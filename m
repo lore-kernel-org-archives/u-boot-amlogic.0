@@ -1,21 +1,21 @@
-Received: by mail-wm1-f51.google.com with SMTP id p6so1574885wmc.1
-        for <u-boot-amlogic@groups.io>; Thu, 31 Jan 2019 00:41:30 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id d15so1541572wmb.3
+        for <u-boot-amlogic@groups.io>; Thu, 31 Jan 2019 00:42:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
          :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=aNEyVIjm0HUfwvcOi72gnauk/8XGlvlKA1rqysWbScQ=;
-        b=UkQSM/HNLwZs4v6zHGJtkM5upeF0reJaWirvp3vzOYqg2A8lHJyDXQsB+rUpSXNrDH
-         Zp0SQgxhuitEosuRpTuzbTKXvD6CX1+CqQnTwcwoYvSdOyRefHubQJyv2LCsbmY2NMN1
-         v1jqVzsYieWcwVUGKmZ+QvJJdICZABac4xiAdE4jWYFmo6F0CILvdiGm1lJbar220jt1
-         Mg4dtSo8c1eUJfpbsQlHfaw6v7/7K/EyYJv42/EsURixCdvcyL9pc3dvzP2/d2LXLRL9
-         pvvfF6EO1vEM56sO/I91jlYdPx1EIpbqgrmVVCqL7lAQXh8uCSIz+ONUkfuZO68kNoqc
-         Q4Rg==
+        bh=RY7yW5AtrvHLDfsggMJGRoizdSXSyZG4PTvJO9mlQsY=;
+        b=EXUF7bOzWTdfSeLHZ0KotBmlF9Yzqii3nQJb8T6Z/xOgGBgqyLivZ0XhH2xHXiPXQY
+         sb2cM05cMET5jPIImn8PvK6z9OZhSximAq7WID+uHgLu1KihXB5621V3sFPgJ7V5spTG
+         zlBHm3P1p9Yamg22Gw2O0CK4m8/WEoYO41j2LKQw5zP2Gi4fqnInOH9+c5d0II3JWlbq
+         7NrH+q8wJVlB3MNL7hyDgINurdmt1qDSRLJWZ4pG0u6X/iIT44+bd+dfFyEZn28qzdc+
+         dNhvFdyZk1DrTyJT/z8z6hLdZvXqJNI61/O6tArVaVc+WWsA2rI9mQTERz3rxPEUDFZY
+         aiPA==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190129
-Message-ID: <f31bd6e3-4980-8a59-3a00-7bbe9cb0e41c@baylibre.com>
-Date: Thu, 31 Jan 2019 09:41:27 +0100
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20190131
+Message-ID: <71a64c72-a9fc-4002-00f0-0dc632809513@baylibre.com>
+Date: Thu, 31 Jan 2019 09:42:50 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
@@ -23,6 +23,8 @@ Content-Transfer-Encoding: 7bit
 To: trini@konsulko.com
 Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
+
+[Oops, wrong subject, now fixed]
 
 Hi Tom,
 
