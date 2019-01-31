@@ -1,139 +1,90 @@
-Received: by mail-wm1-f54.google.com with SMTP id d15so1541572wmb.3
-        for <u-boot-amlogic@groups.io>; Thu, 31 Jan 2019 00:42:53 -0800 (PST)
+Received: by mail-yb1-f194.google.com with SMTP id 64so1923192ybs.2
+        for <u-boot-amlogic@groups.io>; Thu, 31 Jan 2019 13:07:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=RY7yW5AtrvHLDfsggMJGRoizdSXSyZG4PTvJO9mlQsY=;
-        b=EXUF7bOzWTdfSeLHZ0KotBmlF9Yzqii3nQJb8T6Z/xOgGBgqyLivZ0XhH2xHXiPXQY
-         sb2cM05cMET5jPIImn8PvK6z9OZhSximAq7WID+uHgLu1KihXB5621V3sFPgJ7V5spTG
-         zlBHm3P1p9Yamg22Gw2O0CK4m8/WEoYO41j2LKQw5zP2Gi4fqnInOH9+c5d0II3JWlbq
-         7NrH+q8wJVlB3MNL7hyDgINurdmt1qDSRLJWZ4pG0u6X/iIT44+bd+dfFyEZn28qzdc+
-         dNhvFdyZk1DrTyJT/z8z6hLdZvXqJNI61/O6tArVaVc+WWsA2rI9mQTERz3rxPEUDFZY
-         aiPA==
-Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190131
-Message-ID: <71a64c72-a9fc-4002-00f0-0dc632809513@baylibre.com>
-Date: Thu, 31 Jan 2019 09:42:50 +0100
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Vkn2CYk9T+hXTubzBwApOuvm7Vq8XmCuRMTvoJpHjfs=;
+        b=nfTffwT2rHRWiMxxNUKoR4nIbGMyxHkw9vgaoo7PfSd4wqqEct8Jfqzbhawh8peSI0
+         Ys+eE6gCiaItVXB8reyHWiRFIAbgypfoCeVjjlCPY1CfHs89HhXcm8wWbdo/zA9VDfrR
+         a4uohSwU5gjD32OR/jhLM7yqz3O34OOZKUVJg=
+Return-Path: <trini@konsulko.com>
+Date: Thu, 31 Jan 2019 16:07:20 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20190131
+Message-ID: <20190131210720.GI30838@bill-the-cat>
+References: <71a64c72-a9fc-4002-00f0-0dc632809513@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
+In-Reply-To: <71a64c72-a9fc-4002-00f0-0dc632809513@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="T3gMhG0dRUMlbdt/"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
 Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-[Oops, wrong subject, now fixed]
+--T3gMhG0dRUMlbdt/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tom,
+On Thu, Jan 31, 2019 at 09:42:50AM +0100, Neil Armstrong wrote:
 
-This PR adds support for HDMI & CVBS video output support for Amlogic GX SoCs.
-For simplicity, Anatolij acked to include the video patches along the platform
-changes in this PR.
-Video has been enabled only on libretech-cc, but will be enabled on the other
-boards after broader testing.
+> [Oops, wrong subject, now fixed]
+>=20
+> Hi Tom,
+>=20
+> This PR adds support for HDMI & CVBS video output support for Amlogic GX =
+SoCs.
+> For simplicity, Anatolij acked to include the video patches along the pla=
+tform
+> changes in this PR.
+> Video has been enabled only on libretech-cc, but will be enabled on the o=
+ther
+> boards after broader testing.
+>=20
+> Thanks,
+> Neil
+>=20
+>=20
+> The following changes since commit 535d74a8ae8d194269cefdf59ae17a92cd6e75=
+dc:
+>=20
+>   MAINTAINERS: Add Amlogic entry (2019-01-30 21:22:53 -0500)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190131
+>=20
+> for you to fetch changes up to fce1069bfb9b0b12fb760c408833c33243492257:
+>=20
+>   arm: libretech-cc: enable video by default (2019-01-31 09:35:01 +0100)
+>=20
 
-Thanks,
-Neil
+Applied to u-boot/master, thanks!
 
+--=20
+Tom
 
-The following changes since commit 535d74a8ae8d194269cefdf59ae17a92cd6e75dc:
+--T3gMhG0dRUMlbdt/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  MAINTAINERS: Add Amlogic entry (2019-01-30 21:22:53 -0500)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-are available in the Git repository at:
+iQIcBAEBAgAGBQJcU2OIAAoJEIf59jXTHXZSKM8QAMVl2NZ27zeEfbfBt+AqmBB0
+7ITlnn9JmJRuQf51bKygMwOhurb5/hR9Ov54Mz2bwBR7vocyjDW27aOSBu9FDLMA
+cMnkk/9dHiQYJ2swrjY7MoeGm5VXTkRUVdaxxe5SAvdo/7Wug8rBH6V/+75zICpp
+58L4/NLEEcmgsFQYeiOoI8Q8Q2u5tH0cV7Zu4H9Gg1PmdQIz9ySKGLoMfc0OvVY/
+a/VWe1j80FezN2ZYI3pJBC0RLTtkCAvy/k+b2E9CGqwH8ah1NWjVyRoD7022TgRU
+WaA1PT2hJVMDyy4Fr0dWM5wfda1lVFpOi0QKVq3WA7WUQ9zg8LlDkATEF62P8Ldk
+RjbWdR+zznrH2Xvp2AvzTe+sQYH/vCqD8kF3CGSAG5k84PMQwSuVsl4qxfjVYh9a
+mPscc+qRvGsEzlOFPR+g9nTyFGXEmrzcJyOx64Hb8KfABl+8LhppXp+eTdu45ND2
+UWwxxJM+bv2xqmBxvcwZu3cQdlUEBGjtFeA8j5RMd9dZRCf3LBTdWpjoL3ADvv/B
+sGGzky6rfdfbA5yGTDsG5bDSq6OclbMs5pGg2nFyezzMOvEgfJqiZyG/KIwg/YXn
+rshLYEUphDyGYZMq31zeQwweoZYHiSOlBLMaks/yQl46f5LeeSj21WygtTCRmOlh
+7FAMXZPdcdTI4gdM57jJ
+=bwXF
+-----END PGP SIGNATURE-----
 
-  git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190131
-
-for you to fetch changes up to fce1069bfb9b0b12fb760c408833c33243492257:
-
-  arm: libretech-cc: enable video by default (2019-01-31 09:35:01 +0100)
-
-----------------------------------------------------------------
-- Add features and fixups to support video on Amlogic GX SoCs
-- Add video support for Amlogic GX SoC
-- Add DT fixups
-- Enable Video and USB Console for libretech-cc board
-
-----------------------------------------------------------------
-Jorge Ramirez-Ortiz (2):
-      video: dw_hdmi: support SoC specific read/write ops
-      video: dw_hdmi: add support for color conversion
-
-Maxime Jourdan (6):
-      power: domain: meson-gx-pwrc-vpu: add missing depends
-      arm64: dts: meson-gx: vpu should be probed before relocation
-      arm64: dts: meson-gx: add hhi reg entry to hdmi_tx
-      arm: meson: board-gx: Setup VPU in fdt
-      arm: meson64: enable console mux and console env by default
-      arm: libretech-cc: enable video by default
-
-Neil Armstrong (3):
-      video: Add Meson Video Processing Unit Driver
-      arm64: dts: meson-gx: Add hdmi_5v regulator as hdmi tx supply
-      configs: meson64: use vidconsole and usbkbd if enabled
-
- arch/arm/dts/meson-gx-u-boot.dtsi                  |   21 +
- arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi      |    7 +
- arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi       |    7 +
- .../arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi |    7 +
- arch/arm/dts/meson-gxl-s905x-khadas-vim.dts        |    1 +
- .../dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi   |    7 +
- arch/arm/dts/meson-gxl-s905x-libretech-cc.dts      |    1 +
- arch/arm/dts/meson-gxl-s905x-p212-u-boot.dtsi      |    7 +
- arch/arm/dts/meson-gxl-s905x-p212.dts              |    1 +
- arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi     |    7 +
- arch/arm/dts/meson-gxm-khadas-vim2.dts             |    1 +
- arch/arm/include/asm/arch-meson/meson-vpu.h        |   13 +
- arch/arm/mach-meson/board-gx.c                     |    5 +
- configs/khadas-vim2_defconfig                      |    2 +
- configs/khadas-vim_defconfig                       |    2 +
- configs/libretech-cc_defconfig                     |    8 +
- configs/odroid-c2_defconfig                        |    2 +
- configs/p212_defconfig                             |    2 +
- drivers/power/domain/Kconfig                       |    2 +-
- drivers/video/Kconfig                              |    2 +
- drivers/video/Makefile                             |    1 +
- drivers/video/dw_hdmi.c                            |  267 +++-
- drivers/video/meson/Kconfig                        |   12 +
- drivers/video/meson/Makefile                       |    9 +
- drivers/video/meson/meson_canvas.c                 |   45 +
- drivers/video/meson/meson_dw_hdmi.c                |  445 ++++++
- drivers/video/meson/meson_dw_hdmi.h                |  134 ++
- drivers/video/meson/meson_plane.c                  |  177 +++
- drivers/video/meson/meson_registers.h              | 1393 +++++++++++++++++++
- drivers/video/meson/meson_vclk.c                   |  893 ++++++++++++
- drivers/video/meson/meson_venc.c                   | 1464 ++++++++++++++++++++
- drivers/video/meson/meson_vpu.c                    |  211 +++
- drivers/video/meson/meson_vpu.h                    |   97 ++
- drivers/video/meson/meson_vpu_init.c               |  440 ++++++
- drivers/video/meson/simplefb_common.c              |   29 +
- drivers/video/meson/simplefb_common.h              |   21 +
- include/configs/meson64.h                          |   23 +
- include/dw_hdmi.h                                  |   74 +
- include/media_bus_format.h                         |  156 +++
- 39 files changed, 5992 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm/dts/meson-gx-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxl-s905x-p212-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
- create mode 100644 arch/arm/include/asm/arch-meson/meson-vpu.h
- create mode 100644 drivers/video/meson/Kconfig
- create mode 100644 drivers/video/meson/Makefile
- create mode 100644 drivers/video/meson/meson_canvas.c
- create mode 100644 drivers/video/meson/meson_dw_hdmi.c
- create mode 100644 drivers/video/meson/meson_dw_hdmi.h
- create mode 100644 drivers/video/meson/meson_plane.c
- create mode 100644 drivers/video/meson/meson_registers.h
- create mode 100644 drivers/video/meson/meson_vclk.c
- create mode 100644 drivers/video/meson/meson_venc.c
- create mode 100644 drivers/video/meson/meson_vpu.c
- create mode 100644 drivers/video/meson/meson_vpu.h
- create mode 100644 drivers/video/meson/meson_vpu_init.c
- create mode 100644 drivers/video/meson/simplefb_common.c
- create mode 100644 drivers/video/meson/simplefb_common.h
- create mode 100644 include/media_bus_format.h
+--T3gMhG0dRUMlbdt/--
