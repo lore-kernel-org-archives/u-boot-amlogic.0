@@ -1,21 +1,21 @@
-Received: by mail-ed1-f49.google.com with SMTP id d6so4695322eds.2
-        for <u-boot-amlogic@groups.io>; Thu, 14 Mar 2019 10:02:16 -0700 (PDT)
+Received: by mail-ed1-f68.google.com with SMTP id j89so5250796edb.9
+        for <u-boot-amlogic@groups.io>; Thu, 14 Mar 2019 10:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z0haLPh+8U84EfnIDpzXIXLt/5qh5/Jn/McguFbt9fg=;
-        b=XPLHcsCG7L+fK3oNzrfh47wEQyhexUotbLCKzcuRDVVvTfs4FjieLy6pQu+5QQN5s5
-         Ij46du5fHjTtaSmc63Z/ONrtG0pKpIwXJgoGRtq4USouwsmxUuWEtIUqZntF2gwgoTdB
-         502IM1BSXTgdbhoDMDeREUlXbzY4eLPQHciRwHDQ54x4m4r0tS7geDqNHodVAxxoYWbs
-         Slut0zKgdvkWhTIhwp/Ap8f7Ovb0mcDI5UEZLdkCwHRv2XAlVa3eWV7qSm5XZ6MbvSCH
-         ZNNx2dxV2Lnxa3vkM+WAzYvNlZKpjUkdwOTcspJ5Db3+UkCuBcx7H0bimhlVl4Zb2Kha
-         L19w==
+        bh=X9Uc8Hm9JJh3jkKQef+9WMGdX52ctFzTAoEZjrr2+68=;
+        b=RTRcnRvCb+I0Eh3Yu9wqIzN2BBeKCX+w2n7n7VLjisYtW3fYk0GtrWvzAfkxTsJDh+
+         KS5uGk34a7uyC/vQvP30+72mwRVKkWQT52WeIUTtZSPe+WiiXxsOpnMSjFF6Gr+lQhR4
+         mZXMJU3g7MMtG1QjE5gazJIJQgozyGV3/n7e7+swpoUnWbGFZrSfwJa8VSbhup4uILTA
+         Ya9j/jrAjR47T5peoVoahtKAWmTAjGvGbwEzDb4rt/dM4tt0ApxgN7poENPKUbOvEVDX
+         n/twpnhrRPLmfPTzJMsSoxUkmzUJIe8TBKnZ5v0mSXX5smyyVcBdL8j1o+WBk8YDV0Jc
+         PDVg==
 Return-Path: <mohammad.rasim96@gmail.com>
 From: Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [PATCH v2 2/3] ARM: board: meson: add p201 board
-Date: Thu, 14 Mar 2019 20:00:43 +0300
-Message-Id: <20190314170044.4844-3-mohammad.rasim96@gmail.com>
+Subject: [PATCH v2 3/3] ARM: board: meson: add p200 board
+Date: Thu, 14 Mar 2019 20:00:44 +0300
+Message-Id: <20190314170044.4844-4-mohammad.rasim96@gmail.com>
 In-Reply-To: <20190314170044.4844-1-mohammad.rasim96@gmail.com>
 References: <20190314170044.4844-1-mohammad.rasim96@gmail.com>
 MIME-Version: 1.0
@@ -27,57 +27,28 @@ List-ID: <u-boot-amlogic@groups.io>
 
 Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
 ---
- board/amlogic/p201/MAINTAINERS |   6 ++
- board/amlogic/p201/Makefile    |   5 ++
- board/amlogic/p201/README.p201 | 103 +++++++++++++++++++++++++++++++++
- board/amlogic/p201/p201.c      |  43 ++++++++++++++
- configs/p201_defconfig         |  41 +++++++++++++
- 5 files changed, 198 insertions(+)
- create mode 100644 board/amlogic/p201/MAINTAINERS
- create mode 100644 board/amlogic/p201/Makefile
- create mode 100644 board/amlogic/p201/README.p201
- create mode 100644 board/amlogic/p201/p201.c
- create mode 100644 configs/p201_defconfig
+ board/amlogic/odroid-c2/README.p200 | 103 ++++++++++++++++++++++++++++
+ configs/p200_defconfig              |  41 +++++++++++
+ 2 files changed, 144 insertions(+)
+ create mode 100644 board/amlogic/odroid-c2/README.p200
+ create mode 100644 configs/p200_defconfig
 
-diff --git a/board/amlogic/p201/MAINTAINERS b/board/amlogic/p201/MAINTAINERS
+diff --git a/board/amlogic/odroid-c2/README.p200 b/board/amlogic/odroid-c2/README.p200
 new file mode 100644
-index 0000000000..6ebb5f6396
+index 0000000000..01d82d1e79
 --- /dev/null
-+++ b/board/amlogic/p201/MAINTAINERS
-@@ -0,0 +1,6 @@
-+P201
-+M:	Beniamino Galvani <b.galvani@gmail.com>
-+M:	Neil Armstrong <narmstrong@baylibre.com>
-+S:	Maintained
-+F:	board/amlogic/p201/
-+F:	configs/p201_defconfig
-diff --git a/board/amlogic/p201/Makefile b/board/amlogic/p201/Makefile
-new file mode 100644
-index 0000000000..11de5396ab
---- /dev/null
-+++ b/board/amlogic/p201/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
-+
-+obj-y	:= p201.o
-diff --git a/board/amlogic/p201/README.p201 b/board/amlogic/p201/README.p201
-new file mode 100644
-index 0000000000..c251096ce1
---- /dev/null
-+++ b/board/amlogic/p201/README.p201
++++ b/board/amlogic/odroid-c2/README.p200
 @@ -0,0 +1,103 @@
-+U-Boot for Amlogic P201
++U-Boot for Amlogic P200
 +=======================
 +
-+P201 is a reference board manufactured by Amlogic with the following
++P200 is a reference board manufactured by Amlogic with the following
 +specifications:
 +
 + - Amlogic S905 ARM Cortex-A53 quad-core SoC @ 1.5GHz
 + - ARM Mali 450 GPU
 + - 2GB DDR3 SDRAM
-+ - 10/100 Ethernet
++ - Gigabit Ethernet
 + - HDMI 2.0 4K/60Hz display
 + - 2 x USB 2.0 Host
 + - eMMC, microSD
@@ -103,7 +74,7 @@ index 0000000000..c251096ce1
 +
 + > export ARCH=arm
 + > export CROSS_COMPILE=aarch64-none-elf-
-+ > make p201_defconfig
++ > make p200_defconfig
 + > make
 +
 +Image creation
@@ -120,7 +91,7 @@ index 0000000000..c251096ce1
 + > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
 + > git clone https://github.com/BayLibre/u-boot.git -b n-amlogic-openlinux-20170606 amlogic-u-boot
 + > cd amlogic-u-boot
-+ > make gxb_p201_v1_defconfig
++ > make gxb_p200_v1_defconfig
 + > make
 + > export FIPDIR=$PWD/fip
 +
@@ -171,67 +142,18 @@ index 0000000000..c251096ce1
 + > DEV=/dev/your_sd_device
 + > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
 + > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/board/amlogic/p201/p201.c b/board/amlogic/p201/p201.c
+diff --git a/configs/p200_defconfig b/configs/p200_defconfig
 new file mode 100644
-index 0000000000..ef0c65cd9f
+index 0000000000..4011866140
 --- /dev/null
-+++ b/board/amlogic/p201/p201.c
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
-+ */
-+
-+#include <common.h>
-+#include <dm.h>
-+#include <environment.h>
-+#include <asm/io.h>
-+#include <asm/arch/gx.h>
-+#include <asm/arch/sm.h>
-+#include <asm/arch/eth.h>
-+#include <asm/arch/mem.h>
-+
-+#define EFUSE_SN_OFFSET		20
-+#define EFUSE_SN_SIZE		16
-+#define EFUSE_MAC_OFFSET	52
-+#define EFUSE_MAC_SIZE		6
-+
-+int misc_init_r(void)
-+{
-+	u8 mac_addr[EFUSE_MAC_SIZE];
-+	char serial[EFUSE_SN_SIZE];
-+	ssize_t len;
-+
-+	meson_eth_init(PHY_INTERFACE_MODE_RMII, 0);
-+
-+	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
-+		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
-+					  mac_addr, EFUSE_MAC_SIZE);
-+		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
-+			eth_env_set_enetaddr("ethaddr", mac_addr);
-+	}
-+
-+	if (!env_get("serial#")) {
-+		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
-+			EFUSE_SN_SIZE);
-+		if (len == EFUSE_SN_SIZE)
-+			env_set("serial#", serial);
-+	}
-+
-+	return 0;
-+}
-diff --git a/configs/p201_defconfig b/configs/p201_defconfig
-new file mode 100644
-index 0000000000..f6a821cf32
---- /dev/null
-+++ b/configs/p201_defconfig
++++ b/configs/p200_defconfig
 @@ -0,0 +1,41 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_MESON=y
 +CONFIG_SYS_TEXT_BASE=0x01000000
 +CONFIG_DEBUG_UART_BASE=0xc81004c0
 +CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" p201"
++CONFIG_IDENT_STRING=" p200"
 +CONFIG_DEBUG_UART=y
 +CONFIG_NR_DRAM_BANKS=1
 +CONFIG_OF_BOARD_SETUP=y
@@ -247,7 +169,7 @@ index 0000000000..f6a821cf32
 +# CONFIG_CMD_SETEXPR is not set
 +CONFIG_CMD_REGULATOR=y
 +CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p201"
++CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p200"
 +CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_DM_GPIO=y
 +CONFIG_DM_I2C=y
@@ -266,7 +188,7 @@ index 0000000000..f6a821cf32
 +CONFIG_DEBUG_UART_SKIP_INIT=y
 +CONFIG_MESON_SERIAL=y
 +CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_SYS_BOARD="p201"
++CONFIG_SYS_BOARD="odroid-c2"
 --
 2.21.0
 
