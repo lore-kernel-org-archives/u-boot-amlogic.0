@@ -1,234 +1,447 @@
-Received: by mail-ed1-f68.google.com with SMTP id a25so688389edc.8
-        for <u-boot-amlogic@groups.io>; Fri, 15 Mar 2019 08:15:17 -0700 (PDT)
+Received: by mail-ed1-f67.google.com with SMTP id n17so7907819edt.13
+        for <u-boot-amlogic@groups.io>; Fri, 15 Mar 2019 08:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=6bxgNPOA+ubDFM7u68Y5QMW1oP7284Qd4pZDrui1uaw=;
-        b=VMxM7Y+DjWKEodU3EGza8TGtX2rrTLZ/vYyK+vWMFsYgJG76hZO6+JVH7s4qMk3+HP
-         V0fgthCa7Rd9kRo8n/galcDm0kWr7RyBqx23zU3iHeDw9mp0jZRchfSNxDPxwC332X9e
-         l+Gp/RoVFFe3BBxe/ROgNO2vOOtZZCf+CTh06Gel55kBQbcwbvr9Pnr6r/HyHIxZ86WH
-         /+miz4mfQxQAPomez8I+td8GMrJxf3bYT8paM+ph0ZcIwM8b2y50aG9K+nd4ZQDPE520
-         g+7Iu9MpSo0/8RFIAa9HUCgIhKQNhXD/WU3cn2TWWOG1EgtvKjjyaNWf65kP9iJqVle0
-         PJxQ==
+        bh=kgnvNaLp7b7v09dXFvyNLRUAr43bqO7RUeWsqS/dt50=;
+        b=RuxyD7M3Q3uY6gIkgrg6O7fjChJjzy1H18galBvCNaUCncBgpK6jvbIp9TFim/oLjh
+         8EVTKbJWNSJ1HG+9CFsGt4DJOsWDgoyCr8m8djHbCUJhHQ+PgdZ1bzQyiLQEJI6dXwxj
+         kM/XvNmi8s31hqrmp3R2yLVTJvk9lNBorww1GfAlhjMcZxllvXk9wshVcYo4lTXUqJUx
+         BspZLfJiVQA/C6Q1WN+4axNxqJgF7gntyrhvewDY5kMEqpoN5BSDmEIZPcC7To+1hW21
+         WtMLLlSFrf6CKm2b/SyEUGFfDYIEGOy76GW+KPvVUgg8TWzPZOqFUER+haYjxsqGvONn
+         FwmQ==
 Return-Path: <mohammad.rasim96@gmail.com>
 From: Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [PATCH v4 1/5] ARM: board: meson: rename odroid-c2 to p200
-Date: Fri, 15 Mar 2019 18:11:06 +0300
-Message-Id: <20190315151109.17317-2-mohammad.rasim96@gmail.com>
-In-Reply-To: <20190315151109.17317-1-mohammad.rasim96@gmail.com>
-References: <20190315151109.17317-1-mohammad.rasim96@gmail.com>
+Subject: [PATCH v4 2/5] ARM: dts: meson: add p200 and p201 boards
+Date: Fri, 15 Mar 2019 18:19:43 +0300
+Message-Id: <20190315151946.23105-1-mohammad.rasim96@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-To: Albert Aribaud <albert.u.boot@aribaud.net>, Neil Armstrong <narmstrong@baylibre.com>, Beniamino Galvani <b.galvani@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Mohammad Rasim <mohammad.rasim96@gmail.com>, "open list:ARM AMLOGIC SOC SUPPORT" <u-boot-amlogic@groups.io>, open list <u-boot@lists.denx.de>
+To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, narmstrong@baylibre.com, jbrunet@baylibre.com
+Cc: Mohammad Rasim <mohammad.rasim96@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This renames the odroid-c2 to p200 and set it as the default GXBB board
-Other boards (odroid-c2 and nanopi-k2) will inherit from p200
+This adds the device trees for p200 and p201 boards.
+Synced from kernel 5.0.0
+Commit a667cb7a94d4 ("Merge branch 'akpm' (patches from Andrew)")
 
 Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/mach-meson/Kconfig                   |   2 +-
- board/amlogic/{odroid-c2 => p200}/MAINTAINERS |   6 +-
- board/amlogic/{odroid-c2 => p200}/Makefile    |   2 +-
- .../{odroid-c2 => p200}/README.nanopi-k2      |   0
- .../{odroid-c2 => p200}/README.odroid-c2      |   0
- board/amlogic/p200/README.p200                | 103 ++++++++++++++++++
- .../{odroid-c2/odroid-c2.c => p200/p200.c}    |   0
- configs/nanopi-k2_defconfig                   |   1 +
- configs/odroid-c2_defconfig                   |   1 +
- 9 files changed, 110 insertions(+), 5 deletions(-)
- rename board/amlogic/{odroid-c2 => p200}/MAINTAINERS (70%)
- rename board/amlogic/{odroid-c2 => p200}/Makefile (82%)
- rename board/amlogic/{odroid-c2 => p200}/README.nanopi-k2 (100%)
- rename board/amlogic/{odroid-c2 => p200}/README.odroid-c2 (100%)
- create mode 100644 board/amlogic/p200/README.p200
- rename board/amlogic/{odroid-c2/odroid-c2.c => p200/p200.c} (100%)
+ arch/arm/dts/Makefile             |   2 +
+ arch/arm/dts/meson-gxbb-p200.dts  |  99 ++++++++++++
+ arch/arm/dts/meson-gxbb-p201.dts  |  26 ++++
+ arch/arm/dts/meson-gxbb-p20x.dtsi | 247 ++++++++++++++++++++++++++++++
+ 4 files changed, 374 insertions(+)
+ create mode 100644 arch/arm/dts/meson-gxbb-p200.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-p201.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-p20x.dtsi
 
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index 11077bc6cc24..1b1d0aef0d22 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -61,7 +61,7 @@ config SYS_VENDOR
-
- config SYS_BOARD
- 	string "Board name"
--	default "odroid-c2" if MESON_GXBB
-+	default "p200" if MESON_GXBB
- 	default "p212" if MESON_GXL
- 	default "q200" if MESON_GXM
- 	default "s400" if MESON_AXG
-diff --git a/board/amlogic/odroid-c2/MAINTAINERS b/board/amlogic/p200/MAINTAINERS
-similarity index 70%
-rename from board/amlogic/odroid-c2/MAINTAINERS
-rename to board/amlogic/p200/MAINTAINERS
-index 6a853066d781..96fe92dd0874 100644
---- a/board/amlogic/odroid-c2/MAINTAINERS
-+++ b/board/amlogic/p200/MAINTAINERS
-@@ -1,8 +1,8 @@
--ODROID-C2
-+P200
- M:	Beniamino Galvani <b.galvani@gmail.com>
- M:	Neil Armstrong <narmstrong@baylibre.com>
- S:	Maintained
--F:	board/amlogic/odroid-c2/
--F:	include/configs/odroid-c2.h
-+F:	board/amlogic/p200/
- F:	configs/nanopi-k2_defconfig
- F:	configs/odroid-c2_defconfig
-+F:	configs/p200_defconfig
-diff --git a/board/amlogic/odroid-c2/Makefile b/board/amlogic/p200/Makefile
-similarity index 82%
-rename from board/amlogic/odroid-c2/Makefile
-rename to board/amlogic/p200/Makefile
-index a6a3db755f21..f82a7ea9ca6b 100644
---- a/board/amlogic/odroid-c2/Makefile
-+++ b/board/amlogic/p200/Makefile
-@@ -2,4 +2,4 @@
- #
- # (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
-
--obj-y	:= odroid-c2.o
-+obj-y	:= p200.o
-diff --git a/board/amlogic/odroid-c2/README.nanopi-k2 b/board/amlogic/p200/README.nanopi-k2
-similarity index 100%
-rename from board/amlogic/odroid-c2/README.nanopi-k2
-rename to board/amlogic/p200/README.nanopi-k2
-diff --git a/board/amlogic/odroid-c2/README.odroid-c2 b/board/amlogic/p200/README.odroid-c2
-similarity index 100%
-rename from board/amlogic/odroid-c2/README.odroid-c2
-rename to board/amlogic/p200/README.odroid-c2
-diff --git a/board/amlogic/p200/README.p200 b/board/amlogic/p200/README.p200
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index 2a040b20a539..adf5f26facc1 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -60,6 +60,8 @@ dtb-$(CONFIG_ARCH_MESON) += \
+ 	meson-gxbb-nanopi-k2.dtb \
+ 	meson-gxbb-odroidc2.dtb \
+ 	meson-gxbb-nanopi-k2.dtb \
++	meson-gxbb-p200.dtb \
++	meson-gxbb-p201.dtb \
+ 	meson-gxl-s905x-p212.dtb \
+ 	meson-gxl-s905x-libretech-cc.dtb \
+ 	meson-gxl-s905x-khadas-vim.dtb \
+diff --git a/arch/arm/dts/meson-gxbb-p200.dts b/arch/arm/dts/meson-gxbb-p200.dts
 new file mode 100644
-index 000000000000..01d82d1e79e3
+index 000000000000..9d2406a7c4fa
 --- /dev/null
-+++ b/board/amlogic/p200/README.p200
-@@ -0,0 +1,103 @@
-+U-Boot for Amlogic P200
-+=======================
++++ b/arch/arm/dts/meson-gxbb-p200.dts
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2016 Andreas Färber
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Kevin Hilman <khilman@kernel.org>
++ */
 +
-+P200 is a reference board manufactured by Amlogic with the following
-+specifications:
++/dts-v1/;
 +
-+ - Amlogic S905 ARM Cortex-A53 quad-core SoC @ 1.5GHz
-+ - ARM Mali 450 GPU
-+ - 2GB DDR3 SDRAM
-+ - Gigabit Ethernet
-+ - HDMI 2.0 4K/60Hz display
-+ - 2 x USB 2.0 Host
-+ - eMMC, microSD
-+ - Infrared receiver
-+ - SDIO WiFi Module
-+ - CVBS+Stereo Audio Jack
++#include "meson-gxbb-p20x.dtsi"
++#include <dt-bindings/input/input.h>
 +
-+Schematics are available from Amlogic on demand.
++/ {
++	compatible = "amlogic,p200", "amlogic,meson-gxbb";
++	model = "Amlogic Meson GXBB P200 Development Board";
 +
-+Currently the u-boot port supports the following devices:
-+ - serial
-+ - eMMC, microSD
-+ - Ethernet
-+ - I2C
-+ - Regulators
-+ - Reset controller
-+ - Clock controller
-+ - USB Host
-+ - ADC
++	avdd18_usb_adc: regulator-avdd18_usb_adc {
++		compatible = "regulator-fixed";
++		regulator-name = "AVDD18_USB_ADC";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
 +
-+u-boot compilation
-+==================
++	adc_keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 0>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1800000>;
 +
-+ > export ARCH=arm
-+ > export CROSS_COMPILE=aarch64-none-elf-
-+ > make p200_defconfig
-+ > make
++		button-home {
++			label = "Home";
++			linux,code = <KEY_HOME>;
++			press-threshold-microvolt = <900000>; /* 50% */
++		};
 +
-+Image creation
-+==============
++		button-esc {
++			label = "Esc";
++			linux,code = <KEY_ESC>;
++			press-threshold-microvolt = <684000>; /* 38% */
++		};
 +
-+Amlogic doesn't provide sources for the firmware and for tools needed
-+to create the bootloader image, so it is necessary to obtain them from
-+the git tree published by the board vendor:
++		button-up {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			press-threshold-microvolt = <468000>; /* 26% */
++		};
 +
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
-+ > git clone https://github.com/BayLibre/u-boot.git -b n-amlogic-openlinux-20170606 amlogic-u-boot
-+ > cd amlogic-u-boot
-+ > make gxb_p200_v1_defconfig
-+ > make
-+ > export FIPDIR=$PWD/fip
++		button-down {
++			label = "Volume Down";
++			linux,code = <KEY_VOLUMEDOWN>;
++			press-threshold-microvolt = <252000>; /* 14% */
++		};
 +
-+Go back to mainline U-boot source tree then :
-+ > mkdir fip
++		button-menu {
++			label = "Menu";
++			linux,code = <KEY_MENU>;
++			press-threshold-microvolt = <0>; /* 0% */
++		};
++	};
++};
 +
-+ > cp $FIPDIR/gxl/bl2.bin fip/
-+ > cp $FIPDIR/gxl/acs.bin fip/
-+ > cp $FIPDIR/gxl/bl21.bin fip/
-+ > cp $FIPDIR/gxl/bl30.bin fip/
-+ > cp $FIPDIR/gxl/bl301.bin fip/
-+ > cp $FIPDIR/gxl/bl31.img fip/
-+ > cp u-boot.bin fip/bl33.bin
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rgmii_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
 +
-+ > $FIPDIR/blx_fix.sh \
-+	fip/bl30.bin \
-+	fip/zero_tmp \
-+	fip/bl30_zero.bin \
-+	fip/bl301.bin \
-+	fip/bl301_zero.bin \
-+	fip/bl30_new.bin \
-+	bl30
++	amlogic,tx-delay-ns = <2>;
 +
-+ > $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
 +
-+ > $FIPDIR/blx_fix.sh \
-+	fip/bl2_acs.bin \
-+	fip/zero_tmp \
-+	fip/bl2_zero.bin \
-+	fip/bl21.bin \
-+	fip/bl21_zero.bin \
-+	fip/bl2_new.bin \
-+	bl2
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl31.img
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bootmk \
-+		--output fip/u-boot.bin \
-+		--bl2 fip/bl2.n.bin.sig \
-+		--bl30 fip/bl30_new.bin.enc \
-+		--bl31 fip/bl31.img.enc \
-+		--bl33 fip/bl33.bin.enc
++		eth_phy0: ethernet-phy@3 {
++			/* Micrel KSZ9031 (0x00221620) */
++			reg = <3>;
++			interrupt-parent = <&gpio_intc>;
++			/* MAC_INTR on GPIOZ_15 */
++			interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++		};
++	};
++};
 +
-+and then write the image to SD with:
++&i2c_B {
++	status = "okay";
++	pinctrl-0 = <&i2c_b_pins>;
++	pinctrl-names = "default";
++};
 +
-+ > DEV=/dev/your_sd_device
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/board/amlogic/odroid-c2/odroid-c2.c b/board/amlogic/p200/p200.c
-similarity index 100%
-rename from board/amlogic/odroid-c2/odroid-c2.c
-rename to board/amlogic/p200/p200.c
-diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
-index 8bbf48f41f7d..a513bc7cf8ce 100644
---- a/configs/nanopi-k2_defconfig
-+++ b/configs/nanopi-k2_defconfig
-@@ -38,3 +38,4 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_SYS_BOARD="p200"
-diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
-index 747da184b3ad..f19b291164b7 100644
---- a/configs/odroid-c2_defconfig
-+++ b/configs/odroid-c2_defconfig
-@@ -39,3 +39,4 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_SYS_BOARD="p200"
++&saradc {
++	status = "okay";
++	vref-supply = <&avdd18_usb_adc>;
++};
+diff --git a/arch/arm/dts/meson-gxbb-p201.dts b/arch/arm/dts/meson-gxbb-p201.dts
+new file mode 100644
+index 000000000000..56e0dd1ff55c
+--- /dev/null
++++ b/arch/arm/dts/meson-gxbb-p201.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2016 Andreas Färber
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Kevin Hilman <khilman@kernel.org>
++ */
++
++/dts-v1/;
++
++#include "meson-gxbb-p20x.dtsi"
++
++/ {
++	compatible = "amlogic,p201", "amlogic,meson-gxbb";
++	model = "Amlogic Meson GXBB P201 Development Board";
++};
++
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rmii_pins>;
++	pinctrl-names = "default";
++	phy-mode = "rmii";
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++};
+diff --git a/arch/arm/dts/meson-gxbb-p20x.dtsi b/arch/arm/dts/meson-gxbb-p20x.dtsi
+new file mode 100644
+index 000000000000..0be0f2a5d2fe
+--- /dev/null
++++ b/arch/arm/dts/meson-gxbb-p20x.dtsi
+@@ -0,0 +1,247 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2016 Andreas Färber
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Kevin Hilman <khilman@kernel.org>
++ */
++
++#include "meson-gxbb.dtsi"
++
++/ {
++	aliases {
++		serial0 = &uart_AO;
++		ethernet0 = &ethmac;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
++
++	usb_pwr: regulator-usb-pwrs {
++		compatible = "regulator-fixed";
++
++		regulator-name = "USB_PWR";
++
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		/* signal name in schematic: USB_PWR_EN */
++		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	vddio_card: gpio-regulator {
++		compatible = "regulator-gpio";
++
++		regulator-name = "VDDIO_CARD";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
++		gpios-states = <1>;
++
++		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
++		states = <1800000 0
++			  3300000 1>;
++
++		regulator-settling-time-up-us = <10000>;
++		regulator-settling-time-down-us = <150000>;
++	};
++
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++
++	cvbs_connector: cvbs-connector {
++		compatible = "composite-video-connector";
++
++		port {
++			cvbs_connector_in: endpoint {
++				remote-endpoint = <&cvbs_vdac_out>;
++			};
++		};
++	};
++
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_tmds_out>;
++			};
++		};
++	};
++};
++
++&cec_AO {
++	status = "okay";
++	pinctrl-0 = <&ao_cec_pins>;
++	pinctrl-names = "default";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
++	};
++};
++
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
++/* Wireless SDIO Module */
++&sd_emmc_a {
++	status = "okay";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-1 = <&sdio_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-1 = <&sdcard_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	sd-uhs-sdr12;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	max-frequency = <100000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_card>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
++	pinctrl-1 = <&emmc_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
++
++/* This UART is brought out to the DB9 connector */
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&usb0_phy {
++	status = "okay";
++	phy-supply = <&usb_pwr>;
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
 --
 2.21.0
 
