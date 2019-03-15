@@ -1,21 +1,21 @@
-Received: by mail-ed1-f65.google.com with SMTP id r23so7924957edm.7
-        for <u-boot-amlogic@groups.io>; Fri, 15 Mar 2019 08:21:10 -0700 (PDT)
+Received: by mail-ed1-f66.google.com with SMTP id e10so4031073edy.5
+        for <u-boot-amlogic@groups.io>; Fri, 15 Mar 2019 08:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pPBPT6FbOrC/87GbK9lrHhzTdPmXcpj24jxCyB8gcRQ=;
-        b=mn2wHFye5FlO0dtAfO45cimG5TntH04tmWREUvjys+s1u8/eGADUm8xHT3HwxqNILj
-         AgEw1XMceWOSTDooIYdxaZxpJjRLOtdCKEhk2QGrJC9v7KTMv893GAHx3cgfDT/a70rt
-         ejmHqTCah2CmWaqdnUGNzkplRFOJKoqByocrFgiQrgjUwlGPnt8+4p99NTzPNbAhvsTg
-         mAHdo/EpqNIR1Z+JHdBSkAZcpKSe9LJWIuUu/XM4qnym1IuSrzjC4RAdVJMh+OTcW3S0
-         jpnduGivTflJZ8K0vL5MRARcSW6NH/huBmDq9+rTOFcC8r3BP7eY+AiEbKA5IQ2mp5AV
-         DVMg==
+        bh=5wAlqGKWG8aMhmoZvnLdoG+laKRx1RzcE+dZWMcGQ08=;
+        b=az+J6ga3fEP33gJ9tZhPHypDiwh8w/M7XtBs7/CQpo2jrBmeDV1ZFwUY59DAghzbVn
+         kcNM2keBOilG/BkSBYHw/ufeWZlI83IfhZQd5VW+BmLUv5vC0MmDgiCe2HYcIGBMiWDF
+         uO8ovTTrDACo44bDyU2qFkIMFBM5pBeCw4Rm9YmRE9kugN/Ux3Pjzbn+XJVbCwX5CJrb
+         wa2UP6IoTwcMtxW0K7WuqtheWS2P3N2iY8BjB4cDw1lpkioEoFIlFA3xd/sjGgvmCsmp
+         sVOA2iTKE7ian0X/yDytd92l/vHigxvFX9sgGGcsZHZZtukLF23ewUXizv/eoj+u7Gnx
+         j4Jg==
 Return-Path: <mohammad.rasim96@gmail.com>
 From: Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [PATCH v4 3/5] Arm: dts: meson: add u-boot.dtsi for p200 and p201
-Date: Fri, 15 Mar 2019 18:19:44 +0300
-Message-Id: <20190315151946.23105-2-mohammad.rasim96@gmail.com>
+Subject: [PATCH v4 4/5] ARM: board: meson: add p200 board
+Date: Fri, 15 Mar 2019 18:19:45 +0300
+Message-Id: <20190315151946.23105-3-mohammad.rasim96@gmail.com>
 In-Reply-To: <20190315151946.23105-1-mohammad.rasim96@gmail.com>
 References: <20190315151946.23105-1-mohammad.rasim96@gmail.com>
 MIME-Version: 1.0
@@ -24,43 +24,61 @@ To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, narmstrong@baylibre.com, jbr
 Cc: Mohammad Rasim <mohammad.rasim96@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This adds *-u-boot.dtsi files for p200 and p201 boards
-These are just copies of arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
+This adds the p200 defconfig
 
 Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
 ---
- arch/arm/dts/meson-gxbb-p200-u-boot.dtsi | 7 +++++++
- arch/arm/dts/meson-gxbb-p201-u-boot.dtsi | 7 +++++++
- 2 files changed, 14 insertions(+)
- create mode 100644 arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
+ configs/p200_defconfig | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 configs/p200_defconfig
 
-diff --git a/arch/arm/dts/meson-gxbb-p200-u-boot.dtsi b/arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
+diff --git a/configs/p200_defconfig b/configs/p200_defconfig
 new file mode 100644
-index 000000000000..c35158d7e9ee
+index 000000000000..3980e4eb5f1d
 --- /dev/null
-+++ b/arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gx-u-boot.dtsi"
-diff --git a/arch/arm/dts/meson-gxbb-p201-u-boot.dtsi b/arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
-new file mode 100644
-index 000000000000..c35158d7e9ee
---- /dev/null
-+++ b/arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gx-u-boot.dtsi"
++++ b/configs/p200_defconfig
+@@ -0,0 +1,41 @@
++CONFIG_ARM=y
++CONFIG_ARCH_MESON=y
++CONFIG_SYS_TEXT_BASE=0x01000000
++CONFIG_DEBUG_UART_BASE=0xc81004c0
++CONFIG_DEBUG_UART_CLOCK=24000000
++CONFIG_IDENT_STRING=" p200"
++CONFIG_DEBUG_UART=y
++CONFIG_NR_DRAM_BANKS=1
++CONFIG_OF_BOARD_SETUP=y
++CONFIG_MISC_INIT_R=y
++# CONFIG_DISPLAY_CPUINFO is not set
++# CONFIG_DISPLAY_BOARDINFO is not set
++# CONFIG_CMD_BDI is not set
++# CONFIG_CMD_IMI is not set
++CONFIG_CMD_GPIO=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_LOADS is not set
++CONFIG_CMD_MMC=y
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_REGULATOR=y
++CONFIG_OF_CONTROL=y
++CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p200"
++CONFIG_NET_RANDOM_ETHADDR=y
++CONFIG_DM_GPIO=y
++CONFIG_DM_I2C=y
++CONFIG_SYS_I2C_MESON=y
++CONFIG_DM_MMC=y
++CONFIG_MMC_MESON_GX=y
++CONFIG_DM_ETH=y
++CONFIG_ETH_DESIGNWARE=y
++CONFIG_PINCTRL=y
++CONFIG_PINCTRL_MESON_GXBB=y
++CONFIG_DM_REGULATOR=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_RESET=y
++CONFIG_DEBUG_UART_MESON=y
++CONFIG_DEBUG_UART_ANNOUNCE=y
++CONFIG_DEBUG_UART_SKIP_INIT=y
++CONFIG_MESON_SERIAL=y
++CONFIG_OF_LIBFDT_OVERLAY=y
++CONFIG_SYS_BOARD="p200"
 --
 2.21.0
 
