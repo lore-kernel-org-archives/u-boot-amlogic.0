@@ -1,84 +1,99 @@
-Received: by mail-ed1-f66.google.com with SMTP id e10so4031073edy.5
-        for <u-boot-amlogic@groups.io>; Fri, 15 Mar 2019 08:21:15 -0700 (PDT)
+Received: by mail-wr1-f65.google.com with SMTP id g3so2428382wrx.9
+        for <u-boot-amlogic@groups.io>; Fri, 22 Mar 2019 06:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5wAlqGKWG8aMhmoZvnLdoG+laKRx1RzcE+dZWMcGQ08=;
-        b=az+J6ga3fEP33gJ9tZhPHypDiwh8w/M7XtBs7/CQpo2jrBmeDV1ZFwUY59DAghzbVn
-         kcNM2keBOilG/BkSBYHw/ufeWZlI83IfhZQd5VW+BmLUv5vC0MmDgiCe2HYcIGBMiWDF
-         uO8ovTTrDACo44bDyU2qFkIMFBM5pBeCw4Rm9YmRE9kugN/Ux3Pjzbn+XJVbCwX5CJrb
-         wa2UP6IoTwcMtxW0K7WuqtheWS2P3N2iY8BjB4cDw1lpkioEoFIlFA3xd/sjGgvmCsmp
-         sVOA2iTKE7ian0X/yDytd92l/vHigxvFX9sgGGcsZHZZtukLF23ewUXizv/eoj+u7Gnx
-         j4Jg==
-Return-Path: <mohammad.rasim96@gmail.com>
-From: Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [PATCH v4 4/5] ARM: board: meson: add p200 board
-Date: Fri, 15 Mar 2019 18:19:45 +0300
-Message-Id: <20190315151946.23105-3-mohammad.rasim96@gmail.com>
-In-Reply-To: <20190315151946.23105-1-mohammad.rasim96@gmail.com>
-References: <20190315151946.23105-1-mohammad.rasim96@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, narmstrong@baylibre.com, jbrunet@baylibre.com
-Cc: Mohammad Rasim <mohammad.rasim96@gmail.com>
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id;
+        bh=5fKBIdpGc0GQ79zlEs28/2Xd35EUBdAHg9bYpAQQjAs=;
+        b=zqUgUqw9NwF/GkW7FzJaQ7sMIeAeYM3WfRwj2Dypot9Sc0fFZVbVrQmTs0Y/42N3uD
+         p+w82U0wpK/KjabfC87hhWoly/I1KGuY0PjMsFh5XCIsGmCrazNK2GIf+NsqUV9HHGbA
+         Z5MMenPFmsCWXXfu/ddcIO+VzUjWaL99s72C3xRV2eL50yRQe8hkC5OluQJc9T3S7QRz
+         hBNxZLNmV1gs9V2lL8CrGz3VjmmgdMNC0iNvnqChFtofoJt2AJKBGRHsUVLnDJQomlOX
+         3ICnsJr8907GiPKJCqp1MDI7fYw+EgIs8s13Vn68igyhCXuWPPFtzZ+JhOmFLhDgdvvB
+         8w5Q==
+Return-Path: <glaroque@baylibre.com>
+From: glaroque@baylibre.com
+Subject: [PATCH] i2c: meson: add configurable divider factors
+Date: Fri, 22 Mar 2019 14:49:32 +0100
+Message-Id: <20190322134932.17103-1-glaroque@baylibre.com>
+To: hs@denx.de, narmstrong@baylibre.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-This adds the p200 defconfig
+This patch add support for I2C controller in Meson-AXG SoC,
+Due to the IP changes between I2C controller, we need to introduce
+a compatible data to make the divider factor configurable.
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+backport from linux:
+931b18e92cd0 ("2c: meson: add configurable divider factors")
+
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- configs/p200_defconfig | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 configs/p200_defconfig
+ drivers/i2c/meson_i2c.c | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
-diff --git a/configs/p200_defconfig b/configs/p200_defconfig
-new file mode 100644
-index 000000000000..3980e4eb5f1d
---- /dev/null
-+++ b/configs/p200_defconfig
-@@ -0,0 +1,41 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_DEBUG_UART_BASE=0xc81004c0
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" p200"
-+CONFIG_DEBUG_UART=y
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_DISPLAY_BOARDINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+CONFIG_CMD_I2C=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p200"
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_DM_GPIO=y
-+CONFIG_DM_I2C=y
-+CONFIG_SYS_I2C_MESON=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_GXBB=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_MESON=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_SYS_BOARD="p200"
---
-2.21.0
+diff --git a/drivers/i2c/meson_i2c.c b/drivers/i2c/meson_i2c.c
+index 7d06d95cf3..ee59bac123 100644
+--- a/drivers/i2c/meson_i2c.c
++++ b/drivers/i2c/meson_i2c.c
+@@ -41,7 +41,12 @@ struct i2c_regs {
+ 	u32 tok_rdata1;
+ };
+ 
++struct meson_i2c_data {
++	unsigned char div_factor;
++};
++
+ struct meson_i2c {
++	const struct meson_i2c_data *data;
+ 	struct clk clk;
+ 	struct i2c_regs *regs;
+ 	struct i2c_msg *msg;	/* Current I2C message */
+@@ -229,7 +234,7 @@ static int meson_i2c_set_bus_speed(struct udevice *bus, unsigned int speed)
+ 	if (IS_ERR_VALUE(clk_rate))
+ 		return -EINVAL;
+ 
+-	div = DIV_ROUND_UP(clk_rate, speed * 4);
++	div = DIV_ROUND_UP(clk_rate, speed * i2c->data->div_factor);
+ 
+ 	/* clock divider has 12 bits */
+ 	if (div >= (1 << 12)) {
+@@ -253,6 +258,8 @@ static int meson_i2c_probe(struct udevice *bus)
+ 	struct meson_i2c *i2c = dev_get_priv(bus);
+ 	int ret;
+ 
++	i2c->data = (const struct meson_i2c_data *)dev_get_driver_data(bus);
++
+ 	ret = clk_get_by_index(bus, 0, &i2c->clk);
+ 	if (ret < 0)
+ 		return ret;
+@@ -272,11 +279,24 @@ static const struct dm_i2c_ops meson_i2c_ops = {
+ 	.set_bus_speed = meson_i2c_set_bus_speed,
+ };
+ 
++static const struct meson_i2c_data i2c_meson6_data = {
++	.div_factor = 4,
++};
++
++static const struct meson_i2c_data i2c_gxbb_data = {
++	.div_factor = 4,
++};
++
++static const struct meson_i2c_data i2c_axg_data = {
++	.div_factor = 3,
++};
++
+ static const struct udevice_id meson_i2c_ids[] = {
+-	{ .compatible = "amlogic,meson6-i2c" },
+-	{ .compatible = "amlogic,meson-gx-i2c" },
+-	{ .compatible = "amlogic,meson-gxbb-i2c" },
+-	{ }
++	{.compatible = "amlogic,meson6-i2c", .data = (ulong)&i2c_meson6_data},
++	{.compatible = "amlogic,meson-gx-i2c", .data = (ulong)&i2c_gxbb_data},
++	{.compatible = "amlogic,meson-gxbb-i2c", .data = (ulong)&i2c_gxbb_data},
++	{.compatible = "amlogic,meson-axg-i2c", .data = (ulong)&i2c_axg_data},
++	{}
+ };
+ 
+ U_BOOT_DRIVER(i2c_meson) = {
+-- 
+2.17.1
 
