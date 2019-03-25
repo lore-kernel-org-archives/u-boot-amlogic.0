@@ -1,270 +1,335 @@
-Received: by mail-wm1-f65.google.com with SMTP id q16so4480190wmj.3
-        for <u-boot-amlogic@groups.io>; Sat, 23 Mar 2019 04:56:30 -0700 (PDT)
+Received: by mail-wm1-f65.google.com with SMTP id f3so8417627wmj.4
+        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2019 04:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3dmtmPDPJAzkmET63PllHTzqQzZJAhFuIBnp+SUg/a0=;
-        b=Sk6Z7kb14CRQbgfH55WhqR89hBe9XIZJKSERXceBnsRLdqm7mFI9eZCKmpxDgpkUrY
-         OeVd+ZzQzXP86EUD63Zur94GiQ6xcDlPCwYfdg2AYn6BDp7kQLPk6zQJ39qR6HKp4NmH
-         lTdV69RS8D+ZTm2LO7nZIryKPLOWJ9pFJAvucwfFy1OHhd4LJBlq9+ju8bb6J8Pniz0r
-         uHHc0F91TtvSAdzI3J86x3DdJKc3sGxHApjhDCjJ4ptCZ+It996Z0yXuR0mxFDqF9Zh/
-         joanj0FjKQCvKVSG3YFQrLY4bJHuMd24jmoKCnE2FxTibHj0MpQsAmXcbHAT3cn6E52x
-         4VBA==
-Return-Path: <mohammad.rasim96@gmail.com>
-From: "Mohammad Rasim" <mohammad.rasim96@gmail.com>
-Subject: [PATCH 5/5] ARM: board: meson: add p201 board
-Date: Sat, 23 Mar 2019 14:55:21 +0300
-Message-Id: <20190323115521.3833-1-mohammad.rasim96@gmail.com>
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version;
+        bh=IfLTU40U3N4TmT/XLAe8fT9oBVCvfQ1gsj+pPq5QFpQ=;
+        b=gXb3yAo6xPej6a+cT+ga49RWpdrFf5w8Q4ggEn+8y0DWc6vvOiHH7YmJQpXL7qNDAW
+         8DovYdvwmJovG7utD2tKnlBAJGgRRunUlgLCwQhymwFtZdshNoxRnahMxAm/ImDp9QWr
+         WfkeRhCu+qgllbJzDmmDZDgoYoj5OFj94yjXTyMH+JmXRR0xWu9NSnIthiD4zy7XrD61
+         sTIFY0A/rgsYqTCDN0JAHZawjAkTMcwHGoH1nR6ul1OQYNmCQod07ni8LeOgZad9p+h4
+         Zx3NUTCc+MYdCSi7asougjub9LxegdYCoOpXo6t7I9TGKGFvJJ7BLvSaackTeMNqw2jk
+         Kh6g==
+Return-Path: <jmasson@baylibre.com>
+From: Julien Masson <jmasson@baylibre.com>
+Subject: [PATCH v2] ARM: meson: display Amlogic SoC Information
+Date: Mon, 25 Mar 2019 11:55:29 +0100
+Message-ID: <86a7hjrzf3.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, narmstrong@baylibre.com, jbrunet@baylibre.com
-Cc: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Content-Type: text/plain
+To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Cc: Beniamino Galvani <b.galvani@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Albert Aribaud <albert.u.boot@aribaud.net>
 List-ID: <u-boot-amlogic@groups.io>
 
-This adds support for p201 reference boards
+The Amlogic SoCs have a registers containing the die revision
+and packaging type to determine the SoC family and package marketing
+name like S905X for the GXL SoC Family.
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+This code is taken from the Linux meson-gx-socinfo driver and adapted
+to U-Boot printing.
+
+Signed-off-by: Julien Masson <jmasson@baylibre.com>
 ---
- board/amlogic/p201/MAINTAINERS |   5 ++
- board/amlogic/p201/Makefile    |   5 ++
- board/amlogic/p201/README.p201 | 103 +++++++++++++++++++++++++++++++++
- board/amlogic/p201/p201.c      |  43 ++++++++++++++
- configs/p201_defconfig         |  41 +++++++++++++
- 5 files changed, 197 insertions(+)
- create mode 100644 board/amlogic/p201/MAINTAINERS
- create mode 100644 board/amlogic/p201/Makefile
- create mode 100644 board/amlogic/p201/README.p201
- create mode 100644 board/amlogic/p201/p201.c
- create mode 100644 configs/p201_defconfig
+Changes from v1:
+-> enable CONFIG_DISPLAY_BOARDINFO for nanopi-k2, khadas-vim2 and s400
 
-diff --git a/board/amlogic/p201/MAINTAINERS b/board/amlogic/p201/MAINTAINERS
+-> handle the mask like the kernel when getting the package id:
+https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/commit/?h=v5.2/drivers&id=dce47aed20c7de3ee2011b7a63e67f08e9dcfb5e
+
+-> add new soc ids:
+https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/commit/?h=v5.2/drivers&id=65f80df58eb770b2b687c35142c113d1ad6fa415
+
+-> print the board model from the device tree
+
+-> move all the source code in dedicated new file: board-info.c
+
+ arch/arm/mach-meson/Makefile     |   2 +-
+ arch/arm/mach-meson/board-info.c | 166 +++++++++++++++++++++++++++++++++++++++
+ configs/khadas-vim2_defconfig    |   2 +-
+ configs/khadas-vim_defconfig     |   2 +-
+ configs/libretech-cc_defconfig   |   2 +-
+ configs/nanopi-k2_defconfig      |   2 +-
+ configs/odroid-c2_defconfig      |   2 +-
+ configs/p212_defconfig           |   2 +-
+ configs/s400_defconfig           |   2 +-
+ 9 files changed, 174 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/mach-meson/board-info.c
+
+diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
+index b716e1a..6ddfba6 100644
+--- a/arch/arm/mach-meson/Makefile
++++ b/arch/arm/mach-meson/Makefile
+@@ -2,6 +2,6 @@
+ #
+ # Copyright (c) 2016 Beniamino Galvani <b.galvani@gmail.com>
+ 
+-obj-y += board-common.o sm.o
++obj-y += board-common.o sm.o board-info.o
+ obj-$(CONFIG_MESON_GX) += board-gx.o
+ obj-$(CONFIG_MESON_AXG) += board-axg.o
+diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
 new file mode 100644
-index 000000000000..3e84a8e2a2af
+index 0000000..ba248e8
 --- /dev/null
-+++ b/board/amlogic/p201/MAINTAINERS
-@@ -0,0 +1,5 @@
-+P201
-+M:	Neil Armstrong <narmstrong@baylibre.com>
-+S:	Maintained
-+F:	board/amlogic/p201/
-+F:	configs/p201_defconfig
-diff --git a/board/amlogic/p201/Makefile b/board/amlogic/p201/Makefile
-new file mode 100644
-index 000000000000..11de5396ab4c
---- /dev/null
-+++ b/board/amlogic/p201/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
-+
-+obj-y	:= p201.o
-diff --git a/board/amlogic/p201/README.p201 b/board/amlogic/p201/README.p201
-new file mode 100644
-index 000000000000..c251096ce142
---- /dev/null
-+++ b/board/amlogic/p201/README.p201
-@@ -0,0 +1,103 @@
-+U-Boot for Amlogic P201
-+=======================
-+
-+P201 is a reference board manufactured by Amlogic with the following
-+specifications:
-+
-+ - Amlogic S905 ARM Cortex-A53 quad-core SoC @ 1.5GHz
-+ - ARM Mali 450 GPU
-+ - 2GB DDR3 SDRAM
-+ - 10/100 Ethernet
-+ - HDMI 2.0 4K/60Hz display
-+ - 2 x USB 2.0 Host
-+ - eMMC, microSD
-+ - Infrared receiver
-+ - SDIO WiFi Module
-+ - CVBS+Stereo Audio Jack
-+
-+Schematics are available from Amlogic on demand.
-+
-+Currently the u-boot port supports the following devices:
-+ - serial
-+ - eMMC, microSD
-+ - Ethernet
-+ - I2C
-+ - Regulators
-+ - Reset controller
-+ - Clock controller
-+ - USB Host
-+ - ADC
-+
-+u-boot compilation
-+==================
-+
-+ > export ARCH=arm
-+ > export CROSS_COMPILE=aarch64-none-elf-
-+ > make p201_defconfig
-+ > make
-+
-+Image creation
-+==============
-+
-+Amlogic doesn't provide sources for the firmware and for tools needed
-+to create the bootloader image, so it is necessary to obtain them from
-+the git tree published by the board vendor:
-+
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
-+ > git clone https://github.com/BayLibre/u-boot.git -b n-amlogic-openlinux-20170606 amlogic-u-boot
-+ > cd amlogic-u-boot
-+ > make gxb_p201_v1_defconfig
-+ > make
-+ > export FIPDIR=$PWD/fip
-+
-+Go back to mainline U-boot source tree then :
-+ > mkdir fip
-+
-+ > cp $FIPDIR/gxl/bl2.bin fip/
-+ > cp $FIPDIR/gxl/acs.bin fip/
-+ > cp $FIPDIR/gxl/bl21.bin fip/
-+ > cp $FIPDIR/gxl/bl30.bin fip/
-+ > cp $FIPDIR/gxl/bl301.bin fip/
-+ > cp $FIPDIR/gxl/bl31.img fip/
-+ > cp u-boot.bin fip/bl33.bin
-+
-+ > $FIPDIR/blx_fix.sh \
-+	fip/bl30.bin \
-+	fip/zero_tmp \
-+	fip/bl30_zero.bin \
-+	fip/bl301.bin \
-+	fip/bl301_zero.bin \
-+	fip/bl30_new.bin \
-+	bl30
-+
-+ > $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
-+
-+ > $FIPDIR/blx_fix.sh \
-+	fip/bl2_acs.bin \
-+	fip/zero_tmp \
-+	fip/bl2_zero.bin \
-+	fip/bl21.bin \
-+	fip/bl21_zero.bin \
-+	fip/bl2_new.bin \
-+	bl2
-+
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl31.img
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
-+ > $FIPDIR/gxl/aml_encrypt_gxl --bootmk \
-+		--output fip/u-boot.bin \
-+		--bl2 fip/bl2.n.bin.sig \
-+		--bl30 fip/bl30_new.bin.enc \
-+		--bl31 fip/bl31.img.enc \
-+		--bl33 fip/bl33.bin.enc
-+
-+and then write the image to SD with:
-+
-+ > DEV=/dev/your_sd_device
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/board/amlogic/p201/p201.c b/board/amlogic/p201/p201.c
-new file mode 100644
-index 000000000000..ef0c65cd9f89
---- /dev/null
-+++ b/board/amlogic/p201/p201.c
-@@ -0,0 +1,43 @@
++++ b/arch/arm/mach-meson/board-info.c
+@@ -0,0 +1,166 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
++ * (C) Copyright 2019 Julien Masson <jmasson@baylibre.com>
++ * (C) Copyright 2019 Neil Armstrong <narmstrong@baylibre.com>
 + */
 +
 +#include <common.h>
-+#include <dm.h>
-+#include <environment.h>
 +#include <asm/io.h>
-+#include <asm/arch/gx.h>
-+#include <asm/arch/sm.h>
-+#include <asm/arch/eth.h>
-+#include <asm/arch/mem.h>
++#include <dm.h>
++#include <linux/bitfield.h>
++#include <regmap.h>
++#include <syscon.h>
 +
-+#define EFUSE_SN_OFFSET		20
-+#define EFUSE_SN_SIZE		16
-+#define EFUSE_MAC_OFFSET	52
-+#define EFUSE_MAC_SIZE		6
++#define AO_SEC_SD_CFG8		0xe0
++#define AO_SEC_SOCINFO_OFFSET	AO_SEC_SD_CFG8
 +
-+int misc_init_r(void)
++#define SOCINFO_MAJOR	GENMASK(31, 24)
++#define SOCINFO_PACK	GENMASK(23, 16)
++#define SOCINFO_MINOR	GENMASK(15, 8)
++#define SOCINFO_MISC	GENMASK(7, 0)
++
++static const struct meson_gx_soc_id {
++	const char *name;
++	unsigned int id;
++} soc_ids[] = {
++	{ "GXBB",   0x1f },
++	{ "GXTVBB", 0x20 },
++	{ "GXL",    0x21 },
++	{ "GXM",    0x22 },
++	{ "TXL",    0x23 },
++	{ "TXLX",   0x24 },
++	{ "AXG",    0x25 },
++	{ "GXLX",   0x26 },
++	{ "TXHD",   0x27 },
++	{ "G12A",   0x28 },
++	{ "G12B",   0x29 },
++};
++
++static const struct meson_gx_package_id {
++	const char *name;
++	unsigned int major_id;
++	unsigned int pack_id;
++	unsigned int pack_mask;
++} soc_packages[] = {
++	{ "S905",   0x1f, 0,    0x20 }, /* pack_id != 0x20 */
++	{ "S905H",  0x1f, 0x3,  0xf },  /* pack_id & 0xf == 0x3 */
++	{ "S905M",  0x1f, 0x20, 0xf0 }, /* pack_id == 0x20 */
++	{ "S905D",  0x21, 0,    0xf0 },
++	{ "S905X",  0x21, 0x80, 0xf0 },
++	{ "S905W",  0x21, 0xa0, 0xf0 },
++	{ "S905L",  0x21, 0xc0, 0xf0 },
++	{ "S905M2", 0x21, 0xe0, 0xf0 },
++	{ "S805X",  0x21, 0x30, 0xf0 },
++	{ "S805Y",  0x21, 0xb0, 0xf0 },
++	{ "S912",   0x22, 0,    0x0 },  /* Only S912 is known for GXM */
++	{ "962X",   0x24, 0x10, 0xf0 },
++	{ "962E",   0x24, 0x20, 0xf0 },
++	{ "A113X",  0x25, 0x37, 0xff },
++	{ "A113D",  0x25, 0x22, 0xff },
++	{ "S905D2", 0x28, 0x10, 0xf0 },
++	{ "S905X2", 0x28, 0x40, 0xf0 },
++	{ "S922X",  0x29, 0x40, 0xf0 },
++};
++
++DECLARE_GLOBAL_DATA_PTR;
++
++static inline unsigned int socinfo_to_major(u32 socinfo)
 +{
-+	u8 mac_addr[EFUSE_MAC_SIZE];
-+	char serial[EFUSE_SN_SIZE];
-+	ssize_t len;
++	return FIELD_GET(SOCINFO_MAJOR, socinfo);
++}
 +
-+	meson_eth_init(PHY_INTERFACE_MODE_RMII, 0);
++static inline unsigned int socinfo_to_minor(u32 socinfo)
++{
++	return FIELD_GET(SOCINFO_MINOR, socinfo);
++}
 +
-+	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
-+		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
-+					  mac_addr, EFUSE_MAC_SIZE);
-+		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
-+			eth_env_set_enetaddr("ethaddr", mac_addr);
++static inline unsigned int socinfo_to_pack(u32 socinfo)
++{
++	return FIELD_GET(SOCINFO_PACK, socinfo);
++}
++
++static inline unsigned int socinfo_to_misc(u32 socinfo)
++{
++	return FIELD_GET(SOCINFO_MISC, socinfo);
++}
++
++static const char *socinfo_to_package_id(u32 socinfo)
++{
++	unsigned int pack = socinfo_to_pack(socinfo);
++	unsigned int major = socinfo_to_major(socinfo);
++	int i;
++
++	for (i = 0 ; i < ARRAY_SIZE(soc_packages) ; ++i) {
++		if (soc_packages[i].major_id == major &&
++		    soc_packages[i].pack_id ==
++		    (pack & soc_packages[i].pack_mask))
++			return soc_packages[i].name;
 +	}
 +
-+	if (!env_get("serial#")) {
-+		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
-+			EFUSE_SN_SIZE);
-+		if (len == EFUSE_SN_SIZE)
-+			env_set("serial#", serial);
++	return "Unknown";
++}
++
++static const char *socinfo_to_soc_id(u32 socinfo)
++{
++	unsigned int id = socinfo_to_major(socinfo);
++	int i;
++
++	for (i = 0 ; i < ARRAY_SIZE(soc_ids) ; ++i) {
++		if (soc_ids[i].id == id)
++			return soc_ids[i].name;
 +	}
++
++	return "Unknown";
++}
++
++static void print_board_model(void)
++{
++	const char *model;
++	model = fdt_getprop(gd->fdt_blob, 0, "model", NULL);
++	printf("Model: %s\n", model ? model : "Unknown");
++}
++
++int show_board_info(void)
++{
++	struct regmap *regmap;
++	int nodeoffset, ret;
++	ofnode node;
++	unsigned int socinfo;
++
++	/* find the offset of compatible node */
++	nodeoffset = fdt_node_offset_by_compatible(gd->fdt_blob, -1,
++						   "amlogic,meson-gx-ao-secure");
++	if (nodeoffset < 0)
++		return 0;
++
++	/* check if chip-id is available */
++	if (!fdt_getprop(gd->fdt_blob, nodeoffset, "amlogic,has-chip-id", NULL))
++		return 0;
++
++	/* get regmap from the syscon node */
++	node = offset_to_ofnode(nodeoffset);
++	regmap = syscon_node_to_regmap(node);
++	if (IS_ERR(regmap)) {
++		printf("%s: failed to get regmap\n", __func__);
++		return 0;
++	}
++
++	/* read soc info */
++	ret = regmap_read(regmap, AO_SEC_SOCINFO_OFFSET, &socinfo);
++	if (ret && !socinfo) {
++		printf("%s: invalid chipid value\n", __func__);
++		return 0;
++	}
++
++	/* print board information */
++	print_board_model();
++	printf("Soc:   Amlogic Meson %s (%s) Revision %x:%x (%x:%x)\n",
++	       socinfo_to_soc_id(socinfo),
++	       socinfo_to_package_id(socinfo),
++	       socinfo_to_major(socinfo),
++	       socinfo_to_minor(socinfo),
++	       socinfo_to_pack(socinfo),
++	       socinfo_to_misc(socinfo));
 +
 +	return 0;
 +}
-diff --git a/configs/p201_defconfig b/configs/p201_defconfig
-new file mode 100644
-index 000000000000..f6a821cf3275
---- /dev/null
-+++ b/configs/p201_defconfig
-@@ -0,0 +1,41 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_DEBUG_UART_BASE=0xc81004c0
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" p201"
-+CONFIG_DEBUG_UART=y
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_DISPLAY_BOARDINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+CONFIG_CMD_I2C=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p201"
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_DM_GPIO=y
-+CONFIG_DM_I2C=y
-+CONFIG_SYS_I2C_MESON=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_GXBB=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_MESON=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_SYS_BOARD="p201"
---
-2.21.0
+diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
+index 0f738cb..7e40683 100644
+--- a/configs/khadas-vim2_defconfig
++++ b/configs/khadas-vim2_defconfig
+@@ -9,7 +9,7 @@ CONFIG_DEBUG_UART=y
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_CONSOLE_MUX=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO=y
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_ADC=y
+diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
+index 6f1ad0e..aeec2be 100644
+--- a/configs/khadas-vim_defconfig
++++ b/configs/khadas-vim_defconfig
+@@ -11,7 +11,7 @@ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_CONSOLE_MUX=y
+ CONFIG_MISC_INIT_R=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO=y
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_ADC=y
+diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+index d28c7ab..a1b9fd9 100644
+--- a/configs/libretech-cc_defconfig
++++ b/configs/libretech-cc_defconfig
+@@ -10,7 +10,7 @@ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_MISC_INIT_R=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO=y
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_ADC=y
+diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
+index 8bbf48f..60481cd 100644
+--- a/configs/nanopi-k2_defconfig
++++ b/configs/nanopi-k2_defconfig
+@@ -9,7 +9,7 @@ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_MISC_INIT_R=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO=y
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_GPIO=y
+diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
+index 747da18..04904c2 100644
+--- a/configs/odroid-c2_defconfig
++++ b/configs/odroid-c2_defconfig
+@@ -10,7 +10,7 @@ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_CONSOLE_MUX=y
+ CONFIG_MISC_INIT_R=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO=y
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_GPIO=y
+diff --git a/configs/p212_defconfig b/configs/p212_defconfig
+index b048863..0422740 100644
+--- a/configs/p212_defconfig
++++ b/configs/p212_defconfig
+@@ -11,7 +11,7 @@ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_CONSOLE_MUX=y
+ CONFIG_MISC_INIT_R=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO=y
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_GPIO=y
+diff --git a/configs/s400_defconfig b/configs/s400_defconfig
+index 1bd4b71..6cd47d0 100644
+--- a/configs/s400_defconfig
++++ b/configs/s400_defconfig
+@@ -10,7 +10,7 @@ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_MISC_INIT_R=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-# CONFIG_DISPLAY_BOARDINFO is not set
++CONFIG_DISPLAY_BOARDINFO=y
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_GPIO=y
+-- 
+2.7.4
 
