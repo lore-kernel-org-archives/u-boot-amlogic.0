@@ -1,335 +1,87 @@
-Received: by mail-wm1-f65.google.com with SMTP id f3so8417627wmj.4
-        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2019 04:01:07 -0700 (PDT)
+Received: by mail-wr1-f66.google.com with SMTP id y13so13447429wrd.3
+        for <u-boot-amlogic@groups.io>; Tue, 26 Mar 2019 02:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version;
-        bh=IfLTU40U3N4TmT/XLAe8fT9oBVCvfQ1gsj+pPq5QFpQ=;
-        b=gXb3yAo6xPej6a+cT+ga49RWpdrFf5w8Q4ggEn+8y0DWc6vvOiHH7YmJQpXL7qNDAW
-         8DovYdvwmJovG7utD2tKnlBAJGgRRunUlgLCwQhymwFtZdshNoxRnahMxAm/ImDp9QWr
-         WfkeRhCu+qgllbJzDmmDZDgoYoj5OFj94yjXTyMH+JmXRR0xWu9NSnIthiD4zy7XrD61
-         sTIFY0A/rgsYqTCDN0JAHZawjAkTMcwHGoH1nR6ul1OQYNmCQod07ni8LeOgZad9p+h4
-         Zx3NUTCc+MYdCSi7asougjub9LxegdYCoOpXo6t7I9TGKGFvJJ7BLvSaackTeMNqw2jk
-         Kh6g==
-Return-Path: <jmasson@baylibre.com>
-From: Julien Masson <jmasson@baylibre.com>
-Subject: [PATCH v2] ARM: meson: display Amlogic SoC Information
-Date: Mon, 25 Mar 2019 11:55:29 +0100
-Message-ID: <86a7hjrzf3.fsf@baylibre.com>
+        h=subject:to:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XCXJezdcoAwSWCNDC4IDG+yshBLL2bZqt6EGl2v8GB8=;
+        b=snRltC8swXz7vxJ+4+TbYrhQ0KRm+YIc5Hd8fCaCdvPGWUzzES1KUttxnDgCLzxnw2
+         z2Pb3mWDa37jHUigAUsQ1E334HWxlvqwBiuykf2YfUa4RtxAqZD0KXVU9i791PlU0qiY
+         cTX5NMBm5bKS5U5qBnbzrHBOGxUcCrMcgEA1KZbYslh1kW6O0nlK0zfOooQu/h2W0PU+
+         sAiHSFm3ydAFj5ffKTZsn8PSKIt1SP8Q2N42JgZ8tioJrDvxDY8gvht2GKWY6iKCRk0N
+         DID145BCOEX7yH6+8JAH0dWdXS6O4Fv7Gg78yC2tQ5POxZ4ROrna6LsJzvNqybxU7JtB
+         d+BQ==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH v5 0/5] ARM: meson: add support for p200 and p201 boards
+References: <20190323115200.1675-1-mohammad.rasim96@gmail.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <428e8f84-cc11-6f68-e975-fead1b1b2be7@baylibre.com>
+Date: Tue, 26 Mar 2019 10:26:35 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Cc: Beniamino Galvani <b.galvani@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Albert Aribaud <albert.u.boot@aribaud.net>
+In-Reply-To: <20190323115200.1675-1-mohammad.rasim96@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Mohammad Rasim <mohammad.rasim96@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-The Amlogic SoCs have a registers containing the die revision
-and packaging type to determine the SoC family and package marketing
-name like S905X for the GXL SoC Family.
+Hi Mohammad,
 
-This code is taken from the Linux meson-gx-socinfo driver and adapted
-to U-Boot printing.
+On 23/03/2019 12:52, Mohammad Rasim wrote:
+> This adds support for p200 and p201 reference boards from amlogic
+> 
+> Mohammad Rasim (5):
+>   ARM: board: meson: rename odroid-c2 to p200
+>   ARM: dts: meson: add p200 and p201 boards
+>   ARM: dts: meson: add u-boot.dtsi for p200 and p201
+>   ARM: board: meson: add p200 board
+>   ARM: board: meson: add p201 board
+> 
+>  arch/arm/dts/Makefile                         |   2 +
+>  arch/arm/dts/meson-gxbb-p200-u-boot.dtsi      |   7 +
+>  arch/arm/dts/meson-gxbb-p200.dts              |  99 +++++++
+>  arch/arm/dts/meson-gxbb-p201-u-boot.dtsi      |   7 +
+>  arch/arm/dts/meson-gxbb-p201.dts              |  26 ++
+>  arch/arm/dts/meson-gxbb-p20x.dtsi             | 247 ++++++++++++++++++
+>  arch/arm/mach-meson/Kconfig                   |   2 +-
+>  board/amlogic/{odroid-c2 => p200}/MAINTAINERS |   6 +-
+>  board/amlogic/{odroid-c2 => p200}/Makefile    |   2 +-
+>  .../{odroid-c2 => p200}/README.nanopi-k2      |   0
+>  .../{odroid-c2 => p200}/README.odroid-c2      |   0
+>  board/amlogic/p200/README.p200                | 103 ++++++++
+>  .../{odroid-c2/odroid-c2.c => p200/p200.c}    |   0
+>  board/amlogic/p201/MAINTAINERS                |   5 +
+>  board/amlogic/p201/Makefile                   |   5 +
+>  board/amlogic/p201/README.p201                | 103 ++++++++
+>  board/amlogic/p201/p201.c                     |  43 +++
+>  configs/p200_defconfig                        |  41 +++
+>  configs/p201_defconfig                        |  41 +++
+>  19 files changed, 734 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
+>  create mode 100644 arch/arm/dts/meson-gxbb-p200.dts
+>  create mode 100644 arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
+>  create mode 100644 arch/arm/dts/meson-gxbb-p201.dts
+>  create mode 100644 arch/arm/dts/meson-gxbb-p20x.dtsi
+>  rename board/amlogic/{odroid-c2 => p200}/MAINTAINERS (70%)
+>  rename board/amlogic/{odroid-c2 => p200}/Makefile (82%)
+>  rename board/amlogic/{odroid-c2 => p200}/README.nanopi-k2 (100%)
+>  rename board/amlogic/{odroid-c2 => p200}/README.odroid-c2 (100%)
+>  create mode 100644 board/amlogic/p200/README.p200
+>  rename board/amlogic/{odroid-c2/odroid-c2.c => p200/p200.c} (100%)
+>  create mode 100644 board/amlogic/p201/MAINTAINERS
+>  create mode 100644 board/amlogic/p201/Makefile
+>  create mode 100644 board/amlogic/p201/README.p201
+>  create mode 100644 board/amlogic/p201/p201.c
+>  create mode 100644 configs/p200_defconfig
+>  create mode 100644 configs/p201_defconfig
 
-Signed-off-by: Julien Masson <jmasson@baylibre.com>
----
-Changes from v1:
--> enable CONFIG_DISPLAY_BOARDINFO for nanopi-k2, khadas-vim2 and s400
+Thanks, applied to u-boot-amlogic !
 
--> handle the mask like the kernel when getting the package id:
-https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/commit/?h=v5.2/drivers&id=dce47aed20c7de3ee2011b7a63e67f08e9dcfb5e
+Neil
 
--> add new soc ids:
-https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/commit/?h=v5.2/drivers&id=65f80df58eb770b2b687c35142c113d1ad6fa415
-
--> print the board model from the device tree
-
--> move all the source code in dedicated new file: board-info.c
-
- arch/arm/mach-meson/Makefile     |   2 +-
- arch/arm/mach-meson/board-info.c | 166 +++++++++++++++++++++++++++++++++++++++
- configs/khadas-vim2_defconfig    |   2 +-
- configs/khadas-vim_defconfig     |   2 +-
- configs/libretech-cc_defconfig   |   2 +-
- configs/nanopi-k2_defconfig      |   2 +-
- configs/odroid-c2_defconfig      |   2 +-
- configs/p212_defconfig           |   2 +-
- configs/s400_defconfig           |   2 +-
- 9 files changed, 174 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm/mach-meson/board-info.c
-
-diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
-index b716e1a..6ddfba6 100644
---- a/arch/arm/mach-meson/Makefile
-+++ b/arch/arm/mach-meson/Makefile
-@@ -2,6 +2,6 @@
- #
- # Copyright (c) 2016 Beniamino Galvani <b.galvani@gmail.com>
- 
--obj-y += board-common.o sm.o
-+obj-y += board-common.o sm.o board-info.o
- obj-$(CONFIG_MESON_GX) += board-gx.o
- obj-$(CONFIG_MESON_AXG) += board-axg.o
-diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
-new file mode 100644
-index 0000000..ba248e8
---- /dev/null
-+++ b/arch/arm/mach-meson/board-info.c
-@@ -0,0 +1,166 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * (C) Copyright 2019 Julien Masson <jmasson@baylibre.com>
-+ * (C) Copyright 2019 Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include <common.h>
-+#include <asm/io.h>
-+#include <dm.h>
-+#include <linux/bitfield.h>
-+#include <regmap.h>
-+#include <syscon.h>
-+
-+#define AO_SEC_SD_CFG8		0xe0
-+#define AO_SEC_SOCINFO_OFFSET	AO_SEC_SD_CFG8
-+
-+#define SOCINFO_MAJOR	GENMASK(31, 24)
-+#define SOCINFO_PACK	GENMASK(23, 16)
-+#define SOCINFO_MINOR	GENMASK(15, 8)
-+#define SOCINFO_MISC	GENMASK(7, 0)
-+
-+static const struct meson_gx_soc_id {
-+	const char *name;
-+	unsigned int id;
-+} soc_ids[] = {
-+	{ "GXBB",   0x1f },
-+	{ "GXTVBB", 0x20 },
-+	{ "GXL",    0x21 },
-+	{ "GXM",    0x22 },
-+	{ "TXL",    0x23 },
-+	{ "TXLX",   0x24 },
-+	{ "AXG",    0x25 },
-+	{ "GXLX",   0x26 },
-+	{ "TXHD",   0x27 },
-+	{ "G12A",   0x28 },
-+	{ "G12B",   0x29 },
-+};
-+
-+static const struct meson_gx_package_id {
-+	const char *name;
-+	unsigned int major_id;
-+	unsigned int pack_id;
-+	unsigned int pack_mask;
-+} soc_packages[] = {
-+	{ "S905",   0x1f, 0,    0x20 }, /* pack_id != 0x20 */
-+	{ "S905H",  0x1f, 0x3,  0xf },  /* pack_id & 0xf == 0x3 */
-+	{ "S905M",  0x1f, 0x20, 0xf0 }, /* pack_id == 0x20 */
-+	{ "S905D",  0x21, 0,    0xf0 },
-+	{ "S905X",  0x21, 0x80, 0xf0 },
-+	{ "S905W",  0x21, 0xa0, 0xf0 },
-+	{ "S905L",  0x21, 0xc0, 0xf0 },
-+	{ "S905M2", 0x21, 0xe0, 0xf0 },
-+	{ "S805X",  0x21, 0x30, 0xf0 },
-+	{ "S805Y",  0x21, 0xb0, 0xf0 },
-+	{ "S912",   0x22, 0,    0x0 },  /* Only S912 is known for GXM */
-+	{ "962X",   0x24, 0x10, 0xf0 },
-+	{ "962E",   0x24, 0x20, 0xf0 },
-+	{ "A113X",  0x25, 0x37, 0xff },
-+	{ "A113D",  0x25, 0x22, 0xff },
-+	{ "S905D2", 0x28, 0x10, 0xf0 },
-+	{ "S905X2", 0x28, 0x40, 0xf0 },
-+	{ "S922X",  0x29, 0x40, 0xf0 },
-+};
-+
-+DECLARE_GLOBAL_DATA_PTR;
-+
-+static inline unsigned int socinfo_to_major(u32 socinfo)
-+{
-+	return FIELD_GET(SOCINFO_MAJOR, socinfo);
-+}
-+
-+static inline unsigned int socinfo_to_minor(u32 socinfo)
-+{
-+	return FIELD_GET(SOCINFO_MINOR, socinfo);
-+}
-+
-+static inline unsigned int socinfo_to_pack(u32 socinfo)
-+{
-+	return FIELD_GET(SOCINFO_PACK, socinfo);
-+}
-+
-+static inline unsigned int socinfo_to_misc(u32 socinfo)
-+{
-+	return FIELD_GET(SOCINFO_MISC, socinfo);
-+}
-+
-+static const char *socinfo_to_package_id(u32 socinfo)
-+{
-+	unsigned int pack = socinfo_to_pack(socinfo);
-+	unsigned int major = socinfo_to_major(socinfo);
-+	int i;
-+
-+	for (i = 0 ; i < ARRAY_SIZE(soc_packages) ; ++i) {
-+		if (soc_packages[i].major_id == major &&
-+		    soc_packages[i].pack_id ==
-+		    (pack & soc_packages[i].pack_mask))
-+			return soc_packages[i].name;
-+	}
-+
-+	return "Unknown";
-+}
-+
-+static const char *socinfo_to_soc_id(u32 socinfo)
-+{
-+	unsigned int id = socinfo_to_major(socinfo);
-+	int i;
-+
-+	for (i = 0 ; i < ARRAY_SIZE(soc_ids) ; ++i) {
-+		if (soc_ids[i].id == id)
-+			return soc_ids[i].name;
-+	}
-+
-+	return "Unknown";
-+}
-+
-+static void print_board_model(void)
-+{
-+	const char *model;
-+	model = fdt_getprop(gd->fdt_blob, 0, "model", NULL);
-+	printf("Model: %s\n", model ? model : "Unknown");
-+}
-+
-+int show_board_info(void)
-+{
-+	struct regmap *regmap;
-+	int nodeoffset, ret;
-+	ofnode node;
-+	unsigned int socinfo;
-+
-+	/* find the offset of compatible node */
-+	nodeoffset = fdt_node_offset_by_compatible(gd->fdt_blob, -1,
-+						   "amlogic,meson-gx-ao-secure");
-+	if (nodeoffset < 0)
-+		return 0;
-+
-+	/* check if chip-id is available */
-+	if (!fdt_getprop(gd->fdt_blob, nodeoffset, "amlogic,has-chip-id", NULL))
-+		return 0;
-+
-+	/* get regmap from the syscon node */
-+	node = offset_to_ofnode(nodeoffset);
-+	regmap = syscon_node_to_regmap(node);
-+	if (IS_ERR(regmap)) {
-+		printf("%s: failed to get regmap\n", __func__);
-+		return 0;
-+	}
-+
-+	/* read soc info */
-+	ret = regmap_read(regmap, AO_SEC_SOCINFO_OFFSET, &socinfo);
-+	if (ret && !socinfo) {
-+		printf("%s: invalid chipid value\n", __func__);
-+		return 0;
-+	}
-+
-+	/* print board information */
-+	print_board_model();
-+	printf("Soc:   Amlogic Meson %s (%s) Revision %x:%x (%x:%x)\n",
-+	       socinfo_to_soc_id(socinfo),
-+	       socinfo_to_package_id(socinfo),
-+	       socinfo_to_major(socinfo),
-+	       socinfo_to_minor(socinfo),
-+	       socinfo_to_pack(socinfo),
-+	       socinfo_to_misc(socinfo));
-+
-+	return 0;
-+}
-diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
-index 0f738cb..7e40683 100644
---- a/configs/khadas-vim2_defconfig
-+++ b/configs/khadas-vim2_defconfig
-@@ -9,7 +9,7 @@ CONFIG_DEBUG_UART=y
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_CONSOLE_MUX=y
- # CONFIG_DISPLAY_CPUINFO is not set
--# CONFIG_DISPLAY_BOARDINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_ADC=y
-diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
-index 6f1ad0e..aeec2be 100644
---- a/configs/khadas-vim_defconfig
-+++ b/configs/khadas-vim_defconfig
-@@ -11,7 +11,7 @@ CONFIG_OF_BOARD_SETUP=y
- CONFIG_CONSOLE_MUX=y
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
--# CONFIG_DISPLAY_BOARDINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_ADC=y
-diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index d28c7ab..a1b9fd9 100644
---- a/configs/libretech-cc_defconfig
-+++ b/configs/libretech-cc_defconfig
-@@ -10,7 +10,7 @@ CONFIG_NR_DRAM_BANKS=1
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
--# CONFIG_DISPLAY_BOARDINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_ADC=y
-diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
-index 8bbf48f..60481cd 100644
---- a/configs/nanopi-k2_defconfig
-+++ b/configs/nanopi-k2_defconfig
-@@ -9,7 +9,7 @@ CONFIG_NR_DRAM_BANKS=1
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
--# CONFIG_DISPLAY_BOARDINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_GPIO=y
-diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
-index 747da18..04904c2 100644
---- a/configs/odroid-c2_defconfig
-+++ b/configs/odroid-c2_defconfig
-@@ -10,7 +10,7 @@ CONFIG_OF_BOARD_SETUP=y
- CONFIG_CONSOLE_MUX=y
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
--# CONFIG_DISPLAY_BOARDINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_GPIO=y
-diff --git a/configs/p212_defconfig b/configs/p212_defconfig
-index b048863..0422740 100644
---- a/configs/p212_defconfig
-+++ b/configs/p212_defconfig
-@@ -11,7 +11,7 @@ CONFIG_OF_BOARD_SETUP=y
- CONFIG_CONSOLE_MUX=y
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
--# CONFIG_DISPLAY_BOARDINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_GPIO=y
-diff --git a/configs/s400_defconfig b/configs/s400_defconfig
-index 1bd4b71..6cd47d0 100644
---- a/configs/s400_defconfig
-+++ b/configs/s400_defconfig
-@@ -10,7 +10,7 @@ CONFIG_NR_DRAM_BANKS=1
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
--# CONFIG_DISPLAY_BOARDINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_GPIO=y
--- 
-2.7.4
+> 
+> --
+> 2.21.0
+> 
 
