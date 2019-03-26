@@ -1,44 +1,104 @@
-Received: by mail-wr1-f66.google.com with SMTP id k17so5687356wrx.10
-        for <u-boot-amlogic@groups.io>; Tue, 26 Mar 2019 03:25:49 -0700 (PDT)
+Received: by mail-wm1-f65.google.com with SMTP id q16so12994343wmj.3
+        for <u-boot-amlogic@groups.io>; Tue, 26 Mar 2019 08:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GyeLGZmjVFHbMvWnxcs946gnfHZD6xHvFj7fMPWePqk=;
-        b=i0cjo3rl3o58ap95mW+jXmlZhbVYmULfc21oJGBPxNkWFIJvatZMjlbUctFGeFX9vK
-         Zie50ZIt8mZAhWiaBS5VPFTCeZ49/DYRJgDV1z1fBhYp0GoyENywSdUprYIlUTLlYchT
-         yK6gEkasWWvZ966ILHLfq/66Ra+OU09Q9DT8RpDtOfhJZIOt3XI7kHNppO3pjRSAkwzw
-         GsYntkFebsIHhhyMFvaVsFq3fduVFrEXjyE6l3QgBydCyUVVmVxDihv9SQtTpq8rcvlh
-         4roIKvyNtURik26edzVGQke1nnZxS3wz8QlW5isBIcf1ZRqV33Cb9OGQa5mt1Op1kV3g
-         Pu/Q==
+        bh=qSASZm30x/+KPcWuhYpjsdyUKnLDNmefcCM2JqUQVDg=;
+        b=1aLhkQvhM1V1/87ramlrDNknH321DIMD7+AAVhrbxEKxZjZWS8s0F2tBbcHRl+1wmY
+         JsKnovgm20CJY3swGvWGYsXG9Ift6OQbHl7s1Kk4hhil0bOi+H2ZMEUPeKBVHMNQ3yEg
+         dYdUY5dzS306H89egkBlI3jiZmsgB4/zX8/3d10zz/s3BfLBkzPl47ql/NjEt3x8kxGG
+         WUJ4+r3BBeshsXfoLXRX+PqO+7AJ252F5f74uHtWF97O5gDchVsvC4CFTCaY7iONVI/6
+         VerqC9Ze8aKbhV7jF7TmGTeUThYZQcrrC+fuUWfXPNRHIIkb8OgJcIoNj1csCAvS2fhr
+         Qxgw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] reset-meson: Add AXG reset compatible
-Date: Tue, 26 Mar 2019 11:25:44 +0100
-Message-Id: <20190326102544.10102-1-narmstrong@baylibre.com>
+Subject: [PATCH 0/6] ARM: meson: Add support for G12A based U200 board
+Date: Tue, 26 Mar 2019 16:02:34 +0100
+Message-Id: <20190326150240.20620-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot-amlogic@groups.io
 Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/reset/reset-meson.c | 1 +
- 1 file changed, 1 insertion(+)
+This patchset adds basic support for the recent Amlogic G12A SoC family.
 
-diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
-index 92f04695ec..31aa4d41e8 100644
---- a/drivers/reset/reset-meson.c
-+++ b/drivers/reset/reset-meson.c
-@@ -69,6 +69,7 @@ struct reset_ops meson_reset_ops = {
- 
- static const struct udevice_id meson_reset_ids[] = {                          
- 	{ .compatible = "amlogic,meson-gxbb-reset" },                                  
-+	{ .compatible = "amlogic,meson-axg-reset" },
- 	{ }                                                                     
- };  
- 
+This SoC family embeds 4xCortex A53 CPUs, and is very similar to
+the AXG SoC Family with the multimedia features of previous families.
+
+This patchset adds :
+- pinctrl support
+- clk driver atfer a rework of the drivers files
+- import Linux 5.1-rc1 G12A & U200 DT files
+- add board/amlogic/u200 to support the U200 reference design
+
+Jerome Brunet (5):
+  pinctrl: meson: add g12a support
+  clk: create meson directory and move related drivers
+  clk: meson: add g12a support
+  ARM: meson: add G12a support
+  boards: meson: add g12a u200
+
+Neil Armstrong (1):
+  ARM: dts: Import Amlogic G12A u200 DT from Linux 5.1-rc1
+
+ MAINTAINERS                                   |    2 +-
+ arch/arm/dts/Makefile                         |    3 +-
+ arch/arm/dts/meson-g12a-u200.dts              |   29 +
+ arch/arm/dts/meson-g12a.dtsi                  |  192 +++
+ arch/arm/include/asm/arch-meson/clock-g12a.h  |  104 ++
+ arch/arm/include/asm/arch-meson/g12a.h        |   66 +
+ arch/arm/mach-meson/Kconfig                   |    9 +-
+ arch/arm/mach-meson/Makefile                  |    1 +
+ arch/arm/mach-meson/board-g12a.c              |  150 ++
+ board/amlogic/u200/MAINTAINERS                |    5 +
+ board/amlogic/u200/Makefile                   |    6 +
+ board/amlogic/u200/README                     |  128 ++
+ board/amlogic/u200/u200.c                     |   22 +
+ configs/u200_defconfig                        |   40 +
+ drivers/clk/Kconfig                           |    1 +
+ drivers/clk/Makefile                          |    2 +-
+ drivers/clk/meson/Kconfig                     |   23 +
+ drivers/clk/meson/Makefile                    |    9 +
+ drivers/clk/{clk_meson_axg.c => meson/axg.c}  |    0
+ drivers/clk/{ => meson}/clk_meson.h           |    0
+ drivers/clk/meson/g12a.c                      |  315 ++++
+ drivers/clk/{clk_meson.c => meson/gxbb.c}     |    0
+ drivers/pinctrl/meson/Kconfig                 |    4 +
+ drivers/pinctrl/meson/Makefile                |    1 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    | 1294 +++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c         |   17 +-
+ drivers/pinctrl/meson/pinctrl-meson.h         |    1 +
+ include/dt-bindings/clock/g12a-aoclkc.h       |   34 +
+ include/dt-bindings/clock/g12a-clkc.h         |  135 ++
+ include/dt-bindings/gpio/meson-g12a-gpio.h    |  114 ++
+ .../reset/amlogic,meson-g12a-reset.h          |  134 ++
+ include/dt-bindings/reset/g12a-aoclkc.h       |   18 +
+ 32 files changed, 2850 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm/dts/meson-g12a-u200.dts
+ create mode 100644 arch/arm/dts/meson-g12a.dtsi
+ create mode 100644 arch/arm/include/asm/arch-meson/clock-g12a.h
+ create mode 100644 arch/arm/include/asm/arch-meson/g12a.h
+ create mode 100644 arch/arm/mach-meson/board-g12a.c
+ create mode 100644 board/amlogic/u200/MAINTAINERS
+ create mode 100644 board/amlogic/u200/Makefile
+ create mode 100644 board/amlogic/u200/README
+ create mode 100644 board/amlogic/u200/u200.c
+ create mode 100644 configs/u200_defconfig
+ create mode 100644 drivers/clk/meson/Kconfig
+ create mode 100644 drivers/clk/meson/Makefile
+ rename drivers/clk/{clk_meson_axg.c => meson/axg.c} (100%)
+ rename drivers/clk/{ => meson}/clk_meson.h (100%)
+ create mode 100644 drivers/clk/meson/g12a.c
+ rename drivers/clk/{clk_meson.c => meson/gxbb.c} (100%)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-g12a.c
+ create mode 100644 include/dt-bindings/clock/g12a-aoclkc.h
+ create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+ create mode 100644 include/dt-bindings/gpio/meson-g12a-gpio.h
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+ create mode 100644 include/dt-bindings/reset/g12a-aoclkc.h
+
 -- 
 2.21.0
 
