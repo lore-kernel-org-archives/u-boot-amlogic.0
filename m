@@ -1,40 +1,40 @@
-Received: by mail-ed1-f68.google.com with SMTP id q14so15633219edr.5
-        for <u-boot-amlogic@groups.io>; Wed, 03 Apr 2019 10:23:03 -0700 (PDT)
+Received: by mail-ed1-f67.google.com with SMTP id d11so5899000edp.11
+        for <u-boot-amlogic@groups.io>; Wed, 03 Apr 2019 10:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=8sC/u7h2O9OgVOlh12PzWCY/rjjMZ7mCrUd6WKBsSKU=;
-        b=epWWy9IKscYXbuL5ZAE7agM5DOTdMb3ReKf59SA7uLEBFNwKrM8RlERoG1eP5f4sCc
-         +dVOtHF76UuZoMYCbh0e+AcyyNeaRGEK1QmT/Sulke/X4i7rIT0tnHzfR+PRKNUzDzSn
-         6nE5VynbaYPMs+RUzJf0xjqu6ASwComQ1wNXU=
+        bh=NbKGcyARXJUt5f/ZFMNi+uoTEMBzKdIzZQjoCkIiPiQ=;
+        b=B0A7Qwz/d+vtAhTzMAk+JmpL6+5O5riW3/bJ6tKJMaJrLcpLtetuLQ3XYPKjHVwEeV
+         5eShcEx2LquSsrcQNeTk9nm5ys5zAftJplgtGXsanZkmpmuGRTUo04GQ9l0W0GTl2sdO
+         xflr9FGpDXadbEYTtl/m1NvOae7lBPUu0RSmo=
 Return-Path: <trini@konsulko.com>
-Date: Wed, 3 Apr 2019 13:22:56 -0400
+Date: Wed, 3 Apr 2019 13:23:05 -0400
 From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PATCH 1/2] phy: Also allow MESON_GXM for MESON_GXL_USB_PHY
-Message-ID: <20190403172256.GI4664@bill-the-cat>
+Subject: Re: [PATCH 2/2] configs: khadas_vim2: Fix defconfig
+Message-ID: <20190403172305.GJ4664@bill-the-cat>
 References: <20190403114637.32068-1-narmstrong@baylibre.com>
- <20190403114637.32068-2-narmstrong@baylibre.com>
+ <20190403114637.32068-3-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190403114637.32068-2-narmstrong@baylibre.com>
+In-Reply-To: <20190403114637.32068-3-narmstrong@baylibre.com>
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JVYm2bz4YjPqKA1I"
+	protocol="application/pgp-signature"; boundary="aRzsUE0Mp86t8N62"
 Content-Disposition: inline
 To: Neil Armstrong <narmstrong@baylibre.com>
 Cc: marex@denx.de, ldevulder@suse.de, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
---JVYm2bz4YjPqKA1I
+--aRzsUE0Mp86t8N62
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 03, 2019 at 01:46:36PM +0200, Neil Armstrong wrote:
+On Wed, Apr 03, 2019 at 01:46:37PM +0200, Neil Armstrong wrote:
 
-> The MESON_GXL_USB_PHY is also used on the Amlogic Meson GXM SoCs.
+> The Khadas VIM2 defconfig was missing the USB PHY config and
+> two other misc configs to setup dram banks and call misc_init_r.
+> Align it on the other Amlogic SoC based boards defconfig.
 >=20
-> Fixes: 2960e27e38 ("phy: Add Amlogic Meson USB2 & USB3 Generic PHY driver=
-s")
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
 Applied to u-boot/master, thanks!
@@ -42,25 +42,25 @@ Applied to u-boot/master, thanks!
 --=20
 Tom
 
---JVYm2bz4YjPqKA1I
+--aRzsUE0Mp86t8N62
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJcpOvvAAoJEIf59jXTHXZSzOgP/2kKcQAYBd7oT+etVcE1LKKJ
-euKSgNdRf45wyskU7IQiFRr3WNNi9k8Nc72x8CixzVL8X+mq7zhNywRfaEwrAZw7
-56T9o7u3mp+1tpB8dT725sM/KpDvnEbM35/hCHyasJfBDJD+GCE45f2f7xC2QKTA
-kacVraCSB8oLzVEnAu2+hNj9faj+s0NLUkjedV8YodMTg0BvNjZeDlRqCXcfIXwF
-YS67MC/G4ey1hSp7DUqAi/xVWGlHsJxQalqS1Bz1rwNiye7p2sBGNuGCMOfxGhqS
-SRLNK/p2EOz/8xwrdqNEvUNiM2aTHz9VytpKQesZn+leCvss5ymr0BLmBwT6AmBf
-23sjKmaxUpdGbWgNA9vVKLxgR1ptJObUZzVowaIyf0O74SqadPEbAkicnDE1bsUd
-LEyx7ARaBLRM7i/e2XzLkmCrI0grz0A4Ibe4L8O5dN+Ih5rOTXu34kRDB2ziv58P
-7l7yRkVpcQ8Yk+zWYcW2FkfrauqELGfof3iQZFL9ahCjkwVwqAjcv0CK1wUe7ize
-Xv8SiPhAl8GVbjNhOqyelkNoNBh7jQRS4C2R33K+k56Rf5ZffkkCx6ygUIqVRpPQ
-WdFqK9ALJrsTSqiFg0Fa0Zz5i2BPIwQg29RsTpZ8yfi02QxZLRXGuU562KKFaA3x
-ONfOKYP1zrppDYMIoXYF
-=7w2r
+iQIcBAEBAgAGBQJcpOv5AAoJEIf59jXTHXZSQOAQAI2O9HXLbc0ViTXs0wWYXInY
+aH+1JGi0nq5zWPdW+mxK3p6OI5z14AzoewzQLMY1zG1aPjantiOweDFFQa5TJCXN
+QQT66mWJy3EHKw89O5ThJYl4brov4pHbkXddiQg2HFXf2+DQBSQEZlNIxQvUypRm
+U4ZEGdsJkFHaQveUbM/6oadT0ZbE3qFEcpdtxggTccbuLjkBKnOs/im/nPjXTUX4
+iTqcQzVKENwl+PDHdqGERrpyISsSEdCo6mte99THF6ApVe8dhXbdgbvd1Yb85iL5
+iS4Z0bKhvJ22ZO76cBFHYPe468y4LAmkFi0oCRGmInse1WxYaIF5qb5kMqhBgxWx
+fnZ+464AImjOxeFIo4BteVGpd7ui4Ov03yby4V9y6qlH8iAC8cBO/VjSee0QrMDb
+IvE70JtK9TdIwQziU4L1A6WOhllAi2bKHM56UlNlsqipQteQ+sUmzl1Wzde37Qh6
+2cYziLI8BmMYhnGaK0ENxDuwVo1i8Gsr6GspIC+l9kv0sccTo99KsvglViEFvlQM
+VbH3s3JrB4kQAlU8O/IHehlGRBkkWwIuQTxF8Vxt1Q1/STcDi9CMA/EdiSrXiwJf
+uolZOO1w3DwbyRzyyGohOInxKErHS48X1OkSn9GMr9U+hiA1HHTUkjhR1DnOAem0
+xN1wjdEOCP4RgHHzqyQ0
+=ivsE
 -----END PGP SIGNATURE-----
 
---JVYm2bz4YjPqKA1I--
+--aRzsUE0Mp86t8N62--
