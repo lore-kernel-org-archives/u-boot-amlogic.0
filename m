@@ -1,110 +1,71 @@
-Received: by mail-wm1-f66.google.com with SMTP id y197so2946620wmd.0
-        for <u-boot-amlogic@groups.io>; Wed, 10 Apr 2019 07:50:28 -0700 (PDT)
+Received: by mail-wm1-f67.google.com with SMTP id z24so2953690wmi.5
+        for <u-boot-amlogic@groups.io>; Wed, 10 Apr 2019 07:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:openpgp:autocrypt:organization
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=PUiqR/4/UBrFxrLUF5VMfuAOVpiHmrqWF6htGx4HhQM=;
-        b=bcIySXf80cDYMZA7UVejwkGGnA323QOw2Ni8uMdyzVnkYKFBoRqTCA8pUMdXl/i0c1
-         0akgVxPcOsVlKtEUr5dSoQ1IaGVlE/Q38bxiT6DISh0mwJsTpTw8vT6YshCoim2f0MXG
-         uz1xmvNtcw5dBQo5Uy0vnSWxrBUwJo95r1MLe67ZgUcSYE2fSBDxV649eLcpuLqqrMI5
-         Ec5iWsi5SEIJsy61Loci0EKaedbDsXK0NqqV4cngiTW07VYJhXTeydsQm5WEknu5tbKe
-         zdMZQZ3e5vrh/HzvYVmYh9/L48/J7d05LVNYzM8xygo+lwBGXb59ViRlaDTvpvxnJobt
-         oRIA==
+        bh=FpI5Ng+i0isViOGxIbo/fFtga0kzqRzT7gTmxgik9fc=;
+        b=tZ0GjScjPV8T0NMqW2hNkRj8QtU9w+xwzzbFW1xvsnC0BPG9OJI6/BM08wxhHsza6y
+         ekhISyFEypRqOjYw9W8c0Gl13dQI6MIXbcSrTQZARWrMth8lH+bOn0bNFOwnxSoaN7Rg
+         a2ri0i8CXv87N48vXGjZpOsME9ObGbAxhLnafb2TZnjZD4UQRlM688T8NKWxXlhUwjYb
+         npawzjN0PEWpLHXWAjCDflARD41oL620Zmao3211qCS3uM4I5GktksME1CfljNfj8Pn/
+         hyZMlEvj3YA1XYYhFfo5dGQ0kSX99C8W0Zrmu07bhlq02lTLxz+Ag8f1DGJ2jLbd0ZiV
+         z5ow==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] i2c: meson: add configurable divider factors
-References: <20190322134932.17103-1-glaroque@baylibre.com>
+Subject: Re: [PATCH 0/2] ARM: meson: Add support for Libretech-AC
+References: <20190326102035.9239-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <36dfbb7b-9f4d-4e8e-9da6-b5080c075023@baylibre.com>
-Date: Wed, 10 Apr 2019 16:50:26 +0200
+Message-ID: <bb9cccfe-5c7d-41c3-6593-936b9da17ced@baylibre.com>
+Date: Wed, 10 Apr 2019 16:52:24 +0200
 MIME-Version: 1.0
-In-Reply-To: <20190322134932.17103-1-glaroque@baylibre.com>
+In-Reply-To: <20190326102035.9239-1-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Guillaume La Roque <glaroque@baylibre.com>, hs@denx.de, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+To: u-boot-amlogic@groups.io
+Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 22/03/2019 14:49, Guillaume La Roque wrote:
-> This patch add support for I2C controller in Meson-AXG SoC,
-> Due to the IP changes between I2C controller, we need to introduce
-> a compatible data to make the divider factor configurable.
+On 26/03/2019 11:20, Neil Armstrong wrote:
+> LibreTech AC is a single board computer manufactured by Libre Technology
+> with the following specifications:
 > 
-> backport from linux:
-> 931b18e92cd0 ("2c: meson: add configurable divider factors")
+>  - Amlogic S805X ARM Cortex-A53 quad-core SoC @ 1.2GHz
+>  - ARM Mali 450 GPU
+>  - 512MiB DDR4 SDRAM
+>  - 10/100 Ethernet
+>  - HDMI 2.0 4K/60Hz display
+>  - 40-pin GPIO header
+>  - 4 x USB 2.0 Host
+>  - eMMC, SPI NOR Flash
+>  - Infrared receiver
 > 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  drivers/i2c/meson_i2c.c | 30 +++++++++++++++++++++++++-----
->  1 file changed, 25 insertions(+), 5 deletions(-)
+> The u-boot specific code is the same as the P212 support,
+> so use the P212 board support code with a distinct defconfig
+> and config include files.
 > 
-> diff --git a/drivers/i2c/meson_i2c.c b/drivers/i2c/meson_i2c.c
-> index 7d06d95cf3..ee59bac123 100644
-> --- a/drivers/i2c/meson_i2c.c
-> +++ b/drivers/i2c/meson_i2c.c
-> @@ -41,7 +41,12 @@ struct i2c_regs {
->  	u32 tok_rdata1;
->  };
->  
-> +struct meson_i2c_data {
-> +	unsigned char div_factor;
-> +};
-> +
->  struct meson_i2c {
-> +	const struct meson_i2c_data *data;
->  	struct clk clk;
->  	struct i2c_regs *regs;
->  	struct i2c_msg *msg;	/* Current I2C message */
-> @@ -229,7 +234,7 @@ static int meson_i2c_set_bus_speed(struct udevice *bus, unsigned int speed)
->  	if (IS_ERR_VALUE(clk_rate))
->  		return -EINVAL;
->  
-> -	div = DIV_ROUND_UP(clk_rate, speed * 4);
-> +	div = DIV_ROUND_UP(clk_rate, speed * i2c->data->div_factor);
->  
->  	/* clock divider has 12 bits */
->  	if (div >= (1 << 12)) {
-> @@ -253,6 +258,8 @@ static int meson_i2c_probe(struct udevice *bus)
->  	struct meson_i2c *i2c = dev_get_priv(bus);
->  	int ret;
->  
-> +	i2c->data = (const struct meson_i2c_data *)dev_get_driver_data(bus);
-> +
->  	ret = clk_get_by_index(bus, 0, &i2c->clk);
->  	if (ret < 0)
->  		return ret;
-> @@ -272,11 +279,24 @@ static const struct dm_i2c_ops meson_i2c_ops = {
->  	.set_bus_speed = meson_i2c_set_bus_speed,
->  };
->  
-> +static const struct meson_i2c_data i2c_meson6_data = {
-> +	.div_factor = 4,
-> +};
-> +
-> +static const struct meson_i2c_data i2c_gxbb_data = {
-> +	.div_factor = 4,
-> +};
-> +
-> +static const struct meson_i2c_data i2c_axg_data = {
-> +	.div_factor = 3,
-> +};
-> +
->  static const struct udevice_id meson_i2c_ids[] = {
-> -	{ .compatible = "amlogic,meson6-i2c" },
-> -	{ .compatible = "amlogic,meson-gx-i2c" },
-> -	{ .compatible = "amlogic,meson-gxbb-i2c" },
-> -	{ }
-> +	{.compatible = "amlogic,meson6-i2c", .data = (ulong)&i2c_meson6_data},
-> +	{.compatible = "amlogic,meson-gx-i2c", .data = (ulong)&i2c_gxbb_data},
-> +	{.compatible = "amlogic,meson-gxbb-i2c", .data = (ulong)&i2c_gxbb_data},
-> +	{.compatible = "amlogic,meson-axg-i2c", .data = (ulong)&i2c_axg_data},
-> +	{}
->  };
->  
->  U_BOOT_DRIVER(i2c_meson) = {
+> The patchset inports the DT from Linux 5.0 and add the corresponding
+> configs and update the MAINTAINERS files.
+> 
+> Neil Armstrong (2):
+>   ARM: dts: Import libretech-ac DT from Linux 5.0
+>   boards: Amlogic: Add support for Libretech-AC
+> 
+>  arch/arm/dts/Makefile                         |   1 +
+>  arch/arm/dts/meson-gxl-s805x-libretech-ac.dts | 248 ++++++++++++++++++
+>  arch/arm/dts/meson-gxl.dtsi                   |  70 ++++-
+>  board/amlogic/p212/MAINTAINERS                |   1 +
+>  board/amlogic/p212/README.libretech-ac        | 103 ++++++++
+>  configs/libretech-ac_defconfig                |  74 ++++++
+>  include/configs/libretech-ac.h                |  24 ++
+>  7 files changed, 512 insertions(+), 9 deletions(-)
+>  create mode 100644 arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+>  create mode 100644 board/amlogic/p212/README.libretech-ac
+>  create mode 100644 configs/libretech-ac_defconfig
+>  create mode 100644 include/configs/libretech-ac.h
 > 
 
-Applied to u-boot-amlogic
+Applied both to u-boot-amlogic
 
-Thanks
+Neil
