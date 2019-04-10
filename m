@@ -1,88 +1,51 @@
-Received: by mail-wm1-f68.google.com with SMTP id z24so2929683wmi.5
-        for <u-boot-amlogic@groups.io>; Wed, 10 Apr 2019 07:46:13 -0700 (PDT)
+Received: by mail-wr1-f66.google.com with SMTP id s15so3257568wra.12
+        for <u-boot-amlogic@groups.io>; Wed, 10 Apr 2019 07:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2BPc9n0EMRDNki3TTGwAH0D6xkHBTW0nLKHZTff5jjw=;
-        b=umHhcH88WliuwfL7SnHPKrmNXolTTlpIOPo1iFKZkBuSU4orjmrAigInNIfHeL+0GV
-         FHGHyBgSE66NQQs4ddLftDL7dbzjNH0of8XvQipebpG4Xun2OkhtsAyUi/GYAEJCXbGK
-         3a2uQNetoqDJLmF95MrUbORaHdALkJuGuG4ZNUzWIlLgF6ON9oq8NPPQbdbgLZ+ju9Qn
-         5cvjpoNejo1zB4gjI0RYV93lj0Wotnms7ssO1nDqe4vHMUbZFl2HDIAYk8QfW9NBtenG
-         IWf6m964eijtQNqikocQHOdBVke2yW1QCD0XZnLJab7jVZf+L8BYPVCTtSYu7FCqIajC
-         6fVg==
+        bh=+Us2rFgLdFJdGriOAU0fqPP7RHI1eIlEJWLJwdMNhb0=;
+        b=1dGSLik3CBYR/2fnER3dI1Y3S/uIuESc3W/flU+C8/IydqEVLrE7XeBukKM2O4cr26
+         wgFBBONCTl6M5Axc3+vrgAJOwxgXdnhlpyBQA5qMpEFtzxlDlhn7DQfpkZ2j3ObeK9oF
+         fNr6pIQPSVAoiclxar52gyo05XOsQv7va9+b6SCafkmuCqwGTF7PRE+bowfkWNyp7i3A
+         03XTyPnhr4Oa+GBlqZTqEWTqZVBeilYK9z5YGkCEj9i5f9OHznJAOiftlX/mLn1b0ezE
+         5UmpOHgMPcxwaPBk0PlvoYs9EcFkIKDhLappa9aeAyya5eqnCgr96n4u3X6pePxFbhDI
+         5dMQ==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] board: amlogic: enable PHY_REALTEK for selected boards
-Date: Wed, 10 Apr 2019 16:46:09 +0200
-Message-Id: <20190410144609.1091-1-narmstrong@baylibre.com>
+Subject: [PATCH] board: amlogic-q200: fix Khadas VIM2 README
+Date: Wed, 10 Apr 2019 16:47:53 +0200
+Message-Id: <20190410144753.1343-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de
 Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io, baylibre-upstreaming@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-When using the generic PHY on boards using an RGMII Realtek PHY,
-gigabit speed is not always reliable.
-
-This patch enables the Realtek PHY driver for such boards.
+The vendor U-boot branch and defconfig was wrong for the
+Khadas VIM2, fix this.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- configs/khadas-vim2_defconfig | 1 +
- configs/nanopi-k2_defconfig   | 1 +
- configs/odroid-c2_defconfig   | 1 +
- configs/s400_defconfig        | 1 +
- 4 files changed, 4 insertions(+)
+ board/amlogic/q200/README.khadas-vim2 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
-index 080dd19590..f7fb9338e2 100644
---- a/configs/khadas-vim2_defconfig
-+++ b/configs/khadas-vim2_defconfig
-@@ -31,6 +31,7 @@ CONFIG_MMC_MESON_GX=y
- CONFIG_MTD=y
- CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PHY_REALTEK=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
- CONFIG_PINCTRL=y
-diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
-index 8bbf48f41f..106c5c0193 100644
---- a/configs/nanopi-k2_defconfig
-+++ b/configs/nanopi-k2_defconfig
-@@ -28,6 +28,7 @@ CONFIG_DM_MMC=y
- CONFIG_MMC_MESON_GX=y
- CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PHY_REALTEK=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXBB=y
- CONFIG_DM_REGULATOR=y
-diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
-index 747da184b3..91baddbb60 100644
---- a/configs/odroid-c2_defconfig
-+++ b/configs/odroid-c2_defconfig
-@@ -29,6 +29,7 @@ CONFIG_DM_MMC=y
- CONFIG_MMC_MESON_GX=y
- CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PHY_REALTEK=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXBB=y
- CONFIG_DM_REGULATOR=y
-diff --git a/configs/s400_defconfig b/configs/s400_defconfig
-index 1bd4b7127b..9b8448e003 100644
---- a/configs/s400_defconfig
-+++ b/configs/s400_defconfig
-@@ -26,6 +26,7 @@ CONFIG_DM_MMC=y
- CONFIG_MMC_MESON_GX=y
- CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PHY_REALTEK=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_AXG=y
- CONFIG_DM_REGULATOR=y
+diff --git a/board/amlogic/q200/README.khadas-vim2 b/board/amlogic/q200/README.khadas-vim2
+index 578693fd2d..8bcfc296f3 100644
+--- a/board/amlogic/q200/README.khadas-vim2
++++ b/board/amlogic/q200/README.khadas-vim2
+@@ -48,9 +48,9 @@ the git tree published by the board vendor:
+  > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
+  > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
+  > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
+- > git clone https://github.com/khadas/u-boot -b Vim vim-u-boot
++ > git clone https://github.com/khadas/u-boot -b khadas-vim-v2015.01 vim-u-boot
+  > cd vim-u-boot
+- > make kvim_defconfig
++ > make kvim2_defconfig
+  > make
+  > export FIPDIR=$PWD/fip
+ 
 -- 
 2.21.0
 
