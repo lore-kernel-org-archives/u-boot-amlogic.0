@@ -1,146 +1,99 @@
-Received: by mail-wr1-f67.google.com with SMTP id g3so33151278wrx.9
-        for <u-boot-amlogic@groups.io>; Wed, 17 Apr 2019 11:17:17 -0700 (PDT)
+Received: by mail-qt1-f193.google.com with SMTP id v20so7347815qtv.12
+        for <u-boot-amlogic@groups.io>; Thu, 11 Apr 2019 07:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JgF3JY07Cum/JNf9dS16FQBBTYC+LyYKixfbB4y6wQQ=;
-        b=vAgektiDAxwh65kmAHoHdZjFybB8kBuczCSmXvGaciVeD0x40+hIeIQpLqGEPT5YGP
-         31WINxo8nGn5hSlqag33B9kd0QJpM9CMzTaFUCU4pDXt7Jy2qsbYycKiNzj8gs1PYOqB
-         lBaKv+6kXzSNiiIKIjzuablOsiNa9gM8GYzlltpU7VtODp8HJ5FQAIN2qw0OGPNzMCqk
-         lbSMnqJKrlst6Tc9cac5VVZvVwxcluBOnGM1e8hD4zsy89yMZSWKx9gy2LBhW4yA1Tgn
-         YyN/Am6U7tl8Bn9Js3JSO2rupEh/UZm0m+IXyXwBtMHjh2c4da825Yo2WlXVKR3TlvWv
-         T9Uw==
-Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v2] regmap: fix regmap_read_poll_timeout warning about sandbox_timer_add_offset
-Date: Wed, 17 Apr 2019 20:17:14 +0200
-Message-Id: <20190417181714.1281-1-narmstrong@baylibre.com>
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=57u97IxJGAjGlvYXfh8fvO22v2U638zmikgrxW13iRo=;
+        b=aWCUEEGFTI7Oje0nXFMf9cUJDWQcNwTqVD/uhraa2Iahmyv/8q2p9zG2P2H9RT00r1
+         IdWBnECQ/aZiP6agVIEj4Yy18vIsnEH8sDQs0UxGTPsR+/Ms5rdCArpPdckU/3ptx2Qs
+         JzR2H++HcG7IbOdPrGVcUUYq6APkhi3ihCA2o=
+Return-Path: <trini@konsulko.com>
+Date: Thu, 11 Apr 2019 10:52:14 -0400
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20190411
+Message-ID: <20190411145214.GC4664@bill-the-cat>
+References: <0ccf82f4-9490-b40c-419a-93eea9691992@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+In-Reply-To: <0ccf82f4-9490-b40c-419a-93eea9691992@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KYDL+JEW1t54otQB"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, baylibre-upstreaming@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-When fixing sandbox test for regmap_read_poll_timeout(), the
-sandbox_timer_add_offset was introduced but only defined in sandbox code
-thus generating warnings when used out of sandbox :
+--KYDL+JEW1t54otQB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-include/regmap.h:289:2: note: in expansion of macro 'regmap_read_poll_timeout_test'
-regmap_read_poll_timeout_test(map, addr, val, cond, sleep_us, \
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/spi/meson_spifc.c:169:8: note: in expansion of macro 'regmap_read_poll_timeout'
-ret = regmap_read_poll_timeout(spifc->regmap, REG_SLAVE, data,
-        ^~~~~~~~~~~~~~~~~~~~~~~~
-drivers/spi/meson_spifc.c: In function 'meson_spifc_txrx':
-include/regmap.h:277:4: warning: implicit declaration of function 'sandbox_timer_add_offset' [-Wimplicit-function-declaration]
+On Thu, Apr 11, 2019 at 01:16:26PM +0200, Neil Armstrong wrote:
 
-This fix renames the sandbox_timer_add_offset() to a generic timer_test_add_offset()
-function defined in time.h and renames the implementation and test usages.
+> Hi Tom,
+>=20
+> This PR adds support for 3 more Amlogic boards, support printing SoC
+> revision information, add AXG family support for I2C and Reset, then
+> fixup the AXG pinctrl defintions.
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit 48ff1bc4f0a97c3291d0c87c2717fc1d79da5e=
+f5:
+>=20
+>   Merge branch '2019-04-09-master-imports-fs' (2019-04-10 08:18:18 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190411
+>=20
+> for you to fetch changes up to 2c4e3cf21257f962e69264fe91ff2cc23cbd041a:
+>=20
+>   pinctrl: meson: axg: Fix PIN and BANK offsets (2019-04-10 16:54:59 +020=
+0)
+>=20
 
-Cc: Simon Glass <sjg@chromium.org>
-Reported-by: Tom Rini <trini@konsulko.com>
-Fixes: df9cf1cc08 ("test: dm: regmap: Fix the long test delay")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/sandbox/include/asm/test.h | 8 --------
- board/sandbox/sandbox.c         | 2 +-
- drivers/net/sandbox.c           | 2 +-
- drivers/timer/sandbox_timer.c   | 2 +-
- include/regmap.h                | 2 +-
- include/time.h                  | 8 ++++++++
- 6 files changed, 12 insertions(+), 12 deletions(-)
+NAK:
+   aarch64:  w+   libretech-ac
++(libretech-ac)     sandbox_timer_add_offset(test_add_time); \
++(libretech-ac)     ^
++(libretech-ac) include/regmap.h:289:2: note: in expansion of macro 'regmap=
+_read_poll_timeout_test'
++(libretech-ac)   regmap_read_poll_timeout_test(map, addr, val, cond, sleep=
+_us, \
++(libretech-ac)   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++(libretech-ac) drivers/spi/meson_spifc.c:169:8: note: in expansion of macr=
+o 'regmap_read_poll_timeout'
++(libretech-ac)   ret =3D regmap_read_poll_timeout(spifc->regmap, REG_SLAVE=
+, data,
++(libretech-ac)         ^~~~~~~~~~~~~~~~~~~~~~~~
+w+(libretech-ac) drivers/spi/meson_spifc.c: In function 'meson_spifc_txrx':
+w+(libretech-ac) include/regmap.h:277:4: warning: implicit declaration of f=
+unction 'sandbox_timer_add_offset' [-Wimplicit-function-declaration]
 
-diff --git a/arch/sandbox/include/asm/test.h b/arch/sandbox/include/asm/test.h
-index fc52f47f82..e956a05262 100644
---- a/arch/sandbox/include/asm/test.h
-+++ b/arch/sandbox/include/asm/test.h
-@@ -59,14 +59,6 @@ void sandbox_i2c_eeprom_set_test_mode(struct udevice *dev,
- 
- void sandbox_i2c_eeprom_set_offset_len(struct udevice *dev, int offset_len);
- 
--/*
-- * sandbox_timer_add_offset()
-- *
-- * Allow tests to add to the time reported through lib/time.c functions
-- * offset: number of milliseconds to advance the system time
-- */
--void sandbox_timer_add_offset(unsigned long offset);
--
- /**
-  * sandbox_i2c_rtc_set_offset() - set the time offset from system/base time
-  *
-diff --git a/board/sandbox/sandbox.c b/board/sandbox/sandbox.c
-index 397e7561d4..9ca1eca027 100644
---- a/board/sandbox/sandbox.c
-+++ b/board/sandbox/sandbox.c
-@@ -31,7 +31,7 @@ void flush_cache(unsigned long start, unsigned long size)
- /* system timer offset in ms */
- static unsigned long sandbox_timer_offset;
- 
--void sandbox_timer_add_offset(unsigned long offset)
-+void timer_test_add_offset(unsigned long offset)
- {
- 	sandbox_timer_offset += offset;
- }
-diff --git a/drivers/net/sandbox.c b/drivers/net/sandbox.c
-index decce2fa59..c136392350 100644
---- a/drivers/net/sandbox.c
-+++ b/drivers/net/sandbox.c
-@@ -350,7 +350,7 @@ static int sb_eth_recv(struct udevice *dev, int flags, uchar **packetp)
- 	struct eth_sandbox_priv *priv = dev_get_priv(dev);
- 
- 	if (skip_timeout) {
--		sandbox_timer_add_offset(11000UL);
-+		timer_test_add_offset(11000UL);
- 		skip_timeout = false;
- 	}
- 
-diff --git a/drivers/timer/sandbox_timer.c b/drivers/timer/sandbox_timer.c
-index 6d2b045fe8..5228486082 100644
---- a/drivers/timer/sandbox_timer.c
-+++ b/drivers/timer/sandbox_timer.c
-@@ -14,7 +14,7 @@
- /* system timer offset in ms */
- static unsigned long sandbox_timer_offset;
- 
--void sandbox_timer_add_offset(unsigned long offset)
-+void timer_test_add_offset(unsigned long offset)
- {
- 	sandbox_timer_offset += offset;
- }
-diff --git a/include/regmap.h b/include/regmap.h
-index 8359c511d2..3cd7a66cea 100644
---- a/include/regmap.h
-+++ b/include/regmap.h
-@@ -274,7 +274,7 @@ int regmap_raw_read_range(struct regmap *map, uint range_num, uint offset,
- 		if (cond) \
- 			break; \
- 		if (IS_ENABLED(CONFIG_SANDBOX) && test_add_time) \
--			sandbox_timer_add_offset(test_add_time); \
-+			timer_test_add_offset(test_add_time); \
- 		if ((timeout_ms) && get_timer(__start) > (timeout_ms)) { \
- 			__ret = regmap_read((map), (addr), &(val)); \
- 			break; \
-diff --git a/include/time.h b/include/time.h
-index 825991e222..9fd0d73fb4 100644
---- a/include/time.h
-+++ b/include/time.h
-@@ -13,6 +13,14 @@ unsigned long get_timer(unsigned long base);
-  */
- unsigned long timer_get_us(void);
- 
-+/*
-+ * timer_test_add_offset()
-+ *
-+ * Allow tests to add to the time reported through lib/time.c functions
-+ * offset: number of milliseconds to advance the system time
-+ */
-+void timer_test_add_offset(unsigned long offset);
-+
- /*
-  *	These inlines deal with timer wrapping correctly. You are
-  *	strongly encouraged to use them
--- 
-2.21.0
+--=20
+Tom
 
+--KYDL+JEW1t54otQB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJcr1SeAAoJEIf59jXTHXZSDGoP/jOC7lc83UZ/ourQyzOwg+kq
+znJX4Ja9YlQcdIxzhsNjb8FC1mhCiHZwIzdNpoqXkioaWp7v7ERg2Y8Ce3t/KWdI
+8XrTbd7xR+u0RoPjHQcl2GXP7PalW89tdNiueiQyexYfks5UjM0zFF131UJrbAbI
+H55S1V2QNcY7xlGhNwSph4UNkH8ZfPKNIWYbJSxunGbZHptLWFKlhLswWkfL1R0k
+a0ve/RZl8DgErdMW04e2fU4Nz450IWLtqEL8qWBj+SDKG/dGPNvt99xGDtFcMTpA
+twBGeC3QZpMnAPsUS1Wue7ueFNy4tjZU+yHH93VrXUmMfj2MKL9TRsjoCHeP+8SD
+DNjMvAcmPJH5oi/2ZNM4C8Kod/wO/rnO04/NIU8Dk8AULUHQtVCywUcjp745JYYv
+85xUuAUh2cIkPWJF9u8N9Ob4NcWFXsVxYwFix/3luOKAS2mHgnt9vFNhBkU99/k3
+3r+fhDUfYTh3MSBvi+Mp6hsw9pqraYUx5sDQW7jF8GimBHTkRHJu5S7N5IwyHSb/
+2Sk5JImt0i4s83no29HB402Nrh/z15G6NYUYymas/YzwZ4zd/mbVl/npmv4qvHO+
+xTa1P4Wfi9O7NrbYRoU1O6pS8txaCYpmP92JtCPZUQA42hVhOUVc8Cwh5GPNAw/g
+QgHaHtjrxjrVbfXZFj4U
+=Gpiu
+-----END PGP SIGNATURE-----
+
+--KYDL+JEW1t54otQB--
