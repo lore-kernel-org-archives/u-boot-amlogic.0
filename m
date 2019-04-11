@@ -1,293 +1,135 @@
-Received: by mail-wr1-f68.google.com with SMTP id s15so3413951wra.12
-        for <u-boot-amlogic@groups.io>; Wed, 10 Apr 2019 08:24:02 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 4so6216876wmf.1
+        for <u-boot-amlogic@groups.io>; Thu, 11 Apr 2019 04:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N844wq8ejUV4DnzAT1m1c7L2IrOgRe9pTVOwY5+Txxs=;
-        b=sB0WzFR5Kb7l5maWZNYikFtY1n9w4F3p3KkDN3xLUSqiRgU2KhDLx4HQYLkivP7QYj
-         U78fHAM4fo/bHirhbAGvv9uKbBV8wEQ4Sd5PN1kN5N2FVzBlNLUG1/zWi5wwZhwoUAzv
-         2gLy5sOdpKtRkbwJh5C4PRlxQEAv5lRJ49lY6pUFOW8Z8AffD1usoIDlKQlKC68tsBlD
-         ZvqX9VG6XYRB3RguyAMQYIVDclYKz7dhCeCobo7TpHxpdfJa77yUzt20n1I2aGyupVKP
-         eu+DnVwslWYipfJ2NiehVeWCNXLcS5DpOV08iFQ+mlZU8xr1P66tHDXDWp8tEujToJQc
-         yVZw==
+        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=9ZC0hdT6/oKIbWXAgjS6ZNZAWBozoKLKwnHdIXfFBU8=;
+        b=wXYyMYkJpv2xpGsz5DOn4+hO8kKFq/9u32ZUDKyWSY5q2/nt2UF5WvMyg+dAta/Cry
+         DtNa5RJMrJ86Z/MEsqqZUg9Fi7+TxEVpv0KOY7cbzV8RBKBRkm8CP9yDPtfJhtJYyEaG
+         HPtSey/O1ZCGjgA65XvoQIUVV/0Rn36qRKl5ihFL4cUL+GKFX2hHPN3v6qN6ptsF6wUs
+         ynE+YMnV8IreTQ7eoexiaG7s3QTdd36PElcA02TwXIko6q1o5/orYWJOQuLk8gR3uBvS
+         kRQKWEBNIu9h5D7k1WxRoiZHECjfejAPsjv4hCMPVUaaXpSkqVlangieTdk5D+JXRWh3
+         dhuw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v2 6/6] boards: meson: add g12a u200
-Date: Wed, 10 Apr 2019 17:23:48 +0200
-Message-Id: <20190410152348.13777-7-narmstrong@baylibre.com>
-In-Reply-To: <20190410152348.13777-1-narmstrong@baylibre.com>
-References: <20190410152348.13777-1-narmstrong@baylibre.com>
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20190411
+Message-ID: <0ccf82f4-9490-b40c-419a-93eea9691992@baylibre.com>
+Date: Thu, 11 Apr 2019 13:16:26 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot-amlogic@groups.io
-Cc: Jerome Brunet <jbrunet@baylibre.com>, u-boot@lists.denx.de, baylibre-upstreaming@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, baylibre-upstreaming@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+Hi Tom,
 
-The Amlogic U200 board is based on the Amlogic S905D2 SoC
-from the Amlogic G12A SoC family.
+This PR adds support for 3 more Amlogic boards, support printing SoC
+revision information, add AXG family support for I2C and Reset, then
+fixup the AXG pinctrl defintions.
 
-The board has the following specifications :
- - Amlogic S905D2 ARM Cortex-A53 quad-core SoC
- - XGB DDR4 SDRAM
- - 10/100 Ethernet (Internal PHY)
- - 1 x USB 3.0 Host
- - eMMC
- - SDcard
- - Infrared receiver
- - SDIO WiFi Module
- - MIPI DSI Connector
- - Audio HAT Connector
- - PCI-E M.2 Connector
+Thanks,
+Neil
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- board/amlogic/u200/MAINTAINERS |   5 ++
- board/amlogic/u200/Makefile    |   6 ++
- board/amlogic/u200/README      | 128 +++++++++++++++++++++++++++++++++
- board/amlogic/u200/u200.c      |  22 ++++++
- configs/u200_defconfig         |  40 +++++++++++
- 5 files changed, 201 insertions(+)
- create mode 100644 board/amlogic/u200/MAINTAINERS
- create mode 100644 board/amlogic/u200/Makefile
- create mode 100644 board/amlogic/u200/README
- create mode 100644 board/amlogic/u200/u200.c
- create mode 100644 configs/u200_defconfig
+The following changes since commit 48ff1bc4f0a97c3291d0c87c2717fc1d79da5ef5:
 
-diff --git a/board/amlogic/u200/MAINTAINERS b/board/amlogic/u200/MAINTAINERS
-new file mode 100644
-index 0000000000..baf3813fd0
---- /dev/null
-+++ b/board/amlogic/u200/MAINTAINERS
-@@ -0,0 +1,5 @@
-+U200
-+M:	Neil Armstrong <narmstrong@baylibre.com>
-+S:	Maintained
-+F:	board/amlogic/u200/
-+F:	configs/u200_defconfig
-diff --git a/board/amlogic/u200/Makefile b/board/amlogic/u200/Makefile
-new file mode 100644
-index 0000000000..485791bbb2
---- /dev/null
-+++ b/board/amlogic/u200/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# (C) Copyright 2016 BayLibre, SAS
-+# Author: Neil Armstrong <narmstrong@baylibre.com>
-+
-+obj-y	:= u200.o
-diff --git a/board/amlogic/u200/README b/board/amlogic/u200/README
-new file mode 100644
-index 0000000000..bffac5e7ae
---- /dev/null
-+++ b/board/amlogic/u200/README
-@@ -0,0 +1,128 @@
-+U-Boot for Amlogic U200
-+=======================
-+
-+U200 is a reference board manufactured by Amlogic with the following
-+specifications:
-+
-+ - Amlogic S905D2 ARM Cortex-A53 quad-core SoC
-+ - 2GB DDR4 SDRAM
-+ - 10/100 Ethernet (Internal PHY)
-+ - 1 x USB 3.0 Host
-+ - eMMC
-+ - SDcard
-+ - Infrared receiver
-+ - SDIO WiFi Module
-+ - MIPI DSI Connector
-+ - Audio HAT Connector
-+ - PCI-E M.2 Connector
-+
-+Schematics are available from Amlogic on demand.
-+
-+Currently the u-boot port supports the following devices:
-+ - serial
-+ - Ethernet
-+ - Regulators
-+ - Clock controller
-+
-+u-boot compilation
-+==================
-+
-+ > export ARCH=arm
-+ > export CROSS_COMPILE=aarch64-none-elf-
-+ > make u200_defconfig
-+ > make
-+
-+Image creation
-+==============
-+
-+Amlogic doesn't provide sources for the firmware and for tools needed
-+to create the bootloader image, so it is necessary to obtain them from
-+the git tree published by the board vendor:
-+
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
-+ > git clone https://github.com/BayLibre/u-boot.git -b buildroot-openlinux-20180418 amlogic-u-boot
-+ > cd amlogic-u-boot
-+ > make g12a_u200_v1_defconfig
-+ > make
-+ > export UBOOTDIR=$PWD
-+
-+Download the latest Amlogic Buildroot package, and extract it :
-+ > wget http://openlinux2.amlogic.com:8000/ARM/filesystem/Linux_BSP/buildroot_openlinux_kernel_4.9_fbdev_20180706.tar.gz
-+ > tar xfz buildroot_openlinux_kernel_4.9_fbdev_20180706.tar.gz buildroot_openlinux_kernel_4.9_fbdev_20180706/bootloader
-+ > export BRDIR=$PWD/buildroot_openlinux_kernel_4.9_fbdev_20180706
-+ > export FIPDIR=$BRDIR/bootloader/uboot-repo/fip
-+
-+Go back to mainline U-Boot source tree then :
-+ > mkdir fip
-+
-+ > wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
-+ > cp $UBOOTDIR/build/scp_task/bl301.bin fip/
-+ > cp $UBOOTDIR/build/board/amlogic/g12a_u200_v1/firmware/acs.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl2/bin/g12a/bl2.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl30/bin/g12a/bl30.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl31_1.3/bin/g12a/bl31.img fip/
-+ > cp $FIPDIR/g12a/ddr3_1d.fw fip/
-+ > cp $FIPDIR/g12a/ddr4_1d.fw fip/
-+ > cp $FIPDIR/g12a/ddr4_2d.fw fip/
-+ > cp $FIPDIR/g12a/diag_lpddr4.fw fip/
-+ > cp $FIPDIR/g12a/lpddr4_1d.fw fip/
-+ > cp $FIPDIR/g12a/lpddr4_2d.fw fip/
-+ > cp $FIPDIR/g12a/piei.fw fip/
-+ > cp u-boot.bin fip/bl33.bin
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl30.bin \
-+	fip/zero_tmp \
-+	fip/bl30_zero.bin \
-+	fip/bl301.bin \
-+	fip/bl301_zero.bin \
-+	fip/bl30_new.bin \
-+	bl30
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl2.bin \
-+	fip/zero_tmp \
-+	fip/bl2_zero.bin \
-+	fip/acs.bin \
-+	fip/bl21_zero.bin \
-+	fip/bl2_new.bin \
-+	bl2
-+
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl30sig --input fip/bl30_new.bin \
-+					--output fip/bl30_new.bin.g12a.enc \
-+					--level v3
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl3sig --input fip/bl30_new.bin.g12a.enc \
-+					--output fip/bl30_new.bin.enc \
-+					--level v3 --type bl30
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl3sig --input fip/bl31.img \
-+					--output fip/bl31.img.enc \
-+					--level v3 --type bl31
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl3sig --input fip/bl33.bin --compress lz4 \
-+					--output fip/bl33.bin.enc \
-+					--level v3 --type bl33
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl2sig --input fip/bl2_new.bin \
-+					--output fip/bl2.n.bin.sig
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bootmk \
-+		--output fip/u-boot.bin \
-+		--bl2 fip/bl2.n.bin.sig \
-+		--bl30 fip/bl30_new.bin.enc \
-+		--bl31 fip/bl31.img.enc \
-+		--bl33 fip/bl33.bin.enc \
-+		--ddrfw1 fip/ddr4_1d.fw \
-+		--ddrfw2 fip/ddr4_2d.fw \
-+		--ddrfw3 fip/ddr3_1d.fw \
-+		--ddrfw4 fip/piei.fw \
-+		--ddrfw5 fip/lpddr4_1d.fw \
-+		--ddrfw6 fip/lpddr4_2d.fw \
-+		--ddrfw7 fip/diag_lpddr4.fw \
-+		--level v3
-+
-+and then write the image to SD with:
-+
-+ > DEV=/dev/your_sd_device
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/board/amlogic/u200/u200.c b/board/amlogic/u200/u200.c
-new file mode 100644
-index 0000000000..94ee3ce6e4
---- /dev/null
-+++ b/board/amlogic/u200/u200.c
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2016 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include <common.h>
-+#include <dm.h>
-+#include <environment.h>
-+#include <asm/io.h>
-+#include <asm/arch/axg.h>
-+#include <asm/arch/sm.h>
-+#include <asm/arch/eth.h>
-+#include <asm/arch/mem.h>
-+
-+int misc_init_r(void)
-+{
-+	meson_eth_init(PHY_INTERFACE_MODE_RMII,
-+		       MESON_USE_INTERNAL_RMII_PHY);
-+
-+	return 0;
-+}
-diff --git a/configs/u200_defconfig b/configs/u200_defconfig
-new file mode 100644
-index 0000000000..c351913f0e
---- /dev/null
-+++ b/configs/u200_defconfig
-@@ -0,0 +1,40 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_MESON_G12A=y
-+CONFIG_DEBUG_UART_BASE=0xff803000
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" u200"
-+CONFIG_DEBUG_UART=y
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+CONFIG_DISPLAY_BOARDINFO=y
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-g12a-u200"
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_DM_GPIO=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_PHY_ADDR_ENABLE=y
-+CONFIG_PHY_ADDR=8
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_MESON=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
--- 
-2.21.0
+  Merge branch '2019-04-09-master-imports-fs' (2019-04-10 08:18:18 -0400)
 
+are available in the Git repository at:
+
+  git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190411
+
+for you to fetch changes up to 2c4e3cf21257f962e69264fe91ff2cc23cbd041a:
+
+  pinctrl: meson: axg: Fix PIN and BANK offsets (2019-04-10 16:54:59 +0200)
+
+----------------------------------------------------------------
+- Add support for Amlogic p200 & p201 Reference Designs
+- Add Amlogic SoC information display
+- Add support for the Libretech-AC AML-S805X-AC board
+- Add Amlogic AXG reset compatible
+- Add I2C support for Amlogic AXG
+- Fix AXG PIN and BANK pinctrl definitions
+
+----------------------------------------------------------------
+Guillaume La Roque (2):
+      i2c: meson: add configurable divider factors
+      pinctrl: meson: axg: Fix PIN and BANK offsets
+
+Julien Masson (1):
+      ARM: meson: display Amlogic SoC Information
+
+Mohammad Rasim (5):
+      ARM: board: meson: rename odroid-c2 to p200
+      ARM: dts: meson: add p200 and p201 boards
+      ARM: dts: meson: add u-boot.dtsi for p200 and p201
+      ARM: board: meson: add p200 board
+      ARM: board: meson: add p201 board
+
+Neil Armstrong (3):
+      ARM: dts: Import libretech-ac DT from Linux 5.0
+      boards: Amlogic: Add support for Libretech-AC
+      reset-meson: Add AXG reset compatible
+
+ arch/arm/dts/Makefile                              |   3 +
+ arch/arm/dts/meson-gxbb-p200-u-boot.dtsi           |   7 +
+ arch/arm/dts/meson-gxbb-p200.dts                   |  99 ++++++
+ arch/arm/dts/meson-gxbb-p201-u-boot.dtsi           |   7 +
+ arch/arm/dts/meson-gxbb-p201.dts                   |  26 ++
+ arch/arm/dts/meson-gxbb-p20x.dtsi                  | 247 ++++++++++++++
+ arch/arm/dts/meson-gxl-s805x-libretech-ac.dts      | 248 ++++++++++++++
+ arch/arm/dts/meson-gxl.dtsi                        |  70 +++-
+ arch/arm/mach-meson/Kconfig                        |   2 +-
+ arch/arm/mach-meson/Makefile                       |   2 +-
+ arch/arm/mach-meson/board-info.c                   | 166 ++++++++++
+ board/amlogic/{odroid-c2 => p200}/MAINTAINERS      |   6 +-
+ board/amlogic/{odroid-c2 => p200}/Makefile         |   2 +-
+ board/amlogic/{odroid-c2 => p200}/README.nanopi-k2 |   0
+ board/amlogic/{odroid-c2 => p200}/README.odroid-c2 |   0
+ board/amlogic/p200/README.p200                     | 103 ++++++
+ .../amlogic/{odroid-c2/odroid-c2.c => p200/p200.c} |   0
+ board/amlogic/p201/MAINTAINERS                     |   5 +
+ board/amlogic/p201/Makefile                        |   5 +
+ board/amlogic/p201/README.p201                     | 103 ++++++
+ board/amlogic/p201/p201.c                          |  43 +++
+ board/amlogic/p212/MAINTAINERS                     |   1 +
+ board/amlogic/p212/README.libretech-ac             | 103 ++++++
+ configs/khadas-vim2_defconfig                      |   2 +-
+ configs/khadas-vim_defconfig                       |   2 +-
+ configs/libretech-ac_defconfig                     |  74 +++++
+ configs/libretech-cc_defconfig                     |   2 +-
+ configs/nanopi-k2_defconfig                        |   2 +-
+ configs/odroid-c2_defconfig                        |   2 +-
+ configs/p200_defconfig                             |  41 +++
+ configs/p201_defconfig                             |  41 +++
+ configs/p212_defconfig                             |   2 +-
+ configs/s400_defconfig                             |   2 +-
+ drivers/i2c/meson_i2c.c                            |  30 +-
+ drivers/pinctrl/meson/pinctrl-meson-axg.c          | 358 ++++++++++-----------
+ drivers/reset/reset-meson.c                        |   1 +
+ include/configs/libretech-ac.h                     |  24 ++
+ 37 files changed, 1625 insertions(+), 206 deletions(-)
+ create mode 100644 arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-gxbb-p200.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-gxbb-p201.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-p20x.dtsi
+ create mode 100644 arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+ create mode 100644 arch/arm/mach-meson/board-info.c
+ rename board/amlogic/{odroid-c2 => p200}/MAINTAINERS (70%)
+ rename board/amlogic/{odroid-c2 => p200}/Makefile (82%)
+ rename board/amlogic/{odroid-c2 => p200}/README.nanopi-k2 (100%)
+ rename board/amlogic/{odroid-c2 => p200}/README.odroid-c2 (100%)
+ create mode 100644 board/amlogic/p200/README.p200
+ rename board/amlogic/{odroid-c2/odroid-c2.c => p200/p200.c} (100%)
+ create mode 100644 board/amlogic/p201/MAINTAINERS
+ create mode 100644 board/amlogic/p201/Makefile
+ create mode 100644 board/amlogic/p201/README.p201
+ create mode 100644 board/amlogic/p201/p201.c
+ create mode 100644 board/amlogic/p212/README.libretech-ac
+ create mode 100644 configs/libretech-ac_defconfig
+ create mode 100644 configs/p200_defconfig
+ create mode 100644 configs/p201_defconfig
+ create mode 100644 include/configs/libretech-ac.h
