@@ -1,97 +1,64 @@
-Received: by mail-wm1-f65.google.com with SMTP id q16so11852042wmj.3
-        for <u-boot-amlogic@groups.io>; Fri, 12 Apr 2019 08:52:53 -0700 (PDT)
+Received: by mail-wr1-f67.google.com with SMTP id g3so33151278wrx.9
+        for <u-boot-amlogic@groups.io>; Wed, 17 Apr 2019 11:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8tYBR253RWJGYVvp8PYyfW9TmeVUjnSn5DRr9zxDTX4=;
-        b=0sHXzPNZxjs1JhmpiGoNXxvBDAOJrzJu/+bbRWhTov5bwaYAtdbm9pAit2gBSHD4M/
-         gKNxV2ePN4rzakmwVIkiTGC8PRc5D9sz9f3vhGWqHzQmKIi+nsyQ50w8AFsISz+SUgUm
-         qLyAEhnpsD+eh/2U71vdb+UTAUL9a4Skdx7azOJKRfmovwGAx5tjP8HHcAlEB/qUjSoR
-         xyIJqSSlUegyxkJGKJM2x7Lk8hNzlyU6ISyUaxUqNDFjiYWhIXNvI9ELgGawyvd3VEHI
-         2dgnHjhZuczmC5m+JsZoQT6ywIWbY/vph4gFn57KCk6v0xWmckpqU4VNIbT1z0tBM73N
-         ljzg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JgF3JY07Cum/JNf9dS16FQBBTYC+LyYKixfbB4y6wQQ=;
+        b=vAgektiDAxwh65kmAHoHdZjFybB8kBuczCSmXvGaciVeD0x40+hIeIQpLqGEPT5YGP
+         31WINxo8nGn5hSlqag33B9kd0QJpM9CMzTaFUCU4pDXt7Jy2qsbYycKiNzj8gs1PYOqB
+         lBaKv+6kXzSNiiIKIjzuablOsiNa9gM8GYzlltpU7VtODp8HJ5FQAIN2qw0OGPNzMCqk
+         lbSMnqJKrlst6Tc9cac5VVZvVwxcluBOnGM1e8hD4zsy89yMZSWKx9gy2LBhW4yA1Tgn
+         YyN/Am6U7tl8Bn9Js3JSO2rupEh/UZm0m+IXyXwBtMHjh2c4da825Yo2WlXVKR3TlvWv
+         T9Uw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] regmap: fix regmap_read_poll_timeout warning about sandbox_timer_add_offset
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-References: <20190411151204.27316-1-narmstrong@baylibre.com>
- <CAPnjgZ3k_GGivhpUf6DgBJoU6A7pLA1TC=OyTdQmfnT7OsK6Ww@mail.gmail.com>
- <4b3bd0e7-a0dc-65a0-e20b-062dfabd8351@baylibre.com>
-Message-ID: <f32c1716-4e9b-a15c-81e8-7b2268107b21@baylibre.com>
-Date: Fri, 12 Apr 2019 17:52:50 +0200
+Subject: [PATCH v2] regmap: fix regmap_read_poll_timeout warning about sandbox_timer_add_offset
+Date: Wed, 17 Apr 2019 20:17:14 +0200
+Message-Id: <20190417181714.1281-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <4b3bd0e7-a0dc-65a0-e20b-062dfabd8351@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>
-Cc: Tom Rini <trini@konsulko.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 12/04/2019 16:56, Neil Armstrong wrote:
-> Hi,
-> 
-> 
-> On 12/04/2019 15:09, Simon Glass wrote:
->> Hi,
->>
->> On Thu, 11 Apr 2019 at 09:12, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>
->>> When fixing sandbox test for regmap_read_poll_timeout(), the
->>> sandbox_timer_add_offset was introduced but only defined in sandbox code
->>> thus generating warnings when used out of sandbox :
->>>
->>> include/regmap.h:289:2: note: in expansion of macro 'regmap_read_poll_timeout_test'
->>> regmap_read_poll_timeout_test(map, addr, val, cond, sleep_us, \
->>>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>> drivers/spi/meson_spifc.c:169:8: note: in expansion of macro 'regmap_read_poll_timeout'
->>> ret = regmap_read_poll_timeout(spifc->regmap, REG_SLAVE, data,
->>>         ^~~~~~~~~~~~~~~~~~~~~~~~
->>> drivers/spi/meson_spifc.c: In function 'meson_spifc_txrx':
->>> include/regmap.h:277:4: warning: implicit declaration of function 'sandbox_timer_add_offset' [-Wimplicit-function-declaration]
->>>
->>> This simply adds an empty static inline sandbox_timer_add_offset()
->>> implementation that will be dropped by the compiler optimization routines.
->>>
->>> Cc: Simon Glass <sjg@chromium.org>
->>> Reported-by: Tom Rini <trini@konsulko.com>
->>> Fixes: df9cf1cc08 ("test: dm: regmap: Fix the long test delay")
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>> ---
->>>  include/regmap.h | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>
->> This is OK with me, but I wonder if it would be better to change the code:
->>
->> if (IS_ENABLED(CONFIG_SANDBOX) && test_add_time) \
->>    sandbox_timer_add_offset(test_add_time); \
->>
->> to something like
->>
->>    do_test_add_time(test_add_time);
->>
->> where do_test_add_time() is defined above as either a sandbox call, or empty?
->>
->> The reason I say this is it seems a bit weird to define a function
->> called sandbox_... in non-sandbox code.
-> 
-> Yes, but it still seems weird to have empty test code defined in this header.
-> 
-> Can't we use sandbox_state->skip_delays here instead ?
+When fixing sandbox test for regmap_read_poll_timeout(), the
+sandbox_timer_add_offset was introduced but only defined in sandbox code
+thus generating warnings when used out of sandbox :
 
-What about the following ?
+include/regmap.h:289:2: note: in expansion of macro 'regmap_read_poll_timeout_test'
+regmap_read_poll_timeout_test(map, addr, val, cond, sleep_us, \
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/spi/meson_spifc.c:169:8: note: in expansion of macro 'regmap_read_poll_timeout'
+ret = regmap_read_poll_timeout(spifc->regmap, REG_SLAVE, data,
+        ^~~~~~~~~~~~~~~~~~~~~~~~
+drivers/spi/meson_spifc.c: In function 'meson_spifc_txrx':
+include/regmap.h:277:4: warning: implicit declaration of function 'sandbox_timer_add_offset' [-Wimplicit-function-declaration]
 
------><--------------------------------------------
+This fix renames the sandbox_timer_add_offset() to a generic timer_test_add_offset()
+function defined in time.h and renames the implementation and test usages.
+
+Cc: Simon Glass <sjg@chromium.org>
+Reported-by: Tom Rini <trini@konsulko.com>
+Fixes: df9cf1cc08 ("test: dm: regmap: Fix the long test delay")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/sandbox/include/asm/test.h | 8 --------
+ board/sandbox/sandbox.c         | 2 +-
+ drivers/net/sandbox.c           | 2 +-
+ drivers/timer/sandbox_timer.c   | 2 +-
+ include/regmap.h                | 2 +-
+ include/time.h                  | 8 ++++++++
+ 6 files changed, 12 insertions(+), 12 deletions(-)
+
 diff --git a/arch/sandbox/include/asm/test.h b/arch/sandbox/include/asm/test.h
 index fc52f47f82..e956a05262 100644
 --- a/arch/sandbox/include/asm/test.h
 +++ b/arch/sandbox/include/asm/test.h
 @@ -59,14 +59,6 @@ void sandbox_i2c_eeprom_set_test_mode(struct udevice *dev,
-
+ 
  void sandbox_i2c_eeprom_set_offset_len(struct udevice *dev, int offset_len);
-
+ 
 -/*
 - * sandbox_timer_add_offset()
 - *
@@ -110,7 +77,7 @@ index 397e7561d4..9ca1eca027 100644
 @@ -31,7 +31,7 @@ void flush_cache(unsigned long start, unsigned long size)
  /* system timer offset in ms */
  static unsigned long sandbox_timer_offset;
-
+ 
 -void sandbox_timer_add_offset(unsigned long offset)
 +void timer_test_add_offset(unsigned long offset)
  {
@@ -122,13 +89,13 @@ index decce2fa59..c136392350 100644
 +++ b/drivers/net/sandbox.c
 @@ -350,7 +350,7 @@ static int sb_eth_recv(struct udevice *dev, int flags, uchar **packetp)
  	struct eth_sandbox_priv *priv = dev_get_priv(dev);
-
+ 
  	if (skip_timeout) {
 -		sandbox_timer_add_offset(11000UL);
 +		timer_test_add_offset(11000UL);
  		skip_timeout = false;
  	}
-
+ 
 diff --git a/drivers/timer/sandbox_timer.c b/drivers/timer/sandbox_timer.c
 index 6d2b045fe8..5228486082 100644
 --- a/drivers/timer/sandbox_timer.c
@@ -136,7 +103,7 @@ index 6d2b045fe8..5228486082 100644
 @@ -14,7 +14,7 @@
  /* system timer offset in ms */
  static unsigned long sandbox_timer_offset;
-
+ 
 -void sandbox_timer_add_offset(unsigned long offset)
 +void timer_test_add_offset(unsigned long offset)
  {
@@ -162,7 +129,7 @@ index 825991e222..9fd0d73fb4 100644
 @@ -13,6 +13,14 @@ unsigned long get_timer(unsigned long base);
   */
  unsigned long timer_get_us(void);
-
+ 
 +/*
 + * timer_test_add_offset()
 + *
@@ -174,5 +141,6 @@ index 825991e222..9fd0d73fb4 100644
  /*
   *	These inlines deal with timer wrapping correctly. You are
   *	strongly encouraged to use them
-
+-- 
+2.21.0
 
