@@ -1,99 +1,251 @@
-Received: by mail-qt1-f193.google.com with SMTP id v20so7347815qtv.12
-        for <u-boot-amlogic@groups.io>; Thu, 11 Apr 2019 07:52:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=57u97IxJGAjGlvYXfh8fvO22v2U638zmikgrxW13iRo=;
-        b=aWCUEEGFTI7Oje0nXFMf9cUJDWQcNwTqVD/uhraa2Iahmyv/8q2p9zG2P2H9RT00r1
-         IdWBnECQ/aZiP6agVIEj4Yy18vIsnEH8sDQs0UxGTPsR+/Ms5rdCArpPdckU/3ptx2Qs
-         JzR2H++HcG7IbOdPrGVcUUYq6APkhi3ihCA2o=
-Return-Path: <trini@konsulko.com>
-Date: Thu, 11 Apr 2019 10:52:14 -0400
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20190411
-Message-ID: <20190411145214.GC4664@bill-the-cat>
-References: <0ccf82f4-9490-b40c-419a-93eea9691992@baylibre.com>
+Date: Fri, 19 Apr 2019 08:17:22 +0200
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [U-Boot] [PATCH v2 3/3] mach-meson: g12a: add DWC2 peripheral mode support
+Message-ID: <20190419081722.6941a8a7@jawa>
+In-Reply-To: <20190401124657.29736-4-narmstrong@baylibre.com>
+References: <20190401124657.29736-1-narmstrong@baylibre.com>
+	<20190401124657.29736-4-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <0ccf82f4-9490-b40c-419a-93eea9691992@baylibre.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="KYDL+JEW1t54otQB"
-Content-Disposition: inline
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/KqKqogL2vtBPqf2FMOpa2WP"; protocol="application/pgp-signature"
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, baylibre-upstreaming@groups.io
+Cc: marex@denx.de, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
---KYDL+JEW1t54otQB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/KqKqogL2vtBPqf2FMOpa2WP
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2019 at 01:16:26PM +0200, Neil Armstrong wrote:
+Hi Neil,
 
-> Hi Tom,
+> Adds support for Amlogic G12A USB Device mode.
 >=20
-> This PR adds support for 3 more Amlogic boards, support printing SoC
-> revision information, add AXG family support for I2C and Reset, then
-> fixup the AXG pinctrl defintions.
+> The DWC2 Controller behind the Glue can be connected to an OTG
+> capable PHY. The Glue setups the PHY mode.
 >=20
-> Thanks,
-> Neil
+> This patch implements Device mode support by adding a
+> board_usb_init/cleanup setting up the DWC2 controller and switch the
+> OTG capable port to Device before starting the DWC2 controller in
+> Device mode.
 >=20
-> The following changes since commit 48ff1bc4f0a97c3291d0c87c2717fc1d79da5e=
-f5:
->=20
->   Merge branch '2019-04-09-master-imports-fs' (2019-04-10 08:18:18 -0400)
->=20
-> are available in the Git repository at:
->=20
->   git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190411
->=20
-> for you to fetch changes up to 2c4e3cf21257f962e69264fe91ff2cc23cbd041a:
->=20
->   pinctrl: meson: axg: Fix PIN and BANK offsets (2019-04-10 16:54:59 +020=
-0)
->=20
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-NAK:
-   aarch64:  w+   libretech-ac
-+(libretech-ac)     sandbox_timer_add_offset(test_add_time); \
-+(libretech-ac)     ^
-+(libretech-ac) include/regmap.h:289:2: note: in expansion of macro 'regmap=
-_read_poll_timeout_test'
-+(libretech-ac)   regmap_read_poll_timeout_test(map, addr, val, cond, sleep=
-_us, \
-+(libretech-ac)   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+(libretech-ac) drivers/spi/meson_spifc.c:169:8: note: in expansion of macr=
-o 'regmap_read_poll_timeout'
-+(libretech-ac)   ret =3D regmap_read_poll_timeout(spifc->regmap, REG_SLAVE=
-, data,
-+(libretech-ac)         ^~~~~~~~~~~~~~~~~~~~~~~~
-w+(libretech-ac) drivers/spi/meson_spifc.c: In function 'meson_spifc_txrx':
-w+(libretech-ac) include/regmap.h:277:4: warning: implicit declaration of f=
-unction 'sandbox_timer_add_offset' [-Wimplicit-function-declaration]
+I wanted to apply this series, but it turned out that it depends on:
+[U-Boot] [PATCH v2 0/6] ARM: meson: Add support for G12A based U200
+board
 
---=20
-Tom
+Let's wait till the above one is pulled to master.
 
---KYDL+JEW1t54otQB
-Content-Type: application/pgp-signature; name="signature.asc"
+> ---
+>  arch/arm/include/asm/arch-meson/usb.h |  12 +++
+>  arch/arm/mach-meson/board-g12a.c      | 126
+> ++++++++++++++++++++++++++ 2 files changed, 138 insertions(+)
+>  create mode 100644 arch/arm/include/asm/arch-meson/usb.h
+>=20
+> diff --git a/arch/arm/include/asm/arch-meson/usb.h
+> b/arch/arm/include/asm/arch-meson/usb.h new file mode 100644
+> index 0000000000..b794b5ce77
+> --- /dev/null
+> +++ b/arch/arm/include/asm/arch-meson/usb.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (C) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +#ifndef __MESON_USB_H__
+> +#define __MESON_USB_H__
+> +
+> +int dwc3_meson_g12a_force_mode(struct udevice *dev, enum usb_dr_mode
+> mode); +
+> +#endif /* __MESON_USB_H__ */
+> diff --git a/arch/arm/mach-meson/board-g12a.c
+> b/arch/arm/mach-meson/board-g12a.c index fc3764b960..1652970fbd 100644
+> --- a/arch/arm/mach-meson/board-g12a.c
+> +++ b/arch/arm/mach-meson/board-g12a.c
+> @@ -12,7 +12,12 @@
+>  #include <asm/io.h>
+>  #include <asm/armv8/mmu.h>
+>  #include <linux/sizes.h>
+> +#include <usb.h>
+> +#include <linux/usb/otg.h>
+> +#include <asm/arch/usb.h>
+> +#include <usb/dwc2_udc.h>
+>  #include <phy.h>
+> +#include <clk.h>
+> =20
+>  DECLARE_GLOBAL_DATA_PTR;
+> =20
+> @@ -148,3 +153,124 @@ void meson_eth_init(phy_interface_t mode,
+> unsigned int flags) /* Enable power gate */
+>  	clrbits_le32(G12A_MEM_PD_REG_0, G12A_MEM_PD_REG_0_ETH_MASK);
+>  }
+> +
+> +#if CONFIG_IS_ENABLED(USB_DWC3_MESON_G12A) && \
+> +	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
+> +static struct dwc2_plat_otg_data meson_g12a_dwc2_data;
+> +
+> +int board_usb_init(int index, enum usb_init_type init)
+> +{
+> +	struct fdtdec_phandle_args args;
+> +	const void *blob =3D gd->fdt_blob;
+> +	int node, dwc2_node;
+> +	struct udevice *dev, *clk_dev;
+> +	struct clk clk;
+> +	int ret;
+> +
+> +	/* find the usb glue node */
+> +	node =3D fdt_node_offset_by_compatible(blob, -1,
+> +
+> "amlogic,meson-g12a-usb-ctrl");
+> +	if (node < 0) {
+> +		debug("Not found usb-control node\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!fdtdec_get_is_enabled(blob, node)) {
+> +		debug("usb is disabled in the device tree\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret =3D uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS,
+> node, &dev);
+> +	if (ret) {
+> +		debug("Not found usb-control device\n");
+> +		return ret;
+> +	}
+> +
+> +	/* find the dwc2 node */
+> +	dwc2_node =3D fdt_node_offset_by_compatible(blob, node,
+> +
+> "amlogic,meson-g12a-usb");
+> +	if (dwc2_node < 0) {
+> +		debug("Not found dwc2 node\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
+> +		debug("dwc2 is disabled in the device tree\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	meson_g12a_dwc2_data.regs_otg =3D fdtdec_get_addr(blob,
+> dwc2_node, "reg");
+> +	if (meson_g12a_dwc2_data.regs_otg =3D=3D FDT_ADDR_T_NONE) {
+> +		debug("usbotg: can't get base address\n");
+> +		return -ENODATA;
+> +	}
+> +
+> +	/* Enable clock */
+> +	ret =3D fdtdec_parse_phandle_with_args(blob, dwc2_node,
+> "clocks",
+> +					     "#clock-cells", 0, 0,
+> &args);
+> +	if (ret) {
+> +		debug("usbotg has no clocks defined in the device
+> tree\n");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D uclass_get_device_by_of_offset(UCLASS_CLK, args.node,
+> &clk_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (args.args_count !=3D 1) {
+> +		debug("Can't find clock ID in the device tree\n");
+> +		return -ENODATA;
+> +	}
+> +
+> +	clk.dev =3D clk_dev;
+> +	clk.id =3D args.args[0];
+> +
+> +	ret =3D clk_enable(&clk);
+> +	if (ret) {
+> +		debug("Failed to enable usbotg clock\n");
+> +		return ret;
+> +	}
+> +
+> +	meson_g12a_dwc2_data.rx_fifo_sz =3D fdtdec_get_int(blob,
+> dwc2_node,
+> +
+> "g-rx-fifo-size", 0);
+> +	meson_g12a_dwc2_data.np_tx_fifo_sz =3D fdtdec_get_int(blob,
+> dwc2_node,
+> +							"g-np-tx-fifo-size",
+> 0);
+> +	meson_g12a_dwc2_data.tx_fifo_sz =3D fdtdec_get_int(blob,
+> dwc2_node,
+> +
+> "g-tx-fifo-size", 0); +
+> +	/* Switch to peripheral mode */
+> +	ret =3D dwc3_meson_g12a_force_mode(dev,
+> USB_DR_MODE_PERIPHERAL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return dwc2_udc_probe(&meson_g12a_dwc2_data);
+> +}
+> +
+> +int board_usb_cleanup(int index, enum usb_init_type init)
+> +{
+> +	const void *blob =3D gd->fdt_blob;
+> +	struct udevice *dev;
+> +	int node;
+> +	int ret;
+> +
+> +	/* find the usb glue node */
+> +	node =3D fdt_node_offset_by_compatible(blob, -1,
+> +
+> "amlogic,meson-g12a-usb-ctrl");
+> +	if (node < 0)
+> +		return -ENODEV;
+> +
+> +	if (!fdtdec_get_is_enabled(blob, node))
+> +		return -ENODEV;
+> +
+> +	ret =3D uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS,
+> node, &dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Switch to OTG mode */
+> +	ret =3D dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_HOST);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +#endif
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/KqKqogL2vtBPqf2FMOpa2WP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBAgAGBQJcr1SeAAoJEIf59jXTHXZSDGoP/jOC7lc83UZ/ourQyzOwg+kq
-znJX4Ja9YlQcdIxzhsNjb8FC1mhCiHZwIzdNpoqXkioaWp7v7ERg2Y8Ce3t/KWdI
-8XrTbd7xR+u0RoPjHQcl2GXP7PalW89tdNiueiQyexYfks5UjM0zFF131UJrbAbI
-H55S1V2QNcY7xlGhNwSph4UNkH8ZfPKNIWYbJSxunGbZHptLWFKlhLswWkfL1R0k
-a0ve/RZl8DgErdMW04e2fU4Nz450IWLtqEL8qWBj+SDKG/dGPNvt99xGDtFcMTpA
-twBGeC3QZpMnAPsUS1Wue7ueFNy4tjZU+yHH93VrXUmMfj2MKL9TRsjoCHeP+8SD
-DNjMvAcmPJH5oi/2ZNM4C8Kod/wO/rnO04/NIU8Dk8AULUHQtVCywUcjp745JYYv
-85xUuAUh2cIkPWJF9u8N9Ob4NcWFXsVxYwFix/3luOKAS2mHgnt9vFNhBkU99/k3
-3r+fhDUfYTh3MSBvi+Mp6hsw9pqraYUx5sDQW7jF8GimBHTkRHJu5S7N5IwyHSb/
-2Sk5JImt0i4s83no29HB402Nrh/z15G6NYUYymas/YzwZ4zd/mbVl/npmv4qvHO+
-xTa1P4Wfi9O7NrbYRoU1O6pS8txaCYpmP92JtCPZUQA42hVhOUVc8Cwh5GPNAw/g
-QgHaHtjrxjrVbfXZFj4U
-=Gpiu
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAly5Z/IACgkQAR8vZIA0
+zr1jHgf/XfpjsRuxYVspr9+pmCBJy3rAPLcMmC/jB64miagV9CnoV4Scf0AvZ9Ld
+ntEuJ23pkhIIoj/ETiRGRz/FtAZSbOslByb3g8eXVdkJdtCs1csKhNb5TykSBUBk
+TMwNku8FHA349+if5Vfceijdms9f5LZeC0MhfpDRHcU6UW7SgzYV7wHIPqOfVwtT
+y9XW2IILHQ9VYn1lzDT/MkvqG9Qi2LvMK54UsN+igBDw6ca75ZFqE74cCtAt+WI5
+jgD/cYnqof3UoqyEmfB1ZODISQ+X9/vZYC7Tmm8E24qvD6qaksk5KSElQ2Q0TEFT
+egG6wI6AQ2FYaRq/MJp5acGE1N4puA==
+=fm5C
 -----END PGP SIGNATURE-----
 
---KYDL+JEW1t54otQB--
+--Sig_/KqKqogL2vtBPqf2FMOpa2WP--
