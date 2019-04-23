@@ -1,54 +1,113 @@
-Received: by mail-ot1-f67.google.com with SMTP id e5so8017246otk.12
-        for <u-boot-amlogic@groups.io>; Sun, 21 Apr 2019 12:29:52 -0700 (PDT)
+Received: by mail-wr1-f65.google.com with SMTP id b1so7920697wru.3
+        for <u-boot-amlogic@groups.io>; Tue, 23 Apr 2019 02:29:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QHJM4i3uhBLD/kB1khpb7wdGrsIG86EfCcnQg5LKeXM=;
-        b=K1nzZq+5HtJNm7HOdjfYwn7cFDgnGCcW6G3qdNRY5ah/kQeCkC7d/iDGN8fu54LZ9f
-         IUKdaQjapoiCaOBmQhj9xVPbvNNMRDQLm5ryExYH8Rzso3tQdmllwHioucTZfe9IFIEI
-         6lLAAu9/I83QLFfUJOfCwbB8lXYCEKE9KRwZw=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=g5L0RCJsqA47JgSw3VHnNaVhWpGMfDz5siAiy9V8VJk=;
+        b=ISMZoxOgNt2hDuRYg1shTLSuxIc2zQxpWGx9RiSKc+LwzaJCl7xp19dh1XTIQpmcFO
+         HQxKdRUqeqNh5Olbh2PsuT/CY50HAYqQjHj5qlXz1piYma3O3gfb6xrtw9NR+gMQffVR
+         MrOk7bf+1a35le8xb9LuZf+JS9rUSrenAPQ5ANrVpad6+qSk2HkNd2BQ15AIuKYtSnuI
+         kdXg0P7TSWQgnjckjK0qJJ4tfvneCLq20boUIaBhF4p1R5tkYU81yRRFd7UaRTV2yTQb
+         rCLndYWDee+8BGIvgq+PzZQruQYIiyjF4VhnKa8QPCBWmC7eJk/Gqe7j40x02EDZ1C+t
+         K78Q==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 0/6] ARM: meson: Add support for G12A based U200 board
+References: <20190410152348.13777-1-narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <11305140-ad85-6eb4-b7f5-d6be9991cb28@baylibre.com>
+Date: Tue, 23 Apr 2019 11:29:16 +0200
 MIME-Version: 1.0
-References: <20190417181714.1281-1-narmstrong@baylibre.com>
-In-Reply-To: <20190417181714.1281-1-narmstrong@baylibre.com>
-From: Simon Glass <sjg@chromium.org>
-Date: Sun, 21 Apr 2019 12:29:40 -0700
-Message-ID: <CAPnjgZ3_XPk=C+SKOP860MHU+TUGrwrrqWLXw4faGhRf6kp6wQ@mail.gmail.com>
-Subject: Re: [PATCH v2] regmap: fix regmap_read_poll_timeout warning about sandbox_timer_add_offset
-Content-Type: text/plain; charset="UTF-8"
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Tom Rini <trini@konsulko.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+In-Reply-To: <20190410152348.13777-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: u-boot-amlogic@groups.io
+Cc: u-boot@lists.denx.de, baylibre-upstreaming@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On Wed, 17 Apr 2019 at 11:17, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> When fixing sandbox test for regmap_read_poll_timeout(), the
-> sandbox_timer_add_offset was introduced but only defined in sandbox code
-> thus generating warnings when used out of sandbox :
->
-> include/regmap.h:289:2: note: in expansion of macro 'regmap_read_poll_timeout_test'
-> regmap_read_poll_timeout_test(map, addr, val, cond, sleep_us, \
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/spi/meson_spifc.c:169:8: note: in expansion of macro 'regmap_read_poll_timeout'
-> ret = regmap_read_poll_timeout(spifc->regmap, REG_SLAVE, data,
->         ^~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/spi/meson_spifc.c: In function 'meson_spifc_txrx':
-> include/regmap.h:277:4: warning: implicit declaration of function 'sandbox_timer_add_offset' [-Wimplicit-function-declaration]
->
-> This fix renames the sandbox_timer_add_offset() to a generic timer_test_add_offset()
-> function defined in time.h and renames the implementation and test usages.
->
-> Cc: Simon Glass <sjg@chromium.org>
-> Reported-by: Tom Rini <trini@konsulko.com>
-> Fixes: df9cf1cc08 ("test: dm: regmap: Fix the long test delay")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  arch/sandbox/include/asm/test.h | 8 --------
->  board/sandbox/sandbox.c         | 2 +-
->  drivers/net/sandbox.c           | 2 +-
->  drivers/timer/sandbox_timer.c   | 2 +-
->  include/regmap.h                | 2 +-
->  include/time.h                  | 8 ++++++++
->  6 files changed, 12 insertions(+), 12 deletions(-)
+On 10/04/2019 17:23, Neil Armstrong wrote:
+> This patchset adds basic support for the recent Amlogic G12A SoC family.
+> 
+> This SoC family embeds 4xCortex A53 CPUs, and is very similar to
+> the AXG SoC Family with the multimedia features of previous families.
+> 
+> This patchset adds :
+> - pinctrl support
+> - clk driver atfer a rework of the drivers files
+> - import Linux 5.1-rc1 G12A & U200 DT files
+> - add board/amlogic/u200 to support the U200 reference design
+> 
+> Changes since v1:
+> - add fixup for pinctrl like for AXG
+> 
+> Jerome Brunet (5):
+>   pinctrl: meson: add g12a support
+>   clk: create meson directory and move related drivers
+>   clk: meson: add g12a support
+>   ARM: meson: add G12a support
+>   boards: meson: add g12a u200
+> 
+> Neil Armstrong (1):
+>   ARM: dts: Import Amlogic G12A u200 DT from Linux 5.1-rc1
+> 
+>  MAINTAINERS                                   |    2 +-
+>  arch/arm/dts/Makefile                         |    3 +-
+>  arch/arm/dts/meson-g12a-u200.dts              |   29 +
+>  arch/arm/dts/meson-g12a.dtsi                  |  192 +++
+>  arch/arm/include/asm/arch-meson/clock-g12a.h  |  104 ++
+>  arch/arm/include/asm/arch-meson/g12a.h        |   66 +
+>  arch/arm/mach-meson/Kconfig                   |    9 +-
+>  arch/arm/mach-meson/Makefile                  |    1 +
+>  arch/arm/mach-meson/board-g12a.c              |  150 ++
+>  board/amlogic/u200/MAINTAINERS                |    5 +
+>  board/amlogic/u200/Makefile                   |    6 +
+>  board/amlogic/u200/README                     |  128 ++
+>  board/amlogic/u200/u200.c                     |   22 +
+>  configs/u200_defconfig                        |   40 +
+>  drivers/clk/Kconfig                           |    1 +
+>  drivers/clk/Makefile                          |    2 +-
+>  drivers/clk/meson/Kconfig                     |   23 +
+>  drivers/clk/meson/Makefile                    |    9 +
+>  drivers/clk/{clk_meson_axg.c => meson/axg.c}  |    0
+>  drivers/clk/{ => meson}/clk_meson.h           |    0
+>  drivers/clk/meson/g12a.c                      |  315 ++++
+>  drivers/clk/{clk_meson.c => meson/gxbb.c}     |    0
+>  drivers/pinctrl/meson/Kconfig                 |    4 +
+>  drivers/pinctrl/meson/Makefile                |    1 +
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    | 1294 +++++++++++++++++
+>  drivers/pinctrl/meson/pinctrl-meson.c         |   17 +-
+>  drivers/pinctrl/meson/pinctrl-meson.h         |    1 +
+>  include/dt-bindings/clock/g12a-aoclkc.h       |   34 +
+>  include/dt-bindings/clock/g12a-clkc.h         |  135 ++
+>  include/dt-bindings/gpio/meson-g12a-gpio.h    |  114 ++
+>  .../reset/amlogic,meson-g12a-reset.h          |  134 ++
+>  include/dt-bindings/reset/g12a-aoclkc.h       |   18 +
+>  32 files changed, 2850 insertions(+), 9 deletions(-)
+>  create mode 100644 arch/arm/dts/meson-g12a-u200.dts
+>  create mode 100644 arch/arm/dts/meson-g12a.dtsi
+>  create mode 100644 arch/arm/include/asm/arch-meson/clock-g12a.h
+>  create mode 100644 arch/arm/include/asm/arch-meson/g12a.h
+>  create mode 100644 arch/arm/mach-meson/board-g12a.c
+>  create mode 100644 board/amlogic/u200/MAINTAINERS
+>  create mode 100644 board/amlogic/u200/Makefile
+>  create mode 100644 board/amlogic/u200/README
+>  create mode 100644 board/amlogic/u200/u200.c
+>  create mode 100644 configs/u200_defconfig
+>  create mode 100644 drivers/clk/meson/Kconfig
+>  create mode 100644 drivers/clk/meson/Makefile
+>  rename drivers/clk/{clk_meson_axg.c => meson/axg.c} (100%)
+>  rename drivers/clk/{ => meson}/clk_meson.h (100%)
+>  create mode 100644 drivers/clk/meson/g12a.c
+>  rename drivers/clk/{clk_meson.c => meson/gxbb.c} (100%)
+>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>  create mode 100644 include/dt-bindings/clock/g12a-aoclkc.h
+>  create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+>  create mode 100644 include/dt-bindings/gpio/meson-g12a-gpio.h
+>  create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+>  create mode 100644 include/dt-bindings/reset/g12a-aoclkc.h
+> 
 
-Reviewed-by: Simon Glass <sjg@chromium.org>
+
+Applied to u-boot-amlogic
