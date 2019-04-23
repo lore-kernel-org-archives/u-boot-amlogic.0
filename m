@@ -1,215 +1,285 @@
-Received: by mail-wr1-f45.google.com with SMTP id b1so7927931wru.3
-        for <u-boot-amlogic@groups.io>; Tue, 23 Apr 2019 02:31:01 -0700 (PDT)
+Received: by mail-wm1-f66.google.com with SMTP id o25so17766311wmf.5
+        for <u-boot-amlogic@groups.io>; Tue, 23 Apr 2019 02:32:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=LU4HzE35frL41CHca/H9m8WCjrGhQrHZVkH/4CTkA88=;
-        b=RJJDt7WpjOKdizl6IV83bZZ9eOrfyIfGeF3U23QUO38P2aehnBRkXKzseTrmgdyFAz
-         P/i0geSsozkdSz1EdidiMqz6927h2evaHMll6UMFf6oR1+oWRhqOw+RVjotvLz2xWC4p
-         QcQsElvKRtXCKVbFxarM71pnwlgiwYo+EaY2kvfGRa8RdqV5+rJNnAUkiFwRzm1BgnBK
-         fXdzp+vSTd8w0JZBoqgjwNiv2M3mIPWvVRyLFZdrfOu8kHGzXaqppo8uBc05aJzSGYzu
-         AtFatb2mlWnIamvDkEnfKA2jLu906T00u6IqmrdWkCQ51H6mZQXn6fq/xWY7US1QQFEe
-         4b0Q==
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=lkB0MU9e8c2xs5aHscWJmRPDst9/Dmw408i416cSgH8=;
+        b=WbNG2Dx8Mq4r/Ix+j83uKvf0OwzJaZV9BuY6YEqrjcKiWKDvI2n3BnIQ4vN8Knqfmf
+         NK1eBgJR4xr3UpmGKJXE09XfykE1sX4gTsIakdobnYwd5EMwyNi3yxN+f59N1sxEqsA8
+         hGuE2nEK+n1bYOX48DJnmRT2nX31QwnFKkvoGz5LJs4y8jZl5irCoolEfZDNFmTVfqIM
+         Ak0U7rSZJno3W1l0ebpKNxZFnocfZApmG5OjQXWXwudv+LeHy3qhdRWojFwokchfEpmz
+         ZmWL66ti/M/FM2+10Tjv0kC29xkC8TM0ivo9eEC0cAO2ecueoXxbqg5wYfBueYbVg6CG
+         tNnA==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [U-Boot] [PATCH v2 3/3] mach-meson: g12a: add DWC2 peripheral mode support
+References: <20190401124657.29736-1-narmstrong@baylibre.com>
+ <20190401124657.29736-4-narmstrong@baylibre.com>
+ <20190419081722.6941a8a7@jawa>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190423
-Message-ID: <e7d9cff0-66f0-43b4-7b24-7a5b149f15f6@baylibre.com>
-Date: Tue, 23 Apr 2019 11:30:58 +0200
+Message-ID: <9e88b584-363e-5310-9efc-5ae3a19a0aaf@baylibre.com>
+Date: Tue, 23 Apr 2019 11:31:54 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, baylibre-upstreaming@groups.io
+In-Reply-To: <20190419081722.6941a8a7@jawa>
+Content-Type: multipart/mixed; boundary="Groupsio=0zmcsHXNq5GkVD5ZzzXU"
+To: Lukasz Majewski <lukma@denx.de>
+Cc: marex@denx.de, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+--Groupsio=0zmcsHXNq5GkVD5ZzzXU
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-This PR includes the previous nacked u-boot-amlogic-20190411 PR but include the
-fix for the warning :
-regmap: fix regmap_read_poll_timeout warning about sandbox_timer_add_offset
+Hi Lukasz,
 
-This PR adds support for 3 more Amlogic boards, support printing SoC
-revision information, add AXG family support for I2C and Reset, then
-fixup the AXG pinctrl defintions.
+On 19/04/2019 08:17, Lukasz Majewski wrote:
+> Hi Neil,
+>=20
+>> Adds support for Amlogic G12A USB Device mode.
+>>
+>> The DWC2 Controller behind the Glue can be connected to an OTG
+>> capable PHY. The Glue setups the PHY mode.
+>>
+>> This patch implements Device mode support by adding a
+>> board_usb_init/cleanup setting up the DWC2 controller and switch the
+>> OTG capable port to Device before starting the DWC2 controller in
+>> Device mode.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>=20
+> I wanted to apply this series, but it turned out that it depends on:
+> [U-Boot] [PATCH v2 0/6] ARM: meson: Add support for G12A based U200
+> board
+>=20
+> Let's wait till the above one is pulled to master.
 
-Then it also adds minimal support for G12A SoC and the U200 reference
-design board, and 2 minor defconfig and README fixes.
+I just sent a PR to Tom, will ping you when pulled to master.
 
 Thanks,
 Neil
 
-The following changes since commit 48ff1bc4f0a97c3291d0c87c2717fc1d79da5ef5:
+>=20
+>> ---
+>>  arch/arm/include/asm/arch-meson/usb.h |  12 +++
+>>  arch/arm/mach-meson/board-g12a.c      | 126
+>> ++++++++++++++++++++++++++ 2 files changed, 138 insertions(+)
+>>  create mode 100644 arch/arm/include/asm/arch-meson/usb.h
+>>
+>> diff --git a/arch/arm/include/asm/arch-meson/usb.h
+>> b/arch/arm/include/asm/arch-meson/usb.h new file mode 100644
+>> index 0000000000..b794b5ce77
+>> --- /dev/null
+>> +++ b/arch/arm/include/asm/arch-meson/usb.h
+>> @@ -0,0 +1,12 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ */
+>> +/*
+>> + * Copyright (C) 2019 BayLibre, SAS
+>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+>> + */
+>> +
+>> +#ifndef __MESON_USB_H__
+>> +#define __MESON_USB_H__
+>> +
+>> +int dwc3_meson_g12a_force_mode(struct udevice *dev, enum usb_dr_mode
+>> mode); +
+>> +#endif /* __MESON_USB_H__ */
+>> diff --git a/arch/arm/mach-meson/board-g12a.c
+>> b/arch/arm/mach-meson/board-g12a.c index fc3764b960..1652970fbd 100644
+>> --- a/arch/arm/mach-meson/board-g12a.c
+>> +++ b/arch/arm/mach-meson/board-g12a.c
+>> @@ -12,7 +12,12 @@
+>>  #include <asm/io.h>
+>>  #include <asm/armv8/mmu.h>
+>>  #include <linux/sizes.h>
+>> +#include <usb.h>
+>> +#include <linux/usb/otg.h>
+>> +#include <asm/arch/usb.h>
+>> +#include <usb/dwc2_udc.h>
+>>  #include <phy.h>
+>> +#include <clk.h>
+>>  
+>>  DECLARE_GLOBAL_DATA_PTR;
+>>  
+>> @@ -148,3 +153,124 @@ void meson_eth_init(phy_interface_t mode,
+>> unsigned int flags) /* Enable power gate */
+>>  	clrbits_le32(G12A_MEM_PD_REG_0, G12A_MEM_PD_REG_0_ETH_MASK);
+>>  }
+>> +
+>> +#if CONFIG_IS_ENABLED(USB_DWC3_MESON_G12A) && \
+>> +	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
+>> +static struct dwc2_plat_otg_data meson_g12a_dwc2_data;
+>> +
+>> +int board_usb_init(int index, enum usb_init_type init)
+>> +{
+>> +	struct fdtdec_phandle_args args;
+>> +	const void *blob =3D gd->fdt_blob;
+>> +	int node, dwc2_node;
+>> +	struct udevice *dev, *clk_dev;
+>> +	struct clk clk;
+>> +	int ret;
+>> +
+>> +	/* find the usb glue node */
+>> +	node =3D fdt_node_offset_by_compatible(blob, -1,
+>> +
+>> "amlogic,meson-g12a-usb-ctrl");
+>> +	if (node < 0) {
+>> +	=09debug("Not found usb-control node\n");
+>> +	=09return -ENODEV;
+>> +	}
+>> +
+>> +	if (!fdtdec_get_is_enabled(blob, node)) {
+>> +	=09debug("usb is disabled in the device tree\n");
+>> +	=09return -ENODEV;
+>> +	}
+>> +
+>> +	ret =3D uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS,
+>> node, &dev);
+>> +	if (ret) {
+>> +	=09debug("Not found usb-control device\n");
+>> +	=09return ret;
+>> +	}
+>> +
+>> +	/* find the dwc2 node */
+>> +	dwc2_node =3D fdt_node_offset_by_compatible(blob, node,
+>> +
+>> "amlogic,meson-g12a-usb");
+>> +	if (dwc2_node < 0) {
+>> +	=09debug("Not found dwc2 node\n");
+>> +	=09return -ENODEV;
+>> +	}
+>> +
+>> +	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
+>> +	=09debug("dwc2 is disabled in the device tree\n");
+>> +	=09return -ENODEV;
+>> +	}
+>> +
+>> +	meson_g12a_dwc2_data.regs_otg =3D fdtdec_get_addr(blob,
+>> dwc2_node, "reg");
+>> +	if (meson_g12a_dwc2_data.regs_otg =3D=3D FDT_ADDR_T_NONE) {
+>> +	=09debug("usbotg: can't get base address\n");
+>> +	=09return -ENODATA;
+>> +	}
+>> +
+>> +	/* Enable clock */
+>> +	ret =3D fdtdec_parse_phandle_with_args(blob, dwc2_node,
+>> "clocks",
+>> +	=09	=09	     "#clock-cells", 0, 0,
+>> &args);
+>> +	if (ret) {
+>> +	=09debug("usbotg has no clocks defined in the device
+>> tree\n");
+>> +	=09return ret;
+>> +	}
+>> +
+>> +	ret =3D uclass_get_device_by_of_offset(UCLASS_CLK, args.node,
+>> &clk_dev);
+>> +	if (ret)
+>> +	=09return ret;
+>> +
+>> +	if (args.args_count !=3D 1) {
+>> +	=09debug("Can't find clock ID in the device tree\n");
+>> +	=09return -ENODATA;
+>> +	}
+>> +
+>> +	clk.dev =3D clk_dev;
+>> +	clk.id =3D args.args[0];
+>> +
+>> +	ret =3D clk_enable(&clk);
+>> +	if (ret) {
+>> +	=09debug("Failed to enable usbotg clock\n");
+>> +	=09return ret;
+>> +	}
+>> +
+>> +	meson_g12a_dwc2_data.rx_fifo_sz =3D fdtdec_get_int(blob,
+>> dwc2_node,
+>> +
+>> "g-rx-fifo-size", 0);
+>> +	meson_g12a_dwc2_data.np_tx_fifo_sz =3D fdtdec_get_int(blob,
+>> dwc2_node,
+>> +	=09	=09	=09	"g-np-tx-fifo-size",
+>> 0);
+>> +	meson_g12a_dwc2_data.tx_fifo_sz =3D fdtdec_get_int(blob,
+>> dwc2_node,
+>> +
+>> "g-tx-fifo-size", 0); +
+>> +	/* Switch to peripheral mode */
+>> +	ret =3D dwc3_meson_g12a_force_mode(dev,
+>> USB_DR_MODE_PERIPHERAL);
+>> +	if (ret)
+>> +	=09return ret;
+>> +
+>> +	return dwc2_udc_probe(&meson_g12a_dwc2_data);
+>> +}
+>> +
+>> +int board_usb_cleanup(int index, enum usb_init_type init)
+>> +{
+>> +	const void *blob =3D gd->fdt_blob;
+>> +	struct udevice *dev;
+>> +	int node;
+>> +	int ret;
+>> +
+>> +	/* find the usb glue node */
+>> +	node =3D fdt_node_offset_by_compatible(blob, -1,
+>> +
+>> "amlogic,meson-g12a-usb-ctrl");
+>> +	if (node < 0)
+>> +	=09return -ENODEV;
+>> +
+>> +	if (!fdtdec_get_is_enabled(blob, node))
+>> +	=09return -ENODEV;
+>> +
+>> +	ret =3D uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS,
+>> node, &dev);
+>> +	if (ret)
+>> +	=09return ret;
+>> +
+>> +	/* Switch to OTG mode */
+>> +	ret =3D dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_HOST);
+>> +	if (ret)
+>> +	=09return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +#endif
+>=20
+>=20
+>=20
+>=20
+> Best regards,
+>=20
+> Lukasz Majewski
+>=20
+> --
+>=20
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+>=20
 
-  Merge branch '2019-04-09-master-imports-fs' (2019-04-10 08:18:18 -0400)
 
-are available in the Git repository at:
 
-  git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190423
+--Groupsio=0zmcsHXNq5GkVD5ZzzXU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-for you to fetch changes up to c6e4e8f99c1430e803dc2ef306935a93b46dad7c:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-  board: amlogic-q200: fix Khadas VIM2 README (2019-04-23 11:19:59 +0200)
+iQIcBAEBCAAGBQJcvtuNAAoJEHfc29rIyEnRpvsP+wVeeSoWQlXxeTW7sEMJmt8o
+TdyYE1DQbvG9PsT8fAhaw3xdhjTm6RAlffduRdxJ4sBkLb0i6tOfoYsJK8V6gP0x
+IUIcoGcTyaPH3pRVE0tjxVGS01bDXt1id1kTfJHOy6UXdzXqWQHat8L0/iwGBfO5
+9qmcjwdlhQSmQCfbQO+m10hYKaZtfLbXMwDxhwd4v0ebleeYhDRniFCqp3gbGe7f
+ZrPlBOQD7EBH8DVKjrBhiMyS6Pst6HGsOKXR8vzDutgIcIVLqtQ3aAMghMJ2U2Io
+Rafo+pkTagJFjp/ilyHWbWReGliXSqbcwwXKRwmYzlq4vXHrYvdPI8F0XMhEr124
+PIR5CNNR8NFZotFCJS5wJS492HMscYZyjHpK8pcLJFL0q9oo5lVXDPwWbg/MijP+
+wuteH1NLQiGbz0SJtHZlG81VaezXeSsIv2byZgltf15ApcHURqV6x+mOvdD7Msdj
+rJ7xFwKQrEuXQHXQbha/jB4mOkiaINuoe4bJHVH99LEAM7j0K8tE9qsbZV6oFINe
+/Zg86wiNURHhtxHLjSykOKgeyTyFAewZ/MBB3g279i8ls/1FyfpSpn+faW21o98j
+viDDU/Yb1rfT1kMX+uuhKDbUqaR+VVNXM/dD9tkZ0Jm9xk6dtcnvOLjaeRRvzQl3
+Or8kUfi2KyMl364pkx1H
+=0jqg
+-----END PGP SIGNATURE-----
 
-----------------------------------------------------------------
-- Add support for Amlogic p200 & p201 Reference Designs
-- Add Amlogic SoC information display
-- Add support for the Libretech-AC AML-S805X-AC board
-- Add Amlogic AXG reset compatible
-- Add I2C support for Amlogic AXG
-- Fix AXG PIN and BANK pinctrl definitions
-- Fix regmap_read_poll_timeout warning about sandbox_timer_add_offset
-- Add initial support for Amlogic G12A SoC and U200 board
-- Enable PHY_REALTEK for selected boards
-- Fix Khadas VIM2 README
-
-----------------------------------------------------------------
-Guillaume La Roque (2):
-      i2c: meson: add configurable divider factors
-      pinctrl: meson: axg: Fix PIN and BANK offsets
-
-Jerome Brunet (5):
-      pinctrl: meson: add g12a support
-      clk: create meson directory and move related drivers
-      clk: meson: add g12a support
-      ARM: meson: add G12a support
-      boards: meson: add g12a u200
-
-Julien Masson (1):
-      ARM: meson: display Amlogic SoC Information
-
-Mohammad Rasim (5):
-      ARM: board: meson: rename odroid-c2 to p200
-      ARM: dts: meson: add p200 and p201 boards
-      ARM: dts: meson: add u-boot.dtsi for p200 and p201
-      ARM: board: meson: add p200 board
-      ARM: board: meson: add p201 board
-
-Neil Armstrong (7):
-      ARM: dts: Import libretech-ac DT from Linux 5.0
-      boards: Amlogic: Add support for Libretech-AC
-      reset-meson: Add AXG reset compatible
-      regmap: fix regmap_read_poll_timeout warning about sandbox_timer_add_offset
-      ARM: dts: Import Amlogic G12A u200 DT from Linux 5.1-rc1
-      board: amlogic: enable PHY_REALTEK for selected boards
-      board: amlogic-q200: fix Khadas VIM2 README
-
- MAINTAINERS                                        |    2 +-
- arch/arm/dts/Makefile                              |    6 +-
- arch/arm/dts/meson-g12a-u200.dts                   |   29 +
- arch/arm/dts/meson-g12a.dtsi                       |  192 +++
- arch/arm/dts/meson-gxbb-p200-u-boot.dtsi           |    7 +
- arch/arm/dts/meson-gxbb-p200.dts                   |   99 ++
- arch/arm/dts/meson-gxbb-p201-u-boot.dtsi           |    7 +
- arch/arm/dts/meson-gxbb-p201.dts                   |   26 +
- arch/arm/dts/meson-gxbb-p20x.dtsi                  |  247 ++++
- arch/arm/dts/meson-gxl-s805x-libretech-ac.dts      |  248 ++++
- arch/arm/dts/meson-gxl.dtsi                        |   70 +-
- arch/arm/include/asm/arch-meson/clock-g12a.h       |  104 ++
- arch/arm/include/asm/arch-meson/g12a.h             |   66 +
- arch/arm/mach-meson/Kconfig                        |   11 +-
- arch/arm/mach-meson/Makefile                       |    3 +-
- arch/arm/mach-meson/board-g12a.c                   |  150 +++
- arch/arm/mach-meson/board-info.c                   |  166 +++
- arch/sandbox/include/asm/test.h                    |    8 -
- board/amlogic/{odroid-c2 => p200}/MAINTAINERS      |    6 +-
- board/amlogic/{odroid-c2 => p200}/Makefile         |    2 +-
- board/amlogic/{odroid-c2 => p200}/README.nanopi-k2 |    0
- board/amlogic/{odroid-c2 => p200}/README.odroid-c2 |    0
- board/amlogic/p200/README.p200                     |  103 ++
- .../amlogic/{odroid-c2/odroid-c2.c => p200/p200.c} |    0
- board/amlogic/p201/MAINTAINERS                     |    5 +
- board/amlogic/p201/Makefile                        |    5 +
- board/amlogic/p201/README.p201                     |  103 ++
- board/amlogic/p201/p201.c                          |   43 +
- board/amlogic/p212/MAINTAINERS                     |    1 +
- board/amlogic/p212/README.libretech-ac             |  103 ++
- board/amlogic/q200/README.khadas-vim2              |    4 +-
- board/amlogic/u200/MAINTAINERS                     |    5 +
- board/amlogic/u200/Makefile                        |    6 +
- board/amlogic/u200/README                          |  128 ++
- board/amlogic/u200/u200.c                          |   22 +
- board/sandbox/sandbox.c                            |    2 +-
- configs/khadas-vim2_defconfig                      |    3 +-
- configs/khadas-vim_defconfig                       |    2 +-
- configs/libretech-ac_defconfig                     |   74 ++
- configs/libretech-cc_defconfig                     |    2 +-
- configs/nanopi-k2_defconfig                        |    3 +-
- configs/odroid-c2_defconfig                        |    3 +-
- configs/p200_defconfig                             |   41 +
- configs/p201_defconfig                             |   41 +
- configs/p212_defconfig                             |    2 +-
- configs/s400_defconfig                             |    3 +-
- configs/u200_defconfig                             |   40 +
- drivers/clk/Kconfig                                |    1 +
- drivers/clk/Makefile                               |    2 +-
- drivers/clk/meson/Kconfig                          |   23 +
- drivers/clk/meson/Makefile                         |    9 +
- drivers/clk/{clk_meson_axg.c => meson/axg.c}       |    0
- drivers/clk/{ => meson}/clk_meson.h                |    0
- drivers/clk/meson/g12a.c                           |  315 +++++
- drivers/clk/{clk_meson.c => meson/gxbb.c}          |    0
- drivers/i2c/meson_i2c.c                            |   30 +-
- drivers/net/sandbox.c                              |    2 +-
- drivers/pinctrl/meson/Kconfig                      |    4 +
- drivers/pinctrl/meson/Makefile                     |    1 +
- drivers/pinctrl/meson/pinctrl-meson-axg.c          |  358 +++---
- drivers/pinctrl/meson/pinctrl-meson-g12a.c         | 1294 ++++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson.c              |   17 +-
- drivers/pinctrl/meson/pinctrl-meson.h              |    1 +
- drivers/reset/reset-meson.c                        |    1 +
- drivers/timer/sandbox_timer.c                      |    2 +-
- include/configs/libretech-ac.h                     |   24 +
- include/dt-bindings/clock/g12a-aoclkc.h            |   34 +
- include/dt-bindings/clock/g12a-clkc.h              |  135 ++
- include/dt-bindings/gpio/meson-g12a-gpio.h         |  114 ++
- .../dt-bindings/reset/amlogic,meson-g12a-reset.h   |  134 ++
- include/dt-bindings/reset/g12a-aoclkc.h            |   18 +
- include/regmap.h                                   |    2 +-
- include/time.h                                     |    8 +
- 73 files changed, 4493 insertions(+), 229 deletions(-)
- create mode 100644 arch/arm/dts/meson-g12a-u200.dts
- create mode 100644 arch/arm/dts/meson-g12a.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-p200.dts
- create mode 100644 arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-p201.dts
- create mode 100644 arch/arm/dts/meson-gxbb-p20x.dtsi
- create mode 100644 arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
- create mode 100644 arch/arm/include/asm/arch-meson/clock-g12a.h
- create mode 100644 arch/arm/include/asm/arch-meson/g12a.h
- create mode 100644 arch/arm/mach-meson/board-g12a.c
- create mode 100644 arch/arm/mach-meson/board-info.c
- rename board/amlogic/{odroid-c2 => p200}/MAINTAINERS (70%)
- rename board/amlogic/{odroid-c2 => p200}/Makefile (82%)
- rename board/amlogic/{odroid-c2 => p200}/README.nanopi-k2 (100%)
- rename board/amlogic/{odroid-c2 => p200}/README.odroid-c2 (100%)
- create mode 100644 board/amlogic/p200/README.p200
- rename board/amlogic/{odroid-c2/odroid-c2.c => p200/p200.c} (100%)
- create mode 100644 board/amlogic/p201/MAINTAINERS
- create mode 100644 board/amlogic/p201/Makefile
- create mode 100644 board/amlogic/p201/README.p201
- create mode 100644 board/amlogic/p201/p201.c
- create mode 100644 board/amlogic/p212/README.libretech-ac
- create mode 100644 board/amlogic/u200/MAINTAINERS
- create mode 100644 board/amlogic/u200/Makefile
- create mode 100644 board/amlogic/u200/README
- create mode 100644 board/amlogic/u200/u200.c
- create mode 100644 configs/libretech-ac_defconfig
- create mode 100644 configs/p200_defconfig
- create mode 100644 configs/p201_defconfig
- create mode 100644 configs/u200_defconfig
- create mode 100644 drivers/clk/meson/Kconfig
- create mode 100644 drivers/clk/meson/Makefile
- rename drivers/clk/{clk_meson_axg.c => meson/axg.c} (100%)
- rename drivers/clk/{ => meson}/clk_meson.h (100%)
- create mode 100644 drivers/clk/meson/g12a.c
- rename drivers/clk/{clk_meson.c => meson/gxbb.c} (100%)
- create mode 100644 drivers/pinctrl/meson/pinctrl-meson-g12a.c
- create mode 100644 include/configs/libretech-ac.h
- create mode 100644 include/dt-bindings/clock/g12a-aoclkc.h
- create mode 100644 include/dt-bindings/clock/g12a-clkc.h
- create mode 100644 include/dt-bindings/gpio/meson-g12a-gpio.h
- create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-reset.h
- create mode 100644 include/dt-bindings/reset/g12a-aoclkc.h
+--Groupsio=0zmcsHXNq5GkVD5ZzzXU--
