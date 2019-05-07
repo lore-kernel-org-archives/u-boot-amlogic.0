@@ -1,21 +1,21 @@
-Received: by mail-wr1-f66.google.com with SMTP id v10so8809224wrt.6
-        for <u-boot-amlogic@groups.io>; Tue, 07 May 2019 01:44:02 -0700 (PDT)
+Received: by mail-wm1-f65.google.com with SMTP id j187so2685773wmj.1
+        for <u-boot-amlogic@groups.io>; Tue, 07 May 2019 01:44:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NJpiIcORV2zXECA81N3gBzVukxffqnTjr414Gm3KahI=;
-        b=c8bdOO4k9sBnVzUtq9sUKBd4D9G83mGrLeNHkQJEmqfqE7Fp7R1vCoJgl0ivyIcgEq
-         KGdLqModuFt7xAt2Bz/huAeUlJSa0itd2eOWEClpqLrS7deJ79LY/sSW9fNJ1PnCVQzW
-         kH/vTFkH2sFwlMXCkxHG5sA+5Ia2M9rH/hiuEoOsOrWHdeLdsKwg2guuJmD2NnuRTdyy
-         O8m8l1rfcKHDG//ZHlql61e/zwPO/XE2aMzD5NdzmytDUSW6q6XcuOJrvXXcslkEWCAw
-         9IyfBYkX0uF8hNTPOVDdi7QyWbpq4J5PJCDklA1YreJIAFMYA156oFMTeOVshKfWuYm+
-         3x4g==
+        bh=RttoshIXTLaw8ESHhvvLuuHe5MeRvtvIluoVCGI7fmE=;
+        b=XiScbFLyM28mwiplDksc4eYJmrXMxzYDNxo/66+CRVi6Q7fUpDvoPA09nwaAnuYCmt
+         bh8QlW6lY+zPJYyxXT8xogVJMOZaYz8+Ro+yAbzIEzejMe7jSF/8O4vECfLBjOBYksN7
+         GJELMPkXukNYacLarc3JaAhMiasn0wRJdxHMWqERx8S5DJgC1oqDtQCUA4fJS2oSCeQM
+         iX50QFYFkkWJIswf7KLeg3hsiV4hgR7eN9SVxg7M/V7MtfrfLZ1gfIZL+cQQuaoxRVkD
+         pic7+M3mzhAkB3jM18PD3/37pisFEi+QugcjeDBr6wJQWN3n/3arez8HJbBmGFb5fOk/
+         7Pig==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v3 1/3] usb: dwc3: Add Meson G12A USB Glue
-Date: Tue,  7 May 2019 10:43:37 +0200
-Message-Id: <20190507084339.14723-2-narmstrong@baylibre.com>
+Subject: [PATCH v3 2/3] phy: meson: add Amlogic G12A USB2 and USB3+PCIE PHY drivers
+Date: Tue,  7 May 2019 10:43:38 +0200
+Message-Id: <20190507084339.14723-3-narmstrong@baylibre.com>
 In-Reply-To: <20190507084339.14723-1-narmstrong@baylibre.com>
 References: <20190507084339.14723-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -24,417 +24,609 @@ To: marex@denx.de, lukma@denx.de
 Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Adds support for Amlogic G12A USB Control Glue HW.
+This adds support for the USB PHYs found in the Amlogic G12A SoC Family.
 
-The Amlogic G12A SoC Family embeds 2 USB Controllers :
-- a DWC3 IP configured as Host for USB2 and USB3
-- a DWC2 IP configured as Peripheral USB2 Only
+The USB2 PHY supports Host and/or Peripheral mode, depending on it's position.
+The first PHY is only used as Host, but the second supports Dual modes
+defined by the USB Control Glue HW in front of the USB Controllers.
 
-A glue connects these both controllers to 2 USB2 PHYs, and optionnally
-to an USB3+PCIE Combo PHY shared with the PCIE controller.
-
-The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
-routing of the OTG PHY between the DWC3 and DWC2 controllers, and
-setups the on-chip OTG mode selection for this PHY.
-
-This driver sets the OTG capable port as Host mode by default,
-the switch to Device mode is to be done in a separate patch.
+The second driver supports USB3 Host mode or PCIE 2.0 mode, depending on
+the layout of the board.
+Selection is done by the #phy-cells, making the mode static and exclusive.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Marek Vasut <marex@denx.de>
 ---
- drivers/usb/dwc3/Kconfig           |   8 +
- drivers/usb/dwc3/Makefile          |   1 +
- drivers/usb/dwc3/dwc3-meson-g12a.c | 456 +++++++++++++++++++++++++++++
- 3 files changed, 465 insertions(+)
- create mode 100644 drivers/usb/dwc3/dwc3-meson-g12a.c
+ drivers/phy/Kconfig                |   8 +
+ drivers/phy/Makefile               |   1 +
+ drivers/phy/meson-g12a-usb2.c      | 216 ++++++++++++++++++
+ drivers/phy/meson-g12a-usb3-pcie.c | 345 +++++++++++++++++++++++++++++
+ 4 files changed, 570 insertions(+)
+ create mode 100644 drivers/phy/meson-g12a-usb2.c
+ create mode 100644 drivers/phy/meson-g12a-usb3-pcie.c
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index bbd8105c06..25e1a38aee 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -44,6 +44,14 @@ config USB_DWC3_GENERIC
- 	  Select this for Xilinx ZynqMP and similar Platforms.
- 	  This wrapper supports Host and Peripheral operation modes.
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 102fb91fff..957efb3984 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -147,6 +147,14 @@ config MESON_GXL_USB_PHY
+ 	  This is the generic phy driver for the Amlogic Meson GXL
+ 	  USB2 and USB3 PHYS.
  
-+config USB_DWC3_MESON_G12A
-+	bool "Amlogic Meson G12A USB wrapper"
-+	depends on DM_USB && USB_DWC3 && ARCH_MESON
-+	imply PHY
++config MESON_G12A_USB_PHY
++	bool "Amlogic Meson G12A USB PHYs"
++	depends on PHY && ARCH_MESON && MESON_G12A
++	imply REGMAP
 +	help
-+	  Select this for Amlogic Meson G12A Platforms.
-+	  This wrapper supports Host and Peripheral operation modes.
++	  This is the generic phy driver for the Amlogic Meson G12A
++	  USB2 and USB3 PHYS.
 +
- config USB_DWC3_UNIPHIER
- 	bool "DesignWare USB3 Host Support on UniPhier Platforms"
- 	depends on ARCH_UNIPHIER && USB_XHCI_DWC3
-diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
-index 60b5515a67..0b652a6f36 100644
---- a/drivers/usb/dwc3/Makefile
-+++ b/drivers/usb/dwc3/Makefile
-@@ -7,6 +7,7 @@ dwc3-y					:= core.o
- obj-$(CONFIG_USB_DWC3_GADGET)		+= gadget.o ep0.o
- 
- obj-$(CONFIG_USB_DWC3_OMAP)		+= dwc3-omap.o
-+obj-$(CONFIG_USB_DWC3_MESON_G12A)	+= dwc3-meson-g12a.o
- obj-$(CONFIG_USB_DWC3_GENERIC)		+= dwc3-generic.o
- obj-$(CONFIG_USB_DWC3_UNIPHIER)		+= dwc3-uniphier.o
- obj-$(CONFIG_USB_DWC3_PHY_OMAP)		+= ti_usb_phy.o
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+ config MSM8916_USB_PHY
+ 	bool "Qualcomm MSM8916 USB PHY support"
+ 	depends on PHY
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index b55917bce1..90646ca55b 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_PHY_RCAR_GEN2) += phy-rcar-gen2.o
+ obj-$(CONFIG_PHY_RCAR_GEN3) += phy-rcar-gen3.o
+ obj-$(CONFIG_PHY_STM32_USBPHYC) += phy-stm32-usbphyc.o
+ obj-$(CONFIG_MESON_GXL_USB_PHY) += meson-gxl-usb2.o meson-gxl-usb3.o
++obj-$(CONFIG_MESON_G12A_USB_PHY) += meson-g12a-usb2.o meson-g12a-usb3-pcie.o
+ obj-$(CONFIG_MSM8916_USB_PHY) += msm8916-usbh-phy.o
+ obj-$(CONFIG_OMAP_USB2_PHY) += omap-usb2-phy.o
+ obj-$(CONFIG_KEYSTONE_USB_PHY) += keystone-usb-phy.o
+diff --git a/drivers/phy/meson-g12a-usb2.c b/drivers/phy/meson-g12a-usb2.c
 new file mode 100644
-index 0000000000..832bcd70ff
+index 0000000000..ad1a77fcfc
 --- /dev/null
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -0,0 +1,456 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/drivers/phy/meson-g12a-usb2.c
+@@ -0,0 +1,216 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Amlogic G12A DWC3 Glue layer
++ * Meson G12A USB2 PHY driver
 + *
++ * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 + * Copyright (C) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ * Author: Neil Armstrong <narmstron@baylibre.com>
 + */
 +
 +#include <common.h>
-+#include <asm-generic/io.h>
++#include <asm/io.h>
++#include <bitfield.h>
 +#include <dm.h>
-+#include <dm/device-internal.h>
-+#include <dm/lists.h>
-+#include <dwc3-uboot.h>
++#include <errno.h>
 +#include <generic-phy.h>
-+#include <linux/usb/ch9.h>
-+#include <linux/usb/gadget.h>
-+#include <malloc.h>
 +#include <regmap.h>
-+#include <usb.h>
-+#include "core.h"
-+#include "gadget.h"
++#include <power/regulator.h>
 +#include <reset.h>
 +#include <clk.h>
-+#include <power/regulator.h>
-+#include <linux/bitfield.h>
++
 +#include <linux/bitops.h>
 +#include <linux/compat.h>
 +
-+/* USB2 Ports Control Registers */
++#define PHY_CTRL_R0						0x0
++#define PHY_CTRL_R1						0x4
++#define PHY_CTRL_R2						0x8
++#define PHY_CTRL_R3						0xc
++#define PHY_CTRL_R4						0x10
++#define PHY_CTRL_R5						0x14
++#define PHY_CTRL_R6						0x18
++#define PHY_CTRL_R7						0x1c
++#define PHY_CTRL_R8						0x20
++#define PHY_CTRL_R9						0x24
++#define PHY_CTRL_R10						0x28
++#define PHY_CTRL_R11						0x2c
++#define PHY_CTRL_R12						0x30
++#define PHY_CTRL_R13						0x34
++#define PHY_CTRL_R14						0x38
++#define PHY_CTRL_R15						0x3c
++#define PHY_CTRL_R16						0x40
++#define PHY_CTRL_R17						0x44
++#define PHY_CTRL_R18						0x48
++#define PHY_CTRL_R19						0x4c
++#define PHY_CTRL_R20						0x50
++#define PHY_CTRL_R21						0x54
++#define PHY_CTRL_R22						0x58
++#define PHY_CTRL_R23						0x5c
 +
-+#define U2P_REG_SIZE						0x20
++#define RESET_COMPLETE_TIME					1000
++#define PLL_RESET_COMPLETE_TIME					100
 +
-+#define U2P_R0							0x0
-+	#define U2P_R0_HOST_DEVICE				BIT(0)
-+	#define U2P_R0_POWER_OK					BIT(1)
-+	#define U2P_R0_HAST_MODE				BIT(2)
-+	#define U2P_R0_POWER_ON_RESET				BIT(3)
-+	#define U2P_R0_ID_PULLUP				BIT(4)
-+	#define U2P_R0_DRV_VBUS					BIT(5)
-+
-+#define U2P_R1							0x4
-+	#define U2P_R1_PHY_READY				BIT(0)
-+	#define U2P_R1_ID_DIG					BIT(1)
-+	#define U2P_R1_OTG_SESSION_VALID			BIT(2)
-+	#define U2P_R1_VBUS_VALID				BIT(3)
-+
-+/* USB Glue Control Registers */
-+
-+#define USB_R0							0x80
-+	#define USB_R0_P30_LANE0_TX2RX_LOOPBACK			BIT(17)
-+	#define USB_R0_P30_LANE0_EXT_PCLK_REQ			BIT(18)
-+	#define USB_R0_P30_PCS_RX_LOS_MASK_VAL_MASK		GENMASK(28, 19)
-+	#define USB_R0_U2D_SS_SCALEDOWN_MODE_MASK		GENMASK(30, 29)
-+	#define USB_R0_U2D_ACT					BIT(31)
-+
-+#define USB_R1							0x84
-+	#define USB_R1_U3H_BIGENDIAN_GS				BIT(0)
-+	#define USB_R1_U3H_PME_ENABLE				BIT(1)
-+	#define USB_R1_U3H_HUB_PORT_OVERCURRENT_MASK		GENMASK(4, 2)
-+	#define USB_R1_U3H_HUB_PORT_PERM_ATTACH_MASK		GENMASK(9, 7)
-+	#define USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK		GENMASK(13, 12)
-+	#define USB_R1_U3H_HOST_U3_PORT_DISABLE			BIT(16)
-+	#define USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT	BIT(17)
-+	#define USB_R1_U3H_HOST_MSI_ENABLE			BIT(18)
-+	#define USB_R1_U3H_FLADJ_30MHZ_REG_MASK			GENMASK(24, 19)
-+	#define USB_R1_P30_PCS_TX_SWING_FULL_MASK		GENMASK(31, 25)
-+
-+#define USB_R2							0x88
-+	#define USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK		GENMASK(25, 20)
-+	#define USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK		GENMASK(31, 26)
-+
-+#define USB_R3							0x8c
-+	#define USB_R3_P30_SSC_ENABLE				BIT(0)
-+	#define USB_R3_P30_SSC_RANGE_MASK			GENMASK(3, 1)
-+	#define USB_R3_P30_SSC_REF_CLK_SEL_MASK			GENMASK(12, 4)
-+	#define USB_R3_P30_REF_SSP_EN				BIT(13)
-+
-+#define USB_R4							0x90
-+	#define USB_R4_P21_PORT_RESET_0				BIT(0)
-+	#define USB_R4_P21_SLEEP_M0				BIT(1)
-+	#define USB_R4_MEM_PD_MASK				GENMASK(3, 2)
-+	#define USB_R4_P21_ONLY					BIT(4)
-+
-+#define USB_R5							0x94
-+	#define USB_R5_ID_DIG_SYNC				BIT(0)
-+	#define USB_R5_ID_DIG_REG				BIT(1)
-+	#define USB_R5_ID_DIG_CFG_MASK				GENMASK(3, 2)
-+	#define USB_R5_ID_DIG_EN_0				BIT(4)
-+	#define USB_R5_ID_DIG_EN_1				BIT(5)
-+	#define USB_R5_ID_DIG_CURR				BIT(6)
-+	#define USB_R5_ID_DIG_IRQ				BIT(7)
-+	#define USB_R5_ID_DIG_TH_MASK				GENMASK(15, 8)
-+	#define USB_R5_ID_DIG_CNT_MASK				GENMASK(23, 16)
-+
-+enum {
-+	USB2_HOST_PHY = 0,
-+	USB2_OTG_PHY,
-+	USB3_HOST_PHY,
-+	PHY_COUNT,
-+};
-+
-+static const char *phy_names[PHY_COUNT] = {
-+	"usb2-phy0", "usb2-phy1", "usb3-phy0",
-+};
-+
-+struct dwc3_meson_g12a {
-+	struct udevice		*dev;
-+	struct regmap           *regmap;
++struct phy_meson_g12a_usb2_priv {
++	struct regmap		*regmap;
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	struct udevice		*phy_supply;
++#endif
++#if CONFIG_IS_ENABLED(CLK)
 +	struct clk		clk;
-+	struct reset_ctl	reset;
-+	struct phy		phys[PHY_COUNT];
-+	enum usb_dr_mode	otg_mode;
-+	enum usb_dr_mode	otg_phy_mode;
-+	unsigned int		usb2_ports;
-+	unsigned int		usb3_ports;
-+#if CONFIG_IS_ENABLED(DM_REGULATOR)
-+	struct udevice		*vbus_supply;
 +#endif
++	struct reset_ctl	reset;
 +};
 +
-+#define U2P_REG_SIZE						0x20
-+#define USB_REG_OFFSET						0x80
 +
-+static void dwc3_meson_g12a_usb2_set_mode(struct dwc3_meson_g12a *priv,
-+					  int i, enum usb_dr_mode mode)
++static int phy_meson_g12a_usb2_power_on(struct phy *phy)
 +{
-+	switch (mode) {
-+	case USB_DR_MODE_HOST:
-+	case USB_DR_MODE_OTG:
-+	case USB_DR_MODE_UNKNOWN:
-+		regmap_update_bits(priv->regmap, U2P_R0 + (U2P_REG_SIZE * i),
-+				U2P_R0_HOST_DEVICE,
-+				U2P_R0_HOST_DEVICE);
-+		break;
-+
-+	case USB_DR_MODE_PERIPHERAL:
-+		regmap_update_bits(priv->regmap, U2P_R0 + (U2P_REG_SIZE * i),
-+				U2P_R0_HOST_DEVICE, 0);
-+		break;
-+	}
-+}
-+
-+static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv)
-+{
-+	int i;
-+
-+	if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
-+		priv->otg_phy_mode = USB_DR_MODE_PERIPHERAL;
-+	else
-+		priv->otg_phy_mode = USB_DR_MODE_HOST;
-+
-+	for (i = 0 ; i < USB3_HOST_PHY ; ++i) {
-+		if (!priv->phys[i].dev)
-+			continue;
-+
-+		regmap_update_bits(priv->regmap, U2P_R0 + (U2P_REG_SIZE * i),
-+				   U2P_R0_POWER_ON_RESET,
-+				   U2P_R0_POWER_ON_RESET);
-+
-+		if (i == USB2_OTG_PHY) {
-+			regmap_update_bits(priv->regmap,
-+					   U2P_R0 + (U2P_REG_SIZE * i),
-+					   U2P_R0_ID_PULLUP | U2P_R0_DRV_VBUS,
-+					   U2P_R0_ID_PULLUP | U2P_R0_DRV_VBUS);
-+
-+			dwc3_meson_g12a_usb2_set_mode(priv, i,
-+						      priv->otg_phy_mode);
-+		} else
-+			dwc3_meson_g12a_usb2_set_mode(priv, i,
-+						      USB_DR_MODE_HOST);
-+
-+		regmap_update_bits(priv->regmap, U2P_R0 + (U2P_REG_SIZE * i),
-+				   U2P_R0_POWER_ON_RESET, 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static void dwc3_meson_g12a_usb3_init(struct dwc3_meson_g12a *priv)
-+{
-+	regmap_update_bits(priv->regmap, USB_R3,
-+			USB_R3_P30_SSC_RANGE_MASK |
-+			USB_R3_P30_REF_SSP_EN,
-+			USB_R3_P30_SSC_ENABLE |
-+			FIELD_PREP(USB_R3_P30_SSC_RANGE_MASK, 2) |
-+			USB_R3_P30_REF_SSP_EN);
-+	udelay(2);
-+
-+	regmap_update_bits(priv->regmap, USB_R2,
-+			USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK,
-+			FIELD_PREP(USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK, 0x15));
-+
-+	regmap_update_bits(priv->regmap, USB_R2,
-+			USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK,
-+			FIELD_PREP(USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK, 0x20));
-+
-+	udelay(2);
-+
-+	regmap_update_bits(priv->regmap, USB_R1,
-+			USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT,
-+			USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT);
-+
-+	regmap_update_bits(priv->regmap, USB_R1,
-+			USB_R1_P30_PCS_TX_SWING_FULL_MASK,
-+			FIELD_PREP(USB_R1_P30_PCS_TX_SWING_FULL_MASK, 127));
-+}
-+
-+static void dwc3_meson_g12a_usb_init_mode(struct dwc3_meson_g12a *priv)
-+{
-+	if (priv->otg_phy_mode == USB_DR_MODE_PERIPHERAL) {
-+		regmap_update_bits(priv->regmap, USB_R0,
-+				USB_R0_U2D_ACT, USB_R0_U2D_ACT);
-+		regmap_update_bits(priv->regmap, USB_R0,
-+				USB_R0_U2D_SS_SCALEDOWN_MODE_MASK, 0);
-+		regmap_update_bits(priv->regmap, USB_R4,
-+				USB_R4_P21_SLEEP_M0, USB_R4_P21_SLEEP_M0);
-+	} else {
-+		regmap_update_bits(priv->regmap, USB_R0,
-+				USB_R0_U2D_ACT, 0);
-+		regmap_update_bits(priv->regmap, USB_R4,
-+				USB_R4_P21_SLEEP_M0, 0);
-+	}
-+}
-+
-+static int dwc3_meson_g12a_usb_init(struct dwc3_meson_g12a *priv)
-+{
-+	int ret;
-+
-+	ret = dwc3_meson_g12a_usb2_init(priv);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(priv->regmap, USB_R1,
-+			USB_R1_U3H_FLADJ_30MHZ_REG_MASK,
-+			FIELD_PREP(USB_R1_U3H_FLADJ_30MHZ_REG_MASK, 0x20));
-+
-+	regmap_update_bits(priv->regmap, USB_R5,
-+			USB_R5_ID_DIG_EN_0,
-+			USB_R5_ID_DIG_EN_0);
-+	regmap_update_bits(priv->regmap, USB_R5,
-+			USB_R5_ID_DIG_EN_1,
-+			USB_R5_ID_DIG_EN_1);
-+	regmap_update_bits(priv->regmap, USB_R5,
-+			USB_R5_ID_DIG_TH_MASK,
-+			FIELD_PREP(USB_R5_ID_DIG_TH_MASK, 0xff));
-+
-+	/* If we have an actual SuperSpeed port, initialize it */
-+	if (priv->usb3_ports)
-+		dwc3_meson_g12a_usb3_init(priv);
-+
-+	dwc3_meson_g12a_usb_init_mode(priv);
-+
-+	return 0;
-+}
-+
-+int dwc3_meson_g12a_force_mode(struct udevice *dev, enum usb_dr_mode mode)
-+{
-+	struct dwc3_meson_g12a *priv = dev_get_platdata(dev);
-+
-+	if (!priv)
-+		return -EINVAL;
-+
-+	if (mode != USB_DR_MODE_HOST && mode != USB_DR_MODE_PERIPHERAL)
-+		return -EINVAL;
-+
-+	if (!priv->phys[USB2_OTG_PHY].dev)
-+		return -EINVAL;
-+
-+	if (mode == priv->otg_mode)
-+		return 0;
-+
-+	if (mode == USB_DR_MODE_HOST)
-+		debug("%s: switching to Host Mode\n", __func__);
-+	else
-+		debug("%s: switching to Device Mode\n", __func__);
++	struct udevice *dev = phy->dev;
++	struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
 +
 +#if CONFIG_IS_ENABLED(DM_REGULATOR)
-+	if (priv->vbus_supply) {
-+		int ret = regulator_set_enable(priv->vbus_supply,
-+					(mode == USB_DR_MODE_PERIPHERAL));
++	if (priv->phy_supply) {
++		int ret = regulator_set_enable(priv->phy_supply, true);
 +		if (ret)
 +			return ret;
 +	}
 +#endif
-+	priv->otg_phy_mode = mode;
-+
-+	dwc3_meson_g12a_usb2_set_mode(priv, USB2_OTG_PHY, mode);
-+
-+	dwc3_meson_g12a_usb_init_mode(priv);
 +
 +	return 0;
 +}
 +
-+static int dwc3_meson_g12a_get_phys(struct dwc3_meson_g12a *priv)
++static int phy_meson_g12a_usb2_power_off(struct phy *phy)
 +{
-+	int i, ret;
++	struct udevice *dev = phy->dev;
++	struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
 +
-+	for (i = 0 ; i < PHY_COUNT ; ++i) {
-+		ret = generic_phy_get_by_name(priv->dev, phy_names[i],
-+					      &priv->phys[i]);
-+		if (ret == -ENOENT)
-+			continue;
-+
-+		if (ret)
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	if (priv->phy_supply) {
++		int ret = regulator_set_enable(priv->phy_supply, false);
++		if (ret) {
++			pr_err("Error disabling PHY supply\n");
 +			return ret;
-+
-+		if (i == USB3_HOST_PHY)
-+			priv->usb3_ports++;
-+		else
-+			priv->usb2_ports++;
++		}
 +	}
-+
-+	debug("%s: usb2 ports: %d\n", __func__, priv->usb2_ports);
-+	debug("%s: usb3 ports: %d\n", __func__, priv->usb3_ports);
++#endif
 +
 +	return 0;
 +}
 +
-+static int dwc3_meson_g12a_reset_init(struct dwc3_meson_g12a *priv)
++static int phy_meson_g12a_usb2_init(struct phy *phy)
 +{
++	struct udevice *dev = phy->dev;
++	struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
 +	int ret;
-+
-+	ret = reset_get_by_index(priv->dev, 0, &priv->reset);
-+	if (ret)
-+		return ret;
 +
 +	ret = reset_assert(&priv->reset);
 +	udelay(1);
 +	ret |= reset_deassert(&priv->reset);
-+	if (ret) {
-+		reset_free(&priv->reset);
++	if (ret)
 +		return ret;
-+	}
++
++	udelay(RESET_COMPLETE_TIME);
++
++	/* usb2_otg_aca_en == 0 */
++	regmap_update_bits(priv->regmap, PHY_CTRL_R21, BIT(2), 0);
++
++	/* PLL Setup : 24MHz * 20 / 1 = 480MHz */
++	regmap_write(priv->regmap, PHY_CTRL_R16, 0x39400414);
++	regmap_write(priv->regmap, PHY_CTRL_R17, 0x927e0000);
++	regmap_write(priv->regmap, PHY_CTRL_R18, 0xac5f49e5);
++
++	udelay(PLL_RESET_COMPLETE_TIME);
++
++	/* UnReset PLL */
++	regmap_write(priv->regmap, PHY_CTRL_R16, 0x19400414);
++
++	/* PHY Tuning */
++	regmap_write(priv->regmap, PHY_CTRL_R20, 0xfe18);
++	regmap_write(priv->regmap, PHY_CTRL_R4, 0x8000fff);
++
++	/* Tuning Disconnect Threshold */
++	regmap_write(priv->regmap, PHY_CTRL_R3, 0x34);
++
++	/* Analog Settings */
++	regmap_write(priv->regmap, PHY_CTRL_R14, 0);
++	regmap_write(priv->regmap, PHY_CTRL_R13, 0x78000);
 +
 +	return 0;
 +}
 +
-+static int dwc3_meson_g12a_clk_init(struct dwc3_meson_g12a *priv)
++static int phy_meson_g12a_usb2_exit(struct phy *phy)
 +{
++	struct udevice *dev = phy->dev;
++	struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
 +	int ret;
 +
-+	ret = clk_get_by_index(priv->dev, 0, &priv->clk);
++	ret = reset_assert(&priv->reset);
 +	if (ret)
 +		return ret;
 +
-+#if CONFIG_IS_ENABLED(CLK)
-+	ret = clk_enable(&priv->clk);
++	return 0;
++}
++
++struct phy_ops meson_g12a_usb2_phy_ops = {
++	.init = phy_meson_g12a_usb2_init,
++	.exit = phy_meson_g12a_usb2_exit,
++	.power_on = phy_meson_g12a_usb2_power_on,
++	.power_off = phy_meson_g12a_usb2_power_off,
++};
++
++int meson_g12a_usb2_phy_probe(struct udevice *dev)
++{
++	struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
++	int ret;
++
++	ret = regmap_init_mem(dev_ofnode(dev), &priv->regmap);
++	if (ret)
++		return ret;
++
++	ret = reset_get_by_index(dev, 0, &priv->reset);
++	if (ret == -ENOTSUPP)
++		return 0;
++	else if (ret)
++		return ret;
++
++	ret = reset_deassert(&priv->reset);
 +	if (ret) {
++		reset_release_all(&priv->reset, 1);
++		return ret;
++	}
++
++#if CONFIG_IS_ENABLED(CLK)
++	ret = clk_get_by_index(dev, 0, &priv->clk);
++	if (ret < 0)
++		return ret;
++
++	ret = clk_enable(&priv->clk);
++	if (ret && ret != -ENOSYS && ret != -ENOTSUPP) {
++		pr_err("failed to enable PHY clock\n");
++		clk_free(&priv->clk);
++		return ret;
++	}
++#endif
++
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	ret = device_get_supply_regulator(dev, "phy-supply", &priv->phy_supply);
++	if (ret && ret != -ENOENT) {
++		pr_err("Failed to get PHY regulator\n");
++		return ret;
++	}
++#endif
++
++	return 0;
++}
++
++static const struct udevice_id meson_g12a_usb2_phy_ids[] = {
++	{ .compatible = "amlogic,g12a-usb2-phy" },
++	{ }
++};
++
++U_BOOT_DRIVER(meson_g12a_usb2_phy) = {
++	.name = "meson_g12a_usb2_phy",
++	.id = UCLASS_PHY,
++	.of_match = meson_g12a_usb2_phy_ids,
++	.probe = meson_g12a_usb2_phy_probe,
++	.ops = &meson_g12a_usb2_phy_ops,
++	.priv_auto_alloc_size = sizeof(struct phy_meson_g12a_usb2_priv),
++};
+diff --git a/drivers/phy/meson-g12a-usb3-pcie.c b/drivers/phy/meson-g12a-usb3-pcie.c
+new file mode 100644
+index 0000000000..920675dc99
+--- /dev/null
++++ b/drivers/phy/meson-g12a-usb3-pcie.c
+@@ -0,0 +1,345 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Meson G12A USB3+PCIE Combo PHY driver
++ *
++ * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ * Copyright (C) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstron@baylibre.com>
++ */
++
++#include <common.h>
++#include <clk.h>
++#include <dm.h>
++#include <regmap.h>
++#include <errno.h>
++#include <asm/io.h>
++#include <reset.h>
++#include <bitfield.h>
++#include <generic-phy.h>
++
++#include <linux/bitops.h>
++#include <linux/compat.h>
++#include <linux/bitfield.h>
++
++#define PHY_R0							0x00
++	#define PHY_R0_PCIE_POWER_STATE				GENMASK(4, 0)
++	#define PHY_R0_PCIE_USB3_SWITCH				GENMASK(6, 5)
++
++#define PHY_R1							0x04
++	#define PHY_R1_PHY_TX1_TERM_OFFSET			GENMASK(4, 0)
++	#define PHY_R1_PHY_TX0_TERM_OFFSET			GENMASK(9, 5)
++	#define PHY_R1_PHY_RX1_EQ				GENMASK(12, 10)
++	#define PHY_R1_PHY_RX0_EQ				GENMASK(15, 13)
++	#define PHY_R1_PHY_LOS_LEVEL				GENMASK(20, 16)
++	#define PHY_R1_PHY_LOS_BIAS				GENMASK(23, 21)
++	#define PHY_R1_PHY_REF_CLKDIV2				BIT(24)
++	#define PHY_R1_PHY_MPLL_MULTIPLIER			GENMASK(31, 25)
++
++#define PHY_R2							0x08
++	#define PHY_R2_PCS_TX_DEEMPH_GEN2_6DB			GENMASK(5, 0)
++	#define PHY_R2_PCS_TX_DEEMPH_GEN2_3P5DB			GENMASK(11, 6)
++	#define PHY_R2_PCS_TX_DEEMPH_GEN1			GENMASK(17, 12)
++	#define PHY_R2_PHY_TX_VBOOST_LVL			GENMASK(20, 18)
++
++#define PHY_R4							0x10
++	#define PHY_R4_PHY_CR_WRITE				BIT(0)
++	#define PHY_R4_PHY_CR_READ				BIT(1)
++	#define PHY_R4_PHY_CR_DATA_IN				GENMASK(17, 2)
++	#define PHY_R4_PHY_CR_CAP_DATA				BIT(18)
++	#define PHY_R4_PHY_CR_CAP_ADDR				BIT(19)
++
++#define PHY_R5							0x14
++	#define PHY_R5_PHY_CR_DATA_OUT				GENMASK(15, 0)
++	#define PHY_R5_PHY_CR_ACK				BIT(16)
++	#define PHY_R5_PHY_BS_OUT				BIT(17)
++
++struct phy_g12a_usb3_pcie_priv {
++	struct regmap		*regmap;
++#if CONFIG_IS_ENABLED(CLK)
++	struct clk		clk;
++#endif
++	struct reset_ctl_bulk	resets;
++};
++
++static int phy_g12a_usb3_pcie_cr_bus_addr(struct phy_g12a_usb3_pcie_priv *priv,
++					  unsigned int addr)
++{
++	unsigned int val, reg;
++	int ret;
++
++	reg = FIELD_PREP(PHY_R4_PHY_CR_DATA_IN, addr);
++
++	regmap_write(priv->regmap, PHY_R4, reg);
++	regmap_write(priv->regmap, PHY_R4, reg);
++
++	regmap_write(priv->regmap, PHY_R4, reg | PHY_R4_PHY_CR_CAP_ADDR);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       (val & PHY_R5_PHY_CR_ACK),
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	regmap_write(priv->regmap, PHY_R4, reg);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       !(val & PHY_R5_PHY_CR_ACK),
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int
++phy_g12a_usb3_pcie_cr_bus_read(struct phy_g12a_usb3_pcie_priv *priv,
++			       unsigned int addr, unsigned int *data)
++{
++	unsigned int val;
++	int ret;
++
++	ret = phy_g12a_usb3_pcie_cr_bus_addr(priv, addr);
++	if (ret)
++		return ret;
++
++	regmap_write(priv->regmap, PHY_R4, 0);
++	regmap_write(priv->regmap, PHY_R4, PHY_R4_PHY_CR_READ);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       (val & PHY_R5_PHY_CR_ACK),
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	*data = FIELD_GET(PHY_R5_PHY_CR_DATA_OUT, val);
++
++	regmap_write(priv->regmap, PHY_R4, 0);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       !(val & PHY_R5_PHY_CR_ACK),
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int
++phy_g12a_usb3_pcie_cr_bus_write(struct phy_g12a_usb3_pcie_priv *priv,
++			        unsigned int addr, unsigned int data)
++{
++	unsigned int val, reg;
++	int ret;
++
++	ret = phy_g12a_usb3_pcie_cr_bus_addr(priv, addr);
++	if (ret)
++		return ret;
++
++	reg = FIELD_PREP(PHY_R4_PHY_CR_DATA_IN, data);
++
++	regmap_write(priv->regmap, PHY_R4, reg);
++	regmap_write(priv->regmap, PHY_R4, reg);
++
++	regmap_write(priv->regmap, PHY_R4, reg | PHY_R4_PHY_CR_CAP_DATA);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       (val & PHY_R5_PHY_CR_ACK),
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	regmap_write(priv->regmap, PHY_R4, reg);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       (val & PHY_R5_PHY_CR_ACK) == 0,
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	regmap_write(priv->regmap, PHY_R4, reg);
++
++	regmap_write(priv->regmap, PHY_R4, reg | PHY_R4_PHY_CR_WRITE);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       (val & PHY_R5_PHY_CR_ACK),
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	regmap_write(priv->regmap, PHY_R4, reg);
++
++	ret = regmap_read_poll_timeout(priv->regmap, PHY_R5, val,
++				       (val & PHY_R5_PHY_CR_ACK) == 0,
++				       5, 1000);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int
++phy_g12a_usb3_pcie_cr_bus_update_bits(struct phy_g12a_usb3_pcie_priv *priv,
++				      uint offset, uint mask, uint val)
++{
++	uint reg;
++	int ret;
++
++	ret = phy_g12a_usb3_pcie_cr_bus_read(priv, offset, &reg);
++	if (ret)
++		return ret;
++
++	reg &= ~mask;
++
++	return phy_g12a_usb3_pcie_cr_bus_write(priv, offset, reg | val);
++}
++
++static int phy_meson_g12a_usb3_init(struct phy *phy)
++{
++	struct udevice *dev = phy->dev;
++	struct phy_g12a_usb3_pcie_priv *priv = dev_get_priv(dev);
++	unsigned int data;
++	int ret;
++
++	/* TOFIX Handle PCIE mode */
++
++	ret = reset_assert_bulk(&priv->resets);
++	udelay(1);
++	ret |= reset_deassert_bulk(&priv->resets);
++	if (ret)
++		return ret;
++
++	/* Switch PHY to USB3 */
++	regmap_update_bits(priv->regmap, PHY_R0,
++			   PHY_R0_PCIE_USB3_SWITCH,
++			   PHY_R0_PCIE_USB3_SWITCH);
++
++	/*
++	 * WORKAROUND: There is SSPHY suspend bug due to
++	 * which USB enumerates
++	 * in HS mode instead of SS mode. Workaround it by asserting
++	 * LANE0.TX_ALT_BLOCK.EN_ALT_BUS to enable TX to use alt bus
++	 * mode
++	 */
++	ret = phy_g12a_usb3_pcie_cr_bus_update_bits(priv, 0x102d,
++						    BIT(7), BIT(7));
++	if (ret)
++		return ret;
++
++	ret = phy_g12a_usb3_pcie_cr_bus_update_bits(priv, 0x1010, 0xff0, 20);
++	if (ret)
++		return ret;
++
++	/*
++	 * Fix RX Equalization setting as follows
++	 * LANE0.RX_OVRD_IN_HI. RX_EQ_EN set to 0
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_EN_OVRD set to 1
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ set to 3
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_OVRD set to 1
++	 */
++	ret = phy_g12a_usb3_pcie_cr_bus_read(priv, 0x1006, &data);
++	if (ret)
++		return ret;
++
++	data &= ~BIT(6);
++	data |= BIT(7);
++	data &= ~(0x7 << 8);
++	data |= (0x3 << 8);
++	data |= (1 << 11);
++	ret = phy_g12a_usb3_pcie_cr_bus_write(priv, 0x1006, data);
++	if (ret)
++		return ret;
++
++	/*
++	 * Set EQ and TX launch amplitudes as follows
++	 * LANE0.TX_OVRD_DRV_LO.PREEMPH set to 22
++	 * LANE0.TX_OVRD_DRV_LO.AMPLITUDE set to 127
++	 * LANE0.TX_OVRD_DRV_LO.EN set to 1.
++	 */
++	ret = phy_g12a_usb3_pcie_cr_bus_read(priv, 0x1002, &data);
++	if (ret)
++		return ret;
++
++	data &= ~0x3f80;
++	data |= (0x16 << 7);
++	data &= ~0x7f;
++	data |= (0x7f | BIT(14));
++	ret = phy_g12a_usb3_pcie_cr_bus_write(priv, 0x1002, data);
++	if (ret)
++		return ret;
++
++	/*
++	 * MPLL_LOOP_CTL.PROP_CNTRL = 8
++	 */
++	ret = phy_g12a_usb3_pcie_cr_bus_update_bits(priv, 0x30,
++						    0xf << 4, 8 << 4);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(priv->regmap, PHY_R2,
++			PHY_R2_PHY_TX_VBOOST_LVL,
++			FIELD_PREP(PHY_R2_PHY_TX_VBOOST_LVL, 0x4));
++
++	regmap_update_bits(priv->regmap, PHY_R1,
++			PHY_R1_PHY_LOS_BIAS | PHY_R1_PHY_LOS_LEVEL,
++			FIELD_PREP(PHY_R1_PHY_LOS_BIAS, 4) |
++			FIELD_PREP(PHY_R1_PHY_LOS_LEVEL, 9));
++
++	return ret;
++}
++
++static int phy_meson_g12a_usb3_exit(struct phy *phy)
++{
++	struct phy_g12a_usb3_pcie_priv *priv = dev_get_priv(phy->dev);
++
++	return reset_assert_bulk(&priv->resets);
++}
++
++struct phy_ops meson_g12a_usb3_pcie_phy_ops = {
++	.init = phy_meson_g12a_usb3_init,
++	.exit = phy_meson_g12a_usb3_exit,
++};
++
++int meson_g12a_usb3_pcie_phy_probe(struct udevice *dev)
++{
++	struct phy_g12a_usb3_pcie_priv *priv = dev_get_priv(dev);
++	int ret;
++
++	ret = regmap_init_mem(dev_ofnode(dev), &priv->regmap);
++	if (ret)
++		return ret;
++
++	ret = reset_get_bulk(dev, &priv->resets);
++	if (ret == -ENOTSUPP)
++		return 0;
++	else if (ret)
++		return ret;
++
++#if CONFIG_IS_ENABLED(CLK)
++	ret = clk_get_by_index(dev, 0, &priv->clk);
++	if (ret < 0)
++		return ret;
++
++	ret = clk_enable(&priv->clk);
++	if (ret && ret != -ENOENT && ret != -ENOTSUPP) {
++		pr_err("failed to enable PHY clock\n");
 +		clk_free(&priv->clk);
 +		return ret;
 +	}
@@ -443,104 +635,18 @@ index 0000000000..832bcd70ff
 +	return 0;
 +}
 +
-+static int dwc3_meson_g12a_probe(struct udevice *dev)
-+{
-+	struct dwc3_meson_g12a *priv = dev_get_platdata(dev);
-+	int ret, i;
-+
-+	priv->dev = dev;
-+
-+	ret = regmap_init_mem(dev_ofnode(dev), &priv->regmap);
-+	if (ret)
-+		return ret;
-+
-+	ret = dwc3_meson_g12a_clk_init(priv);
-+	if (ret)
-+		return ret;
-+
-+	ret = dwc3_meson_g12a_reset_init(priv);
-+	if (ret)
-+		return ret;
-+
-+	ret = dwc3_meson_g12a_get_phys(priv);
-+	if (ret)
-+		return ret;
-+
-+#if CONFIG_IS_ENABLED(DM_REGULATOR)
-+	ret = device_get_supply_regulator(dev, "vbus-supply",
-+					  &priv->vbus_supply);
-+	if (ret && ret != -ENOENT) {
-+		pr_err("Failed to get PHY regulator\n");
-+		return ret;
-+	}
-+
-+	if (priv->vbus_supply) {
-+		ret = regulator_set_enable(priv->vbus_supply, true);
-+		if (ret)
-+			return ret;
-+	}
-+#endif
-+
-+	priv->otg_mode = usb_get_dr_mode(dev_of_offset(dev));
-+
-+	ret = dwc3_meson_g12a_usb_init(priv);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0 ; i < PHY_COUNT ; ++i) {
-+		if (!priv->phys[i].dev)
-+			continue;
-+
-+		ret = generic_phy_init(&priv->phys[i]);
-+		if (ret)
-+			goto err_phy_init;
-+	}
-+
-+	return 0;
-+
-+err_phy_init:
-+	for (i = 0 ; i < PHY_COUNT ; ++i) {
-+		if (!priv->phys[i].dev)
-+			continue;
-+
-+		 generic_phy_exit(&priv->phys[i]);
-+	}
-+
-+	return ret;
-+}
-+
-+static int dwc3_meson_g12a_remove(struct udevice *dev)
-+{
-+	struct dwc3_meson_g12a *priv = dev_get_platdata(dev);
-+	int i;
-+
-+	reset_release_all(&priv->reset, 1);
-+
-+	clk_release_all(&priv->clk, 1);
-+
-+	for (i = 0 ; i < PHY_COUNT ; ++i) {
-+		if (!priv->phys[i].dev)
-+			continue;
-+
-+		 generic_phy_exit(&priv->phys[i]);
-+	}
-+
-+	return dm_scan_fdt_dev(dev);
-+}
-+
-+static const struct udevice_id dwc3_meson_g12a_ids[] = {
-+	{ .compatible = "amlogic,meson-g12a-usb-ctrl" },
++static const struct udevice_id meson_g12a_usb3_pcie_phy_ids[] = {
++	{ .compatible = "amlogic,g12a-usb3-pcie-phy" },
 +	{ }
 +};
 +
-+U_BOOT_DRIVER(dwc3_generic_wrapper) = {
-+	.name	= "dwc3-meson-g12a",
-+	.id	= UCLASS_SIMPLE_BUS,
-+	.of_match = dwc3_meson_g12a_ids,
-+	.probe = dwc3_meson_g12a_probe,
-+	.remove = dwc3_meson_g12a_remove,
-+	.platdata_auto_alloc_size = sizeof(struct dwc3_meson_g12a),
-+
++U_BOOT_DRIVER(meson_g12a_usb3_pcie_phy) = {
++	.name = "meson_g12a_usb3_pcie_phy",
++	.id = UCLASS_PHY,
++	.of_match = meson_g12a_usb3_pcie_phy_ids,
++	.probe = meson_g12a_usb3_pcie_phy_probe,
++	.ops = &meson_g12a_usb3_pcie_phy_ops,
++	.priv_auto_alloc_size = sizeof(struct phy_g12a_usb3_pcie_priv),
 +};
 -- 
 2.21.0
