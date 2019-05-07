@@ -1,205 +1,71 @@
-Received: by mail-wm1-f65.google.com with SMTP id h11so18737952wmb.5
-        for <u-boot-amlogic@groups.io>; Tue, 07 May 2019 01:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0mggUSjmXFXGcVUCUiWN0uenJecDUdG1SsbVKs0JHcU=;
-        b=Sw0XSYC0o0fmmDpRwkCYIV1B+wjAlWgy3Dwbf+2/BUz0VhHq4KTAxLeQMv/ejsvSQ/
-         Y2BzJ8O66JfPsmEQRPvnvmxkOL8XD83G6AadgUQiPIwNga7Wh3DminfbLwoFs1FRemah
-         mX3I7+IZl8Zjfl4KF5XX/oUGerNRUBFW1iEKnkA12F325AJN1Lb63CJe8EoGsCBEh0Ey
-         zIUD2PSKIrsANbFVQbjgXWcsagkBrD30ytWXt9izlDvIyT7THlqFxmQ6raPAVz2AAFFv
-         JWlqUuqrCj2c5Kaybv005be8cJnMIuIFgFBXVdm28kjEawhawbGx+cIT0CUfU/B7r/SC
-         ansg==
-Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v3 3/3] mach-meson: g12a: add DWC2 peripheral mode support
-Date: Tue,  7 May 2019 10:43:39 +0200
-Message-Id: <20190507084339.14723-4-narmstrong@baylibre.com>
-In-Reply-To: <20190507084339.14723-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 0/3] ARM: meson: Add G12A USB Support
 References: <20190507084339.14723-1-narmstrong@baylibre.com>
+From: Marek Vasut <marex@denx.de>
+Message-ID: <037a2b22-393a-7df6-9217-5ae797ef5179@denx.de>
+Date: Tue, 7 May 2019 15:05:00 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: marex@denx.de, lukma@denx.de
-Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+In-Reply-To: <20190507084339.14723-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Neil Armstrong <narmstrong@baylibre.com>, lukma@denx.de
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Adds support for Amlogic G12A USB Device mode.
+On 5/7/19 10:43 AM, Neil Armstrong wrote:
+> This patchset adds support for USB on Amlogic G12A SoCs.
+> 
+> This patchset is composed with :
+> - PHY Drivers
+> - USB Control Glue driver
+> - G12A board setup for Device mode
+> 
+> Device Tree nodes will be added in a separate patchset when applied
+> on a tagged Linux tree.
+> 
+> The Amlogic G12A USB Complex is composed of :
+> - 2 USB Controllers :
+>  * DWC3 for USB2 and USB3 Host functionality
+>  * DWC2 for USB2 Peripheral functionality
+> - 2 USB2 OTG PHYs, only a single one will be routed to either DWC2 to DWC3
+> - 1 USB3 PHY shared with PCIE funcionnality
+> - A Glue to control PHY routing, setup and OTG detection
+> 
+> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
+> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
+> setups the on-chip OTG mode selection for this PHY.
+> 
+> This drivers supports the on-probe setup of the OTG mode, and manually
+> via a setup function in the G12A common board code.
+> 
+> Changes since v2:
+> - rebased on u-boot master
+> 
+> Changes since v1:
+> - switch printf() to debug() in patch 1
+> 
+> Neil Armstrong (3):
+>   usb: dwc3: Add Meson G12A USB Glue
+>   phy: meson: add Amlogic G12A USB2 and USB3+PCIE PHY drivers
+>   mach-meson: g12a: add DWC2 peripheral mode support
+> 
+>  arch/arm/include/asm/arch-meson/usb.h |  12 +
+>  arch/arm/mach-meson/board-g12a.c      | 126 +++++++
+>  drivers/phy/Kconfig                   |   8 +
+>  drivers/phy/Makefile                  |   1 +
+>  drivers/phy/meson-g12a-usb2.c         | 216 ++++++++++++
+>  drivers/phy/meson-g12a-usb3-pcie.c    | 345 +++++++++++++++++++
+>  drivers/usb/dwc3/Kconfig              |   8 +
+>  drivers/usb/dwc3/Makefile             |   1 +
+>  drivers/usb/dwc3/dwc3-meson-g12a.c    | 456 ++++++++++++++++++++++++++
+>  9 files changed, 1173 insertions(+)
+>  create mode 100644 arch/arm/include/asm/arch-meson/usb.h
+>  create mode 100644 drivers/phy/meson-g12a-usb2.c
+>  create mode 100644 drivers/phy/meson-g12a-usb3-pcie.c
+>  create mode 100644 drivers/usb/dwc3/dwc3-meson-g12a.c
+> 
+Looks good to me, pick this via the meson tree please.
 
-The DWC2 Controller behind the Glue can be connected to an OTG
-capable PHY. The Glue setups the PHY mode.
-
-This patch implements Device mode support by adding a board_usb_init/cleanup
-setting up the DWC2 controller and switch the OTG capable port to Device
-before starting the DWC2 controller in Device mode.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm/include/asm/arch-meson/usb.h |  12 +++
- arch/arm/mach-meson/board-g12a.c      | 126 ++++++++++++++++++++++++++
- 2 files changed, 138 insertions(+)
- create mode 100644 arch/arm/include/asm/arch-meson/usb.h
-
-diff --git a/arch/arm/include/asm/arch-meson/usb.h b/arch/arm/include/asm/arch-meson/usb.h
-new file mode 100644
-index 0000000000..b794b5ce77
---- /dev/null
-+++ b/arch/arm/include/asm/arch-meson/usb.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright (C) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#ifndef __MESON_USB_H__
-+#define __MESON_USB_H__
-+
-+int dwc3_meson_g12a_force_mode(struct udevice *dev, enum usb_dr_mode mode);
-+
-+#endif /* __MESON_USB_H__ */
-diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
-index fc3764b960..1652970fbd 100644
---- a/arch/arm/mach-meson/board-g12a.c
-+++ b/arch/arm/mach-meson/board-g12a.c
-@@ -12,7 +12,12 @@
- #include <asm/io.h>
- #include <asm/armv8/mmu.h>
- #include <linux/sizes.h>
-+#include <usb.h>
-+#include <linux/usb/otg.h>
-+#include <asm/arch/usb.h>
-+#include <usb/dwc2_udc.h>
- #include <phy.h>
-+#include <clk.h>
- 
- DECLARE_GLOBAL_DATA_PTR;
- 
-@@ -148,3 +153,124 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
- 	/* Enable power gate */
- 	clrbits_le32(G12A_MEM_PD_REG_0, G12A_MEM_PD_REG_0_ETH_MASK);
- }
-+
-+#if CONFIG_IS_ENABLED(USB_DWC3_MESON_G12A) && \
-+	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
-+static struct dwc2_plat_otg_data meson_g12a_dwc2_data;
-+
-+int board_usb_init(int index, enum usb_init_type init)
-+{
-+	struct fdtdec_phandle_args args;
-+	const void *blob = gd->fdt_blob;
-+	int node, dwc2_node;
-+	struct udevice *dev, *clk_dev;
-+	struct clk clk;
-+	int ret;
-+
-+	/* find the usb glue node */
-+	node = fdt_node_offset_by_compatible(blob, -1,
-+					     "amlogic,meson-g12a-usb-ctrl");
-+	if (node < 0) {
-+		debug("Not found usb-control node\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!fdtdec_get_is_enabled(blob, node)) {
-+		debug("usb is disabled in the device tree\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
-+	if (ret) {
-+		debug("Not found usb-control device\n");
-+		return ret;
-+	}
-+
-+	/* find the dwc2 node */
-+	dwc2_node = fdt_node_offset_by_compatible(blob, node,
-+						  "amlogic,meson-g12a-usb");
-+	if (dwc2_node < 0) {
-+		debug("Not found dwc2 node\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
-+		debug("dwc2 is disabled in the device tree\n");
-+		return -ENODEV;
-+	}
-+
-+	meson_g12a_dwc2_data.regs_otg = fdtdec_get_addr(blob, dwc2_node, "reg");
-+	if (meson_g12a_dwc2_data.regs_otg == FDT_ADDR_T_NONE) {
-+		debug("usbotg: can't get base address\n");
-+		return -ENODATA;
-+	}
-+
-+	/* Enable clock */
-+	ret = fdtdec_parse_phandle_with_args(blob, dwc2_node, "clocks",
-+					     "#clock-cells", 0, 0, &args);
-+	if (ret) {
-+		debug("usbotg has no clocks defined in the device tree\n");
-+		return ret;
-+	}
-+
-+	ret = uclass_get_device_by_of_offset(UCLASS_CLK, args.node, &clk_dev);
-+	if (ret)
-+		return ret;
-+
-+	if (args.args_count != 1) {
-+		debug("Can't find clock ID in the device tree\n");
-+		return -ENODATA;
-+	}
-+
-+	clk.dev = clk_dev;
-+	clk.id = args.args[0];
-+
-+	ret = clk_enable(&clk);
-+	if (ret) {
-+		debug("Failed to enable usbotg clock\n");
-+		return ret;
-+	}
-+
-+	meson_g12a_dwc2_data.rx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
-+						     "g-rx-fifo-size", 0);
-+	meson_g12a_dwc2_data.np_tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
-+							"g-np-tx-fifo-size", 0);
-+	meson_g12a_dwc2_data.tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
-+						     "g-tx-fifo-size", 0);
-+
-+	/* Switch to peripheral mode */
-+	ret = dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_PERIPHERAL);
-+	if (ret)
-+		return ret;
-+
-+	return dwc2_udc_probe(&meson_g12a_dwc2_data);
-+}
-+
-+int board_usb_cleanup(int index, enum usb_init_type init)
-+{
-+	const void *blob = gd->fdt_blob;
-+	struct udevice *dev;
-+	int node;
-+	int ret;
-+
-+	/* find the usb glue node */
-+	node = fdt_node_offset_by_compatible(blob, -1,
-+					     "amlogic,meson-g12a-usb-ctrl");
-+	if (node < 0)
-+		return -ENODEV;
-+
-+	if (!fdtdec_get_is_enabled(blob, node))
-+		return -ENODEV;
-+
-+	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Switch to OTG mode */
-+	ret = dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_HOST);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+#endif
 -- 
-2.21.0
-
+Best regards,
+Marek Vasut
