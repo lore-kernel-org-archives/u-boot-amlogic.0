@@ -1,78 +1,87 @@
-Received: by mail-wm1-f44.google.com with SMTP id z23so5321088wma.4
-        for <u-boot-amlogic@groups.io>; Fri, 31 May 2019 01:22:02 -0700 (PDT)
+Received: by mail-yw1-f50.google.com with SMTP id w18so4192571ywa.12
+        for <u-boot-amlogic@groups.io>; Fri, 31 May 2019 07:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=ynl2y417vzOJlgllWxTA4S9bUmy6XzMsHpVHXn9+/lw=;
-        b=ZHNStCs3Ot+2LDN03Yd/g9wmQkS7zl5R0/guZTEWEzjYwP29rWeXRKlQ37ClNAODos
-         zULj1CZZ9pWzhBL/v4Vb+R3gppntcWqp0t1eqiON41wGgJ2vYBJzrR0DHkVGgqztQW5h
-         Cnp+Mgbu9M//ARdbP/lapkeww9tVKmLLS1zP/z6tKb9LMhYKp3PFL1LAYvwOj7hyE7ab
-         90Oipu+dc/KALfN28yOyKuljUovmyxtahMc+FsF/g2v92J9uGA56GeaDa4oY4SLURaEa
-         aFvq8WtALQ/oVA3B12rMASOXdLbsPC/BRw+SF5Gkk4lGw3EKHzzKjfTtGWzmfraMrcdf
-         I7Jg==
-Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190531
-Message-ID: <79cb920d-2608-86c6-f486-c50ada73f33a@baylibre.com>
-Date: Fri, 31 May 2019 10:21:59 +0200
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UNQOSkaikE8bCFqzbwoRFJIkWv1b7xxDf3U70JnbrSk=;
+        b=ciUr+LVTbrl5ki664j6RrsEhK/elmbdnqxx4Sgjpo4hK0O7E5hf4AZ/2vK+h6hzGrq
+         kBZRd2yjV2KM537+43/q4mLg2nm6N8ioEsH5FLo48mypjknJaR9JdIWOWXEP9FsKAuUg
+         pu51Kb0llzMN3xmvycrY7rz76facnJ4wDGH2A=
+Return-Path: <trini@konsulko.com>
+Date: Fri, 31 May 2019 10:36:10 -0400
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20190531
+Message-ID: <20190531143610.GE20781@bill-the-cat>
+References: <79cb920d-2608-86c6-f486-c50ada73f33a@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
+In-Reply-To: <79cb920d-2608-86c6-f486-c50ada73f33a@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5lHLQ5DB5n8Yi0p9"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
 Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, baylibre-upstreaming@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+--5lHLQ5DB5n8Yi0p9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This PR syncs G12A support (DT, clock, config) to enable full functionalities
-with already merged drivers, fixes a bug for internal PHY routing on Amlogic GXL/GXM
-soc when chainloading, and finally removes an useless PHY reset on the Q200 board support.
+On Fri, May 31, 2019 at 10:21:59AM +0200, Neil Armstrong wrote:
 
-Thanks,
-Neil
+> Hi Tom,
+>=20
+> This PR syncs G12A support (DT, clock, config) to enable full functionali=
+ties
+> with already merged drivers, fixes a bug for internal PHY routing on Amlo=
+gic GXL/GXM
+> soc when chainloading, and finally removes an useless PHY reset on the Q2=
+00 board support.
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit e2822ccc2c7c0ba8d7d959a1fa1e6221ed1354=
+23:
+>=20
+>   Merge branch 'master' of git://git.denx.de/u-boot-tegra (2019-05-29 07:=
+28:40 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190531
+>=20
+> for you to fetch changes up to d0b1f72a04e49cb2abfac5c4e13696eabc125132:
+>=20
+>   configs: u200: enable support for USB Host & Gadget (2019-05-31 10:09:4=
+1 +0200)
+>=20
 
-The following changes since commit e2822ccc2c7c0ba8d7d959a1fa1e6221ed135423:
+Applied to u-boot/master, thanks!
 
-  Merge branch 'master' of git://git.denx.de/u-boot-tegra (2019-05-29 07:28:40 -0400)
+--=20
+Tom
 
-are available in the Git repository at:
+--5lHLQ5DB5n8Yi0p9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  git://git.denx.de/u-boot-amlogic.git tags/u-boot-amlogic-20190531
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-for you to fetch changes up to d0b1f72a04e49cb2abfac5c4e13696eabc125132:
+iQIcBAEBAgAGBQJc8TvaAAoJEIf59jXTHXZSO+IQALNZQlOYmzIGEqk4MuqZv7B5
+QJRAMZJAXmjuvBPIKiLAlJs2F/XPh83ai4z38kU9lIqNBFsAfjVUpDS9BEDzoVxd
+lUwH2SIWjRNRPN/mb6+mDfij2yXOQgIWfKOGyc4ZXdSZqvHJY9maU0gMLcQUBWyW
+dhBlNnNGZEtkR/BrvbpbxgXXPiKeofI6dC6Uwm0c1pCoMlrz0ll1GqgUvdPOae2e
+OUnzfTMmmoSFTARcJb7yZwTKt2l78gA4RgiZO9AdzVIqVPifAIkGX2EgJj75uFBC
+HZ3/TMVVfmlRP6u0a+QRaxMT5bbwzU4MrvM4+bqiCIy/bre+tooKhmlhK8s/d4nx
+npR73K/+Pn224sQ1m+fKVzQdL7C645rXy3o8UtoQsVa6sm5YR1C/OFecSP3suRo2
++4tseiqB4z9UCb6y0u4ZZY2kjTUOWCkpjdfbTeS0xtTZpreIO92TkX85E4CTypS6
+ml/aCEwHXFFP46yh79jFuC4rl+nJEAA4xXrIL+YKlbBQ/BnYwE+/r9A2GSXS5mV0
+KfthhRR67otdwrohJvXgmstK5cworgdjWkpvjZk7HtZGJXVKmwc1+IWkuCD7heff
+RXQCEawzlM/yY85JpVOK2eoDwX2o//gmG22a3anE+FiLLQmUi5d/VcmDT/NNYOIs
+11roCKpWgb572S4KPX0N
+=6FyJ
+-----END PGP SIGNATURE-----
 
-  configs: u200: enable support for USB Host & Gadget (2019-05-31 10:09:41 +0200)
-
-----------------------------------------------------------------
-- Sync DT with Linux 5.2-rc1 for G12A
-- Add USB clock support that was introduced in 5.2-rc1 bindings
-- Add currently in-review for Linux eMMC & USB DT for G12A in -u-boot.dtsi
-- Fix PHY routing to external PHY when chainloading from a misconfigred bootloader
-- Remove useless PHY GPIO reset from q200 board file
-- Enable USB support for Amlogic U200 reference board
-
-----------------------------------------------------------------
-Neil Armstrong (6):
-      ARM: dts: sync Amlogic G12A DT with Linux 5.2-rc1
-      clk: meson-g12a: Add PCIE PLL support
-      ARM: dts: Add missing DT for Meson G12A support
-      ARM: meson-gx: Reset GXL/GXM to external PHY when not using internal PHY
-      boards: amlogic-g200: remove phy reset
-      configs: u200: enable support for USB Host & Gadget
-
- arch/arm/dts/meson-g12a-u-boot.dtsi                | 216 ++++++++++
- arch/arm/dts/meson-g12a-u200-u-boot.dtsi           |  63 +++
- arch/arm/dts/meson-g12a-u200.dts                   | 147 +++++++
- arch/arm/dts/meson-g12a.dtsi                       | 465 +++++++++++++++++++++
- arch/arm/mach-meson/board-gx.c                     |  17 +-
- board/amlogic/q200/q200.c                          |   6 -
- configs/u200_defconfig                             |  17 +
- drivers/clk/meson/g12a.c                           | 103 +++++
- include/dt-bindings/clock/g12a-aoclkc.h            |   2 +
- include/dt-bindings/clock/g12a-clkc.h              |   5 +
- .../dt-bindings/reset/amlogic,meson-g12a-reset.h   |   5 +-
- 11 files changed, 1034 insertions(+), 12 deletions(-)
- create mode 100644 arch/arm/dts/meson-g12a-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-g12a-u200-u-boot.dtsi
+--5lHLQ5DB5n8Yi0p9--
