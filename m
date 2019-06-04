@@ -1,21 +1,21 @@
-Received: by mail-wm1-f65.google.com with SMTP id 22so5619505wmg.2
+Received: by mail-wm1-f68.google.com with SMTP id t5so13851583wmh.3
         for <u-boot-amlogic@groups.io>; Tue, 04 Jun 2019 02:05:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qmVCkw6wTHmgykieXCuFRYX2ZUiej0nj8ZYV3FCCTSg=;
-        b=scsuZ6CWnYnu+8wKlek4qme7vi4htTQzNZyPT50591wtR+U75IX9Sb23zaFdJsHoF1
-         V0eNvzgjin08Fas17BUfj9TPEhBTAjsZRsmAEu+HjitTTw/fXgcg1oZIUyHO6id8Ih5w
-         Q1WJHn5IksOAAvYfetbLiain4dQb7hpNSV9fo2aAB1GIAXx8ThIc7B5a8rxEKHESLMUj
-         aqRNBZ95iRypYoSfqWRmZ87nteW9at1aMche+JTANuRtq4P+4JOl6igLWXvXonbLDFAO
-         KzhZztqsQZz/aEkRcRosm0FkJg/o2ps8bgwtgmxIemVqSjGpot0CN/m0Jh5wmh18pfM4
-         eBKg==
+        bh=2RIzAo13YywZNh40XUqBespctRr8Rj2Cg5ANTYGSq4c=;
+        b=IIwivXD8fiOEA/6xtKVaOURpebNc44rANCC5h4r396liKNIMWmJ9rXbJ+q+flhzxX0
+         SpfIeQe3WV/LedfyNcxLLcQb5AJ9RdqGe2fa2lDPVM9/zAN9OPvVbLZrX+qRq0jTRvX7
+         M4A0IVTmOzonDH84lehPGttusZeCZNb9oVxwHDURNVoxcGy3JmJlvNoHwsai9SDRnKxh
+         d+ASdEx46ykcrbBsuvaV1sBQXjLHueHac49ta8hEqJ92tGN9G35pbBM7u7O3PmSY8cJD
+         /51Dg42RUuA0kKzVAWR4FbS75SXTU15hxZ1hXbfYVt5g6Tdg7Ha18UjGTOXyHDmRrdoU
+         zAVw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 1/4] pinctrl: meson-gx: fix GPIO_TEST_N and GPIOCLK_ groups
-Date: Tue,  4 Jun 2019 11:04:51 +0200
-Message-Id: <20190604090454.18245-2-narmstrong@baylibre.com>
+Subject: [PATCH 2/4] pinctrl: meson: add common function to get pins name
+Date: Tue,  4 Jun 2019 11:04:52 +0200
+Message-Id: <20190604090454.18245-3-narmstrong@baylibre.com>
 In-Reply-To: <20190604090454.18245-1-narmstrong@baylibre.com>
 References: <20190604090454.18245-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -24,93 +24,71 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The GPIO_TEST_N was in the wrong pmx group table, move it back with the AO
-groups, GPIODV_18 was missing, add it back, and finally the GPIOCLK_*
-group names were missing.
+In order to support the "pinmux status" command, add common function
+to get pins count and pin name.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 7 +++++--
- drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 6 ++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson.c | 24 ++++++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.h |  3 +++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 22e8b055d7..59b5be6211 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -144,6 +144,7 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GPIO_GROUP(GPIODV_15, EE_OFF),
- 	GPIO_GROUP(GPIODV_16, EE_OFF),
- 	GPIO_GROUP(GPIODV_17, EE_OFF),
-+	GPIO_GROUP(GPIODV_18, EE_OFF),
- 	GPIO_GROUP(GPIODV_19, EE_OFF),
- 	GPIO_GROUP(GPIODV_20, EE_OFF),
- 	GPIO_GROUP(GPIODV_21, EE_OFF),
-@@ -203,8 +204,6 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GPIO_GROUP(GPIOCLK_2, EE_OFF),
- 	GPIO_GROUP(GPIOCLK_3, EE_OFF),
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 8735418c5b..eb40a84ed1 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -20,6 +20,8 @@ DECLARE_GLOBAL_DATA_PTR;
  
--	GPIO_GROUP(GPIO_TEST_N, EE_OFF),
--
- 	/* Bank X */
- 	GROUP(uart_tx_a,	4,	13),
- 	GROUP(uart_rx_a,	4,	12),
-@@ -270,6 +269,8 @@ static struct meson_pmx_group meson_gxbb_aobus_groups[] = {
- 	GPIO_GROUP(GPIOAO_12, 0),
- 	GPIO_GROUP(GPIOAO_13, 0),
+ static const char *meson_pinctrl_dummy_name = "_dummy";
  
-+	GPIO_GROUP(GPIO_TEST_N, 0),
++static char pin_name[PINNAME_SIZE];
 +
- 	/* bank AO */
- 	GROUP(uart_tx_ao_b,	0,	26),
- 	GROUP(uart_rx_ao_b,	0,	25),
-@@ -318,6 +319,8 @@ static const char * const gpio_periphs_groups[] = {
- 	"GPIOX_10", "GPIOX_11", "GPIOX_12", "GPIOX_13", "GPIOX_14",
- 	"GPIOX_15", "GPIOX_16", "GPIOX_17", "GPIOX_18", "GPIOX_19",
- 	"GPIOX_20", "GPIOX_21", "GPIOX_22",
+ int meson_pinctrl_get_groups_count(struct udevice *dev)
+ {
+ 	struct meson_pinctrl *priv = dev_get_priv(dev);
+@@ -38,6 +40,28 @@ const char *meson_pinctrl_get_group_name(struct udevice *dev,
+ 	return priv->data->groups[selector].name;
+ }
+ 
++int meson_pinctrl_get_pins_count(struct udevice *dev)
++{
++	struct meson_pinctrl *priv = dev_get_priv(dev);
 +
-+	"GPIOCLK_0", "GPIOCLK_1", "GPIOCLK_2", "GPIOCLK_3",
- };
- 
- static const char * const emmc_groups[] = {
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 1819eee4d0..5acc21b9c2 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -254,6 +254,7 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
- 	GPIO_GROUP(GPIODV_15, EE_OFF),
- 	GPIO_GROUP(GPIODV_16, EE_OFF),
- 	GPIO_GROUP(GPIODV_17, EE_OFF),
-+	GPIO_GROUP(GPIODV_18, EE_OFF),
- 	GPIO_GROUP(GPIODV_19, EE_OFF),
- 	GPIO_GROUP(GPIODV_20, EE_OFF),
- 	GPIO_GROUP(GPIODV_21, EE_OFF),
-@@ -289,8 +290,6 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
- 	GPIO_GROUP(GPIOCLK_0, EE_OFF),
- 	GPIO_GROUP(GPIOCLK_1, EE_OFF),
- 
--	GPIO_GROUP(GPIO_TEST_N, 0),
--
- 	/* Bank X */
- 	GROUP(sdio_d0,		5,	31),
- 	GROUP(sdio_d1,		5,	30),
-@@ -415,6 +414,8 @@ static struct meson_pmx_group meson_gxl_aobus_groups[] = {
- 	GPIO_GROUP(GPIOAO_8, 0),
- 	GPIO_GROUP(GPIOAO_9, 0),
- 
-+	GPIO_GROUP(GPIO_TEST_N, 0),
++	return priv->data->num_pins;
++}
 +
- 	/* bank AO */
- 	GROUP(uart_tx_ao_b_0,	0,	26),
- 	GROUP(uart_rx_ao_b_1,	0,	25),
-@@ -471,6 +472,7 @@ static const char * const gpio_periphs_groups[] = {
- 	"GPIOX_5", "GPIOX_6", "GPIOX_7", "GPIOX_8", "GPIOX_9",
- 	"GPIOX_10", "GPIOX_11", "GPIOX_12", "GPIOX_13", "GPIOX_14",
- 	"GPIOX_15", "GPIOX_16", "GPIOX_17", "GPIOX_18",
-+	"GPIOCLK_0", "GPIOCLK_1",
- };
- 
- static const char * const emmc_groups[] = {
++const char *meson_pinctrl_get_pin_name(struct udevice *dev,
++				       unsigned int selector)
++{
++	struct meson_pinctrl *priv = dev_get_priv(dev);
++
++	if (selector > priv->data->num_pins ||
++	    selector > priv->data->funcs[0].num_groups)
++		snprintf(pin_name, PINNAME_SIZE, "Error");
++	else
++		snprintf(pin_name, PINNAME_SIZE, "%s",
++			 priv->data->funcs[0].groups[selector]);
++
++	return pin_name;
++}
++
+ int meson_pinmux_get_functions_count(struct udevice *dev)
+ {
+ 	struct meson_pinctrl *priv = dev_get_priv(dev);
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+index b3683e2073..0882dfe713 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.h
++++ b/drivers/pinctrl/meson/pinctrl-meson.h
+@@ -120,6 +120,9 @@ extern const struct pinctrl_ops meson_pinctrl_ops;
+ int meson_pinctrl_get_groups_count(struct udevice *dev);
+ const char *meson_pinctrl_get_group_name(struct udevice *dev,
+ 					 unsigned int selector);
++int meson_pinctrl_get_pins_count(struct udevice *dev);
++const char *meson_pinctrl_get_pin_name(struct udevice *dev,
++				       unsigned int selector);
+ int meson_pinmux_get_functions_count(struct udevice *dev);
+ const char *meson_pinmux_get_function_name(struct udevice *dev,
+ 					   unsigned int selector);
 -- 
 2.21.0
 
