@@ -1,67 +1,66 @@
-Received: by mail-wm1-f65.google.com with SMTP id v19so2523413wmh.0
-        for <u-boot-amlogic@groups.io>; Tue, 04 Jun 2019 08:19:38 -0700 (PDT)
+Received: by mail-wr1-f67.google.com with SMTP id e16so8936319wrn.1
+        for <u-boot-amlogic@groups.io>; Tue, 04 Jun 2019 13:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=RD2Ni9dELCPccuCcFc7XmweV9vEif+RBz/BvvOVY9uQ=;
-        b=Ocp//6NnbIVjsLznpmrgBTPB/KW48bRcuLtpheHKXw4zMZ1Gh3VnuGAxsf5u9UGl0v
-         SIQIqzI69/X7g8QsLfulWIhXHac+2BuxOAhrPHXeKp6q3kJh4IkfbSZSZPFSxEGFsBl2
-         79/JBHjh9cwVWr54mOclIML7Gp586QNoptR50U4OGa0x2+JPxWoehnYRqi6hcYbv60l3
-         bAyR0ZkK/sKc41kzFtEPkA6NZZrENWMI4UOwWhPJcoBzw/flLpsV649RDG2EMoW6IFt0
-         vp68SIbiFlZmdqcXxT6UD+RmjWGVqrcQ+rnibTgZlBlM9Fm1a/qJLnTmDy1TR4VWX9v9
-         28Hw==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/3] Add drive-strength-microamp in Meson pinctrl driver
-References: <20190604115308.26510-1-glaroque@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <6f031055-7264-1ed0-868a-2292ef1921fe@baylibre.com>
-Date: Tue, 4 Jun 2019 17:19:36 +0200
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jhpVHBa1GjUPbgrbSm7KGBfaJVchbgNmoWFxOfaOZcw=;
+        b=AjzYIADlSHFIz47S3oRona3mhTVQYf5YESdyZGPcknV3FXeS/kgGrK1kbt/2gaEah+
+         bp5t1N+i1JJD6i1BElbF26RP6iUmoE5p2XfOcrN9ZcSMohaxyk4qfknoAISqUcwtlUsi
+         x1TsHBWh7b5Ge4s6RIkTKOTwdYzs/MmdgCBTms/m/cDb0i80HE8GQNHfeBtpsbuYG0aY
+         jmm9IMaoQcBWdMiT3VzW3aU4pj+6jecun3miGnRB/BHKou9BhzXAhKBQYyzF1qIV6ita
+         AaXyY+jO9vxs7vrj68OjTIgb6Kl5ew7zirwne8CkNnLIjz9rzI5fdO1Bo0wDH03cPmfO
+         8SoA==
+Return-Path: <mjourdan@baylibre.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH] video: meson: hdmi-supply regulator should be optional
+Date: Tue,  4 Jun 2019 22:26:19 +0200
+Message-Id: <20190604202619.6332-1-mjourdan@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190604115308.26510-1-glaroque@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Transfer-Encoding: 8bit
+To: Anatolij Gustschin <agust@denx.de>, u-boot@lists.denx.de
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Mohammad Rasim <mohammad.rasim96@gmail.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Guillaume,
+Some boards don't have such a regulator, and don't need one to enable
+HDMI display. Make it optional, fixing hdmi display for those boards.
 
-On 04/06/2019 13:53, Guillaume La Roque wrote:
-> The purpose of this patchset is to add drive-strength-microamp support in meson pinconf
-> driver. This is a new feature that was added on the g12a. It is critical for us
-> to support this since many functions are failing with default pad drive-strength.
-> 
-> The value achievable by the SoC are 500uA, 2500uA, 3000uA and 4000uA and the DT property
-> 'drive-strength-microamp' is expressed in uA.
-> So this patch add another generic property "drive-strength-microamp". The change to do so
-> would be minimal and could be benefit to other platforms later on.
-> 
-> it's backport from linux :
-> https://lore.kernel.org/lkml/20190514082652.20686-1-glaroque@baylibre.com/
-> 
-> Cheers
-> Guillaume
-> 
-> Guillaume La Roque (3):
->   dm: pinctrl: Add driver-strength-microamp property
->   pinctrl: meson: add support of drive-strength-microamp
->   pinctrl: meson: g12a: add DS bank value
-> 
->  drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c |  1 +
->  drivers/pinctrl/meson/pinctrl-meson-g12a.c    | 20 ++++----
->  drivers/pinctrl/meson/pinctrl-meson.c         | 46 ++++++++++++++++++-
->  drivers/pinctrl/meson/pinctrl-meson.h         | 43 +++++++++++------
->  include/dm/pinctrl.h                          |  3 ++
->  5 files changed, 89 insertions(+), 24 deletions(-)
-> 
+Also surround the regulator code with a config check on DM_REGULATOR.
 
-Thanks
+Reported-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+---
+ drivers/video/meson/meson_dw_hdmi.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-Tested on an Odroid-N2 !
+diff --git a/drivers/video/meson/meson_dw_hdmi.c b/drivers/video/meson/meson_dw_hdmi.c
+index 7a1c060856..483c93f6b6 100644
+--- a/drivers/video/meson/meson_dw_hdmi.c
++++ b/drivers/video/meson/meson_dw_hdmi.c
+@@ -361,13 +361,19 @@ static int meson_dw_hdmi_probe(struct udevice *dev)
+ 	priv->hdmi.i2c_clk_high = 0x67;
+ 	priv->hdmi.i2c_clk_low = 0x78;
+ 
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
+ 	ret = device_get_supply_regulator(dev, "hdmi-supply", &supply);
+-	if (ret)
++	if (ret && ret != -ENOENT) {
++		pr_err("Failed to get HDMI regulator\n");
+ 		return ret;
++	}
+ 
+-	ret = regulator_set_enable(supply, true);
+-	if (ret)
+-		return ret;
++	if (!ret) {
++		ret = regulator_set_enable(supply, true);
++		if (ret)
++			return ret;
++	}
++#endif
+ 
+ 	ret = reset_get_bulk(dev, &resets);
+ 	if (ret)
+-- 
+2.21.0
 
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Neil
