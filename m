@@ -1,21 +1,21 @@
-Received: by mail-wr1-f65.google.com with SMTP id x17so870790wrl.9
-        for <u-boot-amlogic@groups.io>; Wed, 12 Jun 2019 02:49:14 -0700 (PDT)
+Received: by mail-wm1-f44.google.com with SMTP id c66so5864898wmf.0
+        for <u-boot-amlogic@groups.io>; Wed, 12 Jun 2019 02:49:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=URIjQjlNsfsd++fz6mDWEFYflv3utJwf4LriwUGZB6E=;
-        b=QtQ+MywNZm1+H414cQze2NhNjWmLprgpwuPfcQlqhJBguTaodT9QmU2f86x39qs65s
-         ucajjDhyBIXsPGIECLJXrNyaohTzRL0OXZoXyiaeGcdvvayDWfIRYiwW/N6TZHIfXSB1
-         wCStKDfiW1DPdLwKbBBQgDJWPOMDx8Tb+pISnSAxvUbKfOAstl7p9cJNhr5zW016V4Ms
-         9gWx//PCUwy/DhaXvQzJixR+9hyQ5qDYpTM8CpLZBvbDAOTFj3zfYPDlycQFriJGce/Z
-         KXp5vEIURGQgqtqdLhpwekOEHhrmSPaT2zHI1XjoYBJ1fziWb4M58sKhtYlqaBJvf/a9
-         vNSg==
+        bh=Qug4BPUViJWZB5rrdRdoBkjIpPZ43dobo7J71ZERGuk=;
+        b=yVCxzKp0uzMgCOHur1AG3hw87gOrXHZwD8ZQisii5EAPEav/nPJ/vVKraCDO1LG6FY
+         Nl7x04pItl/EmN4eR8KQSMNfx1QwNI+YeyUyxhyuv73kvZzJYrOxF4JDHU7JLLS4a7yz
+         MW0CyzrizPZdz2UEvs/2lLBjGlKzRql8zKMFjSvguksu9h0yShwwspcjISQIa6Vi6oCC
+         ITaYGP3/ekIla+fFMNjtRjldqDYepr9i78TsSYmuGvAHoWm5xQblktkXpq0VNjSdbWFG
+         oDiQPIOyvUoz5QcwJRiymW4k1BYbU+zawxfquLtAwFj/M93waBw+XmHxmG54uuKQjkVx
+         80vw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 2/3] ARM: meson: add unique MAC address generation
-Date: Wed, 12 Jun 2019 11:49:07 +0200
-Message-Id: <20190612094908.24858-3-narmstrong@baylibre.com>
+Subject: [PATCH 3/3] board: amlogic: Generate unique MAC address for Q200 and P212 based boards
+Date: Wed, 12 Jun 2019 11:49:08 +0200
+Message-Id: <20190612094908.24858-4-narmstrong@baylibre.com>
 In-Reply-To: <20190612094908.24858-1-narmstrong@baylibre.com>
 References: <20190612094908.24858-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -24,96 +24,41 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add support for generating an unique MAC address using the SoC internal
-serial number from the Secure Monitor interface.
-
-The algorithm generates an unicast locally administered 6bytes minus 2bits
-address using an crc16 of the serial for the top 16bits with the lower 2 bits
-masked to setup the unicast locally administered property and a crc24 for
-the lower 24bits.
+Enable unique MAC address generation for boards usins SoCs having
+a known functional and valid unique serial number.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/include/asm/arch-meson/eth.h |  3 +++
- arch/arm/include/asm/arch-meson/sm.h  |  3 +++
- arch/arm/mach-meson/board-common.c    | 31 +++++++++++++++++++++++++++
- 3 files changed, 37 insertions(+)
+ board/amlogic/p212/p212.c | 2 ++
+ board/amlogic/q200/q200.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm/include/asm/arch-meson/eth.h b/arch/arm/include/asm/arch-meson/eth.h
-index 08acc5cbf7..f765cd7c4c 100644
---- a/arch/arm/include/asm/arch-meson/eth.h
-+++ b/arch/arm/include/asm/arch-meson/eth.h
-@@ -19,4 +19,7 @@ enum {
-  */
- void meson_eth_init(phy_interface_t mode, unsigned int flags);
- 
-+/* Generate an unique MAC address based on the HW serial */
-+int meson_generate_serial_ethaddr(void);
-+
- #endif /* __MESON_ETH_H__ */
-diff --git a/arch/arm/include/asm/arch-meson/sm.h b/arch/arm/include/asm/arch-meson/sm.h
-index a5bac5abda..60d04ae228 100644
---- a/arch/arm/include/asm/arch-meson/sm.h
-+++ b/arch/arm/include/asm/arch-meson/sm.h
-@@ -7,6 +7,9 @@
- #define __MESON_SM_H__
- 
- ssize_t meson_sm_read_efuse(uintptr_t offset, void *buffer, size_t size);
-+
-+#define SM_SERIAL_SIZE	12
-+
- int meson_sm_get_serial(void *buffer, size_t size);
- 
- #endif /* __MESON_SM_H__ */
-diff --git a/arch/arm/mach-meson/board-common.c b/arch/arm/mach-meson/board-common.c
-index 8c41301674..18383f774e 100644
---- a/arch/arm/mach-meson/board-common.c
-+++ b/arch/arm/mach-meson/board-common.c
-@@ -7,6 +7,7 @@
- #include <asm/arch/boot.h>
- #include <linux/libfdt.h>
- #include <linux/err.h>
-+#include <environment.h>
- #include <asm/arch/mem.h>
- #include <asm/arch/sm.h>
- #include <asm/armv8/mmu.h>
-@@ -67,6 +68,36 @@ void meson_board_add_reserved_memory(void *fdt, u64 start, u64 size)
+diff --git a/board/amlogic/p212/p212.c b/board/amlogic/p212/p212.c
+index 546c4d9c86..1159cee4ce 100644
+--- a/board/amlogic/p212/p212.c
++++ b/board/amlogic/p212/p212.c
+@@ -32,6 +32,8 @@ int misc_init_r(void)
+ 					  mac_addr, EFUSE_MAC_SIZE);
+ 		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
+ 			eth_env_set_enetaddr("ethaddr", mac_addr);
++		else
++			meson_generate_serial_ethaddr();
  	}
- }
  
-+int meson_generate_serial_ethaddr(void)
-+{
-+	u8 mac_addr[ARP_HLEN];
-+	char serial[SM_SERIAL_SIZE];
-+	u32 sid;
-+	u16 sid16;
-+
-+	if (!meson_sm_get_serial(serial, SM_SERIAL_SIZE)) {
-+		sid = crc32(0, (unsigned char *)serial, SM_SERIAL_SIZE);
-+		sid16 = crc16_ccitt(0, (unsigned char *)serial,	SM_SERIAL_SIZE);
-+
-+		/* Ensure the NIC specific bytes of the mac are not all 0 */
-+		if ((sid & 0xffffff) == 0)
-+			sid |= 0x800000;
-+
-+		/* Non OUI / registered MAC address */
-+		mac_addr[0] = ((sid16 >> 8) & 0xfc) | 0x02;
-+		mac_addr[1] = (sid16 >>  0) & 0xff;
-+		mac_addr[2] = (sid >> 24) & 0xff;
-+		mac_addr[3] = (sid >> 16) & 0xff;
-+		mac_addr[4] = (sid >>  8) & 0xff;
-+		mac_addr[5] = (sid >>  0) & 0xff;
-+
-+		eth_env_set_enetaddr("ethaddr", mac_addr);
-+	} else
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static void meson_set_boot_source(void)
- {
- 	const char *source;
+ 	if (!env_get("serial#")) {
+diff --git a/board/amlogic/q200/q200.c b/board/amlogic/q200/q200.c
+index de97d6ad58..2ea97c362e 100644
+--- a/board/amlogic/q200/q200.c
++++ b/board/amlogic/q200/q200.c
+@@ -31,6 +31,8 @@ int misc_init_r(void)
+ 					  mac_addr, EFUSE_MAC_SIZE);
+ 		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
+ 			eth_env_set_enetaddr("ethaddr", mac_addr);
++		else
++			meson_generate_serial_ethaddr();
+ 	}
+ 
+ 	if (!env_get("serial#")) {
 -- 
 2.21.0
 
