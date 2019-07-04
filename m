@@ -1,21 +1,21 @@
-Received: by mail-wr1-f65.google.com with SMTP id p13so6711812wru.10
-        for <u-boot-amlogic@groups.io>; Thu, 04 Jul 2019 06:52:16 -0700 (PDT)
+Received: by mail-wr1-f67.google.com with SMTP id b2so5499142wrx.11
+        for <u-boot-amlogic@groups.io>; Thu, 04 Jul 2019 06:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bbfQ+Jmc8Su62WVi81909SfTWTAk8T56gH/qadrUWbk=;
-        b=KtWFbORVctxdgFA0sqvB5nB3eFdFhP2j3Bo8+c2GOR11xL3wm4flnMdGAScDbvoLvf
-         e+eBzDJkt+xdsNPEs76Ld+s1Q7UTalW6j+5QEqGeGOACsVZ9kKTeCx3uOwzVA7benUbG
-         85cttu+/eHLa/B/pRPIIx0ovBuY8+6lntl+EnN4gUmt93cMSFIkgywdxi2ASWnngF3yz
-         V7ZZUURSmYaCfg6B01x3Dw/yGThCdne+oe7lUa5BFkolc1Oe31Hbjrdt2xcboU1T3+tr
-         cqdCylhZUtE05XSa6/kp/J0aRI5JKFlMgrUAf7U0HdUBZTbYISOrLA+EP3t12jk4nRnL
-         8zFw==
+        bh=VwiGuXU951s4yt+UxjjQdhtHcFPb7/GYOeJp+XiRbmI=;
+        b=S/C+Qlab+NCiVDgr4iJ5rVf3eGln4oEdQzvkUgECT83O0pr3KE9WYlmgRsLQqt+qAE
+         sZNAOLjUu9yMXqJ7u5tjecQuvGMg9ROHO+nXYxI4iZJYarTw9h68mlAx9aQH4QgM14iz
+         cJarC84tqlTlVb/rWPjmF7fUoO357JWKo8Tmj66JtIxmWB7G68JjJEhT5VezvfxLZ0pS
+         jqEnDuKemVXj9fGzTPbK/5Cbv0OMwm0CMod2oh2mMge/DUCVpp5jyGoUwCouxDBOwN4H
+         bnTjnx3Bq98SdYVzAzOdKXu6xhaCLsq8zG0+k+DqXkWQUaF7NCCmPNq3UjtIFr5W+jvB
+         6GWQ==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] edid: add edid_get_timing_validate() variant to filter out edid modes
-Date: Thu,  4 Jul 2019 15:52:06 +0200
-Message-Id: <20190704135208.32104-2-narmstrong@baylibre.com>
+Subject: [PATCH 2/3] video: display: use edid_get_timing_validate() variant to filter supported EDID modes
+Date: Thu,  4 Jul 2019 15:52:07 +0200
+Message-Id: <20190704135208.32104-3-narmstrong@baylibre.com>
 In-Reply-To: <20190704135208.32104-1-narmstrong@baylibre.com>
 References: <20190704135208.32104-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -24,103 +24,70 @@ To: agust@denx.de
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The original edid_get_timing() function returns the first valid timing,
-but on some plaforms, we could only supports a subset of the listed
-monitot's navite timing.
-
-Let's introduce a edid_get_timing_validate() adding a mode_valid callback
-including a private cookie pointer.
-
-If the callback returns false, the current timing is discared and the next
-one is checked. If no valid & supported timings are found, the function
-would return an error.
+Introduce a new display op, mode_valid() to be used with the newly
+introduced edid_get_timing_validate() function, to filter supported
+monitor timings if handled by the display driver.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- common/edid.c  | 22 +++++++++++++++++++---
- include/edid.h | 22 ++++++++++++++++++++++
- 2 files changed, 41 insertions(+), 3 deletions(-)
+ drivers/video/display-uclass.c | 15 ++++++++++++++-
+ include/display.h              | 10 ++++++++++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/common/edid.c b/common/edid.c
-index 90d1167f6e..f244d26e04 100644
---- a/common/edid.c
-+++ b/common/edid.c
-@@ -168,8 +168,12 @@ static bool cea_is_hdmi_vsdb_present(struct edid_cea861_info *info)
- 	return false;
- }
- 
--int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
--		    int *panel_bits_per_colourp)
-+int edid_get_timing_validate(u8 *buf, int buf_size,
-+			     struct display_timing *timing,
-+			     int *panel_bits_per_colourp,
-+			     bool (*mode_valid)(void *priv,
-+					const struct display_timing *timing),
-+			     void *mode_valid_priv)
- {
- 	struct edid1_info *edid = (struct edid1_info *)buf;
- 	bool timing_done;
-@@ -193,7 +197,11 @@ int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
- 		desc = &edid->monitor_details.descriptor[i];
- 		if (desc->zero_flag_1 != 0) {
- 			decode_timing((u8 *)desc, timing);
--			timing_done = true;
-+			if (mode_valid)
-+				timing_done = mode_valid(mode_valid_priv,
-+							 timing);
-+			else
-+				timing_done = true;
- 			break;
- 		}
- 	}
-@@ -225,6 +233,14 @@ int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
+diff --git a/drivers/video/display-uclass.c b/drivers/video/display-uclass.c
+index 99ef5e76f5..1a29ce5d85 100644
+--- a/drivers/video/display-uclass.c
++++ b/drivers/video/display-uclass.c
+@@ -37,6 +37,17 @@ int display_enable(struct udevice *dev, int panel_bpp,
  	return 0;
  }
  
-+int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
-+		    int *panel_bits_per_colourp)
++static bool display_mode_valid(void *priv, const struct display_timing *timing)
 +{
-+	return edid_get_timing_validate(buf, buf_size, timing,
-+					panel_bits_per_colourp, NULL, NULL);
++	struct udevice *dev = priv;
++	struct dm_display_ops *ops = display_get_ops(dev);
++
++	if (ops && ops->mode_valid)
++		return ops->mode_valid(dev, timing);
++
++	return true;
 +}
 +
-+
- /**
-  * Snip the tailing whitespace/return of a string.
-  *
-diff --git a/include/edid.h b/include/edid.h
-index f05d2b82f2..2562733061 100644
---- a/include/edid.h
-+++ b/include/edid.h
-@@ -306,6 +306,28 @@ int edid_get_ranges(struct edid1_info *edid, unsigned int *hmin,
+ int display_read_timing(struct udevice *dev, struct display_timing *timing)
+ {
+ 	struct dm_display_ops *ops = display_get_ops(dev);
+@@ -53,7 +64,9 @@ int display_read_timing(struct udevice *dev, struct display_timing *timing)
+ 	if (ret < 0)
+ 		return ret;
  
- struct display_timing;
+-	return edid_get_timing(buf, ret, timing, &panel_bits_per_colour);
++	return edid_get_timing_validate(buf, ret, timing,
++					&panel_bits_per_colour,
++					display_mode_valid, dev);
+ }
  
-+/**
-+ * edid_get_timing_validate() - Get basic digital display parameters with
-+ * mode selection callback
-+ *
-+ * @param buf		Buffer containing EDID data
-+ * @param buf_size	Size of buffer in bytes
-+ * @param timing	Place to put preferring timing information
-+ * @param panel_bits_per_colourp	Place to put the number of bits per
-+ *			colour supported by the panel. This will be set to
-+ *			-1 if not available
-+ * @param mode_valid	Callback validating mode, returning true is mode is
-+ *			supported, false otherwise.
-+ * @parem valid_priv	Pointer to private data for mode_valid callback
-+ * @return 0 if timings are OK, -ve on error
-+ */
-+int edid_get_timing_validate(u8 *buf, int buf_size,
-+			     struct display_timing *timing,
-+			     int *panel_bits_per_colourp,
-+			     bool (*mode_valid)(void *priv,
-+					const struct display_timing *timing),
-+			     void *mode_valid_priv);
+ bool display_in_use(struct udevice *dev)
+diff --git a/include/display.h b/include/display.h
+index 16f317c9c8..66294616ea 100644
+--- a/include/display.h
++++ b/include/display.h
+@@ -80,6 +80,16 @@ struct dm_display_ops {
+ 	 */
+ 	int (*enable)(struct udevice *dev, int panel_bpp,
+ 		      const struct display_timing *timing);
 +
- /**
-  * edid_get_timing() - Get basic digital display parameters
-  *
++	/**
++	 * mode_valid() - Check if mode is supported
++	 *
++	 * @dev:	Device to enable
++	 * @timing:	Display timings
++	 * @return true if supported, false if not
++	 */
++	bool (*mode_valid)(struct udevice *dev,
++			   const struct display_timing *timing);
+ };
+ 
+ #define display_get_ops(dev)	((struct dm_display_ops *)(dev)->driver->ops)
 -- 
 2.21.0
 
