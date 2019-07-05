@@ -1,71 +1,76 @@
-Received: by mail-wr1-f46.google.com with SMTP id v14so6812557wrr.4
-        for <u-boot-amlogic@groups.io>; Thu, 04 Jul 2019 07:12:56 -0700 (PDT)
+Received: by mail-wr1-f66.google.com with SMTP id p11so3570986wro.5
+        for <u-boot-amlogic@groups.io>; Fri, 05 Jul 2019 01:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=kZGQj72W+qsUFuSBySrzQCYfd5X2U1dC46XHytgkFzo=;
-        b=kJQigb9n5X9UtbjX53rFUQH0alcSeCtY/B3SMdiMhMuuHyfRHsYAdLzIwU6kGTZmgs
-         komfpsQKeAzXNJ8ffnxxMJFD/qtldVW7EyNxyr+AP94tXNEsmJ72k+yerl0hlyO2mzQm
-         Vikt7/AZ73opFgkYHQXleEVDmOkeeROTfJfRZodGWD0OW/yZCsUG7kYIiucvORua8K/M
-         Vj5Pw9jaurFeRAVxnaDQJoXdjZeuYJiizy5afcFnW5qUYRvsAyOQWuJnH3NMgFYwqmya
-         NzGqILbBdFUZQ+TW9LWlEGedNqRypBGtjN3PzEOa341DmNJ+mo0x8FE7oNZPLN/3jRPg
-         rd+A==
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=9fyiH7nunWxWGxPQHM38qciC3Vsn+hL/SpowoWARDCY=;
+        b=e5V83Vxsaz1/WvKKfYsVk+MIMZZXXdV1a2S9V/N/fA0QczRNpc0b2AL6HXZpks7pud
+         XuUFRReZv412RX94DAXE7sMtvpgXbugeQdoFAUL5JVnvv8aRCbwK9iFbzbS4VbXBQT6p
+         A8x3L+pvjGnBzZJu112/eFL9Kr92/XdLqMVjHsg3Bp2U6YsYnQzu4DVS+ZAAu/HZlPdh
+         cG6xQl8c5auEnLTZSaONWazmVLjw5D5HJm4pY9u1NCRhDmw3/IryM1p+5xBX7XhKhPvx
+         cQniD/9rlFJPZNi60MgoELkaZsLfi6yykwdybuuFKRGmxMHA04NNZiWmk2TCj+uLHfcA
+         ElVg==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] board: amlogic: add mailing-list to MAINTAINERS
+References: <20190704135938.1193-1-narmstrong@baylibre.com>
+ <20190705000155.GV8554@bill-the-cat>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190704
-Message-ID: <6963e3dd-9003-e696-5cc7-bfec825752d0@baylibre.com>
-Date: Thu, 4 Jul 2019 16:12:53 +0200
+Message-ID: <c647f75c-2098-5089-15ac-d0345a88612a@baylibre.com>
+Date: Fri, 5 Jul 2019 10:52:10 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, baylibre-upstreaming@groups.io
+In-Reply-To: <20190705000155.GV8554@bill-the-cat>
+Content-Type: multipart/mixed; boundary="Groupsio=IZjb0uDSal9u7OkPmE7K"
+To: Tom Rini <trini@konsulko.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+--Groupsio=IZjb0uDSal9u7OkPmE7K
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-This is my first PR from gitlab !
-Since I'll be on vacation next 2 weeks, this PR is for the next release, after v2019.07 is tagged.
+On 05/07/2019 02:01, Tom Rini wrote:
+> On Thu, Jul 04, 2019 at 03:59:38PM +0200, Neil Armstrong wrote:
+>=20
+>> Add missing mailing-list to the amlogic boards MAINTAINERS file.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>=20
+> Since you're going on vacation and this makes sense for the current
+> release, I'm grabbing this for you, I hope you don't mind!
 
-It contains a small typo fix from Andreas, and adds support for generating an unique MAC
-addresses from the SoC serial number in case none has been fused or saved in the env.
+Not at all, thanks for applying it !
 
-Thanks,
 Neil
 
-The following changes since commit ca4491f2d2af93d8b77c48c5d272d88094fc06eb:
+>=20
+> Applied to u-boot/master, thanks!
+>=20
 
-  Merge tag 'rockchip-for-v2019.07-rc5-2' of https://gitlab.denx.de/u-boot/custodians/u-boot-rockchip (2019-07-02 08:18:19 -0400)
 
-are available in the Git repository at:
 
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20190704
+--Groupsio=IZjb0uDSal9u7OkPmE7K
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-for you to fetch changes up to 3f1f9f08eb2031e14a7e2037feed18a69f1437c6:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-  board: amlogic: Generate unique MAC address for Q200 and P212 based boards (2019-07-04 16:04:59 +0200)
+iQIcBAEBCAAGBQJdHw+9AAoJEHfc29rIyEnRaNgQAKNd71SqTu7RBsEOY70fRNAU
+hR9ilxhUKkgJA88UafPMDM1hf2iKj+KSQjtjcWi8qViUBv8yesfXyLBm3OOS2zsR
+boIUa2LcFd9JMwXaACk5XTCAjfxNDtH3geVCKAEWXeXLbEOmGs5SDDf8smYqeQrk
+nhoblQz7hZg7PP+VsbglKkVMuwf5g4CNoB+uUU5eKfHuS9/ALdAdguZjaFOIjK8b
+E/u8saIOYOWNb7BNtzWp3koahGN+aEtyd1h/j4ATU5uU0nwtHRkZebfHXx/RHt0C
+tq697OFFLd0o8jiXvigZFJUpF3W3fssZRWH/Cp8jl0GV5STdc2HshbhjF5KGbAUn
+kN3X8aT/qYH1PcSACE0ScxgD2lETgka/yTjFJZZp0ZIUR5BD7wO3EloCX9O7zYQE
+ydhukjwi3FO9OFLPtuaLWkZr1q1VIti98t6721XITI/l76Wl4vNW+bHIaUVm73kl
+U2c2fW8Kfq+6tpq8yYpwvrgRyxB9LP39nJRw2mPka7SoLa0EwikoV5DFHXJV+7ks
+t08F3Brd2b3Dtcqr6YRt9Vg3WU+ZNL+OTOggeE19RafOQqzW9mL2lpxGsdK3R449
+gkDcqW7s1JuROQpGH0bpQ/NpTd8nVlOZjrvK0v4HgDuEX34XIlug1ngYy2IjkgdV
+KO7stym+BjubHuQz+AVb
+=EHyP
+-----END PGP SIGNATURE-----
 
-----------------------------------------------------------------
-- fix khadas-vim README
-- add support for unique generated MAC adresses from SoC serial,
-  limited to Amlogic GXL/GXM boards for now
-
-----------------------------------------------------------------
-Andreas Färber (1):
-      board: amlogic: vim: Fix README
-
-Neil Armstrong (3):
-      ARM: meson: sm: Add secure monitor calls to retrieve SoC serial number
-      ARM: meson: add unique MAC address generation
-      board: amlogic: Generate unique MAC address for Q200 and P212 based boards
-
- arch/arm/include/asm/arch-meson/eth.h |  3 +++
- arch/arm/include/asm/arch-meson/sm.h  |  4 ++++
- arch/arm/mach-meson/board-common.c    | 31 +++++++++++++++++++++++++++++++
- arch/arm/mach-meson/sm.c              | 24 ++++++++++++++++++++++++
- board/amlogic/p212/README.khadas-vim  |  2 +-
- board/amlogic/p212/p212.c             |  2 ++
- board/amlogic/q200/q200.c             |  2 ++
- 7 files changed, 67 insertions(+), 1 deletion(-)
+--Groupsio=IZjb0uDSal9u7OkPmE7K--
