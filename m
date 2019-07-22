@@ -1,21 +1,21 @@
-Received: by mail-wr1-f66.google.com with SMTP id r1so38689009wrl.7
-        for <u-boot-amlogic@groups.io>; Mon, 22 Jul 2019 02:48:18 -0700 (PDT)
+Received: by mail-wm1-f68.google.com with SMTP id s15so13276806wmj.3
+        for <u-boot-amlogic@groups.io>; Mon, 22 Jul 2019 02:48:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=untB0aKMev1Ym794X8O5Lhhxtqb4W2zyw+noOUR9cOw=;
-        b=c5vMJuCnw7a+APaVRaxVM1L7W4V1rrL5f2gLeMXpTveVmFqYkoz9guMS5c39yN3Xwd
-         DacuAaJxiWPFqJwnqC92RjEcPYPQ9q2AKCwwUz5snjHk/fXhcIWhTCKY/ShNmzmaPFcN
-         /NokTbmcpENt848nLH1C3a/XTSYrpyviQ8wC7vgojqj1ZvYLIukZNseYz95dLOiIzGD1
-         KTwVWuLOaMEFYRj21xuqO5wYqzwnn7Zw931NZIW9f1JW/EJyQRMACpqZYmUI7Q4sRgzJ
-         FMMjrAkZ8OTl/UU55lvQ/cFSSzo51PSovK7YaPjT2mTNS3dyUn3pj6wqI4UfweuQEnGe
-         qcvw==
+        bh=Mndbx5rbQt3LUjArcWC9v7xyQgvrncxMbiMItnXPync=;
+        b=revM8/+aChEUK7eLmUILIL/dtCeogPjweykh4+/j25OGqnJYnxElnw9dgsAasigCm0
+         65NuullfBCPOIy0VAnZzImSbPXN/FzZ5Z8k0V/Ksvz/RibLn1yW38C1Ux6p7MylqEjCb
+         rRz8TN9yr5BewbAJtg6NfGwf568EjMWVPFiyeI2Ai3KRU2xOsmpw/Gk4N75ad07qIgbz
+         4nykvr4/3s6grJR9eyHzBoA6RPKp8hm/07MfQV5U2eHUFIsaN8LsE/V8kpboLKQhUYLf
+         LO8ls2S1vHez3+pFcw5jLcf4axWzX+1MuVXJGBeLT4qmhaQc5pp+fqGawPq8reGgo2Iw
+         Z1qw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] ARM: dts: add support for Odroid-N2
-Date: Mon, 22 Jul 2019 11:48:12 +0200
-Message-Id: <20190722094814.25602-2-narmstrong@baylibre.com>
+Subject: [PATCH 2/3] ARM: meson-g12a: Handle 4GiB DRAM size
+Date: Mon, 22 Jul 2019 11:48:13 +0200
+Message-Id: <20190722094814.25602-3-narmstrong@baylibre.com>
 In-Reply-To: <20190722094814.25602-1-narmstrong@baylibre.com>
 References: <20190722094814.25602-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -24,533 +24,60 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Import HardKernel Odroid-N2 DT from Linux 5.3-rc1, commit 5f9e832c1370
-("Linus 5.3-rc1") based on an Amlogic G12B S922X SoC.
+When configured with 4GiB DRAM size, only 3.8GiB is available, the
+I/O beeing mapped in the last 256MiB of the first 4GiB physical memory/
+
+First fixup the mm_region to handle the first 3.8GiB as memory and the
+last 256MiB as I/O.
+
+Then limit the real memory reported by the firmware to the available
+physical space, 3.8GiB aligned with the mm_region memory zone size.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/dts/Makefile                         |   3 +-
- arch/arm/dts/meson-g12b-odroid-n2.dts         | 386 ++++++++++++++++++
- arch/arm/dts/meson-g12b.dtsi                  |  82 ++++
- .../dt-bindings/sound/meson-g12a-tohdmitx.h   |  13 +
- 4 files changed, 483 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/dts/meson-g12b-odroid-n2.dts
- create mode 100644 arch/arm/dts/meson-g12b.dtsi
- create mode 100644 include/dt-bindings/sound/meson-g12a-tohdmitx.h
+ arch/arm/mach-meson/board-g12a.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index f5535078c7..2baa368215 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -135,7 +135,8 @@ dtb-$(CONFIG_ARCH_MESON) += \
- 	meson-gxl-s905x-khadas-vim.dtb \
- 	meson-gxm-khadas-vim2.dtb \
- 	meson-axg-s400.dtb \
--	meson-g12a-u200.dtb
-+	meson-g12a-u200.dtb \
-+	meson-g12b-odroid-n2.dtb
- dtb-$(CONFIG_TEGRA) += tegra20-harmony.dtb \
- 	tegra20-medcom-wide.dtb \
- 	tegra20-paz00.dtb \
-diff --git a/arch/arm/dts/meson-g12b-odroid-n2.dts b/arch/arm/dts/meson-g12b-odroid-n2.dts
-new file mode 100644
-index 0000000000..81780ffcc7
---- /dev/null
-+++ b/arch/arm/dts/meson-g12b-odroid-n2.dts
-@@ -0,0 +1,386 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-g12b.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
-+
-+/ {
-+	compatible = "hardkernel,odroid-n2", "amlogic,g12b";
-+	model = "Hardkernel ODROID-N2";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			label = "n2:blue";
-+			gpios = <&gpio_ao GPIOAO_11 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	tflash_vdd: regulator-tflash_vdd {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "TFLASH_VDD";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	tf_io: gpio-regulator-tf_io {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "TF_IO";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+
-+		states = <3300000 0
-+			  1800000 1>;
-+	};
-+
-+	flash_1v8: regulator-flash_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "FLASH_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	main_12v: regulator-main_12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_5v: regulator-vcc_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&main_12v>;
-+	};
-+
-+	vcc_1v8: regulator-vcc_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
-+		/* FIXME: actually controlled by VDDCPU_B_EN */
-+	};
-+
-+	hub_5v: regulator-hub_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "HUB_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		/* Connected to the Hub CHIPENABLE, LOW sets low power state */
-+		gpio = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	usb_pwr_en: regulator-usb_pwr_en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB_PWR_EN";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		/* Connected to the microUSB port power enable */
-+		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vddao_1v8: regulator-vddao_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&main_12v>;
-+		regulator-always-on;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "G12A-ODROIDN2";
-+		audio-aux-devs = <&tdmout_b>;
-+		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
-+};
-+
-+&cec_AO {
-+	pinctrl-0 = <&cec_ao_a_h_pins>;
-+	pinctrl-names = "default";
-+	status = "disabled";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cecb_AO {
-+	pinctrl-0 = <&cec_ao_b_h_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&clkc_audio {
-+	status = "okay";
-+};
-+
-+&ext_mdio {
-+	external_phy: ethernet-phy@0 {
-+		/* Realtek RTL8211F (0x001cc916) */	
-+		reg = <0>;
-+		max-speed = <1000>;
-+
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <30000>;
-+		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-+
-+		interrupt-parent = <&gpio_intc>;
-+		/* MAC_INTR on GPIOZ_14 */
-+		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&ethmac {
-+	pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+	phy-mode = "rgmii";
-+	phy-handle = <&external_phy>;
-+	amlogic,tx-delay-ns = <2>;
-+};
-+
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
-+&gpio {
-+	/*
-+	 * WARNING: The USB Hub on the Odroid-N2 needs a reset signal
-+	 * to be turned high in order to be detected by the USB Controller
-+	 * This signal should be handled by a USB specific power sequence
-+	 * in order to reset the Hub when USB bus is powered down.
-+	 */
-+	usb-hub {
-+		gpio-hog;
-+		gpios = <GPIOH_4 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "usb-hub-reset";
-+	};
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&vcc_5v>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_c_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&tflash_vdd>;
-+	vqmmc-supply = <&tf_io>;
-+
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&flash_1v8>;
-+};
-+
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb {
-+	status = "okay";
-+	vbus-supply = <&usb_pwr_en>;
-+};
-+
-+&usb2_phy0 {
-+	phy-supply = <&vcc_5v>;
-+};
-+
-+&usb2_phy1 {
-+	/* Enable the hub which is connected to this port */
-+	phy-supply = <&hub_5v>;
-+};
-diff --git a/arch/arm/dts/meson-g12b.dtsi b/arch/arm/dts/meson-g12b.dtsi
-new file mode 100644
-index 0000000000..9e88e513b2
---- /dev/null
-+++ b/arch/arm/dts/meson-g12b.dtsi
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-g12a.dtsi"
-+
-+/ {
-+	compatible = "amlogic,g12b";
-+
-+	cpus {
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu100>;
-+				};
-+
-+				core1 {
-+					cpu = <&cpu101>;
-+				};
-+
-+				core2 {
-+					cpu = <&cpu102>;
-+				};
-+
-+				core3 {
-+					cpu = <&cpu103>;
-+				};
-+			};
-+		};
-+
-+		/delete-node/ cpu@2;
-+		/delete-node/ cpu@3;
-+
-+		cpu100: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu101: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu102: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x102>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu103: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x0 0x103>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+	};
-+};
-+
-+&clkc {
-+	compatible = "amlogic,g12b-clkc";
-+};
-diff --git a/include/dt-bindings/sound/meson-g12a-tohdmitx.h b/include/dt-bindings/sound/meson-g12a-tohdmitx.h
-new file mode 100644
-index 0000000000..c5e1f48d30
---- /dev/null
-+++ b/include/dt-bindings/sound/meson-g12a-tohdmitx.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __DT_MESON_G12A_TOHDMITX_H
-+#define __DT_MESON_G12A_TOHDMITX_H
-+
-+#define TOHDMITX_I2S_IN_A	0
-+#define TOHDMITX_I2S_IN_B	1
-+#define TOHDMITX_I2S_IN_C	2
-+#define TOHDMITX_I2S_OUT	3
-+#define TOHDMITX_SPDIF_IN_A	4
-+#define TOHDMITX_SPDIF_IN_B	5
-+#define TOHDMITX_SPDIF_OUT	6
-+
-+#endif /* __DT_MESON_G12A_TOHDMITX_H */
+diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
+index 1652970fbd..546b9f6039 100644
+--- a/arch/arm/mach-meson/board-g12a.c
++++ b/arch/arm/mach-meson/board-g12a.c
+@@ -62,21 +62,21 @@ void meson_init_reserved_memory(void *fdt)
+ phys_size_t get_effective_memsize(void)
+ {
+ 	/* Size is reported in MiB, convert it in bytes */
+-	return ((readl(G12A_AO_SEC_GP_CFG0) & G12A_AO_MEM_SIZE_MASK)
+-			>> G12A_AO_MEM_SIZE_SHIFT) * SZ_1M;
++	return min(((readl(G12A_AO_SEC_GP_CFG0) & G12A_AO_MEM_SIZE_MASK)
++			>> G12A_AO_MEM_SIZE_SHIFT) * SZ_1M, 0xf5000000);
+ }
+ 
+ static struct mm_region g12a_mem_map[] = {
+ 	{
+ 		.virt = 0x0UL,
+ 		.phys = 0x0UL,
+-		.size = 0x80000000UL,
++		.size = 0xf5000000UL,
+ 		.attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
+ 			 PTE_BLOCK_INNER_SHARE
+ 	}, {
+-		.virt = 0xf0000000UL,
+-		.phys = 0xf0000000UL,
+-		.size = 0x10000000UL,
++		.virt = 0xf5000000UL,
++		.phys = 0xf5000000UL,
++		.size = 0x0b000000UL,
+ 		.attrs = PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
+ 			 PTE_BLOCK_NON_SHARE |
+ 			 PTE_BLOCK_PXN | PTE_BLOCK_UXN
+@@ -129,6 +129,7 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
+ 			     G12A_ETH_REG_0_TX_RATIO(4) |
+ 			     G12A_ETH_REG_0_PHY_CLK_EN |
+ 			     G12A_ETH_REG_0_CLK_EN);
++		g12a_enable_external_mdio();
+ 		break;
+ 
+ 	case PHY_INTERFACE_MODE_RMII:
 -- 
 2.22.0
 
