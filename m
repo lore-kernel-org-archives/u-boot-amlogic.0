@@ -1,443 +1,96 @@
-Received: by mail-wm1-f67.google.com with SMTP id s15so13276865wmj.3
-        for <u-boot-amlogic@groups.io>; Mon, 22 Jul 2019 02:48:20 -0700 (PDT)
+Received: by mail-wr1-f68.google.com with SMTP id f9so41994249wre.12
+        for <u-boot-amlogic@groups.io>; Tue, 23 Jul 2019 00:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DdetfJ6ItgdktY5wMnKqgU+F+vEte0IYSnLGFeKjVc8=;
-        b=CB1jfZUcbCXLLuH7/I/6RXJuDktzLkT3cMigFEWNWdQEi9QPdApz8/RmHq9EXePb82
-         RcZfiC1lc1yrrv/c15grj4nwEXwIJ5G7J50jbcpfWzNPRp3RSfZMdLLidd5ZTLSXLW3G
-         k92kwiNK8fs5HeX3NbSqMDS9E0D/TI7BuIRe0lqbx453CmpgVBKe5xibeaLonjH+rGsI
-         emYX0DoNcXIpeC7LvPij+3127QiMKws+uUC4azL+HlOfTM3GEG34oqXXNQif2naxUjCf
-         qqJto1qRSVDAaClcEDyZcCKCVEXYA0vfs3F4C2unylOZbTQkfu9o28b3jDftILYo6vMK
-         S+pw==
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/IKgaP+iuwPnYqXdl3HJABOrtKl4WQMfjqGR+sJRIQE=;
+        b=IckrHwX3RkLixI7ou6qBtBB/Ntk5h5cxCb+vri3xB6zqr3P52uqKqJoWKSbjnFfNWi
+         cqe1Q1NpTFJzY3cFygqFNaDLzDmrVVx/S3H38jRRhYRNFYBQCPYTR63B4slCgPde/WC8
+         7LuAkuQss3mN0ByXgk3OxPwbiM75rGOsqAJloQ7SLIV+udqjA2AnqZOr2J/XCwv81oHC
+         b/MYfH6LE2vQvOKcEmvVAygSQEZ4n3PuvnqABN7cTojOX844k7T4Wws3HXmuMLTA0WvV
+         zy18S2VmSVSaGNXdoD9sCi2sWkRhgCAeTkig/kX87solkFVAbvgfSMS7u6EObOkUooHN
+         aSLA==
 Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 3/3] board: amlogic: add support for Odroid-N2
-Date: Mon, 22 Jul 2019 11:48:14 +0200
-Message-Id: <20190722094814.25602-4-narmstrong@baylibre.com>
-In-Reply-To: <20190722094814.25602-1-narmstrong@baylibre.com>
+Subject: Re: [U-Boot] [PATCH 3/3] board: amlogic: add support for Odroid-N2
 References: <20190722094814.25602-1-narmstrong@baylibre.com>
+ <20190722094814.25602-4-narmstrong@baylibre.com>
+ <CANAwSgQT72L_xGRBnbWbVvPMBxy1FTaQMM2KmDBp9n7442m39Q@mail.gmail.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <00670e7b-f8f4-84e0-56e9-e84d26e4e2c1@baylibre.com>
+Date: Tue, 23 Jul 2019 09:49:10 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <CANAwSgQT72L_xGRBnbWbVvPMBxy1FTaQMM2KmDBp9n7442m39Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-ODROID-N2 is a single board computer manufactured by Hardkernel Co. Ltd
-with the following specifications:
+Hi Anand,
 
- - Amlogic S922X ARM Cortex-A53 dual-core + Cortex-A73 quad-core SoC
- - 4GB DDR4 SDRAM
- - Gigabit Ethernet
- - HDMI 2.1 4K/60Hz display
- - 40-pin GPIO header
- - 4 x USB 3.0 Host, 1 x USB OTG
- - eMMC, microSD
- - Infrared receiver
+On 22/07/2019 19:08, Anand Moon wrote:
+> Hi Neil,
+> 
+> On Mon, 22 Jul 2019 at 16:00, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> ODROID-N2 is a single board computer manufactured by Hardkernel Co. Ltd
+>> with the following specifications:
+>>
+>>  - Amlogic S922X ARM Cortex-A53 dual-core + Cortex-A73 quad-core SoC
+>>  - 4GB DDR4 SDRAM
+>>  - Gigabit Ethernet
+>>  - HDMI 2.1 4K/60Hz display
+>>  - 40-pin GPIO header
+>>  - 4 x USB 3.0 Host, 1 x USB OTG
+>>  - eMMC, microSD
+>>  - Infrared receiver
+>>
+>> The board directory is W400, the name of the Amlogic Reference Design
+>> of Amlogic G12B with Gigabit boards, which will be used for similar
+>> boards.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  board/amlogic/w400/MAINTAINERS      |   6 ++
+>>  board/amlogic/w400/Makefile         |   6 ++
+>>  board/amlogic/w400/README.odroid-n2 | 130 ++++++++++++++++++++++++++++
+>>  board/amlogic/w400/README.w400      | 130 ++++++++++++++++++++++++++++
+>>  board/amlogic/w400/w400.c           |  18 ++++
+>>  configs/odroid-n2_defconfig         |  56 ++++++++++++
+>>  6 files changed, 346 insertions(+)
+>>  create mode 100644 board/amlogic/w400/MAINTAINERS
+>>  create mode 100644 board/amlogic/w400/Makefile
+>>  create mode 100644 board/amlogic/w400/README.odroid-n2
+>>  create mode 100644 board/amlogic/w400/README.w400
+>>  create mode 100644 board/amlogic/w400/w400.c
+>>  create mode 100644 configs/odroid-n2_defconfig
+>>
+[..]
 
-The board directory is W400, the name of the Amlogic Reference Design
-of Amlogic G12B with Gigabit boards, which will be used for similar
-boards.
+>> +
+>> + > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
+>> + > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
+>> + > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
+>> + > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
+>> + > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
+>> +
+> 
+> Should we checkout odroidn2-v2015.01 from Hardkernel repository.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- board/amlogic/w400/MAINTAINERS      |   6 ++
- board/amlogic/w400/Makefile         |   6 ++
- board/amlogic/w400/README.odroid-n2 | 130 ++++++++++++++++++++++++++++
- board/amlogic/w400/README.w400      | 130 ++++++++++++++++++++++++++++
- board/amlogic/w400/w400.c           |  18 ++++
- configs/odroid-n2_defconfig         |  56 ++++++++++++
- 6 files changed, 346 insertions(+)
- create mode 100644 board/amlogic/w400/MAINTAINERS
- create mode 100644 board/amlogic/w400/Makefile
- create mode 100644 board/amlogic/w400/README.odroid-n2
- create mode 100644 board/amlogic/w400/README.w400
- create mode 100644 board/amlogic/w400/w400.c
- create mode 100644 configs/odroid-n2_defconfig
+Yes, you are right it's a typo !
 
-diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
-new file mode 100644
-index 0000000000..6e68fa73f7
---- /dev/null
-+++ b/board/amlogic/w400/MAINTAINERS
-@@ -0,0 +1,6 @@
-+W400
-+M:	Neil Armstrong <narmstrong@baylibre.com>
-+S:	Maintained
-+L:	u-boot-amlogic@groups.io
-+F:	board/amlogic/w400/
-+F:	configs/odroid-n2_defconfig
-diff --git a/board/amlogic/w400/Makefile b/board/amlogic/w400/Makefile
-new file mode 100644
-index 0000000000..fac4a73afa
---- /dev/null
-+++ b/board/amlogic/w400/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# (C) Copyright 2019 BayLibre, SAS
-+# Author: Neil Armstrong <narmstrong@baylibre.com>
-+
-+obj-y	:= w400.o
-diff --git a/board/amlogic/w400/README.odroid-n2 b/board/amlogic/w400/README.odroid-n2
-new file mode 100644
-index 0000000000..90070a988d
---- /dev/null
-+++ b/board/amlogic/w400/README.odroid-n2
-@@ -0,0 +1,130 @@
-+U-Boot for ODROID-N2
-+====================
-+
-+ODROID-N2 is a single board computer manufactured by Hardkernel
-+Co. Ltd with the following specifications:
-+
-+ - Amlogic S922X ARM Cortex-A53 dual-core + Cortex-A73 quad-core SoC
-+ - 4GB DDR4 SDRAM
-+ - Gigabit Ethernet
-+ - HDMI 2.1 4K/60Hz display
-+ - 40-pin GPIO header
-+ - 4 x USB 3.0 Host, 1 x USB OTG
-+ - eMMC, microSD
-+ - Infrared receiver
-+
-+Schematics are available on the manufacturer website.
-+
-+Currently the u-boot port supports the following devices:
-+ - serial
-+ - eMMC, microSD
-+ - Ethernet
-+ - I2C
-+ - Regulators
-+ - Reset controller
-+ - Clock controller
-+ - ADC
-+
-+u-boot compilation
-+==================
-+
-+ > export ARCH=arm
-+ > export CROSS_COMPILE=aarch64-none-elf-
-+ > make odroid-n2_defconfig
-+ > make
-+
-+Image creation
-+==============
-+
-+Amlogic doesn't provide sources for the firmware and for tools needed
-+to create the bootloader image, so it is necessary to obtain them from
-+the git tree published by the board vendor:
-+
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
-+
-+ > DIR=odroid-c2
-+ > git clone --depth 1 \
-+       https://github.com/hardkernel/u-boot.git -b odroidc2-v2015.01 \
-+       $DIR
-+
-+ > cd odroid-c2
-+ > make odroidn2_defconfig
-+ > make
-+ > export UBOOTDIR=$PWD
-+
-+ Go back to mainline U-Boot source tree then :
-+ > mkdir fip
-+
-+ > wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
-+ > cp $UBOOTDIR/build/scp_task/bl301.bin fip/
-+ > cp $UBOOTDIR/build/board/hardkernel/odroidn2/firmware/acs.bin fip/
-+ > cp $UBOOTDIR/fip/g12b/bl2.bin fip/
-+ > cp $UBOOTDIR/fip/g12b/bl30.bin fip/
-+ > cp $UBOOTDIR/fip/g12b/bl31.img fip/
-+ > cp $UBOOTDIR/fip/g12b/ddr3_1d.fw fip/
-+ > cp $UBOOTDIR/fip/g12b/ddr4_1d.fw fip/
-+ > cp $UBOOTDIR/fip/g12b/ddr4_2d.fw fip/
-+ > cp $UBOOTDIR/fip/g12b/diag_lpddr4.fw fip/
-+ > cp $UBOOTDIR/fip/g12b/lpddr4_1d.fw fip/
-+ > cp $UBOOTDIR/fip/g12b/lpddr4_2d.fw fip/
-+ > cp $UBOOTDIR/fip/g12b/piei.fw fip/
-+ > cp $UBOOTDIR/fip/g12b/aml_ddr.fw fip/
-+ > cp u-boot.bin fip/bl33.bin
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl30.bin \
-+	fip/zero_tmp \
-+	fip/bl30_zero.bin \
-+	fip/bl301.bin \
-+	fip/bl301_zero.bin \
-+	fip/bl30_new.bin \
-+	bl30
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl2.bin \
-+	fip/zero_tmp \
-+	fip/bl2_zero.bin \
-+	fip/acs.bin \
-+	fip/bl21_zero.bin \
-+	fip/bl2_new.bin \
-+	bl2
-+
-+ > $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl30sig --input fip/bl30_new.bin \
-+					--output fip/bl30_new.bin.g12a.enc \
-+					--level v3
-+ > $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl30_new.bin.g12a.enc \
-+					--output fip/bl30_new.bin.enc \
-+					--level v3 --type bl30
-+ > $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl31.img \
-+					--output fip/bl31.img.enc \
-+					--level v3 --type bl31
-+ > $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
-+					--output fip/bl33.bin.enc \
-+					--level v3 --type bl33 --compress lz4
-+ > $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
-+					--output fip/bl2.n.bin.sig
-+ > $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bootmk \
-+		--output fip/u-boot.bin \
-+		--bl2 fip/bl2.n.bin.sig \
-+		--bl30 fip/bl30_new.bin.enc \
-+		--bl31 fip/bl31.img.enc \
-+		--bl33 fip/bl33.bin.enc \
-+		--ddrfw1 fip/ddr4_1d.fw \
-+		--ddrfw2 fip/ddr4_2d.fw \
-+		--ddrfw3 fip/ddr3_1d.fw \
-+		--ddrfw4 fip/piei.fw \
-+		--ddrfw5 fip/lpddr4_1d.fw \
-+		--ddrfw6 fip/lpddr4_2d.fw \
-+		--ddrfw7 fip/diag_lpddr4.fw \
-+		--ddrfw8 fip/aml_ddr.fw \
-+		--level v3
-+
-+and then write the image to SD with:
-+
-+ > DEV=/dev/your_sd_device
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/board/amlogic/w400/README.w400 b/board/amlogic/w400/README.w400
-new file mode 100644
-index 0000000000..25b786d817
---- /dev/null
-+++ b/board/amlogic/w400/README.w400
-@@ -0,0 +1,130 @@
-+U-Boot for Amlogic W400
-+=======================
-+
-+U200 is a reference board manufactured by Amlogic with the following
-+specifications:
-+
-+ - Amlogic S922X ARM Cortex-A53 dual-core + Cortex-A73 quad-core SoC
-+ - 2GB DDR4 SDRAM
-+ - 10/100 Ethernet (Internal PHY)
-+ - 1 x USB 3.0 Host
-+ - eMMC
-+ - SDcard
-+ - Infrared receiver
-+ - SDIO WiFi Module
-+ - MIPI DSI Connector
-+ - Audio HAT Connector
-+ - PCI-E M.2 Connector
-+
-+Schematics are available from Amlogic on demand.
-+
-+Currently the u-boot port supports the following devices:
-+ - serial
-+ - Ethernet
-+ - Regulators
-+ - Clock controller
-+
-+u-boot compilation
-+==================
-+
-+ > export ARCH=arm
-+ > export CROSS_COMPILE=aarch64-none-elf-
-+ > make w400_defconfig
-+ > make
-+
-+Image creation
-+==============
-+
-+Amlogic doesn't provide sources for the firmware and for tools needed
-+to create the bootloader image, so it is necessary to obtain them from
-+the git tree published by the board vendor:
-+
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
-+ > git clone https://github.com/BayLibre/u-boot.git -b buildroot-openlinux-20180418 amlogic-u-boot
-+ > cd amlogic-u-boot
-+ > make g12b_w400_v1_defconfig
-+ > make
-+ > export UBOOTDIR=$PWD
-+
-+Download the latest Amlogic Buildroot package, and extract it :
-+ > wget http://openlinux2.amlogic.com:8000/ARM/filesystem/Linux_BSP/buildroot_openlinux_kernel_4.9_fbdev_20180706.tar.gz
-+ > tar xfz buildroot_openlinux_kernel_4.9_fbdev_20180706.tar.gz buildroot_openlinux_kernel_4.9_fbdev_20180706/bootloader
-+ > export BRDIR=$PWD/buildroot_openlinux_kernel_4.9_fbdev_20180706
-+ > export FIPDIR=$BRDIR/bootloader/uboot-repo/fip
-+
-+Go back to mainline U-Boot source tree then :
-+ > mkdir fip
-+
-+ > wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
-+ > cp $UBOOTDIR/build/scp_task/bl301.bin fip/
-+ > cp $UBOOTDIR/build/board/amlogic/g12b_w400_v1/firmware/acs.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl2/bin/g12b/bl2.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl30/bin/g12b/bl30.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl31_1.3/bin/g12b/bl31.img fip/
-+ > cp $FIPDIR/g12b/ddr3_1d.fw fip/
-+ > cp $FIPDIR/g12b/ddr4_1d.fw fip/
-+ > cp $FIPDIR/g12b/ddr4_2d.fw fip/
-+ > cp $FIPDIR/g12b/diag_lpddr4.fw fip/
-+ > cp $FIPDIR/g12b/lpddr4_1d.fw fip/
-+ > cp $FIPDIR/g12b/lpddr4_2d.fw fip/
-+ > cp $FIPDIR/g12b/piei.fw fip/
-+ > cp $FIPDIR/g12b/aml_ddr.fw fip/
-+ > cp u-boot.bin fip/bl33.bin
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl30.bin \
-+	fip/zero_tmp \
-+	fip/bl30_zero.bin \
-+	fip/bl301.bin \
-+	fip/bl301_zero.bin \
-+	fip/bl30_new.bin \
-+	bl30
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl2.bin \
-+	fip/zero_tmp \
-+	fip/bl2_zero.bin \
-+	fip/acs.bin \
-+	fip/bl21_zero.bin \
-+	fip/bl2_new.bin \
-+	bl2
-+
-+ > $FIPDIR/g12b/aml_encrypt_g12b --bl30sig --input fip/bl30_new.bin \
-+					--output fip/bl30_new.bin.g12a.enc \
-+					--level v3
-+ > $FIPDIR/g12b/aml_encrypt_g12b --bl3sig --input fip/bl30_new.bin.g12a.enc \
-+					--output fip/bl30_new.bin.enc \
-+					--level v3 --type bl30
-+ > $FIPDIR/g12b/aml_encrypt_g12b --bl3sig --input fip/bl31.img \
-+					--output fip/bl31.img.enc \
-+					--level v3 --type bl31
-+ > $FIPDIR/g12b/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
-+					--output fip/bl33.bin.enc \
-+					--level v3 --type bl33
-+ > $FIPDIR/g12b/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
-+					--output fip/bl2.n.bin.sig
-+ > $FIPDIR/g12b/aml_encrypt_g12b --bootmk \
-+		--output fip/u-boot.bin \
-+		--bl2 fip/bl2.n.bin.sig \
-+		--bl30 fip/bl30_new.bin.enc \
-+		--bl31 fip/bl31.img.enc \
-+		--bl33 fip/bl33.bin.enc \
-+		--ddrfw1 fip/ddr4_1d.fw \
-+		--ddrfw2 fip/ddr4_2d.fw \
-+		--ddrfw3 fip/ddr3_1d.fw \
-+		--ddrfw4 fip/piei.fw \
-+		--ddrfw5 fip/lpddr4_1d.fw \
-+		--ddrfw6 fip/lpddr4_2d.fw \
-+		--ddrfw7 fip/diag_lpddr4.fw \
-+		--ddrfw8 fip/aml_ddr.fw \
-+		--level v3
-+
-+and then write the image to SD with:
-+
-+ > DEV=/dev/your_sd_device
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/board/amlogic/w400/w400.c b/board/amlogic/w400/w400.c
-new file mode 100644
-index 0000000000..4737865367
---- /dev/null
-+++ b/board/amlogic/w400/w400.c
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2016 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include <common.h>
-+#include <dm.h>
-+#include <environment.h>
-+#include <asm/io.h>
-+#include <asm/arch/eth.h>
-+
-+int misc_init_r(void)
-+{
-+	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
-+
-+	return 0;
-+}
-diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
-new file mode 100644
-index 0000000000..38d1549375
---- /dev/null
-+++ b/configs/odroid-n2_defconfig
-@@ -0,0 +1,56 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_MESON_G12A=y
-+CONFIG_SYS_BOARD="w400"
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_DEBUG_UART_BASE=0xff803000
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" odroid-n2"
-+CONFIG_DEBUG_UART=y
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-odroid-n2"
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_DM_GPIO=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_PHY_REALTEK=y
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_MESON=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_USB=y
-+CONFIG_USB_HOST=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_GADGET_DOWNLOAD=y
-+CONFIG_PHY=y
-+CONFIG_MESON_G12A_USB_PHY=y
-+CONFIG_DM_USB=y
-+CONFIG_USB_GADGET_DWC2_OTG=y
-+CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_DWC3=y
-+CONFIG_USB_DWC3_MESON_G12A=y
-+CONFIG_CMD_USB=y
-+CONFIG_CMD_USB_MASS_STORAGE=y
-+CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-+CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
--- 
-2.22.0
+> 
+> 
+>> + > DIR=odroid-c2
+>> + > git clone --depth 1 \
+>> +       https://github.com/hardkernel/u-boot.git -b odroidc2-v2015.01 \
+>> +       $DIR
+>> +
 
+[..]
+
+Thanks,
+Neil
