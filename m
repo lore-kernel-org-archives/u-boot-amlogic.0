@@ -1,27 +1,27 @@
-Received: by mail-wr1-f68.google.com with SMTP id f9so41994249wre.12
-        for <u-boot-amlogic@groups.io>; Tue, 23 Jul 2019 00:49:13 -0700 (PDT)
+Received: by mail-wr1-f67.google.com with SMTP id x1so27044668wrr.9
+        for <u-boot-amlogic@groups.io>; Tue, 23 Jul 2019 00:50:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=/IKgaP+iuwPnYqXdl3HJABOrtKl4WQMfjqGR+sJRIQE=;
-        b=IckrHwX3RkLixI7ou6qBtBB/Ntk5h5cxCb+vri3xB6zqr3P52uqKqJoWKSbjnFfNWi
-         cqe1Q1NpTFJzY3cFygqFNaDLzDmrVVx/S3H38jRRhYRNFYBQCPYTR63B4slCgPde/WC8
-         7LuAkuQss3mN0ByXgk3OxPwbiM75rGOsqAJloQ7SLIV+udqjA2AnqZOr2J/XCwv81oHC
-         b/MYfH6LE2vQvOKcEmvVAygSQEZ4n3PuvnqABN7cTojOX844k7T4Wws3HXmuMLTA0WvV
-         zy18S2VmSVSaGNXdoD9sCi2sWkRhgCAeTkig/kX87solkFVAbvgfSMS7u6EObOkUooHN
-         aSLA==
+        bh=7t+spxbFNJO3Ir3+Rjkq/JYeQ2FQhQnHTYD8Lezmrqw=;
+        b=AEHrVjSCynCCoXWAFl7sCWA+G27MScj4afWWxpw4OWuI+/rj8cQHOyMPObB/EMfsyt
+         dPY5mPYye/T9bg3VXiaFbPon0jwtyaRUSUGSs38bIiMF1yRy3dTaaShuEuaWUJz1z+I6
+         qg8Wk6v5P5ne4mLbZ05+7Hou7LqmhS6W0EBQkImbZZXGAd989kRnKy6QCd2oFkfIEp91
+         A8rGW1FCqqF5v9aYCNdAZcIo0UErZ4rVdGJR1/Vn/5TrDmoUz2Bn5Kf+ExZQ7KvqNgn3
+         D6QJdkfsF+xR6DdcZN0oLqjECgt8gNQohlLIQBFrV+Cyir2AR7gih517rq1shPCTLXAC
+         fsOA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [U-Boot] [PATCH 3/3] board: amlogic: add support for Odroid-N2
+Subject: Re: [U-Boot] [PATCH 1/3] ARM: dts: add support for Odroid-N2
 References: <20190722094814.25602-1-narmstrong@baylibre.com>
- <20190722094814.25602-4-narmstrong@baylibre.com>
- <CANAwSgQT72L_xGRBnbWbVvPMBxy1FTaQMM2KmDBp9n7442m39Q@mail.gmail.com>
+ <20190722094814.25602-2-narmstrong@baylibre.com>
+ <CANAwSgRqpnhpK80k_vTLNVwP7WD6d9X0CV9Errgq6vFzC6p5_A@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <00670e7b-f8f4-84e0-56e9-e84d26e4e2c1@baylibre.com>
-Date: Tue, 23 Jul 2019 09:49:10 +0200
+Message-ID: <2c0fffa7-3e09-8ef8-d15f-254598274c75@baylibre.com>
+Date: Tue, 23 Jul 2019 09:50:51 +0200
 MIME-Version: 1.0
-In-Reply-To: <CANAwSgQT72L_xGRBnbWbVvPMBxy1FTaQMM2KmDBp9n7442m39Q@mail.gmail.com>
+In-Reply-To: <CANAwSgRqpnhpK80k_vTLNVwP7WD6d9X0CV9Errgq6vFzC6p5_A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -31,66 +31,102 @@ List-ID: <u-boot-amlogic@groups.io>
 
 Hi Anand,
 
-On 22/07/2019 19:08, Anand Moon wrote:
+On 22/07/2019 19:07, Anand Moon wrote:
 > Hi Neil,
 > 
-> On Mon, 22 Jul 2019 at 16:00, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On Mon, 22 Jul 2019 at 15:50, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> ODROID-N2 is a single board computer manufactured by Hardkernel Co. Ltd
->> with the following specifications:
->>
->>  - Amlogic S922X ARM Cortex-A53 dual-core + Cortex-A73 quad-core SoC
->>  - 4GB DDR4 SDRAM
->>  - Gigabit Ethernet
->>  - HDMI 2.1 4K/60Hz display
->>  - 40-pin GPIO header
->>  - 4 x USB 3.0 Host, 1 x USB OTG
->>  - eMMC, microSD
->>  - Infrared receiver
->>
->> The board directory is W400, the name of the Amlogic Reference Design
->> of Amlogic G12B with Gigabit boards, which will be used for similar
->> boards.
+>> Import HardKernel Odroid-N2 DT from Linux 5.3-rc1, commit 5f9e832c1370
+>> ("Linus 5.3-rc1") based on an Amlogic G12B S922X SoC.
 >>
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 >> ---
->>  board/amlogic/w400/MAINTAINERS      |   6 ++
->>  board/amlogic/w400/Makefile         |   6 ++
->>  board/amlogic/w400/README.odroid-n2 | 130 ++++++++++++++++++++++++++++
->>  board/amlogic/w400/README.w400      | 130 ++++++++++++++++++++++++++++
->>  board/amlogic/w400/w400.c           |  18 ++++
->>  configs/odroid-n2_defconfig         |  56 ++++++++++++
->>  6 files changed, 346 insertions(+)
->>  create mode 100644 board/amlogic/w400/MAINTAINERS
->>  create mode 100644 board/amlogic/w400/Makefile
->>  create mode 100644 board/amlogic/w400/README.odroid-n2
->>  create mode 100644 board/amlogic/w400/README.w400
->>  create mode 100644 board/amlogic/w400/w400.c
->>  create mode 100644 configs/odroid-n2_defconfig
+>>  arch/arm/dts/Makefile                         |   3 +-
+>>  arch/arm/dts/meson-g12b-odroid-n2.dts         | 386 ++++++++++++++++++
+>>  arch/arm/dts/meson-g12b.dtsi                  |  82 ++++
+>>  .../dt-bindings/sound/meson-g12a-tohdmitx.h   |  13 +
+>>  4 files changed, 483 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/dts/meson-g12b-odroid-n2.dts
+>>  create mode 100644 arch/arm/dts/meson-g12b.dtsi
+>>  create mode 100644 include/dt-bindings/sound/meson-g12a-tohdmitx.h
 >>
-[..]
-
->> +
->> + > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
->> + > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
->> + > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
->> + > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
->> + > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
->> +
 > 
-> Should we checkout odroidn2-v2015.01 from Hardkernel repository.
+> I am getting following error while building this on mainline u-boot.
 
-Yes, you are right it's a typo !
+I forgot to explicit in the cover letter, but you'll need https://patchwork.ozlabs.org/patch/1134772/
+before this serie.
 
-> 
-> 
->> + > DIR=odroid-c2
->> + > git clone --depth 1 \
->> +       https://github.com/hardkernel/u-boot.git -b odroidc2-v2015.01 \
->> +       $DIR
->> +
-
-[..]
-
-Thanks,
 Neil
+
+> 
+>   CHK     include/config/uboot.release
+>   UPD     include/config/uboot.release
+>   CHK     include/generated/version_autogenerated.h
+>   UPD     include/generated/version_autogenerated.h
+>   CHK     include/generated/timestamp_autogenerated.h
+>   UPD     include/generated/timestamp_autogenerated.h
+>   CHK     include/generated/generic-asm-offsets.h
+>   CHK     include/generated/asm-offsets.h
+>   HOSTCC  tools/mkenvimage.o
+>   HOSTLD  tools/mkenvimage
+>   HOSTCC  tools/dumpimage.o
+>   HOSTLD  tools/dumpimage
+>   HOSTCC  tools/mkimage.o
+>   HOSTLD  tools/mkimage
+>   CC      arch/arm/cpu/armv8/fwcall.o
+>   LD      arch/arm/cpu/armv8/built-in.o
+>   CC      cmd/version.o
+>   LD      cmd/built-in.o
+>   CC      common/main.o
+>   LD      common/built-in.o
+>   CC      lib/efi_loader/helloworld.o
+>   CC      lib/efi_loader/efi_reloc.o
+>   CC      lib/efi_loader/efi_freestanding.o
+>   LD      lib/efi_loader/helloworld_efi.so
+>   OBJCOPY lib/efi_loader/helloworld.efi
+>   CC      lib/smbios.o
+>   CC      lib/display_options.o
+>   LD      lib/built-in.o
+>   LD      u-boot
+>   OBJCOPY u-boot.srec
+>   OBJCOPY u-boot-nodtb.bin
+> start=$(aarch64-linux-gnu-nm u-boot | grep __rel_dyn_start | cut -f 1
+> -d ' '); end=$(aarch64-linux-gnu-nm u-boot | grep __rel_dyn_end | cut
+> -f 1 -d ' '); tools/relocate-rela u-boot-nodtb.bin 0x01000000 $start
+> $end
+>   DTC     arch/arm/dts/meson-g12b-odroid-n2.dtb
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:226.1-5 Label or
+> path arb not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:244.1-12 Label
+> or path clkc_audio not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:248.1-10 Label
+> or path ext_mdio not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:264.1-8 Label or
+> path ethmac not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:273.1-9 Label or
+> path frddr_a not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:277.1-9 Label or
+> path frddr_b not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:281.1-9 Label or
+> path frddr_c not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:313.1-4 Label or
+> path ir not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:320.1-11 Label
+> or path sd_emmc_b not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:338.1-11 Label
+> or path sd_emmc_c not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:356.1-9 Label or
+> path tdmif_b not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:360.1-10 Label
+> or path tdmout_b not found
+> Error: arch/arm/dts/.meson-g12b-odroid-n2.dtb.pre.tmp:364.1-10 Label
+> or path tohdmitx not found
+> FATAL ERROR: Syntax error parsing input tree
+> make[2]: *** [scripts/Makefile.lib:308:
+> arch/arm/dts/meson-g12b-odroid-n2.dtb] Error 1
+> make[1]: *** [dts/Makefile:38: arch-dtbs] Error 2
+> make: *** [Makefile:1045: dts/dt.dtb] Error 2
+> 
+> 
+
+[..]
