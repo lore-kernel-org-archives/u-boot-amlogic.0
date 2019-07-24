@@ -1,64 +1,140 @@
-Received: by mail-wr1-f49.google.com with SMTP id p17so45573978wrf.11
-        for <u-boot-amlogic@groups.io>; Tue, 23 Jul 2019 23:45:25 -0700 (PDT)
+Received: by mail-wr1-f67.google.com with SMTP id z1so45661338wru.13
+        for <u-boot-amlogic@groups.io>; Wed, 24 Jul 2019 00:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:openpgp:autocrypt:organization
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Mm7GTnCdGQbUBin+hEsGkDf1UX2fNY/YbE/iadYRUf0=;
-        b=u4YSsPRM9XXHqCYnWSOFIwCglS+LmDvtQ0kT02xMxvczsK89bIjF6CKtaEFI+P4EFE
-         YqQPmb8V2QPPcT68Pd6mObf0YJ2uFpL6+TEA7Or1HeflsVVlZbNXyXNBvyN3XV1V7DB4
-         5rupkIT6r7O166uL2STV9rX+k2BSwm3+oTILXMEWPi/HoZILCc2TuFcYSz17mcJclQOe
-         GGm3BWs3y28duUy9wh/3uYp00NoX5qIQTPPMbbcpaxXworPzDytlz7kZNDkDVrKrfq4G
-         Z5AMh4faNvM4lMlh/LfxQBbc7gip7MKYnQeTPAaVsE6slT7YZZmgQgyqlFBYhmYF/lBb
-         4/Yg==
+        bh=07fNFOGJzmueDGxNhfASoix83V4RSqtQw+uj7KY58lc=;
+        b=bVEsHLyVHThbv8YlnxRMMLec5dPGP75Y5Yr6TKvEZccCz/DC1NGpVh9u6YHpLBUKlY
+         ptzexWxbqT5DMqI+Lvk6tu0/09PosPK+ZzhTRUTW7Z/MlF60etQqEsXe8Y/ZcT8wkxB4
+         ckv08nlmLtOs/vM0+k/J9NdotY332YA/BZiB9urEksNFs9EhTALFSmNkE/beSp/CqQfp
+         Ub9vLqRNGCWVTcD6Ie07shZbiELFWOu7nzQRmzRH8NozekId/VVEs6WCL15/u6yAAzqR
+         JvJhlTVAwgjM68Lpnzermquipeqk9OVZkn64Kp85YmCAnC1x8TBVtkoMsxgxKkrITkDN
+         Sa1w==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: how to encrypt fip for GXB P201 and possible bug in docs
-References: <28195.1563904673848199695@groups.io>
+Subject: Re: [PATCH 1/3] edid: add edid_get_timing_validate() variant to filter out edid modes
+References: <20190704135208.32104-1-narmstrong@baylibre.com>
+ <20190704135208.32104-2-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <16bdc4f8-71de-05c0-f976-0a9a76e96f57@baylibre.com>
-Date: Wed, 24 Jul 2019 08:45:23 +0200
+Message-ID: <d8c0590f-7c3b-02ec-502a-03ef1ffaf903@baylibre.com>
+Date: Wed, 24 Jul 2019 09:14:53 +0200
 MIME-Version: 1.0
-In-Reply-To: <28195.1563904673848199695@groups.io>
+In-Reply-To: <20190704135208.32104-2-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io, krecis@gmail.com
+To: agust@denx.de
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
-
-On 23/07/2019 19:57, krecis@gmail.com wrote:
-> Hi,
-> this is my first approach to both u-boot and this group, I have an S905w based board .
-
-S905w is a derivative from S905X, not S905 (without X), S905 is GXBB and S905W, like S905X, S905L, S805X, S805Y, is from the GXL family.
-
-> Here is my problem :
-> in the vanilla u-boot ( version 2019.07 ), there is a txt file ( u-boot-amlogic/board/amlogic/p201/README.p201 ) containing instructions on how to build the bootloader that you need in order to boot from an SD card starting from the p201_defconfig .
-
-So you should start from the P212 instead, which is the reference board for S905X, we don't support reference designs for S905W since this
-soc is not sold for SBCs, but only on final products.
-
+On 04/07/2019 15:52, Neil Armstrong wrote:
+> The original edid_get_timing() function returns the first valid timing,
+> but on some plaforms, we could only supports a subset of the listed
+> monitot's navite timing.
 > 
-> The problem is that I think that the original author mixed the two GXB and GXL targets and wrote something about GXL inside a document intended for GXB targets .
+> Let's introduce a edid_get_timing_validate() adding a mode_valid callback
+> including a private cookie pointer.
 > 
-> According to the description the gxb_p201_v1_defconfig is the target that I'm looking for ( considering the S905W hardware properties ) and it's a GXB target that uses "aml_encrypt_gxb" and not "aml_encrypt_gxl", infact after building the suggested amlogic-openlinux-20170606 Baylibre branch I have a "fip/gxb" populated with all the expected files where the "fip/gxl" content is not enough to build anything.
-
-The P201 is really the S905 reference design for GXBB.
-
+> If the callback returns false, the current timing is discared and the next
+> one is checked. If no valid & supported timings are found, the function
+> would return an error.
 > 
-> from this point on I'm unable to build anything since the last instructions in the README.p201 are mentioning files that are simply not generated and an utility like aml_encrypt_gxl which I don't think I should use for my P201 GXB target .
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  common/edid.c  | 22 +++++++++++++++++++---
+>  include/edid.h | 22 ++++++++++++++++++++++
+>  2 files changed, 41 insertions(+), 3 deletions(-)
 > 
-> Am I wrong ? what are the final steps to create the right u-boot.bin.sd.bin by "adding together" the vanilla and Baylibre builds ?
+> diff --git a/common/edid.c b/common/edid.c
+> index 90d1167f6e..f244d26e04 100644
+> --- a/common/edid.c
+> +++ b/common/edid.c
+> @@ -168,8 +168,12 @@ static bool cea_is_hdmi_vsdb_present(struct edid_cea861_info *info)
+>  	return false;
+>  }
+>  
+> -int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
+> -		    int *panel_bits_per_colourp)
+> +int edid_get_timing_validate(u8 *buf, int buf_size,
+> +			     struct display_timing *timing,
+> +			     int *panel_bits_per_colourp,
+> +			     bool (*mode_valid)(void *priv,
+> +					const struct display_timing *timing),
+> +			     void *mode_valid_priv)
+>  {
+>  	struct edid1_info *edid = (struct edid1_info *)buf;
+>  	bool timing_done;
+> @@ -193,7 +197,11 @@ int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
+>  		desc = &edid->monitor_details.descriptor[i];
+>  		if (desc->zero_flag_1 != 0) {
+>  			decode_timing((u8 *)desc, timing);
+> -			timing_done = true;
+> +			if (mode_valid)
+> +				timing_done = mode_valid(mode_valid_priv,
+> +							 timing);
+> +			else
+> +				timing_done = true;
+>  			break;
 
-Please retry from the P212 target, and tell me your results.
+the break is wrong, it should be :
 
-Typos may still occur, and I'll be happy to apply fixes !
+			if (timing_done)
+				break;
+
+I'll send a v2.
 
 Neil
 
-> 
-> 
+>  		}
+>  	}
+> @@ -225,6 +233,14 @@ int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
+>  	return 0;
+>  }
+>  
+> +int edid_get_timing(u8 *buf, int buf_size, struct display_timing *timing,
+> +		    int *panel_bits_per_colourp)
+> +{
+> +	return edid_get_timing_validate(buf, buf_size, timing,
+> +					panel_bits_per_colourp, NULL, NULL);
+> +}
+> +
+> +
+>  /**
+>   * Snip the tailing whitespace/return of a string.
+>   *
+> diff --git a/include/edid.h b/include/edid.h
+> index f05d2b82f2..2562733061 100644
+> --- a/include/edid.h
+> +++ b/include/edid.h
+> @@ -306,6 +306,28 @@ int edid_get_ranges(struct edid1_info *edid, unsigned int *hmin,
+>  
+>  struct display_timing;
+>  
+> +/**
+> + * edid_get_timing_validate() - Get basic digital display parameters with
+> + * mode selection callback
+> + *
+> + * @param buf		Buffer containing EDID data
+> + * @param buf_size	Size of buffer in bytes
+> + * @param timing	Place to put preferring timing information
+> + * @param panel_bits_per_colourp	Place to put the number of bits per
+> + *			colour supported by the panel. This will be set to
+> + *			-1 if not available
+> + * @param mode_valid	Callback validating mode, returning true is mode is
+> + *			supported, false otherwise.
+> + * @parem valid_priv	Pointer to private data for mode_valid callback
+> + * @return 0 if timings are OK, -ve on error
+> + */
+> +int edid_get_timing_validate(u8 *buf, int buf_size,
+> +			     struct display_timing *timing,
+> +			     int *panel_bits_per_colourp,
+> +			     bool (*mode_valid)(void *priv,
+> +					const struct display_timing *timing),
+> +			     void *mode_valid_priv);
+> +
+>  /**
+>   * edid_get_timing() - Get basic digital display parameters
+>   *
 > 
 
