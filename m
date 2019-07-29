@@ -1,73 +1,559 @@
-Received: by mail-wr1-f68.google.com with SMTP id 31so62056696wrm.1
+Received: by mail-wm1-f67.google.com with SMTP id v19so53637311wmj.5
         for <u-boot-amlogic@groups.io>; Mon, 29 Jul 2019 07:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cUB51INKSyIFfyS0NJHGOAjLo+KlQhNb1+VVy0ZPhKU=;
-        b=qp6N2ymH78bU+mrCEmTOJGhwqJeUxEtwJbvOptgelWeyHxudmgdaQuBECiUk7VJnPE
-         OwYDF7VAwPHAv4HWvR4Qa5f9PfwAvxEdqTdXqvumNKpFNAfm5oJ/L6NGpzqSwYtW7JQG
-         G5ANNR/VsEBp0H8ZAoxpRukwalCNHarWLwlmkksx+gZFJYg2fi/gWoiPOl5iJvaJcbyv
-         JJ8fvu2Dfw7/EJRWJatfpj/SM0dhkmZLzgz05z8bpSTmP87zwvRUYIaSIarxxXFuacow
-         0XXV0QlO9s+/6HkAxZLWj8xr6+jay/LD+JcWoCt4xCiOuksxIQsgozm1pfMoVo0kfjsj
-         ODCA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=irbhaRkuPPraHXaO7EA/+lbMgY0m0S1VflW5oY9QBqQ=;
+        b=nC3DAxBWcqyPa7RIlagr7THpJME0PKxjNeFUlhZq6e2u+QDq7BZyMMibSuxYM5AJ02
+         a5Vut0SDl6uHFJbAyGEIi2SIJKZxMEdTaaVefKWr2rCCCitAKB4RPQV6pa3zbwPCt/yG
+         dOZBTb4tLVaPf2VcPCTfLIvMgASu6FmD7tmL2Z4USC0ASqx3/CpNvHMATCm2e4IdhRC8
+         /r+9gOK0nsV4LV6bZlwd92jujIZbTkldzTwTTub375ln0fugjaIXz6WWj8WOz1tstHBM
+         V21HubWNDo5cl54j5IU+gdP2yxPpwoZXNGXXmYm6NqDu300pvWwjuTb6fGZI8lYw6Awz
+         cdAw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [RESEND PATCH 0/5] amlogic: add support for the SEI Robotic SEI510
-Date: Mon, 29 Jul 2019 16:07:46 +0200
-Message-Id: <20190729140751.7851-1-narmstrong@baylibre.com>
+Subject: [RESEND PATCH 1/5] ARM: dts: Import Amlogic G12A SEI510 DT from Linux 5.3-rc1
+Date: Mon, 29 Jul 2019 16:07:47 +0200
+Message-Id: <20190729140751.7851-2-narmstrong@baylibre.com>
+In-Reply-To: <20190729140751.7851-1-narmstrong@baylibre.com>
+References: <20190729140751.7851-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, jbrunet@baylibre.com, glaroque@baylibre.com, khilman@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The SEI510 board is based on the Amlogic S905X2 SoC
-from the Amlogic G12A SoC family.
+Import Linux 5.2-rc1 sei510 DT from 5f9e832c1370 ("Linus 5.3-rc1") for the
+meson-g12a-sei510 board.
 
-The board has the following specifications :
-- Amlogic S905X2 ARM Cortex-A53 quad-core SoC
-- XGB DDR4 SDRAM
-- 10/100 Ethernet (Internal PHY)
-- 1 x USB 3.0 Host
-- eMMC
-- SDcard
-- Infrared receiver
-- SDIO WiFi Module
-
-The board default behaviour is for booting Android and triggers
-fastboot on recovery or reboot mode.
-
-Jerome Brunet (1):
-  boards: meson: add g12a sei510
-
-Neil Armstrong (4):
-  ARM: dts: Import Amlogic G12A SEI510 DT from Linux 5.3-rc1
-  configs: meson64: permit redefining ENV_SIZE
-  ARM: meson: Add support for fastboot_set_reboot_flag()
-  configs: sei510: disable PSCI_RESET to support fastboot reboot_flag
-
- arch/arm/dts/Makefile                |   1 +
- arch/arm/dts/meson-g12a-sei510.dts   | 502 +++++++++++++++++++++++++++
- arch/arm/include/asm/arch-meson/sm.h |  18 +
- arch/arm/mach-meson/board-common.c   |  33 ++
- arch/arm/mach-meson/sm.c             | 155 +++++++++
- board/amlogic/sei510/MAINTAINERS     |   5 +
- board/amlogic/sei510/Makefile        |   6 +
- board/amlogic/sei510/README          | 123 +++++++
- board/amlogic/sei510/sei510.c        |  26 ++
- configs/sei510_defconfig             |  75 ++++
- include/configs/meson64.h            |   2 +
- include/configs/sei510.h             | 137 ++++++++
- 12 files changed, 1083 insertions(+)
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm/dts/Makefile              |   1 +
+ arch/arm/dts/meson-g12a-sei510.dts | 502 +++++++++++++++++++++++++++++
+ 2 files changed, 503 insertions(+)
  create mode 100644 arch/arm/dts/meson-g12a-sei510.dts
- create mode 100644 board/amlogic/sei510/MAINTAINERS
- create mode 100644 board/amlogic/sei510/Makefile
- create mode 100644 board/amlogic/sei510/README
- create mode 100644 board/amlogic/sei510/sei510.c
- create mode 100644 configs/sei510_defconfig
- create mode 100644 include/configs/sei510.h
 
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index 2baa368215..fdb0d66e97 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -136,6 +136,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
+ 	meson-gxm-khadas-vim2.dtb \
+ 	meson-axg-s400.dtb \
+ 	meson-g12a-u200.dtb \
++	meson-g12a-sei510.dtb \
+ 	meson-g12b-odroid-n2.dtb
+ dtb-$(CONFIG_TEGRA) += tegra20-harmony.dtb \
+ 	tegra20-medcom-wide.dtb \
+diff --git a/arch/arm/dts/meson-g12a-sei510.dts b/arch/arm/dts/meson-g12a-sei510.dts
+new file mode 100644
+index 0000000000..c7a8736885
+--- /dev/null
++++ b/arch/arm/dts/meson-g12a-sei510.dts
+@@ -0,0 +1,502 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre SAS. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "meson-g12a.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/meson-g12a-gpio.h>
++#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
++
++/ {
++	compatible = "seirobotics,sei510", "amlogic,g12a";
++	model = "SEI Robotics SEI510";
++
++	adc_keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 0>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1800000>;
++
++		button-onoff {
++			label = "On/Off";
++			linux,code = <KEY_POWER>;
++			press-threshold-microvolt = <1700000>;
++		};
++	};
++
++	aliases {
++		serial0 = &uart_AO;
++		ethernet0 = &ethmac;
++	};
++
++	mono_dac: audio-codec-0 {
++		compatible = "maxim,max98357a";
++		#sound-dai-cells = <0>;
++		sound-name-prefix = "U16";
++		sdmode-gpios = <&gpio GPIOX_8 GPIO_ACTIVE_HIGH>;
++	};
++
++	dmics: audio-codec-1 {
++		#sound-dai-cells = <0>;
++		compatible = "dmic-codec";
++		num-channels = <2>;
++		wakeup-delay-ms = <50>;
++		status = "okay";
++		sound-name-prefix = "MIC";
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	cvbs-connector {
++		compatible = "composite-video-connector";
++
++		port {
++			cvbs_connector_in: endpoint {
++				remote-endpoint = <&cvbs_vdac_out>;
++			};
++		};
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
++	};
++
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_tmds_out>;
++			};
++		};
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
++
++	ao_5v: regulator-ao_5v {
++		compatible = "regulator-fixed";
++		regulator-name = "AO_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
++
++	dc_in: regulator-dc_in {
++		compatible = "regulator-fixed";
++		regulator-name = "DC_IN";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	emmc_1v8: regulator-emmc_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "EMMC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
++
++	vddao_3v3_t: regultor-vddao_3v3_t {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3_T";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vddao_3v3>;
++		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
++		enable-active-high;
++	};
++
++	vddio_ao1v8: regulator-vddio_ao1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++	};
++
++	reserved-memory {
++		/* TEE Reserved Memory */
++		bl32_reserved: bl32@5000000 {
++			reg = <0x0 0x05300000 0x0 0x2000000>;
++			no-map;
++		};
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
++
++	sound {
++		compatible = "amlogic,axg-sound-card";
++		model = "G12A-SEI510";
++		audio-aux-devs = <&tdmout_a>, <&tdmout_b>,
++				 <&tdmin_a>, <&tdmin_b>;
++		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
++				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
++				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
++				"TDM_A Playback", "TDMOUT_A OUT",
++				"TDMOUT_B IN 0", "FRDDR_A OUT 1",
++				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
++				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
++				"TDM_B Playback", "TDMOUT_B OUT",
++				"TODDR_A IN 4", "PDM Capture",
++				"TODDR_B IN 4", "PDM Capture",
++				"TODDR_C IN 4", "PDM Capture",
++				"TDMIN_A IN 0", "TDM_A Capture",
++				"TDMIN_A IN 3", "TDM_A Loopback",
++				"TDMIN_B IN 0", "TDM_A Capture",
++				"TDMIN_B IN 3", "TDM_A Loopback",
++				"TDMIN_A IN 1", "TDM_B Capture",
++				"TDMIN_A IN 4", "TDM_B Loopback",
++				"TDMIN_B IN 1", "TDM_B Capture",
++				"TDMIN_B IN 4", "TDM_B Loopback",
++				"TODDR_A IN 0", "TDMIN_A OUT",
++				"TODDR_B IN 0", "TDMIN_A OUT",
++				"TODDR_C IN 0", "TDMIN_A OUT",
++				"TODDR_A IN 1", "TDMIN_B OUT",
++				"TODDR_B IN 1", "TDMIN_B OUT",
++				"TODDR_C IN 1", "TDMIN_B OUT";
++
++		assigned-clocks = <&clkc CLKID_MPLL2>,
++				  <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		status = "okay";
++
++		dai-link-0 {
++			sound-dai = <&frddr_a>;
++		};
++
++		dai-link-1 {
++			sound-dai = <&frddr_b>;
++		};
++
++		dai-link-2 {
++			sound-dai = <&frddr_c>;
++		};
++
++		dai-link-3 {
++			sound-dai = <&toddr_a>;
++		};
++
++		dai-link-4 {
++			sound-dai = <&toddr_b>;
++		};
++
++		dai-link-5 {
++			sound-dai = <&toddr_c>;
++		};
++
++		/* internal speaker interface */
++		dai-link-6 {
++			sound-dai = <&tdmif_a>;
++			dai-format = "i2s";
++			dai-tdm-slot-tx-mask-0 = <1 1>;
++			mclk-fs = <256>;
++
++			codec-0 {
++				sound-dai = <&mono_dac>;
++			};
++
++			codec-1 {
++				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
++			};
++		};
++
++		/* 8ch hdmi interface */
++		dai-link-7 {
++			sound-dai = <&tdmif_b>;
++			dai-format = "i2s";
++			dai-tdm-slot-tx-mask-0 = <1 1>;
++			dai-tdm-slot-tx-mask-1 = <1 1>;
++			dai-tdm-slot-tx-mask-2 = <1 1>;
++			dai-tdm-slot-tx-mask-3 = <1 1>;
++			mclk-fs = <256>;
++
++			codec@0 {
++				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
++			};
++		};
++
++		/* internal digital mics */
++		dai-link-8 {
++			sound-dai = <&pdm>;
++
++			codec {
++				sound-dai = <&dmics>;
++			};
++		};
++
++		/* hdmi glue */
++		dai-link-9 {
++			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
++
++			codec {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++	};
++};
++
++&arb {
++	status = "okay";
++};
++
++&cec_AO {
++	pinctrl-0 = <&cec_ao_a_h_pins>;
++	pinctrl-names = "default";
++	status = "disabled";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&cecb_AO {
++	pinctrl-0 = <&cec_ao_b_h_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&clkc_audio {
++	status = "okay";
++};
++
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
++	};
++};
++
++&ethmac {
++	status = "okay";
++	phy-handle = <&internal_ephy>;
++	phy-mode = "rmii";
++};
++
++&frddr_a {
++	status = "okay";
++};
++
++&frddr_b {
++	status = "okay";
++};
++
++&frddr_c {
++	status = "okay";
++};
++
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
++&i2c3 {
++	status = "okay";
++	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
++	pinctrl-names = "default";
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&xtal>;
++	clock-names = "clkin0";
++};
++
++&pdm {
++	pinctrl-0 = <&pdm_din0_z_pins>, <&pdm_din1_z_pins>,
++		    <&pdm_din2_z_pins>, <&pdm_din3_z_pins>,
++		    <&pdm_dclk_z_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&vddio_ao1v8>;
++};
++
++/* SDIO */
++&sd_emmc_a {
++	status = "okay";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-1 = <&sdio_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	sd-uhs-sdr50;
++	max-frequency = <100000000>;
++
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_ao1v8>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_c_pins>;
++	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <50000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddao_3v3>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
++	pinctrl-1 = <&emmc_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&emmc_1v8>;
++};
++
++&tdmif_a {
++	pinctrl-0 = <&tdm_a_dout0_pins>, <&tdm_a_fs_pins>, <&tdm_a_sclk_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	assigned-clocks = <&clkc_audio AUD_CLKID_TDM_SCLK_PAD0>,
++			  <&clkc_audio AUD_CLKID_TDM_LRCLK_PAD0>;
++	assigned-clock-parents = <&clkc_audio AUD_CLKID_MST_A_SCLK>,
++				 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
++	assigned-clock-rates = <0>, <0>;
++};
++
++&tdmif_b {
++	status = "okay";
++};
++
++&tdmin_a {
++	status = "okay";
++};
++
++&tdmin_b {
++	status = "okay";
++};
++
++&tdmout_a {
++	status = "okay";
++};
++
++&tdmout_b {
++	status = "okay";
++};
++
++&toddr_a {
++	status = "okay";
++};
++
++&toddr_b {
++	status = "okay";
++};
++
++&toddr_c {
++	status = "okay";
++};
++
++&tohdmitx {
++	status = "okay";
++};
++
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		max-speed = <2000000>;
++		clocks = <&wifi32k>;
++		clock-names = "lpo";
++		vbat-supply = <&vddao_3v3>;
++		vddio-supply = <&vddio_ao1v8>;
++	};
++};
++
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&usb {
++	status = "okay";
++	dr_mode = "host";
++};
 -- 
 2.22.0
 
