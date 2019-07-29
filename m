@@ -1,65 +1,52 @@
-Received: by mail-wr1-f51.google.com with SMTP id 31so56910996wrm.1
-        for <u-boot-amlogic@groups.io>; Sat, 27 Jul 2019 03:35:39 -0700 (PDT)
+Received: by mail-wr1-f66.google.com with SMTP id r1so61885749wrl.7
+        for <u-boot-amlogic@groups.io>; Mon, 29 Jul 2019 06:35:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding;
-        bh=+b2gI1vItlkbG+L48EqXj5i2IRa12n1IQl/e7NEa2XI=;
-        b=BCQPRhc109lLsVfUGFJHEpl4lgQVT1DExrlnlpn7wuXOHBrnRhldOf4QRC27NyfjJH
-         004vcQPW/bvdTznnbhUwu1QWCSgj0qTIab8aabJ5I99iPublAMh11E3QjIqvysSm5it5
-         ZdZNobcfi4BzuwWvjRXTpVmvvsV5UWz96fvUnLH89Jk2NT8prHxxzgsDGEYJSlz3r4OD
-         4OkPc2M0jqscFicGEqoQNLz/jHXK3CcrH1h3XViAQwIy0e8szLmJR73dOl0ziOeFp/GN
-         lb63WGUo5t/nzOXveF/29RaZ68q0H7tvkmoDrFMhQsZy8qBN6Uknfd/NqZUPq/xu7EQj
-         po4Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9dw1dqF8aAbWoinwQMv4KUs9iUxf43l5bSM9NBDn2Bs=;
+        b=DsmalDwnxP7HhwZkqpKVpLtnsp1FQj/vRoa7kyWcjzNeOjf6p1uuoxQlP01h4A11wN
+         bgDq+yf5crq4xbbi5gz2oJgXndUYNiThhdP1ckT8RP0JbyE3YNY+joooGnhITVz7ZwKW
+         vZW/Z0ncjeFJsV/KcM896b1ihlVv+eACREmc4WDwipx7rmknpam1Z87BmLRsG2/o6lqy
+         XMwj2+oKx1pyAL/5Rh14gQtICexN4Fwhomi3rVSnV20r5t6PHEQ00mPQ9Skju2XHL/+O
+         BcEz6OYYCIeKwGmrQmM6Qkrcfh8PMtjod6Q2SmmCWlAJXibtZYPhjexTMYsapB1+cECY
+         drMg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: how to encrypt fip for GXB P201 and possible bug in docs
-References: <5f5ee7b6-ac19-a33a-3aa0-aebe1b080b0f@baylibre.com>
- <10527.1564164183658025956@groups.io>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <64cc7ec7-1915-d478-1d3c-f78ed22cc051@baylibre.com>
-Date: Sat, 27 Jul 2019 12:35:35 +0200
+Subject: [PATCH] edid: fix edid_get_timing_validate() mode_valid lookup
+Date: Mon, 29 Jul 2019 15:35:18 +0200
+Message-Id: <20190729133518.8287-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <10527.1564164183658025956@groups.io>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-To: u-boot-amlogic@groups.io, krecis@gmail.com
+To: agust@denx.de
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+Add a condition to the break in the modes lookup, without this
+when the first mode is not valid, then edid_get_timing_validate()
+return an error instead of checking the next modes.
 
-Le 26/07/2019 à 20:03, krecis@gmail.com a écrit :
-> I'm interested in re-using already existing binaries but for now I'm more interested in closing down on how to build u-boot from sources and get it to work . I'll reserve this for another topic .
-> 
-> I have successfully compiled the "plain" p212 target ( meaning without any p281 specific step ) and I don't get the very last step inside the readme :
-> 
->  > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-> and this basically means : copy uboot but skip the first 512 bytes so you can leave the partition table alone
+Fixes: 1c1ed441b0d1 ("edid: add edid_get_timing_validate() variant to filter out edid modes")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ common/edid.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Exact,
+diff --git a/common/edid.c b/common/edid.c
+index f244d26e04..f99f42dc40 100644
+--- a/common/edid.c
++++ b/common/edid.c
+@@ -202,7 +202,9 @@ int edid_get_timing_validate(u8 *buf, int buf_size,
+ 							 timing);
+ 			else
+ 				timing_done = true;
+-			break;
++
++			if (timing_done)
++				break;
+ 		}
+ 	}
+ 	if (!timing_done)
+-- 
+2.22.0
 
-> 
->  > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-> what are we doing here ? and most importantly : why just 444 bytes ? my fip/u-boot.bin.sd.bin is 803328 bytes .
-
-The first 444bytes are necessary for booting over sdcard, so we need to copy them at the
-start of the sdcard. It's a vendor specificity, at some point we stop trying to understand ;-)
-
-> 
-> Also, do you have any suggestions about how to create a complete sd image with kernel and rootfs ? I don't want a complete rootfs but really the bare minimum .
-
-Buildroot, or meta-meson with Yocto or OpenEmbedded
-
-With meta-meson, you can generate a full sdcard image, including u-boot :
-https://github.com/superna9999/meta-meson
-
-It contains a profile for amlogic-p281, but without u-boot, only with rootfs and a minimal
-fat partition containing a script to boot from vendor u-boot.
-
-With buildroot, it should be able to generate you an ext4 image containing the kernel
-and the p281 dtb, since it's all upstream, but you'll need to partition and flash the rootfs
-manually.
-
-Neil
- 
-> 
-> 
