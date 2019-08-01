@@ -1,95 +1,75 @@
-Received: by mail-wm1-f50.google.com with SMTP id x15so62101338wmj.3
-        for <u-boot-amlogic@groups.io>; Wed, 31 Jul 2019 12:57:04 -0700 (PDT)
+Received: by mail-wm1-f44.google.com with SMTP id u25so52962372wmc.4
+        for <u-boot-amlogic@groups.io>; Thu, 01 Aug 2019 07:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=JqMnEpJEjLNdJPBQ6yW1lbQSoRlE49R1KMup5U9B044=;
-        b=2Ng7pGDbBKzAMhiuC4OWHCj9N4X9guYYjn+peMYVSaDVlXY3oUNrvzxh02vXJa5qcy
-         CN2LdtxHNWHpd2rIIdOxaX1nVrroCVkKTDXeoj3BEC1jwAkL9c3OuOCZKyPqt2GDvyC4
-         AMtAwiIXkQfy+uh2erYOY+Z28g2WzSGcaQPpCMZzyEzladgJIKKvIrdXsUUMmC5eo49r
-         /pL5YQnMtD+5IokGFh5R8rJ/YvZskW7+cyPSkF3rU/NFHeu0nsRTNIahmH5uwTNQRSBz
-         HJtfGIx/a8EQk0pC9zhXdpsoqveVpi0kd38pS+s1Erzyr76Qo9TigB4PsZvk9UC3R+6q
-         WfbA==
+        h=subject:references:cc:to:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=plT9ADyEvPeOM6c5d3WQaBoMtFY3Fr75GLZLB2QyPV8=;
+        b=PMWDi3LpLcuxM4SyjaPsUxNJ6seASz43CSnazBhOSK7i6YfjQbR4Ypd2eAh92t5u9A
+         tb1IIvf9aOaSwxMdSC+OIYNmbuOXjoWUAAgfZw+12/Kzb1tq9WRjIrNxf9afsTWL+kcj
+         62QSO2ZTjvuVpMz9OP8g5bjKIIlze23VmkHBCd1aoMsJERqgVCcSJonLG4IH0E5qb72F
+         8lV3ln1RGILSumZt2o9pbXSmIdUFg9VdH5fgW3a5BhGQJo+4OXzBKrrcPGftPyYZWoWT
+         NlIr7/xI/EPsviSVk+aB1eFtHDgInRNyZZEko0pDlGhznfFPHlSpTWwhREB0FSgFA/BT
+         qx/Q==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: Using meson-tools to install u-boot
+References: <CAD8Lp46mjcT3mqsCcrFAcD3opqp20mGCxrd154H68XvC7haLXg@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190731
-Message-ID: <9d44c293-3ed7-b681-a3b5-33087115b555@baylibre.com>
-Date: Wed, 31 Jul 2019 21:57:01 +0200
+Message-ID: <7204db34-6471-b480-d8da-db2c3ffde56e@baylibre.com>
+Date: Thu, 1 Aug 2019 16:02:39 +0200
 MIME-Version: 1.0
+In-Reply-To: <CAD8Lp46mjcT3mqsCcrFAcD3opqp20mGCxrd154H68XvC7haLXg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, baylibre-upstreaming@groups.io
+To: Daniel Drake <drake@endlessm.com>
+Cc: linux-amlogic@lists.infradead.org, u-boot-amlogic@groups.io, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+Hi Daniel,
 
-This PR adds support for the Odroid-N2 board and sync the Amlogic G12A DT
-with Linux 5.3-rc1, removing the local DT in -u-boot.dtsi files.
-It also includes the last minute fix from Heinrich in the gxbb clock driver.
+On 01/08/2019 10:24, Daniel Drake wrote:
+> Hi,
+> 
+> Thanks for https://github.com/afaerber/meson-tools
+> 
+> I'm interested in it as a way of dropping reliance on the vendor's
+> bitrotting uboot tree, and also because the vendor binaries are
+> x86_64, whereas distros benefit from running this on native arm64
+> build infrastructure. Is this possible with the current state of
+> meson-tools?
 
-The CI jobs passed at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/376
+I assume yes, and I'm open to a README update with these tools.
+I haven't tested these tools personally, and I'll be also happy to have
+them integrated in a build system like meta-meson.
 
-Thanks,
+> 
+> Looking at the instructions at
+> https://github.com/u-boot/u-boot/blob/master/board/amlogic/p212/README.libretech-cc
+> and your README, most of the steps appear easy to "translate" to
+> meson-tools.
+> 
+> But what about this one?
+>  > $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin>
+> Does meson-tools provide an alternative here?
+
+No, but the https://github.com/repk/gxlimg provides a uncompiled version :
+https://github.com/repk/gxlimg/blob/master/acs_tool.py
+
+No idea about legal terms of reusing a decompiled python script.
+
 Neil
 
-The following changes since commit d0d07ba86afc8074d79e436b1ba4478fa0f0c1b5:
+PS: can you Cc u-boot-amlogic@groups.io next time, it's the u-boot list !
 
-  Prepare v2019.10-rc1 (2019-07-29 21:16:16 -0400)
+> 
+> Thanks
+> Daniel
+> 
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
 
-are available in the Git repository at:
-
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20190731
-
-for you to fetch changes up to 0c0cdc86103a1f579cb9f86a3c7c076abb383542:
-
-  clk: meson: remove duplicate logic (2019-07-31 12:11:04 +0200)
-
-----------------------------------------------------------------
-- sync Amlogic G12A DT with linux 5.3-rc1
-- add support for 4GiB DRAM memory
-- add support for Amlogic G12B based Odroid-N2
-- small duplicate logic fix for gxbb clock driver
-
-----------------------------------------------------------------
-Heinrich Schuchardt (1):
-      clk: meson: remove duplicate logic
-
-Neil Armstrong (4):
-      ARM: dts: Sync Amlogic G12A with Linux 5.3-rc1
-      ARM: dts: add support for Odroid-N2
-      ARM: meson-g12a: Handle 4GiB DRAM size
-      board: amlogic: add support for Odroid-N2
-
- arch/arm/dts/Makefile                           |    3 +-
- arch/arm/dts/meson-g12a-u-boot.dtsi             |  216 ---
- arch/arm/dts/meson-g12a-u200-u-boot.dtsi        |   63 -
- arch/arm/dts/meson-g12a-u200.dts                |  122 +-
- arch/arm/dts/meson-g12a.dtsi                    | 1825 ++++++++++++++++++++++-
- arch/arm/dts/meson-g12b-odroid-n2.dts           |  386 +++++
- arch/arm/dts/meson-g12b.dtsi                    |   82 +
- arch/arm/mach-meson/board-g12a.c                |   13 +-
- board/amlogic/w400/MAINTAINERS                  |    6 +
- board/amlogic/w400/Makefile                     |    6 +
- board/amlogic/w400/README.odroid-n2             |  130 ++
- board/amlogic/w400/README.w400                  |  130 ++
- board/amlogic/w400/w400.c                       |   18 +
- configs/odroid-n2_defconfig                     |   56 +
- drivers/clk/meson/gxbb.c                        |    5 +-
- include/dt-bindings/clock/axg-aoclkc.h          |    7 +-
- include/dt-bindings/clock/axg-audio-clkc.h      |   30 +-
- include/dt-bindings/clock/g12a-clkc.h           |    3 +-
- include/dt-bindings/sound/meson-g12a-tohdmitx.h |   13 +
- 19 files changed, 2765 insertions(+), 349 deletions(-)
- delete mode 100644 arch/arm/dts/meson-g12a-u-boot.dtsi
- delete mode 100644 arch/arm/dts/meson-g12a-u200-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-g12b-odroid-n2.dts
- create mode 100644 arch/arm/dts/meson-g12b.dtsi
- create mode 100644 board/amlogic/w400/MAINTAINERS
- create mode 100644 board/amlogic/w400/Makefile
- create mode 100644 board/amlogic/w400/README.odroid-n2
- create mode 100644 board/amlogic/w400/README.w400
- create mode 100644 board/amlogic/w400/w400.c
- create mode 100644 configs/odroid-n2_defconfig
- create mode 100644 include/dt-bindings/sound/meson-g12a-tohdmitx.h
