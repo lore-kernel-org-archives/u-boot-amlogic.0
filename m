@@ -1,121 +1,120 @@
-Received: by mail-wr1-f68.google.com with SMTP id p17so88376149wrf.11
-        for <u-boot-amlogic@groups.io>; Tue, 06 Aug 2019 08:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=PP/ykVNUp1Nvidy0H0GwBiXPjNBm9A1hOx300cXp5JE=;
-        b=GaFkQb/S4cnGoPne4StTwo0LeOVZa4kF+KJ9h3ILxBALVbuFto8FnLHfp5XQWL1JXQ
-         nZti4uwztQvs4h9NIvjh0PbAa7UtRujW+Gocm+yLLsYiRoSOh1fghmoKkDZZpj9bX/Ib
-         2CF29AgnQ13vFMhpraUjmRbJIG3qc6qTyOM+pQcu2TOmSQoosQvwxuTCOFTfFZ3GQnga
-         1e0YyOqHExF4+1ReC/eLdJ4xc0r2jz5X6DPu9m3kdDCpL8zb7DsEd8DkIdd8YxuVR6yo
-         XA29TcmpsyhaAKClvib2Ax9b9m++4H5S75uNMnnFgjDhX0Ne3G3lQEIVFE/TCIZZDvOq
-         W0rQ==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] board: amlogic: document alternative libretech-cc installation methods
-References: <20190806081042.26399-1-drake@endlessm.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <19545002-a0bd-23af-bd38-a5b9bc962b54@baylibre.com>
-Date: Tue, 6 Aug 2019 17:45:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1565193349;
+	bh=9JKC/jxhocrjUK/iVZUesC3jio71WaNyeI7UUZuSrqY=;
+	h=From:To:CC:Subject:Date;
+	b=oeyaJqIbztCuVZWxGD6ci5sBT1Bz8Ak2r+sGciSPBcc7TbtMi01q1NhEn6h7uTtbE
+	 DAW+CAuUqF04ThRVTDJ0yc5YtZqVZxoGXbTvNQFS+Yrjkkbmzys8f8gXIl1ppiYxvD
+	 Oy0EYVcj+944tcb3fPWI/5nESZ4J4zrwXNOw7i4A=
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH] usb: dwc3: Kconfig: get rid of obsolete mode selection
+Date: Wed, 7 Aug 2019 17:55:39 +0200
+Message-ID: <20190807155539.29369-1-jjhiblot@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190806081042.26399-1-drake@endlessm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Daniel Drake <drake@endlessm.com>, u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, afaerber@suse.de, repk@triplefau.lt
+Content-Type: text/plain
+To: marex@denx.de, narmstrong@baylibre.com, kever.yang@rock-chips.com, lukma@denx.de
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, sven@svenschwermer.de, jjhiblot@ti.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Daniel,
+The mode selection for the DWC3 is kind of obsolete. The driver does not
+have to be host only or gadget only. This choice is confusing.
+All the remaining callers of dwc3_uboot_init() explicitly set dr_mode
+before calling the function, so none rely on a default behavior.
 
-On 06/08/2019 10:10, Daniel Drake wrote:
-> As already documented in this README, several binaries must be
-> glued together in order to boot the device.
-> 
-> Extend the documentation to cover the prebuilt binaries
-> (saving you the hassle of installing ancient cross-compilers),
-> and also mention the open source replacements for the encryption
-> tool (which is especially useful if you want to avoid requiring
-> 32-bit x86 binaries in your build system).
+Remove the choice menu and keep only the USB_DWC3_GADGET option. Enable it
+by default if USB_GADGET and USB_DWC3 are enabled.
+It must be disabled for the evb-rk3328 and odroid-n2 as it uses DWC2 for
+the gadget and DWC3 for the host.
 
-Looks fine, could also be added to other board's README files.
-Waiting a few more days until we have more comments on it by Andreas
-and others.
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 
-Thanks,
+---
 
-Neil
+This patch applies on top of git://git.denx.de/u-boot-usb.git master
 
-> 
-> Signed-off-by: Daniel Drake <drake@endlessm.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  board/amlogic/p212/README.libretech-cc | 41 +++++++++++++++++++++++---
->  1 file changed, 37 insertions(+), 4 deletions(-)
-> 
-> diff --git a/board/amlogic/p212/README.libretech-cc b/board/amlogic/p212/README.libretech-cc
-> index d007f58764..6af7de3cfa 100644
-> --- a/board/amlogic/p212/README.libretech-cc
-> +++ b/board/amlogic/p212/README.libretech-cc
-> @@ -38,9 +38,28 @@ U-Boot compilation
->  Image creation
->  ==============
->  
-> -Amlogic doesn't provide sources for the firmware and for tools needed
-> -to create the bootloader image, so it is necessary to obtain them from
-> -the git tree published by the board vendor:
-> +To boot the system, u-boot must be combined with several earlier stage
-> +bootloaders:
-> +
-> +* bl2.bin: vendor-provided binary blob
-> +* bl21.bin: built from vendor u-boot source
-> +* bl30.bin: vendor-provided binary blob
-> +* bl301.bin: built from vendor u-boot source
-> +* bl31.bin: vendor-provided binary blob
-> +* acs.bin: built from vendor u-boot source
-> +
-> +These binaries and the tools required below have been collected and prebuilt
-> +for convenience at <https://github.com/BayLibre/u-boot/releases/>
-> +
-> +Download and extract the libretech-cc release from there, and set FIPDIR to
-> +point to the `fip` subdirectory.
-> +
-> + > export FIPDIR=/path/to/extracted/fip
-> +
-> +Alternatively, you can obtain the original vendor u-boot tree which
-> +contains the required blobs and sources, and build yourself.
-> +Note that old compilers are required for this to build. The compilers here
-> +are suggested by Amlogic, and they are 32-bit x86 binaries.
->  
->   > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
->   > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-> @@ -53,7 +72,10 @@ the git tree published by the board vendor:
->   > make
->   > export FIPDIR=$PWD/fip
->  
-> -Go back to mainline U-Boot source tree then :
-> +Once you have the binaries available (either through the prebuilt download,
-> +or having built the vendor u-boot yourself), you can then proceed to glue
-> +everything together. Go back to mainline U-Boot source tree then :
-> +
->   > mkdir fip
->  
->   > cp $FIPDIR/gxl/bl2.bin fip/
-> @@ -100,3 +122,14 @@ and then write the image to SD with:
->   > DEV=/dev/your_sd_device
->   > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
->   > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-> +
-> +Note that Amlogic provides aml_encrypt_gxl as a 32-bit x86 binary with no
-> +source code. Should you prefer to avoid that, there are open source reverse
-> +engineered versions available:
-> +
-> +1. gxlimg <https://github.com/repk/gxlimg>, which comes with a handy
-> +   Makefile that automates the whole process.
-> +2. meson-tools <https://github.com/afaerber/meson-tools>
-> +
-> +However, these community-developed alternatives are not endorsed by or
-> +supported by Amlogic.
-> 
+This patch was a part of a larger series. The changes since are:
+- Fix the test of the USB_DWC3_GADGET option. IS_ENABLED() requires the
+  whole option name including the 'CONFIG_' prefix
+- disable the CONFIG_USB_DWC3_GADGET option for the new odroid-n2 config
+
+
+configs/evb-rk3328_defconfig |  1 +
+ configs/odroid-n2_defconfig  |  1 +
+ drivers/usb/dwc3/Kconfig     | 18 ++----------------
+ drivers/usb/dwc3/core.c      |  4 ++--
+ 4 files changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/configs/evb-rk3328_defconfig b/configs/evb-rk3328_defconfig
+index fcc04f27ec..373ddf2f7f 100644
+--- a/configs/evb-rk3328_defconfig
++++ b/configs/evb-rk3328_defconfig
+@@ -63,6 +63,7 @@ CONFIG_USB_OHCI_HCD=y
+ CONFIG_USB_OHCI_GENERIC=y
+ CONFIG_USB_DWC2=y
+ CONFIG_USB_DWC3=y
++# CONFIG_USB_DWC3_GADGET is not set
+ CONFIG_USB_GADGET=y
+ CONFIG_USB_GADGET_MANUFACTURER="Rockchip"
+ CONFIG_USB_GADGET_VENDOR_NUM=0x2207
+diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
+index 38d1549375..40b491e170 100644
+--- a/configs/odroid-n2_defconfig
++++ b/configs/odroid-n2_defconfig
+@@ -49,6 +49,7 @@ CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_DWC3=y
+ CONFIG_USB_DWC3=y
++# CONFIG_USB_DWC3_GADGET is not set
+ CONFIG_USB_DWC3_MESON_G12A=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_USB_MASS_STORAGE=y
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 25e1a38aee..c302486291 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -7,25 +7,11 @@ config USB_DWC3
+ 
+ if USB_DWC3
+ 
+-choice
+-	bool "DWC3 Mode Selection"
+-
+-config USB_DWC3_HOST
+-	bool "Host only mode"
+-	depends on USB
+-	help
+-	  Select this when you want to use DWC3 in host mode only,
+-	  thereby the gadget feature will be regressed.
+-
+ config USB_DWC3_GADGET
+-	bool "Gadget only mode"
++	bool "USB Gadget support for DWC3"
++	default y
+ 	depends on USB_GADGET
+ 	select USB_GADGET_DUALSPEED
+-	help
+-	  Select this when you want to use DWC3 in gadget mode only,
+-	  thereby the host feature will be regressed.
+-
+-endchoice
+ 
+ comment "Platform Glue Driver Support"
+ 
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 1baad39796..10b3f837f2 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -707,9 +707,9 @@ int dwc3_uboot_init(struct dwc3_device *dwc3_dev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_USB_DWC3_HOST))
++	if (!IS_ENABLED(CONFIG_USB_DWC3_GADGET))
+ 		dwc->dr_mode = USB_DR_MODE_HOST;
+-	else if (IS_ENABLED(CONFIG_USB_DWC3_GADGET))
++	else if (!IS_ENABLED(CONFIG_USB_HOST))
+ 		dwc->dr_mode = USB_DR_MODE_PERIPHERAL;
+ 
+ 	if (dwc->dr_mode == USB_DR_MODE_UNKNOWN)
+-- 
+2.17.1
 
