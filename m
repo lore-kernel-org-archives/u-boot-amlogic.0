@@ -1,125 +1,86 @@
-Received: by mail-wr1-f66.google.com with SMTP id h7so5393978wrt.13
-        for <u-boot-amlogic@groups.io>; Fri, 30 Aug 2019 05:09:41 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id y194so1882731ybe.13
+        for <u-boot-amlogic@groups.io>; Thu, 29 Aug 2019 18:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gPD0j54rVuEZFuKvRpHoQCj3j/4oXr+QweIQnOCNHwg=;
-        b=eAVl7+vhgbeSLUc5QdC3D3dgT3re2y43LNRF/igorQtX4InnzgmBaHmZqMF1/FWa5Z
-         GW7LF4ebia8p1q2ybSRxlgMu5YlLWzrGvqkFw2tNjPuhOb+3HcXl6gj8Sv1C8jdxiLXc
-         eRmgJMSxQ38SHHhhomW6epcxeIha4SJcpzYPzcRIEmBBiOAhq5S0qEZD1IM7DAlsnZFk
-         vsMNHBoj97P9LTG87spftp5TFWiSohCFOHDAl/yuoVYWzpPgKZSMaRIDwoLoZ97sPEfb
-         NqNnn+gNbrQlwOPyjFvzwbqOQC2OGYLlkAyYFr34cvPKYmcVhcb/t+K2kWpEz2L2RTee
-         5QeQ==
-Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 8/8] configs: sei510: enable Video Display support
-Date: Fri, 30 Aug 2019 14:09:28 +0200
-Message-Id: <20190830120928.23890-9-narmstrong@baylibre.com>
-In-Reply-To: <20190830120928.23890-1-narmstrong@baylibre.com>
-References: <20190830120928.23890-1-narmstrong@baylibre.com>
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dt8FwCL6mbWniaRV/YjFM8Cqnetm8UxXnAFFMtxRxS4=;
+        b=oQBbyOY/XSyTX/YEFLjkJSzVxA8sxyB0JDCUkY4ZGVhgHfaTP1RO6DszRKfBTtxc3y
+         1IKyNT89WYSdlWfab5kmYXpKIFe3bpvcLOjDP2tYkduBdUwQsXKyNv2KPBCneRBVe3CN
+         wky45pH7paom5P8Y8brkc92f11IoD9cMi+kWk=
+Return-Path: <trini@konsulko.com>
+Date: Thu, 29 Aug 2019 21:36:36 -0400
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20190828
+Message-ID: <20190830013636.GJ26850@bill-the-cat>
+References: <328a6134-2e7e-78a2-19fa-47c58e62d069@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot-amlogic@groups.io
-Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de
+In-Reply-To: <328a6134-2e7e-78a2-19fa-47c58e62d069@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Er1ntMVhQcukqcwj"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add the necessary config options to support BMP display over HDMI,
-and add a preboot command to load the BMP file from a predefined
-eMMC partition.
+--Er1ntMVhQcukqcwj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- configs/sei510_defconfig | 11 +++++++++++
- include/configs/sei510.h | 12 ++++++++++++
- 2 files changed, 23 insertions(+)
+On Wed, Aug 28, 2019 at 03:20:00PM +0200, Neil Armstrong wrote:
 
-diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
-index 5aea81d873..9eb205bc63 100644
---- a/configs/sei510_defconfig
-+++ b/configs/sei510_defconfig
-@@ -11,6 +11,9 @@ CONFIG_IDENT_STRING=" sei510"
- # CONFIG_PSCI_RESET is not set
- CONFIG_DEBUG_UART=y
- CONFIG_OF_BOARD_SETUP=y
-+CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="run load_logo"
-+# CONFIG_CONSOLE_MUX is not set
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
- # CONFIG_CMD_BDI is not set
-@@ -23,6 +26,7 @@ CONFIG_CMD_USB=y
- CONFIG_CMD_USB_MASS_STORAGE=y
- # CONFIG_CMD_SETEXPR is not set
- CONFIG_CMD_REGULATOR=y
-+CONFIG_CMD_BMP=y
- CONFIG_OF_CONTROL=y
- CONFIG_DEFAULT_DEVICE_TREE="meson-g12a-sei510"
- CONFIG_ENV_IS_IN_MMC=y
-@@ -33,6 +37,7 @@ CONFIG_FASTBOOT_FLASH=y
- CONFIG_FASTBOOT_FLASH_MMC_DEV=2
- CONFIG_FASTBOOT_CMD_OEM_FORMAT=y
- CONFIG_DM_GPIO=y
-+# CONFIG_INPUT is not set
- CONFIG_DM_MMC=y
- CONFIG_MMC_MESON_GX=y
- CONFIG_PHY_ADDR_ENABLE=y
-@@ -42,6 +47,12 @@ CONFIG_ETH_DESIGNWARE=y
- CONFIG_MESON_G12A_USB_PHY=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
-+CONFIG_DM_VIDEO=y
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
- CONFIG_DM_REGULATOR=y
- CONFIG_DM_REGULATOR_FIXED=y
- CONFIG_DM_RESET=y
-diff --git a/include/configs/sei510.h b/include/configs/sei510.h
-index 9957902250..5bf982cada 100644
---- a/include/configs/sei510.h
-+++ b/include/configs/sei510.h
-@@ -14,6 +14,7 @@
- #define CONFIG_ENV_SIZE		0x10000
- #define CONFIG_ENV_OFFSET	(-0x10000)
- 
-+#define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
- #define CACHE_UUID "99207ae6-5207-11e9-999e-6f77a3612069;"
- #define SYSTEM_UUID "99f9b7ac-5207-11e9-8507-c3c037e393f3;"
- #define VENDOR_UUID "9d082802-5207-11e9-954c-cbbce08ba108;"
-@@ -23,6 +24,7 @@
- #define PARTS_DEFAULT                                        \
- 	"uuid_disk=${uuid_gpt_disk};"  			\
- 	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
-+	"name=logo,size=2M,uuid=" LOGO_UUID             \
- 	"name=cache,size=256M,uuid=" CACHE_UUID             \
- 	"name=system,size=1536M,uuid=" SYSTEM_UUID           \
- 	"name=vendor,size=256M,uuid=" VENDOR_UUID            \
-@@ -113,12 +115,22 @@
- 	func(RECOVERY, recovery, na) \
- 	func(SYSTEM, system, na) \
- 
-+#define PREBOOT_LOAD_LOGO \
-+	"mmc dev ${mmcdev};" \
-+	"part start mmc ${mmcdev} ${logopart} boot_start;" \
-+	"part size mmc ${mmcdev} ${logopart} boot_size;" \
-+	"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
-+			"bmp display ${loadaddr} m m;" \
-+	"fi;"
-+
- #define CONFIG_EXTRA_ENV_SETTINGS                                     \
- 	"partitions=" PARTS_DEFAULT "\0"                              \
- 	"mmcdev=2\0"                                                  \
- 	"bootpart=1\0"                                                \
-+	"logopart=2\0"                                                \
- 	"gpio_recovery=88\0"                                          \
- 	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
-+	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
- 	"console=/dev/ttyAML0\0"                                      \
- 	"bootargs=no_console_suspend\0"                               \
- 	"stdin=" STDIN_CFG "\0"                                       \
--- 
-2.22.0
+> Hi Tom,
+>=20
+> This PR simply adds a missing compatible enabling the G12B clock controll=
+er.
+>=20
+> The CI jobs passed at https://gitlab.denx.de/u-boot/custodians/u-boot-aml=
+ogic/pipelines/568
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit e4b8dd9b34021241cd05d5cc9d24b4ae346578=
+30:
+>=20
+>   Merge https://gitlab.denx.de/u-boot/custodians/u-boot-mpc85xx (2019-08-=
+27 07:11:37 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20190828
+>=20
+> for you to fetch changes up to d0e8c4ad513c0df492cc90bdc59f272687e90b32:
+>=20
+>   clk: meson-g12b: add compatible (2019-08-28 10:14:31 +0200)
+>=20
 
+Applied to u-boot/master, thanks!
+
+--=20
+Tom
+
+--Er1ntMVhQcukqcwj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJdaH2kAAoJEIf59jXTHXZSAxUP/RRofn/B9KvvU21oQHOPscrd
+JHJmeYS6c6n8IsyAWxqNP1HW5fzoy848rFfWhHLft0pCG3vD1O7XtZUJQECzQ7Jd
+XtLbKW6uEeoK/KpsPifHS1wtl+bycZSdOoZuFg55bD6mbVj7eVh74k0gph0e0W3j
+f70YQ2KNNHmgFC38GJxA5kpaJP4LNUS75vITw3laVTo5hf4rsMpK3v9pDE3bIxHp
+1AtxUzNu6BPbaT0xnSmfi7SBfMcQWHCJqxRcf4S8fk+cTx7oUcTb+PkIyxhUC3Ra
+Tjbq/oXBRxK52UVX+Y4eQMmSmILh+XJF3uDyne1ZwkNhlKZJgN6aXrpID6Kuh2Eh
+mU+kdWbpGwySYGUn1ifVa2Sj26JxfCf8BKSdL1nHEIxrA2Vzxhyi0S/NiT8YeoIv
+Ps3H5AIHbeLNxGC1q3PB084v2cpQbsc/4ReK63n1vwevV4DdMS78qMQccSEOKecp
+B457PXpbwCCWZcYBFi7vQwjoc8vNO7SFZqKklivvPVBnk77B1d0q6UUPkwihsTxW
+6WUrRcnNVOGKQcKW8w6FhOMJc+OmfDbqDe5ITgZkglwMQX1TH5uLy8Ew9OB/J2qb
+kHzzuf1rtQV+mCaEvKPEEVGy0m+gIum7zXXqC6lK97ubqzby3AVDT7MbG6I6x+Ut
+R6+gjVXoq0SqGuhW3Rqk
+=H+qK
+-----END PGP SIGNATURE-----
+
+--Er1ntMVhQcukqcwj--
