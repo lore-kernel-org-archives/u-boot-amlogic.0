@@ -1,56 +1,70 @@
-Received: by mail-wr1-f47.google.com with SMTP id y19so2504263wrd.3
-        for <u-boot-amlogic@groups.io>; Wed, 28 Aug 2019 06:20:02 -0700 (PDT)
+Received: by mail-wm1-f65.google.com with SMTP id d16so7203634wme.2
+        for <u-boot-amlogic@groups.io>; Fri, 30 Aug 2019 05:09:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=lxWxEPtDqbQeUvrQyNiZ6o8AphK1Atau+hD5Ur2F7oQ=;
-        b=NLLbEx1NccHyoDFt5b8oYs7/IO5xzSHfDhtBke42PH/Na8hUpA5734iRHc2JMp3Ylx
-         mB5kijY40tcRxAoukp0aG6Vu/wfJGPShh5mX6UxxWncBdrO5EaTxhJEbyUYMMWERY1NX
-         PbUs654lQo1AhG7FaHEsz5cVJTdxukJmwD6NWQzo3AicUFqVqwQURcyBnkZCWg9MKEzA
-         eyyBHAj2T4+mdw7s5P9o3zsV81VjW98L4AI3OFrIIKRFYbLGD3ZSfzpdhyzcMh5iVn5S
-         /beC2JCFXphnyvZWuZOP2XyrHtycbu15o8XrrwZSYb0uPZOt+KvLffzvBucrgWGEIOlt
-         9OQQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LY0MYYXVVV2+jvUCJZ/HLDZZF0AkdDfWki7QQDqV1d8=;
+        b=MDsoFRCwNrCr60IBXpaMBPvc4H6OdRbY5rHwn6TuVBr3YwtH8s8JB+Oqja4ePB9oZi
+         65jF01dsXdaSAemcFVsADd76zj7pdZwfk2zzOox9rc5iOAdT9RB5UtpVCaI+J7BCZGGX
+         AQTXP3t/WagZHLxXlewiHP4OSO8ofjQ72G0hH2yStjaZBnPOL3bY0BpUsmbMFRlOEJGW
+         98LO7trdhPoQ7hxdAETlUCpWOO/9hZzXQJDlbbvjxAWSsdDSEypFAQDSI0l+th2b5geD
+         pGMJusvKdYbRYFuGBnX1SPgwtqh8QER2bjJW7+goQk8Z7Li5OzSlyBhXvXTBg+eaXA9I
+         04Pg==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190828
-Message-ID: <328a6134-2e7e-78a2-19fa-47c58e62d069@baylibre.com>
-Date: Wed, 28 Aug 2019 15:20:00 +0200
+Subject: [PATCH 0/8] arm: meson: add Video support for G12A and SEI510 board
+Date: Fri, 30 Aug 2019 14:09:20 +0200
+Message-Id: <20190830120928.23890-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Transfer-Encoding: 8bit
+To: u-boot-amlogic@groups.io, agust@denx.de, jh80.chung@samsung.com, lukma@denx.de
+Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+This patchset adds Amlogic G12A support for HDMI & Composite video output like
+the Amlogic GXBB/GXL/GXM, by syncing from the latest Linux VPU DRM driver.
 
-This PR simply adds a missing compatible enabling the G12B clock controller.
+It also adds VPU/VAPB/HDMI Clock & VPU Power Domain support.
 
-The CI jobs passed at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/568
+Finally it adds the necessary config to show a logo from a fastboot flashed
+partition on the SEI510 board.
 
-Thanks,
-Neil
+U200 and Odroid-N2 config support will be added later.
 
-The following changes since commit e4b8dd9b34021241cd05d5cc9d24b4ae34657830:
+Neil Armstrong (8):
+  power: domain: meson-gx-pwrc: add G12A support
+  clk: meson: g12a: add support for VPU/HDMI clocks
+  video: meson: remove power domain get
+  video: meson: sync with linux drm-misc tree
+  video: meson: add compatible for Amlogic G12A
+  arm: meson: board-g12a: Setup VPU in fdt
+  ARM: dts: meson-g12a: add U-Boot specific DT for graphics
+  configs: sei510: enable Video Display support
 
-  Merge https://gitlab.denx.de/u-boot/custodians/u-boot-mpc85xx (2019-08-27 07:11:37 -0400)
+ arch/arm/dts/meson-g12a-sei510-u-boot.dtsi    |   7 +
+ arch/arm/dts/meson-g12a-u-boot.dtsi           |  29 +
+ arch/arm/dts/meson-g12a-u200-u-boot.dtsi      |   7 +
+ arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi |   7 +
+ arch/arm/mach-meson/board-g12a.c              |   5 +
+ configs/sei510_defconfig                      |  11 +
+ drivers/clk/meson/g12a.c                      | 620 +++++++++++++++++-
+ drivers/power/domain/meson-gx-pwrc-vpu.c      | 155 ++++-
+ drivers/video/meson/meson_dw_hdmi.c           |  61 +-
+ drivers/video/meson/meson_plane.c             |  47 +-
+ drivers/video/meson/meson_registers.h         | 373 ++++++++++-
+ drivers/video/meson/meson_vclk.c              | 233 +++++--
+ drivers/video/meson/meson_venc.c              | 169 ++++-
+ drivers/video/meson/meson_vpu.c               |  11 +-
+ drivers/video/meson/meson_vpu.h               |   2 +
+ drivers/video/meson/meson_vpu_init.c          | 205 ++++--
+ include/configs/sei510.h                      |  12 +
+ 17 files changed, 1757 insertions(+), 197 deletions(-)
+ create mode 100644 arch/arm/dts/meson-g12a-sei510-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-g12a-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-g12a-u200-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi
 
-are available in the Git repository at:
+-- 
+2.22.0
 
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20190828
-
-for you to fetch changes up to d0e8c4ad513c0df492cc90bdc59f272687e90b32:
-
-  clk: meson-g12b: add compatible (2019-08-28 10:14:31 +0200)
-
-----------------------------------------------------------------
-- add missing g12b clock driver compatible, fixing odroid-n2 usb support
-
-----------------------------------------------------------------
-Mark Kettenis (1):
-      clk: meson-g12b: add compatible
-
- drivers/clk/meson/g12a.c | 1 +
- 1 file changed, 1 insertion(+)
