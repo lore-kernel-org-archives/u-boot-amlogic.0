@@ -1,41 +1,41 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 3/4] arm: meson: Tidy SoC information output
-Date: Mon,  2 Sep 2019 14:19:09 +0200
-Message-Id: <20190902121914.18946-4-afaerber@suse.de>
+Subject: [PATCH v2 4/4] arm: meson: Recognize A311D SoC
+Date: Mon,  2 Sep 2019 14:19:10 +0200
+Message-Id: <20190902121914.18946-5-afaerber@suse.de>
 In-Reply-To: <20190902121914.18946-1-afaerber@suse.de>
 References: <20190902121914.18946-1-afaerber@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Julien Masson <jmasson@baylibre.com>, Albert Aribaud <albert.u.boot@aribaud.net>
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Christian Hewitt <christianshewitt@gmail.com>, Albert Aribaud <albert.u.boot@aribaud.net>
 List-ID: <u-boot-amlogic@groups.io>
 
-Write SoC instead of Soc. The Linux driver is not affected.
+Values imported from Linux driver, but in correct numeric order.
 
-Fixes: f41d723b9f ("ARM: meson: display Amlogic SoC Information")
-Signed-off-by: Julien Masson <jmasson@baylibre.com>
+Khadas VIM3 prints: Amlogic Meson G12B (A311D) Revision 29:b (10:2)
+
+Cc: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
  v2: New
 =20
- arch/arm/mach-meson/board-info.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-meson/board-info.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board=
 -info.c
-index ba248e8ff6..ea32c01d11 100644
+index ea32c01d11..9571b5a189 100644
 --- a/arch/arm/mach-meson/board-info.c
 +++ b/arch/arm/mach-meson/board-info.c
-@@ -154,7 +154,7 @@ int show_board_info(void)
+@@ -59,6 +59,7 @@ static const struct meson_gx_package_id {
+ 	{ "A113D",  0x25, 0x22, 0xff },
+ 	{ "S905D2", 0x28, 0x10, 0xf0 },
+ 	{ "S905X2", 0x28, 0x40, 0xf0 },
++	{ "A311D",  0x29, 0x10, 0xf0 },
+ 	{ "S922X",  0x29, 0x40, 0xf0 },
+ };
 =20
- 	/* print board information */
- 	print_board_model();
--	printf("Soc:   Amlogic Meson %s (%s) Revision %x:%x (%x:%x)\n",
-+	printf("SoC:   Amlogic Meson %s (%s) Revision %x:%x (%x:%x)\n",
- 	       socinfo_to_soc_id(socinfo),
- 	       socinfo_to_package_id(socinfo),
- 	       socinfo_to_major(socinfo),
 --=20
 2.16.4
 
