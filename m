@@ -1,41 +1,97 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 4/4] arm: meson: Recognize A311D SoC
-Date: Mon,  2 Sep 2019 14:19:10 +0200
-Message-Id: <20190902121914.18946-5-afaerber@suse.de>
-In-Reply-To: <20190902121914.18946-1-afaerber@suse.de>
-References: <20190902121914.18946-1-afaerber@suse.de>
+Subject: Re: [PATCH 1/2] arm: dts: Import and update DT for Khadas VIM3
+References: <20190902022851.9228-1-afaerber@suse.de>
+ <20190902022851.9228-2-afaerber@suse.de>
+ <865e1398-4da5-fc3c-4ce7-93e8f2d08439@baylibre.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Message-ID: <9069bbc4-e890-0feb-3a1c-729344d00dee@suse.de>
+Date: Mon, 2 Sep 2019 14:03:58 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <865e1398-4da5-fc3c-4ce7-93e8f2d08439@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Christian Hewitt <christianshewitt@gmail.com>, Albert Aribaud <albert.u.boot@aribaud.net>
+To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, Albert Aribaud <albert.u.boot@aribaud.net>, Gouwa <gouwa@khadas.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Values imported from Linux driver, but in correct numeric order.
+Hi Neil,
 
-Khadas VIM3 prints: Amlogic Meson G12B (A311D) Revision 29:b (10:2)
+Am 02.09.19 um 12:03 schrieb Neil Armstrong:
+> On 02/09/2019 04:28, Andreas F=C3=A4rber wrote:
+>> In Linux meson-g12-common.dtsi was introduced as well as new g12b node=
+s
+>> and headers, as dependencies of new meson-g12b-a311d-khadas-vim3.dts.
+>=20
+> Can you precise the Linux commit ID you sync'ed from ?
 
-Cc: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
----
- v2: New
-=20
- arch/arm/mach-meson/board-info.c | 1 +
- 1 file changed, 1 insertion(+)
+It was yesterday's linux-next.git (via cgit), adding tag next-20190830.
 
-diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board=
--info.c
-index ea32c01d11..9571b5a189 100644
---- a/arch/arm/mach-meson/board-info.c
-+++ b/arch/arm/mach-meson/board-info.c
-@@ -59,6 +59,7 @@ static const struct meson_gx_package_id {
- 	{ "A113D",  0x25, 0x22, 0xff },
- 	{ "S905D2", 0x28, 0x10, 0xf0 },
- 	{ "S905X2", 0x28, 0x40, 0xf0 },
-+	{ "A311D",  0x29, 0x10, 0xf0 },
- 	{ "S922X",  0x29, 0x40, 0xf0 },
- };
-=20
+> The best would be to sync from the v2 dt64 PR from kevin :
+> https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.g=
+it/tag/?h=3Damlogic-dt64-2.1
+>=20
+> Thanks,
+> Neil
+>=20
+>>
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>> ---
+>>  arch/arm/dts/Makefile                              |    3 +-
+>>  arch/arm/dts/meson-g12-common.dtsi                 | 2435 +++++++++++=
++++++++++
+>>  arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts      |   15 +
+>=20
+> Can you also sync the s922x version ?
+
+Why? No such model is being sold: https://www.khadas.com/vim3
+
+In any case, if you or someone has such a pre-production model you can
+add it as follow-up. In fact you could even entirely replace this import
+patch if you so desired, it's intentionally separate.
+
+>>  arch/arm/dts/meson-g12b-a311d.dtsi                 |  149 ++
+>>  arch/arm/dts/meson-g12b-khadas-vim3.dtsi           |  544 +++++
+>>  arch/arm/dts/meson-g12b.dtsi                       |   39 +-
+>>  include/dt-bindings/clock/g12a-clkc.h              |    6 +
+>>  include/dt-bindings/power/meson-g12a-power.h       |   13 +
+>>  .../reset/amlogic,meson-g12a-audio-reset.h         |   38 +
+>>  9 files changed, 3238 insertions(+), 4 deletions(-)
+>>  create mode 100644 arch/arm/dts/meson-g12-common.dtsi
+>>  create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
+>>  create mode 100644 arch/arm/dts/meson-g12b-a311d.dtsi
+>>  create mode 100644 arch/arm/dts/meson-g12b-khadas-vim3.dtsi
+>>  create mode 100644 include/dt-bindings/power/meson-g12a-power.h
+>>  create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio=
+-reset.h
+>>
+>> diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+>> index aac1b83d49..6de5e4c62a 100644
+>> --- a/arch/arm/dts/Makefile
+>> +++ b/arch/arm/dts/Makefile
+>> @@ -141,7 +141,8 @@ dtb-$(CONFIG_ARCH_MESON) +=3D \
+>>  	meson-axg-s400.dtb \
+>>  	meson-g12a-u200.dtb \
+>>  	meson-g12a-sei510.dtb \
+>> -	meson-g12b-odroid-n2.dtb
+>> +	meson-g12b-odroid-n2.dtb \
+>> +	meson-g12b-a311d-khadas-vim3.dtb
+>=20
+> Same here, can you also build the s922x variant ?
+
+Again, I don't see why, in particular when we don't have a defconfig
+using it. If you intend to add one, you can still add it later.
+
+Adding Gouwa for insights.
+
+To my knowledge the VIM3L will have S905D3, not S922X. VIM3 is A311D.
+
+https://www.khadas.com/post/khadas-vim3-won-t-use-s922x
+
+Regards,
+Andreas
+
 --=20
-2.16.4
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer
+HRB 247165 (AG M=C3=BCnchen)
