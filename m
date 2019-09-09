@@ -1,129 +1,58 @@
-Subject: Re: [PATCH 1/2] arm: dts: Import and update DT for Khadas VIM3
-References: <20190902022851.9228-1-afaerber@suse.de>
- <20190902022851.9228-2-afaerber@suse.de>
- <865e1398-4da5-fc3c-4ce7-93e8f2d08439@baylibre.com>
- <9069bbc4-e890-0feb-3a1c-729344d00dee@suse.de>
- <c179af5e-d099-5ea3-87d9-6aaae0467ac6@baylibre.com>
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Message-ID: <bdf46216-096b-53c3-d2e8-9193e9504b88@suse.de>
-Date: Mon, 2 Sep 2019 14:45:04 +0200
-MIME-Version: 1.0
-In-Reply-To: <c179af5e-d099-5ea3-87d9-6aaae0467ac6@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Albert Aribaud <albert.u.boot@aribaud.net>, Gouwa <gouwa@khadas.com>
+Received: by mail-wr1-f66.google.com with SMTP id q17so10539990wrx.10
+        for <u-boot-amlogic@groups.io>; Mon, 09 Sep 2019 11:52:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=mgW95iiIEYs8Ik4hLY+MXkO6+YJsMz1RvMmgO0HgvHU=;
+        b=PDbsi0j4W0BnzL+1OhMNOf0L7TRHn45qdg8No1RLiiu+Tj9Kl0JPJIqZ78EC80XGiQ
+         Hk6jbyr3axyc1eNrkg2K5bXZii2QW/bSXci1C9X1myW+oo2vi0UjPHbP+g9HEvWh5nFV
+         n3yqSfWw37g4FBVz6QJlo+bFE0eAM0xvklhI/Vg3FpGROJs7qUqbVDvQQR+U/5tdOVh4
+         mM1X5LLaI/clYPnJT7oNABsV2l5/SxhLbrjm3RrHQ09OUcDFQpiS3Y097Er/BqLvZ0ru
+         oTkMHD846NgKszQh13eW+1TPNFBEZTeM0ym6ybX9SmQMb5EYixtox+XMw9kEkjT5Ovyp
+         Q+nA==
+Return-Path: <narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Subject: [PATCH] usb: xhci-dwc3: Add support for dis_u2_susphy_quirk
+Date: Mon,  9 Sep 2019 18:52:39 +0000
+Message-Id: <1568055159-27982-1-git-send-email-narmstrong@baylibre.com>
+To: marex@denx.de
+Cc: bmeng.cn@gmail.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Yuri Frolov <crashing.kernel@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Neil,
+This quirk is necessary for the Amlogic GXL SoCs otherwise the
+Port 2 PHY doesn't get out of suspend and U-Boot resets the board after:
 
-Am 02.09.19 um 14:10 schrieb Neil Armstrong:
-> On 02/09/2019 14:03, Andreas F=C3=A4rber wrote:
->> Am 02.09.19 um 12:03 schrieb Neil Armstrong:
->>> On 02/09/2019 04:28, Andreas F=C3=A4rber wrote:
->>>> In Linux meson-g12-common.dtsi was introduced as well as new g12b no=
-des
->>>> and headers, as dependencies of new meson-g12b-a311d-khadas-vim3.dts=
-.
->>>
->>> Can you precise the Linux commit ID you sync'ed from ?
->>
->> It was yesterday's linux-next.git (via cgit), adding tag next-20190830=
-.
->=20
-> Please don't use linux next, it's not a stable tree, either wait for 5.=
-4-rc1
-> or use kevin's amlogic-dt64-2.1 tag, since it will be kept in the final
-> merge.
+XHCI timeout on event type 33... cannot recover.
+BUG: failure at drivers/usb/host/xhci-ring.c:474/xhci_wait_for_event()!
+BUG!
 
-Well, in my view linux-next would contain whatever vX patchset Kevin
-applied to his tree... let's wait for -rc1 then.
+This quirk is also handled in the dwc3 core code, but until the
+xhci-dwc3 driver uses the dwc3 core, the quirk must be handled here
+to fix USB support on the Amlogic libretech-cc and libretech-ac board
+when a device is only plugged in the OTG port.
 
->>
->>> The best would be to sync from the v2 dt64 PR from kevin :
->>> https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic=
-.git/tag/?h=3Damlogic-dt64-2.1
->>>
->>> Thanks,
->>> Neil
->>>
->>>>
->>>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->>>> ---
->>>>  arch/arm/dts/Makefile                              |    3 +-
->>>>  arch/arm/dts/meson-g12-common.dtsi                 | 2435 +++++++++=
-+++++++++++
->>>>  arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts      |   15 +
->>>
->>> Can you also sync the s922x version ?
->>
->> Why? No such model is being sold: https://www.khadas.com/vim3
->>
->> In any case, if you or someone has such a pre-production model you can
->> add it as follow-up. In fact you could even entirely replace this impo=
-rt
->> patch if you so desired, it's intentionally separate.
->=20
-> Didn't want to offend you, don't sync it if you don't want...
+Cc: Yuri Frolov <crashing.kernel@gmail.com>
+Cc: Bin Meng <bmeng.cn@gmail.com>
+Fixes: dc9cdf859e ("usb: dwc3: Add DWC3 controller driver support")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/usb/host/xhci-dwc3.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It was an honest question. So I take it you have such a prototype?
+diff --git a/drivers/usb/host/xhci-dwc3.c b/drivers/usb/host/xhci-dwc3.c
+index 9e8cae7ae4..55a1b22cf6 100644
+--- a/drivers/usb/host/xhci-dwc3.c
++++ b/drivers/usb/host/xhci-dwc3.c
+@@ -150,6 +150,9 @@ static int xhci_dwc3_probe(struct udevice *dev)
+ 	if (dev_read_bool(dev, "snps,dis-u2-freeclk-exists-quirk"))
+ 		reg &= ~DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS;
+ 
++	if (dev_read_bool(dev, "snps,dis_u2_susphy_quirk"))
++		reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
++
+ 	writel(reg, &dwc3_reg->g_usb2phycfg[0]);
+ 
+ 	dr_mode = usb_get_dr_mode(dev_of_offset(dev));
+-- 
+2.17.1
 
-What I do feel offended about is that my NanoPi K2 patch got ignored and
-someone else's got merged without crediting or even notifying me. I've
-become rather hesitant to send U-Boot patches for new boards since, as I
-don't have much time for it lately and I'd rather spend it productively.
-
-https://patchwork.ozlabs.org/patch/762194/
-https://patchwork.ozlabs.org/patch/762483/
-https://patchwork.ozlabs.org/patch/934377/
-https://gitlab.denx.de/u-boot/u-boot/commit/eee45b4f545902a9089f68331c925=
-898da813ac0
-
->>>>  arch/arm/dts/meson-g12b-a311d.dtsi                 |  149 ++
->>>>  arch/arm/dts/meson-g12b-khadas-vim3.dtsi           |  544 +++++
->>>>  arch/arm/dts/meson-g12b.dtsi                       |   39 +-
->>>>  include/dt-bindings/clock/g12a-clkc.h              |    6 +
->>>>  include/dt-bindings/power/meson-g12a-power.h       |   13 +
->>>>  .../reset/amlogic,meson-g12a-audio-reset.h         |   38 +
->>>>  9 files changed, 3238 insertions(+), 4 deletions(-)
->>>>  create mode 100644 arch/arm/dts/meson-g12-common.dtsi
->>>>  create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
->>>>  create mode 100644 arch/arm/dts/meson-g12b-a311d.dtsi
->>>>  create mode 100644 arch/arm/dts/meson-g12b-khadas-vim3.dtsi
->>>>  create mode 100644 include/dt-bindings/power/meson-g12a-power.h
->>>>  create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-aud=
-io-reset.h
->>>>
->>>> diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
->>>> index aac1b83d49..6de5e4c62a 100644
->>>> --- a/arch/arm/dts/Makefile
->>>> +++ b/arch/arm/dts/Makefile
->>>> @@ -141,7 +141,8 @@ dtb-$(CONFIG_ARCH_MESON) +=3D \
->>>>  	meson-axg-s400.dtb \
->>>>  	meson-g12a-u200.dtb \
->>>>  	meson-g12a-sei510.dtb \
->>>> -	meson-g12b-odroid-n2.dtb
->>>> +	meson-g12b-odroid-n2.dtb \
->>>> +	meson-g12b-a311d-khadas-vim3.dtb
->>>
->>> Same here, can you also build the s922x variant ?
->>
->> Again, I don't see why, in particular when we don't have a defconfig
->> using it. If you intend to add one, you can still add it later
->=20
-> Since I maintain the whole stuff, it would have saved my time.
-
-Sorry, no time to redo this patch the next ~3 weeks due to travels.
-It was not scripted.
-
-Thanks for your quick review.
-
-Regards,
-Andreas
-
---=20
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer
-HRB 247165 (AG M=C3=BCnchen)
