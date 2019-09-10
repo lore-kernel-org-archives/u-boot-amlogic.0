@@ -1,58 +1,51 @@
-Received: by mail-wr1-f66.google.com with SMTP id q17so10539990wrx.10
-        for <u-boot-amlogic@groups.io>; Mon, 09 Sep 2019 11:52:45 -0700 (PDT)
+Received: by mail-ed1-f66.google.com with SMTP id t50so15313042edd.2
+        for <u-boot-amlogic@groups.io>; Mon, 09 Sep 2019 18:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=mgW95iiIEYs8Ik4hLY+MXkO6+YJsMz1RvMmgO0HgvHU=;
-        b=PDbsi0j4W0BnzL+1OhMNOf0L7TRHn45qdg8No1RLiiu+Tj9Kl0JPJIqZ78EC80XGiQ
-         Hk6jbyr3axyc1eNrkg2K5bXZii2QW/bSXci1C9X1myW+oo2vi0UjPHbP+g9HEvWh5nFV
-         n3yqSfWw37g4FBVz6QJlo+bFE0eAM0xvklhI/Vg3FpGROJs7qUqbVDvQQR+U/5tdOVh4
-         mM1X5LLaI/clYPnJT7oNABsV2l5/SxhLbrjm3RrHQ09OUcDFQpiS3Y097Er/BqLvZ0ru
-         oTkMHD846NgKszQh13eW+1TPNFBEZTeM0ym6ybX9SmQMb5EYixtox+XMw9kEkjT5Ovyp
-         Q+nA==
-Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] usb: xhci-dwc3: Add support for dis_u2_susphy_quirk
-Date: Mon,  9 Sep 2019 18:52:39 +0000
-Message-Id: <1568055159-27982-1-git-send-email-narmstrong@baylibre.com>
-To: marex@denx.de
-Cc: bmeng.cn@gmail.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Yuri Frolov <crashing.kernel@gmail.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2fN9hL2xGSx0maP8PWL67PlS+RJ9AbCPwH9+4V4IvAQ=;
+        b=L+nNHsBwmrYNpxt1oke5vLfX5CntOJ2MmK8ycsmxx8p/+uq7Q3vpwB8X6/NzT5Hvlx
+         CutQYnaDoCwKOjCeSEyemVUr0kbeT/8AvFjkglBCqt1Mx9gzCoodFH+h5JKeoAaO1rWD
+         wDktZz8aGnNUyEpB8WpNPrqDEszzXFp5NHWUFUO9D2SW8H1eBGxLrzIp+iqz+BxQE2VX
+         yXSpM/vq/0jG5HEGujb5pj5obhsm7jxRxwaAvv4cMnaor16fJLC0mqOXvWYcFL4SE69n
+         mEDa2J7XNQ/hvdUOVTDdNYR5am189Xza4TXciM2i2S3QgJk3oxxdxP/575zkSOKBrZ8f
+         wijg==
+MIME-Version: 1.0
+References: <1568055159-27982-1-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1568055159-27982-1-git-send-email-narmstrong@baylibre.com>
+From: Bin Meng <bmeng.cn@gmail.com>
+Date: Tue, 10 Sep 2019 09:56:24 +0800
+Message-ID: <CAEUhbmUQ3kE79jnQ20FFBit2W-96x+bKFEnGc0yZugBrNdr0Zg@mail.gmail.com>
+Subject: Re: [PATCH] usb: xhci-dwc3: Add support for dis_u2_susphy_quirk
+Content-Type: text/plain; charset="UTF-8"
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Marek Vasut <marex@denx.de>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Yuri Frolov <crashing.kernel@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This quirk is necessary for the Amlogic GXL SoCs otherwise the
-Port 2 PHY doesn't get out of suspend and U-Boot resets the board after:
+On Tue, Sep 10, 2019 at 2:52 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This quirk is necessary for the Amlogic GXL SoCs otherwise the
+> Port 2 PHY doesn't get out of suspend and U-Boot resets the board after:
+>
+> XHCI timeout on event type 33... cannot recover.
+> BUG: failure at drivers/usb/host/xhci-ring.c:474/xhci_wait_for_event()!
+> BUG!
+>
+> This quirk is also handled in the dwc3 core code, but until the
+> xhci-dwc3 driver uses the dwc3 core, the quirk must be handled here
+> to fix USB support on the Amlogic libretech-cc and libretech-ac board
+> when a device is only plugged in the OTG port.
+>
+> Cc: Yuri Frolov <crashing.kernel@gmail.com>
+> Cc: Bin Meng <bmeng.cn@gmail.com>
+> Fixes: dc9cdf859e ("usb: dwc3: Add DWC3 controller driver support")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/usb/host/xhci-dwc3.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
 
-XHCI timeout on event type 33... cannot recover.
-BUG: failure at drivers/usb/host/xhci-ring.c:474/xhci_wait_for_event()!
-BUG!
+Thanks for your efforts tracing this down!
 
-This quirk is also handled in the dwc3 core code, but until the
-xhci-dwc3 driver uses the dwc3 core, the quirk must be handled here
-to fix USB support on the Amlogic libretech-cc and libretech-ac board
-when a device is only plugged in the OTG port.
-
-Cc: Yuri Frolov <crashing.kernel@gmail.com>
-Cc: Bin Meng <bmeng.cn@gmail.com>
-Fixes: dc9cdf859e ("usb: dwc3: Add DWC3 controller driver support")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/usb/host/xhci-dwc3.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/usb/host/xhci-dwc3.c b/drivers/usb/host/xhci-dwc3.c
-index 9e8cae7ae4..55a1b22cf6 100644
---- a/drivers/usb/host/xhci-dwc3.c
-+++ b/drivers/usb/host/xhci-dwc3.c
-@@ -150,6 +150,9 @@ static int xhci_dwc3_probe(struct udevice *dev)
- 	if (dev_read_bool(dev, "snps,dis-u2-freeclk-exists-quirk"))
- 		reg &= ~DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS;
- 
-+	if (dev_read_bool(dev, "snps,dis_u2_susphy_quirk"))
-+		reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
-+
- 	writel(reg, &dwc3_reg->g_usb2phycfg[0]);
- 
- 	dr_mode = usb_get_dr_mode(dev_of_offset(dev));
--- 
-2.17.1
-
+Reviewed-by: Bin Meng <bmeng.cn@gmail.com>
