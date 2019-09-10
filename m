@@ -1,68 +1,60 @@
-Received: by mail-ed1-f68.google.com with SMTP id o9so16167710edq.0
-        for <u-boot-amlogic@groups.io>; Tue, 10 Sep 2019 01:00:48 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id h7so18423517wrw.8
+        for <u-boot-amlogic@groups.io>; Tue, 10 Sep 2019 04:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wAYVrYwTKqfzbew0+3w/c/vSjOHQyGhh+GVWIw6xYDU=;
-        b=cgWPoor3mVlA1+Jy/MEtI18JY1IAicQEMUxyNH8ChPSB93plSRgwG/OU3CnEnXhQ3c
-         K3E74z+ibbE45tHoX0Ca8trFN5vHT1ArBBNWqBZqHccaCSuVEzOX4NkGIWQ93lPWuey4
-         aV+m5hKarjHJPvH6tdP/40mnT6STR/GhAjfOhacI72imssVn9/5LlHOs8qFyevNXc1E8
-         WcW92Mlqw7L3dMrLu4wGo8AJSslHGp241aFW4nRaXZEOpMQ6HpNTso2eH1Ow5WuUvB2q
-         bchrbw7bYb1ndSWTw+Sh3fvcX/KauoILEOLafsnKygaJBHa7hBkNTHsG/fyLPyljiWmX
-         ZePw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=CsN2hU6lu7yw0UqiKXICqMRgIY1s59tU8Pp8T8u3+5Q=;
+        b=0l9MGS1neDZhPaJRjZV4zGEqB6KdFTV7krSscmD8dGLUOd06/3gqGbO5aVpvyUpA4q
+         wlIXhQGDvnGKuBjRwSF9OK99S/qk+d8JfPlC5ptLKABeA51O0Y9zy/9jnyY10rsMm4Xz
+         MdOaYiEyQXSzah8t/x2NIAsBpsPHeb1Tw8Hp1/k6+zzKXMi+xgbl4U/Hvy2VZO/ASou4
+         1P2PVXw3gRU/iAkkPWDExoOe9F4fCb0LjGuK3XOfqDntto2/RCsEeHeVZAXaCOMweseI
+         EQ8BzmqL1jkqIK5O8IgEYv/zXkuth/b4jjOALAF2ivn3/xrgqmni2uPJbMCqdcL+8Z/m
+         MlIA==
+Return-Path: <narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20190910
+Message-ID: <99fcc772-b283-c888-4747-b89fdf27177d@baylibre.com>
+Date: Tue, 10 Sep 2019 13:28:01 +0200
 MIME-Version: 1.0
-References: <1568055159-27982-1-git-send-email-narmstrong@baylibre.com>
- <CAEUhbmUQ3kE79jnQ20FFBit2W-96x+bKFEnGc0yZugBrNdr0Zg@mail.gmail.com> <2a299283-7f5b-15ce-cf38-6ebd30a5cecb@baylibre.com>
-In-Reply-To: <2a299283-7f5b-15ce-cf38-6ebd30a5cecb@baylibre.com>
-From: Bin Meng <bmeng.cn@gmail.com>
-Date: Tue, 10 Sep 2019 16:00:36 +0800
-Message-ID: <CAEUhbmVra3kcipbKSKDZ=DBKxRDTCnnmwgD=pw0Vb+db0HR_2w@mail.gmail.com>
-Subject: Re: [PATCH] usb: xhci-dwc3: Add support for dis_u2_susphy_quirk
-Content-Type: text/plain; charset="UTF-8"
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Marek Vasut <marex@denx.de>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Yuri Frolov <crashing.kernel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Neil,
+Hi Tom,
 
-On Tue, Sep 10, 2019 at 3:58 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi Bin, Marek,
->
-> On 10/09/2019 03:56, Bin Meng wrote:
-> > On Tue, Sep 10, 2019 at 2:52 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> This quirk is necessary for the Amlogic GXL SoCs otherwise the
-> >> Port 2 PHY doesn't get out of suspend and U-Boot resets the board after:
-> >>
-> >> XHCI timeout on event type 33... cannot recover.
-> >> BUG: failure at drivers/usb/host/xhci-ring.c:474/xhci_wait_for_event()!
-> >> BUG!
-> >>
-> >> This quirk is also handled in the dwc3 core code, but until the
-> >> xhci-dwc3 driver uses the dwc3 core, the quirk must be handled here
-> >> to fix USB support on the Amlogic libretech-cc and libretech-ac board
-> >> when a device is only plugged in the OTG port.
-> >>
-> >> Cc: Yuri Frolov <crashing.kernel@gmail.com>
-> >> Cc: Bin Meng <bmeng.cn@gmail.com>
-> >> Fixes: dc9cdf859e ("usb: dwc3: Add DWC3 controller driver support")
-> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >> ---
-> >>  drivers/usb/host/xhci-dwc3.c | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >>
-> >
-> > Thanks for your efforts tracing this down!
-> >
-> > Reviewed-by: Bin Meng <bmeng.cn@gmail.com>
-> >
->
-> Should I take it into my amlogic tree or you'll handle it ?
->
+This PR simply adds support for dis_u2_susphy_quirk in the xhci-dwc3 driver to fix boot when
+a device is plugged only in the OTG capable port for libretech-ac and libretech-cc.
 
-I think you can take it via your tree. Thanks!
+Bin acked me for pushing this fix through my tree.
 
-Regards,
-Bin
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/642
+
+Thanks,
+Neil
+
+The following changes since commit c705fc3b40b88bfbf465448643c91da71426df2f:
+
+  arm: ti: Add missing "=" from previous fix (2019-09-09 10:55:45 -0400)
+
+are available in the Git repository at:
+
+  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20190910
+
+for you to fetch changes up to b35b8076828d1059c1fcc648ed8c8210ebe6a3dd:
+
+  usb: xhci-dwc3: Add support for dis_u2_susphy_quirk (2019-09-10 10:00:53 +0200)
+
+----------------------------------------------------------------
+- Add support for dis_u2_susphy_quirk in the xhci-dwc3 driver to fix boot when
+a device is plugged only in the OTG capable port for libretech-ac and libretech-cc
+
+----------------------------------------------------------------
+Neil Armstrong (1):
+      usb: xhci-dwc3: Add support for dis_u2_susphy_quirk
+
+ drivers/usb/host/xhci-dwc3.c | 3 +++
+ 1 file changed, 3 insertions(+)
