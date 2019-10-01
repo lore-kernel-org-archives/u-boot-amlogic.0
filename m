@@ -1,60 +1,83 @@
-Received: by mail-wr1-f50.google.com with SMTP id h7so18423517wrw.8
-        for <u-boot-amlogic@groups.io>; Tue, 10 Sep 2019 04:28:03 -0700 (PDT)
+Received: by mail-wr1-f66.google.com with SMTP id n14so14345739wrw.9
+        for <u-boot-amlogic@groups.io>; Tue, 01 Oct 2019 01:38:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:openpgp:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=CsN2hU6lu7yw0UqiKXICqMRgIY1s59tU8Pp8T8u3+5Q=;
-        b=0l9MGS1neDZhPaJRjZV4zGEqB6KdFTV7krSscmD8dGLUOd06/3gqGbO5aVpvyUpA4q
-         wlIXhQGDvnGKuBjRwSF9OK99S/qk+d8JfPlC5ptLKABeA51O0Y9zy/9jnyY10rsMm4Xz
-         MdOaYiEyQXSzah8t/x2NIAsBpsPHeb1Tw8Hp1/k6+zzKXMi+xgbl4U/Hvy2VZO/ASou4
-         1P2PVXw3gRU/iAkkPWDExoOe9F4fCb0LjGuK3XOfqDntto2/RCsEeHeVZAXaCOMweseI
-         EQ8BzmqL1jkqIK5O8IgEYv/zXkuth/b4jjOALAF2ivn3/xrgqmni2uPJbMCqdcL+8Z/m
-         MlIA==
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=g5faoAMgA7/dRIljB7u3Zs+SS+8oN/QNKhlXGdzDEGs=;
+        b=T5knndcfrnqwDLgIoIVASvHT673ufpuE0KCN4oSOLziKnX/XXOKsEZCd1uXrcORVf/
+         h1UT2biLlZ8G7DqlDPx6u7RflgxMZyyA0Vo+QIqAvzrTw1L7FCkg0FMhodTC18mWxjy5
+         Lswo9vVqm4ZwgiqMT7IIrSs9Bk8r4wMgSF1bzsriTSSFTILLEdmIWSZhrBfGvivfNuFH
+         ngSeacLtmy5aupSFm/pI6/2aY2UryUJvENCsDcCYFuNzoJqrZt9OTbh53kHYNQSQ9HvB
+         1BFgK/6UlaW1fkLLzJMIY1dJ0dZn5cNBMtVBG7bukkpjjY6n/+P4Ao4FvGZ0EgTxEmO4
+         IUFw==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 0/4] amlogic: Add Khadas VIM3 support
+References: <20190902121914.18946-1-afaerber@suse.de>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20190910
-Message-ID: <99fcc772-b283-c888-4747-b89fdf27177d@baylibre.com>
-Date: Tue, 10 Sep 2019 13:28:01 +0200
+Message-ID: <e9e9709e-54d9-4f7a-8f5d-3d57316a3bf6@baylibre.com>
+Date: Tue, 1 Oct 2019 10:38:03 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190902121914.18946-1-afaerber@suse.de>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Transfer-Encoding: 8bit
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+Hi Andreas,
 
-This PR simply adds support for dis_u2_susphy_quirk in the xhci-dwc3 driver to fix boot when
-a device is plugged only in the OTG capable port for libretech-ac and libretech-cc.
+On 02/09/2019 14:19, Andreas Färber wrote:
+> Hi Neil,
+> 
+> This mini-series adds initial support for Amlogic A311D based Khadas VIM3.
+> 
+> v2 fixes an oversight and adds some cleanups.
+> 
+> Regards,
+> Andreas
+> 
+> v1 -> v2:
+> * Fixed branch name in README
+> * Mention linux-next tag for DT/header import (Neil)
+> * Avoid "Unknown" SoC output for A311D, fixing a typo while at it
 
-Bin acked me for pushing this fix through my tree.
+Do you have time to rebase patch 1 on Linux v5.3-rc1 ? Or do you allow me to rebase it myself ?
 
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/642
-
-Thanks,
 Neil
 
-The following changes since commit c705fc3b40b88bfbf465448643c91da71426df2f:
+> 
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> Andreas Färber (4):
+>   arm: dts: Import and update DT for Khadas VIM3
+>   configs: Add Khadas VIM3 defconfig
+>   arm: meson: Tidy SoC information output
+>   arm: meson: Recognize A311D SoC
+> 
+>  arch/arm/dts/Makefile                              |    3 +-
+>  arch/arm/dts/meson-g12-common.dtsi                 | 2435 ++++++++++++++++++++
+>  arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts      |   15 +
+>  arch/arm/dts/meson-g12b-a311d.dtsi                 |  149 ++
+>  arch/arm/dts/meson-g12b-khadas-vim3.dtsi           |  544 +++++
+>  arch/arm/dts/meson-g12b.dtsi                       |   39 +-
+>  arch/arm/mach-meson/board-info.c                   |    3 +-
+>  board/amlogic/w400/MAINTAINERS                     |    1 +
+>  board/amlogic/w400/README.khadas-vim3              |  132 ++
+>  configs/khadas-vim3_defconfig                      |   54 +
+>  include/dt-bindings/clock/g12a-clkc.h              |    6 +
+>  include/dt-bindings/power/meson-g12a-power.h       |   13 +
+>  .../reset/amlogic,meson-g12a-audio-reset.h         |   38 +
+>  13 files changed, 3427 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm/dts/meson-g12-common.dtsi
+>  create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
+>  create mode 100644 arch/arm/dts/meson-g12b-a311d.dtsi
+>  create mode 100644 arch/arm/dts/meson-g12b-khadas-vim3.dtsi
+>  create mode 100644 board/amlogic/w400/README.khadas-vim3
+>  create mode 100644 configs/khadas-vim3_defconfig
+>  create mode 100644 include/dt-bindings/power/meson-g12a-power.h
+>  create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
+> 
 
-  arm: ti: Add missing "=" from previous fix (2019-09-09 10:55:45 -0400)
-
-are available in the Git repository at:
-
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20190910
-
-for you to fetch changes up to b35b8076828d1059c1fcc648ed8c8210ebe6a3dd:
-
-  usb: xhci-dwc3: Add support for dis_u2_susphy_quirk (2019-09-10 10:00:53 +0200)
-
-----------------------------------------------------------------
-- Add support for dis_u2_susphy_quirk in the xhci-dwc3 driver to fix boot when
-a device is plugged only in the OTG capable port for libretech-ac and libretech-cc
-
-----------------------------------------------------------------
-Neil Armstrong (1):
-      usb: xhci-dwc3: Add support for dis_u2_susphy_quirk
-
- drivers/usb/host/xhci-dwc3.c | 3 +++
- 1 file changed, 3 insertions(+)
