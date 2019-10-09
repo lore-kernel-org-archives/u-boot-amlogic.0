@@ -1,83 +1,84 @@
-Received: by mail-wr1-f66.google.com with SMTP id n14so14345739wrw.9
-        for <u-boot-amlogic@groups.io>; Tue, 01 Oct 2019 01:38:06 -0700 (PDT)
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web11.5325.1570629843070291418
+ for <u-boot-amlogic@groups.io>;
+ Wed, 09 Oct 2019 07:04:03 -0700
+Received: by mail-wm1-f65.google.com with SMTP id r19so2774884wmh.2
+        for <u-boot-amlogic@groups.io>; Wed, 09 Oct 2019 07:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=g5faoAMgA7/dRIljB7u3Zs+SS+8oN/QNKhlXGdzDEGs=;
-        b=T5knndcfrnqwDLgIoIVASvHT673ufpuE0KCN4oSOLziKnX/XXOKsEZCd1uXrcORVf/
-         h1UT2biLlZ8G7DqlDPx6u7RflgxMZyyA0Vo+QIqAvzrTw1L7FCkg0FMhodTC18mWxjy5
-         Lswo9vVqm4ZwgiqMT7IIrSs9Bk8r4wMgSF1bzsriTSSFTILLEdmIWSZhrBfGvivfNuFH
-         ngSeacLtmy5aupSFm/pI6/2aY2UryUJvENCsDcCYFuNzoJqrZt9OTbh53kHYNQSQ9HvB
-         1BFgK/6UlaW1fkLLzJMIY1dJ0dZn5cNBMtVBG7bukkpjjY6n/+P4Ao4FvGZ0EgTxEmO4
-         IUFw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+jl/1FkSJzAeUz7etFWhefUtEi7LbhKQ3MhmK1xLKFE=;
+        b=ZdX9ILcXAw2FuMpBcnsY53nrJrrlCQH4agKw9zG8P5QZ0JWsSmI45amh8Mk7J2gSzw
+         ei8BVGR+8dCuMT3IXFQk6YpoZehL/9SQi68ulrXBVetiWdGnxz0FdAfQMTlhq9Ssja4D
+         Xoxu3nj4tM6uyKBdmU/Udfx1AKoUSy6hsQFPXVwnRO9vV9JHwIFW0j08t3UT9ZMwNftj
+         Er7F47WDqAukzQMqR4q0bZ6IsrlNvoJ3adN1UaYPf0vPlRldsyzm1BrvwUni8dpbbpqI
+         TGYMJR4La4ydrmdwBBHzvqDsukPlbgCcZHdRGxuSHLeOzZpNEeNKbD2qZJeZ8eifois+
+         l8sg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 0/4] amlogic: Add Khadas VIM3 support
-References: <20190902121914.18946-1-afaerber@suse.de>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <e9e9709e-54d9-4f7a-8f5d-3d57316a3bf6@baylibre.com>
-Date: Tue, 1 Oct 2019 10:38:03 +0200
+Subject: [PATCH v3 0/4] amlogic: Add Khadas VIM3 support
+Date: Wed,  9 Oct 2019 16:03:53 +0200
+Message-Id: <20191009140357.27279-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190902121914.18946-1-afaerber@suse.de>
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io
+To: u-boot@lists.denx.de
+Cc: afaerber@suse.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
 Hi Andreas,
 
-On 02/09/2019 14:19, Andreas Färber wrote:
-> Hi Neil,
-> 
-> This mini-series adds initial support for Amlogic A311D based Khadas VIM3.
-> 
-> v2 fixes an oversight and adds some cleanups.
-> 
-> Regards,
-> Andreas
-> 
-> v1 -> v2:
-> * Fixed branch name in README
-> * Mention linux-next tag for DT/header import (Neil)
-> * Avoid "Unknown" SoC output for A311D, fixing a typo while at it
+This is a resend from v2 with first patch resync'ed on v5.4-rc2.
 
-Do you have time to rebase patch 1 on Linux v5.3-rc1 ? Or do you allow me to rebase it myself ?
+This mini-series adds initial support for Amlogic A311D based Khadas VIM3.
 
-Neil
+v2 fixes an oversight and adds some cleanups.
 
-> 
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> 
-> Andreas Färber (4):
->   arm: dts: Import and update DT for Khadas VIM3
->   configs: Add Khadas VIM3 defconfig
->   arm: meson: Tidy SoC information output
->   arm: meson: Recognize A311D SoC
-> 
->  arch/arm/dts/Makefile                              |    3 +-
->  arch/arm/dts/meson-g12-common.dtsi                 | 2435 ++++++++++++++++++++
->  arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts      |   15 +
->  arch/arm/dts/meson-g12b-a311d.dtsi                 |  149 ++
->  arch/arm/dts/meson-g12b-khadas-vim3.dtsi           |  544 +++++
->  arch/arm/dts/meson-g12b.dtsi                       |   39 +-
->  arch/arm/mach-meson/board-info.c                   |    3 +-
->  board/amlogic/w400/MAINTAINERS                     |    1 +
->  board/amlogic/w400/README.khadas-vim3              |  132 ++
->  configs/khadas-vim3_defconfig                      |   54 +
->  include/dt-bindings/clock/g12a-clkc.h              |    6 +
->  include/dt-bindings/power/meson-g12a-power.h       |   13 +
->  .../reset/amlogic,meson-g12a-audio-reset.h         |   38 +
->  13 files changed, 3427 insertions(+), 5 deletions(-)
->  create mode 100644 arch/arm/dts/meson-g12-common.dtsi
->  create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
->  create mode 100644 arch/arm/dts/meson-g12b-a311d.dtsi
->  create mode 100644 arch/arm/dts/meson-g12b-khadas-vim3.dtsi
->  create mode 100644 board/amlogic/w400/README.khadas-vim3
->  create mode 100644 configs/khadas-vim3_defconfig
->  create mode 100644 include/dt-bindings/power/meson-g12a-power.h
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-> 
+v2 -> v3:
+* Resync patch 1 on v5.4-rc2
+* Removed bad signeoff of Julien Masson in patch 3
+
+v1 -> v2:
+* Fixed branch name in README
+* Mention linux-next tag for DT/header import (Neil)
+* Avoid "Unknown" SoC output for A311D, fixing a typo while at it
+
+Andreas Färber (4):
+  arm: dts: Import and update DT for Khadas VIM3
+  configs: Add Khadas VIM3 defconfig
+  arm: meson: Tidy SoC information output
+  arm: meson: Recognize A311D SoC
+
+ arch/arm/dts/Makefile                         |    3 +-
+ arch/arm/dts/meson-g12-common.dtsi            | 2435 +++++++++++++++++
+ arch/arm/dts/meson-g12a.dtsi                  | 2422 +---------------
+ arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts |   16 +
+ arch/arm/dts/meson-g12b-a311d.dtsi            |  149 +
+ arch/arm/dts/meson-g12b-khadas-vim3.dtsi      |  189 ++
+ arch/arm/dts/meson-g12b-odroid-n2.dts         |  104 +-
+ arch/arm/dts/meson-g12b-s922x.dtsi            |  124 +
+ arch/arm/dts/meson-g12b.dtsi                  |   39 +-
+ arch/arm/dts/meson-khadas-vim3.dtsi           |  360 +++
+ arch/arm/mach-meson/board-info.c              |    3 +-
+ board/amlogic/w400/MAINTAINERS                |    1 +
+ board/amlogic/w400/README.khadas-vim3         |  132 +
+ configs/khadas-vim3_defconfig                 |   54 +
+ include/dt-bindings/clock/g12a-clkc.h         |    6 +
+ include/dt-bindings/power/meson-g12a-power.h  |   13 +
+ .../reset/amlogic,meson-g12a-audio-reset.h    |   38 +
+ 17 files changed, 3705 insertions(+), 2383 deletions(-)
+ create mode 100644 arch/arm/dts/meson-g12-common.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
+ create mode 100644 arch/arm/dts/meson-g12b-a311d.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-khadas-vim3.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-s922x.dtsi
+ create mode 100644 arch/arm/dts/meson-khadas-vim3.dtsi
+ create mode 100644 board/amlogic/w400/README.khadas-vim3
+ create mode 100644 configs/khadas-vim3_defconfig
+ create mode 100644 include/dt-bindings/power/meson-g12a-power.h
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
+
+-- 
+2.22.0
 
