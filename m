@@ -1,6159 +1,1942 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web11.5326.1570629846337303508
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web12.5865.1570633962199875242
  for <u-boot-amlogic@groups.io>;
- Wed, 09 Oct 2019 07:04:07 -0700
-Received: by mail-wm1-f66.google.com with SMTP id v17so2758136wml.4
-        for <u-boot-amlogic@groups.io>; Wed, 09 Oct 2019 07:04:06 -0700 (PDT)
+ Wed, 09 Oct 2019 08:12:43 -0700
+Received: by mail-wr1-f65.google.com with SMTP id b9so3523073wrs.0
+        for <u-boot-amlogic@groups.io>; Wed, 09 Oct 2019 08:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tYV2j+QG/2e4+Z/doh0mY5NLG/SrNeLAqoabK6XhEOU=;
-        b=J2pRXPamD3zXP1MWjhLrDGm9BBOU4k9Jl0O1T4XjaIXKJaA7tG1mwvvyQ7agb9feVg
-         XTurDizp6nnpRiDxfz4XcEUFbjuBYNV0dLTREbrT6b2JKpONa45ce61uVwK9Fxl3Rsgw
-         abvBXm+nMPGGECnnAZxiz7ej2A9zLgj9dj00PMOkpHAcsi3tpugZas6eBl/i7FO8PUld
-         jYk9pwS0MWfIKg6HDGRqViRFwHJRCQp4OcfWiJsuVVDBK03hbkxg+yB/raW4jCz1wcnD
-         cNpWAUu45eznHrAELYZdilpAo+k7bvFYU2nEXSPf0cH1NbX+Pv/Y4/93d9BYCfL1dwnx
-         9HrQ==
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vfG7flUDy3IPtfdueG7Pso021WKfm/wPKsbMaKioIbI=;
+        b=GGD6EiyLHB413dWNJFoOd4V4AxGw1AHu8Iz/EAr1Rf6Pl8Hnjl9iYfnB932FY3vZsg
+         IHZYphoMffIgtK+fIpnqqxkumAw7hDXFwYOt3Qza0IOWwOoWcljpYwnMCcEHclFKB8yY
+         8jHRsnEkzhDDgiHWzY99Ao8mbonIqYcA+J8Cx9KB6xiQY9ajct9x1qtamonKLfDuqF1i
+         xxYsp0PDLP93jTtSJoCm0z1SrJGLjTHmyeuE0NgZVt45fM5G1pC41abfAPEzixIg8Ayi
+         KVfmIGH7R1n+qyr3fiEWHRFRtSOyGudjmEeGWNwP/c9rtEISwlc0sCNdMjR0VxlRvyTk
+         0xSQ==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 4/8] video: meson: sync with linux drm-misc tree
+References: <20190830120928.23890-1-narmstrong@baylibre.com>
+ <20190830120928.23890-5-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v3 1/4] arm: dts: Import and update DT for Khadas VIM3
-Date: Wed,  9 Oct 2019 16:03:54 +0200
-Message-Id: <20191009140357.27279-2-narmstrong@baylibre.com>
-In-Reply-To: <20191009140357.27279-1-narmstrong@baylibre.com>
-References: <20191009140357.27279-1-narmstrong@baylibre.com>
+Message-ID: <8c4b276a-3757-c671-1f51-8a8f29597a23@baylibre.com>
+Date: Wed, 9 Oct 2019 17:12:37 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de
-Cc: afaerber@suse.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <20190830120928.23890-5-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: agust@denx.de
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-From: Andreas Färber <afaerber@suse.de>
+Hi Anatolij,
 
-In Linux meson-g12-common.dtsi was introduced as well as new g12b nodes
-and headers, as dependencies of new meson-g12b-a311d-khadas-vim3.dts.
+Gentle ping, did you have time to review this patchset ?
 
-Copied from da0c9ea146cb ("Linux 5.4-rc2")
-
-Signed-off-by: Andreas Färber <afaerber@suse.de>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm/dts/Makefile                         |    3 +-
- arch/arm/dts/meson-g12-common.dtsi            | 2435 +++++++++++++++++
- arch/arm/dts/meson-g12a.dtsi                  | 2422 +---------------
- arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts |   16 +
- arch/arm/dts/meson-g12b-a311d.dtsi            |  149 +
- arch/arm/dts/meson-g12b-khadas-vim3.dtsi      |  189 ++
- arch/arm/dts/meson-g12b-odroid-n2.dts         |  104 +-
- arch/arm/dts/meson-g12b-s922x.dtsi            |  124 +
- arch/arm/dts/meson-g12b.dtsi                  |   39 +-
- arch/arm/dts/meson-khadas-vim3.dtsi           |  360 +++
- include/dt-bindings/clock/g12a-clkc.h         |    6 +
- include/dt-bindings/power/meson-g12a-power.h  |   13 +
- .../reset/amlogic,meson-g12a-audio-reset.h    |   38 +
- 13 files changed, 3516 insertions(+), 2382 deletions(-)
- create mode 100644 arch/arm/dts/meson-g12-common.dtsi
- create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
- create mode 100644 arch/arm/dts/meson-g12b-a311d.dtsi
- create mode 100644 arch/arm/dts/meson-g12b-khadas-vim3.dtsi
- create mode 100644 arch/arm/dts/meson-g12b-s922x.dtsi
- create mode 100644 arch/arm/dts/meson-khadas-vim3.dtsi
- create mode 100644 include/dt-bindings/power/meson-g12a-power.h
- create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 62da168ef8..aac3d21ef8 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -141,7 +141,8 @@ dtb-$(CONFIG_ARCH_MESON) += \
- 	meson-axg-s400.dtb \
- 	meson-g12a-u200.dtb \
- 	meson-g12a-sei510.dtb \
--	meson-g12b-odroid-n2.dtb
-+	meson-g12b-odroid-n2.dtb \
-+	meson-g12b-a311d-khadas-vim3.dtb
- dtb-$(CONFIG_TEGRA) += tegra20-harmony.dtb \
- 	tegra20-medcom-wide.dtb \
- 	tegra20-paz00.dtb \
-diff --git a/arch/arm/dts/meson-g12-common.dtsi b/arch/arm/dts/meson-g12-common.dtsi
-new file mode 100644
-index 0000000000..3f39e020f7
---- /dev/null
-+++ b/arch/arm/dts/meson-g12-common.dtsi
-@@ -0,0 +1,2435 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/axg-audio-clkc.h>
-+#include <dt-bindings/clock/g12a-clkc.h>
-+#include <dt-bindings/clock/g12a-aoclkc.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
-+#include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
-+#include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	tdmif_a: audio-controller-0 {
-+		compatible = "amlogic,axg-tdm-iface";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "TDM_A";
-+		clocks = <&clkc_audio AUD_CLKID_MST_A_MCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_A_SCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
-+		clock-names = "mclk", "sclk", "lrclk";
-+		status = "disabled";
-+	};
-+
-+	tdmif_b: audio-controller-1 {
-+		compatible = "amlogic,axg-tdm-iface";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "TDM_B";
-+		clocks = <&clkc_audio AUD_CLKID_MST_B_MCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_B_SCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_B_LRCLK>;
-+		clock-names = "mclk", "sclk", "lrclk";
-+		status = "disabled";
-+	};
-+
-+	tdmif_c: audio-controller-2 {
-+		compatible = "amlogic,axg-tdm-iface";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "TDM_C";
-+		clocks = <&clkc_audio AUD_CLKID_MST_C_MCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_C_SCLK>,
-+			 <&clkc_audio AUD_CLKID_MST_C_LRCLK>;
-+		clock-names = "mclk", "sclk", "lrclk";
-+		status = "disabled";
-+	};
-+
-+	efuse: efuse {
-+		compatible = "amlogic,meson-gxbb-efuse";
-+		clocks = <&clkc CLKID_EFUSE>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		read-only;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* 3 MiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon_reserved: secmon@5000000 {
-+			reg = <0x0 0x05000000 0x0 0x300000>;
-+			no-map;
-+		};
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0x0 0x10000000>;
-+			alignment = <0x0 0x400000>;
-+			linux,cma-default;
-+		};
-+	};
-+
-+	sm: secure-monitor {
-+		compatible = "amlogic,meson-gxbb-sm";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ethmac: ethernet@ff3f0000 {
-+			compatible = "amlogic,meson-axg-dwmac",
-+				     "snps,dwmac-3.70a",
-+				     "snps,dwmac";
-+			reg = <0x0 0xff3f0000 0x0 0x10000>,
-+			      <0x0 0xff634540 0x0 0x8>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			clocks = <&clkc CLKID_ETH>,
-+				 <&clkc CLKID_FCLK_DIV2>,
-+				 <&clkc CLKID_MPLL2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1";
-+			rx-fifo-depth = <4096>;
-+			tx-fifo-depth = <2048>;
-+			status = "disabled";
-+
-+			mdio0: mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "snps,dwmac-mdio";
-+			};
-+		};
-+
-+		apb: bus@ff600000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff600000 0x0 0x200000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff600000 0x0 0x200000>;
-+
-+			hdmi_tx: hdmi-tx@0 {
-+				compatible = "amlogic,meson-g12a-dw-hdmi";
-+				reg = <0x0 0x0 0x0 0x10000>;
-+				interrupts = <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
-+				resets = <&reset RESET_HDMITX_CAPB3>,
-+					 <&reset RESET_HDMITX_PHY>,
-+					 <&reset RESET_HDMITX>;
-+				reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
-+				clocks = <&clkc CLKID_HDMI>,
-+					 <&clkc CLKID_HTX_PCLK>,
-+					 <&clkc CLKID_VPU_INTR>;
-+				clock-names = "isfr", "iahb", "venci";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				#sound-dai-cells = <0>;
-+				status = "disabled";
-+
-+				/* VPU VENC Input */
-+				hdmi_tx_venc_port: port@0 {
-+					reg = <0>;
-+
-+					hdmi_tx_in: endpoint {
-+						remote-endpoint = <&hdmi_tx_out>;
-+					};
-+				};
-+
-+				/* TMDS Output */
-+				hdmi_tx_tmds_port: port@1 {
-+					reg = <1>;
-+				};
-+			};
-+
-+			apb_efuse: bus@30000 {
-+				compatible = "simple-bus";
-+				reg = <0x0 0x30000 0x0 0x2000>;
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges = <0x0 0x0 0x0 0x30000 0x0 0x2000>;
-+
-+				hwrng: rng@218 {
-+					compatible = "amlogic,meson-rng";
-+					reg = <0x0 0x218 0x0 0x4>;
-+				};
-+			};
-+
-+			periphs: bus@34400 {
-+				compatible = "simple-bus";
-+				reg = <0x0 0x34400 0x0 0x400>;
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges = <0x0 0x0 0x0 0x34400 0x0 0x400>;
-+
-+				periphs_pinctrl: pinctrl@40 {
-+					compatible = "amlogic,meson-g12a-periphs-pinctrl";
-+					#address-cells = <2>;
-+					#size-cells = <2>;
-+					ranges;
-+
-+					gpio: bank@40 {
-+						reg = <0x0 0x40  0x0 0x4c>,
-+						      <0x0 0xe8  0x0 0x18>,
-+						      <0x0 0x120 0x0 0x18>,
-+						      <0x0 0x2c0 0x0 0x40>,
-+						      <0x0 0x340 0x0 0x1c>;
-+						reg-names = "gpio",
-+							    "pull",
-+							    "pull-enable",
-+							    "mux",
-+							    "ds";
-+						gpio-controller;
-+						#gpio-cells = <2>;
-+						gpio-ranges = <&periphs_pinctrl 0 0 86>;
-+					};
-+
-+					cec_ao_a_h_pins: cec_ao_a_h {
-+						mux {
-+							groups = "cec_ao_a_h";
-+							function = "cec_ao_a_h";
-+							bias-disable;
-+						};
-+					};
-+
-+					cec_ao_b_h_pins: cec_ao_b_h {
-+						mux {
-+							groups = "cec_ao_b_h";
-+							function = "cec_ao_b_h";
-+							bias-disable;
-+						};
-+					};
-+
-+					emmc_pins: emmc {
-+						mux-0 {
-+							groups = "emmc_nand_d0",
-+								 "emmc_nand_d1",
-+								 "emmc_nand_d2",
-+								 "emmc_nand_d3",
-+								 "emmc_nand_d4",
-+								 "emmc_nand_d5",
-+								 "emmc_nand_d6",
-+								 "emmc_nand_d7",
-+								 "emmc_cmd";
-+							function = "emmc";
-+							bias-pull-up;
-+							drive-strength-microamp = <4000>;
-+						};
-+
-+						mux-1 {
-+							groups = "emmc_clk";
-+							function = "emmc";
-+							bias-disable;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					emmc_ds_pins: emmc-ds {
-+						mux {
-+							groups = "emmc_nand_ds";
-+							function = "emmc";
-+							bias-pull-down;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					emmc_clk_gate_pins: emmc_clk_gate {
-+						mux {
-+							groups = "BOOT_8";
-+							function = "gpio_periphs";
-+							bias-pull-down;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					hdmitx_ddc_pins: hdmitx_ddc {
-+						mux {
-+							groups = "hdmitx_sda",
-+								 "hdmitx_sck";
-+							function = "hdmitx";
-+							bias-disable;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					hdmitx_hpd_pins: hdmitx_hpd {
-+						mux {
-+							groups = "hdmitx_hpd_in";
-+							function = "hdmitx";
-+							bias-disable;
-+						};
-+					};
-+
-+
-+					i2c0_sda_c_pins: i2c0-sda-c {
-+						mux {
-+							groups = "i2c0_sda_c";
-+							function = "i2c0";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+
-+						};
-+					};
-+
-+					i2c0_sck_c_pins: i2c0-sck-c {
-+						mux {
-+							groups = "i2c0_sck_c";
-+							function = "i2c0";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c0_sda_z0_pins: i2c0-sda-z0 {
-+						mux {
-+							groups = "i2c0_sda_z0";
-+							function = "i2c0";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c0_sck_z1_pins: i2c0-sck-z1 {
-+						mux {
-+							groups = "i2c0_sck_z1";
-+							function = "i2c0";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c0_sda_z7_pins: i2c0-sda-z7 {
-+						mux {
-+							groups = "i2c0_sda_z7";
-+							function = "i2c0";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c0_sda_z8_pins: i2c0-sda-z8 {
-+						mux {
-+							groups = "i2c0_sda_z8";
-+							function = "i2c0";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c1_sda_x_pins: i2c1-sda-x {
-+						mux {
-+							groups = "i2c1_sda_x";
-+							function = "i2c1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c1_sck_x_pins: i2c1-sck-x {
-+						mux {
-+							groups = "i2c1_sck_x";
-+							function = "i2c1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c1_sda_h2_pins: i2c1-sda-h2 {
-+						mux {
-+							groups = "i2c1_sda_h2";
-+							function = "i2c1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c1_sck_h3_pins: i2c1-sck-h3 {
-+						mux {
-+							groups = "i2c1_sck_h3";
-+							function = "i2c1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c1_sda_h6_pins: i2c1-sda-h6 {
-+						mux {
-+							groups = "i2c1_sda_h6";
-+							function = "i2c1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c1_sck_h7_pins: i2c1-sck-h7 {
-+						mux {
-+							groups = "i2c1_sck_h7";
-+							function = "i2c1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c2_sda_x_pins: i2c2-sda-x {
-+						mux {
-+							groups = "i2c2_sda_x";
-+							function = "i2c2";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c2_sck_x_pins: i2c2-sck-x {
-+						mux {
-+							groups = "i2c2_sck_x";
-+							function = "i2c2";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c2_sda_z_pins: i2c2-sda-z {
-+						mux {
-+							groups = "i2c2_sda_z";
-+							function = "i2c2";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c2_sck_z_pins: i2c2-sck-z {
-+						mux {
-+							groups = "i2c2_sck_z";
-+							function = "i2c2";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c3_sda_h_pins: i2c3-sda-h {
-+						mux {
-+							groups = "i2c3_sda_h";
-+							function = "i2c3";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c3_sck_h_pins: i2c3-sck-h {
-+						mux {
-+							groups = "i2c3_sck_h";
-+							function = "i2c3";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c3_sda_a_pins: i2c3-sda-a {
-+						mux {
-+							groups = "i2c3_sda_a";
-+							function = "i2c3";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c3_sck_a_pins: i2c3-sck-a {
-+						mux {
-+							groups = "i2c3_sck_a";
-+							function = "i2c3";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					mclk0_a_pins: mclk0-a {
-+						mux {
-+							groups = "mclk0_a";
-+							function = "mclk0";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					mclk1_a_pins: mclk1-a {
-+						mux {
-+							groups = "mclk1_a";
-+							function = "mclk1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					mclk1_x_pins: mclk1-x {
-+						mux {
-+							groups = "mclk1_x";
-+							function = "mclk1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					mclk1_z_pins: mclk1-z {
-+						mux {
-+							groups = "mclk1_z";
-+							function = "mclk1";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					pdm_din0_a_pins: pdm-din0-a {
-+						mux {
-+							groups = "pdm_din0_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din0_c_pins: pdm-din0-c {
-+						mux {
-+							groups = "pdm_din0_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din0_x_pins: pdm-din0-x {
-+						mux {
-+							groups = "pdm_din0_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din0_z_pins: pdm-din0-z {
-+						mux {
-+							groups = "pdm_din0_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_a_pins: pdm-din1-a {
-+						mux {
-+							groups = "pdm_din1_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_c_pins: pdm-din1-c {
-+						mux {
-+							groups = "pdm_din1_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_x_pins: pdm-din1-x {
-+						mux {
-+							groups = "pdm_din1_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din1_z_pins: pdm-din1-z {
-+						mux {
-+							groups = "pdm_din1_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_a_pins: pdm-din2-a {
-+						mux {
-+							groups = "pdm_din2_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_c_pins: pdm-din2-c {
-+						mux {
-+							groups = "pdm_din2_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_x_pins: pdm-din2-x {
-+						mux {
-+							groups = "pdm_din2_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din2_z_pins: pdm-din2-z {
-+						mux {
-+							groups = "pdm_din2_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_a_pins: pdm-din3-a {
-+						mux {
-+							groups = "pdm_din3_a";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_c_pins: pdm-din3-c {
-+						mux {
-+							groups = "pdm_din3_c";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_x_pins: pdm-din3-x {
-+						mux {
-+							groups = "pdm_din3_x";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_din3_z_pins: pdm-din3-z {
-+						mux {
-+							groups = "pdm_din3_z";
-+							function = "pdm";
-+							bias-disable;
-+						};
-+					};
-+
-+					pdm_dclk_a_pins: pdm-dclk-a {
-+						mux {
-+							groups = "pdm_dclk_a";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
-+					pdm_dclk_c_pins: pdm-dclk-c {
-+						mux {
-+							groups = "pdm_dclk_c";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
-+					pdm_dclk_x_pins: pdm-dclk-x {
-+						mux {
-+							groups = "pdm_dclk_x";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
-+					pdm_dclk_z_pins: pdm-dclk-z {
-+						mux {
-+							groups = "pdm_dclk_z";
-+							function = "pdm";
-+							bias-disable;
-+							drive-strength-microamp = <500>;
-+						};
-+					};
-+
-+					pwm_a_pins: pwm-a {
-+						mux {
-+							groups = "pwm_a";
-+							function = "pwm_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_b_x7_pins: pwm-b-x7 {
-+						mux {
-+							groups = "pwm_b_x7";
-+							function = "pwm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_b_x19_pins: pwm-b-x19 {
-+						mux {
-+							groups = "pwm_b_x19";
-+							function = "pwm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_c_c_pins: pwm-c-c {
-+						mux {
-+							groups = "pwm_c_c";
-+							function = "pwm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_c_x5_pins: pwm-c-x5 {
-+						mux {
-+							groups = "pwm_c_x5";
-+							function = "pwm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_c_x8_pins: pwm-c-x8 {
-+						mux {
-+							groups = "pwm_c_x8";
-+							function = "pwm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_d_x3_pins: pwm-d-x3 {
-+						mux {
-+							groups = "pwm_d_x3";
-+							function = "pwm_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_d_x6_pins: pwm-d-x6 {
-+						mux {
-+							groups = "pwm_d_x6";
-+							function = "pwm_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_e_pins: pwm-e {
-+						mux {
-+							groups = "pwm_e";
-+							function = "pwm_e";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_f_x_pins: pwm-f-x {
-+						mux {
-+							groups = "pwm_f_x";
-+							function = "pwm_f";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_f_h_pins: pwm-f-h {
-+						mux {
-+							groups = "pwm_f_h";
-+							function = "pwm_f";
-+							bias-disable;
-+						};
-+					};
-+
-+					sdcard_c_pins: sdcard_c {
-+						mux-0 {
-+							groups = "sdcard_d0_c",
-+								 "sdcard_d1_c",
-+								 "sdcard_d2_c",
-+								 "sdcard_d3_c",
-+								 "sdcard_cmd_c";
-+							function = "sdcard";
-+							bias-pull-up;
-+							drive-strength-microamp = <4000>;
-+						};
-+
-+						mux-1 {
-+							groups = "sdcard_clk_c";
-+							function = "sdcard";
-+							bias-disable;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					sdcard_clk_gate_c_pins: sdcard_clk_gate_c {
-+						mux {
-+							groups = "GPIOC_4";
-+							function = "gpio_periphs";
-+							bias-pull-down;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					sdcard_z_pins: sdcard_z {
-+						mux-0 {
-+							groups = "sdcard_d0_z",
-+								 "sdcard_d1_z",
-+								 "sdcard_d2_z",
-+								 "sdcard_d3_z",
-+								 "sdcard_cmd_z";
-+							function = "sdcard";
-+							bias-pull-up;
-+							drive-strength-microamp = <4000>;
-+						};
-+
-+						mux-1 {
-+							groups = "sdcard_clk_z";
-+							function = "sdcard";
-+							bias-disable;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					sdcard_clk_gate_z_pins: sdcard_clk_gate_z {
-+						mux {
-+							groups = "GPIOZ_6";
-+							function = "gpio_periphs";
-+							bias-pull-down;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					sdio_pins: sdio {
-+						mux {
-+							groups = "sdio_d0",
-+								 "sdio_d1",
-+								 "sdio_d2",
-+								 "sdio_d3",
-+								 "sdio_clk",
-+								 "sdio_cmd";
-+							function = "sdio";
-+							bias-disable;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					sdio_clk_gate_pins: sdio_clk_gate {
-+						mux {
-+							groups = "GPIOX_4";
-+							function = "gpio_periphs";
-+							bias-pull-down;
-+							drive-strength-microamp = <4000>;
-+						};
-+					};
-+
-+					spdif_in_a10_pins: spdif-in-a10 {
-+						mux {
-+							groups = "spdif_in_a10";
-+							function = "spdif_in";
-+							bias-disable;
-+						};
-+					};
-+
-+					spdif_in_a12_pins: spdif-in-a12 {
-+						mux {
-+							groups = "spdif_in_a12";
-+							function = "spdif_in";
-+							bias-disable;
-+						};
-+					};
-+
-+					spdif_in_h_pins: spdif-in-h {
-+						mux {
-+							groups = "spdif_in_h";
-+							function = "spdif_in";
-+							bias-disable;
-+						};
-+					};
-+
-+					spdif_out_h_pins: spdif-out-h {
-+						mux {
-+							groups = "spdif_out_h";
-+							function = "spdif_out";
-+							drive-strength-microamp = <500>;
-+							bias-disable;
-+						};
-+					};
-+
-+					spdif_out_a11_pins: spdif-out-a11 {
-+						mux {
-+							groups = "spdif_out_a11";
-+							function = "spdif_out";
-+							drive-strength-microamp = <500>;
-+							bias-disable;
-+						};
-+					};
-+
-+					spdif_out_a13_pins: spdif-out-a13 {
-+						mux {
-+							groups = "spdif_out_a13";
-+							function = "spdif_out";
-+							drive-strength-microamp = <500>;
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_a_din0_pins: tdm-a-din0 {
-+						mux {
-+							groups = "tdm_a_din0";
-+							function = "tdm_a";
-+							bias-disable;
-+						};
-+					};
-+
-+
-+					tdm_a_din1_pins: tdm-a-din1 {
-+						mux {
-+							groups = "tdm_a_din1";
-+							function = "tdm_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_a_dout0_pins: tdm-a-dout0 {
-+						mux {
-+							groups = "tdm_a_dout0";
-+							function = "tdm_a";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_a_dout1_pins: tdm-a-dout1 {
-+						mux {
-+							groups = "tdm_a_dout1";
-+							function = "tdm_a";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_a_fs_pins: tdm-a-fs {
-+						mux {
-+							groups = "tdm_a_fs";
-+							function = "tdm_a";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_a_sclk_pins: tdm-a-sclk {
-+						mux {
-+							groups = "tdm_a_sclk";
-+							function = "tdm_a";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_a_slv_fs_pins: tdm-a-slv-fs {
-+						mux {
-+							groups = "tdm_a_slv_fs";
-+							function = "tdm_a";
-+							bias-disable;
-+						};
-+					};
-+
-+
-+					tdm_a_slv_sclk_pins: tdm-a-slv-sclk {
-+						mux {
-+							groups = "tdm_a_slv_sclk";
-+							function = "tdm_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_b_din0_pins: tdm-b-din0 {
-+						mux {
-+							groups = "tdm_b_din0";
-+							function = "tdm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_b_din1_pins: tdm-b-din1 {
-+						mux {
-+							groups = "tdm_b_din1";
-+							function = "tdm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_b_din2_pins: tdm-b-din2 {
-+						mux {
-+							groups = "tdm_b_din2";
-+							function = "tdm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_b_din3_a_pins: tdm-b-din3-a {
-+						mux {
-+							groups = "tdm_b_din3_a";
-+							function = "tdm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_b_din3_h_pins: tdm-b-din3-h {
-+						mux {
-+							groups = "tdm_b_din3_h";
-+							function = "tdm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_b_dout0_pins: tdm-b-dout0 {
-+						mux {
-+							groups = "tdm_b_dout0";
-+							function = "tdm_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_b_dout1_pins: tdm-b-dout1 {
-+						mux {
-+							groups = "tdm_b_dout1";
-+							function = "tdm_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_b_dout2_pins: tdm-b-dout2 {
-+						mux {
-+							groups = "tdm_b_dout2";
-+							function = "tdm_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_b_dout3_a_pins: tdm-b-dout3-a {
-+						mux {
-+							groups = "tdm_b_dout3_a";
-+							function = "tdm_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_b_dout3_h_pins: tdm-b-dout3-h {
-+						mux {
-+							groups = "tdm_b_dout3_h";
-+							function = "tdm_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_b_fs_pins: tdm-b-fs {
-+						mux {
-+							groups = "tdm_b_fs";
-+							function = "tdm_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_b_sclk_pins: tdm-b-sclk {
-+						mux {
-+							groups = "tdm_b_sclk";
-+							function = "tdm_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_b_slv_fs_pins: tdm-b-slv-fs {
-+						mux {
-+							groups = "tdm_b_slv_fs";
-+							function = "tdm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_b_slv_sclk_pins: tdm-b-slv-sclk {
-+						mux {
-+							groups = "tdm_b_slv_sclk";
-+							function = "tdm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din0_a_pins: tdm-c-din0-a {
-+						mux {
-+							groups = "tdm_c_din0_a";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din0_z_pins: tdm-c-din0-z {
-+						mux {
-+							groups = "tdm_c_din0_z";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din1_a_pins: tdm-c-din1-a {
-+						mux {
-+							groups = "tdm_c_din1_a";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din1_z_pins: tdm-c-din1-z {
-+						mux {
-+							groups = "tdm_c_din1_z";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din2_a_pins: tdm-c-din2-a {
-+						mux {
-+							groups = "tdm_c_din2_a";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					eth_leds_pins: eth-leds {
-+						mux {
-+							groups = "eth_link_led",
-+								 "eth_act_led";
-+							function = "eth";
-+							bias-disable;
-+						};
-+					};
-+
-+					eth_pins: eth {
-+						mux {
-+							groups = "eth_mdio",
-+								 "eth_mdc",
-+								 "eth_rgmii_rx_clk",
-+								 "eth_rx_dv",
-+								 "eth_rxd0",
-+								 "eth_rxd1",
-+								 "eth_txen",
-+								 "eth_txd0",
-+								 "eth_txd1";
-+							function = "eth";
-+							drive-strength-microamp = <4000>;
-+							bias-disable;
-+						};
-+					};
-+
-+					eth_rgmii_pins: eth-rgmii {
-+						mux {
-+							groups = "eth_rxd2_rgmii",
-+								 "eth_rxd3_rgmii",
-+								 "eth_rgmii_tx_clk",
-+								 "eth_txd2_rgmii",
-+								 "eth_txd3_rgmii";
-+							function = "eth";
-+							drive-strength-microamp = <4000>;
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din2_z_pins: tdm-c-din2-z {
-+						mux {
-+							groups = "tdm_c_din2_z";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din3_a_pins: tdm-c-din3-a {
-+						mux {
-+							groups = "tdm_c_din3_a";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_din3_z_pins: tdm-c-din3-z {
-+						mux {
-+							groups = "tdm_c_din3_z";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_dout0_a_pins: tdm-c-dout0-a {
-+						mux {
-+							groups = "tdm_c_dout0_a";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_dout0_z_pins: tdm-c-dout0-z {
-+						mux {
-+							groups = "tdm_c_dout0_z";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_dout1_a_pins: tdm-c-dout1-a {
-+						mux {
-+							groups = "tdm_c_dout1_a";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_dout1_z_pins: tdm-c-dout1-z {
-+						mux {
-+							groups = "tdm_c_dout1_z";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_dout2_a_pins: tdm-c-dout2-a {
-+						mux {
-+							groups = "tdm_c_dout2_a";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_dout2_z_pins: tdm-c-dout2-z {
-+						mux {
-+							groups = "tdm_c_dout2_z";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_dout3_a_pins: tdm-c-dout3-a {
-+						mux {
-+							groups = "tdm_c_dout3_a";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_dout3_z_pins: tdm-c-dout3-z {
-+						mux {
-+							groups = "tdm_c_dout3_z";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_fs_a_pins: tdm-c-fs-a {
-+						mux {
-+							groups = "tdm_c_fs_a";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_fs_z_pins: tdm-c-fs-z {
-+						mux {
-+							groups = "tdm_c_fs_z";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_sclk_a_pins: tdm-c-sclk-a {
-+						mux {
-+							groups = "tdm_c_sclk_a";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_sclk_z_pins: tdm-c-sclk-z {
-+						mux {
-+							groups = "tdm_c_sclk_z";
-+							function = "tdm_c";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_c_slv_fs_a_pins: tdm-c-slv-fs-a {
-+						mux {
-+							groups = "tdm_c_slv_fs_a";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_slv_fs_z_pins: tdm-c-slv-fs-z {
-+						mux {
-+							groups = "tdm_c_slv_fs_z";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_slv_sclk_a_pins: tdm-c-slv-sclk-a {
-+						mux {
-+							groups = "tdm_c_slv_sclk_a";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_c_slv_sclk_z_pins: tdm-c-slv-sclk-z {
-+						mux {
-+							groups = "tdm_c_slv_sclk_z";
-+							function = "tdm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_a_pins: uart-a {
-+						mux {
-+							groups = "uart_a_tx",
-+								 "uart_a_rx";
-+							function = "uart_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_a_cts_rts_pins: uart-a-cts-rts {
-+						mux {
-+							groups = "uart_a_cts",
-+								 "uart_a_rts";
-+							function = "uart_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_b_pins: uart-b {
-+						mux {
-+							groups = "uart_b_tx",
-+								 "uart_b_rx";
-+							function = "uart_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_c_pins: uart-c {
-+						mux {
-+							groups = "uart_c_tx",
-+								 "uart_c_rx";
-+							function = "uart_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_c_cts_rts_pins: uart-c-cts-rts {
-+						mux {
-+							groups = "uart_c_cts",
-+								 "uart_c_rts";
-+							function = "uart_c";
-+							bias-disable;
-+						};
-+					};
-+				};
-+			};
-+
-+			usb2_phy0: phy@36000 {
-+				compatible = "amlogic,g12a-usb2-phy";
-+				reg = <0x0 0x36000 0x0 0x2000>;
-+				clocks = <&xtal>;
-+				clock-names = "xtal";
-+				resets = <&reset RESET_USB_PHY20>;
-+				reset-names = "phy";
-+				#phy-cells = <0>;
-+			};
-+
-+			dmc: bus@38000 {
-+				compatible = "simple-bus";
-+				reg = <0x0 0x38000 0x0 0x400>;
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges = <0x0 0x0 0x0 0x38000 0x0 0x400>;
-+
-+				canvas: video-lut@48 {
-+					compatible = "amlogic,canvas";
-+					reg = <0x0 0x48 0x0 0x14>;
-+				};
-+			};
-+
-+			usb2_phy1: phy@3a000 {
-+				compatible = "amlogic,g12a-usb2-phy";
-+				reg = <0x0 0x3a000 0x0 0x2000>;
-+				clocks = <&xtal>;
-+				clock-names = "xtal";
-+				resets = <&reset RESET_USB_PHY21>;
-+				reset-names = "phy";
-+				#phy-cells = <0>;
-+			};
-+
-+			hiu: bus@3c000 {
-+				compatible = "simple-bus";
-+				reg = <0x0 0x3c000 0x0 0x1400>;
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges = <0x0 0x0 0x0 0x3c000 0x0 0x1400>;
-+
-+				hhi: system-controller@0 {
-+					compatible = "amlogic,meson-gx-hhi-sysctrl",
-+						     "simple-mfd", "syscon";
-+					reg = <0 0 0 0x400>;
-+
-+					clkc: clock-controller {
-+						compatible = "amlogic,g12a-clkc";
-+						#clock-cells = <1>;
-+						clocks = <&xtal>;
-+						clock-names = "xtal";
-+					};
-+
-+					pwrc: power-controller {
-+						compatible = "amlogic,meson-g12a-pwrc";
-+						#power-domain-cells = <1>;
-+						amlogic,ao-sysctrl = <&rti>;
-+						resets = <&reset RESET_VIU>,
-+							 <&reset RESET_VENC>,
-+							 <&reset RESET_VCBUS>,
-+							 <&reset RESET_BT656>,
-+							 <&reset RESET_RDMA>,
-+							 <&reset RESET_VENCI>,
-+							 <&reset RESET_VENCP>,
-+							 <&reset RESET_VDAC>,
-+							 <&reset RESET_VDI6>,
-+							 <&reset RESET_VENCL>,
-+							 <&reset RESET_VID_LOCK>;
-+						reset-names = "viu", "venc", "vcbus", "bt656",
-+							      "rdma", "venci", "vencp", "vdac",
-+							      "vdi6", "vencl", "vid_lock";
-+						clocks = <&clkc CLKID_VPU>,
-+							 <&clkc CLKID_VAPB>;
-+						clock-names = "vpu", "vapb";
-+						/*
-+						 * VPU clocking is provided by two identical clock paths
-+						 * VPU_0 and VPU_1 muxed to a single clock by a glitch
-+						 * free mux to safely change frequency while running.
-+						 * Same for VAPB but with a final gate after the glitch free mux.
-+						 */
-+						assigned-clocks = <&clkc CLKID_VPU_0_SEL>,
-+								  <&clkc CLKID_VPU_0>,
-+								  <&clkc CLKID_VPU>, /* Glitch free mux */
-+								  <&clkc CLKID_VAPB_0_SEL>,
-+								  <&clkc CLKID_VAPB_0>,
-+								  <&clkc CLKID_VAPB_SEL>; /* Glitch free mux */
-+						assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
-+									 <0>, /* Do Nothing */
-+									 <&clkc CLKID_VPU_0>,
-+									 <&clkc CLKID_FCLK_DIV4>,
-+									 <0>, /* Do Nothing */
-+									 <&clkc CLKID_VAPB_0>;
-+						assigned-clock-rates = <0>, /* Do Nothing */
-+								       <666666666>,
-+								       <0>, /* Do Nothing */
-+								       <0>, /* Do Nothing */
-+								       <250000000>,
-+								       <0>; /* Do Nothing */
-+					};
-+				};
-+			};
-+
-+			pdm: audio-controller@40000 {
-+				compatible = "amlogic,g12a-pdm",
-+					     "amlogic,axg-pdm";
-+				reg = <0x0 0x40000 0x0 0x34>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "PDM";
-+				clocks = <&clkc_audio AUD_CLKID_PDM>,
-+					 <&clkc_audio AUD_CLKID_PDM_DCLK>,
-+					 <&clkc_audio AUD_CLKID_PDM_SYSCLK>;
-+				clock-names = "pclk", "dclk", "sysclk";
-+				status = "disabled";
-+			};
-+
-+			audio: bus@42000 {
-+				compatible = "simple-bus";
-+				reg = <0x0 0x42000 0x0 0x2000>;
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges = <0x0 0x0 0x0 0x42000 0x0 0x2000>;
-+
-+				clkc_audio: clock-controller@0 {
-+					status = "disabled";
-+					compatible = "amlogic,g12a-audio-clkc";
-+					reg = <0x0 0x0 0x0 0xb4>;
-+					#clock-cells = <1>;
-+					#reset-cells = <1>;
-+
-+					clocks = <&clkc CLKID_AUDIO>,
-+						 <&clkc CLKID_MPLL0>,
-+						 <&clkc CLKID_MPLL1>,
-+						 <&clkc CLKID_MPLL2>,
-+						 <&clkc CLKID_MPLL3>,
-+						 <&clkc CLKID_HIFI_PLL>,
-+						 <&clkc CLKID_FCLK_DIV3>,
-+						 <&clkc CLKID_FCLK_DIV4>,
-+						 <&clkc CLKID_GP0_PLL>;
-+					clock-names = "pclk",
-+						      "mst_in0",
-+						      "mst_in1",
-+						      "mst_in2",
-+						      "mst_in3",
-+						      "mst_in4",
-+						      "mst_in5",
-+						      "mst_in6",
-+						      "mst_in7";
-+
-+					resets = <&reset RESET_AUDIO>;
-+				};
-+
-+				toddr_a: audio-controller@100 {
-+					compatible = "amlogic,g12a-toddr",
-+						     "amlogic,axg-toddr";
-+					reg = <0x0 0x100 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "TODDR_A";
-+					interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
-+					resets = <&arb AXG_ARB_TODDR_A>;
-+					status = "disabled";
-+				};
-+
-+				toddr_b: audio-controller@140 {
-+					compatible = "amlogic,g12a-toddr",
-+						     "amlogic,axg-toddr";
-+					reg = <0x0 0x140 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "TODDR_B";
-+					interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
-+					resets = <&arb AXG_ARB_TODDR_B>;
-+					status = "disabled";
-+				};
-+
-+				toddr_c: audio-controller@180 {
-+					compatible = "amlogic,g12a-toddr",
-+						     "amlogic,axg-toddr";
-+					reg = <0x0 0x180 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "TODDR_C";
-+					interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
-+					resets = <&arb AXG_ARB_TODDR_C>;
-+					status = "disabled";
-+				};
-+
-+				frddr_a: audio-controller@1c0 {
-+					compatible = "amlogic,g12a-frddr",
-+						     "amlogic,axg-frddr";
-+					reg = <0x0 0x1c0 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "FRDDR_A";
-+					interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
-+					resets = <&arb AXG_ARB_FRDDR_A>;
-+					status = "disabled";
-+				};
-+
-+				frddr_b: audio-controller@200 {
-+					compatible = "amlogic,g12a-frddr",
-+						     "amlogic,axg-frddr";
-+					reg = <0x0 0x200 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "FRDDR_B";
-+					interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
-+					resets = <&arb AXG_ARB_FRDDR_B>;
-+					status = "disabled";
-+				};
-+
-+				frddr_c: audio-controller@240 {
-+					compatible = "amlogic,g12a-frddr",
-+						     "amlogic,axg-frddr";
-+					reg = <0x0 0x240 0x0 0x1c>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "FRDDR_C";
-+					interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
-+					resets = <&arb AXG_ARB_FRDDR_C>;
-+					status = "disabled";
-+				};
-+
-+				arb: reset-controller@280 {
-+					status = "disabled";
-+					compatible = "amlogic,meson-axg-audio-arb";
-+					reg = <0x0 0x280 0x0 0x4>;
-+					#reset-cells = <1>;
-+					clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
-+				};
-+
-+				tdmin_a: audio-controller@300 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x300 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_A";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_A>;
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_A>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_A_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmin_b: audio-controller@340 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x340 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_B";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_B>;
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_B>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_B_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmin_c: audio-controller@380 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x380 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_C";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_C>;
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_C>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_C_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmin_lb: audio-controller@3c0 {
-+					compatible = "amlogic,g12a-tdmin",
-+						     "amlogic,axg-tdmin";
-+					reg = <0x0 0x3c0 0x0 0x40>;
-+					sound-name-prefix = "TDMIN_LB";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_LB>;
-+					clocks = <&clkc_audio AUD_CLKID_TDMIN_LB>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMIN_LB_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				spdifin: audio-controller@400 {
-+					compatible = "amlogic,g12a-spdifin",
-+						     "amlogic,axg-spdifin";
-+					reg = <0x0 0x400 0x0 0x30>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "SPDIFIN";
-+					interrupts = <GIC_SPI 151 IRQ_TYPE_EDGE_RISING>;
-+					clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
-+						 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
-+					clock-names = "pclk", "refclk";
-+					status = "disabled";
-+				};
-+
-+				spdifout: audio-controller@480 {
-+					compatible = "amlogic,g12a-spdifout",
-+						     "amlogic,axg-spdifout";
-+					reg = <0x0 0x480 0x0 0x50>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "SPDIFOUT";
-+					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
-+						 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
-+					clock-names = "pclk", "mclk";
-+					status = "disabled";
-+				};
-+
-+				tdmout_a: audio-controller@500 {
-+					compatible = "amlogic,g12a-tdmout";
-+					reg = <0x0 0x500 0x0 0x40>;
-+					sound-name-prefix = "TDMOUT_A";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
-+					clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmout_b: audio-controller@540 {
-+					compatible = "amlogic,g12a-tdmout";
-+					reg = <0x0 0x540 0x0 0x40>;
-+					sound-name-prefix = "TDMOUT_B";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_B>;
-+					clocks = <&clkc_audio AUD_CLKID_TDMOUT_B>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				tdmout_c: audio-controller@580 {
-+					compatible = "amlogic,g12a-tdmout";
-+					reg = <0x0 0x580 0x0 0x40>;
-+					sound-name-prefix = "TDMOUT_C";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_C>;
-+					clocks = <&clkc_audio AUD_CLKID_TDMOUT_C>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK_SEL>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>,
-+						 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>;
-+					clock-names = "pclk", "sclk", "sclk_sel",
-+						      "lrclk", "lrclk_sel";
-+					status = "disabled";
-+				};
-+
-+				spdifout_b: audio-controller@680 {
-+					compatible = "amlogic,g12a-spdifout",
-+						     "amlogic,axg-spdifout";
-+					reg = <0x0 0x680 0x0 0x50>;
-+					#sound-dai-cells = <0>;
-+					sound-name-prefix = "SPDIFOUT_B";
-+					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
-+						 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
-+					clock-names = "pclk", "mclk";
-+					status = "disabled";
-+				};
-+
-+				tohdmitx: audio-controller@744 {
-+					compatible = "amlogic,g12a-tohdmitx";
-+					reg = <0x0 0x744 0x0 0x4>;
-+					#sound-dai-cells = <1>;
-+					sound-name-prefix = "TOHDMITX";
-+					status = "disabled";
-+				};
-+			};
-+
-+			usb3_pcie_phy: phy@46000 {
-+				compatible = "amlogic,g12a-usb3-pcie-phy";
-+				reg = <0x0 0x46000 0x0 0x2000>;
-+				clocks = <&clkc CLKID_PCIE_PLL>;
-+				clock-names = "ref_clk";
-+				resets = <&reset RESET_PCIE_PHY>;
-+				reset-names = "phy";
-+				assigned-clocks = <&clkc CLKID_PCIE_PLL>;
-+				assigned-clock-rates = <100000000>;
-+				#phy-cells = <1>;
-+			};
-+
-+			eth_phy: mdio-multiplexer@4c000 {
-+				compatible = "amlogic,g12a-mdio-mux";
-+				reg = <0x0 0x4c000 0x0 0xa4>;
-+				clocks = <&clkc CLKID_ETH_PHY>,
-+					 <&xtal>,
-+					 <&clkc CLKID_MPLL_50M>;
-+				clock-names = "pclk", "clkin0", "clkin1";
-+				mdio-parent-bus = <&mdio0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ext_mdio: mdio@0 {
-+					reg = <0>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+				};
-+
-+				int_mdio: mdio@1 {
-+					reg = <1>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					internal_ephy: ethernet_phy@8 {
-+						compatible = "ethernet-phy-id0180.3301",
-+							     "ethernet-phy-ieee802.3-c22";
-+						interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+						reg = <8>;
-+						max-speed = <100>;
-+					};
-+				};
-+			};
-+		};
-+
-+		aobus: bus@ff800000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff800000 0x0 0x100000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
-+
-+			rti: sys-ctrl@0 {
-+				compatible = "amlogic,meson-gx-ao-sysctrl",
-+					     "simple-mfd", "syscon";
-+				reg = <0x0 0x0 0x0 0x100>;
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges = <0x0 0x0 0x0 0x0 0x0 0x100>;
-+
-+				clkc_AO: clock-controller {
-+					compatible = "amlogic,meson-g12a-aoclkc";
-+					#clock-cells = <1>;
-+					#reset-cells = <1>;
-+					clocks = <&xtal>, <&clkc CLKID_CLK81>;
-+					clock-names = "xtal", "mpeg-clk";
-+				};
-+
-+				ao_pinctrl: pinctrl@14 {
-+					compatible = "amlogic,meson-g12a-aobus-pinctrl";
-+					#address-cells = <2>;
-+					#size-cells = <2>;
-+					ranges;
-+
-+					gpio_ao: bank@14 {
-+						reg = <0x0 0x14 0x0 0x8>,
-+						      <0x0 0x1c 0x0 0x8>,
-+						      <0x0 0x24 0x0 0x14>;
-+						reg-names = "mux",
-+							    "ds",
-+							    "gpio";
-+						gpio-controller;
-+						#gpio-cells = <2>;
-+						gpio-ranges = <&ao_pinctrl 0 0 15>;
-+					};
-+
-+					i2c_ao_sck_pins: i2c_ao_sck_pins {
-+						mux {
-+							groups = "i2c_ao_sck";
-+							function = "i2c_ao";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c_ao_sda_pins: i2c_ao_sda {
-+						mux {
-+							groups = "i2c_ao_sda";
-+							function = "i2c_ao";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c_ao_sck_e_pins: i2c_ao_sck_e {
-+						mux {
-+							groups = "i2c_ao_sck_e";
-+							function = "i2c_ao";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					i2c_ao_sda_e_pins: i2c_ao_sda_e {
-+						mux {
-+							groups = "i2c_ao_sda_e";
-+							function = "i2c_ao";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					mclk0_ao_pins: mclk0-ao {
-+						mux {
-+							groups = "mclk0_ao";
-+							function = "mclk0_ao";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_ao_b_din0_pins: tdm-ao-b-din0 {
-+						mux {
-+							groups = "tdm_ao_b_din0";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					spdif_ao_out_pins: spdif-ao-out {
-+						mux {
-+							groups = "spdif_ao_out";
-+							function = "spdif_ao_out";
-+							drive-strength-microamp = <500>;
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_ao_b_din1_pins: tdm-ao-b-din1 {
-+						mux {
-+							groups = "tdm_ao_b_din1";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_ao_b_din2_pins: tdm-ao-b-din2 {
-+						mux {
-+							groups = "tdm_ao_b_din2";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_ao_b_dout0_pins: tdm-ao-b-dout0 {
-+						mux {
-+							groups = "tdm_ao_b_dout0";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_ao_b_dout1_pins: tdm-ao-b-dout1 {
-+						mux {
-+							groups = "tdm_ao_b_dout1";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_ao_b_dout2_pins: tdm-ao-b-dout2 {
-+						mux {
-+							groups = "tdm_ao_b_dout2";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_ao_b_fs_pins: tdm-ao-b-fs {
-+						mux {
-+							groups = "tdm_ao_b_fs";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_ao_b_sclk_pins: tdm-ao-b-sclk {
-+						mux {
-+							groups = "tdm_ao_b_sclk";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+							drive-strength-microamp = <3000>;
-+						};
-+					};
-+
-+					tdm_ao_b_slv_fs_pins: tdm-ao-b-slv-fs {
-+						mux {
-+							groups = "tdm_ao_b_slv_fs";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					tdm_ao_b_slv_sclk_pins: tdm-ao-b-slv-sclk {
-+						mux {
-+							groups = "tdm_ao_b_slv_sclk";
-+							function = "tdm_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_ao_a_pins: uart-a-ao {
-+						mux {
-+							groups = "uart_ao_a_tx",
-+								 "uart_ao_a_rx";
-+							function = "uart_ao_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_ao_a_cts_rts_pins: uart-ao-a-cts-rts {
-+						mux {
-+							groups = "uart_ao_a_cts",
-+								 "uart_ao_a_rts";
-+							function = "uart_ao_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_a_e_pins: pwm-a-e {
-+						mux {
-+							groups = "pwm_a_e";
-+							function = "pwm_a_e";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_a_pins: pwm-ao-a {
-+						mux {
-+							groups = "pwm_ao_a";
-+							function = "pwm_ao_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_b_pins: pwm-ao-b {
-+						mux {
-+							groups = "pwm_ao_b";
-+							function = "pwm_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_c_4_pins: pwm-ao-c-4 {
-+						mux {
-+							groups = "pwm_ao_c_4";
-+							function = "pwm_ao_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_c_6_pins: pwm-ao-c-6 {
-+						mux {
-+							groups = "pwm_ao_c_6";
-+							function = "pwm_ao_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_d_5_pins: pwm-ao-d-5 {
-+						mux {
-+							groups = "pwm_ao_d_5";
-+							function = "pwm_ao_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_d_10_pins: pwm-ao-d-10 {
-+						mux {
-+							groups = "pwm_ao_d_10";
-+							function = "pwm_ao_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_d_e_pins: pwm-ao-d-e {
-+						mux {
-+							groups = "pwm_ao_d_e";
-+							function = "pwm_ao_d";
-+						};
-+					};
-+
-+					remote_input_ao_pins: remote-input-ao {
-+						mux {
-+							groups = "remote_ao_input";
-+							function = "remote_ao_input";
-+							bias-disable;
-+						};
-+					};
-+				};
-+			};
-+
-+			vrtc: rtc@0a8 {
-+				compatible = "amlogic,meson-vrtc";
-+				reg = <0x0 0x000a8 0x0 0x4>;
-+			};
-+
-+			cec_AO: cec@100 {
-+				compatible = "amlogic,meson-gx-ao-cec";
-+				reg = <0x0 0x00100 0x0 0x14>;
-+				interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_AO CLKID_AO_CEC>;
-+				clock-names = "core";
-+				status = "disabled";
-+			};
-+
-+			sec_AO: ao-secure@140 {
-+				compatible = "amlogic,meson-gx-ao-secure", "syscon";
-+				reg = <0x0 0x140 0x0 0x140>;
-+				amlogic,has-chip-id;
-+			};
-+
-+			cecb_AO: cec@280 {
-+				compatible = "amlogic,meson-g12a-ao-cec";
-+				reg = <0x0 0x00280 0x0 0x1c>;
-+				interrupts = <GIC_SPI 203 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_AO CLKID_AO_CTS_OSCIN>;
-+				clock-names = "oscin";
-+				status = "disabled";
-+			};
-+
-+			pwm_AO_cd: pwm@2000 {
-+				compatible = "amlogic,meson-g12a-ao-pwm-cd";
-+				reg = <0x0 0x2000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			uart_AO: serial@3000 {
-+				compatible = "amlogic,meson-gx-uart",
-+					     "amlogic,meson-ao-uart";
-+				reg = <0x0 0x3000 0x0 0x18>;
-+				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			uart_AO_B: serial@4000 {
-+				compatible = "amlogic,meson-gx-uart",
-+					     "amlogic,meson-ao-uart";
-+				reg = <0x0 0x4000 0x0 0x18>;
-+				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			i2c_AO: i2c@5000 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				status = "disabled";
-+				reg = <0x0 0x05000 0x0 0x20>;
-+				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc CLKID_I2C>;
-+			};
-+
-+			pwm_AO_ab: pwm@7000 {
-+				compatible = "amlogic,meson-g12a-ao-pwm-ab";
-+				reg = <0x0 0x7000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			ir: ir@8000 {
-+				compatible = "amlogic,meson-gxbb-ir";
-+				reg = <0x0 0x8000 0x0 0x20>;
-+				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
-+				status = "disabled";
-+			};
-+
-+			saradc: adc@9000 {
-+				compatible = "amlogic,meson-g12a-saradc",
-+					     "amlogic,meson-saradc";
-+				reg = <0x0 0x9000 0x0 0x48>;
-+				#io-channel-cells = <1>;
-+				interrupts = <GIC_SPI 200 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>,
-+					 <&clkc_AO CLKID_AO_SAR_ADC>,
-+					 <&clkc_AO CLKID_AO_SAR_ADC_CLK>,
-+					 <&clkc_AO CLKID_AO_SAR_ADC_SEL>;
-+				clock-names = "clkin", "core", "adc_clk", "adc_sel";
-+				status = "disabled";
-+			};
-+		};
-+
-+		vpu: vpu@ff900000 {
-+			compatible = "amlogic,meson-g12a-vpu";
-+			reg = <0x0 0xff900000 0x0 0x100000>,
-+			      <0x0 0xff63c000 0x0 0x1000>;
-+			reg-names = "vpu", "hhi";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			amlogic,canvas = <&canvas>;
-+
-+			/* CVBS VDAC output port */
-+			cvbs_vdac_port: port@0 {
-+				reg = <0>;
-+			};
-+
-+			/* HDMI-TX output port */
-+			hdmi_tx_port: port@1 {
-+				reg = <1>;
-+
-+				hdmi_tx_out: endpoint {
-+					remote-endpoint = <&hdmi_tx_in>;
-+				};
-+			};
-+		};
-+
-+		gic: interrupt-controller@ffc01000 {
-+			compatible = "arm,gic-400";
-+			reg = <0x0 0xffc01000 0 0x1000>,
-+			      <0x0 0xffc02000 0 0x2000>,
-+			      <0x0 0xffc04000 0 0x2000>,
-+			      <0x0 0xffc06000 0 0x2000>;
-+			interrupt-controller;
-+			interrupts = <GIC_PPI 9
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+		};
-+
-+		cbus: bus@ffd00000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xffd00000 0x0 0x100000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x100000>;
-+
-+			reset: reset-controller@1004 {
-+				compatible = "amlogic,meson-axg-reset";
-+				reg = <0x0 0x1004 0x0 0x9c>;
-+				#reset-cells = <1>;
-+			};
-+
-+			gpio_intc: interrupt-controller@f080 {
-+				compatible = "amlogic,meson-g12a-gpio-intc",
-+					     "amlogic,meson-gpio-intc";
-+				reg = <0x0 0xf080 0x0 0x10>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
-+			};
-+
-+			pwm_ef: pwm@19000 {
-+				compatible = "amlogic,meson-g12a-ee-pwm";
-+				reg = <0x0 0x19000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_cd: pwm@1a000 {
-+				compatible = "amlogic,meson-g12a-ee-pwm";
-+				reg = <0x0 0x1a000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_ab: pwm@1b000 {
-+				compatible = "amlogic,meson-g12a-ee-pwm";
-+				reg = <0x0 0x1b000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			i2c3: i2c@1c000 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				status = "disabled";
-+				reg = <0x0 0x1c000 0x0 0x20>;
-+				interrupts = <GIC_SPI 39 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc CLKID_I2C>;
-+			};
-+
-+			i2c2: i2c@1d000 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				status = "disabled";
-+				reg = <0x0 0x1d000 0x0 0x20>;
-+				interrupts = <GIC_SPI 215 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc CLKID_I2C>;
-+			};
-+
-+			i2c1: i2c@1e000 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				status = "disabled";
-+				reg = <0x0 0x1e000 0x0 0x20>;
-+				interrupts = <GIC_SPI 214 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc CLKID_I2C>;
-+			};
-+
-+			i2c0: i2c@1f000 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				status = "disabled";
-+				reg = <0x0 0x1f000 0x0 0x20>;
-+				interrupts = <GIC_SPI 21 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc CLKID_I2C>;
-+			};
-+
-+			clk_msr: clock-measure@18000 {
-+				compatible = "amlogic,meson-g12a-clk-measure";
-+				reg = <0x0 0x18000 0x0 0x10>;
-+			};
-+
-+			uart_C: serial@22000 {
-+				compatible = "amlogic,meson-gx-uart";
-+				reg = <0x0 0x22000 0x0 0x18>;
-+				interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			uart_B: serial@23000 {
-+				compatible = "amlogic,meson-gx-uart";
-+				reg = <0x0 0x23000 0x0 0x18>;
-+				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			uart_A: serial@24000 {
-+				compatible = "amlogic,meson-gx-uart";
-+				reg = <0x0 0x24000 0x0 0x18>;
-+				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+		};
-+
-+		sd_emmc_a: sd@ffe03000 {
-+			compatible = "amlogic,meson-axg-mmc";
-+			reg = <0x0 0xffe03000 0x0 0x800>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
-+			status = "disabled";
-+			clocks = <&clkc CLKID_SD_EMMC_A>,
-+				 <&clkc CLKID_SD_EMMC_A_CLK0>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "core", "clkin0", "clkin1";
-+			resets = <&reset RESET_SD_EMMC_A>;
-+		};
-+
-+		sd_emmc_b: sd@ffe05000 {
-+			compatible = "amlogic,meson-axg-mmc";
-+			reg = <0x0 0xffe05000 0x0 0x800>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_EDGE_RISING>;
-+			status = "disabled";
-+			clocks = <&clkc CLKID_SD_EMMC_B>,
-+				 <&clkc CLKID_SD_EMMC_B_CLK0>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "core", "clkin0", "clkin1";
-+			resets = <&reset RESET_SD_EMMC_B>;
-+		};
-+
-+		sd_emmc_c: mmc@ffe07000 {
-+			compatible = "amlogic,meson-axg-mmc";
-+			reg = <0x0 0xffe07000 0x0 0x800>;
-+			interrupts = <GIC_SPI 191 IRQ_TYPE_EDGE_RISING>;
-+			status = "disabled";
-+			clocks = <&clkc CLKID_SD_EMMC_C>,
-+				 <&clkc CLKID_SD_EMMC_C_CLK0>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "core", "clkin0", "clkin1";
-+			resets = <&reset RESET_SD_EMMC_C>;
-+		};
-+
-+		usb: usb@ffe09000 {
-+			status = "disabled";
-+			compatible = "amlogic,meson-g12a-usb-ctrl";
-+			reg = <0x0 0xffe09000 0x0 0xa0>;
-+			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&clkc CLKID_USB>;
-+			resets = <&reset RESET_USB>;
-+
-+			dr_mode = "otg";
-+
-+			phys = <&usb2_phy0>, <&usb2_phy1>,
-+			       <&usb3_pcie_phy PHY_TYPE_USB3>;
-+			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
-+
-+			dwc2: usb@ff400000 {
-+				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-+				reg = <0x0 0xff400000 0x0 0x40000>;
-+				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
-+				clock-names = "ddr";
-+				phys = <&usb2_phy1>;
-+				phy-names = "usb2-phy";
-+				dr_mode = "peripheral";
-+				g-rx-fifo-size = <192>;
-+				g-np-tx-fifo-size = <128>;
-+				g-tx-fifo-size = <128 128 16 16 16>;
-+			};
-+
-+			dwc3: usb@ff500000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0 0xff500000 0x0 0x100000>;
-+				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+				dr_mode = "host";
-+				snps,dis_u2_susphy_quirk;
-+				snps,quirk-frame-length-adjustment;
-+			};
-+		};
-+
-+		mali: gpu@ffe40000 {
-+			compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
-+			reg = <0x0 0xffe40000 0x0 0x40000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "gpu", "mmu", "job";
-+			clocks = <&clkc CLKID_MALI>;
-+			resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
-+
-+			/*
-+			 * Mali clocking is provided by two identical clock paths
-+			 * MALI_0 and MALI_1 muxed to a single clock by a glitch
-+			 * free mux to safely change frequency while running.
-+			 */
-+			assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
-+					  <&clkc CLKID_MALI_0>,
-+					  <&clkc CLKID_MALI>; /* Glitch free mux */
-+			assigned-clock-parents = <&clkc CLKID_FCLK_DIV2P5>,
-+						 <0>, /* Do Nothing */
-+						 <&clkc CLKID_MALI_0>;
-+			assigned-clock-rates = <0>, /* Do Nothing */
-+					       <800000000>,
-+					       <0>; /* Do Nothing */
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
-+		arm,no-tick-in-suspend;
-+	};
-+
-+	xtal: xtal-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xtal";
-+		#clock-cells = <0>;
-+	};
-+
-+};
-diff --git a/arch/arm/dts/meson-g12a.dtsi b/arch/arm/dts/meson-g12a.dtsi
-index f8d43e3dcf..eb5d177d7a 100644
---- a/arch/arm/dts/meson-g12a.dtsi
-+++ b/arch/arm/dts/meson-g12a.dtsi
-@@ -3,56 +3,12 @@
-  * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-  */
- 
--#include <dt-bindings/phy/phy.h>
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/clock/axg-audio-clkc.h>
--#include <dt-bindings/clock/g12a-clkc.h>
--#include <dt-bindings/clock/g12a-aoclkc.h>
--#include <dt-bindings/interrupt-controller/irq.h>
--#include <dt-bindings/interrupt-controller/arm-gic.h>
--#include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
--#include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
-+#include "meson-g12-common.dtsi"
-+#include <dt-bindings/power/meson-g12a-power.h>
- 
- / {
- 	compatible = "amlogic,g12a";
- 
--	interrupt-parent = <&gic>;
--	#address-cells = <2>;
--	#size-cells = <2>;
--
--	tdmif_a: audio-controller-0 {
--		compatible = "amlogic,axg-tdm-iface";
--		#sound-dai-cells = <0>;
--		sound-name-prefix = "TDM_A";
--		clocks = <&clkc_audio AUD_CLKID_MST_A_MCLK>,
--			 <&clkc_audio AUD_CLKID_MST_A_SCLK>,
--			 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
--		clock-names = "mclk", "sclk", "lrclk";
--		status = "disabled";
--	};
--
--	tdmif_b: audio-controller-1 {
--		compatible = "amlogic,axg-tdm-iface";
--		#sound-dai-cells = <0>;
--		sound-name-prefix = "TDM_B";
--		clocks = <&clkc_audio AUD_CLKID_MST_B_MCLK>,
--			 <&clkc_audio AUD_CLKID_MST_B_SCLK>,
--			 <&clkc_audio AUD_CLKID_MST_B_LRCLK>;
--		clock-names = "mclk", "sclk", "lrclk";
--		status = "disabled";
--	};
--
--	tdmif_c: audio-controller-2 {
--		compatible = "amlogic,axg-tdm-iface";
--		#sound-dai-cells = <0>;
--		sound-name-prefix = "TDM_C";
--		clocks = <&clkc_audio AUD_CLKID_MST_C_MCLK>,
--			 <&clkc_audio AUD_CLKID_MST_C_SCLK>,
--			 <&clkc_audio AUD_CLKID_MST_C_LRCLK>;
--		clock-names = "mclk", "sclk", "lrclk";
--		status = "disabled";
--	};
--
- 	cpus {
- 		#address-cells = <0x2>;
- 		#size-cells = <0x0>;
-@@ -94,2359 +50,75 @@
- 		};
- 	};
- 
--	efuse: efuse {
--		compatible = "amlogic,meson-gxbb-efuse";
--		clocks = <&clkc CLKID_EFUSE>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		read-only;
--	};
-+	cpu_opp_table: opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
- 
--	psci {
--		compatible = "arm,psci-1.0";
--		method = "smc";
--	};
--
--	reserved-memory {
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
--
--		/* 3 MiB reserved for ARM Trusted Firmware (BL31) */
--		secmon_reserved: secmon@5000000 {
--			reg = <0x0 0x05000000 0x0 0x300000>;
--			no-map;
-+		opp-100000000 {
-+			opp-hz = /bits/ 64 <100000000>;
-+			opp-microvolt = <731000>;
- 		};
- 
--		linux,cma {
--			compatible = "shared-dma-pool";
--			reusable;
--			size = <0x0 0x10000000>;
--			alignment = <0x0 0x400000>;
--			linux,cma-default;
-+		opp-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			opp-microvolt = <731000>;
- 		};
--	};
--
--	sm: secure-monitor {
--		compatible = "amlogic,meson-gxbb-sm";
--	};
--
--	soc {
--		compatible = "simple-bus";
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
- 
--		ethmac: ethernet@ff3f0000 {
--			compatible = "amlogic,meson-axg-dwmac",
--				     "snps,dwmac-3.70a",
--				     "snps,dwmac";
--			reg = <0x0 0xff3f0000 0x0 0x10000
--			       0x0 0xff634540 0x0 0x8>;
--			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "macirq";
--			clocks = <&clkc CLKID_ETH>,
--				 <&clkc CLKID_FCLK_DIV2>,
--				 <&clkc CLKID_MPLL2>;
--			clock-names = "stmmaceth", "clkin0", "clkin1";
--			status = "disabled";
--
--			mdio0: mdio {
--				#address-cells = <1>;
--				#size-cells = <0>;
--				compatible = "snps,dwmac-mdio";
--			};
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <731000>;
- 		};
- 
--		apb: bus@ff600000 {
--			compatible = "simple-bus";
--			reg = <0x0 0xff600000 0x0 0x200000>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xff600000 0x0 0x200000>;
--
--			hdmi_tx: hdmi-tx@0 {
--				compatible = "amlogic,meson-g12a-dw-hdmi";
--				reg = <0x0 0x0 0x0 0x10000>;
--				interrupts = <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
--				resets = <&reset RESET_HDMITX_CAPB3>,
--					 <&reset RESET_HDMITX_PHY>,
--					 <&reset RESET_HDMITX>;
--				reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
--				clocks = <&clkc CLKID_HDMI>,
--					 <&clkc CLKID_HTX_PCLK>,
--					 <&clkc CLKID_VPU_INTR>;
--				clock-names = "isfr", "iahb", "venci";
--				#address-cells = <1>;
--				#size-cells = <0>;
--				#sound-dai-cells = <0>;
--				status = "disabled";
--
--				/* VPU VENC Input */
--				hdmi_tx_venc_port: port@0 {
--					reg = <0>;
--
--					hdmi_tx_in: endpoint {
--						remote-endpoint = <&hdmi_tx_out>;
--					};
--				};
--
--				/* TMDS Output */
--				hdmi_tx_tmds_port: port@1 {
--					reg = <1>;
--				};
--			};
--
--			apb_efuse: bus@30000 {
--				compatible = "simple-bus";
--				reg = <0x0 0x30000 0x0 0x2000>;
--				#address-cells = <2>;
--				#size-cells = <2>;
--				ranges = <0x0 0x0 0x0 0x30000 0x0 0x2000>;
--
--				hwrng: rng@218 {
--					compatible = "amlogic,meson-rng";
--					reg = <0x0 0x218 0x0 0x4>;
--				};
--			};
--
--			periphs: bus@34400 {
--				compatible = "simple-bus";
--				reg = <0x0 0x34400 0x0 0x400>;
--				#address-cells = <2>;
--				#size-cells = <2>;
--				ranges = <0x0 0x0 0x0 0x34400 0x0 0x400>;
--
--				periphs_pinctrl: pinctrl@40 {
--					compatible = "amlogic,meson-g12a-periphs-pinctrl";
--					#address-cells = <2>;
--					#size-cells = <2>;
--					ranges;
--
--					gpio: bank@40 {
--						reg = <0x0 0x40  0x0 0x4c>,
--						      <0x0 0xe8  0x0 0x18>,
--						      <0x0 0x120 0x0 0x18>,
--						      <0x0 0x2c0 0x0 0x40>,
--						      <0x0 0x340 0x0 0x1c>;
--						reg-names = "gpio",
--							    "pull",
--							    "pull-enable",
--							    "mux",
--							    "ds";
--						gpio-controller;
--						#gpio-cells = <2>;
--						gpio-ranges = <&periphs_pinctrl 0 0 86>;
--					};
--
--					cec_ao_a_h_pins: cec_ao_a_h {
--						mux {
--							groups = "cec_ao_a_h";
--							function = "cec_ao_a_h";
--							bias-disable;
--						};
--					};
--
--					cec_ao_b_h_pins: cec_ao_b_h {
--						mux {
--							groups = "cec_ao_b_h";
--							function = "cec_ao_b_h";
--							bias-disable;
--						};
--					};
--
--					emmc_pins: emmc {
--						mux-0 {
--							groups = "emmc_nand_d0",
--								 "emmc_nand_d1",
--								 "emmc_nand_d2",
--								 "emmc_nand_d3",
--								 "emmc_nand_d4",
--								 "emmc_nand_d5",
--								 "emmc_nand_d6",
--								 "emmc_nand_d7",
--								 "emmc_cmd";
--							function = "emmc";
--							bias-pull-up;
--							drive-strength-microamp = <4000>;
--						};
--
--						mux-1 {
--							groups = "emmc_clk";
--							function = "emmc";
--							bias-disable;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					emmc_ds_pins: emmc-ds {
--						mux {
--							groups = "emmc_nand_ds";
--							function = "emmc";
--							bias-pull-down;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					emmc_clk_gate_pins: emmc_clk_gate {
--						mux {
--							groups = "BOOT_8";
--							function = "gpio_periphs";
--							bias-pull-down;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					hdmitx_ddc_pins: hdmitx_ddc {
--						mux {
--							groups = "hdmitx_sda",
--								 "hdmitx_sck";
--							function = "hdmitx";
--							bias-disable;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					hdmitx_hpd_pins: hdmitx_hpd {
--						mux {
--							groups = "hdmitx_hpd_in";
--							function = "hdmitx";
--							bias-disable;
--						};
--					};
--
--
--					i2c0_sda_c_pins: i2c0-sda-c {
--						mux {
--							groups = "i2c0_sda_c";
--							function = "i2c0";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--
--						};
--					};
--
--					i2c0_sck_c_pins: i2c0-sck-c {
--						mux {
--							groups = "i2c0_sck_c";
--							function = "i2c0";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c0_sda_z0_pins: i2c0-sda-z0 {
--						mux {
--							groups = "i2c0_sda_z0";
--							function = "i2c0";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c0_sck_z1_pins: i2c0-sck-z1 {
--						mux {
--							groups = "i2c0_sck_z1";
--							function = "i2c0";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c0_sda_z7_pins: i2c0-sda-z7 {
--						mux {
--							groups = "i2c0_sda_z7";
--							function = "i2c0";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c0_sda_z8_pins: i2c0-sda-z8 {
--						mux {
--							groups = "i2c0_sda_z8";
--							function = "i2c0";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c1_sda_x_pins: i2c1-sda-x {
--						mux {
--							groups = "i2c1_sda_x";
--							function = "i2c1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c1_sck_x_pins: i2c1-sck-x {
--						mux {
--							groups = "i2c1_sck_x";
--							function = "i2c1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c1_sda_h2_pins: i2c1-sda-h2 {
--						mux {
--							groups = "i2c1_sda_h2";
--							function = "i2c1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c1_sck_h3_pins: i2c1-sck-h3 {
--						mux {
--							groups = "i2c1_sck_h3";
--							function = "i2c1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c1_sda_h6_pins: i2c1-sda-h6 {
--						mux {
--							groups = "i2c1_sda_h6";
--							function = "i2c1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c1_sck_h7_pins: i2c1-sck-h7 {
--						mux {
--							groups = "i2c1_sck_h7";
--							function = "i2c1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c2_sda_x_pins: i2c2-sda-x {
--						mux {
--							groups = "i2c2_sda_x";
--							function = "i2c2";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c2_sck_x_pins: i2c2-sck-x {
--						mux {
--							groups = "i2c2_sck_x";
--							function = "i2c2";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c2_sda_z_pins: i2c2-sda-z {
--						mux {
--							groups = "i2c2_sda_z";
--							function = "i2c2";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c2_sck_z_pins: i2c2-sck-z {
--						mux {
--							groups = "i2c2_sck_z";
--							function = "i2c2";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c3_sda_h_pins: i2c3-sda-h {
--						mux {
--							groups = "i2c3_sda_h";
--							function = "i2c3";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c3_sck_h_pins: i2c3-sck-h {
--						mux {
--							groups = "i2c3_sck_h";
--							function = "i2c3";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c3_sda_a_pins: i2c3-sda-a {
--						mux {
--							groups = "i2c3_sda_a";
--							function = "i2c3";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c3_sck_a_pins: i2c3-sck-a {
--						mux {
--							groups = "i2c3_sck_a";
--							function = "i2c3";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					mclk0_a_pins: mclk0-a {
--						mux {
--							groups = "mclk0_a";
--							function = "mclk0";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					mclk1_a_pins: mclk1-a {
--						mux {
--							groups = "mclk1_a";
--							function = "mclk1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					mclk1_x_pins: mclk1-x {
--						mux {
--							groups = "mclk1_x";
--							function = "mclk1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					mclk1_z_pins: mclk1-z {
--						mux {
--							groups = "mclk1_z";
--							function = "mclk1";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					pdm_din0_a_pins: pdm-din0-a {
--						mux {
--							groups = "pdm_din0_a";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din0_c_pins: pdm-din0-c {
--						mux {
--							groups = "pdm_din0_c";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din0_x_pins: pdm-din0-x {
--						mux {
--							groups = "pdm_din0_x";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din0_z_pins: pdm-din0-z {
--						mux {
--							groups = "pdm_din0_z";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din1_a_pins: pdm-din1-a {
--						mux {
--							groups = "pdm_din1_a";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din1_c_pins: pdm-din1-c {
--						mux {
--							groups = "pdm_din1_c";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din1_x_pins: pdm-din1-x {
--						mux {
--							groups = "pdm_din1_x";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din1_z_pins: pdm-din1-z {
--						mux {
--							groups = "pdm_din1_z";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din2_a_pins: pdm-din2-a {
--						mux {
--							groups = "pdm_din2_a";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din2_c_pins: pdm-din2-c {
--						mux {
--							groups = "pdm_din2_c";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din2_x_pins: pdm-din2-x {
--						mux {
--							groups = "pdm_din2_x";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din2_z_pins: pdm-din2-z {
--						mux {
--							groups = "pdm_din2_z";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din3_a_pins: pdm-din3-a {
--						mux {
--							groups = "pdm_din3_a";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din3_c_pins: pdm-din3-c {
--						mux {
--							groups = "pdm_din3_c";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din3_x_pins: pdm-din3-x {
--						mux {
--							groups = "pdm_din3_x";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_din3_z_pins: pdm-din3-z {
--						mux {
--							groups = "pdm_din3_z";
--							function = "pdm";
--							bias-disable;
--						};
--					};
--
--					pdm_dclk_a_pins: pdm-dclk-a {
--						mux {
--							groups = "pdm_dclk_a";
--							function = "pdm";
--							bias-disable;
--							drive-strength-microamp = <500>;
--						};
--					};
--
--					pdm_dclk_c_pins: pdm-dclk-c {
--						mux {
--							groups = "pdm_dclk_c";
--							function = "pdm";
--							bias-disable;
--							drive-strength-microamp = <500>;
--						};
--					};
--
--					pdm_dclk_x_pins: pdm-dclk-x {
--						mux {
--							groups = "pdm_dclk_x";
--							function = "pdm";
--							bias-disable;
--							drive-strength-microamp = <500>;
--						};
--					};
--
--					pdm_dclk_z_pins: pdm-dclk-z {
--						mux {
--							groups = "pdm_dclk_z";
--							function = "pdm";
--							bias-disable;
--							drive-strength-microamp = <500>;
--						};
--					};
--
--					pwm_a_pins: pwm-a {
--						mux {
--							groups = "pwm_a";
--							function = "pwm_a";
--							bias-disable;
--						};
--					};
--
--					pwm_b_x7_pins: pwm-b-x7 {
--						mux {
--							groups = "pwm_b_x7";
--							function = "pwm_b";
--							bias-disable;
--						};
--					};
--
--					pwm_b_x19_pins: pwm-b-x19 {
--						mux {
--							groups = "pwm_b_x19";
--							function = "pwm_b";
--							bias-disable;
--						};
--					};
--
--					pwm_c_c_pins: pwm-c-c {
--						mux {
--							groups = "pwm_c_c";
--							function = "pwm_c";
--							bias-disable;
--						};
--					};
--
--					pwm_c_x5_pins: pwm-c-x5 {
--						mux {
--							groups = "pwm_c_x5";
--							function = "pwm_c";
--							bias-disable;
--						};
--					};
--
--					pwm_c_x8_pins: pwm-c-x8 {
--						mux {
--							groups = "pwm_c_x8";
--							function = "pwm_c";
--							bias-disable;
--						};
--					};
--
--					pwm_d_x3_pins: pwm-d-x3 {
--						mux {
--							groups = "pwm_d_x3";
--							function = "pwm_d";
--							bias-disable;
--						};
--					};
--
--					pwm_d_x6_pins: pwm-d-x6 {
--						mux {
--							groups = "pwm_d_x6";
--							function = "pwm_d";
--							bias-disable;
--						};
--					};
--
--					pwm_e_pins: pwm-e {
--						mux {
--							groups = "pwm_e";
--							function = "pwm_e";
--							bias-disable;
--						};
--					};
--
--					pwm_f_x_pins: pwm-f-x {
--						mux {
--							groups = "pwm_f_x";
--							function = "pwm_f";
--							bias-disable;
--						};
--					};
--
--					pwm_f_h_pins: pwm-f-h {
--						mux {
--							groups = "pwm_f_h";
--							function = "pwm_f";
--							bias-disable;
--						};
--					};
--
--					sdcard_c_pins: sdcard_c {
--						mux-0 {
--							groups = "sdcard_d0_c",
--								 "sdcard_d1_c",
--								 "sdcard_d2_c",
--								 "sdcard_d3_c",
--								 "sdcard_cmd_c";
--							function = "sdcard";
--							bias-pull-up;
--							drive-strength-microamp = <4000>;
--						};
--
--						mux-1 {
--							groups = "sdcard_clk_c";
--							function = "sdcard";
--							bias-disable;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					sdcard_clk_gate_c_pins: sdcard_clk_gate_c {
--						mux {
--							groups = "GPIOC_4";
--							function = "gpio_periphs";
--							bias-pull-down;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					sdcard_z_pins: sdcard_z {
--						mux-0 {
--							groups = "sdcard_d0_z",
--								 "sdcard_d1_z",
--								 "sdcard_d2_z",
--								 "sdcard_d3_z",
--								 "sdcard_cmd_z";
--							function = "sdcard";
--							bias-pull-up;
--							drive-strength-microamp = <4000>;
--						};
--
--						mux-1 {
--							groups = "sdcard_clk_z";
--							function = "sdcard";
--							bias-disable;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					sdcard_clk_gate_z_pins: sdcard_clk_gate_z {
--						mux {
--							groups = "GPIOZ_6";
--							function = "gpio_periphs";
--							bias-pull-down;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					sdio_pins: sdio {
--						mux {
--							groups = "sdio_d0",
--								 "sdio_d1",
--								 "sdio_d2",
--								 "sdio_d3",
--								 "sdio_clk",
--								 "sdio_cmd";
--							function = "sdio";
--							bias-disable;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					sdio_clk_gate_pins: sdio_clk_gate {
--						mux {
--							groups = "GPIOX_4";
--							function = "gpio_periphs";
--							bias-pull-down;
--							drive-strength-microamp = <4000>;
--						};
--					};
--
--					spdif_in_a10_pins: spdif-in-a10 {
--						mux {
--							groups = "spdif_in_a10";
--							function = "spdif_in";
--							bias-disable;
--						};
--					};
--
--					spdif_in_a12_pins: spdif-in-a12 {
--						mux {
--							groups = "spdif_in_a12";
--							function = "spdif_in";
--							bias-disable;
--						};
--					};
--
--					spdif_in_h_pins: spdif-in-h {
--						mux {
--							groups = "spdif_in_h";
--							function = "spdif_in";
--							bias-disable;
--						};
--					};
--
--					spdif_out_h_pins: spdif-out-h {
--						mux {
--							groups = "spdif_out_h";
--							function = "spdif_out";
--							drive-strength-microamp = <500>;
--							bias-disable;
--						};
--					};
--
--					spdif_out_a11_pins: spdif-out-a11 {
--						mux {
--							groups = "spdif_out_a11";
--							function = "spdif_out";
--							drive-strength-microamp = <500>;
--							bias-disable;
--						};
--					};
--
--					spdif_out_a13_pins: spdif-out-a13 {
--						mux {
--							groups = "spdif_out_a13";
--							function = "spdif_out";
--							drive-strength-microamp = <500>;
--							bias-disable;
--						};
--					};
--
--					tdm_a_din0_pins: tdm-a-din0 {
--						mux {
--							groups = "tdm_a_din0";
--							function = "tdm_a";
--							bias-disable;
--						};
--					};
--
--
--					tdm_a_din1_pins: tdm-a-din1 {
--						mux {
--							groups = "tdm_a_din1";
--							function = "tdm_a";
--							bias-disable;
--						};
--					};
--
--					tdm_a_dout0_pins: tdm-a-dout0 {
--						mux {
--							groups = "tdm_a_dout0";
--							function = "tdm_a";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_a_dout1_pins: tdm-a-dout1 {
--						mux {
--							groups = "tdm_a_dout1";
--							function = "tdm_a";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_a_fs_pins: tdm-a-fs {
--						mux {
--							groups = "tdm_a_fs";
--							function = "tdm_a";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_a_sclk_pins: tdm-a-sclk {
--						mux {
--							groups = "tdm_a_sclk";
--							function = "tdm_a";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_a_slv_fs_pins: tdm-a-slv-fs {
--						mux {
--							groups = "tdm_a_slv_fs";
--							function = "tdm_a";
--							bias-disable;
--						};
--					};
--
--
--					tdm_a_slv_sclk_pins: tdm-a-slv-sclk {
--						mux {
--							groups = "tdm_a_slv_sclk";
--							function = "tdm_a";
--							bias-disable;
--						};
--					};
--
--					tdm_b_din0_pins: tdm-b-din0 {
--						mux {
--							groups = "tdm_b_din0";
--							function = "tdm_b";
--							bias-disable;
--						};
--					};
--
--					tdm_b_din1_pins: tdm-b-din1 {
--						mux {
--							groups = "tdm_b_din1";
--							function = "tdm_b";
--							bias-disable;
--						};
--					};
--
--					tdm_b_din2_pins: tdm-b-din2 {
--						mux {
--							groups = "tdm_b_din2";
--							function = "tdm_b";
--							bias-disable;
--						};
--					};
--
--					tdm_b_din3_a_pins: tdm-b-din3-a {
--						mux {
--							groups = "tdm_b_din3_a";
--							function = "tdm_b";
--							bias-disable;
--						};
--					};
--
--					tdm_b_din3_h_pins: tdm-b-din3-h {
--						mux {
--							groups = "tdm_b_din3_h";
--							function = "tdm_b";
--							bias-disable;
--						};
--					};
--
--					tdm_b_dout0_pins: tdm-b-dout0 {
--						mux {
--							groups = "tdm_b_dout0";
--							function = "tdm_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_b_dout1_pins: tdm-b-dout1 {
--						mux {
--							groups = "tdm_b_dout1";
--							function = "tdm_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_b_dout2_pins: tdm-b-dout2 {
--						mux {
--							groups = "tdm_b_dout2";
--							function = "tdm_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_b_dout3_a_pins: tdm-b-dout3-a {
--						mux {
--							groups = "tdm_b_dout3_a";
--							function = "tdm_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_b_dout3_h_pins: tdm-b-dout3-h {
--						mux {
--							groups = "tdm_b_dout3_h";
--							function = "tdm_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_b_fs_pins: tdm-b-fs {
--						mux {
--							groups = "tdm_b_fs";
--							function = "tdm_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_b_sclk_pins: tdm-b-sclk {
--						mux {
--							groups = "tdm_b_sclk";
--							function = "tdm_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_b_slv_fs_pins: tdm-b-slv-fs {
--						mux {
--							groups = "tdm_b_slv_fs";
--							function = "tdm_b";
--							bias-disable;
--						};
--					};
--
--					tdm_b_slv_sclk_pins: tdm-b-slv-sclk {
--						mux {
--							groups = "tdm_b_slv_sclk";
--							function = "tdm_b";
--							bias-disable;
--						};
--					};
--
--					tdm_c_din0_a_pins: tdm-c-din0-a {
--						mux {
--							groups = "tdm_c_din0_a";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_din0_z_pins: tdm-c-din0-z {
--						mux {
--							groups = "tdm_c_din0_z";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_din1_a_pins: tdm-c-din1-a {
--						mux {
--							groups = "tdm_c_din1_a";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_din1_z_pins: tdm-c-din1-z {
--						mux {
--							groups = "tdm_c_din1_z";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_din2_a_pins: tdm-c-din2-a {
--						mux {
--							groups = "tdm_c_din2_a";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					eth_leds_pins: eth-leds {
--						mux {
--							groups = "eth_link_led",
--								 "eth_act_led";
--							function = "eth";
--							bias-disable;
--						};
--					};
--
--					eth_pins: eth {
--						mux {
--							groups = "eth_mdio",
--								 "eth_mdc",
--								 "eth_rgmii_rx_clk",
--								 "eth_rx_dv",
--								 "eth_rxd0",
--								 "eth_rxd1",
--								 "eth_txen",
--								 "eth_txd0",
--								 "eth_txd1";
--							function = "eth";
--							drive-strength-microamp = <4000>;
--							bias-disable;
--						};
--					};
--
--					eth_rgmii_pins: eth-rgmii {
--						mux {
--							groups = "eth_rxd2_rgmii",
--								 "eth_rxd3_rgmii",
--								 "eth_rgmii_tx_clk",
--								 "eth_txd2_rgmii",
--								 "eth_txd3_rgmii";
--							function = "eth";
--							drive-strength-microamp = <4000>;
--							bias-disable;
--						};
--					};
--
--					tdm_c_din2_z_pins: tdm-c-din2-z {
--						mux {
--							groups = "tdm_c_din2_z";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_din3_a_pins: tdm-c-din3-a {
--						mux {
--							groups = "tdm_c_din3_a";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_din3_z_pins: tdm-c-din3-z {
--						mux {
--							groups = "tdm_c_din3_z";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_dout0_a_pins: tdm-c-dout0-a {
--						mux {
--							groups = "tdm_c_dout0_a";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_dout0_z_pins: tdm-c-dout0-z {
--						mux {
--							groups = "tdm_c_dout0_z";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_dout1_a_pins: tdm-c-dout1-a {
--						mux {
--							groups = "tdm_c_dout1_a";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_dout1_z_pins: tdm-c-dout1-z {
--						mux {
--							groups = "tdm_c_dout1_z";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_dout2_a_pins: tdm-c-dout2-a {
--						mux {
--							groups = "tdm_c_dout2_a";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_dout2_z_pins: tdm-c-dout2-z {
--						mux {
--							groups = "tdm_c_dout2_z";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_dout3_a_pins: tdm-c-dout3-a {
--						mux {
--							groups = "tdm_c_dout3_a";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_dout3_z_pins: tdm-c-dout3-z {
--						mux {
--							groups = "tdm_c_dout3_z";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_fs_a_pins: tdm-c-fs-a {
--						mux {
--							groups = "tdm_c_fs_a";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_fs_z_pins: tdm-c-fs-z {
--						mux {
--							groups = "tdm_c_fs_z";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_sclk_a_pins: tdm-c-sclk-a {
--						mux {
--							groups = "tdm_c_sclk_a";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_sclk_z_pins: tdm-c-sclk-z {
--						mux {
--							groups = "tdm_c_sclk_z";
--							function = "tdm_c";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_c_slv_fs_a_pins: tdm-c-slv-fs-a {
--						mux {
--							groups = "tdm_c_slv_fs_a";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_slv_fs_z_pins: tdm-c-slv-fs-z {
--						mux {
--							groups = "tdm_c_slv_fs_z";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_slv_sclk_a_pins: tdm-c-slv-sclk-a {
--						mux {
--							groups = "tdm_c_slv_sclk_a";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					tdm_c_slv_sclk_z_pins: tdm-c-slv-sclk-z {
--						mux {
--							groups = "tdm_c_slv_sclk_z";
--							function = "tdm_c";
--							bias-disable;
--						};
--					};
--
--					uart_a_pins: uart-a {
--						mux {
--							groups = "uart_a_tx",
--								 "uart_a_rx";
--							function = "uart_a";
--							bias-disable;
--						};
--					};
--
--					uart_a_cts_rts_pins: uart-a-cts-rts {
--						mux {
--							groups = "uart_a_cts",
--								 "uart_a_rts";
--							function = "uart_a";
--							bias-disable;
--						};
--					};
--
--					uart_b_pins: uart-b {
--						mux {
--							groups = "uart_b_tx",
--								 "uart_b_rx";
--							function = "uart_b";
--							bias-disable;
--						};
--					};
--
--					uart_c_pins: uart-c {
--						mux {
--							groups = "uart_c_tx",
--								 "uart_c_rx";
--							function = "uart_c";
--							bias-disable;
--						};
--					};
--
--					uart_c_cts_rts_pins: uart-c-cts-rts {
--						mux {
--							groups = "uart_c_cts",
--								 "uart_c_rts";
--							function = "uart_c";
--							bias-disable;
--						};
--					};
--				};
--			};
--
--			usb2_phy0: phy@36000 {
--				compatible = "amlogic,g12a-usb2-phy";
--				reg = <0x0 0x36000 0x0 0x2000>;
--				clocks = <&xtal>;
--				clock-names = "xtal";
--				resets = <&reset RESET_USB_PHY20>;
--				reset-names = "phy";
--				#phy-cells = <0>;
--			};
--
--			dmc: bus@38000 {
--				compatible = "simple-bus";
--				reg = <0x0 0x38000 0x0 0x400>;
--				#address-cells = <2>;
--				#size-cells = <2>;
--				ranges = <0x0 0x0 0x0 0x38000 0x0 0x400>;
--
--				canvas: video-lut@48 {
--					compatible = "amlogic,canvas";
--					reg = <0x0 0x48 0x0 0x14>;
--				};
--			};
--
--			usb2_phy1: phy@3a000 {
--				compatible = "amlogic,g12a-usb2-phy";
--				reg = <0x0 0x3a000 0x0 0x2000>;
--				clocks = <&xtal>;
--				clock-names = "xtal";
--				resets = <&reset RESET_USB_PHY21>;
--				reset-names = "phy";
--				#phy-cells = <0>;
--			};
--
--			hiu: bus@3c000 {
--				compatible = "simple-bus";
--				reg = <0x0 0x3c000 0x0 0x1400>;
--				#address-cells = <2>;
--				#size-cells = <2>;
--				ranges = <0x0 0x0 0x0 0x3c000 0x0 0x1400>;
--
--				hhi: system-controller@0 {
--					compatible = "amlogic,meson-gx-hhi-sysctrl",
--						     "simple-mfd", "syscon";
--					reg = <0 0 0 0x400>;
--
--					clkc: clock-controller {
--						compatible = "amlogic,g12a-clkc";
--						#clock-cells = <1>;
--						clocks = <&xtal>;
--						clock-names = "xtal";
--					};
--				};
--			};
--
--			pdm: audio-controller@40000 {
--				compatible = "amlogic,g12a-pdm",
--					     "amlogic,axg-pdm";
--				reg = <0x0 0x40000 0x0 0x34>;
--				#sound-dai-cells = <0>;
--				sound-name-prefix = "PDM";
--				clocks = <&clkc_audio AUD_CLKID_PDM>,
--					 <&clkc_audio AUD_CLKID_PDM_DCLK>,
--					 <&clkc_audio AUD_CLKID_PDM_SYSCLK>;
--				clock-names = "pclk", "dclk", "sysclk";
--				status = "disabled";
--			};
--
--			audio: bus@42000 {
--				compatible = "simple-bus";
--				reg = <0x0 0x42000 0x0 0x2000>;
--				#address-cells = <2>;
--				#size-cells = <2>;
--				ranges = <0x0 0x0 0x0 0x42000 0x0 0x2000>;
--
--				clkc_audio: clock-controller@0 {
--					status = "disabled";
--					compatible = "amlogic,g12a-audio-clkc";
--					reg = <0x0 0x0 0x0 0xb4>;
--					#clock-cells = <1>;
--
--					clocks = <&clkc CLKID_AUDIO>,
--						 <&clkc CLKID_MPLL0>,
--						 <&clkc CLKID_MPLL1>,
--						 <&clkc CLKID_MPLL2>,
--						 <&clkc CLKID_MPLL3>,
--						 <&clkc CLKID_HIFI_PLL>,
--						 <&clkc CLKID_FCLK_DIV3>,
--						 <&clkc CLKID_FCLK_DIV4>,
--						 <&clkc CLKID_GP0_PLL>;
--					clock-names = "pclk",
--						      "mst_in0",
--						      "mst_in1",
--						      "mst_in2",
--						      "mst_in3",
--						      "mst_in4",
--						      "mst_in5",
--						      "mst_in6",
--						      "mst_in7";
--
--					resets = <&reset RESET_AUDIO>;
--				};
--
--				toddr_a: audio-controller@100 {
--					compatible = "amlogic,g12a-toddr",
--						     "amlogic,axg-toddr";
--					reg = <0x0 0x100 0x0 0x1c>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "TODDR_A";
--					interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
--					clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
--					resets = <&arb AXG_ARB_TODDR_A>;
--					status = "disabled";
--				};
--
--				toddr_b: audio-controller@140 {
--					compatible = "amlogic,g12a-toddr",
--						     "amlogic,axg-toddr";
--					reg = <0x0 0x140 0x0 0x1c>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "TODDR_B";
--					interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
--					clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
--					resets = <&arb AXG_ARB_TODDR_B>;
--					status = "disabled";
--				};
--
--				toddr_c: audio-controller@180 {
--					compatible = "amlogic,g12a-toddr",
--						     "amlogic,axg-toddr";
--					reg = <0x0 0x180 0x0 0x1c>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "TODDR_C";
--					interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
--					clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
--					resets = <&arb AXG_ARB_TODDR_C>;
--					status = "disabled";
--				};
--
--				frddr_a: audio-controller@1c0 {
--					compatible = "amlogic,g12a-frddr",
--						     "amlogic,axg-frddr";
--					reg = <0x0 0x1c0 0x0 0x1c>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "FRDDR_A";
--					interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
--					clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
--					resets = <&arb AXG_ARB_FRDDR_A>;
--					status = "disabled";
--				};
--
--				frddr_b: audio-controller@200 {
--					compatible = "amlogic,g12a-frddr",
--						     "amlogic,axg-frddr";
--					reg = <0x0 0x200 0x0 0x1c>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "FRDDR_B";
--					interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
--					clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
--					resets = <&arb AXG_ARB_FRDDR_B>;
--					status = "disabled";
--				};
--
--				frddr_c: audio-controller@240 {
--					compatible = "amlogic,g12a-frddr",
--						     "amlogic,axg-frddr";
--					reg = <0x0 0x240 0x0 0x1c>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "FRDDR_C";
--					interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
--					clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
--					resets = <&arb AXG_ARB_FRDDR_C>;
--					status = "disabled";
--				};
--
--				arb: reset-controller@280 {
--					status = "disabled";
--					compatible = "amlogic,meson-axg-audio-arb";
--					reg = <0x0 0x280 0x0 0x4>;
--					#reset-cells = <1>;
--					clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
--				};
--
--				tdmin_a: audio-controller@300 {
--					compatible = "amlogic,g12a-tdmin",
--						     "amlogic,axg-tdmin";
--					reg = <0x0 0x300 0x0 0x40>;
--					sound-name-prefix = "TDMIN_A";
--					clocks = <&clkc_audio AUD_CLKID_TDMIN_A>,
--						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK_SEL>,
--						 <&clkc_audio AUD_CLKID_TDMIN_A_LRCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_A_LRCLK>;
--					clock-names = "pclk", "sclk", "sclk_sel",
--						      "lrclk", "lrclk_sel";
--					status = "disabled";
--				};
--
--				tdmin_b: audio-controller@340 {
--					compatible = "amlogic,g12a-tdmin",
--						     "amlogic,axg-tdmin";
--					reg = <0x0 0x340 0x0 0x40>;
--					sound-name-prefix = "TDMIN_B";
--					clocks = <&clkc_audio AUD_CLKID_TDMIN_B>,
--						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK_SEL>,
--						 <&clkc_audio AUD_CLKID_TDMIN_B_LRCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_B_LRCLK>;
--					clock-names = "pclk", "sclk", "sclk_sel",
--						      "lrclk", "lrclk_sel";
--					status = "disabled";
--				};
--
--				tdmin_c: audio-controller@380 {
--					compatible = "amlogic,g12a-tdmin",
--						     "amlogic,axg-tdmin";
--					reg = <0x0 0x380 0x0 0x40>;
--					sound-name-prefix = "TDMIN_C";
--					clocks = <&clkc_audio AUD_CLKID_TDMIN_C>,
--						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK_SEL>,
--						 <&clkc_audio AUD_CLKID_TDMIN_C_LRCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_C_LRCLK>;
--					clock-names = "pclk", "sclk", "sclk_sel",
--						      "lrclk", "lrclk_sel";
--					status = "disabled";
--				};
--
--				tdmin_lb: audio-controller@3c0 {
--					compatible = "amlogic,g12a-tdmin",
--						     "amlogic,axg-tdmin";
--					reg = <0x0 0x3c0 0x0 0x40>;
--					sound-name-prefix = "TDMIN_LB";
--					clocks = <&clkc_audio AUD_CLKID_TDMIN_LB>,
--						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK_SEL>,
--						 <&clkc_audio AUD_CLKID_TDMIN_LB_LRCLK>,
--						 <&clkc_audio AUD_CLKID_TDMIN_LB_LRCLK>;
--					clock-names = "pclk", "sclk", "sclk_sel",
--						      "lrclk", "lrclk_sel";
--					status = "disabled";
--				};
--
--				spdifin: audio-controller@400 {
--					compatible = "amlogic,g12a-spdifin",
--						     "amlogic,axg-spdifin";
--					reg = <0x0 0x400 0x0 0x30>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "SPDIFIN";
--					interrupts = <GIC_SPI 151 IRQ_TYPE_EDGE_RISING>;
--					clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
--						 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
--					clock-names = "pclk", "refclk";
--					status = "disabled";
--				};
--
--				spdifout: audio-controller@480 {
--					compatible = "amlogic,g12a-spdifout",
--						     "amlogic,axg-spdifout";
--					reg = <0x0 0x480 0x0 0x50>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "SPDIFOUT";
--					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
--						 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
--					clock-names = "pclk", "mclk";
--					status = "disabled";
--				};
--
--				tdmout_a: audio-controller@500 {
--					compatible = "amlogic,g12a-tdmout";
--					reg = <0x0 0x500 0x0 0x40>;
--					sound-name-prefix = "TDMOUT_A";
--					clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
--					clock-names = "pclk", "sclk", "sclk_sel",
--						      "lrclk", "lrclk_sel";
--					status = "disabled";
--				};
--
--				tdmout_b: audio-controller@540 {
--					compatible = "amlogic,g12a-tdmout";
--					reg = <0x0 0x540 0x0 0x40>;
--					sound-name-prefix = "TDMOUT_B";
--					clocks = <&clkc_audio AUD_CLKID_TDMOUT_B>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK_SEL>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>;
--					clock-names = "pclk", "sclk", "sclk_sel",
--						      "lrclk", "lrclk_sel";
--					status = "disabled";
--				};
--
--				tdmout_c: audio-controller@580 {
--					compatible = "amlogic,g12a-tdmout";
--					reg = <0x0 0x580 0x0 0x40>;
--					sound-name-prefix = "TDMOUT_C";
--					clocks = <&clkc_audio AUD_CLKID_TDMOUT_C>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK_SEL>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>,
--						 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>;
--					clock-names = "pclk", "sclk", "sclk_sel",
--						      "lrclk", "lrclk_sel";
--					status = "disabled";
--				};
--
--				spdifout_b: audio-controller@680 {
--					compatible = "amlogic,g12a-spdifout",
--						     "amlogic,axg-spdifout";
--					reg = <0x0 0x680 0x0 0x50>;
--					#sound-dai-cells = <0>;
--					sound-name-prefix = "SPDIFOUT_B";
--					clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
--						 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
--					clock-names = "pclk", "mclk";
--					status = "disabled";
--				};
--
--				tohdmitx: audio-controller@744 {
--					compatible = "amlogic,g12a-tohdmitx";
--					reg = <0x0 0x744 0x0 0x4>;
--					#sound-dai-cells = <1>;
--					sound-name-prefix = "TOHDMITX";
--					status = "disabled";
--				};
--			};
--
--			usb3_pcie_phy: phy@46000 {
--				compatible = "amlogic,g12a-usb3-pcie-phy";
--				reg = <0x0 0x46000 0x0 0x2000>;
--				clocks = <&clkc CLKID_PCIE_PLL>;
--				clock-names = "ref_clk";
--				resets = <&reset RESET_PCIE_PHY>;
--				reset-names = "phy";
--				assigned-clocks = <&clkc CLKID_PCIE_PLL>;
--				assigned-clock-rates = <100000000>;
--				#phy-cells = <1>;
--			};
--
--			eth_phy: mdio-multiplexer@4c000 {
--				compatible = "amlogic,g12a-mdio-mux";
--				reg = <0x0 0x4c000 0x0 0xa4>;
--				clocks = <&clkc CLKID_ETH_PHY>,
--					 <&xtal>,
--					 <&clkc CLKID_MPLL_50M>;
--				clock-names = "pclk", "clkin0", "clkin1";
--				mdio-parent-bus = <&mdio0>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--
--				ext_mdio: mdio@0 {
--					reg = <0>;
--					#address-cells = <1>;
--					#size-cells = <0>;
--				};
--
--				int_mdio: mdio@1 {
--					reg = <1>;
--					#address-cells = <1>;
--					#size-cells = <0>;
--
--					internal_ephy: ethernet_phy@8 {
--						compatible = "ethernet-phy-id0180.3301",
--							     "ethernet-phy-ieee802.3-c22";
--						interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--						reg = <8>;
--						max-speed = <100>;
--					};
--				};
--			};
-+		opp-667000000 {
-+			opp-hz = /bits/ 64 <666666666>;
-+			opp-microvolt = <731000>;
- 		};
- 
--		aobus: bus@ff800000 {
--			compatible = "simple-bus";
--			reg = <0x0 0xff800000 0x0 0x100000>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
--
--			rti: sys-ctrl@0 {
--				compatible = "amlogic,meson-gx-ao-sysctrl",
--					     "simple-mfd", "syscon";
--				reg = <0x0 0x0 0x0 0x100>;
--				#address-cells = <2>;
--				#size-cells = <2>;
--				ranges = <0x0 0x0 0x0 0x0 0x0 0x100>;
--
--				clkc_AO: clock-controller {
--					compatible = "amlogic,meson-g12a-aoclkc";
--					#clock-cells = <1>;
--					#reset-cells = <1>;
--					clocks = <&xtal>, <&clkc CLKID_CLK81>;
--					clock-names = "xtal", "mpeg-clk";
--				};
--
--				pwrc_vpu: power-controller-vpu {
--					compatible = "amlogic,meson-g12a-pwrc-vpu";
--					#power-domain-cells = <0>;
--					amlogic,hhi-sysctrl = <&hhi>;
--					resets = <&reset RESET_VIU>,
--						 <&reset RESET_VENC>,
--						 <&reset RESET_VCBUS>,
--						 <&reset RESET_BT656>,
--						 <&reset RESET_RDMA>,
--						 <&reset RESET_VENCI>,
--						 <&reset RESET_VENCP>,
--						 <&reset RESET_VDAC>,
--						 <&reset RESET_VDI6>,
--						 <&reset RESET_VENCL>,
--						 <&reset RESET_VID_LOCK>;
--					clocks = <&clkc CLKID_VPU>,
--						 <&clkc CLKID_VAPB>;
--					clock-names = "vpu", "vapb";
--					/*
--					 * VPU clocking is provided by two identical clock paths
--					 * VPU_0 and VPU_1 muxed to a single clock by a glitch
--					 * free mux to safely change frequency while running.
--					 * Same for VAPB but with a final gate after the glitch free mux.
--					 */
--					assigned-clocks = <&clkc CLKID_VPU_0_SEL>,
--							  <&clkc CLKID_VPU_0>,
--							  <&clkc CLKID_VPU>, /* Glitch free mux */
--							  <&clkc CLKID_VAPB_0_SEL>,
--							  <&clkc CLKID_VAPB_0>,
--							  <&clkc CLKID_VAPB_SEL>; /* Glitch free mux */
--					assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
--								 <0>, /* Do Nothing */
--								 <&clkc CLKID_VPU_0>,
--								 <&clkc CLKID_FCLK_DIV4>,
--								 <0>, /* Do Nothing */
--								 <&clkc CLKID_VAPB_0>;
--					assigned-clock-rates = <0>, /* Do Nothing */
--							       <666666666>,
--							       <0>, /* Do Nothing */
--							       <0>, /* Do Nothing */
--							       <250000000>,
--							       <0>; /* Do Nothing */
--				};
--
--				ao_pinctrl: pinctrl@14 {
--					compatible = "amlogic,meson-g12a-aobus-pinctrl";
--					#address-cells = <2>;
--					#size-cells = <2>;
--					ranges;
--
--					gpio_ao: bank@14 {
--						reg = <0x0 0x14 0x0 0x8>,
--						      <0x0 0x1c 0x0 0x8>,
--						      <0x0 0x24 0x0 0x14>;
--						reg-names = "mux",
--							    "ds",
--							    "gpio";
--						gpio-controller;
--						#gpio-cells = <2>;
--						gpio-ranges = <&ao_pinctrl 0 0 15>;
--					};
--
--					i2c_ao_sck_pins: i2c_ao_sck_pins {
--						mux {
--							groups = "i2c_ao_sck";
--							function = "i2c_ao";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c_ao_sda_pins: i2c_ao_sda {
--						mux {
--							groups = "i2c_ao_sda";
--							function = "i2c_ao";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c_ao_sck_e_pins: i2c_ao_sck_e {
--						mux {
--							groups = "i2c_ao_sck_e";
--							function = "i2c_ao";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					i2c_ao_sda_e_pins: i2c_ao_sda_e {
--						mux {
--							groups = "i2c_ao_sda_e";
--							function = "i2c_ao";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					mclk0_ao_pins: mclk0-ao {
--						mux {
--							groups = "mclk0_ao";
--							function = "mclk0_ao";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_ao_b_din0_pins: tdm-ao-b-din0 {
--						mux {
--							groups = "tdm_ao_b_din0";
--							function = "tdm_ao_b";
--							bias-disable;
--						};
--					};
--
--					spdif_ao_out_pins: spdif-ao-out {
--						mux {
--							groups = "spdif_ao_out";
--							function = "spdif_ao_out";
--							drive-strength-microamp = <500>;
--							bias-disable;
--						};
--					};
--
--					tdm_ao_b_din1_pins: tdm-ao-b-din1 {
--						mux {
--							groups = "tdm_ao_b_din1";
--							function = "tdm_ao_b";
--							bias-disable;
--						};
--					};
--
--					tdm_ao_b_din2_pins: tdm-ao-b-din2 {
--						mux {
--							groups = "tdm_ao_b_din2";
--							function = "tdm_ao_b";
--							bias-disable;
--						};
--					};
--
--					tdm_ao_b_dout0_pins: tdm-ao-b-dout0 {
--						mux {
--							groups = "tdm_ao_b_dout0";
--							function = "tdm_ao_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_ao_b_dout1_pins: tdm-ao-b-dout1 {
--						mux {
--							groups = "tdm_ao_b_dout1";
--							function = "tdm_ao_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_ao_b_dout2_pins: tdm-ao-b-dout2 {
--						mux {
--							groups = "tdm_ao_b_dout2";
--							function = "tdm_ao_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_ao_b_fs_pins: tdm-ao-b-fs {
--						mux {
--							groups = "tdm_ao_b_fs";
--							function = "tdm_ao_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_ao_b_sclk_pins: tdm-ao-b-sclk {
--						mux {
--							groups = "tdm_ao_b_sclk";
--							function = "tdm_ao_b";
--							bias-disable;
--							drive-strength-microamp = <3000>;
--						};
--					};
--
--					tdm_ao_b_slv_fs_pins: tdm-ao-b-slv-fs {
--						mux {
--							groups = "tdm_ao_b_slv_fs";
--							function = "tdm_ao_b";
--							bias-disable;
--						};
--					};
--
--					tdm_ao_b_slv_sclk_pins: tdm-ao-b-slv-sclk {
--						mux {
--							groups = "tdm_ao_b_slv_sclk";
--							function = "tdm_ao_b";
--							bias-disable;
--						};
--					};
--
--					uart_ao_a_pins: uart-a-ao {
--						mux {
--							groups = "uart_ao_a_tx",
--								 "uart_ao_a_rx";
--							function = "uart_ao_a";
--							bias-disable;
--						};
--					};
--
--					uart_ao_a_cts_rts_pins: uart-ao-a-cts-rts {
--						mux {
--							groups = "uart_ao_a_cts",
--								 "uart_ao_a_rts";
--							function = "uart_ao_a";
--							bias-disable;
--						};
--					};
--
--					pwm_ao_a_pins: pwm-ao-a {
--						mux {
--							groups = "pwm_ao_a";
--							function = "pwm_ao_a";
--							bias-disable;
--						};
--					};
--
--					pwm_ao_b_pins: pwm-ao-b {
--						mux {
--							groups = "pwm_ao_b";
--							function = "pwm_ao_b";
--							bias-disable;
--						};
--					};
--
--					pwm_ao_c_4_pins: pwm-ao-c-4 {
--						mux {
--							groups = "pwm_ao_c_4";
--							function = "pwm_ao_c";
--							bias-disable;
--						};
--					};
--
--					pwm_ao_c_6_pins: pwm-ao-c-6 {
--						mux {
--							groups = "pwm_ao_c_6";
--							function = "pwm_ao_c";
--							bias-disable;
--						};
--					};
--
--					pwm_ao_d_5_pins: pwm-ao-d-5 {
--						mux {
--							groups = "pwm_ao_d_5";
--							function = "pwm_ao_d";
--							bias-disable;
--						};
--					};
--
--					pwm_ao_d_10_pins: pwm-ao-d-10 {
--						mux {
--							groups = "pwm_ao_d_10";
--							function = "pwm_ao_d";
--							bias-disable;
--						};
--					};
--
--					pwm_ao_d_e_pins: pwm-ao-d-e {
--						mux {
--							groups = "pwm_ao_d_e";
--							function = "pwm_ao_d";
--						};
--					};
--
--					remote_input_ao_pins: remote-input-ao {
--						mux {
--							groups = "remote_ao_input";
--							function = "remote_ao_input";
--							bias-disable;
--						};
--					};
--				};
--			};
--
--			cec_AO: cec@100 {
--				compatible = "amlogic,meson-gx-ao-cec";
--				reg = <0x0 0x00100 0x0 0x14>;
--				interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&clkc_AO CLKID_AO_CEC>;
--				clock-names = "core";
--				status = "disabled";
--			};
--
--			sec_AO: ao-secure@140 {
--				compatible = "amlogic,meson-gx-ao-secure", "syscon";
--				reg = <0x0 0x140 0x0 0x140>;
--				amlogic,has-chip-id;
--			};
--
--			cecb_AO: cec@280 {
--				compatible = "amlogic,meson-g12a-ao-cec";
--				reg = <0x0 0x00280 0x0 0x1c>;
--				interrupts = <GIC_SPI 203 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&clkc_AO CLKID_AO_CTS_OSCIN>;
--				clock-names = "oscin";
--				status = "disabled";
--			};
--
--			pwm_AO_cd: pwm@2000 {
--				compatible = "amlogic,meson-g12a-ao-pwm-cd";
--				reg = <0x0 0x2000 0x0 0x20>;
--				#pwm-cells = <3>;
--				status = "disabled";
--			};
--
--			uart_AO: serial@3000 {
--				compatible = "amlogic,meson-gx-uart",
--					     "amlogic,meson-ao-uart";
--				reg = <0x0 0x3000 0x0 0x18>;
--				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
--				status = "disabled";
--			};
--
--			uart_AO_B: serial@4000 {
--				compatible = "amlogic,meson-gx-uart",
--					     "amlogic,meson-ao-uart";
--				reg = <0x0 0x4000 0x0 0x18>;
--				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
--				status = "disabled";
--			};
--
--			i2c_AO: i2c@5000 {
--				compatible = "amlogic,meson-axg-i2c";
--				status = "disabled";
--				reg = <0x0 0x05000 0x0 0x20>;
--				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				clocks = <&clkc CLKID_I2C>;
--			};
--
--			pwm_AO_ab: pwm@7000 {
--				compatible = "amlogic,meson-g12a-ao-pwm-ab";
--				reg = <0x0 0x7000 0x0 0x20>;
--				#pwm-cells = <3>;
--				status = "disabled";
--			};
--
--			ir: ir@8000 {
--				compatible = "amlogic,meson-gxbb-ir";
--				reg = <0x0 0x8000 0x0 0x20>;
--				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
--				status = "disabled";
--			};
--
--			saradc: adc@9000 {
--				compatible = "amlogic,meson-g12a-saradc",
--					     "amlogic,meson-saradc";
--				reg = <0x0 0x9000 0x0 0x48>;
--				#io-channel-cells = <1>;
--				interrupts = <GIC_SPI 200 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>,
--					 <&clkc_AO CLKID_AO_SAR_ADC>,
--					 <&clkc_AO CLKID_AO_SAR_ADC_CLK>,
--					 <&clkc_AO CLKID_AO_SAR_ADC_SEL>;
--				clock-names = "clkin", "core", "adc_clk", "adc_sel";
--				status = "disabled";
--			};
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <731000>;
- 		};
- 
--		vpu: vpu@ff900000 {
--			compatible = "amlogic,meson-g12a-vpu";
--			reg = <0x0 0xff900000 0x0 0x100000>,
--			      <0x0 0xff63c000 0x0 0x1000>;
--			reg-names = "vpu", "hhi";
--			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			amlogic,canvas = <&canvas>;
--			power-domains = <&pwrc_vpu>;
--
--			/* CVBS VDAC output port */
--			cvbs_vdac_port: port@0 {
--				reg = <0>;
--			};
--
--			/* HDMI-TX output port */
--			hdmi_tx_port: port@1 {
--				reg = <1>;
--
--				hdmi_tx_out: endpoint {
--					remote-endpoint = <&hdmi_tx_in>;
--				};
--			};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <731000>;
- 		};
- 
--		gic: interrupt-controller@ffc01000 {
--			compatible = "arm,gic-400";
--			reg = <0x0 0xffc01000 0 0x1000>,
--			      <0x0 0xffc02000 0 0x2000>,
--			      <0x0 0xffc04000 0 0x2000>,
--			      <0x0 0xffc06000 0 0x2000>;
--			interrupt-controller;
--			interrupts = <GIC_PPI 9
--				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
--			#interrupt-cells = <3>;
--			#address-cells = <0>;
-+		opp-1398000000 {
-+			opp-hz = /bits/ 64 <1398000000>;
-+			opp-microvolt = <761000>;
- 		};
- 
--		cbus: bus@ffd00000 {
--			compatible = "simple-bus";
--			reg = <0x0 0xffd00000 0x0 0x100000>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x100000>;
--
--			reset: reset-controller@1004 {
--				compatible = "amlogic,meson-g12a-reset",
--					     "amlogic,meson-axg-reset";
--				reg = <0x0 0x1004 0x0 0x9c>;
--				#reset-cells = <1>;
--			};
--
--			gpio_intc: interrupt-controller@f080 {
--				compatible = "amlogic,meson-g12a-gpio-intc",
--					     "amlogic,meson-gpio-intc";
--				reg = <0x0 0xf080 0x0 0x10>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
--			};
--
--			pwm_ef: pwm@19000 {
--				compatible = "amlogic,meson-g12a-ee-pwm";
--				reg = <0x0 0x19000 0x0 0x20>;
--				#pwm-cells = <3>;
--				status = "disabled";
--			};
--
--			pwm_cd: pwm@1a000 {
--				compatible = "amlogic,meson-g12a-ee-pwm";
--				reg = <0x0 0x1a000 0x0 0x20>;
--				#pwm-cells = <3>;
--				status = "disabled";
--			};
--
--			pwm_ab: pwm@1b000 {
--				compatible = "amlogic,meson-g12a-ee-pwm";
--				reg = <0x0 0x1b000 0x0 0x20>;
--				#pwm-cells = <3>;
--				status = "disabled";
--			};
--
--			i2c3: i2c@1c000 {
--				compatible = "amlogic,meson-axg-i2c";
--				status = "disabled";
--				reg = <0x0 0x1c000 0x0 0x20>;
--				interrupts = <GIC_SPI 39 IRQ_TYPE_EDGE_RISING>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				clocks = <&clkc CLKID_I2C>;
--			};
--
--			i2c2: i2c@1d000 {
--				compatible = "amlogic,meson-axg-i2c";
--				status = "disabled";
--				reg = <0x0 0x1d000 0x0 0x20>;
--				interrupts = <GIC_SPI 215 IRQ_TYPE_EDGE_RISING>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				clocks = <&clkc CLKID_I2C>;
--			};
--
--			i2c1: i2c@1e000 {
--				compatible = "amlogic,meson-axg-i2c";
--				status = "disabled";
--				reg = <0x0 0x1e000 0x0 0x20>;
--				interrupts = <GIC_SPI 214 IRQ_TYPE_EDGE_RISING>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				clocks = <&clkc CLKID_I2C>;
--			};
--
--			i2c0: i2c@1f000 {
--				compatible = "amlogic,meson-axg-i2c";
--				status = "disabled";
--				reg = <0x0 0x1f000 0x0 0x20>;
--				interrupts = <GIC_SPI 21 IRQ_TYPE_EDGE_RISING>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				clocks = <&clkc CLKID_I2C>;
--			};
--
--			clk_msr: clock-measure@18000 {
--				compatible = "amlogic,meson-g12a-clk-measure";
--				reg = <0x0 0x18000 0x0 0x10>;
--			};
--
--			uart_C: serial@22000 {
--				compatible = "amlogic,meson-gx-uart";
--				reg = <0x0 0x22000 0x0 0x18>;
--				interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
--				status = "disabled";
--			};
--
--			uart_B: serial@23000 {
--				compatible = "amlogic,meson-gx-uart";
--				reg = <0x0 0x23000 0x0 0x18>;
--				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
--				status = "disabled";
--			};
--
--			uart_A: serial@24000 {
--				compatible = "amlogic,meson-gx-uart";
--				reg = <0x0 0x24000 0x0 0x18>;
--				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
--				status = "disabled";
--			};
--		};
--
--		sd_emmc_a: sd@ffe03000 {
--			compatible = "amlogic,meson-axg-mmc";
--			reg = <0x0 0xffe03000 0x0 0x800>;
--			interrupts = <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
--			status = "disabled";
--			clocks = <&clkc CLKID_SD_EMMC_A>,
--				 <&clkc CLKID_SD_EMMC_A_CLK0>,
--				 <&clkc CLKID_FCLK_DIV2>;
--			clock-names = "core", "clkin0", "clkin1";
--			resets = <&reset RESET_SD_EMMC_A>;
--			amlogic,dram-access-quirk;
--		};
--
--		sd_emmc_b: sd@ffe05000 {
--			compatible = "amlogic,meson-axg-mmc";
--			reg = <0x0 0xffe05000 0x0 0x800>;
--			interrupts = <GIC_SPI 190 IRQ_TYPE_EDGE_RISING>;
--			status = "disabled";
--			clocks = <&clkc CLKID_SD_EMMC_B>,
--				 <&clkc CLKID_SD_EMMC_B_CLK0>,
--				 <&clkc CLKID_FCLK_DIV2>;
--			clock-names = "core", "clkin0", "clkin1";
--			resets = <&reset RESET_SD_EMMC_B>;
-+		opp-1512000000 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-microvolt = <791000>;
- 		};
- 
--		sd_emmc_c: mmc@ffe07000 {
--			compatible = "amlogic,meson-axg-mmc";
--			reg = <0x0 0xffe07000 0x0 0x800>;
--			interrupts = <GIC_SPI 191 IRQ_TYPE_EDGE_RISING>;
--			status = "disabled";
--			clocks = <&clkc CLKID_SD_EMMC_C>,
--				 <&clkc CLKID_SD_EMMC_C_CLK0>,
--				 <&clkc CLKID_FCLK_DIV2>;
--			clock-names = "core", "clkin0", "clkin1";
--			resets = <&reset RESET_SD_EMMC_C>;
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <831000>;
- 		};
- 
--		usb: usb@ffe09000 {
--			status = "disabled";
--			compatible = "amlogic,meson-g12a-usb-ctrl";
--			reg = <0x0 0xffe09000 0x0 0xa0>;
--			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges;
--
--			clocks = <&clkc CLKID_USB>;
--			resets = <&reset RESET_USB>;
--
--			dr_mode = "otg";
--
--			phys = <&usb2_phy0>, <&usb2_phy1>,
--			       <&usb3_pcie_phy PHY_TYPE_USB3>;
--			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
--
--			dwc2: usb@ff400000 {
--				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
--				reg = <0x0 0xff400000 0x0 0x40000>;
--				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
--				clock-names = "ddr";
--				phys = <&usb2_phy1>;
--				dr_mode = "peripheral";
--				g-rx-fifo-size = <192>;
--				g-np-tx-fifo-size = <128>;
--				g-tx-fifo-size = <128 128 16 16 16>;
--			};
--
--			dwc3: usb@ff500000 {
--				compatible = "snps,dwc3";
--				reg = <0x0 0xff500000 0x0 0x100000>;
--				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
--				dr_mode = "host";
--				snps,dis_u2_susphy_quirk;
--				snps,quirk-frame-length-adjustment;
--			};
-+		opp-1704000000 {
-+			opp-hz = /bits/ 64 <1704000000>;
-+			opp-microvolt = <861000>;
- 		};
- 
--		mali: gpu@ffe40000 {
--			compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
--			reg = <0x0 0xffe40000 0x0 0x40000>;
--			interrupt-parent = <&gic>;
--			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "gpu", "mmu", "job";
--			clocks = <&clkc CLKID_MALI>;
--			resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
--
--			/*
--			 * Mali clocking is provided by two identical clock paths
--			 * MALI_0 and MALI_1 muxed to a single clock by a glitch
--			 * free mux to safely change frequency while running.
--			 */
--			assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
--					  <&clkc CLKID_MALI_0>,
--					  <&clkc CLKID_MALI>; /* Glitch free mux */
--			assigned-clock-parents = <&clkc CLKID_FCLK_DIV2P5>,
--						 <0>, /* Do Nothing */
--						 <&clkc CLKID_MALI_0>;
--			assigned-clock-rates = <0>, /* Do Nothing */
--					       <800000000>,
--					       <0>; /* Do Nothing */
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <981000>;
- 		};
- 	};
-+};
- 
--	timer {
--		compatible = "arm,armv8-timer";
--		interrupts = <GIC_PPI 13
--			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
--			     <GIC_PPI 14
--			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
--			     <GIC_PPI 11
--			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
--			     <GIC_PPI 10
--			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
--	};
-+&ethmac {
-+	power-domains = <&pwrc PWRC_G12A_ETH_ID>;
-+};
- 
--	xtal: xtal-clk {
--		compatible = "fixed-clock";
--		clock-frequency = <24000000>;
--		clock-output-names = "xtal";
--		#clock-cells = <0>;
--	};
-+&vpu {
-+	power-domains = <&pwrc PWRC_G12A_VPU_ID>;
-+};
- 
-+&sd_emmc_a {
-+	amlogic,dram-access-quirk;
- };
-diff --git a/arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts b/arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
-new file mode 100644
-index 0000000000..3a6a1e0c1e
---- /dev/null
-+++ b/arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-g12b-a311d.dtsi"
-+#include "meson-khadas-vim3.dtsi"
-+#include "meson-g12b-khadas-vim3.dtsi"
-+
-+/ {
-+	compatible = "khadas,vim3", "amlogic,a311d", "amlogic,g12b";
-+};
-diff --git a/arch/arm/dts/meson-g12b-a311d.dtsi b/arch/arm/dts/meson-g12b-a311d.dtsi
-new file mode 100644
-index 0000000000..d61f43052a
---- /dev/null
-+++ b/arch/arm/dts/meson-g12b-a311d.dtsi
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-g12b.dtsi"
-+
-+/ {
-+	cpu_opp_table_0: opp-table-0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-100000000 {
-+			opp-hz = /bits/ 64 <100000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-667000000 {
-+			opp-hz = /bits/ 64 <667000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <761000>;
-+		};
-+
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <781000>;
-+		};
-+
-+		opp-1398000000 {
-+			opp-hz = /bits/ 64 <1398000000>;
-+			opp-microvolt = <811000>;
-+		};
-+
-+		opp-1512000000 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-microvolt = <861000>;
-+		};
-+
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <901000>;
-+		};
-+
-+		opp-1704000000 {
-+			opp-hz = /bits/ 64 <1704000000>;
-+			opp-microvolt = <951000>;
-+		};
-+
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1001000>;
-+		};
-+	};
-+
-+	cpub_opp_table_1: opp-table-1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-100000000 {
-+			opp-hz = /bits/ 64 <100000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-667000000 {
-+			opp-hz = /bits/ 64 <667000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <751000>;
-+		};
-+
-+		opp-1398000000 {
-+			opp-hz = /bits/ 64 <1398000000>;
-+			opp-microvolt = <771000>;
-+		};
-+
-+		opp-1512000000 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-microvolt = <771000>;
-+		};
-+
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <781000>;
-+		};
-+
-+		opp-1704000000 {
-+			opp-hz = /bits/ 64 <1704000000>;
-+			opp-microvolt = <791000>;
-+		};
-+
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <831000>;
-+		};
-+
-+                opp-1908000000 {
-+                        opp-hz = /bits/ 64 <1908000000>;
-+                        opp-microvolt = <861000>;
-+                };
-+
-+                opp-2016000000 {
-+                        opp-hz = /bits/ 64 <2016000000>;
-+                        opp-microvolt = <911000>;
-+                };
-+
-+                opp-2108000000 {
-+                        opp-hz = /bits/ 64 <2108000000>;
-+                        opp-microvolt = <951000>;
-+                };
-+
-+                opp-2208000000 {
-+                        opp-hz = /bits/ 64 <2208000000>;
-+                        opp-microvolt = <1011000>;
-+                };
-+	};
-+};
-diff --git a/arch/arm/dts/meson-g12b-khadas-vim3.dtsi b/arch/arm/dts/meson-g12b-khadas-vim3.dtsi
-new file mode 100644
-index 0000000000..554863429a
---- /dev/null
-+++ b/arch/arm/dts/meson-g12b-khadas-vim3.dtsi
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
-+
-+/ {
-+	vddcpu_a: regulator-vddcpu-a {
-+		/*
-+		 * MP8756GD Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU_A";
-+		regulator-min-microvolt = <690000>;
-+		regulator-max-microvolt = <1050000>;
-+
-+		vin-supply = <&dc_in>;
-+
-+		pwms = <&pwm_ab 0 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vddcpu_b: regulator-vddcpu-b {
-+		/*
-+		 * Silergy SY8030DEC Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU_B";
-+		regulator-min-microvolt = <690000>;
-+		regulator-max-microvolt = <1050000>;
-+
-+		vin-supply = <&vsys_3v3>;
-+
-+		pwms = <&pwm_AO_cd 1 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "G12A-KHADAS-VIM3";
-+		audio-aux-devs = <&tdmout_b>;
-+		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
-+};
-+
-+&clkc_audio {
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vddcpu_b>;
-+	operating-points-v2 = <&cpu_opp_table_0>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu_b>;
-+	operating-points-v2 = <&cpu_opp_table_0>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu100 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu101 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu102 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu103 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
-+&pwm_ab {
-+	pinctrl-0 = <&pwm_a_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin0";
-+	status = "okay";
-+};
-+
-+&pwm_AO_cd {
-+	pinctrl-0 = <&pwm_ao_d_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin1";
-+	status = "okay";
-+};
-+
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-diff --git a/arch/arm/dts/meson-g12b-odroid-n2.dts b/arch/arm/dts/meson-g12b-odroid-n2.dts
-index 81780ffcc7..42f1540575 100644
---- a/arch/arm/dts/meson-g12b-odroid-n2.dts
-+++ b/arch/arm/dts/meson-g12b-odroid-n2.dts
-@@ -6,7 +6,7 @@
- 
- /dts-v1/;
- 
--#include "meson-g12b.dtsi"
-+#include "meson-g12b-s922x.dtsi"
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
-@@ -53,6 +53,7 @@
- 
- 		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
-+		regulator-always-on;
- 	};
- 
- 	tf_io: gpio-regulator-tf_io {
-@@ -65,8 +66,8 @@
- 		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <0>;
- 
--		states = <3300000 0
--			  1800000 1>;
-+		states = <3300000 0>,
-+			 <1800000 1>;
- 	};
- 
- 	flash_1v8: regulator-flash_1v8 {
-@@ -114,6 +115,44 @@
- 		/* FIXME: actually controlled by VDDCPU_B_EN */
- 	};
- 
-+	vddcpu_a: regulator-vddcpu-a {
-+		/*
-+		 * MP8756GD Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU_A";
-+		regulator-min-microvolt = <721000>;
-+		regulator-max-microvolt = <1022000>;
-+
-+		vin-supply = <&main_12v>;
-+
-+		pwms = <&pwm_ab 0 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vddcpu_b: regulator-vddcpu-b {
-+		/*
-+		 * Silergy SY8120B1ABC Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU_B";
-+		regulator-min-microvolt = <721000>;
-+		regulator-max-microvolt = <1022000>;
-+
-+		vin-supply = <&main_12v>;
-+
-+		pwms = <&pwm_AO_cd 1 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	hub_5v: regulator-hub_5v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "HUB_5V";
-@@ -245,6 +284,48 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&vddcpu_b>;
-+	operating-points-v2 = <&cpu_opp_table_0>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu_b>;
-+	operating-points-v2 = <&cpu_opp_table_0>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu100 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu101 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu102 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu103 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
- &ext_mdio {
- 	external_phy: ethernet-phy@0 {
- 		/* Realtek RTL8211F (0x001cc916) */	
-@@ -314,6 +395,23 @@
- 	status = "okay";
- 	pinctrl-0 = <&remote_input_ao_pins>;
- 	pinctrl-names = "default";
-+	linux,rc-map-name = "rc-odroid";
-+};
-+
-+&pwm_ab {
-+	pinctrl-0 = <&pwm_a_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin0";
-+	status = "okay";
-+};
-+
-+&pwm_AO_cd {
-+	pinctrl-0 = <&pwm_ao_d_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin1";
-+	status = "okay";
- };
- 
- /* SD card */
-diff --git a/arch/arm/dts/meson-g12b-s922x.dtsi b/arch/arm/dts/meson-g12b-s922x.dtsi
-new file mode 100644
-index 0000000000..046cc332d0
---- /dev/null
-+++ b/arch/arm/dts/meson-g12b-s922x.dtsi
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-g12b.dtsi"
-+
-+/ {
-+	cpu_opp_table_0: opp-table-0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-100000000 {
-+			opp-hz = /bits/ 64 <100000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-667000000 {
-+			opp-hz = /bits/ 64 <667000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <731000>;
-+		};
-+
-+		opp-1398000000 {
-+			opp-hz = /bits/ 64 <1398000000>;
-+			opp-microvolt = <761000>;
-+		};
-+
-+		opp-1512000000 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-microvolt = <791000>;
-+		};
-+
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <831000>;
-+		};
-+
-+		opp-1704000000 {
-+			opp-hz = /bits/ 64 <1704000000>;
-+			opp-microvolt = <861000>;
-+		};
-+
-+		opp-1896000000 {
-+			opp-hz = /bits/ 64 <1896000000>;
-+			opp-microvolt = <981000>;
-+		};
-+	};
-+
-+	cpub_opp_table_1: opp-table-1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-100000000 {
-+			opp-hz = /bits/ 64 <100000000>;
-+			opp-microvolt = <751000>;
-+		};
-+
-+		opp-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			opp-microvolt = <751000>;
-+		};
-+
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <751000>;
-+		};
-+
-+		opp-667000000 {
-+			opp-hz = /bits/ 64 <667000000>;
-+			opp-microvolt = <751000>;
-+		};
-+
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <771000>;
-+		};
-+
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <771000>;
-+		};
-+
-+		opp-1398000000 {
-+			opp-hz = /bits/ 64 <1398000000>;
-+			opp-microvolt = <791000>;
-+		};
-+
-+		opp-1512000000 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-microvolt = <821000>;
-+		};
-+
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <861000>;
-+		};
-+
-+		opp-1704000000 {
-+			opp-hz = /bits/ 64 <1704000000>;
-+			opp-microvolt = <891000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/dts/meson-g12b.dtsi b/arch/arm/dts/meson-g12b.dtsi
-index 9e88e513b2..5628ccd545 100644
---- a/arch/arm/dts/meson-g12b.dtsi
-+++ b/arch/arm/dts/meson-g12b.dtsi
-@@ -4,12 +4,16 @@
-  * Author: Neil Armstrong <narmstrong@baylibre.com>
-  */
- 
--#include "meson-g12a.dtsi"
-+#include "meson-g12-common.dtsi"
-+#include <dt-bindings/power/meson-g12a-power.h>
- 
- / {
- 	compatible = "amlogic,g12b";
- 
- 	cpus {
-+		#address-cells = <0x2>;
-+		#size-cells = <0x0>;
-+
- 		cpu-map {
- 			cluster0 {
- 				core0 {
-@@ -40,8 +44,21 @@
- 			};
- 		};
- 
--		/delete-node/ cpu@2;
--		/delete-node/ cpu@3;
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
- 
- 		cpu100: cpu@100 {
- 			device_type = "cpu";
-@@ -74,9 +91,25 @@
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
- 		};
-+
-+		l2: l2-cache0 {
-+			compatible = "cache";
-+		};
- 	};
- };
- 
- &clkc {
- 	compatible = "amlogic,g12b-clkc";
- };
-+
-+&ethmac {
-+	power-domains = <&pwrc PWRC_G12A_ETH_ID>;
-+};
-+
-+&vpu {
-+	power-domains = <&pwrc PWRC_G12A_VPU_ID>;
-+};
-+
-+&sd_emmc_a {
-+	amlogic,dram-access-quirk;
-+};
-diff --git a/arch/arm/dts/meson-khadas-vim3.dtsi b/arch/arm/dts/meson-khadas-vim3.dtsi
-new file mode 100644
-index 0000000000..8647da7d66
---- /dev/null
-+++ b/arch/arm/dts/meson-khadas-vim3.dtsi
-@@ -0,0 +1,360 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/meson-g12a-gpio.h>
-+
-+/ {
-+	model = "Khadas VIM3";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 2>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1710000>;
-+
-+		button-function {
-+			label = "Function";
-+			linux,code = <KEY_FN>;
-+			press-threshold-microvolt = <10000>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		white {
-+			label = "vim3:white:sys";
-+			gpios = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		red {
-+			label = "vim3:red";
-+			gpios = <&gpio_expander 5 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <100>;
-+
-+		power-button {
-+			label = "power";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio_ao GPIOAO_7 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	dc_in: regulator-dc_in {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DC_IN";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_5v: regulator-vcc_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&dc_in>;
-+
-+		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
-+		enable-active-high;
-+	};
-+
-+	vcc_1v8: regulator-vcc_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vsys_3v3>;
-+		regulator-always-on;
-+		/* FIXME: actually controlled by VDDCPU_B_EN */
-+	};
-+
-+	vddao_1v8: regulator-vddao_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vsys_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	emmc_1v8: regulator-emmc_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "EMMC_AO1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vsys_3v3: regulator-vsys_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VSYS_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&dc_in>;
-+		regulator-always-on;
-+	};
-+
-+	usb_pwr: regulator-usb_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB_PWR";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		gpio = <&gpio GPIOA_6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+};
-+
-+&cec_AO {
-+	pinctrl-0 = <&cec_ao_a_h_pins>;
-+	pinctrl-names = "default";
-+	status = "disabled";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cecb_AO {
-+	pinctrl-0 = <&cec_ao_b_h_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&ext_mdio {
-+	external_phy: ethernet-phy@0 {
-+		/* Realtek RTL8211F (0x001cc916) */
-+		reg = <0>;
-+		max-speed = <1000>;
-+
-+		interrupt-parent = <&gpio_intc>;
-+		/* MAC_INTR on GPIOZ_14 */
-+		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&ethmac {
-+        pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
-+        pinctrl-names = "default";
-+        status = "okay";
-+        phy-mode = "rgmii";
-+        phy-handle = <&external_phy>;
-+        amlogic,tx-delay-ns = <2>;
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&vcc_5v>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&i2c_AO {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
-+	pinctrl-names = "default";
-+
-+	gpio_expander: gpio-controller@20 {
-+		compatible = "ti,tca6408";
-+		reg = <0x20>;
-+		vcc-supply = <&vcc_3v3>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	rtc@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+	linux,rc-map-name = "rc-khadas";
-+};
-+
-+&pwm_ef {
-+        status = "okay";
-+        pinctrl-0 = <&pwm_e_pins>;
-+        pinctrl-names = "default";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddao_1v8>;
-+};
-+
-+/* SDIO */
-+&sd_emmc_a {
-+	status = "okay";
-+	pinctrl-0 = <&sdio_pins>;
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	sd-uhs-sdr50;
-+	max-frequency = <100000000>;
-+
-+	non-removable;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+
-+	vmmc-supply = <&vsys_3v3>;
-+	vqmmc-supply = <&vddao_1v8>;
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_c_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&vsys_3v3>;
-+	vqmmc-supply = <&vsys_3v3>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&emmc_1v8>;
-+};
-+
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb2_phy0 {
-+	phy-supply = <&dc_in>;
-+};
-+
-+&usb2_phy1 {
-+	phy-supply = <&usb_pwr>;
-+};
-+
-+&usb3_pcie_phy {
-+	phy-supply = <&usb_pwr>;
-+};
-+
-+&usb {
-+	status = "okay";
-+	dr_mode = "peripheral";
-+};
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-index b6b127e456..0837c1a7ae 100644
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -137,5 +137,11 @@
- #define CLKID_VDEC_HEVC				207
- #define CLKID_VDEC_HEVCF			210
- #define CLKID_TS				212
-+#define CLKID_CPUB_CLK				224
-+#define CLKID_GP1_PLL				243
-+#define CLKID_DSU_CLK				252
-+#define CLKID_CPU1_CLK				253
-+#define CLKID_CPU2_CLK				254
-+#define CLKID_CPU3_CLK				255
- 
- #endif /* __G12A_CLKC_H */
-diff --git a/include/dt-bindings/power/meson-g12a-power.h b/include/dt-bindings/power/meson-g12a-power.h
-new file mode 100644
-index 0000000000..bb5e67a842
---- /dev/null
-+++ b/include/dt-bindings/power/meson-g12a-power.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_G12A_POWER_H
-+#define _DT_BINDINGS_MESON_G12A_POWER_H
-+
-+#define PWRC_G12A_VPU_ID		0
-+#define PWRC_G12A_ETH_ID		1
-+
-+#endif
-diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-new file mode 100644
-index 0000000000..14b78dabed
---- /dev/null
-+++ b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ *
-+ */
-+
-+#ifndef _DT_BINDINGS_AMLOGIC_MESON_G12A_AUDIO_RESET_H
-+#define _DT_BINDINGS_AMLOGIC_MESON_G12A_AUDIO_RESET_H
-+
-+#define AUD_RESET_PDM		0
-+#define AUD_RESET_TDMIN_A	1
-+#define AUD_RESET_TDMIN_B	2
-+#define AUD_RESET_TDMIN_C	3
-+#define AUD_RESET_TDMIN_LB	4
-+#define AUD_RESET_LOOPBACK	5
-+#define AUD_RESET_TODDR_A	6
-+#define AUD_RESET_TODDR_B	7
-+#define AUD_RESET_TODDR_C	8
-+#define AUD_RESET_FRDDR_A	9
-+#define AUD_RESET_FRDDR_B	10
-+#define AUD_RESET_FRDDR_C	11
-+#define AUD_RESET_TDMOUT_A	12
-+#define AUD_RESET_TDMOUT_B	13
-+#define AUD_RESET_TDMOUT_C	14
-+#define AUD_RESET_SPDIFOUT	15
-+#define AUD_RESET_SPDIFOUT_B	16
-+#define AUD_RESET_SPDIFIN	17
-+#define AUD_RESET_EQDRC		18
-+#define AUD_RESET_RESAMPLE	19
-+#define AUD_RESET_DDRARB	20
-+#define AUD_RESET_POWDET	21
-+#define AUD_RESET_TORAM		22
-+#define AUD_RESET_TOACODEC	23
-+#define AUD_RESET_TOHDMITX	24
-+#define AUD_RESET_CLKTREE	25
-+
-+#endif
--- 
-2.22.0
+Thanks,
+Neil
+On 30/08/2019 14:09, Neil Armstrong wrote:
+> Synchronize the Amlogic Meson Video driver back with the latest
+> DRM misc tree, adding G12A platform support, from the latest commit:
+> 528a25d040bc ("drm: meson: use match data to detect vpu compatibility")
+> 
+> The sync includes the following changes from Linux adapted to U-Boot:
+> - Add support for VIC alternate timings
+> - Switch PLL to 5.94GHz base for 297Mhz pixel clock
+> - Add registers for G12A SoC
+> - Add G12A Support for VPP setup
+> - Add G12A Support for VIU setup
+> - Add G12A support for OSD1 Plane
+> - Add G12A support for plane handling in CRTC driver
+> - Add G12A support for CVBS Encoder
+> - Add G12A Video Clock setup
+> - Add G12A support for the DW-HDMI Glue
+> - fix G12A HDMI PLL settings for 4K60 1000/1001 variations
+> - fix primary plane disabling
+> - fix G12A primary plane disabling
+> - mask value when writing bits relaxed
+> - crtc: drv: vpp: viu: venc: use proper macros instead of magic constants
+> - global clean-up
+> - add macro used to enable HDMI PLL
+> - venc: set the correct macrovision max amplitude value
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/video/meson/meson_dw_hdmi.c   |  61 ++++-
+>  drivers/video/meson/meson_plane.c     |  47 +++-
+>  drivers/video/meson/meson_registers.h | 373 +++++++++++++++++++++++++-
+>  drivers/video/meson/meson_vclk.c      | 233 ++++++++++++----
+>  drivers/video/meson/meson_venc.c      | 169 +++++++++---
+>  drivers/video/meson/meson_vpu.h       |   1 +
+>  drivers/video/meson/meson_vpu_init.c  | 205 +++++++++++---
+>  7 files changed, 929 insertions(+), 160 deletions(-)
+> 
+> diff --git a/drivers/video/meson/meson_dw_hdmi.c b/drivers/video/meson/meson_dw_hdmi.c
+> index 9831d978fc..ae2e6288f3 100644
+> --- a/drivers/video/meson/meson_dw_hdmi.c
+> +++ b/drivers/video/meson/meson_dw_hdmi.c
+> @@ -24,6 +24,7 @@
+>  #define HDMITX_TOP_ADDR_REG	0x0
+>  #define HDMITX_TOP_DATA_REG	0x4
+>  #define HDMITX_TOP_CTRL_REG	0x8
+> +#define HDMITX_TOP_G12A_OFFSET	0x8000
+>  
+>  /* Controller Communication Channel */
+>  #define HDMITX_DWC_ADDR_REG	0x10
+> @@ -37,6 +38,8 @@
+>  #define HHI_HDMI_PHY_CNTL1	0x3a4 /* 0xe9 */
+>  #define HHI_HDMI_PHY_CNTL2	0x3a8 /* 0xea */
+>  #define HHI_HDMI_PHY_CNTL3	0x3ac /* 0xeb */
+> +#define HHI_HDMI_PHY_CNTL4	0x3b0 /* 0xec */
+> +#define HHI_HDMI_PHY_CNTL5	0x3b4 /* 0xed */
+>  
+>  struct meson_dw_hdmi {
+>  	struct udevice *dev;
+> @@ -48,6 +51,7 @@ enum hdmi_compatible {
+>  	HDMI_COMPATIBLE_GXBB = 0,
+>  	HDMI_COMPATIBLE_GXL = 1,
+>  	HDMI_COMPATIBLE_GXM = 2,
+> +	HDMI_COMPATIBLE_G12A = 3,
+>  };
+>  
+>  static inline bool meson_hdmi_is_compatible(struct meson_dw_hdmi *priv,
+> @@ -60,8 +64,14 @@ static inline bool meson_hdmi_is_compatible(struct meson_dw_hdmi *priv,
+>  
+>  static unsigned int dw_hdmi_top_read(struct dw_hdmi *hdmi, unsigned int addr)
+>  {
+> +	struct meson_dw_hdmi *priv = container_of(hdmi, struct meson_dw_hdmi,
+> +						  hdmi);
+>  	unsigned int data;
+>  
+> +	if (meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_G12A))
+> +		return readl(hdmi->ioaddr +
+> +			     HDMITX_TOP_G12A_OFFSET + (addr << 2));
+> +
+>  	/* ADDR must be written twice */
+>  	writel(addr & 0xffff, hdmi->ioaddr + HDMITX_TOP_ADDR_REG);
+>  	writel(addr & 0xffff, hdmi->ioaddr + HDMITX_TOP_ADDR_REG);
+> @@ -76,6 +86,15 @@ static unsigned int dw_hdmi_top_read(struct dw_hdmi *hdmi, unsigned int addr)
+>  static inline void dw_hdmi_top_write(struct dw_hdmi *hdmi,
+>  				     unsigned int addr, unsigned int data)
+>  {
+> +	struct meson_dw_hdmi *priv = container_of(hdmi, struct meson_dw_hdmi,
+> +						  hdmi);
+> +
+> +	if (meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_G12A)) {
+> +		writel(data, hdmi->ioaddr +
+> +		       HDMITX_TOP_G12A_OFFSET + (addr << 2));
+> +		return;
+> +	}
+> +
+>  	/* ADDR must be written twice */
+>  	writel(addr & 0xffff, hdmi->ioaddr + HDMITX_TOP_ADDR_REG);
+>  	writel(addr & 0xffff, hdmi->ioaddr + HDMITX_TOP_ADDR_REG);
+> @@ -237,7 +256,7 @@ static void meson_dw_hdmi_phy_setup_mode(struct meson_dw_hdmi *priv,
+>  			hhi_write(HHI_HDMI_PHY_CNTL0, 0x33604142);
+>  			hhi_write(HHI_HDMI_PHY_CNTL3, 0x0016315b);
+>  		}
+> -	} else {
+> +	} else if (meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_GXBB)) {
+>  		if (pixel_clock >= 371250) {
+>  			/* 5.94Gbps, 3.7125Gbps */
+>  			hhi_write(HHI_HDMI_PHY_CNTL0, 0x33353245);
+> @@ -251,6 +270,23 @@ static void meson_dw_hdmi_phy_setup_mode(struct meson_dw_hdmi *priv,
+>  			hhi_write(HHI_HDMI_PHY_CNTL0, 0x33632122);
+>  			hhi_write(HHI_HDMI_PHY_CNTL3, 0x2000115b);
+>  		}
+> +	} else if (meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_G12A)) {
+> +		if (pixel_clock >= 371250) {
+> +			/* 5.94Gbps, 3.7125Gbps */
+> +			hhi_write(HHI_HDMI_PHY_CNTL0, 0x37eb65c4);
+> +			hhi_write(HHI_HDMI_PHY_CNTL3, 0x2ab0ff3b);
+> +			hhi_write(HHI_HDMI_PHY_CNTL5, 0x0000080b);
+> +		} else if (pixel_clock >= 297000) {
+> +			/* 2.97Gbps */
+> +			hhi_write(HHI_HDMI_PHY_CNTL0, 0x33eb6262);
+> +			hhi_write(HHI_HDMI_PHY_CNTL3, 0x2ab0ff3b);
+> +			hhi_write(HHI_HDMI_PHY_CNTL5, 0x00000003);
+> +		} else {
+> +			/* 1.485Gbps, and below */
+> +			hhi_write(HHI_HDMI_PHY_CNTL0, 0x33eb4242);
+> +			hhi_write(HHI_HDMI_PHY_CNTL3, 0x2ab0ff3b);
+> +			hhi_write(HHI_HDMI_PHY_CNTL5, 0x00000003);
+> +		}
+>  	}
+>  }
+>  
+> @@ -292,7 +328,8 @@ static int meson_dw_hdmi_phy_init(struct dw_hdmi *hdmi, uint pixel_clock)
+>  
+>  	/* BIT_INVERT */
+>  	if (meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_GXL) ||
+> -	    meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_GXM))
+> +	    meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_GXM) ||
+> +	    meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_G12A))
+>  		dw_hdmi_hhi_update_bits(priv, HHI_HDMI_PHY_CNTL1, BIT(17), 0);
+>  	else
+>  		dw_hdmi_hhi_update_bits(priv, HHI_HDMI_PHY_CNTL1,
+> @@ -356,8 +393,12 @@ static int meson_dw_hdmi_probe(struct udevice *dev)
+>  	priv->hdmi.hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+>  	priv->hdmi.hdmi_data.enc_in_bus_format = MEDIA_BUS_FMT_YUV8_1X24;
+>  	priv->hdmi.phy_set = meson_dw_hdmi_phy_init;
+> -	priv->hdmi.write_reg = dw_hdmi_dwc_write;
+> -	priv->hdmi.read_reg = dw_hdmi_dwc_read;
+> +	if (meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_G12A))
+> +		priv->hdmi.reg_io_width = 1;
+> +	else {
+> +		priv->hdmi.write_reg = dw_hdmi_dwc_write;
+> +		priv->hdmi.read_reg = dw_hdmi_dwc_read;
+> +	}
+>  	priv->hdmi.i2c_clk_high = 0x67;
+>  	priv->hdmi.i2c_clk_low = 0x78;
+>  
+> @@ -409,9 +450,13 @@ static int meson_dw_hdmi_probe(struct udevice *dev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* Enable APB3 fail on error */
+> -	writel_bits(BIT(15), BIT(15), priv->hdmi.ioaddr + HDMITX_TOP_CTRL_REG);
+> -	writel_bits(BIT(15), BIT(15), priv->hdmi.ioaddr + HDMITX_DWC_CTRL_REG);
+> +	if (!meson_hdmi_is_compatible(priv, HDMI_COMPATIBLE_G12A)) {
+> +		/* Enable APB3 fail on error */
+> +		writel_bits(BIT(15), BIT(15),
+> +			    priv->hdmi.ioaddr + HDMITX_TOP_CTRL_REG);
+> +		writel_bits(BIT(15), BIT(15),
+> +			    priv->hdmi.ioaddr + HDMITX_DWC_CTRL_REG);
+> +	}
+>  
+>  	/* Bring out of reset */
+>  	dw_hdmi_top_write(&priv->hdmi, HDMITX_TOP_SW_RESET,  0);
+> @@ -448,6 +493,8 @@ static const struct udevice_id meson_dw_hdmi_ids[] = {
+>  		.data = HDMI_COMPATIBLE_GXL },
+>  	{ .compatible = "amlogic,meson-gxm-dw-hdmi",
+>  		.data = HDMI_COMPATIBLE_GXM },
+> +	{ .compatible = "amlogic,meson-g12a-dw-hdmi",
+> +		.data = HDMI_COMPATIBLE_G12A },
+>  	{ }
+>  };
+>  
+> diff --git a/drivers/video/meson/meson_plane.c b/drivers/video/meson/meson_plane.c
+> index 63a4bf2d8d..2bc9327e1e 100644
+> --- a/drivers/video/meson/meson_plane.c
+> +++ b/drivers/video/meson/meson_plane.c
+> @@ -108,12 +108,33 @@ void meson_vpu_setup_plane(struct udevice *dev, bool is_interlaced)
+>  	dest_y1 = src_y1 = 0;
+>  	dest_y2 = src_y2 = uc_priv->ysize;
+>  
+> -	/* Enable VPP Postblend */
+> -	writel(uc_priv->xsize,
+> -	       priv->io_base + _REG(VPP_POSTBLEND_H_SIZE));
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		/* VD1 Preblend vertical start/end */
+> +		writel(FIELD_PREP(GENMASK(11, 0), 2303),
+> +		       priv->io_base + _REG(VPP_PREBLEND_VD1_V_START_END));
+> +
+> +		/* Setup Blender */
+> +		writel(uc_priv->xsize |
+> +		       uc_priv->ysize << 16,
+> +		       priv->io_base + _REG(VPP_POSTBLEND_H_SIZE));
+> +
+> +		writel(0 << 16 |
+> +		       (uc_priv->xsize - 1),
+> +		       priv->io_base + _REG(VPP_OSD1_BLD_H_SCOPE));
+> +		writel(0 << 16 |
+> +		       (uc_priv->ysize - 1),
+> +		       priv->io_base + _REG(VPP_OSD1_BLD_V_SCOPE));
+> +		writel(uc_priv->xsize << 16 |
+> +		       uc_priv->ysize,
+> +		       priv->io_base + _REG(VPP_OUT_H_V_SIZE));
+> +	} else {
+> +		/* Enable VPP Postblend */
+> +		writel(uc_priv->xsize,
+> +		       priv->io_base + _REG(VPP_POSTBLEND_H_SIZE));
+>  
+> -	writel_bits(VPP_POSTBLEND_ENABLE, VPP_POSTBLEND_ENABLE,
+> -		    priv->io_base + _REG(VPP_MISC));
+> +		writel_bits(VPP_POSTBLEND_ENABLE, VPP_POSTBLEND_ENABLE,
+> +			    priv->io_base + _REG(VPP_MISC));
+> +	}
+>  
+>  	/* uc_plat->base is the framebuffer */
+>  
+> @@ -172,6 +193,18 @@ void meson_vpu_setup_plane(struct udevice *dev, bool is_interlaced)
+>  			   MESON_CANVAS_BLKMODE_LINEAR);
+>  
+>  	/* Enable OSD1 */
+> -	writel_bits(VPP_OSD1_POSTBLEND, VPP_OSD1_POSTBLEND,
+> -		    priv->io_base + _REG(VPP_MISC));
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		writel(((dest_x2 - 1) << 16) | dest_x1,
+> +		       priv->io_base + _REG(VIU_OSD_BLEND_DIN0_SCOPE_H));
+> +		writel(((dest_y2 - 1) << 16) | dest_y1,
+> +		       priv->io_base + _REG(VIU_OSD_BLEND_DIN0_SCOPE_V));
+> +		writel(uc_priv->xsize << 16 | uc_priv->ysize,
+> +		       priv->io_base + _REG(VIU_OSD_BLEND_BLEND0_SIZE));
+> +		writel(uc_priv->xsize << 16 | uc_priv->ysize,
+> +		       priv->io_base + _REG(VIU_OSD_BLEND_BLEND1_SIZE));
+> +		writel_bits(3 << 8, 3 << 8,
+> +			    priv->io_base + _REG(OSD1_BLEND_SRC_CTRL));
+> +	} else
+> +		writel_bits(VPP_OSD1_POSTBLEND, VPP_OSD1_POSTBLEND,
+> +			    priv->io_base + _REG(VPP_MISC));
+>  }
+> diff --git a/drivers/video/meson/meson_registers.h b/drivers/video/meson/meson_registers.h
+> index 01fe7d2431..39e8ec8639 100644
+> --- a/drivers/video/meson/meson_registers.h
+> +++ b/drivers/video/meson/meson_registers.h
+> @@ -136,11 +136,19 @@
+>  #define VIU_ADDR_START 0x1a00
+>  #define VIU_ADDR_END 0x1aff
+>  #define VIU_SW_RESET 0x1a01
+> +#define		VIU_SW_RESET_OSD1               BIT(0)
+>  #define VIU_MISC_CTRL0 0x1a06
+> +#define		VIU_CTRL0_VD1_AFBC_MASK         0x170000
+>  #define VIU_MISC_CTRL1 0x1a07
+>  #define D2D3_INTF_LENGTH 0x1a08
+>  #define D2D3_INTF_CTRL0 0x1a09
+>  #define VIU_OSD1_CTRL_STAT 0x1a10
+> +#define		VIU_OSD1_OSD_BLK_ENABLE         BIT(0)
+> +#define		VIU_OSD1_POSTBLD_SRC_VD1        (1 << 8)
+> +#define		VIU_OSD1_POSTBLD_SRC_VD2        (2 << 8)
+> +#define		VIU_OSD1_POSTBLD_SRC_OSD1       (3 << 8)
+> +#define		VIU_OSD1_POSTBLD_SRC_OSD2       (4 << 8)
+> +#define		VIU_OSD1_OSD_ENABLE             BIT(21)
+>  #define VIU_OSD1_CTRL_STAT2 0x1a2d
+>  #define VIU_OSD1_COLOR_ADDR 0x1a11
+>  #define VIU_OSD1_COLOR 0x1a12
+> @@ -206,6 +214,35 @@
+>  #define VIU_OSD2_FIFO_CTRL_STAT 0x1a4b
+>  #define VIU_OSD2_TEST_RDDATA 0x1a4c
+>  #define VIU_OSD2_PROT_CTRL 0x1a4e
+> +#define VIU_OSD2_MALI_UNPACK_CTRL 0x1abd
+> +#define VIU_OSD2_DIMM_CTRL 0x1acf
+> +
+> +#define VIU_OSD3_CTRL_STAT 0x3d80
+> +#define VIU_OSD3_CTRL_STAT2 0x3d81
+> +#define VIU_OSD3_COLOR_ADDR 0x3d82
+> +#define VIU_OSD3_COLOR 0x3d83
+> +#define VIU_OSD3_TCOLOR_AG0 0x3d84
+> +#define VIU_OSD3_TCOLOR_AG1 0x3d85
+> +#define VIU_OSD3_TCOLOR_AG2 0x3d86
+> +#define VIU_OSD3_TCOLOR_AG3 0x3d87
+> +#define VIU_OSD3_BLK0_CFG_W0 0x3d88
+> +#define VIU_OSD3_BLK0_CFG_W1 0x3d8c
+> +#define VIU_OSD3_BLK0_CFG_W2 0x3d90
+> +#define VIU_OSD3_BLK0_CFG_W3 0x3d94
+> +#define VIU_OSD3_BLK0_CFG_W4 0x3d98
+> +#define VIU_OSD3_BLK1_CFG_W4 0x3d99
+> +#define VIU_OSD3_BLK2_CFG_W4 0x3d9a
+> +#define VIU_OSD3_FIFO_CTRL_STAT 0x3d9c
+> +#define VIU_OSD3_TEST_RDDATA 0x3d9d
+> +#define VIU_OSD3_PROT_CTRL 0x3d9e
+> +#define VIU_OSD3_MALI_UNPACK_CTRL 0x3d9f
+> +#define VIU_OSD3_DIMM_CTRL 0x3da0
+> +
+> +#define VIU_OSD_DDR_PRIORITY_URGENT      BIT(0)
+> +#define VIU_OSD_HOLD_FIFO_LINES(lines)   ((lines & 0x1f) << 5)
+> +#define VIU_OSD_FIFO_DEPTH_VAL(val)      ((val & 0x7f) << 12)
+> +#define VIU_OSD_WORDS_PER_BURST(words)   (((words & 0x4) >> 1) << 22)
+> +#define VIU_OSD_FIFO_LIMITS(size)        ((size & 0xf) << 24)
+>  
+>  #define VD1_IF0_GEN_REG 0x1a50
+>  #define VD1_IF0_CANVAS0 0x1a51
+> @@ -277,6 +314,27 @@
+>  #define VIU_OSD1_MATRIX_COEF31_32 0x1a9e
+>  #define VIU_OSD1_MATRIX_COEF40_41 0x1a9f
+>  #define VD1_IF0_GEN_REG3 0x1aa7
+> +
+> +#define VIU_OSD_BLENDO_H_START_END 0x1aa9
+> +#define VIU_OSD_BLENDO_V_START_END 0x1aaa
+> +#define VIU_OSD_BLEND_GEN_CTRL0 0x1aab
+> +#define VIU_OSD_BLEND_GEN_CTRL1 0x1aac
+> +#define VIU_OSD_BLEND_DUMMY_DATA 0x1aad
+> +#define VIU_OSD_BLEND_CURRENT_XY 0x1aae
+> +
+> +#define VIU_OSD2_MATRIX_CTRL 0x1ab0
+> +#define VIU_OSD2_MATRIX_COEF00_01 0x1ab1
+> +#define VIU_OSD2_MATRIX_COEF02_10 0x1ab2
+> +#define VIU_OSD2_MATRIX_COEF11_12 0x1ab3
+> +#define VIU_OSD2_MATRIX_COEF20_21 0x1ab4
+> +#define VIU_OSD2_MATRIX_COEF22 0x1ab5
+> +#define VIU_OSD2_MATRIX_OFFSET0_1 0x1ab6
+> +#define VIU_OSD2_MATRIX_OFFSET2 0x1ab7
+> +#define VIU_OSD2_MATRIX_PRE_OFFSET0_1 0x1ab8
+> +#define VIU_OSD2_MATRIX_PRE_OFFSET2 0x1ab9
+> +#define VIU_OSD2_MATRIX_PROBE_COLOR 0x1aba
+> +#define VIU_OSD2_MATRIX_HL_COLOR 0x1abb
+> +#define VIU_OSD2_MATRIX_PROBE_POS 0x1abc
+>  #define VIU_OSD1_EOTF_CTL 0x1ad4
+>  #define VIU_OSD1_EOTF_COEF00_01 0x1ad5
+>  #define VIU_OSD1_EOTF_COEF02_10 0x1ad6
+> @@ -295,6 +353,7 @@
+>  #define VPP_LINE_IN_LENGTH 0x1d01
+>  #define VPP_PIC_IN_HEIGHT 0x1d02
+>  #define VPP_SCALE_COEF_IDX 0x1d03
+> +#define		VPP_SCALE_HORIZONTAL_COEF       BIT(8)
+>  #define VPP_SCALE_COEF 0x1d04
+>  #define VPP_VSC_REGION12_STARTP 0x1d05
+>  #define VPP_VSC_REGION34_STARTP 0x1d06
+> @@ -316,6 +375,12 @@
+>  #define VPP_HSC_REGION4_PHASE_SLOPE 0x1d17
+>  #define VPP_HSC_PHASE_CTRL 0x1d18
+>  #define VPP_SC_MISC 0x1d19
+> +#define		VPP_SC_VD_EN_ENABLE             BIT(15)
+> +#define		VPP_SC_TOP_EN_ENABLE            BIT(16)
+> +#define		VPP_SC_HSC_EN_ENABLE            BIT(17)
+> +#define		VPP_SC_VSC_EN_ENABLE            BIT(18)
+> +#define		VPP_VSC_BANK_LENGTH(length)     (length & 0x7)
+> +#define		VPP_HSC_BANK_LENGTH(length)     ((length & 0x7) << 8)
+>  #define VPP_PREBLEND_VD1_H_START_END 0x1d1a
+>  #define VPP_PREBLEND_VD1_V_START_END 0x1d1b
+>  #define VPP_POSTBLEND_VD1_H_START_END 0x1d1c
+> @@ -325,24 +390,28 @@
+>  #define VPP_PREBLEND_H_SIZE 0x1d20
+>  #define VPP_POSTBLEND_H_SIZE 0x1d21
+>  #define VPP_HOLD_LINES 0x1d22
+> +#define		VPP_POSTBLEND_HOLD_LINES(lines) (lines & 0xf)
+> +#define		VPP_PREBLEND_HOLD_LINES(lines)  ((lines & 0xf) << 8)
+>  #define VPP_BLEND_ONECOLOR_CTRL 0x1d23
+>  #define VPP_PREBLEND_CURRENT_XY 0x1d24
+>  #define VPP_POSTBLEND_CURRENT_XY 0x1d25
+>  #define VPP_MISC 0x1d26
+> -#define		VPP_PREBLEND_ENABLE	BIT(6)
+> -#define		VPP_POSTBLEND_ENABLE	BIT(7)
+> -#define		VPP_OSD2_ALPHA_PREMULT	BIT(8)
+> -#define		VPP_OSD1_ALPHA_PREMULT	BIT(9)
+> -#define		VPP_VD1_POSTBLEND	BIT(10)
+> -#define		VPP_VD2_POSTBLEND	BIT(11)
+> -#define		VPP_OSD1_POSTBLEND	BIT(12)
+> -#define		VPP_OSD2_POSTBLEND	BIT(13)
+> -#define		VPP_VD1_PREBLEND	BIT(14)
+> -#define		VPP_VD2_PREBLEND	BIT(15)
+> -#define		VPP_OSD1_PREBLEND	BIT(16)
+> -#define		VPP_OSD2_PREBLEND	BIT(17)
+> -#define		VPP_COLOR_MNG_ENABLE	BIT(28)
+> +#define		VPP_PREBLEND_ENABLE             BIT(6)
+> +#define		VPP_POSTBLEND_ENABLE            BIT(7)
+> +#define		VPP_OSD2_ALPHA_PREMULT          BIT(8)
+> +#define		VPP_OSD1_ALPHA_PREMULT          BIT(9)
+> +#define		VPP_VD1_POSTBLEND               BIT(10)
+> +#define		VPP_VD2_POSTBLEND               BIT(11)
+> +#define		VPP_OSD1_POSTBLEND              BIT(12)
+> +#define		VPP_OSD2_POSTBLEND              BIT(13)
+> +#define		VPP_VD1_PREBLEND                BIT(14)
+> +#define		VPP_VD2_PREBLEND                BIT(15)
+> +#define		VPP_OSD1_PREBLEND               BIT(16)
+> +#define		VPP_OSD2_PREBLEND               BIT(17)
+> +#define		VPP_COLOR_MNG_ENABLE            BIT(28)
+>  #define VPP_OFIFO_SIZE 0x1d27
+> +#define		VPP_OFIFO_SIZE_MASK             GENMASK(13, 0)
+> +#define		VPP_OFIFO_SIZE_DEFAULT          (0xfff << 20 | 0x1000)
+>  #define VPP_FIFO_STATUS 0x1d28
+>  #define VPP_SMOKE_CTRL 0x1d29
+>  #define VPP_SMOKE1_VAL 0x1d2a
+> @@ -358,6 +427,8 @@
+>  #define VPP_HSC_PHASE_CTRL1 0x1d34
+>  #define VPP_HSC_INI_PAT_CTRL 0x1d35
+>  #define VPP_VADJ_CTRL 0x1d40
+> +#define		VPP_MINUS_BLACK_LVL_VADJ1_ENABLE BIT(1)
+> +
+>  #define VPP_VADJ1_Y 0x1d41
+>  #define VPP_VADJ1_MA_MB 0x1d42
+>  #define VPP_VADJ1_MC_MD 0x1d43
+> @@ -417,6 +488,7 @@
+>  #define VPP_PEAKING_VGAIN 0x1d92
+>  #define VPP_PEAKING_NLP_1 0x1d93
+>  #define VPP_DOLBY_CTRL 0x1d93
+> +#define VPP_PPS_DUMMY_DATA_MODE (1 << 17)
+>  #define VPP_PEAKING_NLP_2 0x1d94
+>  #define VPP_PEAKING_NLP_3 0x1d95
+>  #define VPP_PEAKING_NLP_4 0x1d96
+> @@ -471,6 +543,83 @@
+>  #define VPP_OSD_SCALE_COEF 0x1dcd
+>  #define VPP_INT_LINE_NUM 0x1dce
+>  
+> +#define VPP_WRAP_OSD1_MATRIX_COEF00_01 0x3d60
+> +#define VPP_WRAP_OSD1_MATRIX_COEF02_10 0x3d61
+> +#define VPP_WRAP_OSD1_MATRIX_COEF11_12 0x3d62
+> +#define VPP_WRAP_OSD1_MATRIX_COEF20_21 0x3d63
+> +#define VPP_WRAP_OSD1_MATRIX_COEF22 0x3d64
+> +#define VPP_WRAP_OSD1_MATRIX_COEF13_14 0x3d65
+> +#define VPP_WRAP_OSD1_MATRIX_COEF23_24 0x3d66
+> +#define VPP_WRAP_OSD1_MATRIX_COEF15_25 0x3d67
+> +#define VPP_WRAP_OSD1_MATRIX_CLIP 0x3d68
+> +#define VPP_WRAP_OSD1_MATRIX_OFFSET0_1 0x3d69
+> +#define VPP_WRAP_OSD1_MATRIX_OFFSET2 0x3d6a
+> +#define VPP_WRAP_OSD1_MATRIX_PRE_OFFSET0_1 0x3d6b
+> +#define VPP_WRAP_OSD1_MATRIX_PRE_OFFSET2 0x3d6c
+> +#define VPP_WRAP_OSD1_MATRIX_EN_CTRL 0x3d6d
+> +
+> +#define VPP_WRAP_OSD2_MATRIX_COEF00_01 0x3d70
+> +#define VPP_WRAP_OSD2_MATRIX_COEF02_10 0x3d71
+> +#define VPP_WRAP_OSD2_MATRIX_COEF11_12 0x3d72
+> +#define VPP_WRAP_OSD2_MATRIX_COEF20_21 0x3d73
+> +#define VPP_WRAP_OSD2_MATRIX_COEF22 0x3d74
+> +#define VPP_WRAP_OSD2_MATRIX_COEF13_14 0x3d75
+> +#define VPP_WRAP_OSD2_MATRIX_COEF23_24 0x3d76
+> +#define VPP_WRAP_OSD2_MATRIX_COEF15_25 0x3d77
+> +#define VPP_WRAP_OSD2_MATRIX_CLIP 0x3d78
+> +#define VPP_WRAP_OSD2_MATRIX_OFFSET0_1 0x3d79
+> +#define VPP_WRAP_OSD2_MATRIX_OFFSET2 0x3d7a
+> +#define VPP_WRAP_OSD2_MATRIX_PRE_OFFSET0_1 0x3d7b
+> +#define VPP_WRAP_OSD2_MATRIX_PRE_OFFSET2 0x3d7c
+> +#define VPP_WRAP_OSD2_MATRIX_EN_CTRL 0x3d7d
+> +
+> +#define VPP_WRAP_OSD3_MATRIX_COEF00_01 0x3db0
+> +#define VPP_WRAP_OSD3_MATRIX_COEF02_10 0x3db1
+> +#define VPP_WRAP_OSD3_MATRIX_COEF11_12 0x3db2
+> +#define VPP_WRAP_OSD3_MATRIX_COEF20_21 0x3db3
+> +#define VPP_WRAP_OSD3_MATRIX_COEF22 0x3db4
+> +#define VPP_WRAP_OSD3_MATRIX_COEF13_14 0x3db5
+> +#define VPP_WRAP_OSD3_MATRIX_COEF23_24 0x3db6
+> +#define VPP_WRAP_OSD3_MATRIX_COEF15_25 0x3db7
+> +#define VPP_WRAP_OSD3_MATRIX_CLIP 0x3db8
+> +#define VPP_WRAP_OSD3_MATRIX_OFFSET0_1 0x3db9
+> +#define VPP_WRAP_OSD3_MATRIX_OFFSET2 0x3dba
+> +#define VPP_WRAP_OSD3_MATRIX_PRE_OFFSET0_1 0x3dbb
+> +#define VPP_WRAP_OSD3_MATRIX_PRE_OFFSET2 0x3dbc
+> +#define VPP_WRAP_OSD3_MATRIX_EN_CTRL 0x3dbd
+> +
+> +/* osd2 scaler */
+> +#define OSD2_VSC_PHASE_STEP 0x3d00
+> +#define OSD2_VSC_INI_PHASE 0x3d01
+> +#define OSD2_VSC_CTRL0 0x3d02
+> +#define OSD2_HSC_PHASE_STEP 0x3d03
+> +#define OSD2_HSC_INI_PHASE 0x3d04
+> +#define OSD2_HSC_CTRL0 0x3d05
+> +#define OSD2_HSC_INI_PAT_CTRL 0x3d06
+> +#define OSD2_SC_DUMMY_DATA 0x3d07
+> +#define OSD2_SC_CTRL0 0x3d08
+> +#define OSD2_SCI_WH_M1 0x3d09
+> +#define OSD2_SCO_H_START_END 0x3d0a
+> +#define OSD2_SCO_V_START_END 0x3d0b
+> +#define OSD2_SCALE_COEF_IDX 0x3d18
+> +#define OSD2_SCALE_COEF 0x3d19
+> +
+> +/* osd34 scaler */
+> +#define OSD34_SCALE_COEF_IDX 0x3d1e
+> +#define OSD34_SCALE_COEF 0x3d1f
+> +#define OSD34_VSC_PHASE_STEP 0x3d20
+> +#define OSD34_VSC_INI_PHASE 0x3d21
+> +#define OSD34_VSC_CTRL0 0x3d22
+> +#define OSD34_HSC_PHASE_STEP 0x3d23
+> +#define OSD34_HSC_INI_PHASE 0x3d24
+> +#define OSD34_HSC_CTRL0 0x3d25
+> +#define OSD34_HSC_INI_PAT_CTRL 0x3d26
+> +#define OSD34_SC_DUMMY_DATA 0x3d27
+> +#define OSD34_SC_CTRL0 0x3d28
+> +#define OSD34_SCI_WH_M1 0x3d29
+> +#define OSD34_SCO_H_START_END 0x3d2a
+> +#define OSD34_SCO_V_START_END 0x3d2b
+> +
+>  /* viu2 */
+>  #define VIU2_ADDR_START 0x1e00
+>  #define VIU2_ADDR_END 0x1eff
+> @@ -584,6 +733,25 @@
+>  #define VENC_UPSAMPLE_CTRL0 0x1b64
+>  #define VENC_UPSAMPLE_CTRL1 0x1b65
+>  #define VENC_UPSAMPLE_CTRL2 0x1b66
+> +#define		VENC_UPSAMPLE_CTRL_F0_2_CLK_RATIO        BIT(0)
+> +#define		VENC_UPSAMPLE_CTRL_F1_EN                 BIT(5)
+> +#define		VENC_UPSAMPLE_CTRL_F1_UPSAMPLE_EN        BIT(6)
+> +#define		VENC_UPSAMPLE_CTRL_INTERLACE_HIGH_LUMA   (0x0 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_CVBS                  (0x1 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_S_VIDEO_LUMA          (0x2 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_S_VIDEO_CHROMA        (0x3 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_INTERLACE_PB          (0x4 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_INTERLACE_PR          (0x5 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_INTERLACE_R           (0x6 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_INTERLACE_G           (0x7 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_INTERLACE_B           (0x8 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_PROGRESSIVE_Y         (0x9 << 12)
+> +#define		VENC_UPSAMPLE_CTRL_PROGRESSIVE_PB        (0xa << 12)
+> +#define		VENC_UPSAMPLE_CTRL_PROGRESSIVE_PR        (0xb << 12)
+> +#define		VENC_UPSAMPLE_CTRL_PROGRESSIVE_R         (0xc << 12)
+> +#define		VENC_UPSAMPLE_CTRL_PROGRESSIVE_G         (0xd << 12)
+> +#define		VENC_UPSAMPLE_CTRL_PROGRESSIVE_B         (0xe << 12)
+> +#define		VENC_UPSAMPLE_CTRL_VDAC_TEST_VALUE       (0xf << 12)
+>  #define TCON_INVERT_CTL 0x1b67
+>  #define VENC_VIDEO_PROG_MODE 0x1b68
+>  #define VENC_ENCI_LINE 0x1b69
+> @@ -592,6 +760,7 @@
+>  #define VENC_ENCP_PIXEL 0x1b6c
+>  #define VENC_STATA 0x1b6d
+>  #define VENC_INTCTRL 0x1b6e
+> +#define		VENC_INTCTRL_ENCI_LNRST_INT_EN  BIT(1)
+>  #define VENC_INTFLAG 0x1b6f
+>  #define VENC_VIDEO_TST_EN 0x1b70
+>  #define VENC_VIDEO_TST_MDSEL 0x1b71
+> @@ -602,6 +771,7 @@
+>  #define VENC_VIDEO_TST_CLRBAR_WIDTH 0x1b76
+>  #define VENC_VIDEO_TST_VDCNT_STSET 0x1b77
+>  #define VENC_VDAC_DACSEL0 0x1b78
+> +#define		VENC_VDAC_SEL_ATV_DMD           BIT(5)
+>  #define VENC_VDAC_DACSEL1 0x1b79
+>  #define VENC_VDAC_DACSEL2 0x1b7a
+>  #define VENC_VDAC_DACSEL3 0x1b7b
+> @@ -622,6 +792,7 @@
+>  #define VENC_VDAC_DAC5_GAINCTRL 0x1bfa
+>  #define VENC_VDAC_DAC5_OFFSET 0x1bfb
+>  #define VENC_VDAC_FIFO_CTRL 0x1bfc
+> +#define		VENC_VDAC_FIFO_EN_ENCI_ENABLE   BIT(13)
+>  #define ENCL_TCON_INVERT_CTL 0x1bfd
+>  #define ENCP_VIDEO_EN 0x1b80
+>  #define ENCP_VIDEO_SYNC_MODE 0x1b81
+> @@ -637,6 +808,7 @@
+>  #define ENCP_VIDEO_SYNC_OFFST 0x1b8b
+>  #define ENCP_VIDEO_MACV_OFFST 0x1b8c
+>  #define ENCP_VIDEO_MODE 0x1b8d
+> +#define		ENCP_VIDEO_MODE_DE_V_HIGH       BIT(14)
+>  #define ENCP_VIDEO_MODE_ADV 0x1b8e
+>  #define ENCP_DBG_PX_RST 0x1b90
+>  #define ENCP_DBG_LN_RST 0x1b91
+> @@ -715,6 +887,11 @@
+>  #define C656_FS_LNED 0x1be7
+>  #define ENCI_VIDEO_MODE 0x1b00
+>  #define ENCI_VIDEO_MODE_ADV 0x1b01
+> +#define		ENCI_VIDEO_MODE_ADV_DMXMD(val)          (val & 0x3)
+> +#define		ENCI_VIDEO_MODE_ADV_VBICTL_LINE_17_22   BIT(2)
+> +#define		ENCI_VIDEO_MODE_ADV_YBW_MEDIUM          (0 << 4)
+> +#define		ENCI_VIDEO_MODE_ADV_YBW_LOW             (0x1 << 4)
+> +#define		ENCI_VIDEO_MODE_ADV_YBW_HIGH            (0x2 << 4)
+>  #define ENCI_VIDEO_FSC_ADJ 0x1b02
+>  #define ENCI_VIDEO_BRIGHT 0x1b03
+>  #define ENCI_VIDEO_CONT 0x1b04
+> @@ -785,13 +962,17 @@
+>  #define ENCI_DBG_MAXPX 0x1b4c
+>  #define ENCI_DBG_MAXLN 0x1b4d
+>  #define ENCI_MACV_MAX_AMP 0x1b50
+> +#define		ENCI_MACV_MAX_AMP_ENABLE_CHANGE BIT(15)
+> +#define		ENCI_MACV_MAX_AMP_VAL(val)      (val & 0x83ff)
+>  #define ENCI_MACV_PULSE_LO 0x1b51
+>  #define ENCI_MACV_PULSE_HI 0x1b52
+>  #define ENCI_MACV_BKP_MAX 0x1b53
+>  #define ENCI_CFILT_CTRL 0x1b54
+> +#define		ENCI_CFILT_CMPT_SEL_HIGH        BIT(1)
+>  #define ENCI_CFILT7 0x1b55
+>  #define ENCI_YC_DELAY 0x1b56
+>  #define ENCI_VIDEO_EN 0x1b57
+> +#define		ENCI_VIDEO_EN_ENABLE            BIT(0)
+>  #define ENCI_DVI_HSO_BEGIN 0x1c00
+>  #define ENCI_DVI_HSO_END 0x1c01
+>  #define ENCI_DVI_VSO_BLINE_EVN 0x1c02
+> @@ -803,6 +984,10 @@
+>  #define ENCI_DVI_VSO_END_EVN 0x1c08
+>  #define ENCI_DVI_VSO_END_ODD 0x1c09
+>  #define ENCI_CFILT_CTRL2 0x1c0a
+> +#define		ENCI_CFILT_CMPT_CR_DLY(delay)   (delay & 0xf)
+> +#define		ENCI_CFILT_CMPT_CB_DLY(delay)   ((delay & 0xf) << 4)
+> +#define		ENCI_CFILT_CVBS_CR_DLY(delay)   ((delay & 0xf) << 8)
+> +#define		ENCI_CFILT_CVBS_CB_DLY(delay)   ((delay & 0xf) << 12)
+>  #define ENCI_DACSEL_0 0x1c0b
+>  #define ENCI_DACSEL_1 0x1c0c
+>  #define ENCP_DACSEL_0 0x1c0d
+> @@ -817,6 +1002,8 @@
+>  #define ENCI_TST_CLRBAR_WIDTH 0x1c16
+>  #define ENCI_TST_VDCNT_STSET 0x1c17
+>  #define ENCI_VFIFO2VD_CTL 0x1c18
+> +#define		ENCI_VFIFO2VD_CTL_ENABLE        BIT(0)
+> +#define		ENCI_VFIFO2VD_CTL_VD_SEL(val)   ((val & 0xff) << 8)
+>  #define ENCI_VFIFO2VD_PIXEL_START 0x1c19
+>  #define ENCI_VFIFO2VD_PIXEL_END 0x1c1a
+>  #define ENCI_VFIFO2VD_LINE_TOP_START 0x1c1b
+> @@ -879,6 +1066,7 @@
+>  #define VENC_VDAC_DAC5_FILT_CTRL0 0x1c56
+>  #define VENC_VDAC_DAC5_FILT_CTRL1 0x1c57
+>  #define VENC_VDAC_DAC0_FILT_CTRL0 0x1c58
+> +#define		VENC_VDAC_DAC0_FILT_CTRL0_EN    BIT(0)
+>  #define VENC_VDAC_DAC0_FILT_CTRL1 0x1c59
+>  #define VENC_VDAC_DAC1_FILT_CTRL0 0x1c5a
+>  #define VENC_VDAC_DAC1_FILT_CTRL1 0x1c5b
+> @@ -1284,6 +1472,18 @@
+>  #define		VIU2_SEL_VENC_ENCP	(2 << 2)
+>  #define		VIU2_SEL_VENC_ENCT	(3 << 2)
+>  #define VPU_HDMI_SETTING 0x271b
+> +#define		VPU_HDMI_ENCI_DATA_TO_HDMI      BIT(0)
+> +#define		VPU_HDMI_ENCP_DATA_TO_HDMI      BIT(1)
+> +#define		VPU_HDMI_INV_HSYNC              BIT(2)
+> +#define		VPU_HDMI_INV_VSYNC              BIT(3)
+> +#define		VPU_HDMI_OUTPUT_CRYCB           (0 << 5)
+> +#define		VPU_HDMI_OUTPUT_YCBCR           (1 << 5)
+> +#define		VPU_HDMI_OUTPUT_YCRCB           (2 << 5)
+> +#define		VPU_HDMI_OUTPUT_CBCRY           (3 << 5)
+> +#define		VPU_HDMI_OUTPUT_CBYCR           (4 << 5)
+> +#define		VPU_HDMI_OUTPUT_CRCBY           (5 << 5)
+> +#define		VPU_HDMI_WR_RATE(rate)          (((rate & 0x1f) - 1) << 8)
+> +#define		VPU_HDMI_RD_RATE(rate)          (((rate & 0x1f) - 1) << 12)
+>  #define ENCI_INFO_READ 0x271c
+>  #define ENCP_INFO_READ 0x271d
+>  #define ENCT_INFO_READ 0x271e
+> @@ -1360,6 +1560,7 @@
+>  #define VPU_RDARB_MODE_L1C2 0x2799
+>  #define VPU_RDARB_MODE_L2C1 0x279d
+>  #define VPU_WRARB_MODE_L2C1 0x27a2
+> +#define		VPU_RDARB_SLAVE_TO_MASTER_PORT(dc, port) (port << (16 + dc))
+>  
+>  /* osd super scale */
+>  #define OSDSR_HV_SIZEIN 0x3130
+> @@ -1390,4 +1591,150 @@
+>  #define OSDSR_YBIC_VCOEF0 0x3149
+>  #define OSDSR_CBIC_VCOEF0 0x314a
+>  
+> +/* osd afbcd on gxtvbb */
+> +#define OSD1_AFBCD_ENABLE 0x31a0
+> +#define OSD1_AFBCD_MODE 0x31a1
+> +#define OSD1_AFBCD_SIZE_IN 0x31a2
+> +#define OSD1_AFBCD_HDR_PTR 0x31a3
+> +#define OSD1_AFBCD_FRAME_PTR 0x31a4
+> +#define OSD1_AFBCD_CHROMA_PTR 0x31a5
+> +#define OSD1_AFBCD_CONV_CTRL 0x31a6
+> +#define OSD1_AFBCD_STATUS 0x31a8
+> +#define OSD1_AFBCD_PIXEL_HSCOPE 0x31a9
+> +#define OSD1_AFBCD_PIXEL_VSCOPE 0x31aa
+> +
+> +/* add for gxm and 962e dv core2 */
+> +#define DOLBY_CORE2A_SWAP_CTRL1	0x3434
+> +#define DOLBY_CORE2A_SWAP_CTRL2	0x3435
+> +
+> +/* osd afbc on g12a */
+> +#define VPU_MAFBC_BLOCK_ID 0x3a00
+> +#define VPU_MAFBC_IRQ_RAW_STATUS 0x3a01
+> +#define VPU_MAFBC_IRQ_CLEAR 0x3a02
+> +#define VPU_MAFBC_IRQ_MASK 0x3a03
+> +#define VPU_MAFBC_IRQ_STATUS 0x3a04
+> +#define VPU_MAFBC_COMMAND 0x3a05
+> +#define VPU_MAFBC_STATUS 0x3a06
+> +#define VPU_MAFBC_SURFACE_CFG 0x3a07
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_LOW_S0 0x3a10
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_HIGH_S0 0x3a11
+> +#define VPU_MAFBC_FORMAT_SPECIFIER_S0 0x3a12
+> +#define VPU_MAFBC_BUFFER_WIDTH_S0 0x3a13
+> +#define VPU_MAFBC_BUFFER_HEIGHT_S0 0x3a14
+> +#define VPU_MAFBC_BOUNDING_BOX_X_START_S0 0x3a15
+> +#define VPU_MAFBC_BOUNDING_BOX_X_END_S0 0x3a16
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_START_S0 0x3a17
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_END_S0 0x3a18
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_LOW_S0 0x3a19
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_HIGH_S0 0x3a1a
+> +#define VPU_MAFBC_OUTPUT_BUF_STRIDE_S0 0x3a1b
+> +#define VPU_MAFBC_PREFETCH_CFG_S0 0x3a1c
+> +
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_LOW_S1 0x3a30
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_HIGH_S1 0x3a31
+> +#define VPU_MAFBC_FORMAT_SPECIFIER_S1 0x3a32
+> +#define VPU_MAFBC_BUFFER_WIDTH_S1 0x3a33
+> +#define VPU_MAFBC_BUFFER_HEIGHT_S1 0x3a34
+> +#define VPU_MAFBC_BOUNDING_BOX_X_START_S1 0x3a35
+> +#define VPU_MAFBC_BOUNDING_BOX_X_END_S1 0x3a36
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_START_S1 0x3a37
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_END_S1 0x3a38
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_LOW_S1 0x3a39
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_HIGH_S1 0x3a3a
+> +#define VPU_MAFBC_OUTPUT_BUF_STRIDE_S1 0x3a3b
+> +#define VPU_MAFBC_PREFETCH_CFG_S1 0x3a3c
+> +
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_LOW_S2 0x3a50
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_HIGH_S2 0x3a51
+> +#define VPU_MAFBC_FORMAT_SPECIFIER_S2 0x3a52
+> +#define VPU_MAFBC_BUFFER_WIDTH_S2 0x3a53
+> +#define VPU_MAFBC_BUFFER_HEIGHT_S2 0x3a54
+> +#define VPU_MAFBC_BOUNDING_BOX_X_START_S2 0x3a55
+> +#define VPU_MAFBC_BOUNDING_BOX_X_END_S2 0x3a56
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_START_S2 0x3a57
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_END_S2 0x3a58
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_LOW_S2 0x3a59
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_HIGH_S2 0x3a5a
+> +#define VPU_MAFBC_OUTPUT_BUF_STRIDE_S2 0x3a5b
+> +#define VPU_MAFBC_PREFETCH_CFG_S2 0x3a5c
+> +
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_LOW_S3 0x3a70
+> +#define VPU_MAFBC_HEADER_BUF_ADDR_HIGH_S3 0x3a71
+> +#define VPU_MAFBC_FORMAT_SPECIFIER_S3 0x3a72
+> +#define VPU_MAFBC_BUFFER_WIDTH_S3 0x3a73
+> +#define VPU_MAFBC_BUFFER_HEIGHT_S3 0x3a74
+> +#define VPU_MAFBC_BOUNDING_BOX_X_START_S3 0x3a75
+> +#define VPU_MAFBC_BOUNDING_BOX_X_END_S3 0x3a76
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_START_S3 0x3a77
+> +#define VPU_MAFBC_BOUNDING_BOX_Y_END_S3 0x3a78
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_LOW_S3 0x3a79
+> +#define VPU_MAFBC_OUTPUT_BUF_ADDR_HIGH_S3 0x3a7a
+> +#define VPU_MAFBC_OUTPUT_BUF_STRIDE_S3 0x3a7b
+> +#define VPU_MAFBC_PREFETCH_CFG_S3 0x3a7c
+> +
+> +#define DOLBY_PATH_CTRL 0x1a0c
+> +#define		DOLBY_BYPASS_EN(val)            (val & 0xf)
+> +#define OSD_PATH_MISC_CTRL 0x1a0e
+> +#define MALI_AFBCD_TOP_CTRL 0x1a0f
+> +
+> +#define VIU_OSD_BLEND_CTRL 0x39b0
+> +#define		VIU_OSD_BLEND_REORDER(dest, src)      ((src) << (dest * 4))
+> +#define		VIU_OSD_BLEND_DIN_EN(bits)            ((bits & 0xf) << 20)
+> +#define		VIU_OSD_BLEND1_DIN3_BYPASS_TO_DOUT1   BIT(24)
+> +#define		VIU_OSD_BLEND1_DOUT_BYPASS_TO_BLEND2  BIT(25)
+> +#define		VIU_OSD_BLEND_DIN0_BYPASS_TO_DOUT0    BIT(26)
+> +#define		VIU_OSD_BLEND_BLEN2_PREMULT_EN(input) ((input & 0x3) << 27)
+> +#define		VIU_OSD_BLEND_HOLD_LINES(lines)       ((u32)(lines & 0x7) << 29)
+> +#define VIU_OSD_BLEND_CTRL1 0x39c0
+> +#define VIU_OSD_BLEND_DIN0_SCOPE_H 0x39b1
+> +#define VIU_OSD_BLEND_DIN0_SCOPE_V 0x39b2
+> +#define VIU_OSD_BLEND_DIN1_SCOPE_H 0x39b3
+> +#define VIU_OSD_BLEND_DIN1_SCOPE_V 0x39b4
+> +#define VIU_OSD_BLEND_DIN2_SCOPE_H 0x39b5
+> +#define VIU_OSD_BLEND_DIN2_SCOPE_V 0x39b6
+> +#define VIU_OSD_BLEND_DIN3_SCOPE_H 0x39b7
+> +#define VIU_OSD_BLEND_DIN3_SCOPE_V 0x39b8
+> +#define VIU_OSD_BLEND_DUMMY_DATA0 0x39b9
+> +#define VIU_OSD_BLEND_DUMMY_ALPHA 0x39ba
+> +#define VIU_OSD_BLEND_BLEND0_SIZE 0x39bb
+> +#define VIU_OSD_BLEND_BLEND1_SIZE 0x39bc
+> +#define VIU_OSD_BLEND_RO_CURRENT_XY 0x39bf
+> +
+> +#define VPP_OUT_H_V_SIZE 0x1da5
+> +
+> +#define VPP_VD2_HDR_IN_SIZE 0x1df0
+> +#define VPP_OSD1_IN_SIZE 0x1df1
+> +#define VPP_GCLK_CTRL2 0x1df2
+> +#define VD2_PPS_DUMMY_DATA 0x1df4
+> +#define VPP_OSD1_BLD_H_SCOPE 0x1df5
+> +#define VPP_OSD1_BLD_V_SCOPE 0x1df6
+> +#define VPP_OSD2_BLD_H_SCOPE 0x1df7
+> +#define VPP_OSD2_BLD_V_SCOPE 0x1df8
+> +#define VPP_WRBAK_CTRL 0x1df9
+> +#define VPP_SLEEP_CTRL 0x1dfa
+> +#define VD1_BLEND_SRC_CTRL 0x1dfb
+> +#define VD2_BLEND_SRC_CTRL 0x1dfc
+> +#define		VD_BLEND_PREBLD_SRC_VD1         (1 << 0)
+> +#define		VD_BLEND_PREBLD_SRC_VD2         (2 << 0)
+> +#define		VD_BLEND_PREBLD_SRC_OSD1        (3 << 0)
+> +#define		VD_BLEND_PREBLD_SRC_OSD2        (4 << 0)
+> +#define		VD_BLEND_PREBLD_PREMULT_EN      BIT(4)
+> +#define		VD_BLEND_POSTBLD_SRC_VD1        (1 << 8)
+> +#define		VD_BLEND_POSTBLD_SRC_VD2        (2 << 8)
+> +#define		VD_BLEND_POSTBLD_SRC_OSD1       (3 << 8)
+> +#define		VD_BLEND_POSTBLD_SRC_OSD2       (4 << 8)
+> +#define		VD_BLEND_POSTBLD_PREMULT_EN     BIT(16)
+> +#define OSD1_BLEND_SRC_CTRL 0x1dfd
+> +#define OSD2_BLEND_SRC_CTRL 0x1dfe
+> +#define		OSD_BLEND_POSTBLD_SRC_VD1       (1 << 8)
+> +#define		OSD_BLEND_POSTBLD_SRC_VD2       (2 << 8)
+> +#define		OSD_BLEND_POSTBLD_SRC_OSD1      (3 << 8)
+> +#define		OSD_BLEND_POSTBLD_SRC_OSD2      (4 << 8)
+> +#define		OSD_BLEND_PATH_SEL_ENABLE       BIT(20)
+> +
+> +#define VPP_POST_BLEND_BLEND_DUMMY_DATA 0x3968
+> +#define VPP_POST_BLEND_DUMMY_ALPHA 0x3969
+> +#define VPP_RDARB_MODE 0x3978
+> +#define VPP_RDARB_REQEN_SLV 0x3979
+> +
+>  #endif /* __MESON_REGISTERS_H */
+> diff --git a/drivers/video/meson/meson_vclk.c b/drivers/video/meson/meson_vclk.c
+> index 693e0ebe39..0f628e920b 100644
+> --- a/drivers/video/meson/meson_vclk.c
+> +++ b/drivers/video/meson/meson_vclk.c
+> @@ -68,14 +68,20 @@ enum {
+>  #define CTS_HDMI_SYS_EN		BIT(8)
+>  
+>  #define HHI_HDMI_PLL_CNTL	0x320 /* 0xc8 offset in data sheet */
+> +#define HHI_HDMI_PLL_CNTL_EN	BIT(30)
+>  #define HHI_HDMI_PLL_CNTL2	0x324 /* 0xc9 offset in data sheet */
+>  #define HHI_HDMI_PLL_CNTL3	0x328 /* 0xca offset in data sheet */
+>  #define HHI_HDMI_PLL_CNTL4	0x32C /* 0xcb offset in data sheet */
+>  #define HHI_HDMI_PLL_CNTL5	0x330 /* 0xcc offset in data sheet */
+>  #define HHI_HDMI_PLL_CNTL6	0x334 /* 0xcd offset in data sheet */
+> +#define HHI_HDMI_PLL_CNTL7	0x338 /* 0xce offset in data sheet */
+>  
+>  #define HDMI_PLL_RESET		BIT(28)
+> +#define HDMI_PLL_RESET_G12A	BIT(29)
+>  #define HDMI_PLL_LOCK		BIT(31)
+> +#define HDMI_PLL_LOCK_G12A	(3 << 30)
+> +
+> +#define FREQ_1000_1001(_freq)	DIV_ROUND_CLOSEST(_freq * 1000, 1001)
+>  
+>  /* VID PLL Dividers */
+>  enum {
+> @@ -206,8 +212,6 @@ static void meson_venci_cvbs_clock_config(struct meson_vpu_priv *priv)
+>  {
+>  	unsigned int val;
+>  
+> -	debug("%s:%d\n", __func__, __LINE__);
+> -
+>  	/* Setup PLL to output 1.485GHz */
+>  	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXBB)) {
+>  		hhi_write(HHI_HDMI_PLL_CNTL, 0x5800023d);
+> @@ -217,6 +221,10 @@ static void meson_venci_cvbs_clock_config(struct meson_vpu_priv *priv)
+>  		hhi_write(HHI_HDMI_PLL_CNTL5, 0x71486980);
+>  		hhi_write(HHI_HDMI_PLL_CNTL6, 0x00000e55);
+>  		hhi_write(HHI_HDMI_PLL_CNTL, 0x4800023d);
+> +
+> +		/* Poll for lock bit */
+> +		readl_poll_timeout(priv->hhi_base + HHI_HDMI_PLL_CNTL, val,
+> +				   (val & HDMI_PLL_LOCK), 10);
+>  	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
+>  		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
+>  		hhi_write(HHI_HDMI_PLL_CNTL, 0x4000027b);
+> @@ -231,13 +239,26 @@ static void meson_venci_cvbs_clock_config(struct meson_vpu_priv *priv)
+>  				HDMI_PLL_RESET, HDMI_PLL_RESET);
+>  		hhi_update_bits(HHI_HDMI_PLL_CNTL,
+>  				HDMI_PLL_RESET, 0);
+> -	}
+>  
+> -	debug("%s:%d\n", __func__, __LINE__);
+> +		/* Poll for lock bit */
+> +		readl_poll_timeout(priv->hhi_base + HHI_HDMI_PLL_CNTL, val,
+> +				   (val & HDMI_PLL_LOCK), 10);
+> +	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		hhi_write(HHI_HDMI_PLL_CNTL, 0x1a0504f7);
+> +		hhi_write(HHI_HDMI_PLL_CNTL2, 0x00010000);
+> +		hhi_write(HHI_HDMI_PLL_CNTL3, 0x00000000);
+> +		hhi_write(HHI_HDMI_PLL_CNTL4, 0x6a28dc00);
+> +		hhi_write(HHI_HDMI_PLL_CNTL5, 0x65771290);
+> +		hhi_write(HHI_HDMI_PLL_CNTL6, 0x39272000);
+> +		hhi_write(HHI_HDMI_PLL_CNTL7, 0x56540000);
+> +		hhi_write(HHI_HDMI_PLL_CNTL, 0x3a0504f7);
+> +		hhi_write(HHI_HDMI_PLL_CNTL, 0x1a0504f7);
+>  
+> -	/* Poll for lock bit */
+> -	readl_poll_timeout(priv->hhi_base + HHI_HDMI_PLL_CNTL, val,
+> -			   (val & HDMI_PLL_LOCK), 10);
+> +		/* Poll for lock bit */
+> +		readl_poll_timeout(priv->hhi_base + HHI_HDMI_PLL_CNTL, val,
+> +			((val & HDMI_PLL_LOCK_G12A) == HDMI_PLL_LOCK_G12A),
+> +			10);
+> +	}
+>  
+>  	/* Disable VCLK2 */
+>  	hhi_update_bits(HHI_VIID_CLK_CNTL, VCLK2_EN, 0);
+> @@ -250,8 +271,13 @@ static void meson_venci_cvbs_clock_config(struct meson_vpu_priv *priv)
+>  			VCLK2_DIV_MASK, (55 - 1));
+>  
+>  	/* select vid_pll for vclk2 */
+> -	hhi_update_bits(HHI_VIID_CLK_CNTL,
+> -			VCLK2_SEL_MASK, (4 << VCLK2_SEL_SHIFT));
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		hhi_update_bits(HHI_VIID_CLK_CNTL,
+> +				VCLK2_SEL_MASK, (0 << VCLK2_SEL_SHIFT));
+> +	else
+> +		hhi_update_bits(HHI_VIID_CLK_CNTL,
+> +				VCLK2_SEL_MASK, (4 << VCLK2_SEL_SHIFT));
+> +
+>  	/* enable vclk2 gate */
+>  	hhi_update_bits(HHI_VIID_CLK_CNTL, VCLK2_EN, VCLK2_EN);
+>  
+> @@ -282,14 +308,12 @@ static void meson_venci_cvbs_clock_config(struct meson_vpu_priv *priv)
+>  	/* enable vdac_clk */
+>  	hhi_update_bits(HHI_VID_CLK_CNTL2,
+>  			CTS_VDAC_EN, CTS_VDAC_EN);
+> -
+> -	debug("%s:%d\n", __func__, __LINE__);
+>  }
+>  
+>  enum {
+>  /* PLL	O1 O2 O3 VP DV     EN TX */
+>  /* 4320 /4 /4 /1 /5 /1  => /2 /2 */
+> -	MESON_VCLK_HDMI_ENCI_54000 = 1,
+> +	MESON_VCLK_HDMI_ENCI_54000 = 0,
+>  /* 4320 /4 /4 /1 /5 /1  => /1 /2 */
+>  	MESON_VCLK_HDMI_DDR_54000,
+>  /* 2970 /4 /1 /1 /5 /1  => /1 /2 */
+> @@ -305,6 +329,7 @@ enum {
+>  };
+>  
+>  struct meson_vclk_params {
+> +	unsigned int pixel_freq;
+>  	unsigned int pll_base_freq;
+>  	unsigned int pll_od1;
+>  	unsigned int pll_od2;
+> @@ -313,6 +338,7 @@ struct meson_vclk_params {
+>  	unsigned int vclk_div;
+>  } params[] = {
+>  	[MESON_VCLK_HDMI_ENCI_54000] = {
+> +		.pixel_freq = 54000,
+>  		.pll_base_freq = 4320000,
+>  		.pll_od1 = 4,
+>  		.pll_od2 = 4,
+> @@ -321,6 +347,7 @@ struct meson_vclk_params {
+>  		.vclk_div = 1,
+>  	},
+>  	[MESON_VCLK_HDMI_DDR_54000] = {
+> +		.pixel_freq = 54000,
+>  		.pll_base_freq = 4320000,
+>  		.pll_od1 = 4,
+>  		.pll_od2 = 4,
+> @@ -329,6 +356,7 @@ struct meson_vclk_params {
+>  		.vclk_div = 1,
+>  	},
+>  	[MESON_VCLK_HDMI_DDR_148500] = {
+> +		.pixel_freq = 148500,
+>  		.pll_base_freq = 2970000,
+>  		.pll_od1 = 4,
+>  		.pll_od2 = 1,
+> @@ -337,6 +365,7 @@ struct meson_vclk_params {
+>  		.vclk_div = 1,
+>  	},
+>  	[MESON_VCLK_HDMI_74250] = {
+> +		.pixel_freq = 74250,
+>  		.pll_base_freq = 2970000,
+>  		.pll_od1 = 2,
+>  		.pll_od2 = 2,
+> @@ -345,6 +374,7 @@ struct meson_vclk_params {
+>  		.vclk_div = 1,
+>  	},
+>  	[MESON_VCLK_HDMI_148500] = {
+> +		.pixel_freq = 148500,
+>  		.pll_base_freq = 2970000,
+>  		.pll_od1 = 1,
+>  		.pll_od2 = 2,
+> @@ -353,14 +383,16 @@ struct meson_vclk_params {
+>  		.vclk_div = 1,
+>  	},
+>  	[MESON_VCLK_HDMI_297000] = {
+> -		.pll_base_freq = 2970000,
+> -		.pll_od1 = 1,
+> +		.pixel_freq = 297000,
+> +		.pll_base_freq = 5940000,
+> +		.pll_od1 = 2,
+>  		.pll_od2 = 1,
+>  		.pll_od3 = 1,
+>  		.vid_pll_div = VID_PLL_DIV_5,
+>  		.vclk_div = 2,
+>  	},
+>  	[MESON_VCLK_HDMI_594000] = {
+> +		.pixel_freq = 594000,
+>  		.pll_base_freq = 5940000,
+>  		.pll_od1 = 1,
+>  		.pll_od2 = 1,
+> @@ -368,6 +400,7 @@ struct meson_vclk_params {
+>  		.vid_pll_div = VID_PLL_DIV_5,
+>  		.vclk_div = 1,
+>  	},
+> +	{ /* sentinel */ },
+>  };
+>  
+>  static inline unsigned int pll_od_to_reg(unsigned int od)
+> @@ -431,6 +464,50 @@ void meson_hdmi_pll_set_params(struct meson_vpu_priv *priv, unsigned int m,
+>  		/* Poll for lock bit */
+>  		readl_poll_timeout(priv->hhi_base + HHI_HDMI_PLL_CNTL, val,
+>  				   (val & HDMI_PLL_LOCK), 10);
+> +	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		hhi_write(HHI_HDMI_PLL_CNTL, 0x0b3a0400 | m);
+> +
+> +		/* Enable and reset */
+> +		hhi_update_bits(HHI_HDMI_PLL_CNTL, 0x3 << 28, 0x3 << 28);
+> +
+> +		hhi_write(HHI_HDMI_PLL_CNTL2, frac);
+> +		hhi_write(HHI_HDMI_PLL_CNTL3, 0x00000000);
+> +
+> +		/* G12A HDMI PLL Needs specific parameters for 5.4GHz */
+> +		if (m >= 0xf7) {
+> +			if (frac < 0x10000) {
+> +				hhi_write(HHI_HDMI_PLL_CNTL4, 0x6a685c00);
+> +				hhi_write(HHI_HDMI_PLL_CNTL5, 0x11551293);
+> +			} else {
+> +				hhi_write(HHI_HDMI_PLL_CNTL4, 0xea68dc00);
+> +				hhi_write(HHI_HDMI_PLL_CNTL5, 0x65771290);
+> +			}
+> +			hhi_write(HHI_HDMI_PLL_CNTL6, 0x39272000);
+> +			hhi_write(HHI_HDMI_PLL_CNTL7, 0x55540000);
+> +		} else {
+> +			hhi_write(HHI_HDMI_PLL_CNTL4, 0x0a691c00);
+> +			hhi_write(HHI_HDMI_PLL_CNTL5, 0x33771290);
+> +			hhi_write(HHI_HDMI_PLL_CNTL6, 0x39270000);
+> +			hhi_write(HHI_HDMI_PLL_CNTL7, 0x50540000);
+> +		}
+> +
+> +		do {
+> +			/* Reset PLL */
+> +			hhi_update_bits(HHI_HDMI_PLL_CNTL,
+> +					HDMI_PLL_RESET_G12A,
+> +					HDMI_PLL_RESET_G12A);
+> +
+> +			/* UN-Reset PLL */
+> +			hhi_update_bits(HHI_HDMI_PLL_CNTL,
+> +					HDMI_PLL_RESET_G12A, 0);
+> +
+> +			/* Poll for lock bits */
+> +			if (!readl_poll_timeout(
+> +					priv->hhi_base + HHI_HDMI_PLL_CNTL, val,
+> +					((val & HDMI_PLL_LOCK_G12A)
+> +						== HDMI_PLL_LOCK_G12A), 100))
+> +				break;
+> +		} while (1);
+>  	}
+>  
+>  	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXBB))
+> @@ -440,6 +517,9 @@ void meson_hdmi_pll_set_params(struct meson_vpu_priv *priv, unsigned int m,
+>  		 meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL))
+>  		hhi_update_bits(HHI_HDMI_PLL_CNTL3,
+>  				3 << 21, pll_od_to_reg(od1) << 21);
+> +	else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		hhi_update_bits(HHI_HDMI_PLL_CNTL,
+> +				3 << 16, pll_od_to_reg(od1) << 16);
+>  
+>  	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXBB))
+>  		hhi_update_bits(HHI_HDMI_PLL_CNTL2,
+> @@ -448,6 +528,9 @@ void meson_hdmi_pll_set_params(struct meson_vpu_priv *priv, unsigned int m,
+>  		 meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL))
+>  		hhi_update_bits(HHI_HDMI_PLL_CNTL3,
+>  				3 << 23, pll_od_to_reg(od2) << 23);
+> +	else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		hhi_update_bits(HHI_HDMI_PLL_CNTL,
+> +				3 << 18, pll_od_to_reg(od2) << 18);
+>  
+>  	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXBB))
+>  		hhi_update_bits(HHI_HDMI_PLL_CNTL2,
+> @@ -456,6 +539,9 @@ void meson_hdmi_pll_set_params(struct meson_vpu_priv *priv, unsigned int m,
+>  		 meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL))
+>  		hhi_update_bits(HHI_HDMI_PLL_CNTL3,
+>  				3 << 19, pll_od_to_reg(od3) << 19);
+> +	else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		hhi_update_bits(HHI_HDMI_PLL_CNTL,
+> +				3 << 20, pll_od_to_reg(od3) << 20);
+>  }
+>  
+>  #define XTAL_FREQ 24000
+> @@ -472,6 +558,7 @@ static unsigned int meson_hdmi_pll_get_m(struct meson_vpu_priv *priv,
+>  
+>  #define HDMI_FRAC_MAX_GXBB	4096
+>  #define HDMI_FRAC_MAX_GXL	1024
+> +#define HDMI_FRAC_MAX_G12A	131072
+>  
+>  static unsigned int meson_hdmi_pll_get_frac(struct meson_vpu_priv *priv,
+>  					    unsigned int m,
+> @@ -488,6 +575,9 @@ static unsigned int meson_hdmi_pll_get_frac(struct meson_vpu_priv *priv,
+>  		parent_freq *= 2;
+>  	}
+>  
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		frac_max = HDMI_FRAC_MAX_G12A;
+> +
+>  	/* We can have a perfect match !*/
+>  	if (pll_freq / m == parent_freq &&
+>  	    pll_freq % m == 0)
+> @@ -519,6 +609,12 @@ static bool meson_hdmi_pll_validate_params(struct meson_vpu_priv *priv,
+>  			return false;
+>  		if (frac >= HDMI_FRAC_MAX_GXL)
+>  			return false;
+> +	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		/* Empiric supported min/max dividers */
+> +		if (m < 106 || m > 247)
+> +			return false;
+> +		if (frac >= HDMI_FRAC_MAX_G12A)
+> +			return false;
+>  	}
+>  
+>  	return true;
+> @@ -595,8 +691,10 @@ meson_vclk_set(struct meson_vpu_priv *priv, unsigned int pll_base_freq,
+>  	       unsigned int od1, unsigned int od2, unsigned int od3,
+>  	       unsigned int vid_pll_div, unsigned int vclk_div,
+>  	       unsigned int hdmi_tx_div, unsigned int venc_div,
+> -	       bool hdmi_use_enci)
+> +	       bool hdmi_use_enci, bool vic_alternate_clock)
+>  {
+> +	unsigned int m = 0, frac = 0;
+> +
+>  	/* Set HDMI-TX sys clock */
+>  	hhi_update_bits(HHI_HDMI_CLK_CNTL,
+>  			CTS_HDMI_SYS_SEL_MASK, 0);
+> @@ -611,34 +709,55 @@ meson_vclk_set(struct meson_vpu_priv *priv, unsigned int pll_base_freq,
+>  	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXBB)) {
+>  		switch (pll_base_freq) {
+>  		case 2970000:
+> -			meson_hdmi_pll_set_params(priv, 0x3d, 0xe00,
+> -						  od1, od2, od3);
+> +			m = 0x3d;
+> +			frac = vic_alternate_clock ? 0xd02 : 0xe00;
+>  			break;
+>  		case 4320000:
+> -			meson_hdmi_pll_set_params(priv, 0x5a, 0,
+> -						  od1, od2, od3);
+> +			m = vic_alternate_clock ? 0x59 : 0x5a;
+> +			frac = vic_alternate_clock ? 0xe8f : 0;
+>  			break;
+>  		case 5940000:
+> -			meson_hdmi_pll_set_params(priv, 0x7b, 0xc00,
+> -						  od1, od2, od3);
+> +			m = 0x7b;
+> +			frac = vic_alternate_clock ? 0xa05 : 0xc00;
+>  			break;
+>  		}
+> +
+> +		meson_hdmi_pll_set_params(priv, m, frac, od1, od2, od3);
+>  	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
+>  		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
+>  		switch (pll_base_freq) {
+>  		case 2970000:
+> -			meson_hdmi_pll_set_params(priv, 0x7b, 0x300,
+> -						  od1, od2, od3);
+> +			m = 0x7b;
+> +			frac = vic_alternate_clock ? 0x281 : 0x300;
+> +			break;
+> +		case 4320000:
+> +			m = vic_alternate_clock ? 0xb3 : 0xb4;
+> +			frac = vic_alternate_clock ? 0x347 : 0;
+> +			break;
+> +		case 5940000:
+> +			m = 0xf7;
+> +			frac = vic_alternate_clock ? 0x102 : 0x200;
+> +			break;
+> +		}
+> +
+> +		meson_hdmi_pll_set_params(priv, m, frac, od1, od2, od3);
+> +	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		switch (pll_base_freq) {
+> +		case 2970000:
+> +			m = 0x7b;
+> +			frac = vic_alternate_clock ? 0x140b4 : 0x18000;
+>  			break;
+>  		case 4320000:
+> -			meson_hdmi_pll_set_params(priv, 0xb4, 0,
+> -						  od1, od2, od3);
+> +			m = vic_alternate_clock ? 0xb3 : 0xb4;
+> +			frac = vic_alternate_clock ? 0x1a3ee : 0;
+>  			break;
+>  		case 5940000:
+> -			meson_hdmi_pll_set_params(priv, 0xf7, 0x200,
+> -						  od1, od2, od3);
+> +			m = 0xf7;
+> +			frac = vic_alternate_clock ? 0x8148 : 0x10000;
+>  			break;
+>  		}
+> +
+> +		meson_hdmi_pll_set_params(priv, m, frac, od1, od2, od3);
+>  	}
+>  
+>  	/* Setup vid_pll divider */
+> @@ -803,6 +922,7 @@ static void meson_vclk_setup(struct meson_vpu_priv *priv, unsigned int target,
+>  			     unsigned int vclk_freq, unsigned int venc_freq,
+>  			     unsigned int dac_freq, bool hdmi_use_enci)
+>  {
+> +	bool vic_alternate_clock = false;
+>  	unsigned int freq;
+>  	unsigned int hdmi_tx_div;
+>  	unsigned int venc_div;
+> @@ -820,8 +940,7 @@ static void meson_vclk_setup(struct meson_vpu_priv *priv, unsigned int target,
+>  		 * - encp encoder
+>  		 */
+>  		meson_vclk_set(priv, vclk_freq * 10, 0, 0, 0,
+> -			       VID_PLL_DIV_5, 2, 1, 1, false);
+> -
+> +			       VID_PLL_DIV_5, 2, 1, 1, false, false);
+>  		return;
+>  	}
+>  
+> @@ -841,31 +960,35 @@ static void meson_vclk_setup(struct meson_vpu_priv *priv, unsigned int target,
+>  		return;
+>  	}
+>  
+> -	switch (vclk_freq) {
+> -	case 54000:
+> -		if (hdmi_use_enci)
+> -			freq = MESON_VCLK_HDMI_ENCI_54000;
+> -		else
+> -			freq = MESON_VCLK_HDMI_DDR_54000;
+> -		break;
+> -	case 74250:
+> -		freq = MESON_VCLK_HDMI_74250;
+> -		break;
+> -	case 148500:
+> -		if (dac_freq != 148500)
+> -			freq = MESON_VCLK_HDMI_DDR_148500;
+> -		else
+> -			freq = MESON_VCLK_HDMI_148500;
+> -		break;
+> -	case 297000:
+> -		freq = MESON_VCLK_HDMI_297000;
+> -		break;
+> -	case 594000:
+> -		freq = MESON_VCLK_HDMI_594000;
+> -		break;
+> -	default:
+> -		printf("Fatal Error, invalid HDMI vclk freq %d\n",
+> -		       vclk_freq);
+> +	for (freq = 0 ; params[freq].pixel_freq ; ++freq) {
+> +		if (vclk_freq == params[freq].pixel_freq ||
+> +		    vclk_freq == FREQ_1000_1001(params[freq].pixel_freq)) {
+> +			if (vclk_freq != params[freq].pixel_freq)
+> +				vic_alternate_clock = true;
+> +			else
+> +				vic_alternate_clock = false;
+> +
+> +			if (freq == MESON_VCLK_HDMI_ENCI_54000 &&
+> +			    !hdmi_use_enci)
+> +				continue;
+> +
+> +			if (freq == MESON_VCLK_HDMI_DDR_54000 &&
+> +			    hdmi_use_enci)
+> +				continue;
+> +
+> +			if (freq == MESON_VCLK_HDMI_DDR_148500 &&
+> +			    dac_freq == vclk_freq)
+> +				continue;
+> +
+> +			if (freq == MESON_VCLK_HDMI_148500 &&
+> +			    dac_freq != vclk_freq)
+> +				continue;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (!params[freq].pixel_freq) {
+> +		pr_err("Fatal Error, invalid HDMI vclk freq %d\n", vclk_freq);
+>  		return;
+>  	}
+>  
+> @@ -873,7 +996,7 @@ static void meson_vclk_setup(struct meson_vpu_priv *priv, unsigned int target,
+>  		       params[freq].pll_od1, params[freq].pll_od2,
+>  		       params[freq].pll_od3, params[freq].vid_pll_div,
+>  		       params[freq].vclk_div, hdmi_tx_div, venc_div,
+> -		       hdmi_use_enci);
+> +		       hdmi_use_enci, vic_alternate_clock);
+>  }
+>  
+>  void meson_vpu_setup_vclk(struct udevice *dev,
+> diff --git a/drivers/video/meson/meson_venc.c b/drivers/video/meson/meson_venc.c
+> index d137dde8e2..5da4b3f096 100644
+> --- a/drivers/video/meson/meson_venc.c
+> +++ b/drivers/video/meson/meson_venc.c
+> @@ -23,7 +23,9 @@ enum meson_venc_source {
+>  };
+>  
+>  #define HHI_VDAC_CNTL0		0x2F4 /* 0xbd offset in data sheet */
+> +#define HHI_VDAC_CNTL0_G12A	0x2EC /* 0xbb offset in data sheet */
+>  #define HHI_VDAC_CNTL1		0x2F8 /* 0xbe offset in data sheet */
+> +#define HHI_VDAC_CNTL1_G12A	0x2F0 /* 0xbc offset in data sheet */
+>  
+>  struct meson_cvbs_enci_mode {
+>  	unsigned int mode_tag;
+> @@ -175,7 +177,7 @@ union meson_hdmi_venc_mode meson_hdmi_enci_mode_480i = {
+>  		.hso_end = 129,
+>  		.vso_even = 3,
+>  		.vso_odd = 260,
+> -		.macv_max_amp = 0x810b,
+> +		.macv_max_amp = 0xb,
+>  		.video_prog_mode = 0xf0,
+>  		.video_mode = 0x8,
+>  		.sch_adjust = 0x20,
+> @@ -195,7 +197,7 @@ union meson_hdmi_venc_mode meson_hdmi_enci_mode_576i = {
+>  		.hso_end = 129,
+>  		.vso_even = 3,
+>  		.vso_odd = 260,
+> -		.macv_max_amp = 8107,
+> +		.macv_max_amp = 0x7,
+>  		.video_prog_mode = 0xff,
+>  		.video_mode = 0x13,
+>  		.sch_adjust = 0x28,
+> @@ -774,12 +776,13 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  	unsigned int eof_lines;
+>  	unsigned int sof_lines;
+>  	unsigned int vsync_lines;
+> +	u32 reg;
+>  
+>  	/* Use VENCI for 480i and 576i and double HDMI pixels */
+>  	if (mode->flags & DISPLAY_FLAGS_DOUBLECLK) {
+> -		venc_hdmi_latency = 1;
+>  		hdmi_repeat = true;
+>  		use_enci = true;
+> +		venc_hdmi_latency = 1;
+>  	}
+>  
+>  	meson_venc_hdmi_get_dmt_vmode(mode, &vmode_dmt);
+> @@ -850,8 +853,11 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		unsigned int lines_f1;
+>  
+>  		/* CVBS Filter settings */
+> -		writel(0x12, priv->io_base + _REG(ENCI_CFILT_CTRL));
+> -		writel(0x12, priv->io_base + _REG(ENCI_CFILT_CTRL2));
+> +		writel(ENCI_CFILT_CMPT_SEL_HIGH | 0x10,
+> +		       priv->io_base + _REG(ENCI_CFILT_CTRL));
+> +		writel(ENCI_CFILT_CMPT_CR_DLY(2) |
+> +		       ENCI_CFILT_CMPT_CB_DLY(1),
+> +		       priv->io_base + _REG(ENCI_CFILT_CTRL2));
+>  
+>  		/* Digital Video Select : Interlace, clk27 clk, external */
+>  		writel(0, priv->io_base + _REG(VENC_DVI_SETTING));
+> @@ -873,7 +879,8 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		       priv->io_base + _REG(ENCI_SYNC_VSO_ODDLN));
+>  
+>  		/* Macrovision max amplitude change */
+> -		writel(vmode->enci.macv_max_amp,
+> +		writel(ENCI_MACV_MAX_AMP_ENABLE_CHANGE |
+> +		       ENCI_MACV_MAX_AMP_VAL(vmode->enci.macv_max_amp),
+>  		       priv->io_base + _REG(ENCI_MACV_MAX_AMP));
+>  
+>  		/* Video mode */
+> @@ -882,7 +889,8 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		writel(vmode->enci.video_mode,
+>  		       priv->io_base + _REG(ENCI_VIDEO_MODE));
+>  
+> -		/* Advanced Video Mode :
+> +		/*
+> +		 * Advanced Video Mode :
+>  		 * Demux shifting 0x2
+>  		 * Blank line end at line17/22
+>  		 * High bandwidth Luma Filter
+> @@ -890,7 +898,10 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		 * Bypass luma low pass filter
+>  		 * No macrovision on CSYNC
+>  		 */
+> -		writel(0x26, priv->io_base + _REG(ENCI_VIDEO_MODE_ADV));
+> +		writel(ENCI_VIDEO_MODE_ADV_DMXMD(2) |
+> +		       ENCI_VIDEO_MODE_ADV_VBICTL_LINE_17_22 |
+> +		       ENCI_VIDEO_MODE_ADV_YBW_HIGH,
+> +		       priv->io_base + _REG(ENCI_VIDEO_MODE_ADV));
+>  
+>  		writel(vmode->enci.sch_adjust,
+>  		       priv->io_base + _REG(ENCI_VIDEO_SCH));
+> @@ -905,8 +916,17 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		/* UNreset Interlaced TV Encoder */
+>  		writel(0, priv->io_base + _REG(ENCI_DBG_PX_RST));
+>  
+> -		/* Enable Vfifo2vd, Y_Cb_Y_Cr select */
+> -		writel(0x4e01, priv->io_base + _REG(ENCI_VFIFO2VD_CTL));
+> +		/*
+> +		 * Enable Vfifo2vd and set Y_Cb_Y_Cr:
+> +		 * Corresponding value:
+> +		 * Y  => 00 or 10
+> +		 * Cb => 01
+> +		 * Cr => 11
+> +		 * Ex: 0x4e => 01001110 would mean Cb/Y/Cr/Y
+> +		 */
+> +		writel(ENCI_VFIFO2VD_CTL_ENABLE |
+> +		       ENCI_VFIFO2VD_CTL_VD_SEL(0x4e),
+> +		       priv->io_base + _REG(ENCI_VFIFO2VD_CTL));
+>  
+>  		/* Timings */
+>  		writel(vmode->enci.pixel_start,
+> @@ -928,7 +948,8 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		meson_vpp_setup_mux(priv, MESON_VIU_VPP_MUX_ENCI);
+>  
+>  		/* Interlace video enable */
+> -		writel(1, priv->io_base + _REG(ENCI_VIDEO_EN));
+> +		writel(ENCI_VIDEO_EN_ENABLE,
+> +		       priv->io_base + _REG(ENCI_VIDEO_EN));
+>  
+>  		lines_f0 = mode->vback_porch.typ + mode->vactive.typ +
+>  			   mode->vback_porch.typ + mode->vsync_len.typ;
+> @@ -1177,7 +1198,8 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		writel(1, priv->io_base + _REG(ENCP_VIDEO_EN));
+>  
+>  		/* Set DE signal's polarity is active high */
+> -		writel_bits(BIT(14), BIT(14),
+> +		writel_bits(ENCP_VIDEO_MODE_DE_V_HIGH,
+> +			    ENCP_VIDEO_MODE_DE_V_HIGH,
+>  			    priv->io_base + _REG(ENCP_VIDEO_MODE));
+>  
+>  		/* Program DE timing */
+> @@ -1302,21 +1324,52 @@ static void meson_venc_hdmi_mode_set(struct meson_vpu_priv *priv,
+>  		meson_vpp_setup_mux(priv, MESON_VIU_VPP_MUX_ENCP);
+>  	}
+>  
+> -	writel((use_enci ? 1 : 2) |
+> -		       (mode->flags & DISPLAY_FLAGS_HSYNC_HIGH ? 1 << 2 : 0) |
+> -		       (mode->flags & DISPLAY_FLAGS_VSYNC_HIGH ? 1 << 3 : 0) |
+> -		       4 << 5 |
+> -		       (venc_repeat ? 1 << 8 : 0) |
+> -		       (hdmi_repeat ? 1 << 12 : 0),
+> -		       priv->io_base + _REG(VPU_HDMI_SETTING));
+> +	/* Set VPU HDMI setting */
+> +	/* Select ENCP or ENCI data to HDMI */
+> +	if (use_enci)
+> +		reg = VPU_HDMI_ENCI_DATA_TO_HDMI;
+> +	else
+> +		reg = VPU_HDMI_ENCP_DATA_TO_HDMI;
+> +
+> +	/* Invert polarity of HSYNC from VENC */
+> +	if (mode->flags & DISPLAY_FLAGS_HSYNC_HIGH)
+> +		reg |= VPU_HDMI_INV_HSYNC;
+> +
+> +	/* Invert polarity of VSYNC from VENC */
+> +	if (mode->flags & DISPLAY_FLAGS_VSYNC_HIGH)
+> +		reg |= VPU_HDMI_INV_VSYNC;
+> +
+> +	/* Output data format: CbYCr */
+> +	reg |= VPU_HDMI_OUTPUT_CBYCR;
+> +
+> +	/*
+> +	 * Write rate to the async FIFO between VENC and HDMI.
+> +	 * One write every 2 wr_clk.
+> +	 */
+> +	if (venc_repeat)
+> +		reg |= VPU_HDMI_WR_RATE(2);
+> +
+> +	/*
+> +	 * Read rate to the async FIFO between VENC and HDMI.
+> +	 * One read every 2 wr_clk.
+> +	 */
+> +	if (hdmi_repeat)
+> +		reg |= VPU_HDMI_RD_RATE(2);
+> +
+> +	writel(reg, priv->io_base + _REG(VPU_HDMI_SETTING));
+>  }
+>  
+>  static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  				      struct meson_cvbs_enci_mode *mode)
+>  {
+> +	u32 reg;
+> +
+>  	/* CVBS Filter settings */
+> -	writel(0x12, priv->io_base + _REG(ENCI_CFILT_CTRL));
+> -	writel(0x12, priv->io_base + _REG(ENCI_CFILT_CTRL2));
+> +	writel(ENCI_CFILT_CMPT_SEL_HIGH | 0x10,
+> +	       priv->io_base + _REG(ENCI_CFILT_CTRL));
+> +	writel(ENCI_CFILT_CMPT_CR_DLY(2) |
+> +	       ENCI_CFILT_CMPT_CB_DLY(1),
+> +	       priv->io_base + _REG(ENCI_CFILT_CTRL2));
+>  
+>  	/* Digital Video Select : Interlace, clk27 clk, external */
+>  	writel(0, priv->io_base + _REG(VENC_DVI_SETTING));
+> @@ -1338,7 +1391,8 @@ static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  	       priv->io_base + _REG(ENCI_SYNC_VSO_ODDLN));
+>  
+>  	/* Macrovision max amplitude change */
+> -	writel(0x8100 + mode->macv_max_amp,
+> +	writel(ENCI_MACV_MAX_AMP_ENABLE_CHANGE |
+> +	       ENCI_MACV_MAX_AMP_VAL(mode->macv_max_amp),
+>  	       priv->io_base + _REG(ENCI_MACV_MAX_AMP));
+>  
+>  	/* Video mode */
+> @@ -1347,7 +1401,8 @@ static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  	writel(mode->video_mode,
+>  	       priv->io_base + _REG(ENCI_VIDEO_MODE));
+>  
+> -	/* Advanced Video Mode :
+> +	/*
+> +	 * Advanced Video Mode :
+>  	 * Demux shifting 0x2
+>  	 * Blank line end at line17/22
+>  	 * High bandwidth Luma Filter
+> @@ -1355,7 +1410,10 @@ static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  	 * Bypass luma low pass filter
+>  	 * No macrovision on CSYNC
+>  	 */
+> -	writel(0x26, priv->io_base + _REG(ENCI_VIDEO_MODE_ADV));
+> +	writel(ENCI_VIDEO_MODE_ADV_DMXMD(2) |
+> +	       ENCI_VIDEO_MODE_ADV_VBICTL_LINE_17_22 |
+> +	       ENCI_VIDEO_MODE_ADV_YBW_HIGH,
+> +	       priv->io_base + _REG(ENCI_VIDEO_MODE_ADV));
+>  
+>  	writel(mode->sch_adjust, priv->io_base + _REG(ENCI_VIDEO_SCH));
+>  
+> @@ -1387,16 +1445,50 @@ static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  	/* UNreset Interlaced TV Encoder */
+>  	writel(0, priv->io_base + _REG(ENCI_DBG_PX_RST));
+>  
+> -	/* Enable Vfifo2vd, Y_Cb_Y_Cr select */
+> -	writel(0x4e01, priv->io_base + _REG(ENCI_VFIFO2VD_CTL));
+> +	/*
+> +	 * Enable Vfifo2vd and set Y_Cb_Y_Cr:
+> +	 * Corresponding value:
+> +	 * Y  => 00 or 10
+> +	 * Cb => 01
+> +	 * Cr => 11
+> +	 * Ex: 0x4e => 01001110 would mean Cb/Y/Cr/Y
+> +	 */
+> +	writel(ENCI_VFIFO2VD_CTL_ENABLE |
+> +	       ENCI_VFIFO2VD_CTL_VD_SEL(0x4e),
+> +	       priv->io_base + _REG(ENCI_VFIFO2VD_CTL));
+>  
+>  	/* Power UP Dacs */
+>  	writel(0, priv->io_base + _REG(VENC_VDAC_SETTING));
+>  
+>  	/* Video Upsampling */
+> -	writel(0x0061, priv->io_base + _REG(VENC_UPSAMPLE_CTRL0));
+> -	writel(0x4061, priv->io_base + _REG(VENC_UPSAMPLE_CTRL1));
+> -	writel(0x5061, priv->io_base + _REG(VENC_UPSAMPLE_CTRL2));
+> +	/*
+> +	 * CTRL0, CTRL1 and CTRL2:
+> +	 * Filter0: input data sample every 2 cloks
+> +	 * Filter1: filtering and upsample enable
+> +	 */
+> +	reg = VENC_UPSAMPLE_CTRL_F0_2_CLK_RATIO | VENC_UPSAMPLE_CTRL_F1_EN |
+> +		VENC_UPSAMPLE_CTRL_F1_UPSAMPLE_EN;
+> +
+> +	/*
+> +	 * Upsample CTRL0:
+> +	 * Interlace High Bandwidth Luma
+> +	 */
+> +	writel(VENC_UPSAMPLE_CTRL_INTERLACE_HIGH_LUMA | reg,
+> +	       priv->io_base + _REG(VENC_UPSAMPLE_CTRL0));
+> +
+> +	/*
+> +	 * Upsample CTRL1:
+> +	 * Interlace Pb
+> +	 */
+> +	writel(VENC_UPSAMPLE_CTRL_INTERLACE_PB | reg,
+> +	       priv->io_base + _REG(VENC_UPSAMPLE_CTRL1));
+> +
+> +	/*
+> +	 * Upsample CTRL2:
+> +	 * Interlace R
+> +	 */
+> +	writel(VENC_UPSAMPLE_CTRL_INTERLACE_PR | reg,
+> +	       priv->io_base + _REG(VENC_UPSAMPLE_CTRL2));
+>  
+>  	/* Select Interlace Y DACs */
+>  	writel(0, priv->io_base + _REG(VENC_VDAC_DACSEL0));
+> @@ -1410,14 +1502,16 @@ static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  	meson_vpp_setup_mux(priv, MESON_VIU_VPP_MUX_ENCI);
+>  
+>  	/* Enable ENCI FIFO */
+> -	writel(0x2000, priv->io_base + _REG(VENC_VDAC_FIFO_CTRL));
+> +	writel(VENC_VDAC_FIFO_EN_ENCI_ENABLE,
+> +	       priv->io_base + _REG(VENC_VDAC_FIFO_CTRL));
+>  
+>  	/* Select ENCI DACs 0, 1, 4, and 5 */
+>  	writel(0x11, priv->io_base + _REG(ENCI_DACSEL_0));
+>  	writel(0x11, priv->io_base + _REG(ENCI_DACSEL_1));
+>  
+>  	/* Interlace video enable */
+> -	writel(1, priv->io_base + _REG(ENCI_VIDEO_EN));
+> +	writel(ENCI_VIDEO_EN_ENABLE,
+> +	       priv->io_base + _REG(ENCI_VIDEO_EN));
+>  
+>  	/* Configure Video Saturation / Contrast / Brightness / Hue */
+>  	writel(mode->video_saturation,
+> @@ -1430,7 +1524,8 @@ static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  	       priv->io_base + _REG(ENCI_VIDEO_HUE));
+>  
+>  	/* Enable DAC0 Filter */
+> -	writel(0x1, priv->io_base + _REG(VENC_VDAC_DAC0_FILT_CTRL0));
+> +	writel(VENC_VDAC_DAC0_FILT_CTRL0_EN,
+> +	       priv->io_base + _REG(VENC_VDAC_DAC0_FILT_CTRL0));
+>  	writel(0xfc48, priv->io_base + _REG(VENC_VDAC_DAC0_FILT_CTRL1));
+>  
+>  	/* 0 in Macrovision register 0 */
+> @@ -1441,15 +1536,21 @@ static void meson_venci_cvbs_mode_set(struct meson_vpu_priv *priv,
+>  	       priv->io_base + _REG(ENCI_SYNC_ADJ));
+>  
+>  	/* enable VDAC */
+> -	writel_bits(BIT(5), 0, priv->io_base + _REG(VENC_VDAC_DACSEL0));
+> +	writel_bits(VENC_VDAC_SEL_ATV_DMD, 0,
+> +		    priv->io_base + _REG(VENC_VDAC_DACSEL0));
+>  
+>  	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXBB))
+>  		hhi_write(HHI_VDAC_CNTL0, 1);
+>  	else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL) ||
+>  		 meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM))
+>  		hhi_write(HHI_VDAC_CNTL0, 0xf0001);
+> +	else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		hhi_write(HHI_VDAC_CNTL0_G12A, 0x906001);
+>  
+> -	hhi_write(HHI_VDAC_CNTL1, 0);
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		hhi_write(HHI_VDAC_CNTL1_G12A, 0);
+> +	else
+> +		hhi_write(HHI_VDAC_CNTL1, 0);
+>  }
+>  
+>  void meson_vpu_setup_venc(struct udevice *dev,
+> diff --git a/drivers/video/meson/meson_vpu.h b/drivers/video/meson/meson_vpu.h
+> index ef5f10eae3..3412dac052 100644
+> --- a/drivers/video/meson/meson_vpu.h
+> +++ b/drivers/video/meson/meson_vpu.h
+> @@ -14,6 +14,7 @@
+>  #include <video.h>
+>  #include <display.h>
+>  #include <linux/io.h>
+> +#include <linux/bitfield.h>
+>  #include "meson_registers.h"
+>  
+>  enum {
+> diff --git a/drivers/video/meson/meson_vpu_init.c b/drivers/video/meson/meson_vpu_init.c
+> index 92228b5ceb..12f8c4194a 100644
+> --- a/drivers/video/meson/meson_vpu_init.c
+> +++ b/drivers/video/meson/meson_vpu_init.c
+> @@ -12,7 +12,9 @@
+>  
+>  /* HHI Registers */
+>  #define HHI_VDAC_CNTL0		0x2F4 /* 0xbd offset in data sheet */
+> +#define HHI_VDAC_CNTL0_G12A	0x2EC /* 0xbd offset in data sheet */
+>  #define HHI_VDAC_CNTL1		0x2F8 /* 0xbe offset in data sheet */
+> +#define HHI_VDAC_CNTL1_G12A	0x2F0 /* 0xbe offset in data sheet */
+>  #define HHI_HDMI_PHY_CNTL0	0x3a0 /* 0xe8 offset in data sheet */
+>  
+>  /* OSDx_CTRL_STAT2 */
+> @@ -42,7 +44,7 @@ static void meson_vpp_write_scaling_filter_coefs(struct meson_vpu_priv *priv,
+>  {
+>  	int i;
+>  
+> -	writel(is_horizontal ? BIT(8) : 0,
+> +	writel(is_horizontal ? VPP_SCALE_HORIZONTAL_COEF : 0,
+>  	       priv->io_base + _REG(VPP_OSD_SCALE_COEF_IDX));
+>  	for (i = 0; i < 33; i++)
+>  		writel(coefs[i],
+> @@ -67,7 +69,7 @@ static void meson_vpp_write_vd_scaling_filter_coefs(struct meson_vpu_priv *priv,
+>  {
+>  	int i;
+>  
+> -	writel(is_horizontal ? BIT(8) : 0,
+> +	writel(is_horizontal ? VPP_SCALE_HORIZONTAL_COEF : 0,
+>  	       priv->io_base + _REG(VPP_SCALE_COEF_IDX));
+>  	for (i = 0; i < 33; i++)
+>  		writel(coefs[i],
+> @@ -112,6 +114,34 @@ static int eotf_bypass_coeff[EOTF_COEFF_SIZE] = {
+>  	EOTF_COEFF_RIGHTSHIFT /* right shift */
+>  };
+>  
+> +static void meson_viu_set_g12a_osd1_matrix(struct meson_vpu_priv *priv,
+> +					   int *m, bool csc_on)
+> +{
+> +	/* VPP WRAP OSD1 matrix */
+> +	writel(((m[0] & 0xfff) << 16) | (m[1] & 0xfff),
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_PRE_OFFSET0_1));
+> +	writel(m[2] & 0xfff,
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_PRE_OFFSET2));
+> +	writel(((m[3] & 0x1fff) << 16) | (m[4] & 0x1fff),
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_COEF00_01));
+> +	writel(((m[5] & 0x1fff) << 16) | (m[6] & 0x1fff),
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_COEF02_10));
+> +	writel(((m[7] & 0x1fff) << 16) | (m[8] & 0x1fff),
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_COEF11_12));
+> +	writel(((m[9] & 0x1fff) << 16) | (m[10] & 0x1fff),
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_COEF20_21));
+> +	writel((m[11] & 0x1fff) << 16,
+> +	       priv->io_base +	_REG(VPP_WRAP_OSD1_MATRIX_COEF22));
+> +
+> +	writel(((m[18] & 0xfff) << 16) | (m[19] & 0xfff),
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_OFFSET0_1));
+> +	writel(m[20] & 0xfff,
+> +	       priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_OFFSET2));
+> +
+> +	writel_bits(BIT(0), csc_on ? BIT(0) : 0,
+> +		    priv->io_base + _REG(VPP_WRAP_OSD1_MATRIX_EN_CTRL));
+> +}
+> +
+>  static void meson_viu_set_osd_matrix(struct meson_vpu_priv *priv,
+>  				     enum viu_matrix_sel_e m_select,
+>  				     int *m, bool csc_on)
+> @@ -322,20 +352,47 @@ static void meson_viu_load_matrix(struct meson_vpu_priv *priv)
+>  				 true);
+>  }
+>  
+> +static inline uint32_t meson_viu_osd_burst_length_reg(uint32_t length)
+> +{
+> +	u32 val = (((length & 0x80) % 24) / 12);
+> +
+> +	return (((val & 0x3) << 10) | (((val & 0x4) >> 2) << 31));
+> +}
+> +
+>  void meson_vpu_init(struct udevice *dev)
+>  {
+>  	struct meson_vpu_priv *priv = dev_get_priv(dev);
+>  	u32 reg;
+>  
+> -	/* vpu initialization */
+> -	writel(0x210000, priv->io_base + _REG(VPU_RDARB_MODE_L1C1));
+> -	writel(0x10000, priv->io_base + _REG(VPU_RDARB_MODE_L1C2));
+> -	writel(0x900000, priv->io_base + _REG(VPU_RDARB_MODE_L2C1));
+> -	writel(0x20000, priv->io_base + _REG(VPU_WRARB_MODE_L2C1));
+> +	/*
+> +	 * Slave dc0 and dc5 connected to master port 1.
+> +	 * By default other slaves are connected to master port 0.
+> +	 */
+> +	reg = VPU_RDARB_SLAVE_TO_MASTER_PORT(0, 1) |
+> +		VPU_RDARB_SLAVE_TO_MASTER_PORT(5, 1);
+> +	writel(reg, priv->io_base + _REG(VPU_RDARB_MODE_L1C1));
+> +
+> +	/* Slave dc0 connected to master port 1 */
+> +	reg = VPU_RDARB_SLAVE_TO_MASTER_PORT(0, 1);
+> +	writel(reg, priv->io_base + _REG(VPU_RDARB_MODE_L1C2));
+> +
+> +	/* Slave dc4 and dc7 connected to master port 1 */
+> +	reg = VPU_RDARB_SLAVE_TO_MASTER_PORT(4, 1) |
+> +		VPU_RDARB_SLAVE_TO_MASTER_PORT(7, 1);
+> +	writel(reg, priv->io_base + _REG(VPU_RDARB_MODE_L2C1));
+> +
+> +	/* Slave dc1 connected to master port 1 */
+> +	reg = VPU_RDARB_SLAVE_TO_MASTER_PORT(1, 1);
+> +	writel(reg, priv->io_base + _REG(VPU_WRARB_MODE_L2C1));
+>  
+>  	/* Disable CVBS VDAC */
+> -	hhi_write(HHI_VDAC_CNTL0, 0);
+> -	hhi_write(HHI_VDAC_CNTL1, 8);
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		hhi_write(HHI_VDAC_CNTL0_G12A, 0);
+> +		hhi_write(HHI_VDAC_CNTL1_G12A, 8);
+> +	} else {
+> +		hhi_write(HHI_VDAC_CNTL0, 0);
+> +		hhi_write(HHI_VDAC_CNTL1, 8);
+> +	}
+>  
+>  	/* Power Down Dacs */
+>  	writel(0xff, priv->io_base + _REG(VENC_VDAC_SETTING));
+> @@ -344,7 +401,9 @@ void meson_vpu_init(struct udevice *dev)
+>  	hhi_write(HHI_HDMI_PHY_CNTL0, 0);
+>  
+>  	/* Disable HDMI */
+> -	writel_bits(0x3, 0, priv->io_base + _REG(VPU_HDMI_SETTING));
+> +	writel_bits(VPU_HDMI_ENCI_DATA_TO_HDMI |
+> +		    VPU_HDMI_ENCP_DATA_TO_HDMI, 0,
+> +		    priv->io_base + _REG(VPU_HDMI_SETTING));
+>  
+>  	/* Disable all encoders */
+>  	writel(0, priv->io_base + _REG(ENCI_VIDEO_EN));
+> @@ -360,43 +419,58 @@ void meson_vpu_init(struct udevice *dev)
+>  	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM)) {
+>  		writel_bits(0xff << 16, 0xff << 16,
+>  			    priv->io_base + _REG(VIU_MISC_CTRL1));
+> -		writel(0x20000, priv->io_base + _REG(VPP_DOLBY_CTRL));
+> +		writel(VPP_PPS_DUMMY_DATA_MODE,
+> +		       priv->io_base + _REG(VPP_DOLBY_CTRL));
+>  		writel(0x1020080,
+>  		       priv->io_base + _REG(VPP_DUMMY_DATA1));
+> -	}
+> +	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		writel(0xf, priv->io_base + _REG(DOLBY_PATH_CTRL));
+>  
+>  	/* Initialize vpu fifo control registers */
+> -	writel(readl(priv->io_base + _REG(VPP_OFIFO_SIZE)) |
+> -			0x77f, priv->io_base + _REG(VPP_OFIFO_SIZE));
+> -	writel(0x08080808, priv->io_base + _REG(VPP_HOLD_LINES));
+> -
+> -	/* Turn off preblend */
+> -	writel_bits(VPP_PREBLEND_ENABLE, 0,
+> -		    priv->io_base + _REG(VPP_MISC));
+> -
+> -	/* Turn off POSTBLEND */
+> -	writel_bits(VPP_POSTBLEND_ENABLE, 0,
+> -		    priv->io_base + _REG(VPP_MISC));
+> -
+> -	/* Force all planes off */
+> -	writel_bits(VPP_OSD1_POSTBLEND | VPP_OSD2_POSTBLEND |
+> -		    VPP_VD1_POSTBLEND | VPP_VD2_POSTBLEND |
+> -		    VPP_VD1_PREBLEND | VPP_VD2_PREBLEND, 0,
+> -		    priv->io_base + _REG(VPP_MISC));
+> -
+> -	/* Setup default VD settings */
+> -	writel(4096,
+> -	       priv->io_base + _REG(VPP_PREBLEND_VD1_H_START_END));
+> -	writel(4096,
+> -	       priv->io_base + _REG(VPP_BLEND_VD2_H_START_END));
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		writel(VPP_OFIFO_SIZE_DEFAULT,
+> +		       priv->io_base + _REG(VPP_OFIFO_SIZE));
+> +	else
+> +		writel_bits(VPP_OFIFO_SIZE_MASK, 0x77f,
+> +			    priv->io_base + _REG(VPP_OFIFO_SIZE));
+> +	writel(VPP_POSTBLEND_HOLD_LINES(4) | VPP_PREBLEND_HOLD_LINES(4),
+> +	       priv->io_base + _REG(VPP_HOLD_LINES));
+> +
+> +	if (!meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		/* Turn off preblend */
+> +		writel_bits(VPP_PREBLEND_ENABLE, 0,
+> +			    priv->io_base + _REG(VPP_MISC));
+> +
+> +		/* Turn off POSTBLEND */
+> +		writel_bits(VPP_POSTBLEND_ENABLE, 0,
+> +			    priv->io_base + _REG(VPP_MISC));
+> +
+> +		/* Force all planes off */
+> +		writel_bits(VPP_OSD1_POSTBLEND | VPP_OSD2_POSTBLEND |
+> +			    VPP_VD1_POSTBLEND | VPP_VD2_POSTBLEND |
+> +			    VPP_VD1_PREBLEND | VPP_VD2_PREBLEND, 0,
+> +			    priv->io_base + _REG(VPP_MISC));
+> +
+> +		/* Setup default VD settings */
+> +		writel(4096,
+> +		       priv->io_base + _REG(VPP_PREBLEND_VD1_H_START_END));
+> +		writel(4096,
+> +		       priv->io_base + _REG(VPP_BLEND_VD2_H_START_END));
+> +	}
+>  
+>  	/* Disable Scalers */
+>  	writel(0, priv->io_base + _REG(VPP_OSD_SC_CTRL0));
+>  	writel(0, priv->io_base + _REG(VPP_OSD_VSC_CTRL0));
+>  	writel(0, priv->io_base + _REG(VPP_OSD_HSC_CTRL0));
+> -	writel(4 | (4 << 8) | BIT(15),
+> +
+> +	writel(VPP_VSC_BANK_LENGTH(4) | VPP_HSC_BANK_LENGTH(4) |
+> +	       VPP_SC_VD_EN_ENABLE,
+>  	       priv->io_base + _REG(VPP_SC_MISC));
+>  
+> +	/* Enable minus black level for vadj1 */
+> +	writel(VPP_MINUS_BLACK_LVL_VADJ1_ENABLE,
+> +	       priv->io_base + _REG(VPP_VADJ_CTRL));
+> +
+>  	/* Write in the proper filter coefficients. */
+>  	meson_vpp_write_scaling_filter_coefs(priv,
+>  				vpp_filter_coefs_4point_bspline, false);
+> @@ -410,23 +484,31 @@ void meson_vpu_init(struct udevice *dev)
+>  						true);
+>  
+>  	/* Disable OSDs */
+> -	writel_bits(BIT(0) | BIT(21), 0,
+> +	writel_bits(VIU_OSD1_OSD_BLK_ENABLE | VIU_OSD1_OSD_ENABLE, 0,
+>  		    priv->io_base + _REG(VIU_OSD1_CTRL_STAT));
+> -	writel_bits(BIT(0) | BIT(21), 0,
+> +	writel_bits(VIU_OSD1_OSD_BLK_ENABLE | VIU_OSD1_OSD_ENABLE, 0,
+>  		    priv->io_base + _REG(VIU_OSD2_CTRL_STAT));
+>  
+>  	/* On GXL/GXM, Use the 10bit HDR conversion matrix */
+>  	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
+>  	    meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL))
+>  		meson_viu_load_matrix(priv);
+> +	else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		meson_viu_set_g12a_osd1_matrix(priv, RGB709_to_YUV709l_coeff,
+> +					       true);
+>  
+>  	/* Initialize OSD1 fifo control register */
+> -	reg = BIT(0) |	/* Urgent DDR request priority */
+> -	      (4 << 5) | /* hold_fifo_lines */
+> -	      (3 << 10) | /* burst length 64 */
+> -	      (32 << 12) | /* fifo_depth_val: 32*8=256 */
+> -	      (2 << 22) | /* 4 words in 1 burst */
+> -	      (2 << 24);
+> +	reg = VIU_OSD_DDR_PRIORITY_URGENT |
+> +		VIU_OSD_HOLD_FIFO_LINES(4) |
+> +		VIU_OSD_FIFO_DEPTH_VAL(32) | /* fifo_depth_val: 32*8=256 */
+> +		VIU_OSD_WORDS_PER_BURST(4) | /* 4 words in 1 burst */
+> +		VIU_OSD_FIFO_LIMITS(2);      /* fifo_lim: 2*16=32 */
+> +
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
+> +		reg |= meson_viu_osd_burst_length_reg(32);
+> +	else
+> +		reg |= meson_viu_osd_burst_length_reg(64);
+> +
+>  	writel(reg, priv->io_base + _REG(VIU_OSD1_FIFO_CTRL_STAT));
+>  	writel(reg, priv->io_base + _REG(VIU_OSD2_FIFO_CTRL_STAT));
+>  
+> @@ -437,4 +519,39 @@ void meson_vpu_init(struct udevice *dev)
+>  	writel_bits(0xff << OSD_REPLACE_SHIFT,
+>  		    0xff << OSD_REPLACE_SHIFT,
+>  		    priv->io_base + _REG(VIU_OSD2_CTRL_STAT2));
+> +
+> +	/* Disable VD1 AFBC */
+> +	/* di_mif0_en=0 mif0_to_vpp_en=0 di_mad_en=0 and afbc vd1 set=0*/
+> +	writel_bits(VIU_CTRL0_VD1_AFBC_MASK, 0,
+> +		    priv->io_base + _REG(VIU_MISC_CTRL0));
+> +	writel(0, priv->io_base + _REG(AFBC_ENABLE));
+> +
+> +	writel(0x00FF00C0,
+> +	       priv->io_base + _REG(VD1_IF0_LUMA_FIFO_SIZE));
+> +	writel(0x00FF00C0,
+> +	       priv->io_base + _REG(VD2_IF0_LUMA_FIFO_SIZE));
+> +
+> +	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
+> +		writel(VIU_OSD_BLEND_REORDER(0, 1) |
+> +		       VIU_OSD_BLEND_REORDER(1, 0) |
+> +		       VIU_OSD_BLEND_REORDER(2, 0) |
+> +		       VIU_OSD_BLEND_REORDER(3, 0) |
+> +		       VIU_OSD_BLEND_DIN_EN(1) |
+> +		       VIU_OSD_BLEND1_DIN3_BYPASS_TO_DOUT1 |
+> +		       VIU_OSD_BLEND1_DOUT_BYPASS_TO_BLEND2 |
+> +		       VIU_OSD_BLEND_DIN0_BYPASS_TO_DOUT0 |
+> +		       VIU_OSD_BLEND_BLEN2_PREMULT_EN(1) |
+> +		       VIU_OSD_BLEND_HOLD_LINES(4),
+> +		       priv->io_base + _REG(VIU_OSD_BLEND_CTRL));
+> +		writel(OSD_BLEND_PATH_SEL_ENABLE,
+> +		       priv->io_base + _REG(OSD1_BLEND_SRC_CTRL));
+> +		writel(OSD_BLEND_PATH_SEL_ENABLE,
+> +		       priv->io_base + _REG(OSD2_BLEND_SRC_CTRL));
+> +		writel(0, priv->io_base + _REG(VD1_BLEND_SRC_CTRL));
+> +		writel(0, priv->io_base + _REG(VD2_BLEND_SRC_CTRL));
+> +		writel(0, priv->io_base + _REG(VIU_OSD_BLEND_DUMMY_DATA0));
+> +		writel(0, priv->io_base + _REG(VIU_OSD_BLEND_DUMMY_ALPHA));
+> +		writel_bits(DOLBY_BYPASS_EN(0xc), DOLBY_BYPASS_EN(0xc),
+> +			    priv->io_base + _REG(DOLBY_PATH_CTRL));
+> +	}
+>  }
+> 
 
