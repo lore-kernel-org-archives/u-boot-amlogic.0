@@ -1,47 +1,26 @@
 Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
- by mx.groups.io with SMTP id smtpd.web11.2581.1570740493722428100
+ by mx.groups.io with SMTP id smtpd.web12.1114.1570731335690095842
  for <u-boot-amlogic@groups.io>;
- Thu, 10 Oct 2019 13:48:14 -0700
-Date: Thu, 10 Oct 2019 22:48:10 +0200
+ Thu, 10 Oct 2019 11:15:36 -0700
+Date: Thu, 10 Oct 2019 20:15:32 +0200
 From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 4/8] video: meson: sync with linux drm-misc tree
-Message-ID: <20191010224810.5ee129fa@crub>
-In-Reply-To: <20190830120928.23890-5-narmstrong@baylibre.com>
+Subject: Re: [U-Boot] [PATCH 1/8] power: domain: meson-gx-pwrc: add G12A support
+Message-ID: <20191010201532.529b83e6@crub>
+In-Reply-To: <20190830120928.23890-2-narmstrong@baylibre.com>
 References: <20190830120928.23890-1-narmstrong@baylibre.com>
-	<20190830120928.23890-5-narmstrong@baylibre.com>
+	<20190830120928.23890-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, jh80.chung@samsung.com, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On Fri, 30 Aug 2019 14:09:24 +0200
+On Fri, 30 Aug 2019 14:09:21 +0200
 Neil Armstrong narmstrong@baylibre.com wrote:
 
-> Synchronize the Amlogic Meson Video driver back with the latest
-> DRM misc tree, adding G12A platform support, from the latest commit:
-> 528a25d040bc ("drm: meson: use match data to detect vpu compatibility")
-> 
-> The sync includes the following changes from Linux adapted to U-Boot:
-> - Add support for VIC alternate timings
-> - Switch PLL to 5.94GHz base for 297Mhz pixel clock
-> - Add registers for G12A SoC
-> - Add G12A Support for VPP setup
-> - Add G12A Support for VIU setup
-> - Add G12A support for OSD1 Plane
-> - Add G12A support for plane handling in CRTC driver
-> - Add G12A support for CVBS Encoder
-> - Add G12A Video Clock setup
-> - Add G12A support for the DW-HDMI Glue
-> - fix G12A HDMI PLL settings for 4K60 1000/1001 variations
-> - fix primary plane disabling
-> - fix G12A primary plane disabling
-> - mask value when writing bits relaxed
-> - crtc: drv: vpp: viu: venc: use proper macros instead of magic constants
-> - global clean-up
-> - add macro used to enable HDMI PLL
-> - venc: set the correct macrovision max amplitude value
+> Add Amlogic G12A support for the gx-pwrc driver, aligned on the
+> Linux v5.2 driver.
 > 
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
