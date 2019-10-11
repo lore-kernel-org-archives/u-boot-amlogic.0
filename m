@@ -1,100 +1,60 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
- by mx.groups.io with SMTP id smtpd.web11.1821.1570808043617184962
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web10.1854.1570808044218832497
  for <u-boot-amlogic@groups.io>;
  Fri, 11 Oct 2019 08:34:04 -0700
-Received: by mail-wm1-f67.google.com with SMTP id i16so10866825wmd.3
+Received: by mail-wm1-f68.google.com with SMTP id m18so10659785wmc.1
         for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2019 08:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rvmDKD3KEDAfPy6WEdt2Eh3n5PUt/plWNnz3VgcO+6w=;
-        b=GhakUyDUdObiQwWl47UK4ORJqmLI1hqbX7hZfv1zc/Q2qQUebiSIheJQw/J28M0x1s
-         wV8fPfq0D7u19wnUueAuUx21CwlThDcjY0Q3uRiPWB+ZW2gElaJOfO0zCqsPSW6vbyGZ
-         bIwCkTWpjMoYmaXbQRspv07AhgZNiavy/QkbRYjx5JT/VONNkkuLCvTVpDBj/P/2MVdX
-         0zH83gEKLv56eEegODCUz1HM1Eqy0VRVq5DBOxtlTJ8JDNJbyOYYIR5+zLZDtFLEukXb
-         ecsGPgmXIlhbH693SXSVexyplHlJTqR2k3bz4HUPlP+vW20kciYMUBFJPbVPpuxjiWKp
-         dOFA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MofgDhNbEhJwFWNdYjWwZPNVpyZI7oqdGd1seHwLcR4=;
+        b=JpUErQ0KMTrYsNF1Tq+P7qZwNG+h/zITPxQumXchpQwEy56QiaplAi+PUG1tZl26Av
+         wB6xeWtkJ+oFdOkWJ80UzbNLvQcieA52S8aENfqLusx3lES76A9csZg4CsDPq1I75J1E
+         W+c7JE8KnfgKI7XJy6uoCiQHUMpHCb04/OYI2//41T8QtHQvnub/162P9i6Il+nuct9/
+         fSPne8e+9hksshogmmFt1JeyIQ6ssKj8uWFVNzXynOowPgk7lM4v9kmzpKlbY41WO71j
+         JiAvUhCGTiC/b2JaWoHuE/1iJf/cWuFI91IjvnfoIbnIXimO5G4h0eYii96MXuUyleo+
+         Nyog==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 0/8] amlogic: add SEI610 support
-Date: Fri, 11 Oct 2019 17:33:50 +0200
-Message-Id: <20191011153358.29739-1-narmstrong@baylibre.com>
+Subject: [PATCH 1/8] ARM: meson: add SM1 SoC id
+Date: Fri, 11 Oct 2019 17:33:51 +0200
+Message-Id: <20191011153358.29739-2-narmstrong@baylibre.com>
+In-Reply-To: <20191011153358.29739-1-narmstrong@baylibre.com>
+References: <20191011153358.29739-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add support for the customer board SEI610 manufactured by SEI Robotics
-with the following specifications:
- - Amlogic S905X3 ARM Cortex-A35 quad-core SoC
- - 2GB DDR4 SDRAM
- - 10/100 Ethernet (Internal PHY)
- - 1 x USB 3.0 Host
- - 1 x USB Type-C DRD
- - 1 x FTDI USB Serial Debug Interface
- - eMMC
- - SDcard
- - Infrared receiver
- - SDIO WiFi Module
+Add the missing IDs to detect the SM1 S905X3 SoC.
 
-Like it's SEI510 counterpart, the boot flow is designed to boot
-Android AOSP built for the Yukawa Android device.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm/mach-meson/board-info.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The SM1 SoC is very close to G12A, so it uses the same arm board code
-and reuses what was pushed for SEI510.
-
-For that it needs to reuse the SEI510 android boot flow into
-a common flow with custom partitions for each board.
-
-Guillaume La Roque (2):
-  configs: sei510: rework header and fix userdata size
-  configs: sei610: Add config file to fix userdata size
-
-Neil Armstrong (6):
-  ARM: meson: add SM1 SoC id
-  mmc: meson-gx: add support for mmc-pwrseq-emmc
-  clk: meson-sm1: add compatible
-  ARM: dts: Import SEI610 DT from Linux 5.4-rc2
-  ARM: dts: meson-sm1: add U-Boot specific DT for graphics
-  boards: amlogic: add SEI610 support
-
- MAINTAINERS                                   |   1 +
- arch/arm/dts/Makefile                         |   3 +-
- ...boot.dtsi => meson-g12-common-u-boot.dtsi} |   0
- arch/arm/dts/meson-g12a-sei510-u-boot.dtsi    |   2 +-
- arch/arm/dts/meson-g12a-u200-u-boot.dtsi      |   2 +-
- arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi |   2 +-
- arch/arm/dts/meson-sm1-sei610-u-boot.dtsi     |   7 +
- arch/arm/dts/meson-sm1-sei610.dts             | 383 ++++++++++++++++++
- arch/arm/dts/meson-sm1.dtsi                   | 147 +++++++
- arch/arm/mach-meson/board-info.c              |   2 +
- board/amlogic/sei610/MAINTAINERS              |   7 +
- board/amlogic/sei610/Makefile                 |   6 +
- board/amlogic/sei610/README                   | 119 ++++++
- board/amlogic/sei610/sei610.c                 |  26 ++
- configs/sei610_defconfig                      |  76 ++++
- drivers/clk/meson/g12a.c                      |   1 +
- drivers/mmc/meson_gx_mmc.c                    |  51 +++
- include/configs/meson64_android.h             | 136 +++++++
- include/configs/sei510.h                      | 121 +-----
- include/configs/sei610.h                      |  31 ++
- include/dt-bindings/power/meson-sm1-power.h   |  18 +
- 21 files changed, 1018 insertions(+), 123 deletions(-)
- rename arch/arm/dts/{meson-g12a-u-boot.dtsi => meson-g12-common-u-boot.dtsi} (100%)
- create mode 100644 arch/arm/dts/meson-sm1-sei610-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-sm1-sei610.dts
- create mode 100644 arch/arm/dts/meson-sm1.dtsi
- create mode 100644 board/amlogic/sei610/MAINTAINERS
- create mode 100644 board/amlogic/sei610/Makefile
- create mode 100644 board/amlogic/sei610/README
- create mode 100644 board/amlogic/sei610/sei610.c
- create mode 100644 configs/sei610_defconfig
- create mode 100644 include/configs/meson64_android.h
- create mode 100644 include/configs/sei610.h
- create mode 100644 include/dt-bindings/power/meson-sm1-power.h
-
+diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
+index 9571b5a189..0d3b40a249 100644
+--- a/arch/arm/mach-meson/board-info.c
++++ b/arch/arm/mach-meson/board-info.c
+@@ -34,6 +34,7 @@ static const struct meson_gx_soc_id {
+ 	{ "TXHD",   0x27 },
+ 	{ "G12A",   0x28 },
+ 	{ "G12B",   0x29 },
++	{ "SM1",    0x2b },
+ };
+ 
+ static const struct meson_gx_package_id {
+@@ -61,6 +62,7 @@ static const struct meson_gx_package_id {
+ 	{ "S905X2", 0x28, 0x40, 0xf0 },
+ 	{ "A311D",  0x29, 0x10, 0xf0 },
+ 	{ "S922X",  0x29, 0x40, 0xf0 },
++	{ "S905X3", 0x2b, 0x5, 0xf },
+ };
+ 
+ DECLARE_GLOBAL_DATA_PTR;
 -- 
 2.22.0
 
