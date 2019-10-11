@@ -1,326 +1,342 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web11.1822.1570808048094673676
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web11.1823.1570808048755180473
  for <u-boot-amlogic@groups.io>;
- Fri, 11 Oct 2019 08:34:08 -0700
-Received: by mail-wr1-f67.google.com with SMTP id z9so12413859wrl.11
-        for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2019 08:34:07 -0700 (PDT)
+ Fri, 11 Oct 2019 08:34:09 -0700
+Received: by mail-wr1-f66.google.com with SMTP id y19so12437335wrd.3
+        for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2019 08:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8ivoyAkPPMDGigW1duJIYLJ5WZ69ryCQWV3eXwtLMTU=;
-        b=re9B7h/2coKCbKdwkzy9u/K1aV8DQcA2zpclA9UdYtag0XjPslutmH6IBLFURQ+AfP
-         w/PBV1s0oBVIJjfD6Yj1MER+80bj0yyNM/aazcBAYFtnr8M20rozdaF/LkXFFVWitygF
-         Sest/9SP7ZEz4nZJTkm7jcN9dmaJs0+B4g7K4OktjhXIvymfphefP44V4bSIXNV7LBsn
-         CKGfHz5LW3yxpfNwh0S6cGGXHpbcyebo9qsnGpbUjEnpfGSYJqI9Xu32uqTzm2u6Muoo
-         9cKo4rqxpZx9+p2/b5d9UYT9SHHl+cu54xytE8l/y70H6O9O6hZAjNhpeYuF5mOWHowE
-         3bAw==
+        bh=VJLoPVPsh0M3m+7W85DmlzHjkc/RikvP2nWFMPd7aFo=;
+        b=gMRP7EqPRN5x5WAovUQsNWVtNk/yQNRm12pVQmMtsdhpBHJL9LN83PNDusqF+XHVEb
+         BXDmxvaVtg47Oslb77wCMqGeV2bGyF0OD3r+yh1Z0Sw2tevxYu++kRNEvbr8EkIDrSce
+         ZCHQ5TAk0IoOB7WbwrPgk4Eih0kASy07B2b8TqAydzILTSOMYlckIfY+a51z2sBq3HV/
+         Pn5RPnjldmgC55fc66PwRI5ucfTjucLplD2G9O56de/MnjCPtvAQOAR9vMdY9s4KpRWQ
+         ldQrwrD+XwSRG08w6d9a2tFFcsCwlPbKnmhsTZwuUavEPuD29lHDinhWjQGGt0Kt8Nqe
+         fRlw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 6/8] boards: amlogic: add SEI610 support
-Date: Fri, 11 Oct 2019 17:33:56 +0200
-Message-Id: <20191011153358.29739-7-narmstrong@baylibre.com>
+Subject: [PATCH 7/8] configs: sei510: rework header and fix userdata size
+Date: Fri, 11 Oct 2019 17:33:57 +0200
+Message-Id: <20191011153358.29739-8-narmstrong@baylibre.com>
 In-Reply-To: <20191011153358.29739-1-narmstrong@baylibre.com>
 References: <20191011153358.29739-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, Guillaume La Roque <glaroque@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add support for the customer board SEI610 manufactured by SEI Robotics
-with the following specifications:
- - Amlogic S905X3 ARM Cortex-A35 quad-core SoC
- - 2GB DDR4 SDRAM
- - 10/100 Ethernet (Internal PHY)
- - 1 x USB 3.0 Host
- - 1 x USB Type-C DRD
- - 1 x FTDI USB Serial Debug Interface
- - eMMC
- - SDcard
- - Infrared receiver
- - SDIO WiFi Module
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-Like it's SEI510 counterpart, the boot flow is designed to boot
-Android AOSP built for the Yukawa Android device.
+Move android generic config and boot sequence in meson64_android header
+and fix size of userdata to use all eMMC on SEI510.
 
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- board/amlogic/sei610/MAINTAINERS |   6 ++
- board/amlogic/sei610/Makefile    |   6 ++
- board/amlogic/sei610/README      | 119 +++++++++++++++++++++++++++++++
- board/amlogic/sei610/sei610.c    |  26 +++++++
- configs/sei610_defconfig         |  76 ++++++++++++++++++++
- 5 files changed, 233 insertions(+)
- create mode 100644 board/amlogic/sei610/MAINTAINERS
- create mode 100644 board/amlogic/sei610/Makefile
- create mode 100644 board/amlogic/sei610/README
- create mode 100644 board/amlogic/sei610/sei610.c
- create mode 100644 configs/sei610_defconfig
+ MAINTAINERS                       |   1 +
+ include/configs/meson64_android.h | 136 ++++++++++++++++++++++++++++++
+ include/configs/sei510.h          | 121 +-------------------------
+ 3 files changed, 139 insertions(+), 119 deletions(-)
+ create mode 100644 include/configs/meson64_android.h
 
-diff --git a/board/amlogic/sei610/MAINTAINERS b/board/amlogic/sei610/MAINTAINERS
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c53656695a..e874a44c31 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -137,6 +137,7 @@ F:	drivers/pinctrl/meson/
+ F:	drivers/power/domain/meson-gx-pwrc-vpu.c
+ F:	drivers/video/meson/
+ F:	include/configs/meson64.h
++F:	include/configs/meson64_android.h
+ N:	meson
+ 
+ ARM BROADCOM BCM283X
+diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
 new file mode 100644
-index 0000000000..20f12334e9
+index 0000000000..055fb44e93
 --- /dev/null
-+++ b/board/amlogic/sei610/MAINTAINERS
-@@ -0,0 +1,6 @@
-+SEI610
-+M:	Neil Armstrong <narmstrong@baylibre.com>
-+S:	Maintained
-+L:	u-boot-amlogic@groups.io
-+F:	board/amlogic/sei610/
-+F:	configs/sei610_defconfig
-diff --git a/board/amlogic/sei610/Makefile b/board/amlogic/sei610/Makefile
-new file mode 100644
-index 0000000000..428792afea
---- /dev/null
-+++ b/board/amlogic/sei610/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# (C) Copyright 2016 BayLibre, SAS
-+# Author: Neil Armstrong <narmstrong@baylibre.com>
-+
-+obj-y	:= sei610.o
-diff --git a/board/amlogic/sei610/README b/board/amlogic/sei610/README
-new file mode 100644
-index 0000000000..836809ccdb
---- /dev/null
-+++ b/board/amlogic/sei610/README
-@@ -0,0 +1,119 @@
-+U-Boot for Amlogic SEI610
-+=======================
-+
-+SEI610 is a customer board manufactured by SEI Robotics with the following
-+specifications:
-+
-+ - Amlogic S905X3 ARM Cortex-A35 quad-core SoC
-+ - 2GB DDR4 SDRAM
-+ - 10/100 Ethernet (Internal PHY)
-+ - 1 x USB 3.0 Host
-+ - 1 x USB Type-C DRD
-+ - 1 x FTDI USB Serial Debug Interface
-+ - eMMC
-+ - SDcard
-+ - Infrared receiver
-+ - SDIO WiFi Module
-+
-+u-boot compilation
-+==================
-+
-+ > export ARCH=arm
-+ > export CROSS_COMPILE=aarch64-none-elf-
-+ > make sei610_defconfig
-+ > make
-+
-+Image creation
-+==============
-+
-+Amlogic doesn't provide sources for the firmware and for tools needed
-+to create the bootloader image, so it is necessary to obtain them from
-+the git tree published by the board vendor:
-+
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+ > tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+ > export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
-+ > git clone https://github.com/BayLibre/u-boot.git -b buildroot-openlinux-4.9-g12a-201904 amlogic-u-boot
-+ > cd amlogic-u-boot
-+ > make sm1_ac200_v1_defconfig
-+ > make
-+ > export UBOOTDIR=$PWD
-+
-+Download the latest Amlogic Buildroot package, and extract it :
-+ > wget http://openlinux2.amlogic.com:8000/ARM/filesystem/buildroot-openlinux-A113-201901.tgz
-+ > tar xfz buildroot-openlinux-A113-201901.tgz buildroot-openlinux-A113-201901/bootloader
-+ > export BRDIR=$PWD/buildroot-openlinux-A113-201901
-+ > export FIPDIR=$BRDIR/bootloader/uboot-repo/fip
-+
-+Go back to mainline U-Boot source tree then :
-+ > mkdir fip
-+
-+ > wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
-+ > cp $UBOOTDIR/build/scp_task/bl301.bin fip/
-+ > cp $UBOOTDIR/build/board/amlogic/g12a_u200_v1/firmware/acs.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl2/bin/g12a/bl2.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl30/bin/g12a/bl30.bin fip/
-+ > cp $BRDIR/bootloader/uboot-repo/bl31_1.3/bin/g12a/bl31.img fip/
-+ > cp $FIPDIR/g12a/ddr3_1d.fw fip/
-+ > cp $FIPDIR/g12a/ddr4_1d.fw fip/
-+ > cp $FIPDIR/g12a/ddr4_2d.fw fip/
-+ > cp $FIPDIR/g12a/diag_lpddr4.fw fip/
-+ > cp $FIPDIR/g12a/lpddr4_1d.fw fip/
-+ > cp $FIPDIR/g12a/lpddr4_2d.fw fip/
-+ > cp $FIPDIR/g12a/piei.fw fip/
-+ > cp u-boot.bin fip/bl33.bin
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl30.bin \
-+	fip/zero_tmp \
-+	fip/bl30_zero.bin \
-+	fip/bl301.bin \
-+	fip/bl301_zero.bin \
-+	fip/bl30_new.bin \
-+	bl30
-+
-+ > sh fip/blx_fix.sh \
-+	fip/bl2.bin \
-+	fip/zero_tmp \
-+	fip/bl2_zero.bin \
-+	fip/acs.bin \
-+	fip/bl21_zero.bin \
-+	fip/bl2_new.bin \
-+	bl2
-+
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl30sig --input fip/bl30_new.bin \
-+					--output fip/bl30_new.bin.g12a.enc \
-+					--level v3
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl3sig --input fip/bl30_new.bin.g12a.enc \
-+					--output fip/bl30_new.bin.enc \
-+					--level v3 --type bl30
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl3sig --input fip/bl31.img \
-+					--output fip/bl31.img.enc \
-+					--level v3 --type bl31
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl3sig --input fip/bl33.bin --compress lz4 \
-+					--output fip/bl33.bin.enc \
-+					--level v3 --type bl33
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bl2sig --input fip/bl2_new.bin \
-+					--output fip/bl2.n.bin.sig
-+ > $FIPDIR/g12a/aml_encrypt_g12a --bootmk \
-+		--output fip/u-boot.bin \
-+		--bl2 fip/bl2.n.bin.sig \
-+		--bl30 fip/bl30_new.bin.enc \
-+		--bl31 fip/bl31.img.enc \
-+		--bl33 fip/bl33.bin.enc \
-+		--ddrfw1 fip/ddr4_1d.fw \
-+		--ddrfw2 fip/ddr4_2d.fw \
-+		--ddrfw3 fip/ddr3_1d.fw \
-+		--ddrfw4 fip/piei.fw \
-+		--ddrfw5 fip/lpddr4_1d.fw \
-+		--ddrfw6 fip/lpddr4_2d.fw \
-+		--ddrfw7 fip/diag_lpddr4.fw \
-+		--level v3
-+
-+and then write the image to SD with:
-+
-+ > DEV=/dev/your_sd_device
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+ > dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/board/amlogic/sei610/sei610.c b/board/amlogic/sei610/sei610.c
-new file mode 100644
-index 0000000000..b17eb9ef55
---- /dev/null
-+++ b/board/amlogic/sei610/sei610.c
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0+
++++ b/include/configs/meson64_android.h
+@@ -0,0 +1,136 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
 +/*
-+ * Copyright (C) 2016 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ * Configuration for Android Amlogic Meson 64bits SoCs
++ *
++ * Copyright (C) 2019 Baylibre, SAS
++ * Author: Jerome Brunet <jbrunet@baylibre.com>
 + */
 +
-+#include <common.h>
-+#include <dm.h>
-+#include <env_internal.h>
-+#include <asm/io.h>
-+#include <asm/arch/axg.h>
-+#include <asm/arch/sm.h>
-+#include <asm/arch/eth.h>
-+#include <asm/arch/mem.h>
++#ifndef __MESON64_ANDROID_CONFIG_H
++#define __MESON64_ANDROID_CONFIG_H
 +
-+int misc_init_r(void)
-+{
-+	meson_eth_init(PHY_INTERFACE_MODE_RMII,
-+		       MESON_USE_INTERNAL_RMII_PHY);
++#define CONFIG_SYS_MMC_ENV_DEV	2
++#define CONFIG_SYS_MMC_ENV_PART	1
++#define CONFIG_ENV_SIZE		0x10000
++#define CONFIG_ENV_OFFSET	(-0x10000)
 +
-+	meson_generate_serial_ethaddr();
 +
-+	env_set("serial#", "AMLG12ASEI610");
++#define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
++	"bootcmd_fastboot=" \
++		"sm reboot_reason reason;" \
++		"setenv run_fastboot 0;" \
++		"if test \"${boot_source}\" = \"usb\"; then " \
++			"echo Fastboot forced by usb rom boot;" \
++			"setenv run_fastboot 1;" \
++		"fi;" \
++		"if gpt verify mmc ${mmcdev} ${partitions}; then; " \
++		"else " \
++			"echo Broken MMC partition scheme;" \
++			"setenv run_fastboot 1;" \
++		"fi;" \
++		"if test \"${reason}\" = \"bootloader\" -o " \
++			"\"${reason}\" = \"fastboot\"; then " \
++			"echo Fastboot asked by reboot reason;" \
++			"setenv run_fastboot 1;" \
++		"fi;" \
++		"if test \"${skip_fastboot}\" -eq 1; then " \
++			"echo Fastboot skipped by environment;" \
++			"setenv run_fastboot 0;" \
++		"fi;" \
++		"if test \"${force_fastboot}\" -eq 1; then " \
++			"echo Fastboot forced by environment;" \
++			"setenv run_fastboot 1;" \
++		"fi;" \
++		"if test \"${run_fastboot}\" -eq 1; then " \
++			"echo Running Fastboot...;" \
++			"fastboot 0;" \
++		"fi\0"
 +
-+	return 0;
-+}
-diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
-new file mode 100644
-index 0000000000..89e7bd7bab
---- /dev/null
-+++ b/configs/sei610_defconfig
-@@ -0,0 +1,76 @@
-+CONFIG_ARM=y
-+CONFIG_SYS_BOARD="sei610"
-+CONFIG_SYS_CONFIG_NAME="sei510"
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_MESON_G12A=y
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_DEBUG_UART_BASE=0xff803000
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" sei610"
-+# CONFIG_PSCI_RESET is not set
-+CONFIG_DEBUG_UART=y
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="run load_logo"
-+# CONFIG_CONSOLE_MUX is not set
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+CONFIG_CMD_GPT=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+CONFIG_CMD_USB=y
-+CONFIG_CMD_USB_MASS_STORAGE=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_BMP=y
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-sei610"
-+CONFIG_ENV_IS_IN_MMC=y
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_USB_FUNCTION_FASTBOOT=y
-+CONFIG_FASTBOOT_BUF_ADDR=0x6000000
-+CONFIG_FASTBOOT_FLASH=y
-+CONFIG_FASTBOOT_FLASH_MMC_DEV=2
-+CONFIG_FASTBOOT_CMD_OEM_FORMAT=y
-+CONFIG_DM_GPIO=y
-+# CONFIG_INPUT is not set
-+CONFIG_PWRSEQ=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_PHY_ADDR_ENABLE=y
-+CONFIG_PHY_ADDR=8
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_MESON_G12A_USB_PHY=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_EE_POWER_DOMAIN=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_MESON=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_USB=y
-+CONFIG_DM_USB=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_DWC3=y
-+CONFIG_USB_DWC3_MESON_G12A=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_GADGET_VENDOR_NUM=0x18d1
-+CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-+CONFIG_USB_GADGET_DWC2_OTG=y
-+CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
-+CONFIG_DM_VIDEO=y
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
-+CONFIG_LZ4=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
++#define BOOTENV_DEV_NAME_FASTBOOT(devtypeu, devtypel, instance)	\
++		"fastboot "
++
++/* TOFIX: Run actual recovery instead of fastboot */
++#define BOOTENV_DEV_RECOVERY(devtypeu, devtypel, instance) \
++	"bootcmd_recovery=" \
++		"pinmux dev pinctrl@14;" \
++		"pinmux dev pinctrl@40;" \
++		"sm reboot_reason reason;" \
++		"setenv run_recovery 0;" \
++		"if run check_button; then " \
++			"echo Recovery button is pressed;" \
++			"setenv run_recovery 1;" \
++		"elif test \"${reason}\" = \"recovery\" -o " \
++			  "\"${reason}\" = \"update\"; then " \
++			"echo Recovery asked by reboot reason;" \
++			"setenv run_recovery 1;" \
++		"fi;" \
++		"if test \"${skip_recovery}\" -eq 1; then " \
++			"echo Recovery skipped by environment;" \
++			"setenv run_recovery 0;" \
++		"fi;" \
++		"if test \"${force_recovery}\" -eq 1; then " \
++			"echo Recovery forced by environment;" \
++			"setenv run_recovery 1;" \
++		"fi;" \
++		"if test \"${run_recovery}\" -eq 1; then " \
++			"echo Running Recovery...;" \
++			"fastboot 0;" \
++		"fi\0"
++
++#define BOOTENV_DEV_NAME_RECOVERY(devtypeu, devtypel, instance)	\
++		"recovery "
++
++#define BOOTENV_DEV_SYSTEM(devtypeu, devtypel, instance) \
++	"bootcmd_system=" \
++		"echo Loading Android boot partition...;" \
++		"mmc dev ${mmcdev};" \
++		"setenv bootargs ${bootargs} console=${console} androidboot.serialno=${serial#};" \
++		"part start mmc ${mmcdev} ${bootpart} boot_start;" \
++		"part size mmc ${mmcdev} ${bootpart} boot_size;" \
++		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
++			"echo Running Android...;" \
++			"bootm ${loadaddr};" \
++		"fi;" \
++		"echo Failed to boot Android...;" \
++		"reset\0"
++
++#define BOOTENV_DEV_NAME_SYSTEM(devtypeu, devtypel, instance)	\
++		"system "
++
++#define BOOT_TARGET_DEVICES(func) \
++	func(FASTBOOT, fastboot, na) \
++	func(RECOVERY, recovery, na) \
++	func(SYSTEM, system, na) \
++
++#define PREBOOT_LOAD_LOGO \
++	"mmc dev ${mmcdev};" \
++	"part start mmc ${mmcdev} ${logopart} boot_start;" \
++	"part size mmc ${mmcdev} ${logopart} boot_size;" \
++	"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
++			"bmp display ${loadaddr} m m;" \
++	"fi;"
++
++#define CONFIG_EXTRA_ENV_SETTINGS                                     \
++	"partitions=" PARTS_DEFAULT "\0"                              \
++	"mmcdev=2\0"                                                  \
++	"bootpart=1\0"                                                \
++	"logopart=2\0"                                                \
++	"gpio_recovery=88\0"                                          \
++	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
++	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
++	"console=/dev/ttyAML0\0"                                      \
++	"bootargs=no_console_suspend\0"                               \
++	"stdin=" STDIN_CFG "\0"                                       \
++	"stdout=" STDOUT_CFG "\0"                                     \
++	"stderr=" STDOUT_CFG "\0"                                     \
++	"loadaddr=0x01000000\0"                                       \
++	"fdt_addr_r=0x01000000\0"                                     \
++	"scriptaddr=0x08000000\0"                                     \
++	"kernel_addr_r=0x01080000\0"                                  \
++	"pxefile_addr_r=0x01080000\0"                                 \
++	"ramdisk_addr_r=0x13000000\0"                                 \
++	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" BOOTENV
++
++#include <configs/meson64.h>
++
++#endif /* __MESON64_ANDROID_CONFIG_H */
+diff --git a/include/configs/sei510.h b/include/configs/sei510.h
+index 5bf982cada..d37b4c6405 100644
+--- a/include/configs/sei510.h
++++ b/include/configs/sei510.h
+@@ -9,11 +9,6 @@
+ #ifndef __CONFIG_H
+ #define __CONFIG_H
+ 
+-#define CONFIG_SYS_MMC_ENV_DEV	2
+-#define CONFIG_SYS_MMC_ENV_PART	1
+-#define CONFIG_ENV_SIZE		0x10000
+-#define CONFIG_ENV_OFFSET	(-0x10000)
+-
+ #define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
+ #define CACHE_UUID "99207ae6-5207-11e9-999e-6f77a3612069;"
+ #define SYSTEM_UUID "99f9b7ac-5207-11e9-8507-c3c037e393f3;"
+@@ -28,122 +23,10 @@
+ 	"name=cache,size=256M,uuid=" CACHE_UUID             \
+ 	"name=system,size=1536M,uuid=" SYSTEM_UUID           \
+ 	"name=vendor,size=256M,uuid=" VENDOR_UUID            \
+-	"name=userdata,size=4746M,uuid=" USERDATA_UUID	\
++	"name=userdata,size=5341M,uuid=" USERDATA_UUID	\
+ 	"name=rootfs,size=-,uuid=" ROOT_UUID
+ 
+-#define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
+-	"bootcmd_fastboot=" \
+-		"sm reboot_reason reason;" \
+-		"setenv run_fastboot 0;" \
+-		"if gpt verify mmc ${mmcdev} ${partitions}; then; " \
+-		"else " \
+-			"echo Broken MMC partition scheme;" \
+-			"setenv run_fastboot 1;" \
+-		"fi;" \
+-		"if test \"${reason}\" = \"bootloader\" -o " \
+-			"\"${reason}\" = \"fastboot\"; then " \
+-			"echo Fastboot asked by reboot reason;" \
+-			"setenv run_fastboot 1;" \
+-		"fi;" \
+-		"if test \"${skip_fastboot}\" -eq 1; then " \
+-			"echo Fastboot skipped by environment;" \
+-			"setenv run_fastboot 0;" \
+-		"fi;" \
+-		"if test \"${force_fastboot}\" -eq 1; then " \
+-			"echo Fastboot forced by environment;" \
+-			"setenv run_fastboot 1;" \
+-		"fi;" \
+-		"if test \"${run_fastboot}\" -eq 1; then " \
+-			"echo Running Fastboot...;" \
+-			"fastboot 0;" \
+-		"fi\0"
+-
+-#define BOOTENV_DEV_NAME_FASTBOOT(devtypeu, devtypel, instance)	\
+-		"fastboot "
+-
+-/* TOFIX: Run actual recovery instead of fastboot */
+-#define BOOTENV_DEV_RECOVERY(devtypeu, devtypel, instance) \
+-	"bootcmd_recovery=" \
+-		"pinmux dev pinctrl@14;" \
+-		"pinmux dev pinctrl@40;" \
+-		"sm reboot_reason reason;" \
+-		"setenv run_recovery 0;" \
+-		"if run check_button; then " \
+-			"echo Recovery button is pressed;" \
+-			"setenv run_recovery 1;" \
+-		"elif test \"${reason}\" = \"recovery\" -o " \
+-			  "\"${reason}\" = \"update\"; then " \
+-			"echo Recovery asked by reboot reason;" \
+-			"setenv run_recovery 1;" \
+-		"fi;" \
+-		"if test \"${skip_recovery}\" -eq 1; then " \
+-			"echo Recovery skipped by environment;" \
+-			"setenv run_recovery 0;" \
+-		"fi;" \
+-		"if test \"${force_recovery}\" -eq 1; then " \
+-			"echo Recovery forced by environment;" \
+-			"setenv run_recovery 1;" \
+-		"fi;" \
+-		"if test \"${run_recovery}\" -eq 1; then " \
+-			"echo Running Recovery...;" \
+-			"fastboot 0;" \
+-		"fi\0"
+-
+-#define BOOTENV_DEV_NAME_RECOVERY(devtypeu, devtypel, instance)	\
+-		"recovery "
+-
+-#define BOOTENV_DEV_SYSTEM(devtypeu, devtypel, instance) \
+-	"bootcmd_system=" \
+-		"echo Loading Android boot partition...;" \
+-		"mmc dev ${mmcdev};" \
+-		"setenv bootargs ${bootargs} console=${console} androidboot.serialno=${serial#};" \
+-		"part start mmc ${mmcdev} ${bootpart} boot_start;" \
+-		"part size mmc ${mmcdev} ${bootpart} boot_size;" \
+-		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+-			"echo Running Android...;" \
+-			"bootm ${loadaddr};" \
+-		"fi;" \
+-		"echo Failed to boot Android...;" \
+-		"reset\0"
+-
+-#define BOOTENV_DEV_NAME_SYSTEM(devtypeu, devtypel, instance)	\
+-		"system "
+-
+-#define BOOT_TARGET_DEVICES(func) \
+-	func(ROMUSB, romusb, na)  \
+-	func(FASTBOOT, fastboot, na) \
+-	func(RECOVERY, recovery, na) \
+-	func(SYSTEM, system, na) \
+-
+-#define PREBOOT_LOAD_LOGO \
+-	"mmc dev ${mmcdev};" \
+-	"part start mmc ${mmcdev} ${logopart} boot_start;" \
+-	"part size mmc ${mmcdev} ${logopart} boot_size;" \
+-	"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+-			"bmp display ${loadaddr} m m;" \
+-	"fi;"
+-
+-#define CONFIG_EXTRA_ENV_SETTINGS                                     \
+-	"partitions=" PARTS_DEFAULT "\0"                              \
+-	"mmcdev=2\0"                                                  \
+-	"bootpart=1\0"                                                \
+-	"logopart=2\0"                                                \
+-	"gpio_recovery=88\0"                                          \
+-	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
+-	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
+-	"console=/dev/ttyAML0\0"                                      \
+-	"bootargs=no_console_suspend\0"                               \
+-	"stdin=" STDIN_CFG "\0"                                       \
+-	"stdout=" STDOUT_CFG "\0"                                     \
+-	"stderr=" STDOUT_CFG "\0"                                     \
+-	"loadaddr=0x01000000\0"                                       \
+-	"fdt_addr_r=0x01000000\0"                                     \
+-	"scriptaddr=0x08000000\0"                                     \
+-	"kernel_addr_r=0x01080000\0"                                  \
+-	"pxefile_addr_r=0x01080000\0"                                 \
+-	"ramdisk_addr_r=0x13000000\0"                                 \
+-	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" BOOTENV
+ 
+-#include <configs/meson64.h>
++#include <configs/meson64_android.h>
+ 
+ #endif /* __CONFIG_H */
 -- 
 2.22.0
 
