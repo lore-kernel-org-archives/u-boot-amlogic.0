@@ -1,51 +1,68 @@
-Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
- by mx.groups.io with SMTP id smtpd.web10.3583.1574802733829696340
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+ by mx.groups.io with SMTP id smtpd.web11.3618.1574802735853807866
  for <u-boot-amlogic@groups.io>;
- Tue, 26 Nov 2019 13:12:13 -0800
-Received: by mail-pg1-f193.google.com with SMTP id b10so9623462pgd.4
-        for <u-boot-amlogic@groups.io>; Tue, 26 Nov 2019 13:12:13 -0800 (PST)
+ Tue, 26 Nov 2019 13:12:15 -0800
+Received: by mail-pj1-f66.google.com with SMTP id r11so1018409pjp.12
+        for <u-boot-amlogic@groups.io>; Tue, 26 Nov 2019 13:12:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=12PGjxvghBVY4nTT8a91uxGT/upVEmhdfJWzf9vQDcA=;
-        b=c90Uc86M86fRKnriMrZzmG3hpd+Ztrm9yyOVp/QHHdcDhiVS4AX0qitgOuK/bXuoZw
-         pHdF7+7gJCKtGaQGqvxH2U19Nwdmqx+IEVV9LNpbDcoXaAHRHQ3GJvKoBVRPxlzuTJHe
-         gKDGttnz7EmbTUjl5Z1B6W/T4Xr4oY0GxkoU6ccFzWPksKWN3D0VT4lGpxVRGUDeoKXI
-         Wdxj5pP0Xt9OiMnX/SMYq73cTt03/6o7JgsX986jQ6SQBUAkQg0r9824Kb3HFIBfqeVW
-         PiFkPLDkwDHrGii6u/I9KDb85DhzcU0eA1QYbzwub/Hy8V2/rGy/fKnM9tIVeMxPO1AO
-         +qvg==
+        bh=1gyCuNJdwq9fkWptRgSHTFv1PuwMVNoFlj9J3+lagf0=;
+        b=Sm5uKdnLL/UvMFMPUmatQXBj03ydEN/4pdmbsT7QAtYHnDRRG1ej8eibEk+cEOGOvq
+         haukSMbq0aA5sulBO8nxCtx7xqEpnBzeuXgUQLY86OmgJwPPuvKWEC9Y/PIBYFS/h/Tw
+         aZmaUahMxCQsqH91uXgTQTm4VaJVYHO15EKMlDpSfHQjqZwPS6PNk4uYUWe9wH0+dU7F
+         DjlEZogK9xQjqvfWBZ9S/1DiJPuAQk5hj0pxZ5g4wKhF3Fyr2wutlzRmH0lun0e/OfRm
+         4qYlUtkseohqhelnjN3CKpu7oVxKvObiJOlLieMHSp9CKXg52VS293Ajx6C8sXfZE2T0
+         VZwA==
 Return-Path: <linux.amoon@gmail.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [U-Boot] [PATCH 0/4] Odroid n2 using eMMC would fail to boot up
-Date: Tue, 26 Nov 2019 21:12:02 +0000
-Message-Id: <20191126211206.4537-1-linux.amoon@gmail.com>
+Subject: [U-Boot] [PATCH 1/4] mmc: meson-gx: Fix tx phase in the tuning process
+Date: Tue, 26 Nov 2019 21:12:03 +0000
+Message-Id: <20191126211206.4537-2-linux.amoon@gmail.com>
+In-Reply-To: <20191126211206.4537-1-linux.amoon@gmail.com>
+References: <20191126211206.4537-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Here are some small changes to fix booting of Odroid N2 
+odroid n2 eMMC module would failed to boot up,
+because of TX phase clk failure, fix the typo in
+TX phase macro to help tune correct clk freqency.
 
-Tested on below eMMC module
+Before these changes.
+  clock is enabled (380953Hz)
+  clock is enabled (25000000Hz)
+after these changes
+  clock is enabled (380953Hz)
+  clock is enabled (25000000Hz)
+  clock is enabled (52000000Hz)
+  clock is enabled (52000000Hz)
+  clock is enabled (52000000Hz)
+
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+Tested on
 new orange - eMMC AJNB4R 14.6 GiB MMC 5.1
 old back   - eMMC CGND3R 58.2 GiB MMC 5.0
+---
+ drivers/mmc/meson_gx_mmc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--Anand
-
-Anand Moon (4):
-  mmc: meson-gx: Fix tx phase in the tuning process
-  configs: meson64: enable GIC support for G12A/G12B
-  board: amlogic: select PWRSEQ for all amlogic platform
-  board: amlogic: Add missing config option
-
- arch/arm/mach-meson/Kconfig | 1 +
- configs/nanopi-k2_defconfig | 2 ++
- configs/odroid-c2_defconfig | 2 ++
- drivers/mmc/meson_gx_mmc.c  | 2 +-
- include/configs/meson64.h   | 2 +-
- 5 files changed, 7 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+index 031cc79ccb..87bea2888b 100644
+--- a/drivers/mmc/meson_gx_mmc.c
++++ b/drivers/mmc/meson_gx_mmc.c
+@@ -53,7 +53,7 @@ static void meson_mmc_config_clock(struct mmc *mmc)
+ 	meson_mmc_clk |= CLK_CO_PHASE_180;
+ 
+ 	/* 180 phase tx clock */
+-	meson_mmc_clk |= CLK_TX_PHASE_000;
++	meson_mmc_clk |= CLK_TX_PHASE_180;
+ 
+ 	/* clock settings */
+ 	meson_mmc_clk |= clk_src;
 -- 
 2.24.0
 
