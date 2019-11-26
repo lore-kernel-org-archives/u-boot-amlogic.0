@@ -1,25 +1,25 @@
-Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
- by mx.groups.io with SMTP id smtpd.web10.3584.1574802737748112169
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+ by mx.groups.io with SMTP id smtpd.web12.3488.1574802739898422866
  for <u-boot-amlogic@groups.io>;
- Tue, 26 Nov 2019 13:12:17 -0800
-Received: by mail-pg1-f193.google.com with SMTP id i5so1346956pgj.9
-        for <u-boot-amlogic@groups.io>; Tue, 26 Nov 2019 13:12:17 -0800 (PST)
+ Tue, 26 Nov 2019 13:12:19 -0800
+Received: by mail-pg1-f194.google.com with SMTP id b137so7310498pga.6
+        for <u-boot-amlogic@groups.io>; Tue, 26 Nov 2019 13:12:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=9u6hfyFxBExH0vpMdVnVWr/5OqckcxU17J3z35GQGmQ=;
-        b=SnR7wiWQyWZQlzzE6jQ3DtJ0kAiCMyMmV5AVei0LXBkrn3SKSkDWbm0NZIllWoovUY
-         pSmf4rRIFr+SsbjS01M+f88yDdWckOQ0oSDzcfSFMs/je+VMNpD5HIAa7go1xCxnh1JJ
-         HqCdbUiSFun24zDH6ljlY2jGN5HtIP+ucAOtnbLxmq9Xj3B4tfrDRYrQXkMpRocgpR3n
-         zdFlOwXH7Srm1u2qRAh43eCWN1qAQEiNRlXeJ93+HA013xXjMhpJpiSyeTdY5QZc3qCG
-         A8sBihyc+JT3NzaZL22oWGCi2nJ7JmzR9bisZXtxmtTZuVON9w5awleySLOw7qgLPF3Z
-         WaRA==
+        bh=V1ZJmTUdD9Se0n8cj01R0Wag2ZVKLNJLdmFU6DS42KA=;
+        b=teDUhfaH881miBcvyQ5akurVtU7EhjpDKVO+5Je9bKp9szI9JWQWR/j68ymkE4A3k+
+         eEXWvBKJxnHs28eNsRRim/MSk/Mu/erxrGrZWhOW1EFEzL58cK2xrDhMUc7ZP01jDMuP
+         uBfnUdG/RxNjwGpR2GCuxQ315OeYqyO5X1lNBh4iAsozDgWpSjhoISfPpp2dhpFa6KlR
+         DyJHOwAcWzR5NDMQSZDMAG0pghSCg4u4i7iega752rW+uJJoaciy4poDt+P0FuM+rdxZ
+         zqhosmpi0QfXdxrXX7G+4m9kq7KOSyuzR0/FPNpaju3a54YEbmAK9vtaGb120Z7FvS0A
+         tnWw==
 Return-Path: <linux.amoon@gmail.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [U-Boot] [PATCH 2/4] configs: meson64: enable GIC support for G12A/G12B
-Date: Tue, 26 Nov 2019 21:12:04 +0000
-Message-Id: <20191126211206.4537-3-linux.amoon@gmail.com>
+Subject: [U-Boot] [PATCH 3/4] board: amlogic: select PWRSEQ for all amlogic platform
+Date: Tue, 26 Nov 2019 21:12:05 +0000
+Message-Id: <20191126211206.4537-4-linux.amoon@gmail.com>
 In-Reply-To: <20191126211206.4537-1-linux.amoon@gmail.com>
 References: <20191126211206.4537-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
@@ -27,26 +27,27 @@ Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Enable GIC support for G12A/G12B platform.
+commit a10388dc6982 ("mmc: meson-gx: add support for mmc-pwrseq-emmc")
+introduce CONFIG_PWESEQ for power sequence for eMMC module on
+amlogic platform, so enable this to all amlogic boards.
 
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- include/configs/meson64.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-meson/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index 736081277d..50707a3197 100644
---- a/include/configs/meson64.h
-+++ b/include/configs/meson64.h
-@@ -8,7 +8,7 @@
- #define __MESON64_CONFIG_H
+diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+index e29e4c0acc..513a33dae2 100644
+--- a/arch/arm/mach-meson/Kconfig
++++ b/arch/arm/mach-meson/Kconfig
+@@ -8,6 +8,7 @@ config MESON64_COMMON
+ 	select DM_SERIAL
+ 	select SYSCON
+ 	select REGMAP
++	select PWRSEQ
+ 	select BOARD_LATE_INIT
+ 	imply CMD_DM
  
- /* Generic Interrupt Controller Definitions */
--#if defined(CONFIG_MESON_AXG)
-+#if (defined(CONFIG_MESON_AXG) || defined(CONFIG_MESON_G12A))
- #define GICD_BASE			0xffc01000
- #define GICC_BASE			0xffc02000
- #else /* MESON GXL and GXBB */
 -- 
 2.24.0
 
