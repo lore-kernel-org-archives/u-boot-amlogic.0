@@ -1,1377 +1,1385 @@
-Received: from mail-il1-f196.google.com (mail-il1-f196.google.com [209.85.166.196])
- by mx.groups.io with SMTP id smtpd.web09.383.1576111730913536102
+Received: from mail-io1-f66.google.com (mail-io1-f66.google.com [209.85.166.66])
+ by mx.groups.io with SMTP id smtpd.web11.350.1576111743164583983
  for <u-boot-amlogic@groups.io>;
- Wed, 11 Dec 2019 16:48:51 -0800
-Received: by mail-il1-f196.google.com with SMTP id f6so490233ilh.9
-        for <u-boot-amlogic@groups.io>; Wed, 11 Dec 2019 16:48:50 -0800 (PST)
+ Wed, 11 Dec 2019 16:49:03 -0800
+Received: by mail-io1-f66.google.com with SMTP id a22so866704ios.3
+        for <u-boot-amlogic@groups.io>; Wed, 11 Dec 2019 16:49:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5BTRd9TGvrzhYEbyAQpguxlLavymbvcg4GVMkqjP01M=;
-        b=XPSFzGoKabQTle2X2H1AWqNWYXsvFa9qABx0P0IpULAVGBNxheKMHDt3c9N6g/3KdM
-         bNemOpqr9veyUVMF86rpQvDH/QFzRtygsYREg9wpr/h0i7Aik3JDu3Xi03YnWo8n3RvT
-         09p6pYLQ7BrDj6fnS7GLTNGo9EnE2UpjxKX3w=
+        bh=fmFA5FxD9napyhuLFpjKYEM+4G2l+6KnT/Da41VMWWA=;
+        b=YFpxSaQCSFPgVl9NUfhqDpc5gIKSFw8zUx7QrDPKUW8hP5kJfC30vK46/MF0CVOTaz
+         Yl++nuy3XFutCRMqvCtSHepZ4Z1R3MrusflO7MgeVBdWfXWK5WcUKA+zQdZyE5I9sc/I
+         shDZMKo/ZOa4hiuDGcCSYgF2nPJh0lRra+AEc=
 Return-Path: <sjg@chromium.org>
 From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH 24/35] common: Move reset_cpu() to the CPU header
-Date: Wed, 11 Dec 2019 17:47:43 -0700
-Message-Id: <20191212004755.11091-14-sjg@chromium.org>
+Subject: [PATCH 28/35] common: Move RAM-sizing functions to init.h
+Date: Wed, 11 Dec 2019 17:47:47 -0700
+Message-Id: <20191211174637.28.Ibf2a89e8247fb54de790b3b8b55622b9ed234b2b@changeid>
 In-Reply-To: <20191212004755.11091-2-sjg@chromium.org>
 References: <20191212004755.11091-2-sjg@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, Alexander Graf <agraf@csgraf.de>, Alexey Brodkin <alexey.brodkin@synopsys.com>, Bai Ping <ping.bai@nxp.com>, Boris Brezillon <boris.brezillon@bootlin.com>, "Cogent Embedded, Inc." <source@cogentembedded.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, David Feng <fenghua@phytium.com.cn>, =?UTF-8?q?Eddy=20Petri=C8=99or?= <eddy.petrisor@gmail.com>, Eric Nelson <eric@nelint.com>, Eugen Hristev <eugen.hristev@microchip.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Fabien Parent <fparent@baylibre.com>, Fabio Estevam <festevam@gmail.com>, GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, Hannes Schmelzer <hannes.schmelzer@br-automation.com>, Heiko Schocher <hs@denx.de>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Igor Grinberg <grinberg@compulab.co.il>, Joe Hershberger <joe.hershberger@ni.com>, Jon Mason <jon.mason@broadcom.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Ley Foon Tan <ley.foon.tan@intel.com>, Liviu Dudau <liviu.dudau@foss.arm.com>, Lukasz Majewski <lukma@denx.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Marek Vasut <marex@denx.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Masakazu Mochizuki <masakazu.mochizuki.wd@hitachi.com>, Matthias Brugger <mbrugger@suse.com>, Max Krummenacher <max.krummenacher@toradex.com>, Michal Simek <michal.simek@xilinx.com>, "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Neil Armstrong <narmstrong@baylibre.com>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Oliver Graute <oliver.graute@kococonnector.com>, Otavio Salvador <otavio@ossystems.com.br>, Patrice Chotard <patrice.chotard@st.com>, Patrick Delaunay <patrick.delaunay@st.com>, Peng Fan <peng.fan@nxp.com>, Peter Griffin <peter.griffin@linaro.org>, Ramon Fried <rfried.dev@gmail.com>, Richard Hu <richard.hu@technexion.com>, Rick Chen <rick@andestech.com>, Robert Hancock <hancock@sedsystems.ca>, Ryder Lee <ryder.lee@mediatek.com>, Sergey Temerkhanov <s.temerkhanov@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Stefan Agner <stefan.agner@toradex.com>, Stefan Roese <sr@denx.de>, Stefano Babic <sbabic@denx.de>, Tetsuyuki Kobayashi <koba@kmckk.co.jp>, Tom Warren <twarren@nvidia.com>, Urja Rannikko <urjaman@gmail.com>, Vanessa Maegima <vanessa.maegima@nxp.com>, Vikas Manocha <vikas.manocha@st.com>, Weijie Gao <weijie.gao@mediatek.com>, Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, liuhao <liuhao@phytium.com.cn>, mingming lee <mingming.lee@mediatek.com>, shuyiqi <shuyiqi@phytium.com.cn>, u-boot-amlogic@groups.io, uboot-snps-arc@synopsys.com
+Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, Alison Wang <alison.wang@nxp.com>, Andes <uboot@andestech.com>, =?UTF-8?q?Andreas=20Bie=C3=9Fmann?= <andreas@biessmann.org>, Andrej Rosano <andrej@inversepath.com>, "Andrew F. Davis" <afd@ti.com>, Angelo Dureghello <angelo@sysam.it>, Ben Whitten <ben.whitten@lairdtech.com>, Bin Meng <bmeng.cn@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Brad Griffis <bgriffis@ti.com>, Chander Kashyap <k.chander@samsung.com>, Dalon Westergreen <dalon.westergreen@intel.com>, Daniel Gorsulowski <daniel.gorsulowski@esd.eu>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Dirk Eibach <dirk.eibach@gdsys.cc>, =?UTF-8?q?Eddy=20Petri=C8=99or?= <eddy.petrisor@gmail.com>, Erik van Luijk <evanluijk@interact.nl>, Eugen Hristev <eugen.hristev@microchip.com>, Fabio Estevam <festevam@gmail.com>, GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, Hans de Goede <hdegoede@redhat.com>, Heiko Schocher <hs@denx.de>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Igor Grinberg <grinberg@compulab.co.il>, Ilko Iliev <iliev@ronetix.at>, Ilya Yanok <yanok@emcraft.com>, Jagan Teki <jagan@amarulasolutions.com>, Jason Liu <Jason.hui.liu@nxp.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>, Joe Hershberger <joe.hershberger@ni.com>, Jon Mason <jon.mason@broadcom.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Keerthy <j-keerthy@ti.com>, Krunal Bhargav <k-bhargav@ti.com>, Krzysztof Kozlowski <krzk@kernel.org>, Ley Foon Tan <ley.foon.tan@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@foss.arm.com>, Lokesh Vutla <lokeshvutla@ti.com>, Lukasz Majewski <lukma@denx.de>, Marcel Ziswiler <marcel@ziswiler.com>, Marek Vasut <marex@denx.de>, Mario Six <mario.six@gdsys.cc>, Martyn Welch <martyn.welch@collabora.com>, Mateusz Kulikowski <mateusz.kulikowski@gmail.com>, Max Krummenacher <max.krummenacher@toradex.com>, Maxime Ripard <mripard@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Minkyu Kang <mk7.kang@samsung.com>, "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Neil Armstrong <narmstrong@baylibre.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Niel Fourie <lusus@denx.de>, Nikita Kiryanov <nikita@compulab.co.il>, Pankaj Bansal <pankaj.bansal@nxp.com>, Parthiban Nallathambi <parthitce@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Patrick Delaunay <patrick.delaunay@st.com>, Peng Fan <peng.fan@nxp.com>, Poonam Aggrwal <poonam.aggrwal@nxp.com>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Reinhard Arlt <reinhard.arlt@esd-electronics.com>, Richard Hu <richard.hu@technexion.com>, Rick Chen <rick@andestech.com>, Ryder Lee <ryder.lee@mediatek.com>, Sandeep Sheriker M <sandeep.sheriker@microchip.com>, Shawn Guo <shawn.guo@linaro.org>, Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Stefan Agner <stefan.agner@toradex.com>, Stefan Roese <sr@denx.de>, Stefano Babic <sbabic@denx.de>, Stelian Pop <stelian@popies.net>, Steve Rae <steve.rae@raedomain.com>, Thomas Schaefer <thomas.schaefer@kontron.com>, Tom Warren <twarren@nvidia.com>, Trevor Woerner <trevor@toganlabs.com>, Udit Agarwal <udit.agarwal@nxp.com>, Uri Mashiach <uri.mashiach@compulab.co.il>, Vitaly Andrianov <vitalya@ti.com>, Vladimir Zapolskiy <vz@mleia.com>, Weijie Gao <weijie.gao@mediatek.com>, Wolfgang Denk <wd@denx.de>, Wolfgang Wegner <w.wegner@astro-kom.de>, Yangbo Lu <yangbo.lu@nxp.com>, Ye Li <ye.li@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, egnite GmbH <info@egnite.de>, u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Move this function out of common.h and into a relevant header file.
+These functions relate to memory init so move them into the init
+header.
 
 Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
 
- arch/arc/lib/reset.c                                    | 1 +
- arch/arm/cpu/arm920t/ep93xx/cpu.c                       | 1 +
- arch/arm/cpu/arm920t/imx/timer.c                        | 3 ++-
- arch/arm/cpu/arm926ejs/armada100/timer.c                | 3 ++-
- arch/arm/cpu/arm926ejs/mx25/reset.c                     | 1 +
- arch/arm/cpu/arm926ejs/mx27/reset.c                     | 1 +
- arch/arm/cpu/arm926ejs/mxs/mxs.c                        | 1 +
- arch/arm/cpu/arm926ejs/spear/reset.c                    | 1 +
- arch/arm/cpu/armv7/bcm281xx/reset.c                     | 1 +
- arch/arm/cpu/armv7/bcmcygnus/reset.c                    | 1 +
- arch/arm/cpu/armv7/bcmnsp/reset.c                       | 1 +
- arch/arm/cpu/armv7/stv0991/reset.c                      | 1 +
- arch/arm/cpu/armv8/s32v234/generic.c                    | 1 +
- arch/arm/lib/interrupts.c                               | 3 ++-
- arch/arm/lib/interrupts_m.c                             | 1 +
- arch/arm/lib/reset.c                                    | 1 +
- arch/arm/mach-at91/arm920t/reset.c                      | 1 +
- arch/arm/mach-at91/arm926ejs/reset.c                    | 1 +
- arch/arm/mach-at91/armv7/reset.c                        | 1 +
- arch/arm/mach-bcm283x/reset.c                           | 1 +
- arch/arm/mach-davinci/reset.c                           | 1 +
- arch/arm/mach-imx/mx7ulp/soc.c                          | 1 +
- arch/arm/mach-k3/common.c                               | 1 +
- arch/arm/mach-keystone/ddr3.c                           | 1 +
- arch/arm/mach-kirkwood/cpu.c                            | 1 +
- arch/arm/mach-mediatek/mt8516/init.c                    | 1 +
- arch/arm/mach-mediatek/mt8518/init.c                    | 1 +
- arch/arm/mach-meson/board-common.c                      | 1 +
- arch/arm/mach-mvebu/armada3700/cpu.c                    | 1 +
- arch/arm/mach-omap2/omap5/hwinit.c                      | 1 +
- arch/arm/mach-omap2/reset.c                             | 1 +
- arch/arm/mach-socfpga/misc_gen5.c                       | 1 +
- arch/arm/mach-tegra/cmd_enterrcm.c                      | 1 +
- arch/arm/mach-tegra/pmc.c                               | 1 +
- arch/arm/mach-uniphier/reset.c                          | 1 +
- arch/arm/mach-zynqmp-r5/cpu.c                           | 1 +
- arch/nds32/lib/interrupts.c                             | 1 +
- arch/sh/cpu/sh4/cpu.c                                   | 2 +-
- arch/sh/cpu/sh4/watchdog.c                              | 1 +
- board/BuR/brppt2/board.c                                | 1 +
- board/abilis/tb100/tb100.c                              | 1 +
- board/advantech/imx8qm_rom7720_a1/imx8qm_rom7720_a1.c   | 1 +
- board/armltd/vexpress64/vexpress64.c                    | 1 +
- board/atmark-techno/armadillo-800eva/armadillo-800eva.c | 1 +
- board/bosch/shc/board.c                                 | 1 +
- board/broadcom/bcmns2/northstar2.c                      | 1 +
- board/cavium/thunderx/thunderx.c                        | 1 +
- board/compulab/cm_t335/spl.c                            | 1 +
- board/freescale/imx8mm_evk/spl.c                        | 1 +
- board/freescale/imx8mn_evk/spl.c                        | 1 +
- board/freescale/imx8qm_mek/imx8qm_mek.c                 | 1 +
- board/freescale/imx8qxp_mek/imx8qxp_mek.c               | 1 +
- board/freescale/mx6memcal/spl.c                         | 1 +
- board/hisilicon/hikey/hikey.c                           | 1 +
- board/hisilicon/hikey960/hikey960.c                     | 1 +
- board/hisilicon/poplar/poplar.c                         | 1 +
- board/kmc/kzm9g/kzm9g.c                                 | 1 +
- board/liebherr/display5/spl.c                           | 1 +
- board/phytium/durian/durian.c                           | 1 +
- board/qualcomm/dragonboard410c/dragonboard410c.c        | 1 +
- board/qualcomm/dragonboard820c/dragonboard820c.c        | 1 +
- board/renesas/alt/alt.c                                 | 1 +
- board/renesas/alt/alt_spl.c                             | 1 +
- board/renesas/blanche/blanche.c                         | 1 +
- board/renesas/condor/condor.c                           | 1 +
- board/renesas/draak/draak.c                             | 1 +
- board/renesas/eagle/eagle.c                             | 1 +
- board/renesas/ebisu/ebisu.c                             | 1 +
- board/renesas/gose/gose.c                               | 1 +
- board/renesas/gose/gose_spl.c                           | 1 +
- board/renesas/grpeach/grpeach.c                         | 1 +
- board/renesas/koelsch/koelsch.c                         | 1 +
- board/renesas/koelsch/koelsch_spl.c                     | 1 +
- board/renesas/lager/lager.c                             | 1 +
- board/renesas/lager/lager_spl.c                         | 1 +
- board/renesas/porter/porter.c                           | 1 +
- board/renesas/porter/porter_spl.c                       | 1 +
- board/renesas/rcar-common/gen3-spl.c                    | 1 +
- board/renesas/salvator-x/salvator-x.c                   | 1 +
- board/renesas/silk/silk.c                               | 1 +
- board/renesas/silk/silk_spl.c                           | 1 +
- board/renesas/stout/cpld.c                              | 1 +
- board/renesas/stout/stout_spl.c                         | 1 +
- board/synopsys/emsdp/emsdp.c                            | 1 +
- board/synopsys/iot_devkit/iot_devkit.c                  | 1 +
- board/technexion/pico-imx6ul/spl.c                      | 1 +
- board/technexion/pico-imx7d/spl.c                       | 1 +
- board/toradex/apalis-imx8/apalis-imx8.c                 | 1 +
- board/toradex/apalis_imx6/apalis_imx6.c                 | 1 +
- board/toradex/colibri-imx8x/colibri-imx8x.c             | 1 +
- board/toradex/colibri_imx6/colibri_imx6.c               | 1 +
- board/toradex/colibri_imx7/colibri_imx7.c               | 1 +
- board/ucRobotics/bubblegum_96/bubblegum_96.c            | 1 +
- board/xilinx/versal/board.c                             | 1 +
- cmd/tpm_test.c                                          | 1 +
- drivers/sysreset/sysreset-uclass.c                      | 1 +
- drivers/watchdog/imx_watchdog.c                         | 1 +
- drivers/watchdog/ulp_wdog.c                             | 1 +
- include/common.h                                        | 2 --
- include/cpu_func.h                                      | 2 ++
- lib/efi/efi_app.c                                       | 1 +
- 101 files changed, 104 insertions(+), 6 deletions(-)
+ arch/arm/cpu/arm926ejs/mxs/spl_mem_init.c           | 1 +
+ arch/arm/cpu/arm926ejs/spear/spr_misc.c             | 1 +
+ arch/arm/cpu/armv8/fsl-layerscape/cpu.c             | 1 +
+ arch/arm/mach-davinci/misc.c                        | 1 +
+ arch/arm/mach-imx/imx8/cpu.c                        | 1 +
+ arch/arm/mach-imx/mx5/mx53_dram.c                   | 1 +
+ arch/arm/mach-imx/mx6/litesom.c                     | 1 +
+ arch/arm/mach-mediatek/mt7623/init.c                | 1 +
+ arch/arm/mach-meson/board-axg.c                     | 1 +
+ arch/arm/mach-meson/board-g12a.c                    | 1 +
+ arch/arm/mach-meson/board-gx.c                      | 1 +
+ arch/arm/mach-mvebu/dram.c                          | 1 +
+ arch/arm/mach-omap2/am33xx/board.c                  | 1 +
+ arch/arm/mach-omap2/emif-common.c                   | 1 +
+ arch/arm/mach-omap2/sec-common.c                    | 1 +
+ arch/arm/mach-orion5x/dram.c                        | 1 +
+ arch/arm/mach-sunxi/dram_sun4i.c                    | 1 +
+ arch/arm/mach-tegra/board.c                         | 1 +
+ arch/mips/mach-ath79/dram.c                         | 1 +
+ arch/mips/mach-mtmips/cpu.c                         | 1 +
+ arch/powerpc/cpu/mpc85xx/traps.c                    | 1 +
+ arch/powerpc/cpu/mpc86xx/traps.c                    | 1 +
+ arch/powerpc/lib/bootm.c                            | 1 +
+ arch/x86/cpu/tangier/sdram.c                        | 1 +
+ board/AndesTech/adp-ae3xx/adp-ae3xx.c               | 1 +
+ board/AndesTech/adp-ag101p/adp-ag101p.c             | 1 +
+ board/AndesTech/ax25-ae350/ax25-ae350.c             | 1 +
+ board/CarMediaLab/flea3/flea3.c                     | 1 +
+ board/armltd/integrator/integrator.c                | 1 +
+ board/armltd/vexpress/vexpress_common.c             | 1 +
+ board/astro/mcf5373l/mcf5373l.c                     | 1 +
+ board/atmel/at91rm9200ek/at91rm9200ek.c             | 1 +
+ board/atmel/at91sam9260ek/at91sam9260ek.c           | 1 +
+ board/atmel/at91sam9261ek/at91sam9261ek.c           | 1 +
+ board/atmel/at91sam9263ek/at91sam9263ek.c           | 1 +
+ board/atmel/at91sam9m10g45ek/at91sam9m10g45ek.c     | 1 +
+ board/atmel/at91sam9n12ek/at91sam9n12ek.c           | 1 +
+ board/atmel/at91sam9rlek/at91sam9rlek.c             | 1 +
+ board/atmel/sam9x60ek/sam9x60ek.c                   | 1 +
+ board/atmel/sama5d27_wlsom1_ek/sama5d27_wlsom1_ek.c | 1 +
+ board/barco/platinum/platinum.c                     | 1 +
+ board/barco/titanium/titanium.c                     | 1 +
+ board/bluewater/snapper9260/snapper9260.c           | 1 +
+ board/broadcom/bcm23550_w1d/bcm23550_w1d.c          | 1 +
+ board/broadcom/bcm28155_ap/bcm28155_ap.c            | 1 +
+ board/broadcom/bcm_ep/board.c                       | 1 +
+ board/broadcom/bcmns2/northstar2.c                  | 1 +
+ board/calao/usb_a9263/usb_a9263.c                   | 1 +
+ board/compulab/cl-som-imx7/spl.c                    | 1 +
+ board/compulab/cm_fx6/spl.c                         | 1 +
+ board/compulab/cm_t335/spl.c                        | 1 +
+ board/compulab/cm_t43/spl.c                         | 1 +
+ board/egnite/ethernut5/ethernut5.c                  | 1 +
+ board/esd/meesc/meesc.c                             | 1 +
+ board/esd/vme8349/vme8349.c                         | 1 +
+ board/freescale/bsc9131rdb/ddr.c                    | 1 +
+ board/freescale/mpc8308rdb/sdram.c                  | 1 +
+ board/freescale/mx53ard/mx53ard.c                   | 1 +
+ board/freescale/mx53smd/mx53smd.c                   | 1 +
+ board/freescale/s32v234evb/s32v234evb.c             | 1 +
+ board/freescale/vf610twr/vf610twr.c                 | 1 +
+ board/gdsys/mpc8308/sdram.c                         | 1 +
+ board/hisilicon/poplar/poplar.c                     | 1 +
+ board/ids/ids8313/ids8313.c                         | 1 +
+ board/inversepath/usbarmory/usbarmory.c             | 1 +
+ board/l+g/vinco/vinco.c                             | 1 +
+ board/laird/wb45n/wb45n.c                           | 1 +
+ board/mini-box/picosam9g45/picosam9g45.c            | 1 +
+ board/mpc8308_p1m/sdram.c                           | 1 +
+ board/phytec/pcl063/pcl063.c                        | 1 +
+ board/phytec/phycore_am335x_r2/board.c              | 1 +
+ board/ronetix/pm9261/pm9261.c                       | 1 +
+ board/ronetix/pm9263/pm9263.c                       | 1 +
+ board/ronetix/pm9g45/pm9g45.c                       | 1 +
+ board/samsung/arndale/arndale.c                     | 1 +
+ board/samsung/smdkc100/smdkc100.c                   | 1 +
+ board/samsung/smdkv310/smdkv310.c                   | 1 +
+ board/seco/mx6quq7/mx6quq7.c                        | 1 +
+ board/siemens/corvus/board.c                        | 1 +
+ board/siemens/smartweb/smartweb.c                   | 1 +
+ board/siemens/taurus/taurus.c                       | 1 +
+ board/socrates/sdram.c                              | 1 +
+ board/sunxi/board.c                                 | 1 +
+ board/sysam/amcore/amcore.c                         | 1 +
+ board/technexion/pico-imx6ul/spl.c                  | 2 ++
+ board/technologic/ts4800/ts4800.c                   | 1 +
+ board/ti/ks2_evm/board.c                            | 1 +
+ board/timll/devkit3250/devkit3250.c                 | 1 +
+ board/toradex/colibri_imx7/colibri_imx7.c           | 2 ++
+ board/tqc/tqm834x/tqm834x.c                         | 1 +
+ board/ve8313/ve8313.c                               | 2 +-
+ board/woodburn/woodburn.c                           | 1 +
+ cmd/ti/ddr3.c                                       | 1 +
+ common/memsize.c                                    | 1 +
+ drivers/ddr/altera/sdram_gen5.c                     | 1 +
+ drivers/ddr/altera/sdram_s10.c                      | 1 +
+ drivers/ram/bmips_ram.c                             | 1 +
+ drivers/ram/mpc83xx_sdram.c                         | 1 +
+ drivers/ram/stm32mp1/stm32mp1_ram.c                 | 1 +
+ drivers/ram/stm32mp1/stm32mp1_tests.c               | 1 +
+ include/common.h                                    | 4 ----
+ include/init.h                                      | 3 +++
+ lib/fdtdec.c                                        | 1 +
+ 103 files changed, 106 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arc/lib/reset.c b/arch/arc/lib/reset.c
-index 02e08df48d..30dd4b5238 100644
---- a/arch/arc/lib/reset.c
-+++ b/arch/arc/lib/reset.c
-@@ -5,6 +5,7 @@
+diff --git a/arch/arm/cpu/arm926ejs/mxs/spl_mem_init.c b/arch/arm/cpu/arm926ejs/mxs/spl_mem_init.c
+index 7818d72908..542543cc28 100644
+--- a/arch/arm/cpu/arm926ejs/mxs/spl_mem_init.c
++++ b/arch/arm/cpu/arm926ejs/mxs/spl_mem_init.c
+@@ -8,6 +8,7 @@
  
- #include <command.h>
  #include <common.h>
-+#include <cpu_func.h>
+ #include <config.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/imx-regs.h>
+ #include <asm/arch/sys_proto.h>
+diff --git a/arch/arm/cpu/arm926ejs/spear/spr_misc.c b/arch/arm/cpu/arm926ejs/spear/spr_misc.c
+index ccf944f814..d5be646555 100644
+--- a/arch/arm/cpu/arm926ejs/spear/spr_misc.c
++++ b/arch/arm/cpu/arm926ejs/spear/spr_misc.c
+@@ -9,6 +9,7 @@
+ #include <cpu_func.h>
+ #include <env.h>
+ #include <i2c.h>
++#include <init.h>
+ #include <net.h>
+ #include <linux/mtd/st_smi.h>
+ #include <asm/io.h>
+diff --git a/arch/arm/cpu/armv8/fsl-layerscape/cpu.c b/arch/arm/cpu/armv8/fsl-layerscape/cpu.c
+index 6c87c1b11a..7a378d93df 100644
+--- a/arch/arm/cpu/armv8/fsl-layerscape/cpu.c
++++ b/arch/arm/cpu/armv8/fsl-layerscape/cpu.c
+@@ -8,6 +8,7 @@
+ #include <cpu_func.h>
+ #include <env.h>
+ #include <fsl_ddr_sdram.h>
++#include <init.h>
+ #include <vsprintf.h>
+ #include <asm/io.h>
+ #include <linux/errno.h>
+diff --git a/arch/arm/mach-davinci/misc.c b/arch/arm/mach-davinci/misc.c
+index 80e964274e..3e5185261c 100644
+--- a/arch/arm/mach-davinci/misc.c
++++ b/arch/arm/mach-davinci/misc.c
+@@ -11,6 +11,7 @@
+ #include <common.h>
+ #include <env.h>
+ #include <i2c.h>
++#include <init.h>
+ #include <net.h>
+ #include <asm/arch/hardware.h>
+ #include <asm/io.h>
+diff --git a/arch/arm/mach-imx/imx8/cpu.c b/arch/arm/mach-imx/imx8/cpu.c
+index d31af47c31..2110380957 100644
+--- a/arch/arm/mach-imx/imx8/cpu.c
++++ b/arch/arm/mach-imx/imx8/cpu.c
+@@ -8,6 +8,7 @@
+ #include <cpu.h>
+ #include <cpu_func.h>
+ #include <dm.h>
++#include <init.h>
+ #include <dm/device-internal.h>
+ #include <dm/lists.h>
+ #include <dm/uclass.h>
+diff --git a/arch/arm/mach-imx/mx5/mx53_dram.c b/arch/arm/mach-imx/mx5/mx53_dram.c
+index 39ac287fb4..a7f033f3f4 100644
+--- a/arch/arm/mach-imx/mx5/mx53_dram.c
++++ b/arch/arm/mach-imx/mx5/mx53_dram.c
+@@ -5,6 +5,7 @@
+  */
  
- __weak void reset_cpu(ulong addr)
- {
-diff --git a/arch/arm/cpu/arm920t/ep93xx/cpu.c b/arch/arm/cpu/arm920t/ep93xx/cpu.c
-index 3aae12f8ad..c9ea4e46a8 100644
---- a/arch/arm/cpu/arm920t/ep93xx/cpu.c
-+++ b/arch/arm/cpu/arm920t/ep93xx/cpu.c
+ #include <common.h>
++#include <init.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+diff --git a/arch/arm/mach-imx/mx6/litesom.c b/arch/arm/mach-imx/mx6/litesom.c
+index 4f4df7433b..b0a6bd589c 100644
+--- a/arch/arm/mach-imx/mx6/litesom.c
++++ b/arch/arm/mach-imx/mx6/litesom.c
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2016 Grinn
+  */
+ 
++#include <init.h>
+ #include <asm/arch/clock.h>
+ #include <asm/arch/iomux.h>
+ #include <asm/arch/imx-regs.h>
+diff --git a/arch/arm/mach-mediatek/mt7623/init.c b/arch/arm/mach-mediatek/mt7623/init.c
+index 0ee8c6664c..2778e260e0 100644
+--- a/arch/arm/mach-mediatek/mt7623/init.c
++++ b/arch/arm/mach-mediatek/mt7623/init.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <linux/io.h>
+ #include <linux/sizes.h>
+ #include <asm/arch/misc.h>
+diff --git a/arch/arm/mach-meson/board-axg.c b/arch/arm/mach-meson/board-axg.c
+index 173905e762..6874458e36 100644
+--- a/arch/arm/mach-meson/board-axg.c
++++ b/arch/arm/mach-meson/board-axg.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/arch/boot.h>
+ #include <asm/arch/eth.h>
+ #include <asm/arch/axg.h>
+diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
+index 24786df6cd..26d6b90790 100644
+--- a/arch/arm/mach-meson/board-g12a.c
++++ b/arch/arm/mach-meson/board-g12a.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/arch/boot.h>
+ #include <asm/arch/eth.h>
+ #include <asm/arch/g12a.h>
+diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
+index ab8f1a81f8..191fd49005 100644
+--- a/arch/arm/mach-meson/board-gx.c
++++ b/arch/arm/mach-meson/board-gx.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/arch/boot.h>
+ #include <asm/arch/eth.h>
+ #include <asm/arch/gx.h>
+diff --git a/arch/arm/mach-mvebu/dram.c b/arch/arm/mach-mvebu/dram.c
+index ba8ebc6288..6c6f8d8c5c 100644
+--- a/arch/arm/mach-mvebu/dram.c
++++ b/arch/arm/mach-mvebu/dram.c
+@@ -7,6 +7,7 @@
+ 
+ #include <config.h>
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/cpu.h>
+ #include <asm/arch/soc.h>
+diff --git a/arch/arm/mach-omap2/am33xx/board.c b/arch/arm/mach-omap2/am33xx/board.c
+index 03460c3eb7..055eb6b760 100644
+--- a/arch/arm/mach-omap2/am33xx/board.c
++++ b/arch/arm/mach-omap2/am33xx/board.c
+@@ -11,6 +11,7 @@
+ #include <dm.h>
+ #include <debug_uart.h>
+ #include <errno.h>
++#include <init.h>
+ #include <ns16550.h>
+ #include <spl.h>
+ #include <asm/arch/cpu.h>
+diff --git a/arch/arm/mach-omap2/emif-common.c b/arch/arm/mach-omap2/emif-common.c
+index c900f28af2..bb81063c0f 100644
+--- a/arch/arm/mach-omap2/emif-common.c
++++ b/arch/arm/mach-omap2/emif-common.c
 @@ -9,6 +9,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <asm/arch/ep93xx.h>
- #include <asm/io.h>
- 
-diff --git a/arch/arm/cpu/arm920t/imx/timer.c b/arch/arm/cpu/arm920t/imx/timer.c
-index 403cd8ae57..21129a7901 100644
---- a/arch/arm/cpu/arm920t/imx/timer.c
-+++ b/arch/arm/cpu/arm920t/imx/timer.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <time.h>
- #if defined (CONFIG_IMX)
- 
-@@ -79,7 +80,7 @@ ulong get_tbclk(void)
- /*
-  * Reset the cpu by setting up the watchdog timer and let him time out
-  */
--void reset_cpu (ulong ignored)
-+void reset_cpu(ulong ignored)
- {
- 	/* Disable watchdog and set Time-Out field to 0 */
- 	WCR = 0x00000000;
-diff --git a/arch/arm/cpu/arm926ejs/armada100/timer.c b/arch/arm/cpu/arm926ejs/armada100/timer.c
-index a11a4f3a5b..f4962ec45f 100644
---- a/arch/arm/cpu/arm926ejs/armada100/timer.c
-+++ b/arch/arm/cpu/arm926ejs/armada100/timer.c
-@@ -7,6 +7,7 @@
-  */
++#include <init.h>
+ #include <net.h>
+ #include <asm/emif.h>
+ #include <asm/arch/clock.h>
+diff --git a/arch/arm/mach-omap2/sec-common.c b/arch/arm/mach-omap2/sec-common.c
+index e9b3e746fe..f3df8affa3 100644
+--- a/arch/arm/mach-omap2/sec-common.c
++++ b/arch/arm/mach-omap2/sec-common.c
+@@ -14,6 +14,7 @@
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <time.h>
+ #include <cpu_func.h>
++#include <init.h>
+ #include <stdarg.h>
+ 
+ #include <asm/arch/sys_proto.h>
+diff --git a/arch/arm/mach-orion5x/dram.c b/arch/arm/mach-orion5x/dram.c
+index b52c417e30..33f65db48e 100644
+--- a/arch/arm/mach-orion5x/dram.c
++++ b/arch/arm/mach-orion5x/dram.c
+@@ -10,6 +10,7 @@
+ 
+ #include <common.h>
+ #include <config.h>
++#include <init.h>
  #include <asm/arch/cpu.h>
- #include <asm/arch/armada100.h>
-@@ -138,7 +139,7 @@ int timer_init(void)
-  * 2. Write key value to TMP_WSAR reg.
-  * 3. Perform write operation.
-  */
--void reset_cpu (unsigned long ignored)
-+void reset_cpu(unsigned long ignored)
- {
- 	struct armd1mpmu_registers *mpmu =
- 		(struct armd1mpmu_registers *) ARMD1_MPMU_BASE;
-diff --git a/arch/arm/cpu/arm926ejs/mx25/reset.c b/arch/arm/cpu/arm926ejs/mx25/reset.c
-index 576f7fac6f..38df1c9402 100644
---- a/arch/arm/cpu/arm926ejs/mx25/reset.c
-+++ b/arch/arm/cpu/arm926ejs/mx25/reset.c
-@@ -16,6 +16,7 @@
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+diff --git a/arch/arm/mach-sunxi/dram_sun4i.c b/arch/arm/mach-sunxi/dram_sun4i.c
+index 396c0424ea..72de807a47 100644
+--- a/arch/arm/mach-sunxi/dram_sun4i.c
++++ b/arch/arm/mach-sunxi/dram_sun4i.c
+@@ -21,6 +21,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
++#include <init.h>
  #include <asm/io.h>
- #include <asm/arch/imx-regs.h>
- 
-diff --git a/arch/arm/cpu/arm926ejs/mx27/reset.c b/arch/arm/cpu/arm926ejs/mx27/reset.c
-index e2437d13c8..320b0a65e7 100644
---- a/arch/arm/cpu/arm926ejs/mx27/reset.c
-+++ b/arch/arm/cpu/arm926ejs/mx27/reset.c
-@@ -16,6 +16,7 @@
+ #include <asm/arch/clock.h>
+ #include <asm/arch/dram.h>
+diff --git a/arch/arm/mach-tegra/board.c b/arch/arm/mach-tegra/board.c
+index 61eaba711a..31c49a7c84 100644
+--- a/arch/arm/mach-tegra/board.c
++++ b/arch/arm/mach-tegra/board.c
+@@ -7,6 +7,7 @@
+ #include <common.h>
+ #include <cpu_func.h>
+ #include <dm.h>
++#include <init.h>
+ #include <ns16550.h>
+ #include <spl.h>
+ #include <asm/io.h>
+diff --git a/arch/mips/mach-ath79/dram.c b/arch/mips/mach-ath79/dram.c
+index 138a7f8483..1abe2a49e6 100644
+--- a/arch/mips/mach-ath79/dram.c
++++ b/arch/mips/mach-ath79/dram.c
+@@ -4,6 +4,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/imx-regs.h>
++#include <init.h>
+ #include <linux/sizes.h>
+ #include <asm/addrspace.h>
+ #include <mach/ddr.h>
+diff --git a/arch/mips/mach-mtmips/cpu.c b/arch/mips/mach-mtmips/cpu.c
+index 7afc2c5940..cee3c0cb0a 100644
+--- a/arch/mips/mach-mtmips/cpu.c
++++ b/arch/mips/mach-mtmips/cpu.c
+@@ -5,6 +5,7 @@
  
-diff --git a/arch/arm/cpu/arm926ejs/mxs/mxs.c b/arch/arm/cpu/arm926ejs/mxs/mxs.c
-index 85c65dcb44..62ad8b8c25 100644
---- a/arch/arm/cpu/arm926ejs/mxs/mxs.c
-+++ b/arch/arm/cpu/arm926ejs/mxs/mxs.c
+ #include <common.h>
+ #include <dm.h>
++#include <init.h>
+ #include <ram.h>
+ #include <wdt.h>
+ #include <asm/io.h>
+diff --git a/arch/powerpc/cpu/mpc85xx/traps.c b/arch/powerpc/cpu/mpc85xx/traps.c
+index 804788d050..bc2fc93e11 100644
+--- a/arch/powerpc/cpu/mpc85xx/traps.c
++++ b/arch/powerpc/cpu/mpc85xx/traps.c
+@@ -21,6 +21,7 @@
+ 
+ #include <common.h>
+ #include <command.h>
++#include <init.h>
+ #include <irq_func.h>
+ #include <kgdb.h>
+ #include <asm/processor.h>
+diff --git a/arch/powerpc/cpu/mpc86xx/traps.c b/arch/powerpc/cpu/mpc86xx/traps.c
+index 1820187d1d..79bab91367 100644
+--- a/arch/powerpc/cpu/mpc86xx/traps.c
++++ b/arch/powerpc/cpu/mpc86xx/traps.c
+@@ -15,6 +15,7 @@
+ 
+ #include <common.h>
+ #include <command.h>
++#include <init.h>
+ #include <kgdb.h>
+ #include <asm/processor.h>
+ 
+diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c
+index f2e670eb6b..390e8c0673 100644
+--- a/arch/powerpc/lib/bootm.c
++++ b/arch/powerpc/lib/bootm.c
+@@ -10,6 +10,7 @@
+ #include <common.h>
+ #include <cpu_func.h>
+ #include <env.h>
++#include <init.h>
+ #include <watchdog.h>
+ #include <command.h>
+ #include <image.h>
+diff --git a/arch/x86/cpu/tangier/sdram.c b/arch/x86/cpu/tangier/sdram.c
+index b47d896e20..8c7e1c10c2 100644
+--- a/arch/x86/cpu/tangier/sdram.c
++++ b/arch/x86/cpu/tangier/sdram.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/e820.h>
+ #include <asm/global_data.h>
+ #include <asm/sfi.h>
+diff --git a/board/AndesTech/adp-ae3xx/adp-ae3xx.c b/board/AndesTech/adp-ae3xx/adp-ae3xx.c
+index db08d86de5..a04415deca 100644
+--- a/board/AndesTech/adp-ae3xx/adp-ae3xx.c
++++ b/board/AndesTech/adp-ae3xx/adp-ae3xx.c
+@@ -5,6 +5,7 @@
+  * Macpaul Lin, Andes Technology Corporation <macpaul@andestech.com>
+  */
+ 
++#include <init.h>
+ #include <asm/mach-types.h>
+ #include <common.h>
+ #if defined(CONFIG_FTMAC100) && !defined(CONFIG_DM_ETH)
+diff --git a/board/AndesTech/adp-ag101p/adp-ag101p.c b/board/AndesTech/adp-ag101p/adp-ag101p.c
+index 657921e741..faf39b4ba6 100644
+--- a/board/AndesTech/adp-ag101p/adp-ag101p.c
++++ b/board/AndesTech/adp-ag101p/adp-ag101p.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #if defined(CONFIG_FTMAC100) && !defined(CONFIG_DM_ETH)
+ #include <netdev.h>
+ #endif
+diff --git a/board/AndesTech/ax25-ae350/ax25-ae350.c b/board/AndesTech/ax25-ae350/ax25-ae350.c
+index 47e6929365..f164073000 100644
+--- a/board/AndesTech/ax25-ae350/ax25-ae350.c
++++ b/board/AndesTech/ax25-ae350/ax25-ae350.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #if defined(CONFIG_FTMAC100) && !defined(CONFIG_DM_ETH)
+ #include <netdev.h>
+ #endif
+diff --git a/board/CarMediaLab/flea3/flea3.c b/board/CarMediaLab/flea3/flea3.c
+index be0bc228ec..fb66c9ecc7 100644
+--- a/board/CarMediaLab/flea3/flea3.c
++++ b/board/CarMediaLab/flea3/flea3.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <env.h>
+ #include <linux/errno.h>
+diff --git a/board/armltd/integrator/integrator.c b/board/armltd/integrator/integrator.c
+index 5cdf7905a9..1a472f50d3 100644
+--- a/board/armltd/integrator/integrator.c
++++ b/board/armltd/integrator/integrator.c
+@@ -20,6 +20,7 @@
+ #include <cpu_func.h>
+ #include <dm.h>
+ #include <env.h>
++#include <init.h>
+ #include <netdev.h>
+ #include <asm/io.h>
+ #include <dm/platform_data/serial_pl01x.h>
+diff --git a/board/armltd/vexpress/vexpress_common.c b/board/armltd/vexpress/vexpress_common.c
+index 416c18adec..14626c1f55 100644
+--- a/board/armltd/vexpress/vexpress_common.c
++++ b/board/armltd/vexpress/vexpress_common.c
+@@ -17,6 +17,7 @@
+  */
+ #include <common.h>
+ #include <cpu_func.h>
++#include <init.h>
+ #include <malloc.h>
+ #include <errno.h>
+ #include <netdev.h>
+diff --git a/board/astro/mcf5373l/mcf5373l.c b/board/astro/mcf5373l/mcf5373l.c
+index db157a83c8..9adf58eb8a 100644
+--- a/board/astro/mcf5373l/mcf5373l.c
++++ b/board/astro/mcf5373l/mcf5373l.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <serial.h>
+ #include <watchdog.h>
+ #include <command.h>
+diff --git a/board/atmel/at91rm9200ek/at91rm9200ek.c b/board/atmel/at91rm9200ek/at91rm9200ek.c
+index 5d228fcc16..e75d5b182f 100644
+--- a/board/atmel/at91rm9200ek/at91rm9200ek.c
++++ b/board/atmel/at91rm9200ek/at91rm9200ek.c
 @@ -10,6 +10,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <linux/errno.h>
++#include <init.h>
+ #include <netdev.h>
+ #include <asm/mach-types.h>
+ #include <asm/arch/hardware.h>
+diff --git a/board/atmel/at91sam9260ek/at91sam9260ek.c b/board/atmel/at91sam9260ek/at91sam9260ek.c
+index d1e78dabf2..42fa762772 100644
+--- a/board/atmel/at91sam9260ek/at91sam9260ek.c
++++ b/board/atmel/at91sam9260ek/at91sam9260ek.c
+@@ -7,6 +7,7 @@
+ 
+ #include <common.h>
+ #include <debug_uart.h>
++#include <init.h>
+ #include <net.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91sam9260_matrix.h>
+diff --git a/board/atmel/at91sam9261ek/at91sam9261ek.c b/board/atmel/at91sam9261ek/at91sam9261ek.c
+index 28765315f7..36f2149b61 100644
+--- a/board/atmel/at91sam9261ek/at91sam9261ek.c
++++ b/board/atmel/at91sam9261ek/at91sam9261ek.c
+@@ -7,6 +7,7 @@
+ 
+ #include <common.h>
+ #include <debug_uart.h>
++#include <init.h>
+ #include <vsprintf.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91sam9261.h>
+diff --git a/board/atmel/at91sam9263ek/at91sam9263ek.c b/board/atmel/at91sam9263ek/at91sam9263ek.c
+index fc941d447f..b811d931c4 100644
+--- a/board/atmel/at91sam9263ek/at91sam9263ek.c
++++ b/board/atmel/at91sam9263ek/at91sam9263ek.c
+@@ -7,6 +7,7 @@
+ 
+ #include <common.h>
+ #include <debug_uart.h>
++#include <init.h>
+ #include <net.h>
+ #include <vsprintf.h>
+ #include <linux/sizes.h>
+diff --git a/board/atmel/at91sam9m10g45ek/at91sam9m10g45ek.c b/board/atmel/at91sam9m10g45ek/at91sam9m10g45ek.c
+index 6df915fcf1..8aabc55951 100644
+--- a/board/atmel/at91sam9m10g45ek/at91sam9m10g45ek.c
++++ b/board/atmel/at91sam9m10g45ek/at91sam9m10g45ek.c
+@@ -7,6 +7,7 @@
+ 
+ #include <common.h>
+ #include <debug_uart.h>
++#include <init.h>
+ #include <net.h>
+ #include <vsprintf.h>
+ #include <asm/io.h>
+diff --git a/board/atmel/at91sam9n12ek/at91sam9n12ek.c b/board/atmel/at91sam9n12ek/at91sam9n12ek.c
+index 51b24e1d59..90d32353e9 100644
+--- a/board/atmel/at91sam9n12ek/at91sam9n12ek.c
++++ b/board/atmel/at91sam9n12ek/at91sam9n12ek.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <vsprintf.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91sam9x5_matrix.h>
+diff --git a/board/atmel/at91sam9rlek/at91sam9rlek.c b/board/atmel/at91sam9rlek/at91sam9rlek.c
+index 4e674d49b3..f81dccc9cc 100644
+--- a/board/atmel/at91sam9rlek/at91sam9rlek.c
++++ b/board/atmel/at91sam9rlek/at91sam9rlek.c
+@@ -7,6 +7,7 @@
+ 
+ #include <common.h>
+ #include <debug_uart.h>
++#include <init.h>
+ #include <vsprintf.h>
+ #include <asm/io.h>
+ #include <asm/mach-types.h>
+diff --git a/board/atmel/sam9x60ek/sam9x60ek.c b/board/atmel/sam9x60ek/sam9x60ek.c
+index 7be1dd54f4..fbd05c78a9 100644
+--- a/board/atmel/sam9x60ek/sam9x60ek.c
++++ b/board/atmel/sam9x60ek/sam9x60ek.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91sam9_smc.h>
+ #include <asm/arch/at91_common.h>
+diff --git a/board/atmel/sama5d27_wlsom1_ek/sama5d27_wlsom1_ek.c b/board/atmel/sama5d27_wlsom1_ek/sama5d27_wlsom1_ek.c
+index fda06c824d..e9159d470f 100644
+--- a/board/atmel/sama5d27_wlsom1_ek/sama5d27_wlsom1_ek.c
++++ b/board/atmel/sama5d27_wlsom1_ek/sama5d27_wlsom1_ek.c
+@@ -7,6 +7,7 @@
+ 
+ #include <common.h>
+ #include <debug_uart.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91_common.h>
+ #include <asm/arch/atmel_pio4.h>
+diff --git a/board/barco/platinum/platinum.c b/board/barco/platinum/platinum.c
+index 1c6514af6e..c2c7c09553 100644
+--- a/board/barco/platinum/platinum.c
++++ b/board/barco/platinum/platinum.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <mmc.h>
+ #include <fsl_esdhc_imx.h>
+ #include <miiphy.h>
+diff --git a/board/barco/titanium/titanium.c b/board/barco/titanium/titanium.c
+index 407bfe95ed..6348f123ad 100644
+--- a/board/barco/titanium/titanium.c
++++ b/board/barco/titanium/titanium.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
  #include <asm/io.h>
  #include <asm/arch/clock.h>
-diff --git a/arch/arm/cpu/arm926ejs/spear/reset.c b/arch/arm/cpu/arm926ejs/spear/reset.c
-index 05c7ecdb49..3b884cd0d3 100644
---- a/arch/arm/cpu/arm926ejs/spear/reset.c
-+++ b/arch/arm/cpu/arm926ejs/spear/reset.c
-@@ -5,6 +5,7 @@
-  */
+ #include <asm/arch/imx-regs.h>
+diff --git a/board/bluewater/snapper9260/snapper9260.c b/board/bluewater/snapper9260/snapper9260.c
+index d2a1b97d7b..47ce307880 100644
+--- a/board/bluewater/snapper9260/snapper9260.c
++++ b/board/bluewater/snapper9260/snapper9260.c
+@@ -9,6 +9,7 @@
  
  #include <common.h>
-+#include <cpu_func.h>
+ #include <dm.h>
++#include <init.h>
  #include <asm/io.h>
- #include <asm/arch/hardware.h>
- #include <asm/arch/spr_syscntl.h>
-diff --git a/arch/arm/cpu/armv7/bcm281xx/reset.c b/arch/arm/cpu/armv7/bcm281xx/reset.c
-index fbdeea4de3..fda5a9527e 100644
---- a/arch/arm/cpu/armv7/bcm281xx/reset.c
-+++ b/arch/arm/cpu/armv7/bcm281xx/reset.c
+ #include <asm/gpio.h>
+ #include <asm/mach-types.h>
+diff --git a/board/broadcom/bcm23550_w1d/bcm23550_w1d.c b/board/broadcom/bcm23550_w1d/bcm23550_w1d.c
+index ce9f0494ee..d83eb9bd52 100644
+--- a/board/broadcom/bcm23550_w1d/bcm23550_w1d.c
++++ b/board/broadcom/bcm23550_w1d/bcm23550_w1d.c
 @@ -4,6 +4,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
++#include <init.h>
  #include <asm/io.h>
- #include <asm/arch/sysmap.h>
- 
-diff --git a/arch/arm/cpu/armv7/bcmcygnus/reset.c b/arch/arm/cpu/armv7/bcmcygnus/reset.c
-index 7f3f4055e4..3bfed34533 100644
---- a/arch/arm/cpu/armv7/bcmcygnus/reset.c
-+++ b/arch/arm/cpu/armv7/bcmcygnus/reset.c
+ #include <asm/mach-types.h>
+ #include <env.h>
+diff --git a/board/broadcom/bcm28155_ap/bcm28155_ap.c b/board/broadcom/bcm28155_ap/bcm28155_ap.c
+index 87616386cb..40ced1a87c 100644
+--- a/board/broadcom/bcm28155_ap/bcm28155_ap.c
++++ b/board/broadcom/bcm28155_ap/bcm28155_ap.c
 @@ -4,6 +4,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
++#include <init.h>
  #include <asm/io.h>
+ #include <asm/mach-types.h>
+ #include <env.h>
+diff --git a/board/broadcom/bcm_ep/board.c b/board/broadcom/bcm_ep/board.c
+index 63fb98ba7c..e4dbe42649 100644
+--- a/board/broadcom/bcm_ep/board.c
++++ b/board/broadcom/bcm_ep/board.c
+@@ -5,6 +5,7 @@
  
- #define CRMU_MAIL_BOX1		0x03024028
-diff --git a/arch/arm/cpu/armv7/bcmnsp/reset.c b/arch/arm/cpu/armv7/bcmnsp/reset.c
-index 674166daab..675f99fe99 100644
---- a/arch/arm/cpu/armv7/bcmnsp/reset.c
-+++ b/arch/arm/cpu/armv7/bcmnsp/reset.c
+ #include <common.h>
+ #include <cpu_func.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <config.h>
+ #include <netdev.h>
+diff --git a/board/broadcom/bcmns2/northstar2.c b/board/broadcom/bcmns2/northstar2.c
+index 292802f4c0..6cbad9c1f0 100644
+--- a/board/broadcom/bcmns2/northstar2.c
++++ b/board/broadcom/bcmns2/northstar2.c
 @@ -4,6 +4,7 @@
   */
- 
  #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
+ #include <cpu_func.h>
++#include <init.h>
+ #include <asm/system.h>
+ #include <asm/armv8/mmu.h>
  
- #define CRU_RESET_OFFSET	0x1803F184
-diff --git a/arch/arm/cpu/armv7/stv0991/reset.c b/arch/arm/cpu/armv7/stv0991/reset.c
-index d4b3ab7fd8..008e271dcc 100644
---- a/arch/arm/cpu/armv7/stv0991/reset.c
-+++ b/arch/arm/cpu/armv7/stv0991/reset.c
-@@ -5,6 +5,7 @@
+diff --git a/board/calao/usb_a9263/usb_a9263.c b/board/calao/usb_a9263/usb_a9263.c
+index 9e8e1f36f7..919e3ed27c 100644
+--- a/board/calao/usb_a9263/usb_a9263.c
++++ b/board/calao/usb_a9263/usb_a9263.c
+@@ -8,6 +8,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/stv0991_wdru.h>
- void reset_cpu(ulong ignored)
-diff --git a/arch/arm/cpu/armv8/s32v234/generic.c b/arch/arm/cpu/armv8/s32v234/generic.c
-index 50ca4198be..ec4641dcdb 100644
---- a/arch/arm/cpu/armv8/s32v234/generic.c
-+++ b/arch/arm/cpu/armv8/s32v234/generic.c
-@@ -5,6 +5,7 @@
++#include <init.h>
+ #include <asm/arch/at91sam9_smc.h>
+ #include <asm/arch/at91_common.h>
+ #include <asm/arch/at91_matrix.h>
+diff --git a/board/compulab/cl-som-imx7/spl.c b/board/compulab/cl-som-imx7/spl.c
+index f9a19f08da..6833608a53 100644
+--- a/board/compulab/cl-som-imx7/spl.c
++++ b/board/compulab/cl-som-imx7/spl.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <spl.h>
+ #include <fsl_esdhc_imx.h>
+ #include <asm/mach-imx/iomux-v3.h>
+diff --git a/board/compulab/cm_fx6/spl.c b/board/compulab/cm_fx6/spl.c
+index a406d0046e..1ddf424e42 100644
+--- a/board/compulab/cm_fx6/spl.c
++++ b/board/compulab/cm_fx6/spl.c
+@@ -9,6 +9,7 @@
  
  #include <common.h>
  #include <clock_legacy.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/imx-regs.h>
- #include <asm/arch/clock.h>
-diff --git a/arch/arm/lib/interrupts.c b/arch/arm/lib/interrupts.c
-index 75b70d9125..6dbf03b00c 100644
---- a/arch/arm/lib/interrupts.c
-+++ b/arch/arm/lib/interrupts.c
-@@ -19,6 +19,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <efi_loader.h>
- #include <irq_func.h>
- #include <asm/proc-armv/ptrace.h>
-@@ -48,7 +49,7 @@ int disable_interrupts(void)
- void bad_mode (void)
- {
- 	panic ("Resetting CPU ...\n");
--	reset_cpu (0);
-+	reset_cpu(0);
- }
- 
- static void show_efi_loaded_images(struct pt_regs *regs)
-diff --git a/arch/arm/lib/interrupts_m.c b/arch/arm/lib/interrupts_m.c
-index e4373f3781..1f6fdf2995 100644
---- a/arch/arm/lib/interrupts_m.c
-+++ b/arch/arm/lib/interrupts_m.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <irq_func.h>
- 
- /*
-diff --git a/arch/arm/lib/reset.c b/arch/arm/lib/reset.c
-index 3c4512d495..835a40e59d 100644
---- a/arch/arm/lib/reset.c
-+++ b/arch/arm/lib/reset.c
-@@ -21,6 +21,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <irq_func.h>
- 
- __weak void reset_misc(void)
-diff --git a/arch/arm/mach-at91/arm920t/reset.c b/arch/arm/mach-at91/arm920t/reset.c
-index 3164182b69..d92bc57d66 100644
---- a/arch/arm/mach-at91/arm920t/reset.c
-+++ b/arch/arm/mach-at91/arm920t/reset.c
-@@ -14,6 +14,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/hardware.h>
- #include <asm/arch/at91_st.h>
-diff --git a/arch/arm/mach-at91/arm926ejs/reset.c b/arch/arm/mach-at91/arm926ejs/reset.c
-index 06b25db522..56fbbd991e 100644
---- a/arch/arm/mach-at91/arm926ejs/reset.c
-+++ b/arch/arm/mach-at91/arm926ejs/reset.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/hardware.h>
- #include <asm/arch/at91_rstc.h>
-diff --git a/arch/arm/mach-at91/armv7/reset.c b/arch/arm/mach-at91/armv7/reset.c
-index c114dafac5..8f4c81d1af 100644
---- a/arch/arm/mach-at91/armv7/reset.c
-+++ b/arch/arm/mach-at91/armv7/reset.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/hardware.h>
- #include <asm/arch/at91_rstc.h>
-diff --git a/arch/arm/mach-bcm283x/reset.c b/arch/arm/mach-bcm283x/reset.c
-index cd8138d702..2b4ccd4727 100644
---- a/arch/arm/mach-bcm283x/reset.c
-+++ b/arch/arm/mach-bcm283x/reset.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/base.h>
- #include <asm/arch/wdog.h>
-diff --git a/arch/arm/mach-davinci/reset.c b/arch/arm/mach-davinci/reset.c
-index 9fbd09c77b..4e6031a593 100644
---- a/arch/arm/mach-davinci/reset.c
-+++ b/arch/arm/mach-davinci/reset.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/timer_defs.h>
- #include <asm/arch/hardware.h>
-diff --git a/arch/arm/mach-imx/mx7ulp/soc.c b/arch/arm/mach-imx/mx7ulp/soc.c
-index 8345b01398..7f8fdc7005 100644
---- a/arch/arm/mach-imx/mx7ulp/soc.c
-+++ b/arch/arm/mach-imx/mx7ulp/soc.c
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (C) 2016 Freescale Semiconductor, Inc.
-  */
-+#include <cpu_func.h>
- #include <init.h>
- #include <asm/io.h>
- #include <asm/arch/clock.h>
-diff --git a/arch/arm/mach-k3/common.c b/arch/arm/mach-k3/common.c
-index bf631b74f8..17fb8d4cf0 100644
---- a/arch/arm/mach-k3/common.c
-+++ b/arch/arm/mach-k3/common.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
++#include <init.h>
  #include <spl.h>
- #include "common.h"
- #include <dm.h>
-diff --git a/arch/arm/mach-keystone/ddr3.c b/arch/arm/mach-keystone/ddr3.c
-index 863ae6321b..23ff06466d 100644
---- a/arch/arm/mach-keystone/ddr3.c
-+++ b/arch/arm/mach-keystone/ddr3.c
-@@ -6,6 +6,7 @@
-  *     Texas Instruments Incorporated, <www.ti.com>
-  */
- 
-+#include <cpu_func.h>
  #include <asm/io.h>
- #include <common.h>
- #include <asm/arch/msmc.h>
-diff --git a/arch/arm/mach-kirkwood/cpu.c b/arch/arm/mach-kirkwood/cpu.c
-index 29c0e592e4..5e964af8ea 100644
---- a/arch/arm/mach-kirkwood/cpu.c
-+++ b/arch/arm/mach-kirkwood/cpu.c
-@@ -7,6 +7,7 @@
- 
- #include <common.h>
- #include <command.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <netdev.h>
- #include <asm/cache.h>
-diff --git a/arch/arm/mach-mediatek/mt8516/init.c b/arch/arm/mach-mediatek/mt8516/init.c
-index 186f6c048a..360d94abb0 100644
---- a/arch/arm/mach-mediatek/mt8516/init.c
-+++ b/arch/arm/mach-mediatek/mt8516/init.c
-@@ -7,6 +7,7 @@
- 
- #include <clk.h>
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <fdtdec.h>
- #include <ram.h>
-diff --git a/arch/arm/mach-mediatek/mt8518/init.c b/arch/arm/mach-mediatek/mt8518/init.c
-index 5a97c8cb26..c2b1b76982 100644
---- a/arch/arm/mach-mediatek/mt8518/init.c
-+++ b/arch/arm/mach-mediatek/mt8518/init.c
-@@ -8,6 +8,7 @@
- 
- #include <clk.h>
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <fdtdec.h>
- #include <ram.h>
-diff --git a/arch/arm/mach-meson/board-common.c b/arch/arm/mach-meson/board-common.c
-index d33e7f1741..bc4c92074c 100644
---- a/arch/arm/mach-meson/board-common.c
-+++ b/arch/arm/mach-meson/board-common.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <init.h>
- #include <asm/arch/boot.h>
- #include <env.h>
-diff --git a/arch/arm/mach-mvebu/armada3700/cpu.c b/arch/arm/mach-mvebu/armada3700/cpu.c
-index 7c8e4cade1..c83268181b 100644
---- a/arch/arm/mach-mvebu/armada3700/cpu.c
-+++ b/arch/arm/mach-mvebu/armada3700/cpu.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <fdtdec.h>
- #include <linux/libfdt.h>
-diff --git a/arch/arm/mach-omap2/omap5/hwinit.c b/arch/arm/mach-omap2/omap5/hwinit.c
-index eba21647d9..30045bd505 100644
---- a/arch/arm/mach-omap2/omap5/hwinit.c
-+++ b/arch/arm/mach-omap2/omap5/hwinit.c
-@@ -12,6 +12,7 @@
-  *	Sricharan	<r.sricharan@ti.com>
-  */
- #include <common.h>
-+#include <cpu_func.h>
- #include <palmas.h>
- #include <asm/armv7.h>
- #include <asm/arch/cpu.h>
-diff --git a/arch/arm/mach-omap2/reset.c b/arch/arm/mach-omap2/reset.c
-index ea27248e85..2bbd5fcb9b 100644
---- a/arch/arm/mach-omap2/reset.c
-+++ b/arch/arm/mach-omap2/reset.c
-@@ -9,6 +9,7 @@
-  * Sricharan R <r.sricharan@ti.com>
-  */
- #include <config.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/cpu.h>
- #include <linux/compiler.h>
-diff --git a/arch/arm/mach-socfpga/misc_gen5.c b/arch/arm/mach-socfpga/misc_gen5.c
-index 22042d0de0..6705a192ca 100644
---- a/arch/arm/mach-socfpga/misc_gen5.c
-+++ b/arch/arm/mach-socfpga/misc_gen5.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <env.h>
- #include <errno.h>
-diff --git a/arch/arm/mach-tegra/cmd_enterrcm.c b/arch/arm/mach-tegra/cmd_enterrcm.c
-index 5247e52a5a..b2252f3621 100644
---- a/arch/arm/mach-tegra/cmd_enterrcm.c
-+++ b/arch/arm/mach-tegra/cmd_enterrcm.c
-@@ -25,6 +25,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <irq_func.h>
- #include <asm/arch/tegra.h>
- #include <asm/arch-tegra/pmc.h>
-diff --git a/arch/arm/mach-tegra/pmc.c b/arch/arm/mach-tegra/pmc.c
-index afd3c54179..68a211286f 100644
---- a/arch/arm/mach-tegra/pmc.c
-+++ b/arch/arm/mach-tegra/pmc.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- 
- #include <linux/arm-smccc.h>
- 
-diff --git a/arch/arm/mach-uniphier/reset.c b/arch/arm/mach-uniphier/reset.c
-index 31685d0009..92a8b92547 100644
---- a/arch/arm/mach-uniphier/reset.c
-+++ b/arch/arm/mach-uniphier/reset.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <linux/io.h>
- #include <asm/secure.h>
- 
-diff --git a/arch/arm/mach-zynqmp-r5/cpu.c b/arch/arm/mach-zynqmp-r5/cpu.c
-index 98f63e3427..aa5de863eb 100644
---- a/arch/arm/mach-zynqmp-r5/cpu.c
-+++ b/arch/arm/mach-zynqmp-r5/cpu.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/armv7_mpu.h>
- 
- DECLARE_GLOBAL_DATA_PTR;
-diff --git a/arch/nds32/lib/interrupts.c b/arch/nds32/lib/interrupts.c
-index 88cc7b98d8..1481e05500 100644
---- a/arch/nds32/lib/interrupts.c
-+++ b/arch/nds32/lib/interrupts.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <irq_func.h>
- #include <asm/ptrace.h>
- #include <asm/system.h>
-diff --git a/arch/sh/cpu/sh4/cpu.c b/arch/sh/cpu/sh4/cpu.c
-index f1b8df9b0b..a8d0590d51 100644
---- a/arch/sh/cpu/sh4/cpu.c
-+++ b/arch/sh/cpu/sh4/cpu.c
-@@ -31,7 +31,7 @@ int cleanup_before_linux (void)
- int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
- {
- 	disable_interrupts();
--	reset_cpu (0);
-+	reset_cpu(0);
- 	return 0;
- }
- 
-diff --git a/arch/sh/cpu/sh4/watchdog.c b/arch/sh/cpu/sh4/watchdog.c
-index 7c157bc035..1de32cd419 100644
---- a/arch/sh/cpu/sh4/watchdog.c
-+++ b/arch/sh/cpu/sh4/watchdog.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/processor.h>
- #include <asm/system.h>
- #include <asm/io.h>
-diff --git a/board/BuR/brppt2/board.c b/board/BuR/brppt2/board.c
-index 3284ff0936..590e92b5a0 100644
---- a/board/BuR/brppt2/board.c
-+++ b/board/BuR/brppt2/board.c
-@@ -7,6 +7,7 @@
-  *
-  */
- #include <common.h>
-+#include <cpu_func.h>
- #include <spl.h>
- #include <dm.h>
- #include <miiphy.h>
-diff --git a/board/abilis/tb100/tb100.c b/board/abilis/tb100/tb100.c
-index 4f8006da00..e3fbbbaa8a 100644
---- a/board/abilis/tb100/tb100.c
-+++ b/board/abilis/tb100/tb100.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <netdev.h>
- #include <asm/io.h>
- 
-diff --git a/board/advantech/imx8qm_rom7720_a1/imx8qm_rom7720_a1.c b/board/advantech/imx8qm_rom7720_a1/imx8qm_rom7720_a1.c
-index 2f97d5ce96..5017ab8d93 100644
---- a/board/advantech/imx8qm_rom7720_a1/imx8qm_rom7720_a1.c
-+++ b/board/advantech/imx8qm_rom7720_a1/imx8qm_rom7720_a1.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <errno.h>
- #include <linux/libfdt.h>
- #include <asm/io.h>
-diff --git a/board/armltd/vexpress64/vexpress64.c b/board/armltd/vexpress64/vexpress64.c
-index 7fe539e4d6..dd0ebdd303 100644
---- a/board/armltd/vexpress64/vexpress64.c
-+++ b/board/armltd/vexpress64/vexpress64.c
-@@ -5,6 +5,7 @@
-  * Sharma Bhupesh <bhupesh.sharma@freescale.com>
-  */
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <malloc.h>
- #include <errno.h>
-diff --git a/board/atmark-techno/armadillo-800eva/armadillo-800eva.c b/board/atmark-techno/armadillo-800eva/armadillo-800eva.c
-index 867fa82c17..a18fb275d9 100644
---- a/board/atmark-techno/armadillo-800eva/armadillo-800eva.c
-+++ b/board/atmark-techno/armadillo-800eva/armadillo-800eva.c
-@@ -21,6 +21,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <init.h>
- #include <malloc.h>
- #include <asm/processor.h>
-diff --git a/board/bosch/shc/board.c b/board/bosch/shc/board.c
-index 440d02fdbc..d34f3ba007 100644
---- a/board/bosch/shc/board.c
-+++ b/board/bosch/shc/board.c
-@@ -12,6 +12,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <errno.h>
- #include <init.h>
-diff --git a/board/broadcom/bcmns2/northstar2.c b/board/broadcom/bcmns2/northstar2.c
-index 1068edca59..292802f4c0 100644
---- a/board/broadcom/bcmns2/northstar2.c
-+++ b/board/broadcom/bcmns2/northstar2.c
-@@ -3,6 +3,7 @@
-  * (C) Copyright 2016 Broadcom Ltd.
-  */
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/system.h>
- #include <asm/armv8/mmu.h>
- 
-diff --git a/board/cavium/thunderx/thunderx.c b/board/cavium/thunderx/thunderx.c
-index 940455de5b..687ade544a 100644
---- a/board/cavium/thunderx/thunderx.c
-+++ b/board/cavium/thunderx/thunderx.c
-@@ -4,6 +4,7 @@
- **/
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <init.h>
- #include <malloc.h>
+ #include <asm/gpio.h>
 diff --git a/board/compulab/cm_t335/spl.c b/board/compulab/cm_t335/spl.c
-index 93f834f512..6d5b15aef4 100644
+index 6d5b15aef4..39ca535d11 100644
 --- a/board/compulab/cm_t335/spl.c
 +++ b/board/compulab/cm_t335/spl.c
+@@ -12,6 +12,7 @@
+ #include <common.h>
+ #include <cpu_func.h>
+ #include <errno.h>
++#include <init.h>
+ 
+ #include <asm/arch/ddr_defs.h>
+ #include <asm/arch/clock.h>
+diff --git a/board/compulab/cm_t43/spl.c b/board/compulab/cm_t43/spl.c
+index 7da9a9ad86..fdab9c3fd1 100644
+--- a/board/compulab/cm_t43/spl.c
++++ b/board/compulab/cm_t43/spl.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <spl.h>
+ #include <i2c.h>
+ #include <asm/arch/clock.h>
+diff --git a/board/egnite/ethernut5/ethernut5.c b/board/egnite/ethernut5/ethernut5.c
+index 9dea2ba80e..bfd5a4fe36 100644
+--- a/board/egnite/ethernut5/ethernut5.c
++++ b/board/egnite/ethernut5/ethernut5.c
+@@ -53,6 +53,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <net.h>
+ #include <netdev.h>
+ #include <miiphy.h>
+diff --git a/board/esd/meesc/meesc.c b/board/esd/meesc/meesc.c
+index 4271b0db19..6c5992733c 100644
+--- a/board/esd/meesc/meesc.c
++++ b/board/esd/meesc/meesc.c
+@@ -11,6 +11,7 @@
+ 
+ #include <common.h>
+ #include <env.h>
++#include <init.h>
+ #include <serial.h>
+ #include <vsprintf.h>
+ #include <asm/io.h>
+diff --git a/board/esd/vme8349/vme8349.c b/board/esd/vme8349/vme8349.c
+index 49d085acf9..ff811643a6 100644
+--- a/board/esd/vme8349/vme8349.c
++++ b/board/esd/vme8349/vme8349.c
+@@ -13,6 +13,7 @@
+ 
+ #include <common.h>
+ #include <fdt_support.h>
++#include <init.h>
+ #include <ioports.h>
+ #include <mpc83xx.h>
+ #include <asm/mpc8349_pci.h>
+diff --git a/board/freescale/bsc9131rdb/ddr.c b/board/freescale/bsc9131rdb/ddr.c
+index 4b6d91df21..0951d7758a 100644
+--- a/board/freescale/bsc9131rdb/ddr.c
++++ b/board/freescale/bsc9131rdb/ddr.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <vsprintf.h>
+ #include <asm/mmu.h>
+ #include <asm/immap_85xx.h>
+diff --git a/board/freescale/mpc8308rdb/sdram.c b/board/freescale/mpc8308rdb/sdram.c
+index 317e63ea6a..6e0922cd53 100644
+--- a/board/freescale/mpc8308rdb/sdram.c
++++ b/board/freescale/mpc8308rdb/sdram.c
+@@ -12,6 +12,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <mpc83xx.h>
+ 
+ #include <asm/bitops.h>
+diff --git a/board/freescale/mx53ard/mx53ard.c b/board/freescale/mx53ard/mx53ard.c
+index e8fccccafd..33d056b47d 100644
+--- a/board/freescale/mx53ard/mx53ard.c
++++ b/board/freescale/mx53ard/mx53ard.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/imx-regs.h>
+ #include <asm/arch/sys_proto.h>
+diff --git a/board/freescale/mx53smd/mx53smd.c b/board/freescale/mx53smd/mx53smd.c
+index cab0e79a6b..2599272173 100644
+--- a/board/freescale/mx53smd/mx53smd.c
++++ b/board/freescale/mx53smd/mx53smd.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/imx-regs.h>
+ #include <asm/arch/sys_proto.h>
+diff --git a/board/freescale/s32v234evb/s32v234evb.c b/board/freescale/s32v234evb/s32v234evb.c
+index 9bc9ddf649..a7301e2a2e 100644
+--- a/board/freescale/s32v234evb/s32v234evb.c
++++ b/board/freescale/s32v234evb/s32v234evb.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/imx-regs.h>
+ #include <asm/arch/siul.h>
+diff --git a/board/freescale/vf610twr/vf610twr.c b/board/freescale/vf610twr/vf610twr.c
+index f6cd7a4c8d..17427f23d8 100644
+--- a/board/freescale/vf610twr/vf610twr.c
++++ b/board/freescale/vf610twr/vf610twr.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/imx-regs.h>
+ #include <asm/arch/iomux-vf610.h>
+diff --git a/board/gdsys/mpc8308/sdram.c b/board/gdsys/mpc8308/sdram.c
+index 2a77fed270..9695fb0a10 100644
+--- a/board/gdsys/mpc8308/sdram.c
++++ b/board/gdsys/mpc8308/sdram.c
+@@ -14,6 +14,7 @@
+ #ifndef CONFIG_MPC83XX_SDRAM
+ 
+ #include <common.h>
++#include <init.h>
+ #include <mpc83xx.h>
+ #include <spd_sdram.h>
+ 
+diff --git a/board/hisilicon/poplar/poplar.c b/board/hisilicon/poplar/poplar.c
+index 304f64a032..36999bdcea 100644
+--- a/board/hisilicon/poplar/poplar.c
++++ b/board/hisilicon/poplar/poplar.c
+@@ -7,6 +7,7 @@
+ #include <cpu_func.h>
+ #include <dm.h>
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <dm/platform_data/serial_pl01x.h>
+ #include <asm/arch/hi3798cv200.h>
+diff --git a/board/ids/ids8313/ids8313.c b/board/ids/ids8313/ids8313.c
+index 2b6e4df86f..6e74e939c3 100644
+--- a/board/ids/ids8313/ids8313.c
++++ b/board/ids/ids8313/ids8313.c
+@@ -13,6 +13,7 @@
+ 
+ #include <common.h>
+ #include <fdt_support.h>
++#include <init.h>
+ #include <mpc83xx.h>
+ #include <spi.h>
+ #include <linux/libfdt.h>
+diff --git a/board/inversepath/usbarmory/usbarmory.c b/board/inversepath/usbarmory/usbarmory.c
+index e9eea40e45..4fa34e1b51 100644
+--- a/board/inversepath/usbarmory/usbarmory.c
++++ b/board/inversepath/usbarmory/usbarmory.c
+@@ -10,6 +10,7 @@
+ #include <common.h>
+ #include <command.h>
+ #include <fs.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/imx-regs.h>
+ #include <asm/arch/sys_proto.h>
+diff --git a/board/l+g/vinco/vinco.c b/board/l+g/vinco/vinco.c
+index 029ab12391..5a998e37d8 100644
+--- a/board/l+g/vinco/vinco.c
++++ b/board/l+g/vinco/vinco.c
 @@ -10,6 +10,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <errno.h>
- 
- #include <asm/arch/ddr_defs.h>
-diff --git a/board/freescale/imx8mm_evk/spl.c b/board/freescale/imx8mm_evk/spl.c
-index 2d08f9a563..d125dc9317 100644
---- a/board/freescale/imx8mm_evk/spl.c
-+++ b/board/freescale/imx8mm_evk/spl.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <spl.h>
++#include <init.h>
  #include <asm/io.h>
- #include <asm/mach-imx/iomux-v3.h>
-diff --git a/board/freescale/imx8mn_evk/spl.c b/board/freescale/imx8mn_evk/spl.c
-index cbde9f6b3c..7bc22d905f 100644
---- a/board/freescale/imx8mn_evk/spl.c
-+++ b/board/freescale/imx8mn_evk/spl.c
-@@ -5,6 +5,7 @@
+ #include <asm/arch/at91_common.h>
+ #include <asm/arch/at91_pmc.h>
+diff --git a/board/laird/wb45n/wb45n.c b/board/laird/wb45n/wb45n.c
+index e7f31ec9e7..0d1be3f784 100644
+--- a/board/laird/wb45n/wb45n.c
++++ b/board/laird/wb45n/wb45n.c
+@@ -3,6 +3,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <spl.h>
++#include <init.h>
  #include <asm/io.h>
- #include <asm/mach-imx/iomux-v3.h>
-diff --git a/board/freescale/imx8qm_mek/imx8qm_mek.c b/board/freescale/imx8qm_mek/imx8qm_mek.c
-index 68be0fe0cf..5f5e5fd6ab 100644
---- a/board/freescale/imx8qm_mek/imx8qm_mek.c
-+++ b/board/freescale/imx8qm_mek/imx8qm_mek.c
-@@ -4,6 +4,7 @@
+ #include <asm/arch/at91sam9x5_matrix.h>
+ #include <asm/arch/at91sam9_smc.h>
+diff --git a/board/mini-box/picosam9g45/picosam9g45.c b/board/mini-box/picosam9g45/picosam9g45.c
+index 9a724040b0..5e55918fa6 100644
+--- a/board/mini-box/picosam9g45/picosam9g45.c
++++ b/board/mini-box/picosam9g45/picosam9g45.c
+@@ -11,6 +11,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <errno.h>
- #include <init.h>
-diff --git a/board/freescale/imx8qxp_mek/imx8qxp_mek.c b/board/freescale/imx8qxp_mek/imx8qxp_mek.c
-index 671064fae2..45a7789f91 100644
---- a/board/freescale/imx8qxp_mek/imx8qxp_mek.c
-+++ b/board/freescale/imx8qxp_mek/imx8qxp_mek.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <errno.h>
- #include <init.h>
-diff --git a/board/freescale/mx6memcal/spl.c b/board/freescale/mx6memcal/spl.c
-index 75375f12c4..be551bc375 100644
---- a/board/freescale/mx6memcal/spl.c
-+++ b/board/freescale/mx6memcal/spl.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
++#include <init.h>
+ #include <vsprintf.h>
  #include <asm/io.h>
- #include <asm/arch/iomux.h>
+ #include <asm/arch/clk.h>
+diff --git a/board/mpc8308_p1m/sdram.c b/board/mpc8308_p1m/sdram.c
+index baf70d8807..cbf8781746 100644
+--- a/board/mpc8308_p1m/sdram.c
++++ b/board/mpc8308_p1m/sdram.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <mpc83xx.h>
+ 
+ #include <asm/bitops.h>
+diff --git a/board/phytec/pcl063/pcl063.c b/board/phytec/pcl063/pcl063.c
+index 96dd9e38f3..9e6940f9c7 100644
+--- a/board/phytec/pcl063/pcl063.c
++++ b/board/phytec/pcl063/pcl063.c
+@@ -6,6 +6,7 @@
+  * Copyright (C) 2015-2016 Stefan Roese <sr@denx.de>
+  */
+ 
++#include <init.h>
  #include <asm/arch/clock.h>
-diff --git a/board/hisilicon/hikey/hikey.c b/board/hisilicon/hikey/hikey.c
-index 28f5cf7fc4..84400090b3 100644
---- a/board/hisilicon/hikey/hikey.c
-+++ b/board/hisilicon/hikey/hikey.c
-@@ -4,6 +4,7 @@
-  * Peter Griffin <peter.griffin@linaro.org>
-  */
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <fdt_support.h>
- #include <dm/platform_data/serial_pl01x.h>
-diff --git a/board/hisilicon/hikey960/hikey960.c b/board/hisilicon/hikey960/hikey960.c
-index eb9b99eaa9..84c26e0c14 100644
---- a/board/hisilicon/hikey960/hikey960.c
-+++ b/board/hisilicon/hikey960/hikey960.c
-@@ -5,6 +5,7 @@
+ #include <asm/arch/crm_regs.h>
+ #include <asm/arch/mx6-pins.h>
+diff --git a/board/phytec/phycore_am335x_r2/board.c b/board/phytec/phycore_am335x_r2/board.c
+index 02d6c27cec..8964fb5dda 100644
+--- a/board/phytec/phycore_am335x_r2/board.c
++++ b/board/phytec/phycore_am335x_r2/board.c
+@@ -11,6 +11,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <errno.h>
- #include <asm/io.h>
-diff --git a/board/hisilicon/poplar/poplar.c b/board/hisilicon/poplar/poplar.c
-index 4926419a90..304f64a032 100644
---- a/board/hisilicon/poplar/poplar.c
-+++ b/board/hisilicon/poplar/poplar.c
-@@ -4,6 +4,7 @@
-  * Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-  */
- 
-+#include <cpu_func.h>
- #include <dm.h>
- #include <common.h>
- #include <asm/io.h>
-diff --git a/board/kmc/kzm9g/kzm9g.c b/board/kmc/kzm9g/kzm9g.c
-index 8148ace2fe..6ef960b06b 100644
---- a/board/kmc/kzm9g/kzm9g.c
-+++ b/board/kmc/kzm9g/kzm9g.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/sys_proto.h>
- #include <asm/gpio.h>
-diff --git a/board/liebherr/display5/spl.c b/board/liebherr/display5/spl.c
-index e845edf068..765463e370 100644
---- a/board/liebherr/display5/spl.c
-+++ b/board/liebherr/display5/spl.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <serial.h>
++#include <init.h>
  #include <spl.h>
-diff --git a/board/phytium/durian/durian.c b/board/phytium/durian/durian.c
-index 59f307d357..40dd27a7b0 100644
---- a/board/phytium/durian/durian.c
-+++ b/board/phytium/durian/durian.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/armv8/mmu.h>
- #include <asm/system.h>
- #include <asm/io.h>
-diff --git a/board/qualcomm/dragonboard410c/dragonboard410c.c b/board/qualcomm/dragonboard410c/dragonboard410c.c
-index 254af7907a..81bd8bd95b 100644
---- a/board/qualcomm/dragonboard410c/dragonboard410c.c
-+++ b/board/qualcomm/dragonboard410c/dragonboard410c.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <env.h>
- #include <init.h>
-diff --git a/board/qualcomm/dragonboard820c/dragonboard820c.c b/board/qualcomm/dragonboard820c/dragonboard820c.c
-index 7a889646df..6c096b49a1 100644
---- a/board/qualcomm/dragonboard820c/dragonboard820c.c
-+++ b/board/qualcomm/dragonboard820c/dragonboard820c.c
-@@ -5,6 +5,7 @@
-  * (C) Copyright 2017 Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-  */
- 
-+#include <cpu_func.h>
- #include <asm/arch/sysmap-apq8096.h>
- #include <env.h>
- #include <linux/arm-smccc.h>
-diff --git a/board/renesas/alt/alt.c b/board/renesas/alt/alt.c
-index 10ef7f931b..70c14d9f33 100644
---- a/board/renesas/alt/alt.c
-+++ b/board/renesas/alt/alt.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <malloc.h>
- #include <dm.h>
-diff --git a/board/renesas/alt/alt_spl.c b/board/renesas/alt/alt_spl.c
-index 4260dff119..dbb210584d 100644
---- a/board/renesas/alt/alt_spl.c
-+++ b/board/renesas/alt/alt_spl.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dm/platform_data/serial_sh.h>
- #include <asm/processor.h>
-diff --git a/board/renesas/blanche/blanche.c b/board/renesas/blanche/blanche.c
-index 08c5448609..7232370d6f 100644
---- a/board/renesas/blanche/blanche.c
-+++ b/board/renesas/blanche/blanche.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/arch/mmc.h>
- #include <asm/arch/rcar-mstp.h>
- #include <asm/arch/rmobile.h>
-diff --git a/board/renesas/condor/condor.c b/board/renesas/condor/condor.c
-index d1cbbc3339..11fbd5b07d 100644
---- a/board/renesas/condor/condor.c
-+++ b/board/renesas/condor/condor.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/processor.h>
- #include <asm/mach-types.h>
- #include <asm/io.h>
-diff --git a/board/renesas/draak/draak.c b/board/renesas/draak/draak.c
-index 46d9f74785..7ad21f9812 100644
---- a/board/renesas/draak/draak.c
-+++ b/board/renesas/draak/draak.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <netdev.h>
- #include <dm.h>
-diff --git a/board/renesas/eagle/eagle.c b/board/renesas/eagle/eagle.c
-index d6240b19ef..d5f40717d4 100644
---- a/board/renesas/eagle/eagle.c
-+++ b/board/renesas/eagle/eagle.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <netdev.h>
- #include <dm.h>
-diff --git a/board/renesas/ebisu/ebisu.c b/board/renesas/ebisu/ebisu.c
-index cb7d432a15..b608c61e23 100644
---- a/board/renesas/ebisu/ebisu.c
-+++ b/board/renesas/ebisu/ebisu.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <netdev.h>
- #include <dm.h>
-diff --git a/board/renesas/gose/gose.c b/board/renesas/gose/gose.c
-index f86c9f1a63..c137da64b3 100644
---- a/board/renesas/gose/gose.c
-+++ b/board/renesas/gose/gose.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <malloc.h>
- #include <dm.h>
-diff --git a/board/renesas/gose/gose_spl.c b/board/renesas/gose/gose_spl.c
-index 2f94d3e76c..42a6758148 100644
---- a/board/renesas/gose/gose_spl.c
-+++ b/board/renesas/gose/gose_spl.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dm/platform_data/serial_sh.h>
- #include <asm/processor.h>
-diff --git a/board/renesas/grpeach/grpeach.c b/board/renesas/grpeach/grpeach.c
-index 4f901eea71..ba904609ae 100644
---- a/board/renesas/grpeach/grpeach.c
-+++ b/board/renesas/grpeach/grpeach.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <asm/io.h>
- #include <asm/arch/sys_proto.h>
- 
-diff --git a/board/renesas/koelsch/koelsch.c b/board/renesas/koelsch/koelsch.c
-index 841d337f4d..ff7e458b3c 100644
---- a/board/renesas/koelsch/koelsch.c
-+++ b/board/renesas/koelsch/koelsch.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <malloc.h>
- #include <dm.h>
-diff --git a/board/renesas/koelsch/koelsch_spl.c b/board/renesas/koelsch/koelsch_spl.c
-index b7cdcb2216..b3530d7ce7 100644
---- a/board/renesas/koelsch/koelsch_spl.c
-+++ b/board/renesas/koelsch/koelsch_spl.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dm/platform_data/serial_sh.h>
- #include <asm/processor.h>
-diff --git a/board/renesas/lager/lager.c b/board/renesas/lager/lager.c
-index 3cb1a56142..d6b388fead 100644
---- a/board/renesas/lager/lager.c
-+++ b/board/renesas/lager/lager.c
+ #include <asm/arch/cpu.h>
+ #include <asm/arch/ddr_defs.h>
+diff --git a/board/ronetix/pm9261/pm9261.c b/board/ronetix/pm9261/pm9261.c
+index bad673412a..57f8a20ccb 100644
+--- a/board/ronetix/pm9261/pm9261.c
++++ b/board/ronetix/pm9261/pm9261.c
 @@ -8,6 +8,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <env_internal.h>
- #include <malloc.h>
-diff --git a/board/renesas/lager/lager_spl.c b/board/renesas/lager/lager_spl.c
-index ba9b494476..d7db361b12 100644
---- a/board/renesas/lager/lager_spl.c
-+++ b/board/renesas/lager/lager_spl.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dm/platform_data/serial_sh.h>
- #include <asm/processor.h>
-diff --git a/board/renesas/porter/porter.c b/board/renesas/porter/porter.c
-index 86f79da7fd..b9c29349cc 100644
---- a/board/renesas/porter/porter.c
-+++ b/board/renesas/porter/porter.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <malloc.h>
- #include <dm.h>
-diff --git a/board/renesas/porter/porter_spl.c b/board/renesas/porter/porter_spl.c
-index 7bf6823e05..026220d9e2 100644
---- a/board/renesas/porter/porter_spl.c
-+++ b/board/renesas/porter/porter_spl.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dm/platform_data/serial_sh.h>
- #include <asm/processor.h>
-diff --git a/board/renesas/rcar-common/gen3-spl.c b/board/renesas/rcar-common/gen3-spl.c
-index 27140c5c35..d9741c1939 100644
---- a/board/renesas/rcar-common/gen3-spl.c
-+++ b/board/renesas/rcar-common/gen3-spl.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
++#include <init.h>
+ #include <vsprintf.h>
+ #include <linux/sizes.h>
  #include <asm/io.h>
- #include <spl.h>
- 
-diff --git a/board/renesas/salvator-x/salvator-x.c b/board/renesas/salvator-x/salvator-x.c
-index 22fe9619cf..058fa6fbb6 100644
---- a/board/renesas/salvator-x/salvator-x.c
-+++ b/board/renesas/salvator-x/salvator-x.c
+diff --git a/board/ronetix/pm9263/pm9263.c b/board/ronetix/pm9263/pm9263.c
+index 2da39c4acd..3cd6384fc3 100644
+--- a/board/ronetix/pm9263/pm9263.c
++++ b/board/ronetix/pm9263/pm9263.c
 @@ -8,6 +8,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <netdev.h>
- #include <dm.h>
-diff --git a/board/renesas/silk/silk.c b/board/renesas/silk/silk.c
-index 25221e3c55..b69e7035ab 100644
---- a/board/renesas/silk/silk.c
-+++ b/board/renesas/silk/silk.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <env.h>
- #include <malloc.h>
- #include <dm.h>
-diff --git a/board/renesas/silk/silk_spl.c b/board/renesas/silk/silk_spl.c
-index 64ee75a63e..a2c397f935 100644
---- a/board/renesas/silk/silk_spl.c
-+++ b/board/renesas/silk/silk_spl.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dm/platform_data/serial_sh.h>
- #include <asm/processor.h>
-diff --git a/board/renesas/stout/cpld.c b/board/renesas/stout/cpld.c
-index cffdc3e9d2..e6c2051bd4 100644
---- a/board/renesas/stout/cpld.c
-+++ b/board/renesas/stout/cpld.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
++#include <init.h>
+ #include <linux/sizes.h>
  #include <asm/io.h>
  #include <asm/gpio.h>
- #include "cpld.h"
-diff --git a/board/renesas/stout/stout_spl.c b/board/renesas/stout/stout_spl.c
-index 05a3ced97c..8d01efce56 100644
---- a/board/renesas/stout/stout_spl.c
-+++ b/board/renesas/stout/stout_spl.c
+diff --git a/board/ronetix/pm9g45/pm9g45.c b/board/ronetix/pm9g45/pm9g45.c
+index c5d28c61e2..17dc7d6b4d 100644
+--- a/board/ronetix/pm9g45/pm9g45.c
++++ b/board/ronetix/pm9g45/pm9g45.c
+@@ -11,6 +11,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <linux/sizes.h>
+ #include <asm/io.h>
+ #include <asm/gpio.h>
+diff --git a/board/samsung/arndale/arndale.c b/board/samsung/arndale/arndale.c
+index 1d547b1c38..9abad3f824 100644
+--- a/board/samsung/arndale/arndale.c
++++ b/board/samsung/arndale/arndale.c
+@@ -5,6 +5,7 @@
+ 
+ #include <common.h>
+ #include <cpu_func.h>
++#include <init.h>
+ #include <usb.h>
+ #include <asm/gpio.h>
+ #include <asm/arch/pinmux.h>
+diff --git a/board/samsung/smdkc100/smdkc100.c b/board/samsung/smdkc100/smdkc100.c
+index 13c057b426..a80300b0c0 100644
+--- a/board/samsung/smdkc100/smdkc100.c
++++ b/board/samsung/smdkc100/smdkc100.c
 @@ -6,6 +6,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dm/platform_data/serial_sh.h>
++#include <init.h>
+ #include <asm/gpio.h>
+ #include <asm/io.h>
+ #include <asm/arch/sromc.h>
+diff --git a/board/samsung/smdkv310/smdkv310.c b/board/samsung/smdkv310/smdkv310.c
+index 0eba7b66ee..05369d2227 100644
+--- a/board/samsung/smdkv310/smdkv310.c
++++ b/board/samsung/smdkv310/smdkv310.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/gpio.h>
+ #include <asm/io.h>
+ #include <netdev.h>
+diff --git a/board/seco/mx6quq7/mx6quq7.c b/board/seco/mx6quq7/mx6quq7.c
+index c1e36b652e..671fba283e 100644
+--- a/board/seco/mx6quq7/mx6quq7.c
++++ b/board/seco/mx6quq7/mx6quq7.c
+@@ -7,6 +7,7 @@
+  * Modified by: Boris Brezillon <boris.brezillon@free-electrons.com>
+  */
+ 
++#include <init.h>
+ #include <asm/arch/clock.h>
+ #include <asm/arch/imx-regs.h>
+ #include <asm/arch/iomux.h>
+diff --git a/board/siemens/corvus/board.c b/board/siemens/corvus/board.c
+index a569bd53af..03768201c3 100644
+--- a/board/siemens/corvus/board.c
++++ b/board/siemens/corvus/board.c
+@@ -12,6 +12,7 @@
+ 
+ #include <common.h>
+ #include <dm.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91sam9g45_matrix.h>
+ #include <asm/arch/at91sam9_smc.h>
+diff --git a/board/siemens/smartweb/smartweb.c b/board/siemens/smartweb/smartweb.c
+index e1be384994..cb7206a561 100644
+--- a/board/siemens/smartweb/smartweb.c
++++ b/board/siemens/smartweb/smartweb.c
+@@ -17,6 +17,7 @@
+ 
+ #include <common.h>
+ #include <dm.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91sam9_sdramc.h>
+ #include <asm/arch/at91sam9260_matrix.h>
+diff --git a/board/siemens/taurus/taurus.c b/board/siemens/taurus/taurus.c
+index 1cf1f9e1f7..0979df563a 100644
+--- a/board/siemens/taurus/taurus.c
++++ b/board/siemens/taurus/taurus.c
+@@ -15,6 +15,7 @@
+ #include <common.h>
+ #include <dm.h>
+ #include <env.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/arch/at91sam9260_matrix.h>
+ #include <asm/arch/at91sam9_smc.h>
+diff --git a/board/socrates/sdram.c b/board/socrates/sdram.c
+index 4c76b4d0a8..9ee6f3d154 100644
+--- a/board/socrates/sdram.c
++++ b/board/socrates/sdram.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
  #include <asm/processor.h>
-diff --git a/board/synopsys/emsdp/emsdp.c b/board/synopsys/emsdp/emsdp.c
-index 5ba9f862e1..c09ed8cff8 100644
---- a/board/synopsys/emsdp/emsdp.c
-+++ b/board/synopsys/emsdp/emsdp.c
-@@ -4,6 +4,7 @@
+ #include <asm/immap_85xx.h>
+ #include <fsl_ddr_sdram.h>
+diff --git a/board/sunxi/board.c b/board/sunxi/board.c
+index b9450a0e36..a7c4f7f71c 100644
+--- a/board/sunxi/board.c
++++ b/board/sunxi/board.c
+@@ -13,6 +13,7 @@
+ #include <common.h>
+ #include <dm.h>
+ #include <env.h>
++#include <init.h>
+ #include <mmc.h>
+ #include <axp_pmic.h>
+ #include <generic-phy.h>
+diff --git a/board/sysam/amcore/amcore.c b/board/sysam/amcore/amcore.c
+index 0efea3d5cc..4502005941 100644
+--- a/board/sysam/amcore/amcore.c
++++ b/board/sysam/amcore/amcore.c
+@@ -8,6 +8,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <dwmmc.h>
- #include <malloc.h>
- 
-diff --git a/board/synopsys/iot_devkit/iot_devkit.c b/board/synopsys/iot_devkit/iot_devkit.c
-index 9dbdc128f8..36aa8f6ae5 100644
---- a/board/synopsys/iot_devkit/iot_devkit.c
-+++ b/board/synopsys/iot_devkit/iot_devkit.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <malloc.h>
- #include <dwmmc.h>
- #include <linux/libfdt.h>
++#include <init.h>
+ #include <asm/immap.h>
+ #include <asm/io.h>
+ #include <dm.h>
 diff --git a/board/technexion/pico-imx6ul/spl.c b/board/technexion/pico-imx6ul/spl.c
-index 7f520beeb0..ae51113f32 100644
+index ae51113f32..d3cbaf3989 100644
 --- a/board/technexion/pico-imx6ul/spl.c
 +++ b/board/technexion/pico-imx6ul/spl.c
-@@ -1,5 +1,6 @@
+@@ -1,6 +1,8 @@
  // SPDX-License-Identifier: GPL-2.0+
  
-+#include <cpu_func.h>
++#include <common.h>
+ #include <cpu_func.h>
++#include <init.h>
  #include <asm/arch/clock.h>
  #include <asm/arch/iomux.h>
  #include <asm/arch/imx-regs.h>
-diff --git a/board/technexion/pico-imx7d/spl.c b/board/technexion/pico-imx7d/spl.c
-index 8955622b81..6c432ca5a6 100644
---- a/board/technexion/pico-imx7d/spl.c
-+++ b/board/technexion/pico-imx7d/spl.c
-@@ -5,6 +5,7 @@
-  * Author: Richard Hu <richard.hu@technexion.com>
+diff --git a/board/technologic/ts4800/ts4800.c b/board/technologic/ts4800/ts4800.c
+index 82eb0c285c..ff1a189c7e 100644
+--- a/board/technologic/ts4800/ts4800.c
++++ b/board/technologic/ts4800/ts4800.c
+@@ -7,6 +7,7 @@
   */
  
-+#include <cpu_func.h>
- #include <asm/arch/clock.h>
+ #include <common.h>
++#include <init.h>
+ #include <asm/io.h>
+ #include <asm/gpio.h>
  #include <asm/arch/imx-regs.h>
- #include <asm/arch/crm_regs.h>
-diff --git a/board/toradex/apalis-imx8/apalis-imx8.c b/board/toradex/apalis-imx8/apalis-imx8.c
-index 3e5174ef8a..aea5ca3a75 100644
---- a/board/toradex/apalis-imx8/apalis-imx8.c
-+++ b/board/toradex/apalis-imx8/apalis-imx8.c
-@@ -4,6 +4,7 @@
-  */
- 
+diff --git a/board/ti/ks2_evm/board.c b/board/ti/ks2_evm/board.c
+index e3305fbaf6..da98c1c739 100644
+--- a/board/ti/ks2_evm/board.c
++++ b/board/ti/ks2_evm/board.c
+@@ -9,6 +9,7 @@
  #include <common.h>
-+#include <cpu_func.h>
- #include <init.h>
- 
- #include <asm/arch/clock.h>
-diff --git a/board/toradex/apalis_imx6/apalis_imx6.c b/board/toradex/apalis_imx6/apalis_imx6.c
-index d4d6eed11a..29f2cb2d45 100644
---- a/board/toradex/apalis_imx6/apalis_imx6.c
-+++ b/board/toradex/apalis_imx6/apalis_imx6.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
- #include <init.h>
- 
-diff --git a/board/toradex/colibri-imx8x/colibri-imx8x.c b/board/toradex/colibri-imx8x/colibri-imx8x.c
-index adeee67643..857e9fe345 100644
---- a/board/toradex/colibri-imx8x/colibri-imx8x.c
-+++ b/board/toradex/colibri-imx8x/colibri-imx8x.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <init.h>
- 
- #include <asm/arch/clock.h>
-diff --git a/board/toradex/colibri_imx6/colibri_imx6.c b/board/toradex/colibri_imx6/colibri_imx6.c
-index 1fd0f2c122..df6b44675d 100644
---- a/board/toradex/colibri_imx6/colibri_imx6.c
-+++ b/board/toradex/colibri_imx6/colibri_imx6.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <dm.h>
+ #include "board.h"
  #include <env.h>
- #include <init.h>
++#include <init.h>
+ #include <spl.h>
+ #include <exports.h>
+ #include <fdt_support.h>
+diff --git a/board/timll/devkit3250/devkit3250.c b/board/timll/devkit3250/devkit3250.c
+index a4b963d463..b455844c89 100644
+--- a/board/timll/devkit3250/devkit3250.c
++++ b/board/timll/devkit3250/devkit3250.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <common.h>
++#include <init.h>
+ #include <asm/arch/sys_proto.h>
+ #include <asm/arch/clk.h>
+ #include <asm/arch/cpu.h>
 diff --git a/board/toradex/colibri_imx7/colibri_imx7.c b/board/toradex/colibri_imx7/colibri_imx7.c
-index b0914a9ead..15257b68e2 100644
+index 15257b68e2..caa34abc68 100644
 --- a/board/toradex/colibri_imx7/colibri_imx7.c
 +++ b/board/toradex/colibri_imx7/colibri_imx7.c
-@@ -3,6 +3,7 @@
+@@ -3,7 +3,9 @@
   * Copyright (C) 2016-2018 Toradex AG
   */
  
-+#include <cpu_func.h>
++#include <common.h>
+ #include <cpu_func.h>
++#include <init.h>
  #include <asm/arch/clock.h>
  #include <asm/arch/crm_regs.h>
  #include <asm/arch/imx-regs.h>
-diff --git a/board/ucRobotics/bubblegum_96/bubblegum_96.c b/board/ucRobotics/bubblegum_96/bubblegum_96.c
-index a4c202da19..c16f117bf8 100644
---- a/board/ucRobotics/bubblegum_96/bubblegum_96.c
-+++ b/board/ucRobotics/bubblegum_96/bubblegum_96.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2018 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+diff --git a/board/tqc/tqm834x/tqm834x.c b/board/tqc/tqm834x/tqm834x.c
+index 95f95a5c82..02b3d2dea1 100644
+--- a/board/tqc/tqm834x/tqm834x.c
++++ b/board/tqc/tqm834x/tqm834x.c
+@@ -6,6 +6,7 @@
+ 
+ #include <common.h>
+ #include <fdt_support.h>
++#include <init.h>
+ #include <ioports.h>
+ #include <mpc83xx.h>
+ #include <asm/mpc8349_pci.h>
+diff --git a/board/ve8313/ve8313.c b/board/ve8313/ve8313.c
+index 2ea762ccfa..d1c9535f46 100644
+--- a/board/ve8313/ve8313.c
++++ b/board/ve8313/ve8313.c
+@@ -82,7 +82,7 @@ static long fixed_sdram(void)
+ 
+ 	/* now check the real size */
+ 	disable_addr_trans ();
+-	msize = get_ram_size (CONFIG_SYS_SDRAM_BASE, msize);
++	msize = get_ram_size(CONFIG_SYS_SDRAM_BASE, msize);
+ 	enable_addr_trans ();
+ #endif
+ 
+diff --git a/board/woodburn/woodburn.c b/board/woodburn/woodburn.c
+index 5cab3f4487..c69df6c7bf 100644
+--- a/board/woodburn/woodburn.c
++++ b/board/woodburn/woodburn.c
+@@ -6,6 +6,7 @@
   */
  
-+#include <cpu_func.h>
- #include <linux/arm-smccc.h>
- #include <linux/psci.h>
  #include <common.h>
-diff --git a/board/xilinx/versal/board.c b/board/xilinx/versal/board.c
-index 23bb6b9623..9b6ed997f0 100644
---- a/board/xilinx/versal/board.c
-+++ b/board/xilinx/versal/board.c
++#include <init.h>
+ #include <asm/io.h>
+ #include <linux/errno.h>
+ #include <asm/arch/imx-regs.h>
+diff --git a/cmd/ti/ddr3.c b/cmd/ti/ddr3.c
+index 55130898c9..a452fe7876 100644
+--- a/cmd/ti/ddr3.c
++++ b/cmd/ti/ddr3.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <cpu_func.h>
++#include <init.h>
+ #include <asm/arch/hardware.h>
+ #include <asm/cache.h>
+ #include <asm/emif.h>
+diff --git a/common/memsize.c b/common/memsize.c
+index 13b0047786..e95c68265a 100644
+--- a/common/memsize.c
++++ b/common/memsize.c
 @@ -5,6 +5,7 @@
   */
  
  #include <common.h>
-+#include <cpu_func.h>
- #include <fdtdec.h>
- #include <init.h>
- #include <malloc.h>
-diff --git a/cmd/tpm_test.c b/cmd/tpm_test.c
-index c14dd75a26..2cde517d7a 100644
---- a/cmd/tpm_test.c
-+++ b/cmd/tpm_test.c
-@@ -5,6 +5,7 @@
++#include <init.h>
  
- #include <common.h>
- #include <command.h>
-+#include <cpu_func.h>
- #include <tpm-v1.h>
- #include "tpm-user-utils.h"
+ DECLARE_GLOBAL_DATA_PTR;
  
-diff --git a/drivers/sysreset/sysreset-uclass.c b/drivers/sysreset/sysreset-uclass.c
-index 39202588ae..8eff6036e7 100644
---- a/drivers/sysreset/sysreset-uclass.c
-+++ b/drivers/sysreset/sysreset-uclass.c
-@@ -7,6 +7,7 @@
- #define LOG_CATEGORY UCLASS_SYSRESET
- 
- #include <common.h>
-+#include <cpu_func.h>
- #include <sysreset.h>
+diff --git a/drivers/ddr/altera/sdram_gen5.c b/drivers/ddr/altera/sdram_gen5.c
+index 8c8ea19eb9..ed46e49143 100644
+--- a/drivers/ddr/altera/sdram_gen5.c
++++ b/drivers/ddr/altera/sdram_gen5.c
+@@ -6,6 +6,7 @@
  #include <dm.h>
  #include <errno.h>
-diff --git a/drivers/watchdog/imx_watchdog.c b/drivers/watchdog/imx_watchdog.c
-index c030360c21..62bf25e9cc 100644
---- a/drivers/watchdog/imx_watchdog.c
-+++ b/drivers/watchdog/imx_watchdog.c
-@@ -5,6 +5,7 @@
-  */
+ #include <div64.h>
++#include <init.h>
+ #include <ram.h>
+ #include <reset.h>
+ #include <watchdog.h>
+diff --git a/drivers/ddr/altera/sdram_s10.c b/drivers/ddr/altera/sdram_s10.c
+index 82d9a13efa..f61aad2e9a 100644
+--- a/drivers/ddr/altera/sdram_s10.c
++++ b/drivers/ddr/altera/sdram_s10.c
+@@ -10,6 +10,7 @@
+ #include <errno.h>
+ #include <div64.h>
+ #include <fdtdec.h>
++#include <init.h>
+ #include <ram.h>
+ #include <reset.h>
+ #include "sdram_s10.h"
+diff --git a/drivers/ram/bmips_ram.c b/drivers/ram/bmips_ram.c
+index 3e1dd9e241..8f953e79af 100644
+--- a/drivers/ram/bmips_ram.c
++++ b/drivers/ram/bmips_ram.c
+@@ -10,6 +10,7 @@
+ #include <common.h>
+ #include <dm.h>
+ #include <errno.h>
++#include <init.h>
+ #include <ram.h>
+ #include <asm/io.h>
+ 
+diff --git a/drivers/ram/mpc83xx_sdram.c b/drivers/ram/mpc83xx_sdram.c
+index f03d0428b2..46449d3d12 100644
+--- a/drivers/ram/mpc83xx_sdram.c
++++ b/drivers/ram/mpc83xx_sdram.c
+@@ -6,6 +6,7 @@
  
  #include <common.h>
-+#include <cpu_func.h>
  #include <dm.h>
- #include <asm/io.h>
- #include <wdt.h>
-diff --git a/drivers/watchdog/ulp_wdog.c b/drivers/watchdog/ulp_wdog.c
-index 313019f152..7533fc612c 100644
---- a/drivers/watchdog/ulp_wdog.c
-+++ b/drivers/watchdog/ulp_wdog.c
++#include <init.h>
+ #include <ram.h>
+ #include <dt-bindings/memory/mpc83xx-sdram.h>
+ 
+diff --git a/drivers/ram/stm32mp1/stm32mp1_ram.c b/drivers/ram/stm32mp1/stm32mp1_ram.c
+index a362cf98bf..eb78f1198d 100644
+--- a/drivers/ram/stm32mp1/stm32mp1_ram.c
++++ b/drivers/ram/stm32mp1/stm32mp1_ram.c
+@@ -6,6 +6,7 @@
+ #include <common.h>
+ #include <clk.h>
+ #include <dm.h>
++#include <init.h>
+ #include <ram.h>
+ #include <regmap.h>
+ #include <syscon.h>
+diff --git a/drivers/ram/stm32mp1/stm32mp1_tests.c b/drivers/ram/stm32mp1/stm32mp1_tests.c
+index 581ee4897f..12298cf327 100644
+--- a/drivers/ram/stm32mp1/stm32mp1_tests.c
++++ b/drivers/ram/stm32mp1/stm32mp1_tests.c
 @@ -4,6 +4,7 @@
   */
- 
  #include <common.h>
-+#include <cpu_func.h>
+ #include <console.h>
++#include <init.h>
+ #include <watchdog.h>
  #include <asm/io.h>
- #include <asm/arch/imx-regs.h>
- 
+ #include <linux/log2.h>
 diff --git a/include/common.h b/include/common.h
-index cf33b31499..f4a9dc325f 100644
+index c69bad9771..f9ad184f4a 100644
 --- a/include/common.h
 +++ b/include/common.h
-@@ -74,8 +74,6 @@ phys_size_t get_effective_memsize(void);
+@@ -59,10 +59,6 @@ void	hang		(void) __attribute__ ((noreturn));
+ 
+ #include <display_options.h>
+ 
+-/* common/memsize.c */
+-long	get_ram_size  (long *, long);
+-phys_size_t get_effective_memsize(void);
+-
+ #if defined(CONFIG_SYS_DRAM_TEST)
  int testdram(void);
  #endif /* CONFIG_SYS_DRAM_TEST */
- 
--void	reset_cpu     (ulong addr);
--
- /* lib/uuid.c */
- #include <uuid.h>
- 
-diff --git a/include/cpu_func.h b/include/cpu_func.h
-index 46f3d92459..f701f02bfe 100644
---- a/include/cpu_func.h
-+++ b/include/cpu_func.h
-@@ -83,5 +83,7 @@ enum {
-  * @param flags		Flags to control what is done
+diff --git a/include/init.h b/include/init.h
+index ba0d4bc973..3dc109b209 100644
+--- a/include/init.h
++++ b/include/init.h
+@@ -95,6 +95,9 @@ int dram_init(void);
   */
- int cleanup_before_linux_select(int flags);
+ int dram_init_banksize(void);
+ 
++long get_ram_size(long *base, long size);
++phys_size_t get_effective_memsize(void);
 +
-+void reset_cpu(ulong addr);
- ;
- #endif
-diff --git a/lib/efi/efi_app.c b/lib/efi/efi_app.c
-index 0047998ee0..af5a878fc3 100644
---- a/lib/efi/efi_app.c
-+++ b/lib/efi/efi_app.c
-@@ -9,6 +9,7 @@
-  */
- 
+ /**
+  * arch_reserve_stacks() - Reserve all necessary stacks
+  *
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 61af3472e6..f1bdc9f2e2 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -7,6 +7,7 @@
  #include <common.h>
-+#include <cpu_func.h>
- #include <debug_uart.h>
+ #include <boot_fit.h>
  #include <dm.h>
++#include <init.h>
+ #include <dm/of_extra.h>
+ #include <env.h>
  #include <errno.h>
 -- 
 2.24.0.525.g8f36a354ae-goog
