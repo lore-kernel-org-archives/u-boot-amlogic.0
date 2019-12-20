@@ -1,86 +1,132 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web10.7335.1576836815385729008
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web09.7345.1576836870180530054
  for <u-boot-amlogic@groups.io>;
- Fri, 20 Dec 2019 02:13:35 -0800
-Received: by mail-wr1-f68.google.com with SMTP id w15so8878766wru.4
-        for <u-boot-amlogic@groups.io>; Fri, 20 Dec 2019 02:13:35 -0800 (PST)
+ Fri, 20 Dec 2019 02:14:31 -0800
+Received: by mail-wm1-f65.google.com with SMTP id p17so8627264wma.1
+        for <u-boot-amlogic@groups.io>; Fri, 20 Dec 2019 02:14:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=hs6k993moHtpBdoLsBabcE3zMa6+N/hNGanfQ/rcKd4=;
-        b=q5NhSY4KVK4LwT4WOMhP+Wf2MDnERR82KPYK6YEVN1fKUFfEAkaay+kLciH5HXMcFm
-         OU21lubqt9tw5D+sLTfvdQkSMNLzrfn+I3H6OOkiSBs80nO5jGFb3ir/5L1f8hDGcBaM
-         d/k+5KFPxf5H5k2ddmGV/kHBL3Hu5E4/Bx8hg+R7XJEmIxu7N8kB3fCewhk0wO7US4mg
-         OmmVV/bQSBOrSYFbhmufx0GNKgrSgN0dShb2/WpX0Fjq1kzdsqGcKR2YMnWywOJGQVBm
-         svdsBuSit7mQ0S20cOPTzB3Ljgrpopck5n/T1RYHWhfJ2lR7myqz2Zl8bucwyZTJ+bVE
-         wcog==
+        bh=pFwuPfLQ47WZO9hyIO0JLZSoL8EzFSd9iVlAhYwvUTI=;
+        b=YoZw6wyUJULUt2u0HD8moYnAWNe+ZUnmKfiyUPLUaNdAnA+laJ7M/KEB28wS46MTuX
+         XtwR3OdvsbuxrRb/VKMIsqyJMZ/hR1XS/Kn1RUxYgVmJetNZ1gWlDeTChzhcUyXAcNfJ
+         5tdwTa/6EVBPEbEq1hOAxyNPbTXAY0/oxNaM3u33/KrfMmlifm07eOSsAY1k4bB+OFa2
+         1Ryn18LKzIIpQ+Q80SpmgcHvvsgj0aHvxNwHG7Ytq8B/Li3B+wGwccLWSvEubWr81r9Z
+         1MgYLRx1ZzrazACVLUCXV2R+dScuo9ptmYgVCHa2op1FvgQN3YFQFa+xwGg+asVZh+oL
+         EPtw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 5/5] arm64: dts: meson: add libretech-pc support
+Subject: Re: [PATCH 1/5] dt-bindings: leds: import common led bindings from linux v5.4
 References: <20191219183620.1423118-1-jbrunet@baylibre.com>
- <20191219183620.1423118-6-jbrunet@baylibre.com>
- <CAGb2v64Wp8ggLUSnhvheOJHeA5-gqL2YfTJv7mu5q=7KMrWV2Q@mail.gmail.com>
+ <20191219183620.1423118-2-jbrunet@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <5a0a8d98-7d83-9003-2849-f8328ae7400b@baylibre.com>
-Date: Fri, 20 Dec 2019 11:13:31 +0100
+Message-ID: <41ef8e4e-bca3-45ee-9fbf-63484e236d30@baylibre.com>
+Date: Fri, 20 Dec 2019 11:14:27 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAGb2v64Wp8ggLUSnhvheOJHeA5-gqL2YfTJv7mu5q=7KMrWV2Q@mail.gmail.com>
+In-Reply-To: <20191219183620.1423118-2-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Chen-Yu Tsai <wens@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+To: Jerome Brunet <jbrunet@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Kevin Hilman <khilman@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+On 19/12/2019 19:36, Jerome Brunet wrote:
+> Import the common leds bindings definition from linux v5.4
 
-On 20/12/2019 04:05, Chen-Yu Tsai wrote:
-> On Fri, Dec 20, 2019 at 2:37 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
->>
->> Add support for the Amlogic based libretech-pc platform.
->> This platform comes with 2 variant, based on the s905d or s912 SoC.
->>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> ---
->>  arch/arm/dts/Makefile                         |   2 +
->>  arch/arm/dts/meson-gx-libretech-pc.dtsi       | 376 ++++++++++++++++++
->>  .../meson-gxl-s905d-libretech-pc-u-boot.dtsi  |   7 +
->>  arch/arm/dts/meson-gxl-s905d-libretech-pc.dts |  17 +
->>  arch/arm/dts/meson-gxl-s905d.dtsi             |  12 +
->>  arch/arm/dts/meson-gxl.dtsi                   |  35 +-
->>  .../meson-gxm-s912-libretech-pc-u-boot.dtsi   |   7 +
->>  arch/arm/dts/meson-gxm-s912-libretech-pc.dts  |  62 +++
->>  configs/libretech-s905d-pc_defconfig          |  73 ++++
->>  configs/libretech-s912-pc_defconfig           |  73 ++++
->>  10 files changed, 654 insertions(+), 10 deletions(-)
->>  create mode 100644 arch/arm/dts/meson-gx-libretech-pc.dtsi
->>  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
->>  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc.dts
->>  create mode 100644 arch/arm/dts/meson-gxl-s905d.dtsi
->>  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
->>  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc.dts
->>  create mode 100644 configs/libretech-s905d-pc_defconfig
->>  create mode 100644 configs/libretech-s912-pc_defconfig
-> 
-> May I suggest including the actual model name "AML-S912-PC" in the
-> file names? That will make it that much more obvious what these files
-> are for, instead of "libretech-pc" which few people have heard of.
-> 
-> So something like "meson-libretech-aml-s912-pc.dtsi",
-> "meson-gxl-s905d-libretech-aml-s912-pc.dts",
-> "meson-gxm-s912-libretech-aml-s912-pc.dts",
-> "libretech-aml-s912-pc-s905d_defconfig", and
-> "libretech-aml-s912-pc-s912_defconfig".
-> 
-> Same goes for the Linux copy.
+Could you add a Linux sha in the commit log ?
 
-It keeps the same scheme as the libretech-ac and libretech-ac DT naming,
-please comment the Linux patchset instead of this one.
-
-Neil
+With this:
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
 > 
-> ChenYu
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  include/dt-bindings/leds/common.h | 75 +++++++++++++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 include/dt-bindings/leds/common.h
+> 
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> new file mode 100644
+> index 000000000000..9e1256a7c1bf
+> --- /dev/null
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -0,0 +1,75 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides macros for the common LEDs device tree bindings.
+> + *
+> + * Copyright (C) 2015, Samsung Electronics Co., Ltd.
+> + * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
+> + *
+> + * Copyright (C) 2019 Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_LEDS_H
+> +#define __DT_BINDINGS_LEDS_H
+> +
+> +/* External trigger type */
+> +#define LEDS_TRIG_TYPE_EDGE	0
+> +#define LEDS_TRIG_TYPE_LEVEL	1
+> +
+> +/* Boost modes */
+> +#define LEDS_BOOST_OFF		0
+> +#define LEDS_BOOST_ADAPTIVE	1
+> +#define LEDS_BOOST_FIXED	2
+> +
+> +/* Standard LED colors */
+> +#define LED_COLOR_ID_WHITE	0
+> +#define LED_COLOR_ID_RED	1
+> +#define LED_COLOR_ID_GREEN	2
+> +#define LED_COLOR_ID_BLUE	3
+> +#define LED_COLOR_ID_AMBER	4
+> +#define LED_COLOR_ID_VIOLET	5
+> +#define LED_COLOR_ID_YELLOW	6
+> +#define LED_COLOR_ID_IR		7
+> +#define LED_COLOR_ID_MAX	8
+> +
+> +/* Standard LED functions */
+> +#define LED_FUNCTION_ACTIVITY "activity"
+> +#define LED_FUNCTION_ALARM "alarm"
+> +#define LED_FUNCTION_BACKLIGHT "backlight"
+> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
+> +#define LED_FUNCTION_BOOT "boot"
+> +#define LED_FUNCTION_CPU "cpu"
+> +#define LED_FUNCTION_CAPSLOCK "capslock"
+> +#define LED_FUNCTION_CHARGING "charging"
+> +#define LED_FUNCTION_DEBUG "debug"
+> +#define LED_FUNCTION_DISK "disk"
+> +#define LED_FUNCTION_DISK_ACTIVITY "disk-activity"
+> +#define LED_FUNCTION_DISK_ERR "disk-err"
+> +#define LED_FUNCTION_DISK_READ "disk-read"
+> +#define LED_FUNCTION_DISK_WRITE "disk-write"
+> +#define LED_FUNCTION_FAULT "fault"
+> +#define LED_FUNCTION_FLASH "flash"
+> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
+> +#define LED_FUNCTION_INDICATOR "indicator"
+> +#define LED_FUNCTION_KBD_BACKLIGHT "kbd_backlight"
+> +#define LED_FUNCTION_LAN "lan"
+> +#define LED_FUNCTION_MAIL "mail"
+> +#define LED_FUNCTION_MTD "mtd"
+> +#define LED_FUNCTION_MICMUTE "micmute"
+> +#define LED_FUNCTION_MUTE "mute"
+> +#define LED_FUNCTION_NUMLOCK "numlock"
+> +#define LED_FUNCTION_PANIC "panic"
+> +#define LED_FUNCTION_PROGRAMMING "programming"
+> +#define LED_FUNCTION_POWER "power"
+> +#define LED_FUNCTION_RX "rx"
+> +#define LED_FUNCTION_SD "sd"
+> +#define LED_FUNCTION_SCROLLLOCK "scrolllock"
+> +#define LED_FUNCTION_STANDBY "standby"
+> +#define LED_FUNCTION_STATUS "status"
+> +#define LED_FUNCTION_TORCH "torch"
+> +#define LED_FUNCTION_TX "tx"
+> +#define LED_FUNCTION_USB "usb"
+> +#define LED_FUNCTION_WAN "wan"
+> +#define LED_FUNCTION_WLAN "wlan"
+> +#define LED_FUNCTION_WPS "wps"
+> +
+> +#endif /* __DT_BINDINGS_LEDS_H */
 > 
 
