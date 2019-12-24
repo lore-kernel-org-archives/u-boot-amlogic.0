@@ -1,25 +1,25 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
- by mx.groups.io with SMTP id smtpd.web09.2625.1577193961114640282
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+ by mx.groups.io with SMTP id smtpd.web12.2720.1577193966009271126
  for <u-boot-amlogic@groups.io>;
- Tue, 24 Dec 2019 05:26:01 -0800
-Received: by mail-pj1-f68.google.com with SMTP id n59so1237583pjb.1
-        for <u-boot-amlogic@groups.io>; Tue, 24 Dec 2019 05:26:01 -0800 (PST)
+ Tue, 24 Dec 2019 05:26:06 -0800
+Received: by mail-pl1-f196.google.com with SMTP id b22so8468034pls.12
+        for <u-boot-amlogic@groups.io>; Tue, 24 Dec 2019 05:26:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=PYu4iMlrIANJ6xs1O134gVgwE442m1SVv0uOKsRIuZc=;
-        b=aeWbw/u1jrFEdyzoA4UPkzVdVgxsdEiTjRT/T0btKCIh2aS/HHprXKzlxjonLXN87a
-         hC36lAERK8mmw3oref72P/4zHpIbz8/xiCb0Gq3kBabeOSxa6JG/qAO7kLeAj/L/GuBw
-         L20kJpE8HY3UOv9hU3MagVFS/E0Y03PC0NAnWnAsl2V6arrNRxAMhn5FOW7BmnQfu84T
-         BlfOvj6oyV/BCJNrNbgEBzubLb+ZZaHo7Jhr+9uBiylJDjCh21Q8CFgZ7E/45aQWNPNk
-         Gc33qfcMD9itSlChtTQ1hVXmPvoUfSSbPlg2ksQN0TB3O6lpEL0fLj0ML5xhcdEbFUja
-         4aog==
+        bh=uHtuLMfxLcSL4dajNP+ASHQKshVZLIwES/YCcUNozQo=;
+        b=aDFwuBZujncgwufi4KRkwLiOl9agMCzkZKgXWcSV6OLOSWUbFRwPECtjg+chcfxZwB
+         Sgu6wsE/LYCHLqZUIXDDFAwwUcxfI882AyEv7YiWXea9CI6FpZ8XHUdpVCqQ+ihsPf4a
+         HW8ImFobmT7NwAEqaUPCIqWe60LbUUDzh9A+avhiHBmB/LPuevVOOMmaYntvkT5mpvdB
+         nahKD+UJ0P1UI6fakaXbvfJbSV8smmr1EfQi6FY/psPsxSMfH6hCJzmxvsNDpL8C9V8f
+         CuTaF6CyTN75JkQMU84bUng8g4fqgP1qpKYIQcc2j+swUAOsLSzhhYCZmuQX2qalvoTo
+         H0/w==
 Return-Path: <linux.amoon@gmail.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [U-Boot] [PATCHv2 1/3] mmc: meson-gx: Fix clk phase tuning for MMC
-Date: Tue, 24 Dec 2019 13:25:49 +0000
-Message-Id: <20191224132551.1427-2-linux.amoon@gmail.com>
+Subject: [U-Boot] [PATCHv2 2/3] configs: meson64: enable GIC support for G12A/G12B
+Date: Tue, 24 Dec 2019 13:25:50 +0000
+Message-Id: <20191224132551.1427-3-linux.amoon@gmail.com>
 In-Reply-To: <20191224132551.1427-1-linux.amoon@gmail.com>
 References: <20191224132551.1427-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
@@ -27,82 +27,29 @@ Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-As per mainline line kernel fix the clk tunnig phase for
-mmc, set Core=180, Tx=0, Rx=0 clk phase for mmc initialization.
+Enable GIC support for G12A/G12B platform.
 
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
-Changes from previous
-use the mainline kernel tuning for clk tuning.
-Fixed the commmit messages.
-Patch v1:
-https://patchwork.ozlabs.org/patch/1201208/
-
-Before these changes.
-    clock is enabled (380953Hz)
-    clock is enabled (25000000Hz)
-After these changes
-    clock is enabled (380953Hz)
-    clock is enabled (25000000Hz)
-    clock is enabled (52000000Hz)
-Test on Odroid N2 and Odroid C2 with eMMC and microSD cards
+no changes
 ---
- arch/arm/include/asm/arch-meson/sd_emmc.h | 14 ++++++--------
- drivers/mmc/meson_gx_mmc.c                |  9 +++++----
- 2 files changed, 11 insertions(+), 12 deletions(-)
+ include/configs/meson64.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/arch/arm/include/asm/arch-meson/sd_emmc.h
-index e3a72c8b66..d70fe4f03e 100644
---- a/arch/arm/include/asm/arch-meson/sd_emmc.h
-+++ b/arch/arm/include/asm/arch-meson/sd_emmc.h
-@@ -7,6 +7,7 @@
- #define __SD_EMMC_H__
+diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+index 736081277d..50707a3197 100644
+--- a/include/configs/meson64.h
++++ b/include/configs/meson64.h
+@@ -8,7 +8,7 @@
+ #define __MESON64_CONFIG_H
  
- #include <mmc.h>
-+#include <linux/bitops.h>
- 
- #define SDIO_PORT_A			0
- #define SDIO_PORT_B			1
-@@ -19,14 +20,11 @@
- #define   CLK_MAX_DIV			63
- #define   CLK_SRC_24M			(0 << 6)
- #define   CLK_SRC_DIV2			(1 << 6)
--#define   CLK_CO_PHASE_000		(0 << 8)
--#define   CLK_CO_PHASE_090		(1 << 8)
--#define   CLK_CO_PHASE_180		(2 << 8)
--#define   CLK_CO_PHASE_270		(3 << 8)
--#define   CLK_TX_PHASE_000		(0 << 10)
--#define   CLK_TX_PHASE_090		(1 << 10)
--#define   CLK_TX_PHASE_180		(2 << 10)
--#define   CLK_TX_PHASE_270		(3 << 10)
-+
-+#define   CLK_CORE_PHASE_MASK		GENMASK(9, 8)
-+#define   CLK_TX_PHASE_MASK		GENMASK(11, 10)
-+#define   CLK_RX_PHASE_MASK		GENMASK(13, 12)
-+
- #define   CLK_ALWAYS_ON			BIT(24)
- 
- #define MESON_SD_EMMC_CFG		0x44
-diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-index 86c1a7164a..402981c3bb 100644
---- a/drivers/mmc/meson_gx_mmc.c
-+++ b/drivers/mmc/meson_gx_mmc.c
-@@ -52,10 +52,11 @@ static void meson_mmc_config_clock(struct mmc *mmc)
- 	clk_div = DIV_ROUND_UP(clk, mmc->clock);
- 
- 	/* 180 phase core clock */
--	meson_mmc_clk |= CLK_CO_PHASE_180;
--
--	/* 180 phase tx clock */
--	meson_mmc_clk |= CLK_TX_PHASE_000;
-+	meson_mmc_clk |= CLK_CORE_PHASE_MASK;
-+	/* 000 phase rx clock */
-+	meson_mmc_clk |= CLK_RX_PHASE_MASK;
-+	/* 000 phase tx clock */
-+	meson_mmc_clk |= CLK_TX_PHASE_MASK;
- 
- 	/* clock settings */
- 	meson_mmc_clk |= clk_src;
+ /* Generic Interrupt Controller Definitions */
+-#if defined(CONFIG_MESON_AXG)
++#if (defined(CONFIG_MESON_AXG) || defined(CONFIG_MESON_G12A))
+ #define GICD_BASE			0xffc01000
+ #define GICC_BASE			0xffc02000
+ #else /* MESON GXL and GXBB */
 -- 
 2.24.1
 
