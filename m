@@ -1,56 +1,56 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
- by mx.groups.io with SMTP id smtpd.web09.2623.1577193958912895345
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+ by mx.groups.io with SMTP id smtpd.web11.2696.1577193968287518590
  for <u-boot-amlogic@groups.io>;
- Tue, 24 Dec 2019 05:25:58 -0800
-Received: by mail-pf1-f193.google.com with SMTP id p14so10771923pfn.4
-        for <u-boot-amlogic@groups.io>; Tue, 24 Dec 2019 05:25:58 -0800 (PST)
+ Tue, 24 Dec 2019 05:26:08 -0800
+Received: by mail-pj1-f66.google.com with SMTP id d5so1194159pjz.5
+        for <u-boot-amlogic@groups.io>; Tue, 24 Dec 2019 05:26:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=0f1qFpwxL+brFBYEYLEO41QRhsMI3QFu30chGF0LQa8=;
-        b=EIcEv/G38SZ85JaGD0FnFGRtCot/4MZMTre8vvEU77WkDFqe7gjiOODjMGy2AiuPk0
-         nEVYUsKFeTF+S4Sejh4oY0R+pXapXnLDUlEh92npYGoZc1WDYAkgnYYq2In0LhOjHGJ9
-         63KHerpufleIHu/40immCvcFQIGWoWZfyjQGMz3SX5jffp71haND1hWTNKkpqcPvfYKk
-         ezYozp5+zODitrkBrdUfoUr54ky3zwuETloD0vMd1ah3x2Cl3qkmp41C+vSBLXEpHmaH
-         m6lr67g4HY6mmGepr3MScqF6+zknrquylthLnC56tpBHCR3O0uxzq0ewXSPklaBqx2ad
-         880A==
+        bh=BYMmzpXvL8oqxmEw77WpupCIartJvUZ6xEZhbZ3DC+o=;
+        b=Fd97yW7MIeoRLcD2dCyCTNg/CxPQQo7aHP2q5m+2pPkovQZ0t9sazQJpc7DctB09DA
+         uBuBYM0JmA4B1XK3nQ2XmEHRrHLOMLHsakFBs/hqOrgM98bfbUW0UDmpXT9vuKpzwFap
+         wfJxQmx6XyCma5ouS3Go+7g09+kPI3n0ZQe6YKIn7jx3bphoZSqOXE5Kdq6T8s6d/X3m
+         /K2LtsF1yZrO7c6QRZsqkk91cJ/h5+ImyPZVyAHiSlhOZeLN7K3T2D6eyPbRsKYbbpwk
+         CKMjyL/ayuJYmBbTUaBSlcm3aXqrL1QRRRiDngrwwrzQyzVRh7qYaHAS/AUa1sRJ93DL
+         O3hw==
 Return-Path: <linux.amoon@gmail.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [U-Boot] [PATCHv2 0/3] Odroid n2 using eMMC would fail to boot up
-Date: Tue, 24 Dec 2019 13:25:48 +0000
-Message-Id: <20191224132551.1427-1-linux.amoon@gmail.com>
+Subject: [U-Boot] [PATCHv2 3/3] board: amlogic: select PWRSEQ for all amlogic platform
+Date: Tue, 24 Dec 2019 13:25:51 +0000
+Message-Id: <20191224132551.1427-4-linux.amoon@gmail.com>
+In-Reply-To: <20191224132551.1427-1-linux.amoon@gmail.com>
+References: <20191224132551.1427-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Here are some small changes to fix booting of Odroid N2 using eMMC.
-Fixed the clk tunnig during mmc initialization.
+commit a10388dc6982 ("mmc: meson-gx: add support for mmc-pwrseq-emmc")
+introduce CONFIG_PWESEQ for power sequence for eMMC module on
+amlogic platform, so enable this to all amlogic boards.
 
-Build and tested on top of below patches
-[0] https://patchwork.ozlabs.org/patch/1213648/
-[1] https://patchwork.ozlabs.org/patch/1213650/
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+no changes
+---
+ arch/arm/mach-meson/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Tested on below eMMC module on Odroid N2 and C2
-new orange - eMMC AJNB4R 14.6 GiB MMC 5.1
-old back   - eMMC CGND3R 58.2 GiB MMC 5.0
-
-Prevoius changes: [3] https://patchwork.ozlabs.org/cover/1201206/
-
--Anand
-
-Anand Moon (3):
-  mmc: meson-gx: Fix clk phase tuning for MMC
-  configs: meson64: enable GIC support for G12A/G12B
-  board: amlogic: select PWRSEQ for all amlogic platform
-
- arch/arm/include/asm/arch-meson/sd_emmc.h | 14 ++++++--------
- arch/arm/mach-meson/Kconfig               |  1 +
- drivers/mmc/meson_gx_mmc.c                |  9 +++++----
- include/configs/meson64.h                 |  2 +-
- 4 files changed, 13 insertions(+), 13 deletions(-)
-
+diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+index e29e4c0acc..513a33dae2 100644
+--- a/arch/arm/mach-meson/Kconfig
++++ b/arch/arm/mach-meson/Kconfig
+@@ -8,6 +8,7 @@ config MESON64_COMMON
+ 	select DM_SERIAL
+ 	select SYSCON
+ 	select REGMAP
++	select PWRSEQ
+ 	select BOARD_LATE_INIT
+ 	imply CMD_DM
+ 
 -- 
 2.24.1
 
