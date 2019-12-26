@@ -1,59 +1,53 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
- by mx.groups.io with SMTP id smtpd.web12.19862.1577360040051321575
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+ by mx.groups.io with SMTP id smtpd.web11.19908.1577360047165444990
  for <u-boot-amlogic@groups.io>;
- Thu, 26 Dec 2019 03:34:00 -0800
-Received: by mail-pg1-f194.google.com with SMTP id b9so12730959pgk.12
-        for <u-boot-amlogic@groups.io>; Thu, 26 Dec 2019 03:34:00 -0800 (PST)
+ Thu, 26 Dec 2019 03:34:07 -0800
+Received: by mail-pf1-f193.google.com with SMTP id i6so6233657pfc.1
+        for <u-boot-amlogic@groups.io>; Thu, 26 Dec 2019 03:34:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=qjFrBdTmNh3vpBzDywcpnEuVyTvDocQ/AyyscadJkVA=;
-        b=RPc4/FA361TlLr2zrnlSpASYsb97YROHTiVD3F0xjfIji8GofDb13/YihJCrKtTW/o
-         6eAPiN9DVW/KY9GQiu7vMEYzzcA86XLQsnm8/8/IjCNReSMf2bfIACbBlIlZSy2ozvWd
-         rf7KTKPH/CNznmeOte7xUUxY5lzkhp8oqedstsH5xnT5jbR7BMVN8q4yfV5+z3QCRaG2
-         Unc/CRLBAXgQztnhizVgi/hypaQ28UvokaYnLM5HH80XsZmQlVdCwUEF3DzeGkTZ1TsH
-         G7UeEKzPMWdOgnbrc2UWZ2gugehSUbOZj5AhJHTBCorhVN3QbaxYvfpMpnAxCjwcurOk
-         gXUQ==
+        bh=3fsGGUAmxsj0HlXreXOggtnyKWGs1G0VtBFDnwGlqHM=;
+        b=DR9ASmAEBluXR23SMwYZ2bKtUYcPf6TnkX9XuWA6tSih17AZhkOd/1M722dlqgUvFr
+         2Kb+/XPLr/ugZBszwgOlaPSsdQPtmy681ISFM5gunsyM6AckjqbwEthr9y3gx8Vh7GC6
+         5scWaErg2iFEvplZtgtq3QminchQLzkfumXIqc3aeNftf6shhf6Zr0MsmGiPx15Xxki/
+         xzJ05BW3VhDpO9qMPmlXBbADjAP1yNRctrllyC8QUIyuEXn0wjRY7Sf9Rd9GXTpccsHZ
+         sHwZ16or0SpSgU8dmgg94I3YFl9NaDzmAXB4UDZjw9i3JXkuHWy/jQGRFToPELd4/Wuz
+         94og==
 Return-Path: <linux.amoon@gmail.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv3 0/3] Odroid n2 using eMMC would fail to boot up
-Date: Thu, 26 Dec 2019 11:33:50 +0000
-Message-Id: <20191226113353.1757-1-linux.amoon@gmail.com>
+Subject: [PATCHv3 2/3] configs: meson64: enable GIC support for G12A/G12B
+Date: Thu, 26 Dec 2019 11:33:52 +0000
+Message-Id: <20191226113353.1757-3-linux.amoon@gmail.com>
+In-Reply-To: <20191226113353.1757-1-linux.amoon@gmail.com>
+References: <20191226113353.1757-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Here are some small changes to fix booting of Odroid N2 using eMMC.
-Fixed the clk tunnig during mmc initialization.
+Enable GIC support for G12A/G12B platform.
 
-Build and tested on top of below patches
-[0] https://patchwork.ozlabs.org/patch/1213648/
-[1] https://patchwork.ozlabs.org/patch/1213650/
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ include/configs/meson64.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested on below eMMC module on Odroid N2 and C2
-new orange - eMMC AJNB4R 14.6 GiB MMC 5.1
-old back   - eMMC CGND3R 58.2 GiB MMC 5.0
-
-Prevoius changes: 
-Fixed the clk tuning as per mainline kernel
-[3]v1 https://patchwork.ozlabs.org/cover/1201206/
-[4]v2 https://patchwork.ozlabs.org/cover/1215217/
-
--Anand
-
-Anand Moon (3):
-  mmc: meson-gx: Fix clk phase tuning for MMC
-  configs: meson64: enable GIC support for G12A/G12B
-  board: amlogic: select PWRSEQ for all amlogic platform
-
- arch/arm/include/asm/arch-meson/sd_emmc.h | 14 ++++++--------
- arch/arm/mach-meson/Kconfig               |  1 +
- drivers/mmc/meson_gx_mmc.c                |  9 +++++----
- include/configs/meson64.h                 |  2 +-
- 4 files changed, 13 insertions(+), 13 deletions(-)
-
+diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+index 736081277d..50707a3197 100644
+--- a/include/configs/meson64.h
++++ b/include/configs/meson64.h
+@@ -8,7 +8,7 @@
+ #define __MESON64_CONFIG_H
+ 
+ /* Generic Interrupt Controller Definitions */
+-#if defined(CONFIG_MESON_AXG)
++#if (defined(CONFIG_MESON_AXG) || defined(CONFIG_MESON_G12A))
+ #define GICD_BASE			0xffc01000
+ #define GICC_BASE			0xffc02000
+ #else /* MESON GXL and GXBB */
 -- 
 2.24.1
 
