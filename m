@@ -1,56 +1,116 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
- by mx.groups.io with SMTP id smtpd.web11.2696.1577193968287518590
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web12.19237.1577351422236826412
  for <u-boot-amlogic@groups.io>;
- Tue, 24 Dec 2019 05:26:08 -0800
-Received: by mail-pj1-f66.google.com with SMTP id d5so1194159pjz.5
-        for <u-boot-amlogic@groups.io>; Tue, 24 Dec 2019 05:26:08 -0800 (PST)
+ Thu, 26 Dec 2019 01:10:23 -0800
+Received: by mail-wr1-f68.google.com with SMTP id y17so23202797wrh.5
+        for <u-boot-amlogic@groups.io>; Thu, 26 Dec 2019 01:10:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=BYMmzpXvL8oqxmEw77WpupCIartJvUZ6xEZhbZ3DC+o=;
-        b=Fd97yW7MIeoRLcD2dCyCTNg/CxPQQo7aHP2q5m+2pPkovQZ0t9sazQJpc7DctB09DA
-         uBuBYM0JmA4B1XK3nQ2XmEHRrHLOMLHsakFBs/hqOrgM98bfbUW0UDmpXT9vuKpzwFap
-         wfJxQmx6XyCma5ouS3Go+7g09+kPI3n0ZQe6YKIn7jx3bphoZSqOXE5Kdq6T8s6d/X3m
-         /K2LtsF1yZrO7c6QRZsqkk91cJ/h5+ImyPZVyAHiSlhOZeLN7K3T2D6eyPbRsKYbbpwk
-         CKMjyL/ayuJYmBbTUaBSlcm3aXqrL1QRRRiDngrwwrzQyzVRh7qYaHAS/AUa1sRJ93DL
-         O3hw==
-Return-Path: <linux.amoon@gmail.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [U-Boot] [PATCHv2 3/3] board: amlogic: select PWRSEQ for all amlogic platform
-Date: Tue, 24 Dec 2019 13:25:51 +0000
-Message-Id: <20191224132551.1427-4-linux.amoon@gmail.com>
-In-Reply-To: <20191224132551.1427-1-linux.amoon@gmail.com>
-References: <20191224132551.1427-1-linux.amoon@gmail.com>
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=D3qwS7OR2eKI8I1hT9yFKrBLlXrzlRCxS2Ze7Pae6XM=;
+        b=NvWHI14dSwPkMFmru6s+fMyGd/nYluop7et1eXF+CknD89EBa6TvUED8HHfHSTlWa0
+         5y49RLCBiotFjhOxlCNdcPc56buX4K2zHvz8G3NpCVV7LyDP+uCcaUuzI5ReAe/mJKZT
+         5PFR13FqGI6STJkitvv31PN4jvgk85qWUVd5MIS9dlpUc2WuCyg4tpqKNeI7j8iHpcwp
+         9PNQRYvf5x2CSb+lyzbX6DywsoVGWc3ALeuuZKF5AN8yCMOWwpYJRrLPApZHNjT3gFd+
+         fTIdHjCEzzVcGCCp3UIHVAZC5DbXRsjkxa/bZu53kG0Kjcu6sxJLDaottCSOJiRGxuNL
+         /jHA==
+Return-Path: <jbrunet@baylibre.com>
+References: <20191224132551.1427-1-linux.amoon@gmail.com> <20191224132551.1427-2-linux.amoon@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [U-Boot] [PATCHv2 1/3] mmc: meson-gx: Fix clk phase tuning for MMC
+In-reply-to: <20191224132551.1427-2-linux.amoon@gmail.com>
+Date: Thu, 26 Dec 2019 10:10:19 +0100
+Message-ID: <1jh81npi4k.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Type: text/plain
+To: Anand Moon <linux.amoon@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-commit a10388dc6982 ("mmc: meson-gx: add support for mmc-pwrseq-emmc")
-introduce CONFIG_PWESEQ for power sequence for eMMC module on
-amlogic platform, so enable this to all amlogic boards.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
----
-no changes
----
- arch/arm/mach-meson/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Tue 24 Dec 2019 at 14:25, Anand Moon <linux.amoon@gmail.com> wrote:
 
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index e29e4c0acc..513a33dae2 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -8,6 +8,7 @@ config MESON64_COMMON
- 	select DM_SERIAL
- 	select SYSCON
- 	select REGMAP
-+	select PWRSEQ
- 	select BOARD_LATE_INIT
- 	imply CMD_DM
- 
--- 
-2.24.1
+> As per mainline line kernel fix the clk tunnig phase for
+> mmc, set Core=180, Tx=0, Rx=0 clk phase for mmc initialization.
+>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> Changes from previous
+> use the mainline kernel tuning for clk tuning.
+> Fixed the commmit messages.
+> Patch v1:
+> https://patchwork.ozlabs.org/patch/1201208/
+>
+> Before these changes.
+>     clock is enabled (380953Hz)
+>     clock is enabled (25000000Hz)
+> After these changes
+>     clock is enabled (380953Hz)
+>     clock is enabled (25000000Hz)
+>     clock is enabled (52000000Hz)
+> Test on Odroid N2 and Odroid C2 with eMMC and microSD cards
+> ---
+>  arch/arm/include/asm/arch-meson/sd_emmc.h | 14 ++++++--------
+>  drivers/mmc/meson_gx_mmc.c                |  9 +++++----
+>  2 files changed, 11 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/arch/arm/include/asm/arch-meson/sd_emmc.h
+> index e3a72c8b66..d70fe4f03e 100644
+> --- a/arch/arm/include/asm/arch-meson/sd_emmc.h
+> +++ b/arch/arm/include/asm/arch-meson/sd_emmc.h
+> @@ -7,6 +7,7 @@
+>  #define __SD_EMMC_H__
+>  
+>  #include <mmc.h>
+> +#include <linux/bitops.h>
+>  
+>  #define SDIO_PORT_A			0
+>  #define SDIO_PORT_B			1
+> @@ -19,14 +20,11 @@
+>  #define   CLK_MAX_DIV			63
+>  #define   CLK_SRC_24M			(0 << 6)
+>  #define   CLK_SRC_DIV2			(1 << 6)
+> -#define   CLK_CO_PHASE_000		(0 << 8)
+> -#define   CLK_CO_PHASE_090		(1 << 8)
+> -#define   CLK_CO_PHASE_180		(2 << 8)
+> -#define   CLK_CO_PHASE_270		(3 << 8)
+> -#define   CLK_TX_PHASE_000		(0 << 10)
+> -#define   CLK_TX_PHASE_090		(1 << 10)
+> -#define   CLK_TX_PHASE_180		(2 << 10)
+> -#define   CLK_TX_PHASE_270		(3 << 10)
+> +
+> +#define   CLK_CORE_PHASE_MASK		GENMASK(9, 8)
+> +#define   CLK_TX_PHASE_MASK		GENMASK(11, 10)
+> +#define   CLK_RX_PHASE_MASK		GENMASK(13, 12)
+> +
+>  #define   CLK_ALWAYS_ON			BIT(24)
+>  
+>  #define MESON_SD_EMMC_CFG		0x44
+> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+> index 86c1a7164a..402981c3bb 100644
+> --- a/drivers/mmc/meson_gx_mmc.c
+> +++ b/drivers/mmc/meson_gx_mmc.c
+> @@ -52,10 +52,11 @@ static void meson_mmc_config_clock(struct mmc *mmc)
+>  	clk_div = DIV_ROUND_UP(clk, mmc->clock);
+>  
+>  	/* 180 phase core clock */
+> -	meson_mmc_clk |= CLK_CO_PHASE_180;
+> -
+> -	/* 180 phase tx clock */
+> -	meson_mmc_clk |= CLK_TX_PHASE_000;
+> +	meson_mmc_clk |= CLK_CORE_PHASE_MASK;
+> +	/* 000 phase rx clock */
+> +	meson_mmc_clk |= CLK_RX_PHASE_MASK;
+> +	/* 000 phase tx clock */
+> +	meson_mmc_clk |= CLK_TX_PHASE_MASK;
+>
+
+I'm not sure how this acheive what is descibed in the commit
+description.
+
+It looks more that it would set a 270 degree phase on all clocks, which
+is not desirable.
+
+>  	/* clock settings */
+>  	meson_mmc_clk |= clk_src;
 
