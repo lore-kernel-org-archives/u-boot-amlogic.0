@@ -1,30 +1,30 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web09.5505.1578404522172294412
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web12.5528.1578404529337981072
  for <u-boot-amlogic@groups.io>;
- Tue, 07 Jan 2020 05:42:03 -0800
-Received: by mail-wm1-f68.google.com with SMTP id u2so19434192wmc.3
-        for <u-boot-amlogic@groups.io>; Tue, 07 Jan 2020 05:42:01 -0800 (PST)
+ Tue, 07 Jan 2020 05:42:09 -0800
+Received: by mail-wr1-f65.google.com with SMTP id t2so53977960wrr.1
+        for <u-boot-amlogic@groups.io>; Tue, 07 Jan 2020 05:42:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:autocrypt:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ETfmeoV8TSpoP6drOJ8i3wJKPtOOJVspVYrJoxVhDBI=;
-        b=hJPMM2FbMSw7iiOQtKrjpUs41JiJiE/LR9Fzcd/8I9CBCIKmpfQ2zna4/3+6oWrUSe
-         p/tOumwPA9jJUJMzFBCUOldNZmQRVqF6ZtTtNZ0W5SNabFofY6Jaw4+f64FfDI4MYk39
-         +h42Imz9yKUf1bFB6xNvkkR3dYnhN8lJ7meLEL1vIS+5RN54G1mFZjUHJVfGIUlaW6wA
-         AcMIigPKPW8VQjKETnZaIu6PDfrshlyMR/oB0FsnpQ1j1ZfVflMYnQ71nf0cdiVdurE3
-         JQdx+vj77S1pItqUJBGQBK0LNH9d61cUojeUOiRdMImXE+PVtKWg7/xXMHMwT98zmHHG
-         ODPg==
+        bh=sqqaRWF6iWeBMuNow4EFCQsm1JAyFxSH5wVS3n+N0T4=;
+        b=xT3hp9NPAfTWQmnDmsLmnxADMuVL31a20KjAy6L3oyACL6JrpSyBLmJlPIzJbpeieE
+         ig3aRlQ+WyBiXEklCTFn2VB0K3q/xIeh4dIWjUa4VG/TnBNnnxnX6rw2Q9+4NFvxr9dN
+         uBB7InhWYpFkiRZcNP/PIty64ETAdeRzBnXdCQG79kA+7qFc3i8rqoAJDg4ZOLT15FXK
+         1DHW8+4CVDOjnl4/YkpC5BB5JUz2WrDzzT+4aDEPfC98d/KmgLcVewknf4F/JpNWlvUU
+         N5ljq3HjZVW+/kxilHFV0xdJg4LMQ+Wl1+5z8MTtp7OfA+Hh9jOOiEsQ25cnFo+bh1hl
+         SLJA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCHv3 2/3] configs: meson64: enable GIC support for G12A/G12B
+Subject: Re: [PATCHv3 3/3] board: amlogic: select PWRSEQ for all amlogic platform
 References: <20191226113353.1757-1-linux.amoon@gmail.com>
- <20191226113353.1757-3-linux.amoon@gmail.com>
+ <20191226113353.1757-4-linux.amoon@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <c76c932d-2927-624e-d67b-7a332b9a439a@baylibre.com>
-Date: Tue, 7 Jan 2020 14:41:59 +0100
+Message-ID: <3d389772-c5da-b916-adc1-aef21aa9ad02@baylibre.com>
+Date: Tue, 7 Jan 2020 14:42:06 +0100
 MIME-Version: 1.0
-In-Reply-To: <20191226113353.1757-3-linux.amoon@gmail.com>
+In-Reply-To: <20191226113353.1757-4-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -32,29 +32,32 @@ To: Anand Moon <linux.amoon@gmail.com>, Peng Fan <peng.fan@nxp.com>, Jerome Brun
 List-ID: <u-boot-amlogic@groups.io>
 
 On 26/12/2019 12:33, Anand Moon wrote:
-> Enable GIC support for G12A/G12B platform.
+> commit a10388dc6982 ("mmc: meson-gx: add support for mmc-pwrseq-emmc")
+> introduce CONFIG_PWESEQ for power sequence for eMMC module on
+> amlogic platform, so enable this to all amlogic boards.
 > 
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  include/configs/meson64.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm/mach-meson/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-> index 736081277d..50707a3197 100644
-> --- a/include/configs/meson64.h
-> +++ b/include/configs/meson64.h
-> @@ -8,7 +8,7 @@
->  #define __MESON64_CONFIG_H
+> diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+> index e29e4c0acc..513a33dae2 100644
+> --- a/arch/arm/mach-meson/Kconfig
+> +++ b/arch/arm/mach-meson/Kconfig
+> @@ -8,6 +8,7 @@ config MESON64_COMMON
+>  	select DM_SERIAL
+>  	select SYSCON
+>  	select REGMAP
+> +	select PWRSEQ
+>  	select BOARD_LATE_INIT
+>  	imply CMD_DM
 >  
->  /* Generic Interrupt Controller Definitions */
-> -#if defined(CONFIG_MESON_AXG)
-> +#if (defined(CONFIG_MESON_AXG) || defined(CONFIG_MESON_G12A))
->  #define GICD_BASE			0xffc01000
->  #define GICC_BASE			0xffc02000
->  #else /* MESON GXL and GXBB */
 > 
+
 
 Applied this patch to u-boot-amlogic
 
 Neil
+
