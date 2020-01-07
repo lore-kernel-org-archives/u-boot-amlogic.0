@@ -1,51 +1,60 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web11.3985.1578392297801157380
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web09.5505.1578404522172294412
  for <u-boot-amlogic@groups.io>;
- Tue, 07 Jan 2020 02:18:18 -0800
-Received: by mail-wm1-f65.google.com with SMTP id a5so18309470wmb.0
-        for <u-boot-amlogic@groups.io>; Tue, 07 Jan 2020 02:18:17 -0800 (PST)
+ Tue, 07 Jan 2020 05:42:03 -0800
+Received: by mail-wm1-f68.google.com with SMTP id u2so19434192wmc.3
+        for <u-boot-amlogic@groups.io>; Tue, 07 Jan 2020 05:42:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:autocrypt:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=kay1g1sfo1Q2paRgME7BmDnzh54meW4KQy9LfOzOEfw=;
-        b=mxDtNgaD9AiWmjb2I3jyv9w6+7w4qzdUDwexGvlmZt8LkF2Su6+meFQ+LYB+uFPthS
-         4xgXl50/QOzekpGBjJOC828RRxLFAoQx4cq/WD5qtAgx6F2iWFtD5gPa9rCSTjEMZa/u
-         ziDdQn8+2ey9bOs1fVVOwXhC1shuHei+dxKE6PwkQYyAlEW6z/OUkj219ndi/e9D0+aM
-         ng8ZVgQKj4coE7ANDvqxsGFIMNXwaMV8XeME3RfBZdoYgBSh/kpnMVeLewdgjk6VFHd/
-         QYxuOEbo38bDa0GSBAbAmX1pUKJHEVCtetk8adjKHJPxJD7vVBCIDi+MYP7eQCBfSDRJ
-         NyuQ==
+        bh=ETfmeoV8TSpoP6drOJ8i3wJKPtOOJVspVYrJoxVhDBI=;
+        b=hJPMM2FbMSw7iiOQtKrjpUs41JiJiE/LR9Fzcd/8I9CBCIKmpfQ2zna4/3+6oWrUSe
+         p/tOumwPA9jJUJMzFBCUOldNZmQRVqF6ZtTtNZ0W5SNabFofY6Jaw4+f64FfDI4MYk39
+         +h42Imz9yKUf1bFB6xNvkkR3dYnhN8lJ7meLEL1vIS+5RN54G1mFZjUHJVfGIUlaW6wA
+         AcMIigPKPW8VQjKETnZaIu6PDfrshlyMR/oB0FsnpQ1j1ZfVflMYnQ71nf0cdiVdurE3
+         JQdx+vj77S1pItqUJBGQBK0LNH9d61cUojeUOiRdMImXE+PVtKWg7/xXMHMwT98zmHHG
+         ODPg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/2] amlogic: add Khadas VIM3L support
-References: <1576056054-4458-1-git-send-email-christianshewitt@gmail.com>
+Subject: Re: [PATCHv3 2/3] configs: meson64: enable GIC support for G12A/G12B
+References: <20191226113353.1757-1-linux.amoon@gmail.com>
+ <20191226113353.1757-3-linux.amoon@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <5a62e2fd-e4fc-ac44-c28a-6ddafc5f6ec4@baylibre.com>
-Date: Tue, 7 Jan 2020 11:18:15 +0100
+Message-ID: <c76c932d-2927-624e-d67b-7a332b9a439a@baylibre.com>
+Date: Tue, 7 Jan 2020 14:41:59 +0100
 MIME-Version: 1.0
-In-Reply-To: <1576056054-4458-1-git-send-email-christianshewitt@gmail.com>
+In-Reply-To: <20191226113353.1757-3-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Christian Hewitt <christianshewitt@gmail.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+To: Anand Moon <linux.amoon@gmail.com>, Peng Fan <peng.fan@nxp.com>, Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 11/12/2019 10:20, Christian Hewitt wrote:
-> Khadas VIM3L is a new revision of the VIM3 board that swaps the premium
-> A311D chip for Amlogic's mid-range S905D3 chip.
+On 26/12/2019 12:33, Anand Moon wrote:
+> Enable GIC support for G12A/G12B platform.
 > 
-> Christian Hewitt (2):
->   ARM: dts: Import Khadas VIM3L DT from Linux 5.5-rc1
->   boards: amlogic: add Khadas VIM3L support
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  include/configs/meson64.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  arch/arm/dts/Makefile                   |   1 +
->  arch/arm/dts/meson-sm1-khadas-vim3l.dts |  95 +++++++++++++++++++++++
->  board/amlogic/w400/README.khadas-vim3l  | 132 ++++++++++++++++++++++++++++++++
->  configs/khadas-vim3l_defconfig          |  62 +++++++++++++++
->  4 files changed, 290 insertions(+)
->  create mode 100644 arch/arm/dts/meson-sm1-khadas-vim3l.dts
->  create mode 100644 board/amlogic/w400/README.khadas-vim3l
->  create mode 100644 configs/khadas-vim3l_defconfig
+> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+> index 736081277d..50707a3197 100644
+> --- a/include/configs/meson64.h
+> +++ b/include/configs/meson64.h
+> @@ -8,7 +8,7 @@
+>  #define __MESON64_CONFIG_H
+>  
+>  /* Generic Interrupt Controller Definitions */
+> -#if defined(CONFIG_MESON_AXG)
+> +#if (defined(CONFIG_MESON_AXG) || defined(CONFIG_MESON_G12A))
+>  #define GICD_BASE			0xffc01000
+>  #define GICC_BASE			0xffc02000
+>  #else /* MESON GXL and GXBB */
 > 
 
-Applied to u-boot-amlogic
+Applied this patch to u-boot-amlogic
+
+Neil
