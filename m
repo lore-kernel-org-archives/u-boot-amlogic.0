@@ -1,116 +1,227 @@
 Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web09.3747.1578391260932597299
+ by mx.groups.io with SMTP id smtpd.web11.3965.1578392164314389174
  for <u-boot-amlogic@groups.io>;
- Tue, 07 Jan 2020 02:01:01 -0800
-Received: by mail-wr1-f67.google.com with SMTP id w15so40597540wru.4
-        for <u-boot-amlogic@groups.io>; Tue, 07 Jan 2020 02:01:00 -0800 (PST)
+ Tue, 07 Jan 2020 02:16:04 -0800
+Received: by mail-wr1-f67.google.com with SMTP id y17so53270573wrh.5
+        for <u-boot-amlogic@groups.io>; Tue, 07 Jan 2020 02:16:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=Mi4RK4QlhVhYXFDwEFKMqfFJ/Bd6/UJnlGvS/Yl7Z90=;
-        b=aHgXZrHAQHsrcWv2poHhby2kr5GbLJi+2cP4K+En0Wam0nX97a52L33FTqetMX6UiA
-         2bYVELxNPDt97yGH6k6MoZw5ZQqg3JYRnmVGupHEIVQ7zcsA1AgcXGdc3H4ld1642Hn+
-         ReWEmxu9g2e/I1Ndl286VmSVa7vfQAvYOk2uX8+TySkLtJlgNZNYx++/n3Emgn/1YQyV
-         W+K0g/CP+B7uv+iRpjVM3AKPEtfmPGvnqKsQd78KZP18M7mwE89+MPyXZ0mV29rJlLQn
-         JA8Qq3V5cKoO5aIVMoyjhfpG5zrBt78HhXYjLZ9lSO+Z10KN1xI7gr0ZLpTl7fwhBdeV
-         LTsg==
-Return-Path: <jbrunet@baylibre.com>
-References: <20191226113353.1757-1-linux.amoon@gmail.com> <20191226113353.1757-2-linux.amoon@gmail.com>
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCHv3 1/3] mmc: meson-gx: Fix clk phase tuning for MMC
-In-reply-to: <20191226113353.1757-2-linux.amoon@gmail.com>
-Date: Tue, 07 Jan 2020 11:00:57 +0100
-Message-ID: <1j8smjsi06.fsf@starbuckisacylon.baylibre.com>
+        h=subject:from:to:cc:references:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xknX+9MAgHp7ABExlsvf3GSt4cWIUmP/we/9BxBb1fY=;
+        b=RSw2nPmrfzFA9NF1oNdvBRzSSEFk71sM1HDTGSzShkjgNJCajnAOhwo8bvBrlEGNWW
+         yWO121Sb/iiMprpSjCtJLYwcBISiKHXFmH+9fZDvGLpGjIPuXM4enObW57jfuexI1khZ
+         JT0GDcheJJMGjHwuIx7LM89Ba0h4fSe4DjtbrpvvqiTA7+vPI2Ff5YrvP0ECW9zFHjgb
+         9S8glydrLMFP2Izu3848StaqmjpxP7pTkgkzuINkQCsvNsJFqxO6TZ2lRoTmZoYz61xX
+         SnNsyjA2nh/gc/zgXyPFx94qo+BSDapTmlV4KeBMdEKSZewU3ne86d+G7s/kQY8xl5Od
+         eXng==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 23/30] video: meson: Drop unnecessary header includes
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+References: <20191027155410.187957-1-sjg@chromium.org>
+ <20191027155410.187957-23-sjg@chromium.org>
+ <aa3e6b42-a3f6-bbe1-4d66-02aa1597a2cf@baylibre.com>
+Message-ID: <f62ed074-22b3-3bf3-196e-9446cc9f63d2@baylibre.com>
+Date: Tue, 7 Jan 2020 11:16:01 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Anand Moon <linux.amoon@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+In-Reply-To: <aa3e6b42-a3f6-bbe1-4d66-02aa1597a2cf@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Simon Glass <sjg@chromium.org>, U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Tom Rini <trini@konsulko.com>, Anatolij Gustschin <agust@denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
+On 27/10/2019 18:48, Neil Armstrong wrote:
+> On 27/10/2019 16:54, Simon Glass wrote:
+>> These files should not be included in meson header files. Drop them and
+>> tidy up the affected C files.
+>>
+>> Signed-off-by: Simon Glass <sjg@chromium.org>
+>> ---
+>>
+>>  drivers/video/meson/meson_canvas.c   |  4 ++++
+>>  drivers/video/meson/meson_plane.c    |  5 +++++
+>>  drivers/video/meson/meson_vclk.c     |  2 ++
+>>  drivers/video/meson/meson_venc.c     |  4 ++++
+>>  drivers/video/meson/meson_vpu.c      | 18 +++++++++++++++---
+>>  drivers/video/meson/meson_vpu.h      | 17 +++++------------
+>>  drivers/video/meson/meson_vpu_init.c |  4 ++++
+>>  include/video.h                      |  2 ++
+>>  8 files changed, 41 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/video/meson/meson_canvas.c b/drivers/video/meson/meson_canvas.c
+>> index b71cbfcc0b..eccac2f8f2 100644
+>> --- a/drivers/video/meson/meson_canvas.c
+>> +++ b/drivers/video/meson/meson_canvas.c
+>> @@ -6,6 +6,10 @@
+>>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>>   */
+>>  
+>> +#include <common.h>
+>> +#include <dm.h>
+>> +#include <asm/io.h>
+>> +
+>>  #include "meson_vpu.h"
+>>  
+>>  /* DMC Registers */
+>> diff --git a/drivers/video/meson/meson_plane.c b/drivers/video/meson/meson_plane.c
+>> index 2bc9327e1e..8edf451f13 100644
+>> --- a/drivers/video/meson/meson_plane.c
+>> +++ b/drivers/video/meson/meson_plane.c
+>> @@ -6,6 +6,11 @@
+>>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>>   */
+>>  
+>> +#include <common.h>
+>> +#include <dm.h>
+>> +#include <asm/io.h>
+>> +#include <linux/bitfield.h>
+>> +
+>>  #include "meson_vpu.h"
+>>  
+>>  /* OSDx_BLKx_CFG */
+>> diff --git a/drivers/video/meson/meson_vclk.c b/drivers/video/meson/meson_vclk.c
+>> index 0f628e920b..01bfa4bcb8 100644
+>> --- a/drivers/video/meson/meson_vclk.c
+>> +++ b/drivers/video/meson/meson_vclk.c
+>> @@ -6,6 +6,8 @@
+>>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>>   */
+>>  
+>> +#include <common.h>
+>> +#include <dm.h>
+>>  #include <edid.h>
+>>  #include "meson_vpu.h"
+>>  #include <linux/iopoll.h>
+>> diff --git a/drivers/video/meson/meson_venc.c b/drivers/video/meson/meson_venc.c
+>> index 5da4b3f096..89e859b02a 100644
+>> --- a/drivers/video/meson/meson_venc.c
+>> +++ b/drivers/video/meson/meson_venc.c
+>> @@ -6,7 +6,11 @@
+>>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>>   */
+>>  
+>> +#include <common.h>
+>> +#include <dm.h>
+>>  #include <edid.h>
+>> +#include <fdtdec.h>
+>> +#include <asm/io.h>
+>>  #include "meson_vpu.h"
+>>  
+>>  enum {
+>> diff --git a/drivers/video/meson/meson_vpu.c b/drivers/video/meson/meson_vpu.c
+>> index c3af9b013c..4eb66398d0 100644
+>> --- a/drivers/video/meson/meson_vpu.c
+>> +++ b/drivers/video/meson/meson_vpu.c
+>> @@ -6,13 +6,17 @@
+>>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>>   */
+>>  
+>> -#include "meson_vpu.h"
+>> +#include <common.h>
+>> +#include <display.h>
+>> +#include <dm.h>
+>>  #include <efi_loader.h>
+>> -#include <dm/device-internal.h>
+>> -#include <dm/uclass-internal.h>
+>>  #include <fdt_support.h>
+>>  #include <linux/sizes.h>
+>>  #include <asm/arch/mem.h>
+>> +#include <dm/device-internal.h>
+>> +#include <dm/uclass-internal.h>
+>> +
+>> +#include "meson_vpu.h"
+>>  #include "meson_registers.h"
+>>  #include "simplefb_common.h"
+>>  
+>> @@ -27,6 +31,14 @@ static struct meson_framebuffer {
+>>  	bool is_cvbs;
+>>  } meson_fb = { 0 };
+>>  
+>> +bool meson_vpu_is_compatible(struct meson_vpu_priv *priv,
+>> +			     enum vpu_compatible family)
+>> +{
+>> +	enum vpu_compatible compat = dev_get_driver_data(priv->dev);
+>> +
+>> +	return compat == family;
+>> +}
+>> +
+>>  static int meson_vpu_setup_mode(struct udevice *dev, struct udevice *disp)
+>>  {
+>>  	struct video_uc_platdata *uc_plat = dev_get_uclass_platdata(dev);
+>> diff --git a/drivers/video/meson/meson_vpu.h b/drivers/video/meson/meson_vpu.h
+>> index 0d9fddad2e..d9588c3775 100644
+>> --- a/drivers/video/meson/meson_vpu.h
+>> +++ b/drivers/video/meson/meson_vpu.h
+>> @@ -9,14 +9,12 @@
+>>  #ifndef __MESON_VPU_H__
+>>  #define __MESON_VPU_H__
+>>  
+>> -#include <common.h>
+>> -#include <dm.h>
+>>  #include <video.h>
+>> -#include <display.h>
+>> -#include <linux/io.h>
+>> -#include <linux/bitfield.h>
+>>  #include "meson_registers.h"
+>>  
+>> +struct display_timing;
+>> +struct udevice;
+>> +
+>>  enum {
+>>  	/* Maximum size we support */
+>>  	VPU_MAX_WIDTH		= 3840,
+>> @@ -38,13 +36,8 @@ struct meson_vpu_priv {
+>>  	void __iomem *dmc_base;
+>>  };
+>>  
+>> -static inline bool meson_vpu_is_compatible(struct meson_vpu_priv *priv,
+>> -					   enum vpu_compatible family)
+>> -{
+>> -	enum vpu_compatible compat = dev_get_driver_data(priv->dev);
+>> -
+>> -	return compat == family;
+>> -}
+>> +bool meson_vpu_is_compatible(struct meson_vpu_priv *priv,
+>> +			     enum vpu_compatible family);
+>>  
+>>  #define hhi_update_bits(offset, mask, value) \
+>>  	writel_bits(mask, value, priv->hhi_base + offset)
+>> diff --git a/drivers/video/meson/meson_vpu_init.c b/drivers/video/meson/meson_vpu_init.c
+>> index 12f8c4194a..8408c59eaa 100644
+>> --- a/drivers/video/meson/meson_vpu_init.c
+>> +++ b/drivers/video/meson/meson_vpu_init.c
+>> @@ -8,6 +8,10 @@
+>>  
+>>  #define DEBUG
+>>  
+>> +#include <common.h>
+>> +#include <dm.h>
+>> +#include <asm/io.h>
+>> +
+>>  #include "meson_vpu.h"
+>>  
+>>  /* HHI Registers */
+>> diff --git a/include/video.h b/include/video.h
+>> index 485071d072..e7c58e86cb 100644
+>> --- a/include/video.h
+>> +++ b/include/video.h
+>> @@ -17,6 +17,8 @@
+>>  
+>>  #include <stdio_dev.h>
+>>  
+>> +struct udevice;
+>> +
+>>  struct video_uc_platdata {
+>>  	uint align;
+>>  	uint size;
+>>
+> 
+> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> 
 
-On Thu 26 Dec 2019 at 12:33, Anand Moon <linux.amoon@gmail.com> wrote:
+Applied to u-boot-amlogic
 
-> As per mainline line kernel fix the clk tunnig phase for
-> mmc, set Core=180, Tx=0, Rx=0 clk phase for mmc initialization.
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Changes from previous
-> v2: Fix the clk phase macro to support PHASE_180
->     drop the wrong CLK_CORE_PHASE_MASK macro.
->
-> v1: use the mainline kernel tuning for clk tuning.
-> Fixed the commmit messages.
-> Patch v1:
-> https://patchwork.ozlabs.org/patch/1201208/
->
-> Before these changes.
->     clock is enabled (380953Hz)
->     clock is enabled (25000000Hz)
-> After these changes
->     clock is enabled (380953Hz)
->     clock is enabled (25000000Hz)
->     clock is enabled (52000000Hz)
-> Test on Odroid N2 and Odroid C2 with eMMC and microSD cards
-> ---
->  arch/arm/include/asm/arch-meson/sd_emmc.h | 14 ++++++--------
->  drivers/mmc/meson_gx_mmc.c                |  9 +++++----
->  2 files changed, 11 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/arch/arm/include/asm/arch-meson/sd_emmc.h
-> index e3a72c8b66..ee20c009e2 100644
-> --- a/arch/arm/include/asm/arch-meson/sd_emmc.h
-> +++ b/arch/arm/include/asm/arch-meson/sd_emmc.h
-> @@ -7,6 +7,7 @@
->  #define __SD_EMMC_H__
->  
->  #include <mmc.h>
-> +#include <linux/bitops.h>
->  
->  #define SDIO_PORT_A			0
->  #define SDIO_PORT_B			1
-> @@ -19,14 +20,11 @@
->  #define   CLK_MAX_DIV			63
->  #define   CLK_SRC_24M			(0 << 6)
->  #define   CLK_SRC_DIV2			(1 << 6)
-> -#define   CLK_CO_PHASE_000		(0 << 8)
-> -#define   CLK_CO_PHASE_090		(1 << 8)
-> -#define   CLK_CO_PHASE_180		(2 << 8)
-> -#define   CLK_CO_PHASE_270		(3 << 8)
-> -#define   CLK_TX_PHASE_000		(0 << 10)
-> -#define   CLK_TX_PHASE_090		(1 << 10)
-> -#define   CLK_TX_PHASE_180		(2 << 10)
-> -#define   CLK_TX_PHASE_270		(3 << 10)
-> +
-> +#define   CLK_PHASE_180 		2
-> +#define   CLK_TX_PHASE_MASK		GENMASK(11, 10)
-> +#define   CLK_RX_PHASE_MASK		GENMASK(13, 12)
-> +
->  #define   CLK_ALWAYS_ON			BIT(24)
->  
->  #define MESON_SD_EMMC_CFG		0x44
-> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-> index 86c1a7164a..ad697d3a5e 100644
-> --- a/drivers/mmc/meson_gx_mmc.c
-> +++ b/drivers/mmc/meson_gx_mmc.c
-> @@ -52,10 +52,11 @@ static void meson_mmc_config_clock(struct mmc *mmc)
->  	clk_div = DIV_ROUND_UP(clk, mmc->clock);
->  
->  	/* 180 phase core clock */
-> -	meson_mmc_clk |= CLK_CO_PHASE_180;
-> -
-> -	/* 180 phase tx clock */
-> -	meson_mmc_clk |= CLK_TX_PHASE_000;
-> +	meson_mmc_clk |= CLK_PHASE_180;
-> +	/* 000 phase rx clock */
-> +	meson_mmc_clk |= CLK_RX_PHASE_MASK;
-> +	/* 000 phase tx clock */
-> +	meson_mmc_clk |= CLK_TX_PHASE_MASK;
-
-The comment on your previous version seemed correct but I think what you
-have implemented here is still not doing what you expect.
-
->  
->  	/* clock settings */
->  	meson_mmc_clk |= clk_src;
-
+Neil
