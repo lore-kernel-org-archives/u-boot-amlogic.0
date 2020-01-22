@@ -1,89 +1,201 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web09.1777.1578527756170356448
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web11.10090.1579695292931062355
  for <u-boot-amlogic@groups.io>;
- Wed, 08 Jan 2020 15:55:56 -0800
-Received: by mail-qk1-f169.google.com with SMTP id z14so4385094qkg.9
-        for <u-boot-amlogic@groups.io>; Wed, 08 Jan 2020 15:55:56 -0800 (PST)
+ Wed, 22 Jan 2020 04:14:53 -0800
+Received: by mail-wm1-f65.google.com with SMTP id p17so6954166wma.1
+        for <u-boot-amlogic@groups.io>; Wed, 22 Jan 2020 04:14:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=12Kh+trt1O5KSN7kqgDm/Xgj1Wutl+gcDlDfzfMEK4o=;
-        b=N8jzbLsev4L24Gz48jYY+ViEMtmnfRjykqhaMwufVAf8ptiz6uz6rZN1AAufmzWusg
-         sVo3sln2cOesSjJUONeRYPFA0qDbbNhxKYqqGMRubg15exUKtpaamgdjIhTxbaNedOP7
-         JmqnBAt4g+UwGvXbq083dloJorUbBlcM+DY5s=
-Return-Path: <trini@konsulko.com>
-Date: Wed, 8 Jan 2020 18:55:52 -0500
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20200108
-Message-ID: <20200108235552.GV31026@bill-the-cat>
-References: <107d6eb8-08a8-fe3e-7c48-5c66fc6d28c5@baylibre.com>
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:autocrypt:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WHy1tX5IUsFGjI2PYfYSisThb4lwVqV3wytUZ33t73M=;
+        b=YvT3uZ4MQnEsruIpjlxLLSwYz4PXatGVwHusjnx7Msyc2FMvY+FGGePNNEutsEmxND
+         NdadAq168AYsMsl3MGE4cGI44+pPaeAR3av/kPwp/F1BQiXhPayy25V+m6MitFJUad4u
+         oPB8/pYR4oTFZ7jbIOTmJnAINKdoihlG/QNs6kXMCZeOGvBVKuHvK6gWH3xnT42Zs0FN
+         2uSy0vqIpng9ovnXTj7qJU8g5LReTAhd2kQYsS+Zb+b6+ZDe8eQKV9F80M0TXg1GihgP
+         CAXghRSSjgdux05yr2FhMoZZ9CqymqI+Vu4QUykUttQlMMkQFYZRjIJNMtVlpoIe6L8o
+         Xnng==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [Patchv4 2/3] arm: dts: Add mmc alias to avoid warning
+References: <20200122120620.8699-1-linux.amoon@gmail.com>
+ <20200122120620.8699-3-linux.amoon@gmail.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <46a960a2-67a6-dd78-54bf-94b8b33bc197@baylibre.com>
+Date: Wed, 22 Jan 2020 13:14:50 +0100
 MIME-Version: 1.0
-In-Reply-To: <107d6eb8-08a8-fe3e-7c48-5c66fc6d28c5@baylibre.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aYKnuo739dxkFWAR"
-Content-Disposition: inline
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+In-Reply-To: <20200122120620.8699-3-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Anand Moon <linux.amoon@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Peng Fan <peng.fan@nxp.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
---aYKnuo739dxkFWAR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 08, 2020 at 01:58:36PM +0100, Neil Armstrong wrote:
+Hi,
 
-> Hi Tom,
->=20
-> This PR adds more support for the Khadas VIM3L, variant of VIM3 but
-> using the Amlogic SM1 S905D3 SoC, plus various small fixes.
->=20
-> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/1780
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit 0b0c6af38738f2c132cfd41a240889acaa031c=
-8f:
->=20
->   Prepare v2020.01 (2020-01-06 15:56:31 -0500)
->=20
-> are available in the Git repository at:
->=20
->   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20200108
->=20
-> for you to fetch changes up to 262d34363373c10a00279036c1561283c30495c2:
->=20
->   board: amlogic: select PWRSEQ for all amlogic platform (2020-01-07 14:5=
-0:41 +0100)
->=20
+On 22/01/2020 13:06, Anand Moon wrote:
+> Add missing mmc alias to dts nodes to avoid
+> below debug warning.
+> 
+> mmc_bind: alias ret=-2, devnum=-1
+> mmc_bind: alias ret=-2, devnum=-1
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm/dts/meson-axg-s400.dts               | 2 ++
+>  arch/arm/dts/meson-g12a-sei510.dts            | 3 +++
+>  arch/arm/dts/meson-g12a-u200.dts              | 3 +++
+>  arch/arm/dts/meson-g12b-odroid-n2.dts         | 3 +++
+>  arch/arm/dts/meson-gxbb-odroidc2.dts          | 3 +++
+>  arch/arm/dts/meson-gxbb-p20x.dtsi             | 3 +++
+>  arch/arm/dts/meson-gxl-s805x-libretech-ac.dts | 3 +++
+>  arch/arm/dts/meson-gxl-s905x-p212.dtsi        | 3 +++
+>  arch/arm/dts/meson-gxm-khadas-vim2.dts        | 3 +++
+>  arch/arm/dts/meson-sm1-sei610.dts             | 3 +++
+>  10 files changed, 29 insertions(+)
+> 
+> diff --git a/arch/arm/dts/meson-axg-s400.dts b/arch/arm/dts/meson-axg-s400.dts
+> index 18778ada7b..b0192a9720 100644
+> --- a/arch/arm/dts/meson-axg-s400.dts
+> +++ b/arch/arm/dts/meson-axg-s400.dts
+> @@ -58,6 +58,8 @@
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		serial1 = &uart_A;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	linein: audio-codec@0 {
+> diff --git a/arch/arm/dts/meson-g12a-sei510.dts b/arch/arm/dts/meson-g12a-sei510.dts
+> index c7a8736885..0e6378a320 100644
+> --- a/arch/arm/dts/meson-g12a-sei510.dts
+> +++ b/arch/arm/dts/meson-g12a-sei510.dts
+> @@ -31,6 +31,9 @@
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	mono_dac: audio-codec-0 {
+> diff --git a/arch/arm/dts/meson-g12a-u200.dts b/arch/arm/dts/meson-g12a-u200.dts
+> index 8551fbd4a4..88b4d365f8 100644
+> --- a/arch/arm/dts/meson-g12a-u200.dts
+> +++ b/arch/arm/dts/meson-g12a-u200.dts
+> @@ -16,6 +16,9 @@
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm/dts/meson-g12b-odroid-n2.dts b/arch/arm/dts/meson-g12b-odroid-n2.dts
+> index 42f1540575..888429b1cc 100644
+> --- a/arch/arm/dts/meson-g12b-odroid-n2.dts
+> +++ b/arch/arm/dts/meson-g12b-odroid-n2.dts
+> @@ -18,6 +18,9 @@
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm/dts/meson-gxbb-odroidc2.dts b/arch/arm/dts/meson-gxbb-odroidc2.dts
+> index 54954b314a..1436002013 100644
+> --- a/arch/arm/dts/meson-gxbb-odroidc2.dts
+> +++ b/arch/arm/dts/meson-gxbb-odroidc2.dts
+> @@ -17,6 +17,9 @@
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm/dts/meson-gxbb-p20x.dtsi b/arch/arm/dts/meson-gxbb-p20x.dtsi
+> index 0be0f2a5d2..d55f5e1abb 100644
+> --- a/arch/arm/dts/meson-gxbb-p20x.dtsi
+> +++ b/arch/arm/dts/meson-gxbb-p20x.dtsi
+> @@ -11,6 +11,9 @@
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+> index 82b1c48511..6422e11e5e 100644
+> --- a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+> +++ b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+> @@ -20,6 +20,9 @@
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+>  		spi0 = &spifc;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm/dts/meson-gxl-s905x-p212.dtsi b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+> index a1b31013ab..d712e9fa1d 100644
+> --- a/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+> +++ b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+> @@ -17,6 +17,9 @@
+>  		serial0 = &uart_AO;
+>  		serial1 = &uart_A;
+>  		ethernet0 = &ethmac;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm/dts/meson-gxm-khadas-vim2.dts b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+> index 782e9edac8..723061f0e2 100644
+> --- a/arch/arm/dts/meson-gxm-khadas-vim2.dts
+> +++ b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+> @@ -20,6 +20,9 @@
+>  		serial0 = &uart_AO;
+>  		serial1 = &uart_A;
+>  		serial2 = &uart_AO_B;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm/dts/meson-sm1-sei610.dts b/arch/arm/dts/meson-sm1-sei610.dts
+> index 3435aaa4e8..3aafc20ccd 100644
+> --- a/arch/arm/dts/meson-sm1-sei610.dts
+> +++ b/arch/arm/dts/meson-sm1-sei610.dts
+> @@ -17,6 +17,9 @@
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+> +		mmc0 = &sd_emmc_a;
+> +		mmc1 = &sd_emmc_b;
+> +		mmc2 = &sd_emmc_c;
+>  	};
+>  
+>  	chosen {
+> 
 
-Applied to u-boot/master, thanks!
+Since it's not a linux binding but u-boot specific, please move these to the -u-boot.dtsi instead
 
---=20
-Tom
-
---aYKnuo739dxkFWAR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6HLbQJwaaH776GM2h/n2NdMddlIFAl4WbAQACgkQh/n2NdMd
-dlIE7Q/9FZmkxBUqGS8S3f6CrSkfP0P+n/5Zdyfb8whdN97S0G34hOMauQIiHKpb
-yqkAARSsoDKs6fIb9uhrGafZrd7tULdGMtc9dQOb8fJOnkWpL4U1wloYzIMQ4Ppj
-cWI7BhJArWRTBi2AlBFfAOE1Mwm3163/rrE7Hh1ulLOlSYgFHDniLqmJL00aYtNq
-biZFgDQvYdOIW1s1HOAZ0nJ/prst1ccEGlhwtSY1mrsfTF9fSMd5tOupGSm7Gf9N
-W5E2jsFHTih3G1e7VY8dhMVOfA39LHHetGOyjztFjfPUpWCHsAI5BjKp591jS8zZ
-9prQob/NbxWltZtZWPX3FMuuc1R9VThBTWzq2s6yiB3SCN1IydSdMDRiXS7C8utp
-myiuuEjdv/msH3FaWbM+T60m28f0Po4EiMs7wKDqu+adyJ982hoAfF3I08jbTI20
-/1JRSsf0ROKvIG/Yvkr9rMNuVoekDbTcNqAlmGhGueio+v1nZKcGb/OrDXU0vpoK
-W0Oz43Wr6sD/xwRooU3KQ1sXwLSg5AIlg5xIYElHiMXx2jyQEQjmySfCLsFlzjpT
-xB3cYJ7KSaerHz8dCpDbOmnN8uWYhUzYeQdUVWP9r7qEyARJ4OYUX4CqKmVEP9mL
-Cxcbl1YqRN2MXofNhJjRcvm9rQZjBjC4p934IAkH7Pv8Uba/0js=
-=SXX2
------END PGP SIGNATURE-----
-
---aYKnuo739dxkFWAR--
+Neil
