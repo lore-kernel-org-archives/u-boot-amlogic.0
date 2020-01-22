@@ -1,32 +1,70 @@
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
- by mx.groups.io with SMTP id smtpd.web09.27371.1578861010780696690
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
+ by mx.groups.io with SMTP id smtpd.web12.9994.1579694786974598198
  for <u-boot-amlogic@groups.io>;
- Sun, 12 Jan 2020 12:30:11 -0800
-Date: Sun, 12 Jan 2020 21:29:57 +0100
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 29/33] dm: core: Require users of devres to include the header
-Message-ID: <20200112212957.44f7e1f0@crub>
-In-Reply-To: <20200112120216.29.I451105ed1149334d1ef6eca303eede6e56b833d1@changeid>
-References: <20200112190624.79077-1-sjg@chromium.org>
-	<20200112120216.29.I451105ed1149334d1ef6eca303eede6e56b833d1@changeid>
+ Wed, 22 Jan 2020 04:06:27 -0800
+Received: by mail-pj1-f68.google.com with SMTP id r67so3105995pjb.0
+        for <u-boot-amlogic@groups.io>; Wed, 22 Jan 2020 04:06:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bNJkc0DRqOQUAZwb5/Ovox4UoqUc1nROkfZdgEwZmrM=;
+        b=FS9Lg4PQdFUzHOK2nRf2rf4rDKo2Mwx/AzWVb+CB3SVWTOCYVUOSZqkaJdzubTWULV
+         9KPjefMfTrTHt5iYBmJM/BldFf/rCyeneUJwX3aCAp7h/5+z3Q7GvmzyXOY8lzP3+cYm
+         Cyd90uj1HKHi8ePRSZwfJO6aMrxEToZS5a4a7VV/JnkvCml+RXMnvVEsOg++lJc68Xsw
+         4bryWaeSdEvQBDlvoIoEKoRr7Jidd4K8WvNQq2gF0Bw8W5a1lRm6GDmQMimHOcHAHBlm
+         cDIa5+XtKko80JYBwlQ/ujIN248eO1PZ78KNuzMC7kleBd/DbEfh2bHwFm/C+Me0CLsp
+         +7BQ==
+Return-Path: <linux.amoon@gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [Patchv4 0/3] Odroid n2 using eMMC would fail to boot up
+Date: Wed, 22 Jan 2020 12:06:17 +0000
+Message-Id: <20200122120620.8699-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Adam Ford <aford173@gmail.com>, Alexander Graf <agraf@csgraf.de>, Andre Przywara <andre.przywara@arm.com>, Andreas Dannenberg <dannenberg@ti.com>, "Andrew F. Davis" <afd@ti.com>, Andy Yan <andy.yan@rock-chips.com>, Anup Patel <Anup.Patel@wdc.com>, Atish Patra <atish.patra@wdc.com>, Bin Meng <bmeng.cn@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@kaod.org>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, "Derald D. Woods" <woods.technical@gmail.com>, Eddie James <eajames@linux.ibm.com>, Eugen Hristev <eugen.hristev@microchip.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Fabien Dessenne <fabien.dessenne@st.com>, Fabio Estevam <festevam@gmail.com>, Faiz Abbas <faiz_abbas@ti.com>, Frank Wunderlich <frank-w@public-files.de>, Fugang Duan <fugang.duan@nxp.com>, GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Heiko Schocher <hs@denx.de>, Heiko Stuebner <heiko.stuebner@theobroma-systems.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Horatiu Vultur <horatiu.vultur@microchip.com>, Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>, Jens Wiklander <jens.wiklander@linaro.org>, Joe Hershberger <joe.hershberger@ni.com>, Joel Stanley <joel@jms.id.au>, Keerthy <j-keerthy@ti.com>, Kever Yang <kever.yang@rock-chips.com>, Kyungmin Park <kmpark@infradead.org>, Lars Povlsen <lars.povlsen@microchip.com>, Levin Du <djw@t-chip.com.cn>, Lokesh Vutla <lokeshvutla@ti.com>, Lukas Auer <lukas.auer@aisec.fraunhofer.de>, Lukasz Majewski <lukma@denx.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Marek Vasut <marek.vasut@gmail.com>, Marek Vasut <marex@denx.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Michal Suchanek <msuchanek@suse.de>, Miquel Raynal <miquel.raynal@bootlin.com>, "NXP i.MX U-Boot Team  <uboot-imx@nxp.com>, Neil Armstrong <narmstrong@baylibre.com>, Nishanth Menon" <nm@ti.com>, Patrice Chotard <patrice.chotard@st.com>, Patrick Delaunay <patrick.delaunay@st.com>, Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Philippe Reynes <philippe.reynes@softathome.com>, Priyanka Jain <priyanka.jain@nxp.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Ramon Fried <rfried.dev@gmail.com>, Rick Chen <rick@andestech.com>, Roger Quadros <rogerq@ti.com>, Ryder Lee <ryder.lee@mediatek.com>, Sagar Shrikant Kadam <sagar.kadam@sifive.com>, Sekhar Nori <nsekhar@ti.com>, Sergey Kubushyn <ksi@koi8.net>, Sherry Sun <sherry.sun@nxp.com>, Shyam Saini <shyam.saini@amarulasolutions.com>, Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Stefan Agner <stefan.agner@toradex.com>, Stefan Roese <sr@denx.de>, Stefano Babic <sbabic@denx.de>, Suman Anna <s-anna@ti.com>, T Karthik Reddy <t.karthik.reddy@xilinx.com>, Trent Piepho <tpiepho@impinj.com>, Vignesh R <vigneshr@ti.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Weijie Gao <weijie.gao@mediatek.com>, William Zhang <william.zhang@broadcom.com>, Ye Li <ye.li@nxp.com>, titron <tiezhuang.dong.yh@renesas.com>, u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com, =?UTF-8?B?6buY6buY?= <wangqiang1588@sina.com>
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Peng Fan <peng.fan@nxp.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On Sun, 12 Jan 2020 12:06:20 -0700
-Simon Glass sjg@chromium.org wrote:
+Here are some small changes to fix booting of Odroid N2 using eMMC.
+Fixed the clk tunnig during mmc initialization.
+Added two new patches to fix warning
 
-> At present devres.h is included in all files that include dm.h but few
-> make use of it. Also this pulls in linux/compat which adds several more
-> headers. Drop the automatic inclusion and require files to include devres
-> themselves. This provides a good indication of which files use devres.
-> 
-> Signed-off-by: Simon Glass <sjg@chromium.org>
+Build and tested on top of below patches
+[0] https://patchwork.ozlabs.org/patch/1213648/
+[1] https://patchwork.ozlabs.org/patch/1213650/
 
-Reviewed-by: Anatolij Gustschin <agust@denx.de>
+Tested on below eMMC module on Odroid N2 and C2
+new orange - eMMC AJNB4R 14.6 GiB MMC 5.1
+old back   - eMMC CGND3R 58.2 GiB MMC 5.0
 
---
-Anatolij
+Prevoius changes: 
+Fixed the clk tuning as per mainline kernel
+
+[3]v1 https://patchwork.ozlabs.org/cover/1201206/
+[4]v2 https://patchwork.ozlabs.org/cover/1215217/
+[5]v3 https://www.mail-archive.com/u-boot@lists.denx.de/msg351859.html
+
+-Anand
+
+Anand Moon (3):
+  mmc: meson-gx: Fix clk phase tuning for MMC
+  arm: dts: Add mmc alias to avoid warning
+  arm: dts: Add cd-gpio for eMMC
+
+ arch/arm/dts/meson-axg-s400.dts               |  2 +
+ arch/arm/dts/meson-g12a-sei510.dts            |  3 ++
+ arch/arm/dts/meson-g12a-u200.dts              |  3 ++
+ arch/arm/dts/meson-g12b-odroid-n2.dts         |  4 ++
+ arch/arm/dts/meson-gxbb-odroidc2.dts          |  3 ++
+ arch/arm/dts/meson-gxbb-p20x.dtsi             |  3 ++
+ arch/arm/dts/meson-gxl-s805x-libretech-ac.dts |  3 ++
+ arch/arm/dts/meson-gxl-s905x-p212.dtsi        |  3 ++
+ arch/arm/dts/meson-gxm-khadas-vim2.dts        |  3 ++
+ arch/arm/dts/meson-sm1-sei610.dts             |  3 ++
+ arch/arm/include/asm/arch-meson/sd_emmc.h     | 11 ++----
+ drivers/mmc/meson_gx_mmc.c                    | 38 ++++++++++++++++---
+ 12 files changed, 65 insertions(+), 14 deletions(-)
+
+-- 
+2.25.0
+
