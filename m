@@ -1,25 +1,25 @@
-Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
- by mx.groups.io with SMTP id smtpd.web11.345.1580742824699472352
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+ by mx.groups.io with SMTP id smtpd.web09.335.1580742830341420470
  for <u-boot-amlogic@groups.io>;
- Mon, 03 Feb 2020 07:13:44 -0800
-Received: by mail-pg1-f193.google.com with SMTP id 6so8001146pgk.0
-        for <u-boot-amlogic@groups.io>; Mon, 03 Feb 2020 07:13:44 -0800 (PST)
+ Mon, 03 Feb 2020 07:13:50 -0800
+Received: by mail-pl1-f193.google.com with SMTP id a6so5980191plm.3
+        for <u-boot-amlogic@groups.io>; Mon, 03 Feb 2020 07:13:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=qAKTqMqw+UO/u9cpNO61qHuN1v/CrUpnvcUN/hzj1E0=;
-        b=t6nu+EnZMFj3/amIUMbQTkpHLI3FMKdqFltUNWvZLq/Cj8vmxSi4W5GUEuRJWdSEU1
-         QSzjTcLwP3Q9MQNJlBgc4v665Vv7P0IvLVXDjMUgI+tIrvtO0Ny0A7Z5sxL+WqTOfOlR
-         rgFAq/SOiHPSqhvL2d2YgxhZckh26w8ai+Sz5U6nSxQitXsoYlz1LMHRSWnGD3vOSeNc
-         mkt0beMauXsEJkoXoro/py46+1rWkKQm5fb13rfTmKEgBBE+1UfA6gDQ1byWhcXWzqDU
-         A9X6GvPVgJjANNte+EXdO+PcYhYkFTw/qecYQVy5KT/6Awl4zNmao7SZL58ymJUhhAAm
-         phRA==
+        bh=huudZzwu3Yl/gDTN6kJsoLrBVTNjt0FX0UnzIBynbL0=;
+        b=b3UJIxg1nvUCOVU4paiGsJu58tzRWDkIT0MWirs7u8RQMhqTMwlGkMzH5Q4QhmV8tR
+         01WrJz/iYbDlPL2MnM/70FSV1BRZeRbsElJHz+M4Ggm/YKKJ1l9+vjO7FD95TcJ5t43c
+         6dmZhQLK9AD99fIazwEbX9ISeIvFYX8NhL/FWX8XmZ/v4DT3p6sC66BVm8xk9lCHhkta
+         HFstY6Mw/pSGSjcPxLaDzfs/D1PBfRDZJ50qOWZ0wLqNNJZk9ZVks070fRfqG3/hr90m
+         UDJNvSaw25gMB1GQnU9ZVHVWECAABal2e+2p2qNf5kxflzKnNrZa/p/ds2DDHo8HbySh
+         BD4Q==
 Return-Path: <linux.amoon@gmail.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv5 2/5] mmc: meson-gx: Use proper compatible string as per the dts
-Date: Mon,  3 Feb 2020 15:13:20 +0000
-Message-Id: <20200203151323.4615-3-linux.amoon@gmail.com>
+Subject: [PATCHv5 4/5] arm: dts: g12: Move common nodes to the -u-boot.dtsi
+Date: Mon,  3 Feb 2020 15:13:22 +0000
+Message-Id: <20200203151323.4615-5-linux.amoon@gmail.com>
 In-Reply-To: <20200203151323.4615-1-linux.amoon@gmail.com>
 References: <20200203151323.4615-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
@@ -27,143 +27,159 @@ Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Jaehoon Chung <jh80.chung@samsung.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Use proper compatible string as per the dts so that mmc driver
-could be tuned properly. SoC family S905, S905X have common clk
-tuning parameters setting, while AGX and G12 have common clk tuning
-parameters setting for mmc driver.
+Move u-boot specific common nodes in the dts files to
+meson-g12-common-u-boot.dtsi. This allows us to keep the basic
+dts[i] files up-to-date with the ones in kernel,
+but at the same time allowing the u-boot to add its own
+properties to the existing nodes.
+Also add missing mmc alias to dts nodes to avoid
+below debug warning.
 
-Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
+mmc_bind: alias ret=-2, devnum=-1
+mmc_bind: alias ret=-2, devnum=-1
+
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
-New patch in this series.
+New patch in this series
 ---
----
- arch/arm/include/asm/arch-meson/sd_emmc.h |  7 +++
- drivers/mmc/meson_gx_mmc.c                | 62 +++++++++++++++--------
- 2 files changed, 49 insertions(+), 20 deletions(-)
+ arch/arm/dts/meson-g12-common-u-boot.dtsi | 12 ++++++++++++
+ arch/arm/dts/meson-g12a-sei510.dts        |  9 ---------
+ arch/arm/dts/meson-g12a-u200.dts          |  9 ---------
+ arch/arm/dts/meson-g12b-odroid-n2.dts     |  9 ---------
+ arch/arm/dts/meson-khadas-vim3.dtsi       |  9 ---------
+ arch/arm/dts/meson-sm1-sei610.dts         |  9 ---------
+ 6 files changed, 12 insertions(+), 45 deletions(-)
 
-diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/arch/arm/include/asm/arch-meson/sd_emmc.h
-index b7a99947b3..bb48b97ed1 100644
---- a/arch/arm/include/asm/arch-meson/sd_emmc.h
-+++ b/arch/arm/include/asm/arch-meson/sd_emmc.h
-@@ -13,6 +13,12 @@
- #define SDIO_PORT_B			1
- #define SDIO_PORT_C			2
- 
-+enum mmc_compatible {
-+	MMC_COMPATIBLE_GXBB,
-+	MMC_COMPATIBLE_GX,
-+	MMC_COMPATIBLE_AXG,
-+};
+diff --git a/arch/arm/dts/meson-g12-common-u-boot.dtsi b/arch/arm/dts/meson-g12-common-u-boot.dtsi
+index 38fd3d3feb..347b8ded22 100644
+--- a/arch/arm/dts/meson-g12-common-u-boot.dtsi
++++ b/arch/arm/dts/meson-g12-common-u-boot.dtsi
+@@ -8,6 +8,18 @@
+ 	soc {
+ 		u-boot,dm-pre-reloc;
+ 	};
 +
- #define SD_EMMC_CLKSRC_24M		24000000	/* 24 MHz */
- #define SD_EMMC_CLKSRC_DIV2		1000000000	/* 1 GHz */
- 
-@@ -91,6 +97,7 @@
- struct meson_mmc_platdata {
- 	struct mmc_config cfg;
- 	struct mmc mmc;
-+	int compat;
- 	void *regbase;
- 	void *w_buf;
- };
-diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-index 03fb70e717..bf613e00ca 100644
---- a/drivers/mmc/meson_gx_mmc.c
-+++ b/drivers/mmc/meson_gx_mmc.c
-@@ -37,7 +37,8 @@ static inline void meson_write(struct mmc *mmc, uint32_t val, int offset)
- 	writel(val, get_regbase(mmc) + offset);
- }
- 
--static void meson_mmc_config_clock(struct mmc *mmc)
-+static void meson_mmc_config_clock(struct mmc *mmc,
-+				   struct meson_mmc_platdata *pdata)
- {
- 	uint32_t meson_mmc_clk = 0;
- 	unsigned int clk, clk_src, clk_div;
-@@ -66,22 +67,28 @@ static void meson_mmc_config_clock(struct mmc *mmc)
- 	/* RX clock phase 0:180 */
- 	meson_mmc_clk |= FIELD_PREP(CLK_RX_PHASE_MASK, CLK_PHASE_0);
- 
--#ifdef CONFIG_MESON_GX
--	/* TX clock delay line */
--	meson_mmc_clk |= CLK_V2_TX_DELAY_MASK;
--	/* RX clock delay line */
--	meson_mmc_clk |= CLK_V2_RX_DELAY_MASK;
--	/* clk always on */
--	meson_mmc_clk |= CLK_V2_ALWAYS_ON;
--#endif
--#if (defined(CONFIG_MESON_AXG) || defined(CONFIG_MESON_G12A))
--	/* TX clock delay line */
--	meson_mmc_clk |= CLK_V3_TX_DELAY_MASK;
--	/* RX clock delay line */
--	meson_mmc_clk |= CLK_V3_RX_DELAY_MASK;
--	/* clk always on */
--	meson_mmc_clk |= CLK_V3_ALWAYS_ON;
--#endif
-+	switch (pdata->compat) {
-+	case MMC_COMPATIBLE_GXBB:
-+	case MMC_COMPATIBLE_GX:
-+		/* TX clock delay line */
-+		meson_mmc_clk |= CLK_V2_TX_DELAY_MASK;
-+		/* RX clock delay line */
-+		meson_mmc_clk |= CLK_V2_RX_DELAY_MASK;
-+		/* clk always on */
-+		meson_mmc_clk |= CLK_V2_ALWAYS_ON;
-+		break;
-+	case MMC_COMPATIBLE_AXG:
-+		/* TX clock delay line */
-+		meson_mmc_clk |= CLK_V3_TX_DELAY_MASK;
-+		/* RX clock delay line */
-+		meson_mmc_clk |= CLK_V3_RX_DELAY_MASK;
-+		/* clk always on */
-+		meson_mmc_clk |= CLK_V3_ALWAYS_ON;
-+		break;
-+	default:
-+		debug("no compatible supported");
-+		break;
-+	}
- 
- 	/* clock settings */
- 	meson_mmc_clk |= clk_src;
-@@ -93,9 +100,11 @@ static void meson_mmc_config_clock(struct mmc *mmc)
- static int meson_dm_mmc_set_ios(struct udevice *dev)
- {
- 	struct mmc *mmc = mmc_get_mmc_dev(dev);
-+	struct meson_mmc_platdata *pdata =
-+		(struct meson_mmc_platdata *)dev_get_driver_data(dev);
- 	uint32_t meson_mmc_cfg;
- 
--	meson_mmc_config_clock(mmc);
-+	meson_mmc_config_clock(mmc, pdata);
- 
- 	meson_mmc_cfg = meson_read(mmc, MESON_SD_EMMC_CFG);
- 
-@@ -332,9 +341,22 @@ int meson_mmc_bind(struct udevice *dev)
- 	return mmc_bind(dev, &pdata->mmc, &pdata->cfg);
- }
- 
-+static const struct meson_mmc_platdata gxbb_data = {
-+	.compat = MMC_COMPATIBLE_GXBB,
-+};
++	aliases {
++		serial0 = &uart_AO;
++		ethernet0 = &ethmac;
++		mmc0 = &sd_emmc_a;
++		mmc1 = &sd_emmc_b;
++		mmc2 = &sd_emmc_c;
++	};
 +
-+static const struct meson_mmc_platdata gx_data = {
-+	.compat = MMC_COMPATIBLE_GX,
-+};
-+
-+static const struct meson_mmc_platdata axg_data = {
-+	.compat = MMC_COMPATIBLE_AXG,
-+};
-+
- static const struct udevice_id meson_mmc_match[] = {
--	{ .compatible = "amlogic,meson-gx-mmc" },
--	{ .compatible = "amlogic,meson-axg-mmc" },
-+	{ .compatible = "amlogic,meson-gxbb-mmc", .data = (ulong)&gxbb_data },
-+	{ .compatible = "amlogic,meson-gx-mmc",	.data = (ulong)&gx_data },
-+	{ .compatible = "amlogic,meson-axg-mmc", .data = (ulong)&axg_data },
- 	{ /* sentinel */ }
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
  };
  
+ &canvas {
+diff --git a/arch/arm/dts/meson-g12a-sei510.dts b/arch/arm/dts/meson-g12a-sei510.dts
+index c7a8736885..c6a48ebbe5 100644
+--- a/arch/arm/dts/meson-g12a-sei510.dts
++++ b/arch/arm/dts/meson-g12a-sei510.dts
+@@ -28,11 +28,6 @@
+ 		};
+ 	};
+ 
+-	aliases {
+-		serial0 = &uart_AO;
+-		ethernet0 = &ethmac;
+-	};
+-
+ 	mono_dac: audio-codec-0 {
+ 		compatible = "maxim,max98357a";
+ 		#sound-dai-cells = <0>;
+@@ -49,10 +44,6 @@
+ 		sound-name-prefix = "MIC";
+ 	};
+ 
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+ 	cvbs-connector {
+ 		compatible = "composite-video-connector";
+ 
+diff --git a/arch/arm/dts/meson-g12a-u200.dts b/arch/arm/dts/meson-g12a-u200.dts
+index 8551fbd4a4..8be7b6985b 100644
+--- a/arch/arm/dts/meson-g12a-u200.dts
++++ b/arch/arm/dts/meson-g12a-u200.dts
+@@ -13,15 +13,6 @@
+ 	compatible = "amlogic,u200", "amlogic,g12a";
+ 	model = "Amlogic Meson G12A U200 Development Board";
+ 
+-	aliases {
+-		serial0 = &uart_AO;
+-		ethernet0 = &ethmac;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+ 	cvbs-connector {
+ 		compatible = "composite-video-connector";
+ 
+diff --git a/arch/arm/dts/meson-g12b-odroid-n2.dts b/arch/arm/dts/meson-g12b-odroid-n2.dts
+index 42f1540575..a37f66a5e0 100644
+--- a/arch/arm/dts/meson-g12b-odroid-n2.dts
++++ b/arch/arm/dts/meson-g12b-odroid-n2.dts
+@@ -15,15 +15,6 @@
+ 	compatible = "hardkernel,odroid-n2", "amlogic,g12b";
+ 	model = "Hardkernel ODROID-N2";
+ 
+-	aliases {
+-		serial0 = &uart_AO;
+-		ethernet0 = &ethmac;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
+diff --git a/arch/arm/dts/meson-khadas-vim3.dtsi b/arch/arm/dts/meson-khadas-vim3.dtsi
+index 8647da7d66..c6b0ce9a88 100644
+--- a/arch/arm/dts/meson-khadas-vim3.dtsi
++++ b/arch/arm/dts/meson-khadas-vim3.dtsi
+@@ -11,15 +11,6 @@
+ / {
+ 	model = "Khadas VIM3";
+ 
+-	aliases {
+-		serial0 = &uart_AO;
+-		ethernet0 = &ethmac;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+diff --git a/arch/arm/dts/meson-sm1-sei610.dts b/arch/arm/dts/meson-sm1-sei610.dts
+index 3435aaa4e8..4372708811 100644
+--- a/arch/arm/dts/meson-sm1-sei610.dts
++++ b/arch/arm/dts/meson-sm1-sei610.dts
+@@ -14,15 +14,6 @@
+ 	compatible = "seirobotics,sei610", "amlogic,sm1";
+ 	model = "SEI Robotics SEI610";
+ 
+-	aliases {
+-		serial0 = &uart_AO;
+-		ethernet0 = &ethmac;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+ 	emmc_pwrseq: emmc-pwrseq {
+ 		compatible = "mmc-pwrseq-emmc";
+ 		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
 -- 
 2.25.0
 
