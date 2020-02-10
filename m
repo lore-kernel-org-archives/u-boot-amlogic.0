@@ -1,185 +1,306 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web11.6994.1581253698489429774
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web12.19142.1581323098944521129
  for <u-boot-amlogic@groups.io>;
- Sun, 09 Feb 2020 05:08:18 -0800
-Received: by mail-wm1-f68.google.com with SMTP id a9so7534916wmj.3
-        for <u-boot-amlogic@groups.io>; Sun, 09 Feb 2020 05:08:18 -0800 (PST)
+ Mon, 10 Feb 2020 00:24:59 -0800
+Received: by mail-wm1-f65.google.com with SMTP id g1so8790621wmh.4
+        for <u-boot-amlogic@groups.io>; Mon, 10 Feb 2020 00:24:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding;
-        bh=p8eLy3K9qAh3x+hyyWXY68mTg0TrSrqi9GAIbz74TkE=;
-        b=yiprXa5umHZJCsOkgtYqSjiZ3Hf9m4amEdwtghdDOvHfXjX5DidD1s7a4p7ruIMY4v
-         Hz2/g3jaP8zyoP80ChqmmrzoGzfWq6cFLlkM0IwspITbyphHuO0NDm2mpialBg7Kuc0w
-         7Ow4qOZD2oHV9oNSZAEeJv9hWCxbf/MbPyUnb/cJuQAzirQTxRFytQ4lURy95WkOD7+W
-         Q907HYjdoXUf3YT6wIOcFenf9C+U6olidx+CUFQ9Y9iJy5KqOj6d+iSnttFaYqEsr2+1
-         wcdX0t/iPBO0cNMKiHO1NxVPHBWisvzhkChikgAmismYK6ET5Ya1R1dFVPv/F56QyYVU
-         tnig==
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dqXWqGVJANSiU/dVTjMJJDNckLbAMn8PzxXl6fPGdek=;
+        b=ASqO/0xgXsIVjgP+XTeKjWLJ0Je8o5pFCWO2Riyj/smGlWtndzviiteotkmq+zFPZq
+         NeBbRWczBDkqcJCLFBa00H9eu0PaUMkJGTSaPmlatfPK7Kt1a3ANlZfrA9txwWRBkQ8T
+         Ue7SV2liTeJB0SMBHF4xtrX2yAakwC0BQZ1ZnUuExuchXOLUVWDlFaRDmyta2m4Kas1E
+         IvkL1MIEo20ctvBflnKAKPC0UTZn5Y4Bp9KyRnUBZ8VRklrpTSHwcE0gxzK5Ne0bGCM6
+         95KC6W7CM8qZW08+N7Nyv4Cu0cqm4IT31QjDrRowcHpRu8v9ZfhD/24KiQQuh9Nca5eM
+         7eOw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCHv6 1/5] mmc: meson-gx: Fix clk phase tuning for MMC
+Subject: Re: [PATCHv6 3/5] arm: dts: gx: Move common nodes to the -u-boot.dtsi
 References: <20200209110557.1996-1-linux.amoon@gmail.com>
- <20200209110557.1996-2-linux.amoon@gmail.com>
+ <20200209110557.1996-4-linux.amoon@gmail.com>
+ <3a8d18d5-f253-8a15-9e5c-34f31bec6925@baylibre.com>
+ <CANAwSgSx3mSub7=KFoCC8-VVMg2drjFdCBDmhP8p9ccR+S_Ymw@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <61096502-4817-a095-4d11-b487781202b0@baylibre.com>
-Date: Sun, 9 Feb 2020 14:08:15 +0100
+Message-ID: <8eee7c78-13c5-6a97-93c3-c7830109aaf7@baylibre.com>
+Date: Mon, 10 Feb 2020 09:24:56 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200209110557.1996-2-linux.amoon@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-To: Anand Moon <linux.amoon@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Jaehoon Chung <jh80.chung@samsung.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+In-Reply-To: <CANAwSgSx3mSub7=KFoCC8-VVMg2drjFdCBDmhP8p9ccR+S_Ymw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Jaehoon Chung <jh80.chung@samsung.com>, u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+On 09/02/2020 18:25, Anand Moon wrote:
+> Hi Neil,
+> 
+> Thanks for your review.
+> 
+> On Sun, 9 Feb 2020 at 18:28, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Hi,
+>>
+>> Le 09/02/2020 à 12:05, Anand Moon a écrit :
+>>> Move u-boot specific common nodes in the dts files to
+>>> meson-gx-u-boot.dtsi. This allows us to keep the basic
+>>> dts[i] files up-to-date with the ones in kernel,
+>>> but at the same time allowing the u-boot to add its own
+>>> properties to the existing nodes.
+>>> Also add missing mmc alias to dts nodes to avoid
+>>> below debug warning.
+>>>
+>>> mmc_bind: alias ret=-2, devnum=-1
+>>> mmc_bind: alias ret=-2, devnum=-1
+>>
+>> The mmc aliases are u-boot specific, so only those should be
+>> moved into the meson-gx-u-boot.dtsi.
+>>
+>> Please keep the other aliases in the their linux sync'ed files.
+>>
+>> Neil
+>>
+> 
+> meson-gx-u-boot.dtsi is included in following dts file so
+> their is no another common -u-boot.dtsi for all the SBC dts.
+> 
+> $ git grep meson-gx-u-boot.dtsi
+> arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi:#include "meson-gx-u-boot.dtsi"
+> arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi:#include "meson-gx-u-boot.dtsi"
+> arch/arm/dts/meson-gxbb-p200-u-boot.dtsi:#include "meson-gx-u-boot.dtsi"
+> arch/arm/dts/meson-gxbb-p201-u-boot.dtsi:#include "meson-gx-u-boot.dtsi"
+> arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi:#include
+> "meson-gx-u-boot.dtsi"
+> arch/arm/dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi:#include
+> "meson-gx-u-boot.dtsi"
+> arch/arm/dts/meson-gxl-s905x-p212-u-boot.dtsi:#include "meson-gx-u-boot.dtsi"
+> arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi:#include "meson-gx-u-boot.dtsi"
+> 
+> So all the common nodes is included in *meson-gx-u-boot.dtsi* for GXBB
+> and GXL dts.
 
-Le 09/02/2020 =E0 12:05, Anand Moon a =E9crit :
-> As per mainline line kernel fix the clk tuning phase for mmc,
-> set Core=3D180, Tx=3D0, Rx=3D0 clk phase for mmc initialization.
-> As per S905, S905X, AGX and S922X datasheet set the default
-> values for clk tuning.
->=20
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Changes from previous
-> v5  Fix the commit message, configure as per mainline kernel.
->     drop the RX_DELAY_MASK and TX_DELAY_MASK as they are not used.
->=20
-> v4  Fix the update mask value using FIELD_PREP macro.
->=20
-> v3  Fix the initialization of core clk tunning phase as per datasheet.
->     Fix the commit message.
->=20
-> v2: Fix the clk phase macro to support PHASE_180
->     drop the wrong CLK_CORE_PHASE_MASK macro.
->=20
-> v1: use the mainline kernel tuning for clk tuning.
->=20
-> Fixed the commmit messages.
-> Patch v1:
-> https://patchwork.ozlabs.org/patch/1201208/
->=20
-> Before these changes.
->     clock is enabled (380953Hz)
->     clock is enabled (25000000Hz)
-> After these changes
->     clock is enabled (380953Hz)
->     clock is enabled (25000000Hz)
->     clock is enabled (52000000Hz)
-> Test on Odroid N2 and Odroid C2 with eMMC and microSD cards
-> ---
->  arch/arm/include/asm/arch-meson/sd_emmc.h | 24 +++++++++++--------
->  drivers/mmc/meson_gx_mmc.c                | 28 +++++++++++++++++++----
->  2 files changed, 38 insertions(+), 14 deletions(-)
->=20
-> diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/arch/arm/include=
-/asm/arch-meson/sd_emmc.h
-> index e3a72c8b66..f4299485dc 100644
-> --- a/arch/arm/include/asm/arch-meson/sd_emmc.h
-> +++ b/arch/arm/include/asm/arch-meson/sd_emmc.h
-> @@ -7,6 +7,7 @@
->  #define __SD_EMMC_H__
-> =20
->  #include <mmc.h>
-> +#include <linux/bitops.h>
-> =20
->  #define SDIO_PORT_A			0
->  #define SDIO_PORT_B			1
-> @@ -19,15 +20,20 @@
->  #define   CLK_MAX_DIV			63
->  #define   CLK_SRC_24M			(0 << 6)
->  #define   CLK_SRC_DIV2			(1 << 6)
-> -#define   CLK_CO_PHASE_000		(0 << 8)
-> -#define   CLK_CO_PHASE_090		(1 << 8)
-> -#define   CLK_CO_PHASE_180		(2 << 8)
-> -#define   CLK_CO_PHASE_270		(3 << 8)
-> -#define   CLK_TX_PHASE_000		(0 << 10)
-> -#define   CLK_TX_PHASE_090		(1 << 10)
-> -#define   CLK_TX_PHASE_180		(2 << 10)
-> -#define   CLK_TX_PHASE_270		(3 << 10)
-> -#define   CLK_ALWAYS_ON			BIT(24)
-> +
-> +#define   CRYSTAL_24MHZ			0
-> +#define   CLK_PHASE_0			0
-> +#define   CLK_PHASE_180			2
-> +
-> +#define   CLK_DIV_MASK			GENMASK(5, 0)
-> +#define   CLK_SRC_MASK			GENMASK(7, 6)
-> +#define   CLK_CORE_PHASE_MASK		GENMASK(9, 8)
-> +#define   CLK_TX_PHASE_MASK		GENMASK(11, 10)
-> +#define   CLK_RX_PHASE_MASK		GENMASK(13, 12)
-> +
-> +#define   CLK_V2_ALWAYS_ON		BIT(24)
-> +
-> +#define   CLK_V3_ALWAYS_ON		BIT(28)
-> =20
->  #define MESON_SD_EMMC_CFG		0x44
->  #define   CFG_BUS_WIDTH_MASK		GENMASK(1, 0)
-> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-> index 86c1a7164a..b013c7c5fb 100644
-> --- a/drivers/mmc/meson_gx_mmc.c
-> +++ b/drivers/mmc/meson_gx_mmc.c
-> @@ -16,6 +16,10 @@
->  #include <asm/arch/sd_emmc.h>
->  #include <linux/log2.h>
-> =20
-> +#include <linux/bitops.h>
-> +#include <linux/compat.h>
-> +#include <linux/bitfield.h>
-> +
->  static inline void *get_regbase(const struct mmc *mmc)
->  {
->  	struct meson_mmc_platdata *pdata =3D mmc->priv;
-> @@ -51,11 +55,25 @@ static void meson_mmc_config_clock(struct mmc *mmc)
->  	}
->  	clk_div =3D DIV_ROUND_UP(clk, mmc->clock);
-> =20
-> -	/* 180 phase core clock */
-> -	meson_mmc_clk |=3D CLK_CO_PHASE_180;
-> -
-> -	/* 180 phase tx clock */
-> -	meson_mmc_clk |=3D CLK_TX_PHASE_000;
-> +	/* Clock divider */
-> +	meson_mmc_clk |=3D CLK_DIV_MASK;
+It's not the point.
 
-This will set the max divider, whatever the value of clk_div, so the follow=
-ing statement:
-meson_mmc_clk |=3D clk_div;
-will have no effect.
+The goal is to keep the dts and dtsi files untouched to be able to sync them
+from linux easily.
 
+So :
+- all general changes/fixes must go through linux, and temporary in the -u-boot.dtsi
+- all u-boot specific in the -u-boot.dtsi
 
-> +	/* Clock source : Crystal 24MHz */
-> +	meson_mmc_clk |=3D FIELD_PREP(CLK_SRC_MASK, CRYSTAL_24MHZ);
-
-You set CRYSTAL_24MHZ here, but the src is selected in clk_src and set with:
-meson_mmc_clk |=3D clk_src;
-
-In conclusion your change forces the 24MHz crystal and max divider whatever=
- the
-freq asked by the mmc core !
-
-> +	/* Core clock phase 2:180 */
-> +	meson_mmc_clk |=3D FIELD_PREP(CLK_CORE_PHASE_MASK, CLK_PHASE_180);
-> +	/* TX clock phase 0:180 */
-> +	meson_mmc_clk |=3D FIELD_PREP(CLK_TX_PHASE_MASK, CLK_PHASE_0);
-> +	/* RX clock phase 0:180 */
-> +	meson_mmc_clk |=3D FIELD_PREP(CLK_RX_PHASE_MASK, CLK_PHASE_0);
-
-These are ok, but it's exactly the same as before with a different style.
-
-> +
-> +#ifdef CONFIG_MESON_GX
-> +	/* clk always on */
-> +	meson_mmc_clk |=3D CLK_V2_ALWAYS_ON;
-> +#endif
-> +#if (defined(CONFIG_MESON_AXG) || defined(CONFIG_MESON_G12A))
-> +	/* clk always on */
-> +	meson_mmc_clk |=3D CLK_V3_ALWAYS_ON;
-> +#endif
-
-Why not, not sure about the effect.
-
-> =20
->  	/* clock settings */
->  	meson_mmc_clk |=3D clk_src;
->=20
+If you have an issue with the aliases, please discuss it on the linux-amlogic ML, but
+the linux policy is to only declare the needed aliases in the boards dts and avoid having
+a bunch of aliases in the dtsi files.
 
 Neil
+
+> 
+> 
+> 
+> -Anand
+> 
+>>>
+>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>> ---
+>>> no changes from previous
+>>> ---
+>>>  arch/arm/dts/meson-gx-u-boot.dtsi             | 15 +++++++++++++++
+>>>  arch/arm/dts/meson-gxbb-nanopi-k2.dts         |  9 ---------
+>>>  arch/arm/dts/meson-gxbb-odroidc2.dts          |  9 ---------
+>>>  arch/arm/dts/meson-gxbb-p20x.dtsi             |  9 ---------
+>>>  arch/arm/dts/meson-gxl-s805x-libretech-ac.dts | 10 ----------
+>>>  arch/arm/dts/meson-gxl-s905x-khadas-vim.dts   |  5 -----
+>>>  arch/arm/dts/meson-gxl-s905x-libretech-cc.dts |  9 ---------
+>>>  arch/arm/dts/meson-gxl-s905x-p212.dtsi        | 10 ----------
+>>>  arch/arm/dts/meson-gxm-khadas-vim2.dts        | 10 ----------
+>>>  9 files changed, 15 insertions(+), 71 deletions(-)
+>>>
+>>> diff --git a/arch/arm/dts/meson-gx-u-boot.dtsi b/arch/arm/dts/meson-gx-u-boot.dtsi
+>>> index b84e5edba4..13be3a7b8f 100644
+>>> --- a/arch/arm/dts/meson-gx-u-boot.dtsi
+>>> +++ b/arch/arm/dts/meson-gx-u-boot.dtsi
+>>> @@ -8,6 +8,21 @@
+>>>       soc {
+>>>               u-boot,dm-pre-reloc;
+>>>       };
+>>> +
+>>> +     aliases {
+>>> +             serial0 = &uart_AO;
+>>> +             serial1 = &uart_A;
+>>> +             serial2 = &uart_AO_B;
+>>> +             ethernet0 = &ethmac;
+>>> +             spi0 = &spifc;
+>>> +             mmc0 = &sd_emmc_a;
+>>> +             mmc1 = &sd_emmc_b;
+>>> +             mmc2 = &sd_emmc_c;
+>>> +     };
+>>> +
+>>> +     chosen {
+>>> +             stdout-path = "serial0:115200n8";
+>>> +     };
+>>>  };
+>>>
+>>>  &vpu {
+>>> diff --git a/arch/arm/dts/meson-gxbb-nanopi-k2.dts b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+>>> index cbe99bd4e0..11690d6c46 100644
+>>> --- a/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+>>> +++ b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+>>> @@ -11,15 +11,6 @@
+>>>  / {
+>>>       compatible = "friendlyarm,nanopi-k2", "amlogic,meson-gxbb";
+>>>
+>>> -     aliases {
+>>> -             serial0 = &uart_AO;
+>>> -             ethernet0 = &ethmac;
+>>> -     };
+>>> -
+>>> -     chosen {
+>>> -             stdout-path = "serial0:115200n8";
+>>> -     };
+>>> -
+>>>       memory@0 {
+>>>               device_type = "memory";
+>>>               reg = <0x0 0x0 0x0 0x80000000>;
+>>> diff --git a/arch/arm/dts/meson-gxbb-odroidc2.dts b/arch/arm/dts/meson-gxbb-odroidc2.dts
+>>> index 54954b314a..f8cd76a2ef 100644
+>>> --- a/arch/arm/dts/meson-gxbb-odroidc2.dts
+>>> +++ b/arch/arm/dts/meson-gxbb-odroidc2.dts
+>>> @@ -14,15 +14,6 @@
+>>>       compatible = "hardkernel,odroid-c2", "amlogic,meson-gxbb";
+>>>       model = "Hardkernel ODROID-C2";
+>>>
+>>> -     aliases {
+>>> -             serial0 = &uart_AO;
+>>> -             ethernet0 = &ethmac;
+>>> -     };
+>>> -
+>>> -     chosen {
+>>> -             stdout-path = "serial0:115200n8";
+>>> -     };
+>>> -
+>>>       memory@0 {
+>>>               device_type = "memory";
+>>>               reg = <0x0 0x0 0x0 0x80000000>;
+>>> diff --git a/arch/arm/dts/meson-gxbb-p20x.dtsi b/arch/arm/dts/meson-gxbb-p20x.dtsi
+>>> index 0be0f2a5d2..c9822e50f9 100644
+>>> --- a/arch/arm/dts/meson-gxbb-p20x.dtsi
+>>> +++ b/arch/arm/dts/meson-gxbb-p20x.dtsi
+>>> @@ -8,15 +8,6 @@
+>>>  #include "meson-gxbb.dtsi"
+>>>
+>>>  / {
+>>> -     aliases {
+>>> -             serial0 = &uart_AO;
+>>> -             ethernet0 = &ethmac;
+>>> -     };
+>>> -
+>>> -     chosen {
+>>> -             stdout-path = "serial0:115200n8";
+>>> -     };
+>>> -
+>>>       memory@0 {
+>>>               device_type = "memory";
+>>>               reg = <0x0 0x0 0x0 0x40000000>;
+>>> diff --git a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+>>> index 82b1c48511..4f9072a83e 100644
+>>> --- a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+>>> +++ b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+>>> @@ -16,16 +16,6 @@
+>>>                    "amlogic,meson-gxl";
+>>>       model = "Libre Computer Board AML-S805X-AC";
+>>>
+>>> -     aliases {
+>>> -             serial0 = &uart_AO;
+>>> -             ethernet0 = &ethmac;
+>>> -             spi0 = &spifc;
+>>> -     };
+>>> -
+>>> -     chosen {
+>>> -             stdout-path = "serial0:115200n8";
+>>> -     };
+>>> -
+>>>       cvbs-connector {
+>>>               /*
+>>>                * The pads are present but no connector is soldered on
+>>> diff --git a/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts b/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
+>>> index ceb34afe42..072e4575d2 100644
+>>> --- a/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
+>>> +++ b/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
+>>> @@ -26,11 +26,6 @@
+>>>               };
+>>>       };
+>>>
+>>> -     aliases {
+>>> -             serial2 = &uart_AO_B;
+>>> -             ethernet0 = &ethmac;
+>>> -     };
+>>> -
+>>>       gpio-keys-polled {
+>>>               compatible = "gpio-keys-polled";
+>>>               #address-cells = <1>;
+>>> diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+>>> index a23252efc6..8d3965ab42 100644
+>>> --- a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+>>> +++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+>>> @@ -15,15 +15,6 @@
+>>>       compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
+>>>       model = "Libre Computer Board AML-S905X-CC";
+>>>
+>>> -     aliases {
+>>> -             serial0 = &uart_AO;
+>>> -             ethernet0 = &ethmac;
+>>> -     };
+>>> -
+>>> -     chosen {
+>>> -             stdout-path = "serial0:115200n8";
+>>> -     };
+>>> -
+>>>       cvbs-connector {
+>>>               compatible = "composite-video-connector";
+>>>
+>>> diff --git a/arch/arm/dts/meson-gxl-s905x-p212.dtsi b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+>>> index a1b31013ab..70f437fc3a 100644
+>>> --- a/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+>>> +++ b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+>>> @@ -13,16 +13,6 @@
+>>>  #include "meson-gxl-s905x.dtsi"
+>>>
+>>>  / {
+>>> -     aliases {
+>>> -             serial0 = &uart_AO;
+>>> -             serial1 = &uart_A;
+>>> -             ethernet0 = &ethmac;
+>>> -     };
+>>> -
+>>> -     chosen {
+>>> -             stdout-path = "serial0:115200n8";
+>>> -     };
+>>> -
+>>>       memory@0 {
+>>>               device_type = "memory";
+>>>               reg = <0x0 0x0 0x0 0x80000000>;
+>>> diff --git a/arch/arm/dts/meson-gxm-khadas-vim2.dts b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+>>> index 782e9edac8..4e68e289d3 100644
+>>> --- a/arch/arm/dts/meson-gxm-khadas-vim2.dts
+>>> +++ b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+>>> @@ -16,16 +16,6 @@
+>>>       compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
+>>>       model = "Khadas VIM2";
+>>>
+>>> -     aliases {
+>>> -             serial0 = &uart_AO;
+>>> -             serial1 = &uart_A;
+>>> -             serial2 = &uart_AO_B;
+>>> -     };
+>>> -
+>>> -     chosen {
+>>> -             stdout-path = "serial0:115200n8";
+>>> -     };
+>>> -
+>>>       memory@0 {
+>>>               device_type = "memory";
+>>>               reg = <0x0 0x0 0x0 0x80000000>;
+>>>
+
