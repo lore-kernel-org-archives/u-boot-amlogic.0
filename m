@@ -1,191 +1,52 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
- by mx.groups.io with SMTP id smtpd.web12.1235.1582582902689601001
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+ by mx.groups.io with SMTP id smtpd.web09.3568.1581797463177435383
  for <u-boot-amlogic@groups.io>;
- Mon, 24 Feb 2020 14:21:43 -0800
+ Sat, 15 Feb 2020 12:11:03 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1582582898;
-	bh=4a/6Jlm8YMVA1xMQviL6NqskYWOitbstSKy5ZrylSBM=;
+	s=badeba3b8450; t=1581797460;
+	bh=3ZSHKE8HHFuWQeJ/twbxy9jWMlLTMQcc7y4pWVq2IOE=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=QUNY2XcvQ8ydNyjXkpekKP0MZshHR0JAQQQf51r5GCkjhp7PGM+HlN/gyfme8DhOL
-	 UzBXYE1FsPJVzv4ooV2uHm+dIUs0Vfzluzfq+ERlrRpWp9ntxDQ1pSW02HVcjMgDyH
-	 +o1XhwaUapNAKOoYKfYRXj+9iMqtHOygIU4Aij+8=
+	b=QQPTDbI05IaFKAPHLgFFPkkD9vmT4FI8mg4uEMLcAmM2KdI70cI6hZLIkSwfWTnQD
+	 spxhD8kqDCvZBd/TggskI69+gz8R2mHjlKO/DAwkV2bPWXtTZXCW/Uf6emZIVmT2bi
+	 tv942UffcJ67E4I2x2Ma1h2vpYxkaxMGJGuc7wFk=
 From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] drivers/rng: add Amlogic hardware RNG driver
-Date: Mon, 24 Feb 2020 23:21:33 +0100
-Message-Id: <20200224222133.972-1-xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] clk: meson-g12a: missing break
+Date: Sat, 15 Feb 2020 21:10:54 +0100
+Message-Id: <20200215201054.5139-1-xypron.glpk@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-To: Sughosh Ganu <sughosh.ganu@linaro.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, Heinrich Schuchardt <xypron.glpk@gmx.de>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de, Heinrich Schuchardt <xypron.glpk@gmx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add support for the hardware random number generator of Amlogic SOCs.
+Add missing break for CLKID_PCIE_PLL in switch statement.
 
+Reported by CppCheck.
+
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Fixes: 08e09c263fdf ("clk: meson-g12a: Add PCIE PLL support")
 Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
 =2D--
- drivers/rng/Kconfig     |   8 +++
- drivers/rng/Makefile    |   1 +
- drivers/rng/meson-rng.c | 120 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 129 insertions(+)
- create mode 100644 drivers/rng/meson-rng.c
+Looking at the code it seems obvious that something is wrong in commit
+08e09c263fdf but I have no board for testing.
+=2D--
 
-diff --git a/drivers/rng/Kconfig b/drivers/rng/Kconfig
-index c1aa43b823..edb6152bb9 100644
-=2D-- a/drivers/rng/Kconfig
-+++ b/drivers/rng/Kconfig
-@@ -8,6 +8,14 @@ config DM_RNG
+ drivers/clk/meson/g12a.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- if DM_RNG
-
-+config RNG_MESON
-+	bool "Amlogic Meson Random Number Generator support"
-+	depends on ARCH_MESON
-+	default y
-+	help
-+	  Enable support for hardware random number generator
-+	  of Amlogic Meson SoCs.
-+
- config RNG_SANDBOX
- 	bool "Sandbox random number generator"
- 	depends on SANDBOX
-diff --git a/drivers/rng/Makefile b/drivers/rng/Makefile
-index 3517005541..6a8a66779b 100644
-=2D-- a/drivers/rng/Makefile
-+++ b/drivers/rng/Makefile
-@@ -4,5 +4,6 @@
- #
-
- obj-$(CONFIG_DM_RNG) +=3D rng-uclass.o
-+obj-$(CONFIG_RNG_MESON) +=3D meson-rng.o
- obj-$(CONFIG_RNG_SANDBOX) +=3D sandbox_rng.o
- obj-$(CONFIG_RNG_STM32MP1) +=3D stm32mp1_rng.o
-diff --git a/drivers/rng/meson-rng.c b/drivers/rng/meson-rng.c
-new file mode 100644
-index 0000000000..4b81a62353
-=2D-- /dev/null
-+++ b/drivers/rng/meson-rng.c
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright 2020, Heinrich Schuchardt <xypron.glpk@gmx.de>
-+ *
-+ * Driver for Amlogic hardware random number generator
-+ */
-+
-+#include <common.h>
-+#include <clk.h>
-+#include <dm.h>
-+#include <rng.h>
-+#include <asm/io.h>
-+
-+struct meson_rng_platdata {
-+	fdt_addr_t base;
-+	struct clk clk;
-+};
-+
-+/**
-+ * meson_rng_read() - fill buffer with random bytes
-+ *
-+ * @buffer:	buffer to receive data
-+ * @size:	size of buffer
-+ *
-+ * Return:	0
-+ */
-+static int meson_rng_read(struct udevice *dev, void *data, size_t len)
-+{
-+	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
-+	char *buffer =3D (char *)data;
-+
-+	while (len) {
-+		u32 rand =3D readl(pdata->base);
-+		size_t step;
-+
-+		if (len >=3D 4)
-+			step =3D 4;
-+		else
-+			step =3D len;
-+		memcpy(buffer, &rand, step);
-+		buffer +=3D step;
-+		len -=3D step;
-+	}
-+	return 0;
-+}
-+
-+/**
-+ * meson_rng_probe() - probe rng device
-+ *
-+ * @dev:	device
-+ * Return:	0 if ok
-+ */
-+static int meson_rng_probe(struct udevice *dev)
-+{
-+	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
-+	int err;
-+
-+	err =3D clk_enable(&pdata->clk);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+/**
-+ * meson_rng_remove() - deinitialize rng device
-+ *
-+ * @dev:	device
-+ * Return:	0 if ok
-+ */
-+static int meson_rng_remove(struct udevice *dev)
-+{
-+	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
-+
-+	return clk_disable(&pdata->clk);
-+}
-+
-+/**
-+ * meson_rng_ofdata_to_platdata() - transfer device tree data to plaform =
-data
-+ *
-+ * @dev:	device
-+ * Return:	0 if ok
-+ */
-+static int meson_rng_ofdata_to_platdata(struct udevice *dev)
-+{
-+	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
-+	int err;
-+
-+	pdata->base =3D dev_read_addr(dev);
-+	if (!pdata->base)
-+		return -ENODEV;
-+
-+	err =3D clk_get_by_name(dev, "core", &pdata->clk);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static const struct dm_rng_ops meson_rng_ops =3D {
-+	.read =3D meson_rng_read,
-+};
-+
-+static const struct udevice_id meson_rng_match[] =3D {
-+	{
-+		.compatible =3D "amlogic,meson-rng",
-+	},
-+	{},
-+};
-+
-+U_BOOT_DRIVER(meson_rng) =3D {
-+	.name =3D "meson-rng",
-+	.id =3D UCLASS_RNG,
-+	.of_match =3D meson_rng_match,
-+	.ops =3D &meson_rng_ops,
-+	.probe =3D meson_rng_probe,
-+	.remove =3D meson_rng_remove,
-+	.platdata_auto_alloc_size =3D sizeof(struct meson_rng_platdata),
-+	.ofdata_to_platdata =3D meson_rng_ofdata_to_platdata,
-+};
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index 686d94ebfe..cada80e6b5 100644
+=2D-- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -804,6 +804,7 @@ static ulong meson_clk_get_rate_by_id(struct clk *clk,=
+ unsigned long id)
+ 		break;
+ 	case CLKID_PCIE_PLL:
+ 		rate =3D meson_pcie_pll_get_rate(clk);
++		break;
+ 	case CLKID_VPU_0:
+ 		rate =3D meson_div_get_rate(clk, CLKID_VPU_0_DIV);
+ 		break;
 =2D-
-2.20.1
+2.25.0
 
