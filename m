@@ -1,85 +1,54 @@
 Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
- by mx.groups.io with SMTP id smtpd.web12.9828.1581842949932798429
+ by mx.groups.io with SMTP id smtpd.web09.7523.1581940424508218227
  for <u-boot-amlogic@groups.io>;
- Sun, 16 Feb 2020 00:49:10 -0800
-Date: Sun, 16 Feb 2020 09:48:59 +0100
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH 1/1] clk: meson-g12a: missing break
-Message-ID: <20200216094859.465ff909@jawa>
-In-Reply-To: <20200215201054.5139-1-xypron.glpk@gmx.de>
-References: <20200215201054.5139-1-xypron.glpk@gmx.de>
+ Mon, 17 Feb 2020 03:53:45 -0800
+Date: Mon, 17 Feb 2020 12:53:36 +0100
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH] Revert "dm: core: device: switch off power domain after device removal"
+Message-ID: <20200217125336.39990b93@crub>
+In-Reply-To: <20200217091036.19028-1-narmstrong@baylibre.com>
+References: <20200217091036.19028-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/Hx.Vh_OPTe0CYMUcXBaLE1d"; protocol="application/pgp-signature"
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: sjg@chromium.org, trini@konsulko.com, oliver.graute@gmail.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, lokeshvutla@ti.com, sbabic@denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
---Sig_/Hx.Vh_OPTe0CYMUcXBaLE1d
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 17 Feb 2020 10:10:36 +0100
+Neil Armstrong narmstrong@baylibre.com wrote:
 
-On Sat, 15 Feb 2020 21:10:54 +0100
-Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
-
-> Add missing break for CLKID_PCIE_PLL in switch statement.
->=20
-> Reported by CppCheck.
->=20
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Fixes: 08e09c263fdf ("clk: meson-g12a: Add PCIE PLL support")
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> This commit breaks Linux boot on Amlogic libretech-cc, libretech-ac, sei510,
+> sei610 board by automatically disabling the power domain after device removal.
+> This because the power domain associated to the video driver must be kept
+> enabled for linux to boot.
+> 
+> The only way is to use the introduced flag DM_FLAG_DEFAULT_PD_CTRL_OFF, which
+> removes automatic handling of power domain.
+> This flag is not a complete solution since it will force reverting to manually
+> enable the power domain from the driver probe.
+> 
+> Instead a flag to keep the power domain enabled after removal should be
+> introduced.
+> 
+> In the meantime revert this commit until a proper solution is found.
+> 
+> This reverts commit 52edfed65de967a86983a55c51ba0727090efc43.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
-> Looking at the code it seems obvious that something is wrong in commit
-> 08e09c263fdf but I have no board for testing.
-> ---
->=20
->  drivers/clk/meson/g12a.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index 686d94ebfe..cada80e6b5 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -804,6 +804,7 @@ static ulong meson_clk_get_rate_by_id(struct clk
-> *clk, unsigned long id) break;
->  	case CLKID_PCIE_PLL:
->  		rate =3D meson_pcie_pll_get_rate(clk);
-> +		break;
->  	case CLKID_VPU_0:
->  		rate =3D meson_div_get_rate(clk, CLKID_VPU_0_DIV);
->  		break;
-> --
-> 2.25.0
->=20
+> Hi Simon, Tom,
+> 
+> This revert is the simplest fix to make the boards boot again on v2020.04,
+> the goal is to make this behavior happen again with a proper flag to keep the
+> power domain enabled on specific drivers.
+> 
+> I can push it on my next PR on my branch, is it ok ?
 
-Reviewed-by: Lukasz Majewski <lukma@denx.de>
-
-
-Best regards,
-
-Lukasz Majewski
+Please test if these two patches fix the problem:
+ http://patchwork.ozlabs.org/patch/1239143
+ http://patchwork.ozlabs.org/patch/1239144
 
 --
+Anatolij
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/Hx.Vh_OPTe0CYMUcXBaLE1d
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl5JAfsACgkQAR8vZIA0
-zr3C/wgAtJF/cop8wn/XTlsCvJe5jrpTzXRXG9OfKODh3ZNG6HK6TN3/p376mz3y
-3w4P7KRTje9c0b+K2gmPJSGx6Xmg2IsE/TDfFlTe9qSUZwDiQmHUkuxMr6/qcoXv
-+ofQd879qhJLCS+iMpN9/XSWonw61KQPGMde7Ixohc3XMpj8hQnjnbuMahyLSBHY
-W3uPY46Y4Fx1ENbA46YvpLdhZd4zaxpPbbP2bF9BRlZ9CEeL72eeWrwbKCDhtSM4
-xyp/62ObxSFprk7ZtSGmHN0e/4nqhInm4gRGPeafavE21SJBSIsEQBqijZ7dsKSP
-p1KEtKStW3M649tG8rLp3jDFrKGN9g==
-=20dB
------END PGP SIGNATURE-----
-
---Sig_/Hx.Vh_OPTe0CYMUcXBaLE1d--
