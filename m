@@ -1,106 +1,71 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web10.9139.1582098569043087263
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+ by mx.groups.io with SMTP id smtpd.web12.181.1582165960919853970
  for <u-boot-amlogic@groups.io>;
- Tue, 18 Feb 2020 23:49:29 -0800
-Received: by mail-wr1-f66.google.com with SMTP id w15so26967834wru.4
-        for <u-boot-amlogic@groups.io>; Tue, 18 Feb 2020 23:49:28 -0800 (PST)
+ Wed, 19 Feb 2020 18:32:40 -0800
+Received: by mail-pl1-f195.google.com with SMTP id ay11so937374plb.0
+        for <u-boot-amlogic@groups.io>; Wed, 19 Feb 2020 18:32:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5PV3T1/VEO7/qdn/JjX/N3ldLDBmi80Jc/fZjnOadu0=;
-        b=wPLMoHTlEiL+bxIqwAMoQh5jnvX5t5gEeYgx6WsvpEo0G5BUVNE31Xjm6CHi9XO3wj
-         G2ZOvF+1aLiZyM4S6Rwy3zSajoW4+IXn5V6/1hawdrgT94MmuZutKDpN0ilJJlnAiyLC
-         gysriXyfP6EvogeYWKf3Z905XdWMwZ1wLtSsZH7jfAnsJe2M3rOzoI7cTE5ceiVjDNlx
-         LVwjVwT5qWjnAPJukPHg9pDD2vCgvFefvyarQOW/b/itH/xS5XvO4D8j+CtEJR7+TCnb
-         Et8wU7th06WkWx2nY0J9glJbULh5LDz4yk6ui6UEJhoZ/rFXk6zN0f76VLu+oR8HTASX
-         YO+w==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 09/10] usb: Use ofnode as usb_get_dr_mode() parameter
-References: <20200219015447.19392-1-kever.yang@rock-chips.com>
- <20200219015447.19392-10-kever.yang@rock-chips.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <a7131adf-7e14-57ba-5769-8b7882aae4b1@baylibre.com>
-Date: Wed, 19 Feb 2020 08:49:25 +0100
-MIME-Version: 1.0
-In-Reply-To: <20200219015447.19392-10-kever.yang@rock-chips.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Kever Yang <kever.yang@rock-chips.com>, u-boot@lists.denx.de
-Cc: frank.wang@rock-chips.com, Adam Ford <aford173@gmail.com>, Bin Meng <bmeng.cn@gmail.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Fabio Estevam <festevam@gmail.com>, Igor Opaniuk <igor.opaniuk@toradex.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Simon Glass <sjg@chromium.org>, Vignesh Raghavendra <vigneshr@ti.com>, Ye Li <ye.li@nxp.com>, u-boot-amlogic@groups.io
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=kRrPm+9vPeKHLMQzvUOULasluUCy6t+P8VNM4TSkiuI=;
+        b=geyWr0iHhAFW9nR8+5sjotfckZzDlbDc35pgLctVE2pQCdkPe+2waYsYPTCxLqVOkA
+         2UVzbN6c0AOecWlWUkxJO9nGJpYSjoxrh+aPYGaMi9iIDI/vIyUExk7HooTtXopkptyl
+         iBgf/VoUbcTsD4dquwOK/QqcKo+xXpShwBT/QlpHU9/8IVWNGOcq210V9gF6iAg+BHSL
+         m+8KRkb2i8P56Wu6HagQue8mKxG6z/BjgaDcm0VU6Z6XMKpPMcm3gQyxjC2lFHjw8OAq
+         7t+gy+En/F8oybDPt7vat54vkLLN3fz5LsXuCjKymn+C3Pc+wKBPhxGbYXD5CRVWpI30
+         +JTA==
+Return-Path: <kever.yang@gmail.com>
+Sender: Kever Yang <kever.yang@gmail.com>
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH v2 0/9] usb: Covert to support Live DT
+Date: Thu, 20 Feb 2020 10:32:15 +0800
+Message-Id: <20200220023224.32146-1-kever.yang@rock-chips.com>
+To: u-boot@lists.denx.de
+Cc: frank.wang@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Adam Ford <aford173@gmail.com>, Anatolij Gustschin <agust@denx.de>, Bin Meng <bmeng.cn@gmail.com>, Igor Opaniuk <igor.opaniuk@toradex.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Mark Kettenis <kettenis@openbsd.org>, Neil Armstrong <narmstrong@baylibre.com>, Ramon Fried <rfried.dev@gmail.com>, Simon Glass <sjg@chromium.org>, Vignesh Raghavendra <vigneshr@ti.com>, Ye Li <ye.li@nxp.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 19/02/2020 02:54, Kever Yang wrote:
-> ofnode is more common and no need to convert to offset after we migrate
-> other API to use ofnode.
-> 
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> ---
-> 
->  drivers/usb/cdns3/core.c           | 2 +-
->  drivers/usb/common/common.c        | 7 +++----
->  drivers/usb/dwc3/dwc3-generic.c    | 6 +++---
->  drivers/usb/dwc3/dwc3-meson-g12a.c | 2 +-
->  drivers/usb/gadget/dwc2_udc_otg.c  | 5 ++---
->  drivers/usb/host/dwc3-sti-glue.c   | 2 +-
->  drivers/usb/host/ehci-mx6.c        | 2 +-
->  drivers/usb/host/xhci-dwc3.c       | 3 +--
->  drivers/usb/musb-new/ti-musb.c     | 2 +-
->  include/linux/usb/otg.h            | 4 ++--
->  10 files changed, 16 insertions(+), 19 deletions(-)
-> 
 
-[...]
+This patch set convert to use APIs leading with dev_ or ofnode_ which
+supports live DT instead of fdt_ or fdtdec or devfdt_.
+Two functions update there parameter from offset to ofnode:
+- usb_get_maximum_speed()
+- usb_get_dr_mode()
 
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index a55def5aba..4300f711a9 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -7,7 +7,7 @@
->   */
->  
->  #include <common.h>
-> -#include <linux/libfdt.h>
-> +#include <dm.h>
->  #include <linux/usb/otg.h>
->  #include <linux/usb/ch9.h>
->  
-> @@ -20,13 +20,12 @@ static const char *const usb_dr_modes[] = {
->  	[USB_DR_MODE_OTG]		= "otg",
->  };
->  
-> -enum usb_dr_mode usb_get_dr_mode(int node)
-> +enum usb_dr_mode usb_get_dr_mode(ofnode node)
->  {
-> -	const void *fdt = gd->fdt_blob;
->  	const char *dr_mode;
->  	int i;
->  
-> -	dr_mode = fdt_getprop(fdt, node, "dr_mode", NULL);
-> +	dr_mode = ofnode_read_string(node, "dr_mode");
->  	if (!dr_mode) {
->  		pr_err("usb dr_mode not found\n");
->  		return USB_DR_MODE_UNKNOWN;
-> diff --git a/drivers/usb/dwc3/dwc3-generic.c b/drivers/usb/dwc3/dwc3-generic.c
-> index ced0f53bfd..7178f12b47 100644
+For V2 update:
+Drop below patch after include ofnode.h in otg.h:
+[PATCH 09/10] usb: Use ofnode as usb_get_dr_mode() parameter
 
-[..]
 
-> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> index 832bcd70ff..d4453f8784 100644
-> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> @@ -393,7 +393,7 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
->  	}
->  #endif
->  
-> -	priv->otg_mode = usb_get_dr_mode(dev_of_offset(dev));
-> +	priv->otg_mode = usb_get_dr_mode(dev->node);
->  
->  	ret = dwc3_meson_g12a_usb_init(priv);
->  	if (ret)
+Changes in v2:
+- fix build error for ofnode not define
+- add ofnode.h in otg.h to avoid build error
 
-For drivers/usb/dwc3/dwc3-meson-g12a.c:
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Kever Yang (9):
+  usb: dwc3-of-simple: Drop redundant inclding header file
+  usb: ehci-msm: Use dev interface to get device address
+  usb: cdns3: Migrate to use ofnode API for bind function
+  usb: dwc3-generic: Migrate to use ofnode API for bind function
+  usb: dwc3-generic: Use dev_read_addr() instead of devfdt_get_addr()
+  usb: host: dwc3-sti-glue: Migrate to use ofnode API
+  usb: musb-new: Migrate to use ofnode API
+  usb: Use ofnode as usb_get_dr_mode() parameter
+  usb: Use ofnode as usb_get_maximum_speed() parameter
+
+ drivers/usb/cdns3/core.c           | 15 ++++++---------
+ drivers/usb/cdns3/gadget.c         |  2 +-
+ drivers/usb/common/common.c        | 12 +++++-------
+ drivers/usb/dwc3/dwc3-generic.c    | 16 +++++++---------
+ drivers/usb/dwc3/dwc3-meson-g12a.c |  2 +-
+ drivers/usb/gadget/dwc2_udc_otg.c  |  5 ++---
+ drivers/usb/host/dwc3-of-simple.c  |  1 -
+ drivers/usb/host/dwc3-sti-glue.c   | 20 +++++++-------------
+ drivers/usb/host/ehci-msm.c        |  4 +---
+ drivers/usb/host/ehci-mx6.c        |  2 +-
+ drivers/usb/host/xhci-dwc3.c       |  3 +--
+ drivers/usb/musb-new/ti-musb.c     | 12 +++++-------
+ include/linux/usb/otg.h            | 10 ++++++----
+ 13 files changed, 43 insertions(+), 61 deletions(-)
+
+-- 
+2.17.1
+
