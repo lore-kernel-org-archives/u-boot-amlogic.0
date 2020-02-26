@@ -1,188 +1,265 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web12.13390.1582973092252969226
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+ by mx.groups.io with SMTP id smtpd.web10.230.1582739966428344440
  for <u-boot-amlogic@groups.io>;
- Sat, 29 Feb 2020 02:44:53 -0800
-Received: by mail-wr1-f66.google.com with SMTP id l5so6303357wrx.4
-        for <u-boot-amlogic@groups.io>; Sat, 29 Feb 2020 02:44:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rRhKsEOQrQkfWkT3NCaqNc3mJkH+PEy1qU2MUCWJFWo=;
-        b=GKJoHtwTPRMYz+rnV/NVHUWyfNRP2MdPSAz6KW5pZGPCmghspBv4wDweQlpDz2xQBn
-         Z98wcrwQcUrtzannork/JjsX8ta2+4YOYZE2EY/WFqh1WXaO1xbc+BjhastdRGI0NkVb
-         Xxa+ktRy8q7tUisNYvVvyt9m58vxQF3PkKLEU=
+ Wed, 26 Feb 2020 09:59:27 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1582739963;
+	bh=qSLUQzv4tfZEM/K832jtxaEisGmCCd58bjRAqkc8WNc=;
+	h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+	b=bvi1oP0diDYgGOnwZsnzJEI1EKDFj1YrJZzuY5PLtnuTOA/ffEPOSf6DQCz3zi4G/
+	 jV4XNkQISqfbsrGzPl4cJedRn/a8VeBVC5Pg9xDYNHjL1WThRGEBZx+8d+B7TsbbFy
+	 WUyFIgN8f47Jzofpjl2I5PACOok0MkwvjLTX6ou4=
+Subject: Re: [PATCH 1/1] drivers/rng: add Amlogic hardware RNG driver
+References: <20200224222133.972-1-xypron.glpk@gmx.de>
+ <CADg8p96jRVN0LwNh10GFLpxFE2=8JRp6utApiQ40YeDC9_uUjg@mail.gmail.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Message-ID: <695a5210-f697-54bf-5d17-4e7d239dd8f4@gmx.de>
+Date: Wed, 26 Feb 2020 18:59:18 +0100
 MIME-Version: 1.0
-References: <20200225051021.15311-1-michael@amarulasolutions.com>
- <20200225051021.15311-2-michael@amarulasolutions.com> <CAPnjgZ3Ssyr+Q_SCk+11xvt-5qt2naOAH7W3GB7S6ZW_cJk_sw@mail.gmail.com>
-In-Reply-To: <CAPnjgZ3Ssyr+Q_SCk+11xvt-5qt2naOAH7W3GB7S6ZW_cJk_sw@mail.gmail.com>
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date: Sat, 29 Feb 2020 11:44:39 +0100
-Message-ID: <CAOf5uwnL8UALieU33ejhjRzopgYZ+gYhuxBWJpyLdPwPc7YKWQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] common: fdt: Add a function for reserving memory without kernel linear mapping
-Content-Type: text/plain; charset="UTF-8"
-To: Simon Glass <sjg@chromium.org>
-Cc: Anatolij Gustschin <agust@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+In-Reply-To: <CADg8p96jRVN0LwNh10GFLpxFE2=8JRp6utApiQ40YeDC9_uUjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+To: Sughosh Ganu <sughosh.ganu@linaro.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi
+On 2/26/20 11:51 AM, Sughosh Ganu wrote:
+>
+> On Tue, 25 Feb 2020 at 03:56, Heinrich Schuchardt <xypron.glpk@gmx.de
+> <mailto:xypron.glpk@gmx.de>> wrote:
+>
+>     Add support for the hardware random number generator of Amlogic SOCs=
+.
+>
+>     Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de
+>     <mailto:xypron.glpk@gmx.de>>
+>     ---
+>      =C2=A0drivers/rng/Kconfig=C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A08 +++
+>      =C2=A0drivers/rng/Makefile=C2=A0 =C2=A0 |=C2=A0 =C2=A01 +
+>      =C2=A0drivers/rng/meson-rng.c | 120 +++++++++++++++++++++++++++++++=
++++++++++
+>      =C2=A03 files changed, 129 insertions(+)
+>      =C2=A0create mode 100644 drivers/rng/meson-rng.c
+>
+>     diff --git a/drivers/rng/Kconfig b/drivers/rng/Kconfig
+>     index c1aa43b823..edb6152bb9 100644
+>     --- a/drivers/rng/Kconfig
+>     +++ b/drivers/rng/Kconfig
+>     @@ -8,6 +8,14 @@ config DM_RNG
+>
+>      =C2=A0if DM_RNG
+>
+>     +config RNG_MESON
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0bool "Amlogic Meson Random Number Genera=
+tor support"
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0depends on ARCH_MESON
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0default y
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0help
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Enable support for hardware rando=
+m number generator
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0of Amlogic Meson SoCs.
+>     +
+>      =C2=A0config RNG_SANDBOX
+>      =C2=A0 =C2=A0 =C2=A0 =C2=A0 bool "Sandbox random number generator"
+>      =C2=A0 =C2=A0 =C2=A0 =C2=A0 depends on SANDBOX
+>     diff --git a/drivers/rng/Makefile b/drivers/rng/Makefile
+>     index 3517005541..6a8a66779b 100644
+>     --- a/drivers/rng/Makefile
+>     +++ b/drivers/rng/Makefile
+>     @@ -4,5 +4,6 @@
+>      =C2=A0#
+>
+>      =C2=A0obj-$(CONFIG_DM_RNG) +=3D rng-uclass.o
+>     +obj-$(CONFIG_RNG_MESON) +=3D meson-rng.o
+>      =C2=A0obj-$(CONFIG_RNG_SANDBOX) +=3D sandbox_rng.o
+>      =C2=A0obj-$(CONFIG_RNG_STM32MP1) +=3D stm32mp1_rng.o
+>     diff --git a/drivers/rng/meson-rng.c b/drivers/rng/meson-rng.c
+>     new file mode 100644
+>     index 0000000000..4b81a62353
+>     --- /dev/null
+>     +++ b/drivers/rng/meson-rng.c
+>     @@ -0,0 +1,120 @@
+>     +// SPDX-License-Identifier: GPL-2.0-or-later
+>     +/*
+>     + * Copyright 2020, Heinrich Schuchardt <xypron.glpk@gmx.de
+>     <mailto:xypron.glpk@gmx.de>>
+>     + *
+>     + * Driver for Amlogic hardware random number generator
+>     + */
+>     +
+>     +#include <common.h>
+>     +#include <clk.h>
+>     +#include <dm.h>
+>     +#include <rng.h>
+>     +#include <asm/io.h>
+>     +
+>     +struct meson_rng_platdata {
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0fdt_addr_t base;
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct clk clk;
+>     +};
+>     +
+>     +/**
+>     + * meson_rng_read() - fill buffer with random bytes
+>     + *
+>     + * @buffer:=C2=A0 =C2=A0 buffer to receive data
+>     + * @size:=C2=A0 =C2=A0 =C2=A0 size of buffer
+>     + *
+>     + * Return:=C2=A0 =C2=A0 =C2=A00
+>     + */
+>     +static int meson_rng_read(struct udevice *dev, void *data, size_t l=
+en)
+>     +{
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct meson_rng_platdata *pdata =3D dev=
+_get_platdata(dev);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0char *buffer =3D (char *)data;
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0while (len) {
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0u32 rand =3D=
+ readl(pdata->base);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0size_t step;
+>
+>
+> I believe declaration of variables in the middle of the function is
+> frowned upon. Can be moved to the start of the function.
 
-On Wed, Feb 26, 2020 at 4:33 PM Simon Glass <sjg@chromium.org> wrote:
+rand is defined at the top of the smallest possible code block
+delineated by braces.
+
+C compilers before C99 required you to put definitions at the top of
+functions. This led to the unsafe coding practice to reuse the same
+variable for different purposes in the same function. Currently we are
+using -std=3Dgnu11.
+
+U-Boot uses cppcheck in Gitlab CI. Cppcheck gives you a warning if you
+could reduce the scope of a variable.
+
+Neither the U-Boot coding style guide
+https://www.denx.de/wiki/U-Boot/CodingStyle
+nor the Linux kernel coding style guide
+https://www.kernel.org/doc/html/v4.10/process/coding-style.html
+recommend such unsafe practice.
+
+If you look at other parts of the U-Boot code, you will find that in
+lots of places variables are defined in the smallest possible code block
+(e.g. fs/fat/fat.c, fs/ext4/ext4_common.c). Due to our legacy we still
+carry a lot of code lines not following this rule.
+
+But anyway if you still want it in a different way, I will resubmit.
+
+Best regards
+
+Heinrich
+
 >
-> Hi Michael,
+> Other than that,
+> Reviewed-by: Sughosh Ganu <sughosh.ganu@linaro.org
+> <mailto:sughosh.ganu@linaro.org>>
 >
-> On Mon, 24 Feb 2020 at 22:10, Michael Trimarchi
-> <michael@amarulasolutions.com> wrote:
-> >
-> > The intent is to reserve memory _and_ prevent it from being included
-> > in the kernel's linear map. For thos reason it is also necessary to include the
-> > 'no-map' property for this reserved-mem node.
-> >
-> > From Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt:
-> >
-> > no-map (optional) - empty property
-> >     - Indicates the operating system must not create a virtual mapping
-> >       of the region as part of its standard mapping of system memory,
-> >       nor permit speculative access to it under any circumstances other
-> >       than under the control of the device driver using the region.
-> >
-> > Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-> > ---
-> > Changes: RFC->v1
-> >         - Add a better commit message
-> > ---
-> >  common/fdt_support.c  | 40 ++++++++++++++++++++++++++++++++++++++++
-> >  include/fdt_support.h | 11 +++++++++++
-> >  2 files changed, 51 insertions(+)
-> >
-> > diff --git a/common/fdt_support.c b/common/fdt_support.c
-> > index 02cf5c6241..a3662f4358 100644
-> > --- a/common/fdt_support.c
-> > +++ b/common/fdt_support.c
-> > @@ -410,6 +410,46 @@ static int fdt_pack_reg(const void *fdt, void *buf, u64 *address, u64 *size,
-> >         return p - (char *)buf;
-> >  }
-> >
-> > +int fdt_fixup_reserved_memory(void *blob, const char *area, u64 start[], u64 size[])
-> > +{
-> > +       int offs, len;
-> > +       const char *subpath;
-> > +       const char *path = "/reserved-memory";
-> > +       fdt32_t address_cells = cpu_to_fdt32(fdt_address_cells(blob, 0));
-> > +       fdt32_t size_cells = cpu_to_fdt32(fdt_size_cells(blob, 0));
-> > +       u8 temp[16]; /* Up to 64-bit address + 64-bit size */
-> > +
-> > +       offs = fdt_path_offset(blob, path);
-> > +       if (offs < 0) {
-> > +               debug("Node %s not found\n", path);
-> > +               path = "/";
-> > +               subpath = "reserved-memory";
-> > +               offs = fdt_path_offset(blob, path);
+> -sughosh
 >
-> Error check
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (len >=3D=
+ 4)
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0step =3D 4;
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0step =3D len;
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0memcpy(buffe=
+r, &rand, step);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0buffer +=3D =
+step;
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0len -=3D ste=
+p;
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0}
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+>     +}
+>     +
+>     +/**
+>     + * meson_rng_probe() - probe rng device
+>     + *
+>     + * @dev:=C2=A0 =C2=A0 =C2=A0 =C2=A0device
+>     + * Return:=C2=A0 =C2=A0 =C2=A00 if ok
+>     + */
+>     +static int meson_rng_probe(struct udevice *dev)
+>     +{
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct meson_rng_platdata *pdata =3D dev=
+_get_platdata(dev);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0int err;
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D clk_enable(&pdata->clk);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (err)
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return err;
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+>     +}
+>     +
+>     +/**
+>     + * meson_rng_remove() - deinitialize rng device
+>     + *
+>     + * @dev:=C2=A0 =C2=A0 =C2=A0 =C2=A0device
+>     + * Return:=C2=A0 =C2=A0 =C2=A00 if ok
+>     + */
+>     +static int meson_rng_remove(struct udevice *dev)
+>     +{
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct meson_rng_platdata *pdata =3D dev=
+_get_platdata(dev);
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0return clk_disable(&pdata->clk);
+>     +}
+>     +
+>     +/**
+>     + * meson_rng_ofdata_to_platdata() - transfer device tree data to
+>     plaform data
+>     + *
+>     + * @dev:=C2=A0 =C2=A0 =C2=A0 =C2=A0device
+>     + * Return:=C2=A0 =C2=A0 =C2=A00 if ok
+>     + */
+>     +static int meson_rng_ofdata_to_platdata(struct udevice *dev)
+>     +{
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct meson_rng_platdata *pdata =3D dev=
+_get_platdata(dev);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0int err;
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0pdata->base =3D dev_read_addr(dev);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!pdata->base)
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOD=
+EV;
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D clk_get_by_name(dev, "core", &pd=
+ata->clk);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (err)
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return err;
+>     +
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+>     +}
+>     +
+>     +static const struct dm_rng_ops meson_rng_ops =3D {
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.read =3D meson_rng_read,
+>     +};
+>     +
+>     +static const struct udevice_id meson_rng_match[] =3D {
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0{
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.compatible =
+=3D "amlogic,meson-rng",
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0},
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0{},
+>     +};
+>     +
+>     +U_BOOT_DRIVER(meson_rng) =3D {
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.name =3D "meson-rng",
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.id =3D UCLASS_RNG,
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.of_match =3D meson_rng_match,
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.ops =3D &meson_rng_ops,
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.probe =3D meson_rng_probe,
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.remove =3D meson_rng_remove,
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.platdata_auto_alloc_size =3D sizeof(str=
+uct meson_rng_platdata),
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0.ofdata_to_platdata =3D meson_rng_ofdata=
+_to_platdata,
+>     +};
+>     --
+>     2.20.1
 >
 
-Ok
-
-> > +               offs = fdt_add_subnode(blob, offs, subpath);
-> > +               if (offs < 0) {
-> > +                       printf("Could not create %s%s node.\n", path, subpath);
-> > +                       return -1;
-> > +               }
-> > +               path = "/reserved-memory";
-> > +               offs = fdt_path_offset(blob, path);
-> > +
-> > +               fdt_setprop(blob, offs, "#address-cells", &address_cells, sizeof(address_cells));
-> > +               fdt_setprop(blob, offs, "#size-cells", &size_cells, sizeof(size_cells));
-> > +               fdt_setprop(blob, offs, "ranges", NULL, 0);
->
-> Need error-checking on these three
->
-
-ok
-
-> > +       }
-> > +
-> > +       offs = fdt_add_subnode(blob, offs, area ? : "private");
->
-> Is this in a binding file somewhere?
->
-
-The reserved memory is needed to avoid the linux kernel to use it and
-to get a persistent framebuffer. On some SoC I have implemented the
-reuse on the memory on their graphics driver. I need to check how this
-is
-documented in Linux. The name of the reserved memory it's not mandatory.
-
-> > +       if (offs < 0) {
-> > +               printf("Could not create %s%s node.\n", path, subpath);
-> > +               return -1;
->
-> return offs
->
-
-ok
-
-> > +       }
-> > +
-> > +       fdt_setprop(blob, offs, "no-map", NULL, 0);
->
-> and this?
->
-ok
-
-> Also needs error check
->
-> > +       len = fdt_pack_reg(blob, temp, start, size, 1);
-> > +       fdt_setprop(blob, offs, "reg", temp, len);
->
-> blank line before return
->
-
-done
-
-> > +       return 0;
-> > +}
-> > +
-> >  #if CONFIG_NR_DRAM_BANKS > 4
-> >  #define MEMORY_BANKS_MAX CONFIG_NR_DRAM_BANKS
-> >  #else
-> > diff --git a/include/fdt_support.h b/include/fdt_support.h
-> > index ba14acd7f6..7c8a280f53 100644
-> > --- a/include/fdt_support.h
-> > +++ b/include/fdt_support.h
-> > @@ -93,6 +93,17 @@ void do_fixup_by_compat_u32(void *fdt, const char *compat,
-> >   */
-> >  int fdt_fixup_memory(void *blob, u64 start, u64 size);
-> >
-> > +/**
-> > + * Setup the memory reserved node in the DT. Creates one if none was existing before.
-> > + *
-> > + * @param blob         FDT blob to update
-> > + * @param area         Reserved area name
-> > + * @param start                Begin of DRAM mapping in physical memory
-> > + * @param size         Size of the single memory bank
-> > + * @return 0 if ok, or -1 or -FDT_ERR_... on error
->
-> Really we should return an FDT_ERR always. -1 is not a good idea and
-> in fact is an FDT_ERR
->
-
-Now with the change FDT_ERR only is returned.
-
-> > + */
-> > +int fdt_fixup_reserved_memory(void *blob, const char *area, u64 start[], u64 size[]);
-> > +
-> >  /**
-> >   * Fill the DT memory node with multiple memory banks.
-> >   * Creates the node if none was existing before.
-> > --
-> > 2.17.1
-> >
->
-> Regards,
-> Simon
-
-I will post a new one
-
-Michael
