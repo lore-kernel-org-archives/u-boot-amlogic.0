@@ -1,234 +1,215 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
- by mx.groups.io with SMTP id smtpd.web10.5940.1582077319788692870
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web12.6030.1582712377304276124
  for <u-boot-amlogic@groups.io>;
- Tue, 18 Feb 2020 17:55:19 -0800
-Received: by mail-pf1-f196.google.com with SMTP id s1so11642427pfh.10
-        for <u-boot-amlogic@groups.io>; Tue, 18 Feb 2020 17:55:19 -0800 (PST)
+ Wed, 26 Feb 2020 02:19:38 -0800
+Received: by mail-wr1-f66.google.com with SMTP id e8so2256720wrm.5
+        for <u-boot-amlogic@groups.io>; Wed, 26 Feb 2020 02:19:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LspFB9O4eW6sdMgkijV7UJPdw45p14kL3vQJL3u0ifQ=;
-        b=Eo/KuFP7spXUSfbw2LPxDpTOxtbM3+D5hy+yj1zqFau1t+tPVF/HRTd/4YGe2gWyiw
-         jAuzjSrTBiiBOT4AS8elM3ciWJ70N1jnTIk6dDsg3QjIbS+slL3dn5Pf8ZjI5t7Ti6tu
-         8p1NJgBfxnXsy24t8n+SwnKv57tsWiZHu04/25DBJ3yWytICvkRcKgxil0SBBXnCf+7E
-         c2+1lfkmBAw0JAGU3NQg3P7vw4vHGIrpOyzKfdMXm5QnVTI54Ps+5Y2azFRXCe/maiFN
-         yrmuPLobkq0YrNqfJv2cZQUzBgQVJfKCk2RCwvxRRTvfsnWj3cHc47QCfB1xFyKkUrrs
-         2ALw==
-Return-Path: <kever.yang@gmail.com>
-Sender: Kever Yang <kever.yang@gmail.com>
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH 09/10] usb: Use ofnode as usb_get_dr_mode() parameter
-Date: Wed, 19 Feb 2020 09:54:46 +0800
-Message-Id: <20200219015447.19392-10-kever.yang@rock-chips.com>
-In-Reply-To: <20200219015447.19392-1-kever.yang@rock-chips.com>
-References: <20200219015447.19392-1-kever.yang@rock-chips.com>
-To: u-boot@lists.denx.de
-Cc: frank.wang@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Adam Ford <aford173@gmail.com>, Bin Meng <bmeng.cn@gmail.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Fabio Estevam <festevam@gmail.com>, Igor Opaniuk <igor.opaniuk@toradex.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Simon Glass <sjg@chromium.org>, Vignesh Raghavendra <vigneshr@ti.com>, Ye Li <ye.li@nxp.com>, u-boot-amlogic@groups.io
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=KuSTsbSjqiu2Uchv7CLVBvSZSxoEPwZKB4RcdX/N8kw=;
+        b=qO1HQ0ocgsnn46JStdl5IAVRnVi0VeGUuMmAmZ99J9lyCb6hP2t/yG2sdzfDsS+cKf
+         p2QwT70UZf2hR9Y82EEbOg3/naR28Fb1enxtI9CLh6FNjuZHv3H6i6OBlACVxCkllyeh
+         HLS/7x5n5scQHdASSHKs4cTQd0woZK9OFaOoj0eyJfBtTG5BRyzKAL1OMd9sf1qIMSE9
+         naRdENcM0ecKjgorzvY7+BX54XZM5UhFimSYDzHaQ97lsIqb0Eo5edvKFHJDYaWfLTBR
+         MpCPgnSPwT1krAyWxd4HbdsP0H5rS0PxeNAy7kN6iM22YgI/xL3KcJwP9+WX33EyuAc1
+         J24g==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/1] drivers/rng: add Amlogic hardware RNG driver
+References: <20200224222133.972-1-xypron.glpk@gmx.de>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <bf360136-3bbc-42bd-ddf8-c48557ecd557@baylibre.com>
+Date: Wed, 26 Feb 2020 11:19:32 +0100
+MIME-Version: 1.0
+In-Reply-To: <20200224222133.972-1-xypron.glpk@gmx.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>, Sughosh Ganu <sughosh.ganu@linaro.org>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-ofnode is more common and no need to convert to offset after we migrate
-other API to use ofnode.
+Hi,
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
----
+Le 24/02/2020 =E0 23:21, Heinrich Schuchardt a =E9crit :
+> Add support for the hardware random number generator of Amlogic SOCs.
+>=20
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> ---
+>  drivers/rng/Kconfig     |   8 +++
+>  drivers/rng/Makefile    |   1 +
+>  drivers/rng/meson-rng.c | 120 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 129 insertions(+)
+>  create mode 100644 drivers/rng/meson-rng.c
+>=20
+> diff --git a/drivers/rng/Kconfig b/drivers/rng/Kconfig
+> index c1aa43b823..edb6152bb9 100644
+> --- a/drivers/rng/Kconfig
+> +++ b/drivers/rng/Kconfig
+> @@ -8,6 +8,14 @@ config DM_RNG
+>=20
+>  if DM_RNG
+>=20
+> +config RNG_MESON
+> +	bool "Amlogic Meson Random Number Generator support"
+> +	depends on ARCH_MESON
+> +	default y
+> +	help
+> +	  Enable support for hardware random number generator
+> +	  of Amlogic Meson SoCs.
+> +
+>  config RNG_SANDBOX
+>  	bool "Sandbox random number generator"
+>  	depends on SANDBOX
+> diff --git a/drivers/rng/Makefile b/drivers/rng/Makefile
+> index 3517005541..6a8a66779b 100644
+> --- a/drivers/rng/Makefile
+> +++ b/drivers/rng/Makefile
+> @@ -4,5 +4,6 @@
+>  #
+>=20
+>  obj-$(CONFIG_DM_RNG) +=3D rng-uclass.o
+> +obj-$(CONFIG_RNG_MESON) +=3D meson-rng.o
+>  obj-$(CONFIG_RNG_SANDBOX) +=3D sandbox_rng.o
+>  obj-$(CONFIG_RNG_STM32MP1) +=3D stm32mp1_rng.o
+> diff --git a/drivers/rng/meson-rng.c b/drivers/rng/meson-rng.c
+> new file mode 100644
+> index 0000000000..4b81a62353
+> --- /dev/null
+> +++ b/drivers/rng/meson-rng.c
+> @@ -0,0 +1,120 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright 2020, Heinrich Schuchardt <xypron.glpk@gmx.de>
+> + *
+> + * Driver for Amlogic hardware random number generator
+> + */
+> +
+> +#include <common.h>
+> +#include <clk.h>
+> +#include <dm.h>
+> +#include <rng.h>
+> +#include <asm/io.h>
+> +
+> +struct meson_rng_platdata {
+> +	fdt_addr_t base;
+> +	struct clk clk;
+> +};
+> +
+> +/**
+> + * meson_rng_read() - fill buffer with random bytes
+> + *
+> + * @buffer:	buffer to receive data
+> + * @size:	size of buffer
+> + *
+> + * Return:	0
+> + */
+> +static int meson_rng_read(struct udevice *dev, void *data, size_t len)
+> +{
+> +	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
+> +	char *buffer =3D (char *)data;
+> +
+> +	while (len) {
+> +		u32 rand =3D readl(pdata->base);
+> +		size_t step;
+> +
+> +		if (len >=3D 4)
+> +			step =3D 4;
+> +		else
+> +			step =3D len;
+> +		memcpy(buffer, &rand, step);
+> +		buffer +=3D step;
+> +		len -=3D step;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/**
+> + * meson_rng_probe() - probe rng device
+> + *
+> + * @dev:	device
+> + * Return:	0 if ok
+> + */
+> +static int meson_rng_probe(struct udevice *dev)
+> +{
+> +	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
+> +	int err;
+> +
+> +	err =3D clk_enable(&pdata->clk);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * meson_rng_remove() - deinitialize rng device
+> + *
+> + * @dev:	device
+> + * Return:	0 if ok
+> + */
+> +static int meson_rng_remove(struct udevice *dev)
+> +{
+> +	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
+> +
+> +	return clk_disable(&pdata->clk);
+> +}
+> +
+> +/**
+> + * meson_rng_ofdata_to_platdata() - transfer device tree data to plaform=
+ data
+> + *
+> + * @dev:	device
+> + * Return:	0 if ok
+> + */
+> +static int meson_rng_ofdata_to_platdata(struct udevice *dev)
+> +{
+> +	struct meson_rng_platdata *pdata =3D dev_get_platdata(dev);
+> +	int err;
+> +
+> +	pdata->base =3D dev_read_addr(dev);
+> +	if (!pdata->base)
+> +		return -ENODEV;
+> +
+> +	err =3D clk_get_by_name(dev, "core", &pdata->clk);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dm_rng_ops meson_rng_ops =3D {
+> +	.read =3D meson_rng_read,
+> +};
+> +
+> +static const struct udevice_id meson_rng_match[] =3D {
+> +	{
+> +		.compatible =3D "amlogic,meson-rng",
+> +	},
+> +	{},
+> +};
+> +
+> +U_BOOT_DRIVER(meson_rng) =3D {
+> +	.name =3D "meson-rng",
+> +	.id =3D UCLASS_RNG,
+> +	.of_match =3D meson_rng_match,
+> +	.ops =3D &meson_rng_ops,
+> +	.probe =3D meson_rng_probe,
+> +	.remove =3D meson_rng_remove,
+> +	.platdata_auto_alloc_size =3D sizeof(struct meson_rng_platdata),
+> +	.ofdata_to_platdata =3D meson_rng_ofdata_to_platdata,
+> +};
+> --
+> 2.20.1
+>=20
 
- drivers/usb/cdns3/core.c           | 2 +-
- drivers/usb/common/common.c        | 7 +++----
- drivers/usb/dwc3/dwc3-generic.c    | 6 +++---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 2 +-
- drivers/usb/gadget/dwc2_udc_otg.c  | 5 ++---
- drivers/usb/host/dwc3-sti-glue.c   | 2 +-
- drivers/usb/host/ehci-mx6.c        | 2 +-
- drivers/usb/host/xhci-dwc3.c       | 3 +--
- drivers/usb/musb-new/ti-musb.c     | 2 +-
- include/linux/usb/otg.h            | 4 ++--
- 10 files changed, 16 insertions(+), 19 deletions(-)
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
-index d6ccd3e73c..0b543fed3d 100644
---- a/drivers/usb/cdns3/core.c
-+++ b/drivers/usb/cdns3/core.c
-@@ -106,7 +106,7 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
- 	enum usb_dr_mode dr_mode;
- 	int ret = 0;
- 
--	dr_mode = usb_get_dr_mode(dev_of_offset(dev));
-+	dr_mode = usb_get_dr_mode(dev->node);
- 	cdns->role = USB_ROLE_NONE;
- 
- 	/*
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index a55def5aba..4300f711a9 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -7,7 +7,7 @@
-  */
- 
- #include <common.h>
--#include <linux/libfdt.h>
-+#include <dm.h>
- #include <linux/usb/otg.h>
- #include <linux/usb/ch9.h>
- 
-@@ -20,13 +20,12 @@ static const char *const usb_dr_modes[] = {
- 	[USB_DR_MODE_OTG]		= "otg",
- };
- 
--enum usb_dr_mode usb_get_dr_mode(int node)
-+enum usb_dr_mode usb_get_dr_mode(ofnode node)
- {
--	const void *fdt = gd->fdt_blob;
- 	const char *dr_mode;
- 	int i;
- 
--	dr_mode = fdt_getprop(fdt, node, "dr_mode", NULL);
-+	dr_mode = ofnode_read_string(node, "dr_mode");
- 	if (!dr_mode) {
- 		pr_err("usb dr_mode not found\n");
- 		return USB_DR_MODE_UNKNOWN;
-diff --git a/drivers/usb/dwc3/dwc3-generic.c b/drivers/usb/dwc3/dwc3-generic.c
-index ced0f53bfd..7178f12b47 100644
---- a/drivers/usb/dwc3/dwc3-generic.c
-+++ b/drivers/usb/dwc3/dwc3-generic.c
-@@ -98,7 +98,7 @@ static int dwc3_generic_ofdata_to_platdata(struct udevice *dev)
- 		plat->maximum_speed = USB_SPEED_SUPER;
- 	}
- 
--	plat->dr_mode = usb_get_dr_mode(ofnode_to_offset(node));
-+	plat->dr_mode = usb_get_dr_mode(node);
- 	if (plat->dr_mode == USB_DR_MODE_UNKNOWN) {
- 		pr_err("Invalid usb mode setup\n");
- 		return -ENODEV;
-@@ -295,7 +295,7 @@ static int dwc3_glue_bind(struct udevice *parent)
- 
- 		debug("%s: subnode name: %s\n", __func__, name);
- 
--		dr_mode = usb_get_dr_mode(ofnode_to_offset(node));
-+		dr_mode = usb_get_dr_mode(node);
- 
- 		switch (dr_mode) {
- 		case USB_DR_MODE_PERIPHERAL:
-@@ -398,7 +398,7 @@ static int dwc3_glue_probe(struct udevice *dev)
- 	while (child) {
- 		enum usb_dr_mode dr_mode;
- 
--		dr_mode = usb_get_dr_mode(dev_of_offset(child));
-+		dr_mode = usb_get_dr_mode(child->node);
- 		device_find_next_child(&child);
- 		if (ops && ops->select_dr_mode)
- 			ops->select_dr_mode(dev, index, dr_mode);
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-index 832bcd70ff..d4453f8784 100644
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -393,7 +393,7 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
- 	}
- #endif
- 
--	priv->otg_mode = usb_get_dr_mode(dev_of_offset(dev));
-+	priv->otg_mode = usb_get_dr_mode(dev->node);
- 
- 	ret = dwc3_meson_g12a_usb_init(priv);
- 	if (ret)
-diff --git a/drivers/usb/gadget/dwc2_udc_otg.c b/drivers/usb/gadget/dwc2_udc_otg.c
-index 35f4147840..70a7313244 100644
---- a/drivers/usb/gadget/dwc2_udc_otg.c
-+++ b/drivers/usb/gadget/dwc2_udc_otg.c
-@@ -1036,13 +1036,12 @@ void dwc2_phy_shutdown(struct udevice *dev, struct phy *usb_phys, int num_phys)
- static int dwc2_udc_otg_ofdata_to_platdata(struct udevice *dev)
- {
- 	struct dwc2_plat_otg_data *platdata = dev_get_platdata(dev);
--	int node = dev_of_offset(dev);
- 	ulong drvdata;
- 	void (*set_params)(struct dwc2_plat_otg_data *data);
- 	int ret;
- 
--	if (usb_get_dr_mode(node) != USB_DR_MODE_PERIPHERAL &&
--	    usb_get_dr_mode(node) != USB_DR_MODE_OTG) {
-+	if (usb_get_dr_mode(dev->node) != USB_DR_MODE_PERIPHERAL &&
-+	    usb_get_dr_mode(dev->node) != USB_DR_MODE_OTG) {
- 		dev_dbg(dev, "Invalid mode\n");
- 		return -ENODEV;
- 	}
-diff --git a/drivers/usb/host/dwc3-sti-glue.c b/drivers/usb/host/dwc3-sti-glue.c
-index 36c7d4037c..1cbf0df1ea 100644
---- a/drivers/usb/host/dwc3-sti-glue.c
-+++ b/drivers/usb/host/dwc3-sti-glue.c
-@@ -164,7 +164,7 @@ static int sti_dwc3_glue_bind(struct udevice *dev)
- 	}
- 
- 	/* retrieve the DWC3 dual role mode */
--	plat->mode = usb_get_dr_mode(ofnode_to_offset(dwc3_node));
-+	plat->mode = usb_get_dr_mode(dwc3_node);
- 	if (plat->mode == USB_DR_MODE_UNKNOWN)
- 		/* by default set dual role mode to HOST */
- 		plat->mode = USB_DR_MODE_HOST;
-diff --git a/drivers/usb/host/ehci-mx6.c b/drivers/usb/host/ehci-mx6.c
-index 1993ad620a..f2ceb51310 100644
---- a/drivers/usb/host/ehci-mx6.c
-+++ b/drivers/usb/host/ehci-mx6.c
-@@ -513,7 +513,7 @@ static int ehci_usb_ofdata_to_platdata(struct udevice *dev)
- 	struct usb_platdata *plat = dev_get_platdata(dev);
- 	enum usb_dr_mode dr_mode;
- 
--	dr_mode = usb_get_dr_mode(dev_of_offset(dev));
-+	dr_mode = usb_get_dr_mode(dev->node);
- 
- 	switch (dr_mode) {
- 	case USB_DR_MODE_HOST:
-diff --git a/drivers/usb/host/xhci-dwc3.c b/drivers/usb/host/xhci-dwc3.c
-index c1c681ca6c..9fcfa39d4b 100644
---- a/drivers/usb/host/xhci-dwc3.c
-+++ b/drivers/usb/host/xhci-dwc3.c
-@@ -9,7 +9,6 @@
- 
- #include <common.h>
- #include <dm.h>
--#include <fdtdec.h>
- #include <generic-phy.h>
- #include <usb.h>
- #include <dwc3-uboot.h>
-@@ -155,7 +154,7 @@ static int xhci_dwc3_probe(struct udevice *dev)
- 
- 	writel(reg, &dwc3_reg->g_usb2phycfg[0]);
- 
--	dr_mode = usb_get_dr_mode(dev_of_offset(dev));
-+	dr_mode = usb_get_dr_mode(dev->node);
- 	if (dr_mode == USB_DR_MODE_UNKNOWN)
- 		/* by default set dual role mode to HOST */
- 		dr_mode = USB_DR_MODE_HOST;
-diff --git a/drivers/usb/musb-new/ti-musb.c b/drivers/usb/musb-new/ti-musb.c
-index 28172c9c99..6dca0b5f17 100644
---- a/drivers/usb/musb-new/ti-musb.c
-+++ b/drivers/usb/musb-new/ti-musb.c
-@@ -296,7 +296,7 @@ static int ti_musb_wrapper_bind(struct udevice *parent)
- 		if (strncmp(name, "usb@", 4))
- 			continue;
- 
--		dr_mode = usb_get_dr_mode(ofnode_to_offset(node));
-+		dr_mode = usb_get_dr_mode(node);
- 		switch (dr_mode) {
- 		case USB_DR_MODE_PERIPHERAL:
- 			/* Bind MUSB device */
-diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-index d2604c5caf..6ba53fc598 100644
---- a/include/linux/usb/otg.h
-+++ b/include/linux/usb/otg.h
-@@ -18,12 +18,12 @@ enum usb_dr_mode {
- 
- /**
-  * usb_get_dr_mode() - Get dual role mode for given device
-- * @node: Node offset to the given device
-+ * @node: ofnode of the given device
-  *
-  * The function gets phy interface string from property 'dr_mode',
-  * and returns the correspondig enum usb_dr_mode
-  */
--enum usb_dr_mode usb_get_dr_mode(int node);
-+enum usb_dr_mode usb_get_dr_mode(ofnode node);
- 
- /**
-  * usb_get_maximum_speed() - Get maximum speed for given device
--- 
-2.17.1
+Thanks, looks fine.
 
+I suspect this will help adding EFI RNG data for Linux early random seed, r=
+ight ?
+
+Is there a RNG maintainer or should I apply it myself ?
+
+Neil
