@@ -1,58 +1,57 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web12.446.1582607427326416631
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+ by mx.groups.io with SMTP id smtpd.web09.6219.1582713501376112539
  for <u-boot-amlogic@groups.io>;
- Mon, 24 Feb 2020 21:10:27 -0800
-Received: by mail-wr1-f65.google.com with SMTP id u6so13107032wrt.0
-        for <u-boot-amlogic@groups.io>; Mon, 24 Feb 2020 21:10:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qquyljQ4ZPf+qj0RAerkiHXg0k3ZWtO3CZwbda5Dpnw=;
-        b=GaCY98YA+O1d/SiiQGG/jv/yLaxenFbSPuaBZQDY4dPVBHVKNjtgMhXy9b1JWNMrRr
-         6f309/Ds0XDMfg2Om0WlERsHBNu+OzPYgFfuRZSQmibTAP53hhFS58pYDU6JP5czCkgD
-         iQ4vHnyb4fzHzTK5NlXpA09WpIF45yNjT7cKM=
-Return-Path: <michael@amarulasolutions.com>
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: [PATCH 2/2] video: meson: Use reserving memory function without kernel linear mapping
-Date: Tue, 25 Feb 2020 06:10:21 +0100
-Message-Id: <20200225051021.15311-3-michael@amarulasolutions.com>
-In-Reply-To: <20200225051021.15311-1-michael@amarulasolutions.com>
-References: <20200225051021.15311-1-michael@amarulasolutions.com>
-To: Simon Glass <sjg@chromium.org>, Anatolij Gustschin <agust@denx.de>, Neil Armstrong <narmstrong@baylibre.com>
+ Wed, 26 Feb 2020 02:38:22 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1582713498;
+	bh=tgt8wJd+5cmKx3CCqVeWgyE4KtP+bKEhV3g7ddUZi50=;
+	h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+	b=gWdTiPZGJHHQB/qC6/agV/XISJMnsTiSRB/MdwAdcf/t40YG9sLWuUJRKhspBhf7b
+	 kftqCqFHfMBz3NyY0j4ycrTbdYBWZgfiqF16tgO29k6ZBd1ZlAOeVBADH9wxk04ooJ
+	 ynEZIxO+9hyvxuIDL7X4jFHXUIjZzImu8zwDNBDI=
+Subject: Re: [PATCH 1/1] drivers/rng: add Amlogic hardware RNG driver
+References: <20200224222133.972-1-xypron.glpk@gmx.de>
+ <bf360136-3bbc-42bd-ddf8-c48557ecd557@baylibre.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Message-ID: <d8e38126-ee7d-2410-0c6b-e801d6cd403b@gmx.de>
+Date: Wed, 26 Feb 2020 11:38:05 +0100
+MIME-Version: 1.0
+In-Reply-To: <bf360136-3bbc-42bd-ddf8-c48557ecd557@baylibre.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+To: Neil Armstrong <narmstrong@baylibre.com>, Sughosh Ganu <sughosh.ganu@linaro.org>
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Memory reserved for the simple framebuffer should not be used
-and part of memory linear mapping. See
-https://patchwork.kernel.org/patch/10486131/ for more detailed
-background information and discussion.
 
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
----
-Changes RFC -> v1:
-	- Fix compilation issue on RFC
-	- change node name from display_reserved to display-reserved
----
- drivers/video/meson/meson_vpu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/meson/meson_vpu.c b/drivers/video/meson/meson_vpu.c
-index 4eb66398d0..5bfad05d75 100644
---- a/drivers/video/meson/meson_vpu.c
-+++ b/drivers/video/meson/meson_vpu.c
-@@ -173,9 +173,9 @@ static void meson_vpu_setup_simplefb(void *fdt)
- 	 * at the end of the RAM and we strip this portion from the kernel
- 	 * allowed region
- 	 */
--	mem_start = gd->bd->bi_dram[0].start;
--	mem_size = gd->bd->bi_dram[0].size - meson_fb.fb_size;
--	ret = fdt_fixup_memory_banks(fdt, &mem_start, &mem_size, 1);
-+	mem_start = meson_fb.base;
-+	mem_size = meson_fb.fb_size;
-+	ret = fdt_fixup_reserved_memory(fdt, "display-reserved", &mem_start, &mem_size);
- 	if (ret) {
- 		eprintf("Cannot setup simplefb: Error reserving memory\n");
- 		return;
--- 
-2.17.1
+On 2/26/20 11:19 AM, Neil Armstrong wrote:
+> Hi,
+>
+> Le 24/02/2020 =E0 23:21, Heinrich Schuchardt a =E9crit :
+>> Add support for the hardware random number generator of Amlogic SOCs.
+>>
+>> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+>> ---
+<snip />
+>>
+>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Thanks for reviewing.
+
+>
+> Thanks, looks fine.
+>
+> I suspect this will help adding EFI RNG data for Linux early random seed=
+, right ?
+
+Yes, we need this for the EFI_RNG_PROTOCOL.
+
+>
+> Is there a RNG maintainer or should I apply it myself ?
+
+
+Sughosh is the maintainer for RNG.
 
