@@ -1,30 +1,30 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web09.11859.1583141652208623587
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web09.11860.1583141663847751231
  for <u-boot-amlogic@groups.io>;
- Mon, 02 Mar 2020 01:34:12 -0800
-Received: by mail-wr1-f67.google.com with SMTP id r7so11617584wro.2
-        for <u-boot-amlogic@groups.io>; Mon, 02 Mar 2020 01:34:11 -0800 (PST)
+ Mon, 02 Mar 2020 01:34:24 -0800
+Received: by mail-wr1-f68.google.com with SMTP id j7so11520656wrp.13
+        for <u-boot-amlogic@groups.io>; Mon, 02 Mar 2020 01:34:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=fkBdREebpMP5m2HSLlOYVOpSm2NkKF9vEhbtuF1fefs=;
-        b=m8U0YlTgytepkh+Qi2uBlz4CvKkZ/kFcUljhCMkWza+pXAP8EcUgTC0c7l1wMDoHn9
-         IlBQOdUVc7uWMiRK1tUL1Cqm44GPbPnL6X4pcRmA5zzOKqFyc/Iv2DUA+RApY06JMcDm
-         qvLGMgIKW+HE/LbVuNT+I6eVDwCLcke29yFu4biNcWcm/jzEmNlNsA1PREUgOKTuHcuk
-         IWxziPpUp66IssrVgacI4cu2REBMN/YUZ5p8PnAB1tJFmhF5VDSjj+T7YOoV6PqXWmTA
-         TvE/t6QbtSn4TqzB5GBpnXocAAHFAW9Uv5L1ZGah750gByIrI8GEyDkXdWWKy+Dq1T7q
-         h/Tg==
+        bh=yq6YLwHQIKTNyRIGJZyV2o5qQDtHaifNhHdWrVF/Krw=;
+        b=eEnUIJ2G0h0q+hUvsbaqhOJNTHaVuNeR+VWWlErjCOHOyCdBKQAlnNqGJasFULBhwD
+         W3bgBoD/XDwZwaC35U2LETrgpnLCdVmNPKXvCBRzkKH3HIw6uhu1bTXlZD090B8EdIbo
+         qq96jCs+AwfbaWU7BdMsrFx6yj8xih3HrKvEh1Ww8YeyuV9+vkc/At5P0wj3Pn5R7XuL
+         KBiZSS3+DKiSYOre4+/2aCzeynLEKkc7NEzlCO9bGRTz3B6I4+v7twapwdxf58GBE86b
+         VzkwsAjaxIRrrcNaP9uvA9Sv9gDMZP8pE1l1v5NQXPjKmFux/1sHS51WEuJeOtRGFYmX
+         3Qew==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 5/6] arm64: dts: meson: import libretech-pc from linux v5.6-rc2
+Subject: Re: [PATCH v2 6/6] arm64: dts: meson: add libretech-pc support
 References: <20200227112738.494579-1-jbrunet@baylibre.com>
- <20200227112738.494579-6-jbrunet@baylibre.com>
+ <20200227112738.494579-7-jbrunet@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <3769f758-4c99-4706-e1d6-8184c66aa191@baylibre.com>
-Date: Mon, 2 Mar 2020 10:34:09 +0100
+Message-ID: <d9397867-7071-a387-95d8-fb4ecc9bba96@baylibre.com>
+Date: Mon, 2 Mar 2020 10:34:21 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200227112738.494579-6-jbrunet@baylibre.com>
+In-Reply-To: <20200227112738.494579-7-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,510 +33,241 @@ Cc: Kevin Hilman <khilman@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
 On 27/02/2020 12:27, Jerome Brunet wrote:
-> Sync the libretech-pc device tree from Linux v5.6-rc2
-> 11a48a5a18c6 ("Linux 5.6-rc2")
+> Add support for the Amlogic based libretech-pc platform.
+> This platform comes with 2 variant, based on the s905d or s912 SoC.
 > 
 > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  arch/arm/dts/meson-gx-libretech-pc.dtsi       | 375 ++++++++++++++++++
->  arch/arm/dts/meson-gxl-s905d-libretech-pc.dts |  16 +
->  arch/arm/dts/meson-gxl-s905d.dtsi             |  12 +
->  arch/arm/dts/meson-gxm-s912-libretech-pc.dts  |  62 +++
->  4 files changed, 465 insertions(+)
->  create mode 100644 arch/arm/dts/meson-gx-libretech-pc.dtsi
->  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc.dts
->  create mode 100644 arch/arm/dts/meson-gxl-s905d.dtsi
->  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc.dts
+>  arch/arm/dts/Makefile                         |  2 +
+>  .../meson-gxl-s905d-libretech-pc-u-boot.dtsi  |  7 ++
+>  .../meson-gxm-s912-libretech-pc-u-boot.dtsi   |  7 ++
+>  configs/libretech-s905d-pc_defconfig          | 71 +++++++++++++++++++
+>  configs/libretech-s912-pc_defconfig           | 71 +++++++++++++++++++
+>  include/configs/libretech-pc.h                | 17 +++++
+>  6 files changed, 175 insertions(+)
+>  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
+>  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
+>  create mode 100644 configs/libretech-s905d-pc_defconfig
+>  create mode 100644 configs/libretech-s912-pc_defconfig
+>  create mode 100644 include/configs/libretech-pc.h
 > 
-> diff --git a/arch/arm/dts/meson-gx-libretech-pc.dtsi b/arch/arm/dts/meson-gx-libretech-pc.dtsi
+> diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+> index 3b8dc2f56fd2..45120d8f20ce 100644
+> --- a/arch/arm/dts/Makefile
+> +++ b/arch/arm/dts/Makefile
+> @@ -137,7 +137,9 @@ dtb-$(CONFIG_ARCH_MESON) += \
+>  	meson-gxl-s805x-libretech-ac.dtb \
+>  	meson-gxl-s905x-libretech-cc.dtb \
+>  	meson-gxl-s905x-khadas-vim.dtb \
+> +	meson-gxl-s905d-libretech-pc.dtb \
+>  	meson-gxm-khadas-vim2.dtb \
+> +	meson-gxm-s912-libretech-pc.dtb \
+>  	meson-axg-s400.dtb \
+>  	meson-g12a-u200.dtb \
+>  	meson-g12a-sei510.dtb \
+> diff --git a/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
 > new file mode 100644
-> index 000000000000..248b018c83d5
+> index 000000000000..c35158d7e9ee
 > --- /dev/null
-> +++ b/arch/arm/dts/meson-gx-libretech-pc.dtsi
-> @@ -0,0 +1,375 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 BayLibre SAS.
-> + * Author: Jerome Brunet <jbrunet@baylibre.com>
-> + */
-> +
-> +/* Libretech Amlogic GX PC form factor - AKA: Tartiflette */
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/leds/common.h>
-> +
-> +/ {
-> +	adc-keys {
-> +		compatible = "adc-keys";
-> +		io-channels = <&saradc 0>;
-> +		io-channel-names = "buttons";
-> +		keyup-threshold-microvolt = <1800000>;
-> +
-> +		update-button {
-> +			label = "update";
-> +			linux,code = <KEY_VENDOR>;
-> +			press-threshold-microvolt = <1300000>;
-> +		};
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart_AO;
-> +		ethernet0 = &ethmac;
-> +		spi0 = &spifc;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	cvbs-connector {
-> +		compatible = "composite-video-connector";
-> +		status = "disabled";
-> +
-> +		port {
-> +			cvbs_connector_in: endpoint {
-> +				remote-endpoint = <&cvbs_vdac_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	emmc_pwrseq: emmc-pwrseq {
-> +		compatible = "mmc-pwrseq-emmc";
-> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	hdmi-connector {
-> +		compatible = "hdmi-connector";
-> +		type = "a";
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi_tx_tmds_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio-keys-polled {
-> +		compatible = "gpio-keys-polled";
-> +		poll-interval = <100>;
-> +
-> +		power-button {
-> +			label = "power";
-> +			linux,code = <KEY_POWER>;
-> +			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x80000000>;
-> +	};
-> +
-> +	ao_5v: regulator-ao_5v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "AO_5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&dc_in>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	dc_in: regulator-dc_in {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "DC_IN";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		green {
-> +			color = <LED_COLOR_ID_GREEN>;
-> +			function = LED_FUNCTION_DISK_ACTIVITY;
-> +			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "disk-activity";
-> +		};
-> +
-> +		blue {
-> +			color = <LED_COLOR_ID_BLUE>;
-> +			function = LED_FUNCTION_STATUS;
-> +			gpios = <&gpio GPIODV_28 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			panic-indicator;
-> +		};
-> +	};
-> +
-> +	vcc_card: regulator-vcc_card {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_CARD";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vddio_ao3v3>;
-> +
-> +		gpio = <&gpio GPIODV_4 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +	vcc5v: regulator-vcc5v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&ao_5v>;
-> +
-> +		gpio = <&gpio GPIOH_3 GPIO_OPEN_DRAIN>;
-> +	};
-> +
-> +	vddio_ao18: regulator-vddio_ao18 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO18";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&ao_5v>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	vddio_ao3v3: regulator-vddio_ao3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&ao_5v>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	vddio_boot: regulator-vddio_boot {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_BOOT";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&vddio_ao3v3>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	vddio_card: regulator-vddio-card {
-> +		compatible = "regulator-gpio";
-> +		regulator-name = "VDDIO_CARD";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpios = <&gpio GPIODV_5 GPIO_ACTIVE_HIGH>;
-> +		gpios-states = <0>;
-> +
-> +		states = <3300000 0>,
-> +			 <1800000 1>;
-> +
-> +		regulator-settling-time-up-us = <200>;
-> +		regulator-settling-time-down-us = <50000>;
-> +	};
-> +};
-> +
-> +&cec_AO {
-> +	pinctrl-0 = <&ao_cec_pins>;
-> +	pinctrl-names = "default";
-> +	hdmi-phandle = <&hdmi_tx>;
-> +	status = "okay";
-> +};
-> +
-> +&cvbs_vdac_port {
-> +	cvbs_vdac_out: endpoint {
-> +		remote-endpoint = <&cvbs_connector_in>;
-> +	};
-> +};
-> +
-> +&ethmac {
-> +	pinctrl-0 = <&eth_pins>, <&eth_phy_irq_pins>;
-> +	pinctrl-names = "default";
-> +	phy-handle = <&external_phy>;
-> +	amlogic,tx-delay-ns = <2>;
-> +	phy-mode = "rgmii";
-> +	status = "okay";
-> +};
-> +
-> +&external_mdio {
-> +	external_phy: ethernet-phy@0 {
-> +		reg = <0>;
-> +		max-speed = <1000>;
-> +		reset-assert-us = <10000>;
-> +		reset-deassert-us = <30000>;
-> +		reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
-> +		interrupt-parent = <&gpio_intc>;
-> +		interrupts = <25 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +};
-> +
-> +&pinctrl_periphs {
-> +	/*
-> +	 * Make sure the reset pin of the usb HUB is driven high to take
-> +	 * it out of reset.
-> +	 */
-> +	usb1_rst_pins: usb1_rst_irq {
-> +		mux {
-> +			groups = "GPIODV_3";
-> +			function = "gpio_periphs";
-> +			bias-disable;
-> +			output-high;
-> +		};
-> +	};
-> +
-> +	/* Make sure the phy irq pin is properly configured as input */
-> +	eth_phy_irq_pins: eth_phy_irq {
-> +		mux {
-> +			groups = "GPIOZ_15";
-> +			function = "gpio_periphs";
-> +			bias-disable;
-> +			output-disable;
-> +		};
-> +	};
-> +};
-> +
-> +&hdmi_tx {
-> +	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-> +	pinctrl-names = "default";
-> +	hdmi-supply = <&vcc5v>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi_tx_tmds_port {
-> +	hdmi_tx_tmds_out: endpoint {
-> +		remote-endpoint = <&hdmi_connector_in>;
-> +	};
-> +};
-> +
-> +&ir {
-> +	pinctrl-0 = <&remote_input_ao_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&i2c_C {
-> +	pinctrl-0 = <&i2c_c_dv18_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	rtc: rtc@51 {
-> +		reg = <0x51>;
-> +		compatible = "nxp,pcf8563";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "rtc_clkout";
-> +	};
-> +};
-> +
-> +&pwm_AO_ab {
-> +	pinctrl-0 = <&pwm_ao_a_3_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +	status = "okay";
-> +};
-> +
-> +&pwm_ab {
-> +	pinctrl-0 = <&pwm_b_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +	status = "okay";
-> +};
-> +
-> +&pwm_ef {
-> +	pinctrl-0 = <&pwm_e_pins>, <&pwm_f_clk_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +	status = "okay";
-> +};
-> +
-> +&saradc {
-> +	vref-supply = <&vddio_ao18>;
-> +	status = "okay";
-> +};
-> +
-> +/* SD card */
-> +&sd_emmc_b {
-> +	pinctrl-0 = <&sdcard_pins>;
-> +	pinctrl-1 = <&sdcard_clk_gate_pins>;
-> +	pinctrl-names = "default", "clk-gate";
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-ddr50;
-> +	max-frequency = <200000000>;
-> +	disable-wp;
-> +
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
-> +
-> +	vmmc-supply = <&vcc_card>;
-> +	vqmmc-supply = <&vddio_card>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +/* eMMC */
-> +&sd_emmc_c {
-> +	pinctrl-0 = <&emmc_pins>;
-> +	pinctrl-1 = <&emmc_clk_gate_pins>;
-> +	pinctrl-names = "default", "clk-gate";
-> +
-> +	bus-width = <8>;
-> +	cap-mmc-highspeed;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs200-1_8v;
-> +	max-frequency = <200000000>;
-> +	disable-wp;
-> +
-> +	mmc-pwrseq = <&emmc_pwrseq>;
-> +	vmmc-supply = <&vddio_ao3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&spifc {
-> +	pinctrl-0 = <&nor_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	gd25lq128: spi-flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0>;
-> +		spi-max-frequency = <12000000>;
-> +	};
-> +};
-> +
-> +&uart_AO {
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&usb0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb2_phy0 {
-> +	pinctrl-0 = <&usb1_rst_pins>;
-> +	pinctrl-names = "default";
-> +	phy-supply = <&vcc5v>;
-> +};
-> +
-> +&usb2_phy1 {
-> +	phy-supply = <&vcc5v>;
-> +};
-> diff --git a/arch/arm/dts/meson-gxl-s905d-libretech-pc.dts b/arch/arm/dts/meson-gxl-s905d-libretech-pc.dts
-> new file mode 100644
-> index 000000000000..100a1cfeea15
-> --- /dev/null
-> +++ b/arch/arm/dts/meson-gxl-s905d-libretech-pc.dts
-> @@ -0,0 +1,16 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 BayLibre SAS. All rights reserved.
-> + * Author: Jerome Brunet <jbrunet@baylibre.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-gxl-s905d.dtsi"
-> +#include "meson-gx-libretech-pc.dtsi"
-> +
-> +/ {
-> +	compatible = "libretech,aml-s905d-pc", "amlogic,s905d",
-> +		     "amlogic,meson-gxl";
-> +	model = "Libre Computer AML-S905D-PC";
-> +};
-> diff --git a/arch/arm/dts/meson-gxl-s905d.dtsi b/arch/arm/dts/meson-gxl-s905d.dtsi
-> new file mode 100644
-> index 000000000000..43321919547a
-> --- /dev/null
-> +++ b/arch/arm/dts/meson-gxl-s905d.dtsi
-> @@ -0,0 +1,12 @@
+> +++ b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
+> @@ -0,0 +1,7 @@
 > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 > +/*
-> + * Copyright (c) 2016 Endless Computers, Inc.
-> + * Author: Carlo Caione <carlo@endlessm.com>
+> + * Copyright (c) 2019 BayLibre, SAS.
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
 > + */
 > +
-> +#include "meson-gxl.dtsi"
-> +#include "meson-gxl-mali.dtsi"
-> +
-> +/ {
-> +	compatible = "amlogic,s905d", "amlogic,meson-gxl";
-> +};
-> diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc.dts b/arch/arm/dts/meson-gxm-s912-libretech-pc.dts
+> +#include "meson-gx-u-boot.dtsi"
+> diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
 > new file mode 100644
-> index 000000000000..444c249863cb
+> index 000000000000..c35158d7e9ee
 > --- /dev/null
-> +++ b/arch/arm/dts/meson-gxm-s912-libretech-pc.dts
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
+> @@ -0,0 +1,7 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 > +/*
-> + * Copyright (c) 2019 BayLibre SAS. All rights reserved.
-> + * Author: Jerome Brunet <jbrunet@baylibre.com>
+> + * Copyright (c) 2019 BayLibre, SAS.
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
 > + */
 > +
-> +/dts-v1/;
+> +#include "meson-gx-u-boot.dtsi"
+> diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
+> new file mode 100644
+> index 000000000000..0dbacf60046a
+> --- /dev/null
+> +++ b/configs/libretech-s905d-pc_defconfig
+> @@ -0,0 +1,71 @@
+> +CONFIG_ARM=y
+> +CONFIG_SYS_CONFIG_NAME="libretech-pc"
+> +CONFIG_SYS_BOARD="q200"
+> +CONFIG_ARCH_MESON=y
+> +CONFIG_SYS_TEXT_BASE=0x01000000
+> +CONFIG_MESON_GXL=y
+> +CONFIG_NR_DRAM_BANKS=1
+> +CONFIG_DEBUG_UART_BASE=0xc81004c0
+> +CONFIG_DEBUG_UART_CLOCK=24000000
+> +CONFIG_IDENT_STRING=" libretech-s905d-pc"
+> +CONFIG_DEBUG_UART=y
+> +CONFIG_OF_BOARD_SETUP=y
+> +CONFIG_USE_PREBOOT=y
+> +CONFIG_PREBOOT="usb start"
+> +CONFIG_MISC_INIT_R=y
+> +# CONFIG_DISPLAY_CPUINFO is not set
+> +# CONFIG_CMD_BDI is not set
+> +# CONFIG_CMD_IMI is not set
+> +CONFIG_CMD_ADC=y
+> +CONFIG_CMD_GPIO=y
+> +# CONFIG_CMD_LOADS is not set
+> +CONFIG_CMD_MMC=y
+> +CONFIG_CMD_SF=y
+> +CONFIG_CMD_SF_TEST=y
+> +CONFIG_CMD_SPI=y
+> +CONFIG_CMD_USB=y
+> +# CONFIG_CMD_SETEXPR is not set
+> +CONFIG_CMD_REGULATOR=y
+> +CONFIG_OF_CONTROL=y
+> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxl-s905d-libretech-pc"
+> +CONFIG_ENV_IS_IN_SPI_FLASH=y
+> +CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_SARADC_MESON=y
+> +CONFIG_DM_GPIO=y
+> +CONFIG_DM_KEYBOARD=y
+> +CONFIG_DM_MMC=y
+> +CONFIG_MMC_MESON_GX=y
+> +CONFIG_MTD=y
+> +CONFIG_DM_SPI_FLASH=y
+> +CONFIG_SPI_FLASH=y
+> +CONFIG_SPI_FLASH_GIGADEVICE=y
+> +CONFIG_PHY_REALTEK=y
+> +CONFIG_DM_ETH=y
+> +CONFIG_ETH_DESIGNWARE=y
+> +CONFIG_PHY=y
+> +CONFIG_MESON_GXL_USB_PHY=y
+> +CONFIG_PINCTRL=y
+> +CONFIG_PINCTRL_MESON_GXL=y
+> +CONFIG_POWER_DOMAIN=y
+> +CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
+> +CONFIG_DM_REGULATOR_FIXED=y
+> +CONFIG_DM_RESET=y
+> +CONFIG_DEBUG_UART_MESON=y
+> +CONFIG_DEBUG_UART_ANNOUNCE=y
+> +CONFIG_DEBUG_UART_SKIP_INIT=y
+> +CONFIG_MESON_SERIAL=y
+> +CONFIG_SPI=y
+> +CONFIG_DM_SPI=y
+> +CONFIG_MESON_SPIFC=y
+> +CONFIG_USB=y
+> +CONFIG_DM_USB=y
+> +CONFIG_USB_XHCI_HCD=y
+> +CONFIG_USB_XHCI_DWC3=y
+> +CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
+> +CONFIG_USB_DWC3=y
+> +CONFIG_USB_KEYBOARD=y
+> +CONFIG_DM_VIDEO=y
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+> +CONFIG_VIDEO_MESON=y
+> +CONFIG_VIDEO_DT_SIMPLEFB=y
+> +CONFIG_OF_LIBFDT_OVERLAY=y
+> diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
+> new file mode 100644
+> index 000000000000..63b44b389be6
+> --- /dev/null
+> +++ b/configs/libretech-s912-pc_defconfig
+> @@ -0,0 +1,71 @@
+> +CONFIG_ARM=y
+> +CONFIG_SYS_CONFIG_NAME="libretech-pc"
+> +CONFIG_SYS_BOARD="q200"
+> +CONFIG_ARCH_MESON=y
+> +CONFIG_SYS_TEXT_BASE=0x01000000
+> +CONFIG_MESON_GXM=y
+> +CONFIG_NR_DRAM_BANKS=1
+> +CONFIG_DEBUG_UART_BASE=0xc81004c0
+> +CONFIG_DEBUG_UART_CLOCK=24000000
+> +CONFIG_IDENT_STRING=" libretech-s912-pc"
+> +CONFIG_DEBUG_UART=y
+> +CONFIG_OF_BOARD_SETUP=y
+> +CONFIG_USE_PREBOOT=y
+> +CONFIG_PREBOOT="usb start"
+> +CONFIG_MISC_INIT_R=y
+> +# CONFIG_DISPLAY_CPUINFO is not set
+> +# CONFIG_CMD_BDI is not set
+> +# CONFIG_CMD_IMI is not set
+> +CONFIG_CMD_ADC=y
+> +CONFIG_CMD_GPIO=y
+> +# CONFIG_CMD_LOADS is not set
+> +CONFIG_CMD_MMC=y
+> +CONFIG_CMD_SF=y
+> +CONFIG_CMD_SF_TEST=y
+> +CONFIG_CMD_SPI=y
+> +CONFIG_CMD_USB=y
+> +# CONFIG_CMD_SETEXPR is not set
+> +CONFIG_CMD_REGULATOR=y
+> +CONFIG_OF_CONTROL=y
+> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxm-s912-libretech-pc"
+> +CONFIG_ENV_IS_IN_SPI_FLASH=y
+> +CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_SARADC_MESON=y
+> +CONFIG_DM_GPIO=y
+> +CONFIG_DM_KEYBOARD=y
+> +CONFIG_DM_MMC=y
+> +CONFIG_MMC_MESON_GX=y
+> +CONFIG_MTD=y
+> +CONFIG_DM_SPI_FLASH=y
+> +CONFIG_SPI_FLASH=y
+> +CONFIG_SPI_FLASH_GIGADEVICE=y
+> +CONFIG_PHY_REALTEK=y
+> +CONFIG_DM_ETH=y
+> +CONFIG_ETH_DESIGNWARE=y
+> +CONFIG_PHY=y
+> +CONFIG_MESON_GXL_USB_PHY=y
+> +CONFIG_PINCTRL=y
+> +CONFIG_PINCTRL_MESON_GXL=y
+> +CONFIG_POWER_DOMAIN=y
+> +CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
+> +CONFIG_DM_REGULATOR_FIXED=y
+> +CONFIG_DM_RESET=y
+> +CONFIG_DEBUG_UART_MESON=y
+> +CONFIG_DEBUG_UART_ANNOUNCE=y
+> +CONFIG_DEBUG_UART_SKIP_INIT=y
+> +CONFIG_MESON_SERIAL=y
+> +CONFIG_SPI=y
+> +CONFIG_DM_SPI=y
+> +CONFIG_MESON_SPIFC=y
+> +CONFIG_USB=y
+> +CONFIG_DM_USB=y
+> +CONFIG_USB_XHCI_HCD=y
+> +CONFIG_USB_XHCI_DWC3=y
+> +CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
+> +CONFIG_USB_DWC3=y
+> +CONFIG_USB_KEYBOARD=y
+> +CONFIG_DM_VIDEO=y
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+> +CONFIG_VIDEO_MESON=y
+> +CONFIG_VIDEO_DT_SIMPLEFB=y
+> +CONFIG_OF_LIBFDT_OVERLAY=y
+> diff --git a/include/configs/libretech-pc.h b/include/configs/libretech-pc.h
+> new file mode 100644
+> index 000000000000..182eba519d51
+> --- /dev/null
+> +++ b/include/configs/libretech-pc.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Configuration for LibreTech AC
+> + *
+> + * Copyright (C) 2020 Baylibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
 > +
-> +#include "meson-gxm.dtsi"
-> +#include "meson-gx-libretech-pc.dtsi"
+> +#ifndef __CONFIG_H
+> +#define __CONFIG_H
 > +
-> +/ {
-> +	compatible = "libretech,aml-s912-pc", "amlogic,s912",
-> +		     "amlogic,meson-gxm";
-> +	model = "Libre Computer AML-S912-PC";
+> +#define CONFIG_ENV_SECT_SIZE	0x10000
+> +#define CONFIG_ENV_OFFSET	(-0x10000)
 > +
-> +	typec2_vbus: regulator-typec2_vbus {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "TYPEC2_VBUS";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vcc5v>;
+> +#include <configs/meson64.h>
 > +
-> +		gpio = <&gpio GPIODV_1 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&pinctrl_periphs {
-> +	/*
-> +	 * Make sure the irq pin of the TYPE C controller is not driven
-> +	 * by the SoC.
-> +	 */
-> +	fusb302_irq_pins: fusb302_irq {
-> +		mux {
-> +			groups = "GPIODV_0";
-> +			function = "gpio_periphs";
-> +			bias-pull-up;
-> +			output-disable;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c_C {
-> +	fusb302@22 {
-> +		compatible = "fcs,fusb302";
-> +		reg = <0x22>;
-> +
-> +		pinctrl-0 = <&fusb302_irq_pins>;
-> +		pinctrl-names = "default";
-> +		interrupt-parent = <&gpio_intc>;
-> +		interrupts = <59 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		vbus-supply = <&typec2_vbus>;
-> +
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&usb2_phy2 {
-> +	phy-supply = <&typec2_vbus>;
-> +};
+> +#endif /* __CONFIG_H */
 > 
 
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
