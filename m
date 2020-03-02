@@ -1,51 +1,68 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web09.11985.1583143048183385770
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+ by mx.groups.io with SMTP id smtpd.web12.1357.1583179644355824752
  for <u-boot-amlogic@groups.io>;
- Mon, 02 Mar 2020 01:57:28 -0800
-Received: by mail-wm1-f65.google.com with SMTP id a5so10359948wmb.0
-        for <u-boot-amlogic@groups.io>; Mon, 02 Mar 2020 01:57:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=yaCkbSLvAL6nPJ0ayaxDNjXbAKGaxW8JJuf1tmQ1zYY=;
-        b=wRiRuY2pKQIqIYzE+DxjYJXNyUddTEyX4ElprBcXa8s6sK8jzDY9l3lZqvgd1GNalq
-         2SWgH2oX7MHzbMexpz7NQ8UoReSlkgi9Sq25T1hsk7gIwEcVFle2zcrsY4VJRHGUGuD+
-         vViRB3Xa1oDjkHdJf+pkoSLTdNlMzKlSTvhYkcdugvj38vjwudJbGKS2uQ3A+TW/1gHC
-         SMPZlwd6KHbxcfiSRgxyWLmfpcJEOyzGX7NfY9V+MDWJHeUSowpy50sL/oLGzr+GBZro
-         f0z2IQgZDZj6HZJahVT6N3bqNLoMlyJsruqEufkU7dWaaNxhGrhhdlnok0LyiQuVWRyw
-         CrXg==
-Return-Path: <jbrunet@baylibre.com>
-References: <20200227112738.494579-1-jbrunet@baylibre.com> <20200227112738.494579-7-jbrunet@baylibre.com> <d9397867-7071-a387-95d8-fb4ecc9bba96@baylibre.com> <c1a60140-e340-96fd-3011-187538cfdf75@baylibre.com>
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 6/6] arm64: dts: meson: add libretech-pc support
-In-reply-to: <c1a60140-e340-96fd-3011-187538cfdf75@baylibre.com>
-Date: Mon, 02 Mar 2020 10:57:25 +0100
-Message-ID: <1jmu8zt6yi.fsf@starbuckisacylon.baylibre.com>
+ Mon, 02 Mar 2020 12:07:24 -0800
+Date: Mon, 2 Mar 2020 21:07:20 +0100
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH] Revert "dm: core: device: switch off power domain after device removal"
+Message-ID: <20200302210720.64bdca31@crub>
+In-Reply-To: <4ca30460-15e5-1d9e-9a52-0044e308a590@baylibre.com>
+References: <20200217091036.19028-1-narmstrong@baylibre.com>
+	<20200217125336.39990b93@crub>
+	<4ca30460-15e5-1d9e-9a52-0044e308a590@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: sjg@chromium.org, trini@konsulko.com, oliver.graute@gmail.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, lokeshvutla@ti.com, sbabic@denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
+Hi Neil,
 
-On Mon 02 Mar 2020 at 10:52, Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Mon, 2 Mar 2020 10:30:31 +0100
+Neil Armstrong narmstrong@baylibre.com wrote:
 
-> On 02/03/2020 10:34, Neil Armstrong wrote:
->> On 27/02/2020 12:27, Jerome Brunet wrote:
->
-> The defconfig fails with :
-> scripts/kconfig/conf  --syncconfig Kconfig
-> .config:164:warning: symbol value '' invalid for ENV_SECT_SIZE
-> .config:165:warning: symbol value '' invalid for ENV_OFFSET
->
-> for both configs on master.
+> Hi Analolij,
+> 
+> On 17/02/2020 12:53, Anatolij Gustschin wrote:
+> > On Mon, 17 Feb 2020 10:10:36 +0100
+> > Neil Armstrong narmstrong@baylibre.com wrote:
+> >   
+> >> This commit breaks Linux boot on Amlogic libretech-cc, libretech-ac, sei510,
+> >> sei610 board by automatically disabling the power domain after device removal.
+> >> This because the power domain associated to the video driver must be kept
+> >> enabled for linux to boot.
+> >>
+> >> The only way is to use the introduced flag DM_FLAG_DEFAULT_PD_CTRL_OFF, which
+> >> removes automatic handling of power domain.
+> >> This flag is not a complete solution since it will force reverting to manually
+> >> enable the power domain from the driver probe.
+> >>
+> >> Instead a flag to keep the power domain enabled after removal should be
+> >> introduced.
+> >>
+> >> In the meantime revert this commit until a proper solution is found.
+> >>
+> >> This reverts commit 52edfed65de967a86983a55c51ba0727090efc43.
+> >>
+> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> ---
+> >> Hi Simon, Tom,
+> >>
+> >> This revert is the simplest fix to make the boards boot again on v2020.04,
+> >> the goal is to make this behavior happen again with a proper flag to keep the
+> >> power domain enabled on specific drivers.
+> >>
+> >> I can push it on my next PR on my branch, is it ok ?  
+> > 
+> > Please test if these two patches fix the problem:
+> >  http://patchwork.ozlabs.org/patch/1239143
+> >  http://patchwork.ozlabs.org/patch/1239144  
+> 
+> Should I apply these through my tree or you plan to push these yourself ?
 
-That's quite a few comment about master which propably means I messed up
-while rebasing on it (or trying to).
+These patches are assigned to Simon in patchwork, and are in his tree
+under build-testing I think.
 
-I can fix this up a resubmit the whole thing if you want.
-
->
-> Neil
-
+--
+Anatolij
