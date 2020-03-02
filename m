@@ -1,30 +1,29 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web09.11860.1583141663847751231
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web11.11894.1583141715076205159
  for <u-boot-amlogic@groups.io>;
- Mon, 02 Mar 2020 01:34:24 -0800
-Received: by mail-wr1-f68.google.com with SMTP id j7so11520656wrp.13
-        for <u-boot-amlogic@groups.io>; Mon, 02 Mar 2020 01:34:23 -0800 (PST)
+ Mon, 02 Mar 2020 01:35:15 -0800
+Received: by mail-wm1-f65.google.com with SMTP id 6so1784281wmi.5
+        for <u-boot-amlogic@groups.io>; Mon, 02 Mar 2020 01:35:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=yq6YLwHQIKTNyRIGJZyV2o5qQDtHaifNhHdWrVF/Krw=;
-        b=eEnUIJ2G0h0q+hUvsbaqhOJNTHaVuNeR+VWWlErjCOHOyCdBKQAlnNqGJasFULBhwD
-         W3bgBoD/XDwZwaC35U2LETrgpnLCdVmNPKXvCBRzkKH3HIw6uhu1bTXlZD090B8EdIbo
-         qq96jCs+AwfbaWU7BdMsrFx6yj8xih3HrKvEh1Ww8YeyuV9+vkc/At5P0wj3Pn5R7XuL
-         KBiZSS3+DKiSYOre4+/2aCzeynLEKkc7NEzlCO9bGRTz3B6I4+v7twapwdxf58GBE86b
-         VzkwsAjaxIRrrcNaP9uvA9Sv9gDMZP8pE1l1v5NQXPjKmFux/1sHS51WEuJeOtRGFYmX
-         3Qew==
+        bh=E/2OrLFpngk+ZOElvNVn0XtiPAsKZ2LrhcQ0NG3I/L8=;
+        b=kkaNZ5CY8Imz4OHEZW9gLv1vQi2s/eUngFxjnZwJEVeWJlXxAVjKjrKsOLT49aOMAN
+         4GqN1mmkqpU1O1mp66seLTKMoawi7EFO3qaf22bLnB3FCz8fBwc1PHY+6nGtaD4pu8B+
+         tQrBVfxTkjz9imzcqaYPvlN/78/mUXH/XRElLUlqVSge61bLpqbtvj2JaUJIT1aQvc+S
+         WNBljspueysYOfbWqzQjWcn+9nNNtObPSq1mxOaJtPVFpM5kvmdAxDoUWAQBfg05RjHH
+         W1KrAI0muv8VJi1C21/Fkf7WFq5KgJmkhJOQnxFf0aMHKQg1aQnCfHivGi8Nkm7KQ8lO
+         ziKA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 6/6] arm64: dts: meson: add libretech-pc support
+Subject: Re: [PATCH v2 0/6] arm64: meson: add libretech-pc support
 References: <20200227112738.494579-1-jbrunet@baylibre.com>
- <20200227112738.494579-7-jbrunet@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <d9397867-7071-a387-95d8-fb4ecc9bba96@baylibre.com>
-Date: Mon, 2 Mar 2020 10:34:21 +0100
+Message-ID: <ac0c0acd-088e-346b-3be2-d008f4e6d3ba@baylibre.com>
+Date: Mon, 2 Mar 2020 10:35:12 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200227112738.494579-7-jbrunet@baylibre.com>
+In-Reply-To: <20200227112738.494579-1-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,241 +32,101 @@ Cc: Kevin Hilman <khilman@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
 On 27/02/2020 12:27, Jerome Brunet wrote:
-> Add support for the Amlogic based libretech-pc platform.
-> This platform comes with 2 variant, based on the s905d or s912 SoC.
+> Add libretech PC platform support. This platform comes in 2 variants,
+> one with the s905d and the other s912.
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm/dts/Makefile                         |  2 +
->  .../meson-gxl-s905d-libretech-pc-u-boot.dtsi  |  7 ++
->  .../meson-gxm-s912-libretech-pc-u-boot.dtsi   |  7 ++
->  configs/libretech-s905d-pc_defconfig          | 71 +++++++++++++++++++
->  configs/libretech-s912-pc_defconfig           | 71 +++++++++++++++++++
->  include/configs/libretech-pc.h                | 17 +++++
->  6 files changed, 175 insertions(+)
+> While working on these boards, I've found a problem related the mmc
+> clock. In some cases, the ROM code will leave the mmc clocks in such
+> a weird state that any access to the mmc controller would lock the
+> device.
+> 
+> Making sure the MMC clocks are properly reset and enabled is enough
+> to solve the problem.
+> 
+> I have also synced all amlogic supported dts. Since I had to update
+> the gx dsti files, it made sense to update the dts as well. This is
+> done to keep things coherent even if it is not the original purpose
+> of this series.
+> 
+> Changes since v1:
+>  - Split dt sync, libretech-pc import and config addition.
+>  - Rebase on master
+> 
+> Jerome Brunet (6):
+>   dt-bindings: leds: import common led bindings from linux v5.5
+>   mmc: meson-gx: enable input clocks
+>   clk: meson: reset mmc clock on probe
+>   arm64: dts: meson: sync dt and bindings from v5.6-rc2
+>   arm64: dts: meson: import libretech-pc from linux v5.6-rc2
+>   arm64: dts: meson: add libretech-pc support
+> 
+>  arch/arm/dts/Makefile                         |   2 +
+>  arch/arm/dts/meson-axg-s400.dts               |  70 ++-
+>  arch/arm/dts/meson-axg.dtsi                   | 273 ++++++++--
+>  arch/arm/dts/meson-g12-common.dtsi            | 478 ++++++------------
+>  arch/arm/dts/meson-g12.dtsi                   | 398 +++++++++++++++
+>  arch/arm/dts/meson-g12a-sei510.dts            |  64 +++
+>  arch/arm/dts/meson-g12a-u200.dts              |  54 ++
+>  arch/arm/dts/meson-g12a.dtsi                  |  33 +-
+>  arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts |  25 +
+>  arch/arm/dts/meson-g12b-odroid-n2.dts         |   2 +-
+>  arch/arm/dts/meson-g12b.dtsi                  |  26 +-
+>  arch/arm/dts/meson-gx-libretech-pc.dtsi       | 375 ++++++++++++++
+>  arch/arm/dts/meson-gx.dtsi                    |  87 +++-
+>  arch/arm/dts/meson-gxbb-nanopi-k2.dts         |  26 +-
+>  arch/arm/dts/meson-gxbb-odroidc2.dts          | 100 +++-
+>  arch/arm/dts/meson-gxbb-p200.dts              |   9 +-
+>  arch/arm/dts/meson-gxbb-p201.dts              |   2 +-
+>  arch/arm/dts/meson-gxbb-p20x.dtsi             |   9 +-
+>  arch/arm/dts/meson-gxbb.dtsi                  | 118 ++++-
+>  arch/arm/dts/meson-gxl-s805x-libretech-ac.dts |   2 +-
+>  .../meson-gxl-s905d-libretech-pc-u-boot.dtsi  |   7 +
+>  arch/arm/dts/meson-gxl-s905d-libretech-pc.dts |  16 +
+>  arch/arm/dts/meson-gxl-s905d.dtsi             |  12 +
+>  arch/arm/dts/meson-gxl-s905x-khadas-vim.dts   |  20 +-
+>  arch/arm/dts/meson-gxl-s905x-libretech-cc.dts |  26 +-
+>  arch/arm/dts/meson-gxl-s905x-p212.dtsi        |  10 +-
+>  arch/arm/dts/meson-gxl.dtsi                   |  76 ++-
+>  arch/arm/dts/meson-gxm-khadas-vim2.dts        |  71 +--
+>  .../meson-gxm-s912-libretech-pc-u-boot.dtsi   |   7 +
+>  arch/arm/dts/meson-gxm-s912-libretech-pc.dts  |  62 +++
+>  arch/arm/dts/meson-gxm.dtsi                   |  39 +-
+>  arch/arm/dts/meson-khadas-vim3.dtsi           |   7 +
+>  arch/arm/dts/meson-sm1-khadas-vim3l.dts       |  95 ++++
+>  arch/arm/dts/meson-sm1-sei610.dts             | 236 ++++++++-
+>  arch/arm/dts/meson-sm1.dtsi                   | 356 +++++++++++++
+>  configs/libretech-s905d-pc_defconfig          |  71 +++
+>  configs/libretech-s912-pc_defconfig           |  71 +++
+>  drivers/clk/meson/axg.c                       |   7 +
+>  drivers/clk/meson/g12a.c                      |   7 +
+>  drivers/clk/meson/gxbb.c                      |   7 +
+>  drivers/mmc/meson_gx_mmc.c                    |  14 +-
+>  include/configs/libretech-pc.h                |  17 +
+>  include/dt-bindings/clock/axg-audio-clkc.h    |  10 +
+>  include/dt-bindings/clock/gxbb-aoclkc.h       |   7 +
+>  include/dt-bindings/clock/gxbb-clkc.h         |  21 +
+>  include/dt-bindings/gpio/meson-gxbb-gpio.h    |   8 +-
+>  include/dt-bindings/gpio/meson-gxl-gpio.h     |   8 +-
+>  include/dt-bindings/leds/common.h             |  75 +++
+>  .../reset/amlogic,meson-axg-audio-arb.h       |   2 +
+>  .../reset/amlogic,meson-axg-reset.h           |   3 +-
+>  .../reset/amlogic,meson-g12a-audio-reset.h    |  15 +
+>  .../reset/amlogic,meson-gxbb-reset.h          |  51 +-
+>  52 files changed, 2963 insertions(+), 624 deletions(-)
+>  create mode 100644 arch/arm/dts/meson-g12.dtsi
+>  create mode 100644 arch/arm/dts/meson-gx-libretech-pc.dtsi
 >  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
+>  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc.dts
+>  create mode 100644 arch/arm/dts/meson-gxl-s905d.dtsi
 >  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
+>  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc.dts
+>  create mode 100644 arch/arm/dts/meson-sm1-khadas-vim3l.dts
 >  create mode 100644 configs/libretech-s905d-pc_defconfig
 >  create mode 100644 configs/libretech-s912-pc_defconfig
 >  create mode 100644 include/configs/libretech-pc.h
-> 
-> diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-> index 3b8dc2f56fd2..45120d8f20ce 100644
-> --- a/arch/arm/dts/Makefile
-> +++ b/arch/arm/dts/Makefile
-> @@ -137,7 +137,9 @@ dtb-$(CONFIG_ARCH_MESON) += \
->  	meson-gxl-s805x-libretech-ac.dtb \
->  	meson-gxl-s905x-libretech-cc.dtb \
->  	meson-gxl-s905x-khadas-vim.dtb \
-> +	meson-gxl-s905d-libretech-pc.dtb \
->  	meson-gxm-khadas-vim2.dtb \
-> +	meson-gxm-s912-libretech-pc.dtb \
->  	meson-axg-s400.dtb \
->  	meson-g12a-u200.dtb \
->  	meson-g12a-sei510.dtb \
-> diff --git a/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
-> new file mode 100644
-> index 000000000000..c35158d7e9ee
-> --- /dev/null
-> +++ b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
-> @@ -0,0 +1,7 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS.
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include "meson-gx-u-boot.dtsi"
-> diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
-> new file mode 100644
-> index 000000000000..c35158d7e9ee
-> --- /dev/null
-> +++ b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
-> @@ -0,0 +1,7 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS.
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include "meson-gx-u-boot.dtsi"
-> diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
-> new file mode 100644
-> index 000000000000..0dbacf60046a
-> --- /dev/null
-> +++ b/configs/libretech-s905d-pc_defconfig
-> @@ -0,0 +1,71 @@
-> +CONFIG_ARM=y
-> +CONFIG_SYS_CONFIG_NAME="libretech-pc"
-> +CONFIG_SYS_BOARD="q200"
-> +CONFIG_ARCH_MESON=y
-> +CONFIG_SYS_TEXT_BASE=0x01000000
-> +CONFIG_MESON_GXL=y
-> +CONFIG_NR_DRAM_BANKS=1
-> +CONFIG_DEBUG_UART_BASE=0xc81004c0
-> +CONFIG_DEBUG_UART_CLOCK=24000000
-> +CONFIG_IDENT_STRING=" libretech-s905d-pc"
-> +CONFIG_DEBUG_UART=y
-> +CONFIG_OF_BOARD_SETUP=y
-> +CONFIG_USE_PREBOOT=y
-> +CONFIG_PREBOOT="usb start"
-> +CONFIG_MISC_INIT_R=y
-> +# CONFIG_DISPLAY_CPUINFO is not set
-> +# CONFIG_CMD_BDI is not set
-> +# CONFIG_CMD_IMI is not set
-> +CONFIG_CMD_ADC=y
-> +CONFIG_CMD_GPIO=y
-> +# CONFIG_CMD_LOADS is not set
-> +CONFIG_CMD_MMC=y
-> +CONFIG_CMD_SF=y
-> +CONFIG_CMD_SF_TEST=y
-> +CONFIG_CMD_SPI=y
-> +CONFIG_CMD_USB=y
-> +# CONFIG_CMD_SETEXPR is not set
-> +CONFIG_CMD_REGULATOR=y
-> +CONFIG_OF_CONTROL=y
-> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxl-s905d-libretech-pc"
-> +CONFIG_ENV_IS_IN_SPI_FLASH=y
-> +CONFIG_NET_RANDOM_ETHADDR=y
-> +CONFIG_SARADC_MESON=y
-> +CONFIG_DM_GPIO=y
-> +CONFIG_DM_KEYBOARD=y
-> +CONFIG_DM_MMC=y
-> +CONFIG_MMC_MESON_GX=y
-> +CONFIG_MTD=y
-> +CONFIG_DM_SPI_FLASH=y
-> +CONFIG_SPI_FLASH=y
-> +CONFIG_SPI_FLASH_GIGADEVICE=y
-> +CONFIG_PHY_REALTEK=y
-> +CONFIG_DM_ETH=y
-> +CONFIG_ETH_DESIGNWARE=y
-> +CONFIG_PHY=y
-> +CONFIG_MESON_GXL_USB_PHY=y
-> +CONFIG_PINCTRL=y
-> +CONFIG_PINCTRL_MESON_GXL=y
-> +CONFIG_POWER_DOMAIN=y
-> +CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
-> +CONFIG_DM_REGULATOR_FIXED=y
-> +CONFIG_DM_RESET=y
-> +CONFIG_DEBUG_UART_MESON=y
-> +CONFIG_DEBUG_UART_ANNOUNCE=y
-> +CONFIG_DEBUG_UART_SKIP_INIT=y
-> +CONFIG_MESON_SERIAL=y
-> +CONFIG_SPI=y
-> +CONFIG_DM_SPI=y
-> +CONFIG_MESON_SPIFC=y
-> +CONFIG_USB=y
-> +CONFIG_DM_USB=y
-> +CONFIG_USB_XHCI_HCD=y
-> +CONFIG_USB_XHCI_DWC3=y
-> +CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
-> +CONFIG_USB_DWC3=y
-> +CONFIG_USB_KEYBOARD=y
-> +CONFIG_DM_VIDEO=y
-> +CONFIG_SYS_WHITE_ON_BLACK=y
-> +CONFIG_VIDEO_MESON=y
-> +CONFIG_VIDEO_DT_SIMPLEFB=y
-> +CONFIG_OF_LIBFDT_OVERLAY=y
-> diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
-> new file mode 100644
-> index 000000000000..63b44b389be6
-> --- /dev/null
-> +++ b/configs/libretech-s912-pc_defconfig
-> @@ -0,0 +1,71 @@
-> +CONFIG_ARM=y
-> +CONFIG_SYS_CONFIG_NAME="libretech-pc"
-> +CONFIG_SYS_BOARD="q200"
-> +CONFIG_ARCH_MESON=y
-> +CONFIG_SYS_TEXT_BASE=0x01000000
-> +CONFIG_MESON_GXM=y
-> +CONFIG_NR_DRAM_BANKS=1
-> +CONFIG_DEBUG_UART_BASE=0xc81004c0
-> +CONFIG_DEBUG_UART_CLOCK=24000000
-> +CONFIG_IDENT_STRING=" libretech-s912-pc"
-> +CONFIG_DEBUG_UART=y
-> +CONFIG_OF_BOARD_SETUP=y
-> +CONFIG_USE_PREBOOT=y
-> +CONFIG_PREBOOT="usb start"
-> +CONFIG_MISC_INIT_R=y
-> +# CONFIG_DISPLAY_CPUINFO is not set
-> +# CONFIG_CMD_BDI is not set
-> +# CONFIG_CMD_IMI is not set
-> +CONFIG_CMD_ADC=y
-> +CONFIG_CMD_GPIO=y
-> +# CONFIG_CMD_LOADS is not set
-> +CONFIG_CMD_MMC=y
-> +CONFIG_CMD_SF=y
-> +CONFIG_CMD_SF_TEST=y
-> +CONFIG_CMD_SPI=y
-> +CONFIG_CMD_USB=y
-> +# CONFIG_CMD_SETEXPR is not set
-> +CONFIG_CMD_REGULATOR=y
-> +CONFIG_OF_CONTROL=y
-> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxm-s912-libretech-pc"
-> +CONFIG_ENV_IS_IN_SPI_FLASH=y
-> +CONFIG_NET_RANDOM_ETHADDR=y
-> +CONFIG_SARADC_MESON=y
-> +CONFIG_DM_GPIO=y
-> +CONFIG_DM_KEYBOARD=y
-> +CONFIG_DM_MMC=y
-> +CONFIG_MMC_MESON_GX=y
-> +CONFIG_MTD=y
-> +CONFIG_DM_SPI_FLASH=y
-> +CONFIG_SPI_FLASH=y
-> +CONFIG_SPI_FLASH_GIGADEVICE=y
-> +CONFIG_PHY_REALTEK=y
-> +CONFIG_DM_ETH=y
-> +CONFIG_ETH_DESIGNWARE=y
-> +CONFIG_PHY=y
-> +CONFIG_MESON_GXL_USB_PHY=y
-> +CONFIG_PINCTRL=y
-> +CONFIG_PINCTRL_MESON_GXL=y
-> +CONFIG_POWER_DOMAIN=y
-> +CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
-> +CONFIG_DM_REGULATOR_FIXED=y
-> +CONFIG_DM_RESET=y
-> +CONFIG_DEBUG_UART_MESON=y
-> +CONFIG_DEBUG_UART_ANNOUNCE=y
-> +CONFIG_DEBUG_UART_SKIP_INIT=y
-> +CONFIG_MESON_SERIAL=y
-> +CONFIG_SPI=y
-> +CONFIG_DM_SPI=y
-> +CONFIG_MESON_SPIFC=y
-> +CONFIG_USB=y
-> +CONFIG_DM_USB=y
-> +CONFIG_USB_XHCI_HCD=y
-> +CONFIG_USB_XHCI_DWC3=y
-> +CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
-> +CONFIG_USB_DWC3=y
-> +CONFIG_USB_KEYBOARD=y
-> +CONFIG_DM_VIDEO=y
-> +CONFIG_SYS_WHITE_ON_BLACK=y
-> +CONFIG_VIDEO_MESON=y
-> +CONFIG_VIDEO_DT_SIMPLEFB=y
-> +CONFIG_OF_LIBFDT_OVERLAY=y
-> diff --git a/include/configs/libretech-pc.h b/include/configs/libretech-pc.h
-> new file mode 100644
-> index 000000000000..182eba519d51
-> --- /dev/null
-> +++ b/include/configs/libretech-pc.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Configuration for LibreTech AC
-> + *
-> + * Copyright (C) 2020 Baylibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#ifndef __CONFIG_H
-> +#define __CONFIG_H
-> +
-> +#define CONFIG_ENV_SECT_SIZE	0x10000
-> +#define CONFIG_ENV_OFFSET	(-0x10000)
-> +
-> +#include <configs/meson64.h>
-> +
-> +#endif /* __CONFIG_H */
+>  create mode 100644 include/dt-bindings/leds/common.h
 > 
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Applying to u-boot-amlogic-next to be pushed when v2020.04 is tagged.
+
+Neil
