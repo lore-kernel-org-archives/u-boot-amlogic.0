@@ -1,68 +1,57 @@
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
- by mx.groups.io with SMTP id smtpd.web12.1357.1583179644355824752
+Received: from lucky1.263xmail.com (lucky1.263xmail.com [211.157.147.134])
+ by mx.groups.io with SMTP id smtpd.web12.2806.1583283653398138601
  for <u-boot-amlogic@groups.io>;
- Mon, 02 Mar 2020 12:07:24 -0800
-Date: Mon, 2 Mar 2020 21:07:20 +0100
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH] Revert "dm: core: device: switch off power domain after device removal"
-Message-ID: <20200302210720.64bdca31@crub>
-In-Reply-To: <4ca30460-15e5-1d9e-9a52-0044e308a590@baylibre.com>
-References: <20200217091036.19028-1-narmstrong@baylibre.com>
-	<20200217125336.39990b93@crub>
-	<4ca30460-15e5-1d9e-9a52-0044e308a590@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: sjg@chromium.org, trini@konsulko.com, oliver.graute@gmail.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, lokeshvutla@ti.com, sbabic@denx.de
+ Tue, 03 Mar 2020 17:00:53 -0800
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH v3 0/3] usb: Covert to support Live DT
+Date: Wed,  4 Mar 2020 08:59:47 +0800
+Message-Id: <20200304005951.8225-1-kever.yang@rock-chips.com>
+To: u-boot@lists.denx.de
+Cc: frank.wang@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Adam Ford <aford173@gmail.com>, Anatolij Gustschin <agust@denx.de>, Bin Meng <bmeng.cn@gmail.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Fabio Estevam <festevam@gmail.com>, Igor Opaniuk <igor.opaniuk@toradex.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Mark Kettenis <kettenis@openbsd.org>, Neil Armstrong <narmstrong@baylibre.com>, Ramon Fried <rfried.dev@gmail.com>, Simon Glass <sjg@chromium.org>, Vignesh Raghavendra <vigneshr@ti.com>, Ye Li <ye.li@nxp.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Neil,
 
-On Mon, 2 Mar 2020 10:30:31 +0100
-Neil Armstrong narmstrong@baylibre.com wrote:
+This patch set convert to use APIs leading with dev_ or ofnode_ which
+supports live DT instead of fdt_ or fdtdec or devfdt_.
+Two functions update there parameter from offset to ofnode:
+- usb_get_maximum_speed()
+- usb_get_dr_mode()
 
-> Hi Analolij,
-> 
-> On 17/02/2020 12:53, Anatolij Gustschin wrote:
-> > On Mon, 17 Feb 2020 10:10:36 +0100
-> > Neil Armstrong narmstrong@baylibre.com wrote:
-> >   
-> >> This commit breaks Linux boot on Amlogic libretech-cc, libretech-ac, sei510,
-> >> sei610 board by automatically disabling the power domain after device removal.
-> >> This because the power domain associated to the video driver must be kept
-> >> enabled for linux to boot.
-> >>
-> >> The only way is to use the introduced flag DM_FLAG_DEFAULT_PD_CTRL_OFF, which
-> >> removes automatic handling of power domain.
-> >> This flag is not a complete solution since it will force reverting to manually
-> >> enable the power domain from the driver probe.
-> >>
-> >> Instead a flag to keep the power domain enabled after removal should be
-> >> introduced.
-> >>
-> >> In the meantime revert this commit until a proper solution is found.
-> >>
-> >> This reverts commit 52edfed65de967a86983a55c51ba0727090efc43.
-> >>
-> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >> ---
-> >> Hi Simon, Tom,
-> >>
-> >> This revert is the simplest fix to make the boards boot again on v2020.04,
-> >> the goal is to make this behavior happen again with a proper flag to keep the
-> >> power domain enabled on specific drivers.
-> >>
-> >> I can push it on my next PR on my branch, is it ok ?  
-> > 
-> > Please test if these two patches fix the problem:
-> >  http://patchwork.ozlabs.org/patch/1239143
-> >  http://patchwork.ozlabs.org/patch/1239144  
-> 
-> Should I apply these through my tree or you plan to push these yourself ?
+For V3 update:
+Squesh patch 3rd~9th/9 into one patch because the ofnode_to_offset(node) is
+not work with the livetree, so we have to convert the api to support
+livetree and its related function at the same time.
 
-These patches are assigned to Simon in patchwork, and are in his tree
-under build-testing I think.
+For V2 update:
+Drop below patch after include ofnode.h in otg.h:
+[PATCH 09/10] usb: Use ofnode as usb_get_dr_mode() parameter
 
---
-Anatolij
+
+Changes in v3:
+- Squesh the 3rd~9th into one patch.
+
+Kever Yang (3):
+  usb: dwc3-of-simple: Drop redundant inclding header file
+  usb: ehci-msm: Use dev interface to get device address
+  usb: Migrate to support live DT for some driver
+
+ drivers/usb/cdns3/core.c           | 15 ++++++---------
+ drivers/usb/cdns3/gadget.c         |  2 +-
+ drivers/usb/common/common.c        | 12 +++++-------
+ drivers/usb/dwc3/dwc3-generic.c    | 16 +++++++---------
+ drivers/usb/dwc3/dwc3-meson-g12a.c |  2 +-
+ drivers/usb/gadget/dwc2_udc_otg.c  |  5 ++---
+ drivers/usb/host/dwc3-of-simple.c  |  1 -
+ drivers/usb/host/dwc3-sti-glue.c   | 20 +++++++-------------
+ drivers/usb/host/ehci-msm.c        |  4 +---
+ drivers/usb/host/ehci-mx6.c        |  2 +-
+ drivers/usb/host/xhci-dwc3.c       |  3 +--
+ drivers/usb/musb-new/ti-musb.c     | 12 +++++-------
+ include/linux/usb/otg.h            | 10 ++++++----
+ 13 files changed, 43 insertions(+), 61 deletions(-)
+
+-- 
+2.17.1
+
+
+
