@@ -1,93 +1,124 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
- by mx.groups.io with SMTP id smtpd.web11.3832.1583284668310742454
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web12.10877.1583406773315903900
  for <u-boot-amlogic@groups.io>;
- Tue, 03 Mar 2020 17:17:48 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1583284664;
-	bh=X/KniNbsDMNbWxlJGXpo6BrBw8qqx36zULiEJB1L++g=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=NFQAoOmM4YkErR4QdkamQEVb1sJT2r2q3Z9bdK2b3LoH9h6+lQRZGr0KVeQGtY46A
-	 pxOs3ko11pj4aP4CGlK86ayB416U4sjubJLyKxwQUCt4HeVYwvTJ9sdnAvO8iTQWnT
-	 6lfae5LGrmYfq/XjEHDgOs3WcfMRpcFig4PXwWc0=
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/2] drivers/rng: simplify Kconfig
-Date: Wed,  4 Mar 2020 02:17:37 +0100
-Message-Id: <20200304011738.33763-2-xypron.glpk@gmx.de>
-In-Reply-To: <20200304011738.33763-1-xypron.glpk@gmx.de>
-References: <20200304011738.33763-1-xypron.glpk@gmx.de>
+ Thu, 05 Mar 2020 03:12:53 -0800
+Received: by mail-wm1-f68.google.com with SMTP id i9so5787990wml.4
+        for <u-boot-amlogic@groups.io>; Thu, 05 Mar 2020 03:12:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MI2UUpWnL7WTKKOs+vB+w5zB5oszJo5qrPtFMbkQmWw=;
+        b=gPn40kr9Ji9zp2u9uKOr64Sp5D2b/HNLtGK3ou6Hvc1J1JT0iOF7X+Sj29isB/TAZQ
+         h5/Tyod6SQPbvExhR2n/ONrAXAa6nTKydv/E9wQ/Aa+5sjDCgum9nfPDGhrzF57pgglU
+         Ye0lUZXld40eghDP5++uf0rJi/Q9NeQlHojqsFuMf5BhE88G60izSO5L21IwJ6yLQ1di
+         Lc0YRqAlM3t1y+zGrtQ/Vlmv4pX0Ok1gJhspdN6823wmWbGth7HYRE8nSOsQnh6/PHOf
+         WIH/sHPTloCmUydDZ8333x6+GKdBvaHpvGxKWuooikX+VPRjbqa1JAISQIgeQ4N1BDwD
+         ngAw==
+Return-Path: <jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v3 1/6] dt-bindings: leds: import common led bindings from linux v5.5
+Date: Thu,  5 Mar 2020 12:12:35 +0100
+Message-Id: <20200305111240.129010-2-jbrunet@baylibre.com>
+In-Reply-To: <20200305111240.129010-1-jbrunet@baylibre.com>
+References: <20200305111240.129010-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-To: Sughosh Ganu <sughosh.ganu@linaro.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Simon Glass <sjg@chromium.org>, Mario Six <mario.six@gdsys.cc>, u-boot-amlogic@groups.io, u-boot@lists.denx.de, Heinrich Schuchardt <xypron.glpk@gmx.de>
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-For all sandbox systems with DM_RNG we enable RNG_SANDBOX. So we can simpl=
-y
-set the default to yes.
+Import the common leds bindings definition from linux
+d5226fa6dbae ("Linux 5.5")
 
-All rng drivers depend on DM_RNG. Use a single 'if' instead of individual
-dependencies. Now 'make menuconfig' shows the individual drivers neatly
-indented under the DM_RNG entry.
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ include/dt-bindings/leds/common.h | 75 +++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 include/dt-bindings/leds/common.h
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- configs/sandbox64_defconfig | 1 -
- configs/sandbox_defconfig   | 1 -
- drivers/rng/Kconfig         | 9 +++++++--
- 3 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/configs/sandbox64_defconfig b/configs/sandbox64_defconfig
-index d1c94b65a1..71a4d7fccb 100644
-=2D-- a/configs/sandbox64_defconfig
-+++ b/configs/sandbox64_defconfig
-@@ -169,7 +169,6 @@ CONFIG_REMOTEPROC_SANDBOX=3Dy
- CONFIG_DM_RESET=3Dy
- CONFIG_SANDBOX_RESET=3Dy
- CONFIG_DM_RNG=3Dy
--CONFIG_RNG_SANDBOX=3Dy
- CONFIG_DM_RTC=3Dy
- CONFIG_RTC_RV8803=3Dy
- CONFIG_SANDBOX_SERIAL=3Dy
-diff --git a/configs/sandbox_defconfig b/configs/sandbox_defconfig
-index 45b5475b79..f96891ecae 100644
-=2D-- a/configs/sandbox_defconfig
-+++ b/configs/sandbox_defconfig
-@@ -189,7 +189,6 @@ CONFIG_REMOTEPROC_SANDBOX=3Dy
- CONFIG_DM_RESET=3Dy
- CONFIG_SANDBOX_RESET=3Dy
- CONFIG_DM_RNG=3Dy
--CONFIG_RNG_SANDBOX=3Dy
- CONFIG_DM_RTC=3Dy
- CONFIG_RTC_RV8803=3Dy
- CONFIG_DEBUG_UART_SANDBOX=3Dy
-diff --git a/drivers/rng/Kconfig b/drivers/rng/Kconfig
-index 893b89d49b..c1aa43b823 100644
-=2D-- a/drivers/rng/Kconfig
-+++ b/drivers/rng/Kconfig
-@@ -6,16 +6,21 @@ config DM_RNG
- 	  This interface is used to initialise the rng device and to
- 	  read the random seed from the device.
-
-+if DM_RNG
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+new file mode 100644
+index 000000000000..9e1256a7c1bf
+--- /dev/null
++++ b/include/dt-bindings/leds/common.h
+@@ -0,0 +1,75 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides macros for the common LEDs device tree bindings.
++ *
++ * Copyright (C) 2015, Samsung Electronics Co., Ltd.
++ * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
++ *
++ * Copyright (C) 2019 Jacek Anaszewski <jacek.anaszewski@gmail.com>
++ */
 +
- config RNG_SANDBOX
- 	bool "Sandbox random number generator"
--	depends on SANDBOX && DM_RNG
-+	depends on SANDBOX
-+	default y
- 	help
- 	  Enable random number generator for sandbox. This is an
- 	  emulation of a rng device.
-
- config RNG_STM32MP1
- 	bool "Enable random number generator for STM32MP1"
--	depends on ARCH_STM32MP && DM_RNG
-+	depends on ARCH_STM32MP
- 	default n
- 	help
- 	  Enable STM32MP1 rng driver.
++#ifndef __DT_BINDINGS_LEDS_H
++#define __DT_BINDINGS_LEDS_H
 +
-+endif
-=2D-
-2.25.1
++/* External trigger type */
++#define LEDS_TRIG_TYPE_EDGE	0
++#define LEDS_TRIG_TYPE_LEVEL	1
++
++/* Boost modes */
++#define LEDS_BOOST_OFF		0
++#define LEDS_BOOST_ADAPTIVE	1
++#define LEDS_BOOST_FIXED	2
++
++/* Standard LED colors */
++#define LED_COLOR_ID_WHITE	0
++#define LED_COLOR_ID_RED	1
++#define LED_COLOR_ID_GREEN	2
++#define LED_COLOR_ID_BLUE	3
++#define LED_COLOR_ID_AMBER	4
++#define LED_COLOR_ID_VIOLET	5
++#define LED_COLOR_ID_YELLOW	6
++#define LED_COLOR_ID_IR		7
++#define LED_COLOR_ID_MAX	8
++
++/* Standard LED functions */
++#define LED_FUNCTION_ACTIVITY "activity"
++#define LED_FUNCTION_ALARM "alarm"
++#define LED_FUNCTION_BACKLIGHT "backlight"
++#define LED_FUNCTION_BLUETOOTH "bluetooth"
++#define LED_FUNCTION_BOOT "boot"
++#define LED_FUNCTION_CPU "cpu"
++#define LED_FUNCTION_CAPSLOCK "capslock"
++#define LED_FUNCTION_CHARGING "charging"
++#define LED_FUNCTION_DEBUG "debug"
++#define LED_FUNCTION_DISK "disk"
++#define LED_FUNCTION_DISK_ACTIVITY "disk-activity"
++#define LED_FUNCTION_DISK_ERR "disk-err"
++#define LED_FUNCTION_DISK_READ "disk-read"
++#define LED_FUNCTION_DISK_WRITE "disk-write"
++#define LED_FUNCTION_FAULT "fault"
++#define LED_FUNCTION_FLASH "flash"
++#define LED_FUNCTION_HEARTBEAT "heartbeat"
++#define LED_FUNCTION_INDICATOR "indicator"
++#define LED_FUNCTION_KBD_BACKLIGHT "kbd_backlight"
++#define LED_FUNCTION_LAN "lan"
++#define LED_FUNCTION_MAIL "mail"
++#define LED_FUNCTION_MTD "mtd"
++#define LED_FUNCTION_MICMUTE "micmute"
++#define LED_FUNCTION_MUTE "mute"
++#define LED_FUNCTION_NUMLOCK "numlock"
++#define LED_FUNCTION_PANIC "panic"
++#define LED_FUNCTION_PROGRAMMING "programming"
++#define LED_FUNCTION_POWER "power"
++#define LED_FUNCTION_RX "rx"
++#define LED_FUNCTION_SD "sd"
++#define LED_FUNCTION_SCROLLLOCK "scrolllock"
++#define LED_FUNCTION_STANDBY "standby"
++#define LED_FUNCTION_STATUS "status"
++#define LED_FUNCTION_TORCH "torch"
++#define LED_FUNCTION_TX "tx"
++#define LED_FUNCTION_USB "usb"
++#define LED_FUNCTION_WAN "wan"
++#define LED_FUNCTION_WLAN "wlan"
++#define LED_FUNCTION_WPS "wps"
++
++#endif /* __DT_BINDINGS_LEDS_H */
+-- 
+2.24.1
 
