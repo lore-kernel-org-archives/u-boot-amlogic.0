@@ -1,248 +1,94 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web11.10932.1583406778349022181
+Received: from mail-il1-f194.google.com (mail-il1-f194.google.com [209.85.166.194])
+ by mx.groups.io with SMTP id smtpd.web10.11626.1583410560891560242
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Mar 2020 03:12:58 -0800
-Received: by mail-wm1-f68.google.com with SMTP id 6so5805444wmi.5
-        for <u-boot-amlogic@groups.io>; Thu, 05 Mar 2020 03:12:58 -0800 (PST)
+ Thu, 05 Mar 2020 04:16:01 -0800
+Received: by mail-il1-f194.google.com with SMTP id q13so4819634ile.8
+        for <u-boot-amlogic@groups.io>; Thu, 05 Mar 2020 04:16:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gUjkgVLFVyQzHZMTj/jw+yntrWDgaa6T8W/juUSakNM=;
-        b=ltluy0GRvndiFAVQsVHJ1q4Nae55DkraUC3xwI1rrT8CIqE3XUHC6fr6D/q5uHozfE
-         iXgwz1DZowQGH59EZ4nCfoPdx2l18gdU1ZxQ9hk3+8H9l25nYSNX6hEYKB0S+sqfZ3iz
-         C0nNGklNmz7ETwNHAG2ybmnVquMJLpeCgNKhQUYN6dq5c9G3asjd23aTs5AqFARjGo6/
-         3qv4DANFNx3BDkH2WrqsuFGypu5tXAMJG+U5/iHC7HcHxZo0TebqOCDZM7A9+yoOumhw
-         Lv9IVbU7fQGbx7U9icB8RjNMBNzES9DSqCH+TXMqVPy0mWMMA6kQSb8u1tBo03x2p6/m
-         3ZIw==
-Return-Path: <jbrunet@baylibre.com>
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v3 6/6] arm64: dts: meson: add libretech-pc support
-Date: Thu,  5 Mar 2020 12:12:40 +0100
-Message-Id: <20200305111240.129010-7-jbrunet@baylibre.com>
-In-Reply-To: <20200305111240.129010-1-jbrunet@baylibre.com>
-References: <20200305111240.129010-1-jbrunet@baylibre.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HAtTx0i/vh9NXbEVpZo5/0mvmgVeDSL/vEXCnp10mik=;
+        b=goYt+QzsVdJB9Op3lJlMBd0PElKswiIPK8/JkuoRSbmIL+4OnyJ80IeMSgkkUBtbo7
+         Pp9602Hq7NYtyfsj3e7eRrrKoBNQNwuEcbeolO8pF5gDJFcdgrwO28QOy6lf+9SNBCry
+         9KSgGZPYgbWPtAacKH/vPzvHOIskUwb7ZVkBt6gNL3KmQc3ETP7ApG2EUOyIOlt2+Kp7
+         Q1cuYKTxg7HH5a90LzpnNJ2R0Fe9uw7lEGnDsOwAmMprSJ8ccgoyJcrkEUwFelE+qsWT
+         6gE8TRblm5tnz/0EElFHq09r7GtBVXIEOIRbHoU9sy7ix7BtOQ9eFmbMZSFZuMaW1ldi
+         4hUg==
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+References: <20200305111240.129010-1-jbrunet@baylibre.com> <20200305111240.129010-3-jbrunet@baylibre.com>
+In-Reply-To: <20200305111240.129010-3-jbrunet@baylibre.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Thu, 5 Mar 2020 17:45:48 +0530
+Message-ID: <CANAwSgTsmi_868V-LY3HbCQEa2xfVY5kGMmteh_d2xsAt6sozA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] mmc: meson-gx: enable input clocks
+Content-Type: text/plain; charset="UTF-8"
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Kevin Hilman <khilman@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add support for the Amlogic based libretech-pc platform.
-This platform comes with 2 variant, based on the s905d or s912 SoC.
+Hi Jerome,
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm/dts/Makefile                         |  2 +
- .../meson-gxl-s905d-libretech-pc-u-boot.dtsi  |  7 ++
- .../meson-gxm-s912-libretech-pc-u-boot.dtsi   |  7 ++
- configs/libretech-s905d-pc_defconfig          | 73 +++++++++++++++++++
- configs/libretech-s912-pc_defconfig           | 73 +++++++++++++++++++
- 5 files changed, 162 insertions(+)
- create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
- create mode 100644 configs/libretech-s905d-pc_defconfig
- create mode 100644 configs/libretech-s912-pc_defconfig
+On Thu, 5 Mar 2020 at 16:43, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+> Until now, the mmc clock was left in a good enough state by the ROM
+> code to be used by the controller. However on some SoC, if the ROM
+> code finds a bootloader on USB or SPI, it might leave the MMC clock
+> in state the controller cannot work with.
+>
+> Enable the input clocks provided to the mmc controller. While the
+> u-boot mmc controller driver is not doing fancy settings like the Linux,
+> it at least needs to make these clocks are running.
+>
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 9c593b2c986a..cfe1b7849f46 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -147,7 +147,9 @@ dtb-$(CONFIG_ARCH_MESON) += \
- 	meson-gxl-s805x-libretech-ac.dtb \
- 	meson-gxl-s905x-libretech-cc.dtb \
- 	meson-gxl-s905x-khadas-vim.dtb \
-+	meson-gxl-s905d-libretech-pc.dtb \
- 	meson-gxm-khadas-vim2.dtb \
-+	meson-gxm-s912-libretech-pc.dtb \
- 	meson-axg-s400.dtb \
- 	meson-g12a-u200.dtb \
- 	meson-g12a-sei510.dtb \
-diff --git a/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
-new file mode 100644
-index 000000000000..c35158d7e9ee
---- /dev/null
-+++ b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gx-u-boot.dtsi"
-diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
-new file mode 100644
-index 000000000000..c35158d7e9ee
---- /dev/null
-+++ b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gx-u-boot.dtsi"
-diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
-new file mode 100644
-index 000000000000..7e0c95872a62
---- /dev/null
-+++ b/configs/libretech-s905d-pc_defconfig
-@@ -0,0 +1,73 @@
-+CONFIG_ARM=y
-+CONFIG_SYS_BOARD="q200"
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_MESON_GXL=y
-+CONFIG_ENV_SIZE=0x10000
-+CONFIG_ENV_OFFSET=0xFFFF0000
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_DEBUG_UART_BASE=0xc81004c0
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_ENV_SECT_SIZE=0x10000
-+CONFIG_IDENT_STRING=" libretech-s905d-pc"
-+CONFIG_DEBUG_UART=y
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="usb start"
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_ADC=y
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+CONFIG_CMD_SF=y
-+CONFIG_CMD_SF_TEST=y
-+CONFIG_CMD_SPI=y
-+CONFIG_CMD_USB=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-gxl-s905d-libretech-pc"
-+CONFIG_ENV_IS_IN_SPI_FLASH=y
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_SARADC_MESON=y
-+CONFIG_DM_GPIO=y
-+CONFIG_DM_KEYBOARD=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_MTD=y
-+CONFIG_DM_SPI_FLASH=y
-+CONFIG_SPI_FLASH=y
-+CONFIG_SPI_FLASH_GIGADEVICE=y
-+CONFIG_PHY_REALTEK=y
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PHY=y
-+CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_GXL=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_MESON=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_SPI=y
-+CONFIG_DM_SPI=y
-+CONFIG_MESON_SPIFC=y
-+CONFIG_USB=y
-+CONFIG_DM_USB=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
-+CONFIG_USB_DWC3=y
-+CONFIG_USB_KEYBOARD=y
-+CONFIG_DM_VIDEO=y
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
-diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
-new file mode 100644
-index 000000000000..5f4ee329e276
---- /dev/null
-+++ b/configs/libretech-s912-pc_defconfig
-@@ -0,0 +1,73 @@
-+CONFIG_ARM=y
-+CONFIG_SYS_BOARD="q200"
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_MESON_GXM=y
-+CONFIG_ENV_SIZE=0x10000
-+CONFIG_ENV_OFFSET=0xFFFF0000
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_DEBUG_UART_BASE=0xc81004c0
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_ENV_SECT_SIZE=0x10000
-+CONFIG_IDENT_STRING=" libretech-s912-pc"
-+CONFIG_DEBUG_UART=y
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="usb start"
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_ADC=y
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+CONFIG_CMD_SF=y
-+CONFIG_CMD_SF_TEST=y
-+CONFIG_CMD_SPI=y
-+CONFIG_CMD_USB=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-gxm-s912-libretech-pc"
-+CONFIG_ENV_IS_IN_SPI_FLASH=y
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_SARADC_MESON=y
-+CONFIG_DM_GPIO=y
-+CONFIG_DM_KEYBOARD=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_MTD=y
-+CONFIG_DM_SPI_FLASH=y
-+CONFIG_SPI_FLASH=y
-+CONFIG_SPI_FLASH_GIGADEVICE=y
-+CONFIG_PHY_REALTEK=y
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PHY=y
-+CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_GXL=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_MESON=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_SPI=y
-+CONFIG_DM_SPI=y
-+CONFIG_MESON_SPIFC=y
-+CONFIG_USB=y
-+CONFIG_DM_USB=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
-+CONFIG_USB_DWC3=y
-+CONFIG_USB_KEYBOARD=y
-+CONFIG_DM_VIDEO=y
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
--- 
-2.24.1
+Please add my
+Reviewed-by: Anand Moon <linux.amoon@gmail.com>
 
+-Anand
+
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/mmc/meson_gx_mmc.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+> index b5f5122b1b7b..86c1a7164a93 100644
+> --- a/drivers/mmc/meson_gx_mmc.c
+> +++ b/drivers/mmc/meson_gx_mmc.c
+> @@ -4,6 +4,7 @@
+>   */
+>
+>  #include <common.h>
+> +#include <clk.h>
+>  #include <cpu_func.h>
+>  #include <dm.h>
+>  #include <fdtdec.h>
+> @@ -241,12 +242,23 @@ static int meson_mmc_probe(struct udevice *dev)
+>         struct mmc_uclass_priv *upriv = dev_get_uclass_priv(dev);
+>         struct mmc *mmc = &pdata->mmc;
+>         struct mmc_config *cfg = &pdata->cfg;
+> +       struct clk_bulk clocks;
+>         uint32_t val;
+> +       int ret;
+> +
+>  #ifdef CONFIG_PWRSEQ
+>         struct udevice *pwr_dev;
+> -       int ret;
+>  #endif
+>
+> +       /* Enable the clocks feeding the MMC controller */
+> +       ret = clk_get_bulk(dev, &clocks);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = clk_enable_bulk(&clocks);
+> +       if (ret)
+> +               return ret;
+> +
+>         cfg->voltages = MMC_VDD_33_34 | MMC_VDD_32_33 |
+>                         MMC_VDD_31_32 | MMC_VDD_165_195;
+>         cfg->host_caps = MMC_MODE_8BIT | MMC_MODE_4BIT |
+> --
+> 2.24.1
+>
