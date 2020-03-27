@@ -1,133 +1,62 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web10.11480.1585315778486034687
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web12.11490.1585315833773258492
  for <u-boot-amlogic@groups.io>;
- Fri, 27 Mar 2020 06:29:39 -0700
-Received: by mail-wm1-f65.google.com with SMTP id c81so11397801wmd.4
-        for <u-boot-amlogic@groups.io>; Fri, 27 Mar 2020 06:29:38 -0700 (PDT)
+ Fri, 27 Mar 2020 06:30:34 -0700
+Received: by mail-wr1-f65.google.com with SMTP id a25so11459748wrd.0
+        for <u-boot-amlogic@groups.io>; Fri, 27 Mar 2020 06:30:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=u9C+B42TPvMElHJDFhcdGiQBgNt59ngSwDUJs8pCV6U=;
-        b=oKCgHw8IGpGe8Q8gN8JuAEEtnmPFr/m8+HV1MiOTRw8N8679MgpocFZ9uh7xLp6VOT
-         RFHpd7+bqBsMm2lJ2FIlJu02uWO3k/qndiMCeu436BLAGa4QW5M/64tY1RHcNFbDUeYT
-         BQRBFXIT6UzJfh9vPM7uGtwMrF4/zG/FhD7TwJt1Ov37Z15a/9hvDvQxrWziTcBL189w
-         ZjQtVXobwvqQC0fp3PoAa5XFpaSCOxVTqLxd8ZvHtMNL1NhccFzM8EfckcdNnRCK732b
-         AYCQ/CV5uX1sG5QX0JiE68nEBAF3P5wdNfAM3xosI2yHG1Vj06XDBCxVEyKcsZADc7+g
-         oLtw==
+        bh=wahJdDlhnPOKTPKarBWnsXtdH0TzxMVzIcLoV1eG3hs=;
+        b=Scd8gV5QM1qr1EE3aHbfxs10bu/v2HNx0oqQ0hliZpG58Ey5hatYJ00JgIilAmHVUa
+         6ZGMW4M3FknhJGEuY8TrzmjDqu3Hqs9wLrfsK1S3DLDqo4IpbqLAhYG2Li28xkJOCe5a
+         QPyYHV2ms921P73xzGaBdt0dsH2GnnuYS82OPF2B1iQPwvTVSxiPzjSbpCO8NbkyuOeJ
+         VbkKGbqx6pZaDyq6gA8YG6FUE2HuAMRwnZ9sTmQblNjSfrjPyyxOXwP8HEVRdlc/36Yc
+         Vu+d2Wg3pcBfVLMc7N2wqtixGiI5sUkDAuEuPEvOdpPEnJmrOuNdsvs07z9j9/ymY+We
+         CAgg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v3 0/6] arm64: meson: add libretech-pc support
-References: <20200305111240.129010-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/2] drivers/rng: add Amlogic hardware RNG driver
+References: <20200304011738.33763-1-xypron.glpk@gmx.de>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <8e5b4f93-236b-7998-9bd6-e402d05cf7a4@baylibre.com>
-Date: Fri, 27 Mar 2020 14:29:34 +0100
+Message-ID: <dfa16733-ff13-54f6-86ef-36396cdd0df4@baylibre.com>
+Date: Fri, 27 Mar 2020 14:30:30 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200305111240.129010-1-jbrunet@baylibre.com>
+In-Reply-To: <20200304011738.33763-1-xypron.glpk@gmx.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Jerome Brunet <jbrunet@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Kevin Hilman <khilman@baylibre.com>
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>, Sughosh Ganu <sughosh.ganu@linaro.org>
+Cc: Simon Glass <sjg@chromium.org>, Mario Six <mario.six@gdsys.cc>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 05/03/2020 12:12, Jerome Brunet wrote:
-> Add libretech PC platform support. This platform comes in 2 variants,
-> one with the s905d and the other s912.
+On 04/03/2020 02:17, Heinrich Schuchardt wrote:
+> The first patch simplifies the Kconfig for hardware RNG drivers and enables
+> the Sandbox RNG driver for all Sandbox instances.
 > 
-> While working on these boards, I've found a problem related the mmc
-> clock. In some cases, the ROM code will leave the mmc clocks in such
-> a weird state that any access to the mmc controller would lock the
-> device.
+> The second introduces a hardware random number generator driver for Amlogic
+> SOCs. This second patch had been sent before but the preceding patch was
+> missing.
 > 
-> Making sure the MMC clocks are properly reset and enabled is enough
-> to solve the problem.
+> Heinrich Schuchardt (2):
+>   drivers/rng: simplify Kconfig
+>   drivers/rng: add Amlogic hardware RNG driver
 > 
-> I have also synced all amlogic supported dts. Since I had to update
-> the gx dsti files, it made sense to update the dts as well. This is
-> done to keep things coherent even if it is not the original purpose
-> of this series.
+>  configs/sandbox64_defconfig |   1 -
+>  configs/sandbox_defconfig   |   1 -
+>  drivers/rng/Kconfig         |  17 ++++-
+>  drivers/rng/Makefile        |   1 +
+>  drivers/rng/meson-rng.c     | 120 ++++++++++++++++++++++++++++++++++++
+>  5 files changed, 136 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/rng/meson-rng.c
 > 
-> Changes since v2:
->  - actually rebase on master
-> 
-> Changes since v1:
->  - Split dt sync, libretech-pc import and config addition.
->  - Rebase on master (... not really)
-> 
-> Jerome Brunet (6):
->   dt-bindings: leds: import common led bindings from linux v5.5
->   mmc: meson-gx: enable input clocks
->   clk: meson: reset mmc clock on probe
->   arm64: dts: meson: sync dt and bindings from v5.6-rc2
->   arm64: dts: meson: import libretech-pc from linux v5.6-rc2
->   arm64: dts: meson: add libretech-pc support
-> 
->  arch/arm/dts/Makefile                         |   2 +
->  arch/arm/dts/meson-axg-s400.dts               |  70 ++-
->  arch/arm/dts/meson-axg.dtsi                   | 273 ++++++++--
->  arch/arm/dts/meson-g12-common.dtsi            | 478 ++++++------------
->  arch/arm/dts/meson-g12.dtsi                   | 398 +++++++++++++++
->  arch/arm/dts/meson-g12a-sei510.dts            |  64 +++
->  arch/arm/dts/meson-g12a-u200.dts              |  54 ++
->  arch/arm/dts/meson-g12a.dtsi                  |  33 +-
->  arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts |  25 +
->  arch/arm/dts/meson-g12b-odroid-n2.dts         |   2 +-
->  arch/arm/dts/meson-g12b.dtsi                  |  26 +-
->  arch/arm/dts/meson-gx-libretech-pc.dtsi       | 375 ++++++++++++++
->  arch/arm/dts/meson-gx.dtsi                    |  87 +++-
->  arch/arm/dts/meson-gxbb-nanopi-k2.dts         |  26 +-
->  arch/arm/dts/meson-gxbb-odroidc2.dts          | 100 +++-
->  arch/arm/dts/meson-gxbb-p200.dts              |   9 +-
->  arch/arm/dts/meson-gxbb-p201.dts              |   2 +-
->  arch/arm/dts/meson-gxbb-p20x.dtsi             |   9 +-
->  arch/arm/dts/meson-gxbb.dtsi                  | 118 ++++-
->  arch/arm/dts/meson-gxl-s805x-libretech-ac.dts |   2 +-
->  .../meson-gxl-s905d-libretech-pc-u-boot.dtsi  |   7 +
->  arch/arm/dts/meson-gxl-s905d-libretech-pc.dts |  16 +
->  arch/arm/dts/meson-gxl-s905d.dtsi             |  12 +
->  arch/arm/dts/meson-gxl-s905x-khadas-vim.dts   |  20 +-
->  arch/arm/dts/meson-gxl-s905x-libretech-cc.dts |  26 +-
->  arch/arm/dts/meson-gxl-s905x-p212.dtsi        |  10 +-
->  arch/arm/dts/meson-gxl.dtsi                   |  76 ++-
->  arch/arm/dts/meson-gxm-khadas-vim2.dts        |  71 +--
->  .../meson-gxm-s912-libretech-pc-u-boot.dtsi   |   7 +
->  arch/arm/dts/meson-gxm-s912-libretech-pc.dts  |  62 +++
->  arch/arm/dts/meson-gxm.dtsi                   |  39 +-
->  arch/arm/dts/meson-khadas-vim3.dtsi           |   7 +
->  arch/arm/dts/meson-sm1-sei610.dts             | 236 ++++++++-
->  arch/arm/dts/meson-sm1.dtsi                   | 356 +++++++++++++
->  configs/libretech-s905d-pc_defconfig          |  73 +++
->  configs/libretech-s912-pc_defconfig           |  73 +++
->  drivers/clk/meson/axg.c                       |   7 +
->  drivers/clk/meson/g12a.c                      |   7 +
->  drivers/clk/meson/gxbb.c                      |   7 +
->  drivers/mmc/meson_gx_mmc.c                    |  14 +-
->  include/dt-bindings/clock/axg-audio-clkc.h    |  10 +
->  include/dt-bindings/clock/gxbb-aoclkc.h       |   7 +
->  include/dt-bindings/clock/gxbb-clkc.h         |  21 +
->  include/dt-bindings/gpio/meson-gxbb-gpio.h    |   8 +-
->  include/dt-bindings/gpio/meson-gxl-gpio.h     |   8 +-
->  include/dt-bindings/leds/common.h             |  75 +++
->  .../reset/amlogic,meson-axg-audio-arb.h       |   2 +
->  .../reset/amlogic,meson-axg-reset.h           |   3 +-
->  .../reset/amlogic,meson-g12a-audio-reset.h    |  15 +
->  .../reset/amlogic,meson-gxbb-reset.h          |  51 +-
->  50 files changed, 2855 insertions(+), 624 deletions(-)
->  create mode 100644 arch/arm/dts/meson-g12.dtsi
->  create mode 100644 arch/arm/dts/meson-gx-libretech-pc.dtsi
->  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
->  create mode 100644 arch/arm/dts/meson-gxl-s905d-libretech-pc.dts
->  create mode 100644 arch/arm/dts/meson-gxl-s905d.dtsi
->  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
->  create mode 100644 arch/arm/dts/meson-gxm-s912-libretech-pc.dts
->  create mode 100644 configs/libretech-s905d-pc_defconfig
->  create mode 100644 configs/libretech-s912-pc_defconfig
->  create mode 100644 include/dt-bindings/leds/common.h
+> --
+> 2.25.1
 > 
 
-Applied to u-boot-amlogic for next release
+Hi Sughosh,
 
-I'll run tests on most board to check nothing was broken.
+Should I take this serie in my tree ?
 
 Neil
