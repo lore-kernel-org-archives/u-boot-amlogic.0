@@ -1,62 +1,68 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web12.11490.1585315833773258492
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web11.11473.1585316154616890885
  for <u-boot-amlogic@groups.io>;
- Fri, 27 Mar 2020 06:30:34 -0700
-Received: by mail-wr1-f65.google.com with SMTP id a25so11459748wrd.0
-        for <u-boot-amlogic@groups.io>; Fri, 27 Mar 2020 06:30:33 -0700 (PDT)
+ Fri, 27 Mar 2020 06:35:54 -0700
+Received: by mail-wr1-f68.google.com with SMTP id u10so11424099wro.7
+        for <u-boot-amlogic@groups.io>; Fri, 27 Mar 2020 06:35:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=wahJdDlhnPOKTPKarBWnsXtdH0TzxMVzIcLoV1eG3hs=;
-        b=Scd8gV5QM1qr1EE3aHbfxs10bu/v2HNx0oqQ0hliZpG58Ey5hatYJ00JgIilAmHVUa
-         6ZGMW4M3FknhJGEuY8TrzmjDqu3Hqs9wLrfsK1S3DLDqo4IpbqLAhYG2Li28xkJOCe5a
-         QPyYHV2ms921P73xzGaBdt0dsH2GnnuYS82OPF2B1iQPwvTVSxiPzjSbpCO8NbkyuOeJ
-         VbkKGbqx6pZaDyq6gA8YG6FUE2HuAMRwnZ9sTmQblNjSfrjPyyxOXwP8HEVRdlc/36Yc
-         Vu+d2Wg3pcBfVLMc7N2wqtixGiI5sUkDAuEuPEvOdpPEnJmrOuNdsvs07z9j9/ymY+We
-         CAgg==
+        bh=67lAKFcBlohbq3S3hlo2owskh4YzGLV8oikkn8nxSLw=;
+        b=fYiNJaVuuwRezwivyuOsURZu+BNTqKJHYtufNMVdgv3ZM8Sn/kT++amApuqmNWc9yD
+         V+UFNzpNiKO+B0/ijW5J56R2vECq1XuJNJD3uEL+ltZch5Pb1xgJnXVPlkngEzzu6BsV
+         uctfBI0ydbhIf2kj/oZfFoLk8QyNZ8PLn/qLAs7yVPdzYCPAsQuZAJ1Lud6fQ4Kw1ITa
+         4NFQ5aWKVlbTnBRpHf3TUOSxagaqCU4zo5py17zEf6YLw4+6qMi8CYAbEHJza3Pe8EOi
+         +VtKI2FdA/c9l/EpXJ9qo7mtKngjF66dCzJGm0IR3+LSN//+h4+9ATKy9Z8aRHxuWnLv
+         CAxw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/2] drivers/rng: add Amlogic hardware RNG driver
-References: <20200304011738.33763-1-xypron.glpk@gmx.de>
+Subject: Re: Enable USB host controller on Odroid-C2
+References: <20190818134255.7135-1-b.galvani@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <dfa16733-ff13-54f6-86ef-36396cdd0df4@baylibre.com>
-Date: Fri, 27 Mar 2020 14:30:30 +0100
+Message-ID: <f09bd116-97de-81da-50cc-4afa2c1381e8@baylibre.com>
+Date: Fri, 27 Mar 2020 14:35:50 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200304011738.33763-1-xypron.glpk@gmx.de>
+In-Reply-To: <20190818134255.7135-1-b.galvani@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>, Sughosh Ganu <sughosh.ganu@linaro.org>
-Cc: Simon Glass <sjg@chromium.org>, Mario Six <mario.six@gdsys.cc>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+To: Beniamino Galvani <b.galvani@gmail.com>, u-boot@lists.denx.de
+Cc: Tom Rini <trini@ti.com>, Albert Aribaud <albert.u.boot@aribaud.net>, Maxime Jourdan <mjourdan@baylibre.com>, Patrick Delaunay <patrick.delaunay@st.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 04/03/2020 02:17, Heinrich Schuchardt wrote:
-> The first patch simplifies the Kconfig for hardware RNG drivers and enables
-> the Sandbox RNG driver for all Sandbox instances.
+Hi,
+
+On 18/08/2019 15:42, Beniamino Galvani wrote:
+> Hi,
 > 
-> The second introduces a hardware random number generator driver for Amlogic
-> SOCs. This second patch had been sent before but the preceding patch was
-> missing.
+> these two patches enable the USB host controller on Odroid-C2. The
+> first patch adds a PHY driver; the second one enables the necessary
+> configuration options and updates the device tree.
 > 
-> Heinrich Schuchardt (2):
->   drivers/rng: simplify Kconfig
->   drivers/rng: add Amlogic hardware RNG driver
+> Note that the DWC2 driver currently does not support enabling PHYs
+> from the device tree and so the following series (still on review) is
+> needed as runtime requirement for the second patch:
 > 
->  configs/sandbox64_defconfig |   1 -
->  configs/sandbox_defconfig   |   1 -
->  drivers/rng/Kconfig         |  17 ++++-
->  drivers/rng/Makefile        |   1 +
->  drivers/rng/meson-rng.c     | 120 ++++++++++++++++++++++++++++++++++++
->  5 files changed, 136 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/rng/meson-rng.c
+>  [PATCH 0/5] usb: host: dwc2: use driver model for PHY and CLOCK
 > 
-> --
-> 2.25.1
+> Thanks,
+> Beniamino
+> 
+> Beniamino Galvani (2):
+>   phy: meson: add GXBB PHY driver
+>   odroid-c2: enable USB host controller
+> 
+>  arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi |   8 +
+>  configs/odroid-c2_defconfig                  |   7 +
+>  drivers/phy/Kconfig                          |   8 +
+>  drivers/phy/Makefile                         |   1 +
+>  drivers/phy/meson-gxbb-usb2.c                | 235 +++++++++++++++++++
+>  include/configs/meson64.h                    |   5 +
+>  6 files changed, 264 insertions(+)
+>  create mode 100644 drivers/phy/meson-gxbb-usb2.c
 > 
 
-Hi Sughosh,
-
-Should I take this serie in my tree ?
+Could you re-test with v6 of DWC2 patchset at http://patchwork.ozlabs.org/project/uboot/list/?series=163388 ?
 
 Neil
