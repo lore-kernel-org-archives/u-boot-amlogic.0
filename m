@@ -1,71 +1,73 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
- by mx.groups.io with SMTP id smtpd.web12.14174.1585322564024269720
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web10.46455.1585560465018925640
  for <u-boot-amlogic@groups.io>;
- Fri, 27 Mar 2020 08:22:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1585322559;
-	bh=KU/XYucKRb511+Qw1N4kWDJxNGJmTamnOLSzYoA7wy8=;
-	h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-	b=cSPLveopq4tBq1UqtUcRXGYJDr0sptIULSJL6jhPZepgWvJ96pYOjOfjFr4XuA9zS
-	 KYPusDxMTkyIWuuap0BsG96BHZr5++BSWpKnapgwNlbsTCtp1/M+ALjHLQGmsJ3fV6
-	 4MVMnGGmGf2QQZEkuEe4agWpoIlfhXXTL1R2uks4=
-Subject: Re: [PATCH 0/2] drivers/rng: add Amlogic hardware RNG driver
-References: <20200304011738.33763-1-xypron.glpk@gmx.de>
- <dfa16733-ff13-54f6-86ef-36396cdd0df4@baylibre.com>
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Message-ID: <6fc20382-b12e-d28a-b543-2bc6cb177749@gmx.de>
-Date: Fri, 27 Mar 2020 16:22:33 +0100
+ Mon, 30 Mar 2020 02:27:45 -0700
+Received: by mail-wr1-f67.google.com with SMTP id h9so20663712wrc.8
+        for <u-boot-amlogic@groups.io>; Mon, 30 Mar 2020 02:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KiTKarC/pK/jtSXxuciHtqY1XaBgFHLLJSgwxfrBMB0=;
+        b=aGgpgSdPp3rZzH57IMBRhCWmw+fgJHrvWi7RiSwKjZiyyY3ITajKzhyEEPSMdnGrSb
+         710GBNaCOPj0OJYHWSlsNvhXT37xXwxSYlXqHG3gLx6lF+d1Zc2WNYJU3aKTByN/0t8K
+         lSW4dVy3NSghFu22sYZM24HTtAfC6a9lQu+bwEEas9B6//eJrm3jAi/wILuQRrSN6nk7
+         loKeyxzhbJdy7HD8hD1FXANYskiK6vY3+dHK+X0r/v3m1baP65vLL4KFnl27aWaUHDNN
+         X9bW2r1pc8LyixFL885jjzovj8tmR2MYS0Ks8zzB6+uLqKZooyVzS2bje5f0PtxHO0p0
+         RSrQ==
+Return-Path: <narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Subject: [PATCH 00/10] meson: enable USB Gadget support fot GXL/GXM SoCs
+Date: Mon, 30 Mar 2020 11:27:22 +0200
+Message-Id: <20200330092732.7198-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <dfa16733-ff13-54f6-86ef-36396cdd0df4@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-To: Neil Armstrong <narmstrong@baylibre.com>, Sughosh Ganu <sughosh.ganu@linaro.org>
-Cc: Simon Glass <sjg@chromium.org>, Mario Six <mario.six@gdsys.cc>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Transfer-Encoding: 8bit
+To: u-boot@lists.denx.de, marex@denx.de
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 3/27/20 2:30 PM, Neil Armstrong wrote:
-> On 04/03/2020 02:17, Heinrich Schuchardt wrote:
->> The first patch simplifies the Kconfig for hardware RNG drivers and ena=
-bles
->> the Sandbox RNG driver for all Sandbox instances.
->>
->> The second introduces a hardware random number generator driver for Aml=
-ogic
->> SOCs. This second patch had been sent before but the preceding patch wa=
-s
->> missing.
->>
->> Heinrich Schuchardt (2):
->>    drivers/rng: simplify Kconfig
->>    drivers/rng: add Amlogic hardware RNG driver
->>
->>   configs/sandbox64_defconfig |   1 -
->>   configs/sandbox_defconfig   |   1 -
->>   drivers/rng/Kconfig         |  17 ++++-
->>   drivers/rng/Makefile        |   1 +
->>   drivers/rng/meson-rng.c     | 120 +++++++++++++++++++++++++++++++++++=
-+
->>   5 files changed, 136 insertions(+), 4 deletions(-)
->>   create mode 100644 drivers/rng/meson-rng.c
->>
->> --
->> 2.25.1
->>
->
-> Hi Sughosh,
->
-> Should I take this series in my tree ?
->
-> Neil
->
+Thit patchset adds support for OTG Gadget mode on the GXL/GXM SoCs.
 
-Hello Neil,
+It adds a new API generic_phy_get_by_node() to get the PHY by it's node.
 
-the two patches have been merged with bc40eb278b0c14b99055 with the
-efi-2020-04-rc4-3 pull request.
+It enabled Gadget and USB Mass Storage for libretech-cc, libretech-ac,
+khadas-vim, khadas-vim2, libretech-s905d-pc and libretech-s912-pc boards.
 
-Best regards
+Neil Armstrong (10):
+  generic-phy: add generic_phy_get_by_node()
+  phy: meson-gxl-usb: add set_mode call to force switch to peripheral
+    mode
+  arm: meson-gx: add board_usb_init()/cleanup() for USB gadget
+  arm: dts: meson-gxl: Add USB Gadget nodes for U-Boot
+  configs: libretech-cc: Enable USB gadget with Mass Storage function
+  configs: libretech-ac: Enable USB gadget with Mass Storage function
+  configs: khadas-vim2: Enable USB gadget with Mass Storage function
+  configs: khadas-vim: Enable USB gadget with Mass Storage function
+  configs: libretech-s905d-pc: Enable USB gadget with Mass Storage
+    function
+  configs: libretech-s912-pc: Enable USB gadget with Mass Storage
+    function
 
-Heinrich
+ .../meson-gxl-s905x-khadas-vim-u-boot.dtsi    |   2 +-
+ .../meson-gxl-s905x-libretech-cc-u-boot.dtsi  |   6 +-
+ arch/arm/dts/meson-gxl-s905x-p212-u-boot.dtsi |   2 +-
+ arch/arm/dts/meson-gxl-u-boot.dtsi            |  23 ++++
+ arch/arm/include/asm/arch-meson/usb-gx.h      |  16 +++
+ arch/arm/mach-meson/board-gx.c                | 118 ++++++++++++++++++
+ configs/khadas-vim2_defconfig                 |   7 ++
+ configs/khadas-vim_defconfig                  |   7 ++
+ configs/libretech-ac_defconfig                |   7 ++
+ configs/libretech-cc_defconfig                |   7 ++
+ configs/libretech-s905d-pc_defconfig          |   7 ++
+ configs/libretech-s912-pc_defconfig           |   7 ++
+ drivers/phy/meson-gxl-usb2.c                  |  30 ++++-
+ drivers/phy/meson-gxl-usb3.c                  |  44 +++++--
+ drivers/phy/phy-uclass.c                      |  17 ++-
+ include/generic-phy.h                         |  27 ++++
+ 16 files changed, 301 insertions(+), 26 deletions(-)
+ create mode 100644 arch/arm/dts/meson-gxl-u-boot.dtsi
+ create mode 100644 arch/arm/include/asm/arch-meson/usb-gx.h
+
+-- 
+2.22.0
 
