@@ -1,25 +1,25 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web10.46456.1585560466189432633
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web12.46269.1585560466973580990
  for <u-boot-amlogic@groups.io>;
- Mon, 30 Mar 2020 02:27:46 -0700
-Received: by mail-wr1-f66.google.com with SMTP id a25so20738019wrd.0
-        for <u-boot-amlogic@groups.io>; Mon, 30 Mar 2020 02:27:45 -0700 (PDT)
+ Mon, 30 Mar 2020 02:27:47 -0700
+Received: by mail-wr1-f68.google.com with SMTP id h15so20664487wrx.9
+        for <u-boot-amlogic@groups.io>; Mon, 30 Mar 2020 02:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LBjluRFHjGXpsEUa9vKZkvTGEREuThi4nylIwC++0q8=;
-        b=JfkzrG3j67b6Nngd/bqyRQi+vP1Ai+WLB1OMXmwb3t8jQ6AeC6KdIrk8+ZCaZnaJlL
-         fOYl1FQChzFMR2uDE7YHvMEa3Jjkj1BbfUGCSgRVr8bfLSCu9+5KvmOsg8P+a+URNRWX
-         Ba/swPRfbRGBd2ilxkjF3RhR3eEPQU81rGcCyjCmgSgay/gq57IRtj02kWh9V/YuP+Y6
-         AHbjDQm4TyLysD3XE/aS6RAfiM+voC8oY/pmQY9fRK5AU4e3cx3H8WlIoVLKRWLbyLOL
-         zdfK0hobFx8Se0mj6mmj3s9+/jkrr+lykKhar/YG+g7FOPas19eaxTDop/0MTI1A4VNP
-         vWRg==
+        bh=QYNQt1WaGJQ+2y8XTtnEUasMCrE2jGufKrL8Aa73y2c=;
+        b=ZSxGV/jtj6aDJ7VAy30hcJFvV0Qy34HyhdU48wcIwbH9rY46OqhIA6uNb5NyPumwn/
+         gALnXwPRi/Qgey4ykgNDb9+yyMyr+OCK+h/99ecUMP2LZLLrDZzCyirKSuYhEgYcLX59
+         Ilu9RcZyL1reXo0HC/icvO+xRa+CncvXFNaJd7kh4bPIldcn2R7Wkf4ShMMDXndyEUs5
+         B4mCFF/3be5fqnXMfC8+/Fm+4kBH0dn1RIQ+7tRYvR9TmP+nj446otZmx9CTyfPXrO7U
+         sTe97sEEJh+dLwVPu3bggg9lqaVJIR5wy7yWB2lep2wj4eGSnu3cT5pL9yQpf3LVcJDL
+         brsw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 02/10] phy: meson-gxl-usb: add set_mode call to force switch to peripheral mode
-Date: Mon, 30 Mar 2020 11:27:24 +0200
-Message-Id: <20200330092732.7198-3-narmstrong@baylibre.com>
+Subject: [PATCH 03/10] arm: meson-gx: add board_usb_init()/cleanup() for USB gadget
+Date: Mon, 30 Mar 2020 11:27:25 +0200
+Message-Id: <20200330092732.7198-4-narmstrong@baylibre.com>
 In-Reply-To: <20200330092732.7198-1-narmstrong@baylibre.com>
 References: <20200330092732.7198-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,170 +28,147 @@ To: u-boot@lists.denx.de, marex@denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add set_mode function in the Amlogic GXL PHYs that will be called by
-the arch code to switch PHYs from/to gadget mode.
+Add arch code to initialize USB Gadget mode using the DWC2 controller,
+and using the previously added set_mode() phy functions.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/include/asm/arch-meson/usb-gx.h | 16 +++++++++
- drivers/phy/meson-gxl-usb2.c             | 30 ++++++++++++----
- drivers/phy/meson-gxl-usb3.c             | 44 +++++++++++++++++-------
- 3 files changed, 72 insertions(+), 18 deletions(-)
- create mode 100644 arch/arm/include/asm/arch-meson/usb-gx.h
+ arch/arm/mach-meson/board-gx.c | 118 +++++++++++++++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
 
-diff --git a/arch/arm/include/asm/arch-meson/usb-gx.h b/arch/arm/include/asm/arch-meson/usb-gx.h
-new file mode 100644
-index 0000000000..aeb8e0c673
---- /dev/null
-+++ b/arch/arm/include/asm/arch-meson/usb-gx.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright 2019 BayLibre SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+#ifndef _ARCH_MESON_USB_GX_H_
-+#define _ARCH_MESON_USB_GX_H_
-+
-+#include <generic-phy.h>
+diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
+index 191fd49005..1a7e102c38 100644
+--- a/arch/arm/mach-meson/board-gx.c
++++ b/arch/arm/mach-meson/board-gx.c
+@@ -14,6 +14,11 @@
+ #include <asm/io.h>
+ #include <asm/armv8/mmu.h>
+ #include <linux/sizes.h>
++#include <usb.h>
 +#include <linux/usb/otg.h>
-+
-+/* TOFIX add set_mode to struct phy_ops */
-+void phy_meson_gxl_usb2_set_mode(struct phy *phy, enum usb_dr_mode mode);
-+void phy_meson_gxl_usb3_set_mode(struct phy *phy, enum usb_dr_mode mode);
-+
-+#endif
-diff --git a/drivers/phy/meson-gxl-usb2.c b/drivers/phy/meson-gxl-usb2.c
-index c98d12b627..b4f4c3c76b 100644
---- a/drivers/phy/meson-gxl-usb2.c
-+++ b/drivers/phy/meson-gxl-usb2.c
-@@ -17,6 +17,9 @@
- #include <regmap.h>
- #include <power/regulator.h>
- #include <clk.h>
-+#include <linux/usb/otg.h>
-+
 +#include <asm/arch/usb-gx.h>
++#include <usb/dwc2_udc.h>
++#include <clk.h>
+ #include <phy.h>
  
- #include <linux/bitops.h>
- #include <linux/compat.h>
-@@ -121,15 +124,30 @@ static void phy_meson_gxl_usb2_reset(struct phy_meson_gxl_usb2_priv *priv)
- 	udelay(RESET_COMPLETE_TIME);
+ DECLARE_GLOBAL_DATA_PTR;
+@@ -149,3 +154,116 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
+ 	/* Enable power gate */
+ 	clrbits_le32(GX_MEM_PD_REG_0, GX_MEM_PD_REG_0_ETH_MASK);
  }
- 
--static void
--phy_meson_gxl_usb2_set_host_mode(struct phy_meson_gxl_usb2_priv *priv)
-+void phy_meson_gxl_usb2_set_mode(struct phy *phy, enum usb_dr_mode mode)
- {
-+	struct udevice *dev = phy->dev;
-+	struct phy_meson_gxl_usb2_priv *priv = dev_get_priv(dev);
- 	uint val;
- 
- 	regmap_read(priv->regmap, U2P_R0, &val);
--	val |= U2P_R0_DM_PULLDOWN;
--	val |= U2P_R0_DP_PULLDOWN;
--	val &= ~U2P_R0_ID_PULLUP;
 +
-+	switch (mode) {
-+	case USB_DR_MODE_UNKNOWN:
-+	case USB_DR_MODE_HOST:
-+	case USB_DR_MODE_OTG:
-+		val |= U2P_R0_DM_PULLDOWN;
-+		val |= U2P_R0_DP_PULLDOWN;
-+		val &= ~U2P_R0_ID_PULLUP;
-+		break;
++#if CONFIG_IS_ENABLED(USB_XHCI_DWC3_OF_SIMPLE) && \
++	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
++static struct dwc2_plat_otg_data meson_gx_dwc2_data;
++static struct phy usb_phys[2];
 +
-+	case USB_DR_MODE_PERIPHERAL:
-+		val &= ~U2P_R0_DM_PULLDOWN;
-+		val &= ~U2P_R0_DP_PULLDOWN;
-+		val |= U2P_R0_ID_PULLUP;
-+		break;
++int board_usb_init(int index, enum usb_init_type init)
++{
++	struct ofnode_phandle_args args;
++	struct udevice *clk_dev;
++	ofnode dwc2_node;
++	struct clk clk;
++	int ret, i;
++	u32 val;
++
++	/* find the dwc2 node */
++	dwc2_node = ofnode_by_compatible(ofnode_null(), "snps,dwc2");
++	if (!ofnode_valid(dwc2_node)) {
++		debug("Not found dwc2 node\n");
++		return -ENODEV;
 +	}
 +
- 	regmap_write(priv->regmap, U2P_R0, val);
- 
- 	phy_meson_gxl_usb2_reset(priv);
-@@ -146,7 +164,7 @@ static int phy_meson_gxl_usb2_power_on(struct phy *phy)
- 	val &= ~U2P_R0_POWER_ON_RESET;
- 	regmap_write(priv->regmap, U2P_R0, val);
- 
--	phy_meson_gxl_usb2_set_host_mode(priv);
-+	phy_meson_gxl_usb2_set_mode(phy, USB_DR_MODE_HOST);
- 
- #if CONFIG_IS_ENABLED(DM_REGULATOR)
- 	if (priv->phy_supply) {
-diff --git a/drivers/phy/meson-gxl-usb3.c b/drivers/phy/meson-gxl-usb3.c
-index c2a8593b39..227efa7a17 100644
---- a/drivers/phy/meson-gxl-usb3.c
-+++ b/drivers/phy/meson-gxl-usb3.c
-@@ -16,6 +16,9 @@
- #include <generic-phy.h>
- #include <regmap.h>
- #include <clk.h>
-+#include <linux/usb/otg.h>
-+
-+#include <asm/arch/usb-gx.h>
- 
- #include <linux/bitops.h>
- #include <linux/compat.h>
-@@ -93,20 +96,35 @@ struct phy_meson_gxl_usb3_priv {
- #endif
- };
- 
--static int
--phy_meson_gxl_usb3_set_host_mode(struct phy_meson_gxl_usb3_priv *priv)
-+void phy_meson_gxl_usb3_set_mode(struct phy *phy, enum usb_dr_mode mode)
- {
-+	struct udevice *dev = phy->dev;
-+	struct phy_meson_gxl_usb3_priv *priv = dev_get_priv(dev);
- 	uint val;
- 
--	regmap_read(priv->regmap, USB_R0, &val);
--	val &= ~USB_R0_U2D_ACT;
--	regmap_write(priv->regmap, USB_R0, val);
--
--	regmap_read(priv->regmap, USB_R4, &val);
--	val &= ~USB_R4_P21_SLEEP_M0;
--	regmap_write(priv->regmap, USB_R4, val);
--
--	return 0;
-+	switch (mode) {
-+	case USB_DR_MODE_UNKNOWN:
-+	case USB_DR_MODE_HOST:
-+	case USB_DR_MODE_OTG:
-+		regmap_read(priv->regmap, USB_R0, &val);
-+		val &= ~USB_R0_U2D_ACT;
-+		regmap_write(priv->regmap, USB_R0, val);
-+
-+		regmap_read(priv->regmap, USB_R4, &val);
-+		val &= ~USB_R4_P21_SLEEP_M0;
-+		regmap_write(priv->regmap, USB_R4, val);
-+		break;
-+
-+	case USB_DR_MODE_PERIPHERAL:
-+		regmap_read(priv->regmap, USB_R0, &val);
-+		val |= USB_R0_U2D_ACT;
-+		regmap_write(priv->regmap, USB_R0, val);
-+
-+		regmap_read(priv->regmap, USB_R4, &val);
-+		val |= USB_R4_P21_SLEEP_M0;
-+		regmap_write(priv->regmap, USB_R4, val);
-+		break;
++	if (!ofnode_is_available(dwc2_node)) {
++		debug("dwc2 is disabled in the device tree\n");
++		return -ENODEV;
 +	}
- }
- 
- static int phy_meson_gxl_usb3_power_on(struct phy *phy)
-@@ -122,7 +140,9 @@ static int phy_meson_gxl_usb3_power_on(struct phy *phy)
- 	val |= FIELD_PREP(USB_R5_ID_DIG_TH_MASK, 0xff);
- 	regmap_write(priv->regmap, USB_R5, val);
- 
--	return phy_meson_gxl_usb3_set_host_mode(priv);
-+	phy_meson_gxl_usb3_set_mode(phy, USB_DR_MODE_HOST);
++
++	/* get the PHYs */
++	for (i = 0; i < 2; i++) {
++		ret = generic_phy_get_by_node(dwc2_node, i, &usb_phys[i]);
++		if (ret && ret != -ENOENT) {
++			pr_err("Failed to get USB PHY%d for %s\n",
++			       i, ofnode_get_name(dwc2_node));
++			return ret;
++		}
++	}
++
++	for (i = 0; i < 2; i++) {
++		ret = generic_phy_init(&usb_phys[i]);
++		if (ret) {
++			pr_err("Can't init USB PHY%d for %s\n",
++			       i, ofnode_get_name(dwc2_node));
++			return ret;
++		}
++	}
++
++	for (i = 0; i < 2; i++) {
++		ret = generic_phy_power_on(&usb_phys[i]);
++		if (ret) {
++			pr_err("Can't power USB PHY%d for %s\n",
++			       i, ofnode_get_name(dwc2_node));
++			return ret;
++		}
++	}
++
++	phy_meson_gxl_usb3_set_mode(&usb_phys[0], USB_DR_MODE_PERIPHERAL);
++	phy_meson_gxl_usb2_set_mode(&usb_phys[1], USB_DR_MODE_PERIPHERAL);
++
++	meson_gx_dwc2_data.regs_otg = ofnode_get_addr(dwc2_node);
++	if (meson_gx_dwc2_data.regs_otg == FDT_ADDR_T_NONE) {
++		debug("usbotg: can't get base address\n");
++		return -ENODATA;
++	}
++
++	/* Enable clock */
++	ret = ofnode_parse_phandle_with_args(dwc2_node, "clocks",
++					     "#clock-cells", 0, 0, &args);
++	if (ret) {
++		debug("usbotg has no clocks defined in the device tree\n");
++		return ret;
++	}
++
++	ret = uclass_get_device_by_ofnode(UCLASS_CLK, args.node, &clk_dev);
++	if (ret)
++		return ret;
++
++	if (args.args_count != 1) {
++		debug("Can't find clock ID in the device tree\n");
++		return -ENODATA;
++	}
++
++	clk.dev = clk_dev;
++	clk.id = args.args[0];
++
++	ret = clk_enable(&clk);
++	if (ret) {
++		debug("Failed to enable usbotg clock\n");
++		return ret;
++	}
++
++	ofnode_read_u32(dwc2_node, "g-rx-fifo-size", &val);
++	meson_gx_dwc2_data.rx_fifo_sz = val;
++	ofnode_read_u32(dwc2_node, "g-np-tx-fifo-size", &val);
++	meson_gx_dwc2_data.np_tx_fifo_sz = val;
++	ofnode_read_u32(dwc2_node, "g-tx-fifo-size", &val);
++	meson_gx_dwc2_data.tx_fifo_sz = val;
++
++	return dwc2_udc_probe(&meson_gx_dwc2_data);
++}
++
++int board_usb_cleanup(int index, enum usb_init_type init)
++{
++	int i;
++
++	phy_meson_gxl_usb3_set_mode(&usb_phys[0], USB_DR_MODE_HOST);
++	phy_meson_gxl_usb3_set_mode(&usb_phys[1], USB_DR_MODE_HOST);
++
++	for (i = 0; i < 2; i++)
++		usb_phys[i].dev = NULL;
 +
 +	return 0;
- }
- 
- static int phy_meson_gxl_usb3_power_off(struct phy *phy)
++}
++#endif
 -- 
 2.22.0
 
