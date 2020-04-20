@@ -1,100 +1,91 @@
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
- by mx.groups.io with SMTP id smtpd.web10.4633.1587397234312987972
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web12.1165.1587417762516897757
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Apr 2020 08:40:35 -0700
-Subject: Re: [PATCH] usb: dwc3-meson-g12a: add power-on/off of the PHYs
-References: <20200420134601.19863-1-narmstrong@baylibre.com>
- <06638a20-abe1-6991-8dc9-b24f50d59bfd@denx.de>
- <38fc9ea1-2ea4-bb83-55de-b3c12356c4eb@baylibre.com>
- <13895737-7114-fe84-bd16-8395cf050632@denx.de>
- <b4322b30-233c-e60c-77c4-98618bac1b5a@baylibre.com>
- <446a1be9-2c6e-252a-80f5-15ba936143eb@denx.de>
- <79e51bdb-f9ee-dece-5f75-580da5e8cf15@baylibre.com>
- <755cd6e3-6d30-71fc-ba48-e5fbb7b7c7f4@denx.de>
- <1d7313aa-cde0-be01-1a1d-0473e4f1ef79@baylibre.com>
-From: Marek Vasut <marex@denx.de>
-Message-ID: <e6f86557-0a3b-a21b-f66c-2362db26125c@denx.de>
-Date: Mon, 20 Apr 2020 17:40:29 +0200
+ Mon, 20 Apr 2020 14:22:42 -0700
+Received: by mail-qt1-f169.google.com with SMTP id q17so9927594qtp.4
+        for <u-boot-amlogic@groups.io>; Mon, 20 Apr 2020 14:22:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JUQuIyMqIUnf8yHZ7T66L70jk6Dpq8McLYfJPY+Yxt4=;
+        b=MKNv3NTBzMxD7/UWz8kv8fEuG9U0aePmsMYfBoo0uh37a6heOv+95vGnApKeCMAPCy
+         v9gkIRoNR49ioTVxA/Ve9Kw5+BcxdEutTW/yCLBTuJve2ke5UWn342OJ2uNLsO23eRQF
+         eiq9RobWg948gOIhIALrQxE5tCR90PQBXGf1A=
+Return-Path: <trini@konsulko.com>
+Date: Mon, 20 Apr 2020 17:22:38 -0400
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20200420
+Message-ID: <20200420212238.GK4555@bill-the-cat>
+References: <670f4516-c90e-4273-c918-71a0fe8cb069@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <1d7313aa-cde0-be01-1a1d-0473e4f1ef79@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
-Cc: u-boot@lists.denx.de
+In-Reply-To: <670f4516-c90e-4273-c918-71a0fe8cb069@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l8YfOjwMha7d9KWK"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 4/20/20 4:47 PM, Neil Armstrong wrote:
-> On 20/04/2020 16:10, Marek Vasut wrote:
->> On 4/20/20 4:07 PM, Neil Armstrong wrote:
->> [...]
->>
->>>>>>>> Doesn't checkpatch complain about this extra space before semicolon ?
->>>>>>>
->>>>>>> Nop, even in --strict
->>>>>>
->>>>>> Shouldn't it though ? I thought this extra space was forbidden.
->>>>>
->>>>> No idea, this line is copied from the for loop doing the phy init,
->>>>> itself copied from the Linux code passing all checkpatch checks.
->>>>
->>>> Could you change it to for (i = 0; i < PHY_COUNT; i++) please ?
->>>
->>> Sure
->>
->> Thank you.
->>
->> ( I'm still surprised checkpatch doesn't warn about it, I was quite sure
->> it was one of the checks at some point, hmmmmm. )
->>
->>>>>>>>
->>>>>>>>> +		if (!priv->phys[i].dev)
->>>>>>>>> +			continue;
->>>>>>>>> +
->>>>>>>>> +		ret = generic_phy_power_on(&priv->phys[i]);
->>>>>>>>
->>>>>>>> Do we really need to turn on all the PHYs ?
->>>>>>>>
->>>>>>>
->>>>>>> Yes
->>>>>>
->>>>>> Then should we have something like clk_bulk_*(), but for phys ?
->>>>>>
->>>>>
->>>>> Eventually, yes, but this goes beyond a fix.
->>>>
->>>> The merge window is open for quite a bit longer, so doing this in a
->>>> generic way would be appreciated.
->>>>
->>>> btw while you're at it, shouldn't the PHY_COUNT be replaced with some
->>>> PHY count detection by reading the DT ? ( I don't have the hardware and
->>>> I don't know the amlogic SoCs though )
->>>>
->>>
->>> Hmm, the PHYs list can have some holes (i.e only the second PHY could be used on 3),
->>> and the name of the PHY determines it's type and position (PHY1 is a special OTG phy)
->>> this is why we loop over a fixed array and check if the PHY pointer exists.
->>
->> Um, that sounds like a vaguely familiar problem. Is that an issue with
->> mapping between controller and a USB PHY ? Is that mapping fixed or is
->> it configured from DT ? 
-> 
-> Mapping is done via DT, all PHYs are optional depending on the board layout.
-> 
->> And then, should all PHYs really be powered on,
->> or should only the PHY matching the currently used controller be powered
->> on ?
-> 
-> All PHYs are connected to a glue that muxes 1 PHY between DWC2 and DWC3, and
-> the other USB2 PHYs (for now 1, but previous SoCs had 2) to DWC3, the USB3 PHY
-> is muxed between PCIe to dw-pcie and DWC3.
-> 
-> So we power-on only the PHYs specified in DT, thus the:
-> 	if (!priv->phys[i].dev)
-> 		continue;
-> 
-> I attached the USB complex diagram if you need it.
+--l8YfOjwMha7d9KWK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK, thanks for clarifying. Now, can you document this in the commit
-message, so we have this information stored somewhere for future
-reference ? This would be real useful.
+On Mon, Apr 20, 2020 at 05:15:13PM +0200, Neil Armstrong wrote:
+
+> Hi Tom,
+>=20
+> This respin PR of u-boot-amlogic-20200417 enables RNG on meson boards for=
+ UEFI, fixes the SMBIOS
+> information for ODROID-C2, fixes HDMI Video Output broken on GXBB/GXL/GXM=
+ based boards and adds
+> support for USB gadget on GXL/GXM boards.
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/2832
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit 142a07f2a44262d76fec609e1fcde51794a456=
+eb:
+>=20
+>   Merge branch 'master' of git://git.denx.de/u-boot-marvell (2020-04-14 0=
+8:47:07 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20200420
+>=20
+> for you to fetch changes up to 699a33b9388607446452ed3457921cfd61fc094e:
+>=20
+>   configs: libretech-s912-pc: Enable USB gadget with Mass Storage functio=
+n (2020-04-20 14:19:10 +0200)
+>=20
+
+Applied to u-boot/master, thanks!
+
+--=20
+Tom
+
+--l8YfOjwMha7d9KWK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl6eEpsACgkQFHw5/5Y0
+tyxhFwwAhYzu6aBbH98q7CndP9muISr1Rx4dkPm1yLHfQbjP8cstgWYSD03GRYi1
+n5MnG7ajciPjmX2TMgzesX34xMU+qw18kvkvExAFk8uaPbu3Tb8aZIh0tbjXTS2w
+sOsJflU2ZQq3yoWSr+cIyTx/WqRI+O9/WqY9bbCjlzHQoRbYB0xNQeZ6cusfWb+k
+4t3HBNCewLn97d5ucPbW+od1la0EhhmikFH7nYF8runa3gi+KIz5XBA73SMWXuzS
+4BSmrrCbOfqgc9x0c2izi0ER7KDqGvpKcTXNzQ0EcyA3u+9QsOggc2oJMFQSEmEf
+zs9C3HrYuurYPs60mUQVCb+xa3/nT0cL4tDnN24op2gKTzGmNPBbMzJz2nNQYrve
+cew/cexFfs2ZOHq9cZN8BidYflWcO2j/tDpqajVDseTHNJGbtpsijSGAOYpKMmj0
+nhuOdBVhttR93DAfx62Sz6GrylF/5oG4ELYydwyWeZFNJaXbaCwEYPVlaD2NKvr5
+0BW+KdR0
+=N6//
+-----END PGP SIGNATURE-----
+
+--l8YfOjwMha7d9KWK--
