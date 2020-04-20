@@ -1,60 +1,70 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web12.2175.1587390395142012014
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web12.2217.1587390544806345548
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Apr 2020 06:46:35 -0700
-Received: by mail-wm1-f68.google.com with SMTP id e26so11089103wmk.5
-        for <u-boot-amlogic@groups.io>; Mon, 20 Apr 2020 06:46:34 -0700 (PDT)
+ Mon, 20 Apr 2020 06:49:05 -0700
+Received: by mail-wr1-f67.google.com with SMTP id u13so12266529wrp.3
+        for <u-boot-amlogic@groups.io>; Mon, 20 Apr 2020 06:49:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Ifw6seAQ6HrF5j4n4+l1Izrck9aOD0HjJuw95stFwXc=;
-        b=DU8+c1+m8JNDggtezR43IsKw3RKZHnL2555RJRUauyaXMdjDkSq2ts4ph46aWYMXfi
-         1L93erj94cO/zLCCExZlrBxN1mhrG0U/Ws2imwJoz+EMLndLHKS5WTbQSEl1YdGNv4bB
-         1y6XtA/HOkbbULqSkp+w+P5rndSH3WS4syy8vXU9nOs+O25Ok1FT1uHq6fdEKZGLPg0Q
-         OsMY4vcZoxSMr6nTvrscyv/ipWHjm5oKnocUgbcucoTgg2tcVaKA/aGy56swEq3j+x6X
-         NSBw9KmFEpK+Sds4j2jNlEhiS1gZSdf64ihf3wQhJ0mTkZq+SB+P8kAdWXQrQXkQzBO6
-         loNg==
+        bh=Nz2H+pG4Ffp9d9F13vc5NnjuLI4rDVx39fGTV/EO+RU=;
+        b=RhfgXrBZPTF+P9pod+7w4xkrGiBsS9uwyIVAAiuvpJqstJXp7vMAfISbtCbW8KtFqR
+         J5LPwPiFcAx5xv9KYHnjgCi5xPm4qbySIm4IeFR3Dg6cDYauvWOTYbRnumghZ3OxFkVJ
+         0YK5G7WsXOxCwFZzTknH6YL7vllnnEyIT9DGKMPMVCOoXf34bSqXNuxNm3JHyhWC9R8M
+         ecAypo3LsuuilkWEB4F/IqcVWZGa5UtSiwJZ7F1Wwn/Mtd0yl+r91AHSFLxCrTflsXrN
+         tnGZJlcWaVyTj3mrj0ZGODOlpOXPlpaULRCXzhxm9gkGVPRX1T5FhbZ/jkgphdEZVrgF
+         FrzQ==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] usb: dwc3-meson-g12a: add power-on/off of the PHYs
+References: <20200420134601.19863-1-narmstrong@baylibre.com>
+ <06638a20-abe1-6991-8dc9-b24f50d59bfd@denx.de>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] clk: meson: g12a: add missing SD_EMMC_A controller gates
-Date: Mon, 20 Apr 2020 15:46:30 +0200
-Message-Id: <20200420134630.19935-1-narmstrong@baylibre.com>
+Message-ID: <38fc9ea1-2ea4-bb83-55de-b3c12356c4eb@baylibre.com>
+Date: Mon, 20 Apr 2020 15:49:01 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot-amlogic@groups.io
-Cc: u-boot@lists.denx.de, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <06638a20-abe1-6991-8dc9-b24f50d59bfd@denx.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Marek Vasut <marex@denx.de>, u-boot-amlogic@groups.io
+Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Add missing SD_EMMC_A controller gates needed for probe of the A
-controller, otherwise leading to a freeze of the SoC after b3d69aa596.
+On 20/04/2020 15:47, Marek Vasut wrote:
+> On 4/20/20 3:46 PM, Neil Armstrong wrote:
+>> Power on/off the PHYs to enable power to the USB ports, fixing USB support
+>> on Khadas VIM3/VIM3L boards.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/usb/dwc3/dwc3-meson-g12a.c | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+>> index d4453f8784..8f4a2f3f82 100644
+>> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
+>> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+>> @@ -408,6 +408,15 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
+>>  			goto err_phy_init;
+>>  	}
+>>  
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+> 
+> Doesn't checkpatch complain about this extra space before semicolon ?
 
-Fixes: b3d69aa596 ("clk: meson: reset mmc clock on probe")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/clk/meson/g12a.c | 2 ++
- 1 file changed, 2 insertions(+)
+Nop, even in --strict
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index c1976aa1ef..6089f8474e 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -112,6 +112,7 @@ static struct meson_gate gates[NUM_CLKS] = {
- 	MESON_GATE(CLKID_I2C, HHI_GCLK_MPEG0, 9),
- 	MESON_GATE(CLKID_UART0, HHI_GCLK_MPEG0, 13),
- 	MESON_GATE(CLKID_SPICC1, HHI_GCLK_MPEG0, 14),
-+	MESON_GATE(CLKID_SD_EMMC_A, HHI_GCLK_MPEG0, 4),
- 	MESON_GATE(CLKID_SD_EMMC_B, HHI_GCLK_MPEG0, 25),
- 	MESON_GATE(CLKID_SD_EMMC_C, HHI_GCLK_MPEG0, 26),
- 	MESON_GATE(CLKID_ETH, HHI_GCLK_MPEG1, 3),
-@@ -127,6 +128,7 @@ static struct meson_gate gates[NUM_CLKS] = {
- 	MESON_GATE(CLKID_FCLK_DIV4, HHI_FIX_PLL_CNTL1, 21),
- 	MESON_GATE(CLKID_FCLK_DIV5, HHI_FIX_PLL_CNTL1, 22),
- 	MESON_GATE(CLKID_FCLK_DIV7, HHI_FIX_PLL_CNTL1, 23),
-+	MESON_GATE(CLKID_SD_EMMC_A_CLK0, HHI_SD_EMMC_CLK_CNTL, 7),
- 	MESON_GATE(CLKID_SD_EMMC_B_CLK0, HHI_SD_EMMC_CLK_CNTL, 23),
- 	MESON_GATE(CLKID_SD_EMMC_C_CLK0, HHI_NAND_CLK_CNTL, 7),
- 	MESON_GATE(CLKID_VPU_0, HHI_VPU_CLK_CNTL, 8),
--- 
-2.22.0
+> 
+>> +		if (!priv->phys[i].dev)
+>> +			continue;
+>> +
+>> +		ret = generic_phy_power_on(&priv->phys[i]);
+> 
+> Do we really need to turn on all the PHYs ?
+> 
 
+Yes
+
+Neil
