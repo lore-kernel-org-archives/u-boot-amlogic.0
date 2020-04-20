@@ -1,83 +1,103 @@
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
- by mx.groups.io with SMTP id smtpd.web11.2767.1587392016728869312
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web12.4051.1587395717468780104
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Apr 2020 07:13:37 -0700
-Subject: Re: [PATCH] usb: dwc3-meson-g12a: add power-on/off of the PHYs
-References: <20200420134601.19863-1-narmstrong@baylibre.com>
- <06638a20-abe1-6991-8dc9-b24f50d59bfd@denx.de>
- <38fc9ea1-2ea4-bb83-55de-b3c12356c4eb@baylibre.com>
- <13895737-7114-fe84-bd16-8395cf050632@denx.de>
- <b4322b30-233c-e60c-77c4-98618bac1b5a@baylibre.com>
- <446a1be9-2c6e-252a-80f5-15ba936143eb@denx.de>
- <79e51bdb-f9ee-dece-5f75-580da5e8cf15@baylibre.com>
-From: Marek Vasut <marex@denx.de>
-Message-ID: <755cd6e3-6d30-71fc-ba48-e5fbb7b7c7f4@denx.de>
-Date: Mon, 20 Apr 2020 16:10:36 +0200
+ Mon, 20 Apr 2020 08:15:17 -0700
+Received: by mail-wr1-f65.google.com with SMTP id k1so12668814wrx.4
+        for <u-boot-amlogic@groups.io>; Mon, 20 Apr 2020 08:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=LOxU9VlBurUOffSaXWiG8iWrkAHcMTXBZGnEsBhGYpY=;
+        b=xos7wMDIyPbrvVuS+9zqBOFKuNuhxhxWdkCM2ecS9emZC8+EjSRAnfAEN5eI9nIct/
+         Fgp8JM/l4Adc46x6CRlzFJsSOyDouHLR8Ubtt4NfKY4PtxWaRkQYU2l+S7ZOMiDX1f93
+         0ruBPIvHGfLmtlMIUQnmQAlCvw+MiD5KvTeiLfAcZqo631xLG7CB3kXxsZICAOA7cABZ
+         SZYihChlC6Igvl5LrbOrkEpv8TOJbUBW33TcA83ly1/MLjgU6bO10hZsIjLmqBdqNOph
+         54LyuD359vMXOXRACHtDnNylb5qbacFcuIFcx3Rg2DFVerYLU+epCND6YkG0vup54o0/
+         kvSw==
+Return-Path: <narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20200420
+Reply-To: narmstrong@baylibre.com
+Message-ID: <670f4516-c90e-4273-c918-71a0fe8cb069@baylibre.com>
+Date: Mon, 20 Apr 2020 17:15:13 +0200
 MIME-Version: 1.0
-In-Reply-To: <79e51bdb-f9ee-dece-5f75-580da5e8cf15@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
-Cc: u-boot@lists.denx.de
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 4/20/20 4:07 PM, Neil Armstrong wrote:
-[...]
+Hi Tom,
 
->>>>>> Doesn't checkpatch complain about this extra space before semicolon ?
->>>>>
->>>>> Nop, even in --strict
->>>>
->>>> Shouldn't it though ? I thought this extra space was forbidden.
->>>
->>> No idea, this line is copied from the for loop doing the phy init,
->>> itself copied from the Linux code passing all checkpatch checks.
->>
->> Could you change it to for (i = 0; i < PHY_COUNT; i++) please ?
-> 
-> Sure
+This respin PR of u-boot-amlogic-20200417 enables RNG on meson boards for UEFI, fixes the SMBIOS
+information for ODROID-C2, fixes HDMI Video Output broken on GXBB/GXL/GXM based boards and adds
+support for USB gadget on GXL/GXM boards.
 
-Thank you.
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/2832
 
-( I'm still surprised checkpatch doesn't warn about it, I was quite sure
-it was one of the checks at some point, hmmmmm. )
+Thanks,
+Neil
 
->>>>>>
->>>>>>> +		if (!priv->phys[i].dev)
->>>>>>> +			continue;
->>>>>>> +
->>>>>>> +		ret = generic_phy_power_on(&priv->phys[i]);
->>>>>>
->>>>>> Do we really need to turn on all the PHYs ?
->>>>>>
->>>>>
->>>>> Yes
->>>>
->>>> Then should we have something like clk_bulk_*(), but for phys ?
->>>>
->>>
->>> Eventually, yes, but this goes beyond a fix.
->>
->> The merge window is open for quite a bit longer, so doing this in a
->> generic way would be appreciated.
->>
->> btw while you're at it, shouldn't the PHY_COUNT be replaced with some
->> PHY count detection by reading the DT ? ( I don't have the hardware and
->> I don't know the amlogic SoCs though )
->>
-> 
-> Hmm, the PHYs list can have some holes (i.e only the second PHY could be used on 3),
-> and the name of the PHY determines it's type and position (PHY1 is a special OTG phy)
-> this is why we loop over a fixed array and check if the PHY pointer exists.
+The following changes since commit 142a07f2a44262d76fec609e1fcde51794a456eb:
 
-Um, that sounds like a vaguely familiar problem. Is that an issue with
-mapping between controller and a USB PHY ? Is that mapping fixed or is
-it configured from DT ? And then, should all PHYs really be powered on,
-or should only the PHY matching the currently used controller be powered
-on ?
+  Merge branch 'master' of git://git.denx.de/u-boot-marvell (2020-04-14 08:47:07 -0400)
 
-> This won't match a phy_bulk_code directly, I would still need to map the bulk PHYs to this
-> array for the OTG and USB3 management.
+are available in the Git repository at:
 
-OK
+  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20200420
+
+for you to fetch changes up to 699a33b9388607446452ed3457921cfd61fc094e:
+
+  configs: libretech-s912-pc: Enable USB gadget with Mass Storage function (2020-04-20 14:19:10 +0200)
+
+----------------------------------------------------------------
+- enable DM_RNG on meson boards
+- fix SMBIOS info on Odroid-C2
+- Fix video output on GXBB/GXL/GXM boards
+- add USB gadget support for GXL/GXM boards
+
+----------------------------------------------------------------
+Heinrich Schuchardt (2):
+      arm: meson: imply DM_RNG
+      configs: correct SMBIOS information for ODROID-C2
+
+Neil Armstrong (12):
+      ARM: dts: add missing meson-gxl-s805x-libretech-ac-u-boot.dtsi file
+      arm64: dts: meson-gx: add back dmc register range until canvas driver is available
+      generic-phy: add generic_phy_get_by_node()
+      phy: meson-gxl-usb: add set_mode call to force switch to peripheral mode
+      arm: meson-gx: add board_usb_init()/cleanup() for USB gadget
+      arm: dts: meson-gxl: Add USB Gadget nodes for U-Boot
+      configs: libretech-cc: Enable USB gadget with Mass Storage function
+      configs: libretech-ac: Enable USB gadget with Mass Storage function
+      configs: khadas-vim2: Enable USB gadget with Mass Storage function
+      configs: khadas-vim: Enable USB gadget with Mass Storage function
+      configs: libretech-s905d-pc: Enable USB gadget with Mass Storage function
+      configs: libretech-s912-pc: Enable USB gadget with Mass Storage function
+
+ arch/arm/Kconfig                                   |   1 +
+ arch/arm/dts/meson-gx-u-boot.dtsi                  |   4 +
+ .../dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi   |   7 ++
+ .../arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi |   2 +-
+ .../dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi   |   6 +-
+ arch/arm/dts/meson-gxl-s905x-p212-u-boot.dtsi      |   2 +-
+ arch/arm/dts/meson-gxl-u-boot.dtsi                 |  23 ++++
+ arch/arm/include/asm/arch-meson/usb-gx.h           |  16 +++
+ arch/arm/mach-meson/board-gx.c                     | 118 +++++++++++++++++++++
+ configs/khadas-vim2_defconfig                      |   7 ++
+ configs/khadas-vim_defconfig                       |   7 ++
+ configs/libretech-ac_defconfig                     |   7 ++
+ configs/libretech-cc_defconfig                     |   7 ++
+ configs/libretech-s905d-pc_defconfig               |   7 ++
+ configs/libretech-s912-pc_defconfig                |   7 ++
+ configs/odroid-c2_defconfig                        |   2 +
+ drivers/phy/meson-gxl-usb2.c                       |  30 ++++--
+ drivers/phy/meson-gxl-usb3.c                       |  44 +++++---
+ drivers/phy/phy-uclass.c                           |  16 ++-
+ include/generic-phy.h                              |  29 +++++
+ 20 files changed, 316 insertions(+), 26 deletions(-)
+ create mode 100644 arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-gxl-u-boot.dtsi
+ create mode 100644 arch/arm/include/asm/arch-meson/usb-gx.h
