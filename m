@@ -1,109 +1,67 @@
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
- by mx.groups.io with SMTP id smtpd.web10.4705.1587456605369794456
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web12.6969.1587469931811345497
  for <u-boot-amlogic@groups.io>;
- Tue, 21 Apr 2020 01:10:06 -0700
-Subject: Re: [PATCH] usb: dwc3-meson-g12a: add power-on/off of the PHYs
-References: <20200420134601.19863-1-narmstrong@baylibre.com>
- <06638a20-abe1-6991-8dc9-b24f50d59bfd@denx.de>
- <38fc9ea1-2ea4-bb83-55de-b3c12356c4eb@baylibre.com>
- <13895737-7114-fe84-bd16-8395cf050632@denx.de>
- <b4322b30-233c-e60c-77c4-98618bac1b5a@baylibre.com>
- <446a1be9-2c6e-252a-80f5-15ba936143eb@denx.de>
- <79e51bdb-f9ee-dece-5f75-580da5e8cf15@baylibre.com>
- <755cd6e3-6d30-71fc-ba48-e5fbb7b7c7f4@denx.de>
- <1d7313aa-cde0-be01-1a1d-0473e4f1ef79@baylibre.com>
- <e6f86557-0a3b-a21b-f66c-2362db26125c@denx.de>
- <a960a909-49f3-25cc-5fd4-0755a6777f20@baylibre.com>
-From: Marek Vasut <marex@denx.de>
-Message-ID: <55848bb4-67b2-d5ec-47be-4347cd5de2bf@denx.de>
-Date: Tue, 21 Apr 2020 10:10:01 +0200
+ Tue, 21 Apr 2020 04:52:12 -0700
+Received: by mail-wr1-f66.google.com with SMTP id t14so16080192wrw.12
+        for <u-boot-amlogic@groups.io>; Tue, 21 Apr 2020 04:52:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bs3E9nsHvtWvGlxeJOGCGlR7x4ONyh+CcLsVxUzbCiU=;
+        b=H+HzviKGaZIAQqKqZTM6MOnlZMQTNh3T0kljZ7IZvFGHzZvCfk5qdqghQaRKqhg57X
+         xzogvKEQgJrJM4M6vFRazQByKq02L+fEl4cw6qRyuMzAViJ113sw1w4i6/PIBd6Bt6z9
+         c9HTOx5f82qLXL2y/VkkZJq/M3K0NNfU302n1Mx1AbQiFLZZcFr0jrxmNAVA6KIEAXHF
+         4uSIrOphUcJQBcYEy1rRc5kjJ5JXgfvLSQTLWVIXCFD9SMSOtv34SRbOuFwL26mN15l5
+         WUYy4gjClebAH5Jy7wO+upg0vT2VzNjnkKfpwq0rIok+9NMFuCLkm8URRMiY83s7yK+B
+         NKdA==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] clk: meson: g12a: add missing SD_EMMC_A controller gates
+References: <20200420134630.19935-1-narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <ca9078ee-ec95-05d9-b6bd-cd7c6c782902@baylibre.com>
+Date: Tue, 21 Apr 2020 13:52:08 +0200
 MIME-Version: 1.0
-In-Reply-To: <a960a909-49f3-25cc-5fd4-0755a6777f20@baylibre.com>
+In-Reply-To: <20200420134630.19935-1-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
+To: u-boot-amlogic@groups.io
 Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 4/21/20 10:09 AM, Neil Armstrong wrote:
-> On 20/04/2020 17:40, Marek Vasut wrote:
->> On 4/20/20 4:47 PM, Neil Armstrong wrote:
->>> On 20/04/2020 16:10, Marek Vasut wrote:
->>>> On 4/20/20 4:07 PM, Neil Armstrong wrote:
->>>> [...]
->>>>
->>>>>>>>>> Doesn't checkpatch complain about this extra space before semicolon ?
->>>>>>>>>
->>>>>>>>> Nop, even in --strict
->>>>>>>>
->>>>>>>> Shouldn't it though ? I thought this extra space was forbidden.
->>>>>>>
->>>>>>> No idea, this line is copied from the for loop doing the phy init,
->>>>>>> itself copied from the Linux code passing all checkpatch checks.
->>>>>>
->>>>>> Could you change it to for (i = 0; i < PHY_COUNT; i++) please ?
->>>>>
->>>>> Sure
->>>>
->>>> Thank you.
->>>>
->>>> ( I'm still surprised checkpatch doesn't warn about it, I was quite sure
->>>> it was one of the checks at some point, hmmmmm. )
->>>>
->>>>>>>>>>
->>>>>>>>>>> +		if (!priv->phys[i].dev)
->>>>>>>>>>> +			continue;
->>>>>>>>>>> +
->>>>>>>>>>> +		ret = generic_phy_power_on(&priv->phys[i]);
->>>>>>>>>>
->>>>>>>>>> Do we really need to turn on all the PHYs ?
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> Yes
->>>>>>>>
->>>>>>>> Then should we have something like clk_bulk_*(), but for phys ?
->>>>>>>>
->>>>>>>
->>>>>>> Eventually, yes, but this goes beyond a fix.
->>>>>>
->>>>>> The merge window is open for quite a bit longer, so doing this in a
->>>>>> generic way would be appreciated.
->>>>>>
->>>>>> btw while you're at it, shouldn't the PHY_COUNT be replaced with some
->>>>>> PHY count detection by reading the DT ? ( I don't have the hardware and
->>>>>> I don't know the amlogic SoCs though )
->>>>>>
->>>>>
->>>>> Hmm, the PHYs list can have some holes (i.e only the second PHY could be used on 3),
->>>>> and the name of the PHY determines it's type and position (PHY1 is a special OTG phy)
->>>>> this is why we loop over a fixed array and check if the PHY pointer exists.
->>>>
->>>> Um, that sounds like a vaguely familiar problem. Is that an issue with
->>>> mapping between controller and a USB PHY ? Is that mapping fixed or is
->>>> it configured from DT ? 
->>>
->>> Mapping is done via DT, all PHYs are optional depending on the board layout.
->>>
->>>> And then, should all PHYs really be powered on,
->>>> or should only the PHY matching the currently used controller be powered
->>>> on ?
->>>
->>> All PHYs are connected to a glue that muxes 1 PHY between DWC2 and DWC3, and
->>> the other USB2 PHYs (for now 1, but previous SoCs had 2) to DWC3, the USB3 PHY
->>> is muxed between PCIe to dw-pcie and DWC3.
->>>
->>> So we power-on only the PHYs specified in DT, thus the:
->>> 	if (!priv->phys[i].dev)
->>> 		continue;
->>>
->>> I attached the USB complex diagram if you need it.
->>
->> OK, thanks for clarifying. Now, can you document this in the commit
->> message, so we have this information stored somewhere for future
->> reference ? This would be real useful.
->>
+On 20/04/2020 15:46, Neil Armstrong wrote:
+> Add missing SD_EMMC_A controller gates needed for probe of the A
+> controller, otherwise leading to a freeze of the SoC after b3d69aa596.
 > 
-> Yes sure.
+> Fixes: b3d69aa596 ("clk: meson: reset mmc clock on probe")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/clk/meson/g12a.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index c1976aa1ef..6089f8474e 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -112,6 +112,7 @@ static struct meson_gate gates[NUM_CLKS] = {
+>  	MESON_GATE(CLKID_I2C, HHI_GCLK_MPEG0, 9),
+>  	MESON_GATE(CLKID_UART0, HHI_GCLK_MPEG0, 13),
+>  	MESON_GATE(CLKID_SPICC1, HHI_GCLK_MPEG0, 14),
+> +	MESON_GATE(CLKID_SD_EMMC_A, HHI_GCLK_MPEG0, 4),
+>  	MESON_GATE(CLKID_SD_EMMC_B, HHI_GCLK_MPEG0, 25),
+>  	MESON_GATE(CLKID_SD_EMMC_C, HHI_GCLK_MPEG0, 26),
+>  	MESON_GATE(CLKID_ETH, HHI_GCLK_MPEG1, 3),
+> @@ -127,6 +128,7 @@ static struct meson_gate gates[NUM_CLKS] = {
+>  	MESON_GATE(CLKID_FCLK_DIV4, HHI_FIX_PLL_CNTL1, 21),
+>  	MESON_GATE(CLKID_FCLK_DIV5, HHI_FIX_PLL_CNTL1, 22),
+>  	MESON_GATE(CLKID_FCLK_DIV7, HHI_FIX_PLL_CNTL1, 23),
+> +	MESON_GATE(CLKID_SD_EMMC_A_CLK0, HHI_SD_EMMC_CLK_CNTL, 7),
+>  	MESON_GATE(CLKID_SD_EMMC_B_CLK0, HHI_SD_EMMC_CLK_CNTL, 23),
+>  	MESON_GATE(CLKID_SD_EMMC_C_CLK0, HHI_NAND_CLK_CNTL, 7),
+>  	MESON_GATE(CLKID_VPU_0, HHI_VPU_CLK_CNTL, 8),
+> 
 
-Thanks
+
+Applied to u-boot-amlogic
