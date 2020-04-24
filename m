@@ -1,79 +1,325 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web11.1231.1587712726670324745
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web12.1280.1587712816719067278
  for <u-boot-amlogic@groups.io>;
- Fri, 24 Apr 2020 00:18:47 -0700
-Received: by mail-wr1-f68.google.com with SMTP id t14so9452332wrw.12
-        for <u-boot-amlogic@groups.io>; Fri, 24 Apr 2020 00:18:46 -0700 (PDT)
+ Fri, 24 Apr 2020 00:20:17 -0700
+Received: by mail-wr1-f65.google.com with SMTP id f13so9427424wrm.13
+        for <u-boot-amlogic@groups.io>; Fri, 24 Apr 2020 00:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=PFp+IeoJUd9hkhYt0jN/bWcNNmPg/DTGJxYS54vA+4g=;
-        b=alIyWTeGrr9n5kl9lkpuR0Kedeolo0xv1OC0N3nuxLi47M/QlVwqCHTLkswoGomj2Y
-         wAsRQQeP7LP7EIcJCgTtIEu7Qyn3wsN7y2jQcI9GDNcQvhnG+dLB/DDDIooE/nQo979V
-         xB8DipWNdpZpoXjTHDrwYAc9IzuoeBez5jSln1vcR0utIqwlqKrDixy8GU2th7ymz/DE
-         qE0FU+wfIIvSzDRXo++fAd0FMp2EImHlCV1AiJQiPAodLrXyZT+mnBlTUenl1MVE3B4x
-         vp+C7RS+ZBLjfLRy6KfWX/q/D9m5Q9negJnfXGNKU8FtkVGqID6f1d63JLSEBex/Ul+A
-         TngQ==
+        bh=bp2S23ghjpScn+w4XG4DRrq2a+YWutQvD+Jc6wKW/3Q=;
+        b=DeiDsKzrwQnP/8IV4jHXYWHXeDTllGpf9eRlyA24QeQBoj6HWmW6EEuWDWpAQe6KSW
+         1eB1ACNRwt117PeJpjv8xbJcEAcg4WTiWKIoN3NYyLThukUp453QoJDN4d0T7+Ze4W8T
+         0KPj0wWwAORkquKh6P8Oum09mAqd6z/5i4wp1zQUpMZ+IJBzjIIKlap/GL4ny/l+y8+w
+         RPvvhauzsf0SYnrdSlwUWt+JjMqA5Uy2BxR6cE95gTfw57W7ZwnKgIQqzdCeDgsPSEAn
+         AnFL7xz06Uc0yi5wEg3bmtSJ2On9uYvru9/FPpdLiM1TKafknE5Q3QWPCkEyTg8EB74L
+         xIdw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] usb: dwc3-meson-g12a: add power-on/off of the PHYs
-References: <16078B20C191ED17.15323@groups.io>
+Subject: Re: [PATCH 1/2] phy: meson: add GXBB PHY driver
+References: <20190818134255.7135-1-b.galvani@gmail.com>
+ <20190818134255.7135-2-b.galvani@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <3cb25222-cc59-6326-62cb-f6ff811188b9@baylibre.com>
-Date: Fri, 24 Apr 2020 09:18:43 +0200
+Message-ID: <7e414819-87e4-84d3-d964-99654534af7d@baylibre.com>
+Date: Fri, 24 Apr 2020 09:20:11 +0200
 MIME-Version: 1.0
-In-Reply-To: <16078B20C191ED17.15323@groups.io>
+In-Reply-To: <20190818134255.7135-2-b.galvani@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io, marex@denx.de
-Cc: u-boot@lists.denx.de
+To: Beniamino Galvani <b.galvani@gmail.com>, u-boot@lists.denx.de
+Cc: Tom Rini <trini@ti.com>, Albert Aribaud <albert.u.boot@aribaud.net>, Maxime Jourdan <mjourdan@baylibre.com>, Patrick Delaunay <patrick.delaunay@st.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 20/04/2020 15:46, Neil Armstrong via groups.io wrote:
-> Power on/off the PHYs to enable power to the USB ports, fixing USB support
-> on Khadas VIM3/VIM3L boards.
+On 18/08/2019 15:42, Beniamino Galvani wrote:
+> This adds support for the USB PHY found on Amlogic GXBB SoCs.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 > ---
->  drivers/usb/dwc3/dwc3-meson-g12a.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/phy/Kconfig           |   8 ++
+>  drivers/phy/Makefile          |   1 +
+>  drivers/phy/meson-gxbb-usb2.c | 235 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 244 insertions(+)
+>  create mode 100644 drivers/phy/meson-gxbb-usb2.c
 > 
-> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> index d4453f8784..8f4a2f3f82 100644
-> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> @@ -408,6 +408,15 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
->  			goto err_phy_init;
->  	}
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 3942f035eb..2190f6f970 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -154,6 +154,14 @@ config PHY_STM32_USBPHYC
+>  	  between an HS USB OTG controller and an HS USB Host controller,
+>  	  selected by an USB switch.
 >  
-> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
-> +		if (!priv->phys[i].dev)
-> +			continue;
+> +config MESON_GXBB_USB_PHY
+> +	bool "Amlogic Meson GXBB USB PHY"
+> +	depends on PHY && ARCH_MESON && MESON_GXBB
+> +	imply REGMAP
+> +	help
+> +	  This is the generic phy driver for the Amlogic Meson GXBB
+> +	  USB2 PHY.
 > +
-> +		ret = generic_phy_power_on(&priv->phys[i]);
+>  config MESON_GXL_USB_PHY
+>  	bool "Amlogic Meson GXL USB PHYs"
+>  	depends on PHY && ARCH_MESON && (MESON_GXL || MESON_GXM)
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 3157f1b7ee..dde3b0ecef 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_STI_USB_PHY) += sti_usb_phy.o
+>  obj-$(CONFIG_PHY_RCAR_GEN2) += phy-rcar-gen2.o
+>  obj-$(CONFIG_PHY_RCAR_GEN3) += phy-rcar-gen3.o
+>  obj-$(CONFIG_PHY_STM32_USBPHYC) += phy-stm32-usbphyc.o
+> +obj-$(CONFIG_MESON_GXBB_USB_PHY) += meson-gxbb-usb2.o
+>  obj-$(CONFIG_MESON_GXL_USB_PHY) += meson-gxl-usb2.o meson-gxl-usb3.o
+>  obj-$(CONFIG_MESON_G12A_USB_PHY) += meson-g12a-usb2.o meson-g12a-usb3-pcie.o
+>  obj-$(CONFIG_MSM8916_USB_PHY) += msm8916-usbh-phy.o
+> diff --git a/drivers/phy/meson-gxbb-usb2.c b/drivers/phy/meson-gxbb-usb2.c
+> new file mode 100644
+> index 0000000000..88c2ec69b2
+> --- /dev/null
+> +++ b/drivers/phy/meson-gxbb-usb2.c
+> @@ -0,0 +1,235 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Meson8, Meson8b and GXBB USB2 PHY driver
+> + *
+> + * Copyright (C) 2016 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> + * Copyright (C) 2018 BayLibre, SAS
+> + *
+> + * Author: Beniamino Galvani <b.galvani@gmail.com>
+> + */
+> +
+> +#include <common.h>
+> +#include <clk.h>
+> +#include <dm.h>
+> +#include <generic-phy.h>
+> +#include <power/regulator.h>
+> +#include <regmap.h>
+> +#include <reset.h>
+> +
+> +#define REG_CONFIG					0x00
+> +	#define REG_CONFIG_CLK_EN			BIT(0)
+> +	#define REG_CONFIG_CLK_SEL_MASK			GENMASK(3, 1)
+> +	#define REG_CONFIG_CLK_DIV_MASK			GENMASK(10, 4)
+> +	#define REG_CONFIG_CLK_32k_ALTSEL		BIT(15)
+> +	#define REG_CONFIG_TEST_TRIG			BIT(31)
+> +
+> +#define REG_CTRL					0x04
+> +	#define REG_CTRL_SOFT_PRST			BIT(0)
+> +	#define REG_CTRL_SOFT_HRESET			BIT(1)
+> +	#define REG_CTRL_SS_SCALEDOWN_MODE_MASK		GENMASK(3, 2)
+> +	#define REG_CTRL_CLK_DET_RST			BIT(4)
+> +	#define REG_CTRL_INTR_SEL			BIT(5)
+> +	#define REG_CTRL_CLK_DETECTED			BIT(8)
+> +	#define REG_CTRL_SOF_SENT_RCVD_TGL		BIT(9)
+> +	#define REG_CTRL_SOF_TOGGLE_OUT			BIT(10)
+> +	#define REG_CTRL_POWER_ON_RESET			BIT(15)
+> +	#define REG_CTRL_SLEEPM				BIT(16)
+> +	#define REG_CTRL_TX_BITSTUFF_ENN_H		BIT(17)
+> +	#define REG_CTRL_TX_BITSTUFF_ENN		BIT(18)
+> +	#define REG_CTRL_COMMON_ON			BIT(19)
+> +	#define REG_CTRL_REF_CLK_SEL_MASK		GENMASK(21, 20)
+> +	#define REG_CTRL_REF_CLK_SEL_SHIFT		20
+> +	#define REG_CTRL_FSEL_MASK			GENMASK(24, 22)
+> +	#define REG_CTRL_FSEL_SHIFT			22
+> +	#define REG_CTRL_PORT_RESET			BIT(25)
+> +	#define REG_CTRL_THREAD_ID_MASK			GENMASK(31, 26)
+> +
+> +/* bits [31:26], [24:21] and [15:3] seem to be read-only */
+> +#define REG_ADP_BC					0x0c
+> +	#define REG_ADP_BC_VBUS_VLD_EXT_SEL		BIT(0)
+> +	#define REG_ADP_BC_VBUS_VLD_EXT			BIT(1)
+> +	#define REG_ADP_BC_OTG_DISABLE			BIT(2)
+> +	#define REG_ADP_BC_ID_PULLUP			BIT(3)
+> +	#define REG_ADP_BC_DRV_VBUS			BIT(4)
+> +	#define REG_ADP_BC_ADP_PRB_EN			BIT(5)
+> +	#define REG_ADP_BC_ADP_DISCHARGE		BIT(6)
+> +	#define REG_ADP_BC_ADP_CHARGE			BIT(7)
+> +	#define REG_ADP_BC_SESS_END			BIT(8)
+> +	#define REG_ADP_BC_DEVICE_SESS_VLD		BIT(9)
+> +	#define REG_ADP_BC_B_VALID			BIT(10)
+> +	#define REG_ADP_BC_A_VALID			BIT(11)
+> +	#define REG_ADP_BC_ID_DIG			BIT(12)
+> +	#define REG_ADP_BC_VBUS_VALID			BIT(13)
+> +	#define REG_ADP_BC_ADP_PROBE			BIT(14)
+> +	#define REG_ADP_BC_ADP_SENSE			BIT(15)
+> +	#define REG_ADP_BC_ACA_ENABLE			BIT(16)
+> +	#define REG_ADP_BC_DCD_ENABLE			BIT(17)
+> +	#define REG_ADP_BC_VDAT_DET_EN_B		BIT(18)
+> +	#define REG_ADP_BC_VDAT_SRC_EN_B		BIT(19)
+> +	#define REG_ADP_BC_CHARGE_SEL			BIT(20)
+> +	#define REG_ADP_BC_CHARGE_DETECT		BIT(21)
+> +	#define REG_ADP_BC_ACA_PIN_RANGE_C		BIT(22)
+> +	#define REG_ADP_BC_ACA_PIN_RANGE_B		BIT(23)
+> +	#define REG_ADP_BC_ACA_PIN_RANGE_A		BIT(24)
+> +	#define REG_ADP_BC_ACA_PIN_GND			BIT(25)
+> +	#define REG_ADP_BC_ACA_PIN_FLOAT		BIT(26)
+> +
+> +#define RESET_COMPLETE_TIME				500
+> +#define ACA_ENABLE_COMPLETE_TIME			50
+> +
+> +struct phy_meson_gxbb_usb2_priv {
+> +	struct regmap *regmap;
+> +	struct reset_ctl_bulk resets;
+> +#if CONFIG_IS_ENABLED(DM_REGULATOR)
+> +	struct udevice *phy_supply;
+> +#endif
+> +};
+> +
+> +static int phy_meson_gxbb_usb2_power_on(struct phy *phy)
+> +{
+> +	struct udevice *dev = phy->dev;
+> +	struct phy_meson_gxbb_usb2_priv *priv = dev_get_priv(dev);
+> +	uint val;
+> +
+> +#if CONFIG_IS_ENABLED(DM_REGULATOR)
+> +	if (priv->phy_supply) {
+> +		int ret = regulator_set_enable(priv->phy_supply, true);
+> +
 > +		if (ret)
-> +			goto err_phy_init;
+> +			return ret;
+> +	}
+> +#endif
+> +
+> +	regmap_update_bits(priv->regmap, REG_CONFIG,
+> +			   REG_CONFIG_CLK_32k_ALTSEL,
+> +			   REG_CONFIG_CLK_32k_ALTSEL);
+> +	regmap_update_bits(priv->regmap, REG_CTRL,
+> +			   REG_CTRL_REF_CLK_SEL_MASK,
+> +			   0x2 << REG_CTRL_REF_CLK_SEL_SHIFT);
+> +	regmap_update_bits(priv->regmap, REG_CTRL,
+> +			   REG_CTRL_FSEL_MASK,
+> +			   0x5 << REG_CTRL_FSEL_SHIFT);
+> +
+> +	/* reset the PHY */
+> +	regmap_update_bits(priv->regmap, REG_CTRL,
+> +			   REG_CTRL_POWER_ON_RESET,
+> +			   REG_CTRL_POWER_ON_RESET);
+> +	udelay(RESET_COMPLETE_TIME);
+> +	regmap_update_bits(priv->regmap, REG_CTRL,
+> +			   REG_CTRL_POWER_ON_RESET,
+> +			   0);
+> +	udelay(RESET_COMPLETE_TIME);
+> +
+> +	regmap_update_bits(priv->regmap, REG_CTRL,
+> +			   REG_CTRL_SOF_TOGGLE_OUT,
+> +			   REG_CTRL_SOF_TOGGLE_OUT);
+> +
+> +	/* Set host mode */
+> +	regmap_update_bits(priv->regmap, REG_ADP_BC,
+> +			   REG_ADP_BC_ACA_ENABLE,
+> +			   REG_ADP_BC_ACA_ENABLE);
+> +	udelay(ACA_ENABLE_COMPLETE_TIME);
+> +
+> +	regmap_read(priv->regmap, REG_ADP_BC, &val);
+> +	if (val & REG_ADP_BC_ACA_PIN_FLOAT) {
+> +		pr_err("Error powering on GXBB USB PHY\n");
+> +		return -EINVAL;
 > +	}
 > +
->  	return 0;
->  
->  err_phy_init:
-> @@ -430,6 +439,13 @@ static int dwc3_meson_g12a_remove(struct udevice *dev)
->  
->  	clk_release_all(&priv->clk, 1);
->  
-> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
-> +		if (!priv->phys[i].dev)
-> +			continue;
+> +	return 0;
+> +}
 > +
-> +		 generic_phy_power_off(&priv->phys[i]);
+> +static int phy_meson_gxbb_usb2_power_off(struct phy *phy)
+> +{
+> +#if CONFIG_IS_ENABLED(DM_REGULATOR)
+> +	struct udevice *dev = phy->dev;
+> +	struct phy_meson_gxbb_usb2_priv *priv = dev_get_priv(dev);
+> +
+> +	if (priv->phy_supply) {
+> +		int ret = regulator_set_enable(priv->phy_supply, false);
+> +
+> +		if (ret)
+> +			return ret;
+> +	}
+> +#endif
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy_ops meson_gxbb_usb2_phy_ops = {
+> +	.power_on = phy_meson_gxbb_usb2_power_on,
+> +	.power_off = phy_meson_gxbb_usb2_power_off,
+> +};
+> +
+> +static int meson_gxbb_usb2_phy_probe(struct udevice *dev)
+> +{
+> +	struct phy_meson_gxbb_usb2_priv *priv = dev_get_priv(dev);
+> +	struct clk clk_usb_general, clk_usb;
+> +	int ret;
+> +
+> +	ret = regmap_init_mem(dev_ofnode(dev), &priv->regmap);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_get_by_name(dev, "usb_general", &clk_usb_general);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_enable(&clk_usb_general);
+> +	if (ret && ret != -ENOSYS && ret != -ENOTSUPP) {
+> +		pr_err("Failed to enable PHY general clock\n");
+> +		return ret;
 > +	}
 > +
->  	for (i = 0 ; i < PHY_COUNT ; ++i) {
->  		if (!priv->phys[i].dev)
->  			continue;
-> 
+> +	ret = clk_get_by_name(dev, "usb", &clk_usb);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_enable(&clk_usb);
+> +	if (ret && ret != -ENOSYS && ret != -ENOTSUPP) {
+> +		pr_err("Failed to enable PHY clock\n");
+> +		return ret;
+> +	}
+> +
+> +#if CONFIG_IS_ENABLED(DM_REGULATOR)
+> +	ret = device_get_supply_regulator(dev, "phy-supply", &priv->phy_supply);
+> +	if (ret && ret != -ENOENT) {
+> +		pr_err("Failed to get PHY regulator\n");
+> +		return ret;
+> +	}
+> +#endif
+> +	ret = reset_get_bulk(dev, &priv->resets);
+> +	if (!ret) {
+> +		ret = reset_deassert_bulk(&priv->resets);
+> +		if (ret) {
+> +			pr_err("Failed to deassert reset\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int meson_gxbb_usb2_phy_remove(struct udevice *dev)
+> +{
+> +	struct phy_meson_gxbb_usb2_priv *priv = dev_get_priv(dev);
+> +
+> +	return reset_release_bulk(&priv->resets);
+> +}
+> +
+> +static const struct udevice_id meson_gxbb_usb2_phy_ids[] = {
+> +	{ .compatible = "amlogic,meson8-usb2-phy" },
+> +	{ .compatible = "amlogic,meson8b-usb2-phy" },
+> +	{ .compatible = "amlogic,meson-gxbb-usb2-phy" },
+> +	{ }
+> +};
+> +
+> +U_BOOT_DRIVER(meson_gxbb_usb2_phy) = {
+> +	.name = "meson_gxbb_usb2_phy",
+> +	.id = UCLASS_PHY,
+> +	.of_match = meson_gxbb_usb2_phy_ids,
+> +	.probe = meson_gxbb_usb2_phy_probe,
+> +	.remove = meson_gxbb_usb2_phy_remove,
+> +	.ops = &meson_gxbb_usb2_phy_ops,
+> +	.priv_auto_alloc_size = sizeof(struct phy_meson_gxbb_usb2_priv),
+> +};
+>
 
 Applied to u-boot-amlogic
+
+Next one will wait until Patrick's v6 is applied.
+
+Neil
+
