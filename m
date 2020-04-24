@@ -1,94 +1,76 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web10.1227.1587712704186778101
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web10.1230.1587712720197544401
  for <u-boot-amlogic@groups.io>;
- Fri, 24 Apr 2020 00:18:25 -0700
-Received: by mail-wr1-f68.google.com with SMTP id d15so7856998wrx.3
-        for <u-boot-amlogic@groups.io>; Fri, 24 Apr 2020 00:18:23 -0700 (PDT)
+ Fri, 24 Apr 2020 00:18:40 -0700
+Received: by mail-wr1-f66.google.com with SMTP id b11so9465390wrs.6
+        for <u-boot-amlogic@groups.io>; Fri, 24 Apr 2020 00:18:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GuzgNOax9FGdgCOdZ+htNCljFj+CSx0/ivxNU6oU4X0=;
-        b=jUj+O8LbWEYKjtp72bVXGqLEwFT9FOytzDTmMm7UsdNINJaRdYa4Ft1IR007+raeTW
-         wQM3TbBTKEE4Xd/KQMrRx0jDDAPi2XmrGCdokj5c+6ceC1I1FLf7AcZ7Q+rkIMyUlS0n
-         3mKwNS+wX7mdmAatWC6fwxzz8xbF0LUfu90DI1U6AbBuZH+m8/WOgtOyWdx3Qbv5QV9g
-         LWGNz4qdY22kYgOBLffX7KfH8ob7lS8t9v2DUGWgHxu74rYzYstoBaV88bhmsq/r3cVM
-         SpmTl3AjK+utd8jvVzH8RcaQ3pgKfKQ4CVBIlB8MpBEYeCqA3pTLWDPAmVy3c58C7tfw
-         gnTg==
+        bh=xBoyiCqTX/SfRDbVss0soYvRc/bRVfdmptYdYqH+4ek=;
+        b=dUO2aVnaonil78lq+8yUE1ofJjtLez4Ki+PQ5vECo8HWnvLM40wuxHelU7zIs6gCGJ
+         d0zZdiv6QckRl1HBTABQRTbXO8cOsg2iANfxdjfHb/5CJ7cK4LtBd5ewHuko2mQ6gBBX
+         1V4c9AvnDwMEve3x8JLbRU5iyg/xTExV+t1SDJdsP0qEVxa92erq8+ZkOqCMW1nSDqmY
+         Hw0YUkHhtdX70uq/Cq9bpnyhmdYkG7rC2MrOcf1cuEU6Dix58ahA/p2zoaWLNPvdOG2d
+         RgDzZ/oqmJGiTlfEyaF5Jik3GT7hhlHrW/dpmJ7CyNddxPfpmcgRFO/gBmUZPHwvCbok
+         EW3Q==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2] usb: dwc3-meson-g12a: add power-on/off of the PHYs
-References: <1607C7CBC1E2C0D1.18995@groups.io>
+Subject: Re: [PATCH 0/5] arm: khadas-vim: enable support for SPI NOR Flash
+References: <16078B1116115F52.6073@groups.io>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <6e979b17-78ab-c8ad-afc5-a058a26516a8@baylibre.com>
-Date: Fri, 24 Apr 2020 09:18:20 +0200
+Message-ID: <cc323da9-9c01-e13e-f009-b2fcfb584a21@baylibre.com>
+Date: Fri, 24 Apr 2020 09:18:37 +0200
 MIME-Version: 1.0
-In-Reply-To: <1607C7CBC1E2C0D1.18995@groups.io>
+In-Reply-To: <16078B1116115F52.6073@groups.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io, marex@denx.de
+To: u-boot-amlogic@groups.io
 Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 21/04/2020 10:17, Neil Armstrong via groups.io wrote:
-> Power on/off the PHYs to enable power to the USB ports, fixing USB support
-> on Khadas VIM3/VIM3L boards.
+On 20/04/2020 15:44, Neil Armstrong via groups.io wrote:
+> This serie enables support of the on-board SPI NOR Flash found on the
+> Khadas VIM2, VIM3 and VIM3L board.
 > 
-> The G12A USB complex has at least 2 USB2 PHYs, but one is muxed between the
-> DWC2 and DWC3 controller and the other one directly connected to the DWC3
-> controller. The USB3+PCIe combo PHY is muxed between the DWC3 controller
-> and a DW-PCIE controller.
-> All PHYs are optional, but it's type (usb2/usb3) and position are important
-> to determine it's capabilities, thus they are stored in a fixed size
-> array and the phy-name determines it's position, it's position determining
-> it's type and functionnalities.
-> This is why we need to loop over the array to power on all the DT provided
-> PHYs.
+> Neil Armstrong (5):
+>   arm64: dts: meson: sync dt and bindings from v5.7-rc1
+>   arm: dts: meson-gxm-khadas-vim2-u-boot: enable SPI NOR flash
+>   configs: khadas-vim2: enable support for SPI NOR flash
+>   arm: dts: meson-khadas-vim3: enable SPI NOR flash
+>   configs: khadas-vim3: enable support for SPI NOR flash
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
-> Changes since v1:
-> - removed extra space before semicolon
-> - added clarification in commit message
-> 
->  drivers/usb/dwc3/dwc3-meson-g12a.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> index d4453f8784..de964d6c10 100644
-> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> @@ -408,6 +408,15 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
->  			goto err_phy_init;
->  	}
->  
-> +	for (i = 0; i < PHY_COUNT; ++i) {
-> +		if (!priv->phys[i].dev)
-> +			continue;
-> +
-> +		ret = generic_phy_power_on(&priv->phys[i]);
-> +		if (ret)
-> +			goto err_phy_init;
-> +	}
-> +
->  	return 0;
->  
->  err_phy_init:
-> @@ -430,6 +439,13 @@ static int dwc3_meson_g12a_remove(struct udevice *dev)
->  
->  	clk_release_all(&priv->clk, 1);
->  
-> +	for (i = 0; i < PHY_COUNT; ++i) {
-> +		if (!priv->phys[i].dev)
-> +			continue;
-> +
-> +		 generic_phy_power_off(&priv->phys[i]);
-> +	}
-> +
->  	for (i = 0 ; i < PHY_COUNT ; ++i) {
->  		if (!priv->phys[i].dev)
->  			continue;
+>  arch/arm/dts/meson-axg-s400.dts               |   6 +-
+>  arch/arm/dts/meson-g12-common.dtsi            | 136 ++++++++++++++++--
+>  arch/arm/dts/meson-g12.dtsi                   |   1 +
+>  arch/arm/dts/meson-g12a-sei510.dts            |   4 +-
+>  arch/arm/dts/meson-g12a-u200.dts              |   2 +-
+>  .../meson-g12b-a311d-khadas-vim3-u-boot.dtsi  |   7 +
+>  arch/arm/dts/meson-g12b-khadas-vim3.dtsi      |   4 +-
+>  arch/arm/dts/meson-g12b-odroid-n2.dts         |  25 +++-
+>  arch/arm/dts/meson-gx.dtsi                    |  52 +++++++
+>  arch/arm/dts/meson-gxbb-odroidc2.dts          |   1 +
+>  arch/arm/dts/meson-gxl-s905x-p212.dtsi        |   9 +-
+>  .../arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi |  15 ++
+>  arch/arm/dts/meson-gxm-khadas-vim2.dts        |  89 +++---------
+>  arch/arm/dts/meson-gxm.dtsi                   |  28 ++++
+>  arch/arm/dts/meson-khadas-vim3-u-boot.dtsi    |  21 +++
+>  arch/arm/dts/meson-khadas-vim3.dtsi           |  24 +++-
+>  .../dts/meson-sm1-khadas-vim3l-u-boot.dtsi    |   7 +
+>  arch/arm/dts/meson-sm1-khadas-vim3l.dts       |   8 +-
+>  arch/arm/dts/meson-sm1-sei610.dts             |   3 +-
+>  arch/arm/dts/meson-sm1.dtsi                   |   1 +
+>  configs/khadas-vim2_defconfig                 |   8 ++
+>  configs/khadas-vim3_defconfig                 |   9 ++
+>  configs/khadas-vim3l_defconfig                |   9 ++
+>  include/dt-bindings/clock/g12a-clkc.h         |   2 +
+>  include/dt-bindings/clock/gxbb-clkc.h         |   1 +
+>  25 files changed, 371 insertions(+), 101 deletions(-)
+>  create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
+>  create mode 100644 arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+>  create mode 100644 arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
 > 
 
 Applied to u-boot-amlogic
