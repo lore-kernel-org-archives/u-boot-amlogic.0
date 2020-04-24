@@ -1,76 +1,79 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web10.1230.1587712720197544401
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web11.1231.1587712726670324745
  for <u-boot-amlogic@groups.io>;
- Fri, 24 Apr 2020 00:18:40 -0700
-Received: by mail-wr1-f66.google.com with SMTP id b11so9465390wrs.6
-        for <u-boot-amlogic@groups.io>; Fri, 24 Apr 2020 00:18:39 -0700 (PDT)
+ Fri, 24 Apr 2020 00:18:47 -0700
+Received: by mail-wr1-f68.google.com with SMTP id t14so9452332wrw.12
+        for <u-boot-amlogic@groups.io>; Fri, 24 Apr 2020 00:18:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=xBoyiCqTX/SfRDbVss0soYvRc/bRVfdmptYdYqH+4ek=;
-        b=dUO2aVnaonil78lq+8yUE1ofJjtLez4Ki+PQ5vECo8HWnvLM40wuxHelU7zIs6gCGJ
-         d0zZdiv6QckRl1HBTABQRTbXO8cOsg2iANfxdjfHb/5CJ7cK4LtBd5ewHuko2mQ6gBBX
-         1V4c9AvnDwMEve3x8JLbRU5iyg/xTExV+t1SDJdsP0qEVxa92erq8+ZkOqCMW1nSDqmY
-         Hw0YUkHhtdX70uq/Cq9bpnyhmdYkG7rC2MrOcf1cuEU6Dix58ahA/p2zoaWLNPvdOG2d
-         RgDzZ/oqmJGiTlfEyaF5Jik3GT7hhlHrW/dpmJ7CyNddxPfpmcgRFO/gBmUZPHwvCbok
-         EW3Q==
+        bh=PFp+IeoJUd9hkhYt0jN/bWcNNmPg/DTGJxYS54vA+4g=;
+        b=alIyWTeGrr9n5kl9lkpuR0Kedeolo0xv1OC0N3nuxLi47M/QlVwqCHTLkswoGomj2Y
+         wAsRQQeP7LP7EIcJCgTtIEu7Qyn3wsN7y2jQcI9GDNcQvhnG+dLB/DDDIooE/nQo979V
+         xB8DipWNdpZpoXjTHDrwYAc9IzuoeBez5jSln1vcR0utIqwlqKrDixy8GU2th7ymz/DE
+         qE0FU+wfIIvSzDRXo++fAd0FMp2EImHlCV1AiJQiPAodLrXyZT+mnBlTUenl1MVE3B4x
+         vp+C7RS+ZBLjfLRy6KfWX/q/D9m5Q9negJnfXGNKU8FtkVGqID6f1d63JLSEBex/Ul+A
+         TngQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/5] arm: khadas-vim: enable support for SPI NOR Flash
-References: <16078B1116115F52.6073@groups.io>
+Subject: Re: [PATCH] usb: dwc3-meson-g12a: add power-on/off of the PHYs
+References: <16078B20C191ED17.15323@groups.io>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <cc323da9-9c01-e13e-f009-b2fcfb584a21@baylibre.com>
-Date: Fri, 24 Apr 2020 09:18:37 +0200
+Message-ID: <3cb25222-cc59-6326-62cb-f6ff811188b9@baylibre.com>
+Date: Fri, 24 Apr 2020 09:18:43 +0200
 MIME-Version: 1.0
-In-Reply-To: <16078B1116115F52.6073@groups.io>
+In-Reply-To: <16078B20C191ED17.15323@groups.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io
+To: u-boot-amlogic@groups.io, marex@denx.de
 Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 20/04/2020 15:44, Neil Armstrong via groups.io wrote:
-> This serie enables support of the on-board SPI NOR Flash found on the
-> Khadas VIM2, VIM3 and VIM3L board.
+On 20/04/2020 15:46, Neil Armstrong via groups.io wrote:
+> Power on/off the PHYs to enable power to the USB ports, fixing USB support
+> on Khadas VIM3/VIM3L boards.
 > 
-> Neil Armstrong (5):
->   arm64: dts: meson: sync dt and bindings from v5.7-rc1
->   arm: dts: meson-gxm-khadas-vim2-u-boot: enable SPI NOR flash
->   configs: khadas-vim2: enable support for SPI NOR flash
->   arm: dts: meson-khadas-vim3: enable SPI NOR flash
->   configs: khadas-vim3: enable support for SPI NOR flash
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/usb/dwc3/dwc3-meson-g12a.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
->  arch/arm/dts/meson-axg-s400.dts               |   6 +-
->  arch/arm/dts/meson-g12-common.dtsi            | 136 ++++++++++++++++--
->  arch/arm/dts/meson-g12.dtsi                   |   1 +
->  arch/arm/dts/meson-g12a-sei510.dts            |   4 +-
->  arch/arm/dts/meson-g12a-u200.dts              |   2 +-
->  .../meson-g12b-a311d-khadas-vim3-u-boot.dtsi  |   7 +
->  arch/arm/dts/meson-g12b-khadas-vim3.dtsi      |   4 +-
->  arch/arm/dts/meson-g12b-odroid-n2.dts         |  25 +++-
->  arch/arm/dts/meson-gx.dtsi                    |  52 +++++++
->  arch/arm/dts/meson-gxbb-odroidc2.dts          |   1 +
->  arch/arm/dts/meson-gxl-s905x-p212.dtsi        |   9 +-
->  .../arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi |  15 ++
->  arch/arm/dts/meson-gxm-khadas-vim2.dts        |  89 +++---------
->  arch/arm/dts/meson-gxm.dtsi                   |  28 ++++
->  arch/arm/dts/meson-khadas-vim3-u-boot.dtsi    |  21 +++
->  arch/arm/dts/meson-khadas-vim3.dtsi           |  24 +++-
->  .../dts/meson-sm1-khadas-vim3l-u-boot.dtsi    |   7 +
->  arch/arm/dts/meson-sm1-khadas-vim3l.dts       |   8 +-
->  arch/arm/dts/meson-sm1-sei610.dts             |   3 +-
->  arch/arm/dts/meson-sm1.dtsi                   |   1 +
->  configs/khadas-vim2_defconfig                 |   8 ++
->  configs/khadas-vim3_defconfig                 |   9 ++
->  configs/khadas-vim3l_defconfig                |   9 ++
->  include/dt-bindings/clock/g12a-clkc.h         |   2 +
->  include/dt-bindings/clock/gxbb-clkc.h         |   1 +
->  25 files changed, 371 insertions(+), 101 deletions(-)
->  create mode 100644 arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
->  create mode 100644 arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
->  create mode 100644 arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
+> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> index d4453f8784..8f4a2f3f82 100644
+> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
+> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> @@ -408,6 +408,15 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
+>  			goto err_phy_init;
+>  	}
+>  
+> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+> +		if (!priv->phys[i].dev)
+> +			continue;
+> +
+> +		ret = generic_phy_power_on(&priv->phys[i]);
+> +		if (ret)
+> +			goto err_phy_init;
+> +	}
+> +
+>  	return 0;
+>  
+>  err_phy_init:
+> @@ -430,6 +439,13 @@ static int dwc3_meson_g12a_remove(struct udevice *dev)
+>  
+>  	clk_release_all(&priv->clk, 1);
+>  
+> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+> +		if (!priv->phys[i].dev)
+> +			continue;
+> +
+> +		 generic_phy_power_off(&priv->phys[i]);
+> +	}
+> +
+>  	for (i = 0 ; i < PHY_COUNT ; ++i) {
+>  		if (!priv->phys[i].dev)
+>  			continue;
 > 
 
 Applied to u-boot-amlogic
