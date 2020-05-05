@@ -1,25 +1,25 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web11.5899.1588710197538727565
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web10.5860.1588710198699205071
  for <u-boot-amlogic@groups.io>;
- Tue, 05 May 2020 13:23:17 -0700
-Received: by mail-wr1-f68.google.com with SMTP id x17so4301993wrt.5
-        for <u-boot-amlogic@groups.io>; Tue, 05 May 2020 13:23:17 -0700 (PDT)
+ Tue, 05 May 2020 13:23:19 -0700
+Received: by mail-wm1-f67.google.com with SMTP id x25so55205wmc.0
+        for <u-boot-amlogic@groups.io>; Tue, 05 May 2020 13:23:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sTM2PyrVVlU/i2wae/GSpgc2Vvy32Qn8hCtIeuLnkrw=;
-        b=gKVTTFyv78uuM2bpkQL2KTCjH7g8E+yTQ42Pw9trPTo+uxdrBuhlh2kV7lBmB8vw5y
-         ysljaxWCsJFtLmIHiuPfXFnVvNk+VwmxrDfIywzteUOi2Uo2MCy2zV/6vK4wtSURLJwJ
-         9qwG8zPDTD5XlGiW+ZHERyiHVRY2O6bmNfImdcPS7ctWp+DdEKNfNxTAlAy/UbJOQvr/
-         naR4nSUd1cyWF1sT743Ajij/5kaKt44GfEKj8bRUlww3fw1pvFmi+tRbkf+BsfHhqpBu
-         N76aLC8+i0XnLXktN3m1dsc/44Iug2Ae7bYsH7wkWjlDhpLqfqN148e8CZOEHIiQ7OG+
-         Y8TQ==
+        bh=txpDlHYQuuE9opOUeYrvRj4RVHhmlL7/Psgy6XT469g=;
+        b=Epr+xDpaLPCCx/L9zG2MDv3pxjpizz7554uqC1M5bZsKX3WKBA58hyHxnQLcN8rpjK
+         9VW0qF+eMi10O0Jw2lgzY3y420sSpk5j1iYHipxWKiAKEwr2GLr/IxWrbFuPzv3SddMS
+         xmNWEtJ8mLUemEr/aPdUVNk3Cy1O6PcwNwLc4hE52zT4SsGWfiBW5nyAXdRE8vrnz/Ks
+         kU6jLSOf4+kEIH1xX/kQ1xSIiHDiDDnLlKvzwS083z6lD4aVrQquPbwSIv0fndCjhMlF
+         aznZKylrC2jUVkliS+ho52eJsaWu035SvVSRtzmheJPzUTSyYqvo4QkyRJWhoOP5zDlq
+         91EQ==
 Return-Path: <b.galvani@gmail.com>
 From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH 1/2] arm: dts: import ODROID-C4 device tree
-Date: Tue,  5 May 2020 22:22:16 +0200
-Message-Id: <20200505202217.7849-2-b.galvani@gmail.com>
+Subject: [PATCH 2/2] boards: amlogic: add ODROID-C4 support
+Date: Tue,  5 May 2020 22:22:17 +0200
+Message-Id: <20200505202217.7849-3-b.galvani@gmail.com>
 In-Reply-To: <20200505202217.7849-1-b.galvani@gmail.com>
 References: <20200505202217.7849-1-b.galvani@gmail.com>
 MIME-Version: 1.0
@@ -28,434 +28,236 @@ To: u-boot@lists.denx.de, Neil Armstrong <narmstrong@baylibre.com>
 Cc: u-boot-amlogic@groups.io, Beniamino Galvani <b.galvani@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Import the device tree for ODROID-C4 as submitted in [1].
+Introduce support for ODROID-C4, a single board computer manufactured
+by Hardkernel Co. Ltd with the following specifications:
 
-[1] https://lkml.org/lkml/2020/4/24/535
+ - Amlogic S905X3 ARM Cortex-A55 quad-core SoC
+ - 4GiB DDR4 SDRAM
+ - Gigabit Ethernet (External Realtek RTL8211F PHY)
+ - 4 x USB 3.0 Host ports
+ - 1 x USB 2.0 OTG port
+ - HDMI 2.0
+ - eMMC
+ - SDcard
+ - 40-pin GPIO header
+ - Infrared receiver
 
 Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 ---
- arch/arm/dts/Makefile                |   1 +
- arch/arm/dts/meson-sm1-odroid-c4.dts | 399 +++++++++++++++++++++++++++
- 2 files changed, 400 insertions(+)
- create mode 100644 arch/arm/dts/meson-sm1-odroid-c4.dts
+ board/amlogic/odroid-c4/MAINTAINERS |  6 +++
+ board/amlogic/odroid-c4/Makefile    |  3 ++
+ board/amlogic/odroid-c4/README      | 83 +++++++++++++++++++++++++++++
+ board/amlogic/odroid-c4/odroid-c4.c | 17 ++++++
+ configs/odroid-c4_defconfig         | 63 ++++++++++++++++++++++
+ 5 files changed, 172 insertions(+)
+ create mode 100644 board/amlogic/odroid-c4/MAINTAINERS
+ create mode 100644 board/amlogic/odroid-c4/Makefile
+ create mode 100644 board/amlogic/odroid-c4/README
+ create mode 100644 board/amlogic/odroid-c4/odroid-c4.c
+ create mode 100644 configs/odroid-c4_defconfig
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 559d3ab6a7..70ea72dfaf 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -161,6 +161,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
- 	meson-g12b-odroid-n2.dtb \
- 	meson-g12b-a311d-khadas-vim3.dtb \
- 	meson-sm1-khadas-vim3l.dtb \
-+	meson-sm1-odroid-c4.dtb \
- 	meson-sm1-sei610.dtb
- dtb-$(CONFIG_TEGRA) += tegra20-harmony.dtb \
- 	tegra20-medcom-wide.dtb \
-diff --git a/arch/arm/dts/meson-sm1-odroid-c4.dts b/arch/arm/dts/meson-sm1-odroid-c4.dts
+diff --git a/board/amlogic/odroid-c4/MAINTAINERS b/board/amlogic/odroid-c4/MAINTAINERS
 new file mode 100644
-index 0000000000..4882c604a7
+index 0000000000..ebc1a9efe5
 --- /dev/null
-+++ b/arch/arm/dts/meson-sm1-odroid-c4.dts
-@@ -0,0 +1,399 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++++ b/board/amlogic/odroid-c4/MAINTAINERS
+@@ -0,0 +1,6 @@
++ODROID-C4
++M:	Beniamino Galvani <b.galvani@gmail.com>
++S:	Maintained
++L:	u-boot-amlogic@groups.io
++F:	board/amlogic/odroid-c4/
++F:	configs/odroid-c4_defconfig
+diff --git a/board/amlogic/odroid-c4/Makefile b/board/amlogic/odroid-c4/Makefile
+new file mode 100644
+index 0000000000..a0ca5fb242
+--- /dev/null
++++ b/board/amlogic/odroid-c4/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0+
++
++obj-y	:= odroid-c4.o
+diff --git a/board/amlogic/odroid-c4/README b/board/amlogic/odroid-c4/README
+new file mode 100644
+index 0000000000..9308965738
+--- /dev/null
++++ b/board/amlogic/odroid-c4/README
+@@ -0,0 +1,83 @@
++U-Boot for ODROID-C4
++====================
++
++ODROID-C4 is a single board computer manufactured by Hardkernel
++Co. Ltd with the following specifications:
++
++ - Amlogic S905X3 ARM Cortex-A55 quad-core SoC
++ - 4GiB DDR4 SDRAM
++ - Gigabit Ethernet (External Realtek RTL8211F PHY)
++ - 4 x USB 3.0 Host ports
++ - 1 x USB 2.0 OTG port
++ - HDMI 2.0
++ - eMMC
++ - SDcard
++ - 40-pin GPIO header
++ - Infrared receiver
++
++Currently the u-boot port supports the following devices:
++ - Serial
++ - Clock controller
++ - USB
++
++u-boot compilation
++==================
++
++ export ARCH=arm
++ export CROSS_COMPILE=aarch64-none-elf-
++ make odroid-c4_defconfig
++ make
++
++Image creation
++==============
++
++Amlogic doesn't provide sources for the firmware and for tools needed
++to create the bootloader image, so it is necessary to obtain them from
++the git tree published by the board vendor:
++
++ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
++ wget https://releases.linaro.org/archive/14.04/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.xz
++ tar xf gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
++ tar xf gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.xz
++ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2014.04_linux/bin:$PATH
++ git clone --depth 1 https://github.com/hardkernel/u-boot.git -b odroidg12-v2015.01 hardkernel-u-boot
++ cd hardkernel-u-boot
++ make odroidc4_defconfig
++ make
++ export UBOOTDIR=$PWD
++
++Go back to mainline U-Boot source tree and then:
++
++ mkdir fip
++ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl30sig --level v3 \
++                                     --input $UBOOTDIR/build/fip/bl30_new.bin \
++                                     --output fip/bl30_new.bin.g12.enc
++ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --type bl30 --level v3 \
++                                     --input fip/bl30_new.bin.g12.enc \
++                                     --output fip/bl30_new.bin.enc
++ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --type bl31 --level v3 \
++                                     --input $UBOOTDIR/fip/g12a/bl31.img \
++                                     --output fip/bl31.img.enc
++ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --type bl33 --level v3 \
++                                     --compress lz4 \
++                                     --input u-boot.bin \
++                                     --output fip/bl33.bin.enc
++ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl2sig \
++                                     --input $UBOOTDIR/build/fip/bl2_new.bin \
++                                     --output fip/bl2.n.bin.sig
++ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bootmk \
++                                     --output fip/u-boot.bin \
++                                     --bl2 fip/bl2.n.bin.sig \
++                                     --bl30 fip/bl30_new.bin.enc \
++                                     --bl31 fip/bl31.img.enc \
++                                     --bl33 fip/bl33.bin.enc \
++                                     --ddrfw1 $UBOOTDIR/fip/g12a/ddr4_1d.fw \
++                                     --ddrfw2 $UBOOTDIR/fip/g12a/ddr4_2d.fw \
++                                     --ddrfw4 $UBOOTDIR/fip/g12a/piei.fw \
++                                     --ddrfw8 $UBOOTDIR/fip/g12a/aml_ddr.fw \
++                                     --level v3
++
++and then write the image to SD with:
++
++ DEV=/dev/your_sd_device
++ dd if=fip/u-boot.bin of=$DEV conv=fsync,notrunc bs=512 seek=1
+diff --git a/board/amlogic/odroid-c4/odroid-c4.c b/board/amlogic/odroid-c4/odroid-c4.c
+new file mode 100644
+index 0000000000..14f1748fa0
+--- /dev/null
++++ b/board/amlogic/odroid-c4/odroid-c4.c
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Copyright (c) 2020 Dongjin Kim <tobetter@gmail.com>
++ * Copyright (C) 2016 BayLibre, SAS
 + */
 +
-+/dts-v1/;
++#include <common.h>
++#include <dm.h>
++#include <asm/arch/eth.h>
 +
-+#include "meson-sm1.dtsi"
-+#include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/leds/common.h>
++int misc_init_r(void)
++{
++	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
 +
-+/ {
-+	compatible = "hardkernel,odroid-c4", "amlogic,sm1";
-+	model = "Hardkernel ODROID-C4";
++	meson_generate_serial_ethaddr();
 +
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio_ao GPIOAO_11 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			panic-indicator;
-+		};
-+	};
-+
-+	tflash_vdd: regulator-tflash_vdd {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "TFLASH_VDD";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	tf_io: gpio-regulator-tf_io {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "TF_IO";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio_ao GPIOAO_6 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+
-+		states = <3300000 0>,
-+			 <1800000 1>;
-+	};
-+
-+	flash_1v8: regulator-flash_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "FLASH_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	main_12v: regulator-main_12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_5v: regulator-vcc_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&main_12v>;
-+	};
-+
-+	vcc_1v8: regulator-vcc_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
-+		/* FIXME: actually controlled by VDDCPU_B_EN */
-+	};
-+
-+	vddcpu: regulator-vddcpu {
-+		/*
-+		 * MP8756GD Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU";
-+		regulator-min-microvolt = <721000>;
-+		regulator-max-microvolt = <1022000>;
-+
-+		vin-supply = <&main_12v>;
-+
-+		pwms = <&pwm_AO_cd 1 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	hub_5v: regulator-hub_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "HUB_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		/* Connected to the Hub CHIPENABLE, LOW sets low power state */
-+		gpio = <&gpio GPIOH_4 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	usb_pwr_en: regulator-usb_pwr_en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB_PWR_EN";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		/* Connected to the microUSB port power enable */
-+		gpio = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vddao_1v8: regulator-vddao_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&main_12v>;
-+		regulator-always-on;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU1_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU2_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU3_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&ext_mdio {
-+	external_phy: ethernet-phy@0 {
-+		/* Realtek RTL8211F (0x001cc916) */
-+		reg = <0>;
-+		max-speed = <1000>;
-+
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <30000>;
-+		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-+
-+		interrupt-parent = <&gpio_intc>;
-+		/* MAC_INTR on GPIOZ_14 */
-+		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&ethmac {
-+	pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+	phy-mode = "rgmii";
-+	phy-handle = <&external_phy>;
-+	amlogic,tx-delay-ns = <2>;
-+};
-+
-+&gpio {
-+	gpio-line-names =
-+		/* GPIOZ */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* GPIOH */
-+		"", "", "", "", "",
-+		"PIN_36", /* GPIOH_5 */
-+		"PIN_26", /* GPIOH_6 */
-+		"PIN_32", /* GPIOH_7 */
-+		"",
-+		/* BOOT */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* GPIOC */
-+		"", "", "", "", "", "", "", "",
-+		/* GPIOA */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "",
-+		"PIN_27", /* GPIOA_14 */
-+		"PIN_28", /* GPIOA_15 */
-+		/* GPIOX */
-+		"PIN_16", /* GPIOX_0 */
-+		"PIN_18", /* GPIOX_1 */
-+		"PIN_22", /* GPIOX_2 */
-+		"PIN_11", /* GPIOX_3 */
-+		"PIN_13", /* GPIOX_4 */
-+		"PIN_7",  /* GPIOX_5 */
-+		"PIN_33", /* GPIOX_6 */
-+		"PIN_15", /* GPIOX_7 */
-+		"PIN_19", /* GPIOX_8 */
-+		"PIN_21", /* GPIOX_9 */
-+		"PIN_24", /* GPIOX_10 */
-+		"PIN_23", /* GPIOX_11 */
-+		"PIN_8",  /* GPIOX_12 */
-+		"PIN_10", /* GPIOX_13 */
-+		"PIN_29", /* GPIOX_14 */
-+		"PIN_31", /* GPIOX_15 */
-+		"PIN_12", /* GPIOX_16 */
-+		"PIN_3",  /* GPIOX_17 */
-+		"PIN_5",  /* GPIOX_18 */
-+		"PIN_35"; /* GPIOX_19 */
-+
-+	/*
-+	 * WARNING: The USB Hub on the Odroid-C4 needs a reset signal
-+	 * to be turned high in order to be detected by the USB Controller
-+	 * This signal should be handled by a USB specific power sequence
-+	 * in order to reset the Hub when USB bus is powered down.
-+	 */
-+	usb-hub {
-+		gpio-hog;
-+		gpios = <GPIOH_4 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "usb-hub-reset";
-+	};
-+};
-+
-+&gpio_ao {
-+	gpio-line-names =
-+		/* GPIOAO */
-+		"", "", "", "",
-+		"PIN_47", /* GPIOAO_4 */
-+		"", "",
-+		"PIN_45", /* GPIOAO_7 */
-+		"PIN_46", /* GPIOAO_8 */
-+		"PIN_44", /* GPIOAO_9 */
-+		"PIN_42", /* GPIOAO_10 */
-+		"",
-+		/* GPIOE */
-+		"", "", "";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&vcc_5v>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&pwm_AO_cd {
-+	pinctrl-0 = <&pwm_ao_d_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin1";
-+	status = "okay";
-+};
-+
-+&saradc {
-+	status = "okay";
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_c_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <200000000>;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&tflash_vdd>;
-+	vqmmc-supply = <&tf_io>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_ctrl_pins>, <&emmc_data_8b_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&flash_1v8>;
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb {
-+	status = "okay";
-+	vbus-supply = <&usb_pwr_en>;
-+};
-+
-+&usb2_phy0 {
-+	phy-supply = <&vcc_5v>;
-+};
-+
-+&usb2_phy1 {
-+	/* Enable the hub which is connected to this port */
-+	phy-supply = <&hub_5v>;
-+};
++	return 0;
++}
+diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
+new file mode 100644
+index 0000000000..cc27c6fc1b
+--- /dev/null
++++ b/configs/odroid-c4_defconfig
+@@ -0,0 +1,63 @@
++CONFIG_ARM=y
++CONFIG_SYS_BOARD="odroid-c4"
++CONFIG_ARCH_MESON=y
++CONFIG_SYS_TEXT_BASE=0x01000000
++CONFIG_ENV_SIZE=0x10000
++CONFIG_DM_GPIO=y
++CONFIG_MESON_G12A=y
++CONFIG_NR_DRAM_BANKS=1
++CONFIG_DEBUG_UART_BASE=0xff803000
++CONFIG_DEBUG_UART_CLOCK=24000000
++CONFIG_IDENT_STRING=" odroid-c4"
++# CONFIG_PSCI_RESET is not set
++CONFIG_DEBUG_UART=y
++CONFIG_OF_BOARD_SETUP=y
++# CONFIG_CONSOLE_MUX is not set
++CONFIG_MISC_INIT_R=y
++# CONFIG_DISPLAY_CPUINFO is not set
++# CONFIG_CMD_BDI is not set
++# CONFIG_CMD_IMI is not set
++CONFIG_CMD_GPIO=y
++CONFIG_CMD_GPT=y
++# CONFIG_CMD_LOADS is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_USB=y
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_BMP=y
++CONFIG_CMD_REGULATOR=y
++CONFIG_OF_CONTROL=y
++CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-odroid-c4"
++CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_NET_RANDOM_ETHADDR=y
++# CONFIG_INPUT is not set
++CONFIG_DM_MMC=y
++CONFIG_MMC_MESON_GX=y
++CONFIG_PHY_ADDR_ENABLE=y
++CONFIG_PHY_ADDR=8
++CONFIG_DM_ETH=y
++CONFIG_ETH_DESIGNWARE=y
++CONFIG_MESON_G12A_USB_PHY=y
++CONFIG_PINCTRL=y
++CONFIG_PINCTRL_MESON_G12A=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_EE_POWER_DOMAIN=y
++CONFIG_DM_REGULATOR=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_RESET=y
++CONFIG_DEBUG_UART_MESON=y
++CONFIG_DEBUG_UART_ANNOUNCE=y
++CONFIG_DEBUG_UART_SKIP_INIT=y
++CONFIG_MESON_SERIAL=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_XHCI_HCD=y
++CONFIG_USB_XHCI_DWC3=y
++CONFIG_USB_DWC3=y
++CONFIG_USB_DWC3_MESON_G12A=y
++CONFIG_DM_VIDEO=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_MESON=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_OF_LIBFDT_OVERLAY=y
 -- 
 2.25.1
 
