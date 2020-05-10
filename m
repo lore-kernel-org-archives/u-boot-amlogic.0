@@ -1,114 +1,128 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web12.15126.1589119738395462369
+Received: from mail-ot1-f68.google.com (mail-ot1-f68.google.com [209.85.210.68])
+ by mx.groups.io with SMTP id smtpd.web10.468.1589143021401320671
  for <u-boot-amlogic@groups.io>;
- Sun, 10 May 2020 07:08:58 -0700
-Received: by mail-wr1-f66.google.com with SMTP id y3so7563499wrt.1
-        for <u-boot-amlogic@groups.io>; Sun, 10 May 2020 07:08:58 -0700 (PDT)
+ Sun, 10 May 2020 13:37:01 -0700
+Received: by mail-ot1-f68.google.com with SMTP id m13so5929783otf.6
+        for <u-boot-amlogic@groups.io>; Sun, 10 May 2020 13:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1afxX8QlHNSOt4uPTFvuobe8vfkQZTYSqfvWDNAbo/g=;
-        b=o9xvUkcQZ2cJtx55dqor1h8YM+nVMW07Wm6mU+0z4oMIGCWS3D+/HV2cypmNGYnlUO
-         BDWcDuOVhLbBbcJqqHZVyOEEtjUuQFe8TJkf5j29AjBynnmcr07hvVMLOeHY8j7UaBf8
-         3Pdd9OVLypzN3QBvbQNvWR9rKkMxA0Zyupr+dnvbfr6ODzbI5akhRpoLJepxVRFBd5dt
-         Z3GQqhnSSJv5ZgMEuORuuIQ5ufytAv0OO6cgDRbPQ7RtMd3z/WXs1wWWHr0DiUWvJdpS
-         wnte8hvnHGggrgpHY5C+MxGSNKb1CaGtiGpigB4xCg/Vu44al+HDJUTCpewiymAex/tK
-         vV0g==
-Return-Path: <b.galvani@gmail.com>
-Date: Sun, 10 May 2020 16:08:29 +0200
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: Re: [PATCH 2/2] odroid-c2: enable USB host controller
-Message-ID: <20200510140829.GA1602@gmail.com>
-References: <20190818134255.7135-1-b.galvani@gmail.com>
- <20190818134255.7135-3-b.galvani@gmail.com>
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eMAr4xJAez3jIzjdwrM2xtMJTlZ/qSyNynrpKg21D6o=;
+        b=cw4YPdKA0GIF29If2e9+tqan2ENEsMO1TkKdn11sZ9nmXP+qdqqOTvn8Zgyhtmlu5p
+         cMxJEW2LgSnxgFpk8kVNTuVLTmSQcNBPVoMi7SrqOFO9vY2ImYezMon6c1Xn6IiaSDnt
+         H4CCRS868LU9MmCu7DrsnAs9/flcocC18D+5s=
 MIME-Version: 1.0
-In-Reply-To: <20190818134255.7135-3-b.galvani@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-To: u-boot@lists.denx.de, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Tom Rini <trini@ti.com>, Albert Aribaud <albert.u.boot@aribaud.net>, Maxime Jourdan <mjourdan@baylibre.com>, Patrick Delaunay <patrick.delaunay@st.com>, u-boot-amlogic@groups.io
+References: <20200407024032.82983-1-sjg@chromium.org> <20200406203250.13.I470731da548fee846f1d7f35a1330a9de6f590c1@changeid>
+ <d9b45054-fc1e-6400-f3c7-9f6830f60f57@xilinx.com>
+In-Reply-To: <d9b45054-fc1e-6400-f3c7-9f6830f60f57@xilinx.com>
+From: Simon Glass <sjg@chromium.org>
+Date: Sun, 10 May 2020 14:36:48 -0600
+Message-ID: <CAPnjgZ1XRt8tRyktg2o-v5zAa6-8MU8DF1j9z-_jdqsao98MhA@mail.gmail.com>
+Subject: Re: [PATCH 13/18] common: Drop asm/ptrace.h from common header
+Content-Type: text/plain; charset="UTF-8"
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Tom Rini <trini@konsulko.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Alex Marginean <alexandru.marginean@nxp.com>, Angelo Dureghello <angelo@sysam.it>, Bin Meng <bmeng.cn@gmail.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Fabio Estevam <festevam@gmail.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Huan Wang <alison.wang@nxp.com>, Ibai Erkiaga <ibai.erkiaga-elorza@xilinx.com>, Joe Hershberger <joe.hershberger@ni.com>, Kever Yang <kever.yang@rock-chips.com>, Luca Ceresoli <luca@lucaceresoli.net>, Lukasz Majewski <lukma@denx.de>, Mario Six <mario.six@gdsys.cc>, Max Filippov <jcmvbkbc@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Neil Armstrong <narmstrong@baylibre.com>, Peng Fan <peng.fan@nxp.com>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Rajan Vaja <rajan.vaja@xilinx.com>, Sergey Temerkhanov <s.temerkhanov@gmail.com>, Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>, Stefan Roese <sr@denx.de>, Stefano Babic <sbabic@denx.de>, Thomas Hebb <tommyhebb@gmail.com>, Thomas Schaefer <thomas.schaefer@kontron.com>, Trevor Woerner <trevor@toganlabs.com>, Udit Agarwal <udit.agarwal@nxp.com>, Vagrant Cascadian <vagrant@debian.org>, Wolfgang Denk <wd@denx.de>, Yuantian Tang <andy.tang@nxp.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On Sun, Aug 18, 2019 at 03:42:55PM +0200, Beniamino Galvani wrote:
-> Enable the second USB controller, which is connected to a hub with 4
-> ports. The first controller is for the OTG port and is currently not
-> supported.
-> 
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-> ---
->  arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi | 8 ++++++++
->  configs/odroid-c2_defconfig                  | 7 +++++++
->  include/configs/meson64.h                    | 5 +++++
->  3 files changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi b/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
-> index c35158d7e9..484b40504d 100644
-> --- a/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
-> +++ b/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
-> @@ -5,3 +5,11 @@
->   */
->  
->  #include "meson-gx-u-boot.dtsi"
-> +
-> +&usb0 {
-> +	status = "disabled";
-> +};
-> +
-> +&usb1 {
-> +	hnp-srp-disable;
-> +};
-> diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
-> index 8849058d33..366ea125af 100644
-> --- a/configs/odroid-c2_defconfig
-> +++ b/configs/odroid-c2_defconfig
-> @@ -16,6 +16,7 @@ CONFIG_CMD_GPIO=y
->  CONFIG_CMD_I2C=y
->  # CONFIG_CMD_LOADS is not set
->  CONFIG_CMD_MMC=y
-> +CONFIG_CMD_USB=y
->  # CONFIG_CMD_SETEXPR is not set
->  CONFIG_CMD_REGULATOR=y
->  CONFIG_OF_CONTROL=y
-> @@ -29,13 +30,19 @@ CONFIG_MMC_MESON_GX=y
->  CONFIG_PHY_REALTEK=y
->  CONFIG_DM_ETH=y
->  CONFIG_ETH_DESIGNWARE=y
-> +CONFIG_PHY=y
-> +CONFIG_MESON_GXBB_USB_PHY=y
->  CONFIG_PINCTRL=y
->  CONFIG_PINCTRL_MESON_GXBB=y
->  CONFIG_DM_REGULATOR=y
->  CONFIG_DM_REGULATOR_FIXED=y
-> +CONFIG_DM_REGULATOR_GPIO=y
->  CONFIG_DM_RESET=y
->  CONFIG_DEBUG_UART_MESON=y
->  CONFIG_DEBUG_UART_ANNOUNCE=y
->  CONFIG_DEBUG_UART_SKIP_INIT=y
->  CONFIG_MESON_SERIAL=y
-> +CONFIG_USB=y
-> +CONFIG_DM_USB=y
-> +CONFIG_USB_DWC2=y
->  CONFIG_OF_LIBFDT_OVERLAY=y
-> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-> index f8d3eee292..483a8f567c 100644
-> --- a/include/configs/meson64.h
-> +++ b/include/configs/meson64.h
-> @@ -16,6 +16,11 @@
->  #define GICC_BASE			0xc4302000
->  #endif
->  
-> +/* USB */
-> +#if defined(CONFIG_MESON_GXBB)
-> +#define CONFIG_DWC2_UTMI_WIDTH		16
-> +#endif
+Hi Michal,
 
-Hi Neil,
+On Tue, 7 Apr 2020 at 00:50, Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> On 07. 04. 20 4:40, Simon Glass wrote:
+> > Move this uncommon header out of the common header.
+> >
+> > Signed-off-by: Simon Glass <sjg@chromium.org>
+> > ---
+> >
+> >  arch/arm/cpu/arm1136/mx35/timer.c       | 1 +
+> >  arch/arm/cpu/arm926ejs/mx25/timer.c     | 1 +
+> >  arch/arm/cpu/arm926ejs/mx27/timer.c     | 1 +
+> >  arch/arm/cpu/arm926ejs/spear/spl.c      | 1 +
+> >  arch/arm/cpu/arm926ejs/spear/timer.c    | 1 +
+> >  arch/arm/cpu/armv8/fsl-layerscape/cpu.c | 1 +
+> >  arch/arm/cpu/armv8/sec_firmware.c       | 1 +
+> >  arch/arm/lib/interrupts.c               | 1 +
+> >  arch/arm/lib/interrupts_64.c            | 1 +
+> >  arch/arm/mach-imx/sip.c                 | 1 +
+> >  arch/arm/mach-meson/board-common.c      | 1 +
+> >  arch/arm/mach-meson/sm.c                | 1 +
+> >  arch/arm/mach-mvebu/arm64-common.c      | 1 +
+> >  arch/m68k/lib/interrupts.c              | 1 +
+> >  arch/m68k/lib/traps.c                   | 1 +
+> >  arch/mips/lib/traps.c                   | 1 +
+> >  arch/powerpc/cpu/mpc83xx/interrupts.c   | 1 +
+> >  arch/powerpc/cpu/mpc83xx/traps.c        | 1 +
+> >  arch/powerpc/cpu/mpc85xx/interrupts.c   | 1 +
+> >  arch/powerpc/cpu/mpc85xx/traps.c        | 1 +
+> >  arch/powerpc/cpu/mpc86xx/interrupts.c   | 1 +
+> >  arch/powerpc/cpu/mpc86xx/traps.c        | 1 +
+> >  arch/powerpc/cpu/mpc8xx/interrupts.c    | 1 +
+> >  arch/powerpc/cpu/mpc8xx/traps.c         | 1 +
+> >  arch/powerpc/lib/interrupts.c           | 1 +
+> >  arch/powerpc/lib/kgdb.c                 | 1 +
+> >  arch/x86/cpu/i386/interrupt.c           | 1 +
+> >  arch/xtensa/cpu/exceptions.c            | 1 +
+> >  board/cavium/thunderx/atf.c             | 1 +
+> >  board/xilinx/zynqmp/zynqmp.c            | 1 +
+> >  cmd/bedbug.c                            | 1 +
+> >  common/bedbug.c                         | 1 +
+> >  common/kgdb.c                           | 1 +
+> >  common/kgdb_stubs.c                     | 1 +
+> >  drivers/clk/clk_versal.c                | 1 +
+> >  drivers/firmware/firmware-zynqmp.c      | 1 +
+> >  drivers/timer/mpc83xx_timer.c           | 1 +
+> >  include/common.h                        | 1 -
+> >  38 files changed, 37 insertions(+), 1 deletion(-)
+> >
 
-I noticed this change to the bus width configuration isn't actually
-needed. The USB port works with or without it. The kernel driver
-doesn't set 16bit mode, so can you please remove these 4 lines from
-the commit before sending the pull request?
+[...]
 
-Thanks,
-Beniamino
+> > diff --git a/board/xilinx/zynqmp/zynqmp.c b/board/xilinx/zynqmp/zynqmp.c
+> > index 76758237c00..4f8a0453f46 100644
+> > --- a/board/xilinx/zynqmp/zynqmp.c
+> > +++ b/board/xilinx/zynqmp/zynqmp.c
+> > @@ -22,6 +22,7 @@
+> >  #include <asm/arch/psu_init_gpl.h>
+> >  #include <asm/cache.h>
+> >  #include <asm/io.h>
+> > +#include <asm/ptrace.h>
+>
+> I did a grep and I can't see ptrace macros used anywhere in the code.
+> I see show_regs used by architecture and common code but not by boards.
+> That's why at least for zynqmp please remove this header because nothing
+> is used from it.
+
+For example: xilinx_zynqmp_virt
+
+ilinx_zynqmp_virt
++WARNING: BL31 file bl31.bin NOT found, U-Boot will run in EL3
++board/xilinx/zynqmp/zynqmp.c: In function 'chip_id':
++board/xilinx/zynqmp/zynqmp.c:198:17: error: storage size of 'regs' isn't known
++  struct pt_regs regs;
++                 ^~~~
++make[2]: *** [board/xilinx/zynqmp/zynqmp.o] Error 1
++make[1]: *** [board/xilinx/zynqmp] Error 2
++make: *** [sub-make] Error 2
+
+
+
++WARNING: BL31 file bl31.bin NOT found, U-Boot will run in EL3
++drivers/firmware/firmware-zynqmp.c: In function 'xilinx_pm_request':
++drivers/firmware/firmware-zynqmp.c:159:17: error: storage size of
+'regs' isn't known
++  struct pt_regs regs;
++                 ^~~~
++ }
++ ^
++make[3]: *** [drivers/firmware/firmware-zynqmp.o] Error 1
++make[2]: *** [drivers/firmware] Error 2
++make[1]: *** [drivers] Error 2
++make: *** [sub-make] Error 2
+w+drivers/firmware/firmware-zynqmp.c:159:17: warning: unused variable
+'regs' [-Wunused-variable]
+w+drivers/firmware/firmware-zynqmp.c:181:1: warning: control reaches
+end of non-void function [-Wreturn-type]
+
+Regards,
+Simon
