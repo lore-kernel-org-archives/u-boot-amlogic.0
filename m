@@ -1,95 +1,71 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web12.11658.1589203055415882912
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web10.2457.1589275616124132686
  for <u-boot-amlogic@groups.io>;
- Mon, 11 May 2020 06:17:35 -0700
-Received: by mail-wr1-f41.google.com with SMTP id v12so10880859wrp.12
-        for <u-boot-amlogic@groups.io>; Mon, 11 May 2020 06:17:35 -0700 (PDT)
+ Tue, 12 May 2020 02:26:56 -0700
+Received: by mail-wm1-f50.google.com with SMTP id g14so8883704wme.1
+        for <u-boot-amlogic@groups.io>; Tue, 12 May 2020 02:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=V3BShulMwG34AudX1DTjzOI/dCcsoBgLJognomfm9rQ=;
-        b=d5GrUupSwZilUVw8FZWAaAqC7TG9zYzgX5dcXCph9m+c8MAX4g/p5M7xIc6EWzyTMO
-         etOgK4VwVEP6BirPonXjr0p0Z03tRshBTADU0onB3q2X5Pe8UvsTVJL5dJ7GRixUpGM2
-         YkjWGo7uOHyv6cCJX9/d1ZZqC9BG5ymPimoyrw9VAeHilqbRkAA/EXNr9ne8VmMtgWoq
-         BtswqDpWBZLJDjj3cTUknbgSgDclZJoQwVpYiig8SmzsiQOuYQmd+9RB4AKyYN8Q5qTI
-         X1sAjeMeqzeYwPiWVX0Opwqe49OlZawvg3AH7imeMZyg3C3iCEynlHoc3ygn+FbdnO/Q
-         6WsA==
+        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=+f+69drr7wRQ5wy7VvvxPyrcvCyZkF7KgMPBMxy9GDA=;
+        b=gK/nwf53q/+xTPyKFvi57bGbSTjCfvelzgvSMmS50UBeFefH2LbaC871MtiVM6BtHc
+         6i4LcfatXSomb5Y4QQUYb5TzbkymjKF96/zjJr/q8bTSTKq1/Mb28KdIJEJdZ5Uiha22
+         c2s6bUn0Uz1jHe1KjTaD1QCX1vk7ibAp5Jh2Q8qH4PDSWnMCSuCL6N7lgdBEpPHtB85p
+         wSlzLnpz5v1hIcv7GhKLvPjmYrfHeNgPi/KavdmuxCRIQbIzlaCIOCR4MJFK7p5StIwB
+         oUukQL066Hc8/HNjbd0a8nn8U+lokjQG3zHSwpbCgBkjRnCXqHHBJHjg+yGU879Hwq+t
+         NJsw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] configs: khadas-vim3: enable HDMI output
-Date: Mon, 11 May 2020 15:17:28 +0200
-Message-Id: <20200511131728.5570-2-narmstrong@baylibre.com>
-In-Reply-To: <20200511131728.5570-1-narmstrong@baylibre.com>
-References: <20200511131728.5570-1-narmstrong@baylibre.com>
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20200511
+Reply-To: narmstrong@baylibre.com
+Message-ID: <c4e53b7a-128a-2d60-729f-713c4981c4f1@baylibre.com>
+Date: Tue, 12 May 2020 11:26:52 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Enable options to permit HDMI output on Khadas VIM3 & VIM3L boards.
+Hi Tom,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- configs/khadas-vim3_defconfig  | 9 +++++++++
- configs/khadas-vim3l_defconfig | 4 ++++
- 2 files changed, 13 insertions(+)
+This PR enables adds GPIO Open-Drain/Open-Source emulation in GPIO uclass
+and finally enables USB Host support for the Odroid-C2 board.
 
-diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
-index 692138eb11..4aeab0e35d 100644
---- a/configs/khadas-vim3_defconfig
-+++ b/configs/khadas-vim3_defconfig
-@@ -40,6 +40,8 @@ CONFIG_ETH_DESIGNWARE=y
- CONFIG_MESON_G12A_USB_PHY=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_EE_POWER_DOMAIN=y
- CONFIG_DM_REGULATOR=y
- CONFIG_DM_REGULATOR_FIXED=y
- CONFIG_DM_RESET=y
-@@ -55,6 +57,7 @@ CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-+CONFIG_USB_KEYBOARD=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_DWC3_MESON_G12A=y
- CONFIG_USB_GADGET=y
-@@ -63,4 +66,10 @@ CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
- CONFIG_USB_GADGET_DWC2_OTG=y
- CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
- CONFIG_USB_GADGET_DOWNLOAD=y
-+CONFIG_DM_VIDEO=y
-+# CONFIG_VIDEO_BPP8 is not set
-+# CONFIG_VIDEO_BPP16 is not set
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
-index 28c20c0d6d..887885f329 100644
---- a/configs/khadas-vim3l_defconfig
-+++ b/configs/khadas-vim3l_defconfig
-@@ -57,6 +57,7 @@ CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-+CONFIG_USB_KEYBOARD=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_DWC3_MESON_G12A=y
- CONFIG_USB_GADGET=y
-@@ -66,6 +67,9 @@ CONFIG_USB_GADGET_DWC2_OTG=y
- CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
- CONFIG_USB_GADGET_DOWNLOAD=y
- CONFIG_DM_VIDEO=y
-+# CONFIG_VIDEO_BPP8 is not set
-+# CONFIG_VIDEO_BPP16 is not set
-+CONFIG_SYS_WHITE_ON_BLACK=y
- CONFIG_VIDEO_MESON=y
- CONFIG_VIDEO_DT_SIMPLEFB=y
- CONFIG_OF_LIBFDT_OVERLAY=y
--- 
-2.22.0
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/3196
 
+Thanks,
+Neil
+
+The following changes since commit c5c657644bc35fd6b3d6e5517698721e90646b8d:
+
+  Merge branch '2020-05-08-assorted-fixes' (2020-05-08 18:58:19 -0400)
+
+are available in the Git repository at:
+
+  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20200511
+
+for you to fetch changes up to 9bf87e256c26246fa6d8df491617e40cb7df89c2:
+
+  test: dm: update test for open-drain/open-source emulation in gpio-uclass (2020-05-11 15:12:56 +0200)
+
+----------------------------------------------------------------
+- Enable USB Host for Odroid-C2 board
+- Add Open-Drain/Open-Source emulation in GPIO uclass
+
+----------------------------------------------------------------
+Beniamino Galvani (1):
+      odroid-c2: enable USB host controller
+
+Neil Armstrong (2):
+      gpio: emulate open drain & open source in dm_gpio_set_value()
+      test: dm: update test for open-drain/open-source emulation in gpio-uclass
+
+ arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi |  8 +++
+ arch/sandbox/dts/test.dts                    |  4 +-
+ configs/odroid-c2_defconfig                  |  7 +++
+ drivers/gpio/gpio-uclass.c                   | 15 +++++
+ test/dm/gpio.c                               | 89 ++++++++++++++++++++++++++++
+ 5 files changed, 122 insertions(+), 1 deletion(-)
