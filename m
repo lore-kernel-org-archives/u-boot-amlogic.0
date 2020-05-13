@@ -1,60 +1,100 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
- by mx.groups.io with SMTP id smtpd.web12.2213.1589360494948266622
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web11.2275.1589360510791159362
  for <u-boot-amlogic@groups.io>;
- Wed, 13 May 2020 02:01:35 -0700
-Received: by mail-wm1-f67.google.com with SMTP id g12so27552296wmh.3
-        for <u-boot-amlogic@groups.io>; Wed, 13 May 2020 02:01:34 -0700 (PDT)
+ Wed, 13 May 2020 02:01:51 -0700
+Received: by mail-wr1-f66.google.com with SMTP id s8so19885561wrt.9
+        for <u-boot-amlogic@groups.io>; Wed, 13 May 2020 02:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=subject:to:references:from:autocrypt:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=fetRFR4pCMS1ghE6/vRsdMX4Iv0cIUOhvaw0WA+t4P8=;
-        b=BfOL5dnzWvqJau/T8kG+DVvp9zG289Qkp7CcseJM44VukdSJxbs1BYhClNPjlbV9k8
-         ONspUgV6JsdjswF4+1V3l2645g07kX5jTJUHITewqkkbnj/iaAyelBLTVISZ7U991Qy8
-         h5KP0cpyuyvI+eYE8oYpivNT15FVY4NZgA3a0dMhKxeigOhoQc/DdIYYsqsXL/b1Lvbj
-         e8f+rZdOeA0d2KrVGdm7lDHb1ELxIQ6SLFPoOmtz/A83Cz9e1OM51nl3z+vj3OxTf6yM
-         vde2By0JX/y5Xgk/QUh/nQFUlJsHjxm2Fnp1LCQS/vdg49icjpxcuRBuVdntIaVgvmri
-         3O5g==
+        bh=8cTECsnv+hNCmBe4PP+CyXJkEcqEQbk8odHGvthgrBI=;
+        b=pyCHExa0MyUx7+pUpBp/hHOrXnvVgVbbBz3WyoVvHt15CPjEVB7bBOmBwIPGLf9WlP
+         ITMz2nHlT6H6GHqunDSY4QPVCF+g+/YgmofKgs11XswDq2NYfv2NeHxB4elqH2Fc/R3h
+         QTwbZriIDRMP+D4jnmPX/fyUYl5/PXeOJcscjjdXHh1Lr90BZQu0SUUHIWheQVmJHysb
+         bcM+SXFdYke8r1rfAW+WNOofzsvQjwUBD9q/mSGi4mh4a1y6iE5MqfEmPzdf6Uvq0Un5
+         jSo0PLYcG0H1JRKsm+Uul8oruOtwK5w14zDlqeIAit5MC8u61eLCM7Lgk2KvIm2uid1l
+         BNzw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] arm: dts: khadas-vim3: include meson-g12-common-u-boot.dtsi to enable HDMI output
+Subject: Re: [PATCH 2/2] configs: khadas-vim3: enable HDMI output
 References: <20200511131728.5570-1-narmstrong@baylibre.com>
+ <160DFBC267226B0F.7726@groups.io>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <c26ce4d5-ffbc-add7-5aaa-e43e7c171261@baylibre.com>
-Date: Wed, 13 May 2020 11:01:31 +0200
+Message-ID: <bef4f0d6-9849-7c52-51d5-e8e6c092f992@baylibre.com>
+Date: Wed, 13 May 2020 11:01:47 +0200
 MIME-Version: 1.0
-In-Reply-To: <20200511131728.5570-1-narmstrong@baylibre.com>
+In-Reply-To: <160DFBC267226B0F.7726@groups.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io
+To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 11/05/2020 15:17, Neil Armstrong wrote:
-> Include the common g12 u-boot tweaks to permit enabling video output tweaks
-> on Khadas VIM3 boards.
+On 11/05/2020 15:17, Neil Armstrong via groups.io wrote:
+> Enable options to permit HDMI output on Khadas VIM3 & VIM3L boards.
 > 
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  arch/arm/dts/meson-khadas-vim3-u-boot.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  configs/khadas-vim3_defconfig  | 9 +++++++++
+>  configs/khadas-vim3l_defconfig | 4 ++++
+>  2 files changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
-> index 81fd5be378..b5da4fdfc3 100644
-> --- a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
-> +++ b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
-> @@ -4,6 +4,8 @@
->   * Author: Neil Armstrong <narmstrong@baylibre.com>
->   */
->  
-> +#include "meson-g12-common-u-boot.dtsi"
-> +
->  / {
->  	aliases {
->  		spi0 = &spifc;
-> 
-
+> diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
+> index 692138eb11..4aeab0e35d 100644
+> --- a/configs/khadas-vim3_defconfig
+> +++ b/configs/khadas-vim3_defconfig
+> @@ -40,6 +40,8 @@ CONFIG_ETH_DESIGNWARE=y
+>  CONFIG_MESON_G12A_USB_PHY=y
+>  CONFIG_PINCTRL=y
+>  CONFIG_PINCTRL_MESON_G12A=y
+> +CONFIG_POWER_DOMAIN=y
+> +CONFIG_MESON_EE_POWER_DOMAIN=y
+>  CONFIG_DM_REGULATOR=y
+>  CONFIG_DM_REGULATOR_FIXED=y
+>  CONFIG_DM_RESET=y
+> @@ -55,6 +57,7 @@ CONFIG_DM_USB=y
+>  CONFIG_USB_XHCI_HCD=y
+>  CONFIG_USB_XHCI_DWC3=y
+>  CONFIG_USB_DWC3=y
+> +CONFIG_USB_KEYBOARD=y
+>  # CONFIG_USB_DWC3_GADGET is not set
+>  CONFIG_USB_DWC3_MESON_G12A=y
+>  CONFIG_USB_GADGET=y
+> @@ -63,4 +66,10 @@ CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
+>  CONFIG_USB_GADGET_DWC2_OTG=y
+>  CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
+>  CONFIG_USB_GADGET_DOWNLOAD=y
+> +CONFIG_DM_VIDEO=y
+> +# CONFIG_VIDEO_BPP8 is not set
+> +# CONFIG_VIDEO_BPP16 is not set
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+> +CONFIG_VIDEO_MESON=y
+> +CONFIG_VIDEO_DT_SIMPLEFB=y
+>  CONFIG_OF_LIBFDT_OVERLAY=y
+> diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
+> index 28c20c0d6d..887885f329 100644
+> --- a/configs/khadas-vim3l_defconfig
+> +++ b/configs/khadas-vim3l_defconfig
+> @@ -57,6 +57,7 @@ CONFIG_DM_USB=y
+>  CONFIG_USB_XHCI_HCD=y
+>  CONFIG_USB_XHCI_DWC3=y
+>  CONFIG_USB_DWC3=y
+> +CONFIG_USB_KEYBOARD=y
+>  # CONFIG_USB_DWC3_GADGET is not set
+>  CONFIG_USB_DWC3_MESON_G12A=y
+>  CONFIG_USB_GADGET=y
+> @@ -66,6 +67,9 @@ CONFIG_USB_GADGET_DWC2_OTG=y
+>  CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
+>  CONFIG_USB_GADGET_DOWNLOAD=y
+>  CONFIG_DM_VIDEO=y
+> +# CONFIG_VIDEO_BPP8 is not set
+> +# CONFIG_VIDEO_BPP16 is not set
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+>  CONFIG_VIDEO_MESON=y
+>  CONFIG_VIDEO_DT_SIMPLEFB=y
+>  CONFIG_OF_LIBFDT_OVERLAY=y
+>
 Applied to u-boot-amlogic
 
 Neil
