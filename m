@@ -1,71 +1,60 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web10.2457.1589275616124132686
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web12.2213.1589360494948266622
  for <u-boot-amlogic@groups.io>;
- Tue, 12 May 2020 02:26:56 -0700
-Received: by mail-wm1-f50.google.com with SMTP id g14so8883704wme.1
-        for <u-boot-amlogic@groups.io>; Tue, 12 May 2020 02:26:55 -0700 (PDT)
+ Wed, 13 May 2020 02:01:35 -0700
+Received: by mail-wm1-f67.google.com with SMTP id g12so27552296wmh.3
+        for <u-boot-amlogic@groups.io>; Wed, 13 May 2020 02:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=+f+69drr7wRQ5wy7VvvxPyrcvCyZkF7KgMPBMxy9GDA=;
-        b=gK/nwf53q/+xTPyKFvi57bGbSTjCfvelzgvSMmS50UBeFefH2LbaC871MtiVM6BtHc
-         6i4LcfatXSomb5Y4QQUYb5TzbkymjKF96/zjJr/q8bTSTKq1/Mb28KdIJEJdZ5Uiha22
-         c2s6bUn0Uz1jHe1KjTaD1QCX1vk7ibAp5Jh2Q8qH4PDSWnMCSuCL6N7lgdBEpPHtB85p
-         wSlzLnpz5v1hIcv7GhKLvPjmYrfHeNgPi/KavdmuxCRIQbIzlaCIOCR4MJFK7p5StIwB
-         oUukQL066Hc8/HNjbd0a8nn8U+lokjQG3zHSwpbCgBkjRnCXqHHBJHjg+yGU879Hwq+t
-         NJsw==
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fetRFR4pCMS1ghE6/vRsdMX4Iv0cIUOhvaw0WA+t4P8=;
+        b=BfOL5dnzWvqJau/T8kG+DVvp9zG289Qkp7CcseJM44VukdSJxbs1BYhClNPjlbV9k8
+         ONspUgV6JsdjswF4+1V3l2645g07kX5jTJUHITewqkkbnj/iaAyelBLTVISZ7U991Qy8
+         h5KP0cpyuyvI+eYE8oYpivNT15FVY4NZgA3a0dMhKxeigOhoQc/DdIYYsqsXL/b1Lvbj
+         e8f+rZdOeA0d2KrVGdm7lDHb1ELxIQ6SLFPoOmtz/A83Cz9e1OM51nl3z+vj3OxTf6yM
+         vde2By0JX/y5Xgk/QUh/nQFUlJsHjxm2Fnp1LCQS/vdg49icjpxcuRBuVdntIaVgvmri
+         3O5g==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/2] arm: dts: khadas-vim3: include meson-g12-common-u-boot.dtsi to enable HDMI output
+References: <20200511131728.5570-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20200511
-Reply-To: narmstrong@baylibre.com
-Message-ID: <c4e53b7a-128a-2d60-729f-713c4981c4f1@baylibre.com>
-Date: Tue, 12 May 2020 11:26:52 +0200
+Message-ID: <c26ce4d5-ffbc-add7-5aaa-e43e7c171261@baylibre.com>
+Date: Wed, 13 May 2020 11:01:31 +0200
 MIME-Version: 1.0
+In-Reply-To: <20200511131728.5570-1-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+On 11/05/2020 15:17, Neil Armstrong wrote:
+> Include the common g12 u-boot tweaks to permit enabling video output tweaks
+> on Khadas VIM3 boards.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm/dts/meson-khadas-vim3-u-boot.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+> index 81fd5be378..b5da4fdfc3 100644
+> --- a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+> @@ -4,6 +4,8 @@
+>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>   */
+>  
+> +#include "meson-g12-common-u-boot.dtsi"
+> +
+>  / {
+>  	aliases {
+>  		spi0 = &spifc;
+> 
 
-This PR enables adds GPIO Open-Drain/Open-Source emulation in GPIO uclass
-and finally enables USB Host support for the Odroid-C2 board.
+Applied to u-boot-amlogic
 
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/3196
-
-Thanks,
 Neil
-
-The following changes since commit c5c657644bc35fd6b3d6e5517698721e90646b8d:
-
-  Merge branch '2020-05-08-assorted-fixes' (2020-05-08 18:58:19 -0400)
-
-are available in the Git repository at:
-
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20200511
-
-for you to fetch changes up to 9bf87e256c26246fa6d8df491617e40cb7df89c2:
-
-  test: dm: update test for open-drain/open-source emulation in gpio-uclass (2020-05-11 15:12:56 +0200)
-
-----------------------------------------------------------------
-- Enable USB Host for Odroid-C2 board
-- Add Open-Drain/Open-Source emulation in GPIO uclass
-
-----------------------------------------------------------------
-Beniamino Galvani (1):
-      odroid-c2: enable USB host controller
-
-Neil Armstrong (2):
-      gpio: emulate open drain & open source in dm_gpio_set_value()
-      test: dm: update test for open-drain/open-source emulation in gpio-uclass
-
- arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi |  8 +++
- arch/sandbox/dts/test.dts                    |  4 +-
- configs/odroid-c2_defconfig                  |  7 +++
- drivers/gpio/gpio-uclass.c                   | 15 +++++
- test/dm/gpio.c                               | 89 ++++++++++++++++++++++++++++
- 5 files changed, 122 insertions(+), 1 deletion(-)
