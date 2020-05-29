@@ -1,72 +1,130 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.32849.1590753184042403089
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web10.32857.1590753208347901322
  for <u-boot-amlogic@groups.io>;
- Fri, 29 May 2020 04:53:05 -0700
-Received: by mail-wr1-f46.google.com with SMTP id r7so3281377wro.1
-        for <u-boot-amlogic@groups.io>; Fri, 29 May 2020 04:53:03 -0700 (PDT)
+ Fri, 29 May 2020 04:53:28 -0700
+Received: by mail-wm1-f67.google.com with SMTP id r15so3100936wmh.5
+        for <u-boot-amlogic@groups.io>; Fri, 29 May 2020 04:53:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=TkfuU4DcD5sWDDQbiYTfuExVAEK7P3MAGPGiZfHr9Ww=;
-        b=nViE4MWFHXGsWU+RRHXCWiBBusFG047Lxc6qpqkQW3GKLbVzu19BsfWkwbZjEHboI/
-         L4YsDucrVfWVeddbcR6wJseiJXkfZiOv1/beGKfXlhoLsx/9Ai0Qd/yAPF3Ts7ZC6OqE
-         DC9zhs6uNAG+FPMDweR1sD/HE58XgkN7IB0q85X8pcQxV8YHcq5XnLPciRrxOALr9Lhc
-         FlLx6g1bJgOTtq+iDqxkL93Q3GwN5HQUGmdlLr7ZooXcqT+iLV9AGsN+TGdWH41+b4nA
-         f8mnclBTC01i3NRa1zDHxKocyK5x5EMakD58eSaK8kw5SoALzVRUV2COQMmY6tL7jjIP
-         rSMw==
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vvyLpMsM5v9utMRsX32kcaIJ4REYP7e1eANF1qdV96Q=;
+        b=Cz5B/ryFEgfivzcK5MRil6qBnkt/bzuAQ4wuCri0Y4nQrYNo42E5kbR4VybXg+bPee
+         DekOKHuc2zHtkZrGHAKhKBy/NDgU2EV9zdn/S2y7WxiHkIqCdvQBZid9ylvqHKKAGXEY
+         6g3IFQvqApG+bhkf9hE5gZPe2e9jnoIYRIx38iPkasIeyxvQNNkRsBjrlRfPNQh/YJ7L
+         oRnW5j2t848bUkBrLBxE/zpKbC4WD9veNLgwpouQG3WO4bpBDwoWk/9QOZuFadi9ZRfy
+         QfPTPa5XTECqrI6S0YexCv4y4Hak3F5d8WzdSYzcKCsklWcKv52/mfXrI9/3AHktTKP+
+         ChzQ==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] arm: dts: meson-gxl: fix USB gadget by adding missing nodes for U-Boot
+References: <20200528134727.32534-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20200529
-Reply-To: narmstrong@baylibre.com
-Message-ID: <0bf95451-23be-3f5f-251d-e1ebd0f75140@baylibre.com>
-Date: Fri, 29 May 2020 13:53:00 +0200
+Message-ID: <5c617836-d8ee-0f13-8ea2-bb0193b5bc6f@baylibre.com>
+Date: Fri, 29 May 2020 13:53:24 +0200
 MIME-Version: 1.0
+In-Reply-To: <20200528134727.32534-1-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, Jerome Brunet <jbrunet@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+On 28/05/2020 15:47, Neil Armstrong wrote:
+> The khadas-vim, khadas-vim2, libretech-ac & libretech-*-pc boards were missing
+> DT tweak to enable USB gadget.
+> Add them to their -u-boot.dtsi files and include the right gxl-u-boot.dtsi.
+> 
+> Fixes: a19e8a0f03 ("arm: dts: meson-gxl: Add USB Gadget nodes for U-Boot")
+> Reported-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi | 6 +++++-
+>  arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi | 6 +++++-
+>  arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi   | 4 ++++
+>  arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi        | 6 +++++-
+>  arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi  | 6 +++++-
+>  5 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi b/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi
+> index c35158d7e9..474a3e1604 100644
+> --- a/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi
+> @@ -4,4 +4,8 @@
+>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>   */
+>  
+> -#include "meson-gx-u-boot.dtsi"
+> +#include "meson-gxl-u-boot.dtsi"
+> +
+> +&dwc2 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
+> index c35158d7e9..474a3e1604 100644
+> --- a/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
+> @@ -4,4 +4,8 @@
+>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>   */
+>  
+> -#include "meson-gx-u-boot.dtsi"
+> +#include "meson-gxl-u-boot.dtsi"
+> +
+> +&dwc2 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
+> index 39270ea71c..474a3e1604 100644
+> --- a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
+> @@ -5,3 +5,7 @@
+>   */
+>  
+>  #include "meson-gxl-u-boot.dtsi"
+> +
+> +&dwc2 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
+> index bec9e05b09..7aecf2696b 100644
+> --- a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
+> @@ -4,7 +4,7 @@
+>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>   */
+>  
+> -#include "meson-gx-u-boot.dtsi"
+> +#include "meson-gxl-u-boot.dtsi"
+>  
+>  / {
+>  	aliases {
+> @@ -12,6 +12,10 @@
+>  	};
+>  };
+>  
+> +&dwc2 {
+> +	status = "okay";
+> +};
+> +
+>  &sd_emmc_c {
+>  	status = "okay";
+>  	pinctrl-0 = <&emmc_pins>;
+> diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
+> index c35158d7e9..474a3e1604 100644
+> --- a/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
+> @@ -4,4 +4,8 @@
+>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>   */
+>  
+> -#include "meson-gx-u-boot.dtsi"
+> +#include "meson-gxl-u-boot.dtsi"
+> +
+> +&dwc2 {
+> +	status = "okay";
+> +};
+> 
 
-This PR enables HDMI on Khadas VIM3/VIM3 board and fixes USB gadget support for
-libretech-ac/pc & vim/vim2 boards.
-
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/3473
-
-Thanks,
-Neil
-
-The following changes since commit ab80137cc436e977ef91a154372ae5aeae3f4fb0:
-
-  Merge https://gitlab.denx.de/u-boot/custodians/u-boot-marvell (2020-05-27 10:56:25 -0400)
-
-are available in the Git repository at:
-
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20200529
-
-for you to fetch changes up to 3678a5f0597d1cd491e3bded19ea72e570b5c8b1:
-
-  arm: dts: meson-gxl: fix USB gadget by adding missing nodes for U-Boot (2020-05-29 10:20:34 +0200)
-
-----------------------------------------------------------------
-- Finally enable config to support HDMI console output in VIM3 boards
-- Fix USB gadget support for libretech-ac/pc & vim/vim2 boards
-
-----------------------------------------------------------------
-Neil Armstrong (3):
-      arm: dts: khadas-vim3: include meson-g12-common-u-boot.dtsi to enable HDMI output
-      configs: khadas-vim3: enable HDMI output
-      arm: dts: meson-gxl: fix USB gadget by adding missing nodes for U-Boot
-
- arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi | 6 +++++-
- arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi | 6 +++++-
- arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi   | 4 ++++
- arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi        | 6 +++++-
- arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi  | 6 +++++-
- arch/arm/dts/meson-khadas-vim3-u-boot.dtsi            | 2 ++
- configs/khadas-vim3_defconfig                         | 9 +++++++++
- configs/khadas-vim3l_defconfig                        | 4 ++++
- 8 files changed, 39 insertions(+), 4 deletions(-)
+Applied to u-boot-amlogic
