@@ -1,55 +1,89 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web10.71.1591806173131874188
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web12.7357.1591882127024484319
  for <u-boot-amlogic@groups.io>;
- Wed, 10 Jun 2020 09:22:53 -0700
-Received: by mail-wr1-f44.google.com with SMTP id x13so2970474wrv.4
-        for <u-boot-amlogic@groups.io>; Wed, 10 Jun 2020 09:22:52 -0700 (PDT)
+ Thu, 11 Jun 2020 06:28:47 -0700
+Received: by mail-wm1-f41.google.com with SMTP id l17so4999136wmj.0
+        for <u-boot-amlogic@groups.io>; Thu, 11 Jun 2020 06:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=l1UYplVB1ebL8c0TXfQxTj8g82c4FKbfyu1T9vuuqNQ=;
-        b=ejWOTIF+rrIOcTO2p1yiyz2UPZInNrTQERY8lN5iR71LFnCJuSZeFyQIaWgjdfYvG4
-         6A6YnzuT1rSUinL8k9FXTRRC/RUKYpc4aADHurPRSFlG6HYC4F0ScOzJOOcWRPnAsdXt
-         qwGIqNcNhmOeQtIldkVq5CnzbVkyEBipHQgojZvkBoXLFtoZaG2bKHVWCP6IKzlYWyzl
-         wRa+W4xhfYQ2s6Daolh5VA6/TYuIVc+BtkLiwVWOdTzMogJTHqxswcaU0IxfdwdZvHrz
-         p+0KHlkRG9VF40UaCKIWqlqoZpr2Cw1HOzxCqGOjLgLGV7Hf/cQJr6/fRmt1Y00vU2kO
-         Rzrw==
+        bh=XU+TZMUQEPydzxIxnw88zynB3iRnp5/W9fhNArO2wKo=;
+        b=UxP09bF9KnE3BKh9X+iHxcLKDz/Sp0MLgZ0FKQIrM4dURg3cVRKe7Z15/p3wDo5zzr
+         WItccyHLhQmzkHLxQQCYLyDQPavaPC6ukXxtjBwvdc+fh5p2CeYKYzlsQJYlgkPPIGwQ
+         zC1barIkXbjoiB1a6DhXeDnNFWT6YI2WE0K97aVr0fWz0NtkTUbEogBGhslf/vjN3zBv
+         LCOFnml9nLqiE4JMTPMy6KHTcWxQIPrDJvi7US7ym0phdUaA/h1kEAOWjVwmBCKIGD4M
+         hKfdTVPvfyo+1DcpWuPzqSb0W85oKv0+hXbW+GSMj/wIcvxaokjB92ZYnBk8Q0m38whH
+         iYNA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: How to properly boot without a separate initrd
-References: <t1wJ.1591805232018748483.qg3Y@groups.io>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <26616143-5a97-1974-e4ab-60a828b80f11@baylibre.com>
-Date: Wed, 10 Jun 2020 18:22:49 +0200
+Subject: [PATCH 0/2] board: amlogic: move boards doc into doc/board/amlogic
+Date: Thu, 11 Jun 2020 15:28:39 +0200
+Message-Id: <20200611132841.6546-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <t1wJ.1591805232018748483.qg3Y@groups.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io, krecis@gmail.com
+Content-Transfer-Encoding: 8bit
+To: trini@konsulko.com, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, b.galvani@gmail.com, xypron.glpk@gmx.de, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-H-,
+As asked by Tom, this moves all the Amlogic board documentation into
+doc/board/amlogic into RsT and proper index with feature matrix.
 
-On 10/06/2020 18:07, krecis@gmail.com wrote:
-> Hi,
-> I have a kernel image which already contains an initramfs, I don't know how to properly boot that with uboot .
-> 
-> The bootm syntax is
-> bootm start <os> <initrd> <fdtaddr>
-> 
-> which implies that the user always has a 2 separate files for the kernel and the initrd, I have an Image file with kernel+initramfs and a dtb/fdt file : how do I boot ?
-> I have not found a proper way/command to achieve this under uboot .
-> should I set the initrd address to 0 ?
+Neil Armstrong (2):
+  board: amlogic: move boards doc into doc/board/amlogic
+  board: amlogic: add board doc files to MAINTAINERS
 
-you can replace the value with "-" and its ignored :
+ MAINTAINERS                                   |   1 +
+ board/amlogic/p200/MAINTAINERS                |   3 +
+ board/amlogic/p201/MAINTAINERS                |   1 +
+ board/amlogic/p212/MAINTAINERS                |   4 +
+ board/amlogic/q200/MAINTAINERS                |   1 +
+ board/amlogic/s400/MAINTAINERS                |   1 +
+ board/amlogic/sei510/MAINTAINERS              |   1 +
+ board/amlogic/sei610/MAINTAINERS              |   1 +
+ board/amlogic/u200/MAINTAINERS                |   1 +
+ board/amlogic/w400/MAINTAINERS                |   4 +
+ doc/board/amlogic/index.rst                   |  95 +++++++++
+ .../board/amlogic/khadas-vim.rst              | 138 +++++++------
+ .../board/amlogic/khadas-vim2.rst             | 138 ++++++-------
+ .../board/amlogic/khadas-vim3.rst             | 189 +++++++++--------
+ .../board/amlogic/khadas-vim3l.rst            | 189 +++++++++--------
+ .../board/amlogic/libretech-ac.rst            | 142 ++++++-------
+ .../board/amlogic/libretech-cc.rst            | 139 +++++++------
+ .../board/amlogic/nanopi-k2.rst               | 136 +++++++------
+ .../board/amlogic/odroid-c2.rst               |  50 +++--
+ .../board/amlogic/odroid-n2.rst               | 187 +++++++++--------
+ .../README.p200 => doc/board/amlogic/p200.rst | 136 ++++++-------
+ .../README.p201 => doc/board/amlogic/p201.rst | 136 ++++++-------
+ .../README.p212 => doc/board/amlogic/p212.rst | 136 ++++++-------
+ .../README.q200 => doc/board/amlogic/q200.rst | 136 ++++++-------
+ .../s400/README => doc/board/amlogic/s400.rst | 150 +++++++-------
+ .../README => doc/board/amlogic/sei510.rst    | 190 ++++++++---------
+ .../README => doc/board/amlogic/sei610.rst    | 185 +++++++++--------
+ .../u200/README => doc/board/amlogic/u200.rst | 188 ++++++++---------
+ .../README.w400 => doc/board/amlogic/w400.rst | 192 +++++++++---------
+ doc/board/index.rst                           |   1 +
+ 30 files changed, 1502 insertions(+), 1369 deletions(-)
+ create mode 100644 doc/board/amlogic/index.rst
+ rename board/amlogic/p212/README.khadas-vim => doc/board/amlogic/khadas-vim.rst (24%)
+ rename board/amlogic/q200/README.khadas-vim2 => doc/board/amlogic/khadas-vim2.rst (26%)
+ rename board/amlogic/w400/README.khadas-vim3 => doc/board/amlogic/khadas-vim3.rst (20%)
+ rename board/amlogic/w400/README.khadas-vim3l => doc/board/amlogic/khadas-vim3l.rst (19%)
+ rename board/amlogic/p212/README.libretech-ac => doc/board/amlogic/libretech-ac.rst (21%)
+ rename board/amlogic/p212/README.libretech-cc => doc/board/amlogic/libretech-cc.rst (46%)
+ rename board/amlogic/p200/README.nanopi-k2 => doc/board/amlogic/nanopi-k2.rst (24%)
+ rename board/amlogic/p200/README.odroid-c2 => doc/board/amlogic/odroid-c2.rst (56%)
+ rename board/amlogic/w400/README.odroid-n2 => doc/board/amlogic/odroid-n2.rst (19%)
+ rename board/amlogic/p200/README.p200 => doc/board/amlogic/p200.rst (24%)
+ rename board/amlogic/p201/README.p201 => doc/board/amlogic/p201.rst (24%)
+ rename board/amlogic/p212/README.p212 => doc/board/amlogic/p212.rst (24%)
+ rename board/amlogic/q200/README.q200 => doc/board/amlogic/q200.rst (24%)
+ rename board/amlogic/s400/README => doc/board/amlogic/s400.rst (21%)
+ rename board/amlogic/sei510/README => doc/board/amlogic/sei510.rst (14%)
+ rename board/amlogic/sei610/README => doc/board/amlogic/sei610.rst (16%)
+ rename board/amlogic/u200/README => doc/board/amlogic/u200.rst (17%)
+ rename board/amlogic/w400/README.w400 => doc/board/amlogic/w400.rst (17%)
 
-bootm <os> - <fdtaddr>
-
-Neil
-
-> 
-> 
-> 
+-- 
+2.22.0
 
