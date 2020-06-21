@@ -1,89 +1,168 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web12.33.1592502440684819903
+Received: from mail-il1-f195.google.com (mail-il1-f195.google.com [209.85.166.195])
+ by mx.groups.io with SMTP id smtpd.web10.993.1592760206364256089
  for <u-boot-amlogic@groups.io>;
- Thu, 18 Jun 2020 10:47:20 -0700
-Received: by mail-qt1-f169.google.com with SMTP id w90so5113835qtd.8
-        for <u-boot-amlogic@groups.io>; Thu, 18 Jun 2020 10:47:20 -0700 (PDT)
+ Sun, 21 Jun 2020 10:23:26 -0700
+Received: by mail-il1-f195.google.com with SMTP id z2so13928745ilq.0
+        for <u-boot-amlogic@groups.io>; Sun, 21 Jun 2020 10:23:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ew2X+ER1gZXRqUrymmZMC3/lutonROOEOBXU7w4R6FU=;
-        b=QKby9gX8A5hdMAbZRC+swrYSufl+CDhBab+UtU2OxQBHjg5wqKMIvcx04CQM2ga8ev
-         vcJlChaPJeEEVy3Q1W4otTGYMcsp5e/46eYaBpR8SyItWi61eW3MmkuRNdDMz7GW0Vl+
-         IaYm9F6OxbrbOU8oxueN3vNWwqySmmMA+7aLk=
-Return-Path: <trini@konsulko.com>
-Date: Thu, 18 Jun 2020 13:47:16 -0400
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20200618
-Message-ID: <20200618174716.GR27801@bill-the-cat>
-References: <e64ef508-6927-d9da-f7ea-8ca85729b82d@baylibre.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z/C3/NczgYSMKfdBvIe5AYNCws+3aqUpAK1i0aJ8UWg=;
+        b=B7IQPmRIUqX2aEohG5SAqaeY1JphDdx0us7eO/ES4lPR5HlixhICSvS6qXUuE6Z53a
+         0woN6zUsZKteHN3hl2tLz4iJk6Sl1spMuK4xx94AyS4z5CGlkfqjkOt3wu15o/TpldKM
+         wuFCSSyL95sJUAcL0x6COZ0A4+LIglCA1J4N86WSDjwxtPh5amZYIjv6cGaZNZbhVGmK
+         BjjsD6TQWhY89umTO+a4lzNAAmTUh5oEiVY8PETdwtY9bF29aAsw6qwo5o6KdjarGjlY
+         R5003QOYHkdPbDqZkDlMvLauLL25xcgHqSF7QXpVZUpKJHiKUviws0kF8Ok0RNmXHrdA
+         6DDg==
 MIME-Version: 1.0
-In-Reply-To: <e64ef508-6927-d9da-f7ea-8ca85729b82d@baylibre.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3gk1bTGVZuaU9V5/"
-Content-Disposition: inline
+References: <20200618144037.23392-1-narmstrong@baylibre.com>
+In-Reply-To: <20200618144037.23392-1-narmstrong@baylibre.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Sun, 21 Jun 2020 22:53:16 +0530
+Message-ID: <CANAwSgR2whQUUHWUze8Jy8yE3frrtMxt_u=kyQRNrgDZ4wMsHA@mail.gmail.com>
+Subject: Re: [PATCH] board: amlogic: Add Odroid-N2 board support
+Content-Type: text/plain; charset="UTF-8"
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Pascal Vizeli <pvizeli@syshack.ch>
 List-ID: <u-boot-amlogic@groups.io>
 
---3gk1bTGVZuaU9V5/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Neil,
 
-On Thu, Jun 18, 2020 at 03:44:11PM +0200, Neil Armstrong wrote:
+On Thu, 18 Jun 2020 at 20:11, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> From: Pascal Vizeli <pvizeli@syshack.ch>
+>
+> Add a proper Odroid-N2 board support to handle the Ethernet MAC
+> address stored in the in-SoC eFuses.
+>
 
-> Hi Tom,
->=20
-> This PR moves the amlogic boards documentation in doc/board/amlogic in Rs=
-T format.
->=20
->=20
-> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/3707
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit 9cb895203a46654f7ee6dd95be5c8ab05e4dfb=
-d3:
->=20
->   Merge tag 'u-boot-stm32-20200616' of https://gitlab.denx.de/u-boot/cust=
-odians/u-boot-stm (2020-06-16 09:18:56 -0400)
->=20
-> are available in the Git repository at:
->=20
->   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20200618
->=20
-> for you to fetch changes up to 9c55f5d11260c5aa0f91d8cb32aa0ad00910659d:
->=20
->   board: amlogic: add board doc files to MAINTAINERS (2020-06-18 10:24:13=
- +0200)
->=20
+This feature need to be implemented for all Amlogic SoC boards,
+since many boards link libretech-cc also generate random mac address
+for ethernet.
 
-Applied to u-boot/master, thanks!
+Please add my: Tested on N2.
+Tested-by: Anand Moon <linux.amoon@gmail.com>
 
---=20
-Tom
+-Anand
 
---3gk1bTGVZuaU9V5/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl7rqKAACgkQFHw5/5Y0
-tyx5IQv/bkmVBD5E+Tl5YOHXA2P8L+hAyRLu+oIEYsuU6Fhvc38BMueZ8NccvD+L
-EqgjuA0ehceFK76W6fOWpeXJsCMu+cOdNiPNje16G3gfRmUfzNNDJkLqf/L6zNv2
-B68V1r8DRdHTtkE7id6/02lJSt3+sXnN5vv5d2Ri7evcVOqAveYKyQ8x+kBEoKSd
-ckvS3osV6RmHhMnl0dfydC9ssish73dzn03R4xiBUJvGNMaQpfXRsF7j682WbpIq
-hIM7p1N2kMBHA5FAyaP3+8TZFdwTw/dK9PIk8cp7yU9QbKJkCiO2x5nS+1F0O/ON
-JpZl2gUi+rpgLX2ea/XKVR6flQjCDavTyBoCzTH6JEbyj2xy9fkVU9ORB/zehyaW
-5KalZw9w10Vsyi8G+a9/1dOj/FJ2gENp91aF+db/fzgO8Yv1p3fPiSupnLPdVME0
-0x7Vcxo9DgUxY9v5SzqUWtKsgHpjyFgynz+6NTIPlOIyCCnXXBgUQXirVP69vTTY
-EktBclth
-=ZRDB
------END PGP SIGNATURE-----
-
---3gk1bTGVZuaU9V5/--
+> Signed-off-by: Pascal Vizeli <pvizeli@syshack.ch>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  board/amlogic/odroid-n2/MAINTAINERS |  7 +++++
+>  board/amlogic/odroid-n2/Makefile    |  6 ++++
+>  board/amlogic/odroid-n2/odroid-n2.c | 49 +++++++++++++++++++++++++++++
+>  board/amlogic/w400/MAINTAINERS      |  2 --
+>  configs/odroid-n2_defconfig         |  2 +-
+>  5 files changed, 63 insertions(+), 3 deletions(-)
+>  create mode 100644 board/amlogic/odroid-n2/MAINTAINERS
+>  create mode 100644 board/amlogic/odroid-n2/Makefile
+>  create mode 100644 board/amlogic/odroid-n2/odroid-n2.c
+>
+> diff --git a/board/amlogic/odroid-n2/MAINTAINERS b/board/amlogic/odroid-n2/MAINTAINERS
+> new file mode 100644
+> index 0000000000..5627e54058
+> --- /dev/null
+> +++ b/board/amlogic/odroid-n2/MAINTAINERS
+> @@ -0,0 +1,7 @@
+> +ODROID-N2
+> +M:     Neil Armstrong <narmstrong@baylibre.com>
+> +S:     Maintained
+> +L:     u-boot-amlogic@groups.io
+> +F:     board/amlogic/odroid-n2/
+> +F:     configs/odroid-n2_defconfig
+> +F:     doc/board/amlogic/odroid-n2.rst
+> diff --git a/board/amlogic/odroid-n2/Makefile b/board/amlogic/odroid-n2/Makefile
+> new file mode 100644
+> index 0000000000..68e4e2a828
+> --- /dev/null
+> +++ b/board/amlogic/odroid-n2/Makefile
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0+
+> +#
+> +# (C) Copyright 2020 BayLibre, SAS
+> +# Author: Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +obj-y  := odroid-n2.o
+> diff --git a/board/amlogic/odroid-n2/odroid-n2.c b/board/amlogic/odroid-n2/odroid-n2.c
+> new file mode 100644
+> index 0000000000..caf7fd6810
+> --- /dev/null
+> +++ b/board/amlogic/odroid-n2/odroid-n2.c
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2020 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +#include <common.h>
+> +#include <dm.h>
+> +#include <env.h>
+> +#include <init.h>
+> +#include <net.h>
+> +#include <asm/io.h>
+> +#include <asm/arch/sm.h>
+> +#include <asm/arch/eth.h>
+> +
+> +#define EFUSE_MAC_OFFSET       20
+> +#define EFUSE_MAC_SIZE         12
+> +#define MAC_ADDR_LEN           6
+> +
+> +int misc_init_r(void)
+> +{
+> +       u8 mac_addr[MAC_ADDR_LEN];
+> +       char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
+> +       ssize_t len;
+> +
+> +       meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
+> +
+> +       if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
+> +               len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
+> +                                         efuse_mac_addr, EFUSE_MAC_SIZE);
+> +               if (len != EFUSE_MAC_SIZE)
+> +                       return 0;
+> +
+> +               /* MAC is stored in ASCII format, 1bytes = 2characters */
+> +               for (int i = 0; i < 6; i++) {
+> +                       tmp[0] = efuse_mac_addr[i * 2];
+> +                       tmp[1] = efuse_mac_addr[i * 2 + 1];
+> +                       tmp[2] = '\0';
+> +                       mac_addr[i] = simple_strtoul(tmp, NULL, 16);
+> +               }
+> +
+> +               if (is_valid_ethaddr(mac_addr))
+> +                       eth_env_set_enetaddr("ethaddr", mac_addr);
+> +               else
+> +                       meson_generate_serial_ethaddr();
+> +       }
+> +
+> +       return 0;
+> +}
+> diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
+> index 5e837cfaef..a1b0ac8636 100644
+> --- a/board/amlogic/w400/MAINTAINERS
+> +++ b/board/amlogic/w400/MAINTAINERS
+> @@ -5,8 +5,6 @@ L:      u-boot-amlogic@groups.io
+>  F:     board/amlogic/w400/
+>  F:     configs/khadas-vim3_defconfig
+>  F:     configs/khadas-vim3l_defconfig
+> -F:     configs/odroid-n2_defconfig
+>  F:     doc/board/amlogic/w400.rst
+>  F:     doc/board/amlogic/khadas-vim3.rst
+>  F:     doc/board/amlogic/khadas-vim3l.rst
+> -F:     doc/board/amlogic/odroid-n2.rst
+> diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
+> index e0cc6e3729..063809416e 100644
+> --- a/configs/odroid-n2_defconfig
+> +++ b/configs/odroid-n2_defconfig
+> @@ -1,5 +1,5 @@
+>  CONFIG_ARM=y
+> -CONFIG_SYS_BOARD="w400"
+> +CONFIG_SYS_BOARD="odroid-n2"
+>  CONFIG_ARCH_MESON=y
+>  CONFIG_SYS_TEXT_BASE=0x01000000
+>  CONFIG_ENV_SIZE=0x2000
+> --
+> 2.22.0
+>
