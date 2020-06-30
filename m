@@ -1,62 +1,48 @@
-Received: from mail-il1-f193.google.com (mail-il1-f193.google.com [209.85.166.193])
- by mx.groups.io with SMTP id smtpd.web12.20812.1592841420468075725
+Received: from mail-il1-f194.google.com (mail-il1-f194.google.com [209.85.166.194])
+ by mx.groups.io with SMTP id smtpd.web12.13303.1593516823816567002
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Jun 2020 08:57:00 -0700
-Received: by mail-il1-f193.google.com with SMTP id l6so16425355ilo.2
-        for <u-boot-amlogic@groups.io>; Mon, 22 Jun 2020 08:57:00 -0700 (PDT)
+ Tue, 30 Jun 2020 04:33:43 -0700
+Received: by mail-il1-f194.google.com with SMTP id k6so17342626ili.6
+        for <u-boot-amlogic@groups.io>; Tue, 30 Jun 2020 04:33:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Uv3XAzM9K62ZPkBF1Ujkzgthom733VY6rEMQq8IqsN8=;
-        b=D1QXrUFrELjpzgT9Nfr5ci6PnO6sAU98U0MXRmADW0SjAbK/lQRHpmZafgwAv2lR+L
-         4chS+a6wH7ZAcTnzD2o8pW6NFTIDCtY5ZrmIiVUMNCH25CMqp/vx7B2THR/z8TYwYLy6
-         YGt856D5c7BYg5yikJJ2bk586YhtII6e2eIzyWIXXj9bISJiRNeTDaWit0Jt+lZGf/e6
-         OpeefouGbA2U9z0K7bxytIbCTNwM281uex0YQLu0mS7KEdjVj5884/EEFI1BognhPhlc
-         6cbOvcJ7ife625m+Qy5V7/nsJyXl/E26irDJgehb8iOTQqKjIW+h5N5rSU9bwGDGXUOi
-         ThLA==
+        bh=4cp1sh5nbrCX5iAeKuwPeVl4OGSQaXol8ZmdBuGulf8=;
+        b=tGjJtlUQ3Ms9gxdBxjlOWLxAJAY+8khrSNq25O4q0yjms+HdNZrPD23lRP+AyfYLdH
+         w+H+adzeTOs6ZIyJ16ZoySQhufT/LQrK1fFDJTzdDnBt2XapCMdtWDnkZPrfK5wkx1Wn
+         XDQ2e1e3CE0k9+/q/doIUkqtXzfqHsV/ZG7JFDtMljgIXWiGhxZ9XymFcTuQwfNSllQX
+         WpfBVVpLg1nrTTyT50R7s8J4Gm+gb8wRiyR1FyE+7sn4EOoT4uO4B5EIN4WCHB5d+Q+8
+         nMim5potmmLwLgS/YXppyU5msawgEqzsOKRzFE0e+i4naB0sbubTaXpYUTmzuoKwdflc
+         WrYA==
 MIME-Version: 1.0
-References: <20200618144037.23392-1-narmstrong@baylibre.com>
- <CANAwSgR2whQUUHWUze8Jy8yE3frrtMxt_u=kyQRNrgDZ4wMsHA@mail.gmail.com> <c22bb120-62f6-c53c-7ba1-fef713708efc@baylibre.com>
-In-Reply-To: <c22bb120-62f6-c53c-7ba1-fef713708efc@baylibre.com>
+References: <20200505202217.7849-1-b.galvani@gmail.com>
+In-Reply-To: <20200505202217.7849-1-b.galvani@gmail.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Date: Mon, 22 Jun 2020 21:26:48 +0530
-Message-ID: <CANAwSgT=gzu5EeVnCxv+Zjcg-84DouNOOJwPAZAy8X3q9R=v3w@mail.gmail.com>
-Subject: Re: [PATCH] board: amlogic: Add Odroid-N2 board support
+Date: Tue, 30 Jun 2020 17:03:33 +0530
+Message-ID: <CANAwSgT3AcsQkE47CusmC_rCnVo_FRuWaRbivUyxzPXFSjCmSA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] u-boot support for ODROID-C4
 Content-Type: text/plain; charset="UTF-8"
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Pascal Vizeli <pvizeli@syshack.ch>
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Neil,
+Hi Beniamino,
 
-On Mon, 22 Jun 2020 at 18:36, Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Wed, 6 May 2020 at 01:53, Beniamino Galvani <b.galvani@gmail.com> wrote:
 >
 > Hi,
 >
-> On 21/06/2020 19:23, Anand Moon wrote:
-> > Hi Neil,
-> >
-> > On Thu, 18 Jun 2020 at 20:11, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> From: Pascal Vizeli <pvizeli@syshack.ch>
-> >>
-> >> Add a proper Odroid-N2 board support to handle the Ethernet MAC
-> >> address stored in the in-SoC eFuses.
-> >>
-> >
-> > This feature need to be implemented for all Amlogic SoC boards,
-> > since many boards link libretech-cc also generate random mac address
-> > for ethernet.
+> these two patches add initial u-boot support for Hardkernel ODROID-C4.
 >
-> In fact, AFAIK only HardKernel stores the MAC in the fuses, now Amlogic stores
-> the MAC in the eMMC custom partitions, but they did for GXBB and previous SoCs.
-> Earlier I introduced meson_generate_serial_ethaddr() for GXL and later (not GXBB),
-> to generate an unique MAC address from the SoC serial.
+> https://wiki.odroid.com/odroid-c4/odroid-c4
 >
-> Neil
+> Beniamino Galvani (2):
+>   arm: dts: import ODROID-C4 device tree
+>   boards: amlogic: add ODROID-C4 support
 >
 
-Thanks for this information.
+Can you respin this patches, I would like to see these get merged in
+the current u-boot release
 
 -Anand
