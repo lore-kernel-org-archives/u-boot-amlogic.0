@@ -1,55 +1,156 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web12.23147.1593614606788245533
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+ by mx.groups.io with SMTP id smtpd.web12.23215.1593614786457735349
  for <u-boot-amlogic@groups.io>;
- Wed, 01 Jul 2020 07:43:27 -0700
-Received: by mail-wm1-f65.google.com with SMTP id g75so22690583wme.5
-        for <u-boot-amlogic@groups.io>; Wed, 01 Jul 2020 07:43:26 -0700 (PDT)
+ Wed, 01 Jul 2020 07:46:26 -0700
+Received: by mail-wm1-f66.google.com with SMTP id j18so22719736wmi.3
+        for <u-boot-amlogic@groups.io>; Wed, 01 Jul 2020 07:46:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EQzOzhjZ5oMHTyEde0nts/8LTKC48UK7+2tWGlUk1gw=;
-        b=Fsti24JEwS5K0tbHOThLz0X3ubbnyVny6hMQiRW6TIipP0rWS+xYj+j/n+rBfEi19x
-         GXJAw+AjzqCkhzAFTABI7g00hH+IR+HT4K9htnAvzHPmlKu3lvyts9/VIEZdmAcRLNW5
-         vatCXGU/IdBtayhkV4E90TnbqbOokdDHHvXrTc8VmNj7urUAGvAS+GOACg/t6KF3Ct6M
-         p4n4RwkBe1Vo4vYUdqhN+QVS28LXAZOg66kG2S6505jMz6B3qNlCuZoup+BYj8EEqy+3
-         fcjC+390zoV2ahsJKv9shFEvj4FsZmGJu5vnukr08CAfCWwzL/wXy8PGAhrNchX1ycip
-         WLMg==
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/5vRZ1ajdeHbmQA6PxaXaWreGP0vM38ZFi78xAS+5hM=;
+        b=Vko1piM0OfjchquyXOmeTZZH5kTxSsGMlfC0JhkXanzOW/u64+7XXzR3teYpwn7Pgr
+         YElRoD/TRioAGpx/Pe/dsl+9xLCq230KsYO1rCtyTtw92h2ZJiZl98yLtzHDOfWF5mVP
+         UJT+otwq+5jFKpFuciNNAv7xHFtH/mzva7z6Jeh2B8SnHBx9gjrCFYW2jAJs7Hqeaht/
+         lZ/e1dIeSW1BrvZDyOsX6cM31fSCIoCWiaiJr1un0+c0i61Tb6GtdZc2m9Xda0OUVSZI
+         pN6z5x5vCvfuw2iK73Fc7iRzZgG8dwXEiUWVA4hxa8ubmGAHJogQSf5JBcMpH6IWCD77
+         kLtw==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/2] u-boot support for ODROID-C4
+References: <20200505202217.7849-1-b.galvani@gmail.com>
+ <CANAwSgT3AcsQkE47CusmC_rCnVo_FRuWaRbivUyxzPXFSjCmSA@mail.gmail.com>
+ <bf6bf3e9-ef60-9d3f-4d32-5b79f5b94b4b@baylibre.com>
+ <CANAwSgR8jX+Z+xZ3EXHQbq80dswn6WjaF-vyJHjyxQREVf+Mfg@mail.gmail.com>
+ <eb5df59e-4d45-99d1-c131-bc630fd772d8@baylibre.com>
+ <CANAwSgQu6c0V-ujGk3R3BkZTRY_Z7KPjP1BF2srnYYNQjdb9UA@mail.gmail.com>
+ <32f06e45-4425-6970-e173-791ff87ae9e5@baylibre.com>
+ <CANAwSgSH-ZzE+TsrjNUp+OL4w3xDg7RMc9HOaKU+Yh-hu=1ZbQ@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 3/3] ARM: dts: meson-sm1-odroid-c4: add ethernet PHY reset
-Date: Wed,  1 Jul 2020 16:43:10 +0200
-Message-Id: <20200701144310.25481-4-narmstrong@baylibre.com>
-In-Reply-To: <20200701144310.25481-1-narmstrong@baylibre.com>
-References: <20200701144310.25481-1-narmstrong@baylibre.com>
+Message-ID: <b8b89fe1-9fe8-fc8d-3e1a-1e44b9417719@baylibre.com>
+Date: Wed, 1 Jul 2020 16:46:22 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, b.galvani@gmail.com, linux.amoon@gmail.com, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <CANAwSgSH-ZzE+TsrjNUp+OL4w3xDg7RMc9HOaKU+Yh-hu=1ZbQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Beniamino Galvani <b.galvani@gmail.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-The PHY needs a reset in order to be functionnal for U-Boot, add the old
-PHY reset bindings for dwmac until we support the new bindings in the PHY node.
+On 01/07/2020 16:43, Anand Moon wrote:
+> Hi Neil,
+> 
+> On Wed, 1 Jul 2020 at 18:38, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Hi,
+>>
+>> On 01/07/2020 13:31, Anand Moon wrote:
+>>> Hi Neil,
+>>>
+>>> On Wed, 1 Jul 2020 at 13:22, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 30/06/2020 18:02, Anand Moon wrote:
+>>>>> Hi Neil,
+>>>>>
+>>>>> On Tue, 30 Jun 2020 at 18:30, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 30/06/2020 13:33, Anand Moon wrote:
+>>>>>>> Hi Beniamino,
+>>>>>>>
+>>>>>>> On Wed, 6 May 2020 at 01:53, Beniamino Galvani <b.galvani@gmail.com> wrote:
+>>>>>>>>
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> these two patches add initial u-boot support for Hardkernel ODROID-C4.
+>>>>>>>>
+>>>>>>>> https://wiki.odroid.com/odroid-c4/odroid-c4
+>>>>>>>>
+>>>>>>>> Beniamino Galvani (2):
+>>>>>>>>   arm: dts: import ODROID-C4 device tree
+>>>>>>>>   boards: amlogic: add ODROID-C4 support
+>>>>>>>>
+>>>>>>>
+>>>>>>> Can you respin this patches, I would like to see these get merged in
+>>>>>>> the current u-boot release
+>>>>>>>
+>>>>>>> -Anand
+>>>>>>>
+>>>>>>
+>>>>>> The Odroid-C4 could re-use the new Odroid-N2 board support I submitted at [1]
+>>>>>>
+>>>>>> Anand, is the MAC address stored stored the same way on the C4 ?
+>>>>>>
+>>>>>> Neil
+>>>>>>
+>>>>>> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
+>>>>>
+>>>>> I gave this patches a try on latest u-boot but I cannot make my Odroid
+>>>>> C4 to boot up uinsg microSD card and eMMC
+>>>>> Here are the logs.
+>>>>
+>>>> The PHY config must be wrong and it misses the -u-boot.dtsi to enable HDMI.
+>>>>
+>>>> Can you test my custodian test branch with my C4 support patchset ?
+>>>>
+>>>> https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/-/tree/u-boot-amlogic-test
+>>>>
+>>>> This one is used in Armbian 5.4 release and our KernelCI lab.
+>>>>
+>>>> Neil
+>>>>
+>>>
+>>> Thanks.
+>>>
+>>> There seems to be a typo in the build instructions in #
+>>> doc/board/amlogic/odroid-c4.rst
+>>> instead of *g12b*, it should be *g12a*
+>>>
+>>> See below I get following build warning, which I fix locally,
+>>>
+>>> ./buildc4c.sh: line 78:
+>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>> No such file or directory
+>>> ./buildc4c.sh: line 81:
+>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>> No such file or directory
+>>> ./buildc4c.sh: line 84:
+>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>> No such file or directory
+>>> ./buildc4c.sh: line 87:
+>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>> No such file or directory
+>>> ./buildc4c.sh: line 90:
+>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>> No such file or directory
+>>> ./buildc4c.sh: line 92:
+>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>> No such file or directory
+>>>
+>>> After that fix I am able to boot my board using eMMC and microSD card.
+>>
+>> Thanks for testing, I'll push my serie rebased on v5.8-rc1 and fix this typo.
+>>
+>> Neil
+>>
+> 
+> Thanks, I see the same issue with random mac address just like N2.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Yes, my branch was not using the N2 board support with eFuses MAC readout,
+can you test my last patchset I just sent ? It should use the MAC from eFuses or
+generate an unique address with the SoC serial number.
 
-diff --git a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
-index ee32c6f43d..2a8f0545b1 100644
---- a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
-+++ b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
-@@ -5,3 +5,9 @@
-  */
- 
- #include "meson-g12-common-u-boot.dtsi"
-+
-+&ethmac {
-+	snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+};
--- 
-2.22.0
+Please apply the patch in [1] before the new Odroid-C4 serie.
+
+[1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
+
+Neil
+
+> 
+> -Anand
+> 
 
