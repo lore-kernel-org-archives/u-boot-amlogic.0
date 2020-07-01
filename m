@@ -1,136 +1,73 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web10.21058.1593608920390754515
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web11.23334.1593614601654714386
  for <u-boot-amlogic@groups.io>;
- Wed, 01 Jul 2020 06:08:41 -0700
-Received: by mail-wr1-f66.google.com with SMTP id q5so23740517wru.6
-        for <u-boot-amlogic@groups.io>; Wed, 01 Jul 2020 06:08:40 -0700 (PDT)
+ Wed, 01 Jul 2020 07:43:22 -0700
+Received: by mail-wr1-f67.google.com with SMTP id b6so24159101wrs.11
+        for <u-boot-amlogic@groups.io>; Wed, 01 Jul 2020 07:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=MxjOctL8FSUqCNpzGMgRo0ce5+g447QkiCZJPXwmQtA=;
-        b=Jj04qmbVoOeJim2SHmQ34KH7QdyOKjN9uqFNQbuB5f+nbDxfyFYRUB3N1v1/RzC2i4
-         qiHEiaRaa3jJN9KG/Qru5OpYvZLURxmaxQgrSX7wDz34N44QkdnnzUF6HhTa8DvhiOWh
-         dO3UXOTFtJe0kPeyAh5lrLwaJnf+0bOeOjIc1q8BjR0heWzs+C8TDkmIQh0YQCS5/Zcl
-         osSul8WeHbZJzVd1Wzy97J+BLCmH/RD1jYJNqI1noeupbTWVQHQuXG3KwR8WIdlC9QiS
-         hRz0yVhUF+YaZBRb4Ra/95KsQD/NJgztQ0tG4L8gPekKyhR+KQyEJREfziYwClYHevlJ
-         rxWg==
+        bh=a87g00hLPqDRELyh3hrWArf9xIg/buSzfqjXutEI8yI=;
+        b=AJ+8NONF/cWlrdmEZBXq+qWrdcyOn935q0iIG6iSm06UCHdr078TRTtAx1rse8wnZQ
+         mLQFFOVahP0/oyMa6oWLj6Axw948lTcypmfcMy7Hp4oVzxelhFRwh6J4aqGWjsDfUYPL
+         d2PR/0yg8UygAGvwJrxmXwqmhGAgQyiNAKDlvYl8G256zucwVlPQvN3lecunMous4ny9
+         Kl3nC5kwJg35+vdl6sBzdcVZvuLeyGhu6FH+xX8KLGw1bQKNifYTb2yWf3Y7QqRt8bv/
+         R6g4MMwk5O+NJ/xKsagU6+edANS+/BK7GpYZpvWA71V253asB3ndyPQ363A0VJOJeBqR
+         Dtng==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/2] u-boot support for ODROID-C4
-References: <20200505202217.7849-1-b.galvani@gmail.com>
- <CANAwSgT3AcsQkE47CusmC_rCnVo_FRuWaRbivUyxzPXFSjCmSA@mail.gmail.com>
- <bf6bf3e9-ef60-9d3f-4d32-5b79f5b94b4b@baylibre.com>
- <CANAwSgR8jX+Z+xZ3EXHQbq80dswn6WjaF-vyJHjyxQREVf+Mfg@mail.gmail.com>
- <eb5df59e-4d45-99d1-c131-bc630fd772d8@baylibre.com>
- <CANAwSgQu6c0V-ujGk3R3BkZTRY_Z7KPjP1BF2srnYYNQjdb9UA@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <32f06e45-4425-6970-e173-791ff87ae9e5@baylibre.com>
-Date: Wed, 1 Jul 2020 15:08:36 +0200
+Subject: [PATCH 0/3] board: amlogic: add Odroid C4 support
+Date: Wed,  1 Jul 2020 16:43:07 +0200
+Message-Id: <20200701144310.25481-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <CANAwSgQu6c0V-ujGk3R3BkZTRY_Z7KPjP1BF2srnYYNQjdb9UA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Beniamino Galvani <b.galvani@gmail.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, b.galvani@gmail.com, linux.amoon@gmail.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+This patchset adds support for the Hardkernel Odroid-C4 board
+based on an Amlogic S905X3 SoC (SM1).
 
-On 01/07/2020 13:31, Anand Moon wrote:
-> Hi Neil,
-> 
-> On Wed, 1 Jul 2020 at 13:22, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Hi,
->>
->> On 30/06/2020 18:02, Anand Moon wrote:
->>> Hi Neil,
->>>
->>> On Tue, 30 Jun 2020 at 18:30, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On 30/06/2020 13:33, Anand Moon wrote:
->>>>> Hi Beniamino,
->>>>>
->>>>> On Wed, 6 May 2020 at 01:53, Beniamino Galvani <b.galvani@gmail.com> wrote:
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> these two patches add initial u-boot support for Hardkernel ODROID-C4.
->>>>>>
->>>>>> https://wiki.odroid.com/odroid-c4/odroid-c4
->>>>>>
->>>>>> Beniamino Galvani (2):
->>>>>>   arm: dts: import ODROID-C4 device tree
->>>>>>   boards: amlogic: add ODROID-C4 support
->>>>>>
->>>>>
->>>>> Can you respin this patches, I would like to see these get merged in
->>>>> the current u-boot release
->>>>>
->>>>> -Anand
->>>>>
->>>>
->>>> The Odroid-C4 could re-use the new Odroid-N2 board support I submitted at [1]
->>>>
->>>> Anand, is the MAC address stored stored the same way on the C4 ?
->>>>
->>>> Neil
->>>>
->>>> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
->>>
->>> I gave this patches a try on latest u-boot but I cannot make my Odroid
->>> C4 to boot up uinsg microSD card and eMMC
->>> Here are the logs.
->>
->> The PHY config must be wrong and it misses the -u-boot.dtsi to enable HDMI.
->>
->> Can you test my custodian test branch with my C4 support patchset ?
->>
->> https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/-/tree/u-boot-amlogic-test
->>
->> This one is used in Armbian 5.4 release and our KernelCI lab.
->>
->> Neil
->>
-> 
-> Thanks.
-> 
-> There seems to be a typo in the build instructions in #
-> doc/board/amlogic/odroid-c4.rst
-> instead of *g12b*, it should be *g12a*
-> 
-> See below I get following build warning, which I fix locally,
-> 
-> ./buildc4c.sh: line 78:
-> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> No such file or directory
-> ./buildc4c.sh: line 81:
-> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> No such file or directory
-> ./buildc4c.sh: line 84:
-> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> No such file or directory
-> ./buildc4c.sh: line 87:
-> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> No such file or directory
-> ./buildc4c.sh: line 90:
-> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> No such file or directory
-> ./buildc4c.sh: line 92:
-> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> No such file or directory
-> 
-> After that fix I am able to boot my board using eMMC and microSD card.
+These patches were made very early from Christian Hewitt when the device
+was unveiled by Hardkernel, and superseed the patchset from Beniamino Galvani
+posted later.
 
-Thanks for testing, I'll push my serie rebased on v5.8-rc1 and fix this typo.
+Beniamino, sorry for posting this over your patchset, but they are essentially
+the same and this one is already used by LibreELEC, Armbian and out KernelCI
+boards.
 
-Neil
+It used the new Odroid-N2 board support instead of W400, and adds a doc
+file in RsT format.
 
-> 
-> -Anand
-> 
+Christian Hewitt (2):
+  ARM: dts: sync amlogic G12A/G12B/SM1 DT from Linux 5.8-rc1
+  boards: amlogic: add Odroid C4 support
+
+Neil Armstrong (1):
+  ARM: dts: meson-sm1-odroid-c4: add ethernet PHY reset
+
+ arch/arm/dts/Makefile                        |   1 +
+ arch/arm/dts/meson-g12-common.dtsi           |  13 +-
+ arch/arm/dts/meson-g12.dtsi                  |  32 +-
+ arch/arm/dts/meson-g12b-khadas-vim3.dtsi     |  22 +-
+ arch/arm/dts/meson-g12b-s922x.dtsi           |  15 +
+ arch/arm/dts/meson-g12b.dtsi                 |  22 +
+ arch/arm/dts/meson-khadas-vim3.dtsi          |   4 +-
+ arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi |  13 +
+ arch/arm/dts/meson-sm1-odroid-c4.dts         | 402 +++++++++++++++++++
+ arch/arm/dts/meson-sm1-sei610.dts            |   2 +-
+ arch/arm/dts/meson-sm1.dtsi                  |  24 ++
+ board/amlogic/odroid-n2/MAINTAINERS          |   2 +
+ configs/odroid-c4_defconfig                  |  62 +++
+ doc/board/amlogic/index.rst                  |   3 +-
+ doc/board/amlogic/odroid-c4.rst              | 133 ++++++
+ 15 files changed, 713 insertions(+), 37 deletions(-)
+ create mode 100644 arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-sm1-odroid-c4.dts
+ create mode 100644 configs/odroid-c4_defconfig
+ create mode 100644 doc/board/amlogic/odroid-c4.rst
+
+-- 
+2.22.0
 
