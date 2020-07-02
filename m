@@ -1,21 +1,21 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web12.23215.1593614786457735349
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web10.1856.1593676752425255317
  for <u-boot-amlogic@groups.io>;
- Wed, 01 Jul 2020 07:46:26 -0700
-Received: by mail-wm1-f66.google.com with SMTP id j18so22719736wmi.3
-        for <u-boot-amlogic@groups.io>; Wed, 01 Jul 2020 07:46:26 -0700 (PDT)
+ Thu, 02 Jul 2020 00:59:13 -0700
+Received: by mail-wm1-f67.google.com with SMTP id 22so25680545wmg.1
+        for <u-boot-amlogic@groups.io>; Thu, 02 Jul 2020 00:59:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/5vRZ1ajdeHbmQA6PxaXaWreGP0vM38ZFi78xAS+5hM=;
-        b=Vko1piM0OfjchquyXOmeTZZH5kTxSsGMlfC0JhkXanzOW/u64+7XXzR3teYpwn7Pgr
-         YElRoD/TRioAGpx/Pe/dsl+9xLCq230KsYO1rCtyTtw92h2ZJiZl98yLtzHDOfWF5mVP
-         UJT+otwq+5jFKpFuciNNAv7xHFtH/mzva7z6Jeh2B8SnHBx9gjrCFYW2jAJs7Hqeaht/
-         lZ/e1dIeSW1BrvZDyOsX6cM31fSCIoCWiaiJr1un0+c0i61Tb6GtdZc2m9Xda0OUVSZI
-         pN6z5x5vCvfuw2iK73Fc7iRzZgG8dwXEiUWVA4hxa8ubmGAHJogQSf5JBcMpH6IWCD77
-         kLtw==
+        bh=iBqaXY857+Aahgu/Gf5E5TGAw9YKSDRAM+HpyZD665o=;
+        b=wHqMLPlSQBqsFkSXSj/Py0MbrYy+nAleevcNWTGGitVZ6Bv1omhtKXqh17e090anZP
+         i6roBPkSj/Vy+fBivxBnBaYO3EhWlEsdDCAo+vpGVQ7yVoZW9/Gt3jS4izo/aFeqc1zY
+         h+ZMzE+W5fzH/vYy34SaV02JRhgqthhphb6wexFW6kx7F4n44CPBmjmBiD9gVwk5kAUd
+         /w60bzJWvkRs77jZloXUUwIOcU9ycalcQPSwffMh8NNN0luCpyMneAAK/zeWjWwS+Dzg
+         tXIfkfWAW0JVCVcAJQWZLH0Cmq0Julq9pWt6nFfs47F2skSzYxKOV5hDwiDnVsk+mJDY
+         8Sgg==
 Return-Path: <narmstrong@baylibre.com>
 Subject: Re: [PATCH 0/2] u-boot support for ODROID-C4
 References: <20200505202217.7849-1-b.galvani@gmail.com>
@@ -26,11 +26,13 @@ References: <20200505202217.7849-1-b.galvani@gmail.com>
  <CANAwSgQu6c0V-ujGk3R3BkZTRY_Z7KPjP1BF2srnYYNQjdb9UA@mail.gmail.com>
  <32f06e45-4425-6970-e173-791ff87ae9e5@baylibre.com>
  <CANAwSgSH-ZzE+TsrjNUp+OL4w3xDg7RMc9HOaKU+Yh-hu=1ZbQ@mail.gmail.com>
+ <b8b89fe1-9fe8-fc8d-3e1a-1e44b9417719@baylibre.com>
+ <CANAwSgRk=oNZ46OBdKqp_BOKyOUGhMnQO2D1mSusH-a9xCBtuw@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <b8b89fe1-9fe8-fc8d-3e1a-1e44b9417719@baylibre.com>
-Date: Wed, 1 Jul 2020 16:46:22 +0200
+Message-ID: <19112043-cb93-eaf5-5fae-b628c1d6b3bb@baylibre.com>
+Date: Thu, 2 Jul 2020 09:59:07 +0200
 MIME-Version: 1.0
-In-Reply-To: <CANAwSgSH-ZzE+TsrjNUp+OL4w3xDg7RMc9HOaKU+Yh-hu=1ZbQ@mail.gmail.com>
+In-Reply-To: <CANAwSgRk=oNZ46OBdKqp_BOKyOUGhMnQO2D1mSusH-a9xCBtuw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -38,115 +40,131 @@ To: Anand Moon <linux.amoon@gmail.com>
 Cc: Beniamino Galvani <b.galvani@gmail.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 01/07/2020 16:43, Anand Moon wrote:
+On 01/07/2020 18:09, Anand Moon wrote:
 > Hi Neil,
 > 
-> On Wed, 1 Jul 2020 at 18:38, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On Wed, 1 Jul 2020 at 20:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> Hi,
->>
->> On 01/07/2020 13:31, Anand Moon wrote:
+>> On 01/07/2020 16:43, Anand Moon wrote:
 >>> Hi Neil,
 >>>
->>> On Wed, 1 Jul 2020 at 13:22, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>> On Wed, 1 Jul 2020 at 18:38, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>>>
 >>>> Hi,
 >>>>
->>>> On 30/06/2020 18:02, Anand Moon wrote:
+>>>> On 01/07/2020 13:31, Anand Moon wrote:
 >>>>> Hi Neil,
 >>>>>
->>>>> On Tue, 30 Jun 2020 at 18:30, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>>> On Wed, 1 Jul 2020 at 13:22, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>>>>>
 >>>>>> Hi,
 >>>>>>
->>>>>> On 30/06/2020 13:33, Anand Moon wrote:
->>>>>>> Hi Beniamino,
+>>>>>> On 30/06/2020 18:02, Anand Moon wrote:
+>>>>>>> Hi Neil,
 >>>>>>>
->>>>>>> On Wed, 6 May 2020 at 01:53, Beniamino Galvani <b.galvani@gmail.com> wrote:
+>>>>>>> On Tue, 30 Jun 2020 at 18:30, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>>>>>>>
 >>>>>>>> Hi,
 >>>>>>>>
->>>>>>>> these two patches add initial u-boot support for Hardkernel ODROID-C4.
+>>>>>>>> On 30/06/2020 13:33, Anand Moon wrote:
+>>>>>>>>> Hi Beniamino,
+>>>>>>>>>
+>>>>>>>>> On Wed, 6 May 2020 at 01:53, Beniamino Galvani <b.galvani@gmail.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>> Hi,
+>>>>>>>>>>
+>>>>>>>>>> these two patches add initial u-boot support for Hardkernel ODROID-C4.
+>>>>>>>>>>
+>>>>>>>>>> https://wiki.odroid.com/odroid-c4/odroid-c4
+>>>>>>>>>>
+>>>>>>>>>> Beniamino Galvani (2):
+>>>>>>>>>>   arm: dts: import ODROID-C4 device tree
+>>>>>>>>>>   boards: amlogic: add ODROID-C4 support
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Can you respin this patches, I would like to see these get merged in
+>>>>>>>>> the current u-boot release
+>>>>>>>>>
+>>>>>>>>> -Anand
+>>>>>>>>>
 >>>>>>>>
->>>>>>>> https://wiki.odroid.com/odroid-c4/odroid-c4
+>>>>>>>> The Odroid-C4 could re-use the new Odroid-N2 board support I submitted at [1]
 >>>>>>>>
->>>>>>>> Beniamino Galvani (2):
->>>>>>>>   arm: dts: import ODROID-C4 device tree
->>>>>>>>   boards: amlogic: add ODROID-C4 support
+>>>>>>>> Anand, is the MAC address stored stored the same way on the C4 ?
 >>>>>>>>
+>>>>>>>> Neil
+>>>>>>>>
+>>>>>>>> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
 >>>>>>>
->>>>>>> Can you respin this patches, I would like to see these get merged in
->>>>>>> the current u-boot release
->>>>>>>
->>>>>>> -Anand
->>>>>>>
+>>>>>>> I gave this patches a try on latest u-boot but I cannot make my Odroid
+>>>>>>> C4 to boot up uinsg microSD card and eMMC
+>>>>>>> Here are the logs.
 >>>>>>
->>>>>> The Odroid-C4 could re-use the new Odroid-N2 board support I submitted at [1]
+>>>>>> The PHY config must be wrong and it misses the -u-boot.dtsi to enable HDMI.
 >>>>>>
->>>>>> Anand, is the MAC address stored stored the same way on the C4 ?
+>>>>>> Can you test my custodian test branch with my C4 support patchset ?
+>>>>>>
+>>>>>> https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/-/tree/u-boot-amlogic-test
+>>>>>>
+>>>>>> This one is used in Armbian 5.4 release and our KernelCI lab.
 >>>>>>
 >>>>>> Neil
 >>>>>>
->>>>>> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
 >>>>>
->>>>> I gave this patches a try on latest u-boot but I cannot make my Odroid
->>>>> C4 to boot up uinsg microSD card and eMMC
->>>>> Here are the logs.
+>>>>> Thanks.
+>>>>>
+>>>>> There seems to be a typo in the build instructions in #
+>>>>> doc/board/amlogic/odroid-c4.rst
+>>>>> instead of *g12b*, it should be *g12a*
+>>>>>
+>>>>> See below I get following build warning, which I fix locally,
+>>>>>
+>>>>> ./buildc4c.sh: line 78:
+>>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>>>> No such file or directory
+>>>>> ./buildc4c.sh: line 81:
+>>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>>>> No such file or directory
+>>>>> ./buildc4c.sh: line 84:
+>>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>>>> No such file or directory
+>>>>> ./buildc4c.sh: line 87:
+>>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>>>> No such file or directory
+>>>>> ./buildc4c.sh: line 90:
+>>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>>>> No such file or directory
+>>>>> ./buildc4c.sh: line 92:
+>>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
+>>>>> No such file or directory
+>>>>>
+>>>>> After that fix I am able to boot my board using eMMC and microSD card.
 >>>>
->>>> The PHY config must be wrong and it misses the -u-boot.dtsi to enable HDMI.
->>>>
->>>> Can you test my custodian test branch with my C4 support patchset ?
->>>>
->>>> https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/-/tree/u-boot-amlogic-test
->>>>
->>>> This one is used in Armbian 5.4 release and our KernelCI lab.
+>>>> Thanks for testing, I'll push my serie rebased on v5.8-rc1 and fix this typo.
 >>>>
 >>>> Neil
 >>>>
 >>>
->>> Thanks.
->>>
->>> There seems to be a typo in the build instructions in #
->>> doc/board/amlogic/odroid-c4.rst
->>> instead of *g12b*, it should be *g12a*
->>>
->>> See below I get following build warning, which I fix locally,
->>>
->>> ./buildc4c.sh: line 78:
->>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>> No such file or directory
->>> ./buildc4c.sh: line 81:
->>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>> No such file or directory
->>> ./buildc4c.sh: line 84:
->>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>> No such file or directory
->>> ./buildc4c.sh: line 87:
->>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>> No such file or directory
->>> ./buildc4c.sh: line 90:
->>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>> No such file or directory
->>> ./buildc4c.sh: line 92:
->>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>> No such file or directory
->>>
->>> After that fix I am able to boot my board using eMMC and microSD card.
+>>> Thanks, I see the same issue with random mac address just like N2.
 >>
->> Thanks for testing, I'll push my serie rebased on v5.8-rc1 and fix this typo.
+>> Yes, my branch was not using the N2 board support with eFuses MAC readout,
+>> can you test my last patchset I just sent ? It should use the MAC from eFuses or
+>> generate an unique address with the SoC serial number.
+>>
+> Thanks
+> 
+>> Please apply the patch in [1] before the new Odroid-C4 serie.
+>>
+>> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
 >>
 >> Neil
->>
 > 
-> Thanks, I see the same issue with random mac address just like N2.
+> I do not know the reason but your patches are not showing up on u-boot
+> patchwork.
+> 
+> [0] https://patchwork.ozlabs.org/project/uboot/list/
 
-Yes, my branch was not using the N2 board support with eFuses MAC readout,
-can you test my last patchset I just sent ? It should use the MAC from eFuses or
-generate an unique address with the SoC serial number.
-
-Please apply the patch in [1] before the new Odroid-C4 serie.
-
-[1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
+Good question !
 
 Neil
 
