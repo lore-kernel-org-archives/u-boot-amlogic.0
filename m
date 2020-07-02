@@ -1,157 +1,62 @@
-Received: from mail-io1-f67.google.com (mail-io1-f67.google.com [209.85.166.67])
- by mx.groups.io with SMTP id smtpd.web12.679.1593619762817600458
+Received: from mail-io1-f68.google.com (mail-io1-f68.google.com [209.85.166.68])
+ by mx.groups.io with SMTP id smtpd.web11.4052.1593659386625889089
  for <u-boot-amlogic@groups.io>;
- Wed, 01 Jul 2020 09:09:22 -0700
-Received: by mail-io1-f67.google.com with SMTP id f6so10005580ioj.5
-        for <u-boot-amlogic@groups.io>; Wed, 01 Jul 2020 09:09:22 -0700 (PDT)
+ Wed, 01 Jul 2020 20:09:46 -0700
+Received: by mail-io1-f68.google.com with SMTP id v6so13655767iob.4
+        for <u-boot-amlogic@groups.io>; Wed, 01 Jul 2020 20:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YzZoCnscVAocM19CFNDpocvyYP9IKphqw7dHX/j3FAY=;
-        b=LpR8lYG1PVusUzfoeZudvRPw4LTkEUGewmCdC6grKrD1bnO+c41IEGqkeAhKqTTsKT
-         rL9wkCDAtYHnhfBqRDl1G5pBINYfyejT8Bu7IcrCQNWoQH4eJBfdktbSzcVzYZRvR6tL
-         tp49jlwqvrL2ePx4hTkVuPrNW5XgdVp0ZAINsFUfSR4t3wLIVzd0EtTA1qLLKm3XC2hq
-         qAsrmGD+S3Xn4h5/YKKohmZudLu+6hngixUEEhCbf5eXc8YaZy6Dwl2lENocPCYzChzs
-         nhZdO+o/Q1NUdIrY5BKfomznRxR53f+lv7NH1ZZPCsGwJYbsE0Ea/p4srLURouU2Xf8g
-         wqbQ==
+        bh=LVY+9Jr29nwCSjQnqwnsuSeURjDkpQiz/vvZSeMOa0w=;
+        b=mSEa5H+7K4f1YwuuEwRShVZ/lxsq1ceUDA59jkGai5ZlWjnBAfPfkmJ9tg0zlUGqRL
+         11iBafPZ8aDGRdf/QjaW5TwEany5gwgN2bhMAs7tJOmasQTsu4nbMBWUwF6hoJ+fPylo
+         YAthHLMWyAovXBfGDyejGJwoTB6hns1suwSWO9JrvPNcMwMRyupWpTXHdEi20zX9gAvM
+         D2kI2Xm/QbzsKBfHD0/ZjQ8gcyhsVZqgjr7ADVdXJV/eJGvbjEzY1bmW+gvI0fMmqrFR
+         +MwkyK88lcGBQ4M8qOdDpSDrFhufvBScmDSJk7q+bzFq+NoCkfZsFn/09SXJAgiS4Njz
+         BfaQ==
 MIME-Version: 1.0
-References: <20200505202217.7849-1-b.galvani@gmail.com> <CANAwSgT3AcsQkE47CusmC_rCnVo_FRuWaRbivUyxzPXFSjCmSA@mail.gmail.com>
- <bf6bf3e9-ef60-9d3f-4d32-5b79f5b94b4b@baylibre.com> <CANAwSgR8jX+Z+xZ3EXHQbq80dswn6WjaF-vyJHjyxQREVf+Mfg@mail.gmail.com>
- <eb5df59e-4d45-99d1-c131-bc630fd772d8@baylibre.com> <CANAwSgQu6c0V-ujGk3R3BkZTRY_Z7KPjP1BF2srnYYNQjdb9UA@mail.gmail.com>
- <32f06e45-4425-6970-e173-791ff87ae9e5@baylibre.com> <CANAwSgSH-ZzE+TsrjNUp+OL4w3xDg7RMc9HOaKU+Yh-hu=1ZbQ@mail.gmail.com>
- <b8b89fe1-9fe8-fc8d-3e1a-1e44b9417719@baylibre.com>
-In-Reply-To: <b8b89fe1-9fe8-fc8d-3e1a-1e44b9417719@baylibre.com>
+References: <20200701144310.25481-1-narmstrong@baylibre.com> <20200701144310.25481-4-narmstrong@baylibre.com>
+In-Reply-To: <20200701144310.25481-4-narmstrong@baylibre.com>
 From: Anand Moon <linux.amoon@gmail.com>
-Date: Wed, 1 Jul 2020 21:39:11 +0530
-Message-ID: <CANAwSgRk=oNZ46OBdKqp_BOKyOUGhMnQO2D1mSusH-a9xCBtuw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] u-boot support for ODROID-C4
+Date: Thu, 2 Jul 2020 08:39:35 +0530
+Message-ID: <CANAwSgSYxYpuH3s561JCdC1uLUxaSYrSkQ=EmFaXarqh4CQPFw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: meson-sm1-odroid-c4: add ethernet PHY reset
 Content-Type: text/plain; charset="UTF-8"
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Beniamino Galvani <b.galvani@gmail.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Beniamino Galvani <b.galvani@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
 Hi Neil,
 
-On Wed, 1 Jul 2020 at 20:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Wed, 1 Jul 2020 at 20:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> On 01/07/2020 16:43, Anand Moon wrote:
-> > Hi Neil,
-> >
-> > On Wed, 1 Jul 2020 at 18:38, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 01/07/2020 13:31, Anand Moon wrote:
-> >>> Hi Neil,
-> >>>
-> >>> On Wed, 1 Jul 2020 at 13:22, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>>>
-> >>>> Hi,
-> >>>>
-> >>>> On 30/06/2020 18:02, Anand Moon wrote:
-> >>>>> Hi Neil,
-> >>>>>
-> >>>>> On Tue, 30 Jun 2020 at 18:30, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>>>>>
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> On 30/06/2020 13:33, Anand Moon wrote:
-> >>>>>>> Hi Beniamino,
-> >>>>>>>
-> >>>>>>> On Wed, 6 May 2020 at 01:53, Beniamino Galvani <b.galvani@gmail.com> wrote:
-> >>>>>>>>
-> >>>>>>>> Hi,
-> >>>>>>>>
-> >>>>>>>> these two patches add initial u-boot support for Hardkernel ODROID-C4.
-> >>>>>>>>
-> >>>>>>>> https://wiki.odroid.com/odroid-c4/odroid-c4
-> >>>>>>>>
-> >>>>>>>> Beniamino Galvani (2):
-> >>>>>>>>   arm: dts: import ODROID-C4 device tree
-> >>>>>>>>   boards: amlogic: add ODROID-C4 support
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>> Can you respin this patches, I would like to see these get merged in
-> >>>>>>> the current u-boot release
-> >>>>>>>
-> >>>>>>> -Anand
-> >>>>>>>
-> >>>>>>
-> >>>>>> The Odroid-C4 could re-use the new Odroid-N2 board support I submitted at [1]
-> >>>>>>
-> >>>>>> Anand, is the MAC address stored stored the same way on the C4 ?
-> >>>>>>
-> >>>>>> Neil
-> >>>>>>
-> >>>>>> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
-> >>>>>
-> >>>>> I gave this patches a try on latest u-boot but I cannot make my Odroid
-> >>>>> C4 to boot up uinsg microSD card and eMMC
-> >>>>> Here are the logs.
-> >>>>
-> >>>> The PHY config must be wrong and it misses the -u-boot.dtsi to enable HDMI.
-> >>>>
-> >>>> Can you test my custodian test branch with my C4 support patchset ?
-> >>>>
-> >>>> https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/-/tree/u-boot-amlogic-test
-> >>>>
-> >>>> This one is used in Armbian 5.4 release and our KernelCI lab.
-> >>>>
-> >>>> Neil
-> >>>>
-> >>>
-> >>> Thanks.
-> >>>
-> >>> There seems to be a typo in the build instructions in #
-> >>> doc/board/amlogic/odroid-c4.rst
-> >>> instead of *g12b*, it should be *g12a*
-> >>>
-> >>> See below I get following build warning, which I fix locally,
-> >>>
-> >>> ./buildc4c.sh: line 78:
-> >>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> >>> No such file or directory
-> >>> ./buildc4c.sh: line 81:
-> >>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> >>> No such file or directory
-> >>> ./buildc4c.sh: line 84:
-> >>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> >>> No such file or directory
-> >>> ./buildc4c.sh: line 87:
-> >>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> >>> No such file or directory
-> >>> ./buildc4c.sh: line 90:
-> >>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> >>> No such file or directory
-> >>> ./buildc4c.sh: line 92:
-> >>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
-> >>> No such file or directory
-> >>>
-> >>> After that fix I am able to boot my board using eMMC and microSD card.
-> >>
-> >> Thanks for testing, I'll push my serie rebased on v5.8-rc1 and fix this typo.
-> >>
-> >> Neil
-> >>
-> >
-> > Thanks, I see the same issue with random mac address just like N2.
+> The PHY needs a reset in order to be functionnal for U-Boot, add the old
+> PHY reset bindings for dwmac until we support the new bindings in the PHY node.
 >
-> Yes, my branch was not using the N2 board support with eFuses MAC readout,
-> can you test my last patchset I just sent ? It should use the MAC from eFuses or
-> generate an unique address with the SoC serial number.
->
-Thanks
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
 
-> Please apply the patch in [1] before the new Odroid-C4 serie.
+Please add my
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+
+>  arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
+> diff --git a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> index ee32c6f43d..2a8f0545b1 100644
+> --- a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> @@ -5,3 +5,9 @@
+>   */
 >
-> Neil
-
-I do not know the reason but your patches are not showing up on u-boot
-patchwork.
-
-[0] https://patchwork.ozlabs.org/project/uboot/list/
-
--Anand
+>  #include "meson-g12-common-u-boot.dtsi"
+> +
+> +&ethmac {
+> +       snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+> +       snps,reset-delays-us = <0 10000 1000000>;
+> +       snps,reset-active-low;
+> +};
+> --
+> 2.22.0
+>
