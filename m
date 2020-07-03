@@ -1,174 +1,66 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
- by mx.groups.io with SMTP id smtpd.web10.1856.1593676752425255317
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [91.207.212.93])
+ by mx.groups.io with SMTP id smtpd.web12.1322.1593790628702240771
  for <u-boot-amlogic@groups.io>;
- Thu, 02 Jul 2020 00:59:13 -0700
-Received: by mail-wm1-f67.google.com with SMTP id 22so25680545wmg.1
-        for <u-boot-amlogic@groups.io>; Thu, 02 Jul 2020 00:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iBqaXY857+Aahgu/Gf5E5TGAw9YKSDRAM+HpyZD665o=;
-        b=wHqMLPlSQBqsFkSXSj/Py0MbrYy+nAleevcNWTGGitVZ6Bv1omhtKXqh17e090anZP
-         i6roBPkSj/Vy+fBivxBnBaYO3EhWlEsdDCAo+vpGVQ7yVoZW9/Gt3jS4izo/aFeqc1zY
-         h+ZMzE+W5fzH/vYy34SaV02JRhgqthhphb6wexFW6kx7F4n44CPBmjmBiD9gVwk5kAUd
-         /w60bzJWvkRs77jZloXUUwIOcU9ycalcQPSwffMh8NNN0luCpyMneAAK/zeWjWwS+Dzg
-         tXIfkfWAW0JVCVcAJQWZLH0Cmq0Julq9pWt6nFfs47F2skSzYxKOV5hDwiDnVsk+mJDY
-         8Sgg==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/2] u-boot support for ODROID-C4
-References: <20200505202217.7849-1-b.galvani@gmail.com>
- <CANAwSgT3AcsQkE47CusmC_rCnVo_FRuWaRbivUyxzPXFSjCmSA@mail.gmail.com>
- <bf6bf3e9-ef60-9d3f-4d32-5b79f5b94b4b@baylibre.com>
- <CANAwSgR8jX+Z+xZ3EXHQbq80dswn6WjaF-vyJHjyxQREVf+Mfg@mail.gmail.com>
- <eb5df59e-4d45-99d1-c131-bc630fd772d8@baylibre.com>
- <CANAwSgQu6c0V-ujGk3R3BkZTRY_Z7KPjP1BF2srnYYNQjdb9UA@mail.gmail.com>
- <32f06e45-4425-6970-e173-791ff87ae9e5@baylibre.com>
- <CANAwSgSH-ZzE+TsrjNUp+OL4w3xDg7RMc9HOaKU+Yh-hu=1ZbQ@mail.gmail.com>
- <b8b89fe1-9fe8-fc8d-3e1a-1e44b9417719@baylibre.com>
- <CANAwSgRk=oNZ46OBdKqp_BOKyOUGhMnQO2D1mSusH-a9xCBtuw@mail.gmail.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <19112043-cb93-eaf5-5fae-b628c1d6b3bb@baylibre.com>
-Date: Thu, 2 Jul 2020 09:59:07 +0200
+ Fri, 03 Jul 2020 08:37:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=0yiwjy2iBqQaZyObcGaxND/wd2pRuBbUwDIYk5pFWrI=;
+ b=U2SVJVLYJohnBXHeEiwLdKaNrEVWYv0SUSa5hcivPAzVFH4HOCeHBGp8FBr3xPWjOAN8
+ 3gfIQC+teuKdWIACXO2IuNH1HQWkYdJWQZlySLfZ7V8Qi8AR3SZ0IExApDVtQpCIpN4x
+ /cyXW6h9OZ3OrHjdKl3nSPFWbZpmpyWF3jloL1H+BFh/ezV3yCEB1Nx2XD2VLWTT9GFO
+ 4oAby7Q6B5LwDMR7cx/1ML8r+HM3M8XaSk+gcYLgqrswwJ4CcK81HRsg61/YUdKYuCjM
+ Ih4ylXIg5RYdD9saU4Yaw4e7W+NL2LwMjvl/GPWxevdOmLhDaDAzhBmGOo6O3mXObfN8 IQ== 
+From: Patrick Delaunay <patrick.delaunay@st.com>
+Subject: [PATCH v3 7/7] arm: meson: change trace level for phy errors managed by uclass
+Date: Fri, 3 Jul 2020 17:36:46 +0200
+Message-ID: <20200703153646.28533-8-patrick.delaunay@st.com>
+In-Reply-To: <20200703153646.28533-1-patrick.delaunay@st.com>
+References: <20200703153646.28533-1-patrick.delaunay@st.com>
 MIME-Version: 1.0
-In-Reply-To: <CANAwSgRk=oNZ46OBdKqp_BOKyOUGhMnQO2D1mSusH-a9xCBtuw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Beniamino Galvani <b.galvani@gmail.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+Content-Type: text/plain
+To: u-boot@lists.denx.de
+Cc: Marek Vasut <marex@denx.de>, Patrick Delaunay <patrick.delaunay@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io, U-Boot STM32 <uboot-stm32@st-md-mailman.stormreply.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 01/07/2020 18:09, Anand Moon wrote:
-> Hi Neil,
-> 
-> On Wed, 1 Jul 2020 at 20:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> On 01/07/2020 16:43, Anand Moon wrote:
->>> Hi Neil,
->>>
->>> On Wed, 1 Jul 2020 at 18:38, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On 01/07/2020 13:31, Anand Moon wrote:
->>>>> Hi Neil,
->>>>>
->>>>> On Wed, 1 Jul 2020 at 13:22, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> On 30/06/2020 18:02, Anand Moon wrote:
->>>>>>> Hi Neil,
->>>>>>>
->>>>>>> On Tue, 30 Jun 2020 at 18:30, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>>>>>
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> On 30/06/2020 13:33, Anand Moon wrote:
->>>>>>>>> Hi Beniamino,
->>>>>>>>>
->>>>>>>>> On Wed, 6 May 2020 at 01:53, Beniamino Galvani <b.galvani@gmail.com> wrote:
->>>>>>>>>>
->>>>>>>>>> Hi,
->>>>>>>>>>
->>>>>>>>>> these two patches add initial u-boot support for Hardkernel ODROID-C4.
->>>>>>>>>>
->>>>>>>>>> https://wiki.odroid.com/odroid-c4/odroid-c4
->>>>>>>>>>
->>>>>>>>>> Beniamino Galvani (2):
->>>>>>>>>>   arm: dts: import ODROID-C4 device tree
->>>>>>>>>>   boards: amlogic: add ODROID-C4 support
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> Can you respin this patches, I would like to see these get merged in
->>>>>>>>> the current u-boot release
->>>>>>>>>
->>>>>>>>> -Anand
->>>>>>>>>
->>>>>>>>
->>>>>>>> The Odroid-C4 could re-use the new Odroid-N2 board support I submitted at [1]
->>>>>>>>
->>>>>>>> Anand, is the MAC address stored stored the same way on the C4 ?
->>>>>>>>
->>>>>>>> Neil
->>>>>>>>
->>>>>>>> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
->>>>>>>
->>>>>>> I gave this patches a try on latest u-boot but I cannot make my Odroid
->>>>>>> C4 to boot up uinsg microSD card and eMMC
->>>>>>> Here are the logs.
->>>>>>
->>>>>> The PHY config must be wrong and it misses the -u-boot.dtsi to enable HDMI.
->>>>>>
->>>>>> Can you test my custodian test branch with my C4 support patchset ?
->>>>>>
->>>>>> https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/-/tree/u-boot-amlogic-test
->>>>>>
->>>>>> This one is used in Armbian 5.4 release and our KernelCI lab.
->>>>>>
->>>>>> Neil
->>>>>>
->>>>>
->>>>> Thanks.
->>>>>
->>>>> There seems to be a typo in the build instructions in #
->>>>> doc/board/amlogic/odroid-c4.rst
->>>>> instead of *g12b*, it should be *g12a*
->>>>>
->>>>> See below I get following build warning, which I fix locally,
->>>>>
->>>>> ./buildc4c.sh: line 78:
->>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>>>> No such file or directory
->>>>> ./buildc4c.sh: line 81:
->>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>>>> No such file or directory
->>>>> ./buildc4c.sh: line 84:
->>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>>>> No such file or directory
->>>>> ./buildc4c.sh: line 87:
->>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>>>> No such file or directory
->>>>> ./buildc4c.sh: line 90:
->>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>>>> No such file or directory
->>>>> ./buildc4c.sh: line 92:
->>>>> /home/amoon/mainline/u-boot/amlogic/w400/odroid-c4/fip/g12b/aml_encrypt_g12a:
->>>>> No such file or directory
->>>>>
->>>>> After that fix I am able to boot my board using eMMC and microSD card.
->>>>
->>>> Thanks for testing, I'll push my serie rebased on v5.8-rc1 and fix this typo.
->>>>
->>>> Neil
->>>>
->>>
->>> Thanks, I see the same issue with random mac address just like N2.
->>
->> Yes, my branch was not using the N2 board support with eFuses MAC readout,
->> can you test my last patchset I just sent ? It should use the MAC from eFuses or
->> generate an unique address with the SoC serial number.
->>
-> Thanks
-> 
->> Please apply the patch in [1] before the new Odroid-C4 serie.
->>
->> [1] https://patchwork.ozlabs.org/project/uboot/patch/20200618144037.23392-1-narmstrong@baylibre.com/
->>
->> Neil
-> 
-> I do not know the reason but your patches are not showing up on u-boot
-> patchwork.
-> 
-> [0] https://patchwork.ozlabs.org/project/uboot/list/
+As the error message is now displayed by generic phy functions,
+the pr_err can be change to pr_debug.
 
-Good question !
+Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
+---
 
-Neil
+Changes in v3:
+- add update for mach-meson board-gx: new generic_phy API usage
 
-> 
-> -Anand
-> 
+ arch/arm/mach-meson/board-gx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
+index c4cc11f1de..b4fde46fcb 100644
+--- a/arch/arm/mach-meson/board-gx.c
++++ b/arch/arm/mach-meson/board-gx.c
+@@ -196,8 +196,8 @@ int board_usb_init(int index, enum usb_init_type init)
+ 	for (i = 0; i < 2; i++) {
+ 		ret = generic_phy_init(&usb_phys[i]);
+ 		if (ret) {
+-			pr_err("Can't init USB PHY%d for %s\n",
+-			       i, ofnode_get_name(dwc2_node));
++			pr_debug("Can't init USB PHY%d for %s\n",
++				 i, ofnode_get_name(dwc2_node));
+ 			return ret;
+ 		}
+ 	}
+@@ -205,8 +205,8 @@ int board_usb_init(int index, enum usb_init_type init)
+ 	for (i = 0; i < 2; i++) {
+ 		ret = generic_phy_power_on(&usb_phys[i]);
+ 		if (ret) {
+-			pr_err("Can't power USB PHY%d for %s\n",
+-			       i, ofnode_get_name(dwc2_node));
++			pr_debug("Can't power USB PHY%d for %s\n",
++				 i, ofnode_get_name(dwc2_node));
+ 			return ret;
+ 		}
+ 	}
+-- 
+2.17.1
 
