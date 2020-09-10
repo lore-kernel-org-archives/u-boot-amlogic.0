@@ -1,25 +1,25 @@
 Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web10.17579.1599727707436490663
+ by mx.groups.io with SMTP id smtpd.web11.17607.1599727709198052775
  for <u-boot-amlogic@groups.io>;
- Thu, 10 Sep 2020 01:48:27 -0700
-Received: by mail-wr1-f66.google.com with SMTP id a17so5769143wrn.6
-        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2020 01:48:27 -0700 (PDT)
+ Thu, 10 Sep 2020 01:48:29 -0700
+Received: by mail-wr1-f66.google.com with SMTP id x14so5733254wrl.12
+        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2020 01:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5asj/zwRTcV60D0MGQlvBlaWAORoYlswDz/jG2Wv7S0=;
-        b=izjis9BAoyD8ntqVuxw9THreF8dSsaq45TNn7xRM8W+jdD8NaM7mwJDaUrG323Ufls
-         pIn8AuHsNBrfK2PMcuWrxaSSw/Nt6NjG0ozLHIQ5nPyn7WG0PLeJaJMErA/nFELWumfy
-         G5u99r5HMi+IF5S+YaFN7zspQTHBu99g/DZW9j8qs4SaPl/6xdEzrhfMKUYZgvU9rn4z
-         le0bu6LJ0nT4w9UZtvblkknbW+N38dP/1jLZ6m4XpV8leT2OntuwWuOAX44d5994GoHS
-         jiNyebdkk+XN8lyIGmlULvODj2NizpHjd32X8L+ZgixqxAqhmrX28Jia5zhRIO+GWthn
-         E3yg==
+        bh=p8tLSgsb0c/afCiIrco6WgP+7ADreNkDX6FlwoC1lAc=;
+        b=rb4VHqtwvw4BKiuo28VZwFfy6RHQCoQbi90yvs4HUy0cjoi9EK2hHKnd+MW96BdKgA
+         6lMirFTu5kr6DqK2/o4tfylc1tmZ3lLDZQgqytMw2b+rtetlE6p26fKV+wXLqhFqWSfQ
+         mvWLKG/cTGHvfKw6cF9UYnXLdkBI+nq4qHmCZ36+AtgqSTMO5pUWMrASJ5+NWaHXghIm
+         vNfqMYnU91r62d6cyHvrXFl9aT9Ijq0XXkHS1Dx7nj2dkJWB1Yhc0BzxxfOl9pbDADKC
+         hjneyVvLVkwLehMyyOLFbujlqkqZ+cBNXkFCCdDv4sY5wlusZiquGev7Gl3aHO/DaV5k
+         rw4w==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 1/8] ARM: dts: sync amlogic AXG/GXL/GXM DT from Linux 5.8-rc1
-Date: Thu, 10 Sep 2020 10:48:12 +0200
-Message-Id: <20200910084819.25312-2-narmstrong@baylibre.com>
+Subject: [PATCH 2/8] usb: dwc3: add Amlogic GXL & GXL DWC3 Glue
+Date: Thu, 10 Sep 2020 10:48:13 +0200
+Message-Id: <20200910084819.25312-3-narmstrong@baylibre.com>
 In-Reply-To: <20200910084819.25312-1-narmstrong@baylibre.com>
 References: <20200910084819.25312-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,845 +28,498 @@ To: marex@denx.de
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This imports the AXG, GXL & GXM SoC and boards DT changes from the Linux
-commit b3a9e3b9622a ("Linux 5.8-rc1").
+The USB support was initialy done with a set of PHYs and dwc3-of-simple
+because the architecture of the USB complex was not understood correctly
+at the time (and proper documentation was missing...).
 
-This change also removes GXL & GXM u-boot.dtsi hacks for USB gadget.
+But with the G12A family, the USB complex was correctly understood and
+implemented correctly.
+
+This adds a proper driver for the glue, based on the G12A one, but with
+enough changes to require a different driver in U-Boot.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/dts/meson-axg.dtsi                   |  6 +-
- arch/arm/dts/meson-gx-libretech-pc.dtsi       | 78 +++++++++++++++++-
- arch/arm/dts/meson-gx.dtsi                    | 23 ++++--
- arch/arm/dts/meson-gxbb-nanopi-k2.dts         |  2 +-
- arch/arm/dts/meson-gxbb-odroidc2.dts          |  2 +-
- arch/arm/dts/meson-gxbb.dtsi                  | 23 ++++++
- .../meson-gxl-s805x-libretech-ac-u-boot.dtsi  |  4 -
- arch/arm/dts/meson-gxl-s805x-libretech-ac.dts | 73 ++++++++++++++++-
- .../meson-gxl-s905d-libretech-pc-u-boot.dtsi  |  4 -
- .../meson-gxl-s905x-khadas-vim-u-boot.dtsi    |  4 -
- arch/arm/dts/meson-gxl-s905x-khadas-vim.dts   |  4 +
- .../meson-gxl-s905x-libretech-cc-u-boot.dtsi  |  4 -
- arch/arm/dts/meson-gxl-s905x-libretech-cc.dts | 77 +++++++++++++++++-
- arch/arm/dts/meson-gxl-s905x-p212.dtsi        |  3 +-
- arch/arm/dts/meson-gxl-u-boot.dtsi            | 16 ----
- arch/arm/dts/meson-gxl.dtsi                   | 79 ++++++++++++++-----
- .../arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi |  4 -
- arch/arm/dts/meson-gxm-khadas-vim2.dts        |  3 +-
- .../meson-gxm-s912-libretech-pc-u-boot.dtsi   |  4 -
- arch/arm/dts/meson-gxm.dtsi                   |  7 +-
- .../reset/amlogic,meson-gxbb-reset.h          |  2 +-
- include/dt-bindings/sound/meson-aiu.h         | 18 +++++
- 22 files changed, 358 insertions(+), 82 deletions(-)
- create mode 100644 include/dt-bindings/sound/meson-aiu.h
+ arch/arm/include/asm/arch-meson/usb-gx.h |   2 +
+ drivers/usb/dwc3/Kconfig                 |   8 +
+ drivers/usb/dwc3/Makefile                |   1 +
+ drivers/usb/dwc3/dwc3-meson-gxl.c        | 425 +++++++++++++++++++++++
+ 4 files changed, 436 insertions(+)
+ create mode 100644 drivers/usb/dwc3/dwc3-meson-gxl.c
 
-diff --git a/arch/arm/dts/meson-axg.dtsi b/arch/arm/dts/meson-axg.dtsi
-index aace3d32a3..8e6281c685 100644
---- a/arch/arm/dts/meson-axg.dtsi
-+++ b/arch/arm/dts/meson-axg.dtsi
-@@ -1735,18 +1735,18 @@
- 		};
+diff --git a/arch/arm/include/asm/arch-meson/usb-gx.h b/arch/arm/include/asm/arch-meson/usb-gx.h
+index aeb8e0c673..7200a4c31a 100644
+--- a/arch/arm/include/asm/arch-meson/usb-gx.h
++++ b/arch/arm/include/asm/arch-meson/usb-gx.h
+@@ -13,4 +13,6 @@
+ void phy_meson_gxl_usb2_set_mode(struct phy *phy, enum usb_dr_mode mode);
+ void phy_meson_gxl_usb3_set_mode(struct phy *phy, enum usb_dr_mode mode);
  
- 		sram: sram@fffc0000 {
--			compatible = "amlogic,meson-axg-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xfffc0000 0x0 0x20000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xfffc0000 0x20000>;
- 
--			cpu_scp_lpri: scp-shmem@13000 {
-+			cpu_scp_lpri: scp-sram@13000 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@13400 {
-+			cpu_scp_hpri: scp-sram@13400 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
-diff --git a/arch/arm/dts/meson-gx-libretech-pc.dtsi b/arch/arm/dts/meson-gx-libretech-pc.dtsi
-index 248b018c83..c2480bab8d 100644
---- a/arch/arm/dts/meson-gx-libretech-pc.dtsi
-+++ b/arch/arm/dts/meson-gx-libretech-pc.dtsi
-@@ -8,6 +8,7 @@
- 
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/leds/common.h>
-+#include <dt-bindings/sound/meson-aiu.h>
- 
- / {
- 	adc-keys {
-@@ -29,6 +30,13 @@
- 		spi0 = &spifc;
- 	};
- 
-+	dio2133: analog-amplifier {
-+		compatible = "simple-audio-amplifier";
-+		sound-name-prefix = "AU2";
-+		VCC-supply = <&vcc5v>;
-+		enable-gpios = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
-+	};
++int dwc3_meson_gxl_force_mode(struct udevice *dev, enum usb_dr_mode mode);
 +
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -96,14 +104,14 @@
- 	leds {
- 		compatible = "gpio-leds";
+ #endif
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index c302486291..802ee508d9 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -38,6 +38,14 @@ config USB_DWC3_MESON_G12A
+ 	  Select this for Amlogic Meson G12A Platforms.
+ 	  This wrapper supports Host and Peripheral operation modes.
  
--		green {
-+		led-green {
- 			color = <LED_COLOR_ID_GREEN>;
- 			function = LED_FUNCTION_DISK_ACTIVITY;
- 			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "disk-activity";
- 		};
- 
--		blue {
-+		led-blue {
- 			color = <LED_COLOR_ID_BLUE>;
- 			function = LED_FUNCTION_STATUS;
- 			gpios = <&gpio GPIODV_28 GPIO_ACTIVE_HIGH>;
-@@ -175,6 +183,69 @@
- 		regulator-settling-time-up-us = <200>;
- 		regulator-settling-time-down-us = <50000>;
- 	};
++config USB_DWC3_MESON_GXL
++	bool "Amlogic Meson GXL USB wrapper"
++	depends on DM_USB && USB_DWC3 && ARCH_MESON
++	imply PHY
++	help
++	  Select this for Amlogic Meson GXL and GXM Platforms.
++	  This wrapper supports Host and Peripheral operation modes.
 +
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "GXL-LIBRETECH-S9XX-PC";
-+		audio-aux-devs = <&dio2133>;
-+		audio-widgets = "Speaker", "7J4-14 LEFT",
-+				"Speaker", "7J4-11 RIGHT";
-+		audio-routing = "AU2 INL", "ACODEC LOLN",
-+				"AU2 INR", "ACODEC LORN",
-+				"7J4-14 LEFT", "AU2 OUTL",
-+				"7J4-11 RIGHT", "AU2 OUTR";
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&aiu AIU_ACODEC CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&aiu AIU_ACODEC CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&acodec>;
-+			};
-+		};
-+	};
-+};
-+
-+&acodec {
-+	AVDD-supply = <&vddio_ao18>;
-+	status = "okay";
-+};
-+
-+&aiu {
-+	status = "okay";
- };
+ config USB_DWC3_UNIPHIER
+ 	bool "DesignWare USB3 Host Support on UniPhier Platforms"
+ 	depends on ARCH_UNIPHIER && USB_XHCI_DWC3
+diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+index 0b652a6f36..6e3e024e97 100644
+--- a/drivers/usb/dwc3/Makefile
++++ b/drivers/usb/dwc3/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_USB_DWC3_GADGET)		+= gadget.o ep0.o
  
- &cec_AO {
-@@ -360,8 +431,9 @@
- 	status = "okay";
- };
- 
--&usb0 {
-+&usb {
- 	status = "okay";
-+	dr_mode = "host";
- };
- 
- &usb2_phy0 {
-diff --git a/arch/arm/dts/meson-gx.dtsi b/arch/arm/dts/meson-gx.dtsi
-index 03f79fe045..ba63c36b22 100644
---- a/arch/arm/dts/meson-gx.dtsi
-+++ b/arch/arm/dts/meson-gx.dtsi
-@@ -278,6 +278,17 @@
- 				#reset-cells = <1>;
- 			};
- 
-+			aiu: audio-controller@5400 {
-+				compatible = "amlogic,aiu";
-+				#sound-dai-cells = <2>;
-+				sound-name-prefix = "AIU";
-+				reg = <0x0 0x5400 0x0 0x2ac>;
-+				interrupts = <GIC_SPI 48 IRQ_TYPE_EDGE_RISING>,
-+					     <GIC_SPI 50 IRQ_TYPE_EDGE_RISING>;
-+				interrupt-names = "i2s", "spdif";
-+				status = "disabled";
-+			};
-+
- 			uart_A: serial@84c0 {
- 				compatible = "amlogic,meson-gx-uart";
- 				reg = <0x0 0x84c0 0x0 0x18>;
-@@ -398,20 +409,20 @@
- 		};
- 
- 		sram: sram@c8000000 {
--			compatible = "amlogic,meson-gx-sram", "amlogic,meson-gxbb-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xc8000000 0x0 0x14000>;
- 
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xc8000000 0x14000>;
- 
--			cpu_scp_lpri: scp-shmem@0 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_lpri: scp-sram@0 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@200 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_hpri: scp-sram@200 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
- 		};
-@@ -626,6 +637,8 @@
- 			interrupts = <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "HDMITX";
- 			status = "disabled";
- 
- 			/* VPU VENC Input */
-diff --git a/arch/arm/dts/meson-gxbb-nanopi-k2.dts b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
-index d6ca684e0e..7be3e35409 100644
---- a/arch/arm/dts/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
-@@ -29,7 +29,7 @@
- 	leds {
- 		compatible = "gpio-leds";
- 
--		stat {
-+		led-stat {
- 			label = "nanopi-k2:blue:stat";
- 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
- 			default-state = "on";
-diff --git a/arch/arm/dts/meson-gxbb-odroidc2.dts b/arch/arm/dts/meson-gxbb-odroidc2.dts
-index b46ef985bb..70fcfb7b06 100644
---- a/arch/arm/dts/meson-gxbb-odroidc2.dts
-+++ b/arch/arm/dts/meson-gxbb-odroidc2.dts
-@@ -49,7 +49,7 @@
- 
- 	leds {
- 		compatible = "gpio-leds";
--		blue {
-+		led-blue {
- 			label = "c2:blue:alive";
- 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "heartbeat";
-diff --git a/arch/arm/dts/meson-gxbb.dtsi b/arch/arm/dts/meson-gxbb.dtsi
-index 0cb40326b0..234490d3ee 100644
---- a/arch/arm/dts/meson-gxbb.dtsi
-+++ b/arch/arm/dts/meson-gxbb.dtsi
-@@ -60,6 +60,29 @@
- 	};
- };
- 
-+&aiu {
-+	compatible = "amlogic,aiu-gxbb", "amlogic,aiu";
-+	clocks = <&clkc CLKID_AIU_GLUE>,
-+		 <&clkc CLKID_I2S_OUT>,
-+		 <&clkc CLKID_AOCLK_GATE>,
-+		 <&clkc CLKID_CTS_AMCLK>,
-+		 <&clkc CLKID_MIXER_IFACE>,
-+		 <&clkc CLKID_IEC958>,
-+		 <&clkc CLKID_IEC958_GATE>,
-+		 <&clkc CLKID_CTS_MCLK_I958>,
-+		 <&clkc CLKID_CTS_I958>;
-+	clock-names = "pclk",
-+		      "i2s_pclk",
-+		      "i2s_aoclk",
-+		      "i2s_mclk",
-+		      "i2s_mixer",
-+		      "spdif_pclk",
-+		      "spdif_aoclk",
-+		      "spdif_mclk",
-+		      "spdif_mclk_sel";
-+	resets = <&reset RESET_AIU>;
-+};
-+
- &aobus {
- 	pinctrl_aobus: pinctrl@14 {
- 		compatible = "amlogic,meson-gxbb-aobus-pinctrl";
-diff --git a/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi b/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi
-index 474a3e1604..39270ea71c 100644
---- a/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi
-@@ -5,7 +5,3 @@
-  */
- 
- #include "meson-gxl-u-boot.dtsi"
--
--&dwc2 {
--	status = "okay";
--};
-diff --git a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
-index 4d59494965..6a226faab1 100644
---- a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
-+++ b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/sound/meson-aiu.h>
- 
- #include "meson-gxl-s905x.dtsi"
- 
-@@ -97,6 +98,15 @@
- 		regulator-always-on;
- 	};
- 
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+
- 	vddio_boot: regulator-vddio_boot {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VDDIO_BOOT";
-@@ -105,6 +115,66 @@
- 		vin-supply = <&vcc_3v3>;
- 		regulator-always-on;
- 	};
-+
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "GXL-LIBRETECH-S805X-AC";
-+		audio-widgets = "Speaker", "9J5-3 LEFT",
-+				"Speaker", "9J5-2 RIGHT";
-+		audio-routing = "9J5-3 LEFT", "ACODEC LOLN",
-+				"9J5-2 RIGHT", "ACODEC LORN";
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&aiu AIU_ACODEC CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&aiu AIU_ACODEC CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&acodec>;
-+			};
-+		};
-+	};
-+};
-+
-+&acodec {
-+	AVDD-supply = <&vddio_ao18>;
-+	status = "okay";
-+};
-+
-+&aiu {
-+	status = "okay";
- };
- 
- &cec_AO {
-@@ -243,6 +313,7 @@
- 	pinctrl-names = "default";
- };
- 
--&usb0 {
-+&usb {
- 	status = "okay";
-+	dr_mode = "host";
- };
-diff --git a/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
-index 474a3e1604..39270ea71c 100644
---- a/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi
-@@ -5,7 +5,3 @@
-  */
- 
- #include "meson-gxl-u-boot.dtsi"
--
--&dwc2 {
--	status = "okay";
--};
-diff --git a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
-index 474a3e1604..39270ea71c 100644
---- a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
-@@ -5,7 +5,3 @@
-  */
- 
- #include "meson-gxl-u-boot.dtsi"
--
--&dwc2 {
--	status = "okay";
--};
-diff --git a/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts b/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
-index 440bc23c73..8bcdffdf55 100644
---- a/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
-+++ b/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
-@@ -207,3 +207,7 @@
- 	pinctrl-0 = <&uart_ao_b_pins>;
- 	pinctrl-names = "default";
- };
-+
-+&usb {
-+	dr_mode = "peripheral";
-+};
-diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi
-index 474a3e1604..39270ea71c 100644
---- a/arch/arm/dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi
-@@ -5,7 +5,3 @@
-  */
- 
- #include "meson-gxl-u-boot.dtsi"
--
--&dwc2 {
--	status = "okay";
--};
-diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
-index e8348b2728..5ae7bb6209 100644
---- a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/sound/meson-aiu.h>
- 
- #include "meson-gxl-s905x.dtsi"
- 
-@@ -21,6 +22,13 @@
- 		ethernet0 = &ethmac;
- 	};
- 
-+	dio2133: analog-amplifier {
-+		compatible = "simple-audio-amplifier";
-+		sound-name-prefix = "AU2";
-+		VCC-supply = <&hdmi_5v>;
-+		enable-gpios = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -54,14 +62,14 @@
- 	leds {
- 		compatible = "gpio-leds";
- 
--		system {
-+		led-system {
- 			label = "librecomputer:system-status";
- 			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
- 			default-state = "on";
- 			panic-indicator;
- 		};
- 
--		blue {
-+		led-blue {
- 			label = "librecomputer:blue";
- 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "heartbeat";
-@@ -124,6 +132,68 @@
- 		regulator-max-microvolt = <1800000>;
- 		vin-supply = <&vcc_3v3>;
- 	};
-+
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "GXL-LIBRETECH-S905X-CC";
-+		audio-aux-devs = <&dio2133>;
-+		audio-widgets = "Line", "Lineout";
-+		audio-routing = "AU2 INL", "ACODEC LOLN",
-+				"AU2 INR", "ACODEC LORN",
-+				"Lineout", "AU2 OUTL",
-+				"Lineout", "AU2 OUTR";
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&aiu AIU_ACODEC CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&aiu AIU_ACODEC CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&acodec>;
-+			};
-+		};
-+	};
-+};
-+
-+&acodec {
-+	AVDD-supply = <&vddio_ao18>;
-+	status = "okay";
-+};
-+
-+&aiu {
-+	status = "okay";
- };
- 
- &cec_AO {
-@@ -272,8 +342,9 @@
- 	pinctrl-names = "default";
- };
- 
--&usb0 {
-+&usb {
- 	status = "okay";
-+	dr_mode = "host";
- };
- 
- &usb2_phy0 {
-diff --git a/arch/arm/dts/meson-gxl-s905x-p212.dtsi b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
-index 6ac678f88b..05cb2f5e5c 100644
---- a/arch/arm/dts/meson-gxl-s905x-p212.dtsi
-+++ b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
-@@ -195,8 +195,9 @@
- 	pinctrl-names = "default";
- };
- 
--&usb0 {
-+&usb {
- 	status = "okay";
-+	dr_mode = "host";
- };
- 
- &usb2_phy0 {
-diff --git a/arch/arm/dts/meson-gxl-u-boot.dtsi b/arch/arm/dts/meson-gxl-u-boot.dtsi
-index 9e88afd30e..c35158d7e9 100644
---- a/arch/arm/dts/meson-gxl-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gxl-u-boot.dtsi
-@@ -5,19 +5,3 @@
-  */
- 
- #include "meson-gx-u-boot.dtsi"
--
--&usb0 {
--	dwc2: usb@c9100000 {
--		compatible = "snps,dwc2";
--		reg = <0x0 0xc9100000 0x0 0x40000>;
--		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
--		clock-names = "ddr";
--		phys = <&usb3_phy>, <&usb2_phy1>;
--		dr_mode = "peripheral";
--		g-rx-fifo-size = <192>;
--		g-np-tx-fifo-size = <128>;
--		g-tx-fifo-size = <128 128 16 16 16>;
--		status = "disabled";
--	};
--};
-diff --git a/arch/arm/dts/meson-gxl.dtsi b/arch/arm/dts/meson-gxl.dtsi
-index 259d863993..fc59c8534c 100644
---- a/arch/arm/dts/meson-gxl.dtsi
-+++ b/arch/arm/dts/meson-gxl.dtsi
-@@ -14,29 +14,57 @@
- 	compatible = "amlogic,meson-gxl";
- 
- 	soc {
--		usb0: usb@c9000000 {
--			status = "disabled";
--			compatible = "amlogic,meson-gxl-dwc3";
-+		usb: usb@d0078080 {
-+			compatible = "amlogic,meson-gxl-usb-ctrl";
-+			reg = <0x0 0xd0078080 0x0 0x20>;
-+			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
- 
--			clocks = <&clkc CLKID_USB>;
--			clock-names = "usb_general";
-+			clocks = <&clkc CLKID_USB>, <&clkc CLKID_USB1_DDR_BRIDGE>;
-+			clock-names = "usb_ctrl", "ddr";
- 			resets = <&reset RESET_USB_OTG>;
--			reset-names = "usb_otg";
- 
--			dwc3: dwc3@c9000000 {
-+			dr_mode = "otg";
-+
-+			phys = <&usb2_phy0>, <&usb2_phy1>;
-+			phy-names = "usb2-phy0", "usb2-phy1";
-+
-+			dwc2: usb@c9100000 {
-+				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-+				reg = <0x0 0xc9100000 0x0 0x40000>;
-+				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clkc CLKID_USB1>;
-+				clock-names = "otg";
-+				phys = <&usb2_phy1>;
-+				dr_mode = "peripheral";
-+				g-rx-fifo-size = <192>;
-+				g-np-tx-fifo-size = <128>;
-+				g-tx-fifo-size = <128 128 16 16 16>;
-+			};
-+
-+			dwc3: usb@c9000000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x0 0xc9000000 0x0 0x100000>;
- 				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 				dr_mode = "host";
- 				maximum-speed = "high-speed";
- 				snps,dis_u2_susphy_quirk;
--				phys = <&usb3_phy>, <&usb2_phy0>, <&usb2_phy1>;
- 			};
- 		};
- 
-+		acodec: audio-controller@c8832000 {
-+			compatible = "amlogic,t9015";
-+			reg = <0x0 0xc8832000 0x0 0x14>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "ACODEC";
-+			clocks = <&clkc CLKID_ACODEC>;
-+			clock-names = "pclk";
-+			resets = <&reset RESET_ACODEC>;
-+			status = "disabled";
-+		};
-+
- 		crypto: crypto@c883e000 {
- 			compatible = "amlogic,gxl-crypto";
- 			reg = <0x0 0xc883e000 0x0 0x36>;
-@@ -49,6 +77,29 @@
- 	};
- };
- 
-+&aiu {
-+	compatible = "amlogic,aiu-gxl", "amlogic,aiu";
-+	clocks = <&clkc CLKID_AIU_GLUE>,
-+		 <&clkc CLKID_I2S_OUT>,
-+		 <&clkc CLKID_AOCLK_GATE>,
-+		 <&clkc CLKID_CTS_AMCLK>,
-+		 <&clkc CLKID_MIXER_IFACE>,
-+		 <&clkc CLKID_IEC958>,
-+		 <&clkc CLKID_IEC958_GATE>,
-+		 <&clkc CLKID_CTS_MCLK_I958>,
-+		 <&clkc CLKID_CTS_I958>;
-+	clock-names = "pclk",
-+		      "i2s_pclk",
-+		      "i2s_aoclk",
-+		      "i2s_mclk",
-+		      "i2s_mixer",
-+		      "spdif_pclk",
-+		      "spdif_aoclk",
-+		      "spdif_mclk",
-+		      "spdif_mclk_sel";
-+	resets = <&reset RESET_AIU>;
-+};
-+
- &apb {
- 	usb2_phy0: phy@78000 {
- 		compatible = "amlogic,meson-gxl-usb2-phy";
-@@ -71,18 +122,6 @@
- 		reset-names = "phy";
- 		status = "okay";
- 	};
--
--	usb3_phy: phy@78080 {
--		compatible = "amlogic,meson-gxl-usb3-phy";
--		#phy-cells = <0>;
--		reg = <0x0 0x78080 0x0 0x20>;
--		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clkc CLKID_USB>, <&clkc_AO CLKID_AO_CEC_32K>;
--		clock-names = "phy", "peripheral";
--		resets = <&reset RESET_USB_OTG>, <&reset RESET_USB_OTG>;
--		reset-names = "phy", "peripheral";
--		status = "okay";
--	};
- };
- 
- &efuse {
-diff --git a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
-index 7aecf2696b..c1763336cf 100644
---- a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
-@@ -12,10 +12,6 @@
- 	};
- };
- 
--&dwc2 {
--	status = "okay";
--};
--
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
-diff --git a/arch/arm/dts/meson-gxm-khadas-vim2.dts b/arch/arm/dts/meson-gxm-khadas-vim2.dts
-index 27eeab71ec..bff8ec2c1c 100644
---- a/arch/arm/dts/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm/dts/meson-gxm-khadas-vim2.dts
-@@ -380,6 +380,7 @@
- 	vref-supply = <&vddio_ao18>;
- };
- 
--&usb0 {
-+&usb {
- 	status = "okay";
-+	dr_mode = "peripheral";
- };
-diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
-index 474a3e1604..39270ea71c 100644
---- a/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gxm-s912-libretech-pc-u-boot.dtsi
-@@ -5,7 +5,3 @@
-  */
- 
- #include "meson-gxl-u-boot.dtsi"
--
--&dwc2 {
--	status = "okay";
--};
-diff --git a/arch/arm/dts/meson-gxm.dtsi b/arch/arm/dts/meson-gxm.dtsi
-index b6f89f108e..40e3e123e0 100644
---- a/arch/arm/dts/meson-gxm.dtsi
-+++ b/arch/arm/dts/meson-gxm.dtsi
-@@ -169,8 +169,11 @@
- 	compatible = "amlogic,meson-gxm-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
- };
- 
--&dwc3 {
--	phys = <&usb3_phy>, <&usb2_phy0>, <&usb2_phy1>, <&usb2_phy2>;
-+&usb {
-+	compatible = "amlogic,meson-gxm-usb-ctrl";
-+
-+	phy-names = "usb2-phy0", "usb2-phy1", "usb2-phy2";
-+	phys = <&usb2_phy0>, <&usb2_phy1>, <&usb2_phy2>;
- };
- 
- &vdec {
-diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-index ea50586188..883bfd3bcb 100644
---- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-@@ -69,7 +69,7 @@
- #define RESET_SYS_CPU_L2		58
- #define RESET_SYS_CPU_P			59
- #define RESET_SYS_CPU_MBIST		60
--/*					61	*/
-+#define RESET_ACODEC			61
- /*					62	*/
- /*					63	*/
- /*	RESET2					*/
-diff --git a/include/dt-bindings/sound/meson-aiu.h b/include/dt-bindings/sound/meson-aiu.h
+ obj-$(CONFIG_USB_DWC3_OMAP)		+= dwc3-omap.o
+ obj-$(CONFIG_USB_DWC3_MESON_G12A)	+= dwc3-meson-g12a.o
++obj-$(CONFIG_USB_DWC3_MESON_GXL)	+= dwc3-meson-gxl.o
+ obj-$(CONFIG_USB_DWC3_GENERIC)		+= dwc3-generic.o
+ obj-$(CONFIG_USB_DWC3_UNIPHIER)		+= dwc3-uniphier.o
+ obj-$(CONFIG_USB_DWC3_PHY_OMAP)		+= ti_usb_phy.o
+diff --git a/drivers/usb/dwc3/dwc3-meson-gxl.c b/drivers/usb/dwc3/dwc3-meson-gxl.c
 new file mode 100644
-index 0000000000..1051b8af29
+index 0000000000..92ee0866f7
 --- /dev/null
-+++ b/include/dt-bindings/sound/meson-aiu.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __DT_MESON_AIU_H
-+#define __DT_MESON_AIU_H
++++ b/drivers/usb/dwc3/dwc3-meson-gxl.c
+@@ -0,0 +1,425 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Amlogic GXL DWC3 Glue layer
++ *
++ * Copyright (C) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
 +
-+#define AIU_CPU			0
-+#define AIU_HDMI		1
-+#define AIU_ACODEC		2
++#define DEBUG
++#include <common.h>
++#include <asm-generic/io.h>
++#include <dm.h>
++#include <dm/device-internal.h>
++#include <dm/lists.h>
++#include <dwc3-uboot.h>
++#include <generic-phy.h>
++#include <linux/usb/ch9.h>
++#include <linux/usb/gadget.h>
++#include <malloc.h>
++#include <regmap.h>
++#include <usb.h>
++#include "core.h"
++#include "gadget.h"
++#include <reset.h>
++#include <clk.h>
++#include <power/regulator.h>
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/compat.h>
++#include <asm/arch/usb-gx.h>
 +
-+#define CPU_I2S_FIFO		0
-+#define CPU_SPDIF_FIFO		1
-+#define CPU_I2S_ENCODER		2
-+#define CPU_SPDIF_ENCODER	3
++/* USB Glue Control Registers */
 +
-+#define CTRL_I2S		0
-+#define CTRL_PCM		1
-+#define CTRL_OUT		2
++#define USB_R0							0x00
++	#define USB_R0_P30_FSEL_MASK				GENMASK(5, 0)
++	#define USB_R0_P30_PHY_RESET				BIT(6)
++	#define USB_R0_P30_TEST_POWERDOWN_HSP			BIT(7)
++	#define USB_R0_P30_TEST_POWERDOWN_SSP			BIT(8)
++	#define USB_R0_P30_ACJT_LEVEL_MASK			GENMASK(13, 9)
++	#define USB_R0_P30_TX_BOOST_LEVEL_MASK			GENMASK(16, 14)
++	#define USB_R0_P30_LANE0_TX2RX_LOOPBACK			BIT(17)
++	#define USB_R0_P30_LANE0_EXT_PCLK_REQ			BIT(18)
++	#define USB_R0_P30_PCS_RX_LOS_MASK_VAL_MASK		GENMASK(28, 19)
++	#define USB_R0_U2D_SS_SCALEDOWN_MODE_MASK		GENMASK(30, 29)
++	#define USB_R0_U2D_ACT					BIT(31)
 +
-+#endif /* __DT_MESON_AIU_H */
++#define USB_R1							0x04
++	#define USB_R1_U3H_BIGENDIAN_GS				BIT(0)
++	#define USB_R1_U3H_PME_ENABLE				BIT(1)
++	#define USB_R1_U3H_HUB_PORT_OVERCURRENT_MASK		GENMASK(6, 2)
++	#define USB_R1_U3H_HUB_PORT_PERM_ATTACH_MASK		GENMASK(11, 7)
++	#define USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK		GENMASK(15, 12)
++	#define USB_R1_U3H_HOST_U3_PORT_DISABLE			BIT(16)
++	#define USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT	BIT(17)
++	#define USB_R1_U3H_HOST_MSI_ENABLE			BIT(18)
++	#define USB_R1_U3H_FLADJ_30MHZ_REG_MASK			GENMASK(24, 19)
++	#define USB_R1_P30_PCS_TX_SWING_FULL_MASK		GENMASK(31, 25)
++
++#define USB_R2							0x08
++	#define USB_R2_P30_CR_DATA_IN_MASK			GENMASK(15, 0)
++	#define USB_R2_P30_CR_READ				BIT(16)
++	#define USB_R2_P30_CR_WRITE				BIT(17)
++	#define USB_R2_P30_CR_CAP_ADDR				BIT(18)
++	#define USB_R2_P30_CR_CAP_DATA				BIT(19)
++	#define USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK		GENMASK(25, 20)
++	#define USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK		GENMASK(31, 26)
++
++#define USB_R3							0x0c
++	#define USB_R3_P30_SSC_ENABLE				BIT(0)
++	#define USB_R3_P30_SSC_RANGE_MASK			GENMASK(3, 1)
++	#define USB_R3_P30_SSC_REF_CLK_SEL_MASK			GENMASK(12, 4)
++	#define USB_R3_P30_REF_SSP_EN				BIT(13)
++	#define USB_R3_P30_LOS_BIAS_MASK			GENMASK(18, 16)
++	#define USB_R3_P30_LOS_LEVEL_MASK			GENMASK(23, 19)
++	#define USB_R3_P30_MPLL_MULTIPLIER_MASK			GENMASK(30, 24)
++
++#define USB_R4							0x10
++	#define USB_R4_P21_PORT_RESET_0				BIT(0)
++	#define USB_R4_P21_SLEEP_M0				BIT(1)
++	#define USB_R4_MEM_PD_MASK				GENMASK(3, 2)
++	#define USB_R4_P21_ONLY					BIT(4)
++
++#define USB_R5							0x14
++	#define USB_R5_ID_DIG_SYNC				BIT(0)
++	#define USB_R5_ID_DIG_REG				BIT(1)
++	#define USB_R5_ID_DIG_CFG_MASK				GENMASK(3, 2)
++	#define USB_R5_ID_DIG_EN_0				BIT(4)
++	#define USB_R5_ID_DIG_EN_1				BIT(5)
++	#define USB_R5_ID_DIG_CURR				BIT(6)
++	#define USB_R5_ID_DIG_IRQ				BIT(7)
++	#define USB_R5_ID_DIG_TH_MASK				GENMASK(15, 8)
++	#define USB_R5_ID_DIG_CNT_MASK				GENMASK(23, 16)
++
++/* read-only register */
++#define USB_R6							0x18
++	#define USB_R6_P30_CR_DATA_OUT_MASK			GENMASK(15, 0)
++	#define USB_R6_P30_CR_ACK				BIT(16)
++
++enum {
++	USB2_HOST_PHY0 = 0,
++	USB2_OTG_PHY1,
++	USB2_HOST_PHY2,
++	PHY_COUNT,
++};
++
++static const char *phy_names[PHY_COUNT] = {
++	"usb2-phy0", "usb2-phy1", "usb2-phy2",
++};
++
++struct dwc3_meson_gxl {
++	struct udevice		*dev;
++	struct regmap           *regmap;
++	struct clk		clk;
++	struct reset_ctl	reset;
++	struct phy		phys[PHY_COUNT];
++	enum usb_dr_mode	otg_mode;
++	enum usb_dr_mode	otg_phy_mode;
++	unsigned int		usb2_ports;
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	struct udevice		*vbus_supply;
++#endif
++};
++
++#define U2P_REG_SIZE						0x20
++#define USB_REG_OFFSET						0x80
++
++#define USB2_OTG_PHY						USB2_OTG_PHY1
++
++static void dwc3_meson_gxl_usb2_set_mode(struct dwc3_meson_gxl *priv, enum usb_dr_mode mode)
++{
++	switch (mode) {
++	case USB_DR_MODE_HOST:
++	case USB_DR_MODE_OTG:
++	case USB_DR_MODE_UNKNOWN:
++		regmap_update_bits(priv->regmap, USB_R1,
++				   USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK, 0);
++		regmap_update_bits(priv->regmap, USB_R0,
++				   USB_R0_U2D_ACT, 0);
++		regmap_update_bits(priv->regmap, USB_R4,
++				   USB_R4_P21_SLEEP_M0, 0);
++		break;
++
++	case USB_DR_MODE_PERIPHERAL:
++		regmap_update_bits(priv->regmap, USB_R0,
++				   USB_R0_U2D_ACT, USB_R0_U2D_ACT);
++		regmap_update_bits(priv->regmap, USB_R0,
++				   USB_R0_U2D_SS_SCALEDOWN_MODE_MASK, 0);
++		regmap_update_bits(priv->regmap, USB_R4,
++				   USB_R4_P21_SLEEP_M0, USB_R4_P21_SLEEP_M0);
++		break;
++	}
++}
++
++static int dwc3_meson_gxl_usb2_init(struct dwc3_meson_gxl *priv)
++{
++	int i;
++
++	for (i = 0; i < PHY_COUNT; ++i) {
++		if (!priv->phys[i].dev)
++			continue;
++
++		phy_meson_gxl_usb2_set_mode(&priv->phys[i],
++				(i == USB2_OTG_PHY) ? USB_DR_MODE_PERIPHERAL
++						    : USB_DR_MODE_HOST);
++	}
++
++	return 0;
++}
++
++static int dwc3_meson_gxl_usb_init(struct dwc3_meson_gxl *priv)
++{
++	int ret;
++	
++	ret = dwc3_meson_gxl_usb2_init(priv);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(priv->regmap, USB_R1,
++			   USB_R1_U3H_FLADJ_30MHZ_REG_MASK,
++			   FIELD_PREP(USB_R1_U3H_FLADJ_30MHZ_REG_MASK, 0x20));
++
++	regmap_update_bits(priv->regmap, USB_R5,
++			   USB_R5_ID_DIG_EN_0,
++			   USB_R5_ID_DIG_EN_0);
++	regmap_update_bits(priv->regmap, USB_R5,
++			   USB_R5_ID_DIG_EN_1,
++			   USB_R5_ID_DIG_EN_1);
++	regmap_update_bits(priv->regmap, USB_R5,
++			   USB_R5_ID_DIG_TH_MASK,
++			   FIELD_PREP(USB_R5_ID_DIG_TH_MASK, 0xff));
++
++	dwc3_meson_gxl_usb2_set_mode(priv, priv->otg_phy_mode);
++
++	return 0;
++}
++
++int dwc3_meson_gxl_force_mode(struct udevice *dev, enum usb_dr_mode mode)
++{
++	struct dwc3_meson_gxl *priv = dev_get_platdata(dev);
++
++	if (!priv)
++		return -EINVAL;
++
++	if (mode != USB_DR_MODE_HOST && mode != USB_DR_MODE_PERIPHERAL)
++		return -EINVAL;
++
++	if (!priv->phys[USB2_OTG_PHY].dev)
++		return -EINVAL;
++
++	if (mode == priv->otg_phy_mode)
++		return 0;
++
++	if (mode == USB_DR_MODE_HOST)
++		debug("%s: switching to Host Mode\n", __func__);
++	else
++		debug("%s: switching to Device Mode\n", __func__);
++
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	if (priv->vbus_supply) {
++		int ret = regulator_set_enable(priv->vbus_supply,
++					(mode == USB_DR_MODE_PERIPHERAL));
++		if (ret)
++			return ret;
++	}
++#endif
++	priv->otg_phy_mode = mode;
++
++	phy_meson_gxl_usb2_set_mode(&priv->phys[USB2_OTG_PHY], mode);
++
++	dwc3_meson_gxl_usb2_set_mode(priv, mode);
++
++	return 0;
++}
++
++static int dwc3_meson_gxl_get_phys(struct dwc3_meson_gxl *priv)
++{
++	int i, ret;
++
++	for (i = 0 ; i < PHY_COUNT ; ++i) {
++		ret = generic_phy_get_by_name(priv->dev, phy_names[i],
++					      &priv->phys[i]);
++		if (ret == -ENOENT || ret == -ENODATA) {
++			priv->phys[i].dev = NULL;
++			continue;
++		}
++
++		if (ret)
++			return ret;
++
++		priv->usb2_ports++;
++	}
++
++	debug("%s: usb2 ports: %d\n", __func__, priv->usb2_ports);
++
++	return 0;
++}
++
++static int dwc3_meson_gxl_reset_init(struct dwc3_meson_gxl *priv)
++{
++	int ret;
++
++	ret = reset_get_by_index(priv->dev, 0, &priv->reset);
++	if (ret)
++		return ret;
++
++	ret = reset_assert(&priv->reset);
++	udelay(1);
++	ret |= reset_deassert(&priv->reset);
++	if (ret) {
++		reset_free(&priv->reset);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int dwc3_meson_gxl_clk_init(struct dwc3_meson_gxl *priv)
++{
++	int ret;
++
++	ret = clk_get_by_index(priv->dev, 0, &priv->clk);
++	if (ret)
++		return ret;
++
++#if CONFIG_IS_ENABLED(CLK)
++	ret = clk_enable(&priv->clk);
++	if (ret) {
++		clk_free(&priv->clk);
++		return ret;
++	}
++#endif
++
++	return 0;
++}
++
++static int dwc3_meson_gxl_probe(struct udevice *dev)
++{
++	struct dwc3_meson_gxl *priv = dev_get_platdata(dev);
++	int ret, i;
++
++	priv->dev = dev;
++
++	ret = regmap_init_mem(dev_ofnode(dev), &priv->regmap);
++	if (ret)
++		return ret;
++
++	ret = dwc3_meson_gxl_clk_init(priv);
++	if (ret)
++		return ret;
++
++	ret = dwc3_meson_gxl_reset_init(priv);
++	if (ret)
++		return ret;
++
++	ret = dwc3_meson_gxl_get_phys(priv);
++	if (ret)
++		return ret;
++
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	ret = device_get_supply_regulator(dev, "vbus-supply",
++					  &priv->vbus_supply);
++	if (ret && ret != -ENOENT) {
++		pr_err("Failed to get PHY regulator\n");
++		return ret;
++	}
++
++	if (priv->vbus_supply) {
++		ret = regulator_set_enable(priv->vbus_supply, true);
++		if (ret)
++			return ret;
++	}
++#endif
++
++	/* On GXL PHY must be started in device mode for DWC2 init */
++	priv->otg_mode = USB_DR_MODE_PERIPHERAL;
++
++	ret = dwc3_meson_gxl_usb_init(priv);
++	if (ret)
++		return ret;
++
++	priv->otg_mode = usb_get_dr_mode(dev->node);
++
++	if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
++		priv->otg_phy_mode = USB_DR_MODE_PERIPHERAL;
++	else
++		priv->otg_phy_mode = USB_DR_MODE_HOST;
++
++	for (i = 0 ; i < PHY_COUNT ; ++i) {
++		if (!priv->phys[i].dev)
++			continue;
++
++		ret = generic_phy_init(&priv->phys[i]);
++		if (ret)
++			goto err_phy_init;
++	}
++
++	for (i = 0; i < PHY_COUNT; ++i) {
++		if (!priv->phys[i].dev)
++			continue;
++
++		ret = generic_phy_power_on(&priv->phys[i]);
++		if (ret)
++			goto err_phy_init;
++	}
++
++	if (priv->phys[USB2_OTG_PHY].dev)
++		phy_meson_gxl_usb2_set_mode(&priv->phys[USB2_OTG_PHY],
++					    priv->otg_phy_mode);
++
++	dwc3_meson_gxl_usb2_set_mode(priv, priv->otg_phy_mode);
++
++	return 0;
++
++err_phy_init:
++	for (i = 0 ; i < PHY_COUNT ; ++i) {
++		if (!priv->phys[i].dev)
++			continue;
++
++		 generic_phy_exit(&priv->phys[i]);
++	}
++
++	return ret;
++}
++
++static int dwc3_meson_gxl_remove(struct udevice *dev)
++{
++	struct dwc3_meson_gxl *priv = dev_get_platdata(dev);
++	int i;
++
++	reset_release_all(&priv->reset, 1);
++
++	clk_release_all(&priv->clk, 1);
++
++	for (i = 0; i < PHY_COUNT; ++i) {
++		if (!priv->phys[i].dev)
++			continue;
++
++		 generic_phy_power_off(&priv->phys[i]);
++	}
++
++	for (i = 0 ; i < PHY_COUNT ; ++i) {
++		if (!priv->phys[i].dev)
++			continue;
++
++		 generic_phy_exit(&priv->phys[i]);
++	}
++
++	return dm_scan_fdt_dev(dev);
++}
++
++static const struct udevice_id dwc3_meson_gxl_ids[] = {
++	{ .compatible = "amlogic,meson-gxl-usb-ctrl" },
++	{ .compatible = "amlogic,meson-gxm-usb-ctrl" },
++	{ }
++};
++
++U_BOOT_DRIVER(dwc3_generic_wrapper) = {
++	.name	= "dwc3-meson-gxl",
++	.id	= UCLASS_SIMPLE_BUS,
++	.of_match = dwc3_meson_gxl_ids,
++	.probe = dwc3_meson_gxl_probe,
++	.remove = dwc3_meson_gxl_remove,
++	.platdata_auto_alloc_size = sizeof(struct dwc3_meson_gxl),
++
++};
 -- 
 2.22.0
 
