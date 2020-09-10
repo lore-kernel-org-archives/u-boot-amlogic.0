@@ -1,25 +1,25 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web10.17580.1599727711015251447
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web12.17393.1599727712580953458
  for <u-boot-amlogic@groups.io>;
- Thu, 10 Sep 2020 01:48:31 -0700
-Received: by mail-wr1-f65.google.com with SMTP id z1so5777866wrt.3
-        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2020 01:48:30 -0700 (PDT)
+ Thu, 10 Sep 2020 01:48:32 -0700
+Received: by mail-wr1-f66.google.com with SMTP id t10so5793502wrv.1
+        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2020 01:48:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TRPU5Zf/SOBuGSYJXKcFsi960RAhLhvM8/uxo9A7I0o=;
-        b=OFl6+xkhefTh2Ipm93LWt2861qB0cpyKJC4QOsZ2YyoyfjIiLAWuGEeUOVepX31dtH
-         lucvhiKdEGG/Z5LjyIbs5YCartwb44a1L1FpWQMzluV+ZoA/l7xwnA14IkEzNdV0xTZc
-         dZWDdoq54w49QBpObV0N2hUCzrPHhzGN2qFbbTF1DWQG2FeQSo6RieXN21Dia9jgY+Lu
-         k1YMl5rwqVIxq0FXtZFxBX1u6PubaIli0k2FYturr3eYIVq+1tNDzbZdoIJfkOlv+aXO
-         +eotfYcyNQu/FN+lnESgygp+Rsa46YdZKfzITvrEPJKPAvpTEAi2XIIdGpu2bvcji3v9
-         /4Eg==
+        bh=sJvcTeEcWwqP0fIqcy4W5CHGUO902g8hC+ytbhws0Ho=;
+        b=WZcAoIGNmCiLRqF89MpMBaQvbfiETf8QJ6mp5SXMzqnBCTN2ML52IklxrLmd2TUOFW
+         UI20AuJVk90VcEkwKvp6V+5wf8iCZi8P5cbo3mMm9H2PHrdTyvk4h/knMeQ8CI9oR2ML
+         JiU56urMbRYEjcmrTzG40w49Xq9nDXKW3SiWePqjnmmYzuHUqvOeWWt+f5BPUugzyv2C
+         1b9D3Pndwh+E8fZvBN+brbXcPVdyWx2LFh2xU6trYAEY+md3iaVsYh/GbmjZBbifUEyk
+         k7OVepKGTPeAJuX9V5DpvIY20GW3c4Nbkwzn7slr0moOlSCZxkb6rAnZjHILXizReYsp
+         nGeQ==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 3/8] ARM: mach-meson: use new DWC3 glue for GXL & GXM
-Date: Thu, 10 Sep 2020 10:48:14 +0200
-Message-Id: <20200910084819.25312-4-narmstrong@baylibre.com>
+Subject: [PATCH 4/8] phy: meson-gxl: remove invalid USB3 PHY driver
+Date: Thu, 10 Sep 2020 10:48:15 +0200
+Message-Id: <20200910084819.25312-5-narmstrong@baylibre.com>
 In-Reply-To: <20200910084819.25312-1-narmstrong@baylibre.com>
 References: <20200910084819.25312-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,342 +28,273 @@ To: marex@denx.de
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Use the new Amlogic GXL/GXM USB Glue instead of the set of USB3 PHY
-and Simple DWC3 wrapper.
+The registers which are managed by the meson-gxl-usb3 PHY driver are
+actually "USB control" registers (which are "glue" registers which
+manage OTG detection and routing of the OTG capable port between the
+DWC2 peripheral-only controller and the DWC3 host-only controller).
+
+Drop the meson-gxl-usb3 PHY driver now that the dwc3-meson-gxl-usb
+driver supports the USB control registers on GXL and GXM SoCs (these
+were previously managed by the meson-gxl-usb3 PHY driver).
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/mach-meson/board-gx.c       | 127 +++++++++++++++------------
- configs/khadas-vim2_defconfig        |   2 +-
- configs/khadas-vim_defconfig         |   2 +-
- configs/libretech-ac_defconfig       |   2 +-
- configs/libretech-cc_defconfig       |   2 +-
- configs/libretech-s905d-pc_defconfig |   2 +-
- configs/libretech-s912-pc_defconfig  |   2 +-
- configs/p212_defconfig               |   2 +-
- 8 files changed, 79 insertions(+), 62 deletions(-)
+ arch/arm/include/asm/arch-meson/usb-gx.h |   1 -
+ drivers/phy/Makefile                     |   2 +-
+ drivers/phy/meson-gxl-usb3.c             | 219 -----------------------
+ 3 files changed, 1 insertion(+), 221 deletions(-)
+ delete mode 100644 drivers/phy/meson-gxl-usb3.c
 
-diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
-index c4cc11f1de..7a0e703596 100644
---- a/arch/arm/mach-meson/board-gx.c
-+++ b/arch/arm/mach-meson/board-gx.c
-@@ -156,79 +156,70 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
- 	clrbits_le32(GX_MEM_PD_REG_0, GX_MEM_PD_REG_0_ETH_MASK);
- }
+diff --git a/arch/arm/include/asm/arch-meson/usb-gx.h b/arch/arm/include/asm/arch-meson/usb-gx.h
+index 7200a4c31a..61f1809df9 100644
+--- a/arch/arm/include/asm/arch-meson/usb-gx.h
++++ b/arch/arm/include/asm/arch-meson/usb-gx.h
+@@ -11,7 +11,6 @@
  
--#if CONFIG_IS_ENABLED(USB_XHCI_DWC3_OF_SIMPLE) && \
-+#if CONFIG_IS_ENABLED(USB_DWC3_MESON_GXL) && \
- 	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
- static struct dwc2_plat_otg_data meson_gx_dwc2_data;
--static struct phy usb_phys[2];
+ /* TOFIX add set_mode to struct phy_ops */
+ void phy_meson_gxl_usb2_set_mode(struct phy *phy, enum usb_dr_mode mode);
+-void phy_meson_gxl_usb3_set_mode(struct phy *phy, enum usb_dr_mode mode);
  
- int board_usb_init(int index, enum usb_init_type init)
- {
--	struct ofnode_phandle_args args;
--	struct udevice *clk_dev;
--	ofnode dwc2_node;
-+	struct fdtdec_phandle_args args;
-+	const void *blob = gd->fdt_blob;
-+	int node, dwc2_node;
-+	struct udevice *dev, *clk_dev;
- 	struct clk clk;
--	int ret, i;
--	u32 val;
+ int dwc3_meson_gxl_force_mode(struct udevice *dev, enum usb_dr_mode mode);
+ 
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 74e8d931d3..c839c250bd 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -17,7 +17,7 @@ obj-$(CONFIG_PHY_RCAR_GEN2) += phy-rcar-gen2.o
+ obj-$(CONFIG_PHY_RCAR_GEN3) += phy-rcar-gen3.o
+ obj-$(CONFIG_PHY_STM32_USBPHYC) += phy-stm32-usbphyc.o
+ obj-$(CONFIG_MESON_GXBB_USB_PHY) += meson-gxbb-usb2.o
+-obj-$(CONFIG_MESON_GXL_USB_PHY) += meson-gxl-usb2.o meson-gxl-usb3.o
++obj-$(CONFIG_MESON_GXL_USB_PHY) += meson-gxl-usb2.o
+ obj-$(CONFIG_MESON_G12A_USB_PHY) += meson-g12a-usb2.o meson-g12a-usb3-pcie.o
+ obj-$(CONFIG_MSM8916_USB_PHY) += msm8916-usbh-phy.o
+ obj-$(CONFIG_OMAP_USB2_PHY) += omap-usb2-phy.o
+diff --git a/drivers/phy/meson-gxl-usb3.c b/drivers/phy/meson-gxl-usb3.c
+deleted file mode 100644
+index 9de55bb5df..0000000000
+--- a/drivers/phy/meson-gxl-usb3.c
++++ /dev/null
+@@ -1,219 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * Meson GXL USB3 PHY driver
+- *
+- * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+- * Copyright (C) 2018 BayLibre, SAS
+- * Author: Neil Armstrong <narmstron@baylibre.com>
+- */
 -
--	/* find the dwc2 node */
--	dwc2_node = ofnode_by_compatible(ofnode_null(), "snps,dwc2");
--	if (!ofnode_valid(dwc2_node)) {
--		debug("Not found dwc2 node\n");
--		return -ENODEV;
-+	int ret;
-+
-+	/* find the usb glue node */
-+	node = fdt_node_offset_by_compatible(blob, -1,
-+					     "amlogic,meson-gxl-usb-ctrl");
-+	if (node < 0) {
-+		node = fdt_node_offset_by_compatible(blob, -1,
-+					"amlogic,meson-gxm-usb-ctrl");
-+		if (node < 0) {
-+			debug("Not found usb-control node\n");
-+			return -ENODEV;
-+		}
- 	}
- 
--	if (!ofnode_is_available(dwc2_node)) {
--		debug("dwc2 is disabled in the device tree\n");
-+	if (!fdtdec_get_is_enabled(blob, node)) {
-+		debug("usb is disabled in the device tree\n");
- 		return -ENODEV;
- 	}
- 
--	/* get the PHYs */
--	for (i = 0; i < 2; i++) {
--		ret = generic_phy_get_by_index_nodev(dwc2_node, i,
--						     &usb_phys[i]);
--		if (ret && ret != -ENOENT) {
--			pr_err("Failed to get USB PHY%d for %s\n",
--			       i, ofnode_get_name(dwc2_node));
--			return ret;
--		}
-+	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
-+	if (ret) {
-+		debug("Not found usb-control device\n");
-+		return ret;
- 	}
- 
--	for (i = 0; i < 2; i++) {
--		ret = generic_phy_init(&usb_phys[i]);
--		if (ret) {
--			pr_err("Can't init USB PHY%d for %s\n",
--			       i, ofnode_get_name(dwc2_node));
--			return ret;
--		}
-+	/* find the dwc2 node */
-+	dwc2_node = fdt_node_offset_by_compatible(blob, node,
-+						  "amlogic,meson-g12a-usb");
-+	if (dwc2_node < 0) {
-+		debug("Not found dwc2 node\n");
-+		return -ENODEV;
- 	}
- 
--	for (i = 0; i < 2; i++) {
--		ret = generic_phy_power_on(&usb_phys[i]);
--		if (ret) {
--			pr_err("Can't power USB PHY%d for %s\n",
--			       i, ofnode_get_name(dwc2_node));
--			return ret;
--		}
-+	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
-+		debug("dwc2 is disabled in the device tree\n");
-+		return -ENODEV;
- 	}
- 
--	phy_meson_gxl_usb3_set_mode(&usb_phys[0], USB_DR_MODE_PERIPHERAL);
--	phy_meson_gxl_usb2_set_mode(&usb_phys[1], USB_DR_MODE_PERIPHERAL);
+-#include <common.h>
+-#include <malloc.h>
+-#include <asm/io.h>
+-#include <bitfield.h>
+-#include <dm.h>
+-#include <errno.h>
+-#include <generic-phy.h>
+-#include <regmap.h>
+-#include <clk.h>
+-#include <linux/usb/otg.h>
 -
--	meson_gx_dwc2_data.regs_otg = ofnode_get_addr(dwc2_node);
-+	meson_gx_dwc2_data.regs_otg = fdtdec_get_addr(blob, dwc2_node, "reg");
- 	if (meson_gx_dwc2_data.regs_otg == FDT_ADDR_T_NONE) {
- 		debug("usbotg: can't get base address\n");
- 		return -ENODATA;
- 	}
- 
- 	/* Enable clock */
--	ret = ofnode_parse_phandle_with_args(dwc2_node, "clocks",
-+	ret = fdtdec_parse_phandle_with_args(blob, dwc2_node, "clocks",
- 					     "#clock-cells", 0, 0, &args);
- 	if (ret) {
- 		debug("usbotg has no clocks defined in the device tree\n");
- 		return ret;
- 	}
- 
--	ret = uclass_get_device_by_ofnode(UCLASS_CLK, args.node, &clk_dev);
-+	ret = uclass_get_device_by_of_offset(UCLASS_CLK, args.node, &clk_dev);
- 	if (ret)
- 		return ret;
- 
-@@ -246,25 +237,51 @@ int board_usb_init(int index, enum usb_init_type init)
- 		return ret;
- 	}
- 
--	ofnode_read_u32(dwc2_node, "g-rx-fifo-size", &val);
--	meson_gx_dwc2_data.rx_fifo_sz = val;
--	ofnode_read_u32(dwc2_node, "g-np-tx-fifo-size", &val);
--	meson_gx_dwc2_data.np_tx_fifo_sz = val;
--	ofnode_read_u32(dwc2_node, "g-tx-fifo-size", &val);
--	meson_gx_dwc2_data.tx_fifo_sz = val;
-+	meson_gx_dwc2_data.rx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
-+						     "g-rx-fifo-size", 0);
-+	meson_gx_dwc2_data.np_tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
-+							"g-np-tx-fifo-size", 0);
-+	meson_gx_dwc2_data.tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
-+						     "g-tx-fifo-size", 0);
-+
-+	/* Switch to peripheral mode */
-+	ret = dwc3_meson_gxl_force_mode(dev, USB_DR_MODE_PERIPHERAL);
-+	if (ret)
-+		return ret;
- 
- 	return dwc2_udc_probe(&meson_gx_dwc2_data);
- }
- 
- int board_usb_cleanup(int index, enum usb_init_type init)
- {
--	int i;
-+	const void *blob = gd->fdt_blob;
-+	struct udevice *dev;
-+	int node;
-+	int ret;
-+
-+	/* find the usb glue node */
-+	node = fdt_node_offset_by_compatible(blob, -1,
-+					     "amlogic,meson-gxl-usb-ctrl");
-+	if (node < 0) {
-+		node = fdt_node_offset_by_compatible(blob, -1,
-+					"amlogic,meson-gxm-usb-ctrl");
-+		if (node < 0) {
-+			debug("Not found usb-control node\n");
-+			return -ENODEV;
-+		}
-+	}
- 
--	phy_meson_gxl_usb3_set_mode(&usb_phys[0], USB_DR_MODE_HOST);
--	phy_meson_gxl_usb2_set_mode(&usb_phys[1], USB_DR_MODE_HOST);
-+	if (!fdtdec_get_is_enabled(blob, node))
-+		return -ENODEV;
- 
--	for (i = 0; i < 2; i++)
--		usb_phys[i].dev = NULL;
-+	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Switch to OTG mode */
-+	ret = dwc3_meson_gxl_force_mode(dev, USB_DR_MODE_HOST);
-+	if (ret)
-+		return ret;
- 
- 	return 0;
- }
-diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
-index b6d5dbdd2e..ac962e7199 100644
---- a/configs/khadas-vim2_defconfig
-+++ b/configs/khadas-vim2_defconfig
-@@ -41,6 +41,7 @@ CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_USB_DWC3_MESON_GXL=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXL=y
- CONFIG_DM_REGULATOR_FIXED=y
-@@ -55,7 +56,6 @@ CONFIG_USB=y
- CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
--CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
- CONFIG_USB_DWC3=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_GADGET=y
-diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
-index 2a57cfb400..be18c025e9 100644
---- a/configs/khadas-vim_defconfig
-+++ b/configs/khadas-vim_defconfig
-@@ -37,6 +37,7 @@ CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_USB_DWC3_MESON_GXL=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXL=y
- CONFIG_DM_REGULATOR_FIXED=y
-@@ -48,7 +49,6 @@ CONFIG_USB=y
- CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
--CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
- CONFIG_USB_DWC3=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_GADGET=y
-diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
-index d5a812c3d8..d0690d47ae 100644
---- a/configs/libretech-ac_defconfig
-+++ b/configs/libretech-ac_defconfig
-@@ -49,6 +49,7 @@ CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_USB_DWC3_MESON_GXL=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXL=y
- CONFIG_POWER_DOMAIN=y
-@@ -65,7 +66,6 @@ CONFIG_USB=y
- CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
--CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
- CONFIG_USB_DWC3=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_KEYBOARD=y
-diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index dce861b8aa..4533cda013 100644
---- a/configs/libretech-cc_defconfig
-+++ b/configs/libretech-cc_defconfig
-@@ -36,6 +36,7 @@ CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_USB_DWC3_MESON_GXL=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXL=y
- CONFIG_POWER_DOMAIN=y
-@@ -49,7 +50,6 @@ CONFIG_USB=y
- CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
--CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
- CONFIG_USB_DWC3=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_GADGET=y
-diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
-index 225a21f0ff..0a32239e1d 100644
---- a/configs/libretech-s905d-pc_defconfig
-+++ b/configs/libretech-s905d-pc_defconfig
-@@ -44,6 +44,7 @@ CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_USB_DWC3_MESON_GXL=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXL=y
- CONFIG_POWER_DOMAIN=y
-@@ -60,7 +61,6 @@ CONFIG_USB=y
- CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
--CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
- CONFIG_USB_DWC3=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_KEYBOARD=y
-diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
-index 005dc0b25e..534b235ea9 100644
---- a/configs/libretech-s912-pc_defconfig
-+++ b/configs/libretech-s912-pc_defconfig
-@@ -43,6 +43,7 @@ CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_USB_DWC3_MESON_GXL=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXL=y
- CONFIG_POWER_DOMAIN=y
-@@ -59,7 +60,6 @@ CONFIG_USB=y
- CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
--CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
- CONFIG_USB_DWC3=y
- # CONFIG_USB_DWC3_GADGET is not set
- CONFIG_USB_KEYBOARD=y
-diff --git a/configs/p212_defconfig b/configs/p212_defconfig
-index 108b60889b..182321151a 100644
---- a/configs/p212_defconfig
-+++ b/configs/p212_defconfig
-@@ -34,6 +34,7 @@ CONFIG_DM_ETH=y
- CONFIG_ETH_DESIGNWARE=y
- CONFIG_PHY=y
- CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_USB_DWC3_MESON_GXL=y
- CONFIG_PINCTRL=y
- CONFIG_PINCTRL_MESON_GXL=y
- CONFIG_DM_REGULATOR=y
-@@ -46,6 +47,5 @@ CONFIG_USB=y
- CONFIG_DM_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
--CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
- CONFIG_USB_DWC3=y
- CONFIG_OF_LIBFDT_OVERLAY=y
+-#include <asm/arch/usb-gx.h>
+-
+-#include <linux/bitops.h>
+-#include <linux/compat.h>
+-#include <linux/bitfield.h>
+-
+-#define USB_R0							0x00
+-	#define USB_R0_P30_FSEL_MASK				GENMASK(5, 0)
+-	#define USB_R0_P30_PHY_RESET				BIT(6)
+-	#define USB_R0_P30_TEST_POWERDOWN_HSP			BIT(7)
+-	#define USB_R0_P30_TEST_POWERDOWN_SSP			BIT(8)
+-	#define USB_R0_P30_ACJT_LEVEL_MASK			GENMASK(13, 9)
+-	#define USB_R0_P30_TX_BOOST_LEVEL_MASK			GENMASK(16, 14)
+-	#define USB_R0_P30_LANE0_TX2RX_LOOPBACK			BIT(17)
+-	#define USB_R0_P30_LANE0_EXT_PCLK_REQ			BIT(18)
+-	#define USB_R0_P30_PCS_RX_LOS_MASK_VAL_MASK		GENMASK(28, 19)
+-	#define USB_R0_U2D_SS_SCALEDOWN_MODE_MASK		GENMASK(30, 29)
+-	#define USB_R0_U2D_ACT					BIT(31)
+-
+-#define USB_R1							0x04
+-	#define USB_R1_U3H_BIGENDIAN_GS				BIT(0)
+-	#define USB_R1_U3H_PME_ENABLE				BIT(1)
+-	#define USB_R1_U3H_HUB_PORT_OVERCURRENT_MASK		GENMASK(6, 2)
+-	#define USB_R1_U3H_HUB_PORT_PERM_ATTACH_MASK		GENMASK(11, 7)
+-	#define USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK		GENMASK(15, 12)
+-	#define USB_R1_U3H_HOST_U3_PORT_DISABLE			BIT(16)
+-	#define USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT	BIT(17)
+-	#define USB_R1_U3H_HOST_MSI_ENABLE			BIT(18)
+-	#define USB_R1_U3H_FLADJ_30MHZ_REG_MASK			GENMASK(24, 19)
+-	#define USB_R1_P30_PCS_TX_SWING_FULL_MASK		GENMASK(31, 25)
+-
+-#define USB_R2							0x08
+-	#define USB_R2_P30_CR_DATA_IN_MASK			GENMASK(15, 0)
+-	#define USB_R2_P30_CR_READ				BIT(16)
+-	#define USB_R2_P30_CR_WRITE				BIT(17)
+-	#define USB_R2_P30_CR_CAP_ADDR				BIT(18)
+-	#define USB_R2_P30_CR_CAP_DATA				BIT(19)
+-	#define USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK		GENMASK(25, 20)
+-	#define USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK		GENMASK(31, 26)
+-
+-#define USB_R3							0x0c
+-	#define USB_R3_P30_SSC_ENABLE				BIT(0)
+-	#define USB_R3_P30_SSC_RANGE_MASK			GENMASK(3, 1)
+-	#define USB_R3_P30_SSC_REF_CLK_SEL_MASK			GENMASK(12, 4)
+-	#define USB_R3_P30_REF_SSP_EN				BIT(13)
+-	#define USB_R3_P30_LOS_BIAS_MASK			GENMASK(18, 16)
+-	#define USB_R3_P30_LOS_LEVEL_MASK			GENMASK(23, 19)
+-	#define USB_R3_P30_MPLL_MULTIPLIER_MASK			GENMASK(30, 24)
+-
+-#define USB_R4							0x10
+-	#define USB_R4_P21_PORT_RESET_0				BIT(0)
+-	#define USB_R4_P21_SLEEP_M0				BIT(1)
+-	#define USB_R4_MEM_PD_MASK				GENMASK(3, 2)
+-	#define USB_R4_P21_ONLY					BIT(4)
+-
+-#define USB_R5							0x14
+-	#define USB_R5_ID_DIG_SYNC				BIT(0)
+-	#define USB_R5_ID_DIG_REG				BIT(1)
+-	#define USB_R5_ID_DIG_CFG_MASK				GENMASK(3, 2)
+-	#define USB_R5_ID_DIG_EN_0				BIT(4)
+-	#define USB_R5_ID_DIG_EN_1				BIT(5)
+-	#define USB_R5_ID_DIG_CURR				BIT(6)
+-	#define USB_R5_ID_DIG_IRQ				BIT(7)
+-	#define USB_R5_ID_DIG_TH_MASK				GENMASK(15, 8)
+-	#define USB_R5_ID_DIG_CNT_MASK				GENMASK(23, 16)
+-
+-/* read-only register */
+-#define USB_R6							0x18
+-	#define USB_R6_P30_CR_DATA_OUT_MASK			GENMASK(15, 0)
+-	#define USB_R6_P30_CR_ACK				BIT(16)
+-
+-struct phy_meson_gxl_usb3_priv {
+-	struct regmap		*regmap;
+-#if CONFIG_IS_ENABLED(CLK)
+-	struct clk		clk;
+-#endif
+-};
+-
+-void phy_meson_gxl_usb3_set_mode(struct phy *phy, enum usb_dr_mode mode)
+-{
+-	struct udevice *dev = phy->dev;
+-	struct phy_meson_gxl_usb3_priv *priv = dev_get_priv(dev);
+-	uint val;
+-
+-	switch (mode) {
+-	case USB_DR_MODE_UNKNOWN:
+-	case USB_DR_MODE_HOST:
+-	case USB_DR_MODE_OTG:
+-		regmap_read(priv->regmap, USB_R0, &val);
+-		val &= ~USB_R0_U2D_ACT;
+-		regmap_write(priv->regmap, USB_R0, val);
+-
+-		regmap_read(priv->regmap, USB_R4, &val);
+-		val &= ~USB_R4_P21_SLEEP_M0;
+-		regmap_write(priv->regmap, USB_R4, val);
+-		break;
+-
+-	case USB_DR_MODE_PERIPHERAL:
+-		regmap_read(priv->regmap, USB_R0, &val);
+-		val |= USB_R0_U2D_ACT;
+-		regmap_write(priv->regmap, USB_R0, val);
+-
+-		regmap_read(priv->regmap, USB_R4, &val);
+-		val |= USB_R4_P21_SLEEP_M0;
+-		regmap_write(priv->regmap, USB_R4, val);
+-		break;
+-	}
+-}
+-
+-static int phy_meson_gxl_usb3_power_on(struct phy *phy)
+-{
+-	struct udevice *dev = phy->dev;
+-	struct phy_meson_gxl_usb3_priv *priv = dev_get_priv(dev);
+-	uint val;
+-
+-	regmap_read(priv->regmap, USB_R5, &val);
+-	val |= USB_R5_ID_DIG_EN_0;
+-	val |= USB_R5_ID_DIG_EN_1;
+-	val &= ~USB_R5_ID_DIG_TH_MASK;
+-	val |= FIELD_PREP(USB_R5_ID_DIG_TH_MASK, 0xff);
+-	regmap_write(priv->regmap, USB_R5, val);
+-
+-	phy_meson_gxl_usb3_set_mode(phy, USB_DR_MODE_HOST);
+-
+-	return 0;
+-}
+-
+-static int phy_meson_gxl_usb3_power_off(struct phy *phy)
+-{
+-	struct udevice *dev = phy->dev;
+-	struct phy_meson_gxl_usb3_priv *priv = dev_get_priv(dev);
+-	uint val;
+-
+-	regmap_read(priv->regmap, USB_R5, &val);
+-	val &= ~USB_R5_ID_DIG_EN_0;
+-	val &= ~USB_R5_ID_DIG_EN_1;
+-	regmap_write(priv->regmap, USB_R5, val);
+-
+-	return 0;
+-}
+-
+-static int phy_meson_gxl_usb3_init(struct phy *phy)
+-{
+-	struct udevice *dev = phy->dev;
+-	struct phy_meson_gxl_usb3_priv *priv = dev_get_priv(dev);
+-	uint val;
+-
+-	regmap_read(priv->regmap, USB_R1, &val);
+-	val &= ~USB_R1_U3H_FLADJ_30MHZ_REG_MASK;
+-	val |= FIELD_PREP(USB_R1_U3H_FLADJ_30MHZ_REG_MASK, 0x20);
+-	regmap_write(priv->regmap, USB_R1, val);
+-
+-	return 0;
+-}
+-
+-struct phy_ops meson_gxl_usb3_phy_ops = {
+-	.init = phy_meson_gxl_usb3_init,
+-	.power_on = phy_meson_gxl_usb3_power_on,
+-	.power_off = phy_meson_gxl_usb3_power_off,
+-};
+-
+-int meson_gxl_usb3_phy_probe(struct udevice *dev)
+-{
+-	struct phy_meson_gxl_usb3_priv *priv = dev_get_priv(dev);
+-	int ret;
+-
+-	ret = regmap_init_mem(dev_ofnode(dev), &priv->regmap);
+-	if (ret)
+-		return ret;
+-	
+-#if CONFIG_IS_ENABLED(CLK)
+-	ret = clk_get_by_index(dev, 0, &priv->clk);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = clk_enable(&priv->clk);
+-	if (ret && ret != -ENOSYS && ret != -ENOTSUPP) {
+-		pr_err("failed to enable PHY clock\n");
+-		clk_free(&priv->clk);
+-		return ret;
+-	}
+-#endif
+-
+-	return 0;
+-}
+-
+-static const struct udevice_id meson_gxl_usb3_phy_ids[] = {
+-	{ .compatible = "amlogic,meson-gxl-usb3-phy" },
+-	{ }
+-};
+-
+-U_BOOT_DRIVER(meson_gxl_usb3_phy) = {
+-	.name = "meson_gxl_usb3_phy",
+-	.id = UCLASS_PHY,
+-	.of_match = meson_gxl_usb3_phy_ids,
+-	.probe = meson_gxl_usb3_phy_probe,
+-	.ops = &meson_gxl_usb3_phy_ops,
+-	.priv_auto_alloc_size = sizeof(struct phy_meson_gxl_usb3_priv),
+-};
 -- 
 2.22.0
 
