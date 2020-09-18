@@ -1,64 +1,66 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web12.20280.1599740203366224626
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web10.9030.1600421353396264568
  for <u-boot-amlogic@groups.io>;
- Thu, 10 Sep 2020 05:16:43 -0700
-Received: by mail-wm1-f46.google.com with SMTP id e11so1773314wme.0
-        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2020 05:16:43 -0700 (PDT)
+ Fri, 18 Sep 2020 02:29:14 -0700
+Received: by mail-wr1-f67.google.com with SMTP id s12so4880993wrw.11
+        for <u-boot-amlogic@groups.io>; Fri, 18 Sep 2020 02:29:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=vV4u/1pn79aNHtYu7ahVxzhpdE5Mo1wYhHq5FSM9SLU=;
-        b=l7F1yJidkwJ92bRAGjFZOmK44tq/2kD8cd0L90XHD2BzIte8aUtLqNv0nJvmkpOLRT
-         xDJChdig+s3/xx6oeDjI14fpp2hOY2IG6ol0/7T5CgYb0kqp4N2IK3VcwPJ9cr4R5Vf4
-         lStN7/9L6k5RAtfJ5q3z4KMycArpZ+NaFADVBxIyyhwPDIhM3RBgJTXi3V5H0lpwYB4J
-         olqJnyg4CjSxHSCexqnvHXwZ+i1dN3eGEAC9DPriD309UxrGiweW737DBtdT4vm1ier/
-         5x18Tw1EYbAJJ8kMx7e9CtioL64dQj3Cee5gR/dEy6y5nyCdbQrCmZcyW11q8bNbU2in
-         iSEQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ia39DQWWDnUmFNRPnpoekN+yXSP5NpYUPsFnXwZ0xOA=;
+        b=ccSCLXI3KY3WhkgIMiYBwo6FXIF2+JGnGfERh2ZdY2aKC1t0PUg2XVZPBJezo41hhy
+         4fc2NX5ZttD2Bb9LsGUqmxiguQrIbollZ0UW6kYSzxwgnUrFiJ1OUbJmFXYCvmYstctK
+         NAyd2wrZILQeN6mJM37F+EiVGdTA6dS02Yjd7Dr4yWhuUzOu618Bcv5ijd0XVXIQwn43
+         oTM2oyNp3oBOXpIe0OiRcfotxtO6ioSsa1qJ852Im7hyzRDa8nXeaohb2QleCYC/AiSn
+         9C1yHH/VSQkt6NtxJRlA/qzjPRet9ggM5FE9CHQ3bQj62Mze5VZTWjmAgmKnqMAHMguQ
+         KKDg==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20200910
-Reply-To: narmstrong@baylibre.com
-Message-ID: <6544fec4-9f3f-b10d-c427-2a00803384d3@baylibre.com>
-Date: Thu, 10 Sep 2020 14:16:40 +0200
+Subject: [PATCH 0/4] amlogic: vim3: add support for dynamic PCIe enable
+Date: Fri, 18 Sep 2020 11:28:58 +0200
+Message-Id: <20200918092902.28028-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Transfer-Encoding: 8bit
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, khilman@baylibre.com, nick@khadas.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+an USB3.0 Type A connector and a M.2 Key M slot.
+The PHY driving these differential lines is shared between
+the USB3.0 controller and the PCIe Controller, thus only
+a single controller can use it.
 
-This PR enables/fixes HDMI output & USB keyboard on Odroid-N2 & Odroid-C4.
+This serie adds a VIM3 specific board support and adds this dynamic
+switching right before booting Linux.
 
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/4642
+Neil Armstrong (4):
+  ARM: dts: sync amlogic G12A/SM1 DT from Linux 5.9-rc1
+  board: amlogic: add a vim3 specific board support
+  configs: vim3: use the vim3 board support
+  board: amlogic: vim3: add support for dynamic PCIe enable
 
-Thanks,
-Neil
+ arch/arm/dts/meson-g12-common.dtsi            |  55 ++++---
+ arch/arm/dts/meson-g12b-odroid-n2.dts         | 136 +++++++++++++++++-
+ arch/arm/dts/meson-khadas-vim3.dtsi           |  26 +++-
+ arch/arm/dts/meson-sm1-khadas-vim3l.dts       |  92 ++++++++++++
+ arch/arm/dts/meson-sm1-odroid-c4.dts          |  88 ++++++++++++
+ board/amlogic/vim3/MAINTAINERS                |   9 ++
+ board/amlogic/vim3/Makefile                   |   6 +
+ board/amlogic/vim3/vim3.c                     | 136 ++++++++++++++++++
+ board/amlogic/w400/MAINTAINERS                |   4 -
+ configs/khadas-vim3_defconfig                 |   5 +-
+ configs/khadas-vim3l_defconfig                |   5 +-
+ include/dt-bindings/clock/g12a-clkc.h         |   2 +
+ .../dt-bindings/sound/meson-g12a-toacodec.h   |  10 ++
+ 13 files changed, 544 insertions(+), 30 deletions(-)
+ create mode 100644 board/amlogic/vim3/MAINTAINERS
+ create mode 100644 board/amlogic/vim3/Makefile
+ create mode 100644 board/amlogic/vim3/vim3.c
+ create mode 100644 include/dt-bindings/sound/meson-g12a-toacodec.h
 
-The following changes since commit a34746b86ecb650679500e0c596fdae38665939f:
+-- 
+2.22.0
 
-  Merge tag 'u-boot-stm32-20200909' of https://gitlab.denx.de/u-boot/custodians/u-boot-stm (2020-09-09 12:59:02 -0400)
-
-are available in the Git repository at:
-
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20200910
-
-for you to fetch changes up to 92f10e61351ddddd730c49c00cdbbd195c838140:
-
-  configs: odroid-c4: update for HDMI output background & USB keyboard (2020-09-10 10:51:36 +0200)
-
-----------------------------------------------------------------
-- enables HDMI output & USB keyboard for Odroid-N2
-- setups HDMI output background & enables USB keyboard
-
-----------------------------------------------------------------
-Anand Moon (2):
-      configs: odroid-n2: update for HDMI output & USB keyboard
-      configs: odroid-c4: update for HDMI output background & USB keyboard
-
- configs/odroid-c4_defconfig | 4 ++++
- configs/odroid-n2_defconfig | 9 +++++++++
- 2 files changed, 13 insertions(+)
