@@ -1,25 +1,25 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web11.36829.1600673663318856808
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web10.36992.1600673665496943947
  for <u-boot-amlogic@groups.io>;
- Mon, 21 Sep 2020 00:34:23 -0700
-Received: by mail-wm1-f66.google.com with SMTP id d4so11079482wmd.5
-        for <u-boot-amlogic@groups.io>; Mon, 21 Sep 2020 00:34:23 -0700 (PDT)
+ Mon, 21 Sep 2020 00:34:25 -0700
+Received: by mail-wr1-f67.google.com with SMTP id o5so11565084wrn.13
+        for <u-boot-amlogic@groups.io>; Mon, 21 Sep 2020 00:34:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aqxWgdGSyTPujTnehfHzSKIWE+NeGjtr6XHIhwFPifw=;
-        b=TI2nD1HYzx+WD6TMqyld14vagZaT9Plbwev/MF4suAiTUQ1JCeZ7MTeW/Ii5XEv7zF
-         PNYJUzndAB+cscpjXIEHAWGOI5N05gxoLa85tBFCHlBe4s579pIiX2fkFObF8vTH/SCl
-         +TT+iViRM/OMPoCBkFx+lWsE4tARifWBFJg5s/adJd80l4R5vl7K+74pqsf/gP7OM6nk
-         wxy+symI3SyqOahyViaaOkaa5CKdh0DTKkums1LqIT72NiOUZHMKsQpLCQ3j+efp9967
-         5Ao3x/c6YK5sl7t+E76WkVkGfmPz5yTTKcyP3hPL4XO55isdgQ3xLuqK47XIshxRSUby
-         tIKw==
+        bh=AFlJUVzfZZoSJnva3bxHcSZ0N6rFWxCWTu2Qt2ogQhY=;
+        b=rOpRJ+uxmwJFeRQiJv5sw39M+PmL5KmPNhgfkTAAaVAvfE5SbedDj/xxBHcG4QqUmA
+         qGePZ+MCtaiFd3Uo1frs4FhlQP4zxAOfymIF314p+H2W7n/jfvQI4DjVbHhGIKESIlHb
+         pdntl3L0dwUfXE6HQk3QiE/zga86spQBT7XGonc9e/mcwM1fGlHhcCCBpsB67C23+0aG
+         wDqzUVg2Ud5hhDudvLehzo/qYt3Y3bOnGrYMtxfnvVsJnIHeboAwK2QoRsf0Pmtq8f43
+         PTjKGKQgNisQHIV16GJ0g18W2Rc8pkJB/URe2ZaVcb9QbbkZl2aL+tQZbt2kxPyli1eN
+         uKxQ==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v2 1/4] ARM: dts: sync amlogic G12A/SM1 DT from Linux 5.9-rc1
-Date: Mon, 21 Sep 2020 09:34:12 +0200
-Message-Id: <20200921073415.24211-2-narmstrong@baylibre.com>
+Subject: [PATCH v2 2/4] board: amlogic: add a vim3 specific board support
+Date: Mon, 21 Sep 2020 09:34:13 +0200
+Message-Id: <20200921073415.24211-3-narmstrong@baylibre.com>
 In-Reply-To: <20200921073415.24211-1-narmstrong@baylibre.com>
 References: <20200921073415.24211-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,643 +28,88 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, khilman@baylibre.com, nick@khadas.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This imports the G12A & SM1 SoC and boards DT changes from the Linux
-commit 9123e3a74ec7 ("Linux 5.9-rc1").
+The VIM3 will need a specific code to enable PCIe if enabled in the MCU,
+thus add a specific board support for VIM3 & VIM3L.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 ---
- arch/arm/dts/meson-g12-common.dtsi            |  55 ++++---
- arch/arm/dts/meson-g12b-odroid-n2.dts         | 136 +++++++++++++++++-
- arch/arm/dts/meson-khadas-vim3.dtsi           |  26 +++-
- arch/arm/dts/meson-sm1-khadas-vim3l.dts       |  92 ++++++++++++
- arch/arm/dts/meson-sm1-odroid-c4.dts          |  88 ++++++++++++
- include/dt-bindings/clock/g12a-clkc.h         |   2 +
- .../dt-bindings/sound/meson-g12a-toacodec.h   |  10 ++
- 7 files changed, 385 insertions(+), 24 deletions(-)
- create mode 100644 include/dt-bindings/sound/meson-g12a-toacodec.h
+ board/amlogic/vim3/MAINTAINERS |  9 +++++++++
+ board/amlogic/vim3/Makefile    |  6 ++++++
+ board/amlogic/vim3/vim3.c      | 20 ++++++++++++++++++++
+ board/amlogic/w400/MAINTAINERS |  4 ----
+ 4 files changed, 35 insertions(+), 4 deletions(-)
+ create mode 100644 board/amlogic/vim3/MAINTAINERS
+ create mode 100644 board/amlogic/vim3/Makefile
+ create mode 100644 board/amlogic/vim3/vim3.c
 
-diff --git a/arch/arm/dts/meson-g12-common.dtsi b/arch/arm/dts/meson-g12-common.dtsi
-index 593a006f4b..1e83ec5b8c 100644
---- a/arch/arm/dts/meson-g12-common.dtsi
-+++ b/arch/arm/dts/meson-g12-common.dtsi
-@@ -52,6 +52,39 @@
- 		secure-monitor = <&sm>;
- 	};
- 
-+	gpu_opp_table: gpu-opp-table {
-+		compatible = "operating-points-v2";
-+
-+		opp-124999998 {
-+			opp-hz = /bits/ 64 <124999998>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp-249999996 {
-+			opp-hz = /bits/ 64 <249999996>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp-285714281 {
-+			opp-hz = /bits/ 64 <285714281>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp-399999994 {
-+			opp-hz = /bits/ 64 <399999994>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp-499999992 {
-+			opp-hz = /bits/ 64 <499999992>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp-666666656 {
-+			opp-hz = /bits/ 64 <666666656>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp-799999987 {
-+			opp-hz = /bits/ 64 <799999987>;
-+			opp-microvolt = <800000>;
-+		};
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
-@@ -185,8 +218,10 @@
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
- 				 <&clkc CLKID_FCLK_DIV2>,
--				 <&clkc CLKID_MPLL2>;
--			clock-names = "stmmaceth", "clkin0", "clkin1";
-+				 <&clkc CLKID_MPLL2>,
-+				 <&clkc CLKID_FCLK_DIV2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1",
-+				      "timing-adjustment";
- 			rx-fifo-depth = <4096>;
- 			tx-fifo-depth = <2048>;
- 			status = "disabled";
-@@ -2360,21 +2395,7 @@
- 			interrupt-names = "job", "mmu", "gpu";
- 			clocks = <&clkc CLKID_MALI>;
- 			resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
--
--			/*
--			 * Mali clocking is provided by two identical clock paths
--			 * MALI_0 and MALI_1 muxed to a single clock by a glitch
--			 * free mux to safely change frequency while running.
--			 */
--			assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
--					  <&clkc CLKID_MALI_0>,
--					  <&clkc CLKID_MALI>; /* Glitch free mux */
--			assigned-clock-parents = <&clkc CLKID_FCLK_DIV2P5>,
--						 <0>, /* Do Nothing */
--						 <&clkc CLKID_MALI_0>;
--			assigned-clock-rates = <0>, /* Do Nothing */
--					       <800000000>,
--					       <0>; /* Do Nothing */
-+			operating-points-v2 = <&gpu_opp_table>;
- 			#cooling-cells = <2>;
- 		};
- 	};
-diff --git a/arch/arm/dts/meson-g12b-odroid-n2.dts b/arch/arm/dts/meson-g12b-odroid-n2.dts
-index 169ea283d4..34fffa6d85 100644
---- a/arch/arm/dts/meson-g12b-odroid-n2.dts
-+++ b/arch/arm/dts/meson-g12b-odroid-n2.dts
-@@ -9,6 +9,7 @@
- #include "meson-g12b-s922x.dtsi"
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-toacodec.h>
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
-@@ -20,6 +21,14 @@
- 		ethernet0 = &ethmac;
- 	};
- 
-+	dioo2133: audio-amplifier-0 {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
-+		VCC-supply = <&vcc_5v>;
-+		sound-name-prefix = "U19";
-+		status = "okay";
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -209,11 +218,42 @@
- 	sound {
- 		compatible = "amlogic,axg-sound-card";
- 		model = "G12B-ODROID-N2";
--		audio-aux-devs = <&tdmout_b>;
-+		audio-widgets = "Line", "Lineout";
-+		audio-aux-devs = <&tdmout_b>, <&tdmout_c>, <&tdmin_a>,
-+				 <&tdmin_b>, <&tdmin_c>, <&tdmin_lb>,
-+				 <&dioo2133>;
- 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
- 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
- 				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
--				"TDM_B Playback", "TDMOUT_B OUT";
-+				"TDM_B Playback", "TDMOUT_B OUT",
-+				"TDMOUT_C IN 0", "FRDDR_A OUT 2",
-+				"TDMOUT_C IN 1", "FRDDR_B OUT 2",
-+				"TDMOUT_C IN 2", "FRDDR_C OUT 2",
-+				"TDM_C Playback", "TDMOUT_C OUT",
-+				"TDMIN_A IN 4", "TDM_B Loopback",
-+				"TDMIN_B IN 4", "TDM_B Loopback",
-+				"TDMIN_C IN 4", "TDM_B Loopback",
-+				"TDMIN_LB IN 1", "TDM_B Loopback",
-+				"TDMIN_A IN 5", "TDM_C Loopback",
-+				"TDMIN_B IN 5", "TDM_C Loopback",
-+				"TDMIN_C IN 5", "TDM_C Loopback",
-+				"TDMIN_LB IN 2", "TDM_C Loopback",
-+				"TODDR_A IN 0", "TDMIN_A OUT",
-+				"TODDR_B IN 0", "TDMIN_A OUT",
-+				"TODDR_C IN 0", "TDMIN_A OUT",
-+				"TODDR_A IN 1", "TDMIN_B OUT",
-+				"TODDR_B IN 1", "TDMIN_B OUT",
-+				"TODDR_C IN 1", "TDMIN_B OUT",
-+				"TODDR_A IN 2", "TDMIN_C OUT",
-+				"TODDR_B IN 2", "TDMIN_C OUT",
-+				"TODDR_C IN 2", "TDMIN_C OUT",
-+				"TODDR_A IN 6", "TDMIN_LB OUT",
-+				"TODDR_B IN 6", "TDMIN_LB OUT",
-+				"TODDR_C IN 6", "TDMIN_LB OUT",
-+				"U19 INL", "ACODEC LOLP",
-+				"U19 INR", "ACODEC LORP",
-+				"Lineout", "U19 OUTL",
-+				"Lineout", "U19 OUTR";
- 
- 		assigned-clocks = <&clkc CLKID_MPLL2>,
- 				  <&clkc CLKID_MPLL0>,
-@@ -236,8 +276,20 @@
- 			sound-dai = <&frddr_c>;
- 		};
- 
--		/* 8ch hdmi interface */
- 		dai-link-3 {
-+			sound-dai = <&toddr_a>;
-+		};
-+
-+		dai-link-4 {
-+			sound-dai = <&toddr_b>;
-+		};
-+
-+		dai-link-5 {
-+			sound-dai = <&toddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-6 {
- 			sound-dai = <&tdmif_b>;
- 			dai-format = "i2s";
- 			dai-tdm-slot-tx-mask-0 = <1 1>;
-@@ -246,22 +298,56 @@
- 			dai-tdm-slot-tx-mask-3 = <1 1>;
- 			mclk-fs = <256>;
- 
--			codec {
-+			codec-0 {
- 				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
- 			};
-+
-+			codec-1 {
-+				sound-dai = <&toacodec TOACODEC_IN_B>;
-+			};
-+		};
-+
-+		/* i2s jack output interface */
-+		dai-link-7 {
-+			sound-dai = <&tdmif_c>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_C>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&toacodec TOACODEC_IN_C>;
-+			};
- 		};
- 
- 		/* hdmi glue */
--		dai-link-4 {
-+		dai-link-8 {
- 			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
- 
- 			codec {
- 				sound-dai = <&hdmi_tx>;
- 			};
- 		};
-+
-+		/* acodec glue */
-+		dai-link-9 {
-+			sound-dai = <&toacodec TOACODEC_OUT>;
-+
-+			codec {
-+				sound-dai = <&acodec>;
-+			};
-+		};
- 	};
- };
- 
-+&acodec {
-+	AVDD-supply = <&vddao_1v8>;
-+	status = "okay";
-+};
-+
- &arb {
- 	status = "okay";
- };
-@@ -476,14 +562,54 @@
- 	status = "okay";
- };
- 
-+&tdmif_c {
-+	status = "okay";
-+};
-+
-+&tdmin_a {
-+	status = "okay";
-+};
-+
-+&tdmin_b {
-+	status = "okay";
-+};
-+
-+&tdmin_c {
-+	status = "okay";
-+};
-+
-+&tdmin_lb {
-+	status = "okay";
-+};
-+
- &tdmout_b {
- 	status = "okay";
- };
- 
-+&tdmout_c {
-+	status = "okay";
-+};
-+
-+&toacodec {
-+	status = "okay";
-+};
-+
- &tohdmitx {
- 	status = "okay";
- };
- 
-+&toddr_a {
-+	status = "okay";
-+};
-+
-+&toddr_b {
-+	status = "okay";
-+};
-+
-+&toddr_c {
-+	status = "okay";
-+};
-+
- &uart_AO {
- 	status = "okay";
- 	pinctrl-0 = <&uart_ao_a_pins>;
-diff --git a/arch/arm/dts/meson-khadas-vim3.dtsi b/arch/arm/dts/meson-khadas-vim3.dtsi
-index 1ef1e3672b..94f75b4465 100644
---- a/arch/arm/dts/meson-khadas-vim3.dtsi
-+++ b/arch/arm/dts/meson-khadas-vim3.dtsi
-@@ -183,6 +183,23 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&cpu_thermal {
-+	trips {
-+		cpu_active: cpu-active {
-+			temperature = <80000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "active";
-+		};
-+	};
-+
-+	cooling-maps {
-+		map {
-+			trip = <&cpu_active>;
-+			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
-+
- &ext_mdio {
- 	external_phy: ethernet-phy@0 {
- 		/* Realtek RTL8211F (0x001cc916) */
-@@ -222,6 +239,12 @@
- 	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
- 	pinctrl-names = "default";
- 
-+	khadas_mcu: system-controller@18 {
-+		compatible = "khadas,mcu";
-+		reg = <0x18>;
-+		#cooling-cells = <2>;
-+	};
-+
- 	gpio_expander: gpio-controller@20 {
- 		compatible = "ti,tca6408";
- 		reg = <0x20>;
-@@ -270,7 +293,6 @@
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
--	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
- 
- 	non-removable;
-@@ -337,7 +359,7 @@
- 	pinctrl-0 = <&nor_pins>;
- 	pinctrl-names = "default";
- 
--	w25q32: spi-flash@0 {
-+	w25q128: spi-flash@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "winbond,w25q128fw", "jedec,spi-nor";
-diff --git a/arch/arm/dts/meson-sm1-khadas-vim3l.dts b/arch/arm/dts/meson-sm1-khadas-vim3l.dts
-index dbbf29a0db..0da56c051a 100644
---- a/arch/arm/dts/meson-sm1-khadas-vim3l.dts
-+++ b/arch/arm/dts/meson-sm1-khadas-vim3l.dts
-@@ -8,6 +8,7 @@
- 
- #include "meson-sm1.dtsi"
- #include "meson-khadas-vim3.dtsi"
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	compatible = "khadas,vim3l", "amlogic,sm1";
-@@ -31,6 +32,69 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "SM1-KHADAS-VIM3L";
-+		audio-aux-devs = <&tdmout_a>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-+				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
-+};
-+
-+&clkc_audio {
-+	status = "okay";
- };
- 
- &cpu0 {
-@@ -61,6 +125,18 @@
- 	clock-latency = <50000>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &pwm_AO_cd {
- 	pinctrl-0 = <&pwm_ao_d_e_pins>;
- 	pinctrl-names = "default";
-@@ -88,8 +164,24 @@
- 	status = "okay";
- };
- 
-+&sd_emmc_a {
-+	sd-uhs-sdr50;
-+};
-+
- &usb {
- 	phys = <&usb2_phy0>, <&usb2_phy1>;
- 	phy-names = "usb2-phy0", "usb2-phy1";
- };
-  */
-+
-+&tdmif_a {
-+	status = "okay";
-+};
-+
-+&tdmout_a {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-diff --git a/arch/arm/dts/meson-sm1-odroid-c4.dts b/arch/arm/dts/meson-sm1-odroid-c4.dts
-index 00d90b30f8..cf5a98f0e4 100644
---- a/arch/arm/dts/meson-sm1-odroid-c4.dts
-+++ b/arch/arm/dts/meson-sm1-odroid-c4.dts
-@@ -8,6 +8,7 @@
- #include "meson-sm1.dtsi"
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
- #include <dt-bindings/leds/common.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	compatible = "hardkernel,odroid-c4", "amlogic,sm1";
-@@ -186,6 +187,69 @@
- 			};
- 		};
- 	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "SM1-ODROID-C4";
-+		audio-aux-devs = <&tdmout_b>;
-+		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
-+};
-+
-+&clkc_audio {
-+	status = "okay";
- };
- 
- &cpu0 {
-@@ -237,6 +301,18 @@
- 	amlogic,tx-delay-ns = <2>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &gpio {
- 	gpio-line-names =
- 		/* GPIOZ */
-@@ -381,6 +457,18 @@
- 	vqmmc-supply = <&flash_1v8>;
- };
- 
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-+
- &uart_AO {
- 	status = "okay";
- 	pinctrl-0 = <&uart_ao_a_pins>;
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-index b0d65d73db..40d49940d8 100644
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -145,5 +145,7 @@
- #define CLKID_CPU3_CLK				255
- #define CLKID_SPICC0_SCLK			258
- #define CLKID_SPICC1_SCLK			261
-+#define CLKID_NNA_AXI_CLK			264
-+#define CLKID_NNA_CORE_CLK			267
- 
- #endif /* __G12A_CLKC_H */
-diff --git a/include/dt-bindings/sound/meson-g12a-toacodec.h b/include/dt-bindings/sound/meson-g12a-toacodec.h
+diff --git a/board/amlogic/vim3/MAINTAINERS b/board/amlogic/vim3/MAINTAINERS
 new file mode 100644
-index 0000000000..69d7a75592
+index 0000000000..92b426f66d
 --- /dev/null
-+++ b/include/dt-bindings/sound/meson-g12a-toacodec.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __DT_MESON_G12A_TOACODEC_H
-+#define __DT_MESON_G12A_TOACODEC_H
++++ b/board/amlogic/vim3/MAINTAINERS
+@@ -0,0 +1,9 @@
++VIM3
++M:	Neil Armstrong <narmstrong@baylibre.com>
++S:	Maintained
++L:	u-boot-amlogic@groups.io
++F:	board/amlogic/vim3/
++F:	configs/khadas-vim3_defconfig
++F:	configs/khadas-vim3l_defconfig
++F:	doc/board/amlogic/khadas-vim3.rst
++F:	doc/board/amlogic/khadas-vim3l.rst
+diff --git a/board/amlogic/vim3/Makefile b/board/amlogic/vim3/Makefile
+new file mode 100644
+index 0000000000..c515077302
+--- /dev/null
++++ b/board/amlogic/vim3/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# (C) Copyright 2020 BayLibre, SAS
++# Author: Neil Armstrong <narmstrong@baylibre.com>
 +
-+#define TOACODEC_IN_A	0
-+#define TOACODEC_IN_B	1
-+#define TOACODEC_IN_C	2
-+#define TOACODEC_OUT	3
++obj-y	:= vim3.o
+diff --git a/board/amlogic/vim3/vim3.c b/board/amlogic/vim3/vim3.c
+new file mode 100644
+index 0000000000..02d8cd0ce0
+--- /dev/null
++++ b/board/amlogic/vim3/vim3.c
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2020 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
 +
-+#endif /* __DT_MESON_G12A_TOACODEC_H */
++#include <common.h>
++#include <dm.h>
++#include <env_internal.h>
++#include <init.h>
++#include <net.h>
++#include <asm/io.h>
++#include <asm/arch/eth.h>
++
++int misc_init_r(void)
++{
++	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
++
++	return 0;
++}
+diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
+index a1b0ac8636..991590d9f2 100644
+--- a/board/amlogic/w400/MAINTAINERS
++++ b/board/amlogic/w400/MAINTAINERS
+@@ -3,8 +3,4 @@ M:	Neil Armstrong <narmstrong@baylibre.com>
+ S:	Maintained
+ L:	u-boot-amlogic@groups.io
+ F:	board/amlogic/w400/
+-F:	configs/khadas-vim3_defconfig
+-F:	configs/khadas-vim3l_defconfig
+ F:	doc/board/amlogic/w400.rst
+-F:	doc/board/amlogic/khadas-vim3.rst
+-F:	doc/board/amlogic/khadas-vim3l.rst
 -- 
 2.22.0
 
