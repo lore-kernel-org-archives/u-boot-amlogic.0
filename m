@@ -1,21 +1,37 @@
-Received: from azure2.cottsay.net (azure2.cottsay.net [104.41.151.152])
- by mx.groups.io with SMTP id smtpd.web11.7353.1601066477950342135
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web11.31568.1601278637722165663
  for <u-boot-amlogic@groups.io>;
- Fri, 25 Sep 2020 13:41:18 -0700
-Message-ID: <af66ec1be1832769b8eb84b394b5f6c3b80d7dae.camel@cottsay.net>
+ Mon, 28 Sep 2020 00:37:18 -0700
+Received: by mail-wm1-f68.google.com with SMTP id l15so3756903wmh.1
+        for <u-boot-amlogic@groups.io>; Mon, 28 Sep 2020 00:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0/NBBp/WqId/VTWDpdLX73bCS/CcU51WGOiGYdhsdP4=;
+        b=DhcM+3PFQ3sUzmHBUWT91FjpWkaHRxm0baE+tkYd6Y+Nbc8klzxpAPvyLgkSgFa/u9
+         5n46p9/977aGFz1PAgURVM4vUkulVvcXIba03hDxbCK+o4hp6cvX36D5EqBJxvPd0Ioh
+         P9B7d9S7nqy+5I7I9CE/KdbD/yCNyfsV4c8Ee/qaVdHrestc1Wk4G61zxyJNWkG2kBX6
+         VTye3CfmloWtu2RA5gvnmvBvJP23c7sLByXN/scUUzKXvk9xbSjzfdB9JtkNJOmkctoB
+         Gm6uj5FP/lTiRRU3zsPS+0ekQBx9tTsy5y5pA4D/vdrk5C3MPmzwZ+f89Rhb3DPCUWCc
+         c1Fw==
+Return-Path: <narmstrong@baylibre.com>
 Subject: Re: [PATCH] rng: meson: make core clock optional
-From: Scott K Logan <logans@cottsay.net>
-Date: Fri, 25 Sep 2020 13:41:15 -0700
-In-Reply-To: <20200925071920.9211-1-narmstrong@baylibre.com>
 References: <20200925071920.9211-1-narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <1925383f-c77b-eefd-68fd-5364e1652c47@baylibre.com>
+Date: Mon, 28 Sep 2020 09:37:14 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200925071920.9211-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, sughosh.ganu@linaro.org
-Cc: u-boot-amlogic@groups.io, Heinrich Schuchardt <xypron.glpk@gmx.de>
+To: u-boot@lists.denx.de, sughosh.ganu@linaro.org
+Cc: u-boot-amlogic@groups.io, Heinrich Schuchardt <xypron.glpk@gmx.de>, Scott K Logan <logans@cottsay.net>
 List-ID: <u-boot-amlogic@groups.io>
 
-On Fri, 2020-09-25 at 09:19 +0200, Neil Armstrong wrote:
+On 25/09/2020 09:19, Neil Armstrong wrote:
 > This fixes HWRNG support on Amlogic GXL, GXM, G12A, G12B & SM1
 > based boards dues to the lack of the core clock in the device tree.
 > 
@@ -46,8 +62,7 @@ On Fri, 2020-09-25 at 09:19 +0200, Neil Armstrong wrote:
 > index 4b81a62353..57a5a702a2 100644
 > --- a/drivers/rng/meson-rng.c
 > +++ b/drivers/rng/meson-rng.c
-> @@ -90,8 +90,9 @@ static int meson_rng_ofdata_to_platdata(struct
-> udevice *dev)
+> @@ -90,8 +90,9 @@ static int meson_rng_ofdata_to_platdata(struct udevice *dev)
 >  	if (!pdata->base)
 >  		return -ENODEV;
 >  
@@ -58,8 +73,9 @@ On Fri, 2020-09-25 at 09:19 +0200, Neil Armstrong wrote:
 >  		return err;
 >  
 >  	return 0;
-> -- 
-> 2.22.0
+> 
 
-Tested-by: Scott K Logan <logans@cottsay.net>
 
+Applied to u-boot-amlogic
+
+Neil
