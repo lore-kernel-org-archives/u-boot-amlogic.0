@@ -1,56 +1,79 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web12.31581.1601278846878122357
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web10.31312.1601278868032535390
  for <u-boot-amlogic@groups.io>;
- Mon, 28 Sep 2020 00:40:47 -0700
-Received: by mail-wr1-f67.google.com with SMTP id s12so26888wrw.11
-        for <u-boot-amlogic@groups.io>; Mon, 28 Sep 2020 00:40:46 -0700 (PDT)
+ Mon, 28 Sep 2020 00:41:08 -0700
+Received: by mail-wm1-f67.google.com with SMTP id e11so3764690wme.0
+        for <u-boot-amlogic@groups.io>; Mon, 28 Sep 2020 00:41:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=S3ouTGt0KaBZCD3WCwOgbNAAQ91aTmUiJ8JsMe0pDf0=;
-        b=MY8ObMZ6F2IjVaGGEpedu0fH45hGQuhGP2WUHNFoIjuNAk42CoxkC8BFprAUoYHYKS
-         +8Zr0Ce5IuysHSaidVBbqrDpyXhHGgXWbQ0jN8Mh/eRjnLtdvnKZmJopZQ+2rO/zmigA
-         YQgzqQg9hWQALWorFIiOD9BukAfz6ZYEKMexNpVtX5lur6SS1K80OWXQR74PmOZ+xfCK
-         F6OMeETe8HJK+04QfqujY5qG4GqV8/xG/iBV28sFLei+MdtZQ/7chCsTjH7BFx8lwJMb
-         hJ7ltgxud0l86QiJNpQeliQ8qLxy9uSA+8f32Eq/5zLmOXYyLDwuGg3pga4RqylHQUbo
-         a+OQ==
+        bh=xGLriLniQ+TPw/NOmtptJ5OpqrJ0mbaTbmFoE6WVQqE=;
+        b=1qQsRrKKxt8LM3XOVpXO4lCnuma7tRI3fT/fHZWateMvLYxEhvp8xoECd29ZkUOYXp
+         3kciz3VjAYAAJs6yfHSw8KfgGwewGU4jWWGTeQXbbLjbZgmLE0ANEvHiYZfXMemioo/R
+         Fnlc8prnyYmd5dlJhzRdcyiODjB9wPhUCsFtzFFfSMbAHTkPu1wzj0lbYNhN0UW5O0FK
+         23s4N/rsoWmxGniPssQNr/fUPjA8jNn/UiOOr7ABUr0ul2J2+aoL6M4iI5eqOz/icbyh
+         6tW4/ofeisoC50uJqD5tBS3cMSqBucCrdamwW52XiP66olV1q2a/yeUWy56TOxwBkSNU
+         XmXg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] board: s400: generate unique mac address from SoC serial
-References: <20200910085039.25785-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 0/4] amlogic: vim3: add support for dynamic PCIe enable
+References: <20200921073415.24211-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <27046589-69a2-b7ee-4d49-12ae99514cb8@baylibre.com>
-Date: Mon, 28 Sep 2020 09:40:43 +0200
+Message-ID: <c85d1007-668c-b3e8-a0a6-48e8cf386ee9@baylibre.com>
+Date: Mon, 28 Sep 2020 09:41:04 +0200
 MIME-Version: 1.0
-In-Reply-To: <20200910085039.25785-1-narmstrong@baylibre.com>
+In-Reply-To: <20200921073415.24211-1-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io
+Cc: u-boot-amlogic@groups.io, khilman@baylibre.com, nick@khadas.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On 10/09/2020 10:50, Neil Armstrong wrote:
-> Enable unique mac address generation from SoC serial on S400 board.
+On 21/09/2020 09:34, Neil Armstrong wrote:
+> The VIM3 on-board  MCU can mux the PCIe/USB3.0 shared differential
+> lines using a FUSB340TMX USB 3.1 SuperSpeed Data Switch between
+> an USB3.0 Type A connector and a M.2 Key M slot.
+> The PHY driving these differential lines is shared between
+> the USB3.0 controller and the PCIe Controller, thus only
+> a single controller can use it.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  board/amlogic/s400/s400.c | 2 ++
->  1 file changed, 2 insertions(+)
+> This serie adds a VIM3 specific board support and adds this dynamic
+> switching right before booting Linux.
 > 
-> diff --git a/board/amlogic/s400/s400.c b/board/amlogic/s400/s400.c
-> index 7e2f0cdae3..b081942dcc 100644
-> --- a/board/amlogic/s400/s400.c
-> +++ b/board/amlogic/s400/s400.c
-> @@ -18,5 +18,7 @@ int misc_init_r(void)
->  {
->  	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
->  
-> +	meson_generate_serial_ethaddr();
-> +
->  	return 0;
->  }
+> Changes since v1:
+> - add missing khadas-mcu.h
+> - add documentation to switch pcie on/off
+> 
+> Neil Armstrong (4):
+>   ARM: dts: sync amlogic G12A/SM1 DT from Linux 5.9-rc1
+>   board: amlogic: add a vim3 specific board support
+>   configs: vim3: use the vim3 board support
+>   board: amlogic: vim3: add support for dynamic PCIe enable
+> 
+>  arch/arm/dts/meson-g12-common.dtsi            |  55 ++++---
+>  arch/arm/dts/meson-g12b-odroid-n2.dts         | 136 +++++++++++++++++-
+>  arch/arm/dts/meson-khadas-vim3.dtsi           |  26 +++-
+>  arch/arm/dts/meson-sm1-khadas-vim3l.dts       |  92 ++++++++++++
+>  arch/arm/dts/meson-sm1-odroid-c4.dts          |  88 ++++++++++++
+>  board/amlogic/vim3/MAINTAINERS                |   9 ++
+>  board/amlogic/vim3/Makefile                   |   6 +
+>  board/amlogic/vim3/khadas-mcu.h               |  81 +++++++++++
+>  board/amlogic/vim3/vim3.c                     | 136 ++++++++++++++++++
+>  board/amlogic/w400/MAINTAINERS                |   4 -
+>  configs/khadas-vim3_defconfig                 |   5 +-
+>  configs/khadas-vim3l_defconfig                |   5 +-
+>  doc/board/amlogic/khadas-vim3.rst             |  27 ++++
+>  doc/board/amlogic/khadas-vim3l.rst            |  27 ++++
+>  include/dt-bindings/clock/g12a-clkc.h         |   2 +
+>  .../dt-bindings/sound/meson-g12a-toacodec.h   |  10 ++
+>  16 files changed, 679 insertions(+), 30 deletions(-)
+>  create mode 100644 board/amlogic/vim3/MAINTAINERS
+>  create mode 100644 board/amlogic/vim3/Makefile
+>  create mode 100644 board/amlogic/vim3/khadas-mcu.h
+>  create mode 100644 board/amlogic/vim3/vim3.c
+>  create mode 100644 include/dt-bindings/sound/meson-g12a-toacodec.h
 > 
 
 Applied to u-boot-amlogic-next
