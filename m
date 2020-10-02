@@ -1,61 +1,55 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web10.33037.1601287150636952634
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web11.10251.1601629545536667432
  for <u-boot-amlogic@groups.io>;
- Mon, 28 Sep 2020 02:59:11 -0700
-Received: by mail-wm1-f42.google.com with SMTP id e2so512365wme.1
-        for <u-boot-amlogic@groups.io>; Mon, 28 Sep 2020 02:59:10 -0700 (PDT)
+ Fri, 02 Oct 2020 02:05:46 -0700
+Received: by mail-wr1-f67.google.com with SMTP id e16so940938wrm.2
+        for <u-boot-amlogic@groups.io>; Fri, 02 Oct 2020 02:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=EPcTWu2OfWiaYyoY/MPM8iGp/BVA7VermD//ZwXt23o=;
-        b=ZPxt6juEIoZvJV3tFHPaumJMO7YkVwaGCjzKa8vzKGahaAMfRK+MmO36udlMb7LOcX
-         sEVevPOSd3L7ZEt9EwBQegIplgioTpmntQO6N9bKWllVV/zcGgoAX9Z/QpFzkoKh83w4
-         R0Na1vPkrkQZfVEH005JczndMHNsgpL4oc3kEZBpK2pMPKXawVSsFY9N3LJXSnl7V5uy
-         R5W+iFUmwzE/UozeIlUGNVSj8hw8iMq04wlXOEn/9+U/+/TUWBz9EsTKNIF7wafH0RG0
-         kLNa2YdkyUh6GyQ/Xzg0JAMjn6Hk1easzPvepi6As8iJHujDHqwdtcm8p3RaiD1ap6SS
-         qlng==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5n1a6LAl4rG1ss+A4vM1elXk68dy2uOoIyjM7mC/xfw=;
+        b=R/a7jbgAdKWg5v6NXO+LEPRd1al+DKSggQlMfsswZluCbGKzV88CedTwbJiV9vIU6x
+         41CA4T3b+2AE38Z5uNwtsO77gmkuy+1Nw3Kd8CH6ACeVua9e95boqcY4kBg6cC/mAvhA
+         IgzM3fszkxVfbTlpLpmf9gqCyive8IdwZwV4TlSDFEY8YXxDz1rWj96rFUolIIHR2/85
+         IVDHsqHtD9IhkfYNMsQJTT0f/ZBPE8vdNrCme7ic0p45qYZ35dbDc2TnDZ6uBBtQNK/w
+         fxnC/B5Y9zxtYpfgIa1xvpMhVv0YGBVQKFr/pg4qs32PFnHGFcdzn7MjQxh0YN7dbv0R
+         A5UA==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20200928
-Reply-To: narmstrong@baylibre.com
-Message-ID: <495378f7-8647-0fb2-83ed-5a12465e9196@baylibre.com>
-Date: Mon, 28 Sep 2020 11:59:07 +0200
+Subject: [PATCH 1/2] pinctrl: meson-axg-pmx: fix gpio request
+Date: Fri,  2 Oct 2020 11:05:39 +0200
+Message-Id: <20201002090540.1022341-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Transfer-Encoding: 8bit
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+The AXG pmx driver gpio request offset needs the pin base to have the
+correct pin number.
 
-This PR fixes Linux EFI KASLR boot on GXL, GXM, G12A, G12B & SM1 based boards.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/4642
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c b/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
+index c6cb941d0a..cfe94cf9e1 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
+@@ -165,7 +165,10 @@ const struct pinctrl_ops meson_axg_pinctrl_ops = {
+ static int meson_axg_gpio_request(struct udevice *dev,
+ 				  unsigned int offset, const char *label)
+ {
+-	return meson_axg_pmx_update_function(dev->parent, offset, 0);
++	struct meson_pinctrl *priv = dev_get_priv(dev->parent);
++
++	return meson_axg_pmx_update_function(dev->parent,
++					     offset + priv->data->pin_base, 0);
+ }
+ 
+ static const struct dm_gpio_ops meson_axg_gpio_ops = {
+-- 
+2.25.1
 
-Thanks,
-Neil
-
-The following changes since commit 1da91d9bcd6e5ef046c1df0d373d0df87b1e8a72:
-
-  Merge https://gitlab.denx.de/u-boot/custodians/u-boot-marvell (2020-09-24 08:34:54 -0400)
-
-are available in the Git repository at:
-
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20200928
-
-for you to fetch changes up to 02d249f99ecb7e398067d91760287c61d35fd34b:
-
-  rng: meson: make core clock optional (2020-09-28 09:38:11 +0200)
-
-----------------------------------------------------------------
-- fix RNG driver probe & linux EFI KASLR boot on GXL, GXM, G12A, G12B & SM1 based boards
-
-----------------------------------------------------------------
-Neil Armstrong (1):
-      rng: meson: make core clock optional
-
- drivers/rng/meson-rng.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
