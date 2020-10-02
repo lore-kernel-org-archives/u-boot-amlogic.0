@@ -1,55 +1,52 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web11.10251.1601629545536667432
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web10.10116.1601629547933090940
  for <u-boot-amlogic@groups.io>;
- Fri, 02 Oct 2020 02:05:46 -0700
-Received: by mail-wr1-f67.google.com with SMTP id e16so940938wrm.2
-        for <u-boot-amlogic@groups.io>; Fri, 02 Oct 2020 02:05:45 -0700 (PDT)
+ Fri, 02 Oct 2020 02:05:48 -0700
+Received: by mail-wr1-f68.google.com with SMTP id k15so919223wrn.10
+        for <u-boot-amlogic@groups.io>; Fri, 02 Oct 2020 02:05:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5n1a6LAl4rG1ss+A4vM1elXk68dy2uOoIyjM7mC/xfw=;
-        b=R/a7jbgAdKWg5v6NXO+LEPRd1al+DKSggQlMfsswZluCbGKzV88CedTwbJiV9vIU6x
-         41CA4T3b+2AE38Z5uNwtsO77gmkuy+1Nw3Kd8CH6ACeVua9e95boqcY4kBg6cC/mAvhA
-         IgzM3fszkxVfbTlpLpmf9gqCyive8IdwZwV4TlSDFEY8YXxDz1rWj96rFUolIIHR2/85
-         IVDHsqHtD9IhkfYNMsQJTT0f/ZBPE8vdNrCme7ic0p45qYZ35dbDc2TnDZ6uBBtQNK/w
-         fxnC/B5Y9zxtYpfgIa1xvpMhVv0YGBVQKFr/pg4qs32PFnHGFcdzn7MjQxh0YN7dbv0R
-         A5UA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=E9/9fEVeniVn7qkF7Bmi5BuicI09VaGEuVWCgJ9Ba1Q=;
+        b=BcLB+eOcbpFdXAxtf4Lj6e7/+M+O76IR43tAH7eR3KNvaVLuUwLlE6H0hsek7ZPeQS
+         qBUOlEEYXNIXrVStRZ438ch0ZjeAGPs1ql7j9S8yBxRnSBIq33aG9qKluFNaZZevzxzv
+         dAqlBeP4mLk0Ta3t7xte81xgTymgb1KMoMXkPP+LiwDXwa1z05JZg+dr/2tWNGHZTsb3
+         No2jTTs4wfrxqccZlZJ53RQwhDD1YrH9EaH/72HdmT2HlxthWMShz5+LQxCYQGEZA+sF
+         kna1OBrCO3V1nhEDIpNMTL7aMTATEyjJI3+9OTqqGpFB0EzRIhkR0RMRq84Y+IzaySNi
+         HkhQ==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 1/2] pinctrl: meson-axg-pmx: fix gpio request
-Date: Fri,  2 Oct 2020 11:05:39 +0200
-Message-Id: <20201002090540.1022341-1-narmstrong@baylibre.com>
+Subject: [PATCH 2/2] pinctrl: meson-axg: add missing GPIOA_18
+Date: Fri,  2 Oct 2020 11:05:40 +0200
+Message-Id: <20201002090540.1022341-2-narmstrong@baylibre.com>
+In-Reply-To: <20201002090540.1022341-1-narmstrong@baylibre.com>
+References: <20201002090540.1022341-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The AXG pmx driver gpio request offset needs the pin base to have the
-correct pin number.
+Add the missing GPIOA_18 from the missing EE gpio list.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pinctrl/meson/pinctrl-meson-axg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c b/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
-index c6cb941d0a..cfe94cf9e1 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
-@@ -165,7 +165,10 @@ const struct pinctrl_ops meson_axg_pinctrl_ops = {
- static int meson_axg_gpio_request(struct udevice *dev,
- 				  unsigned int offset, const char *label)
- {
--	return meson_axg_pmx_update_function(dev->parent, offset, 0);
-+	struct meson_pinctrl *priv = dev_get_priv(dev->parent);
-+
-+	return meson_axg_pmx_update_function(dev->parent,
-+					     offset + priv->data->pin_base, 0);
- }
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg.c b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+index 8f23c8cef1..11809b29f3 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-axg.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+@@ -298,6 +298,7 @@ static struct meson_pmx_group meson_axg_periphs_groups[] = {
+ 	GPIO_GROUP(GPIOA_15, EE_OFF),
+ 	GPIO_GROUP(GPIOA_16, EE_OFF),
+ 	GPIO_GROUP(GPIOA_17, EE_OFF),
++	GPIO_GROUP(GPIOA_18, EE_OFF),
+ 	GPIO_GROUP(GPIOA_19, EE_OFF),
+ 	GPIO_GROUP(GPIOA_20, EE_OFF),
  
- static const struct dm_gpio_ops meson_axg_gpio_ops = {
 -- 
 2.25.1
 
