@@ -1,97 +1,63 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web11.10411.1601630175623178281
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web11.38442.1601913723181170636
  for <u-boot-amlogic@groups.io>;
- Fri, 02 Oct 2020 02:16:15 -0700
-Received: by mail-wr1-f67.google.com with SMTP id m6so985420wrn.0
-        for <u-boot-amlogic@groups.io>; Fri, 02 Oct 2020 02:16:15 -0700 (PDT)
+ Mon, 05 Oct 2020 09:02:04 -0700
+Received: by mail-wr1-f66.google.com with SMTP id n18so2387767wrs.5
+        for <u-boot-amlogic@groups.io>; Mon, 05 Oct 2020 09:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VCa6tY0SJuY+7pxkTM1JSjuiia+vESV2fSnudmzR064=;
-        b=wcMxvYZcgmKBIjEYTDU79HUN/SmI4P17bGcbbrMT8Q5e8pugN1p0rIA7rTANujbklx
-         pLC1+di9EUBBZPDqSDSp0jM2iMT3/2s08oDKMzE2oQMldtvyQ72ZvXxtXI6jKCv4HoA1
-         krzyBx0cF+2IsEa3AQVo0i1albGzlVeai8A+Yt/XqE5ZPWuXS/3pFfDAIINEgWeFSE20
-         d35vEsMPjXudgpT+Xk/Nvu8rUJmr91ftTos3NI1llSyYg9eoH6tCUYe0nsSlCsSA8ZFM
-         bMx/dfWnO/2aJHIcwy/IFTthZjqL9sVf/kolG4xdvpJLHP08sI2T4/sKByfDccXBLd+m
-         +4Eg==
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cdr10IkcxALZs5Lr73ElWl9ufOp10e6DKH/O/nbK3TI=;
+        b=SEVG70HdpnAUOjCYNTR7qkitMzSUSNfRiHBKJnclfxHnFZ9hep4b6lxN0riuWEDWC8
+         bS5mIqx230isoWKlMtd2woccVgvAQrbBlvaorNyDkJX0tebX4Xab7VbujMf58JZzTWBS
+         0kmnB3SLCDMpwFxpu0qNyf4OzdH9TWnOwpBD5PlMPgYZnNMgOwcuBDYtmmlfbxINth6p
+         C3lVR1g837zvGKp58Gtg8MgII9zMlhiaZAJdjSh0O8jn+qNejzU5yI+g9pve9OWUG50S
+         4Q8d3K/lSeigTinOHrJDFlVx6hyrcFFxHu3hFxoxvWoecVfnJIgBrV2SCGfHmycdJOQs
+         w6nQ==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/2] pinctrl: meson-axg-pmx: fix gpio request
+References: <20201002090540.1022341-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] video: dw-mipi-dsi: permit configuring the escape clock rate
-Date: Fri,  2 Oct 2020 11:16:09 +0200
-Message-Id: <20201002091609.1023621-2-narmstrong@baylibre.com>
-In-Reply-To: <20201002091609.1023621-1-narmstrong@baylibre.com>
-References: <20201002091609.1023621-1-narmstrong@baylibre.com>
+Message-ID: <a4dd074f-1ce0-08f5-96af-8528ccb7d73b@baylibre.com>
+Date: Mon, 5 Oct 2020 18:01:59 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: yannick.fertre@st.com, patrick.delaunay@st.com, agust@denx.de
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <20201002090540.1022341-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-The Amlogic D-PHY in the Amlogic AXG SoC Family does support a frequency
-higher than 10MHz for the TX Escape Clock, thus make the target rate
-configurable.
+On 02/10/2020 11:05, Neil Armstrong wrote:
+> The AXG pmx driver gpio request offset needs the pin base to have the
+> correct pin number.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c b/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
+> index c6cb941d0a..cfe94cf9e1 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c
+> @@ -165,7 +165,10 @@ const struct pinctrl_ops meson_axg_pinctrl_ops = {
+>  static int meson_axg_gpio_request(struct udevice *dev,
+>  				  unsigned int offset, const char *label)
+>  {
+> -	return meson_axg_pmx_update_function(dev->parent, offset, 0);
+> +	struct meson_pinctrl *priv = dev_get_priv(dev->parent);
+> +
+> +	return meson_axg_pmx_update_function(dev->parent,
+> +					     offset + priv->data->pin_base, 0);
+>  }
+>  
+>  static const struct dm_gpio_ops meson_axg_gpio_ops = {
+> 
 
-This is based on the Linux commit [1] and adapted to the U-Boot driver.
+Applied both to u-boot-amlogic
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-
-[1] a328ca7e4af3 ("drm/bridge: dw-mipi-dsi: permit configuring the escape clock rate")
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/video/dw_mipi_dsi.c | 20 ++++++++++++++++----
- include/mipi_dsi.h          |  1 +
- 2 files changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/video/dw_mipi_dsi.c b/drivers/video/dw_mipi_dsi.c
-index 8f909a4e9f..12a55cfbec 100644
---- a/drivers/video/dw_mipi_dsi.c
-+++ b/drivers/video/dw_mipi_dsi.c
-@@ -483,15 +483,27 @@ static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
- 
- static void dw_mipi_dsi_init_pll(struct dw_mipi_dsi *dsi)
- {
-+	const struct mipi_dsi_phy_ops *phy_ops = dsi->phy_ops;
-+	unsigned int esc_rate;
-+	u32 esc_clk_division;
-+
- 	/*
- 	 * The maximum permitted escape clock is 20MHz and it is derived from
--	 * lanebyteclk, which is running at "lane_mbps / 8".  Thus we want:
-+	 * lanebyteclk, which is running at "lane_mbps / 8".
-+	 */
-+	if (phy_ops->get_esc_clk_rate)
-+		phy_ops->get_esc_clk_rate(dsi->device, &esc_rate);
-+	else
-+		esc_rate = 20; /* Default to 20MHz */
-+
-+	/*
-+	 * We want:
- 	 *
--	 *     (lane_mbps >> 3) / esc_clk_division < 20
-+	 *     (lane_mbps >> 3) / esc_clk_division < X
- 	 * which is:
--	 *     (lane_mbps >> 3) / 20 > esc_clk_division
-+	 *     (lane_mbps >> 3) / X > esc_clk_division
- 	 */
--	u32 esc_clk_division = (dsi->lane_mbps >> 3) / 20 + 1;
-+	esc_clk_division = (dsi->lane_mbps >> 3) / esc_rate + 1;
- 
- 	dsi_write(dsi, DSI_PWR_UP, RESET);
- 
-diff --git a/include/mipi_dsi.h b/include/mipi_dsi.h
-index 55c7ab3328..4ca05f71e2 100644
---- a/include/mipi_dsi.h
-+++ b/include/mipi_dsi.h
-@@ -123,6 +123,7 @@ struct mipi_dsi_phy_ops {
- 	void (*post_set_mode)(void *priv_data,  unsigned long mode_flags);
- 	int (*get_timing)(void *priv_data, unsigned int lane_mbps,
- 			  struct mipi_dsi_phy_timing *timing);
-+	void (*get_esc_clk_rate)(void *priv_data, unsigned int *esc_clk_rate);
- };
- 
- /**
--- 
-2.25.1
-
+Neil
