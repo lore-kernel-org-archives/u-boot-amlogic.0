@@ -1,621 +1,157 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web10.38952.1601913765803392746
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web10.8746.1601967376093075462
  for <u-boot-amlogic@groups.io>;
- Mon, 05 Oct 2020 09:02:46 -0700
-Received: by mail-wr1-f68.google.com with SMTP id n15so4450591wrq.2
-        for <u-boot-amlogic@groups.io>; Mon, 05 Oct 2020 09:02:45 -0700 (PDT)
+ Mon, 05 Oct 2020 23:56:16 -0700
+Received: by mail-wr1-f67.google.com with SMTP id k10so12115910wru.6
+        for <u-boot-amlogic@groups.io>; Mon, 05 Oct 2020 23:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JRRtCQmsnMFmTA8yyU92pjhb/smTXbreUT1y0SRtsoA=;
-        b=N51sqQSXMYPtM1m3vLciAwn0kEh5cz0V0dQuqCtjLhx9yKDA0yrvWoEXNevx2tF6yK
-         6t6tEMSuGdvDiop77gcbOjghKsqQ4pExYla+9UMfp0Auu+H+TKBEXMOE3Ccdd6Gv7m2L
-         gNzOfEOKeEJ6DZ08/VvhM+SauPOwakhDcBQV1omSaYY8DpV1tJhRgR4C9XENkuREZayy
-         ep10HuNQ036tuj7d0XW5bS3n+crXxqlDWOX2LzAmmCBRzHePTqOcH9rRNT5aLZzBhfM8
-         5NLcezI+/q2iSiIw6SNNVswKuu/opjC0jtTnkRQiXWvGvPL+x8J+7fxvtaZW9QXwsSfj
-         5tZg==
+        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=N30hps9KiYYCzpuprf4YmYAO/8OwbFEqBgI7cuRJTOk=;
+        b=vQaYzJvg19tWdJfTYrZc8ajHrsF63MrYsandm9slUCSPrIvnACD1SnIDvaXLnP453i
+         MHvWaImyShRhSIYTC2/ToB4yxd2qT5zZClFxg7PipU4QoUCTLLqZnkRd0JQZJemYdxR7
+         zqfJ2VqqNYHa64qRNguwg8ig1AdcGLR3EDdvRFQ4IA2LXuzT3KftpIqupsyu9ApexgGX
+         a85Ihy8qaColDBqvFNhxw2TYrfox0ZP9xmBUE7H9+VtHQJict30ZRcc3YJ8CKf72JbId
+         VAF/P/Y8zsjlm5OC+wo6V5f5mSLFljFtBFCpcuJ+CtZhIm0peNXMz1837gK6jp2hyYcg
+         PoNQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] pwm: Add driver for Amlogic Meson PWM controller
-References: <163A21CF07E30B9A.4021@groups.io>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <41c6d230-c502-6c6f-46e1-b1e71e01c8e4@baylibre.com>
-Date: Mon, 5 Oct 2020 18:02:42 +0200
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20201005
+Reply-To: narmstrong@baylibre.com
+Message-ID: <857ef1d4-ff80-56fd-a34e-853c6a8ed151@baylibre.com>
+Date: Tue, 6 Oct 2020 08:56:12 +0200
 MIME-Version: 1.0
-In-Reply-To: <163A21CF07E30B9A.4021@groups.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 02/10/2020 11:09, Neil Armstrong via groups.io wrote:
-> This adds the driver for the PWM controller found in the Amlogic SoCs.
-> 
-> This PWM is only a set of Gates, Dividers and Counters:
-> PWM output is achieved by calculating a clock that permits calculating
-> two periods (low and high). The counter then has to be set to switch after
-> N cycles for the first half period.
-> The hardware has no "polarity" setting. This driver reverses the period
-> cycles (the low length is inverted with the high length) for
-> PWM_POLARITY_INVERSED.
-> 
-> Disabling the PWM stops the output immediately (without waiting for the
-> current period to complete first).
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/pwm/Kconfig     |   7 +
->  drivers/pwm/Makefile    |   1 +
->  drivers/pwm/pwm-meson.c | 528 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 536 insertions(+)
->  create mode 100644 drivers/pwm/pwm-meson.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 61eb468cde..b3bd5c6bb7 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -23,6 +23,13 @@ config PWM_IMX
->  	help
->  	  This PWM is found i.MX27 and later i.MX SoCs.
->  
-> +config PWM_MESON
-> +	bool "Enable support for Amlogic Meson SoCs PWM"
-> +	depends on DM_PWM
-> +	help
-> +	  This PWM is found on Amlogic Meson SoCs. It supports a
-> +	  programmable period and duty cycle for 2 independant channels.
-> +
->  config PWM_MTK
->  	bool "Enable support for MediaTek PWM"
->  	depends on DM_PWM
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 0f4e84b04d..f21ae7d76e 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_DM_PWM)		+= pwm-uclass.o
->  
->  obj-$(CONFIG_PWM_EXYNOS)	+= exynos_pwm.o
->  obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o pwm-imx-util.o
-> +obj-$(CONFIG_PWM_MESON)		+= pwm-meson.o
->  obj-$(CONFIG_PWM_MTK)		+= pwm-mtk.o
->  obj-$(CONFIG_PWM_ROCKCHIP)	+= rk_pwm.o
->  obj-$(CONFIG_PWM_SANDBOX)	+= sandbox_pwm.o
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> new file mode 100644
-> index 0000000000..cafb571f16
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -0,0 +1,528 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/*
-> + * Copyright (C) 2020 BayLibre, SAS.
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + * Copyright (C) 2014 Amlogic, Inc.
-> + *
-> + * This PWM is only a set of Gates, Dividers and Counters:
-> + * PWM output is achieved by calculating a clock that permits calculating
-> + * two periods (low and high). The counter then has to be set to switch after
-> + * N cycles for the first half period.
-> + * The hardware has no "polarity" setting. This driver reverses the period
-> + * cycles (the low length is inverted with the high length) for
-> + * PWM_POLARITY_INVERSED.
-> + * Setting the polarity will disable and re-enable the PWM output.
-> + * Disabling the PWM stops the output immediately (without waiting for the
-> + * current period to complete first).
-> + */
-> +
-> +#include <common.h>
-> +#include <clk.h>
-> +#include <div64.h>
-> +#include <dm.h>
-> +#include <pwm.h>
-> +#include <regmap.h>
-> +#include <linux/io.h>
-> +#include <linux/math64.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk-provider.h>
-> +
-> +#define NSEC_PER_SEC 1000000000L
-> +
-> +#define REG_PWM_A		0x0
-> +#define REG_PWM_B		0x4
-> +#define PWM_LOW_MASK		GENMASK(15, 0)
-> +#define PWM_HIGH_MASK		GENMASK(31, 16)
-> +
-> +#define REG_MISC_AB		0x8
-> +#define MISC_B_CLK_EN		BIT(23)
-> +#define MISC_A_CLK_EN		BIT(15)
-> +#define MISC_CLK_DIV_MASK	0x7f
-> +#define MISC_B_CLK_DIV_SHIFT	16
-> +#define MISC_A_CLK_DIV_SHIFT	8
-> +#define MISC_B_CLK_SEL_SHIFT	6
-> +#define MISC_A_CLK_SEL_SHIFT	4
-> +#define MISC_CLK_SEL_MASK	0x3
-> +#define MISC_B_EN		BIT(1)
-> +#define MISC_A_EN		BIT(0)
-> +
-> +#define MESON_NUM_PWMS		2
-> +
-> +static struct meson_pwm_channel_data {
-> +	u8		reg_offset;
-> +	u8		clk_sel_shift;
-> +	u8		clk_div_shift;
-> +	u32		clk_en_mask;
-> +	u32		pwm_en_mask;
-> +} meson_pwm_per_channel_data[MESON_NUM_PWMS] = {
-> +	{
-> +		.reg_offset	= REG_PWM_A,
-> +		.clk_sel_shift	= MISC_A_CLK_SEL_SHIFT,
-> +		.clk_div_shift	= MISC_A_CLK_DIV_SHIFT,
-> +		.clk_en_mask	= MISC_A_CLK_EN,
-> +		.pwm_en_mask	= MISC_A_EN,
-> +	},
-> +	{
-> +		.reg_offset	= REG_PWM_B,
-> +		.clk_sel_shift	= MISC_B_CLK_SEL_SHIFT,
-> +		.clk_div_shift	= MISC_B_CLK_DIV_SHIFT,
-> +		.clk_en_mask	= MISC_B_CLK_EN,
-> +		.pwm_en_mask	= MISC_B_EN,
-> +	}
-> +};
-> +
-> +struct meson_pwm_channel {
-> +	unsigned int hi;
-> +	unsigned int lo;
-> +	u8 pre_div;
-> +	uint period_ns;
-> +	uint duty_ns;
-> +	bool configured;
-> +	bool enabled;
-> +	bool polarity;
-> +	struct clk clk;
-> +};
-> +
-> +struct meson_pwm_data {
-> +	const long *parent_ids;
-> +	unsigned int num_parents;
-> +};
-> +
-> +struct meson_pwm {
-> +	const struct meson_pwm_data *data;
-> +	struct meson_pwm_channel channels[MESON_NUM_PWMS];
-> +	void __iomem *base;
-> +};
-> +
-> +static int meson_pwm_set_enable(struct udevice *dev, uint channel, bool enable);
-> +
-> +static int meson_pwm_set_config(struct udevice *dev, uint channeln,
-> +				 uint period_ns, uint duty_ns)
-> +{
-> +	struct meson_pwm *priv = dev_get_priv(dev);
-> +	struct meson_pwm_channel *channel;
-> +	struct meson_pwm_channel_data *channel_data;
-> +	unsigned int duty, period, pre_div, cnt, duty_cnt;
-> +	unsigned long fin_freq;
-> +
-> +	if (channeln >= MESON_NUM_PWMS)
-> +		return -ENODEV;
-> +
-> +	channel = &priv->channels[channeln];
-> +	channel_data = &meson_pwm_per_channel_data[channeln];
-> +
-> +	period = period_ns;
-> +	if (channel->polarity)
-> +		duty = period_ns - duty_ns;
-> +	else
-> +		duty = duty_ns;
-> +
-> +	debug("%s%d: polarity %s duty %d period %d\n", __func__, channeln,
-> +	      channel->polarity ? "true" : "false", duty, period);
-> +
-> +	fin_freq = clk_get_rate(&channel->clk);
-> +	if (fin_freq == 0) {
-> +		printf("%s%d: invalid source clock frequency\n", __func__, channeln);
-> +		return -EINVAL;
-> +	}
-> +
-> +	debug("%s%d: fin_freq: %lu Hz\n", __func__, channeln, fin_freq);
-> +
-> +	pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
-> +	if (pre_div > MISC_CLK_DIV_MASK) {
-> +		printf("%s%d: unable to get period pre_div\n", __func__, channeln);
-> +		return -EINVAL;
-> +	}
-> +
-> +	cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
-> +	if (cnt > 0xffff) {
-> +		printf("%s%d: unable to get period cnt\n", __func__, channeln);
-> +		return -EINVAL;
-> +	}
-> +
-> +	debug("%s%d: period=%u pre_div=%u cnt=%u\n", __func__, channeln, period, pre_div, cnt);
-> +
-> +	if (duty == period) {
-> +		channel->pre_div = pre_div;
-> +		channel->hi = cnt;
-> +		channel->lo = 0;
-> +	} else if (duty == 0) {
-> +		channel->pre_div = pre_div;
-> +		channel->hi = 0;
-> +		channel->lo = cnt;
-> +	} else {
-> +		/* Then check is we can have the duty with the same pre_div */
-> +		duty_cnt = div64_u64(fin_freq * (u64)duty, NSEC_PER_SEC * (pre_div + 1));
-> +		if (duty_cnt > 0xffff) {
-> +			printf("%s%d: unable to get duty cycle\n", __func__, channeln);
-> +			return -EINVAL;
-> +		}
-> +
-> +		debug("%s%d: duty=%u pre_div=%u duty_cnt=%u\n",
-> +		      __func__, channeln, duty, pre_div, duty_cnt);
-> +
-> +		channel->pre_div = pre_div;
-> +		channel->hi = duty_cnt;
-> +		channel->lo = cnt - duty_cnt;
-> +	}
-> +
-> +	channel->period_ns = period_ns;
-> +	channel->duty_ns = duty_ns;
-> +	channel->configured = true;
-> +
-> +	if (channel->enabled) {
-> +		meson_pwm_set_enable(dev, channeln, false);
-> +		meson_pwm_set_enable(dev, channeln, true);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson_pwm_set_enable(struct udevice *dev, uint channeln, bool enable)
-> +{
-> +	struct meson_pwm *priv = dev_get_priv(dev);
-> +	struct meson_pwm_channel *channel;
-> +	struct meson_pwm_channel_data *channel_data;
-> +	u32 value;
-> +
-> +	if (channeln >= MESON_NUM_PWMS)
-> +		return -ENODEV;
-> +
-> +	channel = &priv->channels[channeln];
-> +	channel_data = &meson_pwm_per_channel_data[channeln];
-> +
-> +	if (!channel->configured)
-> +		return -EINVAL;
-> +
-> +	if (enable) {
-> +		if (channel->enabled)
-> +			return 0;
-> +
-> +		value = readl(priv->base + REG_MISC_AB);
-> +		value &= ~(MISC_CLK_DIV_MASK << channel_data->clk_div_shift);
-> +		value |= channel->pre_div << channel_data->clk_div_shift;
-> +		value |= channel_data->clk_en_mask;
-> +		writel(value, priv->base + REG_MISC_AB);
-> +
-> +		value = FIELD_PREP(PWM_HIGH_MASK, channel->hi) |
-> +			FIELD_PREP(PWM_LOW_MASK, channel->lo);
-> +		writel(value, priv->base + channel_data->reg_offset);
-> +
-> +		value = readl(priv->base + REG_MISC_AB);
-> +		value |= channel_data->pwm_en_mask;
-> +		writel(value, priv->base + REG_MISC_AB);
-> +
-> +		debug("%s%d: enabled\n", __func__, channeln);
-> +		channel->enabled = true;
-> +	} else {
-> +		if (!channel->enabled)
-> +			return 0;
-> +
-> +		value = readl(priv->base + REG_MISC_AB);
-> +		value &= channel_data->pwm_en_mask;
-> +		writel(value, priv->base + REG_MISC_AB);
-> +
-> +		debug("%s%d: disabled\n", __func__, channeln);
-> +		channel->enabled = false;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson_pwm_set_invert(struct udevice *dev, uint channeln, bool polarity)
-> +{
-> +	struct meson_pwm *priv = dev_get_priv(dev);
-> +	struct meson_pwm_channel *channel;
-> +
-> +	if (channeln >= MESON_NUM_PWMS)
-> +		return -ENODEV;
-> +
-> +	debug("%s%d: set invert %s\n", __func__, channeln, polarity ? "true" : "false");
-> +
-> +	channel = &priv->channels[channeln];
-> +
-> +	channel->polarity = polarity;
-> +
-> +	if (!channel->configured)
-> +		return 0;
-> +
-> +	return meson_pwm_set_config(dev, channeln, channel->period_ns, channel->duty_ns);
-> +}
-> +
-> +static int meson_pwm_ofdata_to_platdata(struct udevice *dev)
-> +{
-> +	struct meson_pwm *priv = dev_get_priv(dev);
-> +
-> +	priv->base = dev_read_addr_ptr(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson_pwm_probe(struct udevice *dev)
-> +{
-> +	struct meson_pwm *priv = dev_get_priv(dev);
-> +	struct meson_pwm_data *data;
-> +	unsigned int i, p;
-> +	char name[255];
-> +	int err;
-> +	u32 reg;
-> +
-> +	data = (struct meson_pwm_data *)dev_get_driver_data(dev);
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < MESON_NUM_PWMS; i++) {
-> +		struct meson_pwm_channel *channel = &priv->channels[i];
-> +		struct meson_pwm_channel_data *channel_data = &meson_pwm_per_channel_data[i];
-> +
-> +		snprintf(name, sizeof(name), "clkin%u", i);
-> +
-> +		err = clk_get_by_name(dev, name, &channel->clk);
-> +		/* If clock is not specified, use the already set clock */
-> +		if (err == -ENODATA) {
-> +			struct udevice *cdev;
-> +			struct uclass *uc;
-> +
-> +			/* Get parent from mux */
-> +			p = (readl(priv->base + REG_MISC_AB) >> channel_data->clk_sel_shift) &
-> +				MISC_CLK_SEL_MASK;
-> +
-> +			if (p >= data->num_parents) {
-> +				printf("%s%d: hw parent is invalid\n", __func__, i);
-> +				return -EINVAL;
-> +			}
-> +
-> +			if (data->parent_ids[p] == -1) {
-> +				/* Search for xtal clk */
-> +				const char *str;
-> +
-> +				err = uclass_get(UCLASS_CLK, &uc);
-> +				if (err)
-> +					return err;
-> +
-> +				uclass_foreach_dev(cdev, uc) {
-> +					if (strcmp(cdev->driver->name, "fixed_rate_clock"))
-> +						continue;
-> +
-> +					str = ofnode_read_string(cdev->node, "clock-output-names");
-> +					if (!str)
-> +						continue;
-> +
-> +					if (!strcmp(str, "xtal")) {
-> +						err = uclass_get_device_by_ofnode(UCLASS_CLK,
-> +										  cdev->node,
-> +										  &cdev);
-> +						if (err) {
-> +							printf("%s%d: Failed to get xtal clk\n", __func__, i);
-> +							return err;
-> +						}
-> +
-> +						break;
-> +					}
-> +				}
-> +
-> +				if (!cdev) {
-> +					printf("%s%d: Failed to find xtal clk device\n", __func__, i);
-> +					return -EINVAL;
-> +				}
-> +
-> +				channel->clk.dev = cdev;
-> +				channel->clk.id = 0;
-> +				channel->clk.data = 0;
-> +			} else {
-> +				/* Look for parent clock */
-> +				err = uclass_get(UCLASS_CLK, &uc);
-> +				if (err)
-> +					return err;
-> +
-> +				uclass_foreach_dev(cdev, uc) {
-> +					if (strstr(cdev->driver->name, "meson_clk"))
-> +						break;
-> +				}
-> +
-> +				if (!cdev) {
-> +					printf("%s%d: Failed to find clk device\n", __func__, i);
-> +					return -EINVAL;
-> +				}
-> +
-> +				err = uclass_get_device_by_ofnode(UCLASS_CLK, cdev->node, &cdev);
-> +				if (err) {
-> +					printf("%s%d: Failed to get clk controller\n", __func__, i);
-> +					return err;
-> +				}
-> +
-> +				channel->clk.dev = cdev;
-> +				channel->clk.id = data->parent_ids[p];
-> +				channel->clk.data = 0;
-> +			}
-> +
-> +			/* We have our source clock, do not alter HW clock mux */
-> +			continue;
-> +		} else
-> +			return err;
-> +
-> +		/* Get id in list */
-> +		for (p = 0 ; p < data->num_parents ; ++p) {
-> +			if (!strcmp(channel->clk.dev->driver->name, "fixed_rate_clock")) {
-> +				if (data->parent_ids[p] == -1)
-> +					break;
-> +			} else {
-> +				if (data->parent_ids[p] == channel->clk.id)
-> +					break;
-> +			}
-> +		}
-> +
-> +		/* Invalid clock ID */
-> +		if (p == data->num_parents) {
-> +			printf("%s%d: source clock is invalid\n", __func__, i);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* switch parent in mux */
-> +		reg = readl(priv->base + REG_MISC_AB);
-> +
-> +		debug("%s%d: switching parent %d to %d\n", __func__, i,
-> +		      (reg >> channel_data->clk_sel_shift) & MISC_CLK_SEL_MASK, p);
-> +
-> +		reg &= MISC_CLK_SEL_MASK << channel_data->clk_sel_shift;
-> +		reg |= (p & MISC_CLK_SEL_MASK) << channel_data->clk_sel_shift;
-> +		writel(reg, priv->base + REG_MISC_AB);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops meson_pwm_ops = {
-> +	.set_config	= meson_pwm_set_config,
-> +	.set_enable	= meson_pwm_set_enable,
-> +	.set_invert	= meson_pwm_set_invert,
-> +};
-> +
-> +#define XTAL 			-1
-> +
-> +/* Local clock ids aliases to avoid define conflicts */
-> +#define GXBB_CLKID_HDMI_PLL		2
-> +#define GXBB_CLKID_FCLK_DIV3		5
-> +#define GXBB_CLKID_FCLK_DIV4		6
-> +#define GXBB_CLKID_CLK81		12
-> +
-> +static const long pwm_gxbb_parent_ids[] = {
-> +	XTAL, GXBB_CLKID_HDMI_PLL, GXBB_CLKID_FCLK_DIV4, GXBB_CLKID_FCLK_DIV3
-> +};
-> +
-> +static const struct meson_pwm_data pwm_gxbb_data = {
-> +	.parent_ids = pwm_gxbb_parent_ids,
-> +	.num_parents = ARRAY_SIZE(pwm_gxbb_parent_ids),
-> +};
-> +
-> +/*
-> + * Only the 2 first inputs of the GXBB AO PWMs are valid
-> + * The last 2 are grounded
-> + */
-> +static const long pwm_gxbb_ao_parent_ids[] = {
-> +	XTAL, GXBB_CLKID_CLK81
-> +};
-> +
-> +static const struct meson_pwm_data pwm_gxbb_ao_data = {
-> +	.parent_ids = pwm_gxbb_ao_parent_ids,
-> +	.num_parents = ARRAY_SIZE(pwm_gxbb_ao_parent_ids),
-> +};
-> +
-> +/* Local clock ids aliases to avoid define conflicts */
-> +#define AXG_CLKID_FCLK_DIV3		3
-> +#define AXG_CLKID_FCLK_DIV4		4
-> +#define AXG_CLKID_FCLK_DIV5		5
-> +#define AXG_CLKID_CLK81			10
-> +
-> +static const long pwm_axg_ee_parent_ids[] = {
-> +	XTAL, AXG_CLKID_FCLK_DIV5, AXG_CLKID_FCLK_DIV4, AXG_CLKID_FCLK_DIV3
-> +};
-> +
-> +static const struct meson_pwm_data pwm_axg_ee_data = {
-> +	.parent_ids = pwm_axg_ee_parent_ids,
-> +	.num_parents = ARRAY_SIZE(pwm_axg_ee_parent_ids),
-> +};
-> +
-> +static const long pwm_axg_ao_parent_ids[] = {
-> +	AXG_CLKID_CLK81, XTAL, AXG_CLKID_FCLK_DIV4, AXG_CLKID_FCLK_DIV5
-> +};
-> +
-> +static const struct meson_pwm_data pwm_axg_ao_data = {
-> +	.parent_ids = pwm_axg_ao_parent_ids,
-> +	.num_parents = ARRAY_SIZE(pwm_axg_ao_parent_ids),
-> +};
-> +
-> +/* Local clock ids aliases to avoid define conflicts */
-> +#define G12A_CLKID_FCLK_DIV3		3
-> +#define G12A_CLKID_FCLK_DIV4		4
-> +#define G12A_CLKID_FCLK_DIV5		5
-> +#define G12A_CLKID_CLK81		10
-> +#define G12A_CLKID_HDMI_PLL		128
-> +
-> +static const long pwm_g12a_ao_ab_parent_ids[] = {
-> +	XTAL, G12A_CLKID_CLK81, G12A_CLKID_FCLK_DIV4, G12A_CLKID_FCLK_DIV5
-> +};
-> +
-> +static const struct meson_pwm_data pwm_g12a_ao_ab_data = {
-> +	.parent_ids = pwm_g12a_ao_ab_parent_ids,
-> +	.num_parents = ARRAY_SIZE(pwm_g12a_ao_ab_parent_ids),
-> +};
-> +
-> +static const long pwm_g12a_ao_cd_parent_ids[] = {
-> +	XTAL, G12A_CLKID_CLK81,
-> +};
-> +
-> +static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
-> +	.parent_ids = pwm_g12a_ao_cd_parent_ids,
-> +	.num_parents = ARRAY_SIZE(pwm_g12a_ao_cd_parent_ids),
-> +};
-> +
-> +static const long pwm_g12a_ee_parent_ids[] = {
-> +	XTAL, G12A_CLKID_HDMI_PLL, G12A_CLKID_FCLK_DIV4, G12A_CLKID_FCLK_DIV3
-> +};
-> +
-> +static const struct meson_pwm_data pwm_g12a_ee_data = {
-> +	.parent_ids = pwm_g12a_ee_parent_ids,
-> +	.num_parents = ARRAY_SIZE(pwm_g12a_ee_parent_ids),
-> +};
-> +
-> +static const struct udevice_id meson_pwm_ids[] = {
-> +	{
-> +		.compatible = "amlogic,meson-gxbb-pwm",
-> +		.data = (ulong)&pwm_gxbb_data
-> +	},
-> +	{
-> +		.compatible = "amlogic,meson-gxbb-ao-pwm",
-> +		.data = (ulong)&pwm_gxbb_ao_data
-> +	},
-> +	{
-> +		.compatible = "amlogic,meson-axg-ee-pwm",
-> +		.data = (ulong)&pwm_axg_ee_data
-> +	},
-> +	{
-> +		.compatible = "amlogic,meson-axg-ao-pwm",
-> +		.data = (ulong)&pwm_axg_ao_data
-> +	},
-> +	{
-> +		.compatible = "amlogic,meson-g12a-ee-pwm",
-> +		.data = (ulong)&pwm_g12a_ee_data
-> +	},
-> +	{
-> +		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
-> +		.data = (ulong)&pwm_g12a_ao_ab_data
-> +	},
-> +	{
-> +		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
-> +		.data = (ulong)&pwm_g12a_ao_cd_data
-> +	},
-> +};
-> +
-> +U_BOOT_DRIVER(meson_pwm) = {
-> +	.name	= "meson_pwm",
-> +	.id	= UCLASS_PWM,
-> +	.of_match = meson_pwm_ids,
-> +	.ops	= &meson_pwm_ops,
-> +	.ofdata_to_platdata = meson_pwm_ofdata_to_platdata,
-> +	.probe	 = meson_pwm_probe,
-> +	.priv_auto_alloc_size	= sizeof(struct meson_pwm),
-> +};
-> 
+Hi Tom,
 
-Applied to u-boot-amlogic
+This PR adds proper USB OTG support for GXL/GXM and AXG based boards with Linux 5.8 DT sync,
+adds dynamic PCIe enable in OS DT for the VIM3/VIM3L boards with Linux 5.9 DT sync,
+AXG pinctrl fixes, introduces the Amlogic PWM driver and enables an unique mac address
+from SoC serial on S400 board.
+
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/4915
+
+Thanks,
+Neil
+
+The following changes since commit 050acee119b3757fee3bd128f55d720fdd9bb890:
+
+  Prepare v2020.10 (2020-10-05 11:15:32 -0400)
+
+are available in the Git repository at:
+
+  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20201005
+
+for you to fetch changes up to 2d481b2e3e22f7be854d381a7bafd92a65e18b23:
+
+  pwm: Add driver for Amlogic Meson PWM controller (2020-10-05 18:02:16 +0200)
+
+----------------------------------------------------------------
+- generate unique mac address from SoC serial on S400 board
+- Add USB support for GXL and AXG SoCs
+- Update Gadget code to use the new GXL and AXG USB glue driver
+- Add a VIM3 board support to add dynamic PCIe enable in OS DT
+- Fix AXG pinmux with requesting GPIOs
+- Add missing GPIOA_18 for AXG pinctrl
+- Add Amlogic PWM driver
+
+----------------------------------------------------------------
+Neil Armstrong (16):
+      board: s400: generate unique mac address from SoC serial
+      ARM: dts: sync amlogic AXG/GXL/GXM DT from Linux 5.8-rc1
+      usb: dwc3: add Amlogic GXL & GXL DWC3 Glue
+      ARM: mach-meson: use new DWC3 glue for GXL & GXM
+      phy: meson-gxl: remove invalid USB3 PHY driver
+      phy: meson-gxl-usb: depend on Meson AXG aswell
+      arm: meson-axg: add board_usb_init()/cleanup() for USB gadget
+      ARM: dts: meson-axg: add USB nodes for S400
+      configs: s400: enable USB
+      ARM: dts: sync amlogic G12A/SM1 DT from Linux 5.9-rc1
+      board: amlogic: add a vim3 specific board support
+      configs: vim3: use the vim3 board support
+      board: amlogic: vim3: add support for dynamic PCIe enable
+      pinctrl: meson-axg-pmx: fix gpio request
+      pinctrl: meson-axg: add missing GPIOA_18
+      pwm: Add driver for Amlogic Meson PWM controller
+
+ arch/arm/dts/meson-axg-s400-u-boot.dtsi            |  12 +
+ arch/arm/dts/meson-axg-u-boot.dtsi                 |  62 +++
+ arch/arm/dts/meson-axg.dtsi                        |   6 +-
+ arch/arm/dts/meson-g12-common.dtsi                 |  55 ++-
+ arch/arm/dts/meson-g12b-odroid-n2.dts              | 136 +++++-
+ arch/arm/dts/meson-gx-libretech-pc.dtsi            |  78 ++-
+ arch/arm/dts/meson-gx.dtsi                         |  23 +-
+ arch/arm/dts/meson-gxbb-nanopi-k2.dts              |   2 +-
+ arch/arm/dts/meson-gxbb-odroidc2.dts               |   2 +-
+ arch/arm/dts/meson-gxbb.dtsi                       |  23 +
+ .../dts/meson-gxl-s805x-libretech-ac-u-boot.dtsi   |   4 -
+ arch/arm/dts/meson-gxl-s805x-libretech-ac.dts      |  73 ++-
+ .../dts/meson-gxl-s905d-libretech-pc-u-boot.dtsi   |   4 -
+ .../arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi |   4 -
+ arch/arm/dts/meson-gxl-s905x-khadas-vim.dts        |   4 +
+ .../dts/meson-gxl-s905x-libretech-cc-u-boot.dtsi   |   4 -
+ arch/arm/dts/meson-gxl-s905x-libretech-cc.dts      |  77 ++-
+ arch/arm/dts/meson-gxl-s905x-p212.dtsi             |   3 +-
+ arch/arm/dts/meson-gxl-u-boot.dtsi                 |  16 -
+ arch/arm/dts/meson-gxl.dtsi                        |  79 ++-
+ arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi     |   4 -
+ arch/arm/dts/meson-gxm-khadas-vim2.dts             |   3 +-
+ .../dts/meson-gxm-s912-libretech-pc-u-boot.dtsi    |   4 -
+ arch/arm/dts/meson-gxm.dtsi                        |   7 +-
+ arch/arm/dts/meson-khadas-vim3.dtsi                |  26 +-
+ arch/arm/dts/meson-sm1-khadas-vim3l.dts            |  92 ++++
+ arch/arm/dts/meson-sm1-odroid-c4.dts               |  88 ++++
+ arch/arm/include/asm/arch-meson/usb-gx.h           |   3 +-
+ arch/arm/mach-meson/board-axg.c                    | 128 +++++
+ arch/arm/mach-meson/board-gx.c                     | 127 ++---
+ board/amlogic/s400/s400.c                          |   2 +
+ board/amlogic/vim3/MAINTAINERS                     |   9 +
+ board/amlogic/vim3/Makefile                        |   6 +
+ board/amlogic/vim3/khadas-mcu.h                    |  81 ++++
+ board/amlogic/vim3/vim3.c                          | 137 ++++++
+ board/amlogic/w400/MAINTAINERS                     |   4 -
+ configs/khadas-vim2_defconfig                      |   2 +-
+ configs/khadas-vim3_defconfig                      |   5 +-
+ configs/khadas-vim3l_defconfig                     |   5 +-
+ configs/khadas-vim_defconfig                       |   2 +-
+ configs/libretech-ac_defconfig                     |   2 +-
+ configs/libretech-cc_defconfig                     |   2 +-
+ configs/libretech-s905d-pc_defconfig               |   2 +-
+ configs/libretech-s912-pc_defconfig                |   2 +-
+ configs/p212_defconfig                             |   2 +-
+ configs/s400_defconfig                             |  15 +
+ doc/board/amlogic/khadas-vim3.rst                  |  27 ++
+ doc/board/amlogic/khadas-vim3l.rst                 |  27 ++
+ drivers/phy/Kconfig                                |   2 +-
+ drivers/phy/Makefile                               |   2 +-
+ drivers/phy/meson-gxl-usb3.c                       | 219 ---------
+ drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c      |   5 +-
+ drivers/pinctrl/meson/pinctrl-meson-axg.c          |   1 +
+ drivers/pwm/Kconfig                                |   7 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-meson.c                            | 528 +++++++++++++++++++++
+ drivers/usb/dwc3/Kconfig                           |   8 +
+ drivers/usb/dwc3/Makefile                          |   1 +
+ drivers/usb/dwc3/dwc3-meson-gxl.c                  | 425 +++++++++++++++++
+ include/dt-bindings/clock/g12a-clkc.h              |   2 +
+ .../dt-bindings/reset/amlogic,meson-gxbb-reset.h   |   2 +-
+ include/dt-bindings/sound/meson-aiu.h              |  18 +
+ include/dt-bindings/sound/meson-g12a-toacodec.h    |  10 +
+ 63 files changed, 2315 insertions(+), 397 deletions(-)
+ create mode 100644 arch/arm/dts/meson-axg-u-boot.dtsi
+ create mode 100644 board/amlogic/vim3/MAINTAINERS
+ create mode 100644 board/amlogic/vim3/Makefile
+ create mode 100644 board/amlogic/vim3/khadas-mcu.h
+ create mode 100644 board/amlogic/vim3/vim3.c
+ delete mode 100644 drivers/phy/meson-gxl-usb3.c
+ create mode 100644 drivers/pwm/pwm-meson.c
+ create mode 100644 drivers/usb/dwc3/dwc3-meson-gxl.c
+ create mode 100644 include/dt-bindings/sound/meson-aiu.h
+ create mode 100644 include/dt-bindings/sound/meson-g12a-toacodec.h
