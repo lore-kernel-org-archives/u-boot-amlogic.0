@@ -1,21 +1,21 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web09.14204.1603806340217952007
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web08.13912.1603806342224963954
  for <u-boot-amlogic@groups.io>;
- Tue, 27 Oct 2020 06:45:41 -0700
-Received: by mail-wr1-f66.google.com with SMTP id j7so1956943wrt.9
-        for <u-boot-amlogic@groups.io>; Tue, 27 Oct 2020 06:45:39 -0700 (PDT)
+ Tue, 27 Oct 2020 06:45:42 -0700
+Received: by mail-wm1-f41.google.com with SMTP id c194so1436412wme.2
+        for <u-boot-amlogic@groups.io>; Tue, 27 Oct 2020 06:45:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=subject:to:cc:references:from:organization:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=oBqgFVd7Hbk/NahGoCyQQBm7kFcjDALu9BuwFYw5QDM=;
-        b=DIHhwzVLrPwo1uaOBeTK5YH9DOhZuVzEPw8vjX0Fs3Gdqia0aqnWvsN/DhcFzjXvZp
-         VnGDO30FyCYMT/RCwkj5rtC0I1IpYGsuMWuZh1XggUU8YkdR3fGzMWI9VHLJ1uCASd3I
-         BeyMKa2391Y0uydCasYbFFiRiDC2ZjIlGgM+KxTpPwB7YfK/T8hlTHnctsjBaneglmTN
-         KFEEKtt5gEHO2SVOx5rWBoF1YZrggxRMjbTdpkfIK8lMnn7AFGvK6eKI2EICpyOfgBoi
-         cZ+bnHr0lIgw/K20ifIrnOGrVrS2j/DxzUMJWnTfbCTH8wbxqUtZ3lVRLuypQq4rMoPF
-         +KfA==
+        b=QsvW+4Njr8ovkLN/ph/l4ZNtsE/JvWXJfHZ+LuMgNYwn4dC88WnQ3JvJ/7pw4ZEbVR
+         f2gMFh9HQHxdHP9Pi7dZIBySneZHZ3WDNY3C5Ne/uDnMpnUaJAvgNn8mo19DtfQVv0h7
+         vAa+RTb88V8O00Zvucntn+Fz2wrLuEda8n5UW9O2qqFGAVm24YRiS5P3fktLfjO56pc+
+         hNIBVtiOtxVWAvscQhqmK2Gq8CzobMuD5exqhaaICulEbUq5OH6JcFDN1vjG0FMGNYkH
+         Vnp/58q9bx3O2PUibTmFODkLFLzfMGlW3ye1HXOHrVkpB8Ri3WK03jGjVCFCnFQLnjcU
+         IuDg==
 Return-Path: <narmstrong@baylibre.com>
 Subject: Re: meson-gxbb regression since u-boot v2020.04
 References: <CAMeizLdpoevi6Fj-X=abWe2QKuvdrJ4gkS_=2yzpBmrnO-RDaQ@mail.gmail.com>
@@ -24,8 +24,8 @@ References: <CAMeizLdpoevi6Fj-X=abWe2QKuvdrJ4gkS_=2yzpBmrnO-RDaQ@mail.gmail.com>
  <1jblgpj8zd.fsf@starbuckisacylon.baylibre.com>
  <CAMeizLc163WqCM-MVGFSSZnrZ_6mwVTrtje4Vp86d8z4gDw-SQ@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <f3f5b4b7-d8b6-70c9-6c15-3a5139fda4b7@baylibre.com>
-Date: Tue, 27 Oct 2020 14:45:35 +0100
+Message-ID: <032e222c-1f46-0efc-d92b-ee848fc2c12e@baylibre.com>
+Date: Tue, 27 Oct 2020 14:45:37 +0100
 MIME-Version: 1.0
 In-Reply-To: <CAMeizLc163WqCM-MVGFSSZnrZ_6mwVTrtje4Vp86d8z4gDw-SQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
