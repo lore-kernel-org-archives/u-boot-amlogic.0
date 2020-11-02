@@ -1,72 +1,68 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.web11.15388.1604071278309540408
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+ by mx.groups.io with SMTP id smtpd.web12.28453.1604306443065639047
  for <u-boot-amlogic@groups.io>;
- Fri, 30 Oct 2020 08:21:18 -0700
-Received: by mail-wm1-f65.google.com with SMTP id e2so3302920wme.1
-        for <u-boot-amlogic@groups.io>; Fri, 30 Oct 2020 08:21:18 -0700 (PDT)
+ Mon, 02 Nov 2020 00:40:43 -0800
+Received: by mail-wr1-f65.google.com with SMTP id i16so8106565wrv.1
+        for <u-boot-amlogic@groups.io>; Mon, 02 Nov 2020 00:40:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Xpcvfd6GUvBEXOyydeAi/kL+QiMn1GLk7kisVXYroi0=;
-        b=QJ0i0A2QW6eAI2Ipv4KzUIt/UNCTg3tdULTxuLTybky6HPJF6ZbvE6uN9KW0Uhp6U7
-         4pZYNAwUTj1y7i4NT98HELLqqi0/JCMvfxhYadyo3hoIcY2ggh7sXZMOcICunYSs18K6
-         FgipPupMI6GIjbnqO5GS+C66KJnKfeEZhE7Afq7ed4zXYNnQ1vayRHMTH2iNZ26WGQLv
-         ldqmK+82or8E8Lo/lfrr3Xnt0/D4x2DGeoSG+sM0AJ8g2wMdlZnSJslUTNWCRQI45eaC
-         DE5wwzgZ3hiFmfWGGA0DmKFcnqXvQun9NfvCfHnadFZSnEAfFHEGUD0TVajRgZdZokI6
-         bXPQ==
+        bh=7iwdku80x9CEIaOlbWSB7o5KnKB4bL/eDDvime3x0cQ=;
+        b=T5MXFtSejpGeIn7ZIrLPDCyigc07EwE4xS3hqhlEoWTU11QNePC8tBhGZpHB5TpdM/
+         BxBRNsprbcKOh4cXvx+OPVzSbk2b1kWKd+ygrvAosE8ZCyFsQPHOeEA2pPtuzR9i4VQN
+         ubaGvlAyvlOl205hX9BpjSIXTLcun65GsS6lw5NVW0JV6ZhtjsKAL/2tNsv49BfmuCJi
+         Iua+BRKkPN3dHsSks2zzbZ3yVf4w8KmAxkLygFvwLlkJrG9uiA9MOuZ1GNM8MULdfdIN
+         qt5VZM11hNS6y3z9XkoM56jQ/cMNWIuTS5Kxrk/5c5G9+pfYxPQb8U0Av8y0ulcgLVOW
+         hceA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] configs: meson64_android: don't show logo on ROM USB boot
-References: <20201030150345.121429-1-mkorpershoek@baylibre.com>
+Subject: Re: [PATCH] configs: meson64: relocate config_distro_bootcmmd header
+References: <CGME20201102030646epcas1p35d5804491644c065158d5aa91238f154@epcas1p3.samsung.com>
+ <20201102030706.2577-1-jh80.chung@samsung.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <19feb844-3fd9-ebe8-6a3a-6d18de201e6e@baylibre.com>
-Date: Fri, 30 Oct 2020 16:21:09 +0100
+Message-ID: <cf30389d-66f6-5d45-5f8a-c590bcc72ed0@baylibre.com>
+Date: Mon, 2 Nov 2020 09:40:39 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201030150345.121429-1-mkorpershoek@baylibre.com>
+In-Reply-To: <20201102030706.2577-1-jh80.chung@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, u-boot-amlogic@groups.io
-Cc: Guillaume La Roque <glaroque@baylibre.com>, u-boot@lists.denx.de
+To: Jaehoon Chung <jh80.chung@samsung.com>, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 30/10/2020 16:03, Mattijs Korpershoek wrote:
-> From: Guillaume La Roque <glaroque@baylibre.com>
+On 02/11/2020 04:07, Jaehoon Chung wrote:
+> Relocate a config_distro_bootcmd header before defined
+> CONFIG_EXTRA_ENV_SETTINGS. Otherwise it can't change to specific
+> environment.
 > 
-> When booting from rom usb, skip the boot logo logic as it's possible
-> that the partition containing the logo does not exist yet.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 > ---
->  include/configs/meson64_android.h | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+>  include/configs/meson64.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index 8fff915b50a4..c47d51c85368 100644
-> --- a/include/configs/meson64_android.h
-> +++ b/include/configs/meson64_android.h
-> @@ -98,11 +98,14 @@
->  	func(SYSTEM, system, na) \
+> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+> index cee690068022..52cc01f73da3 100644
+> --- a/include/configs/meson64.h
+> +++ b/include/configs/meson64.h
+> @@ -69,6 +69,8 @@
+>  	func(DHCP, dhcp, na)
+>  #endif
 >  
->  #define PREBOOT_LOAD_LOGO \
-> -	"mmc dev ${mmcdev};" \
-> -	"part start mmc ${mmcdev} ${logopart} boot_start;" \
-> -	"part size mmc ${mmcdev} ${logopart} boot_size;" \
-> -	"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
-> +	"if test \"${boot_source}\" != \"usb\" && " \
-> +		"gpt verify mmc ${mmcdev} ${partitions}; then; " \
-> +		"mmc dev ${mmcdev};" \
-> +		"part start mmc ${mmcdev} ${logopart} boot_start;" \
-> +		"part size mmc ${mmcdev} ${logopart} boot_size;" \
-> +		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
->  			"bmp display ${loadaddr} m m;" \
-> +		"fi;" \
->  	"fi;"
+> +#include <config_distro_bootcmd.h>
+> +
+>  #ifndef CONFIG_EXTRA_ENV_SETTINGS
+>  #define CONFIG_EXTRA_ENV_SETTINGS \
+>  	"stdin=" STDIN_CFG "\0" \
+> @@ -83,6 +85,5 @@
+>  	BOOTENV
+>  #endif
 >  
->  #define CONFIG_EXTRA_ENV_SETTINGS                                     \
+> -#include <config_distro_bootcmd.h>
+>  
+>  #endif /* __MESON64_CONFIG_H */
 > 
 
-Applied to u-boot-amlogic
+Thanks,
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
