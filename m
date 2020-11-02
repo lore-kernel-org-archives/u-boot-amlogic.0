@@ -1,27 +1,27 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web12.28453.1604306443065639047
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web12.28454.1604306443674079210
  for <u-boot-amlogic@groups.io>;
- Mon, 02 Nov 2020 00:40:43 -0800
-Received: by mail-wr1-f65.google.com with SMTP id i16so8106565wrv.1
-        for <u-boot-amlogic@groups.io>; Mon, 02 Nov 2020 00:40:42 -0800 (PST)
+ Mon, 02 Nov 2020 00:40:44 -0800
+Received: by mail-wr1-f67.google.com with SMTP id i16so8106613wrv.1
+        for <u-boot-amlogic@groups.io>; Mon, 02 Nov 2020 00:40:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=7iwdku80x9CEIaOlbWSB7o5KnKB4bL/eDDvime3x0cQ=;
-        b=T5MXFtSejpGeIn7ZIrLPDCyigc07EwE4xS3hqhlEoWTU11QNePC8tBhGZpHB5TpdM/
-         BxBRNsprbcKOh4cXvx+OPVzSbk2b1kWKd+ygrvAosE8ZCyFsQPHOeEA2pPtuzR9i4VQN
-         ubaGvlAyvlOl205hX9BpjSIXTLcun65GsS6lw5NVW0JV6ZhtjsKAL/2tNsv49BfmuCJi
-         Iua+BRKkPN3dHsSks2zzbZ3yVf4w8KmAxkLygFvwLlkJrG9uiA9MOuZ1GNM8MULdfdIN
-         qt5VZM11hNS6y3z9XkoM56jQ/cMNWIuTS5Kxrk/5c5G9+pfYxPQb8U0Av8y0ulcgLVOW
-         hceA==
+        b=yrD5JZoy8RCEfSDX7xUmOutgj9yXADmRzJCN5W/Ofa8G/O4qGuD7IJetaVCkMZbQyZ
+         FT9IeJ8h8IxIaig0tzYkvugB66EHbrgaAiyeU7ESeiB8+tFaKgjZ4FSMWYjXSnSX1jBb
+         YBoTJ1jkOPFbFhvJxmtZmn75LZMvdNK/Py72PcyWOeaIaGqouXB18GzmmgtRe/W/rnZL
+         o4IkeDtD78lsG1Au8lF83u+pVE5qgUisEe5iA//QWAF/6s9mC6ov6SRXv7vFHkPavtF5
+         VbQ8yK/uVgNgrPwluaTmbyNL332TcsuEbpT+g8RKzF+GOZ9IDqAu91lhtH/EwBiIbCOd
+         nfwg==
 Return-Path: <narmstrong@baylibre.com>
 Subject: Re: [PATCH] configs: meson64: relocate config_distro_bootcmmd header
 References: <CGME20201102030646epcas1p35d5804491644c065158d5aa91238f154@epcas1p3.samsung.com>
  <20201102030706.2577-1-jh80.chung@samsung.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <cf30389d-66f6-5d45-5f8a-c590bcc72ed0@baylibre.com>
+Message-ID: <2cb63e79-20ea-dd52-acaf-c2e827468a78@baylibre.com>
 Date: Mon, 2 Nov 2020 09:40:39 +0100
 MIME-Version: 1.0
 In-Reply-To: <20201102030706.2577-1-jh80.chung@samsung.com>
