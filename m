@@ -1,59 +1,175 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
- by mx.groups.io with SMTP id smtpd.web09.25471.1604286415709046128
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web11.8085.1604586312939103257
  for <u-boot-amlogic@groups.io>;
- Sun, 01 Nov 2020 19:06:56 -0800
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20201102030652epoutp013774ba08ec4dba9b033ec685be95144e~Dkf3zsyVO0738007380epoutp01P
-	for <u-boot-amlogic@groups.io>; Mon,  2 Nov 2020 03:06:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20201102030652epoutp013774ba08ec4dba9b033ec685be95144e~Dkf3zsyVO0738007380epoutp01P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1604286412;
-	bh=S0OD12cnZ8p0WdM1nfprTjIfjfqGoLfws40ALGCCkx4=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=DuTPG/2+A8f9/aGapAiRGQIHXov/Kss8lnfijbTbAENl9AUwjLnpIHapph0eqa7rF
-	 X3DHgh9Gbajz3ZecO86X15GxIfDMTQsBlrLguRUsTZqn+cKlLjyKm8Nf91XJyMkTH2
-	 stXfB3tmOZ3rdkw6Dlvd4HVZfBqliTQKckQ0WyWA=
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH] configs: meson64: relocate config_distro_bootcmmd header
-Date: Mon,  2 Nov 2020 12:07:06 +0900
-Message-Id: <20201102030706.2577-1-jh80.chung@samsung.com>
+ Thu, 05 Nov 2020 06:25:13 -0800
+Received: by mail-wr1-f68.google.com with SMTP id a3so1828681wrx.13
+        for <u-boot-amlogic@groups.io>; Thu, 05 Nov 2020 06:25:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=edQrXR1vFYy2O6oXcj5z34wIRDvUbbk5hBIo+n7wlzw=;
+        b=p+RfopJoUUHeKWUmL5/R/IPAfrFZ/pSv5Qf+u0losz4vWdOrIR69G0Mm65XPbC/Tzo
+         GzTBYnca9RFzsP5bF9ktVQ+rokVTA4KbXNWf+ZsmH+vZOOI8oJ9q4IBIg0u9kAQ1hITa
+         QaM7RLtZdbOu40secXL8josPGQu1/vauLufHc5iijZI0eQSuBveP+KBNYrZQY0gAmxZe
+         kZr6Bqrhsa3S56ZBYmXO69t1WGMOybhwKfPENCdBQ/wPp0/GP11fCpuJo/tT2aMt5zoh
+         iJ3woY92BGiVcd3nnGkm1FfWD2LPyJCqx8dBfHPz/mcKyyV4A2OEFBnxnFmycN4ZnwKU
+         saGQ==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/2] arm64: meson: add support for libretech-cc v2
+References: <20201105141529.666149-1-jbrunet@baylibre.com>
+ <20201105141529.666149-3-jbrunet@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <02f8362e-62b7-6feb-6d5c-34f4cbb825e5@baylibre.com>
+Date: Thu, 5 Nov 2020 15:22:59 +0100
 MIME-Version: 1.0
-References: <CGME20201102030646epcas1p35d5804491644c065158d5aa91238f154@epcas1p3.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, narmstrong@baylibre.com, Jaehoon Chung <jh80.chung@samsung.com>
+In-Reply-To: <20201105141529.666149-3-jbrunet@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Jerome Brunet <jbrunet@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Da Xue <da@libre.computer>
 List-ID: <u-boot-amlogic@groups.io>
 
-Relocate a config_distro_bootcmd header before defined
-CONFIG_EXTRA_ENV_SETTINGS. Otherwise it can't change to specific
-environment.
+Hi,
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- include/configs/meson64.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 05/11/2020 15:15, Jerome Brunet wrote:
+> Add support for the Amlogic based libretech cc version 2.
+> As version 1, it is based on the s905x SoC.
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  arch/arm/dts/Makefile                         |  1 +
+>  ...eson-gxl-s905x-libretech-cc-v2-u-boot.dtsi |  7 ++
+>  configs/libretech-cc_v2_defconfig             | 82 +++++++++++++++++++
+>  3 files changed, 90 insertions(+)
+>  create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
+>  create mode 100644 configs/libretech-cc_v2_defconfig
+> 
+> diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+> index b195723f1645..e957820e8e62 100644
+> --- a/arch/arm/dts/Makefile
+> +++ b/arch/arm/dts/Makefile
+> @@ -159,6 +159,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
+>  	meson-gxl-s905x-p212.dtb \
+>  	meson-gxl-s805x-libretech-ac.dtb \
+>  	meson-gxl-s905x-libretech-cc.dtb \
+> +	meson-gxl-s905x-libretech-cc-v2.dtb \
+>  	meson-gxl-s905x-khadas-vim.dtb \
+>  	meson-gxl-s905d-libretech-pc.dtb \
+>  	meson-gxm-khadas-vim2.dtb \
 
-diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index cee690068022..52cc01f73da3 100644
---- a/include/configs/meson64.h
-+++ b/include/configs/meson64.h
-@@ -69,6 +69,8 @@
- 	func(DHCP, dhcp, na)
- #endif
-=20
-+#include <config_distro_bootcmd.h>
-+
- #ifndef CONFIG_EXTRA_ENV_SETTINGS
- #define CONFIG_EXTRA_ENV_SETTINGS \
- 	"stdin=3D" STDIN_CFG "\0" \
-@@ -83,6 +85,5 @@
- 	BOOTENV
- #endif
-=20
--#include <config_distro_bootcmd.h>
-=20
- #endif /* __MESON64_CONFIG_H */
---=20
-2.29.0
+This should be part of the previous patch
 
+> diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
+> new file mode 100644
+> index 000000000000..8ff5a0ef2ba5
+> --- /dev/null
+> +++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
+> @@ -0,0 +1,7 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2020 BayLibre, SAS.
+> + * Author: Jerome Brunet <jbrunet@baylibre.com>
+> + */
+> +
+> +#include "meson-gxl-u-boot.dtsi"
+> diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+> new file mode 100644
+> index 000000000000..e71f88edaec6
+> --- /dev/null
+> +++ b/configs/libretech-cc_v2_defconfig
+> @@ -0,0 +1,82 @@
+> +CONFIG_ARM=y
+> +CONFIG_ARCH_MESON=y
+> +CONFIG_SYS_TEXT_BASE=0x01000000
+> +CONFIG_ENV_SIZE=0x2000
+> +CONFIG_ENV_OFFSET=0xFFFF0000
+> +CONFIG_ENV_SECT_SIZE=0x10000
+> +CONFIG_DM_GPIO=y
+> +CONFIG_MESON_GXL=y
+> +CONFIG_NR_DRAM_BANKS=1
+> +CONFIG_DEBUG_UART_BASE=0xc81004c0
+> +CONFIG_DEBUG_UART_CLOCK=24000000
+> +CONFIG_IDENT_STRING=" libretech-cc-v2"
+> +CONFIG_DEBUG_UART=y
+> +CONFIG_OF_BOARD_SETUP=y
+> +CONFIG_USE_PREBOOT=y
+> +CONFIG_PREBOOT="usb start"
+> +CONFIG_MISC_INIT_R=y
+> +# CONFIG_DISPLAY_CPUINFO is not set
+> +# CONFIG_DISPLAY_BOARDINFO is not set
+> +# CONFIG_CMD_BDI is not set
+> +# CONFIG_CMD_IMI is not set
+> +CONFIG_CMD_ADC=y
+> +CONFIG_CMD_GPIO=y
+> +# CONFIG_CMD_LOADS is not set
+> +CONFIG_CMD_MMC=y
+> +CONFIG_CMD_SPI=y
+> +CONFIG_CMD_USB=y
+> +CONFIG_CMD_USB_MASS_STORAGE=y
+> +# CONFIG_CMD_SETEXPR is not set
+> +CONFIG_CMD_REGULATOR=y
+> +CONFIG_OF_CONTROL=y
+> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxl-s905x-libretech-cc-v2"
+> +CONFIG_ENV_IS_IN_SPI_FLASH=y
+> +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> +CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_SARADC_MESON=y
+> +CONFIG_DM_KEYBOARD=y
+> +CONFIG_DM_MMC=y
+> +CONFIG_MMC_MESON_GX=y
+> +CONFIG_MTD=y
+> +CONFIG_DM_MTD=y
+> +CONFIG_DM_SPI_FLASH=y
+> +CONFIG_SPI_FLASH_GIGADEVICE=y
+> +CONFIG_PHY_ADDR_ENABLE=y
+> +CONFIG_PHY_ADDR=8
+> +CONFIG_PHY_MESON_GXL=y
+> +CONFIG_DM_ETH=y
+> +CONFIG_ETH_DESIGNWARE=y
+> +CONFIG_PHY=y
+> +CONFIG_MESON_GXL_USB_PHY=y
+> +CONFIG_PINCTRL=y
+> +CONFIG_PINCTRL_MESON_GXL=y
+> +CONFIG_POWER_DOMAIN=y
+> +CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
+> +CONFIG_DM_REGULATOR_FIXED=y
+> +CONFIG_DM_RESET=y
+> +CONFIG_DEBUG_UART_ANNOUNCE=y
+> +CONFIG_DEBUG_UART_SKIP_INIT=y
+> +CONFIG_MESON_SERIAL=y
+> +CONFIG_SPI=y
+> +CONFIG_DM_SPI=y
+> +CONFIG_MESON_SPIFC=y
+> +CONFIG_USB=y
+> +CONFIG_DM_USB=y
+> +CONFIG_USB_XHCI_HCD=y
+> +CONFIG_USB_XHCI_DWC3=y
+> +CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
+> +CONFIG_USB_DWC3=y
+> +# CONFIG_USB_DWC3_GADGET is not set
+> +CONFIG_USB_KEYBOARD=y
+> +CONFIG_USB_GADGET=y
+> +CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
+> +CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
+> +CONFIG_USB_GADGET_DWC2_OTG=y
+> +CONFIG_USB_GADGET_DOWNLOAD=y
+> +CONFIG_DM_VIDEO=y
+> +# CONFIG_VIDEO_BPP8 is not set
+> +# CONFIG_VIDEO_BPP16 is not set
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+> +CONFIG_VIDEO_MESON=y
+> +CONFIG_VIDEO_DT_SIMPLEFB=y
+> +CONFIG_OF_LIBFDT_OVERLAY=y
+> 
+
+And can you also update :
+doc/board/amlogic/libretech-cc.rst
+doc/board/amlogic/index.rst
+and
+board/amlogic/p212/MAINTAINERS
+
+Thanks,
+Neil
