@@ -1,25 +1,25 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web12.9202.1604653707508083307
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web09.9393.1604653708629463904
  for <u-boot-amlogic@groups.io>;
- Fri, 06 Nov 2020 01:08:27 -0800
-Received: by mail-wr1-f65.google.com with SMTP id b8so520479wrn.0
-        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:08:27 -0800 (PST)
+ Fri, 06 Nov 2020 01:08:28 -0800
+Received: by mail-wr1-f67.google.com with SMTP id e6so518917wro.1
+        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:08:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BAuPXwEHkCQZWF1iZsiLzggL+dm0wWo6aVT31XD78tk=;
-        b=1Fu/AVOpwDQXfcHTwHPigYrVrlDYX0h6wgBrw60vAalPHbWt1qQ0Q8RwjZxXYBxQ1y
-         FQSZ+7MfBXXsTbumYX1nMoKMfLyVHiN2oMJ3LBTat0vvQ+2RCD/dMDgsCi9heVsD3AJU
-         2YGhtIJNvEXy4D0cBopJbKC7YPiZOTRWEEMxkZzBt2KIUGKaJnWfjUcInggZXVphB27T
-         xY7XV/jJIOCuXZZ1gYeFzme0wAqjgFZiyflPNoRMXLQhvf33QjRwb9nCd4a37jJE+70d
-         QIu5aGA0WnYB5TI9NwnGLG4QQcmMZy8PohLBsUPZUk621pGSVvA1ezi6SI0MFFfCBct2
-         1a/Q==
+        bh=/sCGQvFU/zZ7HtTPj3BQOLLF5V4fF1rtuL7B/tbn9Vc=;
+        b=nBgPVZ4iXZCY9T6SMtEFyPcgWQjTgGezWOlaIKGMKeuIBLnyZWIXyV+tksGx34XRPm
+         NDiwUGjGVCd6zfbuwF55luj4fJrkftRG9+A9sP51/Kz6lsNOW8Y1Ws9blnke9WA15BcE
+         mVVeAwGQs+cLHzZjnbRweOk9OoPnsRk/SBpAXPZevBqQFRBENsgJAXrm3C7qnz4oHjOz
+         fXzmUlh+dD+d03HgARZbLJ1RS2EyjNnz32dv5V2Z6zpggWr+S5KPZMluzIl5WaOZwSw0
+         XgzyTTBJkAIV3KRz+6eCHi1TsJJo8K/FOitVdoWMLIvNCz6ia2jr4GzyarY/XCIK6mkH
+         wEAA==
 Return-Path: <jbrunet@baylibre.com>
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 1/2] arm64: dts: import libretech-cc-v2 from linux v5.10-rc1
-Date: Fri,  6 Nov 2020 10:07:51 +0100
-Message-Id: <20201106090752.31005-2-jbrunet@baylibre.com>
+Subject: [PATCH v2 2/2] arm64: meson: add support for libretech-cc v2
+Date: Fri,  6 Nov 2020 10:07:52 +0100
+Message-Id: <20201106090752.31005-3-jbrunet@baylibre.com>
 In-Reply-To: <20201106090752.31005-1-jbrunet@baylibre.com>
 References: <20201106090752.31005-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
@@ -28,339 +28,131 @@ To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlog
 Cc: Jerome Brunet <jbrunet@baylibre.com>, Da Xue <da@libre.computer>
 List-ID: <u-boot-amlogic@groups.io>
 
-Sync the libretech cc v2 device tree from Linux v5.10-rc1
-commit 3650b228f83a ("Linux 5.10-rc1")
+Add support for the Amlogic based libretech cc version 2.
+As version 1, it is based on the s905x SoC.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../dts/meson-gxl-s905x-libretech-cc-v2.dts   | 318 ++++++++++++++++++
- 1 file changed, 318 insertions(+)
- create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
+ arch/arm/dts/Makefile                         |  1 +
+ ...eson-gxl-s905x-libretech-cc-v2-u-boot.dtsi |  7 ++
+ configs/libretech-cc_v2_defconfig             | 82 +++++++++++++++++++
+ 3 files changed, 90 insertions(+)
+ create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
+ create mode 100644 configs/libretech-cc_v2_defconfig
 
-diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index b195723f1645..e957820e8e62 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -159,6 +159,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
+ 	meson-gxl-s905x-p212.dtb \
+ 	meson-gxl-s805x-libretech-ac.dtb \
+ 	meson-gxl-s905x-libretech-cc.dtb \
++	meson-gxl-s905x-libretech-cc-v2.dtb \
+ 	meson-gxl-s905x-khadas-vim.dtb \
+ 	meson-gxl-s905d-libretech-pc.dtb \
+ 	meson-gxm-khadas-vim2.dtb \
+diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
 new file mode 100644
-index 000000000000..675eaa87963e
+index 000000000000..8ff5a0ef2ba5
 --- /dev/null
-+++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
-@@ -0,0 +1,318 @@
++++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
+@@ -0,0 +1,7 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2020 BayLibre, SAS.
 + * Author: Jerome Brunet <jbrunet@baylibre.com>
 + */
 +
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/sound/meson-aiu.h>
-+
-+#include "meson-gxl-s905x.dtsi"
-+
-+/ {
-+	compatible = "libretech,aml-s905x-cc-v2", "amlogic,s905x",
-+		     "amlogic,meson-gxl";
-+	model = "Libre Computer AML-S905X-CC V2";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+		spi0 = &spifc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			panic-indicator;
-+		};
-+
-+		led-green {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_DISK_ACTIVITY;
-+			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "disk-activity";
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	ao_5v: regulator-ao_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "AO_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&dc_in>;
-+		regulator-always-on;
-+	};
-+
-+	dc_in: regulator-dc_in {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DC_IN";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+
-+	vcck: regulator-vcck {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCCK";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&ao_5v>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_card: regulator-vcc_card {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_CARD";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vddio_ao3v3>;
-+
-+		gpio = <&gpio GPIOCLK_1 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vcc5v: regulator-vcc5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&ao_5v>;
-+
-+		gpio = <&gpio GPIOH_3 GPIO_OPEN_DRAIN>;
-+	};
-+
-+	vddio_ao3v3: regulator-vddio_ao3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&ao_5v>;
-+		regulator-always-on;
-+	};
-+
-+
-+	vddio_card: regulator-vddio-card {
-+		compatible = "regulator-gpio";
-+		regulator-name = "VDDIO_CARD";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+
-+		states = <3300000 0>,
-+			 <1800000 1>;
-+
-+		regulator-settling-time-up-us = <200>;
-+		regulator-settling-time-down-us = <50000>;
-+	};
-+
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vddio_ao3v3>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_1v8: regulator-vcc_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC 1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vddio_ao3v3>;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "GXL-LIBRETECH-S905X-CC-V2";
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+
-+&aiu {
-+	status = "okay";
-+};
-+
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+
-+&ethmac {
-+	status = "okay";
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-+	hdmi-supply = <&vcc5v>;
-+	pinctrl-names = "default";
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	pinctrl-0 = <&sdcard_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-ddr50;
-+	max-frequency = <100000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
-+
-+	vmmc-supply = <&vcc_card>;
-+	vqmmc-supply = <&vddio_card>;
-+
-+	status = "okay";
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vddio_ao3v3>;
-+	vqmmc-supply = <&vcc_1v8>;
-+
-+	status = "okay";
-+};
-+
-+&spifc {
-+	status = "okay";
-+	pinctrl-0 = <&nor_pins>;
-+	pinctrl-names = "default";
-+
-+	nor_4u1: spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <3000000>;
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&usb2_phy0 {
-+	pinctrl-names = "default";
-+	phy-supply = <&vcc5v>;
-+};
-+
-+&usb2_phy1 {
-+	phy-supply = <&vcc5v>;
-+};
++#include "meson-gxl-u-boot.dtsi"
+diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+new file mode 100644
+index 000000000000..e71f88edaec6
+--- /dev/null
++++ b/configs/libretech-cc_v2_defconfig
+@@ -0,0 +1,82 @@
++CONFIG_ARM=y
++CONFIG_ARCH_MESON=y
++CONFIG_SYS_TEXT_BASE=0x01000000
++CONFIG_ENV_SIZE=0x2000
++CONFIG_ENV_OFFSET=0xFFFF0000
++CONFIG_ENV_SECT_SIZE=0x10000
++CONFIG_DM_GPIO=y
++CONFIG_MESON_GXL=y
++CONFIG_NR_DRAM_BANKS=1
++CONFIG_DEBUG_UART_BASE=0xc81004c0
++CONFIG_DEBUG_UART_CLOCK=24000000
++CONFIG_IDENT_STRING=" libretech-cc-v2"
++CONFIG_DEBUG_UART=y
++CONFIG_OF_BOARD_SETUP=y
++CONFIG_USE_PREBOOT=y
++CONFIG_PREBOOT="usb start"
++CONFIG_MISC_INIT_R=y
++# CONFIG_DISPLAY_CPUINFO is not set
++# CONFIG_DISPLAY_BOARDINFO is not set
++# CONFIG_CMD_BDI is not set
++# CONFIG_CMD_IMI is not set
++CONFIG_CMD_ADC=y
++CONFIG_CMD_GPIO=y
++# CONFIG_CMD_LOADS is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_SPI=y
++CONFIG_CMD_USB=y
++CONFIG_CMD_USB_MASS_STORAGE=y
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_REGULATOR=y
++CONFIG_OF_CONTROL=y
++CONFIG_DEFAULT_DEVICE_TREE="meson-gxl-s905x-libretech-cc-v2"
++CONFIG_ENV_IS_IN_SPI_FLASH=y
++CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_NET_RANDOM_ETHADDR=y
++CONFIG_SARADC_MESON=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_DM_MMC=y
++CONFIG_MMC_MESON_GX=y
++CONFIG_MTD=y
++CONFIG_DM_MTD=y
++CONFIG_DM_SPI_FLASH=y
++CONFIG_SPI_FLASH_GIGADEVICE=y
++CONFIG_PHY_ADDR_ENABLE=y
++CONFIG_PHY_ADDR=8
++CONFIG_PHY_MESON_GXL=y
++CONFIG_DM_ETH=y
++CONFIG_ETH_DESIGNWARE=y
++CONFIG_PHY=y
++CONFIG_MESON_GXL_USB_PHY=y
++CONFIG_PINCTRL=y
++CONFIG_PINCTRL_MESON_GXL=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_RESET=y
++CONFIG_DEBUG_UART_ANNOUNCE=y
++CONFIG_DEBUG_UART_SKIP_INIT=y
++CONFIG_MESON_SERIAL=y
++CONFIG_SPI=y
++CONFIG_DM_SPI=y
++CONFIG_MESON_SPIFC=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_XHCI_HCD=y
++CONFIG_USB_XHCI_DWC3=y
++CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
++CONFIG_USB_DWC3=y
++# CONFIG_USB_DWC3_GADGET is not set
++CONFIG_USB_KEYBOARD=y
++CONFIG_USB_GADGET=y
++CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
++CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
++CONFIG_USB_GADGET_DWC2_OTG=y
++CONFIG_USB_GADGET_DOWNLOAD=y
++CONFIG_DM_VIDEO=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_MESON=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_OF_LIBFDT_OVERLAY=y
 -- 
 2.28.0
 
