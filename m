@@ -1,158 +1,68 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web09.9393.1604653708629463904
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+ by mx.groups.io with SMTP id smtpd.web11.9628.1604655306048994680
  for <u-boot-amlogic@groups.io>;
- Fri, 06 Nov 2020 01:08:28 -0800
-Received: by mail-wr1-f67.google.com with SMTP id e6so518917wro.1
-        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:08:28 -0800 (PST)
+ Fri, 06 Nov 2020 01:35:06 -0800
+Received: by mail-wm1-f66.google.com with SMTP id p19so550305wmg.0
+        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:35:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/sCGQvFU/zZ7HtTPj3BQOLLF5V4fF1rtuL7B/tbn9Vc=;
-        b=nBgPVZ4iXZCY9T6SMtEFyPcgWQjTgGezWOlaIKGMKeuIBLnyZWIXyV+tksGx34XRPm
-         NDiwUGjGVCd6zfbuwF55luj4fJrkftRG9+A9sP51/Kz6lsNOW8Y1Ws9blnke9WA15BcE
-         mVVeAwGQs+cLHzZjnbRweOk9OoPnsRk/SBpAXPZevBqQFRBENsgJAXrm3C7qnz4oHjOz
-         fXzmUlh+dD+d03HgARZbLJ1RS2EyjNnz32dv5V2Z6zpggWr+S5KPZMluzIl5WaOZwSw0
-         XgzyTTBJkAIV3KRz+6eCHi1TsJJo8K/FOitVdoWMLIvNCz6ia2jr4GzyarY/XCIK6mkH
-         wEAA==
-Return-Path: <jbrunet@baylibre.com>
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 2/2] arm64: meson: add support for libretech-cc v2
-Date: Fri,  6 Nov 2020 10:07:52 +0100
-Message-Id: <20201106090752.31005-3-jbrunet@baylibre.com>
-In-Reply-To: <20201106090752.31005-1-jbrunet@baylibre.com>
-References: <20201106090752.31005-1-jbrunet@baylibre.com>
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8moSjL4KmjUBpCmS/TVC1VV7WRyv1avLQ/pqDxu43Ao=;
+        b=cS52GcsHiqoLRgqphwING9kiiqUHOUufXT4ykJID1MUOBw6JG6S4UM5+jxpfXb+uTK
+         s1MN4S0h2HEiUmTNDngX70WPzrzSVWslweixC2IWHNXTGzGT/cTskFUN+dawmNTm7kB2
+         16YBvzEKoDeo3CVIBIkI+X50DtSu+z5doM0BkB3EbsUR9x4xbptbWZnHsAA2KALNwobn
+         CM2Nn2+ZlQJHMc5h7nIRFd/18phv4sgWJV92rrdpX3fGcH257MW//JkvoLRVOG4GKWLU
+         XbXuLA6mA3PNJ2vKzkYy7XGZqIHqYSgwrNpZEOkdSf3JLy+mQh2Vs6Z5V7mAAwbYZt5z
+         wogg==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/2] Fix the potential warning without DM_REGULATOR
+References: <CGME20201106055729epcas1p23448d11a25acd6168d3a514a2c17e6ce@epcas1p2.samsung.com>
+ <20201106055748.20042-1-jh80.chung@samsung.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <17891017-9ee8-3fbe-f875-a3fd694b7007@baylibre.com>
+Date: Fri, 6 Nov 2020 10:32:44 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Da Xue <da@libre.computer>
+In-Reply-To: <20201106055748.20042-1-jh80.chung@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Jaehoon Chung <jh80.chung@samsung.com>, u-boot@lists.denx.de
+Cc: agust@denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Add support for the Amlogic based libretech cc version 2.
-As version 1, it is based on the s905x SoC.
+On 06/11/2020 06:57, Jaehoon Chung wrote:
+> When CONFIG_DM_REGULATOR is disabled, there are some warnings.
+> This patch-set is fixed them.
+> 
+> drivers/phy/meson-g12a-usb2.c: In function 'phy_meson_g12a_usb2_power_on':
+> drivers/phy/meson-g12a-usb2.c:70:35: warning: unused variable 'priv' [-Wunused-variable]
+>    70 |  struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
+>       |                                   ^~~~
+> drivers/phy/meson-g12a-usb2.c: In function 'phy_meson_g12a_usb2_power_off':
+> drivers/phy/meson-g12a-usb2.c:86:35: warning: unused variable 'priv' [-Wunused-variable]
+>    86 |  struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
+>       |                                   ^~~~
+>   LD      drivers/phy/built-in.o
+>   CC      drivers/video/simple_panel.o
+>   CC      drivers/video/meson/meson_dw_hdmi.o
+> drivers/video/meson/meson_dw_hdmi.c: In function 'meson_dw_hdmi_probe':
+> drivers/video/meson/meson_dw_hdmi.c:382:18: warning: unused variable 'supply' [-Wunused-variable]
+>   382 |  struct udevice *supply;
+>       |                  ^~~~~~
+> 
+> Jaehoon Chung (2):
+>   phy: meson-g12a-usb2: fix the potential build warning
+>   video: meson: meson_dw_hdmi: fix the potential build warning
+> 
+>  drivers/phy/meson-g12a-usb2.c       | 4 ++--
+>  drivers/video/meson/meson_dw_hdmi.c | 2 ++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm/dts/Makefile                         |  1 +
- ...eson-gxl-s905x-libretech-cc-v2-u-boot.dtsi |  7 ++
- configs/libretech-cc_v2_defconfig             | 82 +++++++++++++++++++
- 3 files changed, 90 insertions(+)
- create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
- create mode 100644 configs/libretech-cc_v2_defconfig
+Thanks,
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index b195723f1645..e957820e8e62 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -159,6 +159,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
- 	meson-gxl-s905x-p212.dtb \
- 	meson-gxl-s805x-libretech-ac.dtb \
- 	meson-gxl-s905x-libretech-cc.dtb \
-+	meson-gxl-s905x-libretech-cc-v2.dtb \
- 	meson-gxl-s905x-khadas-vim.dtb \
- 	meson-gxl-s905d-libretech-pc.dtb \
- 	meson-gxm-khadas-vim2.dtb \
-diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
-new file mode 100644
-index 000000000000..8ff5a0ef2ba5
---- /dev/null
-+++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 BayLibre, SAS.
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ */
-+
-+#include "meson-gxl-u-boot.dtsi"
-diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
-new file mode 100644
-index 000000000000..e71f88edaec6
---- /dev/null
-+++ b/configs/libretech-cc_v2_defconfig
-@@ -0,0 +1,82 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_ENV_SIZE=0x2000
-+CONFIG_ENV_OFFSET=0xFFFF0000
-+CONFIG_ENV_SECT_SIZE=0x10000
-+CONFIG_DM_GPIO=y
-+CONFIG_MESON_GXL=y
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_DEBUG_UART_BASE=0xc81004c0
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" libretech-cc-v2"
-+CONFIG_DEBUG_UART=y
-+CONFIG_OF_BOARD_SETUP=y
-+CONFIG_USE_PREBOOT=y
-+CONFIG_PREBOOT="usb start"
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_DISPLAY_BOARDINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_ADC=y
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+CONFIG_CMD_SPI=y
-+CONFIG_CMD_USB=y
-+CONFIG_CMD_USB_MASS_STORAGE=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-gxl-s905x-libretech-cc-v2"
-+CONFIG_ENV_IS_IN_SPI_FLASH=y
-+CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_SARADC_MESON=y
-+CONFIG_DM_KEYBOARD=y
-+CONFIG_DM_MMC=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_MTD=y
-+CONFIG_DM_MTD=y
-+CONFIG_DM_SPI_FLASH=y
-+CONFIG_SPI_FLASH_GIGADEVICE=y
-+CONFIG_PHY_ADDR_ENABLE=y
-+CONFIG_PHY_ADDR=8
-+CONFIG_PHY_MESON_GXL=y
-+CONFIG_DM_ETH=y
-+CONFIG_ETH_DESIGNWARE=y
-+CONFIG_PHY=y
-+CONFIG_MESON_GXL_USB_PHY=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_GXL=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_SPI=y
-+CONFIG_DM_SPI=y
-+CONFIG_MESON_SPIFC=y
-+CONFIG_USB=y
-+CONFIG_DM_USB=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
-+CONFIG_USB_DWC3=y
-+# CONFIG_USB_DWC3_GADGET is not set
-+CONFIG_USB_KEYBOARD=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-+CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-+CONFIG_USB_GADGET_DWC2_OTG=y
-+CONFIG_USB_GADGET_DOWNLOAD=y
-+CONFIG_DM_VIDEO=y
-+# CONFIG_VIDEO_BPP8 is not set
-+# CONFIG_VIDEO_BPP16 is not set
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
--- 
-2.28.0
+Applied to u-boot-amlogic
 
+Neil
