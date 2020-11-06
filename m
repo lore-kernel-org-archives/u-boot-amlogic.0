@@ -1,104 +1,86 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.web08.12187.1604931970946981469
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+ by mx.groups.io with SMTP id smtpd.web10.14136.1604680004610930599
  for <u-boot-amlogic@groups.io>;
- Mon, 09 Nov 2020 06:26:11 -0800
-Received: by mail-wr1-f65.google.com with SMTP id p8so8084607wrx.5
-        for <u-boot-amlogic@groups.io>; Mon, 09 Nov 2020 06:26:10 -0800 (PST)
+ Fri, 06 Nov 2020 08:26:44 -0800
+Received: by mail-qk1-f181.google.com with SMTP id i21so1546536qka.12
+        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 08:26:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0MAGyXcbKuYXTLwazeQVL+2cyHU4uROSzMaUoeP/Inw=;
-        b=ITqT/T8GRlGZZdBbedLX/ZAfPkSK7+5mBhpdF25MlSonh9YzAkWrO0/onC+QKWtgjg
-         FlUEjEmrn2r7UuhKDIhJ46KM0IZWf4qZ6E45MYHbwjIw1Srwa22W70dSXez6WpQdtgFb
-         rCUw5SUUj17I0tlLGyL8n9V/Axd7L4sUdDrAyxpZlQAykclPtP3tJ/dh0YMvbc+yK5h7
-         jLfVdqH3WD3afyGIaOJuf5IyUJwtWuDvdwOHtu8qxCaKdqVGvLkiZ5uhbdjq6SAijiBL
-         zKVoRnCVtQb/VdW7xWDe6bSl7NOFWrp4xuoXfy7nRFAIsBDsaTBtBsjUNMUTiV6fyzkg
-         WdcA==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] mmc: meson_gx_mmc: change a clock phase to stable value
-References: <CGME20201109031216epcas1p197a531d87ad92cb02aca01f4b9e2af3a@epcas1p1.samsung.com>
- <20201109031233.25320-1-jh80.chung@samsung.com>
- <15fa8495-b92f-1acc-038e-760df4fdf30f@baylibre.com>
- <e94a6abeb770b3bf@bloch.sibelius.xs4all.nl>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <9bda4738-332d-a687-0d21-20eb42518d42@baylibre.com>
-Date: Mon, 9 Nov 2020 15:23:57 +0100
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8AO3R842Ff+jE23AXMDAFfyI3pFZvRp/XTMGFpDYkzY=;
+        b=ggE7GF7nhfLAK4caoBcwDoUWGpz5c2XDtsglqeTmk0bg7F+IHWCj5RzZkIBVD0DT8q
+         iSLj/NL8RVvdyYxUWLBDoPjSNA1/24ksX3BH0wvGqAM599Eei5xPlfgVMm/t4lGgQC6v
+         EB9YFBW3J5FVCnJwviuRmu3U8ApXOBfuAd/yQ=
+Return-Path: <trini@konsulko.com>
+Date: Fri, 6 Nov 2020 11:26:40 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20201105
+Message-ID: <20201106162640.GF5340@bill-the-cat>
+References: <c64adb73-4f9a-b7a1-7355-e59664b352cd@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <e94a6abeb770b3bf@bloch.sibelius.xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc: jh80.chung@samsung.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, peng.fan@nxp.com
+In-Reply-To: <c64adb73-4f9a-b7a1-7355-e59664b352cd@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DlulSKxyeiBpYDZ7"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 09/11/2020 15:10, Mark Kettenis wrote:
->> From: Neil Armstrong <narmstrong@baylibre.com>
->> Date: Mon, 9 Nov 2020 14:37:09 +0100
->>
->> Hi,
->>
->> On 09/11/2020 04:12, Jaehoon Chung wrote:
->>> Core clock phase value is changed from 180' to 270'.
->>> It's more stable than before.
->>> - Odroidn-N2/C4 : Working fine with 52MHz
->>> - VIM3 : Working fine with 52MHz
->>>
->>> Before this patch, Odroid-C4 doesn't work fine with 52MHz.
->>>
->>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>> ---
->>>  drivers/mmc/meson_gx_mmc.c | 14 ++++++++++----
->>>  1 file changed, 10 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
->>> index 719dd1e5e570..7c60e0566560 100644
->>> --- a/drivers/mmc/meson_gx_mmc.c
->>> +++ b/drivers/mmc/meson_gx_mmc.c
->>> @@ -52,10 +52,16 @@ static void meson_mmc_config_clock(struct mmc *mmc)
->>>  	}
->>>  	clk_div = DIV_ROUND_UP(clk, mmc->clock);
->>>  
->>> -	/* 180 phase core clock */
->>> -	meson_mmc_clk |= CLK_CO_PHASE_180;
->>> -
->>> -	/* 180 phase tx clock */
->>> +	/*
->>> +	 * Clock Phase needs to set a proper value.
->>> +	 * It can be changed to other value.
->>> +	 * Because CORE : 270' Phase and TX : 0' Phase are stable,
->>> +	 * set to them by default.
->>> +	 */
->>> +	/* Core Clock Phase */
->>> +	meson_mmc_clk |= CLK_CO_PHASE_270;
->>> +
->>> +	/* TX Clock Phase */
->>>  	meson_mmc_clk |= CLK_TX_PHASE_000;
->>>  
->>>  	/* clock settings */
->>>
->>
->> The previous values were aligned on the Linux driver, which is functional.
-> 
-> Actually the Linux driver isn't really functional; the 52 MHz
-> high-speed mode doesn't work.  But since HS200 does work in Linux,
-> probably nobody noticed this.
-> 
-> That said, I'm not confident a single clock phase setting will work
-> across all Amlogic SoCs and across different boards.  Maybe we need
-> something in the device tree such that we can control the values on a
-> per-board level.
-> 
+--DlulSKxyeiBpYDZ7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So this is specific to SM1 SoCs then, because others families doesn't have such issues
-at 52MHz.
+On Fri, Nov 06, 2020 at 10:49:31AM +0100, Neil Armstrong wrote:
 
-So the Linux must be fixes, including the bindings to introduce a new compatible, then
-ported to U-Boot.
+> Hi Tom,
+>=20
+> This PR fixes some documentation and the android early logo boot flow.
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/5274
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit cdeb7b8f984e6d9bcdc5a6fdda6107af156d47=
+bf:
+>=20
+>   configs: Resync with savedefconfig (2020-10-29 10:48:01 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20201105
+>=20
+> for you to fetch changes up to 014b9f96762d17d04038d8902d419b6476753e4f:
+>=20
+>   configs: meson64: relocate config_distro_bootcmmd header (2020-11-05 16=
+:27:31 +0100)
+>=20
 
-So in the meantime, it's right to limit to 26MHz on SM1 in U-boot until we have all this
-clarified.
+Applied to u-boot/master, thanks!
 
-Neil
+--=20
+Tom
+
+--DlulSKxyeiBpYDZ7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl+leUAACgkQFHw5/5Y0
+tyz71gwAtSYaFkK8ylA21Xmg7CkGUCdRPiMqnuEnWO0+oPAHrqdJCpChWElKLWUr
+E1glU/jiTGj79R8/XBsFkPn00n9FBJeXheDQb0i9MJUIWbzM4ED5VURySa1jtQ+i
+NeFZvwUtZ4yB7BGUVgHE8qxj0JzPSX+qXeu66Gu7qMtDSyWGP0OGsmIi70hfGvU+
+RR+i3eTHVUtvuePTTXAM6mShrUkRxzFnHdc+dzUXgV9RosE42BnCWcTZI/3a7u5Y
+oK8JsH1b8Tet80LqxgxUQTj1YKQ9FIKWK50Pm5b0A20VWZ6256uvTkCCYjr+ekbZ
+ExksM5tvLocLWKCbCFCoPk8aBjQapjCqkMsCcndxDv0z/TR0PDVR+feLTJFxcCY8
+4M2bPkWP33r69Sr2UHNxGfnqJr83BHWSQo+gbDkmxd7vSw2iCVlD3ptV+YDhuIiI
+DKcQwHKFi21PsFvzTh5Os04L8W5EGhsk6sBhLHeHORMRF47to26ad3cQWq/GCOLu
+wJzHBMzl
+=IIoS
+-----END PGP SIGNATURE-----
+
+--DlulSKxyeiBpYDZ7--
