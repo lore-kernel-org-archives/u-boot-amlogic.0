@@ -1,62 +1,51 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
- by mx.groups.io with SMTP id smtpd.web12.7927.1604642261171479882
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web09.9392.1604653706367986297
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Nov 2020 21:57:41 -0800
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20201106055738epoutp04f5d2bfcc8dead602a1d4fc98f4d3631e~E1aH_MF0B3102931029epoutp04C
-	for <u-boot-amlogic@groups.io>; Fri,  6 Nov 2020 05:57:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20201106055738epoutp04f5d2bfcc8dead602a1d4fc98f4d3631e~E1aH_MF0B3102931029epoutp04C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1604642259;
-	bh=jxUQ8t3/JeSwLRcIlZm19UWE3FzBdZtl9IHwoy1/cgc=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=oDASPQ9280evL0w0expkMRGRRGHYJe1sZUXwnS2wvLJkzDcxr+ac6vLZD/gql8Vbe
-	 lgsXqcHzB2pCvRhuPORXzn78XsGbrUmHtcG21YlfTrBVkBRX44BOxABmgaN9NMTolW
-	 81FZR6axgPGM6GH9jHv5ajsr2xf3ohKOJtCta4XM=
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 0/2] Fix the potential warning without DM_REGULATOR
-Date: Fri,  6 Nov 2020 14:57:46 +0900
-Message-Id: <20201106055748.20042-1-jh80.chung@samsung.com>
+ Fri, 06 Nov 2020 01:08:27 -0800
+Received: by mail-wr1-f43.google.com with SMTP id n18so506008wrs.5
+        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:08:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yr5H+702UqPx3nrBgniKOJuebPjdYUDNNSLu37kTMbM=;
+        b=jPFzUyYtBsSyKwz/aei6sOczOoj0Qsoi+XMnaNQ8nNLsgVxfK+UIQ6LxI9O8Lh2kWk
+         s6i9IZh5vLnshfbgSF/hvkkuC7p8FRYFl7nTHxD3H4/ze/g9e0o/yBPVXrot59BJXU8n
+         /a5tROaFdOaWM3DBQIjWRFw+tFM0DxH35tZdMxJk90RbugRIJC/4o39js8Xh+Kfuk6+y
+         64qZNzVcbwnao6bQruzJgNPfYUMHIxGJZ0HORujUyKEnyF/CiMzf1tni410ZtDir86nE
+         1R5hKCQLv0b0gT1HxthqSQ/AESmQ/TfvYACv2UF3Mx7o8qDeXmGGJivGUbzidArZ94Ns
+         nQBQ==
+Return-Path: <jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/2] arm64: meson: add libretech cc v2 support
+Date: Fri,  6 Nov 2020 10:07:50 +0100
+Message-Id: <20201106090752.31005-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-References: <CGME20201106055729epcas1p23448d11a25acd6168d3a514a2c17e6ce@epcas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-To: u-boot@lists.denx.de
-Cc: narmstrong@baylibre.com, agust@denx.de, u-boot-amlogic@groups.io, Jaehoon Chung <jh80.chung@samsung.com>
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Da Xue <da@libre.computer>
 List-ID: <u-boot-amlogic@groups.io>
 
-When CONFIG_DM_REGULATOR is disabled, there are some warnings.
-This patch-set is fixed them.
+This patchset adds support for the Amlogic based libretech cc v2.
+Like the v1, this revised platform used the s905x SoC.
 
-drivers/phy/meson-g12a-usb2.c: In function 'phy_meson_g12a_usb2_power_on'=
-:
-drivers/phy/meson-g12a-usb2.c:70:35: warning: unused variable 'priv' [-Wu=
-nused-variable]
-   70 |  struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
-      |                                   ^~~~
-drivers/phy/meson-g12a-usb2.c: In function 'phy_meson_g12a_usb2_power_off=
-':
-drivers/phy/meson-g12a-usb2.c:86:35: warning: unused variable 'priv' [-Wu=
-nused-variable]
-   86 |  struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
-      |                                   ^~~~
-  LD      drivers/phy/built-in.o
-  CC      drivers/video/simple_panel.o
-  CC      drivers/video/meson/meson_dw_hdmi.o
-drivers/video/meson/meson_dw_hdmi.c: In function 'meson_dw_hdmi_probe':
-drivers/video/meson/meson_dw_hdmi.c:382:18: warning: unused variable 'sup=
-ply' [-Wunused-variable]
-  382 |  struct udevice *supply;
-      |                  ^~~~~~
+Changes since v1:
+- Move Makefile change to patch #1
+- Amend documentation for libretech cc v2
 
-Jaehoon Chung (2):
-  phy: meson-g12a-usb2: fix the potential build warning
-  video: meson: meson_dw_hdmi: fix the potential build warning
+Jerome Brunet (2):
+  arm64: dts: import libretech-cc-v2 from linux v5.10-rc1
+  arm64: meson: add support for libretech-cc v2
 
- drivers/phy/meson-g12a-usb2.c       | 4 ++--
- drivers/video/meson/meson_dw_hdmi.c | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/dts/Makefile                         |   1 +
+ ...eson-gxl-s905x-libretech-cc-v2-u-boot.dtsi |   7 +
+ .../dts/meson-gxl-s905x-libretech-cc-v2.dts   | 318 ++++++++++++++++++
+ configs/libretech-cc_v2_defconfig             |  82 +++++
+ 4 files changed, 408 insertions(+)
+ create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
+ create mode 100644 configs/libretech-cc_v2_defconfig
 
---=20
-2.29.0
+-- 
+2.28.0
 
