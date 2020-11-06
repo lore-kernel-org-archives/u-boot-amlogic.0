@@ -1,25 +1,25 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web11.9586.1604655002445941763
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web11.9587.1604655003729423904
  for <u-boot-amlogic@groups.io>;
- Fri, 06 Nov 2020 01:30:02 -0800
-Received: by mail-wr1-f66.google.com with SMTP id p1so553194wrf.12
-        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:30:02 -0800 (PST)
+ Fri, 06 Nov 2020 01:30:04 -0800
+Received: by mail-wm1-f67.google.com with SMTP id k18so664481wmj.5
+        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FjppC7PrkxvbDrQmO5gQPRV4XH6BwuKajbVUPyT2fYw=;
-        b=ph1VWBMH5G/6jP+HXEJsiOOw+++F2MwoUspS8uj5Lcqgsfy9o9Yh+yBfWhxOl43/2c
-         htDv67QA1HstUnd2/l/NfjpMtURHi4ayDMqAa4udnHBnZeKmfR2goe3isMuLSgfRq7hS
-         xa1YKmKSpv/MSfwj/jIblXdZmDormOhfNoKb07f697OcfBBy8zqC+Y+DKWdY8gcjd2IR
-         bIbuPNwcndNatpE0mX1bsWfcsA8zeg7cETLWPo10O92B4E4dw76nSQdZGMkBCQ6PvcYa
-         rUVf1WppFRMxZq9GPtBrilULoX3Ixo9YMiHOKd8AzfifEJkzkS4ftGRhYQL5cAZ6Hhvh
-         p+eg==
+        bh=t6lf+d6uFt5Cp26dATeppQeRxqpNUSXTpM90BKJ6/fs=;
+        b=S+Xz5PBCOhYsOubhUTLNIN60gSoy8H3DAJWzuKKXZqNA9qMHZSkBPy7qTzHjFrWzMP
+         vHz07zJmC0gQxo7rPveuTd7p2c2BRwAg/yNsCTHGDFSfcMPnPv0mRsjEL6qCK36/ebzb
+         6Of9+QOZmrumAlqJDzLUHYxDrF1t7LJDouzFt4/nHbTi8WSfvXsNkQ8ALT4P5W12YSNb
+         +H6iVFyVG06HPnJ+kIo9kb3fShqVL3xpPqef0lrWofYtX/1KsyAzGKJA557VSSlH1hJv
+         kVW/MbPbIFEApQvzTFNcBcgEU1q50z41tOK6EyCvhAtcmi8FxkpmvL0/NJm5j8mcf23j
+         mL3A==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] mmc: meson-gx: move arch header to local header
-Date: Fri,  6 Nov 2020 10:27:53 +0100
-Message-Id: <20201106092755.2250773-2-narmstrong@baylibre.com>
+Subject: [PATCH 2/3] mmc: meson-gx: limit max frequency on SM1 SoCs
+Date: Fri,  6 Nov 2020 10:27:54 +0100
+Message-Id: <20201106092755.2250773-3-narmstrong@baylibre.com>
 In-Reply-To: <20201106092755.2250773-1-narmstrong@baylibre.com>
 References: <20201106092755.2250773-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,64 +28,97 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Move the asm/arch-meson/sd_emmc.h to a local meson_gx_mmc.h,
-remove the useless if/then and fix the meson_gx_mmc.c include.
+Amlogic SM1 SoCs doesn't handle very well high clocks from the DIV2 input
+Thus we limit the max freq to 26MHz on SM1 SoCs until we handle higher
+frequencies via the first input from a composite clock.
+
+Here 26MHz corresponds to MMC_HS clock speed.
+
+We also add a u-boot only sm1 compatible to distinguish the controller.
+
+Finally a TOFIX is added to precise the clock management should use
+the clock controller instead of local management with fixed clock rates.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/mmc/meson_gx_mmc.c                                 | 4 ++--
- .../asm/arch-meson/sd_emmc.h => drivers/mmc/meson_gx_mmc.h | 7 ++-----
- 2 files changed, 4 insertions(+), 7 deletions(-)
- rename arch/arm/include/asm/arch-meson/sd_emmc.h => drivers/mmc/meson_gx_mmc.h (97%)
+ drivers/mmc/meson_gx_mmc.c | 26 +++++++++++++++++++++++---
+ drivers/mmc/meson_gx_mmc.h |  5 +++++
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-index 719dd1e5e5..9350edf3fa 100644
+index 9350edf3fa..2c6b6cd15b 100644
 --- a/drivers/mmc/meson_gx_mmc.c
 +++ b/drivers/mmc/meson_gx_mmc.c
-@@ -13,9 +13,9 @@
- #include <mmc.h>
- #include <asm/io.h>
- #include <asm/gpio.h>
--#include <asm/arch/sd_emmc.h>
- #include <linux/delay.h>
+@@ -17,6 +17,14 @@
  #include <linux/log2.h>
-+#include "meson_gx_mmc.h"
+ #include "meson_gx_mmc.h"
  
++bool meson_gx_mmc_is_compatible(struct udevice *dev,
++				enum meson_gx_mmc_compatible family)
++{
++	enum meson_gx_mmc_compatible compat = dev_get_driver_data(dev);
++
++	return compat == family;
++}
++
  static inline void *get_regbase(const struct mmc *mmc)
  {
-@@ -265,7 +265,7 @@ static int meson_mmc_probe(struct udevice *dev)
+ 	struct meson_mmc_platdata *pdata = mmc->priv;
+@@ -42,6 +50,8 @@ static void meson_mmc_config_clock(struct mmc *mmc)
+ 	if (!mmc->clock)
+ 		return;
+ 
++	/* TOFIX This should use the proper clock taken from DT */
++
+ 	/* 1GHz / CLK_MAX_DIV = 15,9 MHz */
+ 	if (mmc->clock > 16000000) {
+ 		clk = SD_EMMC_CLKSRC_DIV2;
+@@ -265,7 +275,16 @@ static int meson_mmc_probe(struct udevice *dev)
  	cfg->host_caps = MMC_MODE_8BIT | MMC_MODE_4BIT |
  			MMC_MODE_HS_52MHz | MMC_MODE_HS;
  	cfg->f_min = DIV_ROUND_UP(SD_EMMC_CLKSRC_24M, CLK_MAX_DIV);
--	cfg->f_max = 100000000; /* 100 MHz */
-+	cfg->f_max = 100000000; /* 100 MHz */;
+-	cfg->f_max = 100000000; /* 100 MHz */;
++	/*
++	 * TOFIX SM1 SoCs doesn't handle very well high clocks from the DIV2 input
++	 * Thus we limit the max freq to 26MHz on SM1 SoCs until we handle higher
++	 * frequencies via the first input from a composite clock
++	 * 26MHz corresponds to MMC_HS clock speed
++	 */
++	if (meson_gx_mmc_is_compatible(dev, MMC_COMPATIBLE_SM1))
++		cfg->f_max = 26000000; /* 26 MHz */
++	else
++		cfg->f_max = 100000000; /* 100 MHz */
  	cfg->b_max = 511; /* max 512 - 1 blocks */
  	cfg->name = dev->name;
  
-diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/drivers/mmc/meson_gx_mmc.h
-similarity index 97%
-rename from arch/arm/include/asm/arch-meson/sd_emmc.h
-rename to drivers/mmc/meson_gx_mmc.h
-index 1e9f8cf498..b4544b5562 100644
---- a/arch/arm/include/asm/arch-meson/sd_emmc.h
+@@ -308,8 +327,9 @@ int meson_mmc_bind(struct udevice *dev)
+ }
+ 
+ static const struct udevice_id meson_mmc_match[] = {
+-	{ .compatible = "amlogic,meson-gx-mmc" },
+-	{ .compatible = "amlogic,meson-axg-mmc" },
++	{ .compatible = "amlogic,meson-gx-mmc", .data = MMC_COMPATIBLE_GX },
++	{ .compatible = "amlogic,meson-axg-mmc", .data = MMC_COMPATIBLE_GX },
++	{ .compatible = "amlogic,meson-sm1-mmc", .data = MMC_COMPATIBLE_SM1 },
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/drivers/mmc/meson_gx_mmc.h b/drivers/mmc/meson_gx_mmc.h
+index b4544b5562..92aec5329f 100644
+--- a/drivers/mmc/meson_gx_mmc.h
 +++ b/drivers/mmc/meson_gx_mmc.h
-@@ -3,14 +3,11 @@
-  * (C) Copyright 2016 Carlo Caione <carlo@caione.org>
-  */
- 
--#ifndef __SD_EMMC_H__
--#define __SD_EMMC_H__
-+#ifndef __MESON_GX_MMC_H__
-+#define __MESON_GX_MMC_H__
- 
+@@ -9,6 +9,11 @@
  #include <mmc.h>
--#ifndef __ASSEMBLY__
  #include <linux/bitops.h>
--#endif
--
  
++enum meson_gx_mmc_compatible {
++	MMC_COMPATIBLE_GX,
++	MMC_COMPATIBLE_SM1,
++};
++
  #define SDIO_PORT_A			0
  #define SDIO_PORT_B			1
+ #define SDIO_PORT_C			2
 -- 
 2.25.1
 
