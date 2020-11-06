@@ -1,68 +1,66 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web11.9628.1604655306048994680
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web11.9691.1604655779449378367
  for <u-boot-amlogic@groups.io>;
- Fri, 06 Nov 2020 01:35:06 -0800
-Received: by mail-wm1-f66.google.com with SMTP id p19so550305wmg.0
-        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:35:05 -0800 (PST)
+ Fri, 06 Nov 2020 01:42:59 -0800
+Received: by mail-wr1-f66.google.com with SMTP id w14so604392wrs.9
+        for <u-boot-amlogic@groups.io>; Fri, 06 Nov 2020 01:42:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8moSjL4KmjUBpCmS/TVC1VV7WRyv1avLQ/pqDxu43Ao=;
-        b=cS52GcsHiqoLRgqphwING9kiiqUHOUufXT4ykJID1MUOBw6JG6S4UM5+jxpfXb+uTK
-         s1MN4S0h2HEiUmTNDngX70WPzrzSVWslweixC2IWHNXTGzGT/cTskFUN+dawmNTm7kB2
-         16YBvzEKoDeo3CVIBIkI+X50DtSu+z5doM0BkB3EbsUR9x4xbptbWZnHsAA2KALNwobn
-         CM2Nn2+ZlQJHMc5h7nIRFd/18phv4sgWJV92rrdpX3fGcH257MW//JkvoLRVOG4GKWLU
-         XbXuLA6mA3PNJ2vKzkYy7XGZqIHqYSgwrNpZEOkdSf3JLy+mQh2Vs6Z5V7mAAwbYZt5z
-         wogg==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/2] Fix the potential warning without DM_REGULATOR
-References: <CGME20201106055729epcas1p23448d11a25acd6168d3a514a2c17e6ce@epcas1p2.samsung.com>
- <20201106055748.20042-1-jh80.chung@samsung.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <17891017-9ee8-3fbe-f875-a3fd694b7007@baylibre.com>
-Date: Fri, 6 Nov 2020 10:32:44 +0100
+        h=references:user-agent:from:to:cc:subject:in-reply-to:message-id
+         :date:mime-version;
+        bh=RSsBsGVC0sWl2fB95PWzX5ulegG+qUnAgNNeIAjUVdo=;
+        b=Zdb6723Y+2ECFuihpZ5u9JCuN/mU64yjuAeS8JkgqllymPTSA22x3JpUEQDrHDbnmX
+         tpOyks1UNAfUPm31AH2spnEXeuqAloa+hnnoVObF0MIf3uEtQq/miK6nVHifaITWxaaW
+         vVKqGluwOAq4W9wePZpajgAZaRgZlqv2x6qZQeb5MfXbJVGYoOEuufQG7o/Qpe1pLES7
+         1LYm1vOuMoMvuht7+nEPQZin8rWa2KjHY58+dZbEPiUxKJKNwVI4oF8DWrWjvEjdZqtC
+         ocOEF+NfYPijFSra0Ny+d7GkR/d7dfToPcqTDRQ700e/o8a5j43aQpSoGznS9UEusJek
+         R0pg==
+Return-Path: <jbrunet@baylibre.com>
+References: <20201106090752.31005-1-jbrunet@baylibre.com>
+ <b93c004f-7783-7402-2e65-ed16380ee4bb@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 0/2] arm64: meson: add libretech cc v2 support
+In-reply-to: <b93c004f-7783-7402-2e65-ed16380ee4bb@baylibre.com>
+Message-ID: <1jwnyyq0rj.fsf@starbuckisacylon.baylibre.com>
+Date: Fri, 06 Nov 2020 10:42:56 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201106055748.20042-1-jh80.chung@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Jaehoon Chung <jh80.chung@samsung.com>, u-boot@lists.denx.de
-Cc: agust@denx.de, u-boot-amlogic@groups.io
+Content-Type: text/plain
+To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Da Xue <da@libre.computer>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 06/11/2020 06:57, Jaehoon Chung wrote:
-> When CONFIG_DM_REGULATOR is disabled, there are some warnings.
-> This patch-set is fixed them.
-> 
-> drivers/phy/meson-g12a-usb2.c: In function 'phy_meson_g12a_usb2_power_on':
-> drivers/phy/meson-g12a-usb2.c:70:35: warning: unused variable 'priv' [-Wunused-variable]
->    70 |  struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
->       |                                   ^~~~
-> drivers/phy/meson-g12a-usb2.c: In function 'phy_meson_g12a_usb2_power_off':
-> drivers/phy/meson-g12a-usb2.c:86:35: warning: unused variable 'priv' [-Wunused-variable]
->    86 |  struct phy_meson_g12a_usb2_priv *priv = dev_get_priv(dev);
->       |                                   ^~~~
->   LD      drivers/phy/built-in.o
->   CC      drivers/video/simple_panel.o
->   CC      drivers/video/meson/meson_dw_hdmi.o
-> drivers/video/meson/meson_dw_hdmi.c: In function 'meson_dw_hdmi_probe':
-> drivers/video/meson/meson_dw_hdmi.c:382:18: warning: unused variable 'supply' [-Wunused-variable]
->   382 |  struct udevice *supply;
->       |                  ^~~~~~
-> 
-> Jaehoon Chung (2):
->   phy: meson-g12a-usb2: fix the potential build warning
->   video: meson: meson_dw_hdmi: fix the potential build warning
-> 
->  drivers/phy/meson-g12a-usb2.c       | 4 ++--
->  drivers/video/meson/meson_dw_hdmi.c | 2 ++
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
 
-Thanks,
+On Fri 06 Nov 2020 at 10:29, Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-Applied to u-boot-amlogic
+> Hi,
+>
+> On 06/11/2020 10:07, Jerome Brunet wrote:
+>> This patchset adds support for the Amlogic based libretech cc v2.
+>> Like the v1, this revised platform used the s905x SoC.
+>> 
+>> Changes since v1:
+>> - Move Makefile change to patch #1
+>> - Amend documentation for libretech cc v2
+>
+> Seems you had a patch issue, the following patches are the same as v1
 
-Neil
+Ugh indeed, sorry about that
+
+>
+> Neil
+>
+>> 
+>> Jerome Brunet (2):
+>>   arm64: dts: import libretech-cc-v2 from linux v5.10-rc1
+>>   arm64: meson: add support for libretech-cc v2
+>> 
+>>  arch/arm/dts/Makefile                         |   1 +
+>>  ...eson-gxl-s905x-libretech-cc-v2-u-boot.dtsi |   7 +
+>>  .../dts/meson-gxl-s905x-libretech-cc-v2.dts   | 318 ++++++++++++++++++
+>>  configs/libretech-cc_v2_defconfig             |  82 +++++
+>>  4 files changed, 408 insertions(+)
+>>  create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
+>>  create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
+>>  create mode 100644 configs/libretech-cc_v2_defconfig
+>> 
+
