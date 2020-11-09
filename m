@@ -1,189 +1,125 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
- by mx.groups.io with SMTP id smtpd.web12.19400.1604960745460990532
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+ by mx.groups.io with SMTP id smtpd.web08.19365.1604960801457994097
  for <u-boot-amlogic@groups.io>;
- Mon, 09 Nov 2020 14:25:46 -0800
+ Mon, 09 Nov 2020 14:26:42 -0800
 Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20201109222542epoutp0251c359621ff1bc02a051a857d88c429a~F90rBDKxh3032430324epoutp02y
-	for <u-boot-amlogic@groups.io>; Mon,  9 Nov 2020 22:25:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20201109222542epoutp0251c359621ff1bc02a051a857d88c429a~F90rBDKxh3032430324epoutp02y
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20201109222639epoutp01bcc4602a12513d7f10b843c1abcf718b~F91ftcCJV3016230162epoutp01U
+	for <u-boot-amlogic@groups.io>; Mon,  9 Nov 2020 22:26:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20201109222639epoutp01bcc4602a12513d7f10b843c1abcf718b~F91ftcCJV3016230162epoutp01U
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1604960742;
-	bh=/CXPrSrAvel5oIwzHto0DphhhaXgehKEaBivWxDlHMk=;
+	s=mail20170921; t=1604960799;
+	bh=sKI/QpKFNQS6pevi+qf9PerxN/ns1YWA/p3ZOJfq85c=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-	b=slc7NvPJPhcDSu+t9e/czqvX7UspliEcBilu4xNpxSkEZu+cOINrzqWBHa2GRWl+Z
-	 0zdINxU9rQCG0YSThVmtnNaVUAd7a6iiEvszVcyp+OSKG7ZuQssXz2AVjU1D1RceEi
-	 26ZeO2mt6rGVn8JzLWwBAUogpKCFOhnw/qifczD4=
-Subject: Re: Fail to reset on Odroid-C4
+	b=jlRr0Gs3aDkESqIYVuKO80Qo9tRlzsu0IusF99xZNuKXwffbAE0uOoPCL2xEuq7VR
+	 TrXR4wr9USTASoZB25Z+EkEXYu4NmHFdk+Qzuu+8mqFCSYNQ5vEG5DsxMeE6p6zMb5
+	 eRhfo6XKvZDHrxFNCrduPjq4/qw5ApWuQXLuB2pU=
+Subject: Re: [PATCH] mmc: meson_gx_mmc: change a clock phase to stable value
 From: Jaehoon Chung <jh80.chung@samsung.com>
-Message-ID: <17a5d0b3-4c78-ca64-35b0-41733aa02660@samsung.com>
-Date: Tue, 10 Nov 2020 07:25:56 +0900
+Message-ID: <d4e7514d-6044-5446-50c7-ccc88ab6ce63@samsung.com>
+Date: Tue, 10 Nov 2020 07:26:53 +0900
 MIME-Version: 1.0
-In-Reply-To: <3c853d26-ddd5-3928-4728-d2224a62fb2a@baylibre.com>
-References: <CGME20201106020946epcas1p3ff6494f0122e9f4c41f81877090df195@epcas1p3.samsung.com>
-	<e66e17d2-8115-6d19-68b7-31f2166d6dc3@samsung.com>
-	<140e6846-4ee3-1099-2198-66d5a4aab9e2@baylibre.com>
-	<57e4b34e-76f6-7b04-6f1b-734e4611f6f9@samsung.com>
-	<e176f941-25fa-4721-e8c8-62f25a904fa8@baylibre.com>
-	<cfd25be7-4fca-93d2-531a-911069eb532f@samsung.com>
-	<3c853d26-ddd5-3928-4728-d2224a62fb2a@baylibre.com>
+In-Reply-To: <CANAwSgRA-43AReFgP7D-5i=EA_XXV+wgQhHkGEFD5StGceXAeg@mail.gmail.com>
+References: <CGME20201109031216epcas1p197a531d87ad92cb02aca01f4b9e2af3a@epcas1p1.samsung.com>
+	<20201109031233.25320-1-jh80.chung@samsung.com>
+	<15fa8495-b92f-1acc-038e-760df4fdf30f@baylibre.com>
+	<e94a6abeb770b3bf@bloch.sibelius.xs4all.nl>
+	<9bda4738-332d-a687-0d21-20eb42518d42@baylibre.com>
+	<CANAwSgRA-43AReFgP7D-5i=EA_XXV+wgQhHkGEFD5StGceXAeg@mail.gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
-To: Neil Armstrong <narmstrong@baylibre.com>, U-Boot Mailing List <U-Boot@lists.denx.de>
-Cc: u-boot-amlogic@groups.io
+To: Anand Moon <linux.amoon@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Mark Kettenis <mark.kettenis@xs4all.nl>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Peng Fan <peng.fan@nxp.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 11/9/20 10:38 PM, Neil Armstrong wrote:
-> On 09/11/2020 09:37, Jaehoon Chung wrote:
->> On 11/6/20 7:01 PM, Neil Armstrong wrote:
->>> On 06/11/2020 10:59, Jaehoon Chung wrote:
+Dear Anand,
+
+On 11/10/20 4:02 AM, Anand Moon wrote:
+> Hi Neil,
+> 
+> On Mon, 9 Nov 2020 at 19:56, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> On 09/11/2020 15:10, Mark Kettenis wrote:
+>>>> From: Neil Armstrong <narmstrong@baylibre.com>
+>>>> Date: Mon, 9 Nov 2020 14:37:09 +0100
+>>>>
 >>>> Hi,
 >>>>
->>>> On 11/6/20 6:28 PM, Neil Armstrong wrote:
->>>>> Hi,
+>>>> On 09/11/2020 04:12, Jaehoon Chung wrote:
+>>>>> Core clock phase value is changed from 180' to 270'.
+>>>>> It's more stable than before.
+>>>>> - Odroidn-N2/C4 : Working fine with 52MHz
+>>>>> - VIM3 : Working fine with 52MHz
 >>>>>
->>>>> On 06/11/2020 03:10, Jaehoon Chung wrote:
->>>>>> Hi,
->>>>>>
->>>>>> I have checked U-boot on Odroid-C4 with v2020.10.
->>>>>> I found a problem about reset behavior.
->>>>>>
->>>>>> In my environment,
->>>>>> - Boot to SD-card,
->>>>>> - built u-boot v2020.10 with ordoid-c4_defconfig
->>>>>> - Referred to doc/board/amlogic/odroid-c4.rst
->>>>>>
->>>>>>
->>>>>> If do "reset" command after run command "mmcinfo", it didn't work anymore.
->>>>>> - After something to do operation relevant to MMC. (read/write or ls mmc, etc..)
->>>>>>
->>>>>>
->>>>>> U-Boot 2020.10-00383-g2f27fb20151b-dirty (Nov 06 2020 - 10:37:09 +0900) odroid-c4
->>>>>>
->>>>>> Model: Hardkernel ODROID-C4
->>>>>> SoC:   Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2)
->>>>>> DRAM:  3.8 GiB
->>>>>> MMC:   sd@ffe05000: 0, mmc@ffe07000: 1
->>>>>> In:    serial
->>>>>> Out:   serial
->>>>>> Err:   serial
->>>>>> Net:   eth0: ethernet@ff3f0000
->>>>>> Hit any key to stop autoboot:  0
->>>>>> Odroid N2>
->>>>>> Odroid N2>
->>>>>> Odroid N2>
->>>>>> Odroid N2>
->>>>>> Odroid N2>
->>>>>> Odroid N2> mmcinfo
->>>>>> Device: sd@ffe05000
->>>>>> Manufacturer ID: 3
->>>>>> OEM: 5344
->>>>>> Name: SB16G
->>>>>> Bus Speed: 50000000
->>>>>> Mode: SD High Speed (50MHz)
->>>>>> Rd Block Len: 512
->>>>>> SD version 3.0
->>>>>> High Capacity: Yes
->>>>>> Capacity: 14.8 GiB
->>>>>> Bus Width: 4-bit
->>>>>> Erase Group Size: 512 Bytes
->>>>>> Odroid N2> reset
->>>>>> resetting ...
->>>>>> bl31 reboot reason: 0xd
->>>>>> bl31 reboot reason: 0x0
->>>>>> system cmd  1.
->>>>>> SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;SD?:0;SD:0;READ:0;0.0;CHK:0;
->>>>>> bl2_stage_init 0x01
->>>>>> bl2_stage_init 0x81
->>>>>> hw id:?M1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;
+>>>>> Before this patch, Odroid-C4 doesn't work fine with 52MHz.
 >>>>>
->>>>> It's a new one !
+>>>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>>>>> ---
+>>>>>  drivers/mmc/meson_gx_mmc.c | 14 ++++++++++----
+>>>>>  1 file changed, 10 insertions(+), 4 deletions(-)
 >>>>>
->>>>>>
->>>>>>
->>>>>> I didn't analyze it in more detail. I will do. But it seems that relevant to BL2 binary.
->>>>>> If nothing to do before reset, it's working fine.
+>>>>> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+>>>>> index 719dd1e5e570..7c60e0566560 100644
+>>>>> --- a/drivers/mmc/meson_gx_mmc.c
+>>>>> +++ b/drivers/mmc/meson_gx_mmc.c
+>>>>> @@ -52,10 +52,16 @@ static void meson_mmc_config_clock(struct mmc *mmc)
+>>>>>     }
+>>>>>     clk_div = DIV_ROUND_UP(clk, mmc->clock);
 >>>>>
->>>>> Is this the same with SDCard ?
->>>>
->>>> Yes. I had tested with same SD-card. (I can't test with eMMC, because eMMC doesn't initialize.)
->>>>
->>>> 1) After boot, reset -> fine
->>>> 2) After boot, run some mmc operation -> reset -> fail.
->>>>
->>>>
+>>>>> -   /* 180 phase core clock */
+>>>>> -   meson_mmc_clk |= CLK_CO_PHASE_180;
+>>>>> -
+>>>>> -   /* 180 phase tx clock */
+>>>>> +   /*
+>>>>> +    * Clock Phase needs to set a proper value.
+>>>>> +    * It can be changed to other value.
+>>>>> +    * Because CORE : 270' Phase and TX : 0' Phase are stable,
+>>>>> +    * set to them by default.
+>>>>> +    */
+>>>>> +   /* Core Clock Phase */
+>>>>> +   meson_mmc_clk |= CLK_CO_PHASE_270;
+>>>>> +
+>>>>> +   /* TX Clock Phase */
+>>>>>     meson_mmc_clk |= CLK_TX_PHASE_000;
 >>>>>
->>>>> The SDCard & eMMC regulators doesn't reset to default when resetting, causing issues
->>>>> with the boot ROM... maybe you'll need to reset the regulators in a reset for the
->>>>> Odroid C4 board.
+>>>>>     /* clock settings */
+>>>>>
 >>>>
->>>> Actually, i hope that it works fine after building mainline u-boot with odroid-c4_defconfig.
->>>> Because it seems that supports Odroid-c4. But it doesn't work well. :(
->>>>
->>>> For checking, i'm using with u-boot-amlogic with 2021.01-rc1
->>>>
->>>> But eMMC doesn't work..
->>>> I'm analyzing this problem..it doesn't work higher mode than 26MHz speed mode.
->>>> How did you check for eMMC card? I will fix it but i don't have any information about meson_gx_mmc.
+>>>> The previous values were aligned on the Linux driver, which is functional.
 >>>
->>> I did my test on the Khadas VIM3L, but we have the exact same issues on the SEI610, VIM3L and now C4 boards.
+>>> Actually the Linux driver isn't really functional; the 52 MHz
+>>> high-speed mode doesn't work.  But since HS200 does work in Linux,
+>>> probably nobody noticed this.
 >>>
->>>>
->>>> If i find how to fix it, i will send patch.
->>>>
->>>>
->>>>>
->>>>>>
->>>>>> If someone already fixed this or I missed something to do, let me know, plz.
->>>>>
->>>>> AFAIK no, I just pushed a fix for the eMMC/SDCard clock causing read issues at 50MHz.
->>>>
->>>> Is it relevant to IO error (-5)?
+>>> That said, I'm not confident a single clock phase setting will work
+>>> across all Amlogic SoCs and across different boards.  Maybe we need
+>>> something in the device tree such that we can control the values on a
+>>> per-board level.
 >>>
->>> Yes, over 26MHz the eMMC fails, the clock management is in cause and needs to be
->>> reworked, but this fix should be fine.
 >>
->> This issue is fixed after applied my patch. Also "reset" is working fine.
+>> So this is specific to SM1 SoCs then, because others families doesn't have such issues
+>> at 52MHz.
 >>
->> https://protect2.fireeye.com/v1/url?k=e6aba439-b9309d23-e6aa2f76-000babff24ad-8b52d9e3f1eaaaba&q=1&e=cfbd62d7-66fc-460f-bb62-f49289448de5&u=https%3A%2F%2Fpatchwork.ozlabs.org%2Fproject%2Fuboot%2Fpatch%2F20201109031233.25320-1-jh80.chung%40samsung.com%2F
+>> So the Linux must be fixes, including the bindings to introduce a new compatible, then
+>> ported to U-Boot.
+>>
+>> So in the meantime, it's right to limit to 26MHz on SM1 in U-boot until we have all this
+>> clarified.
+>>
+>> Neil
 > 
-> I don't understand why a different clock phase would make reset work here.
+> Earlier I had a similar approach for this FIX but somehow it did not get merged.
+> 
+> Please add my
+> Tested-by: Anand Moon <linux.amoon@gmail.com>
 
-Sorry. It's my mistake. It's not fixed. 
+Thanks for testing!
 
 Best Regards,
-Jaehoon CHung
+Jaehoon Chung
 
 > 
-> Neil
-> 
->>
->> Best Regards,
->> Jaehoon Chung
->>
->>>
->>> Neil
->>>
->>>>
->>>>
->>>> Best Regards,
->>>> Jaehoon Chung
->>>>
->>>>>
->>>>> Thanks for the patches & reports !
->>>>>
->>>>> Neil
->>>>>
->>>>>>
->>>>>> Best Regards,
->>>>>> Jaehoon Chung
->>>>>>
->>>>>
->>>>>
->>>>
->>>
->>>
->>
-> 
+> Best Regards
+> -Anand
 > 
 
