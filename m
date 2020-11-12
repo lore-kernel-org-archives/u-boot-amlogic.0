@@ -1,73 +1,73 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web08.3983.1605187733855973484
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web12.4070.1605187820149287135
  for <u-boot-amlogic@groups.io>;
- Thu, 12 Nov 2020 05:28:54 -0800
-Received: by mail-wm1-f66.google.com with SMTP id c16so5514703wmd.2
-        for <u-boot-amlogic@groups.io>; Thu, 12 Nov 2020 05:28:53 -0800 (PST)
+ Thu, 12 Nov 2020 05:30:20 -0800
+Received: by mail-wr1-f67.google.com with SMTP id d12so5961366wrr.13
+        for <u-boot-amlogic@groups.io>; Thu, 12 Nov 2020 05:30:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=EpCg3yJDcOV9T6X+UekcwupgBfh8fnWK99Y2TGwzBgA=;
-        b=HcMN0vzveh9UlV1XHez3nr8KMWuG+zaB2AwlqAXqPQ3idZWBDDXh1838U3fmKjWA1s
-         PeN36pBJ8EVjE2nXie75fZa7hzzzFeGCSocRyxTkHDlSvTaN0mAn8v80wOForbBmuOUl
-         ANMR9XHtXEyJcVPDL5twpMaWEdJjr7coxYygaF/OnHzi4wfUIQi1Pt421RTC7XzUEAbo
-         XhsuWShfcqJz4p8AqfremOaMdyG9MBHcU3ANT3a7ILucXW/67zBz2qetTY4pt1Lko7tF
-         7lBjhCKhvgMmFz5bfLr5L26MpF3m3QOYORcODivEm+ZyrJSQ0h4oBccFgnno1U3ersm6
-         LLvQ==
+        bh=jCyrFQZqI8Cn01ngYku8PasF3nzG3zmpXx0QUP8Bs1Q=;
+        b=atH+yGVuep3SaGCSPVv8AmhvNrK8tlYeidUamJNDFbwDC2MiKyL8iNaEjY7+8Us9P8
+         5KxftNsHSHyXEVwL6WO/Z/OxWhjnhznpN1tqFqXIRYWaXdD0onyLXPJFIwixQrZJ4PDx
+         0AeSorq6tY3n/ah72uOIFF54+3jzIRJ+iHmj2wPc6sWChlI8eG0peQiJEiYEnsdFWo4k
+         9DgPD5ysKDFZi0UxKB99YV63Cm5vQnV6VI+GN5WoTpSnbgvVTvw7nb8KsjZX5dqpf2lr
+         iTPhE+EZrKb71JD7mTAkiJlL71jS6WZRpZyGWnaNHLnSJHOjKi5E4lX03IooY6NWxs32
+         1YMg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] ARM: mach-meson: update SoC IDs
-References: <20201109133355.2794045-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 0/3] mmc: meson-gx: fix mmc & sdcard failur on SM1 SoCs
+References: <CGME20201110232156epcas1p11a12c40acfb7f04ad864f001c0e4ea77@epcas1p1.samsung.com>
+ <20201110232211.3717-1-jh80.chung@samsung.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <833d6056-1a59-afe2-c01c-17721673bd50@baylibre.com>
-Date: Thu, 12 Nov 2020 14:28:49 +0100
+Message-ID: <086ae2bf-ddcc-c544-67e9-a23a08181652@baylibre.com>
+Date: Thu, 12 Nov 2020 14:30:16 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201109133355.2794045-1-narmstrong@baylibre.com>
+In-Reply-To: <20201110232211.3717-1-jh80.chung@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io
+To: Jaehoon Chung <jh80.chung@samsung.com>, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, peng.fan@nxp.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On 09/11/2020 14:33, Neil Armstrong wrote:
-> Update From Linux commits
-> - 240051cb833b ("soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs")
-> - 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
-> - fdfc6997bd08 ("soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for VIM3L")
-> - d16d0481e6ba ("soc: amlogic: meson-gx-socinfo: Fix S905X3 and S905D3 ID's")
+On 11/11/2020 00:22, Jaehoon Chung wrote:
+> Amlogic SM1 SoCs doesn't work over 50MHz. When phase sets to 270', it's
+> working fine over 50MHz on Amlogic SM1 SoCs.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  arch/arm/mach-meson/board-info.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> To use a proper phase value adds an u-boot only sm1 compatible.
 > 
-> diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
-> index 3abb27e03b..e61d1adb10 100644
-> --- a/arch/arm/mach-meson/board-info.c
-> +++ b/arch/arm/mach-meson/board-info.c
-> @@ -38,6 +38,7 @@ static const struct meson_gx_soc_id {
->  	{ "G12A",   0x28 },
->  	{ "G12B",   0x29 },
->  	{ "SM1",    0x2b },
-> +	{ "A1",	    0x2c },
->  };
->  
->  static const struct meson_gx_package_id {
-> @@ -65,7 +66,11 @@ static const struct meson_gx_package_id {
->  	{ "S905X2", 0x28, 0x40, 0xf0 },
->  	{ "A311D",  0x29, 0x10, 0xf0 },
->  	{ "S922X",  0x29, 0x40, 0xf0 },
-> -	{ "S905X3", 0x2b, 0x5, 0xf },
-> +	{ "S905D3", 0x2b, 0x4, 0xf5 },
-> +	{ "S905X3", 0x2b, 0x5, 0xf5 },
-> +	{ "S905X3", 0x2b, 0x10, 0x3f },
-> +	{ "S905D3", 0x2b, 0x30, 0x3f },
-> +	{ "A113L", 0x2c, 0x0, 0xf8 },
->  };
->  
->  DECLARE_GLOBAL_DATA_PTR;
+> In future, it needs to find what value is a proper about each SoCs.
+> 
+> According to Neil's suggestion, applied code based on below patch.
+> https://patchwork.ozlabs.org/project/uboot/patch/20201109031233.25320-1-jh80.chung@samsung.com
+> 
+> Tested on Odroid-C4/N2, VIM3.
+> 
+> Changelog v2:
+> - Rewrote "[2/3] mmc: meson-gx: limit max frequency on SM1 SoCs" 
+> - Applied "mmc: meson_gx_mmc: change a clock phase to stable value"
+> - Add Jaehoon's Signed-off tag
+> 
+> Neil Armstrong (3):
+>   mmc: meson-gx: move arch header to local header
+>   mmc: meson-gx: change clock phase value on SM1 SoCs
+>   ARM: dts: meson-sm1: add u-boot specific MMC controller compatible
+> 
+>  .../meson-g12b-a311d-khadas-vim3-u-boot.dtsi  |  1 +
+>  arch/arm/dts/meson-khadas-vim3-u-boot.dtsi    |  2 --
+>  .../dts/meson-sm1-khadas-vim3l-u-boot.dtsi    |  1 +
+>  arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi  |  2 +-
+>  arch/arm/dts/meson-sm1-sei610-u-boot.dtsi     |  2 +-
+>  arch/arm/dts/meson-sm1-u-boot.dtsi            | 20 +++++++++++++
+>  drivers/mmc/meson_gx_mmc.c                    | 29 +++++++++++++++----
+>  .../sd_emmc.h => drivers/mmc/meson_gx_mmc.h   | 10 ++++---
+>  8 files changed, 54 insertions(+), 13 deletions(-)
+>  create mode 100644 arch/arm/dts/meson-sm1-u-boot.dtsi
+>  rename arch/arm/include/asm/arch-meson/sd_emmc.h => drivers/mmc/meson_gx_mmc.h (95%)
 > 
 
-Applied to u-boot-amlogic
+Thanks !
+
+Applying to u-boot-amlogic
