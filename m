@@ -1,122 +1,133 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web11.21283.1606494933591146804
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+ by mx.groups.io with SMTP id smtpd.web12.7036.1605285481777166700
  for <u-boot-amlogic@groups.io>;
- Fri, 27 Nov 2020 08:35:34 -0800
-Received: by mail-wr1-f68.google.com with SMTP id t4so6152422wrr.12
-        for <u-boot-amlogic@groups.io>; Fri, 27 Nov 2020 08:35:33 -0800 (PST)
+ Fri, 13 Nov 2020 08:38:01 -0800
+Received: by mail-vs1-f42.google.com with SMTP id x11so5492712vsx.12
+        for <u-boot-amlogic@groups.io>; Fri, 13 Nov 2020 08:38:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mkP4GSz4oJ6V15+wN5LNRK73CdV9Y8CgBJeodmD9Hwk=;
-        b=dAYCCuYVjNJkkUaWgEgnfjyOCLwbYBCqHum+swJSxG6UHYgcdAcq9swA37EuaCA2gz
-         h+mGVYFf20Cff2cCDutDMPfUavxZzVhosHTUSYUJYIA9SaXSXmA8rJEcq+y4VkThKBHu
-         86/zTDm8tBRiDF1ow5OmmHb1eziGtUoNjnkYpGJCdZaQryP/SUwX6H3FdtxuERyztwie
-         H7gzAVAdeS7g96XXepJiKbObO6KecWEcKKAeq1G9tUCrNJTv2A4p0exQIOTvPVAADqEW
-         P2wPIOYxCzbaeBJAGbjwERQS8GHgqRKjGQxnpC9CwHTs7jf9nNK/2kqyJhQHQnPYhyF/
-         4/ug==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/2] meson: Add soc_rev to environment
-References: <537d604eeb14149783c1bb398af9f4c9a82374d0.1606492351.git.stefan@agner.ch>
- <ff19d6f90e3f827664f8460e98d86a692342506d.1606492351.git.stefan@agner.ch>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <c6b25ad9-7903-0456-75ef-5f30fdca5df5@baylibre.com>
-Date: Fri, 27 Nov 2020 17:35:09 +0100
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S2QshnfrVX6usAIQ2uFmKu7+HlJxqmYruIxXH3gXYCQ=;
+        b=bkv8s6BNx//wAHUYuEXSS2zF/g3lYbTuXsk1e4luveq/VNgxqEiSFHehh04RtsKJYV
+         9ibTyuFhLuR8ZpzgvfMTt094wHfuwE2kn/h6hNO26sKITOt5YTx9kZ9sMbK0snpN/kdx
+         AWTNp+kA8JUWL3eVDTmC/rx/SteCgDrMl01b0ho/Bp7jMaKTUYTwQqnXHsYSrJRkuLhs
+         HuYwN/vGSkSnq9TKYQIuuLrq/X/ZixnE4aMolyygPoHB8NUPxwrwKFj8o/R+ZXkOkkv4
+         5mjunszCvB6ZaFke8tIvQqqvf9n6Ijf/J1CAea4fB07FvnqON1uBLGxSKJYbTL1KV6k0
+         YOAw==
 MIME-Version: 1.0
-In-Reply-To: <ff19d6f90e3f827664f8460e98d86a692342506d.1606492351.git.stefan@agner.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Stefan Agner <stefan@agner.ch>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Cc: Pascal Vizeli <pvizeli@syshack.ch>
+References: <CAMeizLdpoevi6Fj-X=abWe2QKuvdrJ4gkS_=2yzpBmrnO-RDaQ@mail.gmail.com>
+ <f1afd339-241d-1708-8a07-9daa008cdfd5@baylibre.com> <CAMeizLcQGkmsZ3MOb8uHGKGxFYfWpEK6Y1YF7OPWLJzs765KRQ@mail.gmail.com>
+ <1jblgpj8zd.fsf@starbuckisacylon.baylibre.com> <CAMeizLc163WqCM-MVGFSSZnrZ_6mwVTrtje4Vp86d8z4gDw-SQ@mail.gmail.com>
+ <032e222c-1f46-0efc-d92b-ee848fc2c12e@baylibre.com>
+In-Reply-To: <032e222c-1f46-0efc-d92b-ee848fc2c12e@baylibre.com>
+From: Anton Arapov <arapov@gmail.com>
+Date: Fri, 13 Nov 2020 17:37:44 +0100
+Message-ID: <CAMeizLdD8MZLpPhmhCx-q5CDAVOFA4ig=s3imZCdYVs=+eBSeQ@mail.gmail.com>
+Subject: Re: meson-gxbb regression since u-boot v2020.04
+Content-Type: text/plain; charset="UTF-8"
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 27/11/2020 17:28, Stefan Agner wrote:
-> From: Pascal Vizeli <pvizeli@syshack.ch>
-> 
-> Add SoC revision to environment. This can be useful to select the
-> correct device tree at runtime (N2/N2+).
-> 
-> Signed-off-by: Pascal Vizeli <pvizeli@syshack.ch>
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
-> 
->  arch/arm/include/asm/arch-meson/boot.h |  4 ++++
->  arch/arm/mach-meson/board-info.c       | 12 ++++++++++++
->  board/amlogic/odroid-n2/odroid-n2.c    |  5 +++++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/arch/arm/include/asm/arch-meson/boot.h b/arch/arm/include/asm/arch-meson/boot.h
-> index a90fe55081..c67d12d06c 100644
-> --- a/arch/arm/include/asm/arch-meson/boot.h
-> +++ b/arch/arm/include/asm/arch-meson/boot.h
-> @@ -7,6 +7,8 @@
->  #ifndef __MESON_BOOT_H__
->  #define __MESON_BOOT_H__
->  
-> +#include <linux/types.h>
-> +
->  /* Boot device */
->  #define BOOT_DEVICE_RESERVED    0
->  #define BOOT_DEVICE_EMMC        1
-> @@ -17,4 +19,6 @@
->  
->  int meson_get_boot_device(void);
->  
-> +int meson_get_soc_rev(char *buff, size_t buff_len);
-> +
->  #endif /* __MESON_BOOT_H__ */
-> diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
-> index a0bcf38f29..90e7dfaa3c 100644
-> --- a/arch/arm/mach-meson/board-info.c
-> +++ b/arch/arm/mach-meson/board-info.c
-> @@ -187,3 +187,15 @@ int show_board_info(void)
->  
->  	return 0;
->  }
-> +
-> +int meson_get_soc_rev(char *buff, size_t buff_len)
-> +{
-> +	unsigned int socinfo;
-> +
-> +	socinfo = get_socinfo();
-> +	if (!socinfo)
-> +		return -1;
-> +
-> +	/* Write SoC info */
-> +	return snprintf(buff, buff_len, "%x", socinfo_to_minor(socinfo));
-> +}
-> diff --git a/board/amlogic/odroid-n2/odroid-n2.c b/board/amlogic/odroid-n2/odroid-n2.c
-> index caf7fd6810..dc0d933a39 100644
-> --- a/board/amlogic/odroid-n2/odroid-n2.c
-> +++ b/board/amlogic/odroid-n2/odroid-n2.c
-> @@ -12,6 +12,7 @@
->  #include <asm/io.h>
->  #include <asm/arch/sm.h>
->  #include <asm/arch/eth.h>
-> +#include <asm/arch/boot.h>
->  
->  #define EFUSE_MAC_OFFSET	20
->  #define EFUSE_MAC_SIZE		12
-> @@ -23,6 +24,10 @@ int misc_init_r(void)
->  	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
->  	ssize_t len;
->  
-> +	if (IS_ENABLED(CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG) &&
-> +	    meson_get_soc_rev(tmp, sizeof(tmp)) > 0)
-> +		env_set("soc_rev", tmp);
-> +
->  	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
->  
->  	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
-> 
+Hi,
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+On Tue, Oct 27, 2020 at 2:45 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On 26/10/2020 18:56, Anton Arapov wrote:
+> > On Mon, Oct 26, 2020 at 4:35 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> >> On Mon 26 Oct 2020 at 15:59, Anton Arapov <arapov@gmail.com> wrote:
+[snip]
+> >>> On Mon, Oct 26, 2020 at 3:50 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+[snip]
+> >>>> On 26/10/2020 15:36, Anton Arapov wrote:
+> > [snip]
+> >>>>> Could you suggest what could be done in order to fix the issue? Where
+> >>>>> should I look?
+> >>
+> >> Now if just removing the "bias-pull-up" is making it "go" for you, it
+> >> would be interresting to know what actually happened, what did you
+> >> inherit from the ROM code?
+> >>
+> >> IOW, could you compare the registers linked to the pin bias a let us
+> >> know what changed with and without ?
+> >
+> > Jerome, I am new to u-boot story. Your request made me look into pdf
+> > and registers and this is what I found:
+> >
+> > I built two u-boot builds with odroid-c2_defconf, (1) with the patch,
+> > (2) - a commit before the patch
+> > (1) dd5f2351e9 arm64: dts: meson: sync dt and bindings from v5.6-rc2
+> > (2) b3d69aa596 clk: meson: reset mmc clock on probe
+> >
+> > I found the registers and offsets at page 87 of
+> > S905_Public_Datasheet_V1.1.4.pdf mentioned earlier.
+> >
+> > u-boot build (1) with the patch, can NOT boot from eMMC:
+> > => md.b 0xc8834528 # PU/PD-EN
+> > c8834528: 01 7a 0f fc 00 c0 00 f0 ff ff 7f 00 00 00 00 00    .z..............
+> > => md.b 0xc88344f0 # PU/PD
+> > c88344f0: 01 7b 4f fc ff bf 00 f0 bf ff 6f 00 00 00 00 00    .{O.......o.....
+>
+>
+> Indeed, this makes Pull-Up only on these pins:
+> BOOT0
+> BOOT9
+> BOOT11
+> BOOT12
+> BOOT13
+> BOOT14
+>
+> and the dtsi instructs to set Pull-Up on:
+> BOOT0 to BOOT7
+> BOOT10
+>
+> so there is a bug on the pinctrl u-boot driver here...
+>
+> Can you trace the drivers/pinctrl/meson/pinctrl-meson.c and drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c ?
 
-Applying it u-boot-amlogic-next
+Neil, I've just recovered from "probably covid" .... Could you give me
+a hint as to what you mean by trace here?
+Point me to the document perhaps?
 
-Thanks !
+I've added additional printouts to the relevant)hopefully) code and
+see that it tries to set pull-up on BOOT 0...7 and 10.
 
-Neil
+pinconfig emmc: set_state_simple op missing
+clk_set_defaults(emmc)
+clk_set_default_parents: could not read assigned-clock-parents for
+000000007bf45c20
+ofnode_read_prop: assigned-clock-rates: <not found>
+pinctrl_generic_set_state_subnode(pinctrl@4b0, emmc): count=0
+pinctrl_generic_set_state_subnode(pinctrl@4b0, mux-0): count=2
+        >> pinctrl-meson.c: meson_pinconf_group_set() periphs-banks
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f0 : (1) PIN_CONFIG_BIAS_PULL_UP
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f1 : (1) PIN_CONFIG_BIAS_PULL_UP
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f2 : (1) PIN_CONFIG_BIAS_PULL_UP
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f3 : (1) PIN_CONFIG_BIAS_PULL_UP
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f4 : (1) PIN_CONFIG_BIAS_PULL_UP
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f5 : (1) PIN_CONFIG_BIAS_PULL_UP
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f6 : (1) PIN_CONFIG_BIAS_PULL_UP
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344f7 : (1) PIN_CONFIG_BIAS_PULL_UP
+        >> pinctrl-meson.c: meson_pinconf_group_set() periphs-banks
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc88344fa : (1) PIN_CONFIG_BIAS_PULL_UP
+pinctrl_generic_set_state_subnode(pinctrl@4b0, mux-1): count=1
+        >> pinctrl-meson.c: meson_pinconf_group_set() periphs-banks
+                >> pinctrl-meson.c: meson_pinconf_bias_set() :
+0xc8834530 : (0) PIN_CONFIG_BIAS_DISABLE
 
+wdyt?
+
+> We fixed the AXG and G12 ones, but maybe a bug subsists on the GX side.
+> But it's weird it doesn't appear on GXL.
+>
+> Neil
+[snip]
