@@ -1,133 +1,88 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
- by mx.groups.io with SMTP id smtpd.web12.7036.1605285481777166700
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+ by mx.groups.io with SMTP id smtpd.web09.39400.1605552000768924798
  for <u-boot-amlogic@groups.io>;
- Fri, 13 Nov 2020 08:38:01 -0800
-Received: by mail-vs1-f42.google.com with SMTP id x11so5492712vsx.12
-        for <u-boot-amlogic@groups.io>; Fri, 13 Nov 2020 08:38:01 -0800 (PST)
+ Mon, 16 Nov 2020 10:40:00 -0800
+Received: by mail-qk1-f175.google.com with SMTP id y197so17773435qkb.7
+        for <u-boot-amlogic@groups.io>; Mon, 16 Nov 2020 10:40:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S2QshnfrVX6usAIQ2uFmKu7+HlJxqmYruIxXH3gXYCQ=;
-        b=bkv8s6BNx//wAHUYuEXSS2zF/g3lYbTuXsk1e4luveq/VNgxqEiSFHehh04RtsKJYV
-         9ibTyuFhLuR8ZpzgvfMTt094wHfuwE2kn/h6hNO26sKITOt5YTx9kZ9sMbK0snpN/kdx
-         AWTNp+kA8JUWL3eVDTmC/rx/SteCgDrMl01b0ho/Bp7jMaKTUYTwQqnXHsYSrJRkuLhs
-         HuYwN/vGSkSnq9TKYQIuuLrq/X/ZixnE4aMolyygPoHB8NUPxwrwKFj8o/R+ZXkOkkv4
-         5mjunszCvB6ZaFke8tIvQqqvf9n6Ijf/J1CAea4fB07FvnqON1uBLGxSKJYbTL1KV6k0
-         YOAw==
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mnZiYyKusGP+3CHqXA9ut2f6zUq9jrDfRZ1Vd/rco4k=;
+        b=koy0tPwZTwmBHhuGJM/XYCIQXxrgsDkujPOyX4eq+Y/66hCiYowooMSeeNrAU6p+Ao
+         VD69fAOUc0oTuy5yGQT9U0urb7CPi7CdJP0j33kX/3bjzJ3swNswuEDT5JSfgsSFVwBk
+         mMyLzALEMcSzKYmwUx7Owmkq9TaLwLZos8SxE=
+Return-Path: <trini@konsulko.com>
+Date: Mon, 16 Nov 2020 13:39:54 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20201116
+Message-ID: <20201116183954.GX5340@bill-the-cat>
+References: <d04edf13-4004-d39f-1280-8589a880e2c9@baylibre.com>
 MIME-Version: 1.0
-References: <CAMeizLdpoevi6Fj-X=abWe2QKuvdrJ4gkS_=2yzpBmrnO-RDaQ@mail.gmail.com>
- <f1afd339-241d-1708-8a07-9daa008cdfd5@baylibre.com> <CAMeizLcQGkmsZ3MOb8uHGKGxFYfWpEK6Y1YF7OPWLJzs765KRQ@mail.gmail.com>
- <1jblgpj8zd.fsf@starbuckisacylon.baylibre.com> <CAMeizLc163WqCM-MVGFSSZnrZ_6mwVTrtje4Vp86d8z4gDw-SQ@mail.gmail.com>
- <032e222c-1f46-0efc-d92b-ee848fc2c12e@baylibre.com>
-In-Reply-To: <032e222c-1f46-0efc-d92b-ee848fc2c12e@baylibre.com>
-From: Anton Arapov <arapov@gmail.com>
-Date: Fri, 13 Nov 2020 17:37:44 +0100
-Message-ID: <CAMeizLdD8MZLpPhmhCx-q5CDAVOFA4ig=s3imZCdYVs=+eBSeQ@mail.gmail.com>
-Subject: Re: meson-gxbb regression since u-boot v2020.04
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d04edf13-4004-d39f-1280-8589a880e2c9@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="p4hrGwnOWmUtdCfj"
+Content-Disposition: inline
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+--p4hrGwnOWmUtdCfj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 27, 2020 at 2:45 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> On 26/10/2020 18:56, Anton Arapov wrote:
-> > On Mon, Oct 26, 2020 at 4:35 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> >> On Mon 26 Oct 2020 at 15:59, Anton Arapov <arapov@gmail.com> wrote:
-[snip]
-> >>> On Mon, Oct 26, 2020 at 3:50 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[snip]
-> >>>> On 26/10/2020 15:36, Anton Arapov wrote:
-> > [snip]
-> >>>>> Could you suggest what could be done in order to fix the issue? Where
-> >>>>> should I look?
-> >>
-> >> Now if just removing the "bias-pull-up" is making it "go" for you, it
-> >> would be interresting to know what actually happened, what did you
-> >> inherit from the ROM code?
-> >>
-> >> IOW, could you compare the registers linked to the pin bias a let us
-> >> know what changed with and without ?
-> >
-> > Jerome, I am new to u-boot story. Your request made me look into pdf
-> > and registers and this is what I found:
-> >
-> > I built two u-boot builds with odroid-c2_defconf, (1) with the patch,
-> > (2) - a commit before the patch
-> > (1) dd5f2351e9 arm64: dts: meson: sync dt and bindings from v5.6-rc2
-> > (2) b3d69aa596 clk: meson: reset mmc clock on probe
-> >
-> > I found the registers and offsets at page 87 of
-> > S905_Public_Datasheet_V1.1.4.pdf mentioned earlier.
-> >
-> > u-boot build (1) with the patch, can NOT boot from eMMC:
-> > => md.b 0xc8834528 # PU/PD-EN
-> > c8834528: 01 7a 0f fc 00 c0 00 f0 ff ff 7f 00 00 00 00 00    .z..............
-> > => md.b 0xc88344f0 # PU/PD
-> > c88344f0: 01 7b 4f fc ff bf 00 f0 bf ff 6f 00 00 00 00 00    .{O.......o.....
->
->
-> Indeed, this makes Pull-Up only on these pins:
-> BOOT0
-> BOOT9
-> BOOT11
-> BOOT12
-> BOOT13
-> BOOT14
->
-> and the dtsi instructs to set Pull-Up on:
-> BOOT0 to BOOT7
-> BOOT10
->
-> so there is a bug on the pinctrl u-boot driver here...
->
-> Can you trace the drivers/pinctrl/meson/pinctrl-meson.c and drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c ?
+On Mon, Nov 16, 2020 at 11:23:19AM +0100, Neil Armstrong wrote:
 
-Neil, I've just recovered from "probably covid" .... Could you give me
-a hint as to what you mean by trace here?
-Point me to the document perhaps?
-
-I've added additional printouts to the relevant)hopefully) code and
-see that it tries to set pull-up on BOOT 0...7 and 10.
-
-pinconfig emmc: set_state_simple op missing
-clk_set_defaults(emmc)
-clk_set_default_parents: could not read assigned-clock-parents for
-000000007bf45c20
-ofnode_read_prop: assigned-clock-rates: <not found>
-pinctrl_generic_set_state_subnode(pinctrl@4b0, emmc): count=0
-pinctrl_generic_set_state_subnode(pinctrl@4b0, mux-0): count=2
-        >> pinctrl-meson.c: meson_pinconf_group_set() periphs-banks
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f0 : (1) PIN_CONFIG_BIAS_PULL_UP
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f1 : (1) PIN_CONFIG_BIAS_PULL_UP
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f2 : (1) PIN_CONFIG_BIAS_PULL_UP
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f3 : (1) PIN_CONFIG_BIAS_PULL_UP
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f4 : (1) PIN_CONFIG_BIAS_PULL_UP
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f5 : (1) PIN_CONFIG_BIAS_PULL_UP
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f6 : (1) PIN_CONFIG_BIAS_PULL_UP
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344f7 : (1) PIN_CONFIG_BIAS_PULL_UP
-        >> pinctrl-meson.c: meson_pinconf_group_set() periphs-banks
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc88344fa : (1) PIN_CONFIG_BIAS_PULL_UP
-pinctrl_generic_set_state_subnode(pinctrl@4b0, mux-1): count=1
-        >> pinctrl-meson.c: meson_pinconf_group_set() periphs-banks
-                >> pinctrl-meson.c: meson_pinconf_bias_set() :
-0xc8834530 : (0) PIN_CONFIG_BIAS_DISABLE
-
-wdyt?
-
-> We fixed the AXG and G12 ones, but maybe a bug subsists on the GX side.
-> But it's weird it doesn't appear on GXL.
->
+> Hi Tom,
+>=20
+> This PR fixes the MMC driver on SM1 based platforms, syncs the SoC Ids an=
+d fixes 2 potential
+> build warning.
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/5354
+>=20
+> Thanks,
 > Neil
-[snip]
+>=20
+> The following changes since commit 832bfad7451e2e7bd23c96edff2be050905ac3=
+f6:
+>=20
+>   libfdt: Fix signedness comparison warnings (2020-11-10 14:31:08 -0500)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20201116
+>=20
+> for you to fetch changes up to c87eab81616d671a6004ffc95847bad21b7eb005:
+>=20
+>   ARM: dts: meson-sm1: add u-boot specific MMC controller compatible (202=
+0-11-12 14:31:29 +0100)
+>=20
+
+Applied to u-boot/master, thanks!
+
+--=20
+Tom
+
+--p4hrGwnOWmUtdCfj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl+yx3oACgkQFHw5/5Y0
+tyw96Av/dE9ajc5d4XAA5RJ1ZuYpZ065BlPhRxnvywFB6f+JZg9Wo9UtN9loVDsv
+MqHDbRtB3EfYjMW3lZaCcclnS2tImlC1DASydHUGnGx3+zshaGhYldVESflQ99C1
+AYm0V4++3SfAVupg+0RbQBnIKSyjej0pEi+HlP5cM2AHwZc8IPl4fmqDdkHxBu4G
+Caec11FpMyCmYmEg7ynsauI/JsivFy5Ek2C7GqN3x/mjh8yL1r2AIIjiw8SAr+ol
+mOtd7III4A/mhU/dRXML2d4elIxbbXkgFGgxkrnJsXcrGp4HTPgToXtUODqEiEUz
+6TQzcz0HODPFJAGhl3FzxSKe4xts5hklmTRQNjjcIOT+hGRW0O0X5J0HZMdbVcDy
+i5wnPVShQZiSjkGTyFxszL8NQUHuC9svhy0cCBbMbk9veNjD3Hujlex55Hq5uWD0
+Z5fY/JdwlUYjHdDFLP9G19aXzQJ0daL5iVMToYwOXf3/ab/L0eoGppmC0MbnFaDY
+iYixRFi7
+=m3W0
+-----END PGP SIGNATURE-----
+
+--p4hrGwnOWmUtdCfj--
