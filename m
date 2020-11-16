@@ -1,60 +1,83 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web12.4127.1605188132755096559
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web09.32595.1605522202785217522
  for <u-boot-amlogic@groups.io>;
- Thu, 12 Nov 2020 05:35:33 -0800
-Received: by mail-wr1-f68.google.com with SMTP id r17so6053403wrw.1
-        for <u-boot-amlogic@groups.io>; Thu, 12 Nov 2020 05:35:32 -0800 (PST)
+ Mon, 16 Nov 2020 02:23:23 -0800
+Received: by mail-wm1-f45.google.com with SMTP id p22so23182574wmg.3
+        for <u-boot-amlogic@groups.io>; Mon, 16 Nov 2020 02:23:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2wl0kXr04kQQ8O7qC9XQnkO75HS1M5RhEW9ziNB6sB8=;
-        b=eVcsUi56r/Fg13Kqxg2ky1gdXDLqiVkqvHSpfVLydJeaneZcMh5DgeEqRIfcSdl8BY
-         l4u3/DrBw499KqSFXBkikxRtZ8k+2i9GXChkAHWIKXDST9REOk/3Uf7vM8GI/0clrv16
-         Mz/JuGU147YkiP3Mt0060KWyaWoemHc7nPBjnSNHmQSOQaWvNT27veUwhP++If/shkmh
-         CEyyPXoge348MuQu76PqFNVtVPlL3Jgf3XPjgkYLKxhde4DCcYTU6fr3ihbF30kB/QkX
-         5cOyC+h4kYd8WhpURyoGwxtonzpGVaCRVo3tNqUQTijLwjs8niayRGUZs/WKSay7X9fo
-         dZRQ==
+        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=uiCzzLknbTF7vWruLnvqPIN+bs8RCRp8VA8+GEp3Jfg=;
+        b=f2UH7lo4GH18W0rjRw8HyucayDtqSVNPI/4nWxhFs1gsam9BQbrtsUFsfhFxM8gljp
+         53KuGLuaJ0mBukhyh0D9Lx2oeoe2s0wVcoPfTdZvB2aIWUJTkytZRn6fWQgNF43faskM
+         4ppONEF5USrCj9eLPVMvjauHAR5FGILVnbqz9yywQCaD/5qx0darw7A4DgAoupP4NcdD
+         m4+oS/DFfNKPisUk11mq31HCUEPFR0aAgwp3E6xrkzDbB+cwLk5HTO6UDGL6R11KkLa9
+         40jzB1+nNiV++nGHWt+VECr1Qe53irtZ4wCOL2siiUNNy07jeSbl113F+O4hUDfbhafH
+         SglQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH RESEND v2 0/2] arm64: meson: add libretech cc v2 support
-References: <20201106094555.34241-1-jbrunet@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <5eec188b-cabf-45b8-ef1c-5a32f2eec649@baylibre.com>
-Date: Thu, 12 Nov 2020 14:35:29 +0100
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20201116
+Reply-To: narmstrong@baylibre.com
+Message-ID: <d04edf13-4004-d39f-1280-8589a880e2c9@baylibre.com>
+Date: Mon, 16 Nov 2020 11:23:19 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201106094555.34241-1-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Jerome Brunet <jbrunet@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Da Xue <da@libre.computer>
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 06/11/2020 10:45, Jerome Brunet wrote:
-> This patchset adds support for the Amlogic based libretech cc v2.
-> Like the v1, this revised platform used the s905x SoC.
-> 
-> Changes since v1:
-> - Move Makefile change to patch #1
-> - Amend documentation for libretech cc v2
-> 
-> Jerome Brunet (2):
->   arm64: dts: import libretech-cc-v2 from linux v5.10-rc1
->   arm64: meson: add support for libretech-cc v2
-> 
->  arch/arm/dts/Makefile                         |   1 +
->  ...eson-gxl-s905x-libretech-cc-v2-u-boot.dtsi |   7 +
->  .../dts/meson-gxl-s905x-libretech-cc-v2.dts   | 318 ++++++++++++++++++
->  board/amlogic/p212/MAINTAINERS                |   1 +
->  configs/libretech-cc_v2_defconfig             |  82 +++++
->  doc/board/amlogic/index.rst                   | 117 +++----
->  doc/board/amlogic/libretech-cc.rst            |  15 +-
->  7 files changed, 480 insertions(+), 61 deletions(-)
->  create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2-u-boot.dtsi
->  create mode 100644 arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
->  create mode 100644 configs/libretech-cc_v2_defconfig
-> 
+Hi Tom,
+
+This PR fixes the MMC driver on SM1 based platforms, syncs the SoC Ids and fixes 2 potential
+build warning.
+
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/5354
 
 Thanks,
-Applied to u-boot-amlogic-next
+Neil
+
+The following changes since commit 832bfad7451e2e7bd23c96edff2be050905ac3f6:
+
+  libfdt: Fix signedness comparison warnings (2020-11-10 14:31:08 -0500)
+
+are available in the Git repository at:
+
+  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20201116
+
+for you to fetch changes up to c87eab81616d671a6004ffc95847bad21b7eb005:
+
+  ARM: dts: meson-sm1: add u-boot specific MMC controller compatible (2020-11-12 14:31:29 +0100)
+
+----------------------------------------------------------------
+- Clock fix MMC driver for SM1 based platforms
+- sync SOC Ids from Linux 5.10-rc1
+- fix potential build warning on meson_dw_hdmi and meson-g12a-usb2 phy
+
+----------------------------------------------------------------
+Jaehoon Chung (2):
+      phy: meson-g12a-usb2: fix the potential build warning
+      video: meson: meson_dw_hdmi: fix the potential build warning
+
+Neil Armstrong (4):
+      ARM: mach-meson: update SoC IDs
+      mmc: meson-gx: move arch header to local header
+      mmc: meson-gx: change clock phase value on SM1 SoCs
+      ARM: dts: meson-sm1: add u-boot specific MMC controller compatible
+
+ .../dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi   |  1 +
+ arch/arm/dts/meson-khadas-vim3-u-boot.dtsi         |  2 --
+ arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi    |  1 +
+ arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi       |  2 +-
+ arch/arm/dts/meson-sm1-sei610-u-boot.dtsi          |  2 +-
+ arch/arm/dts/meson-sm1-u-boot.dtsi                 | 20 +++++++++++++++
+ arch/arm/mach-meson/board-info.c                   |  7 +++++-
+ drivers/mmc/meson_gx_mmc.c                         | 29 ++++++++++++++++++----
+ .../sd_emmc.h => drivers/mmc/meson_gx_mmc.h        | 10 +++++---
+ drivers/phy/meson-g12a-usb2.c                      |  4 +--
+ drivers/video/meson/meson_dw_hdmi.c                |  2 ++
+ 11 files changed, 64 insertions(+), 16 deletions(-)
+ create mode 100644 arch/arm/dts/meson-sm1-u-boot.dtsi
+ rename arch/arm/include/asm/arch-meson/sd_emmc.h => drivers/mmc/meson_gx_mmc.h (95%)
