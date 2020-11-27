@@ -1,88 +1,109 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
- by mx.groups.io with SMTP id smtpd.web09.39400.1605552000768924798
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+ by mx.groups.io with SMTP id smtpd.web08.21100.1606494543620117812
  for <u-boot-amlogic@groups.io>;
- Mon, 16 Nov 2020 10:40:00 -0800
-Received: by mail-qk1-f175.google.com with SMTP id y197so17773435qkb.7
-        for <u-boot-amlogic@groups.io>; Mon, 16 Nov 2020 10:40:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mnZiYyKusGP+3CHqXA9ut2f6zUq9jrDfRZ1Vd/rco4k=;
-        b=koy0tPwZTwmBHhuGJM/XYCIQXxrgsDkujPOyX4eq+Y/66hCiYowooMSeeNrAU6p+Ao
-         VD69fAOUc0oTuy5yGQT9U0urb7CPi7CdJP0j33kX/3bjzJ3swNswuEDT5JSfgsSFVwBk
-         mMyLzALEMcSzKYmwUx7Owmkq9TaLwLZos8SxE=
-Return-Path: <trini@konsulko.com>
-Date: Mon, 16 Nov 2020 13:39:54 -0500
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20201116
-Message-ID: <20201116183954.GX5340@bill-the-cat>
-References: <d04edf13-4004-d39f-1280-8589a880e2c9@baylibre.com>
+ Fri, 27 Nov 2020 08:29:04 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1606494540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kYlRYBYmkQb47yX+O3NLFV+1BITUpp3Dj9WC6ty4jUQ=;
+	b=gtl518ssd5rWnHfv9aW8P0cfDcbvlemwVb1FGfu76EnfOyQAGytYp6XL3UEHjZ8ugIsmnU
+	5KJc/KiB1Ayj1kmxOH91F6Pz6R6Dr8xFZ5NR1Qh3+XtZauWyFvWIw3bAnY/aG3JfoLXyJv
+	qDgMjM7DiEq+VRc9t6Mruwn70M4QtZ8=
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 2/2] meson: Add soc_rev to environment
+Date: Fri, 27 Nov 2020 17:28:21 +0100
+Message-Id: <ff19d6f90e3f827664f8460e98d86a692342506d.1606492351.git.stefan@agner.ch>
+In-Reply-To: <537d604eeb14149783c1bb398af9f4c9a82374d0.1606492351.git.stefan@agner.ch>
+References: <537d604eeb14149783c1bb398af9f4c9a82374d0.1606492351.git.stefan@agner.ch>
 MIME-Version: 1.0
-In-Reply-To: <d04edf13-4004-d39f-1280-8589a880e2c9@baylibre.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="p4hrGwnOWmUtdCfj"
-Content-Disposition: inline
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Transfer-Encoding: quoted-printable
+To: u-boot-amlogic@groups.io, narmstrong@baylibre.com, u-boot@lists.denx.de
+Cc: Pascal Vizeli <pvizeli@syshack.ch>, Stefan Agner <stefan@agner.ch>
 List-ID: <u-boot-amlogic@groups.io>
 
---p4hrGwnOWmUtdCfj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Pascal Vizeli <pvizeli@syshack.ch>
 
-On Mon, Nov 16, 2020 at 11:23:19AM +0100, Neil Armstrong wrote:
+Add SoC revision to environment. This can be useful to select the
+correct device tree at runtime (N2/N2+).
 
-> Hi Tom,
->=20
-> This PR fixes the MMC driver on SM1 based platforms, syncs the SoC Ids an=
-d fixes 2 potential
-> build warning.
->=20
-> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/5354
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit 832bfad7451e2e7bd23c96edff2be050905ac3=
-f6:
->=20
->   libfdt: Fix signedness comparison warnings (2020-11-10 14:31:08 -0500)
->=20
-> are available in the Git repository at:
->=20
->   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20201116
->=20
-> for you to fetch changes up to c87eab81616d671a6004ffc95847bad21b7eb005:
->=20
->   ARM: dts: meson-sm1: add u-boot specific MMC controller compatible (202=
-0-11-12 14:31:29 +0100)
->=20
+Signed-off-by: Pascal Vizeli <pvizeli@syshack.ch>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
 
-Applied to u-boot/master, thanks!
+ arch/arm/include/asm/arch-meson/boot.h |  4 ++++
+ arch/arm/mach-meson/board-info.c       | 12 ++++++++++++
+ board/amlogic/odroid-n2/odroid-n2.c    |  5 +++++
+ 3 files changed, 21 insertions(+)
 
+diff --git a/arch/arm/include/asm/arch-meson/boot.h b/arch/arm/include/as=
+m/arch-meson/boot.h
+index a90fe55081..c67d12d06c 100644
+--- a/arch/arm/include/asm/arch-meson/boot.h
++++ b/arch/arm/include/asm/arch-meson/boot.h
+@@ -7,6 +7,8 @@
+ #ifndef __MESON_BOOT_H__
+ #define __MESON_BOOT_H__
+=20
++#include <linux/types.h>
++
+ /* Boot device */
+ #define BOOT_DEVICE_RESERVED    0
+ #define BOOT_DEVICE_EMMC        1
+@@ -17,4 +19,6 @@
+=20
+ int meson_get_boot_device(void);
+=20
++int meson_get_soc_rev(char *buff, size_t buff_len);
++
+ #endif /* __MESON_BOOT_H__ */
+diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board=
+-info.c
+index a0bcf38f29..90e7dfaa3c 100644
+--- a/arch/arm/mach-meson/board-info.c
++++ b/arch/arm/mach-meson/board-info.c
+@@ -187,3 +187,15 @@ int show_board_info(void)
+=20
+ 	return 0;
+ }
++
++int meson_get_soc_rev(char *buff, size_t buff_len)
++{
++	unsigned int socinfo;
++
++	socinfo =3D get_socinfo();
++	if (!socinfo)
++		return -1;
++
++	/* Write SoC info */
++	return snprintf(buff, buff_len, "%x", socinfo_to_minor(socinfo));
++}
+diff --git a/board/amlogic/odroid-n2/odroid-n2.c b/board/amlogic/odroid-n=
+2/odroid-n2.c
+index caf7fd6810..dc0d933a39 100644
+--- a/board/amlogic/odroid-n2/odroid-n2.c
++++ b/board/amlogic/odroid-n2/odroid-n2.c
+@@ -12,6 +12,7 @@
+ #include <asm/io.h>
+ #include <asm/arch/sm.h>
+ #include <asm/arch/eth.h>
++#include <asm/arch/boot.h>
+=20
+ #define EFUSE_MAC_OFFSET	20
+ #define EFUSE_MAC_SIZE		12
+@@ -23,6 +24,10 @@ int misc_init_r(void)
+ 	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
+ 	ssize_t len;
+=20
++	if (IS_ENABLED(CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG) &&
++	    meson_get_soc_rev(tmp, sizeof(tmp)) > 0)
++		env_set("soc_rev", tmp);
++
+ 	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
+=20
+ 	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
 --=20
-Tom
+2.29.2
 
---p4hrGwnOWmUtdCfj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl+yx3oACgkQFHw5/5Y0
-tyw96Av/dE9ajc5d4XAA5RJ1ZuYpZ065BlPhRxnvywFB6f+JZg9Wo9UtN9loVDsv
-MqHDbRtB3EfYjMW3lZaCcclnS2tImlC1DASydHUGnGx3+zshaGhYldVESflQ99C1
-AYm0V4++3SfAVupg+0RbQBnIKSyjej0pEi+HlP5cM2AHwZc8IPl4fmqDdkHxBu4G
-Caec11FpMyCmYmEg7ynsauI/JsivFy5Ek2C7GqN3x/mjh8yL1r2AIIjiw8SAr+ol
-mOtd7III4A/mhU/dRXML2d4elIxbbXkgFGgxkrnJsXcrGp4HTPgToXtUODqEiEUz
-6TQzcz0HODPFJAGhl3FzxSKe4xts5hklmTRQNjjcIOT+hGRW0O0X5J0HZMdbVcDy
-i5wnPVShQZiSjkGTyFxszL8NQUHuC9svhy0cCBbMbk9veNjD3Hujlex55Hq5uWD0
-Z5fY/JdwlUYjHdDFLP9G19aXzQJ0daL5iVMToYwOXf3/ab/L0eoGppmC0MbnFaDY
-iYixRFi7
-=m3W0
------END PGP SIGNATURE-----
-
---p4hrGwnOWmUtdCfj--
