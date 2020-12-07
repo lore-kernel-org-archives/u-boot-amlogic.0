@@ -1,124 +1,290 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web10.1142.1607972303781724351
+Received: from dd10532.kasserver.com (dd10532.kasserver.com [85.13.133.80])
+ by mx.groups.io with SMTP id smtpd.web12.5565.1607345030209068553
  for <u-boot-amlogic@groups.io>;
- Mon, 14 Dec 2020 10:58:24 -0800
-Received: by mail-wm1-f66.google.com with SMTP id g185so16247966wmf.3
-        for <u-boot-amlogic@groups.io>; Mon, 14 Dec 2020 10:58:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S38ZaFyxQ/D36CnEJk/lL1fHDWOObqgKksxKmqEjdCM=;
-        b=0SJL6sc5SD3U6LpDlHgYTqX01OJuAEETPEsgNuPl0eBA4dCv9Hk0AI1joNwkF3W9tK
-         gUj/mCDvsuMrDciIL6iVjepKh5bP9vEzzNAeTbkuxgqIWfufSKANTpVmiugi39i26Doa
-         4GEUhcaHIiJwf4ECeQSqsI+joay3v5P4nMuFtnx60yC9tQH6p4qqdRxaUugp0hWvwtpr
-         BcoDgDq7WaYxV6h1V/mfK/5H8a2pmWrh/A/BYyZeywBWWdNC7URVlhgzETz5b4Qt9f4h
-         Dgx1gwYnzFQ/F3Oo4oAxXrcYxt9QF9gv//FD+w9UAX5tiPP2RYVplL6f3wxAMTRSx34e
-         XPIw==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] mmc: meson-gx: change clock phase value on AGX SoCs
-References: <132c6c42aee5b4f34aca3a629423641c78302ce0.1607361086.git.stefan@agner.ch>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <bd392bb1-8d7a-a72f-a927-0e47ae77641f@baylibre.com>
-Date: Mon, 14 Dec 2020 19:58:20 +0100
+ Mon, 07 Dec 2020 04:43:50 -0800
+Subject: Re: [BUG]odroid-c2 does not hotplug usb-devices
+References: <c2dc3507-67a7-3c18-374f-050295bc1d59@gmx.net>
+ <CAFBinCDrMj4GP2cy4dBSt_isGXf4CuhmDz=uAs+gZwUGQc=o6A@mail.gmail.com>
+ <8afb2adb-4581-a847-e7e0-db1e915e9247@gmx.net>
+ <CAFBinCD6aqna6YYvXgO5iKWa9N3yvqehhB+SAirLaUu3xScy2Q@mail.gmail.com>
+ <bd9d96d2-8b66-db93-a855-5e179adca8c9@gmx.net>
+ <0d05671d-b5f4-55e4-f5bd-58410cc92d08@baylibre.com>
+From: Otto Meier <gf435@gmx.net>
+Message-ID: <dd160e55-55e9-1c41-afcb-22990a05a86b@gmx.net>
+Date: Mon, 7 Dec 2020 13:43:43 +0100
 MIME-Version: 1.0
-In-Reply-To: <132c6c42aee5b4f34aca3a629423641c78302ce0.1607361086.git.stefan@agner.ch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Stefan Agner <stefan@agner.ch>
-Cc: peng.fan@nxp.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+In-Reply-To: <0d05671d-b5f4-55e4-f5bd-58410cc92d08@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
+To: Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
 
-On 07/12/2020 18:15, Stefan Agner wrote:
-> Amlogic AGX SoCs seem to have issue communicating with some eMMC
-> devices (in particular with a Micron 128GB eMMC 5.1). The device
-> is detected with 1-bit bus width, and at higher temperature loading
-> pretty much anything from the storage fails: (e.g. fs_devread read error
-> - block).
-> 
-> When phase is set to 270° it is detected with 8-bit bus width and is
-> working fine accross all temperatures.
 
-This is new to G12, I only had such issues and reports for SM1 only until now.
+Am 07.12.20 um 13:29 schrieb Neil Armstrong:
+> Hi,
+>=20
+> (Please CC u-boot-amlogic@groups.io when U-Boot is concerned)
+>=20
+> On 07/12/2020 13:19, Otto Meier wrote:
+>> Hi Martin,
+>>
+>>
+>> I did a lot of googling this weekend and found some interesting proble=
+ms with
+>> odroid-c2.
+>>
+>> 1. booting from emmc stop after u-boot 2020.04 (this hits me also)
+>=20
+> Indeed, this already has been reported, but the root cause is unknown
+>=20
+>> 2. usb did not work with newer kernels.
+>>
+>> This gaves me the idea that something in the configuration of the s905=
+ soc
+>> is not ok.
+>>
+>> here: https://forum.libreelec.tv/thread/12330-balbes150-le-images-with=
+-kodi-19-for-s9xxx/?postID=3D147212#post147212
+>> and here: https://lists.denx.de/pipermail/u-boot/2020-November/thread.=
+html
+>>
+>> in https://groups.io/g/u-boot-amlogic/topic/77816805#661 some problems=
+ in pinctrl related to booting from emmc is discussed.
+>>
+>> i found that commit dd5f2351e99aad8fcbedbc1305b8b51b09952336 of u-boot
+>> rendered the situation for odroid-c2 bad.
+>>
+>> i gave the following patch on Top of commit ee1e04558ff8c8ed812b986939=
+447f129bb0b0bb of u-boot
+>> a try ad it fixes the odroid-c2 boot issue.
+>>
+>> --- u-boot.git/arch/arm/dts/meson-gxbb.dtsi.orig=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 2020-11-27 17:20:04.624193561 +0100
+>> +++ u-boot.git/arch/arm/dts/meson-gxbb.dtsi=C2=A0=C2=A0=C2=A0=C2=A0 20=
+20-11-27 17:23:18.472088934 +0100
+>> @@ -403,36 +403,33 @@
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpi=
+o-ranges =3D <&pinctrl_periphs 0 0 119>;
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 };
+>>  =20
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 emmc_pins: emmc {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux-0 {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 groups =3D "emmc_nand_d07",
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 "emmc_cmd";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 function =3D "emmc";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bias-pull-up;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>  =20
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux-1 {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 groups =3D "emmc_clk";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 function =3D "emmc";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bias-disable;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 };
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 emmc_pins: emmc {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux=
+ {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 groups =3D "emmc_nand_d07",
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 "emmc_cmd",
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 "emmc_clk";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 function =3D "emmc";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 };
+>>  =20
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 emmc_ds_pins: emmc-ds {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 groups =3D "emmc_ds";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 function =3D "emmc";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bias-pull-down;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 };
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 emmc_ds_pins: emmc-ds {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux=
+ {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 groups =3D "emmc_ds";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 function =3D "emmc";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 };
+>>  =20
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 emmc_clk_gate_pins: emmc_clk_gate {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 groups =3D "BOOT_8";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 function =3D "gpio_periphs";
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bias-pull-down;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 };
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 emmc_clk_gate_pins: emmc_clk_gate {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux=
+ {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 groups =3D "BOOT_8";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 function =3D "gpio_periphs";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cfg=
+-pull-down {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pins =3D "BOOT_8";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bias-pull-down;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 };
+>>  =20
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 nor_pins: nor {
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux=
+ {
+>>
+>>
+>>
+>> So with the latest u-boot and the kernel from https://github.com/chewi=
+tt/linux/tree/amlogic-5.10.y
+>> commit 725fc8df7898102f9031ba2075f763884ffa3ee8 everything is working =
+again.
+>> USB does hotplugging as expected.
+>=20
+> So, this fixes USB under Linux ?? It's not clear
+>=20
+> Neil
 
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
-> Hi Neil,
-> 
-> I debugged this issue today on an ODROID N2+ not booting reliably. I am
-> not sure if we can safely switch to 270° for all SoCs with
-> amlogic,meson-axg-mmc, but I guess we have to try and see what happens?
-> I will do a bit broader testing in the comming days here.
+The above patch fixes booting from emmc for me.
+Using a newer uboot then 2020.04 is mandatory for using the above mention=
+ed kernel.
+The usb issue, i had with earlier kernels from the above mentioned tree.
 
-amlogic,meson-axg-mmc covers too much SoCs, I'll prefer if you introduce
-an u-boot only amlogic,meson-g12b-mmc compatible like I did for SM1.
+Hope that clearifies it. I wanted to run the newest kernel on my system w=
+hich boots from emmc.
+I think these issues are probaly independant but in my system they did in=
+terfere.
 
-> 
-> Btw, I do see that 180° is also set in Linux. Do you have a patch to
-> address this in Linux?
+Best regards
+Otto
 
-I never had such reports on Linux, I think because eMMCs are directly used
-in HS200 mode and 180° is the right configuration for HS200...
-
-Neil
-
-> 
-> --
-> Stefan
-> 
-> 
->  arch/arm/include/asm/arch-meson/sd_emmc.h | 1 +
->  drivers/mmc/meson_gx_mmc.c                | 9 +++++----
->  2 files changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/arch/arm/include/asm/arch-meson/sd_emmc.h
-> index cb16f75fc6..db5e058098 100644
-> --- a/arch/arm/include/asm/arch-meson/sd_emmc.h
-> +++ b/arch/arm/include/asm/arch-meson/sd_emmc.h
-> @@ -14,6 +14,7 @@
->  
->  enum meson_gx_mmc_compatible {
->  	MMC_COMPATIBLE_GX,
-> +	MMC_COMPATIBLE_AGX,
->  	MMC_COMPATIBLE_SM1,
->  };
->  
-> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-> index 5facbfdd9a..2c27113c10 100644
-> --- a/drivers/mmc/meson_gx_mmc.c
-> +++ b/drivers/mmc/meson_gx_mmc.c
-> @@ -64,14 +64,15 @@ static void meson_mmc_config_clock(struct mmc *mmc)
->  
->  	/*
->  	 * SM1 SoCs doesn't work fine over 50MHz with CLK_CO_PHASE_180
-> +	 * AGX SoCs don't work reliable with some eMMCs with CLK_CO_PHASE_180
->  	 * If CLK_CO_PHASE_270 is used, it's more stable than other.
->  	 * Other SoCs use CLK_CO_PHASE_180 by default.
->  	 * It needs to find what is a proper value about each SoCs.
->  	 */
-> -	if (meson_gx_mmc_is_compatible(mmc->dev, MMC_COMPATIBLE_SM1))
-> -		meson_mmc_clk |= CLK_CO_PHASE_270;
-> -	else
-> +	if (meson_gx_mmc_is_compatible(mmc->dev, MMC_COMPATIBLE_GX))
->  		meson_mmc_clk |= CLK_CO_PHASE_180;
-> +	else
-> +		meson_mmc_clk |= CLK_CO_PHASE_270;
->  
->  	/* 180 phase tx clock */
->  	meson_mmc_clk |= CLK_TX_PHASE_000;
-> @@ -327,7 +328,7 @@ int meson_mmc_bind(struct udevice *dev)
->  
->  static const struct udevice_id meson_mmc_match[] = {
->  	{ .compatible = "amlogic,meson-gx-mmc", .data = MMC_COMPATIBLE_GX },
-> -	{ .compatible = "amlogic,meson-axg-mmc", .data = MMC_COMPATIBLE_GX },
-> +	{ .compatible = "amlogic,meson-axg-mmc", .data = MMC_COMPATIBLE_AGX },
->  	{ .compatible = "amlogic,meson-sm1-mmc", .data = MMC_COMPATIBLE_SM1 },
->  	{ /* sentinel */ }
->  };
-> 
-
+>=20
+>>
+>> For me this make it work again. But i`m sorry, I don=C2=B4t know what =
+would be a real fix.
+>>
+>>
+>>
+>>
+>>
+>>
+>> Am 05.12.20 um 20:55 schrieb Martin Blumenstingl:
+>>> Hi Otto,
+>>>
+>>> On Sat, Dec 5, 2020 at 6:40 PM Otto Meier <gf435@gmx.net> wrote:
+>>>>
+>>>> Hi Martin,
+>>>>
+>>>> i have tried your second notice. but it does'nt solve the issue.
+>>>> if at leased on device is pluged in new devices are detected. if
+>>>> all devices have been removed, no new device will be detected anymor=
+e.
+>>> thanks for trying this out and for reporting back.
+>>> can you please also test if running "lsusb -vvv" (as root) makes the
+>>> devices show up?
+>>>
+>>> background info: the Amlogic Meson GXBB SoC on your Odroid-C2 board
+>>> uses a "dwc2" USB 2.0 controller.
+>>> I don't have any GXBB based board, but my Odroid-C1+ uses the same
+>>> controller and overall setup. There I can reproduce the problem you
+>>> are seeing.
+>>>
+>>> I am not sure which part of the "infrastructure" (on-board 4-port USB
+>>> hub, dwc2 controller, ...) is causing this issue.
+>>> My suggestion is to involve the linux-usb mailing list and dwc2 drive=
+r
+>>> maintainer:
+>>> - Minas Harutyunyan <hminas@synopsys.com> (dwc2 driver maintainer)
+>>> - linux-usb@vger.kernel.org (usb mailing list)
+>>>
+>>> In the past they provided information and helped to debug issues.
+>>> Please also keep me Cc'ed so I can help with any Amlogic specific
+>>> questions, drivers, etc.
+>>>
+>>>
+>>> Best regards,
+>>> Martin
+>>>
+>=20
+>=20
