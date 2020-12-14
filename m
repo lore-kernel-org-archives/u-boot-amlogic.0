@@ -1,66 +1,124 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web08.980.1607972106843853018
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+ by mx.groups.io with SMTP id smtpd.web10.1142.1607972303781724351
  for <u-boot-amlogic@groups.io>;
- Mon, 14 Dec 2020 10:55:07 -0800
-Received: by mail-wm1-f68.google.com with SMTP id 190so4492369wmz.0
-        for <u-boot-amlogic@groups.io>; Mon, 14 Dec 2020 10:55:06 -0800 (PST)
+ Mon, 14 Dec 2020 10:58:24 -0800
+Received: by mail-wm1-f66.google.com with SMTP id g185so16247966wmf.3
+        for <u-boot-amlogic@groups.io>; Mon, 14 Dec 2020 10:58:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=o7SHco2+LtAmQKDRO6FY2tZN7Wc3KiX/j8kJ1i41oKk=;
-        b=wI9OiNDhFYNfn/8gQd68pKzlG7UwOAzRglY3k6HOiqO8vZ5vYW3tOvgq/Om6OMzRGO
-         MIBaX/9hhXHuob/V6rOldItdYYL0Yf+Mm4YMNYrtZaPosI359ZvPRp1DKHYyQe8YZooQ
-         1+EYtELbwoi/rNpywGIg5q8R/9CeOJudlWunNGgpcjJcnNUd4NCS7I3Rh0fLOphsXfO3
-         12iPiNSOB4Jpu8KWROIaRVMI7yWpEvc4xAsGAolSYBFXokBuP/EUrtag2HXRT591uyll
-         MZmWG41lmbZRweIkh/9Lw9XlKbxi6yZ+6h+1iJ/2M8gxw3RbFFCaeGqdaKgg4gfMKhK4
-         g1Cw==
+        bh=S38ZaFyxQ/D36CnEJk/lL1fHDWOObqgKksxKmqEjdCM=;
+        b=0SJL6sc5SD3U6LpDlHgYTqX01OJuAEETPEsgNuPl0eBA4dCv9Hk0AI1joNwkF3W9tK
+         gUj/mCDvsuMrDciIL6iVjepKh5bP9vEzzNAeTbkuxgqIWfufSKANTpVmiugi39i26Doa
+         4GEUhcaHIiJwf4ECeQSqsI+joay3v5P4nMuFtnx60yC9tQH6p4qqdRxaUugp0hWvwtpr
+         BcoDgDq7WaYxV6h1V/mfK/5H8a2pmWrh/A/BYyZeywBWWdNC7URVlhgzETz5b4Qt9f4h
+         Dgx1gwYnzFQ/F3Oo4oAxXrcYxt9QF9gv//FD+w9UAX5tiPP2RYVplL6f3wxAMTRSx34e
+         XPIw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 6/6] configs: khadas-vim3: enable Function button support
-References: <20201214112437.18757-1-m.szyprowski@samsung.com>
- <CGME20201214112452eucas1p2ceb557dffa15ea073f922bf59afb8578@eucas1p2.samsung.com>
- <20201214112437.18757-7-m.szyprowski@samsung.com>
+Subject: Re: [PATCH] mmc: meson-gx: change clock phase value on AGX SoCs
+References: <132c6c42aee5b4f34aca3a629423641c78302ce0.1607361086.git.stefan@agner.ch>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <c67d2024-019e-e671-b748-0b25d274d806@baylibre.com>
-Date: Mon, 14 Dec 2020 19:55:03 +0100
+Message-ID: <bd392bb1-8d7a-a72f-a927-0e47ae77641f@baylibre.com>
+Date: Mon, 14 Dec 2020 19:58:20 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201214112437.18757-7-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <132c6c42aee5b4f34aca3a629423641c78302ce0.1607361086.git.stefan@agner.ch>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Transfer-Encoding: 8bit
+To: Stefan Agner <stefan@agner.ch>
+Cc: peng.fan@nxp.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
 Hi,
 
-On 14/12/2020 12:24, Marek Szyprowski wrote:
-> Add options required to check the 'Function' button state.
+On 07/12/2020 18:15, Stefan Agner wrote:
+> Amlogic AGX SoCs seem to have issue communicating with some eMMC
+> devices (in particular with a Micron 128GB eMMC 5.1). The device
+> is detected with 1-bit bus width, and at higher temperature loading
+> pretty much anything from the storage fails: (e.g. fs_devread read error
+> - block).
 > 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  configs/khadas-vim3_defconfig | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
-> index 9d7ba72d440..bc174305692 100644
-> --- a/configs/khadas-vim3_defconfig
-> +++ b/configs/khadas-vim3_defconfig
-> @@ -29,6 +29,10 @@ CONFIG_CMD_REGULATOR=y
->  CONFIG_OF_CONTROL=y
->  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
->  CONFIG_NET_RANDOM_ETHADDR=y
-> +CONFIG_ADC=y
-> +CONFIG_SARADC_MESON=y
-> +CONFIG_BUTTON=y
-> +CONFIG_BUTTON_ADC=y
->  CONFIG_DM_I2C=y
->  CONFIG_SYS_I2C_MESON=y
->  CONFIG_DM_MMC=y
-> 
+> When phase is set to 270° it is detected with 8-bit bus width and is
+> working fine accross all temperatures.
 
-If you separate the ADC configs and Button configs, I can directly apply the clk-ao & adc patches
-for next release.
+This is new to G12, I only had such issues and reports for SM1 only until now.
+
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+> Hi Neil,
+> 
+> I debugged this issue today on an ODROID N2+ not booting reliably. I am
+> not sure if we can safely switch to 270° for all SoCs with
+> amlogic,meson-axg-mmc, but I guess we have to try and see what happens?
+> I will do a bit broader testing in the comming days here.
+
+amlogic,meson-axg-mmc covers too much SoCs, I'll prefer if you introduce
+an u-boot only amlogic,meson-g12b-mmc compatible like I did for SM1.
+
+> 
+> Btw, I do see that 180° is also set in Linux. Do you have a patch to
+> address this in Linux?
+
+I never had such reports on Linux, I think because eMMCs are directly used
+in HS200 mode and 180° is the right configuration for HS200...
 
 Neil
+
+> 
+> --
+> Stefan
+> 
+> 
+>  arch/arm/include/asm/arch-meson/sd_emmc.h | 1 +
+>  drivers/mmc/meson_gx_mmc.c                | 9 +++++----
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/arch-meson/sd_emmc.h b/arch/arm/include/asm/arch-meson/sd_emmc.h
+> index cb16f75fc6..db5e058098 100644
+> --- a/arch/arm/include/asm/arch-meson/sd_emmc.h
+> +++ b/arch/arm/include/asm/arch-meson/sd_emmc.h
+> @@ -14,6 +14,7 @@
+>  
+>  enum meson_gx_mmc_compatible {
+>  	MMC_COMPATIBLE_GX,
+> +	MMC_COMPATIBLE_AGX,
+>  	MMC_COMPATIBLE_SM1,
+>  };
+>  
+> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+> index 5facbfdd9a..2c27113c10 100644
+> --- a/drivers/mmc/meson_gx_mmc.c
+> +++ b/drivers/mmc/meson_gx_mmc.c
+> @@ -64,14 +64,15 @@ static void meson_mmc_config_clock(struct mmc *mmc)
+>  
+>  	/*
+>  	 * SM1 SoCs doesn't work fine over 50MHz with CLK_CO_PHASE_180
+> +	 * AGX SoCs don't work reliable with some eMMCs with CLK_CO_PHASE_180
+>  	 * If CLK_CO_PHASE_270 is used, it's more stable than other.
+>  	 * Other SoCs use CLK_CO_PHASE_180 by default.
+>  	 * It needs to find what is a proper value about each SoCs.
+>  	 */
+> -	if (meson_gx_mmc_is_compatible(mmc->dev, MMC_COMPATIBLE_SM1))
+> -		meson_mmc_clk |= CLK_CO_PHASE_270;
+> -	else
+> +	if (meson_gx_mmc_is_compatible(mmc->dev, MMC_COMPATIBLE_GX))
+>  		meson_mmc_clk |= CLK_CO_PHASE_180;
+> +	else
+> +		meson_mmc_clk |= CLK_CO_PHASE_270;
+>  
+>  	/* 180 phase tx clock */
+>  	meson_mmc_clk |= CLK_TX_PHASE_000;
+> @@ -327,7 +328,7 @@ int meson_mmc_bind(struct udevice *dev)
+>  
+>  static const struct udevice_id meson_mmc_match[] = {
+>  	{ .compatible = "amlogic,meson-gx-mmc", .data = MMC_COMPATIBLE_GX },
+> -	{ .compatible = "amlogic,meson-axg-mmc", .data = MMC_COMPATIBLE_GX },
+> +	{ .compatible = "amlogic,meson-axg-mmc", .data = MMC_COMPATIBLE_AGX },
+>  	{ .compatible = "amlogic,meson-sm1-mmc", .data = MMC_COMPATIBLE_SM1 },
+>  	{ /* sentinel */ }
+>  };
+> 
+
