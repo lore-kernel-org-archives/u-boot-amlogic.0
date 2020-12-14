@@ -1,70 +1,78 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
- by mx.groups.io with SMTP id smtpd.web12.2672.1607977069715537714
+Received: from mail-ua1-f66.google.com (mail-ua1-f66.google.com [209.85.222.66])
+ by mx.groups.io with SMTP id smtpd.web08.3473.1607978934382072958
  for <u-boot-amlogic@groups.io>;
- Mon, 14 Dec 2020 12:17:50 -0800
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20201214201732euoutp024ee33ddc0749f103d33dadec526d0821~QrpwKOWKQ0318503185euoutp02R
-	for <u-boot-amlogic@groups.io>; Mon, 14 Dec 2020 20:17:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20201214201732euoutp024ee33ddc0749f103d33dadec526d0821~QrpwKOWKQ0318503185euoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1607977052;
-	bh=BuHQrOSs2GcHWT+v4XoEyN5rBqq01jv1nbgPPu7GMbY=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-	b=HkBAExtZvBqyynVidWf8SrI50I8CU5b515BlfaJiZTRWaiVwsfStVKT6hsxNkWLNc
-	 jy+y7uejPtZSHl4f+XDeJe357eKkH2yxX77Gcnb3K/09gBFXoF0pVCRFYK3sAQQ+va
-	 5Up+FayAVS/0fN2PnpFc0uQe+B9H/WlZIbo8OgYw=
-Subject: Re: [PATCH 6/6] configs: khadas-vim3: enable Function button support
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <bd110c62-4b09-12f0-47fb-b5bc41def981@samsung.com>
-Date: Mon, 14 Dec 2020 21:17:21 +0100
+ Mon, 14 Dec 2020 12:48:54 -0800
+Received: by mail-ua1-f66.google.com with SMTP id n18so5926266ual.9
+        for <u-boot-amlogic@groups.io>; Mon, 14 Dec 2020 12:48:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s04i7fnUUMz/vJRZ9jUDPdC3EcE04FYurzhWxZcHo9E=;
+        b=veuQRnT/rVXEwmVe+sOQsrcuRAIDkEWFZ9hvfzYWqsGr+h86lxG2yXp0HA5CMhu6dS
+         EYZmWG0n2uL9czDDtDhtq5veWe036BaT2LAETxLNmqSjcQwFqPyxifnAkVEwz3hW9nGJ
+         gnLlIBsWSNcdLYrnhWiq9Np3rn2lR3SMC/mR5Do/La/+lgj4WdCbZFq+kgZJBec4UqGx
+         asD03xu/lzyhpR/cFd6aVBAEYkoDWwkPimzWnER4ZN7r71Myya4jUjScR8s7tuQ1bpbY
+         zTLRXx1k/4mZUG+TgsVpszq+yitwvYlU2KQKRgO1F9hDV3pMkOlovcpXkuoSQcQMJMvw
+         UQtw==
 MIME-Version: 1.0
-In-Reply-To: <c67d2024-019e-e671-b748-0b25d274d806@baylibre.com>
-References: <20201214112437.18757-1-m.szyprowski@samsung.com>
-	<CGME20201214112452eucas1p2ceb557dffa15ea073f922bf59afb8578@eucas1p2.samsung.com>
-	<20201214112437.18757-7-m.szyprowski@samsung.com>
-	<c67d2024-019e-e671-b748-0b25d274d806@baylibre.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <20201214184841.237356-1-narmstrong@baylibre.com>
+In-Reply-To: <20201214184841.237356-1-narmstrong@baylibre.com>
+From: Anton Arapov <arapov@gmail.com>
+Date: Mon, 14 Dec 2020 21:48:42 +0100
+Message-ID: <CAMeizLfQQAHf1cCv6GMb7WkF3=APB-O4GdNzO-=igWt+KkROzw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson: fix bit manipulation of pin bias configuration
+Content-Type: text/plain; charset="UTF-8"
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Otto Meier <gf435@gmx.net>
 List-ID: <u-boot-amlogic@groups.io>
 
 Hi Neil,
 
-On 14.12.2020 19:55, Neil Armstrong wrote:
-> On 14/12/2020 12:24, Marek Szyprowski wrote:
->> Add options required to check the 'Function' button state.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>   configs/khadas-vim3_defconfig | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
->> index 9d7ba72d440..bc174305692 100644
->> --- a/configs/khadas-vim3_defconfig
->> +++ b/configs/khadas-vim3_defconfig
->> @@ -29,6 +29,10 @@ CONFIG_CMD_REGULATOR=y
->>   CONFIG_OF_CONTROL=y
->>   CONFIG_SYS_RELOC_GD_ENV_ADDR=y
->>   CONFIG_NET_RANDOM_ETHADDR=y
->> +CONFIG_ADC=y
->> +CONFIG_SARADC_MESON=y
->> +CONFIG_BUTTON=y
->> +CONFIG_BUTTON_ADC=y
->>   CONFIG_DM_I2C=y
->>   CONFIG_SYS_I2C_MESON=y
->>   CONFIG_DM_MMC=y
->>
-> If you separate the ADC configs and Button configs, I can directly apply the clk-ao & adc patches
-> for next release.
+I tested it and it does fix the issue. I am able to boot from eMMC.
 
-Sure, no problem. I'm sorry for the change-id mess, I forgot to clean it 
-before submission. I will send v2 soon.
+Thanks a lot!
+Anton
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+On Mon, Dec 14, 2020 at 7:48 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This fixes the wrong usage of clrsetbits_le32(), badly setting the set argument.
+>
+> Fixes: c4c726c26b ("pinctrl: meson: add pinconf support")
+> Reported-by: Anton Arapov <arapov@gmail.com>
+> Reported-by: Otto Meier <gf435@gmx.net>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+> Hi Anton, Otto,
+>
+> This should fix eMMC booting on Odroid-C2, could you have a quick try to confirm ?
+>
+> Thanks,
+> Neil
+>
+>  drivers/pinctrl/meson/pinctrl-meson.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> index d4539b02d8..5065b62436 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> @@ -216,13 +216,13 @@ static int meson_pinconf_bias_set(struct udevice *dev, unsigned int pin,
+>         }
+>
+>         /* othewise, enable the bias and select level */
+> -       clrsetbits_le32(priv->reg_pullen + reg, BIT(bit), 1);
+> +       clrsetbits_le32(priv->reg_pullen + reg, BIT(bit), BIT(bit));
+>         ret = meson_gpio_calc_reg_and_bit(dev, offset, REG_PULL, &reg, &bit);
+>         if (ret)
+>                 return ret;
+>
+>         clrsetbits_le32(priv->reg_pull + reg, BIT(bit),
+> -                       param == PIN_CONFIG_BIAS_PULL_UP);
+> +                       (param == PIN_CONFIG_BIAS_PULL_UP ? BIT(bit) : 0));
+>
+>         return 0;
+>  }
+> --
+> 2.25.1
+>
