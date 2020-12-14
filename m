@@ -1,58 +1,55 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
- by mx.groups.io with SMTP id smtpd.web10.32899.1607945108563993749
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+ by mx.groups.io with SMTP id smtpd.web12.33289.1607945109116227186
  for <u-boot-amlogic@groups.io>;
  Mon, 14 Dec 2020 03:25:09 -0800
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20201214112451euoutp01f10d4a354b5a2218d18d7f0f6a5b42b3~QkYqQ8HFy0131301313euoutp01W
-	for <u-boot-amlogic@groups.io>; Mon, 14 Dec 2020 11:24:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20201214112451euoutp01f10d4a354b5a2218d18d7f0f6a5b42b3~QkYqQ8HFy0131301313euoutp01W
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20201214112452euoutp02b5f7d8f9f8033962f2284d8965f5e721~QkYrYgq1R2239122391euoutp02U
+	for <u-boot-amlogic@groups.io>; Mon, 14 Dec 2020 11:24:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20201214112452euoutp02b5f7d8f9f8033962f2284d8965f5e721~QkYrYgq1R2239122391euoutp02U
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1607945091;
-	bh=2H9BBNyv5/vxNOUw1+2E7KnTxYztD616hrCcE1zfDEs=;
+	s=mail20170921; t=1607945092;
+	bh=R7mNm5ML53RHW9zx3apeGR+lOQFHGzETqEb+IveRrCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KII3jivTQTsOdpnQ/fO2aOBlqDESmLS4GS14qo0yxlWoO/ZFw83xvUbUGtKcvTyCX
-	 SAe4sZOLAOmoI963kjPPx45Do12RO52Mk1aIRW6nxCzRH4iBRPrrLx1XeuB4y9dJaW
-	 hJBoxbss11EsXLO0g6HyJWwiaAvWbh0PzuWuf6Xo=
+	b=ApqfuTFR1PaQmppypk8eD63YqcGAlU3tpRCoDPESQU0zsjxoLf/8+qbqma+TES84U
+	 aBmq47Ik80/Qj7cuiTlwWIoldUFkiZs284Tvld3m9oBBJZxoLYQVmLiwuA99xMoHCR
+	 JqagSMRz/5g3leQS/Q8kNTe7tQbdef2+FMkMHnos=
 From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH 3/6] adc: meson-saradc: skip hardware init only if ADC is enabled
-Date: Mon, 14 Dec 2020 12:24:34 +0100
-Message-Id: <20201214112437.18757-4-m.szyprowski@samsung.com>
+Subject: [PATCH 5/6] cmd: button: store button state in the 'button' env
+Date: Mon, 14 Dec 2020 12:24:36 +0100
+Message-Id: <20201214112437.18757-6-m.szyprowski@samsung.com>
 In-Reply-To: <20201214112437.18757-1-m.szyprowski@samsung.com>
 References: <20201214112437.18757-1-m.szyprowski@samsung.com>
-	<CGME20201214112450eucas1p1e7ad389bceaaf1082c9afdcb0733e9c0@eucas1p1.samsung.com>
+	<CGME20201214112451eucas1p2ace7794301c6791761fd130c158f3d08@eucas1p2.samsung.com>
 Content-Type: text/plain; charset="utf-8"
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io
 Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The driver skips hardware initialization if it is already configured by
-the earlier bootloader stage (BL30). Skip the initialization only if the
-hardware is really initialized and enabled.
+Save examined button state in 'button' environment variable to enable
+checking button state in the scripts.
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Change-Id: I3e2e2d270ad3e7e7f38e2bc3ce2a924a47b164af
+Change-Id: I78b539e1516573fcfea4401f75469291844daae4
 ---
- drivers/adc/meson-saradc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ cmd/button.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/adc/meson-saradc.c b/drivers/adc/meson-saradc.c
-index 998cef24d88..ce7ae990ad0 100644
---- a/drivers/adc/meson-saradc.c
-+++ b/drivers/adc/meson-saradc.c
-@@ -512,8 +512,11 @@ static int meson_saradc_init(struct meson_saradc_priv *priv)
- 	 * reading the temperature sensor.
- 	 */
- 	regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
--	if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
--		return 0;
-+	if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED) {
-+		regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-+		if (regval & MESON_SAR_ADC_REG3_ADC_EN)
-+			return 0;
+diff --git a/cmd/button.c b/cmd/button.c
+index 64c5a8fa046..8da911068a4 100644
+--- a/cmd/button.c
++++ b/cmd/button.c
+@@ -23,8 +23,10 @@ static int show_button_state(struct udevice *dev)
+ 	ret = button_get_state(dev);
+ 	if (ret >= BUTTON_COUNT)
+ 		ret = -EINVAL;
+-	if (ret >= 0)
++	if (ret >= 0) {
+ 		printf("%s\n", state_label[ret]);
++		env_set("button", state_label[ret]);
 +	}
  
- 	meson_saradc_stop_sample_engine(priv);
- 
+ 	return ret;
+ }
 -- 
 2.17.1
 
