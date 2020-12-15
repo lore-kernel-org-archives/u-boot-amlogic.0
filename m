@@ -1,56 +1,89 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
- by mx.groups.io with SMTP id smtpd.web09.130.1608051315339527950
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web09.1599.1608055730855166635
  for <u-boot-amlogic@groups.io>;
- Tue, 15 Dec 2020 08:55:16 -0800
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20201215165457euoutp023e947903729e8b7c70c44aa32f70d4f8~Q8iKv4WKi2696626966euoutp02L
-	for <u-boot-amlogic@groups.io>; Tue, 15 Dec 2020 16:54:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20201215165457euoutp023e947903729e8b7c70c44aa32f70d4f8~Q8iKv4WKi2696626966euoutp02L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1608051297;
-	bh=25f9K14ba99a3g1qYAViGnEi+v2MiDNaZ0KcW6aa4SE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eejOQWWy3BY3ELcUGgYcOAH+ULzqRhup1dLNDkJHJmiLqcrITDrmQxt8qUgMPIE4p
-	 /pOFDU9yL2wlcpK7+J+2JJwpCoAd63IMHWTI9aSuHSjVQ/3bMg7xl6rw8SUNYYvpgO
-	 qCMt0bT3GatFc87Z1koBkfoMavUR4WSSklNRkZQ4=
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v2 6/7 RESEND] cmd: button: store button state in the 'button' env
-Date: Tue, 15 Dec 2020 17:54:39 +0100
-Message-Id: <20201215165439.13165-1-m.szyprowski@samsung.com>
-In-Reply-To: <20201215144230.9235-7-m.szyprowski@samsung.com>
-References: <20201215144230.9235-7-m.szyprowski@samsung.com>
-	<CGME20201215165446eucas1p1c627adde04ee9da682e665756c5e934c@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-To: u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+ Tue, 15 Dec 2020 10:08:51 -0800
+Received: by mail-qk1-f182.google.com with SMTP id n142so20039250qkn.2
+        for <u-boot-amlogic@groups.io>; Tue, 15 Dec 2020 10:08:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y7LoEzy48ajBRx5hAfbSZqfCBQEoLqMb2U3O7swYeNU=;
+        b=k3UqwslxgFauDGwyD/QCbrdGu43/qu83+heHhJr3uV7LjWJJN0529C/Mm++RO0zfLQ
+         VLQ9Dzb6lbHo15Sdwr804L+GrEmF6i/RaQs00bQlaf1aEQLEnxmhi2AUWuumQGxNGu+M
+         7ZXe8HtKUZskMfR2pqteOR9e1OUIT0Nd2L96k=
+Return-Path: <trini@konsulko.com>
+Date: Tue, 15 Dec 2020 13:08:47 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20201215
+Message-ID: <20201215180847.GD22942@bill-the-cat>
+References: <7df22695-a473-2941-5399-98955174e10f@baylibre.com>
+MIME-Version: 1.0
+In-Reply-To: <7df22695-a473-2941-5399-98955174e10f@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SO98HVl1bnMOfKZd"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Save examined button state in 'button' environment variable to enable
-checking button state in the scripts.
+--SO98HVl1bnMOfKZd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-Resend reason: get rid of the Change-Id tag, that was still in v2.
----
- cmd/button.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Tue, Dec 15, 2020 at 09:02:27AM +0100, Neil Armstrong wrote:
 
-diff --git a/cmd/button.c b/cmd/button.c
-index 64c5a8fa04..8da911068a 100644
---- a/cmd/button.c
-+++ b/cmd/button.c
-@@ -23,8 +23,10 @@ static int show_button_state(struct udevice *dev)
- 	ret = button_get_state(dev);
- 	if (ret >= BUTTON_COUNT)
- 		ret = -EINVAL;
--	if (ret >= 0)
-+	if (ret >= 0) {
- 		printf("%s\n", state_label[ret]);
-+		env_set("button", state_label[ret]);
-+	}
- 
- 	return ret;
- }
--- 
-2.17.1
+> Hi Tom,
+>=20
+> This PR fixes the pinctrl bias bit handling code and the dr-mode setup on=
+ the G12A DWC3 glue driver
+> when switching USB device/host back and forth.
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/5575
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit 5a1a8a63be8f7262a300eddafb18020926b12f=
+b6:
+>=20
+>   Merge tag 'u-boot-atmel-fixes-2021.01-b' of https://gitlab.denx.de/u-bo=
+ot/custodians/u-boot-atmel (2020-12-11 15:55:17 -0500)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20201215
+>=20
+> for you to fetch changes up to 5ccd5d2cc98224108ae9fb09593a862c9caa5e80:
+>=20
+>   pinctrl: meson: fix bit manipulation of pin bias configuration (2020-12=
+-14 19:58:54 +0100)
+>=20
 
+Applied to u-boot/master, thanks!
+
+--=20
+Tom
+
+--SO98HVl1bnMOfKZd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl/Y+6wACgkQFHw5/5Y0
+tyyv6Qv+LIMgZthxBpK0Z39b2Qbdizdw/9H2KbHbREZtOzAgx9JG/Qi/DjLHI1E6
+/2KsY1nuS4+e08L7EibHn5Jvfb5aHkpIWjOJbhNlBaHNtUovFI421+afb+zmtKIx
+3Ih4OY8flArf5AIAtEyWhMzzoIowJOYOMhn84ysJPjzZQBSMo1wMof600HzpoKoh
+xK2se6xVDL0KNyd32Lm7E04WxpVQ+59Le8s2xBFcHXjta84xDDHJA5tml9sgr3qo
+nNlsBMtCqx8ULgXwE2PD8sx0of7ZktxuWL0sPD6mWfJzePlRu4jx/MgN0cGdBX+w
+0i2+aM7ymZXW/TqC4DeaLQf4DM7h2vHHBDDNpoykixe31xmtmHQrbe2qnycTTE84
+5wPqD8BC6pRZ7qkHxDP7SXdMAzYYklTZLEUsQ1o0XUpdsTy+Mkvmv7dUDyhHFkh8
+b9G7HB0bbe7qT2I7De1KpuCUUj56T04KmqEU3ow+74tpOGAafBw+EySu2tjJ0rPW
+TN5PK+YY
+=geI1
+-----END PGP SIGNATURE-----
+
+--SO98HVl1bnMOfKZd--
