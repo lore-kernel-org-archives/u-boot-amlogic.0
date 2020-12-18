@@ -1,44 +1,44 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web08.7177.1608281155793775358
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web09.7270.1608281157470046632
  for <u-boot-amlogic@groups.io>;
- Fri, 18 Dec 2020 00:45:56 -0800
-Received: by mail-wm1-f44.google.com with SMTP id r4so1666216wmh.5
-        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 00:45:55 -0800 (PST)
+ Fri, 18 Dec 2020 00:45:57 -0800
+Received: by mail-wr1-f41.google.com with SMTP id r7so1245796wrc.5
+        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 00:45:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2zH4qv4QeUKqiZRsx9DxZ2kgtsHAiNa/N/jADDWVab4=;
-        b=TEJ7Mbi9lZHocsqesrgcFJJ5YbY9gUEy0/kRQDmqfLuB2x07besgg3oBjXcoyMwGU1
-         zFvWy3LEUWXaj9qpF3STiB5WiLxeAS0lyejrwObYUhd4TVFDiVk9enJN32KIDMcEG3MQ
-         xtvRfRdPkBNFLy9ScLW4FRhKORoYlPvYJ5N6SsCUP1OoF+FDU3+zoVdy6qVz65a/KQIh
-         ILnu491IJ6K84Vma+Kzk1B4aKv5Qv2ZnIdDStKq6KthtdEoMfh38Eq1ruTKlgrnrCgSs
-         zGLfjIAr/epuAHxtITndzck3rpl8UuX1H1fBqNwxFoQANbmx3SQADFnEE+g1D0Z1M1pt
-         zNRg==
+        bh=k4a9d42Ugfhu8lYfBL9bKXO26rwaj2hx/JHFij18RrU=;
+        b=cUYVGDBv9X/tu64a2ATpz2xE7pXNVV+pLEA3sKGVIywmnq1MxK/5z8uquliFz2X0ix
+         ku8Z7EwbtcYxN7+v3faeI6MxsUWpJXPj4ppwHobRpjgLeVnkXFnWsPqPs3BuL9pxr8EK
+         2ADs0swsN0KmrOmsLR54qzXXHBO0osbvMiHkVYj1PV7jDZIWdHc8cUHKcAph+qQRGmYN
+         jdCPA+FP79jurWVVEUSF1wLCaYlRt64eBTzOcm91WMjPqR8de6QzytC9/x2tV/LUf0Iv
+         w8gqSKtck+88f3Stq0tbzfG92rZACkkM9usfelAwBvqwrgK3ZTmvemf0DMLOwi53xige
+         7TQQ==
 Return-Path: <christianshewitt@gmail.com>
 From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 3/5] boards: amlogic: add Beelink GT-King defconfig
-Date: Fri, 18 Dec 2020 08:45:43 +0000
-Message-Id: <20201218084545.29135-4-christianshewitt@gmail.com>
+Subject: [PATCH 4/5] boards: amlogic: add Beelink GT-King Pro defconfig
+Date: Fri, 18 Dec 2020 08:45:44 +0000
+Message-Id: <20201218084545.29135-5-christianshewitt@gmail.com>
 In-Reply-To: <20201218084545.29135-1-christianshewitt@gmail.com>
 References: <20201218084545.29135-1-christianshewitt@gmail.com>
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
 Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add a defconfig for the Beelink GT-King Android STB, which is based
+Add a defconfig for the Beelink GT-King Pro Android STB, which is based
 on the Amlogic W400 reference design.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- configs/beelink-gtking_defconfig | 71 ++++++++++++++++++++++++++++++++
+ configs/beelink-gtkingpro_defconfig | 71 +++++++++++++++++++++++++++++
  1 file changed, 71 insertions(+)
- create mode 100644 configs/beelink-gtking_defconfig
+ create mode 100644 configs/beelink-gtkingpro_defconfig
 
-diff --git a/configs/beelink-gtking_defconfig b/configs/beelink-gtking_defconfig
+diff --git a/configs/beelink-gtkingpro_defconfig b/configs/beelink-gtkingpro_defconfig
 new file mode 100644
-index 0000000000..ea428874af
+index 0000000000..569031600a
 --- /dev/null
-+++ b/configs/beelink-gtking_defconfig
++++ b/configs/beelink-gtkingpro_defconfig
 @@ -0,0 +1,71 @@
 +CONFIG_ARM=y
 +CONFIG_SYS_BOARD="beelink-s922x"
@@ -51,7 +51,7 @@ index 0000000000..ea428874af
 +CONFIG_DEBUG_UART_BASE=0xff803000
 +CONFIG_DEBUG_UART_CLOCK=24000000
 +CONFIG_IDENT_STRING=" beelink"
-+CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-gtking"
++CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-gtking-pro"
 +CONFIG_DEBUG_UART=y
 +CONFIG_OF_BOARD_SETUP=y
 +CONFIG_MISC_INIT_R=y
