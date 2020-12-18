@@ -1,306 +1,315 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web12.7105.1608281159500517698
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+ by mx.groups.io with SMTP id smtpd.web10.7435.1608282690195000540
  for <u-boot-amlogic@groups.io>;
- Fri, 18 Dec 2020 00:45:59 -0800
-Received: by mail-wm1-f47.google.com with SMTP id 190so1532707wmz.0
-        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 00:45:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=thQ1R8dKB62JvkRRxk7WM2fZWynKL+qHRU9jjxKd5s4=;
-        b=qzheN53i5WF0H2wqyWfIYMZUahcLOdohNusLC4uzVzcQli+OPxLF9AhG8B+1x9quZG
-         JwQ+JAI4Z4F5D2OxrFA6XfVbMCUMmHD6dLIxLteAgHk9gahAC5efvICoAsgALu8K5zf/
-         18CEVG7DOk6cCZiN+eg1HCw3tn0YCBjZv2rEvp0gCcLNueSzHhyOwtDDuLQ3N0NVyHI3
-         u81MyMKQNooFTdN0x1pIWz4OcBcFzUFiKElZCl0a4w07CrhuAbVMGDNRRDvlUE254UHN
-         FoyPpL1YOE7YO9qzUBeOJhHAXqqYt33hb9NA7dJSjjj4FZxXMGOwQC9DFVy1anFZ2uPT
-         bmDQ==
-Return-Path: <christianshewitt@gmail.com>
-From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 5/5] boards: amlogic: update documentation for Beelink GT-King/Pro
-Date: Fri, 18 Dec 2020 08:45:45 +0000
-Message-Id: <20201218084545.29135-6-christianshewitt@gmail.com>
-In-Reply-To: <20201218084545.29135-1-christianshewitt@gmail.com>
-References: <20201218084545.29135-1-christianshewitt@gmail.com>
-To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>
+ Fri, 18 Dec 2020 01:11:31 -0800
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20201218091112euoutp022624ddf2b2c0ece95227162204df13b0~RxJHb8K0s0266702667euoutp02a
+	for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 09:11:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20201218091112euoutp022624ddf2b2c0ece95227162204df13b0~RxJHb8K0s0266702667euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1608282672;
+	bh=lURqj1O42nYA+Z/rE7tpifPpeVE8M5WeKPbdsV0UUn8=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+	b=VTbee1Walgqd78hqHyDP2UCxWjLhsKD3RbxbsIWGL8uGfQDlex6q164Lx1DALTaF8
+	 q+B5uZy1m94Jg9V/shUgncVbIDgjQJlhuPCy+yNSgWlfGuXxxmTExY7JqLQewjrg9E
+	 N2SczOeLPCSKvDeM75XEnSXUXHlfBXFybV0ginPg=
+Subject: Re: [PATCH/RFC] board: amlogic: Fix Odroid-C4 SD card reboot issue
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <b006ae83-3a27-f0dd-c905-5ac7f41be067@samsung.com>
+Date: Fri, 18 Dec 2020 10:11:04 +0100
+MIME-Version: 1.0
+In-Reply-To: <0c53e06e-afa4-2308-7d5d-ba08b1d0caf3@baylibre.com>
+References: <CGME20201217090636eucas1p12fcdef289555f4efc425a8f325ddfe4c@eucas1p1.samsung.com>
+	<20201217090624.14902-1-m.szyprowski@samsung.com>
+	<0c53e06e-afa4-2308-7d5d-ba08b1d0caf3@baylibre.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Dongjin Kim <tobetter@hardkernel.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Update the device matrix and add build instructions.
+Hi Neil,
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- doc/board/amlogic/beelink-gtking.rst    | 115 +++++++++++++++++++++++
- doc/board/amlogic/beelink-gtkingpro.rst | 116 ++++++++++++++++++++++++
- doc/board/amlogic/index.rst             |   4 +-
- 3 files changed, 234 insertions(+), 1 deletion(-)
- create mode 100644 doc/board/amlogic/beelink-gtking.rst
- create mode 100644 doc/board/amlogic/beelink-gtkingpro.rst
+On 18.12.2020 09:36, Neil Armstrong wrote:
+> On 17/12/2020 10:06, Marek Szyprowski wrote:
+>> For the proper reboot Odroid C4 board requires to switch TFLASH_VDD_EN
+>> pin to the input (high impedance?) mode, otherwise the board is stuck
+>> in the middle of loading early stages of the bootloader from SD card.
+> Did you try taking the regulator-tflash_vdd and doing a disable/enable =
+sequence
+> to reset the card ?
+>
+> The GPIOAO_3 has a default pull-up, so I don't see why moving it to inp=
+ut could change
+> anything.
+>
+> So maybe simply doing a 0->1 transition could do the same, using the re=
+gulator
+> would be much better.
+>
+> Can't we add "shutdown" or equivalent method to  the mmc driver that co=
+uld do this
+> directly with the vdd regulator ?
 
-diff --git a/doc/board/amlogic/beelink-gtking.rst b/doc/board/amlogic/beelink-gtking.rst
-new file mode 100644
-index 0000000000..56ce2cb273
---- /dev/null
-+++ b/doc/board/amlogic/beelink-gtking.rst
-@@ -0,0 +1,115 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
-+U-Boot for Beelink GT-King
-+==========================
-+
-+The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference
-+board with an S922X-H chip.
-+
-+- 4GB LPDDR4 RAM
-+- 64GB eMMC storage
-+- 10/100/1000 Base-T Ethernet
-+- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.1)
-+- HDMI 2.1 video
-+- S/PDIF optical output
-+- Analogue audio output
-+- 1x USB 2.0 port
-+- 2x USB 3.0 ports
-+- IR receiver
-+- 1x micro SD card slot
-+
-+Beelink do not provide public schematics, but have been willing
-+to share them with known distro developers on request.
-+
-+U-Boot compilation
-+------------------
-+
-+.. code-block:: bash
-+
-+    $ export CROSS_COMPILE=aarch64-none-elf-
-+    $ make beelink-gtking_defconfig
-+    $ make
-+
-+Image creation
-+--------------
-+
-+Amlogic does not provide sources for the firmware and for tools needed
-+to create the bootloader image. Beelink have provided the Amlogic "SDK"
-+in their forums, but the u-boot sources included result in 2GB RAM being
-+detected. The following FIPs were generated with newer private sources
-+and give correct (4GB) RAM detection:
-+
-+https://github.com/LibreELEC/amlogic-boot-fip/tree/master/beelink-s922x
-+
-+NB: Beelink use a common board config for GT-King, GT-King Pro and the
-+GS-King-X model, hence the "beelink-s922x" name.
-+
-+.. code-block:: bash
-+
-+    $ wget https://github.com/LibreELEC/amlogic-boot-fip/archive/master.zip
-+    $ unzip master.zip
-+    $ export FIPDIR=$PWD/amlogic-boot-fip/beelink-s922x
-+
-+Go back to the mainline U-Boot source tree then:
-+
-+.. code-block:: bash
-+
-+    $ mkdir fip
-+    $ cp $FIPDIR/* fip/
-+    $ cp u-boot.bin fip/bl33.bin
-+
-+    $ sh fip/blx_fix.sh \
-+    	fip/bl30.bin \
-+    	fip/zero_tmp \
-+    	fip/bl30_zero.bin \
-+    	fip/bl301.bin \
-+    	fip/bl301_zero.bin \
-+    	fip/bl30_new.bin \
-+    	bl30
-+
-+    $ sh fip/blx_fix.sh \
-+    	fip/bl2.bin \
-+    	fip/zero_tmp \
-+    	fip/bl2_zero.bin \
-+    	fip/acs.bin \
-+    	fip/bl21_zero.bin \
-+    	fip/bl2_new.bin \
-+    	bl2
-+
-+    $ fip/aml_encrypt_g12b --bl30sig --input fip/bl30_new.bin \
-+    				--output fip/bl30_new.bin.g12a.enc \
-+    				--level v3
-+    $ fip/aml_encrypt_g12b --bl3sig --input fip/bl30_new.bin.g12a.enc \
-+    				--output fip/bl30_new.bin.enc \
-+    				--level v3 --type bl30
-+    $ fip/aml_encrypt_g12b --bl3sig --input fip/bl31.img \
-+    				--output fip/bl31.img.enc \
-+    				--level v3 --type bl31
-+    $ fip/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
-+    				--output fip/bl33.bin.enc \
-+    				--level v3 --type bl33
-+    $ fip/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
-+    				--output fip/bl2.n.bin.sig
-+    $ fip/aml_encrypt_g12b --bootmk \
-+    		--output fip/u-boot.bin \
-+    		--bl2 fip/bl2.n.bin.sig \
-+    		--bl30 fip/bl30_new.bin.enc \
-+    		--bl31 fip/bl31.img.enc \
-+    		--bl33 fip/bl33.bin.enc \
-+    		--ddrfw1 fip/ddr4_1d.fw \
-+    		--ddrfw2 fip/ddr4_2d.fw \
-+    		--ddrfw3 fip/ddr3_1d.fw \
-+    		--ddrfw4 fip/piei.fw \
-+    		--ddrfw5 fip/lpddr4_1d.fw \
-+    		--ddrfw6 fip/lpddr4_2d.fw \
-+    		--ddrfw7 fip/diag_lpddr4.fw \
-+    		--ddrfw8 fip/aml_ddr.fw \
-+    		--level v3
-+
-+and then write the image to SD with:
-+
-+.. code-block:: bash
-+
-+    $ DEV=/dev/your_sd_device
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/doc/board/amlogic/beelink-gtkingpro.rst b/doc/board/amlogic/beelink-gtkingpro.rst
-new file mode 100644
-index 0000000000..d750351361
---- /dev/null
-+++ b/doc/board/amlogic/beelink-gtkingpro.rst
-@@ -0,0 +1,116 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
-+U-Boot for Beelink GT-King Pro
-+==============================
-+
-+The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference
-+board with an S922X-H chip.
-+
-+- 4GB LPDDR4 RAM
-+- 64GB eMMC storage
-+- 10/100/1000 Base-T Ethernet
-+- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.1)
-+- HDMI 2.1 video
-+- Analogue audio output
-+- 1x RS232 port
-+- 2x USB 2.0 port
-+- 2x USB 3.0 ports
-+- IR receiver
-+- 1x SD card slot
-+- 1x Power on/off button
-+
-+Beelink do not provide public schematics, but have been willing
-+to share them with known distro developers on request.
-+
-+U-Boot compilation
-+------------------
-+
-+.. code-block:: bash
-+
-+    $ export CROSS_COMPILE=aarch64-none-elf-
-+    $ make beelink-gtkingpro_defconfig
-+    $ make
-+
-+Image creation
-+--------------
-+
-+Amlogic does not provide sources for the firmware and for tools needed
-+to create the bootloader image. Beelink have provided the Amlogic "SDK"
-+in their forums, but the u-boot sources included result in 2GB RAM being
-+detected. The following FIPs were generated with newer private sources
-+and give correct (4GB) RAM detection:
-+
-+https://github.com/LibreELEC/amlogic-boot-fip/tree/master/beelink-s922x
-+
-+NB: Beelink use a common board config for GT-King, GT-King Pro and the
-+GS-King-X model, hence the "beelink-s922x" name.
-+
-+.. code-block:: bash
-+
-+    $ wget https://github.com/LibreELEC/amlogic-boot-fip/archive/master.zip
-+    $ unzip master.zip
-+    $ export FIPDIR=$PWD/amlogic-boot-fip/beelink-s922x
-+
-+Go back to the mainline U-Boot source tree then:
-+
-+.. code-block:: bash
-+
-+    $ mkdir fip
-+    $ cp $FIPDIR/* fip/
-+    $ cp u-boot.bin fip/bl33.bin
-+
-+    $ sh fip/blx_fix.sh \
-+    	fip/bl30.bin \
-+    	fip/zero_tmp \
-+    	fip/bl30_zero.bin \
-+    	fip/bl301.bin \
-+    	fip/bl301_zero.bin \
-+    	fip/bl30_new.bin \
-+    	bl30
-+
-+    $ sh fip/blx_fix.sh \
-+    	fip/bl2.bin \
-+    	fip/zero_tmp \
-+    	fip/bl2_zero.bin \
-+    	fip/acs.bin \
-+    	fip/bl21_zero.bin \
-+    	fip/bl2_new.bin \
-+    	bl2
-+
-+    $ fip/aml_encrypt_g12b --bl30sig --input fip/bl30_new.bin \
-+    				--output fip/bl30_new.bin.g12a.enc \
-+    				--level v3
-+    $ fip/aml_encrypt_g12b --bl3sig --input fip/bl30_new.bin.g12a.enc \
-+    				--output fip/bl30_new.bin.enc \
-+    				--level v3 --type bl30
-+    $ fip/aml_encrypt_g12b --bl3sig --input fip/bl31.img \
-+    				--output fip/bl31.img.enc \
-+    				--level v3 --type bl31
-+    $ fip/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
-+    				--output fip/bl33.bin.enc \
-+    				--level v3 --type bl33
-+    $ fip/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
-+    				--output fip/bl2.n.bin.sig
-+    $ fip/aml_encrypt_g12b --bootmk \
-+    		--output fip/u-boot.bin \
-+    		--bl2 fip/bl2.n.bin.sig \
-+    		--bl30 fip/bl30_new.bin.enc \
-+    		--bl31 fip/bl31.img.enc \
-+    		--bl33 fip/bl33.bin.enc \
-+    		--ddrfw1 fip/ddr4_1d.fw \
-+    		--ddrfw2 fip/ddr4_2d.fw \
-+    		--ddrfw3 fip/ddr3_1d.fw \
-+    		--ddrfw4 fip/piei.fw \
-+    		--ddrfw5 fip/lpddr4_1d.fw \
-+    		--ddrfw6 fip/lpddr4_2d.fw \
-+    		--ddrfw7 fip/diag_lpddr4.fw \
-+    		--ddrfw8 fip/aml_ddr.fw \
-+    		--level v3
-+
-+and then write the image to SD with:
-+
-+.. code-block:: bash
-+
-+    $ DEV=/dev/your_sd_device
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
-diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index a585d857df..275c3664b7 100644
---- a/doc/board/amlogic/index.rst
-+++ b/doc/board/amlogic/index.rst
-@@ -17,7 +17,7 @@ This matrix concerns the actual source code version.
- +===============================+===========+=================+==============+============+============+=============+==============+
- | Boards                       	| Odroid-C2 | P212            | Khadas VIM2  | S400       | U200       | Odroid-N2   | SEI610       |
- |        			| Nanopi-K2 | Khadas-VIM      | Libretech-PC |	          | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
--|        			| P200	    | LibreTech-CC v1 |	WeTek Core2  |	          |            |	     | Odroid-C4    |
-+|        			| P200	    | LibreTech-CC v1 |	WeTek Core2  |	          |            | GT-King/Pro | Odroid-C4    |
- |        			| P201	    | LibreTech-AC v2 |	             |	          |            |             |              |
- +-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
- | UART                       	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
-@@ -77,6 +77,8 @@ Board Documentation
- .. toctree::
-    :maxdepth: 1
- 
-+   beelink-gtking
-+   beelink-gtkingpro
-    khadas-vim2
-    khadas-vim3l
-    khadas-vim3
--- 
-2.17.1
+Yes, I've tried all combinations of playing this that GPIO and regulator=20
+that came to my mind. Switching pin to the input is the only one I've=20
+found working.
+
+It looks that there must be some additional (hw?) logic there, which=20
+does the SD card reset during the BL, which in turn conflicts with the=20
+constant 0 or constant 1 driven from TFLASH_VDD_EN gpio. This is also=20
+what the vendor's kernel does:=20
+https://github.com/hardkernel/linux/commit/84628497332a5cd2154c92436ec86f=
+ad900fe0af=20
+That commit states that it is according to the odroid schematic, but on=20
+the public schematics of C4 I cannot find anything what might need such=20
+workaround/fix.
+
+Here is how it behaves without the fix:
+
+1. if SD card is not used (TFLASH regulator is not even instantiated, so=20
+GPIO pin is in input state as its initial value left by earlier BL=20
+stages), the reboot works fine:
+
+--->8---
+
+U-Boot 2021.01-rc3 (Dec 18 2020 - 10:00:48 +0100) odroid-c4
+
+Model: Hardkernel ODROID-C4
+SoC:=C2=A0=C2=A0 Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2)
+DRAM:=C2=A0 3.8 GiB
+MMC:=C2=A0=C2=A0 sd@ffe05000: 0, mmc@ffe07000: 1
+In:=C2=A0=C2=A0=C2=A0 serial
+Out:=C2=A0=C2=A0 serial
+Err:=C2=A0=C2=A0 serial
+Net:=C2=A0=C2=A0 eth0: ethernet@ff3f0000
+Hit any key to stop autoboot:=C2=A0 0
+=3D>
+=3D> reset
+resetting ...
+bl31 reboot reason: 0xd
+bl31 reboot reason: 0x0
+system cmd=C2=A0 1.
+SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;=
+SD?:0;SD:0;READ:0;0.0;CHK:0;
+bl2_stage_init 0x01
+bl2_stage_init 0x81
+hw id: 0x0000 - pwm id 0x01
+bl2_stage_init 0xc1
+bl2_stage_init 0x02
+
+no sdio debug board detected
+L0:00000000
+L1:00000703
+L2:00008067
+L3:15000020
+S1:00000000
+B2:20282000
+B1:a0f83180
+
+TE: 143230
+
+BL2 Built : 22:54:32, Apr 28 2020. g12a ga659aac-dirty -=20
+changqing.gao@droid11
+
+Board ID =3D 1
+Set cpu clk to 24M
+Set clk81 to 24M
+Use GP1_pll as DSU clk.
+DSU clk: 1200 Mhz
+CPU clk: 1200 MHz
+Set clk81 to 166.6M
+DDR driver_vesion: LPDDR4_PHY_V_0_1_15 build time: Apr 28 2020 22:54:28
+board id: 1
+Load FIP HDR from SD, src: 0x00010200, des: 0xfffd0000, size:=20
+0x00004000, part: 0
+fw parse done
+Load ddrfw from SD, src: 0x00060200, des: 0xfffd0000, size: 0x0000c000,=20
+part: 0
+Load ddrfw from SD, src: 0x00038200, des: 0xfffd0000, size: 0x00004000,=20
+part: 0
+PIEI prepare done
+fastboot data load
+fastboot data verify
+verify result: 255
+Cfg max: 2, cur: 1. Board id: 255. Force loop cfg
+DDR4 probe
+ddr clk to 1320MHz
+Load ddrfw from SD, src: 0x00014200, des: 0xfffd0000, size: 0x0000c000,=20
+part: 0
+
+dmc_version 0001
+Check phy result
+INFO : End of initialization
+INFO : End of read enable training
+INFO : End of fine write leveling
+INFO : End of read dq deskew training
+INFO : End of MPR read delay center optimization
+INFO : End of Write leveling coarse delay
+INFO : End of write delay center optimization
+INFO : End of read delay center optimization
+INFO : End of max read latency training
+INFO : Training has run successfully!
+1D training succeed
+Load ddrfw from SD, src: 0x00020200, des: 0xfffd0000, size: 0x0000c000,=20
+part: 0
+Check phy result
+INFO : End of initialization
+INFO : End of 2D read delay Voltage center optimization
+INFO : End of 2D write delay Voltage center optimization
+INFO : Training has run successfully!
+
+R0_RxClkDly_Margin=3D=3D94 ps 8
+R0_TxDqDly_Margi=3D=3D106 ps 9
+
+
+R1_RxClkDly_Margin=3D=3D0 ps 0
+R1_TxDqDly_Margi=3D=3D0 ps 0
+
+ =C2=A0dwc_ddrphy_apb_wr((0<<20)|(2<<16)|(0<<12)|(0xb0):0001
+
+soc_vref_reg_value 0x 0000004e 0000004f 0000004e 0000004f 00000050=20
+0000004f 0000004f 0000004e 0000004d 0000004c 0000004f 0000004d 00000050=20
+00000050 0000004f 0000004f 0000004e 0000004f 0000004e 0000004e 0000004e=20
+0000004d 0000004e 0000004e 00000050 0000004e 0000004f 0000004d 0000004d=20
+0000004e 0000004e 0000004d dram_vref_reg_value 0x 00000022
+2D training succeed
+aml_ddr_fw_vesion: LPDDR4_PHY_V_0_1_15 build time: Jun 18 2019 20:29:43
+auto size-- 65535DDR cs0 size: 2048MB
+DDR cs1 size: 2048MB
+DMC_DDR_CTRL: 00700024DDR size: 3928MB
+cs0 DataBus test pass
+cs1 DataBus test pass
+cs0 AddrBus test pass
+cs1 AddrBus test pass
+
+non-sec scramble use zero key
+ddr scramble enabled
+
+100bdlr_step_size ps=3D=3D 425
+result report
+boot times 1Enable ddr reg access
+Load FIP HDR from SD, src: 0x00010200, des: 0x01700000, size:=20
+0x00004000, part: 0
+Load BL3X from SD, src: 0x0006c200, des: 0x0175c000, size: 0x00098000,=20
+part: 0
+0.0;M3 CHK:0;cm4_sp_mode 0
+MVN_1=3D0x00000000
+MVN_2=3D0x00000000
+[Image: g12a_v1.1.3386-3b31431 2019-05-21 10:41:54 luan.yuan@droid15-sz]
+OPS=3D0x10
+ring efuse init
+2b 0c 10 00 01 15 06 00 00 11 36 30 43 57 50 50
+[1.016710 Inits done]
+secure task start!
+high task start!
+low task start!
+run into bl31
+NOTICE:=C2=A0 BL31: v1.3(release):4fc40b1
+NOTICE:=C2=A0 BL31: Built : 15:57:33, May 22 2019
+NOTICE:=C2=A0 BL31: G12A normal boot!
+NOTICE:=C2=A0 BL31: BL33 decompress pass
+ERROR:=C2=A0=C2=A0 Error initializing runtime service opteed_fast
+
+
+U-Boot 2021.01-rc3 (Dec 18 2020 - 10:00:48 +0100) odroid-c4
+
+--->8---
+
+2. If SD card is touched, then reboot hangs somewhere between BL2->BL3=20
+stages:
+
+--->8---
+
+U-Boot 2021.01-rc3 (Dec 18 2020 - 10:00:48 +0100) odroid-c4
+
+Model: Hardkernel ODROID-C4
+SoC:=C2=A0=C2=A0 Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2)
+DRAM:=C2=A0 3.8 GiB
+MMC:=C2=A0=C2=A0 sd@ffe05000: 0, mmc@ffe07000: 1
+In:=C2=A0=C2=A0=C2=A0 serial
+Out:=C2=A0=C2=A0 serial
+Err:=C2=A0=C2=A0 serial
+Net:=C2=A0=C2=A0 eth0: ethernet@ff3f0000
+Hit any key to stop autoboot:=C2=A0 0
+=3D>
+=3D> mmc info
+Device: sd@ffe05000
+Manufacturer ID: 74
+OEM: 4a45
+Name: SDU1
+Bus Speed: 50000000
+Mode: SD High Speed (50MHz)
+Rd Block Len: 512
+SD version 3.0
+High Capacity: Yes
+Capacity: 7.5 GiB
+Bus Width: 4-bit
+Erase Group Size: 512 Bytes
+=3D> reset
+resetting ...
+bl31 reboot reason: 0xd
+bl31 reboot reason: 0x0
+system cmd=C2=A0 1.
+SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;=
+SD?:0;SD:0;READ:0;0.0;CHK:0;
+bl2_stage_init 0x01
+bl2_stage_init 0x81
+hw id: 0x0000 - pwm id 0x01
+bl2_stage_init 0xc1
+bl2_stage_init 0x02
+
+no sdio debug board detected
+L0:00000000
+L1:00000703
+L2:00008067
+L3:15000020
+S1:00000000
+B2:20282000
+B1:a0f83180
+
+TE: 145782
+
+BL2 Built : 22:54:32, Apr 28 2020. g12a ga659aac-dirty -=20
+changqing.gao@droid11
+
+Board ID =3D 1
+Set cpu clk to 24M
+Set clk81 to 24M
+Use GP1_pll as DSU clk.
+DSU clk: 1200 Mhz
+CPU clk: 1200 MHz
+Set clk81 to 166.6M
+DDR driver_vesion: LPDDR4_PHY_V_0_1_15 build time: Apr 28 2020 22:54:28
+board id: 1
+Load FIP HDR from SD, src: 0x00010200, des: 0xfffd0000, size:=20
+0x00004000, part: 0
+FIP HDR CHK: 0x00000089 ADDR 0xfffd0000
+reset...
+SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;=
+SD?:0;SD:800;USB:8;LOOP:1;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:2;EMMC=
+:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:3;EMMC:800;NAND:81;SD?:0;SD:800;USB:=
+8;LOOP:4;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:5;EMMC:800;NAND:81;SD?:=
+0;SD:800;USB:8;LOOP:6;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:7;EMMC:800=
+;NAND:81;SD?:0;SD:800;USB:8;LOOP:8;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LO=
+OP:9;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:A;EMMC:800;NAND:81;SD?:0;SD=
+:800;USB:8;LOOP:B;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:C;EMMC:800;NAN=
+D:81;SD?:0;SD:800;USB:8;LOOP:D;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:E=
+;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:F;EMMC:800;NAND:81;SD?:0;SD:800=
+;USB:8;LOOP:10;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:11;EMMC:800;NAND:=
+81;SD?:0;SD:800;USB:8;
+
+--->8---
+
+> @tobetter, could you provide us a summary of how to fix the reboot issu=
+es on the
+> N2, N2+, C4 and HC4 ?
+
+On the other hand I didn't observe any reboot related issues on N2/N2+.
+
+Best regards
+--=20
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
