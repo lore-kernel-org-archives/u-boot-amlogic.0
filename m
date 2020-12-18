@@ -1,30 +1,30 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.7492.1608284567134987081
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web12.7531.1608284597843559014
  for <u-boot-amlogic@groups.io>;
- Fri, 18 Dec 2020 01:42:47 -0800
-Received: by mail-wr1-f54.google.com with SMTP id t30so1454551wrb.0
-        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 01:42:46 -0800 (PST)
+ Fri, 18 Dec 2020 01:43:18 -0800
+Received: by mail-wr1-f45.google.com with SMTP id c5so1421706wrp.6
+        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 01:43:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:autocrypt:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=rWjAeEtOXDa5d8yW88uulTvw7F7U7U+z+Rg+Cla3MVo=;
-        b=xcn0o9ykZ/E6vWcG+b3B2Eu+/1IRL6OLOVkAGkhpRB3EBrfmyWPol4t2HSAcy1ueOg
-         rBuYswIp61jvcMc7qUGVxeDL7DE9ACO6uTFA+oa8sBTgFK8RztZs0WHoPS/0v5DBWVTO
-         extC4XYQJSZ2x4MOhFnBMIHTi+ZvBkFfxsKR1whbC1PS2ykFMXVOEkEUc0vKzwWx5yl/
-         YSL9ZlxStxdHw8u5mVpZ0pMtdSyOeTuHUz1WSrIdo1knv0j38xdtnWAViOhN7ckxKNMv
-         6jHXCZ+0dEUux0iQiLdXzzgVrIUaFlL+mSQyvVJ+rLR317uZdWtp9OwifAdIPRtjS/F7
-         Fs2Q==
+        bh=d2V0uvA2Me6clbSCxZe+QhqsS8fgAVc2vdXn1jw+AS8=;
+        b=dSh0uen8QghZ1IiL5ExHRXNPS6wKeUw1L3kuP+z9s6nvlr2KJtM7Qjq4BJ1IIomO0p
+         xqfc32Z4AOW483UU821jYguFxFjxrRiGXCz2wzcZwzPk4EYp5fH7ttBtFxUXZ0BAN0UW
+         WUlJfc/6dU7dD4sUg0uga6rrqDhiCVRFgmcmKgvsfqvZBk2iKcelDejfirfDItEp1Fdw
+         t/lecS3xA4jiiHAN5052rAxdbrcaKD+R2fHvCl1e5NBNBJflkOMQADr8Pxu3bcmpxMJP
+         yntpNve6mrbp3l9PDOLT0UQKOpWqyq12r4Yxm89u5jHX8XXxv4Wk7fErnSVH8ZFXn3yC
+         rpww==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/5] boards: amlogic: add Beelink S922X board family support
+Subject: Re: [PATCH 3/5] boards: amlogic: add Beelink GT-King defconfig
 References: <20201218084545.29135-1-christianshewitt@gmail.com>
- <20201218084545.29135-3-christianshewitt@gmail.com>
+ <20201218084545.29135-4-christianshewitt@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <9cc2d431-9bc1-fef4-eb4b-a726e9c9b6fb@baylibre.com>
-Date: Fri, 18 Dec 2020 10:42:44 +0100
+Message-ID: <97d23c04-92d9-958a-167e-f90c76317617@baylibre.com>
+Date: Fri, 18 Dec 2020 10:43:14 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201218084545.29135-3-christianshewitt@gmail.com>
+In-Reply-To: <20201218084545.29135-4-christianshewitt@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -32,105 +32,92 @@ To: Christian Hewitt <christianshewitt@gmail.com>, u-boot@lists.denx.de, u-boot-
 List-ID: <u-boot-amlogic@groups.io>
 
 On 18/12/2020 09:45, Christian Hewitt wrote:
-> Copied from Odroid N2. Add myself as maintainer.
+> Add a defconfig for the Beelink GT-King Android STB, which is based
+> on the Amlogic W400 reference design.
 > 
 > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  board/amlogic/beelink-s922x/MAINTAINERS     |  9 ++++
->  board/amlogic/beelink-s922x/Makefile        |  6 +++
->  board/amlogic/beelink-s922x/beelink-s922x.c | 54 +++++++++++++++++++++
->  3 files changed, 69 insertions(+)
->  create mode 100644 board/amlogic/beelink-s922x/MAINTAINERS
->  create mode 100644 board/amlogic/beelink-s922x/Makefile
->  create mode 100644 board/amlogic/beelink-s922x/beelink-s922x.c
+>  configs/beelink-gtking_defconfig | 71 ++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 configs/beelink-gtking_defconfig
 > 
-> diff --git a/board/amlogic/beelink-s922x/MAINTAINERS b/board/amlogic/beelink-s922x/MAINTAINERS
+> diff --git a/configs/beelink-gtking_defconfig b/configs/beelink-gtking_defconfig
 > new file mode 100644
-> index 0000000000..7f223df4ae
+> index 0000000000..ea428874af
 > --- /dev/null
-> +++ b/board/amlogic/beelink-s922x/MAINTAINERS
-> @@ -0,0 +1,9 @@
-> +BEELINK-S922X
-> +M:	Christian Hewitt <christianshewitt@gmail.com>
-> +S:	Maintained
-> +L:	u-boot-amlogic@groups.io
-> +F:	board/amlogic/beelink-s922x/
-> +F:	configs/beelink-gtking_defconfig
-> +F:	configs/beelink-gtkingpro_defconfig
-> +F:	doc/board/amlogic/beelink-gtking.rst
-> +F:	doc/board/amlogic/beelink-gtkingpro.rst
-> diff --git a/board/amlogic/beelink-s922x/Makefile b/board/amlogic/beelink-s922x/Makefile
-> new file mode 100644
-> index 0000000000..27b1a74105
-> --- /dev/null
-> +++ b/board/amlogic/beelink-s922x/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +#
-> +# (C) Copyright 2020 BayLibre, SAS
-> +# Author: Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +obj-y	:= beelink-s922x.o
-> diff --git a/board/amlogic/beelink-s922x/beelink-s922x.c b/board/amlogic/beelink-s922x/beelink-s922x.c
-> new file mode 100644
-> index 0000000000..dc0d933a39
-> --- /dev/null
-> +++ b/board/amlogic/beelink-s922x/beelink-s922x.c
-> @@ -0,0 +1,54 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2020 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include <common.h>
-> +#include <dm.h>
-> +#include <env.h>
-> +#include <init.h>
-> +#include <net.h>
-> +#include <asm/io.h>
-> +#include <asm/arch/sm.h>
-> +#include <asm/arch/eth.h>
-> +#include <asm/arch/boot.h>
-> +
-> +#define EFUSE_MAC_OFFSET	20
-> +#define EFUSE_MAC_SIZE		12
-> +#define MAC_ADDR_LEN		6
-> +
-> +int misc_init_r(void)
-> +{
-> +	u8 mac_addr[MAC_ADDR_LEN];
-> +	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
-> +	ssize_t len;
-> +
-> +	if (IS_ENABLED(CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG) &&
-> +	    meson_get_soc_rev(tmp, sizeof(tmp)) > 0)
-> +		env_set("soc_rev", tmp);
-> +
-> +	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
-> +
-> +	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
-> +		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
-> +					  efuse_mac_addr, EFUSE_MAC_SIZE);
-> +		if (len != EFUSE_MAC_SIZE)
-> +			return 0;
-> +
-> +		/* MAC is stored in ASCII format, 1bytes = 2characters */
-> +		for (int i = 0; i < 6; i++) {
-> +			tmp[0] = efuse_mac_addr[i * 2];
-> +			tmp[1] = efuse_mac_addr[i * 2 + 1];
-> +			tmp[2] = '\0';
-> +			mac_addr[i] = simple_strtoul(tmp, NULL, 16);
-> +		}
-> +
-> +		if (is_valid_ethaddr(mac_addr))
-> +			eth_env_set_enetaddr("ethaddr", mac_addr);
-> +		else
-> +			meson_generate_serial_ethaddr();
-> +	}
-> +
-> +	return 0;
-> +}
+> +++ b/configs/beelink-gtking_defconfig
+> @@ -0,0 +1,71 @@
+> +CONFIG_ARM=y
+> +CONFIG_SYS_BOARD="beelink-s922x"
+> +CONFIG_ARCH_MESON=y
+> +CONFIG_SYS_TEXT_BASE=0x01000000
+> +CONFIG_NR_DRAM_BANKS=1
+> +CONFIG_ENV_SIZE=0x2000
+> +CONFIG_DM_GPIO=y
+> +CONFIG_MESON_G12A=y
+> +CONFIG_DEBUG_UART_BASE=0xff803000
+> +CONFIG_DEBUG_UART_CLOCK=24000000
+> +CONFIG_IDENT_STRING=" beelink"
+> +CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-gtking"
+> +CONFIG_DEBUG_UART=y
+> +CONFIG_OF_BOARD_SETUP=y
+> +CONFIG_MISC_INIT_R=y
+> +# CONFIG_DISPLAY_CPUINFO is not set
+> +# CONFIG_CMD_BDI is not set
+> +# CONFIG_CMD_IMI is not set
+> +CONFIG_CMD_GPIO=y
+> +# CONFIG_CMD_LOADS is not set
+> +CONFIG_CMD_MMC=y
+> +CONFIG_CMD_SF_TEST=y
+> +CONFIG_CMD_SPI=y
+> +CONFIG_CMD_USB=y
+> +CONFIG_CMD_USB_MASS_STORAGE=y
+> +# CONFIG_CMD_SETEXPR is not set
+> +CONFIG_CMD_REGULATOR=y
+> +CONFIG_OF_CONTROL=y
+> +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> +CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_DM_MMC=y
+> +CONFIG_MMC_MESON_GX=y
+> +CONFIG_MTD=y
+> +CONFIG_DM_MTD=y
+> +CONFIG_PHY_REALTEK=y
+> +CONFIG_DM_ETH=y
+> +CONFIG_ETH_DESIGNWARE=y
+> +CONFIG_MESON_G12A_USB_PHY=y
+> +CONFIG_PINCTRL=y
+> +CONFIG_PINCTRL_MESON_G12A=y
+> +CONFIG_POWER_DOMAIN=y
+> +CONFIG_MESON_EE_POWER_DOMAIN=y
+> +CONFIG_DM_REGULATOR=y
+> +CONFIG_DM_REGULATOR_FIXED=y
+> +CONFIG_DM_RESET=y
+> +CONFIG_DEBUG_UART_ANNOUNCE=y
+> +CONFIG_DEBUG_UART_SKIP_INIT=y
+> +CONFIG_MESON_SERIAL=y
+> +CONFIG_USB=y
+> +CONFIG_DM_USB=y
+> +CONFIG_USB_XHCI_HCD=y
+> +CONFIG_USB_XHCI_DWC3=y
+> +CONFIG_USB_DWC3=y
+> +# CONFIG_USB_DWC3_GADGET is not set
+> +CONFIG_USB_DWC3_MESON_G12A=y
+> +CONFIG_USB_KEYBOARD=y
+> +CONFIG_USB_GADGET=y
+> +CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
+> +CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
+> +CONFIG_USB_GADGET_DWC2_OTG=y
+> +CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
+> +CONFIG_USB_GADGET_DOWNLOAD=y
+> +CONFIG_DM_VIDEO=y
+> +# CONFIG_VIDEO_BPP8 is not set
+> +# CONFIG_VIDEO_BPP16 is not set
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+> +CONFIG_VIDEO_MESON=y
+> +CONFIG_VIDEO_DT_SIMPLEFB=y
+> +CONFIG_SPLASH_SCREEN=y
+> +CONFIG_SPLASH_SCREEN_ALIGN=y
+> +CONFIG_OF_LIBFDT_OVERLAY=y
 > 
 
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
