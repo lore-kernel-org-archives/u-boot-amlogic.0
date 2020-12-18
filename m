@@ -1,70 +1,75 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web08.7721.1608284997852139563
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web08.8150.1608288426534774043
  for <u-boot-amlogic@groups.io>;
- Fri, 18 Dec 2020 01:49:58 -0800
-Received: by mail-wr1-f41.google.com with SMTP id a12so1443339wrv.8
-        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 01:49:57 -0800 (PST)
+ Fri, 18 Dec 2020 02:47:07 -0800
+Received: by mail-wr1-f46.google.com with SMTP id r3so1646813wrt.2
+        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 02:47:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=i68DHKWuidoiLSCjV7Xg6b+4uHNmCRXnOuj5cVbm9rw=;
-        b=05B+BYsTW+FvCB9LCMoqSbVULdUp85baC/MO0WnyfrQI0SLrOsx2hjAsDlIMtxZbEr
-         D7131ePnDtqLEHgyBvDS9BztCid3lMaevi7v0WpB/04sejkEQ0/tYWXMhEFG83EQ57sX
-         HcVaMqtoWMoFueO88KR6k3x4arentx866HvbJrDDXOxTQHMVHrOHBHObSW34LqOmtath
-         wVmaYo/q7QWW2SM/lX5mdK93TYthmJpzMkY2I7Vsq6Tox3uMDxXddzP9Tg4kGyACs6zZ
-         PNQjox69ljMrRl78/kWXciHUWSZsWcx0WR2AgsAUAquCM8E/pZtckVpzxPeH/ERSED9m
-         6Cwg==
+        bh=r2tV4wvJkzjRnZdwwa0FuikdGsUc98Z5MNkVhBtdlbU=;
+        b=DXw2CbQtBvrSe1twib7I8IhrtdOSmEJYlbOVIs5WkYWdhxTYW43UMZFEjwNoDTVz2u
+         OM8nCz9jt0UJOkP9AaF6ftTp+8ADu+4p++nNxpTfDIHU3859DjWE4ketvfpaqm1It2mS
+         kV9S11Jj+fxUlDKpcMhNOjsoyup9hgfp1jNsNQYRWlZtp/un09TQ9ZNkrgt7MBrfH6r4
+         Ie9WxUjmIlOnDE6B0ypR7n7S4GSGXcczIKhn0Yirj6Fu2mNoUGtZ/nJaXEq11nXnZlgU
+         8G0amh44BHBdqgPcrOT8VavnxdeS/CF2TgTXJaT72P86Wg0s/OBeT4fvyoN6KGH9s6Ag
+         5DBw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/5] board: amlogic: add Beelink GT-King/Pro support
-References: <20201218084545.29135-1-christianshewitt@gmail.com>
+Subject: Re: [PATCH] ARM: dts: meson: switch TFLASH_VDD_EN pin to open drain on Odroid-C4
+References: <CGME20201218104353eucas1p266e5210f6272fc60b316881e3fb3c210@eucas1p2.samsung.com>
+ <20201218104345.18370-1-m.szyprowski@samsung.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <19d7f4a3-4c48-54f9-c4f0-73756ea4dc09@baylibre.com>
-Date: Fri, 18 Dec 2020 10:49:54 +0100
+Message-ID: <a9274a4b-6012-e5af-a919-ec5ef0a57950@baylibre.com>
+Date: Fri, 18 Dec 2020 11:47:02 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201218084545.29135-1-christianshewitt@gmail.com>
+In-Reply-To: <20201218104345.18370-1-m.szyprowski@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Christian Hewitt <christianshewitt@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 18/12/2020 09:45, Christian Hewitt wrote:
-> This patchset adds support for the Beelink GT-King and GT-King Pro boxes
-> based on the Amlogic S922X (G12B/W400) SoC. Patches are based on the
-> u-boot-amlogic-next branch in the custodians tree.
+On 18/12/2020 11:43, Marek Szyprowski wrote:
+> For the proper reboot Odroid-C4 board requires to switch TFLASH_VDD_EN
+> pin to the high impedance mode, otherwise the board is stuck in the
+> middle of loading early stages of the bootloader from SD card.
 > 
-> Christian Hewitt (5):
->   ARM: dts: import Beelink GT-King/Pro DTs from Linux 5.10
->   boards: amlogic: add Beelink S922X board family support
->   boards: amlogic: add Beelink GT-King defconfig
->   boards: amlogic: add Beelink GT-King Pro defconfig
->   boards: amlogic: update documentation for Beelink GT-King/Pro
+> This can be achieved by using the OPEN_DRAIN flag instead if the
+> ACTIVE_HIGH, what will leave the pin in input to achieve high state (pin
+> has the pull-up) and solve the issue.
 > 
->  arch/arm/dts/Makefile                       |   2 +
->  arch/arm/dts/meson-g12b-gtking-pro.dts      | 125 ++++++
->  arch/arm/dts/meson-g12b-gtking.dts          | 145 +++++++
->  arch/arm/dts/meson-g12b-w400.dtsi           | 425 ++++++++++++++++++++
->  board/amlogic/beelink-s922x/MAINTAINERS     |   9 +
->  board/amlogic/beelink-s922x/Makefile        |   6 +
->  board/amlogic/beelink-s922x/beelink-s922x.c |  54 +++
->  configs/beelink-gtking_defconfig            |  71 ++++
->  configs/beelink-gtkingpro_defconfig         |  71 ++++
->  doc/board/amlogic/beelink-gtking.rst        | 115 ++++++
->  doc/board/amlogic/beelink-gtkingpro.rst     | 116 ++++++
->  doc/board/amlogic/index.rst                 |   4 +-
->  12 files changed, 1142 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/dts/meson-g12b-gtking-pro.dts
->  create mode 100644 arch/arm/dts/meson-g12b-gtking.dts
->  create mode 100644 arch/arm/dts/meson-g12b-w400.dtsi
->  create mode 100644 board/amlogic/beelink-s922x/MAINTAINERS
->  create mode 100644 board/amlogic/beelink-s922x/Makefile
->  create mode 100644 board/amlogic/beelink-s922x/beelink-s922x.c
->  create mode 100644 configs/beelink-gtking_defconfig
->  create mode 100644 configs/beelink-gtkingpro_defconfig
->  create mode 100644 doc/board/amlogic/beelink-gtking.rst
->  create mode 100644 doc/board/amlogic/beelink-gtkingpro.rst
+> Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> This is a result of the discussion in the "[PATCH/RFC] board: amlogic:
+> Fix Odroid-C4 SD card reboot issue" thread:
+> https://lists.denx.de/pipermail/u-boot/2020-December/435295.html
+> 
+> Patch for the upstream Linux DTS has been already submitted:
+> https://lore.kernel.org/linux-amlogic/20201218102228.16211-1-m.szyprowski@samsung.com/
+> ---
+>  arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> index c431988075..fbcc8287c5 100644
+> --- a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> @@ -11,3 +11,7 @@
+>  	snps,reset-delays-us = <0 10000 1000000>;
+>  	snps,reset-active-low;
+>  };
+> +
+> +&tflash_vdd {
+> +	gpio = <&gpio_ao GPIOAO_3 GPIO_OPEN_DRAIN>;
+> +};
 > 
 
-Applying to u-boot-amlogic-next
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Applying it to u-boot-amlogic, and will send it asap so it's applied for v2020.10
+
+Neil
