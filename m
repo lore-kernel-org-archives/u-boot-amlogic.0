@@ -1,30 +1,30 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web12.7531.1608284597843559014
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web09.7703.1608284622330843616
  for <u-boot-amlogic@groups.io>;
- Fri, 18 Dec 2020 01:43:18 -0800
-Received: by mail-wr1-f45.google.com with SMTP id c5so1421706wrp.6
-        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 01:43:17 -0800 (PST)
+ Fri, 18 Dec 2020 01:43:42 -0800
+Received: by mail-wr1-f47.google.com with SMTP id w5so1405855wrm.11
+        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 01:43:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:autocrypt:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=d2V0uvA2Me6clbSCxZe+QhqsS8fgAVc2vdXn1jw+AS8=;
-        b=dSh0uen8QghZ1IiL5ExHRXNPS6wKeUw1L3kuP+z9s6nvlr2KJtM7Qjq4BJ1IIomO0p
-         xqfc32Z4AOW483UU821jYguFxFjxrRiGXCz2wzcZwzPk4EYp5fH7ttBtFxUXZ0BAN0UW
-         WUlJfc/6dU7dD4sUg0uga6rrqDhiCVRFgmcmKgvsfqvZBk2iKcelDejfirfDItEp1Fdw
-         t/lecS3xA4jiiHAN5052rAxdbrcaKD+R2fHvCl1e5NBNBJflkOMQADr8Pxu3bcmpxMJP
-         yntpNve6mrbp3l9PDOLT0UQKOpWqyq12r4Yxm89u5jHX8XXxv4Wk7fErnSVH8ZFXn3yC
-         rpww==
+        bh=riXNhwu6QVUbvAIBHSYPEHu4XiopFfLuVH7acrDam/I=;
+        b=RUvlccjfRgnIuajclJR08gYlt8t2m8T5iLeIcpf5HJ6asyk/RBHK6CVvkhfwxAJerz
+         e+CPBe/N2iTsqZTP7P46xltksVlzfinS48UYsdB2XwoDlJzFszqwapawhb5+5R2EqhC5
+         UuPkvx7tFtRbKFikouyJ/i/+n+XMmYmXiukRFukQCYl54zSTLGoouyFmY/Z+RQnbicRB
+         Ks6XRi3B6MO15s7Sc10OT0hxeyajOj8NCBuIdICiTW5xdccZO/6boPXmMr6pgGJuKDBP
+         Oq02jCvDL4UB4rBDyLnILbPDULRjaLZNo0TxBfoSH+JII+9+GnOc+J3e7pyTjHd9FgXV
+         lzmw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/5] boards: amlogic: add Beelink GT-King defconfig
+Subject: Re: [PATCH 4/5] boards: amlogic: add Beelink GT-King Pro defconfig
 References: <20201218084545.29135-1-christianshewitt@gmail.com>
- <20201218084545.29135-4-christianshewitt@gmail.com>
+ <20201218084545.29135-5-christianshewitt@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <97d23c04-92d9-958a-167e-f90c76317617@baylibre.com>
-Date: Fri, 18 Dec 2020 10:43:14 +0100
+Message-ID: <732fdedf-269c-6574-4b80-49a2f432fb4c@baylibre.com>
+Date: Fri, 18 Dec 2020 10:43:39 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201218084545.29135-4-christianshewitt@gmail.com>
+In-Reply-To: <20201218084545.29135-5-christianshewitt@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -32,20 +32,20 @@ To: Christian Hewitt <christianshewitt@gmail.com>, u-boot@lists.denx.de, u-boot-
 List-ID: <u-boot-amlogic@groups.io>
 
 On 18/12/2020 09:45, Christian Hewitt wrote:
-> Add a defconfig for the Beelink GT-King Android STB, which is based
+> Add a defconfig for the Beelink GT-King Pro Android STB, which is based
 > on the Amlogic W400 reference design.
 > 
 > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  configs/beelink-gtking_defconfig | 71 ++++++++++++++++++++++++++++++++
+>  configs/beelink-gtkingpro_defconfig | 71 +++++++++++++++++++++++++++++
 >  1 file changed, 71 insertions(+)
->  create mode 100644 configs/beelink-gtking_defconfig
+>  create mode 100644 configs/beelink-gtkingpro_defconfig
 > 
-> diff --git a/configs/beelink-gtking_defconfig b/configs/beelink-gtking_defconfig
+> diff --git a/configs/beelink-gtkingpro_defconfig b/configs/beelink-gtkingpro_defconfig
 > new file mode 100644
-> index 0000000000..ea428874af
+> index 0000000000..569031600a
 > --- /dev/null
-> +++ b/configs/beelink-gtking_defconfig
+> +++ b/configs/beelink-gtkingpro_defconfig
 > @@ -0,0 +1,71 @@
 > +CONFIG_ARM=y
 > +CONFIG_SYS_BOARD="beelink-s922x"
@@ -58,7 +58,7 @@ On 18/12/2020 09:45, Christian Hewitt wrote:
 > +CONFIG_DEBUG_UART_BASE=0xff803000
 > +CONFIG_DEBUG_UART_CLOCK=24000000
 > +CONFIG_IDENT_STRING=" beelink"
-> +CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-gtking"
+> +CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-gtking-pro"
 > +CONFIG_DEBUG_UART=y
 > +CONFIG_OF_BOARD_SETUP=y
 > +CONFIG_MISC_INIT_R=y
