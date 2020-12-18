@@ -1,327 +1,777 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web12.7400.1608283498664494782
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.7485.1608284538501015106
  for <u-boot-amlogic@groups.io>;
- Fri, 18 Dec 2020 01:24:59 -0800
-Received: by mail-wm1-f51.google.com with SMTP id k10so1630067wmi.3
-        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 01:24:58 -0800 (PST)
+ Fri, 18 Dec 2020 01:42:18 -0800
+Received: by mail-wr1-f47.google.com with SMTP id 91so1421737wrj.7
+        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 01:42:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=subject:to:references:from:autocrypt:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=DNArhlNrRexg5Em48x+kCqbzBwYoVwJaTrUOOFlcIis=;
-        b=Prcc5c9N/JX9cuW/PCtFlAO9VIAXNduIaR2RFqVgP7cM+EuejNGFB4+vCmJORvBelt
-         Vo3Ag05E50VBKJea6aFBMnp2W1WQ395fQdh712OaDU+ij5Em3PTD9xvz15qeya2fS043
-         GtBMTWLnebyH4s3Nx6HgTpZG+zgFooC8Gopf34sFSPV5ufEfgUzAJdQIUsg/be54MJr3
-         cSlbCAWV8/7z8476NtbmY7rGSiSEz5Smth4LtdJj+OiPAB6MYs5Pwg68Aolk2KzDQlHq
-         A0Yh7K5PYsDp0kOfU7LklVJBa62TVC81U0/9DLYu/Pj2cpNGZt/byVYnAOK03vPAq8to
-         /VsQ==
+        bh=IlgsUHUUSDN5kCPnZCQ9N8v6TrAVJPtrPXa9U8LpN1I=;
+        b=d3qAc5gMaQ0NM8rvnVfY70zYE7rvxfeKUE2USQYq7R11QAV7OvNklCOZIbHlMWPuJn
+         CcNh2HW2fY46OnglikOcizkRXi4eybi7u/k9FeFwLFDOXvezImsoddNwi79ch2ZYQx19
+         5M95Mk8NQMtrzVvxY0wGcvqiEYlIrXGabmhNBDct6CpmE9bJbvl8GjkgByk+20DG7xkT
+         u2GI4hova+pRUSOSr/HvVg/rShOFGa0XY5Hut/nrz6anT4b6fptcGhcLavbzLNxuYcfU
+         P0Qb4DW+ofx64ApZGjxDmryF7Gt5wA0ElRQMzF8EpB7+3lwaHMAH+CP/ehweQiT10N/Z
+         VckA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH/RFC] board: amlogic: Fix Odroid-C4 SD card reboot issue
-References: <CGME20201217090636eucas1p12fcdef289555f4efc425a8f325ddfe4c@eucas1p1.samsung.com>
- <20201217090624.14902-1-m.szyprowski@samsung.com>
- <0c53e06e-afa4-2308-7d5d-ba08b1d0caf3@baylibre.com>
- <b006ae83-3a27-f0dd-c905-5ac7f41be067@samsung.com>
+Subject: Re: [PATCH 1/5] ARM: dts: import Beelink GT-King/Pro DTs from Linux 5.10
+References: <20201218084545.29135-1-christianshewitt@gmail.com>
+ <20201218084545.29135-2-christianshewitt@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <eea5161b-c5bc-3804-5f88-318052c29a31@baylibre.com>
-Date: Fri, 18 Dec 2020 10:24:54 +0100
+Message-ID: <b19c8c6c-ed7f-6e25-cff1-9111dcf86356@baylibre.com>
+Date: Fri, 18 Dec 2020 10:42:14 +0100
 MIME-Version: 1.0
-In-Reply-To: <b006ae83-3a27-f0dd-c905-5ac7f41be067@samsung.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20201218084545.29135-2-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, tobetter <tobetter@gmail.com>
+Content-Transfer-Encoding: 7bit
+To: Christian Hewitt <christianshewitt@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+On 18/12/2020 09:45, Christian Hewitt wrote:
+> Import the Beelink GT-King/Pro and supporting meson-g12b-w400.dtsi file
+> from Linux 5.10.
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  arch/arm/dts/Makefile                  |   2 +
+>  arch/arm/dts/meson-g12b-gtking-pro.dts | 125 ++++++++
+>  arch/arm/dts/meson-g12b-gtking.dts     | 145 +++++++++
+>  arch/arm/dts/meson-g12b-w400.dtsi      | 425 +++++++++++++++++++++++++
+>  4 files changed, 697 insertions(+)
+>  create mode 100644 arch/arm/dts/meson-g12b-gtking-pro.dts
+>  create mode 100644 arch/arm/dts/meson-g12b-gtking.dts
+>  create mode 100644 arch/arm/dts/meson-g12b-w400.dtsi
+> 
+> diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+> index 02dd6a832f..287ac63da4 100644
+> --- a/arch/arm/dts/Makefile
+> +++ b/arch/arm/dts/Makefile
+> @@ -170,6 +170,8 @@ dtb-$(CONFIG_ARCH_MESON) += \
+>  	meson-axg-s400.dtb \
+>  	meson-g12a-u200.dtb \
+>  	meson-g12a-sei510.dtb \
+> +	meson-g12b-gtking.dtb \
+> +	meson-g12b-gtking-pro.dtb \
+>  	meson-g12b-odroid-n2.dtb \
+>  	meson-g12b-odroid-n2-plus.dtb \
+>  	meson-g12b-a311d-khadas-vim3.dtb \
+> diff --git a/arch/arm/dts/meson-g12b-gtking-pro.dts b/arch/arm/dts/meson-g12b-gtking-pro.dts
+> new file mode 100644
+> index 0000000000..f0c56a16af
+> --- /dev/null
+> +++ b/arch/arm/dts/meson-g12b-gtking-pro.dts
+> @@ -0,0 +1,125 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "meson-g12b-w400.dtsi"
+> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+> +
+> +/ {
+> +	compatible = "azw,gtking", "amlogic,g12b";
+> +	model = "Beelink GT-King Pro";
+> +
+> +	gpio-keys-polled {
+> +		compatible = "gpio-keys-polled";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		poll-interval = <100>;
+> +
+> +		power-button {
+> +			label = "power";
+> +			linux,code = <KEY_POWER>;
+> +			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		white {
+> +			label = "power:white";
+> +			gpios = <&gpio_ao GPIOAO_11 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +	};
+> +
+> +	sound {
+> +		compatible = "amlogic,axg-sound-card";
+> +		model = "G12B-GTKING-PRO";
+> +		audio-aux-devs = <&tdmout_b>;
+> +		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+> +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+> +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
+> +				"TDM_B Playback", "TDMOUT_B OUT";
+> +
+> +		assigned-clocks = <&clkc CLKID_MPLL2>,
+> +				  <&clkc CLKID_MPLL0>,
+> +				  <&clkc CLKID_MPLL1>;
+> +		assigned-clock-parents = <0>, <0>, <0>;
+> +		assigned-clock-rates = <294912000>,
+> +				       <270950400>,
+> +				       <393216000>;
+> +		status = "okay";
+> +
+> +		dai-link-0 {
+> +			sound-dai = <&frddr_a>;
+> +		};
+> +
+> +		dai-link-1 {
+> +			sound-dai = <&frddr_b>;
+> +		};
+> +
+> +		dai-link-2 {
+> +			sound-dai = <&frddr_c>;
+> +		};
+> +
+> +		/* 8ch hdmi interface */
+> +		dai-link-3 {
+> +			sound-dai = <&tdmif_b>;
+> +			dai-format = "i2s";
+> +			dai-tdm-slot-tx-mask-0 = <1 1>;
+> +			dai-tdm-slot-tx-mask-1 = <1 1>;
+> +			dai-tdm-slot-tx-mask-2 = <1 1>;
+> +			dai-tdm-slot-tx-mask-3 = <1 1>;
+> +			mclk-fs = <256>;
+> +
+> +			codec {
+> +				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
+> +			};
+> +		};
+> +
+> +		dai-link-4 {
+> +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
+> +
+> +			codec {
+> +				sound-dai = <&hdmi_tx>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&arb {
+> +	status = "okay";
+> +};
+> +
+> +&clkc_audio {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_a {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_b {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_c {
+> +	status = "okay";
+> +};
+> +
+> +&tdmif_b {
+> +	status = "okay";
+> +};
+> +
+> +&tdmout_b {
+> +	status = "okay";
+> +};
+> +
+> +&tohdmitx {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/dts/meson-g12b-gtking.dts b/arch/arm/dts/meson-g12b-gtking.dts
+> new file mode 100644
+> index 0000000000..eeb7bc5539
+> --- /dev/null
+> +++ b/arch/arm/dts/meson-g12b-gtking.dts
+> @@ -0,0 +1,145 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "meson-g12b-w400.dtsi"
+> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+> +
+> +/ {
+> +	compatible = "azw,gtking", "amlogic,g12b";
+> +	model = "Beelink GT-King";
+> +
+> +	spdif_dit: audio-codec-1 {
+> +		#sound-dai-cells = <0>;
+> +		compatible = "linux,spdif-dit";
+> +		status = "okay";
+> +		sound-name-prefix = "DIT";
+> +	};
+> +
+> +	sound {
+> +		compatible = "amlogic,axg-sound-card";
+> +		model = "G12B-GTKING";
+> +		audio-aux-devs = <&tdmout_b>;
+> +		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+> +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+> +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
+> +				"TDM_B Playback", "TDMOUT_B OUT",
+> +				"SPDIFOUT IN 0", "FRDDR_A OUT 3",
+> +				"SPDIFOUT IN 1", "FRDDR_B OUT 3",
+> +				"SPDIFOUT IN 2", "FRDDR_C OUT 3";
+> +
+> +		assigned-clocks = <&clkc CLKID_MPLL2>,
+> +				  <&clkc CLKID_MPLL0>,
+> +				  <&clkc CLKID_MPLL1>;
+> +		assigned-clock-parents = <0>, <0>, <0>;
+> +		assigned-clock-rates = <294912000>,
+> +				       <270950400>,
+> +				       <393216000>;
+> +		status = "okay";
+> +
+> +		dai-link-0 {
+> +			sound-dai = <&frddr_a>;
+> +		};
+> +
+> +		dai-link-1 {
+> +			sound-dai = <&frddr_b>;
+> +		};
+> +
+> +		dai-link-2 {
+> +			sound-dai = <&frddr_c>;
+> +		};
+> +
+> +		/* 8ch hdmi interface */
+> +		dai-link-3 {
+> +			sound-dai = <&tdmif_b>;
+> +			dai-format = "i2s";
+> +			dai-tdm-slot-tx-mask-0 = <1 1>;
+> +			dai-tdm-slot-tx-mask-1 = <1 1>;
+> +			dai-tdm-slot-tx-mask-2 = <1 1>;
+> +			dai-tdm-slot-tx-mask-3 = <1 1>;
+> +			mclk-fs = <256>;
+> +
+> +			codec {
+> +				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
+> +			};
+> +		};
+> +
+> +		/* spdif hdmi or toslink interface */
+> +		dai-link-4 {
+> +			sound-dai = <&spdifout>;
+> +
+> +			codec-0 {
+> +				sound-dai = <&spdif_dit>;
+> +			};
+> +
+> +			codec-1 {
+> +				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_A>;
+> +			};
+> +		};
+> +
+> +		/* spdif hdmi interface */
+> +		dai-link-5 {
+> +			sound-dai = <&spdifout_b>;
+> +
+> +			codec {
+> +				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_B>;
+> +			};
+> +		};
+> +
+> +		/* hdmi glue */
+> +		dai-link-6 {
+> +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
+> +
+> +			codec {
+> +				sound-dai = <&hdmi_tx>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&arb {
+> +	status = "okay";
+> +};
+> +
+> +&clkc_audio {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_a {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_b {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_c {
+> +	status = "okay";
+> +};
+> +
+> +&spdifout {
+> +	pinctrl-0 = <&spdif_out_h_pins>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +};
+> +
+> +&spdifout_b {
+> +	status = "okay";
+> +};
+> +
+> +&tdmif_b {
+> +	status = "okay";
+> +};
+> +
+> +&tdmout_b {
+> +	status = "okay";
+> +};
+> +
+> +&tohdmitx {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/dts/meson-g12b-w400.dtsi b/arch/arm/dts/meson-g12b-w400.dtsi
+> new file mode 100644
+> index 0000000000..2802ddbb83
+> --- /dev/null
+> +++ b/arch/arm/dts/meson-g12b-w400.dtsi
+> @@ -0,0 +1,425 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "meson-g12b.dtsi"
+> +#include "meson-g12b-s922x.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/meson-g12a-gpio.h>
+> +
+> +/ {
+> +	aliases {
+> +		serial0 = &uart_AO;
+> +		ethernet0 = &ethmac;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x40000000>;
+> +	};
+> +
+> +	emmc_pwrseq: emmc-pwrseq {
+> +		compatible = "mmc-pwrseq-emmc";
+> +		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
+> +		clocks = <&wifi32k>;
+> +		clock-names = "ext_clock";
+> +	};
+> +
+> +	flash_1v8: regulator-flash_1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "FLASH_1V8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc_3v3>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	main_12v: regulator-main_12v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "12V";
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc_5v: regulator-vcc_5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VCC_5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&main_12v>;
+> +
+> +		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
+> +		enable-active-high;
+> +	};
+> +
+> +	vcc_1v8: regulator-vcc_1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VCC_1V8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc_3v3>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc_3v3: regulator-vcc_3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VCC_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vddao_3v3>;
+> +		regulator-always-on;
+> +		/* FIXME: actually controlled by VDDCPU_B_EN */
+> +	};
+> +
+> +	vddcpu_a: regulator-vddcpu-a {
+> +		/*
+> +		 * MP1653 Regulator.
+> +		 */
+> +		compatible = "pwm-regulator";
+> +
+> +		regulator-name = "VDDCPU_A";
+> +		regulator-min-microvolt = <721000>;
+> +		regulator-max-microvolt = <1022000>;
+> +
+> +		vin-supply = <&main_12v>;
+> +
+> +		pwms = <&pwm_ab 0 1250 0>;
+> +		pwm-dutycycle-range = <100 0>;
+> +
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vddcpu_b: regulator-vddcpu-b {
+> +		/*
+> +		 * MP1652 Regulator.
+> +		 */
+> +		compatible = "pwm-regulator";
+> +
+> +		regulator-name = "VDDCPU_B";
+> +		regulator-min-microvolt = <721000>;
+> +		regulator-max-microvolt = <1022000>;
+> +
+> +		vin-supply = <&main_12v>;
+> +
+> +		pwms = <&pwm_AO_cd 1 1250 0>;
+> +		pwm-dutycycle-range = <100 0>;
+> +
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	usb1_pow: regulator-usb1-pow {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "USB1_POW";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&vcc_5v>;
+> +
+> +		/* connected to SY6280A Power Switch */
+> +		gpio = <&gpio GPIOA_8 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	usb_pwr_en: regulator-usb-pwr-en {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "USB_PWR_EN";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&vcc_5v>;
+> +
+> +		/* Connected to USB3 Type-A Port power enable */
+> +		gpio = <&gpio GPIOAO_7 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	vddao_1v8: regulator-vddao-1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDAO_1V8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vddao_3v3>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vddao_3v3: regulator-vddao-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDAO_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&main_12v>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	cvbs-connector {
+> +		compatible = "composite-video-connector";
+> +
+> +		port {
+> +			cvbs_connector_in: endpoint {
+> +				remote-endpoint = <&cvbs_vdac_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	hdmi-connector {
+> +		compatible = "hdmi-connector";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_connector_in: endpoint {
+> +				remote-endpoint = <&hdmi_tx_tmds_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	wifi32k: wifi32k {
+> +		compatible = "pwm-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
+> +	};
+> +};
+> +
+> +&cec_AO {
+> +	pinctrl-0 = <&cec_ao_a_h_pins>;
+> +	pinctrl-names = "default";
+> +	status = "disabled";
+> +	hdmi-phandle = <&hdmi_tx>;
+> +};
+> +
+> +&cecb_AO {
+> +	pinctrl-0 = <&cec_ao_b_h_pins>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +	hdmi-phandle = <&hdmi_tx>;
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply = <&vddcpu_b>;
+> +	operating-points-v2 = <&cpu_opp_table_0>;
+> +	clocks = <&clkc CLKID_CPU_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu1 {
+> +	cpu-supply = <&vddcpu_b>;
+> +	operating-points-v2 = <&cpu_opp_table_0>;
+> +	clocks = <&clkc CLKID_CPU_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu100 {
+> +	cpu-supply = <&vddcpu_a>;
+> +	operating-points-v2 = <&cpub_opp_table_1>;
+> +	clocks = <&clkc CLKID_CPUB_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu101 {
+> +	cpu-supply = <&vddcpu_a>;
+> +	operating-points-v2 = <&cpub_opp_table_1>;
+> +	clocks = <&clkc CLKID_CPUB_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu102 {
+> +	cpu-supply = <&vddcpu_a>;
+> +	operating-points-v2 = <&cpub_opp_table_1>;
+> +	clocks = <&clkc CLKID_CPUB_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cpu103 {
+> +	cpu-supply = <&vddcpu_a>;
+> +	operating-points-v2 = <&cpub_opp_table_1>;
+> +	clocks = <&clkc CLKID_CPUB_CLK>;
+> +	clock-latency = <50000>;
+> +};
+> +
+> +&cvbs_vdac_port {
+> +	cvbs_vdac_out: endpoint {
+> +		remote-endpoint = <&cvbs_connector_in>;
+> +	};
+> +};
+> +
+> +&ext_mdio {
+> +	external_phy: ethernet-phy@0 {
+> +		/* Realtek RTL8211F (0x001cc916) */
+> +		reg = <0>;
+> +		max-speed = <1000>;
+> +
+> +		reset-assert-us = <10000>;
+> +		reset-deassert-us = <30000>;
+> +		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+> +
+> +		interrupt-parent = <&gpio_intc>;
+> +		/* MAC_INTR on GPIOZ_14 */
+> +		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> +
+> +&ethmac {
+> +	pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +	phy-mode = "rgmii";
+> +	phy-handle = <&external_phy>;
+> +	amlogic,tx-delay-ns = <2>;
+> +};
+> +
+> +&hdmi_tx {
+> +	status = "okay";
+> +	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
+> +	pinctrl-names = "default";
+> +	hdmi-supply = <&vcc_5v>;
+> +};
+> +
+> +&hdmi_tx_tmds_port {
+> +	hdmi_tx_tmds_out: endpoint {
+> +		remote-endpoint = <&hdmi_connector_in>;
+> +	};
+> +};
+> +
+> +&ir {
+> +	status = "okay";
+> +	pinctrl-0 = <&remote_input_ao_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&pwm_ab {
+> +	pinctrl-0 = <&pwm_a_e_pins>;
+> +	pinctrl-names = "default";
+> +	clocks = <&xtal>;
+> +	clock-names = "clkin0";
+> +	status = "okay";
+> +};
+> +
+> +&pwm_AO_cd {
+> +	pinctrl-0 = <&pwm_ao_d_e_pins>;
+> +	pinctrl-names = "default";
+> +	clocks = <&xtal>;
+> +	clock-names = "clkin1";
+> +	status = "okay";
+> +};
+> +
+> +&pwm_ef {
+> +	pinctrl-0 = <&pwm_e_pins>;
+> +	pinctrl-names = "default";
+> +	clocks = <&xtal>;
+> +	clock-names = "clkin0";
+> +	status = "okay";
+> +};
+> +
+> +/* SDIO */
+> +&sd_emmc_a {
+> +	status = "okay";
+> +	pinctrl-0 = <&sdio_pins>;
+> +	pinctrl-1 = <&sdio_clk_gate_pins>;
+> +	pinctrl-names = "default", "clk-gate";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	max-frequency = <100000000>;
+> +
+> +	/* WiFi firmware requires power to be kept while in suspend */
+> +	keep-power-in-suspend;
+> +
+> +	non-removable;
+> +	disable-wp;
+> +
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +
+> +	vmmc-supply = <&vddao_3v3>;
+> +	vqmmc-supply = <&vddao_1v8>;
+> +
+> +	brcmf: wifi@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +	};
+> +};
+> +
+> +/* SD card */
+> +&sd_emmc_b {
+> +	status = "okay";
+> +	pinctrl-0 = <&sdcard_c_pins>;
+> +	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
+> +	pinctrl-names = "default", "clk-gate";
+> +
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	max-frequency = <50000000>;
+> +	disable-wp;
+> +
+> +	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
+> +	vmmc-supply = <&vddao_3v3>;
+> +	vqmmc-supply = <&vddao_3v3>;
+> +};
+> +
+> +/* eMMC */
+> +&sd_emmc_c {
+> +	status = "okay";
+> +	pinctrl-0 = <&emmc_ctrl_pins>, <&emmc_data_8b_pins>, <&emmc_ds_pins>;
+> +	pinctrl-1 = <&emmc_clk_gate_pins>;
+> +	pinctrl-names = "default", "clk-gate";
+> +
+> +	bus-width = <8>;
+> +	cap-mmc-highspeed;
+> +	max-frequency = <100000000>;
+> +	disable-wp;
+> +
+> +	mmc-pwrseq = <&emmc_pwrseq>;
+> +	vmmc-supply = <&vcc_3v3>;
+> +	vqmmc-supply = <&flash_1v8>;
+> +};
+> +
+> +&uart_A {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+> +	pinctrl-names = "default";
+> +	uart-has-rtscts;
+> +
+> +	bluetooth {
+> +		compatible = "brcm,bcm43438-bt";
+> +		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+> +		max-speed = <2000000>;
+> +		clocks = <&wifi32k>;
+> +		clock-names = "lpo";
+> +	};
+> +};
+> +
+> +&uart_AO {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_ao_a_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&usb {
+> +	status = "okay";
+> +	dr_mode = "host";
+> +	vbus-supply = <&usb_pwr_en>;
+> +};
+> +
+> +&usb2_phy0 {
+> +	phy-supply = <&usb1_pow>;
+> +};
+> +
+> +&usb2_phy1 {
+> +	phy-supply = <&usb1_pow>;
+> +};
+> 
 
-On 18/12/2020 10:11, Marek Szyprowski wrote:
-> Hi Neil,
-> 
-> On 18.12.2020 09:36, Neil Armstrong wrote:
->> On 17/12/2020 10:06, Marek Szyprowski wrote:
->>> For the proper reboot Odroid C4 board requires to switch TFLASH_VDD_EN
->>> pin to the input (high impedance?) mode, otherwise the board is stuck
->>> in the middle of loading early stages of the bootloader from SD card.
->> Did you try taking the regulator-tflash_vdd and doing a disable/enable sequence
->> to reset the card ?
->>
->> The GPIOAO_3 has a default pull-up, so I don't see why moving it to input could change
->> anything.
->>
->> So maybe simply doing a 0->1 transition could do the same, using the regulator
->> would be much better.
->>
->> Can't we add "shutdown" or equivalent method to  the mmc driver that could do this
->> directly with the vdd regulator ?
-> 
-> Yes, I've tried all combinations of playing this that GPIO and regulator 
-> that came to my mind. Switching pin to the input is the only one I've 
-> found working.
-
-Thanks for the dumps !
-
-Could you try switching the tflash_vdd to opendrain like :
-
---->8---
-
---- a/arch/arm/dts/meson-sm1-odroid-c4.dts
-+++ b/arch/arm/dts/meson-sm1-odroid-c4.dts
-@@ -52,7 +52,7 @@
-                regulator-min-microvolt = <3300000>;
-                regulator-max-microvolt = <3300000>;
-
--               gpio = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
-+               gpio = <&gpio_ao GPIOAO_3 GPIO_OPEN_DRAIN>;
-                enable-active-high;
-                regulator-always-on;
-        };
-
---->8---
-
-This should leave the pin in input to achieve high state, and solve the issue.
-
-Neil
-
-> 
-> It looks that there must be some additional (hw?) logic there, which 
-> does the SD card reset during the BL, which in turn conflicts with the 
-> constant 0 or constant 1 driven from TFLASH_VDD_EN gpio. This is also 
-> what the vendor's kernel does: 
-> https://github.com/hardkernel/linux/commit/84628497332a5cd2154c92436ec86fad900fe0af 
-> That commit states that it is according to the odroid schematic, but on 
-> the public schematics of C4 I cannot find anything what might need such 
-> workaround/fix.
-> 
-> Here is how it behaves without the fix:
-> 
-> 1. if SD card is not used (TFLASH regulator is not even instantiated, so 
-> GPIO pin is in input state as its initial value left by earlier BL 
-> stages), the reboot works fine:
-> 
-> --->8---
-> 
-> U-Boot 2021.01-rc3 (Dec 18 2020 - 10:00:48 +0100) odroid-c4
-> 
-> Model: Hardkernel ODROID-C4
-> SoC:   Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2)
-> DRAM:  3.8 GiB
-> MMC:   sd@ffe05000: 0, mmc@ffe07000: 1
-> In:    serial
-> Out:   serial
-> Err:   serial
-> Net:   eth0: ethernet@ff3f0000
-> Hit any key to stop autoboot:  0
-> =>
-> => reset
-> resetting ...
-> bl31 reboot reason: 0xd
-> bl31 reboot reason: 0x0
-> system cmd  1.
-> SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;SD?:0;SD:0;READ:0;0.0;CHK:0;
-> bl2_stage_init 0x01
-> bl2_stage_init 0x81
-> hw id: 0x0000 - pwm id 0x01
-> bl2_stage_init 0xc1
-> bl2_stage_init 0x02
-> 
-> no sdio debug board detected
-> L0:00000000
-> L1:00000703
-> L2:00008067
-> L3:15000020
-> S1:00000000
-> B2:20282000
-> B1:a0f83180
-> 
-> TE: 143230
-> 
-> BL2 Built : 22:54:32, Apr 28 2020. g12a ga659aac-dirty - 
-> changqing.gao@droid11
-> 
-> Board ID = 1
-> Set cpu clk to 24M
-> Set clk81 to 24M
-> Use GP1_pll as DSU clk.
-> DSU clk: 1200 Mhz
-> CPU clk: 1200 MHz
-> Set clk81 to 166.6M
-> DDR driver_vesion: LPDDR4_PHY_V_0_1_15 build time: Apr 28 2020 22:54:28
-> board id: 1
-> Load FIP HDR from SD, src: 0x00010200, des: 0xfffd0000, size: 
-> 0x00004000, part: 0
-> fw parse done
-> Load ddrfw from SD, src: 0x00060200, des: 0xfffd0000, size: 0x0000c000, 
-> part: 0
-> Load ddrfw from SD, src: 0x00038200, des: 0xfffd0000, size: 0x00004000, 
-> part: 0
-> PIEI prepare done
-> fastboot data load
-> fastboot data verify
-> verify result: 255
-> Cfg max: 2, cur: 1. Board id: 255. Force loop cfg
-> DDR4 probe
-> ddr clk to 1320MHz
-> Load ddrfw from SD, src: 0x00014200, des: 0xfffd0000, size: 0x0000c000, 
-> part: 0
-> 
-> dmc_version 0001
-> Check phy result
-> INFO : End of initialization
-> INFO : End of read enable training
-> INFO : End of fine write leveling
-> INFO : End of read dq deskew training
-> INFO : End of MPR read delay center optimization
-> INFO : End of Write leveling coarse delay
-> INFO : End of write delay center optimization
-> INFO : End of read delay center optimization
-> INFO : End of max read latency training
-> INFO : Training has run successfully!
-> 1D training succeed
-> Load ddrfw from SD, src: 0x00020200, des: 0xfffd0000, size: 0x0000c000, 
-> part: 0
-> Check phy result
-> INFO : End of initialization
-> INFO : End of 2D read delay Voltage center optimization
-> INFO : End of 2D write delay Voltage center optimization
-> INFO : Training has run successfully!
-> 
-> R0_RxClkDly_Margin==94 ps 8
-> R0_TxDqDly_Margi==106 ps 9
-> 
-> 
-> R1_RxClkDly_Margin==0 ps 0
-> R1_TxDqDly_Margi==0 ps 0
-> 
->   dwc_ddrphy_apb_wr((0<<20)|(2<<16)|(0<<12)|(0xb0):0001
-> 
-> soc_vref_reg_value 0x 0000004e 0000004f 0000004e 0000004f 00000050 
-> 0000004f 0000004f 0000004e 0000004d 0000004c 0000004f 0000004d 00000050 
-> 00000050 0000004f 0000004f 0000004e 0000004f 0000004e 0000004e 0000004e 
-> 0000004d 0000004e 0000004e 00000050 0000004e 0000004f 0000004d 0000004d 
-> 0000004e 0000004e 0000004d dram_vref_reg_value 0x 00000022
-> 2D training succeed
-> aml_ddr_fw_vesion: LPDDR4_PHY_V_0_1_15 build time: Jun 18 2019 20:29:43
-> auto size-- 65535DDR cs0 size: 2048MB
-> DDR cs1 size: 2048MB
-> DMC_DDR_CTRL: 00700024DDR size: 3928MB
-> cs0 DataBus test pass
-> cs1 DataBus test pass
-> cs0 AddrBus test pass
-> cs1 AddrBus test pass
-> 
-> non-sec scramble use zero key
-> ddr scramble enabled
-> 
-> 100bdlr_step_size ps== 425
-> result report
-> boot times 1Enable ddr reg access
-> Load FIP HDR from SD, src: 0x00010200, des: 0x01700000, size: 
-> 0x00004000, part: 0
-> Load BL3X from SD, src: 0x0006c200, des: 0x0175c000, size: 0x00098000, 
-> part: 0
-> 0.0;M3 CHK:0;cm4_sp_mode 0
-> MVN_1=0x00000000
-> MVN_2=0x00000000
-> [Image: g12a_v1.1.3386-3b31431 2019-05-21 10:41:54 luan.yuan@droid15-sz]
-> OPS=0x10
-> ring efuse init
-> 2b 0c 10 00 01 15 06 00 00 11 36 30 43 57 50 50
-> [1.016710 Inits done]
-> secure task start!
-> high task start!
-> low task start!
-> run into bl31
-> NOTICE:  BL31: v1.3(release):4fc40b1
-> NOTICE:  BL31: Built : 15:57:33, May 22 2019
-> NOTICE:  BL31: G12A normal boot!
-> NOTICE:  BL31: BL33 decompress pass
-> ERROR:   Error initializing runtime service opteed_fast
-> 
-> 
-> U-Boot 2021.01-rc3 (Dec 18 2020 - 10:00:48 +0100) odroid-c4
-> 
-> --->8---
-> 
-> 2. If SD card is touched, then reboot hangs somewhere between BL2->BL3 
-> stages:
-> 
-> --->8---
-> 
-> U-Boot 2021.01-rc3 (Dec 18 2020 - 10:00:48 +0100) odroid-c4
-> 
-> Model: Hardkernel ODROID-C4
-> SoC:   Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2)
-> DRAM:  3.8 GiB
-> MMC:   sd@ffe05000: 0, mmc@ffe07000: 1
-> In:    serial
-> Out:   serial
-> Err:   serial
-> Net:   eth0: ethernet@ff3f0000
-> Hit any key to stop autoboot:  0
-> =>
-> => mmc info
-> Device: sd@ffe05000
-> Manufacturer ID: 74
-> OEM: 4a45
-> Name: SDU1
-> Bus Speed: 50000000
-> Mode: SD High Speed (50MHz)
-> Rd Block Len: 512
-> SD version 3.0
-> High Capacity: Yes
-> Capacity: 7.5 GiB
-> Bus Width: 4-bit
-> Erase Group Size: 512 Bytes
-> => reset
-> resetting ...
-> bl31 reboot reason: 0xd
-> bl31 reboot reason: 0x0
-> system cmd  1.
-> SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;SD?:0;SD:0;READ:0;0.0;CHK:0;
-> bl2_stage_init 0x01
-> bl2_stage_init 0x81
-> hw id: 0x0000 - pwm id 0x01
-> bl2_stage_init 0xc1
-> bl2_stage_init 0x02
-> 
-> no sdio debug board detected
-> L0:00000000
-> L1:00000703
-> L2:00008067
-> L3:15000020
-> S1:00000000
-> B2:20282000
-> B1:a0f83180
-> 
-> TE: 145782
-> 
-> BL2 Built : 22:54:32, Apr 28 2020. g12a ga659aac-dirty - 
-> changqing.gao@droid11
-> 
-> Board ID = 1
-> Set cpu clk to 24M
-> Set clk81 to 24M
-> Use GP1_pll as DSU clk.
-> DSU clk: 1200 Mhz
-> CPU clk: 1200 MHz
-> Set clk81 to 166.6M
-> DDR driver_vesion: LPDDR4_PHY_V_0_1_15 build time: Apr 28 2020 22:54:28
-> board id: 1
-> Load FIP HDR from SD, src: 0x00010200, des: 0xfffd0000, size: 
-> 0x00004000, part: 0
-> FIP HDR CHK: 0x00000089 ADDR 0xfffd0000
-> reset...
-> SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:1;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:2;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:3;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:4;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:5;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:6;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:7;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:8;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:9;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:A;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:B;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:C;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:D;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:E;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:F;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:10;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;LOOP:11;EMMC:800;NAND:81;SD?:0;SD:800;USB:8;
-> 
-> --->8---
-> 
->> @tobetter, could you provide us a summary of how to fix the reboot issues on the
->> N2, N2+, C4 and HC4 ?
-> 
-> On the other hand I didn't observe any reboot related issues on N2/N2+.
-> 
-> Best regards
-> 
-
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
