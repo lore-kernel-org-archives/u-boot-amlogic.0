@@ -1,24 +1,62 @@
-Received: from sibelius.xs4all.nl (sibelius.xs4all.nl [83.163.83.176])
- by mx.groups.io with SMTP id smtpd.web08.11198.1608223085680912458
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web09.7218.1608280597532730904
  for <u-boot-amlogic@groups.io>;
- Thu, 17 Dec 2020 08:38:06 -0800
-Date: Thu, 17 Dec 2020 17:38:02 +0100 (CET)
-From: Mark Kettenis <mark.kettenis@xs4all.nl>
-In-Reply-To: <20201217090624.14902-1-m.szyprowski@samsung.com> (message from
-	Marek Szyprowski on Thu, 17 Dec 2020 10:06:24 +0100)
+ Fri, 18 Dec 2020 00:36:38 -0800
+Received: by mail-wm1-f41.google.com with SMTP id c133so1491946wme.4
+        for <u-boot-amlogic@groups.io>; Fri, 18 Dec 2020 00:36:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IciUGLfdRIzjhJsGsaMQeweoBPpfwMRtItys+PpjwZk=;
+        b=a2I37JIzOsd6Vj/NHuAwzGA87xdwES27eAA6Tqx4PHbjIIfwjFsmfu4XzfuI6+AluE
+         UkZBaIyuAH7nH7A/350ue/tGm2FmSxjS2C9kUiA253IqUiFJu38KToisaGKClERTsSuU
+         yo4gr+ENawaRzl7SZmhmhwXJOR3/L5JcsvtBZj1zXqO4NVH5Z/4Ju4qn1Adq5Um68W+F
+         toU5L2nf6/bbvhhzbVNfNim6MH9IBYM4oTL5qbXay/vm7usMPFZaHX9xdXNlKPF1M8UH
+         S93jB5JUHHTcxYgnh/AdlHw+SOMMtyI8k59siamvXQPj4gmtz8rKdrRPB0zyd0tW5n9N
+         naRw==
+Return-Path: <narmstrong@baylibre.com>
 Subject: Re: [PATCH/RFC] board: amlogic: Fix Odroid-C4 SD card reboot issue
-References: <CGME20201217090636eucas1p12fcdef289555f4efc425a8f325ddfe4c@eucas1p1.samsung.com> <20201217090624.14902-1-m.szyprowski@samsung.com>
-Message-ID: <42689b5a1ca64ebc@bloch.sibelius.xs4all.nl>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, m.szyprowski@samsung.com, narmstrong@baylibre.com, jh80.chung@samsung.com, b.zolnierkie@samsung.com
+References: <CGME20201217090636eucas1p12fcdef289555f4efc425a8f325ddfe4c@eucas1p1.samsung.com>
+ <20201217090624.14902-1-m.szyprowski@samsung.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <0c53e06e-afa4-2308-7d5d-ba08b1d0caf3@baylibre.com>
+Date: Fri, 18 Dec 2020 09:36:34 +0100
+MIME-Version: 1.0
+In-Reply-To: <20201217090624.14902-1-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Dongjin Kim <tobetter@hardkernel.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
-> Date: Thu, 17 Dec 2020 10:06:24 +0100
-> 
+Hi,
+
+On 17/12/2020 10:06, Marek Szyprowski wrote:
 > For the proper reboot Odroid C4 board requires to switch TFLASH_VDD_EN
 > pin to the input (high impedance?) mode, otherwise the board is stuck
 > in the middle of loading early stages of the bootloader from SD card.
+
+Did you try taking the regulator-tflash_vdd and doing a disable/enable sequence
+to reset the card ?
+
+The GPIOAO_3 has a default pull-up, so I don't see why moving it to input could change
+anything.
+
+So maybe simply doing a 0->1 transition could do the same, using the regulator
+would be much better.
+
+Can't we add "shutdown" or equivalent method to  the mmc driver that could do this
+directly with the vdd regulator ?
+
+@tobetter, could you provide us a summary of how to fix the reboot issues on the
+N2, N2+, C4 and HC4 ?
+
+Thanks,
+Neil
+
 > 
 > This has been achieved by hijacking reset_misc() callback from the PSCI
 > firmware in the Odroid board code. The common meson cpu_reset() function,
@@ -26,24 +64,7 @@ List-ID: <u-boot-amlogic@groups.io>
 > anyway.
 > 
 > This issue doesn't happen if board is booted from eMMC.
-
-This diff fixes the same issue on my Odroid HC4 board as well.  That
-board is similar enough to the Odroid C4 that using
-odroid-c4_defconfig works.  I'm using a patched FDT from Armbian
-
-  https://github.com/armbian/build/blob/master/patch/kernel/meson64-current/0071-ODROID-HC4-Introduce-new-SBC-board-ODROID-HC4.patch
-
-which keeps the "hardkernel,odroid-c4" compatible, so that aspect of
-the diff seems to be allright.
-
-Ideally this issue would be fixed in the PSCI implementation such that
-rebooting after the OS has been loaded would work as well.  But that
-isn't possible since there is no Open Source TF-A implementation for
-these boards.
-
-Tested-by: Mark Kettenis <kettenis@openbsd.org>
-
-
+> 
 > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
 >  board/amlogic/odroid-n2/odroid-n2.c | 15 +++++++++++++++
@@ -92,7 +113,5 @@ Tested-by: Mark Kettenis <kettenis@openbsd.org>
 >  # CONFIG_CMD_BDI is not set
 >  # CONFIG_CMD_IMI is not set
 >  CONFIG_CMD_GPIO=y
-> -- 
-> 2.17.1
 > 
-> 
+
