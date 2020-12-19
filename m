@@ -1,74 +1,190 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
- by mx.groups.io with SMTP id smtpd.web12.9115.1608386330058303358
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+ by mx.groups.io with SMTP id smtpd.web11.12071.1608399630200884967
  for <u-boot-amlogic@groups.io>;
- Sat, 19 Dec 2020 05:58:50 -0800
-Received: by mail-ed1-f48.google.com with SMTP id u19so5263166edx.2
-        for <u-boot-amlogic@groups.io>; Sat, 19 Dec 2020 05:58:49 -0800 (PST)
+ Sat, 19 Dec 2020 09:40:30 -0800
+Received: by mail-il1-f179.google.com with SMTP id r17so5165660ilo.11
+        for <u-boot-amlogic@groups.io>; Sat, 19 Dec 2020 09:40:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D0Wj3hTLe7QvwO5Tkm/aGsAdbvIGY4dIAULLk39tR4k=;
-        b=fqL7dlK4vwrfsFGdZV5K6lmeJpmgtiCLdE1mlj5hOdo12X7uwGUSvuE1A7S1+/NIGP
-         LhYtnd3PjQ93dFQ33Msv1X50EwoDmr+I5I+POHgNRg1Tj92wqjOZ8xBdQgRbth4TxKfm
-         1oO8DJyYct0puFfSZOw2ltuyJEvj7gKa/+wf/xe/LAAFUHcYMaDfXecst8UGpSoH7HqP
-         nAjyzY3LY1fU/+KWgwAFXxQsBSmba/ywtkCB4UG7C+7R6mdQIqBdNsPu3a7ac9KK0qv9
-         cI+O1DOnULKlpknCljIrK8fPoHbSA+45Hnt1Q3uIY9oh6FoDiqe6fa96kCBsqZry112k
-         ncuQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=294cyEpzP4mXuF4fJ43ydwQSI0wo/65cVurUk9p+NU8=;
+        b=VXN7aWFtXDjImtDx75Uh7CdvHiLh6FcnmAGx6oJL79GVj0VlquLDXtKmtv9zTD7jIK
+         doT2/Pa43NLk6fJaxRWxNBw8ThHEEO/jgRSto7v0iMNthWar6Exc9UrSwzlRsfGKFmHJ
+         otQ1GmiFgdA8m9yCs7jV+9j+FhfWQB8/yFtEw=
+Return-Path: <sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH 00/26] dm: Preparation for enhanced of-platdata (part C)
+Date: Sat, 19 Dec 2020 10:39:52 -0700
+Message-Id: <20201219174018.1114146-1-sjg@chromium.org>
 MIME-Version: 1.0
-References: <c2dc3507-67a7-3c18-374f-050295bc1d59@gmx.net> <CAFBinCDrMj4GP2cy4dBSt_isGXf4CuhmDz=uAs+gZwUGQc=o6A@mail.gmail.com>
- <8afb2adb-4581-a847-e7e0-db1e915e9247@gmx.net> <CAFBinCD6aqna6YYvXgO5iKWa9N3yvqehhB+SAirLaUu3xScy2Q@mail.gmail.com>
- <bd9d96d2-8b66-db93-a855-5e179adca8c9@gmx.net> <0d05671d-b5f4-55e4-f5bd-58410cc92d08@baylibre.com>
- <dd160e55-55e9-1c41-afcb-22990a05a86b@gmx.net> <CAFBinCDv+TgEgf1g7xBTknr-aJMhC3K1wOW87-06YG4sQ9wUAg@mail.gmail.com>
- <531138bc-d343-1081-d208-ab6c98c1ddd8@gmx.net>
-In-Reply-To: <531138bc-d343-1081-d208-ab6c98c1ddd8@gmx.net>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Sat, 19 Dec 2020 14:58:37 +0100
-Message-ID: <CAFBinCBoWGV02hF=0DK_geLpArDtm-qbAKCrXQitpb33UU_zYA@mail.gmail.com>
-Subject: Re: [BUG]odroid-c2 does not hotplug usb-devices
-Content-Type: text/plain; charset="UTF-8"
-To: Otto Meier <gf435@gmx.net>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Simon Glass <sjg@chromium.org>, Aaron Williams <awilliams@marvell.com>, Alexey Brodkin <alexey.brodkin@synopsys.com>, Anatolij Gustschin <agust@denx.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Baruch Siach <baruch@tkos.co.il>, Bernhard Messerklinger <bernhard.messerklinger@br-automation.com>, Bin Meng <bmeng.cn@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, Eugeniy Paltsev <paltsev@synopsys.com>, Frank Wang <frank.wang@rock-chips.com>, Frank Wunderlich <frank-w@public-files.de>, GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, Heiko Schocher <hs@denx.de>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Jagannadha Sutradharudu Teki <jagannadh.teki@gmail.com>, Jens Wiklander <jens.wiklander@linaro.org>, Joe Hershberger <joe.hershberger@ni.com>, Kever Yang <kever.yang@rock-chips.com>, Ley Foon Tan <ley.foon.tan@intel.com>, Lokesh Vutla <lokeshvutla@ti.com>, Luka Kovacic <luka.kovacic@sartura.hr>, Luka Perkov <luka.perkov@sartura.hr>, Lukasz Majewski <lukma@denx.de>, Madalin Bucur <madalin.bucur@oss.nxp.com>, Marek Vasut <marex@denx.de>, Masahiro Yamada <masahiroy@kernel.org>, Michael Walle <michael@walle.cc>, Michal Simek <michal.simek@xilinx.com>, Neil Armstrong <narmstrong@baylibre.com>, Ovidiu Panait <ovidiu.panait@windriver.com>, Patrice Chotard <patrice.chotard@st.com>, Patrick Delaunay <patrick.delaunay@st.com>, Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Philippe Reynes <philippe.reynes@softathome.com>, Priyanka Jain <priyanka.jain@nxp.com>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Rick Chen <rick@andestech.com>, Robert Marko <robert.marko@sartura.hr>, Ryder Lee <ryder.lee@mediatek.com>, Sean Anderson <seanga2@gmail.com>, Shivamurthy Shastri <sshivamurthy@micron.com>, Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>, Stefan Bosch <stefan_b@posteo.net>, Stefan Roese <sr@denx.de>, Sughosh Ganu <sughosh.ganu@linaro.org>, Suneel Garapati <sgarapati@marvell.com>, Vignesh R <vigneshr@ti.com>, Walter Lozano <walter.lozano@collabora.com>, Weijie Gao <weijie.gao@mediatek.com>, Wolfgang Wallner <wolfgang.wallner@br-automation.com>, Ye Li <ye.li@nxp.com>, "hui.song" <hui.song_1@nxp.com>, u-boot-amlogic@groups.io, uboot-snps-arc@synopsys.com, uboot-stm32@st-md-mailman.stormreply.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Otto,
+At present various driver model data structures are accessed outside the
+core driver mode code. This makes it harder to adjust how certain values
+are stored, which is needed for of-platdata.
 
-On Mon, Dec 14, 2020 at 8:34 PM Otto Meier <gf435@gmx.net> wrote:
->
-> Hi Martin,
->
-> Am 13.12.20 um 19:46 schrieb Martin Blumenstingl:
-> > Hi Otto,
-> >
-> > On Mon, Dec 7, 2020 at 1:43 PM Otto Meier <gf435@gmx.net> wrote:
-> > [...]
-> >>>> So with the latest u-boot and the kernel from https://github.com/chewitt/linux/tree/amlogic-5.10.y
-> >>>> commit 725fc8df7898102f9031ba2075f763884ffa3ee8 everything is working again.
-> >>>> USB does hotplugging as expected.
-> >>> So, this fixes USB under Linux ?? It's not clear
-> > if you have time it would be great if you could figure out which of
-> > the patches from Christian's tree fixes USB hotplugging for you.
-> > Or is it fixed in Linux 5.10-rcX even without any patches?
-> >
-> The new mainline kernel 5.10.0 from Linus, without any other patches
-> does detect USB hotpluging,
-> when using u-boot DMI: Hardkernel Co., Ltd. ODROID-C2/ODROID-C2, BIOS
-> 2021.01-rc3-00039-gec79f5ce22-dirty 12/08/2020
-> and the following u-boot patch:
-[...]
-> When i use the last unpatched emmc bootable u-boot 2020.04 the kernel
-> boots, but usb hotplugging
-> does not work.
-Thank you for testing this!
+This series updates several a few more fields so that they are only
+accessed via functions.
 
-> Hope this describes my findings. If i can help further, please give me a
-> note.
-to be honest: I am a bit lost here. I don't understand how the BOOT_*
-pins interfere with USB.
-I also don't have any Odroid-C2 board myself so I cannot do any
-experiments myself.
-Neil, please let me know if you have any idea here.
+This series also includes some changes to sandbox and x86 drivers to get
+them ready for the new of-platdata.
+
+It is available at u-boot-dm/prepc-working
 
 
-Best regards,
-Martin
+Simon Glass (26):
+  sandbox: serial: Move priv into a header file
+  sandbox: i2c: Move priv into a header file
+  sandbox: Add a compatible string for spltest
+  sandbox: Update dts files to reduce SPL size
+  x86: apl: Move priv/plat structs to headers
+  x86: Move priv/plat structs for intel_common to headers
+  x86: spl: Move priv/plat structs to headers
+  spi: Tidy up get/set of device node
+  spi: Tweak a few strange SPI NOR features for of-platdata
+  x86: apl: Use struct spi_nor instead of struct spi_flash
+  dm: core: Move priv/plat structs for simple_bus to headers
+  x86: sysreset: Move priv/plat structs to headers
+  x86: apl: Adjust how the UART gets its platform data
+  x86: coral: Remove unwanted nodes from SPL/TPL
+  x86: Drop rtc from SPL
+  dm: core: Split out alloc code into a new function
+  dm: core: Rename sqq to seq_
+  dm: core: Access device flags through functions
+  dm: core: Rename device flags to indicate it is private
+  dm: core: Rename dev_has_of_node() to dev_has_ofnode()
+  dm: core: Use dev_has_ofnode() instead of dev_of_valid()
+  dm: core: Access device ofnode through functions
+  dm: core: Rename device node to indicate it is private
+  dm: core: Split out scanning code to dm_scan()
+  dm: core: Allow the uclass list to move
+  dm: core: Add logging when lists_bind_fdt() fails
+
+ arch/arm/mach-stm32mp/pwr_regulator.c         |   2 +-
+ arch/sandbox/dts/sandbox.dts                  |   4 +-
+ arch/sandbox/dts/sandbox.dtsi                 |  11 +-
+ arch/sandbox/include/asm/i2c.h                |  14 ++
+ arch/sandbox/include/asm/serial.h             |  30 ++++
+ arch/x86/cpu/apollolake/hostbridge.c          |  20 +--
+ arch/x86/cpu/apollolake/pmc.c                 |   8 +-
+ arch/x86/cpu/apollolake/spl.c                 |   2 +-
+ arch/x86/cpu/apollolake/uart.c                |  43 +++---
+ arch/x86/cpu/intel_common/itss.c              |  19 ---
+ arch/x86/cpu/intel_common/p2sb.c              |   9 +-
+ arch/x86/dts/chromebook_coral.dts             |  17 ++-
+ arch/x86/dts/rtc.dtsi                         |   2 +-
+ arch/x86/include/asm/arch-apollolake/gpio.h   |  18 +++
+ .../include/asm/arch-apollolake/hostbridge.h  |  28 ++++
+ arch/x86/include/asm/arch-apollolake/pmc.h    |  16 +++
+ arch/x86/include/asm/arch-apollolake/uart.h   |  19 ++-
+ arch/x86/include/asm/itss.h                   |  21 +++
+ arch/x86/include/asm/p2sb.h                   |  18 +++
+ arch/x86/include/asm/sysreset.h               |  18 +++
+ board/synopsys/hsdk/clk-lib.c                 |   2 +-
+ cmd/remoteproc.c                              |   2 +-
+ drivers/ata/mtk_ahci.c                        |   3 +-
+ drivers/clk/clk-uclass.c                      |   2 +-
+ drivers/clk/clk.c                             |   2 +-
+ drivers/clk/meson/axg.c                       |   2 +-
+ drivers/clk/meson/g12a.c                      |   2 +-
+ drivers/clk/meson/gxbb.c                      |   2 +-
+ drivers/core/device-remove.c                  |  18 +--
+ drivers/core/device.c                         | 135 ++++++++++--------
+ drivers/core/devres.c                         |   4 +-
+ drivers/core/dump.c                           |   6 +-
+ drivers/core/lists.c                          |   2 +-
+ drivers/core/root.c                           |  58 +++++---
+ drivers/core/simple-bus.c                     |   7 +-
+ drivers/core/uclass.c                         |  12 +-
+ drivers/gpio/mpc8xxx_gpio.c                   |   4 +-
+ drivers/gpio/octeon_gpio.c                    |   2 +-
+ drivers/gpio/sandbox.c                        |   2 +-
+ drivers/i2c/designware_i2c_pci.c              |   4 +-
+ drivers/i2c/i2c-uclass.c                      |   2 +-
+ drivers/i2c/sandbox_i2c.c                     |   5 +-
+ drivers/misc/spltest_sandbox.c                |   6 +
+ drivers/misc/swap_case.c                      |   2 +-
+ drivers/mmc/octeontx_hsmmc.c                  |  25 ++--
+ drivers/mmc/pci_mmc.c                         |   2 +-
+ drivers/mtd/nand/raw/octeontx_nand.c          |   4 +-
+ drivers/mtd/nand/spi/core.c                   |   2 +-
+ drivers/mtd/spi/sf-uclass.c                   |   2 +-
+ drivers/mtd/spi/sf_probe.c                    |   2 +-
+ drivers/net/fm/eth.c                          |   4 +-
+ drivers/net/fsl_enetc.c                       |   8 +-
+ drivers/net/fsl_enetc_mdio.c                  |   2 +-
+ drivers/net/mdio-ipq4019.c                    |   4 +-
+ drivers/net/mdio_mux_i2creg.c                 |   2 +-
+ drivers/net/mvmdio.c                          |   4 +-
+ drivers/net/octeontx/smi.c                    |   2 +-
+ drivers/net/tsec.c                            |   3 +-
+ drivers/pci/pci-uclass.c                      |   8 +-
+ drivers/phy/phy-ti-am654.c                    |   2 +-
+ drivers/pinctrl/intel/pinctrl_apl.c           |  12 --
+ drivers/pinctrl/pinctrl-uclass.c              |   4 +-
+ drivers/power/domain/meson-ee-pwrc.c          |   4 +-
+ drivers/power/domain/meson-gx-pwrc-vpu.c      |   4 +-
+ drivers/power/regulator/pbias_regulator.c     |   3 +-
+ drivers/pwm/pwm-meson.c                       |   9 +-
+ drivers/remoteproc/rproc-uclass.c             |   2 +-
+ drivers/reset/reset-socfpga.c                 |   2 +-
+ drivers/serial/sandbox.c                      |  16 +--
+ drivers/serial/serial-uclass.c                |   2 +-
+ drivers/spi/fsl_dspi.c                        |   6 +-
+ drivers/spi/ich.c                             |  11 --
+ drivers/spi/ich.h                             |  11 ++
+ drivers/spi/spi-uclass.c                      |   2 +-
+ drivers/sysreset/sysreset_sandbox.c           |   2 +-
+ drivers/sysreset/sysreset_x86.c               |   5 +-
+ drivers/tee/optee/core.c                      |   2 +-
+ drivers/timer/timer-uclass.c                  |   2 +-
+ drivers/usb/cdns3/core.c                      |   4 +-
+ drivers/usb/dwc3/core.c                       |   2 +-
+ drivers/usb/dwc3/dwc3-generic.c               |   6 +-
+ drivers/usb/dwc3/dwc3-meson-g12a.c            |   2 +-
+ drivers/usb/dwc3/dwc3-meson-gxl.c             |   2 +-
+ drivers/usb/gadget/dwc2_udc_otg.c             |   4 +-
+ drivers/usb/host/dwc3-octeon-glue.c           |   2 +-
+ drivers/usb/host/dwc3-sti-glue.c              |   5 +-
+ drivers/usb/host/ehci-mx6.c                   |   2 +-
+ drivers/usb/host/usb-uclass.c                 |   4 +-
+ drivers/usb/host/xhci-dwc3.c                  |   2 +-
+ drivers/usb/mtu3/mtu3_core.c                  |   2 +-
+ drivers/usb/mtu3/mtu3_plat.c                  |   4 +-
+ drivers/usb/musb-new/ti-musb.c                |   2 +-
+ drivers/video/nexell_display.c                |   2 +-
+ drivers/video/rockchip/rk_mipi.c              |   2 +-
+ include/asm-generic/global_data.h             |   8 +-
+ include/dm/device-internal.h                  |   1 +
+ include/dm/device.h                           |  74 ++++++++--
+ include/dm/read.h                             |  18 +--
+ include/dm/simple_bus.h                       |  15 ++
+ include/linux/mtd/mtd.h                       |   9 +-
+ include/linux/mtd/nand.h                      |  14 ++
+ include/linux/mtd/spi-nor.h                   |   6 +-
+ include/linux/mtd/spinand.h                   |  15 ++
+ include/virtio.h                              |   2 +-
+ net/mdio-mux-uclass.c                         |   2 +-
+ net/mdio-uclass.c                             |   8 +-
+ test/dm/bus.c                                 |  10 +-
+ test/dm/core.c                                |  26 ++--
+ test/dm/cpu.c                                 |   2 +-
+ test/dm/pci.c                                 |   6 +-
+ test/dm/test-fdt.c                            |  20 +--
+ test/dm/virtio.c                              |   2 +-
+ 112 files changed, 655 insertions(+), 410 deletions(-)
+ create mode 100644 arch/sandbox/include/asm/i2c.h
+ create mode 100644 arch/sandbox/include/asm/serial.h
+ create mode 100644 arch/x86/include/asm/arch-apollolake/hostbridge.h
+ create mode 100644 arch/x86/include/asm/arch-apollolake/pmc.h
+ create mode 100644 arch/x86/include/asm/p2sb.h
+ create mode 100644 arch/x86/include/asm/sysreset.h
+ create mode 100644 include/dm/simple_bus.h
+
+-- 
+2.29.2.684.gfbc64c5ab5-goog
+
