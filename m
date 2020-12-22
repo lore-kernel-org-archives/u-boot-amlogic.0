@@ -1,215 +1,144 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
- by mx.groups.io with SMTP id smtpd.web09.9740.1608630369988773164
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+ by mx.groups.io with SMTP id smtpd.web08.9672.1608631945974970354
  for <u-boot-amlogic@groups.io>;
- Tue, 22 Dec 2020 01:46:10 -0800
+ Tue, 22 Dec 2020 02:12:26 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1608630361;
-	bh=gQ/dZNQIXyTl2W44PLd642AovAEhRz9Q+11UlipGgxE=;
+	s=badeba3b8450; t=1608631937;
+	bh=5yAOvpKQGHkVAoOr1Q9MhXkVP3oveSCb+VpdI7hq/R8=;
 	h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-	b=BlDHg+MW+gRRHB6VVBBJHQhi5IISii4cONu7Id8v5dPXI4iIfLAMSIHSq5AVeqjFt
-	 +uhbqup90q2/mSnA/inGXFETMN+O9x2s40cQRljV5pt5SLUWz+FnDpQ5/6L3asO4FL
-	 h/KVnEsIseVaXQBG9PQKsbg7yaTdAxmCaH8Pom/U=
-Subject: Re: [PATCH v4 2/3] button: add a simple Analog to Digital Converter device based button driver
+	b=Yt9BmO9q9y+OEmZ7dnad/hiy6t6NAZUXyAy8CZad1du57w1Ufmwzd+VAVHyXaW+LV
+	 ridL7TEhOZy5ZOOBguvDEbLsN+3rzPZJyiEognU3G35eh2u2RWIxfR+U40z+9u0j1h
+	 6u8rC81UkZzSN0XvWna7BPz8Ya6hRonGOkd7vjFk=
+Subject: Re: [PATCH v4 1/3] dt-bindings: input: adc-keys bindings documentation
 References: <20201222085633.10194-1-m.szyprowski@samsung.com>
- <CGME20201222085639eucas1p1db16b6bc2ae790ed711a09bcc5f176e5@eucas1p1.samsung.com>
- <20201222085633.10194-3-m.szyprowski@samsung.com>
+ <CGME20201222085638eucas1p14d9d9da136593a12fea0140c403095c4@eucas1p1.samsung.com>
+ <20201222085633.10194-2-m.szyprowski@samsung.com>
 From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Message-ID: <56836417-aa29-0e0c-5ba2-539a0fb860c5@gmx.de>
-Date: Tue, 22 Dec 2020 10:45:59 +0100
+Message-ID: <1b82e9ef-e8af-87e1-ea68-d71d65c2aa8a@gmx.de>
+Date: Tue, 22 Dec 2020 11:12:16 +0100
 MIME-Version: 1.0
-In-Reply-To: <20201222085633.10194-3-m.szyprowski@samsung.com>
+In-Reply-To: <20201222085633.10194-2-m.szyprowski@samsung.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, lkml <linux-kernel@vger.kernel.org>
 List-ID: <u-boot-amlogic@groups.io>
 
 On 12/22/20 9:56 AM, Marek Szyprowski wrote:
-> Add a simple Analog to Digital Converter device based button driver. Thi=
-s
-> driver binds to the 'adc-keys' device tree node.
+> Dump adc-keys bindings documentation from Linux kernel source tree v5.10=
+.
 >
 > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->   drivers/button/Kconfig      |   8 +++
->   drivers/button/Makefile     |   1 +
->   drivers/button/button-adc.c | 121 ++++++++++++++++++++++++++++++++++++
->   3 files changed, 130 insertions(+)
->   create mode 100644 drivers/button/button-adc.c
+>   doc/device-tree-bindings/input/adc-keys.txt | 49 +++++++++++++++++++++
+>   1 file changed, 49 insertions(+)
+>   create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
 >
-> diff --git a/drivers/button/Kconfig b/drivers/button/Kconfig
-> index 6b3ec7e55d..6db3c5e93a 100644
-> --- a/drivers/button/Kconfig
-> +++ b/drivers/button/Kconfig
-> @@ -9,6 +9,14 @@ config BUTTON
->   	  can provide access to board-specific buttons. Use of the device tre=
-e
->   	  for configuration is encouraged.
->
-> +config BUTTON_ADC
-> +	bool "Button adc"
-> +	depends on BUTTON
-> +	help
-> +	  Enable support for buttons which are connected to Analog to Digital
-> +	  Converter device. The ADC driver must use driver model. Buttons are
-> +	  configured using the device tree.
-> +
->   config BUTTON_GPIO
->   	bool "Button gpio"
->   	depends on BUTTON
-> diff --git a/drivers/button/Makefile b/drivers/button/Makefile
-> index fcc10ebe8d..bbd18af149 100644
-> --- a/drivers/button/Makefile
-> +++ b/drivers/button/Makefile
-> @@ -3,4 +3,5 @@
->   # Copyright (C) 2020 Philippe Reynes <philippe.reynes@softathome.com>
->
->   obj-$(CONFIG_BUTTON) +=3D button-uclass.o
-> +obj-$(CONFIG_BUTTON_ADC) +=3D button-adc.o
->   obj-$(CONFIG_BUTTON_GPIO) +=3D button-gpio.o
-> diff --git a/drivers/button/button-adc.c b/drivers/button/button-adc.c
+> diff --git a/doc/device-tree-bindings/input/adc-keys.txt b/doc/device-tr=
+ee-bindings/input/adc-keys.txt
 > new file mode 100644
-> index 0000000000..bf99dd8b43
+> index 0000000000..e551814629
 > --- /dev/null
-> +++ b/drivers/button/button-adc.c
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
-> + */
+> +++ b/doc/device-tree-bindings/input/adc-keys.txt
+> @@ -0,0 +1,49 @@
+> +ADC attached resistor ladder buttons
+> +------------------------------------
 > +
-> +#include <common.h>
-> +#include <adc.h>
-> +#include <button.h>
-> +#include <dm.h>
-> +#include <dm/lists.h>
-> +#include <dm/uclass-internal.h>
+> +Required properties:
+> + - compatible: "adc-keys"
+> + - io-channels: Phandle to an ADC channel
+> + - io-channel-names =3D "buttons";
+> + - keyup-threshold-microvolt: Voltage at which all the keys are conside=
+red up.
 > +
-> +/**
-> + * struct button_adc_priv - private data for button-adc driver.
-> + *
-> + * @adc: Analog to Digital Converter device to which button is connecte=
+> +Optional properties:
+> +	- poll-interval: Poll interval time in milliseconds
+> +	- autorepeat: Boolean, Enable auto repeat feature of Linux input
+> +	  subsystem.
+> +
+> +Each button (key) is represented as a sub-node of "adc-keys":
+> +
+> +Required subnode-properties:
+> +	- label: Descriptive name of the key.
+> +	- linux,code: Keycode to emit.
+> +	- press-threshold-microvolt: Voltage ADC input when this key is presse=
 d.
-> + * @channel: channel of the ADC device to probe the button state.
-> + */
-> +struct button_adc_priv {
-> +	struct udevice *adc;
-> +	int channel;
-> +};
-> +
-> +static enum button_state_t button_adc_get_state(struct udevice *dev)
-> +{
-> +	struct button_adc_priv *priv =3D dev_get_priv(dev);
-> +	unsigned int val, mask;
-> +	int ret;
-> +
-> +	ret =3D adc_start_channel(priv->adc, priv->channel);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D adc_channel_data(priv->adc, priv->channel, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D adc_data_mask(priv->adc, &mask);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* getting state is simplified a bit */
-> +	if (ret =3D=3D 0)
-> +		return (val < mask / 2) ? BUTTON_ON : BUTTON_OFF;
-> +
-> +	return ret;
-> +}
-> +
-> +static int button_adc_probe(struct udevice *dev)
-> +{
-> +	struct button_uc_plat *uc_plat =3D dev_get_uclass_platdata(dev);
-> +	struct button_adc_priv *priv =3D dev_get_priv(dev);
-> +	struct ofnode_phandle_args args;
-> +	int ret;
-> +
-> +	/* Ignore the top-level button node */
-> +	if (!uc_plat->label)
-> +		return 0;
-> +
-> +	ret =3D dev_read_phandle_with_args(dev->parent, "io-channels",
-> +					 "#io-channel-cells", 0, 0, &args);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D uclass_get_device_by_ofnode(UCLASS_ADC, args.node, &priv->adc)=
-;
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->channel =3D args.args[0];
-> +
-> +	return ret;
-> +}
-> +
-> +static int button_adc_bind(struct udevice *parent)
-> +{
-> +	struct udevice *dev;
-> +	ofnode node;
-> +	int ret;
-> +
-> +	dev_for_each_subnode(node, parent) {
-> +		struct button_uc_plat *uc_plat;
-> +		const char *label;
-> +
-> +		label =3D ofnode_read_string(node, "label");
-> +		if (!label) {
-> +			debug("%s: node %s has no label\n", __func__,
-> +			      ofnode_get_name(node));
-> +			return -EINVAL;
-> +		}
-> +		ret =3D device_bind_driver_to_node(parent, "button_adc",
-> +						 ofnode_get_name(node),
-> +						 node, &dev);
 
-This code does not match the binding. The binding defines a voltage
-ladder where you have multiple voltage ranges and multiple buttons.
+https://www.merriam-webster.com/dictionary/threshold
+defines threshold as "a level, point, or value above which something is
+true or will take place and below which it is not or will not"
 
-You need to consider the threshold voltages.
+"when this key is pressed" leaves it completely open if a key is
+considered pressed below or above the threshold. Please, replace the
+word 'when' by either 'above which' or 'below which'.
 
-Have a look at Linux' drivers/input/keyboard/adc-keys.c. Beware that
-code is also incorrect as the author ignores the meaning of "threshold"
-and uses it it as closest voltage.
+In the example keyup-threshold-microvolt is larger than
+keyup-threshold-microvolt all values of press-threshold-microvolt. So
+one might assume that 'above' is the intended meaning and the
+interpretation of the example might be:
+
+2.000.000 <=3D value: no key pressed
+1.500.000 <=3D value < 2.000.000: KEY_VOLUMEUP pressed
+1.000.000 <=3D value < 1.500.000: KEY_VOLUMEDOWN pressed
+500.000 <=3D value < 1.000.000: KEY_ENTER pressed
+value < 500.000: no key pressed
+
+Both directions 'above' and 'below' make sense. So maybe if
+keyup-threshold-microvolt is lower than all press-threshold-microvolt
+you want to invert the logic?
+
+The binding lacks a hysteresis which is needed for a reliable function.
+
+If you look into drivers/input/keyboard/adc-keys.c in the Linux source,
+you can see that it is not using the threshold value as a threshold at
+all. Instead is uses abs(st->map[i].voltage - value) to find the nearest
+"threshold" voltage level.
+
+Could you, please, try to bring this text into a form that cannot be
+misinterpreted and reconcile with upstream. This should include
+
+* a results table for the example
+* a definition if keyup-threshold-microvolt must be higher than all
+   press-threshold-microvolt or may be lower than all
+   press-threshold-microvolt
+* a sentence forbidding keyup-threshold-microvolt to be between two
+   press-threshold-microvolt
+* a definition if or when any of the thresholds is a lower or upper
+   boundary
 
 Best regards
 
 Heinrich
 
-> +		if (ret)
-> +			return ret;
-> +		uc_plat =3D dev_get_uclass_platdata(dev);
-> +		uc_plat->label =3D label;
-> +	}
 > +
-> +	return 0;
-> +}
+> +Example:
 > +
-> +static const struct button_ops button_adc_ops =3D {
-> +	.get_state	=3D button_adc_get_state,
-> +};
+> +#include <dt-bindings/input/input.h>
 > +
-> +static const struct udevice_id button_adc_ids[] =3D {
-> +	{ .compatible =3D "adc-keys" },
-> +	{ }
-> +};
+> +	adc-keys {
+> +		compatible =3D "adc-keys";
+> +		io-channels =3D <&lradc 0>;
+> +		io-channel-names =3D "buttons";
+> +		keyup-threshold-microvolt =3D <2000000>;
 > +
-> +U_BOOT_DRIVER(button_adc) =3D {
-> +	.name		=3D "button_adc",
-> +	.id		=3D UCLASS_BUTTON,
-> +	.of_match	=3D button_adc_ids,
-> +	.ops		=3D &button_adc_ops,
-> +	.priv_auto_alloc_size =3D sizeof(struct button_adc_priv),
-> +	.bind		=3D button_adc_bind,
-> +	.probe		=3D button_adc_probe,
-> +};
+> +		button-up {
+> +			label =3D "Volume Up";
+> +			linux,code =3D <KEY_VOLUMEUP>;
+> +			press-threshold-microvolt =3D <1500000>;
+> +		};
+> +
+> +		button-down {
+> +			label =3D "Volume Down";
+> +			linux,code =3D <KEY_VOLUMEDOWN>;
+> +			press-threshold-microvolt =3D <1000000>;
+> +		};
+> +
+> +		button-enter {
+> +			label =3D "Enter";
+> +			linux,code =3D <KEY_ENTER>;
+> +			press-threshold-microvolt =3D <500000>;
+> +		};
+> +	};
 >
 
