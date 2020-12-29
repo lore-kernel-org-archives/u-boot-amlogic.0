@@ -1,91 +1,88 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web10.11770.1609250351393181235
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web08.12084.1609250352748520117
  for <u-boot-amlogic@groups.io>;
- Tue, 29 Dec 2020 05:59:11 -0800
-Received: by mail-wr1-f48.google.com with SMTP id i9so14740300wrc.4
-        for <u-boot-amlogic@groups.io>; Tue, 29 Dec 2020 05:59:11 -0800 (PST)
+ Tue, 29 Dec 2020 05:59:13 -0800
+Received: by mail-wr1-f47.google.com with SMTP id r7so14726956wrc.5
+        for <u-boot-amlogic@groups.io>; Tue, 29 Dec 2020 05:59:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pYPZmiUIFlLhR+Y/B9yZJJAwsy5uN5WpFZ3/cC2HAHw=;
-        b=rAKoO1KBxfCl0Ht8Zeu7mRv8Dm6+oUgVj5fOCyCsXMuZ8ZIvz+BeQ5IPyeFr0MZsrb
-         80PIATiqBwxakBqZi/oapIiztLGG+8dAfIMIc8tYDLbmErVJ5TtrpIkO4xSF4I0gW6lo
-         xpfpv69/xjQy0PgROw3kGpKPd3NF6bdlt9n46jc5iN7ZE5Znad90f1g1MztQgTzseCOs
-         Tay/vfMI+KPry7/baAza998Elg5QLtH7an04NCBKGKdz2VpwOZ7H731TMrc8AWyXn0Z3
-         xuLHmFqd+IiGg/Py5snE3Y+BW6LTtKwsXVKkiqbKWikWU7r68hReXJDxbQCpcvPuT9b8
-         Pzmg==
+        bh=NBWh7OY3b66Tlf7qAD5uTFXQ3f7A+qC63D1MRfLh/B4=;
+        b=t6NBDXxLIYVNl+jlo/r1tl+yVNiW2caCk9KA7eiuzTqZVgmNoljPi/9TybXsjuLQrv
+         W5OHRy2CZsKmOxKZfJaycdbzrf/ViguIpGFa9rmYL7B9KAHKV3u48Hvn162pWqXJj6sO
+         ILe+6Qvau2t4HB34v9GSQiFlq9FG3wQAOQ6wrV2TrKyuNLK7Ge6CA3LlvxAJTKhaRTg3
+         OCClP4UGB7nqkg08IlE+ohhaN8VmgYO5eeuNKkaTVkJUIzYGU1OGwrT0ZyBS+fE2f1rD
+         6w0lEWxX7ahmPi8FwN/+J3DkO/DxO2WjaSE2t9+yUnwh7u75HYBWY97LI0J1VsEbzo5+
+         SeBw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 3/4] phy: Add Amlogic AXG MIPI D-PHY driver
-Date: Tue, 29 Dec 2020 14:59:00 +0100
-Message-Id: <20201229135901.30090-4-narmstrong@baylibre.com>
+Subject: [PATCH 4/4] phy: Add Amlogic AXG MIPI PCIe Analog PHY driver
+Date: Tue, 29 Dec 2020 14:59:01 +0100
+Message-Id: <20201229135901.30090-5-narmstrong@baylibre.com>
 In-Reply-To: <20201229135901.30090-1-narmstrong@baylibre.com>
 References: <20201229135901.30090-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de, sjg@chromium.org
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The Amlogic AXG SoCs embeds a MIPI D-PHY used to communicate with DSI
-panels.
+The Amlogic AXG MIPI + PCIe Analog PHY provides function for both PCIe and
+MIPI DSI at the same time, and provides the Analog part of MIPI DSI transmission
+and Analog part of the PCIe lines.
 
-This D-PHY depends on a separate analog PHY.
-
-Signed-off-by:￼Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/phy/Kconfig               |   9 +
- drivers/phy/Makefile              |   1 +
- drivers/phy/meson-axg-mipi-dphy.c | 393 ++++++++++++++++++++++++++++++
- 3 files changed, 403 insertions(+)
- create mode 100644 drivers/phy/meson-axg-mipi-dphy.c
+ drivers/phy/Kconfig                      |   9 +
+ drivers/phy/Makefile                     |   1 +
+ drivers/phy/meson-axg-mipi-pcie-analog.c | 233 +++++++++++++++++++++++
+ 3 files changed, 243 insertions(+)
+ create mode 100644 drivers/phy/meson-axg-mipi-pcie-analog.c
 
 diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 8d9da17b53..00d77eef08 100644
+index 00d77eef08..e64802e8f3 100644
 --- a/drivers/phy/Kconfig
 +++ b/drivers/phy/Kconfig
-@@ -196,6 +196,15 @@ config MESON_G12A_USB_PHY
- 	  This is the generic phy driver for the Amlogic Meson G12A
- 	  USB2 and USB3 PHYS.
+@@ -205,6 +205,15 @@ config MESON_AXG_MIPI_DPHY
+ 	  This is the generic phy driver for the Amlogic Meson AXG
+ 	  MIPI D-PHY.
  
-+config MESON_AXG_MIPI_DPHY
-+	bool "Amlogic Meson AXG MIPI D-PHY"
++config MESON_AXG_MIPI_PCIE_ANALOG_PHY
++	bool "Amlogic Meson AXG MIPI PCIe Analog PHY"
 +	depends on PHY && ARCH_MESON && MESON_AXG
 +	select MIPI_DPHY_HELPERS
 +	imply REGMAP
 +	help
 +	  This is the generic phy driver for the Amlogic Meson AXG
-+	  MIPI D-PHY.
++	  MIPI PCIe Analog PHY.
 +
  config MSM8916_USB_PHY
  	bool "Qualcomm MSM8916 USB PHY support"
  	depends on PHY
 diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 9024002822..b2fd2d06f6 100644
+index b2fd2d06f6..8daf9f6089 100644
 --- a/drivers/phy/Makefile
 +++ b/drivers/phy/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_PHY_STM32_USBPHYC) += phy-stm32-usbphyc.o
- obj-$(CONFIG_MESON_GXBB_USB_PHY) += meson-gxbb-usb2.o
+@@ -23,6 +23,7 @@ obj-$(CONFIG_MESON_GXBB_USB_PHY) += meson-gxbb-usb2.o
  obj-$(CONFIG_MESON_GXL_USB_PHY) += meson-gxl-usb2.o
  obj-$(CONFIG_MESON_G12A_USB_PHY) += meson-g12a-usb2.o meson-g12a-usb3-pcie.o
-+obj-$(CONFIG_MESON_AXG_MIPI_DPHY) += meson-axg-mipi-dphy.o
+ obj-$(CONFIG_MESON_AXG_MIPI_DPHY) += meson-axg-mipi-dphy.o
++obj-$(CONFIG_MESON_AXG_MIPI_PCIE_ANALOG_PHY) += meson-axg-mipi-pcie-analog.o
  obj-$(CONFIG_MSM8916_USB_PHY) += msm8916-usbh-phy.o
  obj-$(CONFIG_OMAP_USB2_PHY) += omap-usb2-phy.o
  obj-$(CONFIG_KEYSTONE_USB_PHY) += keystone-usb-phy.o
-diff --git a/drivers/phy/meson-axg-mipi-dphy.c b/drivers/phy/meson-axg-mipi-dphy.c
+diff --git a/drivers/phy/meson-axg-mipi-pcie-analog.c b/drivers/phy/meson-axg-mipi-pcie-analog.c
 new file mode 100644
-index 0000000000..8b2469793d
+index 0000000000..276e6004e5
 --- /dev/null
-+++ b/drivers/phy/meson-axg-mipi-dphy.c
-@@ -0,0 +1,393 @@
++++ b/drivers/phy/meson-axg-mipi-pcie-analog.c
+@@ -0,0 +1,233 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Meson AXG MIPI DPHY driver
++ * Amlogic AXG MIPI + PCIE analog PHY driver
 + *
-+ * Copyright (C) 2018 Amlogic, Inc. All rights reserved
++ * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
 + * Copyright (C) 2020 BayLibre, SAS
 + * Author: Neil Armstrong <narmstrong@baylibre.com>
 + */
@@ -99,6 +96,7 @@ index 0000000000..8b2469793d
 +#include <errno.h>
 +#include <generic-phy.h>
 +#include <regmap.h>
++#include <syscon.h>
 +#include <linux/delay.h>
 +#include <power/regulator.h>
 +#include <reset.h>
@@ -109,166 +107,125 @@ index 0000000000..8b2469793d
 +#include <linux/compat.h>
 +#include <linux/bitfield.h>
 +
-+/* [31] soft reset for the phy.
-+ *		1: reset. 0: dessert the reset.
-+ * [30] clock lane soft reset.
-+ * [29] data byte lane 3 soft reset.
-+ * [28] data byte lane 2 soft reset.
-+ * [27] data byte lane 1 soft reset.
-+ * [26] data byte lane 0 soft reset.
-+ * [25] mipi dsi pll clock selection.
-+ *		1:  clock from fixed 850Mhz clock source. 0: from VID2 PLL.
-+ * [12] mipi HSbyteclk enable.
-+ * [11] mipi divider clk selection.
-+ *		1: select the mipi DDRCLKHS from clock divider.
-+ *		0: from PLL clock.
-+ * [10] mipi clock divider control.
-+ *		1: /4. 0: /2.
-+ * [9]  mipi divider output enable.
-+ * [8]  mipi divider counter enable.
-+ * [7]  PLL clock enable.
-+ * [5]  LPDT data endian.
-+ *		1 = transfer the high bit first. 0 : transfer the low bit first.
-+ * [4]  HS data endian.
-+ * [3]  force data byte lane in stop mode.
-+ * [2]  force data byte lane 0 in receiver mode.
-+ * [1]  write 1 to sync the txclkesc input. the internal logic have to
-+ *	use txclkesc to decide Txvalid and Txready.
-+ * [0]  enalbe the MIPI DPHY TxDDRClk.
-+ */
-+#define MIPI_DSI_PHY_CTRL				0x0
++#define HHI_MIPI_CNTL0 0x00
++#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
++#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
++#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
++#define		HHI_MIPI_CNTL0_DIF_REF_CTL1	GENMASK(25, 16)
++#define		HHI_MIPI_CNTL0_DIF_REF_CTL0	GENMASK(15, 0)
 +
-+/* [31] clk lane tx_hs_en control selection.
-+ *		1: from register. 0: use clk lane state machine.
-+ * [30] register bit for clock lane tx_hs_en.
-+ * [29] clk lane tx_lp_en contrl selection.
-+ *		1: from register. 0: from clk lane state machine.
-+ * [28] register bit for clock lane tx_lp_en.
-+ * [27] chan0 tx_hs_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [26] register bit for chan0 tx_hs_en.
-+ * [25] chan0 tx_lp_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [24] register bit from chan0 tx_lp_en.
-+ * [23] chan0 rx_lp_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [22] register bit from chan0 rx_lp_en.
-+ * [21] chan0 contention detection enable control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [20] register bit from chan0 contention dectection enable.
-+ * [19] chan1 tx_hs_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [18] register bit for chan1 tx_hs_en.
-+ * [17] chan1 tx_lp_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [16] register bit from chan1 tx_lp_en.
-+ * [15] chan2 tx_hs_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [14] register bit for chan2 tx_hs_en.
-+ * [13] chan2 tx_lp_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [12] register bit from chan2 tx_lp_en.
-+ * [11] chan3 tx_hs_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [10] register bit for chan3 tx_hs_en.
-+ * [9]  chan3 tx_lp_en control selection.
-+ *		1: from register. 0: from chan0 state machine.
-+ * [8]  register bit from chan3 tx_lp_en.
-+ * [4]  clk chan power down. this bit is also used as the power down
-+ *	of the whole MIPI_DSI_PHY.
-+ * [3]  chan3 power down.
-+ * [2]  chan2 power down.
-+ * [1]  chan1 power down.
-+ * [0]  chan0 power down.
-+ */
-+#define MIPI_DSI_CHAN_CTRL				0x4
++#define HHI_MIPI_CNTL1 0x04
++#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
++#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
++#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
++#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
++#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
++#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
 +
-+/* [24]   rx turn watch dog triggered.
-+ * [23]   rx esc watchdog  triggered.
-+ * [22]   mbias ready.
-+ * [21]   txclkesc  synced and ready.
-+ * [20:17] clk lane state. {mbias_ready, tx_stop, tx_ulps, tx_hs_active}
-+ * [16:13] chan3 state{0, tx_stop, tx_ulps, tx_hs_active}
-+ * [12:9]  chan2 state.{0, tx_stop, tx_ulps, tx_hs_active}
-+ * [8:5]   chan1 state. {0, tx_stop, tx_ulps, tx_hs_active}
-+ * [4:0]   chan0 state. {TX_STOP, tx_ULPS, hs_active, direction, rxulpsesc}
-+ */
-+#define MIPI_DSI_CHAN_STS				0x8
++#define HHI_MIPI_CNTL2 0x08
++#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
++#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
++#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
++#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
++#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
++#define		HHI_MIPI_CNTL2_CH_EN		GENMASK(15, 11)
++#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
 +
-+/* [31:24] TCLK_PREPARE.
-+ * [23:16] TCLK_ZERO.
-+ * [15:8]  TCLK_POST.
-+ * [7:0]   TCLK_TRAIL.
-+ */
-+#define MIPI_DSI_CLK_TIM				0xc
++#define DSI_LANE_0              (1 << 4)
++#define DSI_LANE_1              (1 << 3)
++#define DSI_LANE_CLK            (1 << 2)
++#define DSI_LANE_2              (1 << 1)
++#define DSI_LANE_3              (1 << 0)
++#define DSI_LANE_MASK		(0x1F)
 +
-+/* [31:24] THS_PREPARE.
-+ * [23:16] THS_ZERO.
-+ * [15:8]  THS_TRAIL.
-+ * [7:0]   THS_EXIT.
-+ */
-+#define MIPI_DSI_HS_TIM					0x10
-+
-+/* [31:24] tTA_GET.
-+ * [23:16] tTA_GO.
-+ * [15:8]  tTA_SURE.
-+ * [7:0]   tLPX.
-+ */
-+#define MIPI_DSI_LP_TIM					0x14
-+
-+/* wait time to  MIPI DIS analog ready. */
-+#define MIPI_DSI_ANA_UP_TIM				0x18
-+
-+/* TINIT. */
-+#define MIPI_DSI_INIT_TIM				0x1c
-+
-+/* TWAKEUP. */
-+#define MIPI_DSI_WAKEUP_TIM				0x20
-+
-+/* when in RxULPS check state, after the the logic enable the analog,
-+ *	how long we should wait to check the lP state .
-+ */
-+#define MIPI_DSI_LPOK_TIM				0x24
-+
-+/* Watchdog for RX low power state no finished. */
-+#define MIPI_DSI_LP_WCHDOG				0x28
-+
-+/* tMBIAS,  after send power up signals to analog,
-+ *	how long we should wait for analog powered up.
-+ */
-+#define MIPI_DSI_ANA_CTRL				0x2c
-+
-+/* [31:8]  reserved for future.
-+ * [7:0]   tCLK_PRE.
-+ */
-+#define MIPI_DSI_CLK_TIM1				0x30
-+
-+/* watchdog for turn around waiting time. */
-+#define MIPI_DSI_TURN_WCHDOG				0x34
-+
-+/* When in RxULPS state, how frequency we should to check
-+ *	if the TX side out of ULPS state.
-+ */
-+#define MIPI_DSI_ULPS_CHECK				0x38
-+#define MIPI_DSI_TEST_CTRL0				0x3c
-+#define MIPI_DSI_TEST_CTRL1				0x40
-+
-+#define NSEC_PER_MSEC	1000000L
-+
-+struct phy_meson_axg_mipi_dphy_priv {
++struct phy_meson_axg_mipi_pcie_analog_priv {
 +	struct regmap *regmap;
-+#if CONFIG_IS_ENABLED(CLK)
-+	struct clk clk;
-+#endif
-+	struct reset_ctl reset;
-+	struct phy analog;
 +	struct phy_configure_opts_mipi_dphy config;
++	bool dsi_configured;
++	bool dsi_enabled;
++	bool powered;
 +};
 +
-+static int phy_meson_axg_mipi_dphy_configure(struct phy *phy, void *params)
++static void phy_bandgap_enable(struct phy_meson_axg_mipi_pcie_analog_priv *priv)
++{
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
++
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
++}
++
++static void phy_bandgap_disable(struct phy_meson_axg_mipi_pcie_analog_priv *priv)
++{
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			HHI_MIPI_CNTL0_BANDGAP, 0);
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			HHI_MIPI_CNTL0_ENABLE, 0);
++}
++
++static void phy_dsi_analog_enable(struct phy_meson_axg_mipi_pcie_analog_priv *priv)
++{
++	u32 reg;
++
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			   HHI_MIPI_CNTL0_DIF_REF_CTL1,
++			   FIELD_PREP(HHI_MIPI_CNTL0_DIF_REF_CTL1, 0x1b8));
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			   BIT(31), BIT(31));
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			   HHI_MIPI_CNTL0_DIF_REF_CTL0,
++			   FIELD_PREP(HHI_MIPI_CNTL0_DIF_REF_CTL0, 0x8));
++
++	regmap_write(priv->regmap, HHI_MIPI_CNTL1, 0x001e);
++
++	regmap_write(priv->regmap, HHI_MIPI_CNTL2,
++		     (0x26e0 << 16) | (0x459 << 0));
++
++	reg = DSI_LANE_CLK;
++	switch (priv->config.lanes) {
++	case 4:
++		reg |= DSI_LANE_3;
++		fallthrough;
++	case 3:
++		reg |= DSI_LANE_2;
++		fallthrough;
++	case 2:
++		reg |= DSI_LANE_1;
++		fallthrough;
++	case 1:
++		reg |= DSI_LANE_0;
++		break;
++	default:
++		reg = 0;
++	}
++
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL2,
++			   HHI_MIPI_CNTL2_CH_EN,
++			   FIELD_PREP(HHI_MIPI_CNTL2_CH_EN, reg));
++
++	priv->dsi_enabled = true;
++}
++
++static void phy_dsi_analog_disable(struct phy_meson_axg_mipi_pcie_analog_priv *priv)
++{
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			HHI_MIPI_CNTL0_DIF_REF_CTL1,
++			FIELD_PREP(HHI_MIPI_CNTL0_DIF_REF_CTL1, 0));
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0, BIT(31), 0);
++	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
++			HHI_MIPI_CNTL0_DIF_REF_CTL1, 0);
++
++	regmap_write(priv->regmap, HHI_MIPI_CNTL1, 0x6);
++
++	regmap_write(priv->regmap, HHI_MIPI_CNTL2, 0x00200000);
++
++	priv->dsi_enabled = false;
++}
++
++static int phy_meson_axg_mipi_pcie_analog_configure(struct phy *phy, void *params)
 +{
 +	struct udevice *dev = phy->dev;
-+	struct phy_meson_axg_mipi_dphy_priv *priv = dev_get_priv(dev);
++	struct phy_meson_axg_mipi_pcie_analog_priv *priv = dev_get_priv(dev);
 +	struct phy_configure_opts_mipi_dphy *config = params;
 +	int ret;
 +
@@ -276,203 +233,83 @@ index 0000000000..8b2469793d
 +	if (ret)
 +		return ret;
 +
-+	ret = generic_phy_configure(&priv->analog, config);
-+	if (ret)
-+		return ret;
-+
 +	memcpy(&priv->config, config, sizeof(priv->config));
 +
-+	return 0;
-+}
++	priv->dsi_configured = true;
 +
-+static int phy_meson_axg_mipi_dphy_power_on(struct phy *phy)
-+{
-+	struct udevice *dev = phy->dev;
-+	struct phy_meson_axg_mipi_dphy_priv *priv = dev_get_priv(dev);
-+	unsigned long temp;
-+	int ret;
++	/* If PHY was already powered on, setup the DSI analog part */
++	if (priv->powered) {
++		/* If reconfiguring, disable & reconfigure */
++		if (priv->dsi_enabled)
++			phy_dsi_analog_disable(priv);
 +
-+	ret = generic_phy_power_on(&priv->analog);
-+	if (ret)
-+		return ret;
++		udelay(100);
 +
-+	/* enable phy clock */
-+	regmap_write(priv->regmap, MIPI_DSI_PHY_CTRL,  0x1);
-+	regmap_write(priv->regmap, MIPI_DSI_PHY_CTRL,
-+		     BIT(0) | /* enable the DSI PLL clock . */
-+		     BIT(7) | /* enable pll clock which connected to DDR clock path */
-+		     BIT(8)); /* enable the clock divider counter */
-+
-+	/* enable the divider clock out */
-+	regmap_update_bits(priv->regmap, MIPI_DSI_PHY_CTRL, BIT(9), BIT(9));
-+
-+	/* enable the byte clock generation. */
-+	regmap_update_bits(priv->regmap, MIPI_DSI_PHY_CTRL, BIT(12), BIT(12));
-+	regmap_update_bits(priv->regmap, MIPI_DSI_PHY_CTRL, BIT(31), BIT(31));
-+	regmap_update_bits(priv->regmap, MIPI_DSI_PHY_CTRL, BIT(31), 0);
-+
-+	/* Calculate lanebyteclk period in ps */
-+	temp = (1000000 * 100) / (priv->config.hs_clk_rate / 1000);
-+	temp = temp * 8 * 10;
-+
-+	regmap_write(priv->regmap, MIPI_DSI_CLK_TIM,
-+		     DIV_ROUND_UP(priv->config.clk_trail, temp) |
-+		     (DIV_ROUND_UP(priv->config.clk_post +
-+				   priv->config.hs_trail, temp) << 8) |
-+		     (DIV_ROUND_UP(priv->config.clk_zero, temp) << 16) |
-+		     (DIV_ROUND_UP(priv->config.clk_prepare, temp) << 24));
-+	regmap_write(priv->regmap, MIPI_DSI_CLK_TIM1,
-+		     DIV_ROUND_UP(priv->config.clk_pre, temp));
-+
-+	regmap_write(priv->regmap, MIPI_DSI_HS_TIM,
-+		     DIV_ROUND_UP(priv->config.hs_exit, temp) |
-+		     (DIV_ROUND_UP(priv->config.hs_trail, temp) << 8) |
-+		     (DIV_ROUND_UP(priv->config.hs_zero, temp) << 16) |
-+		     (DIV_ROUND_UP(priv->config.hs_prepare, temp) << 24));
-+
-+	regmap_write(priv->regmap, MIPI_DSI_LP_TIM,
-+		     DIV_ROUND_UP(priv->config.lpx, temp) |
-+		     (DIV_ROUND_UP(priv->config.ta_sure, temp) << 8) |
-+		     (DIV_ROUND_UP(priv->config.ta_go, temp) << 16) |
-+		     (DIV_ROUND_UP(priv->config.ta_get, temp) << 24));
-+
-+	regmap_write(priv->regmap, MIPI_DSI_ANA_UP_TIM, 0x0100);
-+	regmap_write(priv->regmap, MIPI_DSI_INIT_TIM,
-+		     DIV_ROUND_UP(priv->config.init * NSEC_PER_MSEC, temp));
-+	regmap_write(priv->regmap, MIPI_DSI_WAKEUP_TIM,
-+		     DIV_ROUND_UP(priv->config.wakeup * NSEC_PER_MSEC, temp));
-+	regmap_write(priv->regmap, MIPI_DSI_LPOK_TIM, 0x7C);
-+	regmap_write(priv->regmap, MIPI_DSI_ULPS_CHECK, 0x927C);
-+	regmap_write(priv->regmap, MIPI_DSI_LP_WCHDOG, 0x1000);
-+	regmap_write(priv->regmap, MIPI_DSI_TURN_WCHDOG, 0x1000);
-+
-+	/* Powerup the analog circuit */
-+	switch (priv->config.lanes) {
-+	case 1:
-+		regmap_write(priv->regmap, MIPI_DSI_CHAN_CTRL, 0xe);
-+		break;
-+	case 2:
-+		regmap_write(priv->regmap, MIPI_DSI_CHAN_CTRL, 0xc);
-+		break;
-+	case 3:
-+		regmap_write(priv->regmap, MIPI_DSI_CHAN_CTRL, 0x8);
-+		break;
-+	case 4:
-+	default:
-+		regmap_write(priv->regmap, MIPI_DSI_CHAN_CTRL, 0);
-+		break;
++		phy_dsi_analog_enable(priv);
 +	}
 +
-+	/* Trigger a sync active for esc_clk */
-+	regmap_update_bits(priv->regmap, MIPI_DSI_PHY_CTRL, BIT(1), BIT(1));
++	return 0;
++}
++
++static int phy_meson_axg_mipi_pcie_analog_power_on(struct phy *phy)
++{
++	struct udevice *dev = phy->dev;
++	struct phy_meson_axg_mipi_pcie_analog_priv *priv = dev_get_priv(dev);
++
++	phy_bandgap_enable(priv);
++
++	if (priv->dsi_configured)
++		phy_dsi_analog_enable(priv);
++
++	priv->powered = true;
 +
 +	return 0;
 +}
 +
-+static int phy_meson_axg_mipi_dphy_power_off(struct phy *phy)
++static int phy_meson_axg_mipi_pcie_analog_power_off(struct phy *phy)
 +{
 +	struct udevice *dev = phy->dev;
-+	struct phy_meson_axg_mipi_dphy_priv *priv = dev_get_priv(dev);
++	struct phy_meson_axg_mipi_pcie_analog_priv *priv = dev_get_priv(dev);
 +
-+	regmap_write(priv->regmap, MIPI_DSI_CHAN_CTRL, 0xf);
-+	regmap_write(priv->regmap, MIPI_DSI_PHY_CTRL, BIT(31));
++	phy_bandgap_disable(priv);
 +
-+	return generic_phy_power_off(&priv->analog);
-+}
++	if (priv->dsi_enabled)
++		phy_dsi_analog_disable(priv);
 +
-+static int phy_meson_axg_mipi_dphy_init(struct phy *phy)
-+{
-+	struct udevice *dev = phy->dev;
-+	struct phy_meson_axg_mipi_dphy_priv *priv = dev_get_priv(dev);
-+	int ret;
-+
-+	ret = generic_phy_init(&priv->analog);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_assert(&priv->reset);
-+	udelay(1);
-+	ret |= reset_deassert(&priv->reset);
-+	if (ret)
-+		return ret;
++	priv->powered = false;
 +
 +	return 0;
 +}
 +
-+static int phy_meson_axg_mipi_dphy_exit(struct phy *phy)
-+{
-+	struct udevice *dev = phy->dev;
-+	struct phy_meson_axg_mipi_dphy_priv *priv = dev_get_priv(dev);
-+	int ret;
-+
-+	ret = generic_phy_exit(&priv->analog);
-+	if (ret)
-+		return ret;
-+
-+	return reset_assert(&priv->reset);
-+}
-+
-+struct phy_ops meson_axg_mipi_dphy_ops = {
-+	.init = phy_meson_axg_mipi_dphy_init,
-+	.exit = phy_meson_axg_mipi_dphy_exit,
-+	.power_on = phy_meson_axg_mipi_dphy_power_on,
-+	.power_off = phy_meson_axg_mipi_dphy_power_off,
-+	.configure = phy_meson_axg_mipi_dphy_configure,
++struct phy_ops meson_axg_mipi_pcie_analog_ops = {
++	.power_on = phy_meson_axg_mipi_pcie_analog_power_on,
++	.power_off = phy_meson_axg_mipi_pcie_analog_power_off,
++	.configure = phy_meson_axg_mipi_pcie_analog_configure,
 +};
 +
-+int meson_axg_mipi_dphy_probe(struct udevice *dev)
++int meson_axg_mipi_pcie_analog_probe(struct udevice *dev)
 +{
-+	struct phy_meson_axg_mipi_dphy_priv *priv = dev_get_priv(dev);
-+	int ret;
++	struct phy_meson_axg_mipi_pcie_analog_priv *priv = dev_get_priv(dev);
 +
-+	ret = regmap_init_mem(dev_ofnode(dev), &priv->regmap);
-+	if (ret)
-+		return ret;
-+
-+	ret = generic_phy_get_by_index(dev, 0, &priv->analog);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_get_by_index(dev, 0, &priv->reset);
-+	if (ret == -ENOTSUPP)
-+		return 0;
-+	else if (ret)
-+		return ret;
-+
-+	ret = reset_deassert(&priv->reset);
-+	if (ret) {
-+		reset_release_all(&priv->reset, 1);
-+		return ret;
-+	}
-+
-+#if CONFIG_IS_ENABLED(CLK)
-+	ret = clk_get_by_index(dev, 0, &priv->clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = clk_enable(&priv->clk);
-+	if (ret && ret != -ENOSYS && ret != -ENOTSUPP) {
-+		pr_err("failed to enable PHY clock\n");
-+		clk_free(&priv->clk);
-+		return ret;
-+	}
-+#endif
++	priv->regmap = syscon_node_to_regmap(dev_get_parent(dev)->node);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
 +
 +	return 0;
 +}
 +
-+static const struct udevice_id meson_axg_mipi_dphy_ids[] = {
-+	{ .compatible = "amlogic,axg-mipi-dphy" },
++static const struct udevice_id meson_axg_mipi_pcie_analog_ids[] = {
++	{ .compatible = "amlogic,axg-mipi-pcie-analog-phy" },
 +	{ }
 +};
 +
-+U_BOOT_DRIVER(meson_axg_mipi_dphy) = {
-+	.name = "meson_axg_mipi_dphy",
++U_BOOT_DRIVER(meson_axg_mipi_pcie_analog) = {
++	.name = "meson_axg_mipi_pcie_analog",
 +	.id = UCLASS_PHY,
-+	.of_match = meson_axg_mipi_dphy_ids,
-+	.probe = meson_axg_mipi_dphy_probe,
-+	.ops = &meson_axg_mipi_dphy_ops,
-+	.priv_auto_alloc_size = sizeof(struct phy_meson_axg_mipi_dphy_priv),
++	.of_match = meson_axg_mipi_pcie_analog_ids,
++	.probe = meson_axg_mipi_pcie_analog_probe,
++	.ops = &meson_axg_mipi_pcie_analog_ops,
++	.priv_auto_alloc_size = sizeof(struct phy_meson_axg_mipi_pcie_analog_priv),
 +};
 -- 
 2.25.1
