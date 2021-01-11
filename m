@@ -1,101 +1,76 @@
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
- by mx.groups.io with SMTP id smtpd.web11.20840.1609421695006792731
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web12.31461.1610354852779650518
  for <u-boot-amlogic@groups.io>;
- Thu, 31 Dec 2020 05:34:56 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-	t=1609421690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=16bbKRi9+W9feHIPrr71GF/UouHNYgTUtIhn0K0P+cU=;
-	b=qvwGCrDTiaWT6S+NQ/xsdOzILbzOnGEp24iwOo68aZA5xqMlAkr72UGcfUnz5Uwo7b5dZq
-	sfBIwk9S9sHAk/61wHGOFgieGP3QLIS5TPpWmt6XUMTAI2v1mkHmyzSTU2H46B7wyskE3r
-	+CR0SP3KjWXjlFOH0c7+czdfDgAjM0w=
+ Mon, 11 Jan 2021 00:47:33 -0800
+Received: by mail-wm1-f49.google.com with SMTP id v14so13122430wml.1
+        for <u-boot-amlogic@groups.io>; Mon, 11 Jan 2021 00:47:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1hfNVVLUulj9T8GuMf0QRPcXWEgfK0DfQ5uxI4Z4LtQ=;
+        b=nXEKESRpkJLpefzu1cdd2AORzRoOJ9ZPAgXBf8/77jzsQUT0Pll9a/3J3IzKs5anu1
+         xPNN43ruxCMV7ATdS8dRbOGLxXTtqNxyzt7GzoW/e7A7hF9F5OPjX2VHRlyjEuIJqB53
+         drGfkHz+Bgp9Mt1EGzY0qK+xyNGM6RX35k+GM6frw35qlYE+mNjWryY0YPFjPY/4sDbq
+         YvfUCjvOCNzw2S2ZFH0GjSGCD7C2hM2jNYlq3VyP757GkP86y5Eb3/1CWUpM8I86ufcd
+         e2LXpz+3OX+7iaLItm27cK4jYh1LElEtuSlXojzOOtzFC/+O5nWB0pjw8gce+Gf0Roas
+         c79Q==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/4] phy: add support for Amlogic Meson AXG MIPI-DSI PHY function
+References: <20201229135901.30090-1-narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <2639b559-a902-18b9-e0b9-174118890d98@baylibre.com>
+Date: Mon, 11 Jan 2021 09:47:29 +0100
 MIME-Version: 1.0
-Date: Thu, 31 Dec 2020 14:34:49 +0100
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [RFC] arm64: dts: meson: revert breaking change for eMMC detection
-In-Reply-To: <1f765c74-8270-4cc6-5c48-58be51d31f49@baylibre.com>
-References: <14c518aa46f3b87e7489bb1a3736ae5640262f9f.1609410832.git.stefan@agner.ch>
- <1f765c74-8270-4cc6-5c48-58be51d31f49@baylibre.com>
-Message-ID: <75c24a7b6378e1b9871b8b29adbba46b@agner.ch>
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20201229135901.30090-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: jbrunet@baylibre.com, u-boot-amlogic@groups.io
+To: u-boot@lists.denx.de, sjg@chromium.org
+Cc: u-boot-amlogic@groups.io, Tom Rini <trini@konsulko.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 2020-12-31 11:44, Neil Armstrong wrote:
-> Hi Stephan,
-> 
-> 
-> On 31/12/2020 11:36, Stefan Agner wrote:
->> The sync of the device tree and dt-bindings from Linux v5.6-rc2
->> 11a48a5a18c6 ("Linux 5.6-rc2") causes eMMC to break for ODROID-C2.
->> Revert the offending change.
->>
->> Fixes: dd5f2351e99a ("arm64: dts: meson: sync dt and bindings from v5.6-rc2")
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->> It seems that eMMC on ODROID-C2 doesn't work anymore since U-Boot 2020.07. A git
->> bisect pointed to the above mentioned commit. This reverts the offending part
->> only, but is probably not the proper fix. I am not familar with the pinctrl
->> drivers, so maybe somebody with a bit more insight can come up with the proper
->> fix?
-> 
-> This has been fixed with
-> https://patchwork.ozlabs.org/project/uboot/patch/20201214184841.237356-1-narmstrong@baylibre.com/
-> 
-> The fix has been merge for 2021.01 already
+Hi Simon, Tom,
 
-Hm, I thought I checked master, but maybe I did the git pull only
-afterwards :-(
+Could you review patches 1 & 2 of this serie ?
 
-Sorry for the noise and thanks for the pointer!
+Thanks,
+Neil
 
---
-Stefan
-
+On 29/12/2020 14:58, Neil Armstrong wrote:
+> The Amlogic AXg SoCs embeds a MIPI D-PHY to communicate with DSI
+> panels, this adds the bindings.
 > 
-> Neil
+> This D-PHY depends on a separate analog PHY.
 > 
->>
->> -> master without this patch
->> => mmc dev 1
->> Card did not respond to voltage select!
->>
->> -> With this patch
->> => mmc dev 1
->> switch to partitions #0, OK
->> mmc1(part 0) is current device
->>
->>  arch/arm/dts/meson-gxbb.dtsi | 12 +++---------
->>  1 file changed, 3 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/arm/dts/meson-gxbb.dtsi b/arch/arm/dts/meson-gxbb.dtsi
->> index 234490d3ee..bb46dcd1c0 100644
->> --- a/arch/arm/dts/meson-gxbb.dtsi
->> +++ b/arch/arm/dts/meson-gxbb.dtsi
->> @@ -404,17 +404,11 @@
->>  		};
->>
->>  		emmc_pins: emmc {
->> -			mux-0 {
->> +			mux {
->>  				groups = "emmc_nand_d07",
->> -				       "emmc_cmd";
->> -				function = "emmc";
->> -				bias-pull-up;
->> -			};
->> -
->> -			mux-1 {
->> -				groups = "emmc_clk";
->> +				       "emmc_cmd",
->> +				       "emmc_clk";
->>  				function = "emmc";
->> -				bias-disable;
->>  			};
->>  		};
->>
->>
+> The Amlogic AXG MIPI + PCIe Analog PHY provides function for both PCIe and
+> MIPI DSI at the same time.
+> 
+> In order to configure the DSI PHY timings, a new "configure" PHY op is added to
+> permit dynamic (re)configuration of the PHY function.
+> 
+> Finally, the Linux MIPI D-PHY configuration helpers are imported to provide a standard
+> set of default D-PHY timings, timings struct and correct calculations.
+> 
+> Neil Armstrong (4):
+>   phy: dphy: Add configuration helpers
+>   generic-phy: add configure op
+>   phy: Add Amlogic AXG MIPI D-PHY driver
+>   phy: Add Amlogic AXG MIPI PCIe Analog PHY driver
+> 
+>  drivers/phy/Kconfig                      |  23 ++
+>  drivers/phy/Makefile                     |   3 +
+>  drivers/phy/meson-axg-mipi-dphy.c        | 393 +++++++++++++++++++++++
+>  drivers/phy/meson-axg-mipi-pcie-analog.c | 233 ++++++++++++++
+>  drivers/phy/phy-core-mipi-dphy.c         | 161 ++++++++++
+>  drivers/phy/phy-uclass.c                 |  11 +
+>  include/generic-phy.h                    |  23 ++
+>  include/phy-mipi-dphy.h                  | 284 ++++++++++++++++
+>  8 files changed, 1131 insertions(+)
+>  create mode 100644 drivers/phy/meson-axg-mipi-dphy.c
+>  create mode 100644 drivers/phy/meson-axg-mipi-pcie-analog.c
+>  create mode 100644 drivers/phy/phy-core-mipi-dphy.c
+>  create mode 100644 include/phy-mipi-dphy.h
+> 
+
