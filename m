@@ -1,151 +1,94 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
- by mx.groups.io with SMTP id smtpd.web08.8189.1610453563225677300
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+ by mx.groups.io with SMTP id smtpd.web10.8889.1610549036257095316
  for <u-boot-amlogic@groups.io>;
- Tue, 12 Jan 2021 04:12:44 -0800
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20210112121241euoutp02197957337e5e21254a393294b10306a4~Zevs2i4fu2450424504euoutp021
-	for <u-boot-amlogic@groups.io>; Tue, 12 Jan 2021 12:12:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20210112121241euoutp02197957337e5e21254a393294b10306a4~Zevs2i4fu2450424504euoutp021
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1610453561;
-	bh=NuXIxTvMZZaW0wrJxpN7nv0BPyX6WrQfiCRwST/pOUQ=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-	b=NEs1n5XoIvCNtta3emu0TOP5R6ph6B9STHWp8e6owjVAXAuCNDV6QBkS9BoLcTWir
-	 Td7jhjsVC78B4Tnn6IAIJsF4YzL4wg6bGfMieiGtW4G7nuOl+ZDsWGwN98jC5vhg47
-	 hAZU2QcAJp0tNkfj/5NEpyqHNITAJjRALF40L0RQ=
-Subject: Re: [PATCH] board: amlogic: vim3: fix setup ethernet mac from efuse
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <769748ab-3c63-4f68-8c0a-d1cec1e6e42c@samsung.com>
-Date: Tue, 12 Jan 2021 13:12:39 +0100
+ Wed, 13 Jan 2021 06:43:56 -0800
+Received: by mail-io1-f54.google.com with SMTP id q1so4530783ion.8
+        for <u-boot-amlogic@groups.io>; Wed, 13 Jan 2021 06:43:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lpdHGVJjpyJYnGmMPLT9JnvPKBZZpKL59BGNNdQx6wI=;
+        b=h14peIcfuMJwHhNeKeaECCySjJ8KxXamXpT19L37zU/rGK9pr/9jKK6zs3rl346xJi
+         HWdFYtXWDEqI3Grt2jbohnAqLPmZGCVGqywndqzwVhlJA+2lfCM7vJ/0nzQYxulOPYK1
+         GcKyo8Udc1qGvKgnORoU9XNXHBE/EosODlqis=
+Return-Path: <trini@konsulko.com>
+Date: Wed, 13 Jan 2021 09:43:52 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20210112
+Message-ID: <20210113144352.GI19813@bill-the-cat>
+References: <c4315c42-2711-c40f-f843-9cef24a24f20@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20210112050308.774189-1-art@khadas.com>
-References: <CGME20210112050446eucas1p1908335956fcb516ca635c3865c9d8495@eucas1p1.samsung.com>
-	<20210112050308.774189-1-art@khadas.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-To: Artem Lapkin <email2tema@gmail.com>, narmstrong@baylibre.com
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, jh80.chung@samsung.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+In-Reply-To: <c4315c42-2711-c40f-f843-9cef24a24f20@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="WHz+neNWvhIGAO8A"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Artem,
+--WHz+neNWvhIGAO8A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 12.01.2021 06:03, Artem Lapkin wrote:
-> Fix reading built-in ethernet MAC address from efuse
->
-> NOTE: MAC is stored in ASCII format, 1bytes =3D 2characters by 0 offset
->
-> if mac from efuse not valid we use meson_generate_serial_ethaddr
->
-> NOTE: remake odroid-n2.c variant from Neil Armstrong <narmstrong@baylib=
-re.com>
->
-> Signed-off-by: Artem Lapkin <art@khadas.com>
+On Tue, Jan 12, 2021 at 05:39:54PM +0100, Neil Armstrong wrote:
 
-First of all, thanks pointing again at this issue.
+> Hi Tom,
+>=20
+> These are the changes for the next release, in brief is adds some feature=
+s to the VIM3 boards
+> (drivers fro function button detect using ADC, mac from efuses), new boar=
+ds (V2 of libretech-cc,
+> GT-King/Pro and Wetek Core2), all this with DT sync'ed over Linux 5.10 wi=
+th new Power Domain
+> driver support. A new DSI panel driver has been added, the rest of suppor=
+t will come next (PHYs, ...).
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/5836
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit c8f2a060a15b8a21cef90c82cc49f70517356a=
+50:
+>=20
+>   xea: config: Disable CONFIG_SPL_OF_PLATDATA_PARENT on XEA (imx28) (2021=
+-01-08 08:42:08 -0500)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20210112
+>=20
+> for you to fetch changes up to 6bfa331a6e22507ae839fb8474ce1b3fd58808df:
+>=20
+>   board: amlogic: vim3: fix setup ethernet mac from efuse (2021-01-12 14:=
+25:55 +0100)
+>=20
 
-I've implemented reading of MAC address from EFUSE for VIM boards and I=20
-was convinced that it is stored in binary format. I've based my=20
-assumptions on the vendor code, especially the message from the vendor=20
-kernel:
+Applied to u-boot/master, thanks!
 
-[=C2=A0=C2=A0=C2=A0 4.028236] efusekeynum: 1
-[=C2=A0=C2=A0=C2=A0 4.031072] efusekeyname:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mac=C2=A0=C2=A0=C2=A0 offset:=C2=
-=A0=C2=A0=C2=A0=C2=A0 0 size:=C2=A0=C2=A0=C2=A0=C2=A0 6
-[=C2=A0=C2=A0=C2=A0 4.037542] efuse efuse: probe OK!
-
-and the vendors dts:
-
-https://github.com/khadas/linux/blob/khadas-vims-4.9.y/arch/arm64/boot/dt=
-s/amlogic/kvim3_linux.dts#L506
-
-which both points that the EFUSE key has only 6 bytes, what means binary=20
-format. I didn't check it further what is really stored there.
-
-Now I checked again and it looks that the DTS (and thus vendor's kernel=20
-message) is incorrect, as the MAC is stored in ASCII and occupies 12=20
-bytes in efuse. One can check that with vendor's kernel:
-
-# cat /sys/class/efuse/userdata
-0x00: 43 38 36 33 31 34 37 30 41 38 44 37 00 00 00 00
-0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-...
-
-This means that your patch is correct, although I would change it a bit.
-
-BTW, the Odroid N2/C4 boards don't have MAC stored explicitly in the=20
-EFUSE, but the boards UUID. The original code use the last bytes of the=20
-UUID as the MAC address.
-
-> ---
->   board/amlogic/vim3/vim3.c | 22 +++++++++++++++++++---
->   1 file changed, 19 insertions(+), 3 deletions(-)
->
-> diff --git a/board/amlogic/vim3/vim3.c b/board/amlogic/vim3/vim3.c
-> index 824fff8262..87d9fe1f02 100644
-> --- a/board/amlogic/vim3/vim3.c
-> +++ b/board/amlogic/vim3/vim3.c
-> @@ -139,26 +139,42 @@ int meson_ft_board_setup(void *blob, struct bd_in=
-fo *bd)
->   }
->  =20
->   #define EFUSE_MAC_OFFSET	0
-> -#define EFUSE_MAC_SIZE		6
-> +#define EFUSE_MAC_SIZE		12
-> +#define MAC_ADDR_LEN		6
->  =20
->   int misc_init_r(void)
->   {
-> -	uint8_t mac_addr[EFUSE_MAC_SIZE];
-> +	uint8_t mac_addr[MAC_ADDR_LEN];
-> +	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
->   	ssize_t len;
->  =20
->   	meson_eth_init(PHY_INTERFACE_MODE_RGMII, 0);
->  =20
->   	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
->   		len =3D meson_sm_read_efuse(EFUSE_MAC_OFFSET,
-> -					  mac_addr, EFUSE_MAC_SIZE);
-> +					  efuse_mac_addr, EFUSE_MAC_SIZE);
->   		if (len !=3D EFUSE_MAC_SIZE)
->   			return 0;
->  =20
-> +		/* MAC is stored in ASCII format, 1bytes =3D 2characters */
-> +		for (int i =3D 0; i < 6; i++) {
-> +			tmp[0] =3D efuse_mac_addr[i * 2];
-> +			tmp[1] =3D efuse_mac_addr[i * 2 + 1];
-> +			tmp[2] =3D '\0';
-> +			mac_addr[i] =3D simple_strtoul(tmp, NULL, 16);
-> +		}
-> +
->   		if (is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
->   		else
->   			meson_generate_serial_ethaddr();
-
-Now the above code is the same as for Odroid N2/C4, so it can be moved=20
-to arch/arm/mach-meson/board-common.c, maybe as=20
-meson_read_efuse_mac_addr() with the offset as parameter, so it can be=20
-directly used by Odroids and VIMs.
-
-> +
-> +		eth_env_get_enetaddr("ethaddr", mac_addr);
-> +		printf("[i] setup onboard mac %02X:%02X:%02X:%02X:%02X:%02X\n",
-> +			mac_addr[0],mac_addr[1],mac_addr[2],
-> +			mac_addr[3],mac_addr[4],mac_addr[5]);
-
-I'm not really convinced that this message has to be displayed. If so,=20
-then use "%pM" for printing MAC address.
-
->   	}
->  =20
->   	return 0;
->   }
-> +
-
-Best regards
 --=20
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Tom
 
+--WHz+neNWvhIGAO8A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAl//BygACgkQFHw5/5Y0
+tyy4YAv9ESrgCEJ8uP0Tco9obpPaeu7GTM01+hQmdyanxFzDUm8joZgdrrSi6WDv
+f1VahpruMa5NonBFrazHT5NzkqMP8VKSiCfEGA0UY2Mix+KtC1R9a9m0GT9lwsqE
++zTYN80pQhVwlpRwIZvrxzi68EpZVZkSWkGvLVegnwly3CJVquM/3DjQi1UFvBr4
+b/vEAXlOBvkgwH//curDGgXaEgUl7pvUefQ+Od+juEF8RT2NtPSQTHmSMffrLC1P
+VKbfv/x5i2l8MEI71HUIBC4b6NjjToLRDbvbsUx6QKKSbs95+oCsnkiWzIitEI8Q
+TjPkwZKs3xyIzLGZu1m++ELsn3NSOf5CRkHE/gaXSHmLI5+LEc6GfjV80Mmo+8l3
+NPXyVx3Y46YScHp3IFMr0o0cUVlOImy9N8htYU6FWJj8m8bExLQXLGSC16oAUIgO
+b0D3k2SHdUVGJt/qHkmOGvJved/+wFxQp4ZW0ihTn5RhMuyz8lgJZjNp9d/hOeF7
+IDUg7paO
+=ERV9
+-----END PGP SIGNATURE-----
+
+--WHz+neNWvhIGAO8A--
