@@ -1,55 +1,96 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.web08.129.1610687900764666065
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+ by mx.groups.io with SMTP id smtpd.web12.1184.1610698323197871795
  for <u-boot-amlogic@groups.io>;
- Thu, 14 Jan 2021 21:18:20 -0800
-Received: by mail-pj1-f53.google.com with SMTP id w1so5678885pjc.0
-        for <u-boot-amlogic@groups.io>; Thu, 14 Jan 2021 21:18:20 -0800 (PST)
+ Fri, 15 Jan 2021 00:12:03 -0800
+Received: by mail-pf1-f174.google.com with SMTP id d2so5016742pfq.5
+        for <u-boot-amlogic@groups.io>; Fri, 15 Jan 2021 00:12:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ru92q30VrXaJ9a8mzVLaRxIw3EbnfTCXQ3TfFzyO08s=;
-        b=uohCXiMYCCqGeJgQbJgmAz4ClPJPNa67Cn6Qc5ctAA+nKC45c7o5TN3gxv0qLlwvIA
-         q3h/6yU+Q/ccJMg6ThHGsxU0aoYKIR5YH9zG2T248oSIACpEh2zb7KiTa5F0+BZgCb2O
-         BlsNXX/ZzgdA3yaG7WeFOBdtV1ru3SW53bSkDH1FptIoZk8+AZ4ubDlyBFknjMnBUnTT
-         Gjnww3iqiVOoIBPqORq73U6p/Z0If40z9LBlkdY5PZ7zMQyCGB2eHVaYTyLaqKpQMuIe
-         6GoJf6TeDcC46/Dk4Ti0YRgwnffoQJ30DuaHXw67mTuluX4S7VfdzGR7YW4N6lnuJ2r0
-         BLcw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T3Q8gcUuX8y0myj4nrIRMEHYXU2AzWyEwffh9+TTUko=;
+        b=HdzwPZiwdkhcT+2R6Iyzm0QqqsGv6PEo1qJCHrP9sOTDw/DB2Cb7TsA4sOUyaSw8M0
+         XVC5+bMPsYOrlOwn0B+udAdeJfcv3N8EvXQ5XCVjf8KqRI9XUo/ySHs9d1Xpwam03xdV
+         AxTaMF0eVH5HukKU4PqQI1Cgl07fvW5rQRZtg3MQtRfqtv66tnLdxZBkn6dYGgDsCj56
+         Y9BYRrK3X8Cpo51ga1fszaHenjizHaghnDMHh1OF6W1C2tJhUN0HxYAxjELgLs/prZ69
+         OKnonnt0XVVvQumAd7GG0iwBM9YT0Usl1qjg+MdBaBQFc5ZMIFyaIzSf84hzy234ovUd
+         Ho7w==
 Return-Path: <email2tema@gmail.com>
 From: Artem Lapkin <email2tema@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: meson: fix meson-khadas-vim3-u-boot.dtsi
-Date: Fri, 15 Jan 2021 13:15:58 +0800
-Message-Id: <20210115051558.469734-3-art@khadas.com>
-In-Reply-To: <20210115051558.469734-1-art@khadas.com>
-References: <20210115051558.469734-1-art@khadas.com>
+Subject: [PATCH] video: meson: add HDMI fail-save FullHD option
+Date: Fri, 15 Jan 2021 16:11:39 +0800
+Message-Id: <20210115081139.567155-1-art@khadas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: narmstrong@baylibre.com
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, m.szyprowski@samsung.com, jh80.chung@samsung.com, hs@denx.de, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, m.szyprowski@samsung.com, jh80.chung@samsung.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Add missed include meson-g12-common-u-boot.dtsi
+add VIDEO_MESON_HDMI_FAIL_SAVE_FULL_HD configuration option
 
-PROBLEM: missed hdmi video setup for VIM3 and VIM3L boards
+ABOUT:
+
+Force setup FullHD display mode, if proper timing cant readed.
+from display! Its happens for some 4K display, which send
+unsupported high timings, but same time can works as FullHD!
+Also its will be useful for suspended or disconnected displays.
+
+NOTE: this option disabled by default
 
 Signed-off-by: Artem Lapkin <art@khadas.com>
 ---
- arch/arm/dts/meson-khadas-vim3-u-boot.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/video/meson/Kconfig     | 10 ++++++++++
+ drivers/video/meson/meson_vpu.c | 19 +++++++++++++++++--
+ 2 files changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
-index 81fd5be378..5d6444cbac 100644
---- a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
-+++ b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
-@@ -10,6 +10,8 @@
- 	};
- };
- 
-+#include "meson-g12-common-u-boot.dtsi"
+diff --git a/drivers/video/meson/Kconfig b/drivers/video/meson/Kconfig
+index 0c9ddeb8..55d67700 100644
+--- a/drivers/video/meson/Kconfig
++++ b/drivers/video/meson/Kconfig
+@@ -10,3 +10,13 @@ config VIDEO_MESON
+ 	select DISPLAY
+ 	help
+ 	  Enable Amlogic Meson Video Processing Unit video support.
 +
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_ctrl_pins>, <&emmc_data_4b_pins>, <&emmc_ds_pins>;
++config VIDEO_MESON_HDMI_FAIL_SAVE_FULL_HD
++	bool "Enable HDMI fail-save FullHD mode"
++	depends on VIDEO_MESON
++	default n
++	help
++	  Force setup FullHD display mode, if proper timing cant readed.
++	  from display! Its happens for some 4K display, which send
++	  unsupported high timings, but same time can works as FullHD!
++	  Also its will be useful for suspended or disconnected displays
+diff --git a/drivers/video/meson/meson_vpu.c b/drivers/video/meson/meson_vpu.c
+index 4868839f..af677a45 100644
+--- a/drivers/video/meson/meson_vpu.c
++++ b/drivers/video/meson/meson_vpu.c
+@@ -52,8 +52,23 @@ static int meson_vpu_setup_mode(struct udevice *dev, struct udevice *disp)
+ 	if (disp) {
+ 		ret = display_read_timing(disp, &timing);
+ 		if (ret) {
+-			debug("%s: Failed to read timings\n", __func__);
+-			goto cvbs;
++			if (IS_ENABLED(CONFIG_VIDEO_MESON_HDMI_FAIL_SAVE_FULL_HD)) {
++				printf("DISPLAY: setup failsave FullHD mode\n");
++				timing.pixelclock.typ = 148500000;
++				timing.hactive.typ = 1920;
++				timing.hfront_porch.typ = 88;
++				timing.hback_porch.typ = 148;
++				timing.hsync_len.typ = 44;
++				timing.vactive.typ = 1080;
++				timing.vfront_porch.typ = 4;
++				timing.vback_porch.typ = 36;
++				timing.vsync_len.typ = 5;
++				timing.flags = 10;
++				timing.hdmi_monitor = true;
++			} else {
++				debug("%s: Failed to read timings\n", __func__);
++				goto cvbs;
++			}
+ 		}
+ 
+ 		uc_priv->xsize = timing.hactive.typ;
 -- 
 2.25.1
 
