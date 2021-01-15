@@ -1,126 +1,65 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web08.33154.1610974558108329820
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.web10.335.1610736221972728357
  for <u-boot-amlogic@groups.io>;
- Mon, 18 Jan 2021 04:55:58 -0800
-Received: by mail-wr1-f52.google.com with SMTP id 7so9122536wrz.0
-        for <u-boot-amlogic@groups.io>; Mon, 18 Jan 2021 04:55:57 -0800 (PST)
+ Fri, 15 Jan 2021 10:43:42 -0800
+Received: by mail-qv1-f51.google.com with SMTP id j18so4436006qvu.3
+        for <u-boot-amlogic@groups.io>; Fri, 15 Jan 2021 10:43:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D1xoU4fsA1BsB76hUShCrn5oA99OU0qayUj3B6nMWzk=;
-        b=IQs+z5Ae03Y8uImhRdJ6+jJ1f2DO/MEGv2CKwJYSPRLbueBJkPxPO+g9zXMsoSgHoN
-         lq3iGrd4JVoqe2BNxaR6tealV+FLg81jwAUCth3K6YCZwWD7dXKNunZU+sUhXEII96YX
-         UZzAEfVm4ICstbRSS2HrWayjHWhLGjhVPVntxJR66gqoZuxeRJON7Y7EKhzfDSmuRO5T
-         NobvNcsM2ya3XmKa5LScC1VqAaAkk+oO0wkKvg6Xs8SaKNCZTDocyjSGUnBQCWIAODXW
-         Ya2qv9+qRG9Q/BGKIphxhwt3ssykNNeKEQwN+aybEU7w3Q+b/x4KI86q3UXYG03qPe6k
-         xfSQ==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4 0/3] VIM3: add support for checking 'Function' button state
-References: <CGME20201222085638eucas1p158d91ce4a22d13623b19706b26374078@eucas1p1.samsung.com>
- <20201222085633.10194-1-m.szyprowski@samsung.com>
- <47e599d6-288c-163c-e40a-9c5d5b534bf9@baylibre.com>
- <7a32a0a8-689e-6758-2062-84a2e9bca1c1@gmx.de>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <5a3a1b93-885a-6131-923d-33cdf8dbc589@baylibre.com>
-Date: Mon, 18 Jan 2021 13:55:53 +0100
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QtXfNLX8QBTrk6mfxJe6oDerscCpHR3spEPsuaJ3VC8=;
+        b=giKY6+hggOw3afd/GL9iTYstMfS1hw8rgWDHgGyF3Cg7HkKzW+Vci80zdr93mmzhVe
+         CcaoeDUX1CkIi3iAFyJDkDonr6jF2AXxsw3YzNvXabvR4MErL8yJ+rTEQGYIUgE6f8Zd
+         aga4e8O+sDqSujxHwHyQJjGPvXjmdD4KY5Mlw=
+Return-Path: <trini@konsulko.com>
+Date: Fri, 15 Jan 2021 13:43:38 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PATCH 0/4] phy: add support for Amlogic Meson AXG MIPI-DSI PHY function
+Message-ID: <20210115184338.GE9782@bill-the-cat>
+References: <20201229135901.30090-1-narmstrong@baylibre.com>
+ <2639b559-a902-18b9-e0b9-174118890d98@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <7a32a0a8-689e-6758-2062-84a2e9bca1c1@gmx.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>, Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <2639b559-a902-18b9-e0b9-174118890d98@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MIdTMoZhcV1D07fI"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot@lists.denx.de, sjg@chromium.org, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+--MIdTMoZhcV1D07fI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 18/01/2021 13:48, Heinrich Schuchardt wrote:
-> On 18.01.21 11:24, Neil Armstrong wrote:
->> Hi,
->>
->> On 22/12/2020 09:56, Marek Szyprowski wrote:
->>> Hi All,
->>>
->>> This patchset adds all building blocks needed for checking the 'Function'
->>> button state in the boot script on Amlogic A311D based VIM3 board. This
->>> button is connected to the ADC lines of the SoC, so it required to enable
->>> meson SARADC, the clocks needed for it and a simple button-adc drivers.
->>>
->>> Once applied, one can use following commands in the boot scripts:
->>> -->8---
->>> echo Checking Func button state: \\c
->>> if button Function
->>> then
->>> 	echo Selected alternative boot
->>> 	...
->>> fi
->>> --->8---
->>>
->>> Best regards
->>> Marek Szyprowski
->>> Samsung R&D Institute Poland
->>>
->>>
->>> Changelog:
->>> v4:
->>> - rebased onto uboot-amlogic/u-boot-amlogic-next and dropped merged patches
->>> - added adc-keys bindings docs (copied from Linux kernel)
->>> - minor code adjustments pointed by Simon
->>> - enabled driver also in khadas-vim3l_defconfig
->>>
->>> v3: https://lists.denx.de/pipermail/u-boot/2020-December/435072.html
->>> - removed 'button' env variable
->>> - extended kconfig and patch descriptions
->>>
->>> v2: https://lists.denx.de/pipermail/u-boot/2020-December/434991.html
->>> - removed Change-Id tags
->>> - split defconfig changes into ADC and button related
->>>
->>> v1: https://lists.denx.de/pipermail/u-boot/2020-December/434875.html
->>> - initial submission
->>
->> What's the state of the patchset ?
-> 
-> Hello Neil,
-> 
-> the series is assigned to you. Patch 2 is incorrect. Patch 1 can be
-> updated to match Linux. So I suggest to set the status for the series to
-> "changes requested".
-> 
+On Mon, Jan 11, 2021 at 09:47:29AM +0100, Neil Armstrong wrote:
 
-Sure, it was more a question to Marek, but yeah I'll tag them "changes requested"
+> Hi Simon, Tom,
+>=20
+> Could you review patches 1 & 2 of this serie ?
 
-Neil
+Patches 1 and 2 look fine to me, FWIW.
 
-> Best regards
-> 
-> Heinrich
-> 
->>
->> Neil
->>
->>>
->>>
->>> Patch summary:
->>>
->>> Marek Szyprowski (3):
->>>   dt-bindings: input: adc-keys bindings documentation
->>>   button: add a simple Analog to Digital Converter device based button
->>>     driver
->>>   configs: khadas-vim3(l): enable Function button support
->>>
->>>  configs/khadas-vim3_defconfig               |   2 +
->>>  configs/khadas-vim3l_defconfig              |   2 +
->>>  doc/device-tree-bindings/input/adc-keys.txt |  49 ++++++++
->>>  drivers/button/Kconfig                      |   8 ++
->>>  drivers/button/Makefile                     |   1 +
->>>  drivers/button/button-adc.c                 | 121 ++++++++++++++++++++
->>>  6 files changed, 183 insertions(+)
->>>  create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
->>>  create mode 100644 drivers/button/button-adc.c
->>>
->>
-> 
+--=20
+Tom
 
+--MIdTMoZhcV1D07fI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmAB4loACgkQFHw5/5Y0
+tyzH/wv/WmGN8U8kPWoELYFenb1KePiNs5RVXU/Ndzq9NcCbwH0o58YZJxFv7M6W
+As+vpJUTflP4MCIZUTD2P1l+eb9G/g1+X2wVzQs87lcd+hagid0QgHru69QLo5j/
+lxOI2BcnHBroDXp5Un7KIaiyCQWugifSfIJw11LczRlIFuuju/rg6u2amKWRiRyV
+LDuEU2JYTDziPAVWPoavcdQzvEZttzKLLS1768gfcMgAMwD1IcnJwIYatFaolthr
+gzjY2lroasF6J22huMLVkrYUEngk2VAo5yHa/X2UMS9iUTLXymDKCZnJfWA+TESx
+cxHUMHePsIzS4vG7RaIcdMF7nPUtlnYMDsfemlt/wfFSe81c2g78TqDcmZbyXLfh
+pFYV987byh29iVaIEx5UfeaUWDkDy3BKQjg18LanXngwizoH6Ekiz3sqq2nz/XTL
+eZcJXBzIU71SRRAowPvVIXiUnIaFowtzAT0Y96F+Z3ahiFW7zR+rDTY3zCEdqbEt
+BmpIfofJ
+=6d8H
+-----END PGP SIGNATURE-----
+
+--MIdTMoZhcV1D07fI--
