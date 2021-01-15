@@ -1,96 +1,137 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
- by mx.groups.io with SMTP id smtpd.web12.1184.1610698323197871795
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+ by mx.groups.io with SMTP id smtpd.web08.1393.1610699994177505019
  for <u-boot-amlogic@groups.io>;
- Fri, 15 Jan 2021 00:12:03 -0800
-Received: by mail-pf1-f174.google.com with SMTP id d2so5016742pfq.5
-        for <u-boot-amlogic@groups.io>; Fri, 15 Jan 2021 00:12:03 -0800 (PST)
+ Fri, 15 Jan 2021 00:39:54 -0800
+Received: by mail-io1-f46.google.com with SMTP id q2so15032009iow.13
+        for <u-boot-amlogic@groups.io>; Fri, 15 Jan 2021 00:39:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T3Q8gcUuX8y0myj4nrIRMEHYXU2AzWyEwffh9+TTUko=;
-        b=HdzwPZiwdkhcT+2R6Iyzm0QqqsGv6PEo1qJCHrP9sOTDw/DB2Cb7TsA4sOUyaSw8M0
-         XVC5+bMPsYOrlOwn0B+udAdeJfcv3N8EvXQ5XCVjf8KqRI9XUo/ySHs9d1Xpwam03xdV
-         AxTaMF0eVH5HukKU4PqQI1Cgl07fvW5rQRZtg3MQtRfqtv66tnLdxZBkn6dYGgDsCj56
-         Y9BYRrK3X8Cpo51ga1fszaHenjizHaghnDMHh1OF6W1C2tJhUN0HxYAxjELgLs/prZ69
-         OKnonnt0XVVvQumAd7GG0iwBM9YT0Usl1qjg+MdBaBQFc5ZMIFyaIzSf84hzy234ovUd
-         Ho7w==
-Return-Path: <email2tema@gmail.com>
-From: Artem Lapkin <email2tema@gmail.com>
-Subject: [PATCH] video: meson: add HDMI fail-save FullHD option
-Date: Fri, 15 Jan 2021 16:11:39 +0800
-Message-Id: <20210115081139.567155-1-art@khadas.com>
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P7dQmP9rFSsFhCLAYBYJOdPh2opkR1oUhVhRsR5VyWM=;
+        b=Ep2YCboA67gUXCqXXJEnAjoelI+WPGTNwZ1mxQvy7yBYfwXQDcR/MC/c82DxbmU3F7
+         Kh+8mufsUCXyX3bPeIdkoyzyQsx5b3okhDwg3rmjwqvBMYRRPub0P3j0MkTyfDjEbYao
+         HAIaKscg7LU/z2kKtZVPlhCk9hHvUfxk/57Ceol4+4/TFG2rG7/l/LAjxbjQbZryr5LE
+         UkdQ8R5LMYIEdU9sqwXFYaV1EztW6hDe2aeh0BGJj/tMUnRwcJDYJsqZPV7l2r3kdNzx
+         03/AS1Me6LQtH4fKixTchbNF9fK9RVp+6lglYTBWw/cynV5eAwrNjMGjjJS4PHVnmIUu
+         jplQ==
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: narmstrong@baylibre.com
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, m.szyprowski@samsung.com, jh80.chung@samsung.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+References: <20210115051558.469734-1-art@khadas.com> <20210115051558.469734-3-art@khadas.com>
+ <0aa51879-43da-d249-09c3-b32e601224b6@baylibre.com>
+In-Reply-To: <0aa51879-43da-d249-09c3-b32e601224b6@baylibre.com>
+From: Art Nikpal <email2tema@gmail.com>
+Date: Fri, 15 Jan 2021 16:39:42 +0800
+Message-ID: <CAKaHn9+946XJ5S3e8hQRJukpZ3X5EQqn0TYMQdSgth4KxwbKbw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: meson: fix meson-khadas-vim3-u-boot.dtsi
+Content-Type: multipart/alternative; boundary="000000000000f5ad3d05b8ec505d"
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, m.szyprowski@samsung.com, Jaehoon Chung <jh80.chung@samsung.com>, hs@denx.de, Artem Lapkin <art@khadas.com>, nick@khadas.com, Gouwa Wang <gouwa@khadas.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-add VIDEO_MESON_HDMI_FAIL_SAVE_FULL_HD configuration option
+--000000000000f5ad3d05b8ec505d
+Content-Type: text/plain; charset="UTF-8"
 
-ABOUT:
+> It's not necessary since already included in:
 
-Force setup FullHD display mode, if proper timing cant readed.
-from display! Its happens for some 4K display, which send
-unsupported high timings, but same time can works as FullHD!
-Also its will be useful for suspended or disconnected displays.
+Yes u right !  Sorry !
 
-NOTE: this option disabled by default
 
-Signed-off-by: Artem Lapkin <art@khadas.com>
----
- drivers/video/meson/Kconfig     | 10 ++++++++++
- drivers/video/meson/meson_vpu.c | 19 +++++++++++++++++--
- 2 files changed, 27 insertions(+), 2 deletions(-)
+On Fri, Jan 15, 2021 at 4:15 PM Neil Armstrong <narmstrong@baylibre.com>
+wrote:
 
-diff --git a/drivers/video/meson/Kconfig b/drivers/video/meson/Kconfig
-index 0c9ddeb8..55d67700 100644
---- a/drivers/video/meson/Kconfig
-+++ b/drivers/video/meson/Kconfig
-@@ -10,3 +10,13 @@ config VIDEO_MESON
- 	select DISPLAY
- 	help
- 	  Enable Amlogic Meson Video Processing Unit video support.
-+
-+config VIDEO_MESON_HDMI_FAIL_SAVE_FULL_HD
-+	bool "Enable HDMI fail-save FullHD mode"
-+	depends on VIDEO_MESON
-+	default n
-+	help
-+	  Force setup FullHD display mode, if proper timing cant readed.
-+	  from display! Its happens for some 4K display, which send
-+	  unsupported high timings, but same time can works as FullHD!
-+	  Also its will be useful for suspended or disconnected displays
-diff --git a/drivers/video/meson/meson_vpu.c b/drivers/video/meson/meson_vpu.c
-index 4868839f..af677a45 100644
---- a/drivers/video/meson/meson_vpu.c
-+++ b/drivers/video/meson/meson_vpu.c
-@@ -52,8 +52,23 @@ static int meson_vpu_setup_mode(struct udevice *dev, struct udevice *disp)
- 	if (disp) {
- 		ret = display_read_timing(disp, &timing);
- 		if (ret) {
--			debug("%s: Failed to read timings\n", __func__);
--			goto cvbs;
-+			if (IS_ENABLED(CONFIG_VIDEO_MESON_HDMI_FAIL_SAVE_FULL_HD)) {
-+				printf("DISPLAY: setup failsave FullHD mode\n");
-+				timing.pixelclock.typ = 148500000;
-+				timing.hactive.typ = 1920;
-+				timing.hfront_porch.typ = 88;
-+				timing.hback_porch.typ = 148;
-+				timing.hsync_len.typ = 44;
-+				timing.vactive.typ = 1080;
-+				timing.vfront_porch.typ = 4;
-+				timing.vback_porch.typ = 36;
-+				timing.vsync_len.typ = 5;
-+				timing.flags = 10;
-+				timing.hdmi_monitor = true;
-+			} else {
-+				debug("%s: Failed to read timings\n", __func__);
-+				goto cvbs;
-+			}
- 		}
- 
- 		uc_priv->xsize = timing.hactive.typ;
--- 
-2.25.1
+> Hi,
+>
+>
+> On 15/01/2021 06:15, Artem Lapkin wrote:
+> > Add missed include meson-g12-common-u-boot.dtsi
+> >
+> > PROBLEM: missed hdmi video setup for VIM3 and VIM3L boards
+> >
+> > Signed-off-by: Artem Lapkin <art@khadas.com>
+> > ---
+> >  arch/arm/dts/meson-khadas-vim3-u-boot.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+> b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+> > index 81fd5be378..5d6444cbac 100644
+> > --- a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+> > +++ b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+> > @@ -10,6 +10,8 @@
+> >       };
+> >  };
+> >
+> > +#include "meson-g12-common-u-boot.dtsi"
+> > +
+>
+> It's not necessary since already included in:
+> arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi:#include
+> "meson-g12-common-u-boot.dtsi"
+> and
+> arch/arm/dts/meson-sm1-u-boot.dtsi:#include "meson-g12-common-u-boot.dtsi"
+>
+> What u-boot version are you using ?
+> Please check u-boot-master and my u-boot-amlogic and u-boot-amlogic-next
+> branches on https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic
+> before posting !
+>
+> Thanks,
+> Neil
+>
 
+--000000000000f5ad3d05b8ec505d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><span class=3D"gmail-im"><br>
+<br></span><div>
+&gt; It&#39;s not necessary since already included in:</div><div><br></div>=
+<div>Yes u right !=C2=A0 Sorry !<br></div><div><br></div></div><br><div cla=
+ss=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, Jan 15, 20=
+21 at 4:15 PM Neil Armstrong &lt;<a href=3D"mailto:narmstrong@baylibre.com"=
+>narmstrong@baylibre.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail=
+_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204=
+,204);padding-left:1ex">Hi,<br>
+<br>
+<br>
+On 15/01/2021 06:15, Artem Lapkin wrote:<br>
+&gt; Add missed include meson-g12-common-u-boot.dtsi<br>
+&gt; <br>
+&gt; PROBLEM: missed hdmi video setup for VIM3 and VIM3L boards<br>
+&gt; <br>
+&gt; Signed-off-by: Artem Lapkin &lt;<a href=3D"mailto:art@khadas.com" targ=
+et=3D"_blank">art@khadas.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 arch/arm/dts/meson-khadas-vim3-u-boot.dtsi | 2 ++<br>
+&gt;=C2=A0 1 file changed, 2 insertions(+)<br>
+&gt; <br>
+&gt; diff --git a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi b/arch/arm/dts=
+/meson-khadas-vim3-u-boot.dtsi<br>
+&gt; index 81fd5be378..5d6444cbac 100644<br>
+&gt; --- a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi<br>
+&gt; +++ b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi<br>
+&gt; @@ -10,6 +10,8 @@<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;=C2=A0 };<br>
+&gt;=C2=A0 <br>
+&gt; +#include &quot;meson-g12-common-u-boot.dtsi&quot;<br>
+&gt; + <br>
+<br>
+It&#39;s not necessary since already included in:<br>
+arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi:#include &quot;meson-=
+g12-common-u-boot.dtsi&quot;<br>
+and<br>
+arch/arm/dts/meson-sm1-u-boot.dtsi:#include &quot;meson-g12-common-u-boot.d=
+tsi&quot;<br>
+<br>
+What u-boot version are you using ?<br>
+Please check u-boot-master and my u-boot-amlogic and u-boot-amlogic-next br=
+anches on <a href=3D"https://gitlab.denx.de/u-boot/custodians/u-boot-amlogi=
+c" rel=3D"noreferrer" target=3D"_blank">https://gitlab.denx.de/u-boot/custo=
+dians/u-boot-amlogic</a> before posting !<br>
+<br>
+Thanks,<br>
+Neil<br>
+</blockquote></div>
+
+--000000000000f5ad3d05b8ec505d--
