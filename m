@@ -1,176 +1,111 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
- by mx.groups.io with SMTP id smtpd.web11.32827.1610973931596789184
+ by mx.groups.io with SMTP id smtpd.web09.32672.1610974133105809236
  for <u-boot-amlogic@groups.io>;
- Mon, 18 Jan 2021 04:45:32 -0800
+ Mon, 18 Jan 2021 04:48:53 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1610973923;
-	bh=wVmDhmkyarod6C8W61VerQNKXZZPOp6ENDZ8S6ho6hE=;
-	h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-	b=cYiP3+zilYxk+lKGFhEOYviqhqG6zjlSLjoqFIbHNPxdk7bwFljdFk8CRwlmegsdS
-	 3NYAlmleOrrjRe2sH+2oanO6PNeLYmApkxTgc9dt4048N0dUUCGeMlTr+ukXVXsyEm
-	 OVjLp7WG/t32rB52nYmuBmUvCx4sNy4nXda0N2N8=
-Subject: Re: [PATCH v4 1/3] dt-bindings: input: adc-keys bindings documentation
+	s=badeba3b8450; t=1610974126;
+	bh=6fr2bkMKxUHxAMKRLP3bwN8Jj+YZParXiVJk3QcPxJQ=;
+	h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+	b=DGbE4x0mp71q6s3ur7LfPrPZWWqfYuiHcneM0FwThPlI4LL3JTcE8PPgrNux9vTn7
+	 lxIrLUxYyIMg088S26jtNk2SnAAkHeHwzECYpJJ7ItVyfOk7OyDZAu3KuXK4ZjdtnM
+	 olN2vDzI2zufc58jQO8e6t8K1SKUKhuK4hdJAWkg=
+Subject: Re: [PATCH v4 0/3] VIM3: add support for checking 'Function' button state
+References: <CGME20201222085638eucas1p158d91ce4a22d13623b19706b26374078@eucas1p1.samsung.com>
+ <20201222085633.10194-1-m.szyprowski@samsung.com>
+ <47e599d6-288c-163c-e40a-9c5d5b534bf9@baylibre.com>
 From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-References: <20201222085633.10194-1-m.szyprowski@samsung.com>
- <CGME20201222085638eucas1p14d9d9da136593a12fea0140c403095c4@eucas1p1.samsung.com>
- <20201222085633.10194-2-m.szyprowski@samsung.com>
- <1b82e9ef-e8af-87e1-ea68-d71d65c2aa8a@gmx.de>
- <f8930b5a-e1eb-7c41-19ad-6ba539c59322@gmx.de>
-Message-ID: <10bbd556-4686-2129-4bf4-74153a37433a@gmx.de>
-Date: Mon, 18 Jan 2021 13:45:16 +0100
+Message-ID: <7a32a0a8-689e-6758-2062-84a2e9bca1c1@gmx.de>
+Date: Mon, 18 Jan 2021 13:48:42 +0100
 MIME-Version: 1.0
-In-Reply-To: <f8930b5a-e1eb-7c41-19ad-6ba539c59322@gmx.de>
+In-Reply-To: <47e599d6-288c-163c-e40a-9c5d5b534bf9@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Neil Armstrong <narmstrong@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 22.12.20 12:28, Heinrich Schuchardt wrote:
-> On 12/22/20 11:12 AM, Heinrich Schuchardt wrote:
->> On 12/22/20 9:56 AM, Marek Szyprowski wrote:
->>> Dump adc-keys bindings documentation from Linux kernel source tree
->>> v5.10.
->>>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> ---
->>> =C2=A0 doc/device-tree-bindings/input/adc-keys.txt | 49 ++++++++++++++=
-+++++++
->>> =C2=A0 1 file changed, 49 insertions(+)
->>> =C2=A0 create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
->>>
->>> diff --git a/doc/device-tree-bindings/input/adc-keys.txt
->>> b/doc/device-tree-bindings/input/adc-keys.txt
->>> new file mode 100644
->>> index 0000000000..e551814629
->>> --- /dev/null
->>> +++ b/doc/device-tree-bindings/input/adc-keys.txt
->>> @@ -0,0 +1,49 @@
->>> +ADC attached resistor ladder buttons
->>> +------------------------------------
->>> +
->>> +Required properties:
->>> + - compatible: "adc-keys"
->>> + - io-channels: Phandle to an ADC channel
->>> + - io-channel-names =3D "buttons";
->>> + - keyup-threshold-microvolt: Voltage at which all the keys are
->>> considered up.
->>> +
->>> +Optional properties:
->>> +=C2=A0=C2=A0=C2=A0 - poll-interval: Poll interval time in millisecond=
-s
->>> +=C2=A0=C2=A0=C2=A0 - autorepeat: Boolean, Enable auto repeat feature =
-of Linux input
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 subsystem.
->>> +
->>> +Each button (key) is represented as a sub-node of "adc-keys":
->>> +
->>> +Required subnode-properties:
->>> +=C2=A0=C2=A0=C2=A0 - label: Descriptive name of the key.
->>> +=C2=A0=C2=A0=C2=A0 - linux,code: Keycode to emit.
->>> +=C2=A0=C2=A0=C2=A0 - press-threshold-microvolt: Voltage ADC input whe=
-n this key is
->>> pressed.
->>
->> https://www.merriam-webster.com/dictionary/threshold
->> defines threshold as "a level, point, or value above which something is
->> true or will take place and below which it is not or will not"
->>
->> "when this key is pressed" leaves it completely open if a key is
->> considered pressed below or above the threshold. Please, replace the
->> word 'when' by either 'above which' or 'below which'.
->>
->> In the example keyup-threshold-microvolt is larger than
->> keyup-threshold-microvolt all values of press-threshold-microvolt. So
->> one might assume that 'above' is the intended meaning and the
->> interpretation of the example might be:
->>
->> 2.000.000 <=3D value: no key pressed
->> 1.500.000 <=3D value < 2.000.000: KEY_VOLUMEUP pressed
->> 1.000.000 <=3D value < 1.500.000: KEY_VOLUMEDOWN pressed
->> 500.000 <=3D value < 1.000.000: KEY_ENTER pressed
->> value < 500.000: no key pressed
->>
->> Both directions 'above' and 'below' make sense. So maybe if
->> keyup-threshold-microvolt is lower than all press-threshold-microvolt
->> you want to invert the logic?
->>
->> The binding lacks a hysteresis which is needed for a reliable function.
->>
->> If you look into drivers/input/keyboard/adc-keys.c in the Linux source,
->> you can see that it is not using the threshold value as a threshold at
->> all. Instead is uses abs(st->map[i].voltage - value) to find the neares=
-t
->> "threshold" voltage level.
->>
->> Could you, please, try to bring this text into a form that cannot be
->> misinterpreted and reconcile with upstream. This should include
->>
->> * a results table for the example
->> * a definition if keyup-threshold-microvolt must be higher than all
->> =C2=A0=C2=A0 press-threshold-microvolt or may be lower than all
->> =C2=A0=C2=A0 press-threshold-microvolt
->> * a sentence forbidding keyup-threshold-microvolt to be between two
->> =C2=A0=C2=A0 press-threshold-microvolt
->> * a definition if or when any of the thresholds is a lower or upper
->> =C2=A0=C2=A0 boundary
+On 18.01.21 11:24, Neil Armstrong wrote:
+> Hi,
 >
-> Cf. [PATCH 1/1] dt-bindings: adc-keys.txt: clarify description
-> https://lore.kernel.org/linux-input/20201222110815.24121-1-xypron.glpk@g=
-mx.de/T/#u
+> On 22/12/2020 09:56, Marek Szyprowski wrote:
+>> Hi All,
+>>
+>> This patchset adds all building blocks needed for checking the 'Functio=
+n'
+>> button state in the boot script on Amlogic A311D based VIM3 board. This
+>> button is connected to the ADC lines of the SoC, so it required to enab=
+le
+>> meson SARADC, the clocks needed for it and a simple button-adc drivers.
+>>
+>> Once applied, one can use following commands in the boot scripts:
+>> -->8---
+>> echo Checking Func button state: \\c
+>> if button Function
+>> then
+>> 	echo Selected alternative boot
+>> 	...
+>> fi
+>> --->8---
+>>
+>> Best regards
+>> Marek Szyprowski
+>> Samsung R&D Institute Poland
+>>
+>>
+>> Changelog:
+>> v4:
+>> - rebased onto uboot-amlogic/u-boot-amlogic-next and dropped merged pat=
+ches
+>> - added adc-keys bindings docs (copied from Linux kernel)
+>> - minor code adjustments pointed by Simon
+>> - enabled driver also in khadas-vim3l_defconfig
+>>
+>> v3: https://lists.denx.de/pipermail/u-boot/2020-December/435072.html
+>> - removed 'button' env variable
+>> - extended kconfig and patch descriptions
+>>
+>> v2: https://lists.denx.de/pipermail/u-boot/2020-December/434991.html
+>> - removed Change-Id tags
+>> - split defconfig changes into ADC and button related
+>>
+>> v1: https://lists.denx.de/pipermail/u-boot/2020-December/434875.html
+>> - initial submission
+>
+> What's the state of the patchset ?
 
-My patch has been accepted into Linux next.
+Hello Neil,
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit=
-/?h=3Dnext-20210118&id=3D698dc0cf944772a79a9aa417e647c0f7587e51df
+the series is assigned to you. Patch 2 is incorrect. Patch 1 can be
+updated to match Linux. So I suggest to set the status for the series to
+"changes requested".
 
 Best regards
 
 Heinrich
 
->>> +
->>> +Example:
->>> +
->>> +#include <dt-bindings/input/input.h>
->>> +
->>> +=C2=A0=C2=A0=C2=A0 adc-keys {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "adc-keys";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 io-channels =3D <&lradc 0>=
-;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 io-channel-names =3D "butt=
-ons";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 keyup-threshold-microvolt =
-=3D <2000000>;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 button-up {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 la=
-bel =3D "Volume Up";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li=
-nux,code =3D <KEY_VOLUMEUP>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
-ess-threshold-microvolt =3D <1500000>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 button-down {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 la=
-bel =3D "Volume Down";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li=
-nux,code =3D <KEY_VOLUMEDOWN>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
-ess-threshold-microvolt =3D <1000000>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 button-enter {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 la=
-bel =3D "Enter";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li=
-nux,code =3D <KEY_ENTER>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
-ess-threshold-microvolt =3D <500000>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>> +=C2=A0=C2=A0=C2=A0 };
->>>
+>
+> Neil
+>
+>>
+>>
+>> Patch summary:
+>>
+>> Marek Szyprowski (3):
+>>   dt-bindings: input: adc-keys bindings documentation
+>>   button: add a simple Analog to Digital Converter device based button
+>>     driver
+>>   configs: khadas-vim3(l): enable Function button support
+>>
+>>  configs/khadas-vim3_defconfig               |   2 +
+>>  configs/khadas-vim3l_defconfig              |   2 +
+>>  doc/device-tree-bindings/input/adc-keys.txt |  49 ++++++++
+>>  drivers/button/Kconfig                      |   8 ++
+>>  drivers/button/Makefile                     |   1 +
+>>  drivers/button/button-adc.c                 | 121 ++++++++++++++++++++
+>>  6 files changed, 183 insertions(+)
+>>  create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
+>>  create mode 100644 drivers/button/button-adc.c
 >>
 >
 
