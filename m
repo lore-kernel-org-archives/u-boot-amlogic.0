@@ -1,65 +1,176 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
- by mx.groups.io with SMTP id smtpd.web10.335.1610736221972728357
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+ by mx.groups.io with SMTP id smtpd.web11.32827.1610973931596789184
  for <u-boot-amlogic@groups.io>;
- Fri, 15 Jan 2021 10:43:42 -0800
-Received: by mail-qv1-f51.google.com with SMTP id j18so4436006qvu.3
-        for <u-boot-amlogic@groups.io>; Fri, 15 Jan 2021 10:43:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QtXfNLX8QBTrk6mfxJe6oDerscCpHR3spEPsuaJ3VC8=;
-        b=giKY6+hggOw3afd/GL9iTYstMfS1hw8rgWDHgGyF3Cg7HkKzW+Vci80zdr93mmzhVe
-         CcaoeDUX1CkIi3iAFyJDkDonr6jF2AXxsw3YzNvXabvR4MErL8yJ+rTEQGYIUgE6f8Zd
-         aga4e8O+sDqSujxHwHyQJjGPvXjmdD4KY5Mlw=
-Return-Path: <trini@konsulko.com>
-Date: Fri, 15 Jan 2021 13:43:38 -0500
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PATCH 0/4] phy: add support for Amlogic Meson AXG MIPI-DSI PHY function
-Message-ID: <20210115184338.GE9782@bill-the-cat>
-References: <20201229135901.30090-1-narmstrong@baylibre.com>
- <2639b559-a902-18b9-e0b9-174118890d98@baylibre.com>
+ Mon, 18 Jan 2021 04:45:32 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1610973923;
+	bh=wVmDhmkyarod6C8W61VerQNKXZZPOp6ENDZ8S6ho6hE=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+	b=cYiP3+zilYxk+lKGFhEOYviqhqG6zjlSLjoqFIbHNPxdk7bwFljdFk8CRwlmegsdS
+	 3NYAlmleOrrjRe2sH+2oanO6PNeLYmApkxTgc9dt4048N0dUUCGeMlTr+ukXVXsyEm
+	 OVjLp7WG/t32rB52nYmuBmUvCx4sNy4nXda0N2N8=
+Subject: Re: [PATCH v4 1/3] dt-bindings: input: adc-keys bindings documentation
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+References: <20201222085633.10194-1-m.szyprowski@samsung.com>
+ <CGME20201222085638eucas1p14d9d9da136593a12fea0140c403095c4@eucas1p1.samsung.com>
+ <20201222085633.10194-2-m.szyprowski@samsung.com>
+ <1b82e9ef-e8af-87e1-ea68-d71d65c2aa8a@gmx.de>
+ <f8930b5a-e1eb-7c41-19ad-6ba539c59322@gmx.de>
+Message-ID: <10bbd556-4686-2129-4bf4-74153a37433a@gmx.de>
+Date: Mon, 18 Jan 2021 13:45:16 +0100
 MIME-Version: 1.0
-In-Reply-To: <2639b559-a902-18b9-e0b9-174118890d98@baylibre.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MIdTMoZhcV1D07fI"
-Content-Disposition: inline
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot@lists.denx.de, sjg@chromium.org, u-boot-amlogic@groups.io
+In-Reply-To: <f8930b5a-e1eb-7c41-19ad-6ba539c59322@gmx.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-ID: <u-boot-amlogic@groups.io>
 
---MIdTMoZhcV1D07fI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 22.12.20 12:28, Heinrich Schuchardt wrote:
+> On 12/22/20 11:12 AM, Heinrich Schuchardt wrote:
+>> On 12/22/20 9:56 AM, Marek Szyprowski wrote:
+>>> Dump adc-keys bindings documentation from Linux kernel source tree
+>>> v5.10.
+>>>
+>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>> ---
+>>> =C2=A0 doc/device-tree-bindings/input/adc-keys.txt | 49 ++++++++++++++=
++++++++
+>>> =C2=A0 1 file changed, 49 insertions(+)
+>>> =C2=A0 create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
+>>>
+>>> diff --git a/doc/device-tree-bindings/input/adc-keys.txt
+>>> b/doc/device-tree-bindings/input/adc-keys.txt
+>>> new file mode 100644
+>>> index 0000000000..e551814629
+>>> --- /dev/null
+>>> +++ b/doc/device-tree-bindings/input/adc-keys.txt
+>>> @@ -0,0 +1,49 @@
+>>> +ADC attached resistor ladder buttons
+>>> +------------------------------------
+>>> +
+>>> +Required properties:
+>>> + - compatible: "adc-keys"
+>>> + - io-channels: Phandle to an ADC channel
+>>> + - io-channel-names =3D "buttons";
+>>> + - keyup-threshold-microvolt: Voltage at which all the keys are
+>>> considered up.
+>>> +
+>>> +Optional properties:
+>>> +=C2=A0=C2=A0=C2=A0 - poll-interval: Poll interval time in millisecond=
+s
+>>> +=C2=A0=C2=A0=C2=A0 - autorepeat: Boolean, Enable auto repeat feature =
+of Linux input
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 subsystem.
+>>> +
+>>> +Each button (key) is represented as a sub-node of "adc-keys":
+>>> +
+>>> +Required subnode-properties:
+>>> +=C2=A0=C2=A0=C2=A0 - label: Descriptive name of the key.
+>>> +=C2=A0=C2=A0=C2=A0 - linux,code: Keycode to emit.
+>>> +=C2=A0=C2=A0=C2=A0 - press-threshold-microvolt: Voltage ADC input whe=
+n this key is
+>>> pressed.
+>>
+>> https://www.merriam-webster.com/dictionary/threshold
+>> defines threshold as "a level, point, or value above which something is
+>> true or will take place and below which it is not or will not"
+>>
+>> "when this key is pressed" leaves it completely open if a key is
+>> considered pressed below or above the threshold. Please, replace the
+>> word 'when' by either 'above which' or 'below which'.
+>>
+>> In the example keyup-threshold-microvolt is larger than
+>> keyup-threshold-microvolt all values of press-threshold-microvolt. So
+>> one might assume that 'above' is the intended meaning and the
+>> interpretation of the example might be:
+>>
+>> 2.000.000 <=3D value: no key pressed
+>> 1.500.000 <=3D value < 2.000.000: KEY_VOLUMEUP pressed
+>> 1.000.000 <=3D value < 1.500.000: KEY_VOLUMEDOWN pressed
+>> 500.000 <=3D value < 1.000.000: KEY_ENTER pressed
+>> value < 500.000: no key pressed
+>>
+>> Both directions 'above' and 'below' make sense. So maybe if
+>> keyup-threshold-microvolt is lower than all press-threshold-microvolt
+>> you want to invert the logic?
+>>
+>> The binding lacks a hysteresis which is needed for a reliable function.
+>>
+>> If you look into drivers/input/keyboard/adc-keys.c in the Linux source,
+>> you can see that it is not using the threshold value as a threshold at
+>> all. Instead is uses abs(st->map[i].voltage - value) to find the neares=
+t
+>> "threshold" voltage level.
+>>
+>> Could you, please, try to bring this text into a form that cannot be
+>> misinterpreted and reconcile with upstream. This should include
+>>
+>> * a results table for the example
+>> * a definition if keyup-threshold-microvolt must be higher than all
+>> =C2=A0=C2=A0 press-threshold-microvolt or may be lower than all
+>> =C2=A0=C2=A0 press-threshold-microvolt
+>> * a sentence forbidding keyup-threshold-microvolt to be between two
+>> =C2=A0=C2=A0 press-threshold-microvolt
+>> * a definition if or when any of the thresholds is a lower or upper
+>> =C2=A0=C2=A0 boundary
+>
+> Cf. [PATCH 1/1] dt-bindings: adc-keys.txt: clarify description
+> https://lore.kernel.org/linux-input/20201222110815.24121-1-xypron.glpk@g=
+mx.de/T/#u
 
-On Mon, Jan 11, 2021 at 09:47:29AM +0100, Neil Armstrong wrote:
+My patch has been accepted into Linux next.
 
-> Hi Simon, Tom,
->=20
-> Could you review patches 1 & 2 of this serie ?
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit=
+/?h=3Dnext-20210118&id=3D698dc0cf944772a79a9aa417e647c0f7587e51df
 
-Patches 1 and 2 look fine to me, FWIW.
+Best regards
 
---=20
-Tom
+Heinrich
 
---MIdTMoZhcV1D07fI
-Content-Type: application/pgp-signature; name="signature.asc"
+>>> +
+>>> +Example:
+>>> +
+>>> +#include <dt-bindings/input/input.h>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 adc-keys {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "adc-keys";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 io-channels =3D <&lradc 0>=
+;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 io-channel-names =3D "butt=
+ons";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 keyup-threshold-microvolt =
+=3D <2000000>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 button-up {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 la=
+bel =3D "Volume Up";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li=
+nux,code =3D <KEY_VOLUMEUP>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
+ess-threshold-microvolt =3D <1500000>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 button-down {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 la=
+bel =3D "Volume Down";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li=
+nux,code =3D <KEY_VOLUMEDOWN>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
+ess-threshold-microvolt =3D <1000000>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 button-enter {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 la=
+bel =3D "Enter";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 li=
+nux,code =3D <KEY_ENTER>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
+ess-threshold-microvolt =3D <500000>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0 };
+>>>
+>>
+>
 
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmAB4loACgkQFHw5/5Y0
-tyzH/wv/WmGN8U8kPWoELYFenb1KePiNs5RVXU/Ndzq9NcCbwH0o58YZJxFv7M6W
-As+vpJUTflP4MCIZUTD2P1l+eb9G/g1+X2wVzQs87lcd+hagid0QgHru69QLo5j/
-lxOI2BcnHBroDXp5Un7KIaiyCQWugifSfIJw11LczRlIFuuju/rg6u2amKWRiRyV
-LDuEU2JYTDziPAVWPoavcdQzvEZttzKLLS1768gfcMgAMwD1IcnJwIYatFaolthr
-gzjY2lroasF6J22huMLVkrYUEngk2VAo5yHa/X2UMS9iUTLXymDKCZnJfWA+TESx
-cxHUMHePsIzS4vG7RaIcdMF7nPUtlnYMDsfemlt/wfFSe81c2g78TqDcmZbyXLfh
-pFYV987byh29iVaIEx5UfeaUWDkDy3BKQjg18LanXngwizoH6Ekiz3sqq2nz/XTL
-eZcJXBzIU71SRRAowPvVIXiUnIaFowtzAT0Y96F+Z3ahiFW7zR+rDTY3zCEdqbEt
-BmpIfofJ
-=6d8H
------END PGP SIGNATURE-----
-
---MIdTMoZhcV1D07fI--
