@@ -1,111 +1,64 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
- by mx.groups.io with SMTP id smtpd.web09.32672.1610974133105809236
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+ by mx.groups.io with SMTP id smtpd.web12.3992.1611215085232449197
  for <u-boot-amlogic@groups.io>;
- Mon, 18 Jan 2021 04:48:53 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1610974126;
-	bh=6fr2bkMKxUHxAMKRLP3bwN8Jj+YZParXiVJk3QcPxJQ=;
-	h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-	b=DGbE4x0mp71q6s3ur7LfPrPZWWqfYuiHcneM0FwThPlI4LL3JTcE8PPgrNux9vTn7
-	 lxIrLUxYyIMg088S26jtNk2SnAAkHeHwzECYpJJ7ItVyfOk7OyDZAu3KuXK4ZjdtnM
-	 olN2vDzI2zufc58jQO8e6t8K1SKUKhuK4hdJAWkg=
-Subject: Re: [PATCH v4 0/3] VIM3: add support for checking 'Function' button state
-References: <CGME20201222085638eucas1p158d91ce4a22d13623b19706b26374078@eucas1p1.samsung.com>
- <20201222085633.10194-1-m.szyprowski@samsung.com>
- <47e599d6-288c-163c-e40a-9c5d5b534bf9@baylibre.com>
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Message-ID: <7a32a0a8-689e-6758-2062-84a2e9bca1c1@gmx.de>
-Date: Mon, 18 Jan 2021 13:48:42 +0100
+ Wed, 20 Jan 2021 23:44:45 -0800
+Received: by mail-pl1-f180.google.com with SMTP id g3so835602plp.2
+        for <u-boot-amlogic@groups.io>; Wed, 20 Jan 2021 23:44:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TqfDTav3dDBOAsLtJEmGPq2pDM+9FFhk5YmAvdhEmnU=;
+        b=DOHJPSIsEh/6FeVXw9Jpnj7ElcjK8rjcCrLgJBziYkbx6mwGtBmxgmBD3PLcLBskjS
+         XOEXCh3UTa7cdIs+HYngGopC5vmLVyn6VO/ZD0Ikf47F7NLkgVMgojxnb3qfOWrJAo8c
+         UPxgiFrBmmGYKsdJX1utJBX00ZD9iZ8gugdZ7XWvWdA3jNNJjPfftRqmJe4KLXyW25Am
+         7+fwVaGhXWPoWtvIN/IceWwzQkxbVq8KJ3hz6xOleglV8FF/mkvBg9oU6eRCL8pZaUwd
+         OCtucYmMHJkTg9VD2j0pm4BZaPbTDNrXVhaHwgwoonevRsXAWNjpIkG3uSQTiL+dlPSu
+         7cLQ==
+Return-Path: <email2tema@gmail.com>
+From: Artem Lapkin <email2tema@gmail.com>
+Subject: [PATCH] cmd: pxe_utils: fix ipappend ip config empty vars
+Date: Thu, 21 Jan 2021 15:44:35 +0800
+Message-Id: <20210121074435.2754687-1-art@khadas.com>
 MIME-Version: 1.0
-In-Reply-To: <47e599d6-288c-163c-e40a-9c5d5b534bf9@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-To: Neil Armstrong <narmstrong@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Cc: Lukasz Majewski <lukma@denx.de>, Philippe Reynes <philippe.reynes@softathome.com>, Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Transfer-Encoding: 8bit
+To: trini@konsulko.com
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, art@khadas.com, nick@khadas.com, gouwa@khadas.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On 18.01.21 11:24, Neil Armstrong wrote:
-> Hi,
->
-> On 22/12/2020 09:56, Marek Szyprowski wrote:
->> Hi All,
->>
->> This patchset adds all building blocks needed for checking the 'Functio=
-n'
->> button state in the boot script on Amlogic A311D based VIM3 board. This
->> button is connected to the ADC lines of the SoC, so it required to enab=
-le
->> meson SARADC, the clocks needed for it and a simple button-adc drivers.
->>
->> Once applied, one can use following commands in the boot scripts:
->> -->8---
->> echo Checking Func button state: \\c
->> if button Function
->> then
->> 	echo Selected alternative boot
->> 	...
->> fi
->> --->8---
->>
->> Best regards
->> Marek Szyprowski
->> Samsung R&D Institute Poland
->>
->>
->> Changelog:
->> v4:
->> - rebased onto uboot-amlogic/u-boot-amlogic-next and dropped merged pat=
-ches
->> - added adc-keys bindings docs (copied from Linux kernel)
->> - minor code adjustments pointed by Simon
->> - enabled driver also in khadas-vim3l_defconfig
->>
->> v3: https://lists.denx.de/pipermail/u-boot/2020-December/435072.html
->> - removed 'button' env variable
->> - extended kconfig and patch descriptions
->>
->> v2: https://lists.denx.de/pipermail/u-boot/2020-December/434991.html
->> - removed Change-Id tags
->> - split defconfig changes into ADC and button related
->>
->> v1: https://lists.denx.de/pipermail/u-boot/2020-December/434875.html
->> - initial submission
->
-> What's the state of the patchset ?
+PROBLEM: If ipaddr, serverip, gatewayip or netmask variable undefined
+we can have for example ip=192.168.2.33:<NULL>:192.168.2.1:255.255.255.0
+yes its works same for linux kernel, but im think no need print <NULL>
 
-Hello Neil,
+SUGGESTED SOLUTION:
+if some variable was undefined we need just print empty place like this
+ip=192.168.2.33::192.168.2.1:255.255.255.0
 
-the series is assigned to you. Patch 2 is incorrect. Patch 1 can be
-updated to match Linux. So I suggest to set the status for the series to
-"changes requested".
+Signed-off-by: Artem Lapkin <art@khadas.com>
 
-Best regards
+---
+ cmd/pxe_utils.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Heinrich
-
->
-> Neil
->
->>
->>
->> Patch summary:
->>
->> Marek Szyprowski (3):
->>   dt-bindings: input: adc-keys bindings documentation
->>   button: add a simple Analog to Digital Converter device based button
->>     driver
->>   configs: khadas-vim3(l): enable Function button support
->>
->>  configs/khadas-vim3_defconfig               |   2 +
->>  configs/khadas-vim3l_defconfig              |   2 +
->>  doc/device-tree-bindings/input/adc-keys.txt |  49 ++++++++
->>  drivers/button/Kconfig                      |   8 ++
->>  drivers/button/Makefile                     |   1 +
->>  drivers/button/button-adc.c                 | 121 ++++++++++++++++++++
->>  6 files changed, 183 insertions(+)
->>  create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
->>  create mode 100644 drivers/button/button-adc.c
->>
->
+diff --git a/cmd/pxe_utils.c b/cmd/pxe_utils.c
+index 8716e782..2049c0f3 100644
+--- a/cmd/pxe_utils.c
++++ b/cmd/pxe_utils.c
+@@ -395,9 +395,12 @@ static int label_boot(struct cmd_tbl *cmdtp, struct pxe_label *label)
+ 	}
+ 
+ 	if (label->ipappend & 0x1) {
++		char *a = env_get("ipaddr");
++		char *b = env_get("serverip");
++		char *c = env_get("gatewayip");
++		char *d = env_get("netmask");
+ 		sprintf(ip_str, " ip=%s:%s:%s:%s",
+-			env_get("ipaddr"), env_get("serverip"),
+-			env_get("gatewayip"), env_get("netmask"));
++			a ? a : "", b ? b : "", c ? c : "", d ? d : "");
+ 	}
+ 
+ #ifdef CONFIG_CMD_NET
+-- 
+2.25.1
 
