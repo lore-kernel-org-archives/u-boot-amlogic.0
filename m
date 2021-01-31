@@ -1,87 +1,107 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
- by mx.groups.io with SMTP id smtpd.web12.16160.1612084713818393762
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web08.19478.1612107492168590768
  for <u-boot-amlogic@groups.io>;
- Sun, 31 Jan 2021 01:18:34 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1612084713; x=1643620713;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=ei18Zm8nSjwevf/4aRhnnNxQSDpuSj5x2+NahN53OQM=;
-  b=A3zBcrCsc5ZUtwvZFRoko5P2LwB7kyFXy/Gv+O3N8nTDtC7kudqPk4Mq
-   D5G6f4RTdBCa8N1bmreCcTLPzruzzuVJ5rJOEnbilLTNghD+lFpFa9nm0
-   lWZLylIf3XF0jCaHZMo94sYx3NIrvLN6WxBSj35vRT1vIDZKoLaqSHTn8
-   zEZV4+x4sdhBV40SKJvBks1xpNdJR3/EXdcHGtwJfNFVkl9Sj/8ajVUVz
-   RQfjZEEV4PduJ4t3V+nj7gQPiE3O9z+Ewcv7Pk3ZTiY8r355q70lQk5Ia
-   pJtEn5/RIS9iz1LYdbVQMPXowpyIerrFnl5+KX86F1DRbk/+z4bRDAERN
-   w==;
+ Sun, 31 Jan 2021 07:38:12 -0800
+Received: by mail-wr1-f48.google.com with SMTP id z6so13836246wrq.10
+        for <u-boot-amlogic@groups.io>; Sun, 31 Jan 2021 07:38:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ei18Zm8nSjwevf/4aRhnnNxQSDpuSj5x2+NahN53OQM=;
- b=nDgGm6UhHkIiWfmGnPWAkYeWs8zG2fxevG4rfEyhXGqrnmGYT9vpDC+9mDpnAd1izEOyxHJpgMY8A4Y5hf1D9swcS43Aundld+Q1uNL3LhnZUyMphR8RNPH+9Lb0afF8ZmgseKt0U6zDK34FklPQE6t7FQFMZ34raopKEcOeBIQ=
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH 04/11] dm: Remove uses of device_bind_offset()
-Date: Sun, 31 Jan 2021 09:18:28 +0000
-Message-ID: <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
-References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
- <20201129005011.2104545-1-sjg@chromium.org>
- <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
-In-Reply-To: <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TEEKLGiZMXYRp5teJaYCGXWbtxH7lGhZQUsItzEKp4Y=;
+        b=QRnyGwDh9+/RKFX29S+agSYsLNL6wD0+e0zKUDaQZbLS74q6Iz8Trx+FbS9afw7Tdo
+         QcKW+D06y2L0Oe5gOkL/MLCqL/lFLG/QWW7fvH9gs0go2rrnZgxkfMM9r01uHTafi2No
+         QdPXfIxPjXe+WptJTi6ckBCzQPu6eLA2E7rRo=
 MIME-Version: 1.0
-Return-Path: Eugen.Hristev@microchip.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2DD6AD754543F24A9BA8925E585A2D11@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-To: sjg@chromium.org
-Cc: agust@denx.de, bmeng.cn@gmail.com, Claudiu.Beznea@microchip.com, gregory.clement@bootlin.com, Horatiu.Vultur@microchip.com, icenowy@aosc.io, jh80.chung@samsung.com, jagan@amarulasolutions.com, joe.hershberger@ni.com, Lars.Povlsen@microchip.com, lukma@denx.de, marex@denx.de, martin.fuzzey@flowbird.group, yamada.masahiro@socionext.com, mbrugger@suse.com, narmstrong@baylibre.com, morpheus.ibis@gmail.com, peng.fan@nxp.com, bob.beckett@collabora.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
+ <20201129005011.2104545-1-sjg@chromium.org> <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
+ <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
+In-Reply-To: <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
+From: Simon Glass <sjg@chromium.org>
+Date: Sun, 31 Jan 2021 08:37:58 -0700
+Message-ID: <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
+Subject: Re: [PATCH 04/11] dm: Remove uses of device_bind_offset()
+Content-Type: text/plain; charset="UTF-8"
+To: Eugen Hristev <Eugen.Hristev@microchip.com>
+Cc: Anatolij Gustschin <agust@denx.de>, Bin Meng <bmeng.cn@gmail.com>, Claudiu Beznea <Claudiu.Beznea@microchip.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Horatiu Vultur <Horatiu.Vultur@microchip.com>, Icenowy Zheng <icenowy@aosc.io>, Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Joe Hershberger <joe.hershberger@ni.com>, Lars Povlsen <Lars.Povlsen@microchip.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Martin Fuzzey <martin.fuzzey@flowbird.group>, Masahiro Yamada <yamada.masahiro@socionext.com>, Matthias Brugger <mbrugger@suse.com>, Neil Armstrong <narmstrong@baylibre.com>, Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, Robert Beckett <bob.beckett@collabora.com>, u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-T24gMTAuMTIuMjAyMCAwMjoyNiwgU2ltb24gR2xhc3Mgd3JvdGU6DQo+IFRoaXMgZnVuY3Rpb24g
-aXMgbm90IG5lZWRlZCBzaW5jZSB0aGUgc3RhbmRhcmQgZGV2aWNlX2JpbmQoKSBjYW4gYmUgdXNl
-ZA0KPiBpbnN0ZWFkLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU2ltb24gR2xhc3MgPHNqZ0BjaHJv
-bWl1bS5vcmc+DQo+IC0tLQ0KPiANCj4gICBhcmNoL3g4Ni9jcHUvYXBvbGxvbGFrZS9zcGwuYyAg
-ICAgICAgICAgICAgIHwgIDIgKy0NCj4gICBkcml2ZXJzL2Nsay9hdDkxL2NvbXBhdC5jICAgICAg
-ICAgICAgICAgICAgIHwgMjAgKysrKysrKystLS0tLS0tLS0tLS0NCj4gICBkcml2ZXJzL2Nsay9j
-bGsuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0NCj4gICBkcml2ZXJzL2dwaW8v
-bXQ3NjIxX2dwaW8uYyAgICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPiAgIGRyaXZlcnMvZ3Bp
-by9zNXBfZ3Bpby5jICAgICAgICAgICAgICAgICAgICAgfCAgNCArKy0tDQo+ICAgZHJpdmVycy9n
-cGlvL3N1bnhpX2dwaW8uYyAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4gICBkcml2ZXJz
-L2dwaW8vdGVncmExODZfZ3Bpby5jICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPiAgIGRyaXZl
-cnMvZ3Bpby90ZWdyYV9ncGlvLmMgICAgICAgICAgICAgICAgICAgfCAgNiArKystLS0NCj4gICBk
-cml2ZXJzL25ldC9tdnBwMi5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPiAg
-IGRyaXZlcnMvcGluY3RybC9icm9hZGNvbS9waW5jdHJsLWJjbTI4M3guYyAgfCAgNSArKy0tLQ0K
-PiAgIGRyaXZlcnMvcGluY3RybC9tZXNvbi9waW5jdHJsLW1lc29uLmMgICAgICAgfCAgNCArKyst
-DQo+ICAgZHJpdmVycy9waW5jdHJsL21zY2MvcGluY3RybC1qcjIuYyAgICAgICAgICB8ICA0ICsr
-LS0NCj4gICBkcml2ZXJzL3BpbmN0cmwvbXNjYy9waW5jdHJsLWx1dG9uLmMgICAgICAgIHwgIDQg
-KystLQ0KPiAgIGRyaXZlcnMvcGluY3RybC9tc2NjL3BpbmN0cmwtb2NlbG90LmMgICAgICAgfCAg
-NCArKy0tDQo+ICAgZHJpdmVycy9waW5jdHJsL21zY2MvcGluY3RybC1zZXJ2YWwuYyAgICAgICB8
-ICA0ICsrLS0NCj4gICBkcml2ZXJzL3BpbmN0cmwvbXNjYy9waW5jdHJsLXNlcnZhbHQuYyAgICAg
-IHwgIDQgKystLQ0KPiAgIGRyaXZlcnMvcGluY3RybC9tdmVidS9waW5jdHJsLWFybWFkYS0zN3h4
-LmMgfCAgOCArKysrLS0tLQ0KPiAgIGRyaXZlcnMvcG93ZXIvcmVndWxhdG9yL0tjb25maWcgICAg
-ICAgICAgICAgfCAgMiArLQ0KPiAgIGluY2x1ZGUvZG0vZGV2aWNlLWludGVybmFsLmggICAgICAg
-ICAgICAgICAgfCAgNCArKy0tDQo+ICAgaW5jbHVkZS9wb3dlci9yZWd1bGF0b3IuaCAgICAgICAg
-ICAgICAgICAgICB8ICAyICstDQo+ICAgMjAgZmlsZXMgY2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygr
-KSwgNDkgZGVsZXRpb25zKC0pDQo+IA0KPiBBcHBsaWVkIHRvIHUtYm9vdC1kbSwgdGhhbmtzIQ0K
-PiANCg0KDQpIaSBTaW1vbiwNCg0KSSBiaXNlY3RlZCB0aGUgdHJlZSBhbmQgdGhpcyBjb21taXQg
-bG9va3MgdG8gYnJlYWsgDQpzYW1hNWQ0X3hwbGFpbmVkX21tY19kZWZjb25maWcgOg0KDQo8ZGVi
-dWdfdWFydD4NCk5vIHNlcmlhbCBkcml2ZXIgZm91bmQNCkNvdWxkIG5vdCBpbml0aWFsaXplIHRp
-bWVyIChlcnIgLTE5KQ0KDQpDb3VsZCBub3QgaW5pdGlhbGl6ZSB0aW1lciAoZXJyIC0xOSkNCg0K
-Q291bGQgbm90IGluaXRpYWxpemUgdGltZXIgKGVyciAtMTkpDQoNCkNvdWxkIG5vdCBpbml0aWFs
-aXplIHRpbWVyIChlcnIgLTE5KQ0KDQpDb3VsZCBub3QgaW5pdGlhbGl6ZSB0aW1lciAoZXJyIC0x
-OSkNCg0KQ291bGQgbm90IGluaXRpYWxpemUgdGltZXIgKGVyciAtMTkpDQoNCkNvdWxkIG5vdCBp
-bml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KDQpDb3VsZCBub3QgaW5pdGlhbGl6ZSB0aW1lciAo
-ZXJyIC0xOSkNCg0KQ291bGQgbm90IGluaXRpYWxpemUgdGltZXIgKGVyciAtMTkpDQoNCkNvdWxk
-IG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KDQpCb290aW5nIHUtYm9vdCBmYWlscyB3
-aGVuIGFkZGluZyB0aGlzIGNvbW1pdC4NCg0KQ291bGQgeW91IHBsZWFzZSBoZWxwIG9yIGxldCBt
-ZSBrbm93IGhvdyBJIGNhbiBmaXggaXQgPw0KDQpUaGFua3MsDQpFdWdlbg0KDQphMjcwM2NlMTBj
-ZmNiZTZhODJlYzhlZDllYzEwZGYyYWVlYTA4ZTY0IGlzIHRoZSBmaXJzdCBiYWQgY29tbWl0DQpj
-b21taXQgYTI3MDNjZTEwY2ZjYmU2YTgyZWM4ZWQ5ZWMxMGRmMmFlZWEwOGU2NA0KQXV0aG9yOiBT
-aW1vbiBHbGFzcyA8c2pnQGNocm9taXVtLm9yZz4NCkRhdGU6ICAgU2F0IE5vdiAyOCAxNzo1MDow
-MyAyMDIwIC0wNzAwDQoNCiAgICAgZG06IFJlbW92ZSB1c2VzIG9mIGRldmljZV9iaW5kX29mZnNl
-dCgpDQoNCiAgICAgVGhpcyBmdW5jdGlvbiBpcyBub3QgbmVlZGVkIHNpbmNlIHRoZSBzdGFuZGFy
-ZCBkZXZpY2VfYmluZCgpIGNhbiBiZSANCnVzZWQNCiAgICAgaW5zdGVhZC4NCg0KICAgICBTaWdu
-ZWQtb2ZmLWJ5OiBTaW1vbiBHbGFzcyA8c2pnQGNocm9taXVtLm9yZz4NCg==
+Hi Eugen,
+
+On Sun, 31 Jan 2021 at 02:18, <Eugen.Hristev@microchip.com> wrote:
+>
+> On 10.12.2020 02:26, Simon Glass wrote:
+> > This function is not needed since the standard device_bind() can be used
+> > instead.
+> >
+> > Signed-off-by: Simon Glass <sjg@chromium.org>
+> > ---
+> >
+> >   arch/x86/cpu/apollolake/spl.c               |  2 +-
+> >   drivers/clk/at91/compat.c                   | 20 ++++++++------------
+> >   drivers/clk/clk.c                           |  2 +-
+> >   drivers/gpio/mt7621_gpio.c                  |  4 ++--
+> >   drivers/gpio/s5p_gpio.c                     |  4 ++--
+> >   drivers/gpio/sunxi_gpio.c                   |  4 ++--
+> >   drivers/gpio/tegra186_gpio.c                |  4 ++--
+> >   drivers/gpio/tegra_gpio.c                   |  6 +++---
+> >   drivers/net/mvpp2.c                         |  4 ++--
+> >   drivers/pinctrl/broadcom/pinctrl-bcm283x.c  |  5 ++---
+> >   drivers/pinctrl/meson/pinctrl-meson.c       |  4 +++-
+> >   drivers/pinctrl/mscc/pinctrl-jr2.c          |  4 ++--
+> >   drivers/pinctrl/mscc/pinctrl-luton.c        |  4 ++--
+> >   drivers/pinctrl/mscc/pinctrl-ocelot.c       |  4 ++--
+> >   drivers/pinctrl/mscc/pinctrl-serval.c       |  4 ++--
+> >   drivers/pinctrl/mscc/pinctrl-servalt.c      |  4 ++--
+> >   drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |  8 ++++----
+> >   drivers/power/regulator/Kconfig             |  2 +-
+> >   include/dm/device-internal.h                |  4 ++--
+> >   include/power/regulator.h                   |  2 +-
+> >   20 files changed, 46 insertions(+), 49 deletions(-)
+> >
+> > Applied to u-boot-dm, thanks!
+> >
+>
+>
+> Hi Simon,
+>
+> I bisected the tree and this commit looks to break
+> sama5d4_xplained_mmc_defconfig :
+>
+> <debug_uart>
+> No serial driver found
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Could not initialize timer (err -19)
+>
+> Booting u-boot fails when adding this commit.
+>
+> Could you please help or let me know how I can fix it ?
+
+I suspect the problem could be in the changes to
+drivers/clk/at91/compat.c although I cannot see why
+
+You could try reverting that change, and just using offset_to_ofnode()
+in the device_bind_driver_to_node() call. I actually intended to do
+that at the time due to the risk, but somehow I missed this one.
+
+OTOH it would be good to move the code to livetree and stop using fdt offsets.
+
+Regards,
+Simon
