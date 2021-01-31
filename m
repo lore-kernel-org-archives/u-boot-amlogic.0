@@ -1,95 +1,87 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
- by mx.groups.io with SMTP id smtpd.web09.7438.1611753704566420705
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+ by mx.groups.io with SMTP id smtpd.web12.16160.1612084713818393762
  for <u-boot-amlogic@groups.io>;
- Wed, 27 Jan 2021 05:21:44 -0800
-Received: by mail-qk1-f170.google.com with SMTP id t63so1629640qkc.1
-        for <u-boot-amlogic@groups.io>; Wed, 27 Jan 2021 05:21:44 -0800 (PST)
+ Sun, 31 Jan 2021 01:18:34 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1612084713; x=1643620713;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ei18Zm8nSjwevf/4aRhnnNxQSDpuSj5x2+NahN53OQM=;
+  b=A3zBcrCsc5ZUtwvZFRoko5P2LwB7kyFXy/Gv+O3N8nTDtC7kudqPk4Mq
+   D5G6f4RTdBCa8N1bmreCcTLPzruzzuVJ5rJOEnbilLTNghD+lFpFa9nm0
+   lWZLylIf3XF0jCaHZMo94sYx3NIrvLN6WxBSj35vRT1vIDZKoLaqSHTn8
+   zEZV4+x4sdhBV40SKJvBks1xpNdJR3/EXdcHGtwJfNFVkl9Sj/8ajVUVz
+   RQfjZEEV4PduJ4t3V+nj7gQPiE3O9z+Ewcv7Pk3ZTiY8r355q70lQk5Ia
+   pJtEn5/RIS9iz1LYdbVQMPXowpyIerrFnl5+KX86F1DRbk/+z4bRDAERN
+   w==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M7al0y5VcXzra3rvGuaJ838yiCQwq8/1IpPa2g6aNtw=;
-        b=Q9/Ls+0dFswlWZge7FJNmtJUJL2+l++J3ETw+InZ7S7p/5XPt3E4Egnc/vQUXDZFzN
-         Xoh5HuXxDkR9OLNeq1VCYFj36hS2A/3QjLa127FJih1r/RoOHFZbYz4VHDjYbM1+DQ+D
-         WqLZ5HR/7Su9up/rbwSia10hZtGYC/wtLzR8k=
-Return-Path: <trini@konsulko.com>
-Date: Wed, 27 Jan 2021 08:21:40 -0500
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PATCH] cmd: pxe_utils: fix ipappend ip config empty vars
-Message-ID: <20210127132140.GA7530@bill-the-cat>
-References: <20210121074435.2754687-1-art@khadas.com>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ei18Zm8nSjwevf/4aRhnnNxQSDpuSj5x2+NahN53OQM=;
+ b=nDgGm6UhHkIiWfmGnPWAkYeWs8zG2fxevG4rfEyhXGqrnmGYT9vpDC+9mDpnAd1izEOyxHJpgMY8A4Y5hf1D9swcS43Aundld+Q1uNL3LhnZUyMphR8RNPH+9Lb0afF8ZmgseKt0U6zDK34FklPQE6t7FQFMZ34raopKEcOeBIQ=
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [PATCH 04/11] dm: Remove uses of device_bind_offset()
+Date: Sun, 31 Jan 2021 09:18:28 +0000
+Message-ID: <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
+References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
+ <20201129005011.2104545-1-sjg@chromium.org>
+ <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
+In-Reply-To: <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210121074435.2754687-1-art@khadas.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="O9T4zNOkGnr0n+A/"
-Content-Disposition: inline
-To: Artem Lapkin <email2tema@gmail.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+Return-Path: Eugen.Hristev@microchip.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2DD6AD754543F24A9BA8925E585A2D11@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+To: sjg@chromium.org
+Cc: agust@denx.de, bmeng.cn@gmail.com, Claudiu.Beznea@microchip.com, gregory.clement@bootlin.com, Horatiu.Vultur@microchip.com, icenowy@aosc.io, jh80.chung@samsung.com, jagan@amarulasolutions.com, joe.hershberger@ni.com, Lars.Povlsen@microchip.com, lukma@denx.de, marex@denx.de, martin.fuzzey@flowbird.group, yamada.masahiro@socionext.com, mbrugger@suse.com, narmstrong@baylibre.com, morpheus.ibis@gmail.com, peng.fan@nxp.com, bob.beckett@collabora.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
---O9T4zNOkGnr0n+A/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jan 21, 2021 at 03:44:35PM +0800, Artem Lapkin wrote:
-
-> PROBLEM: If ipaddr, serverip, gatewayip or netmask variable undefined
-> we can have for example ip=3D192.168.2.33:<NULL>:192.168.2.1:255.255.255.0
-> yes its works same for linux kernel, but im think no need print <NULL>
->=20
-> SUGGESTED SOLUTION:
-> if some variable was undefined we need just print empty place like this
-> ip=3D192.168.2.33::192.168.2.1:255.255.255.0
->=20
-> Signed-off-by: Artem Lapkin <art@khadas.com>
->=20
-> ---
->  cmd/pxe_utils.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/cmd/pxe_utils.c b/cmd/pxe_utils.c
-> index 8716e782..2049c0f3 100644
-> --- a/cmd/pxe_utils.c
-> +++ b/cmd/pxe_utils.c
-> @@ -395,9 +395,12 @@ static int label_boot(struct cmd_tbl *cmdtp, struct =
-pxe_label *label)
->  	}
-> =20
->  	if (label->ipappend & 0x1) {
-> +		char *a =3D env_get("ipaddr");
-> +		char *b =3D env_get("serverip");
-> +		char *c =3D env_get("gatewayip");
-> +		char *d =3D env_get("netmask");
->  		sprintf(ip_str, " ip=3D%s:%s:%s:%s",
-> -			env_get("ipaddr"), env_get("serverip"),
-> -			env_get("gatewayip"), env_get("netmask"));
-> +			a ? a : "", b ? b : "", c ? c : "", d ? d : "");
->  	}
-> =20
->  #ifdef CONFIG_CMD_NET
-
-If Linux is happily parsing this, I'm not sure it's worth changing.
-
---=20
-Tom
-
---O9T4zNOkGnr0n+A/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmARaOAACgkQFHw5/5Y0
-tyzDRwv+IWTOs3qYFLf9gN7F7um/Eueq1sDEeQKbQeLp5WVECXjt+B43SaU9zDFV
-uD5c9H+a91Ep8XXlkLhhKWR5TOmrki+vrtSnB5x2nCtyEkxHe26uZW6gQ9vWtN+p
-GJMxcIzrCijVwPsitj3xyGHttrnVGTR8Sq1vl7QdCXHj/oE7NRu23gntm9Fe4G76
-VMQv9LbeRk6q45zcJKV13vFJ70C6Fpr25MJmoLwAAWXrA48PYsAAx8DOZZ3L/08T
-BdI8A3/xkdHENH3z15lYkngO8wVreJu1qjsoEbPy4UzGxCznKfCJumomsCjIydG1
-VCj36Cpge/Y7goex4jPBvplt51gdwlZujcG9vm5H4DAXp1/swzaI+EpFLzBkqorZ
-y+bjEWqi0pZDpIxC3aeMpAwBnUpnscn4q0jxCs184cWd8obuq8tcG+gi1hhEY8tL
-7gvqZVvno3ynQgmxFfXUYyf3USULmlQ47EI5P4qv+oRR0qcKYPGQIzII4ADOJXnR
-zx/2+rWG
-=jctG
------END PGP SIGNATURE-----
-
---O9T4zNOkGnr0n+A/--
+T24gMTAuMTIuMjAyMCAwMjoyNiwgU2ltb24gR2xhc3Mgd3JvdGU6DQo+IFRoaXMgZnVuY3Rpb24g
+aXMgbm90IG5lZWRlZCBzaW5jZSB0aGUgc3RhbmRhcmQgZGV2aWNlX2JpbmQoKSBjYW4gYmUgdXNl
+ZA0KPiBpbnN0ZWFkLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU2ltb24gR2xhc3MgPHNqZ0BjaHJv
+bWl1bS5vcmc+DQo+IC0tLQ0KPiANCj4gICBhcmNoL3g4Ni9jcHUvYXBvbGxvbGFrZS9zcGwuYyAg
+ICAgICAgICAgICAgIHwgIDIgKy0NCj4gICBkcml2ZXJzL2Nsay9hdDkxL2NvbXBhdC5jICAgICAg
+ICAgICAgICAgICAgIHwgMjAgKysrKysrKystLS0tLS0tLS0tLS0NCj4gICBkcml2ZXJzL2Nsay9j
+bGsuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0NCj4gICBkcml2ZXJzL2dwaW8v
+bXQ3NjIxX2dwaW8uYyAgICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPiAgIGRyaXZlcnMvZ3Bp
+by9zNXBfZ3Bpby5jICAgICAgICAgICAgICAgICAgICAgfCAgNCArKy0tDQo+ICAgZHJpdmVycy9n
+cGlvL3N1bnhpX2dwaW8uYyAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4gICBkcml2ZXJz
+L2dwaW8vdGVncmExODZfZ3Bpby5jICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPiAgIGRyaXZl
+cnMvZ3Bpby90ZWdyYV9ncGlvLmMgICAgICAgICAgICAgICAgICAgfCAgNiArKystLS0NCj4gICBk
+cml2ZXJzL25ldC9tdnBwMi5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPiAg
+IGRyaXZlcnMvcGluY3RybC9icm9hZGNvbS9waW5jdHJsLWJjbTI4M3guYyAgfCAgNSArKy0tLQ0K
+PiAgIGRyaXZlcnMvcGluY3RybC9tZXNvbi9waW5jdHJsLW1lc29uLmMgICAgICAgfCAgNCArKyst
+DQo+ICAgZHJpdmVycy9waW5jdHJsL21zY2MvcGluY3RybC1qcjIuYyAgICAgICAgICB8ICA0ICsr
+LS0NCj4gICBkcml2ZXJzL3BpbmN0cmwvbXNjYy9waW5jdHJsLWx1dG9uLmMgICAgICAgIHwgIDQg
+KystLQ0KPiAgIGRyaXZlcnMvcGluY3RybC9tc2NjL3BpbmN0cmwtb2NlbG90LmMgICAgICAgfCAg
+NCArKy0tDQo+ICAgZHJpdmVycy9waW5jdHJsL21zY2MvcGluY3RybC1zZXJ2YWwuYyAgICAgICB8
+ICA0ICsrLS0NCj4gICBkcml2ZXJzL3BpbmN0cmwvbXNjYy9waW5jdHJsLXNlcnZhbHQuYyAgICAg
+IHwgIDQgKystLQ0KPiAgIGRyaXZlcnMvcGluY3RybC9tdmVidS9waW5jdHJsLWFybWFkYS0zN3h4
+LmMgfCAgOCArKysrLS0tLQ0KPiAgIGRyaXZlcnMvcG93ZXIvcmVndWxhdG9yL0tjb25maWcgICAg
+ICAgICAgICAgfCAgMiArLQ0KPiAgIGluY2x1ZGUvZG0vZGV2aWNlLWludGVybmFsLmggICAgICAg
+ICAgICAgICAgfCAgNCArKy0tDQo+ICAgaW5jbHVkZS9wb3dlci9yZWd1bGF0b3IuaCAgICAgICAg
+ICAgICAgICAgICB8ICAyICstDQo+ICAgMjAgZmlsZXMgY2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygr
+KSwgNDkgZGVsZXRpb25zKC0pDQo+IA0KPiBBcHBsaWVkIHRvIHUtYm9vdC1kbSwgdGhhbmtzIQ0K
+PiANCg0KDQpIaSBTaW1vbiwNCg0KSSBiaXNlY3RlZCB0aGUgdHJlZSBhbmQgdGhpcyBjb21taXQg
+bG9va3MgdG8gYnJlYWsgDQpzYW1hNWQ0X3hwbGFpbmVkX21tY19kZWZjb25maWcgOg0KDQo8ZGVi
+dWdfdWFydD4NCk5vIHNlcmlhbCBkcml2ZXIgZm91bmQNCkNvdWxkIG5vdCBpbml0aWFsaXplIHRp
+bWVyIChlcnIgLTE5KQ0KDQpDb3VsZCBub3QgaW5pdGlhbGl6ZSB0aW1lciAoZXJyIC0xOSkNCg0K
+Q291bGQgbm90IGluaXRpYWxpemUgdGltZXIgKGVyciAtMTkpDQoNCkNvdWxkIG5vdCBpbml0aWFs
+aXplIHRpbWVyIChlcnIgLTE5KQ0KDQpDb3VsZCBub3QgaW5pdGlhbGl6ZSB0aW1lciAoZXJyIC0x
+OSkNCg0KQ291bGQgbm90IGluaXRpYWxpemUgdGltZXIgKGVyciAtMTkpDQoNCkNvdWxkIG5vdCBp
+bml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KDQpDb3VsZCBub3QgaW5pdGlhbGl6ZSB0aW1lciAo
+ZXJyIC0xOSkNCg0KQ291bGQgbm90IGluaXRpYWxpemUgdGltZXIgKGVyciAtMTkpDQoNCkNvdWxk
+IG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KDQpCb290aW5nIHUtYm9vdCBmYWlscyB3
+aGVuIGFkZGluZyB0aGlzIGNvbW1pdC4NCg0KQ291bGQgeW91IHBsZWFzZSBoZWxwIG9yIGxldCBt
+ZSBrbm93IGhvdyBJIGNhbiBmaXggaXQgPw0KDQpUaGFua3MsDQpFdWdlbg0KDQphMjcwM2NlMTBj
+ZmNiZTZhODJlYzhlZDllYzEwZGYyYWVlYTA4ZTY0IGlzIHRoZSBmaXJzdCBiYWQgY29tbWl0DQpj
+b21taXQgYTI3MDNjZTEwY2ZjYmU2YTgyZWM4ZWQ5ZWMxMGRmMmFlZWEwOGU2NA0KQXV0aG9yOiBT
+aW1vbiBHbGFzcyA8c2pnQGNocm9taXVtLm9yZz4NCkRhdGU6ICAgU2F0IE5vdiAyOCAxNzo1MDow
+MyAyMDIwIC0wNzAwDQoNCiAgICAgZG06IFJlbW92ZSB1c2VzIG9mIGRldmljZV9iaW5kX29mZnNl
+dCgpDQoNCiAgICAgVGhpcyBmdW5jdGlvbiBpcyBub3QgbmVlZGVkIHNpbmNlIHRoZSBzdGFuZGFy
+ZCBkZXZpY2VfYmluZCgpIGNhbiBiZSANCnVzZWQNCiAgICAgaW5zdGVhZC4NCg0KICAgICBTaWdu
+ZWQtb2ZmLWJ5OiBTaW1vbiBHbGFzcyA8c2pnQGNocm9taXVtLm9yZz4NCg==
