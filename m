@@ -1,101 +1,158 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
- by mx.groups.io with SMTP id smtpd.web12.31407.1612171669770624816
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web09.32583.1612180966149170203
  for <u-boot-amlogic@groups.io>;
- Mon, 01 Feb 2021 01:27:50 -0800
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20210201092747epoutp0391b31f0e6a21a8744d033ee5a7b0f712~flZbvKUZ80499704997epoutp03W
-	for <u-boot-amlogic@groups.io>; Mon,  1 Feb 2021 09:27:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20210201092747epoutp0391b31f0e6a21a8744d033ee5a7b0f712~flZbvKUZ80499704997epoutp03W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1612171667;
-	bh=uTqv2MUoXg0enEK1VRmEwPfKeDY7DfVHiVFxVf3isNA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BBVb+CT6krwqivSqp0y0qhpS56NandpxoXb4DBed6NCCvztzMiTvoO/DG38D62YaW
-	 jBrxMMDF2No8OZvajUtzoy+LBuc7jRpr87300iIv30DejCDahO9ewqEC0hR1K8VJ8w
-	 XxaxdAUbbqxU1jL2LP/6AtBddTNVHcZgfaOb+Hro=
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 3/3] mmc: rockchip_dw_mmc: use mmc_pwrseq instead of rockchip_mmc_pwrseq
-Date: Mon,  1 Feb 2021 18:28:06 +0900
-Message-Id: <20210201092806.14314-4-jh80.chung@samsung.com>
-In-Reply-To: <20210201092806.14314-1-jh80.chung@samsung.com>
+ Mon, 01 Feb 2021 04:02:46 -0800
+Received: by mail-wm1-f49.google.com with SMTP id o5so2774207wmq.2
+        for <u-boot-amlogic@groups.io>; Mon, 01 Feb 2021 04:02:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+wm+aCRnWWPzM4eedcin11dHkwNEYwXtJ2KLHte1YM0=;
+        b=drKoGxVOXsyovEiFOi9s5W5cJjWJJ0gQ0B6uN+YKMRlXzikGb1JU2i1n6DLNZ/t6JG
+         CVJKHppaQbvc9Qh4dujlgR0xV0ky3DQM6I5CR2i1p486ZexoEOF+YvxnHBGEI7ZVePFK
+         ey13MucAfR13NWg8H1IvYbRIwLj7v6G1KYsRo=
 MIME-Version: 1.0
-References: <20210201092806.14314-1-jh80.chung@samsung.com>
-	<CGME20210201092741epcas1p2d6b484568480f419e9c7656ab4786621@epcas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-To: u-boot@lists.denx.de
-Cc: peng.fan@nxp.com, narmstrong@baylibre.com, sjg@chromium.org, kever.yang@rock-chips.com, yangbo.lu@nxp.com, faiz_abbas@ti.com, u-boot-amlogic@groups.io, philipp.tomsich@theobroma-systems.com, Jaehoon Chung <jh80.chung@samsung.com>
+References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
+ <20201129005011.2104545-1-sjg@chromium.org> <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
+ <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com> <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
+ <5e45863b-9459-0bd4-a43e-c470a6df659e@microchip.com>
+In-Reply-To: <5e45863b-9459-0bd4-a43e-c470a6df659e@microchip.com>
+From: Simon Glass <sjg@chromium.org>
+Date: Mon, 1 Feb 2021 05:02:31 -0700
+Message-ID: <CAPnjgZ0NJgBxdYMPFFnUQctdTjvuzXO1O5Pvpp9f=Ayp-Lqy5A@mail.gmail.com>
+Subject: Re: [PATCH 04/11] dm: Remove uses of device_bind_offset()
+Content-Type: text/plain; charset="UTF-8"
+To: Eugen Hristev <Eugen.Hristev@microchip.com>
+Cc: Anatolij Gustschin <agust@denx.de>, Bin Meng <bmeng.cn@gmail.com>, Claudiu Beznea <Claudiu.Beznea@microchip.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Horatiu Vultur <Horatiu.Vultur@microchip.com>, Icenowy Zheng <icenowy@aosc.io>, Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Joe Hershberger <joe.hershberger@ni.com>, Lars Povlsen <Lars.Povlsen@microchip.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Martin Fuzzey <martin.fuzzey@flowbird.group>, Masahiro Yamada <yamada.masahiro@socionext.com>, Matthias Brugger <mbrugger@suse.com>, Neil Armstrong <narmstrong@baylibre.com>, Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, Robert Beckett <bob.beckett@collabora.com>, u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Use mmc_pwrseq instead of rockchip_mmc_pwrseq.
+Hi Eugen,
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- drivers/mmc/rockchip_dw_mmc.c | 41 +++--------------------------------
- 1 file changed, 3 insertions(+), 38 deletions(-)
+On Mon, 1 Feb 2021 at 01:13, <Eugen.Hristev@microchip.com> wrote:
+>
+> On 31.01.2021 17:37, Simon Glass wrote:
+> > Hi Eugen,
+> >
+> > On Sun, 31 Jan 2021 at 02:18, <Eugen.Hristev@microchip.com> wrote:
+> >>
+> >> On 10.12.2020 02:26, Simon Glass wrote:
+> >>> This function is not needed since the standard device_bind() can be used
+> >>> instead.
+> >>>
+> >>> Signed-off-by: Simon Glass <sjg@chromium.org>
+> >>> ---
+> >>>
+> >>>    arch/x86/cpu/apollolake/spl.c               |  2 +-
+> >>>    drivers/clk/at91/compat.c                   | 20 ++++++++------------
+> >>>    drivers/clk/clk.c                           |  2 +-
+> >>>    drivers/gpio/mt7621_gpio.c                  |  4 ++--
+> >>>    drivers/gpio/s5p_gpio.c                     |  4 ++--
+> >>>    drivers/gpio/sunxi_gpio.c                   |  4 ++--
+> >>>    drivers/gpio/tegra186_gpio.c                |  4 ++--
+> >>>    drivers/gpio/tegra_gpio.c                   |  6 +++---
+> >>>    drivers/net/mvpp2.c                         |  4 ++--
+> >>>    drivers/pinctrl/broadcom/pinctrl-bcm283x.c  |  5 ++---
+> >>>    drivers/pinctrl/meson/pinctrl-meson.c       |  4 +++-
+> >>>    drivers/pinctrl/mscc/pinctrl-jr2.c          |  4 ++--
+> >>>    drivers/pinctrl/mscc/pinctrl-luton.c        |  4 ++--
+> >>>    drivers/pinctrl/mscc/pinctrl-ocelot.c       |  4 ++--
+> >>>    drivers/pinctrl/mscc/pinctrl-serval.c       |  4 ++--
+> >>>    drivers/pinctrl/mscc/pinctrl-servalt.c      |  4 ++--
+> >>>    drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |  8 ++++----
+> >>>    drivers/power/regulator/Kconfig             |  2 +-
+> >>>    include/dm/device-internal.h                |  4 ++--
+> >>>    include/power/regulator.h                   |  2 +-
+> >>>    20 files changed, 46 insertions(+), 49 deletions(-)
+> >>>
+> >>> Applied to u-boot-dm, thanks!
+> >>>
+> >>
+> >>
+> >> Hi Simon,
+> >>
+> >> I bisected the tree and this commit looks to break
+> >> sama5d4_xplained_mmc_defconfig :
+> >>
+> >> <debug_uart>
+> >> No serial driver found
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Could not initialize timer (err -19)
+> >>
+> >> Booting u-boot fails when adding this commit.
+> >>
+> >> Could you please help or let me know how I can fix it ?
+> >
+> > I suspect the problem could be in the changes to
+> > drivers/clk/at91/compat.c although I cannot see why
+> >
+> > You could try reverting that change, and just using offset_to_ofnode()
+> > in the device_bind_driver_to_node() call. I actually intended to do
+> > that at the time due to the risk, but somehow I missed this one.
+> >
+> > OTOH it would be good to move the code to livetree and stop using fdt offsets.
+> >
+> > Regards,
+> > Simon
+> >
+>
+> I reverted the changes in compat.c and indeed now it boots correctly.
+>
+> I tried to do the following change on top of your code as you suggested
+> but it does not help:
+>
+>
+> --- a/drivers/clk/at91/compat.c
+> +++ b/drivers/clk/at91/compat.c
+> @@ -67,7 +67,7 @@ int at91_clk_sub_device_bind(struct udevice *dev,
+> const char *drv_name)
+>          bool pre_reloc_only = !(gd->flags & GD_FLG_RELOC);
+>          const char *name;
+>          int ret;
+> -
+> +       int offset = dev_of_offset(dev);
+>          ofnode_for_each_subnode(node, parent) {
+>                  if (pre_reloc_only && !ofnode_pre_reloc(node))
+>                          continue;
+> @@ -84,7 +84,7 @@ int at91_clk_sub_device_bind(struct udevice *dev,
+> const char *drv_name)
+>                  name = ofnode_get_name(node);
+>                  if (!name)
+>                          return -EINVAL;
+> -               ret = device_bind_driver_to_node(dev, drv_name, name, node,
+> +               ret = device_bind_driver_to_node(dev, drv_name, name,
+> offset_to_ofnode(offset),
+>                                                   NULL);
+>                  if (ret)
+>                          return ret;
+>
+>
+> I have a feeling the 'for loop' for the subnodes misses an essential
+> driver and thus it fails booting
 
-diff --git a/drivers/mmc/rockchip_dw_mmc.c b/drivers/mmc/rockchip_dw_mmc.=
-c
-index 1be3c1741fd4..0664f6e5aef4 100644
---- a/drivers/mmc/rockchip_dw_mmc.c
-+++ b/drivers/mmc/rockchip_dw_mmc.c
-@@ -136,12 +136,11 @@ static int rockchip_dwmmc_probe(struct udevice *dev=
-)
-=20
- 	host->fifo_mode =3D priv->fifo_mode;
-=20
--#ifdef CONFIG_PWRSEQ
-+#ifdef CONFIG_MMC_PWRSEQ
- 	/* Enable power if needed */
--	ret =3D uclass_get_device_by_phandle(UCLASS_PWRSEQ, dev, "mmc-pwrseq",
--					   &pwr_dev);
-+	ret =3D mmc_pwrseq_get_power(dev, &plat->cfg);
- 	if (!ret) {
--		ret =3D pwrseq_set_power(pwr_dev, true);
-+		ret =3D pwrseq_set_power(&plat->cfg->pwr_dev, true);
- 		if (ret)
- 			return ret;
- 	}
-@@ -182,37 +181,3 @@ U_BOOT_DRIVER(rockchip_rk3288_dw_mshc) =3D {
-=20
- DM_DRIVER_ALIAS(rockchip_rk3288_dw_mshc, rockchip_rk3328_dw_mshc)
- DM_DRIVER_ALIAS(rockchip_rk3288_dw_mshc, rockchip_rk3368_dw_mshc)
--
--#ifdef CONFIG_PWRSEQ
--static int rockchip_dwmmc_pwrseq_set_power(struct udevice *dev, bool ena=
-ble)
--{
--	struct gpio_desc reset;
--	int ret;
--
--	ret =3D gpio_request_by_name(dev, "reset-gpios", 0, &reset, GPIOD_IS_OU=
-T);
--	if (ret)
--		return ret;
--	dm_gpio_set_value(&reset, 1);
--	udelay(1);
--	dm_gpio_set_value(&reset, 0);
--	udelay(200);
--
--	return 0;
--}
--
--static const struct pwrseq_ops rockchip_dwmmc_pwrseq_ops =3D {
--	.set_power	=3D rockchip_dwmmc_pwrseq_set_power,
--};
--
--static const struct udevice_id rockchip_dwmmc_pwrseq_ids[] =3D {
--	{ .compatible =3D "mmc-pwrseq-emmc" },
--	{ }
--};
--
--U_BOOT_DRIVER(rockchip_dwmmc_pwrseq_drv) =3D {
--	.name		=3D "mmc_pwrseq_emmc",
--	.id		=3D UCLASS_PWRSEQ,
--	.of_match	=3D rockchip_dwmmc_pwrseq_ids,
--	.ops		=3D &rockchip_dwmmc_pwrseq_ops,
--};
--#endif
---=20
-2.29.0
+Then I think reverting all the changes is the best thing in this file.
+Can you send a patch?
 
+Ultimately this should be figured out, but I cannot see what is wrong
+and don't have that hardware to try. I do have an old SAM9260/9263 but
+I'm not sure if that uses the same driver.
+
+Regards,
+Simon
