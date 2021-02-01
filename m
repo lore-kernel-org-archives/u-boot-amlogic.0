@@ -1,117 +1,98 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
- by mx.groups.io with SMTP id smtpd.web08.30885.1612167197400585449
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+ by mx.groups.io with SMTP id smtpd.web09.31240.1612171669773092752
  for <u-boot-amlogic@groups.io>;
- Mon, 01 Feb 2021 00:13:17 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1612167198; x=1643703198;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=XwxvvRRCIFKT55ELu8pwoeM19A3M65DCR9U27ARnwho=;
-  b=HAKfmC1AMiBudy/t71sqWNKk/THIa1GhMILlaIx/u7x69xYJBTK9kRMA
-   IG5jCucBPVwU41dbhQ5YbcO2ueseaF8geOhqrIjz30+yG02Sq+N2LFIXH
-   mcnqf7adoAIWaMChRIDexwmLoCjK/8tKKf6aqAfR1TFfgjSZOVNYUDvhR
-   mQ2t4qsZXgoH2aKVJyAdaBduQoA7cSIHdELngpsYKPRHHTqLYSrWpoH7m
-   qTb06Y19OinFOtyJ5CrvpkEvgzv3yA13obuEqcEhLlIiP9xhrim6DXEke
-   AL95Zba3FWxDi0r9JibETDCP+suqszzt5C7c+usEX4apQDxFGNBhyju7d
-   A==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XwxvvRRCIFKT55ELu8pwoeM19A3M65DCR9U27ARnwho=;
- b=alXRpH7gzn8AyMMYRFmPepvHKecR3aF9z6QSER/co3rl7XhixPMLLFUdpWyDn3nLCyYm4gb3Z5iQwgwGYlmAxMPpZm/wsvncDERtpB5BjbZa8HWnawcarQi19R2uBn55TppDYbVwoNn622jiVYti116HH2SGV6fAkAwT6uUSp9Q=
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH 04/11] dm: Remove uses of device_bind_offset()
-Date: Mon, 1 Feb 2021 08:13:13 +0000
-Message-ID: <5e45863b-9459-0bd4-a43e-c470a6df659e@microchip.com>
-References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
- <20201129005011.2104545-1-sjg@chromium.org>
- <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
- <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
- <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
-In-Reply-To: <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
+ Mon, 01 Feb 2021 01:27:50 -0800
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20210201092746epoutp02a51a5e16bfa4ca2dd5d9f3af37c29ba4~flZbn8xeR3221732217epoutp02e
+	for <u-boot-amlogic@groups.io>; Mon,  1 Feb 2021 09:27:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20210201092746epoutp02a51a5e16bfa4ca2dd5d9f3af37c29ba4~flZbn8xeR3221732217epoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1612171667;
+	bh=bcEIN9Tyom6AHt8/0qXMsppDBZCQfvVCJBoEQriPY04=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oJHw6O4uVG0MhWJAucWGkACwGOK8q8Kh/FUpA3XNXmVKRSrhORe4J+KxCZx/yvHQ3
+	 CWBeKlrXucjYZTR8KQVX6QDGIYn+Gf5XXAddPNVrMnBWdE/CGISt3pjvgCkSVVk2Tw
+	 xI3BHv+W5sj5J2st04+a959E0qv8mKz+lGEivZIw=
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH 2/3] mmc: meson_gx_mmc: use mmc_pwrseq instead of meson_mmc_pwrseq
+Date: Mon,  1 Feb 2021 18:28:05 +0900
+Message-Id: <20210201092806.14314-3-jh80.chung@samsung.com>
+In-Reply-To: <20210201092806.14314-1-jh80.chung@samsung.com>
 MIME-Version: 1.0
-Return-Path: Eugen.Hristev@microchip.com
-Content-Language: en-US
+References: <20210201092806.14314-1-jh80.chung@samsung.com>
+	<CGME20210201092741epcas1p1d0ca675d8c002bcac09d9add543f938b@epcas1p1.samsung.com>
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <EBF6BFE193F8CA48AA9370E38AFF653C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-To: sjg@chromium.org
-Cc: agust@denx.de, bmeng.cn@gmail.com, Claudiu.Beznea@microchip.com, gregory.clement@bootlin.com, Horatiu.Vultur@microchip.com, icenowy@aosc.io, jh80.chung@samsung.com, jagan@amarulasolutions.com, joe.hershberger@ni.com, Lars.Povlsen@microchip.com, lukma@denx.de, marex@denx.de, martin.fuzzey@flowbird.group, yamada.masahiro@socionext.com, mbrugger@suse.com, narmstrong@baylibre.com, morpheus.ibis@gmail.com, peng.fan@nxp.com, bob.beckett@collabora.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Transfer-Encoding: quoted-printable
+To: u-boot@lists.denx.de
+Cc: peng.fan@nxp.com, narmstrong@baylibre.com, sjg@chromium.org, kever.yang@rock-chips.com, yangbo.lu@nxp.com, faiz_abbas@ti.com, u-boot-amlogic@groups.io, philipp.tomsich@theobroma-systems.com, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-T24gMzEuMDEuMjAyMSAxNzozNywgU2ltb24gR2xhc3Mgd3JvdGU6DQo+IEhpIEV1Z2VuLA0KPiAN
-Cj4gT24gU3VuLCAzMSBKYW4gMjAyMSBhdCAwMjoxOCwgPEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlw
-LmNvbT4gd3JvdGU6DQo+Pg0KPj4gT24gMTAuMTIuMjAyMCAwMjoyNiwgU2ltb24gR2xhc3Mgd3Jv
-dGU6DQo+Pj4gVGhpcyBmdW5jdGlvbiBpcyBub3QgbmVlZGVkIHNpbmNlIHRoZSBzdGFuZGFyZCBk
-ZXZpY2VfYmluZCgpIGNhbiBiZSB1c2VkDQo+Pj4gaW5zdGVhZC4NCj4+Pg0KPj4+IFNpZ25lZC1v
-ZmYtYnk6IFNpbW9uIEdsYXNzIDxzamdAY2hyb21pdW0ub3JnPg0KPj4+IC0tLQ0KPj4+DQo+Pj4g
-ICAgYXJjaC94ODYvY3B1L2Fwb2xsb2xha2Uvc3BsLmMgICAgICAgICAgICAgICB8ICAyICstDQo+
-Pj4gICAgZHJpdmVycy9jbGsvYXQ5MS9jb21wYXQuYyAgICAgICAgICAgICAgICAgICB8IDIwICsr
-KysrKysrLS0tLS0tLS0tLS0tDQo+Pj4gICAgZHJpdmVycy9jbGsvY2xrLmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAyICstDQo+Pj4gICAgZHJpdmVycy9ncGlvL210NzYyMV9ncGlvLmMg
-ICAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJzL2dwaW8vczVwX2dwaW8u
-YyAgICAgICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPj4+ICAgIGRyaXZlcnMvZ3Bpby9zdW54
-aV9ncGlvLmMgICAgICAgICAgICAgICAgICAgfCAgNCArKy0tDQo+Pj4gICAgZHJpdmVycy9ncGlv
-L3RlZ3JhMTg2X2dwaW8uYyAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJz
-L2dwaW8vdGVncmFfZ3Bpby5jICAgICAgICAgICAgICAgICAgIHwgIDYgKysrLS0tDQo+Pj4gICAg
-ZHJpdmVycy9uZXQvbXZwcDIuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4+
-PiAgICBkcml2ZXJzL3BpbmN0cmwvYnJvYWRjb20vcGluY3RybC1iY20yODN4LmMgIHwgIDUgKyst
-LS0NCj4+PiAgICBkcml2ZXJzL3BpbmN0cmwvbWVzb24vcGluY3RybC1tZXNvbi5jICAgICAgIHwg
-IDQgKysrLQ0KPj4+ICAgIGRyaXZlcnMvcGluY3RybC9tc2NjL3BpbmN0cmwtanIyLmMgICAgICAg
-ICAgfCAgNCArKy0tDQo+Pj4gICAgZHJpdmVycy9waW5jdHJsL21zY2MvcGluY3RybC1sdXRvbi5j
-ICAgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJzL3BpbmN0cmwvbXNjYy9waW5jdHJsLW9j
-ZWxvdC5jICAgICAgIHwgIDQgKystLQ0KPj4+ICAgIGRyaXZlcnMvcGluY3RybC9tc2NjL3BpbmN0
-cmwtc2VydmFsLmMgICAgICAgfCAgNCArKy0tDQo+Pj4gICAgZHJpdmVycy9waW5jdHJsL21zY2Mv
-cGluY3RybC1zZXJ2YWx0LmMgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJzL3BpbmN0cmwv
-bXZlYnUvcGluY3RybC1hcm1hZGEtMzd4eC5jIHwgIDggKysrKy0tLS0NCj4+PiAgICBkcml2ZXJz
-L3Bvd2VyL3JlZ3VsYXRvci9LY29uZmlnICAgICAgICAgICAgIHwgIDIgKy0NCj4+PiAgICBpbmNs
-dWRlL2RtL2RldmljZS1pbnRlcm5hbC5oICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPj4+ICAg
-IGluY2x1ZGUvcG93ZXIvcmVndWxhdG9yLmggICAgICAgICAgICAgICAgICAgfCAgMiArLQ0KPj4+
-ICAgIDIwIGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDQ5IGRlbGV0aW9ucygtKQ0K
-Pj4+DQo+Pj4gQXBwbGllZCB0byB1LWJvb3QtZG0sIHRoYW5rcyENCj4+Pg0KPj4NCj4+DQo+PiBI
-aSBTaW1vbiwNCj4+DQo+PiBJIGJpc2VjdGVkIHRoZSB0cmVlIGFuZCB0aGlzIGNvbW1pdCBsb29r
-cyB0byBicmVhaw0KPj4gc2FtYTVkNF94cGxhaW5lZF9tbWNfZGVmY29uZmlnIDoNCj4+DQo+PiA8
-ZGVidWdfdWFydD4NCj4+IE5vIHNlcmlhbCBkcml2ZXIgZm91bmQNCj4+IENvdWxkIG5vdCBpbml0
-aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVy
-IChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0K
-Pj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxk
-IG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFs
-aXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChl
-cnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4N
-Cj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5v
-dCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IEJvb3RpbmcgdS1ib290IGZhaWxz
-IHdoZW4gYWRkaW5nIHRoaXMgY29tbWl0Lg0KPj4NCj4+IENvdWxkIHlvdSBwbGVhc2UgaGVscCBv
-ciBsZXQgbWUga25vdyBob3cgSSBjYW4gZml4IGl0ID8NCj4gDQo+IEkgc3VzcGVjdCB0aGUgcHJv
-YmxlbSBjb3VsZCBiZSBpbiB0aGUgY2hhbmdlcyB0bw0KPiBkcml2ZXJzL2Nsay9hdDkxL2NvbXBh
-dC5jIGFsdGhvdWdoIEkgY2Fubm90IHNlZSB3aHkNCj4gDQo+IFlvdSBjb3VsZCB0cnkgcmV2ZXJ0
-aW5nIHRoYXQgY2hhbmdlLCBhbmQganVzdCB1c2luZyBvZmZzZXRfdG9fb2Zub2RlKCkNCj4gaW4g
-dGhlIGRldmljZV9iaW5kX2RyaXZlcl90b19ub2RlKCkgY2FsbC4gSSBhY3R1YWxseSBpbnRlbmRl
-ZCB0byBkbw0KPiB0aGF0IGF0IHRoZSB0aW1lIGR1ZSB0byB0aGUgcmlzaywgYnV0IHNvbWVob3cg
-SSBtaXNzZWQgdGhpcyBvbmUuDQo+IA0KPiBPVE9IIGl0IHdvdWxkIGJlIGdvb2QgdG8gbW92ZSB0
-aGUgY29kZSB0byBsaXZldHJlZSBhbmQgc3RvcCB1c2luZyBmZHQgb2Zmc2V0cy4NCj4gDQo+IFJl
-Z2FyZHMsDQo+IFNpbW9uDQo+IA0KDQpJIHJldmVydGVkIHRoZSBjaGFuZ2VzIGluIGNvbXBhdC5j
-IGFuZCBpbmRlZWQgbm93IGl0IGJvb3RzIGNvcnJlY3RseS4NCg0KSSB0cmllZCB0byBkbyB0aGUg
-Zm9sbG93aW5nIGNoYW5nZSBvbiB0b3Agb2YgeW91ciBjb2RlIGFzIHlvdSBzdWdnZXN0ZWQgDQpi
-dXQgaXQgZG9lcyBub3QgaGVscDoNCg0KDQotLS0gYS9kcml2ZXJzL2Nsay9hdDkxL2NvbXBhdC5j
-DQorKysgYi9kcml2ZXJzL2Nsay9hdDkxL2NvbXBhdC5jDQpAQCAtNjcsNyArNjcsNyBAQCBpbnQg
-YXQ5MV9jbGtfc3ViX2RldmljZV9iaW5kKHN0cnVjdCB1ZGV2aWNlICpkZXYsIA0KY29uc3QgY2hh
-ciAqZHJ2X25hbWUpDQogICAgICAgICBib29sIHByZV9yZWxvY19vbmx5ID0gIShnZC0+ZmxhZ3Mg
-JiBHRF9GTEdfUkVMT0MpOw0KICAgICAgICAgY29uc3QgY2hhciAqbmFtZTsNCiAgICAgICAgIGlu
-dCByZXQ7DQotDQorICAgICAgIGludCBvZmZzZXQgPSBkZXZfb2Zfb2Zmc2V0KGRldik7DQogICAg
-ICAgICBvZm5vZGVfZm9yX2VhY2hfc3Vibm9kZShub2RlLCBwYXJlbnQpIHsNCiAgICAgICAgICAg
-ICAgICAgaWYgKHByZV9yZWxvY19vbmx5ICYmICFvZm5vZGVfcHJlX3JlbG9jKG5vZGUpKQ0KICAg
-ICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KQEAgLTg0LDcgKzg0LDcgQEAgaW50IGF0
-OTFfY2xrX3N1Yl9kZXZpY2VfYmluZChzdHJ1Y3QgdWRldmljZSAqZGV2LCANCmNvbnN0IGNoYXIg
-KmRydl9uYW1lKQ0KICAgICAgICAgICAgICAgICBuYW1lID0gb2Zub2RlX2dldF9uYW1lKG5vZGUp
-Ow0KICAgICAgICAgICAgICAgICBpZiAoIW5hbWUpDQogICAgICAgICAgICAgICAgICAgICAgICAg
-cmV0dXJuIC1FSU5WQUw7DQotICAgICAgICAgICAgICAgcmV0ID0gZGV2aWNlX2JpbmRfZHJpdmVy
-X3RvX25vZGUoZGV2LCBkcnZfbmFtZSwgbmFtZSwgbm9kZSwNCisgICAgICAgICAgICAgICByZXQg
-PSBkZXZpY2VfYmluZF9kcml2ZXJfdG9fbm9kZShkZXYsIGRydl9uYW1lLCBuYW1lLCANCm9mZnNl
-dF90b19vZm5vZGUob2Zmc2V0KSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgTlVMTCk7DQogICAgICAgICAgICAgICAgIGlmIChyZXQpDQogICAgICAg
-ICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCg0KDQpJIGhhdmUgYSBmZWVsaW5nIHRoZSAn
-Zm9yIGxvb3AnIGZvciB0aGUgc3Vibm9kZXMgbWlzc2VzIGFuIGVzc2VudGlhbCANCmRyaXZlciBh
-bmQgdGh1cyBpdCBmYWlscyBib290aW5nDQo=
+Use mmc_pwrseq instead of meson_mmc_pwrseq.
+
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+ drivers/mmc/meson_gx_mmc.c | 41 +++-----------------------------------
+ 1 file changed, 3 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+index 8b6dfa3b9603..0ef140562cd2 100644
+--- a/drivers/mmc/meson_gx_mmc.c
++++ b/drivers/mmc/meson_gx_mmc.c
+@@ -292,12 +292,11 @@ static int meson_mmc_probe(struct udevice *dev)
+=20
+ 	mmc_set_clock(mmc, cfg->f_min, MMC_CLK_ENABLE);
+=20
+-#ifdef CONFIG_PWRSEQ
++#ifdef CONFIG_MMC_PWRSEQ
+ 	/* Enable power if needed */
+-	ret =3D uclass_get_device_by_phandle(UCLASS_PWRSEQ, dev, "mmc-pwrseq",
+-					   &pwr_dev);
++	ret =3D mmc_pwrseq_get_power(dev, cfg);
+ 	if (!ret) {
+-		ret =3D pwrseq_set_power(pwr_dev, true);
++		ret =3D pwrseq_set_power(cfg->pwr_dev, true);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -342,37 +341,3 @@ U_BOOT_DRIVER(meson_mmc) =3D {
+ 	.of_to_plat =3D meson_mmc_of_to_plat,
+ 	.plat_auto	=3D sizeof(struct meson_mmc_plat),
+ };
+-
+-#ifdef CONFIG_PWRSEQ
+-static int meson_mmc_pwrseq_set_power(struct udevice *dev, bool enable)
+-{
+-	struct gpio_desc reset;
+-	int ret;
+-
+-	ret =3D gpio_request_by_name(dev, "reset-gpios", 0, &reset, GPIOD_IS_OU=
+T);
+-	if (ret)
+-		return ret;
+-	dm_gpio_set_value(&reset, 1);
+-	udelay(1);
+-	dm_gpio_set_value(&reset, 0);
+-	udelay(200);
+-
+-	return 0;
+-}
+-
+-static const struct pwrseq_ops meson_mmc_pwrseq_ops =3D {
+-	.set_power	=3D meson_mmc_pwrseq_set_power,
+-};
+-
+-static const struct udevice_id meson_mmc_pwrseq_ids[] =3D {
+-	{ .compatible =3D "mmc-pwrseq-emmc" },
+-	{ }
+-};
+-
+-U_BOOT_DRIVER(meson_mmc_pwrseq_drv) =3D {
+-	.name		=3D "mmc_pwrseq_emmc",
+-	.id		=3D UCLASS_PWRSEQ,
+-	.of_match	=3D meson_mmc_pwrseq_ids,
+-	.ops		=3D &meson_mmc_pwrseq_ops,
+-};
+-#endif
+--=20
+2.29.0
+
