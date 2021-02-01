@@ -1,107 +1,117 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web08.19478.1612107492168590768
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+ by mx.groups.io with SMTP id smtpd.web08.30885.1612167197400585449
  for <u-boot-amlogic@groups.io>;
- Sun, 31 Jan 2021 07:38:12 -0800
-Received: by mail-wr1-f48.google.com with SMTP id z6so13836246wrq.10
-        for <u-boot-amlogic@groups.io>; Sun, 31 Jan 2021 07:38:11 -0800 (PST)
+ Mon, 01 Feb 2021 00:13:17 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1612167198; x=1643703198;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=XwxvvRRCIFKT55ELu8pwoeM19A3M65DCR9U27ARnwho=;
+  b=HAKfmC1AMiBudy/t71sqWNKk/THIa1GhMILlaIx/u7x69xYJBTK9kRMA
+   IG5jCucBPVwU41dbhQ5YbcO2ueseaF8geOhqrIjz30+yG02Sq+N2LFIXH
+   mcnqf7adoAIWaMChRIDexwmLoCjK/8tKKf6aqAfR1TFfgjSZOVNYUDvhR
+   mQ2t4qsZXgoH2aKVJyAdaBduQoA7cSIHdELngpsYKPRHHTqLYSrWpoH7m
+   qTb06Y19OinFOtyJ5CrvpkEvgzv3yA13obuEqcEhLlIiP9xhrim6DXEke
+   AL95Zba3FWxDi0r9JibETDCP+suqszzt5C7c+usEX4apQDxFGNBhyju7d
+   A==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TEEKLGiZMXYRp5teJaYCGXWbtxH7lGhZQUsItzEKp4Y=;
-        b=QRnyGwDh9+/RKFX29S+agSYsLNL6wD0+e0zKUDaQZbLS74q6Iz8Trx+FbS9afw7Tdo
-         QcKW+D06y2L0Oe5gOkL/MLCqL/lFLG/QWW7fvH9gs0go2rrnZgxkfMM9r01uHTafi2No
-         QdPXfIxPjXe+WptJTi6ckBCzQPu6eLA2E7rRo=
-MIME-Version: 1.0
-References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
- <20201129005011.2104545-1-sjg@chromium.org> <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
- <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
-In-Reply-To: <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
-From: Simon Glass <sjg@chromium.org>
-Date: Sun, 31 Jan 2021 08:37:58 -0700
-Message-ID: <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XwxvvRRCIFKT55ELu8pwoeM19A3M65DCR9U27ARnwho=;
+ b=alXRpH7gzn8AyMMYRFmPepvHKecR3aF9z6QSER/co3rl7XhixPMLLFUdpWyDn3nLCyYm4gb3Z5iQwgwGYlmAxMPpZm/wsvncDERtpB5BjbZa8HWnawcarQi19R2uBn55TppDYbVwoNn622jiVYti116HH2SGV6fAkAwT6uUSp9Q=
+From: <Eugen.Hristev@microchip.com>
 Subject: Re: [PATCH 04/11] dm: Remove uses of device_bind_offset()
-Content-Type: text/plain; charset="UTF-8"
-To: Eugen Hristev <Eugen.Hristev@microchip.com>
-Cc: Anatolij Gustschin <agust@denx.de>, Bin Meng <bmeng.cn@gmail.com>, Claudiu Beznea <Claudiu.Beznea@microchip.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Horatiu Vultur <Horatiu.Vultur@microchip.com>, Icenowy Zheng <icenowy@aosc.io>, Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Joe Hershberger <joe.hershberger@ni.com>, Lars Povlsen <Lars.Povlsen@microchip.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Martin Fuzzey <martin.fuzzey@flowbird.group>, Masahiro Yamada <yamada.masahiro@socionext.com>, Matthias Brugger <mbrugger@suse.com>, Neil Armstrong <narmstrong@baylibre.com>, Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, Robert Beckett <bob.beckett@collabora.com>, u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Date: Mon, 1 Feb 2021 08:13:13 +0000
+Message-ID: <5e45863b-9459-0bd4-a43e-c470a6df659e@microchip.com>
+References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
+ <20201129005011.2104545-1-sjg@chromium.org>
+ <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
+ <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com>
+ <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
+In-Reply-To: <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
+MIME-Version: 1.0
+Return-Path: Eugen.Hristev@microchip.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EBF6BFE193F8CA48AA9370E38AFF653C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+To: sjg@chromium.org
+Cc: agust@denx.de, bmeng.cn@gmail.com, Claudiu.Beznea@microchip.com, gregory.clement@bootlin.com, Horatiu.Vultur@microchip.com, icenowy@aosc.io, jh80.chung@samsung.com, jagan@amarulasolutions.com, joe.hershberger@ni.com, Lars.Povlsen@microchip.com, lukma@denx.de, marex@denx.de, martin.fuzzey@flowbird.group, yamada.masahiro@socionext.com, mbrugger@suse.com, narmstrong@baylibre.com, morpheus.ibis@gmail.com, peng.fan@nxp.com, bob.beckett@collabora.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Eugen,
-
-On Sun, 31 Jan 2021 at 02:18, <Eugen.Hristev@microchip.com> wrote:
->
-> On 10.12.2020 02:26, Simon Glass wrote:
-> > This function is not needed since the standard device_bind() can be used
-> > instead.
-> >
-> > Signed-off-by: Simon Glass <sjg@chromium.org>
-> > ---
-> >
-> >   arch/x86/cpu/apollolake/spl.c               |  2 +-
-> >   drivers/clk/at91/compat.c                   | 20 ++++++++------------
-> >   drivers/clk/clk.c                           |  2 +-
-> >   drivers/gpio/mt7621_gpio.c                  |  4 ++--
-> >   drivers/gpio/s5p_gpio.c                     |  4 ++--
-> >   drivers/gpio/sunxi_gpio.c                   |  4 ++--
-> >   drivers/gpio/tegra186_gpio.c                |  4 ++--
-> >   drivers/gpio/tegra_gpio.c                   |  6 +++---
-> >   drivers/net/mvpp2.c                         |  4 ++--
-> >   drivers/pinctrl/broadcom/pinctrl-bcm283x.c  |  5 ++---
-> >   drivers/pinctrl/meson/pinctrl-meson.c       |  4 +++-
-> >   drivers/pinctrl/mscc/pinctrl-jr2.c          |  4 ++--
-> >   drivers/pinctrl/mscc/pinctrl-luton.c        |  4 ++--
-> >   drivers/pinctrl/mscc/pinctrl-ocelot.c       |  4 ++--
-> >   drivers/pinctrl/mscc/pinctrl-serval.c       |  4 ++--
-> >   drivers/pinctrl/mscc/pinctrl-servalt.c      |  4 ++--
-> >   drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |  8 ++++----
-> >   drivers/power/regulator/Kconfig             |  2 +-
-> >   include/dm/device-internal.h                |  4 ++--
-> >   include/power/regulator.h                   |  2 +-
-> >   20 files changed, 46 insertions(+), 49 deletions(-)
-> >
-> > Applied to u-boot-dm, thanks!
-> >
->
->
-> Hi Simon,
->
-> I bisected the tree and this commit looks to break
-> sama5d4_xplained_mmc_defconfig :
->
-> <debug_uart>
-> No serial driver found
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Could not initialize timer (err -19)
->
-> Booting u-boot fails when adding this commit.
->
-> Could you please help or let me know how I can fix it ?
-
-I suspect the problem could be in the changes to
-drivers/clk/at91/compat.c although I cannot see why
-
-You could try reverting that change, and just using offset_to_ofnode()
-in the device_bind_driver_to_node() call. I actually intended to do
-that at the time due to the risk, but somehow I missed this one.
-
-OTOH it would be good to move the code to livetree and stop using fdt offsets.
-
-Regards,
-Simon
+T24gMzEuMDEuMjAyMSAxNzozNywgU2ltb24gR2xhc3Mgd3JvdGU6DQo+IEhpIEV1Z2VuLA0KPiAN
+Cj4gT24gU3VuLCAzMSBKYW4gMjAyMSBhdCAwMjoxOCwgPEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlw
+LmNvbT4gd3JvdGU6DQo+Pg0KPj4gT24gMTAuMTIuMjAyMCAwMjoyNiwgU2ltb24gR2xhc3Mgd3Jv
+dGU6DQo+Pj4gVGhpcyBmdW5jdGlvbiBpcyBub3QgbmVlZGVkIHNpbmNlIHRoZSBzdGFuZGFyZCBk
+ZXZpY2VfYmluZCgpIGNhbiBiZSB1c2VkDQo+Pj4gaW5zdGVhZC4NCj4+Pg0KPj4+IFNpZ25lZC1v
+ZmYtYnk6IFNpbW9uIEdsYXNzIDxzamdAY2hyb21pdW0ub3JnPg0KPj4+IC0tLQ0KPj4+DQo+Pj4g
+ICAgYXJjaC94ODYvY3B1L2Fwb2xsb2xha2Uvc3BsLmMgICAgICAgICAgICAgICB8ICAyICstDQo+
+Pj4gICAgZHJpdmVycy9jbGsvYXQ5MS9jb21wYXQuYyAgICAgICAgICAgICAgICAgICB8IDIwICsr
+KysrKysrLS0tLS0tLS0tLS0tDQo+Pj4gICAgZHJpdmVycy9jbGsvY2xrLmMgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAyICstDQo+Pj4gICAgZHJpdmVycy9ncGlvL210NzYyMV9ncGlvLmMg
+ICAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJzL2dwaW8vczVwX2dwaW8u
+YyAgICAgICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPj4+ICAgIGRyaXZlcnMvZ3Bpby9zdW54
+aV9ncGlvLmMgICAgICAgICAgICAgICAgICAgfCAgNCArKy0tDQo+Pj4gICAgZHJpdmVycy9ncGlv
+L3RlZ3JhMTg2X2dwaW8uYyAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJz
+L2dwaW8vdGVncmFfZ3Bpby5jICAgICAgICAgICAgICAgICAgIHwgIDYgKysrLS0tDQo+Pj4gICAg
+ZHJpdmVycy9uZXQvbXZwcDIuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0NCj4+
+PiAgICBkcml2ZXJzL3BpbmN0cmwvYnJvYWRjb20vcGluY3RybC1iY20yODN4LmMgIHwgIDUgKyst
+LS0NCj4+PiAgICBkcml2ZXJzL3BpbmN0cmwvbWVzb24vcGluY3RybC1tZXNvbi5jICAgICAgIHwg
+IDQgKysrLQ0KPj4+ICAgIGRyaXZlcnMvcGluY3RybC9tc2NjL3BpbmN0cmwtanIyLmMgICAgICAg
+ICAgfCAgNCArKy0tDQo+Pj4gICAgZHJpdmVycy9waW5jdHJsL21zY2MvcGluY3RybC1sdXRvbi5j
+ICAgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJzL3BpbmN0cmwvbXNjYy9waW5jdHJsLW9j
+ZWxvdC5jICAgICAgIHwgIDQgKystLQ0KPj4+ICAgIGRyaXZlcnMvcGluY3RybC9tc2NjL3BpbmN0
+cmwtc2VydmFsLmMgICAgICAgfCAgNCArKy0tDQo+Pj4gICAgZHJpdmVycy9waW5jdHJsL21zY2Mv
+cGluY3RybC1zZXJ2YWx0LmMgICAgICB8ICA0ICsrLS0NCj4+PiAgICBkcml2ZXJzL3BpbmN0cmwv
+bXZlYnUvcGluY3RybC1hcm1hZGEtMzd4eC5jIHwgIDggKysrKy0tLS0NCj4+PiAgICBkcml2ZXJz
+L3Bvd2VyL3JlZ3VsYXRvci9LY29uZmlnICAgICAgICAgICAgIHwgIDIgKy0NCj4+PiAgICBpbmNs
+dWRlL2RtL2RldmljZS1pbnRlcm5hbC5oICAgICAgICAgICAgICAgIHwgIDQgKystLQ0KPj4+ICAg
+IGluY2x1ZGUvcG93ZXIvcmVndWxhdG9yLmggICAgICAgICAgICAgICAgICAgfCAgMiArLQ0KPj4+
+ICAgIDIwIGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDQ5IGRlbGV0aW9ucygtKQ0K
+Pj4+DQo+Pj4gQXBwbGllZCB0byB1LWJvb3QtZG0sIHRoYW5rcyENCj4+Pg0KPj4NCj4+DQo+PiBI
+aSBTaW1vbiwNCj4+DQo+PiBJIGJpc2VjdGVkIHRoZSB0cmVlIGFuZCB0aGlzIGNvbW1pdCBsb29r
+cyB0byBicmVhaw0KPj4gc2FtYTVkNF94cGxhaW5lZF9tbWNfZGVmY29uZmlnIDoNCj4+DQo+PiA8
+ZGVidWdfdWFydD4NCj4+IE5vIHNlcmlhbCBkcml2ZXIgZm91bmQNCj4+IENvdWxkIG5vdCBpbml0
+aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVy
+IChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0K
+Pj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxk
+IG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFs
+aXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChl
+cnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4N
+Cj4+IENvdWxkIG5vdCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IENvdWxkIG5v
+dCBpbml0aWFsaXplIHRpbWVyIChlcnIgLTE5KQ0KPj4NCj4+IEJvb3RpbmcgdS1ib290IGZhaWxz
+IHdoZW4gYWRkaW5nIHRoaXMgY29tbWl0Lg0KPj4NCj4+IENvdWxkIHlvdSBwbGVhc2UgaGVscCBv
+ciBsZXQgbWUga25vdyBob3cgSSBjYW4gZml4IGl0ID8NCj4gDQo+IEkgc3VzcGVjdCB0aGUgcHJv
+YmxlbSBjb3VsZCBiZSBpbiB0aGUgY2hhbmdlcyB0bw0KPiBkcml2ZXJzL2Nsay9hdDkxL2NvbXBh
+dC5jIGFsdGhvdWdoIEkgY2Fubm90IHNlZSB3aHkNCj4gDQo+IFlvdSBjb3VsZCB0cnkgcmV2ZXJ0
+aW5nIHRoYXQgY2hhbmdlLCBhbmQganVzdCB1c2luZyBvZmZzZXRfdG9fb2Zub2RlKCkNCj4gaW4g
+dGhlIGRldmljZV9iaW5kX2RyaXZlcl90b19ub2RlKCkgY2FsbC4gSSBhY3R1YWxseSBpbnRlbmRl
+ZCB0byBkbw0KPiB0aGF0IGF0IHRoZSB0aW1lIGR1ZSB0byB0aGUgcmlzaywgYnV0IHNvbWVob3cg
+SSBtaXNzZWQgdGhpcyBvbmUuDQo+IA0KPiBPVE9IIGl0IHdvdWxkIGJlIGdvb2QgdG8gbW92ZSB0
+aGUgY29kZSB0byBsaXZldHJlZSBhbmQgc3RvcCB1c2luZyBmZHQgb2Zmc2V0cy4NCj4gDQo+IFJl
+Z2FyZHMsDQo+IFNpbW9uDQo+IA0KDQpJIHJldmVydGVkIHRoZSBjaGFuZ2VzIGluIGNvbXBhdC5j
+IGFuZCBpbmRlZWQgbm93IGl0IGJvb3RzIGNvcnJlY3RseS4NCg0KSSB0cmllZCB0byBkbyB0aGUg
+Zm9sbG93aW5nIGNoYW5nZSBvbiB0b3Agb2YgeW91ciBjb2RlIGFzIHlvdSBzdWdnZXN0ZWQgDQpi
+dXQgaXQgZG9lcyBub3QgaGVscDoNCg0KDQotLS0gYS9kcml2ZXJzL2Nsay9hdDkxL2NvbXBhdC5j
+DQorKysgYi9kcml2ZXJzL2Nsay9hdDkxL2NvbXBhdC5jDQpAQCAtNjcsNyArNjcsNyBAQCBpbnQg
+YXQ5MV9jbGtfc3ViX2RldmljZV9iaW5kKHN0cnVjdCB1ZGV2aWNlICpkZXYsIA0KY29uc3QgY2hh
+ciAqZHJ2X25hbWUpDQogICAgICAgICBib29sIHByZV9yZWxvY19vbmx5ID0gIShnZC0+ZmxhZ3Mg
+JiBHRF9GTEdfUkVMT0MpOw0KICAgICAgICAgY29uc3QgY2hhciAqbmFtZTsNCiAgICAgICAgIGlu
+dCByZXQ7DQotDQorICAgICAgIGludCBvZmZzZXQgPSBkZXZfb2Zfb2Zmc2V0KGRldik7DQogICAg
+ICAgICBvZm5vZGVfZm9yX2VhY2hfc3Vibm9kZShub2RlLCBwYXJlbnQpIHsNCiAgICAgICAgICAg
+ICAgICAgaWYgKHByZV9yZWxvY19vbmx5ICYmICFvZm5vZGVfcHJlX3JlbG9jKG5vZGUpKQ0KICAg
+ICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KQEAgLTg0LDcgKzg0LDcgQEAgaW50IGF0
+OTFfY2xrX3N1Yl9kZXZpY2VfYmluZChzdHJ1Y3QgdWRldmljZSAqZGV2LCANCmNvbnN0IGNoYXIg
+KmRydl9uYW1lKQ0KICAgICAgICAgICAgICAgICBuYW1lID0gb2Zub2RlX2dldF9uYW1lKG5vZGUp
+Ow0KICAgICAgICAgICAgICAgICBpZiAoIW5hbWUpDQogICAgICAgICAgICAgICAgICAgICAgICAg
+cmV0dXJuIC1FSU5WQUw7DQotICAgICAgICAgICAgICAgcmV0ID0gZGV2aWNlX2JpbmRfZHJpdmVy
+X3RvX25vZGUoZGV2LCBkcnZfbmFtZSwgbmFtZSwgbm9kZSwNCisgICAgICAgICAgICAgICByZXQg
+PSBkZXZpY2VfYmluZF9kcml2ZXJfdG9fbm9kZShkZXYsIGRydl9uYW1lLCBuYW1lLCANCm9mZnNl
+dF90b19vZm5vZGUob2Zmc2V0KSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgTlVMTCk7DQogICAgICAgICAgICAgICAgIGlmIChyZXQpDQogICAgICAg
+ICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCg0KDQpJIGhhdmUgYSBmZWVsaW5nIHRoZSAn
+Zm9yIGxvb3AnIGZvciB0aGUgc3Vibm9kZXMgbWlzc2VzIGFuIGVzc2VudGlhbCANCmRyaXZlciBh
+bmQgdGh1cyBpdCBmYWlscyBib290aW5nDQo=
