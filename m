@@ -1,158 +1,252 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web09.32583.1612180966149170203
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.8294.1612447423909213661
  for <u-boot-amlogic@groups.io>;
- Mon, 01 Feb 2021 04:02:46 -0800
-Received: by mail-wm1-f49.google.com with SMTP id o5so2774207wmq.2
-        for <u-boot-amlogic@groups.io>; Mon, 01 Feb 2021 04:02:45 -0800 (PST)
+ Thu, 04 Feb 2021 06:03:45 -0800
+Received: by mail-wr1-f53.google.com with SMTP id c4so3599760wru.9
+        for <u-boot-amlogic@groups.io>; Thu, 04 Feb 2021 06:03:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+wm+aCRnWWPzM4eedcin11dHkwNEYwXtJ2KLHte1YM0=;
-        b=drKoGxVOXsyovEiFOi9s5W5cJjWJJ0gQ0B6uN+YKMRlXzikGb1JU2i1n6DLNZ/t6JG
-         CVJKHppaQbvc9Qh4dujlgR0xV0ky3DQM6I5CR2i1p486ZexoEOF+YvxnHBGEI7ZVePFK
-         ey13MucAfR13NWg8H1IvYbRIwLj7v6G1KYsRo=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nxtlSgtnI0rwxiFRAlVQqXSwy0+aKz0Eqes9Iho4sng=;
+        b=EfK2/+BxRbVgLRe9iOVQ2Eb6p6PySKrcSzcJTqPhST9UN3SnKiP1rJgmGbUau/8o9s
+         w+UnCjSpl3urwUyBGteSNApXySFe+TFRlzlx23zvnfcrtGmKUm0mhMvrjnY/JUCUiX7O
+         kOscX00qgoU6igWkZs5Ay02uzH+xY6PXP17teIU3EWFz17J7mXg9pfWx/lH4258CinlV
+         eJ6eaDXrh6g7aOyVnI+lJl9M4lobBA+nVG1ja0lOyDO1VRBfEjS66Q5Ds7omaz6FmRnR
+         51mZbLROhj1xs3TzpYYaX2qjGxRATlcNcOmxmVNzdn3QEUO7IGZ3Wb0Be16IqT+aM51C
+         mwxw==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] board: amlogic: odroid: add runtime detection of the N2/N2+/C4/HC4 variants
+References: <CGME20210204091156eucas1p2c0ef39f48be756ff3c40dd7be3dac684@eucas1p2.samsung.com>
+ <20210204091145.19201-1-m.szyprowski@samsung.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <a91703a8-0daa-e8ca-d874-9e6003bfbe35@baylibre.com>
+Date: Thu, 4 Feb 2021 15:03:40 +0100
 MIME-Version: 1.0
-References: <20201128174958.4.I07862310b4e40efa2ea158f4f84e0f79dcfec7ed@changeid>
- <20201129005011.2104545-1-sjg@chromium.org> <CAPnjgZ2Ncs4sCFnAzcBobn6zkpeYH=7-OGb6jJbJyuLWuLEFXg@mail.gmail.com>
- <53b0a6c5-fc97-12ff-2468-10e86cba60fd@microchip.com> <CAPnjgZ3p0=fvxHUd1Nf=-rXk-B7nGVMzbCXBB70PndyubiNcHg@mail.gmail.com>
- <5e45863b-9459-0bd4-a43e-c470a6df659e@microchip.com>
-In-Reply-To: <5e45863b-9459-0bd4-a43e-c470a6df659e@microchip.com>
-From: Simon Glass <sjg@chromium.org>
-Date: Mon, 1 Feb 2021 05:02:31 -0700
-Message-ID: <CAPnjgZ0NJgBxdYMPFFnUQctdTjvuzXO1O5Pvpp9f=Ayp-Lqy5A@mail.gmail.com>
-Subject: Re: [PATCH 04/11] dm: Remove uses of device_bind_offset()
-Content-Type: text/plain; charset="UTF-8"
-To: Eugen Hristev <Eugen.Hristev@microchip.com>
-Cc: Anatolij Gustschin <agust@denx.de>, Bin Meng <bmeng.cn@gmail.com>, Claudiu Beznea <Claudiu.Beznea@microchip.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Horatiu Vultur <Horatiu.Vultur@microchip.com>, Icenowy Zheng <icenowy@aosc.io>, Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Joe Hershberger <joe.hershberger@ni.com>, Lars Povlsen <Lars.Povlsen@microchip.com>, Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, Martin Fuzzey <martin.fuzzey@flowbird.group>, Masahiro Yamada <yamada.masahiro@socionext.com>, Matthias Brugger <mbrugger@suse.com>, Neil Armstrong <narmstrong@baylibre.com>, Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, Robert Beckett <bob.beckett@collabora.com>, u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+In-Reply-To: <20210204091145.19201-1-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Marek Szyprowski <m.szyprowski@samsung.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Eugen,
+Hi,
 
-On Mon, 1 Feb 2021 at 01:13, <Eugen.Hristev@microchip.com> wrote:
->
-> On 31.01.2021 17:37, Simon Glass wrote:
-> > Hi Eugen,
-> >
-> > On Sun, 31 Jan 2021 at 02:18, <Eugen.Hristev@microchip.com> wrote:
-> >>
-> >> On 10.12.2020 02:26, Simon Glass wrote:
-> >>> This function is not needed since the standard device_bind() can be used
-> >>> instead.
-> >>>
-> >>> Signed-off-by: Simon Glass <sjg@chromium.org>
-> >>> ---
-> >>>
-> >>>    arch/x86/cpu/apollolake/spl.c               |  2 +-
-> >>>    drivers/clk/at91/compat.c                   | 20 ++++++++------------
-> >>>    drivers/clk/clk.c                           |  2 +-
-> >>>    drivers/gpio/mt7621_gpio.c                  |  4 ++--
-> >>>    drivers/gpio/s5p_gpio.c                     |  4 ++--
-> >>>    drivers/gpio/sunxi_gpio.c                   |  4 ++--
-> >>>    drivers/gpio/tegra186_gpio.c                |  4 ++--
-> >>>    drivers/gpio/tegra_gpio.c                   |  6 +++---
-> >>>    drivers/net/mvpp2.c                         |  4 ++--
-> >>>    drivers/pinctrl/broadcom/pinctrl-bcm283x.c  |  5 ++---
-> >>>    drivers/pinctrl/meson/pinctrl-meson.c       |  4 +++-
-> >>>    drivers/pinctrl/mscc/pinctrl-jr2.c          |  4 ++--
-> >>>    drivers/pinctrl/mscc/pinctrl-luton.c        |  4 ++--
-> >>>    drivers/pinctrl/mscc/pinctrl-ocelot.c       |  4 ++--
-> >>>    drivers/pinctrl/mscc/pinctrl-serval.c       |  4 ++--
-> >>>    drivers/pinctrl/mscc/pinctrl-servalt.c      |  4 ++--
-> >>>    drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |  8 ++++----
-> >>>    drivers/power/regulator/Kconfig             |  2 +-
-> >>>    include/dm/device-internal.h                |  4 ++--
-> >>>    include/power/regulator.h                   |  2 +-
-> >>>    20 files changed, 46 insertions(+), 49 deletions(-)
-> >>>
-> >>> Applied to u-boot-dm, thanks!
-> >>>
-> >>
-> >>
-> >> Hi Simon,
-> >>
-> >> I bisected the tree and this commit looks to break
-> >> sama5d4_xplained_mmc_defconfig :
-> >>
-> >> <debug_uart>
-> >> No serial driver found
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Could not initialize timer (err -19)
-> >>
-> >> Booting u-boot fails when adding this commit.
-> >>
-> >> Could you please help or let me know how I can fix it ?
-> >
-> > I suspect the problem could be in the changes to
-> > drivers/clk/at91/compat.c although I cannot see why
-> >
-> > You could try reverting that change, and just using offset_to_ofnode()
-> > in the device_bind_driver_to_node() call. I actually intended to do
-> > that at the time due to the risk, but somehow I missed this one.
-> >
-> > OTOH it would be good to move the code to livetree and stop using fdt offsets.
-> >
-> > Regards,
-> > Simon
-> >
->
-> I reverted the changes in compat.c and indeed now it boots correctly.
->
-> I tried to do the following change on top of your code as you suggested
-> but it does not help:
->
->
-> --- a/drivers/clk/at91/compat.c
-> +++ b/drivers/clk/at91/compat.c
-> @@ -67,7 +67,7 @@ int at91_clk_sub_device_bind(struct udevice *dev,
-> const char *drv_name)
->          bool pre_reloc_only = !(gd->flags & GD_FLG_RELOC);
->          const char *name;
->          int ret;
-> -
-> +       int offset = dev_of_offset(dev);
->          ofnode_for_each_subnode(node, parent) {
->                  if (pre_reloc_only && !ofnode_pre_reloc(node))
->                          continue;
-> @@ -84,7 +84,7 @@ int at91_clk_sub_device_bind(struct udevice *dev,
-> const char *drv_name)
->                  name = ofnode_get_name(node);
->                  if (!name)
->                          return -EINVAL;
-> -               ret = device_bind_driver_to_node(dev, drv_name, name, node,
-> +               ret = device_bind_driver_to_node(dev, drv_name, name,
-> offset_to_ofnode(offset),
->                                                   NULL);
->                  if (ret)
->                          return ret;
->
->
-> I have a feeling the 'for loop' for the subnodes misses an essential
-> driver and thus it fails booting
+On 04/02/2021 10:11, Marek Szyprowski wrote:
+> Use the ADC channel 1 to check the hardware revision of the board and
+> detect the N2 vs. N2+ and the C4 vs. HC4 variants. Each of them use
+> different dtb file, so adjust fdtfile environment variable to the
+> detected variant.
+> 
+> The ADC min/max values for each variant are taken from the vendor code,
+> adjusted to the 12-bit ADC driver operation mode (vendor code use 10-bit
+> mode).
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> The relevant vendor's code is here:
+> https://github.com/hardkernel/u-boot/blob/odroidg12-v2015.01/board/hardkernel/odroid-common/board.c#L55
+> ---
+>  arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi |  6 ++
+>  arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi  |  6 ++
+>  board/amlogic/odroid-n2/odroid-n2.c           | 80 +++++++++++++++++++
+>  configs/odroid-c4_defconfig                   |  4 +-
+>  configs/odroid-n2_defconfig                   |  4 +-
+>  5 files changed, 98 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi b/arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi
+> index 236f2468dc..a92f9e9ff1 100644
+> --- a/arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-g12b-odroid-n2-u-boot.dtsi
+> @@ -5,3 +5,9 @@
+>   */
+>  
+>  #include "meson-g12-common-u-boot.dtsi"
+> +
+> +/* SARADC is needed for proper board variant detection */
+> +&saradc {
+> +	status = "okay";
+> +	vref-supply = <&vddao_1v8>;
+> +};
+> diff --git a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> index fbcc8287c5..963bf96b25 100644
+> --- a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
+> @@ -12,6 +12,12 @@
+>  	snps,reset-active-low;
+>  };
+>  
+> +/* SARADC is needed for proper board variant detection */
+> +&saradc {
+> +	status = "okay";
+> +	vref-supply = <&vddao_1v8>;
+> +};
+> +
+>  &tflash_vdd {
+>  	gpio = <&gpio_ao GPIOAO_3 GPIO_OPEN_DRAIN>;
+>  };
+> diff --git a/board/amlogic/odroid-n2/odroid-n2.c b/board/amlogic/odroid-n2/odroid-n2.c
+> index d9955433bf..2eb7fa93be 100644
+> --- a/board/amlogic/odroid-n2/odroid-n2.c
+> +++ b/board/amlogic/odroid-n2/odroid-n2.c
+> @@ -6,6 +6,7 @@
+>  
+>  #include <common.h>
+>  #include <dm.h>
+> +#include <adc.h>
+>  #include <env.h>
+>  #include <init.h>
+>  #include <net.h>
+> @@ -19,6 +20,11 @@
+>  #define EFUSE_MAC_SIZE		12
+>  #define MAC_ADDR_LEN		6
+>  
+> +#define ODROID_HW_VS_ADC_CHANNEL	1
+> +
+> +#define MESON_SOC_ID_G12B	0x29
+> +#define MESON_SOC_ID_SM1	0x2b
+> +
+>  int mmc_get_env_dev(void)
+>  {
+>  	if (meson_get_boot_device() == BOOT_DEVICE_EMMC)
+> @@ -26,6 +32,79 @@ int mmc_get_env_dev(void)
+>  	return 0;
+>  }
+>  
+> +/* Variant detection is based on the ADC RAW values for the channel #1 */
+> +static struct meson_odroid_boards {
+> +	unsigned int soc_id;
+> +	unsigned int adc_min;
+> +	unsigned int adc_max;
+> +	char *variant;
+> +} boards[] = {
+> +	/* OdroidN2 rev 2018,7,23 */
+> +	{ MESON_SOC_ID_G12B, 80 * 4,  90 * 4, "n2" },
+> +	/* OdroidN2 rev 2018,12,6 */
+> +	{ MESON_SOC_ID_G12B, 160 * 4, 170 * 4, "n2" },
+> +	/* OdroidN2 rev 2019,1,17 */
+> +	{ MESON_SOC_ID_G12B, 245 * 4, 255 * 4, "n2" },
+> +	/* OdroidN2 rev 2019,2,7 */
+> +	{ MESON_SOC_ID_G12B, 330 * 4, 350 * 4, "n2" },
+> +	/* OdroidN2plus rev 2019,11,20 */
+> +	{ MESON_SOC_ID_G12B, 410 * 4, 430 * 4, "n2_plus" },
+> +	/* OdroidC4 rev 2020,01,29 */
+> +	{ MESON_SOC_ID_SM1,   80 * 4, 100 * 4, "c4" },
+> +	/* OdroidHC4 rev 2019,12,10 */
+> +	{ MESON_SOC_ID_SM1,  300 * 4, 320 * 4, "hc4" },
+> +	/* OdroidC4 rev 2019,11,29 */
+> +	{ MESON_SOC_ID_SM1,  335 * 4, 345 * 4, "c4" },
+> +	/* OdroidHC4 rev 2020,8,7 */
+> +	{ MESON_SOC_ID_SM1,  590 * 4, 610 * 4, "hc4" },
+> +};
+> +
+> +static void odroid_set_fdtfile(char *soc, char *variant)
+> +{
+> +	char s[128];
+> +
+> +	snprintf(s, sizeof(s), "amlogic/meson-%s-odroid-%s.dtb", soc, variant);
+> +	env_set("fdtfile", s);
+> +}
+> +
+> +static int odroid_detect_variant(void)
+> +{
+> +	char *variant = "", *soc = "";
+> +	unsigned int adcval = 0;
+> +	int ret, i, soc_id = 0;
+> +
+> +	if (of_machine_is_compatible("amlogic,sm1")) {
+> +		soc_id = MESON_SOC_ID_SM1;
+> +		soc = "sm1";
+> +	} else if (of_machine_is_compatible("amlogic,g12b")) {
+> +		soc_id = MESON_SOC_ID_G12B;
+> +		soc = "g12b";
+> +	} else {
+> +		return -1;
+> +	}
+> +
+> +	ret = adc_channel_single_shot("adc@9000", ODROID_HW_VS_ADC_CHANNEL,
+> +				      &adcval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0 ; i < ARRAY_SIZE(boards) ; ++i) {
+> +		if (soc_id == boards[i].soc_id &&
+> +		    adcval >= boards[i].adc_min &&
+> +		    adcval < boards[i].adc_max) {
+> +			variant = boards[i].variant;
+> +			break;
+> +		}
+> +	}
+> +
+> +	printf("Board variant: %s\n", variant);
+> +	env_set("variant", variant);
+> +
+> +	odroid_set_fdtfile(soc, variant);
+> +
+> +	return 0;
+> +}
+> +
+>  int misc_init_r(void)
+>  {
+>  	u8 mac_addr[MAC_ADDR_LEN];
+> @@ -58,5 +137,6 @@ int misc_init_r(void)
+>  			meson_generate_serial_ethaddr();
+>  	}
+>  
+> +	odroid_detect_variant();
+>  	return 0;
+>  }
+> diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
+> index 367d22db0b..8a9b8b0c02 100644
+> --- a/configs/odroid-c4_defconfig
+> +++ b/configs/odroid-c4_defconfig
+> @@ -8,7 +8,7 @@ CONFIG_DM_GPIO=y
+>  CONFIG_MESON_G12A=y
+>  CONFIG_DEBUG_UART_BASE=0xff803000
+>  CONFIG_DEBUG_UART_CLOCK=24000000
+> -CONFIG_IDENT_STRING=" odroid-c4"
+> +CONFIG_IDENT_STRING=" odroid-c4/hc4"
+>  CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-odroid-c4"
+>  CONFIG_DEBUG_UART=y
+>  CONFIG_OF_BOARD_SETUP=y
+> @@ -26,6 +26,8 @@ CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+>  CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_ADC=y
+> +CONFIG_SARADC_MESON=y
+>  CONFIG_DM_MMC=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_PHY_REALTEK=y
+> diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
+> index 76c60ab032..b82bd78f2d 100644
+> --- a/configs/odroid-n2_defconfig
+> +++ b/configs/odroid-n2_defconfig
+> @@ -8,7 +8,7 @@ CONFIG_DM_GPIO=y
+>  CONFIG_MESON_G12A=y
+>  CONFIG_DEBUG_UART_BASE=0xff803000
+>  CONFIG_DEBUG_UART_CLOCK=24000000
+> -CONFIG_IDENT_STRING=" odroid-n2"
+> +CONFIG_IDENT_STRING=" odroid-n2/n2_plus"
+>  CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-odroid-n2"
+>  CONFIG_DEBUG_UART=y
+>  CONFIG_OF_BOARD_SETUP=y
+> @@ -26,6 +26,8 @@ CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+>  CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_ADC=y
+> +CONFIG_SARADC_MESON=y
+>  CONFIG_DM_MMC=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_PHY_REALTEK=y
+> 
 
-Then I think reverting all the changes is the best thing in this file.
-Can you send a patch?
+Nice code ! It' super clean,
+for me it's ok
 
-Ultimately this should be figured out, but I cannot see what is wrong
-and don't have that hardware to try. I do have an old SAM9260/9263 but
-I'm not sure if that uses the same driver.
+I let other people review it and I'll push it in a few days if everyone is happy.
 
-Regards,
-Simon
+Neil
