@@ -1,85 +1,66 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web11.35257.1614004241169606500
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web08.67.1614015592214384909
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Feb 2021 06:30:41 -0800
-Received: by mail-wm1-f44.google.com with SMTP id v21so652085wml.4
-        for <u-boot-amlogic@groups.io>; Mon, 22 Feb 2021 06:30:40 -0800 (PST)
+ Mon, 22 Feb 2021 09:39:53 -0800
+Received: by mail-wr1-f51.google.com with SMTP id n8so19923477wrm.10
+        for <u-boot-amlogic@groups.io>; Mon, 22 Feb 2021 09:39:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=1YVYtL2Zu9z+EV3peOGaJT1k980H9HLn2LElgBvI8Q8=;
-        b=dsTvWHCnLm6DvLI1zModj2pSq4OiL6g+fFzKbfsBRGFiFRP6tUgCfAGTBUzNLDz50U
-         MuvMZXuAzVwh8uN+DUa+OJ4TKx1Gm4us8rgLpNIX1PXe08Bzw2F599XkjXj4I4pY8Qte
-         kmiT367YcywDlmhdm5dP0Bjrt2HxAVxl2Mr+tSkK0vQQ/Kajk6RuZJmbq9FfNPjADonG
-         pSmYffP+gCU3V9IxnYHfe7CyhXm2m8muHMD2SdEWEQH/905VYKw8uvO2VYVt+r7qeHSs
-         XWy7xJUu5unySJ3g7XiYjiEihMVHKO9kFIWbc3xuAd7Dlo9rkBGGFfu8mOKNmEuOnnHG
-         Yn4w==
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QA1ZhxXIZXQLXdD4qO+PC95LwQexQmPmHob9S/iNiJA=;
+        b=YbsfaZ9nLE01T1kDpbMrNmq7ZTjwQIGscoWZtCqMHs0LFWVWhjSumk+mtXjsnY0g11
+         v5kthdLX2VpY6U0zRRqK0uU0/mA1Xo2DeUwZycANp/MuouzBaz6KkRSujAApN6xnZBNR
+         KADqbqyaOGEgpAQXGiV+f1L46nR7f6dmrFyVrebsh7lJi2rzS65tJc1mCbBG9HB91O9W
+         NTwnicjdFQ/eK3y5Vwc28zAkIBbdKizwkGqB29an4RH+0ma2jMI3v3vyScLJowzAl67k
+         pI94MsIU58vxEl+jvjkv/D8iqFFGKUKbwJxsMLdM5zMOrfPu07H5f57xBkD1fmiTs4pX
+         PSXg==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] button: add udevice forward declaration
+References: <20210219074124.1571269-1-narmstrong@baylibre.com>
+ <CAPnjgZ0c3OnOnW0b3xrWNUX1pf90Lc1zBQFWXDNaR2ZWPzpW3w@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20210222
-Reply-To: narmstrong@baylibre.com
-Message-ID: <2417b7bc-0dad-64ce-c4a9-ed4d9851df44@baylibre.com>
-Date: Mon, 22 Feb 2021 15:30:36 +0100
+Message-ID: <b118a5d5-b3b4-8f82-5426-71143c723dc3@baylibre.com>
+Date: Mon, 22 Feb 2021 18:39:49 +0100
 MIME-Version: 1.0
+In-Reply-To: <CAPnjgZ0c3OnOnW0b3xrWNUX1pf90Lc1zBQFWXDNaR2ZWPzpW3w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+To: Simon Glass <sjg@chromium.org>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>, Marek Szyprowski <m.szyprowski@samsung.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Philippe Reynes <philippe.reynes@softathome.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+On 20/02/2021 12:55, Simon Glass wrote:
+> On Fri, 19 Feb 2021 at 00:41, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> After 401d1c4f5d2d ("common: Drop asm/global_data.h from common header")
+>> build fails with :
+>>
+>> drivers/button/button-uclass.c:13:5: error: conflicting types for 'button_get_by_label'
+>> int button_get_by_label(const char *label, struct udevice **devp)
+>>     ^~~~~~~~~~~~~~~~~~~
+>>
+>> Adding struct udevice forward declaration in button.h solves the build error.
+>>
+>> Fixes: 401d1c4f5d2d ("common: Drop asm/global_data.h from common header")
+>> Suggested-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>> Hi,
+>>
+>> This is needed to fix build on vim3/vim3l after [1] is applied.
+>>
+>> [1] https://patchwork.ozlabs.org/project/uboot/cover/20210218103318.18915-1-m.szyprowski@samsung.com/
+>>
+>>  include/button.h | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+> 
+> Reviewed-by: Simon Glass <sjg@chromium.org>
+> 
 
-These changes adds support for reading the ADC key on the Khadas VIM3 & VIM3L, in the same
-time it adds plumbing for ADC keys and a test for sandbox.
+Thanks, applied to u-boot-amlogic
 
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/6461
-
-Thanks,
 Neil
-
-The following changes since commit 496f49464d90b564da5f1a2f4eecb5553e01edf9:
-
-  Merge branch '2021-02-16-assorted-improvements' (2021-02-16 15:14:34 -0500)
-
-are available in the Git repository at:
-
-  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20210222
-
-for you to fetch changes up to 2d339efb1ff941705a770e93494427912689ce18:
-
-  button: add udevice forward declaration (2021-02-22 11:07:57 +0100)
-
-----------------------------------------------------------------
-- adds adc-keys button driver
-- fix meson-saradc driver to get reference voltage
-- add adc-keys test for sandbox
-- enable adc-keys for VIM3 & VIM3L boards
-- fix button.h build
-
-----------------------------------------------------------------
-Marek Szyprowski (5):
-      dt-bindings: input: adc-keys bindings documentation
-      button: add a simple Analog to Digital Converter device based button driver
-      adc: meson-saradc: add support for getting reference voltage value
-      configs: khadas-vim3(l): enable Function button support
-      test: add a simple test for the adc-keys button driver
-
-Neil Armstrong (1):
-      button: add udevice forward declaration
-
- arch/sandbox/dts/test.dts                   |  28 +++++-
- configs/khadas-vim3_defconfig               |   2 +
- configs/khadas-vim3l_defconfig              |   2 +
- configs/sandbox_defconfig                   |   1 +
- doc/device-tree-bindings/input/adc-keys.txt |  67 +++++++++++++
- drivers/adc/meson-saradc.c                  |  21 ++++
- drivers/button/Kconfig                      |   8 ++
- drivers/button/Makefile                     |   1 +
- drivers/button/button-adc.c                 | 146 ++++++++++++++++++++++++++++
- include/button.h                            |   2 +
- test/dm/button.c                            |  50 +++++++++-
- 11 files changed, 325 insertions(+), 3 deletions(-)
- create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
- create mode 100644 drivers/button/button-adc.c
