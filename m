@@ -1,66 +1,61 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web08.67.1614015592214384909
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web10.75.1614015634031669476
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Feb 2021 09:39:53 -0800
-Received: by mail-wr1-f51.google.com with SMTP id n8so19923477wrm.10
-        for <u-boot-amlogic@groups.io>; Mon, 22 Feb 2021 09:39:52 -0800 (PST)
+ Mon, 22 Feb 2021 09:40:34 -0800
+Received: by mail-wm1-f41.google.com with SMTP id p3so36923wmc.2
+        for <u-boot-amlogic@groups.io>; Mon, 22 Feb 2021 09:40:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=QA1ZhxXIZXQLXdD4qO+PC95LwQexQmPmHob9S/iNiJA=;
-        b=YbsfaZ9nLE01T1kDpbMrNmq7ZTjwQIGscoWZtCqMHs0LFWVWhjSumk+mtXjsnY0g11
-         v5kthdLX2VpY6U0zRRqK0uU0/mA1Xo2DeUwZycANp/MuouzBaz6KkRSujAApN6xnZBNR
-         KADqbqyaOGEgpAQXGiV+f1L46nR7f6dmrFyVrebsh7lJi2rzS65tJc1mCbBG9HB91O9W
-         NTwnicjdFQ/eK3y5Vwc28zAkIBbdKizwkGqB29an4RH+0ma2jMI3v3vyScLJowzAl67k
-         pI94MsIU58vxEl+jvjkv/D8iqFFGKUKbwJxsMLdM5zMOrfPu07H5f57xBkD1fmiTs4pX
-         PSXg==
+        bh=30Wh7rDh1kVYkMOu4vKxMsE8UlBmcgxXMqgvKFPfd9M=;
+        b=Sfm3flesQMFlzrkEr6wXdoeUbrQ50RAzOH5bNOZsCm8Iu7pbpSR5l3J+xTAS0BdmTL
+         X1R2kGf/5zl5ehaOdvH4eueAG0D6pqsAl0IdTMFle7XU9jUT+sL1cwhjY6yeKjCs8SJE
+         B9Hxz736FlLhexeit2zZUwO1QG+hL89A15FryqKjMbXnQE+oD3jl5+sWpQTc/Ln1NTn4
+         cYu1kfCIzHMpOHu6RyNQuW6DxWASenhhlcC+sMley+dGRf6/8+8p7v4ahid7Stk/W63i
+         DSIfICmf6bXoFZBCN2QX4euS64TNChIyq5vBe+DaCYuFGpqmTxuHx9jx7LNEckNpV9Hr
+         ovWA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] button: add udevice forward declaration
-References: <20210219074124.1571269-1-narmstrong@baylibre.com>
- <CAPnjgZ0c3OnOnW0b3xrWNUX1pf90Lc1zBQFWXDNaR2ZWPzpW3w@mail.gmail.com>
+Subject: Re: [PATCH V2 4/5] ARM: mach-meson: select MMC_PWRSEQ config
+References: <20210216011656.12855-1-jh80.chung@samsung.com>
+ <CGME20210216011617epcas1p39914bbdb2b853b7effd89cfc126cb6c2@epcas1p3.samsung.com>
+ <20210216011656.12855-5-jh80.chung@samsung.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <b118a5d5-b3b4-8f82-5426-71143c723dc3@baylibre.com>
-Date: Mon, 22 Feb 2021 18:39:49 +0100
+Message-ID: <a02997c4-3fa3-a837-5826-53695ce85414@baylibre.com>
+Date: Mon, 22 Feb 2021 18:40:31 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAPnjgZ0c3OnOnW0b3xrWNUX1pf90Lc1zBQFWXDNaR2ZWPzpW3w@mail.gmail.com>
+In-Reply-To: <20210216011656.12855-5-jh80.chung@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>, Marek Szyprowski <m.szyprowski@samsung.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Philippe Reynes <philippe.reynes@softathome.com>
+To: Jaehoon Chung <jh80.chung@samsung.com>, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, sjg@chromium.org, peng.fan@nxp.com, kever.yang@rock-chips.com, philipp.tomsich@theobroma-systems.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On 20/02/2021 12:55, Simon Glass wrote:
-> On Fri, 19 Feb 2021 at 00:41, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> After 401d1c4f5d2d ("common: Drop asm/global_data.h from common header")
->> build fails with :
->>
->> drivers/button/button-uclass.c:13:5: error: conflicting types for 'button_get_by_label'
->> int button_get_by_label(const char *label, struct udevice **devp)
->>     ^~~~~~~~~~~~~~~~~~~
->>
->> Adding struct udevice forward declaration in button.h solves the build error.
->>
->> Fixes: 401d1c4f5d2d ("common: Drop asm/global_data.h from common header")
->> Suggested-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->> Hi,
->>
->> This is needed to fix build on vim3/vim3l after [1] is applied.
->>
->> [1] https://patchwork.ozlabs.org/project/uboot/cover/20210218103318.18915-1-m.szyprowski@samsung.com/
->>
->>  include/button.h | 2 ++
->>  1 file changed, 2 insertions(+)
->>
+On 16/02/2021 02:16, Jaehoon Chung wrote:
+> Before time, PWRSEQ is selected since below commit.
+> commit 262d34363373 ("board: amlogic: select PWRSEQ for all amlogic platform")
+> Select MMC_PWRSEQ config because of introducing CONFIG_MMC_PWRSEQ for
+> only eMMC module.
 > 
-> Reviewed-by: Simon Glass <sjg@chromium.org>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> ---
+>  arch/arm/mach-meson/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+> index 513a33dae204..6cba2c40ddaa 100644
+> --- a/arch/arm/mach-meson/Kconfig
+> +++ b/arch/arm/mach-meson/Kconfig
+> @@ -9,6 +9,7 @@ config MESON64_COMMON
+>  	select SYSCON
+>  	select REGMAP
+>  	select PWRSEQ
+> +	select MMC_PWRSEQ
+>  	select BOARD_LATE_INIT
+>  	imply CMD_DM
+>  
 > 
 
-Thanks, applied to u-boot-amlogic
-
-Neil
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
