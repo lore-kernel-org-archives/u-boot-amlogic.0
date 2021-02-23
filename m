@@ -1,104 +1,86 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.7165.1614068435628115378
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web08.10753.1614092307823649910
  for <u-boot-amlogic@groups.io>;
- Tue, 23 Feb 2021 00:20:36 -0800
-Received: by mail-wr1-f44.google.com with SMTP id y17so69945wrs.12
-        for <u-boot-amlogic@groups.io>; Tue, 23 Feb 2021 00:20:35 -0800 (PST)
+ Tue, 23 Feb 2021 06:58:28 -0800
+Received: by mail-wr1-f50.google.com with SMTP id w11so207255wrr.10
+        for <u-boot-amlogic@groups.io>; Tue, 23 Feb 2021 06:58:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=ujMZzzFybnMf/RKZvPRQUSL2T5PuxjCoB6tuu8XFSXo=;
-        b=M9m55lSNwyyfI3DThvq/yqeKUc4OUaitK1KEpoot2PVq8FZqJOUYvz9TrgBAp7AgvD
-         9KvvLV/Xoy1v79QAlntR/fd17dGWLJoTUbVH7krT4XI98FaXwk7bWYOr/5WlVj2fabun
-         krs+H7YpPBC70tLYv8gZZqXV+Pol1C6JHPMLG00I3xuACOOECjWvzhdiG9qIkBMnSHrv
-         YFFWrDQVmVKqoZ5Ppo1ofRnaVVscB6XnC2MCp0p4dqQs726DR7A8N1ufD0WKeB+op0J4
-         W5c5Ezkgi6rzOsEcf6deHU3NuwGSdITaDbGhqhPtc0gyfnkzFPp6kCByB7LFCAmlLDFl
-         iRQg==
+        h=from:subject:reply-to:to:cc:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=lwlrJi0YYsYWTQcFCrvc50o+YWVX0M8Y6VrnuIuH9H8=;
+        b=HdyKcJxtCBYLQ6s+PHbAsGgLUOfv6DaM8XnJ19quioeKFbF6lNT1wXzYl/PYjkNiYc
+         6Xn5qQyELpITJMFo5a1pjxPMjZpm8uBMW50lfOX4RZVDfQLQBIG/aa9RVVGxQp+2JE2K
+         7RNkfhmXxxkeiSqk3js6NWodLLKR93bNTX99LlyULPwF1tl72GN00SaGOos7MzCODovb
+         xBK+VtWh2nl/pC4UE36HLgmky0KfSzLpuzyTmpSvg8PH2grjCny7QpcCM1De0uvEzdzu
+         83bF/xMj/XkKkdPttJ/P2Cjr58wAq7aj8hgQvC22rPlxSIJvcHLKfAtLYj5CUYmlf2C4
+         v6Yw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20210222
-References: <2417b7bc-0dad-64ce-c4a9-ed4d9851df44@baylibre.com>
- <20210222200304.GO10169@bill-the-cat>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <31900540-ae20-2a45-6863-60db4ab07949@baylibre.com>
-Date: Tue, 23 Feb 2021 09:20:26 +0100
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20210223
+Reply-To: narmstrong@baylibre.com
+Message-ID: <37445fd3-321a-21ee-8813-81ac50244d6c@baylibre.com>
+Date: Tue, 23 Feb 2021 15:58:25 +0100
 MIME-Version: 1.0
-In-Reply-To: <20210222200304.GO10169@bill-the-cat>
-Content-Type: multipart/mixed; boundary="Groupsio=TICZWyGrobEUgfI6Fdnp"
-To: Tom Rini <trini@konsulko.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
 Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
---Groupsio=TICZWyGrobEUgfI6Fdnp
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hi Tom,
 
-On 22/02/2021 21:03, Tom Rini wrote:
-> On Mon, Feb 22, 2021 at 03:30:36PM +0100, Neil Armstrong wrote:
->=20
->> Hi Tom,
->>
->> These changes adds support for reading the ADC key on the Khadas VIM3 &=
- VIM3L, in the same
->> time it adds plumbing for ADC keys and a test for sandbox.
->>
->> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogi=
-c/pipelines/6461
->>
->> Thanks,
->> Neil
->>
->> The following changes since commit 496f49464d90b564da5f1a2f4eecb5553e01=
-edf9:
->>
->>   Merge branch '2021-02-16-assorted-improvements' (2021-02-16 15:14:34 =
--0500)
->>
->> are available in the Git repository at:
->>
->>   https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-bo=
-ot-amlogic-20210222
->>
->> for you to fetch changes up to 2d339efb1ff941705a770e93494427912689ce18=
-:
->>
->>   button: add udevice forward declaration (2021-02-22 11:07:57 +0100)
->>
->=20
-> First up, I've applied this to u-boot/master, as there's some small
-> problems, but I don't want to make you recreate the tag.  That said,
-> running ./scripts/checkpatch.pl -q --git on this shows that the ADC
-> changes all add "treshold" fields, etc, and not "threshold" fields.  A
-> follow-up to fix this, before the misspelling propagates more would be
-> appreciated.  Thanks!
->=20
+These changes adds support for reading the ADC key on the Khadas VIM3 & VIM3L, in the same
+time it adds plumbing for ADC keys and a test for sandbox.
+This time with s/treshold/threshold/.
 
-Thanks for seeing this, I'll fixup ans resubmit !
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/6480
 
+Thanks,
 Neil
 
+The following changes since commit 496f49464d90b564da5f1a2f4eecb5553e01edf9:
 
---Groupsio=TICZWyGrobEUgfI6Fdnp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+  Merge branch '2021-02-16-assorted-improvements' (2021-02-16 15:14:34 -0500)
 
------BEGIN PGP SIGNATURE-----
+are available in the Git repository at:
 
-iQIzBAEBCgAdFiEEPVPGJshWBf4d9CyLd9zb2sjISdEFAmA0utAACgkQd9zb2sjI
-SdEnvxAAqwmqKcJg1nWvewwpkFrulttStV3Z/sXcmRxQu3KWcqGJLrutC3pOMv3G
-EhApnhmWnDabgTTw+0n5ZuvpEthNeOMijMMMC85/ENcYYZvZNA8Tmijee7q2LG7K
-CVOTfJfPiIQGi/I/EvEikC7TGueiOkXAXlrsX5P9nYrlrCWfMgKBNZoyVvu6y5w8
-cfpmyRkwZJKY5sSnIndEoZplvAcMgWu+riItgzTxm96QpZDg2C1HiMrmLT3ZX03r
-pl/XfyJKb8wJbJsNU8OjK5cM2f+UXlj8kuVLtR18iktG6EtPz09WShROuoTmzIlr
-pTppO4bW8McYoOkqqX+2txZhfN5x+9claYs8eOtcm1pNQ07S1yPGkQr31n1DvmYi
-yEsaCMDLnyf6LgEreib4Mgn8wLPkI5g0e440dggCNAMEcWNDNHnSs6edgUej0FnQ
-lW3C8RXING2iv2+Z2FrnSQxBqXpYW93/u/wstar8Xj4howYY9pVk/H1lete3hC2F
-J5IN7R6fuclgN4YPYlLMN8V5NkgJc9qUfj1LhoGZRzN9aw2HlKRHmT4FvPrCEmNH
-5Zc4UAQuyqWxFJN6JICV/7g27mfkSLKZUaGZyckA42qEhgogje3yEgpkcPyXvzJ3
-xEXAemFAcaHJ5ZNMrEuxvsESVBRMeiI4Q4rsdp472/F46h6WmeE=
-=2hSD
------END PGP SIGNATURE-----
+  https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20210223
 
---Groupsio=TICZWyGrobEUgfI6Fdnp--
+for you to fetch changes up to ceeb50b3bf074960ddfa541b7be3732b38e15c99:
+
+  button: add udevice forward declaration (2021-02-23 15:55:53 +0100)
+
+----------------------------------------------------------------
+- adds adc-keys button driver
+- fix meson-saradc driver to get reference voltage
+- add adc-keys test for sandbox
+- enable adc-keys for VIM3 & VIM3L boards
+- fix button.h build
+
+----------------------------------------------------------------
+Marek Szyprowski (5):
+      dt-bindings: input: adc-keys bindings documentation
+      button: add a simple Analog to Digital Converter device based button driver
+      adc: meson-saradc: add support for getting reference voltage value
+      configs: khadas-vim3(l): enable Function button support
+      test: add a simple test for the adc-keys button driver
+
+Neil Armstrong (1):
+      button: add udevice forward declaration
+
+ arch/sandbox/dts/test.dts                   |  28 +++++-
+ configs/khadas-vim3_defconfig               |   2 +
+ configs/khadas-vim3l_defconfig              |   2 +
+ configs/sandbox_defconfig                   |   1 +
+ doc/device-tree-bindings/input/adc-keys.txt |  67 +++++++++++++
+ drivers/adc/meson-saradc.c                  |  21 ++++
+ drivers/button/Kconfig                      |   8 ++
+ drivers/button/Makefile                     |   1 +
+ drivers/button/button-adc.c                 | 146 ++++++++++++++++++++++++++++
+ include/button.h                            |   2 +
+ test/dm/button.c                            |  50 +++++++++-
+ 11 files changed, 325 insertions(+), 3 deletions(-)
+ create mode 100644 doc/device-tree-bindings/input/adc-keys.txt
+ create mode 100644 drivers/button/button-adc.c
