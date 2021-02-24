@@ -1,226 +1,234 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web11.5.1614184319064379836
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web11.614.1614195242156118027
  for <u-boot-amlogic@groups.io>;
- Wed, 24 Feb 2021 08:31:59 -0800
-Received: by mail-wr1-f48.google.com with SMTP id u14so2493346wri.3
-        for <u-boot-amlogic@groups.io>; Wed, 24 Feb 2021 08:31:58 -0800 (PST)
+ Wed, 24 Feb 2021 11:34:02 -0800
+Received: by mail-wm1-f44.google.com with SMTP id x16so2750631wmk.3
+        for <u-boot-amlogic@groups.io>; Wed, 24 Feb 2021 11:34:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=OlzBzOvtSEzu9sf4xoX5LqOfUljJFprKfcr3nmpIfzc=;
-        b=FjaIdqRdd5EgQ0Pl8TJXYvZQHFkkOmnDuHevRHQFzKoD027wzUcFRNKI8BkOTzp4pu
-         8POWO7BUtpdS8qLG/VF1BMrp5OUeLCvN56EML8ckeQm3CGMDklkNp1VlVHuiKdsdkJc0
-         hPta9ZXvD4vtQ3wG0lB0FSwQfvOr7wkDTAlUMWeM0YXtMgz6UeuUnFvinSg3XrpBLIik
-         IunAHQvZj7sNC8B5t2sRT8ZtDkLmXbwB6oUzZcI04W/hwYUbWR4UQcFgDedL9nxVePXP
-         ST5XwQKSAe2UGB2vRPKkWp5w8XUpbm9kfPdTBsAAZRKpJLMdyCNoWc7BNw7lJGBuM+FD
-         9mSQ==
+        bh=qK/VtO8sYDPYkDatuqCBRDhmLrpzEHf3L+U8UguulSo=;
+        b=J479SEkJ5pcT/CAa9cEXYK3IOyql+xqoF1SC+bpfF3PTjdl48kVCDVs5f1cq9cKYyw
+         QhTzRX4O3YRqPCogDAKbWOw2gmXGfeeCw/6Hp4tu4SFm2gb7vZ/oCAqYums2b8mS+Ru+
+         /Ea/5c6JyP7pEm9kEOePCfVX1MY7/F4iZCIkOw+/mdrIR6RYjoSSKOz1fKWY2td6FWDC
+         Zd4qcWzlD6Uzq++0109Caq7Pz9gLCw3avU1ehWCAmeuM8o2DC1SYZIjaYuGxoKpZ8k8c
+         dlTqhFOn2GAT3w8oHTYidL6mO7YsgFmgRcHKXHkxztVEPt0RJvMv2TznmxUGDEpBM+oN
+         6xRg==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] net: add Amlogic Meson G12A MDIO MUX driver
-Date: Wed, 24 Feb 2021 17:31:53 +0100
-Message-Id: <20210224163153.2678768-1-narmstrong@baylibre.com>
+Subject: [PATCH] net: designware: add Amlogic Meson8b & later glue driver
+Date: Wed, 24 Feb 2021 20:33:56 +0100
+Message-Id: <20210224193356.2948805-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: joe.hershberger@ni.com, rfried.dev@gmail.com, trini@konsulko.com
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The Amlogic G12A & compatible SoCs embeds a mux to either communicate with
-the external PHY or the internal 10/100 PHY.
+This adds a proper glue driver for the Designware DWMAC ethernet MAC IP
+found in the Amlogic Meson8, GXBB, GXL, GXM, G12A, G12B & SM1 SoCs.
 
-This adds support for this mux as a MDIO MUX device.
+This is aimed to replace the static ethernet link setup found on the board
+init code for the Amlogic SoC based boards.
+
+Tested on a libretech-cc (S905x Internal RMII 10/100 PHY) and Khadas VIM3 (A113d
+with external 10/100/1000 RGMII PHY) to cover the most extreme setups.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/net/Kconfig               |   7 ++
- drivers/net/Makefile              |   1 +
- drivers/net/mdio_mux_meson_g12a.c | 149 ++++++++++++++++++++++++++++++
- 3 files changed, 157 insertions(+)
- create mode 100644 drivers/net/mdio_mux_meson_g12a.c
+ drivers/net/Kconfig         |   8 ++
+ drivers/net/Makefile        |   1 +
+ drivers/net/dwmac_meson8b.c | 150 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 159 insertions(+)
+ create mode 100644 drivers/net/dwmac_meson8b.c
 
 diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index 41fa2fe566..e1d3b26687 100644
+index e1d3b26687..cf062fad4d 100644
 --- a/drivers/net/Kconfig
 +++ b/drivers/net/Kconfig
-@@ -797,4 +797,11 @@ config MDIO_MUX_MMIOREG
- 	  This driver is used for MDIO muxes driven by writing to a register in
- 	  the MMIO physical memory.
+@@ -271,6 +271,14 @@ config ETH_DESIGNWARE
+ 	  100Mbit and 1 Gbit operation. You must enable CONFIG_PHYLIB to
+ 	  provide the PHY (physical media interface).
  
-+config MDIO_MUX_MESON_G12A
-+	bool "MDIO MUX for Amlogic Meson G12A SoCs"
-+	depends on DM_MDIO_MUX
++config ETH_DESIGNWARE_MESON8B
++	bool "Amlogic Meson8b and later glue driver for Synopsys Designware Ethernet MAC"
++	depends on DM_ETH
++	select ETH_DESIGNWARE
 +	help
-+	  This driver is used for the MDIO mux found on the Amlogic G12A & compatible
-+	  SoCs.
++	  This provides glue layer to use Synopsys Designware Ethernet MAC
++	  present on the Amlogic Meson8b, GX, AXG & G12A SoCs.
 +
- endif # NETDEVICES
+ config ETH_DESIGNWARE_SOCFPGA
+ 	select REGMAP
+ 	select SYSCON
 diff --git a/drivers/net/Makefile b/drivers/net/Makefile
-index 511c87c3a5..070ae7662c 100644
+index 070ae7662c..ce7b9e3478 100644
 --- a/drivers/net/Makefile
 +++ b/drivers/net/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_MACB) += macb.o
- obj-$(CONFIG_MCFFEC) += mcffec.o mcfmii.o
- obj-$(CONFIG_MDIO_IPQ4019) += mdio-ipq4019.o
- obj-$(CONFIG_MDIO_MUX_I2CREG) += mdio_mux_i2creg.o
-+obj-$(CONFIG_MDIO_MUX_MESON_G12A) += mdio_mux_meson_g12a.o
- obj-$(CONFIG_MDIO_MUX_MMIOREG) += mdio_mux_mmioreg.o
- obj-$(CONFIG_MDIO_MUX_SANDBOX) += mdio_mux_sandbox.o
- obj-$(CONFIG_MPC8XX_FEC) += mpc8xx_fec.o
-diff --git a/drivers/net/mdio_mux_meson_g12a.c b/drivers/net/mdio_mux_meson_g12a.c
+@@ -18,6 +18,7 @@ obj-$(CONFIG_CORTINA_NI_ENET) += cortina_ni.o
+ obj-$(CONFIG_CS8900) += cs8900.o
+ obj-$(CONFIG_TULIP) += dc2114x.o
+ obj-$(CONFIG_ETH_DESIGNWARE) += designware.o
++obj-$(CONFIG_ETH_DESIGNWARE_MESON8B) += dwmac_meson8b.o
+ obj-$(CONFIG_ETH_DESIGNWARE_SOCFPGA) += dwmac_socfpga.o
+ obj-$(CONFIG_ETH_DESIGNWARE_S700) += dwmac_s700.o
+ obj-$(CONFIG_DRIVER_DM9000) += dm9000x.o
+diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
 new file mode 100644
-index 0000000000..b520bf98f0
+index 0000000000..c0b6ef4994
 --- /dev/null
-+++ b/drivers/net/mdio_mux_meson_g12a.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/drivers/net/dwmac_meson8b.c
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * (C) Copyright 2021 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ * Copyright (C) 2021 BayLibre, SAS
 + */
 +
-+#include <dm.h>
-+#include <errno.h>
-+#include <log.h>
-+#include <miiphy.h>
++#include <common.h>
 +#include <asm/io.h>
-+#include <linux/bitfield.h>
++#include <dm.h>
++#include <phy.h>
++#include "designware.h"
++#include <dm/device_compat.h>
++#include <linux/err.h>
 +
-+#define ETH_PLL_STS		0x40
-+#define ETH_PLL_CTL0		0x44
-+#define  PLL_CTL0_LOCK_DIG	BIT(30)
-+#define  PLL_CTL0_RST		BIT(29)
-+#define  PLL_CTL0_EN		BIT(28)
-+#define  PLL_CTL0_SEL		BIT(23)
-+#define  PLL_CTL0_N		GENMASK(14, 10)
-+#define  PLL_CTL0_M		GENMASK(8, 0)
-+#define  PLL_LOCK_TIMEOUT	1000000
-+#define  PLL_MUX_NUM_PARENT	2
-+#define ETH_PLL_CTL1		0x48
-+#define ETH_PLL_CTL2		0x4c
-+#define ETH_PLL_CTL3		0x50
-+#define ETH_PLL_CTL4		0x54
-+#define ETH_PLL_CTL5		0x58
-+#define ETH_PLL_CTL6		0x5c
-+#define ETH_PLL_CTL7		0x60
++#define ETH_REG_0		0x0
++#define ETH_REG_1		0x4
++#define ETH_REG_2		0x18
++#define ETH_REG_3		0x1c
 +
-+#define ETH_PHY_CNTL0		0x80
-+#define   EPHY_G12A_ID		0x33010180
-+#define ETH_PHY_CNTL1		0x84
-+#define  PHY_CNTL1_ST_MODE	GENMASK(2, 0)
-+#define  PHY_CNTL1_ST_PHYADD	GENMASK(7, 3)
-+#define   EPHY_DFLT_ADD		8
-+#define  PHY_CNTL1_MII_MODE	GENMASK(15, 14)
-+#define   EPHY_MODE_RMII	0x1
-+#define  PHY_CNTL1_CLK_EN	BIT(16)
-+#define  PHY_CNTL1_CLKFREQ	BIT(17)
-+#define  PHY_CNTL1_PHY_ENB	BIT(18)
-+#define ETH_PHY_CNTL2		0x88
-+#define  PHY_CNTL2_USE_INTERNAL	BIT(5)
-+#define  PHY_CNTL2_SMI_SRC_MAC	BIT(6)
-+#define  PHY_CNTL2_RX_CLK_EPHY	BIT(9)
++#define GX_ETH_REG_0_PHY_INTF		BIT(0)
++#define GX_ETH_REG_0_TX_PHASE(x)	(((x) & 3) << 5)
++#define GX_ETH_REG_0_TX_RATIO(x)	(((x) & 7) << 7)
++#define GX_ETH_REG_0_PHY_CLK_EN	BIT(10)
++#define GX_ETH_REG_0_INVERT_RMII_CLK	BIT(11)
++#define GX_ETH_REG_0_CLK_EN		BIT(12)
 +
-+#define MESON_G12A_MDIO_EXTERNAL_ID 0
-+#define MESON_G12A_MDIO_INTERNAL_ID 1
++#define AXG_ETH_REG_0_PHY_INTF_RGMII	BIT(0)
++#define AXG_ETH_REG_0_PHY_INTF_RMII	BIT(2)
++#define AXG_ETH_REG_0_TX_PHASE(x)	(((x) & 3) << 5)
++#define AXG_ETH_REG_0_TX_RATIO(x)	(((x) & 7) << 7)
++#define AXG_ETH_REG_0_PHY_CLK_EN	BIT(10)
++#define AXG_ETH_REG_0_INVERT_RMII_CLK	BIT(11)
++#define AXG_ETH_REG_0_CLK_EN		BIT(12)
 +
-+struct mdio_mux_meson_g12a_priv {
-+	struct udevice *chip;
-+	phys_addr_t phys;
++struct dwmac_meson8b_plat {
++	struct dw_eth_pdata dw_eth_pdata;
++	int (*dwmac_setup)(struct udevice *dev, struct eth_pdata *edata);
++	void *regs;
 +};
 +
-+static int meson_g12a_ephy_pll_init(struct mdio_mux_meson_g12a_priv *priv)
++static int dwmac_meson8b_of_to_plat(struct udevice *dev)
 +{
-+	/* Fire up the PHY PLL */
-+	writel(0x29c0040a, priv->phys + ETH_PLL_CTL0);
-+	writel(0x927e0000, priv->phys + ETH_PLL_CTL1);
-+	writel(0xac5f49e5, priv->phys + ETH_PLL_CTL2);
-+	writel(0x00000000, priv->phys + ETH_PLL_CTL3);
-+	writel(0x00000000, priv->phys + ETH_PLL_CTL4);
-+	writel(0x20200000, priv->phys + ETH_PLL_CTL5);
-+	writel(0x0000c002, priv->phys + ETH_PLL_CTL6);
-+	writel(0x00000023, priv->phys + ETH_PLL_CTL7);
-+	writel(0x39c0040a, priv->phys + ETH_PLL_CTL0);
-+	writel(0x19c0040a, priv->phys + ETH_PLL_CTL0);
++	struct dwmac_meson8b_plat *pdata = dev_get_plat(dev);
 +
-+	return 0;
++	pdata->regs = (void *)dev_read_addr_index(dev, 1);
++	if ((fdt_addr_t)pdata->regs == FDT_ADDR_T_NONE)
++		return -EINVAL;
++
++	pdata->dwmac_setup = (void *)dev_get_driver_data(dev);
++	if (!pdata->dwmac_setup)
++		return -EINVAL;
++
++	return designware_eth_of_to_plat(dev);
 +}
 +
-+static int meson_g12a_enable_internal_mdio(struct mdio_mux_meson_g12a_priv *priv)
++static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
 +{
-+	/* Initialize ephy control */
-+	writel(EPHY_G12A_ID, priv->phys + ETH_PHY_CNTL0);
-+	writel(FIELD_PREP(PHY_CNTL1_ST_MODE, 3) |
-+	       FIELD_PREP(PHY_CNTL1_ST_PHYADD, EPHY_DFLT_ADD) |
-+	       FIELD_PREP(PHY_CNTL1_MII_MODE, EPHY_MODE_RMII) |
-+	       PHY_CNTL1_CLK_EN |
-+	       PHY_CNTL1_CLKFREQ |
-+	       PHY_CNTL1_PHY_ENB,
-+	       priv->phys + ETH_PHY_CNTL1);
-+	writel(PHY_CNTL2_USE_INTERNAL |
-+	       PHY_CNTL2_SMI_SRC_MAC |
-+	       PHY_CNTL2_RX_CLK_EPHY,
-+	       priv->phys + ETH_PHY_CNTL2);
++	struct dwmac_meson8b_plat *plat = dev_get_plat(dev);
 +
-+	return 0;
-+}
++	switch (edata->phy_interface) {
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		/* Set RGMII mode */
++		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
++						     AXG_ETH_REG_0_TX_PHASE(1) |
++						     AXG_ETH_REG_0_TX_RATIO(4) |
++						     AXG_ETH_REG_0_PHY_CLK_EN |
++						     AXG_ETH_REG_0_CLK_EN);
++		break;
 +
-+static int meson_g12a_enable_external_mdio(struct mdio_mux_meson_g12a_priv *priv)
-+{
-+	/* Reset the mdio bus mux */
-+	writel(0x0, priv->phys + ETH_PHY_CNTL2);
-+
-+	return 0;
-+}
-+
-+static int mdio_mux_meson_g12a_select(struct udevice *mux, int cur, int sel)
-+{
-+	struct mdio_mux_meson_g12a_priv *priv = dev_get_priv(mux);
-+
-+	debug("%s: %x -> %x\n", __func__, (u32)cur, (u32)sel);
-+
-+	/* if last selection didn't change we're good to go */
-+	if (cur == sel)
-+		return 0;
-+
-+	switch (sel) {
-+	case MESON_G12A_MDIO_EXTERNAL_ID:
-+		return meson_g12a_enable_external_mdio(priv);
-+	case MESON_G12A_MDIO_INTERNAL_ID:
-+		return meson_g12a_enable_internal_mdio(priv);
++	case PHY_INTERFACE_MODE_RMII:
++		/* Set RMII mode */
++		out_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RMII |
++						 AXG_ETH_REG_0_INVERT_RMII_CLK |
++						 AXG_ETH_REG_0_CLK_EN);
++		break;
 +	default:
++		dev_err(dev, "Unsupported PHY mode\n");
 +		return -EINVAL;
 +	}
 +
 +	return 0;
 +}
 +
-+static const struct mdio_mux_ops mdio_mux_meson_g12a_ops = {
-+	.select = mdio_mux_meson_g12a_select,
-+};
-+
-+static int mdio_mux_meson_g12a_probe(struct udevice *dev)
++static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
 +{
-+	struct mdio_mux_meson_g12a_priv *priv = dev_get_priv(dev);
++	struct dwmac_meson8b_plat *plat = dev_get_plat(dev);
 +
-+	priv->phys = dev_read_addr(dev);
++	switch (edata->phy_interface) {
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		/* Set RGMII mode */
++		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
++						     GX_ETH_REG_0_TX_PHASE(1) |
++						     GX_ETH_REG_0_TX_RATIO(4) |
++						     GX_ETH_REG_0_PHY_CLK_EN |
++						     GX_ETH_REG_0_CLK_EN);
 +
-+	meson_g12a_ephy_pll_init(priv);
++		break;
++
++	case PHY_INTERFACE_MODE_RMII:
++		/* Set RMII mode */
++		out_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_INVERT_RMII_CLK |
++						 GX_ETH_REG_0_CLK_EN);
++
++		if (!IS_ENABLED(CONFIG_MESON_GXBB))
++			writel(0x10110181, plat->regs + ETH_REG_2);
++
++		break;
++	default:
++		dev_err(dev, "Unsupported PHY mode\n");
++		return -EINVAL;
++	}
 +
 +	return 0;
 +}
 +
-+static const struct udevice_id mdio_mux_meson_g12a_ids[] = {
-+	{ .compatible = "amlogic,g12a-mdio-mux" },
++static int dwmac_meson8b_probe(struct udevice *dev)
++{
++	struct dwmac_meson8b_plat *pdata = dev_get_plat(dev);
++	struct eth_pdata *edata = &pdata->dw_eth_pdata.eth_pdata;
++	int ret;
++
++	ret = pdata->dwmac_setup(dev, edata);
++	if (ret)
++		return ret;
++
++	return designware_eth_probe(dev);
++}
++
++static const struct udevice_id dwmac_meson8b_ids[] = {
++	{ .compatible = "amlogic,meson-gxbb-dwmac", .data = (ulong)dwmac_setup_gx },
++	{ .compatible = "amlogic,meson-axg-dwmac", .data = (ulong)dwmac_setup_axg },
 +	{ }
 +};
 +
-+U_BOOT_DRIVER(mdio_mux_meson_g12a) = {
-+	.name		= "mdio_mux_meson_g12a",
-+	.id		= UCLASS_MDIO_MUX,
-+	.of_match	= mdio_mux_meson_g12a_ids,
-+	.probe		= mdio_mux_meson_g12a_probe,
-+	.ops		= &mdio_mux_meson_g12a_ops,
-+	.priv_auto	= sizeof(struct mdio_mux_meson_g12a_priv),
++U_BOOT_DRIVER(dwmac_meson8b) = {
++	.name		= "dwmac_meson8b",
++	.id		= UCLASS_ETH,
++	.of_match	= dwmac_meson8b_ids,
++	.of_to_plat = dwmac_meson8b_of_to_plat,
++	.probe		= dwmac_meson8b_probe,
++	.ops		= &designware_eth_ops,
++	.priv_auto	= sizeof(struct dw_eth_dev),
++	.plat_auto	= sizeof(struct dwmac_meson8b_plat),
++	.flags		= DM_FLAG_ALLOC_PRIV_DMA,
 +};
 -- 
 2.25.1
