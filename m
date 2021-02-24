@@ -1,61 +1,227 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web11.7632.1614176924244324255
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web11.5.1614184319064379836
  for <u-boot-amlogic@groups.io>;
- Wed, 24 Feb 2021 06:28:44 -0800
-Received: by mail-wm1-f46.google.com with SMTP id m1so2013328wml.2
-        for <u-boot-amlogic@groups.io>; Wed, 24 Feb 2021 06:28:43 -0800 (PST)
+ Wed, 24 Feb 2021 08:31:59 -0800
+Received: by mail-wr1-f48.google.com with SMTP id u14so2493346wri.3
+        for <u-boot-amlogic@groups.io>; Wed, 24 Feb 2021 08:31:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dqOQzece2Bw64CZ3luHsDFIPAioxyaYaBJNItRqkc/A=;
-        b=0hpGhfOzgfJIAVjO1rTNGBurHjriRZ2isjm6nCCVudjF6FPFxLmx4kqf7CQ/oHGmxf
-         y3mUDBHzuwHijvLplkuw0Rau9q+IHvZYC62SMwCMMzYF7i8XRYAlvx41xJdpsOFpYhoO
-         QghMwTUBbA9mzSNExXYGPSvYPPcqzO3+o/a7hLje63fBpPKgjKfBjYLhps1MfCqb4LEf
-         7QDs9C2IKLpyEkRYkb6VJ+/2A879Uu50DbWa75OdkwJ8F2CmSD5PsSo7oISu2TtQF5yX
-         BxyigG6lqZc/Ht1XxqlI7GZqUi3eHLN8SqkO6K/pj86HQbF1XgRYKsuAlqEcoWjQptE0
-         qtUA==
+        bh=OlzBzOvtSEzu9sf4xoX5LqOfUljJFprKfcr3nmpIfzc=;
+        b=FjaIdqRdd5EgQ0Pl8TJXYvZQHFkkOmnDuHevRHQFzKoD027wzUcFRNKI8BkOTzp4pu
+         8POWO7BUtpdS8qLG/VF1BMrp5OUeLCvN56EML8ckeQm3CGMDklkNp1VlVHuiKdsdkJc0
+         hPta9ZXvD4vtQ3wG0lB0FSwQfvOr7wkDTAlUMWeM0YXtMgz6UeuUnFvinSg3XrpBLIik
+         IunAHQvZj7sNC8B5t2sRT8ZtDkLmXbwB6oUzZcI04W/hwYUbWR4UQcFgDedL9nxVePXP
+         ST5XwQKSAe2UGB2vRPKkWp5w8XUpbm9kfPdTBsAAZRKpJLMdyCNoWc7BNw7lJGBuM+FD
+         9mSQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] configs: meson64: add fdtoverlay_addr_r
-References: <20210210142605.1372944-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <29c9466c-5dfb-e9c8-f41b-3e3f852491b6@baylibre.com>
-Date: Wed, 24 Feb 2021 15:28:40 +0100
+Subject: [PATCH] net: add Amlogic Meson G12A MDIO MUX driver
+Date: Wed, 24 Feb 2021 17:31:53 +0100
+Message-Id: <20210224163153.2678768-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20210210142605.1372944-1-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: joe.hershberger@ni.com, rfried.dev@gmail.com, trini@konsulko.com
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 10/02/2021 15:26, Neil Armstrong wrote:
-> In order to support loading FTD Overlays when booting with the pxe
-> command (or extlinux.conf), supported with [1], add the missing
-> fdtoverlay_addr_r used to load the overlay before applying it to
-> the FDT loaded at fdt_addr_r.
-> 
-> [1] https://patchwork.ozlabs.org/project/uboot/patch/20210120085453.2783678-1-narmstrong@baylibre.com/
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  include/configs/meson64.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-> index 52cc01f73d..7e97f89052 100644
-> --- a/include/configs/meson64.h
-> +++ b/include/configs/meson64.h
-> @@ -80,6 +80,7 @@
->  	"scriptaddr=0x08000000\0" \
->  	"kernel_addr_r=0x08080000\0" \
->  	"pxefile_addr_r=0x01080000\0" \
-> +	"fdtoverlay_addr_r=0x01000000\0" \
->  	"ramdisk_addr_r=0x13000000\0" \
->  	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
->  	BOOTENV
-> 
+The Amlogic G12A & compatible SoCs embeds a mux to either communicate with
+the external PHY or the internal 10/100 PHY.
 
-Applied to u-boot-amlogic
+This adds support for this mux as a MDIO MUX device.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/net/Kconfig               |   7 ++
+ drivers/net/Makefile              |   1 +
+ drivers/net/mdio_mux_meson_g12a.c | 149 ++++++++++++++++++++++++++++++
+ 3 files changed, 157 insertions(+)
+ create mode 100644 drivers/net/mdio_mux_meson_g12a.c
+
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index 41fa2fe566..e1d3b26687 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -797,4 +797,11 @@ config MDIO_MUX_MMIOREG
+ 	  This driver is used for MDIO muxes driven by writing to a register in
+ 	  the MMIO physical memory.
+ 
++config MDIO_MUX_MESON_G12A
++	bool "MDIO MUX for Amlogic Meson G12A SoCs"
++	depends on DM_MDIO_MUX
++	help
++	  This driver is used for the MDIO mux found on the Amlogic G12A & compatible
++	  SoCs.
++
+ endif # NETDEVICES
+diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+index 511c87c3a5..070ae7662c 100644
+--- a/drivers/net/Makefile
++++ b/drivers/net/Makefile
+@@ -43,6 +43,7 @@ obj-$(CONFIG_MACB) += macb.o
+ obj-$(CONFIG_MCFFEC) += mcffec.o mcfmii.o
+ obj-$(CONFIG_MDIO_IPQ4019) += mdio-ipq4019.o
+ obj-$(CONFIG_MDIO_MUX_I2CREG) += mdio_mux_i2creg.o
++obj-$(CONFIG_MDIO_MUX_MESON_G12A) += mdio_mux_meson_g12a.o
+ obj-$(CONFIG_MDIO_MUX_MMIOREG) += mdio_mux_mmioreg.o
+ obj-$(CONFIG_MDIO_MUX_SANDBOX) += mdio_mux_sandbox.o
+ obj-$(CONFIG_MPC8XX_FEC) += mpc8xx_fec.o
+diff --git a/drivers/net/mdio_mux_meson_g12a.c b/drivers/net/mdio_mux_meson_g12a.c
+new file mode 100644
+index 0000000000..b520bf98f0
+--- /dev/null
++++ b/drivers/net/mdio_mux_meson_g12a.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * (C) Copyright 2021 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#include <dm.h>
++#include <errno.h>
++#include <log.h>
++#include <miiphy.h>
++#include <asm/io.h>
++#include <linux/bitfield.h>
++
++#define ETH_PLL_STS		0x40
++#define ETH_PLL_CTL0		0x44
++#define  PLL_CTL0_LOCK_DIG	BIT(30)
++#define  PLL_CTL0_RST		BIT(29)
++#define  PLL_CTL0_EN		BIT(28)
++#define  PLL_CTL0_SEL		BIT(23)
++#define  PLL_CTL0_N		GENMASK(14, 10)
++#define  PLL_CTL0_M		GENMASK(8, 0)
++#define  PLL_LOCK_TIMEOUT	1000000
++#define  PLL_MUX_NUM_PARENT	2
++#define ETH_PLL_CTL1		0x48
++#define ETH_PLL_CTL2		0x4c
++#define ETH_PLL_CTL3		0x50
++#define ETH_PLL_CTL4		0x54
++#define ETH_PLL_CTL5		0x58
++#define ETH_PLL_CTL6		0x5c
++#define ETH_PLL_CTL7		0x60
++
++#define ETH_PHY_CNTL0		0x80
++#define   EPHY_G12A_ID		0x33010180
++#define ETH_PHY_CNTL1		0x84
++#define  PHY_CNTL1_ST_MODE	GENMASK(2, 0)
++#define  PHY_CNTL1_ST_PHYADD	GENMASK(7, 3)
++#define   EPHY_DFLT_ADD		8
++#define  PHY_CNTL1_MII_MODE	GENMASK(15, 14)
++#define   EPHY_MODE_RMII	0x1
++#define  PHY_CNTL1_CLK_EN	BIT(16)
++#define  PHY_CNTL1_CLKFREQ	BIT(17)
++#define  PHY_CNTL1_PHY_ENB	BIT(18)
++#define ETH_PHY_CNTL2		0x88
++#define  PHY_CNTL2_USE_INTERNAL	BIT(5)
++#define  PHY_CNTL2_SMI_SRC_MAC	BIT(6)
++#define  PHY_CNTL2_RX_CLK_EPHY	BIT(9)
++
++#define MESON_G12A_MDIO_EXTERNAL_ID 0
++#define MESON_G12A_MDIO_INTERNAL_ID 1
++
++struct mdio_mux_meson_g12a_priv {
++	struct udevice *chip;
++	phys_addr_t phys;
++};
++
++static int meson_g12a_ephy_pll_init(struct mdio_mux_meson_g12a_priv *priv)
++{
++	/* Fire up the PHY PLL */
++	writel(0x29c0040a, priv->phys + ETH_PLL_CTL0);
++	writel(0x927e0000, priv->phys + ETH_PLL_CTL1);
++	writel(0xac5f49e5, priv->phys + ETH_PLL_CTL2);
++	writel(0x00000000, priv->phys + ETH_PLL_CTL3);
++	writel(0x00000000, priv->phys + ETH_PLL_CTL4);
++	writel(0x20200000, priv->phys + ETH_PLL_CTL5);
++	writel(0x0000c002, priv->phys + ETH_PLL_CTL6);
++	writel(0x00000023, priv->phys + ETH_PLL_CTL7);
++	writel(0x39c0040a, priv->phys + ETH_PLL_CTL0);
++	writel(0x19c0040a, priv->phys + ETH_PLL_CTL0);
++
++	return 0;
++}
++
++static int meson_g12a_enable_internal_mdio(struct mdio_mux_meson_g12a_priv *priv)
++{
++	/* Initialize ephy control */
++	writel(EPHY_G12A_ID, priv->phys + ETH_PHY_CNTL0);
++	writel(FIELD_PREP(PHY_CNTL1_ST_MODE, 3) |
++	       FIELD_PREP(PHY_CNTL1_ST_PHYADD, EPHY_DFLT_ADD) |
++	       FIELD_PREP(PHY_CNTL1_MII_MODE, EPHY_MODE_RMII) |
++	       PHY_CNTL1_CLK_EN |
++	       PHY_CNTL1_CLKFREQ |
++	       PHY_CNTL1_PHY_ENB,
++	       priv->phys + ETH_PHY_CNTL1);
++	writel(PHY_CNTL2_USE_INTERNAL |
++	       PHY_CNTL2_SMI_SRC_MAC |
++	       PHY_CNTL2_RX_CLK_EPHY,
++	       priv->phys + ETH_PHY_CNTL2);
++
++	return 0;
++}
++
++static int meson_g12a_enable_external_mdio(struct mdio_mux_meson_g12a_priv *priv)
++{
++	/* Reset the mdio bus mux */
++	writel(0x0, priv->phys + ETH_PHY_CNTL2);
++
++	return 0;
++}
++
++static int mdio_mux_meson_g12a_select(struct udevice *mux, int cur, int sel)
++{
++	struct mdio_mux_meson_g12a_priv *priv = dev_get_priv(mux);
++
++	debug("%s: %x -> %x\n", __func__, (u32)cur, (u32)sel);
++
++	/* if last selection didn't change we're good to go */
++	if (cur == sel)
++		return 0;
++
++	switch (sel) {
++	case MESON_G12A_MDIO_EXTERNAL_ID:
++		return meson_g12a_enable_external_mdio(priv);
++	case MESON_G12A_MDIO_INTERNAL_ID:
++		return meson_g12a_enable_internal_mdio(priv);
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct mdio_mux_ops mdio_mux_meson_g12a_ops = {
++	.select = mdio_mux_meson_g12a_select,
++};
++
++static int mdio_mux_meson_g12a_probe(struct udevice *dev)
++{
++	struct mdio_mux_meson_g12a_priv *priv = dev_get_priv(dev);
++
++	priv->phys = dev_read_addr(dev);
++
++	meson_g12a_ephy_pll_init(priv);
++
++	return 0;
++}
++
++static const struct udevice_id mdio_mux_meson_g12a_ids[] = {
++	{ .compatible = "amlogic,g12a-mdio-mux" },
++	{ }
++};
++
++U_BOOT_DRIVER(mdio_mux_meson_g12a) = {
++	.name		= "mdio_mux_meson_g12a",
++	.id		= UCLASS_MDIO_MUX,
++	.of_match	= mdio_mux_meson_g12a_ids,
++	.probe		= mdio_mux_meson_g12a_probe,
++	.ops		= &mdio_mux_meson_g12a_ops,
++	.priv_auto	= sizeof(struct mdio_mux_meson_g12a_priv),
++};
+-- 
+2.25.1
+
