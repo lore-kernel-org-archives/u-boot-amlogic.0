@@ -1,235 +1,106 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web11.614.1614195242156118027
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web12.8910.1614242684372545474
  for <u-boot-amlogic@groups.io>;
- Wed, 24 Feb 2021 11:34:02 -0800
-Received: by mail-wm1-f44.google.com with SMTP id x16so2750631wmk.3
-        for <u-boot-amlogic@groups.io>; Wed, 24 Feb 2021 11:34:01 -0800 (PST)
+ Thu, 25 Feb 2021 00:44:44 -0800
+Received: by mail-wr1-f41.google.com with SMTP id l12so4389022wry.2
+        for <u-boot-amlogic@groups.io>; Thu, 25 Feb 2021 00:44:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qK/VtO8sYDPYkDatuqCBRDhmLrpzEHf3L+U8UguulSo=;
-        b=J479SEkJ5pcT/CAa9cEXYK3IOyql+xqoF1SC+bpfF3PTjdl48kVCDVs5f1cq9cKYyw
-         QhTzRX4O3YRqPCogDAKbWOw2gmXGfeeCw/6Hp4tu4SFm2gb7vZ/oCAqYums2b8mS+Ru+
-         /Ea/5c6JyP7pEm9kEOePCfVX1MY7/F4iZCIkOw+/mdrIR6RYjoSSKOz1fKWY2td6FWDC
-         Zd4qcWzlD6Uzq++0109Caq7Pz9gLCw3avU1ehWCAmeuM8o2DC1SYZIjaYuGxoKpZ8k8c
-         dlTqhFOn2GAT3w8oHTYidL6mO7YsgFmgRcHKXHkxztVEPt0RJvMv2TznmxUGDEpBM+oN
-         6xRg==
+        bh=Ns/4VUrAGZUaOhxNaPUd0mEtx7zeD255C2PYIlXfnM0=;
+        b=YM7/qnWlewvuvcGFcCKWpzEeKL657s2DVRihKZMr+OfPsQUs3rd8vLyzXP+vIooR/m
+         ufZTme7wnWBg2rCDoY+IR3S/SBN9+xtdwrkS8lfv46Rtn+tW4abrzjNgUWqyMUdTUowk
+         0vMAsL1BTWrDspRbV0LbZIGUDOn+Z6QzjuCi2erLm1LO8yUS4LANHN8HmAjTl/FKztV5
+         R4hKvSJ8gmBkIBKCcMugmgVS+DWp9YE9FM873CRbc3y+5pWXUIwBZilizejpzyJYrwIa
+         4+kBmDFzc4lCeiOfrUuzpGAQibFDlAERfmNe1JokHB7sGBZkhzvv+z7WmbncKXxmDSGI
+         Juig==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] net: designware: add Amlogic Meson8b & later glue driver
-Date: Wed, 24 Feb 2021 20:33:56 +0100
-Message-Id: <20210224193356.2948805-1-narmstrong@baylibre.com>
+Subject: [RFC/RFT 0/7] arm: meson: static ethernet init cleanup
+Date: Thu, 25 Feb 2021 09:44:31 +0100
+Message-Id: <20210225084438.2964558-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: joe.hershberger@ni.com, rfried.dev@gmail.com, trini@konsulko.com
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, christianshewitt@gmail.com, b.galvani@gmail.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This adds a proper glue driver for the Designware DWMAC ethernet MAC IP
-found in the Amlogic Meson8, GXBB, GXL, GXM, G12A, G12B & SM1 SoCs.
+This serie finally removes the static ethernet link setup, MDIO mux & memory
+power domain after introduction of :
+ - "net: add MMIO Register MDIO MUX driver" at [1]
+ - "net: designware: add DM_MDIO support" at [2]
+ - "net: add Amlogic Meson G12A MDIO MUX driver" at [3]
+ - "net: designware: add Amlogic Meson8b & later glue driver" at [4]
 
-This is aimed to replace the static ethernet link setup found on the board
-init code for the Amlogic SoC based boards.
+These patches makes all this happen automagically thanks to DM_MDIO introduced
+last year.
 
-Tested on a libretech-cc (S905x Internal RMII 10/100 PHY) and Khadas VIM3 (A113d
-with external 10/100/1000 RGMII PHY) to cover the most extreme setups.
+This has been tested on libretech-ac and Khadas VIM3 to check to most opposite
+setups, but the GXBB boards hasn't been tested.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/net/Kconfig         |   8 ++
- drivers/net/Makefile        |   1 +
- drivers/net/dwmac_meson8b.c | 150 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 159 insertions(+)
- create mode 100644 drivers/net/dwmac_meson8b.c
+Note, you'll need [1], [2], [3], [4] applied before these patches
 
-diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index e1d3b26687..cf062fad4d 100644
---- a/drivers/net/Kconfig
-+++ b/drivers/net/Kconfig
-@@ -271,6 +271,14 @@ config ETH_DESIGNWARE
- 	  100Mbit and 1 Gbit operation. You must enable CONFIG_PHYLIB to
- 	  provide the PHY (physical media interface).
- 
-+config ETH_DESIGNWARE_MESON8B
-+	bool "Amlogic Meson8b and later glue driver for Synopsys Designware Ethernet MAC"
-+	depends on DM_ETH
-+	select ETH_DESIGNWARE
-+	help
-+	  This provides glue layer to use Synopsys Designware Ethernet MAC
-+	  present on the Amlogic Meson8b, GX, AXG & G12A SoCs.
-+
- config ETH_DESIGNWARE_SOCFPGA
- 	select REGMAP
- 	select SYSCON
-diff --git a/drivers/net/Makefile b/drivers/net/Makefile
-index 070ae7662c..ce7b9e3478 100644
---- a/drivers/net/Makefile
-+++ b/drivers/net/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_CORTINA_NI_ENET) += cortina_ni.o
- obj-$(CONFIG_CS8900) += cs8900.o
- obj-$(CONFIG_TULIP) += dc2114x.o
- obj-$(CONFIG_ETH_DESIGNWARE) += designware.o
-+obj-$(CONFIG_ETH_DESIGNWARE_MESON8B) += dwmac_meson8b.o
- obj-$(CONFIG_ETH_DESIGNWARE_SOCFPGA) += dwmac_socfpga.o
- obj-$(CONFIG_ETH_DESIGNWARE_S700) += dwmac_s700.o
- obj-$(CONFIG_DRIVER_DM9000) += dm9000x.o
-diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
-new file mode 100644
-index 0000000000..c0b6ef4994
---- /dev/null
-+++ b/drivers/net/dwmac_meson8b.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2021 BayLibre, SAS
-+ */
-+
-+#include <common.h>
-+#include <asm/io.h>
-+#include <dm.h>
-+#include <phy.h>
-+#include "designware.h"
-+#include <dm/device_compat.h>
-+#include <linux/err.h>
-+
-+#define ETH_REG_0		0x0
-+#define ETH_REG_1		0x4
-+#define ETH_REG_2		0x18
-+#define ETH_REG_3		0x1c
-+
-+#define GX_ETH_REG_0_PHY_INTF		BIT(0)
-+#define GX_ETH_REG_0_TX_PHASE(x)	(((x) & 3) << 5)
-+#define GX_ETH_REG_0_TX_RATIO(x)	(((x) & 7) << 7)
-+#define GX_ETH_REG_0_PHY_CLK_EN	BIT(10)
-+#define GX_ETH_REG_0_INVERT_RMII_CLK	BIT(11)
-+#define GX_ETH_REG_0_CLK_EN		BIT(12)
-+
-+#define AXG_ETH_REG_0_PHY_INTF_RGMII	BIT(0)
-+#define AXG_ETH_REG_0_PHY_INTF_RMII	BIT(2)
-+#define AXG_ETH_REG_0_TX_PHASE(x)	(((x) & 3) << 5)
-+#define AXG_ETH_REG_0_TX_RATIO(x)	(((x) & 7) << 7)
-+#define AXG_ETH_REG_0_PHY_CLK_EN	BIT(10)
-+#define AXG_ETH_REG_0_INVERT_RMII_CLK	BIT(11)
-+#define AXG_ETH_REG_0_CLK_EN		BIT(12)
-+
-+struct dwmac_meson8b_plat {
-+	struct dw_eth_pdata dw_eth_pdata;
-+	int (*dwmac_setup)(struct udevice *dev, struct eth_pdata *edata);
-+	void *regs;
-+};
-+
-+static int dwmac_meson8b_of_to_plat(struct udevice *dev)
-+{
-+	struct dwmac_meson8b_plat *pdata = dev_get_plat(dev);
-+
-+	pdata->regs = (void *)dev_read_addr_index(dev, 1);
-+	if ((fdt_addr_t)pdata->regs == FDT_ADDR_T_NONE)
-+		return -EINVAL;
-+
-+	pdata->dwmac_setup = (void *)dev_get_driver_data(dev);
-+	if (!pdata->dwmac_setup)
-+		return -EINVAL;
-+
-+	return designware_eth_of_to_plat(dev);
-+}
-+
-+static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
-+{
-+	struct dwmac_meson8b_plat *plat = dev_get_plat(dev);
-+
-+	switch (edata->phy_interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		/* Set RGMII mode */
-+		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
-+						     AXG_ETH_REG_0_TX_PHASE(1) |
-+						     AXG_ETH_REG_0_TX_RATIO(4) |
-+						     AXG_ETH_REG_0_PHY_CLK_EN |
-+						     AXG_ETH_REG_0_CLK_EN);
-+		break;
-+
-+	case PHY_INTERFACE_MODE_RMII:
-+		/* Set RMII mode */
-+		out_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RMII |
-+						 AXG_ETH_REG_0_INVERT_RMII_CLK |
-+						 AXG_ETH_REG_0_CLK_EN);
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported PHY mode\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
-+{
-+	struct dwmac_meson8b_plat *plat = dev_get_plat(dev);
-+
-+	switch (edata->phy_interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		/* Set RGMII mode */
-+		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
-+						     GX_ETH_REG_0_TX_PHASE(1) |
-+						     GX_ETH_REG_0_TX_RATIO(4) |
-+						     GX_ETH_REG_0_PHY_CLK_EN |
-+						     GX_ETH_REG_0_CLK_EN);
-+
-+		break;
-+
-+	case PHY_INTERFACE_MODE_RMII:
-+		/* Set RMII mode */
-+		out_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_INVERT_RMII_CLK |
-+						 GX_ETH_REG_0_CLK_EN);
-+
-+		if (!IS_ENABLED(CONFIG_MESON_GXBB))
-+			writel(0x10110181, plat->regs + ETH_REG_2);
-+
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported PHY mode\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dwmac_meson8b_probe(struct udevice *dev)
-+{
-+	struct dwmac_meson8b_plat *pdata = dev_get_plat(dev);
-+	struct eth_pdata *edata = &pdata->dw_eth_pdata.eth_pdata;
-+	int ret;
-+
-+	ret = pdata->dwmac_setup(dev, edata);
-+	if (ret)
-+		return ret;
-+
-+	return designware_eth_probe(dev);
-+}
-+
-+static const struct udevice_id dwmac_meson8b_ids[] = {
-+	{ .compatible = "amlogic,meson-gxbb-dwmac", .data = (ulong)dwmac_setup_gx },
-+	{ .compatible = "amlogic,meson-axg-dwmac", .data = (ulong)dwmac_setup_axg },
-+	{ }
-+};
-+
-+U_BOOT_DRIVER(dwmac_meson8b) = {
-+	.name		= "dwmac_meson8b",
-+	.id		= UCLASS_ETH,
-+	.of_match	= dwmac_meson8b_ids,
-+	.of_to_plat = dwmac_meson8b_of_to_plat,
-+	.probe		= dwmac_meson8b_probe,
-+	.ops		= &designware_eth_ops,
-+	.priv_auto	= sizeof(struct dw_eth_dev),
-+	.plat_auto	= sizeof(struct dwmac_meson8b_plat),
-+	.flags		= DM_FLAG_ALLOC_PRIV_DMA,
-+};
+[1] https://patchwork.ozlabs.org/project/uboot/patch/20210224140223.2617536-1-narmstrong@baylibre.com/
+[2] https://patchwork.ozlabs.org/project/uboot/patch/20210224140239.2617642-1-narmstrong@baylibre.com/
+[3] https://patchwork.ozlabs.org/project/uboot/patch/20210224163153.2678768-1-narmstrong@baylibre.com/
+[4] https://patchwork.ozlabs.org/project/uboot/patch/20210224193356.2948805-1-narmstrong@baylibre.com/
+
+Neil Armstrong (7):
+  configs: update Amlogic Meson GXL & GXM config for MDIO MUX
+  configs: update Amlogic Meson G12A, G12B & SM1 configs for MDIO MUX
+  arm: meson: remove static MDIO mux handling
+  configs: meson: use Designware glue driver for Amlogic Meson8b & later
+    SoCs
+  net: designware: remove amlogic compatibles
+  arm: meson: remove static ethernet memory power domain enable
+  arm: meson: remove static ethernet link setup
+
+ arch/arm/include/asm/arch-meson/axg.h       | 22 -------
+ arch/arm/include/asm/arch-meson/eth.h       | 12 ----
+ arch/arm/include/asm/arch-meson/g12a.h      | 35 -----------
+ arch/arm/include/asm/arch-meson/gx.h        | 20 ------
+ arch/arm/mach-meson/board-axg.c             | 34 -----------
+ arch/arm/mach-meson/board-g12a.c            | 67 ---------------------
+ arch/arm/mach-meson/board-gx.c              | 48 ---------------
+ board/amlogic/beelink-s922x/beelink-s922x.c |  2 -
+ board/amlogic/odroid-n2/odroid-n2.c         |  2 -
+ board/amlogic/p200/p200.c                   |  2 -
+ board/amlogic/p201/p201.c                   |  2 -
+ board/amlogic/p212/p212.c                   |  3 -
+ board/amlogic/q200/q200.c                   |  2 -
+ board/amlogic/s400/s400.c                   |  2 -
+ board/amlogic/sei510/sei510.c               |  3 -
+ board/amlogic/sei610/sei610.c               |  3 -
+ board/amlogic/u200/u200.c                   |  3 +-
+ board/amlogic/vim3/vim3.c                   |  2 -
+ board/amlogic/w400/w400.c                   |  2 +-
+ configs/beelink-gtking_defconfig            |  5 +-
+ configs/beelink-gtkingpro_defconfig         |  5 +-
+ configs/khadas-vim2_defconfig               |  5 +-
+ configs/khadas-vim3_defconfig               |  5 +-
+ configs/khadas-vim3l_defconfig              |  5 +-
+ configs/khadas-vim_defconfig                |  7 ++-
+ configs/libretech-ac_defconfig              |  7 ++-
+ configs/libretech-cc_defconfig              |  7 ++-
+ configs/libretech-cc_v2_defconfig           |  7 ++-
+ configs/libretech-s905d-pc_defconfig        |  5 +-
+ configs/libretech-s912-pc_defconfig         |  5 +-
+ configs/nanopi-k2_defconfig                 |  2 +-
+ configs/odroid-c2_defconfig                 |  2 +-
+ configs/odroid-c4_defconfig                 |  5 +-
+ configs/odroid-n2_defconfig                 |  5 +-
+ configs/p200_defconfig                      |  2 +-
+ configs/p201_defconfig                      |  2 +-
+ configs/p212_defconfig                      |  7 ++-
+ configs/s400_defconfig                      |  2 +-
+ configs/sei510_defconfig                    |  7 ++-
+ configs/sei610_defconfig                    |  7 ++-
+ configs/u200_defconfig                      |  7 ++-
+ configs/wetek-core2_defconfig               |  5 +-
+ drivers/net/designware.c                    |  3 -
+ 43 files changed, 79 insertions(+), 306 deletions(-)
+
 -- 
 2.25.1
 
