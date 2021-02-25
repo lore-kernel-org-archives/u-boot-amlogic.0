@@ -1,106 +1,189 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web12.8910.1614242684372545474
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web12.8911.1614242685606110684
  for <u-boot-amlogic@groups.io>;
- Thu, 25 Feb 2021 00:44:44 -0800
-Received: by mail-wr1-f41.google.com with SMTP id l12so4389022wry.2
-        for <u-boot-amlogic@groups.io>; Thu, 25 Feb 2021 00:44:44 -0800 (PST)
+ Thu, 25 Feb 2021 00:44:45 -0800
+Received: by mail-wr1-f49.google.com with SMTP id w11so4364929wrr.10
+        for <u-boot-amlogic@groups.io>; Thu, 25 Feb 2021 00:44:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ns/4VUrAGZUaOhxNaPUd0mEtx7zeD255C2PYIlXfnM0=;
-        b=YM7/qnWlewvuvcGFcCKWpzEeKL657s2DVRihKZMr+OfPsQUs3rd8vLyzXP+vIooR/m
-         ufZTme7wnWBg2rCDoY+IR3S/SBN9+xtdwrkS8lfv46Rtn+tW4abrzjNgUWqyMUdTUowk
-         0vMAsL1BTWrDspRbV0LbZIGUDOn+Z6QzjuCi2erLm1LO8yUS4LANHN8HmAjTl/FKztV5
-         R4hKvSJ8gmBkIBKCcMugmgVS+DWp9YE9FM873CRbc3y+5pWXUIwBZilizejpzyJYrwIa
-         4+kBmDFzc4lCeiOfrUuzpGAQibFDlAERfmNe1JokHB7sGBZkhzvv+z7WmbncKXxmDSGI
-         Juig==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WjAZ1pUFDCQX0u3wiKEycvmY8rSJB94FvTsRvhJYXDk=;
+        b=yisqvbbqlx+DVQ8V8ULZD4pw8H+uFF2OF0McezIOmQ5WbflmZoNP53k1wTH/KrX2cd
+         I2pBl6UChZWNV6yjkfy37tfWUTQpHXXMU5rewOHeDo2WhM9Y7XyLuD5lXhlNbpWYAVYJ
+         U8nxSh3INsEJ/rIL5xhqZxky/Y0UlmuGteKjIULUG/IvxSAce2eTYELRDbhJZbFnNJ1u
+         SphSDtFPhGENzwn9NIIpwontaR97KJ6CCgS05Dutj+fvXH9Zlxz7tGGijqW3BW2tLx+P
+         G6ZrTZDLag40wq/6X6n25+0+rdghqnWxgBxnSkpfo7js1WyCn+v0SmUHYboU0h/F2aXN
+         Jw9Q==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [RFC/RFT 0/7] arm: meson: static ethernet init cleanup
-Date: Thu, 25 Feb 2021 09:44:31 +0100
-Message-Id: <20210225084438.2964558-1-narmstrong@baylibre.com>
+Subject: [RFC/RFT 1/7] configs: update Amlogic Meson GXL & GXM config for MDIO MUX
+Date: Thu, 25 Feb 2021 09:44:32 +0100
+Message-Id: <20210225084438.2964558-2-narmstrong@baylibre.com>
+In-Reply-To: <20210225084438.2964558-1-narmstrong@baylibre.com>
+References: <20210225084438.2964558-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, christianshewitt@gmail.com, b.galvani@gmail.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This serie finally removes the static ethernet link setup, MDIO mux & memory
-power domain after introduction of :
- - "net: add MMIO Register MDIO MUX driver" at [1]
- - "net: designware: add DM_MDIO support" at [2]
- - "net: add Amlogic Meson G12A MDIO MUX driver" at [3]
- - "net: designware: add Amlogic Meson8b & later glue driver" at [4]
+Use DM_MDIO and the new MMIOREG MDIO MUX driver for GXL & GXM board.
 
-These patches makes all this happen automagically thanks to DM_MDIO introduced
-last year.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ configs/khadas-vim2_defconfig        | 3 +++
+ configs/khadas-vim_defconfig         | 5 +++--
+ configs/libretech-ac_defconfig       | 5 +++--
+ configs/libretech-cc_defconfig       | 5 +++--
+ configs/libretech-cc_v2_defconfig    | 5 +++--
+ configs/libretech-s905d-pc_defconfig | 3 +++
+ configs/libretech-s912-pc_defconfig  | 3 +++
+ configs/p212_defconfig               | 5 +++--
+ configs/wetek-core2_defconfig        | 3 +++
+ 9 files changed, 27 insertions(+), 10 deletions(-)
 
-This has been tested on libretech-ac and Khadas VIM3 to check to most opposite
-setups, but the GXBB boards hasn't been tested.
-
-Note, you'll need [1], [2], [3], [4] applied before these patches
-
-[1] https://patchwork.ozlabs.org/project/uboot/patch/20210224140223.2617536-1-narmstrong@baylibre.com/
-[2] https://patchwork.ozlabs.org/project/uboot/patch/20210224140239.2617642-1-narmstrong@baylibre.com/
-[3] https://patchwork.ozlabs.org/project/uboot/patch/20210224163153.2678768-1-narmstrong@baylibre.com/
-[4] https://patchwork.ozlabs.org/project/uboot/patch/20210224193356.2948805-1-narmstrong@baylibre.com/
-
-Neil Armstrong (7):
-  configs: update Amlogic Meson GXL & GXM config for MDIO MUX
-  configs: update Amlogic Meson G12A, G12B & SM1 configs for MDIO MUX
-  arm: meson: remove static MDIO mux handling
-  configs: meson: use Designware glue driver for Amlogic Meson8b & later
-    SoCs
-  net: designware: remove amlogic compatibles
-  arm: meson: remove static ethernet memory power domain enable
-  arm: meson: remove static ethernet link setup
-
- arch/arm/include/asm/arch-meson/axg.h       | 22 -------
- arch/arm/include/asm/arch-meson/eth.h       | 12 ----
- arch/arm/include/asm/arch-meson/g12a.h      | 35 -----------
- arch/arm/include/asm/arch-meson/gx.h        | 20 ------
- arch/arm/mach-meson/board-axg.c             | 34 -----------
- arch/arm/mach-meson/board-g12a.c            | 67 ---------------------
- arch/arm/mach-meson/board-gx.c              | 48 ---------------
- board/amlogic/beelink-s922x/beelink-s922x.c |  2 -
- board/amlogic/odroid-n2/odroid-n2.c         |  2 -
- board/amlogic/p200/p200.c                   |  2 -
- board/amlogic/p201/p201.c                   |  2 -
- board/amlogic/p212/p212.c                   |  3 -
- board/amlogic/q200/q200.c                   |  2 -
- board/amlogic/s400/s400.c                   |  2 -
- board/amlogic/sei510/sei510.c               |  3 -
- board/amlogic/sei610/sei610.c               |  3 -
- board/amlogic/u200/u200.c                   |  3 +-
- board/amlogic/vim3/vim3.c                   |  2 -
- board/amlogic/w400/w400.c                   |  2 +-
- configs/beelink-gtking_defconfig            |  5 +-
- configs/beelink-gtkingpro_defconfig         |  5 +-
- configs/khadas-vim2_defconfig               |  5 +-
- configs/khadas-vim3_defconfig               |  5 +-
- configs/khadas-vim3l_defconfig              |  5 +-
- configs/khadas-vim_defconfig                |  7 ++-
- configs/libretech-ac_defconfig              |  7 ++-
- configs/libretech-cc_defconfig              |  7 ++-
- configs/libretech-cc_v2_defconfig           |  7 ++-
- configs/libretech-s905d-pc_defconfig        |  5 +-
- configs/libretech-s912-pc_defconfig         |  5 +-
- configs/nanopi-k2_defconfig                 |  2 +-
- configs/odroid-c2_defconfig                 |  2 +-
- configs/odroid-c4_defconfig                 |  5 +-
- configs/odroid-n2_defconfig                 |  5 +-
- configs/p200_defconfig                      |  2 +-
- configs/p201_defconfig                      |  2 +-
- configs/p212_defconfig                      |  7 ++-
- configs/s400_defconfig                      |  2 +-
- configs/sei510_defconfig                    |  7 ++-
- configs/sei610_defconfig                    |  7 ++-
- configs/u200_defconfig                      |  7 ++-
- configs/wetek-core2_defconfig               |  5 +-
- drivers/net/designware.c                    |  3 -
- 43 files changed, 79 insertions(+), 306 deletions(-)
-
+diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
+index c26c0ca45c..3fd7543c12 100644
+--- a/configs/khadas-vim2_defconfig
++++ b/configs/khadas-vim2_defconfig
+@@ -36,6 +36,9 @@ CONFIG_MTD=y
+ CONFIG_DM_MTD=y
+ CONFIG_DM_SPI_FLASH=y
+ CONFIG_SPI_FLASH_WINBOND=y
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
+index e7e5c42035..0e64f91d0a 100644
+--- a/configs/khadas-vim_defconfig
++++ b/configs/khadas-vim_defconfig
+@@ -30,8 +30,9 @@ CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+-CONFIG_PHY_ADDR_ENABLE=y
+-CONFIG_PHY_ADDR=8
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
+index ca61591bd7..388974209e 100644
+--- a/configs/libretech-ac_defconfig
++++ b/configs/libretech-ac_defconfig
+@@ -37,13 +37,14 @@ CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_MTD=y
+ CONFIG_DM_MTD=y
+ CONFIG_DM_SPI_FLASH=y
+ CONFIG_SPI_FLASH_GIGADEVICE=y
+ CONFIG_SPI_FLASH_SPANSION=y
+-CONFIG_PHY_ADDR_ENABLE=y
+-CONFIG_PHY_ADDR=8
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+index fb4bf4c929..5308e90bd1 100644
+--- a/configs/libretech-cc_defconfig
++++ b/configs/libretech-cc_defconfig
+@@ -29,8 +29,9 @@ CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+-CONFIG_PHY_ADDR_ENABLE=y
+-CONFIG_PHY_ADDR=8
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+index 017e81bb5d..af60bfc488 100644
+--- a/configs/libretech-cc_v2_defconfig
++++ b/configs/libretech-cc_v2_defconfig
+@@ -38,8 +38,9 @@ CONFIG_MTD=y
+ CONFIG_DM_MTD=y
+ CONFIG_DM_SPI_FLASH=y
+ CONFIG_SPI_FLASH_GIGADEVICE=y
+-CONFIG_PHY_ADDR_ENABLE=y
+-CONFIG_PHY_ADDR=8
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
+index 9d4c880a3b..0d54563dd2 100644
+--- a/configs/libretech-s905d-pc_defconfig
++++ b/configs/libretech-s905d-pc_defconfig
+@@ -39,6 +39,9 @@ CONFIG_MMC_MESON_GX=y
+ CONFIG_MTD=y
+ CONFIG_DM_SPI_FLASH=y
+ CONFIG_SPI_FLASH_GIGADEVICE=y
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
+index cf600c1cbe..e08c1bcca3 100644
+--- a/configs/libretech-s912-pc_defconfig
++++ b/configs/libretech-s912-pc_defconfig
+@@ -38,6 +38,9 @@ CONFIG_MMC_MESON_GX=y
+ CONFIG_MTD=y
+ CONFIG_DM_SPI_FLASH=y
+ CONFIG_SPI_FLASH_GIGADEVICE=y
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/p212_defconfig b/configs/p212_defconfig
+index da66c50ea0..b0ef69d0c6 100644
+--- a/configs/p212_defconfig
++++ b/configs/p212_defconfig
+@@ -27,8 +27,9 @@ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+ CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+-CONFIG_PHY_ADDR_ENABLE=y
+-CONFIG_PHY_ADDR=8
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
+diff --git a/configs/wetek-core2_defconfig b/configs/wetek-core2_defconfig
+index cbe747b63e..4a1ba522fe 100644
+--- a/configs/wetek-core2_defconfig
++++ b/configs/wetek-core2_defconfig
+@@ -31,6 +31,9 @@ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+ CONFIG_MTD=y
+ CONFIG_DM_MTD=y
++CONFIG_DM_MDIO=y
++CONFIG_DM_MDIO_MUX=y
++CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+ CONFIG_ETH_DESIGNWARE=y
 -- 
 2.25.1
 
