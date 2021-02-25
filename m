@@ -1,25 +1,25 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web10.8767.1614242687661504873
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web09.8777.1614242689558961663
  for <u-boot-amlogic@groups.io>;
- Thu, 25 Feb 2021 00:44:47 -0800
-Received: by mail-wr1-f47.google.com with SMTP id e10so4155403wro.12
-        for <u-boot-amlogic@groups.io>; Thu, 25 Feb 2021 00:44:47 -0800 (PST)
+ Thu, 25 Feb 2021 00:44:49 -0800
+Received: by mail-wm1-f54.google.com with SMTP id i9so3639511wml.0
+        for <u-boot-amlogic@groups.io>; Thu, 25 Feb 2021 00:44:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R5T7zBBuAoSamT5fzJg4szJMz7xK6y2iJD0u3Zya85Q=;
-        b=a3McdxQ2qJtLcC2wK1tBvKGzLvH7sClxUKcsZgsKzjkD5Tg5OBq++9a8QrmxSIg/uQ
-         qJd2+ans8NoDTKRD0AvF7RTiOtTz4uTRg1503oG43wk66lqzv+wQ7oOEh4cWPmyYmzlW
-         0CZ8e70mn2mULm2uzJLZ14ewvkKwmKlWFzMzd86Wz5lpfQDUrFvW1hxsJyAF44wkfqJD
-         UxAbUvriEk7hoPC4BLInSdfzLelawCGEqDjbIXo7Lred/45dS89HB56HaiPrFCbCD1Q5
-         ymjbtNWxC2scbmcbCq1R0bxwXZ8oia12Z6t3gVU4nTT4FOf64vakKysPO20H6RRpZDaW
-         rzvA==
+        bh=quMGEk8MhuxER+h0+wyqhiwQDvCgwSP2uRA7LKU/nIg=;
+        b=XqDw2DN7ONJfZRqoiiPqA3mTnTjdvpMW3B+AOaUy546UTKK58mOE4tI1kb+3jrXU+m
+         b6+kI7AwtADvIdkawDhFc9N66QJ6lKDcUp/Tr4cLuIm4dIFqdqcKG6Xvs/u3AC8FxT9A
+         Yet1cKC7HWoVMy8RgwkuJPA5tA2QDkrQvuvUiJ3+TdGEZTme7DE4gzf4SsohXdU8UZ/4
+         9Dhx1ECZZ3ugJWY+HAJM9Lal4hMQygWUaiSb+XT5X/eRSCGIeZlLmSD2BSDg3Lmwc7I5
+         D9qymWLO1YL4NzpO8ZF1ygIb0fJADwVi4nO58vi0e7pkzdXiWFNg1ysnknu398oI6M7N
+         clgQ==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [RFC/RFT 3/7] arm: meson: remove static MDIO mux handling
-Date: Thu, 25 Feb 2021 09:44:34 +0100
-Message-Id: <20210225084438.2964558-4-narmstrong@baylibre.com>
+Subject: [RFC/RFT 4/7] configs: meson: use Designware glue driver for Amlogic Meson8b & later SoCs
+Date: Thu, 25 Feb 2021 09:44:35 +0100
+Message-Id: <20210225084438.2964558-5-narmstrong@baylibre.com>
 In-Reply-To: <20210225084438.2964558-1-narmstrong@baylibre.com>
 References: <20210225084438.2964558-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,104 +28,334 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, christianshewitt@gmail.com, b.galvani@gmail.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The static MDIO mux handling in mach-meson is no more needed, delete it.
+Use the proper Synopsys DWMAC Meson8b glue to handle the ethernet link type.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/mach-meson/board-g12a.c | 33 --------------------------------
- arch/arm/mach-meson/board-gx.c   | 14 ++------------
- 2 files changed, 2 insertions(+), 45 deletions(-)
+ configs/beelink-gtking_defconfig     | 2 +-
+ configs/beelink-gtkingpro_defconfig  | 2 +-
+ configs/khadas-vim2_defconfig        | 2 +-
+ configs/khadas-vim3_defconfig        | 2 +-
+ configs/khadas-vim3l_defconfig       | 2 +-
+ configs/khadas-vim_defconfig         | 2 +-
+ configs/libretech-ac_defconfig       | 2 +-
+ configs/libretech-cc_defconfig       | 2 +-
+ configs/libretech-cc_v2_defconfig    | 2 +-
+ configs/libretech-s905d-pc_defconfig | 2 +-
+ configs/libretech-s912-pc_defconfig  | 2 +-
+ configs/nanopi-k2_defconfig          | 2 +-
+ configs/odroid-c2_defconfig          | 2 +-
+ configs/odroid-c4_defconfig          | 2 +-
+ configs/odroid-n2_defconfig          | 2 +-
+ configs/p200_defconfig               | 2 +-
+ configs/p201_defconfig               | 2 +-
+ configs/p212_defconfig               | 2 +-
+ configs/s400_defconfig               | 2 +-
+ configs/sei510_defconfig             | 2 +-
+ configs/sei610_defconfig             | 2 +-
+ configs/u200_defconfig               | 2 +-
+ configs/wetek-core2_defconfig        | 2 +-
+ 23 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
-index bb75d4f8ad..bfd40fe14f 100644
---- a/arch/arm/mach-meson/board-g12a.c
-+++ b/arch/arm/mach-meson/board-g12a.c
-@@ -97,31 +97,6 @@ static struct mm_region g12a_mem_map[] = {
- 
- struct mm_region *mem_map = g12a_mem_map;
- 
--static void g12a_enable_external_mdio(void)
--{
--	writel(0x0, ETH_PHY_CNTL2);
--}
--
--static void g12a_enable_internal_mdio(void)
--{
--	/* Fire up the PHY PLL */
--	writel(0x29c0040a, ETH_PLL_CNTL0);
--	writel(0x927e0000, ETH_PLL_CNTL1);
--	writel(0xac5f49e5, ETH_PLL_CNTL2);
--	writel(0x00000000, ETH_PLL_CNTL3);
--	writel(0x00000000, ETH_PLL_CNTL4);
--	writel(0x20200000, ETH_PLL_CNTL5);
--	writel(0x0000c002, ETH_PLL_CNTL6);
--	writel(0x00000023, ETH_PLL_CNTL7);
--	writel(0x39c0040a, ETH_PLL_CNTL0);
--	writel(0x19c0040a, ETH_PLL_CNTL0);
--
--	/* Select the internal MDIO */
--	writel(0x33000180, ETH_PHY_CNTL0);
--	writel(0x00074043, ETH_PHY_CNTL1);
--	writel(0x00000260, ETH_PHY_CNTL2);
--}
--
- /* Configure the Ethernet MAC with the requested interface mode
-  * with some optional flags.
-  */
-@@ -138,7 +113,6 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
- 			     G12A_ETH_REG_0_TX_RATIO(4) |
- 			     G12A_ETH_REG_0_PHY_CLK_EN |
- 			     G12A_ETH_REG_0_CLK_EN);
--		g12a_enable_external_mdio();
- 		break;
- 
- 	case PHY_INTERFACE_MODE_RMII:
-@@ -146,13 +120,6 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
- 		out_le32(G12A_ETH_REG_0, G12A_ETH_REG_0_PHY_INTF_RMII |
- 					G12A_ETH_REG_0_INVERT_RMII_CLK |
- 					G12A_ETH_REG_0_CLK_EN);
--
--		/* Use G12A RMII Internal PHY */
--		if (flags & MESON_USE_INTERNAL_RMII_PHY)
--			g12a_enable_internal_mdio();
--		else
--			g12a_enable_external_mdio();
--
- 		break;
- 
- 	default:
-diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
-index f5273f42af..876405f0d4 100644
---- a/arch/arm/mach-meson/board-gx.c
-+++ b/arch/arm/mach-meson/board-gx.c
-@@ -126,10 +126,6 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
- 			     GX_ETH_REG_0_PHY_CLK_EN |
- 			     GX_ETH_REG_0_CLK_EN);
- 
--		/* Reset to external PHY */
--		if(!IS_ENABLED(CONFIG_MESON_GXBB))
--			writel(0x2009087f, GX_ETH_REG_3);
--
- 		break;
- 
- 	case PHY_INTERFACE_MODE_RMII:
-@@ -137,14 +133,8 @@ void meson_eth_init(phy_interface_t mode, unsigned int flags)
- 		out_le32(GX_ETH_REG_0, GX_ETH_REG_0_INVERT_RMII_CLK |
- 					 GX_ETH_REG_0_CLK_EN);
- 
--		/* Use GXL RMII Internal PHY (also on GXM) */
--		if (!IS_ENABLED(CONFIG_MESON_GXBB)) {
--			if ((flags & MESON_USE_INTERNAL_RMII_PHY)) {
--				writel(0x10110181, GX_ETH_REG_2);
--				writel(0xe40908ff, GX_ETH_REG_3);
--			} else
--				writel(0x2009087f, GX_ETH_REG_3);
--		}
-+		if (!IS_ENABLED(CONFIG_MESON_GXBB))
-+			writel(0x10110181, GX_ETH_REG_2);
- 
- 		break;
- 
+diff --git a/configs/beelink-gtking_defconfig b/configs/beelink-gtking_defconfig
+index ce349433be..12caa58697 100644
+--- a/configs/beelink-gtking_defconfig
++++ b/configs/beelink-gtking_defconfig
+@@ -35,7 +35,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/beelink-gtkingpro_defconfig b/configs/beelink-gtkingpro_defconfig
+index 8c4a234900..2b022e42ed 100644
+--- a/configs/beelink-gtkingpro_defconfig
++++ b/configs/beelink-gtkingpro_defconfig
+@@ -35,7 +35,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
+index 3fd7543c12..0aaa6c0db3 100644
+--- a/configs/khadas-vim2_defconfig
++++ b/configs/khadas-vim2_defconfig
+@@ -41,7 +41,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
+index e37bc237d8..cd0327c06b 100644
+--- a/configs/khadas-vim3_defconfig
++++ b/configs/khadas-vim3_defconfig
+@@ -46,7 +46,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
+index 8cc0214abb..ef85f00dd8 100644
+--- a/configs/khadas-vim3l_defconfig
++++ b/configs/khadas-vim3l_defconfig
+@@ -46,7 +46,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
+index 0e64f91d0a..60cdfffe39 100644
+--- a/configs/khadas-vim_defconfig
++++ b/configs/khadas-vim_defconfig
+@@ -35,7 +35,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
+index 388974209e..b383dfb654 100644
+--- a/configs/libretech-ac_defconfig
++++ b/configs/libretech-ac_defconfig
+@@ -47,7 +47,7 @@ CONFIG_SPI_FLASH_GIGADEVICE=y
+ CONFIG_SPI_FLASH_SPANSION=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+index 5308e90bd1..ba59dee637 100644
+--- a/configs/libretech-cc_defconfig
++++ b/configs/libretech-cc_defconfig
+@@ -34,7 +34,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+index af60bfc488..9afcf183cf 100644
+--- a/configs/libretech-cc_v2_defconfig
++++ b/configs/libretech-cc_v2_defconfig
+@@ -43,7 +43,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_PHY=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
+index 0d54563dd2..e0086081bd 100644
+--- a/configs/libretech-s905d-pc_defconfig
++++ b/configs/libretech-s905d-pc_defconfig
+@@ -44,7 +44,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
+index e08c1bcca3..68abbaf55b 100644
+--- a/configs/libretech-s912-pc_defconfig
++++ b/configs/libretech-s912-pc_defconfig
+@@ -43,7 +43,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
+index c2dc488171..4332271779 100644
+--- a/configs/nanopi-k2_defconfig
++++ b/configs/nanopi-k2_defconfig
+@@ -29,7 +29,7 @@ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXBB=y
+ CONFIG_DM_REGULATOR=y
+diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
+index 5c02fa1e62..7ce65b1376 100644
+--- a/configs/odroid-c2_defconfig
++++ b/configs/odroid-c2_defconfig
+@@ -32,7 +32,7 @@ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_PHY=y
+ CONFIG_MESON_GXBB_USB_PHY=y
+ CONFIG_PINCTRL=y
+diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
+index b5e427fda7..48fb8915a0 100644
+--- a/configs/odroid-c4_defconfig
++++ b/configs/odroid-c4_defconfig
+@@ -35,7 +35,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
+index 2e8b365ebc..d2a8c342c2 100644
+--- a/configs/odroid-n2_defconfig
++++ b/configs/odroid-n2_defconfig
+@@ -35,7 +35,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/p200_defconfig b/configs/p200_defconfig
+index 6efc7bc92d..c61e974321 100644
+--- a/configs/p200_defconfig
++++ b/configs/p200_defconfig
+@@ -28,7 +28,7 @@ CONFIG_SYS_I2C_MESON=y
+ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXBB=y
+ CONFIG_DM_REGULATOR=y
+diff --git a/configs/p201_defconfig b/configs/p201_defconfig
+index a1d3f04b4f..34dc154d69 100644
+--- a/configs/p201_defconfig
++++ b/configs/p201_defconfig
+@@ -29,7 +29,7 @@ CONFIG_SYS_I2C_MESON=y
+ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXBB=y
+ CONFIG_DM_REGULATOR=y
+diff --git a/configs/p212_defconfig b/configs/p212_defconfig
+index b0ef69d0c6..c36a674eab 100644
+--- a/configs/p212_defconfig
++++ b/configs/p212_defconfig
+@@ -32,7 +32,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/s400_defconfig b/configs/s400_defconfig
+index a15ac32986..39e44c0c44 100644
+--- a/configs/s400_defconfig
++++ b/configs/s400_defconfig
+@@ -29,7 +29,7 @@ CONFIG_DM_MMC=y
+ CONFIG_MMC_MESON_GX=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_AXG=y
+diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
+index 83ca0812ba..2c84abf591 100644
+--- a/configs/sei510_defconfig
++++ b/configs/sei510_defconfig
+@@ -49,7 +49,7 @@ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
+index f9f5ef657a..392ab64642 100644
+--- a/configs/sei610_defconfig
++++ b/configs/sei610_defconfig
+@@ -49,7 +49,7 @@ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/u200_defconfig b/configs/u200_defconfig
+index 1fbb78dd34..4da02f1598 100644
+--- a/configs/u200_defconfig
++++ b/configs/u200_defconfig
+@@ -31,7 +31,7 @@ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MESON_G12A=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_G12A_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_G12A=y
+diff --git a/configs/wetek-core2_defconfig b/configs/wetek-core2_defconfig
+index 4a1ba522fe..098e2493e3 100644
+--- a/configs/wetek-core2_defconfig
++++ b/configs/wetek-core2_defconfig
+@@ -36,7 +36,7 @@ CONFIG_DM_MDIO_MUX=y
+ CONFIG_MDIO_MUX_MMIOREG=y
+ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_ETH=y
+-CONFIG_ETH_DESIGNWARE=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
 -- 
 2.25.1
 
