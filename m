@@ -1,69 +1,64 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web12.9804.1614348802062553332
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web08.11515.1614355871532496018
  for <u-boot-amlogic@groups.io>;
- Fri, 26 Feb 2021 06:13:22 -0800
-Received: by mail-wm1-f50.google.com with SMTP id p3so7562166wmc.2
-        for <u-boot-amlogic@groups.io>; Fri, 26 Feb 2021 06:13:21 -0800 (PST)
+ Fri, 26 Feb 2021 08:11:12 -0800
+Received: by mail-wm1-f42.google.com with SMTP id i7so1273827wmb.0
+        for <u-boot-amlogic@groups.io>; Fri, 26 Feb 2021 08:11:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=J4/QZBRcCm6TYdPJMGKl+G/X6SY8LW7bdny9tFrMl4k=;
-        b=1x9j6ult/gFKJyLCGx7qAqFKzGZAtYU5jvwgIPCPlV5JjCJuo1wTobQemkbMVIckfU
-         QdN/SL1rUTI36DSHiCXCEG6eJUnzbcfE3uuwrjDwG7KrhvpEYmeKnWrndIhBNHkCab8Z
-         sDS4bS2oUZGlZfTPR19TLFwNPwapfIyBcIa5WvBfTfhzRInsAZBacRXaZIVs3ug6XLR6
-         wMiwsTAY8/qGtLWfOf/my8vN0VnUT39r43UMP1JmEzSzRQZhlYH2bXwiOoaT398l9TB4
-         tBWmtSeRtalMKt2DKyOZUbxRwhg0N+TkGZIi9c57KCmTskpPBcGrPNOEu/bJ0FakzJd1
-         Sp/w==
+        bh=QqXEAl4FUK+CQSByWUI8lO1fpeTUNT15Bh8JLBy2SCM=;
+        b=w2m9k+pHsE8qHRXtEZt5UaeYs7sCj+m1v6d1MtrNzyBK99zgPxI/u/lvpJn5YxKM4A
+         OYhggMM1at5TJFzCHEfvtJ3qMqvPzcAD4DkGukLyxBXki9BIhRa80NRoPXrqADXArf2Q
+         yzUFGeuGFDzLw9GfzvS0mVSydGHHx1OSZ8f/t+FAPBkRqzdvs5dq9Q9nm046Uq8PtPK+
+         f0/kausFve4XnfCN6lGWfWyxXCYmKNmHm2DbcenaTJpKl9MbUwzonWiZQhfNTc/U/2iz
+         tLSW45Mto4TcGbSmc88ixZ7d61ggXnTuJwjOYHmy/JQX7MuVxqzQzdS6MbIAtb9eSPLi
+         G1fQ==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] nvme: add cache flush in get/set_features
+References: <20210226141318.3882733-1-narmstrong@baylibre.com>
+ <52e8d653-c05a-e6a8-65c6-1571f426aab1@arm.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] nvme: add cache flush in get/set_features
-Date: Fri, 26 Feb 2021 15:13:18 +0100
-Message-Id: <20210226141318.3882733-1-narmstrong@baylibre.com>
+Message-ID: <14fa1b42-7248-fa03-0998-cd6480c89d02@baylibre.com>
+Date: Fri, 26 Feb 2021 17:11:07 +0100
 MIME-Version: 1.0
+In-Reply-To: <52e8d653-c05a-e6a8-65c6-1571f426aab1@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, bmeng.cn@gmail.com, Neil Armstrong <narmstrong@baylibre.com>
+To: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, bmeng.cn@gmail.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On Amlogic G12A platforms, the NVME probe timeouts at get/set_feature(),
-adding a cache flush solves the timeout.
+Hi Andre, Bin,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/nvme/nvme.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On 26/02/2021 16:22, André Przywara wrote:
+> On 26/02/2021 14:13, Neil Armstrong wrote:
+> 
+> Hi,
+> 
+[..]
 
-diff --git a/drivers/nvme/nvme.c b/drivers/nvme/nvme.c
-index 5d6331ad34..44c00a0309 100644
---- a/drivers/nvme/nvme.c
-+++ b/drivers/nvme/nvme.c
-@@ -487,11 +487,11 @@ int nvme_get_features(struct nvme_dev *dev, unsigned fid, unsigned nsid,
- 	c.features.nsid = cpu_to_le32(nsid);
- 	c.features.prp1 = cpu_to_le64(dma_addr);
- 	c.features.fid = cpu_to_le32(fid);
--
- 	/*
--	 * TODO: add cache invalidate operation when the size of
-+	 * TODO: add better cache invalidate operation when the size of
- 	 * the DMA buffer is known
- 	 */
-+	invalidate_dcache_all();
- 
- 	return nvme_submit_admin_cmd(dev, &c, result);
- }
-@@ -508,9 +508,10 @@ int nvme_set_features(struct nvme_dev *dev, unsigned fid, unsigned dword11,
- 	c.features.dword11 = cpu_to_le32(dword11);
- 
- 	/*
--	 * TODO: add cache flush operation when the size of
-+	 * TODO: add better cache flush operation when the size of
- 	 * the DMA buffer is known
- 	 */
-+	invalidate_dcache_all();
- 
- 	return nvme_submit_admin_cmd(dev, &c, result);
- }
--- 
-2.25.1
+> 
+> And if this seems to fix something, how?
+
+Good question... sorry for the noise my patch is totally wrong, but it fixed something somehow.
+
+But, "nvme: Always invalidate whole cqes[] array" fixes (correctly) the issue !
+
+Thanks,
+
+Neil
+
+> 
+> Cheers,
+> Andre
+> 
+>>  
+>>  	return nvme_submit_admin_cmd(dev, &c, result);
+>>  }
+>>
+> 
 
