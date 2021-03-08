@@ -1,30 +1,30 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web10.33359.1615196591758251151
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web09.33641.1615196598278240303
  for <u-boot-amlogic@groups.io>;
- Mon, 08 Mar 2021 01:43:12 -0800
-Received: by mail-wr1-f48.google.com with SMTP id b18so10700164wrn.6
-        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:43:11 -0800 (PST)
+ Mon, 08 Mar 2021 01:43:18 -0800
+Received: by mail-wr1-f45.google.com with SMTP id f12so10683768wrx.8
+        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:43:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Xr/0yPbz/esfw37JxYp6ebjI0lkVlAmLBF5h6l90I8Q=;
-        b=as0WIl2diVwyGNeW0TC2nit0wkLxWpbwUL4r7EkRGUSTdHSno1BYooHlmV2YplQFLs
-         Jvt+jOf7i+dDVwgSiqTyeezhJ3JUfsLzPXBJqqqb8UgtJMxb8SKLwjNJZu69tU4WCutM
-         08pTSRjMFhnzlNhPX+z5q0/d6SW0VsqGEtbbYg7RdCG8lGkg6SVsRvtbA9f6q5QukzjB
-         LyiiuN9yNrRqBZUOqGRUmISpgrIDjZbLyQZhTdsg5J6J5yFlFG+irHACyiQFYUwJDin2
-         sSALt03vjv8J3cfFj+r26JVfs/zgFEf+wNL/J0jk5gvSMTwTAl8lUxD3sy+ZL31E1QtA
-         tRMA==
+        bh=jS5QYrR7cni6ws0lFaUjtUmhdgwQkel5cljEjt3SQwc=;
+        b=BEErFYSUwNeCVIaNid81k59O77827gotZjy811VqEzHsp+qLKUTYP81+9Fwe5cvC4I
+         9OnC5NJ3TjHxU4lcNdD0IjjUG7mMwVkyzrwbEjb/Rd/tldZwJsct4UjEv35YU+nD3isB
+         UQKw1IXvd/iMrJHg6ErOZc0jbHa+jeAB3/woB757Ua04qh/QEVjHGDAbuRq3aCMtxmGy
+         saZnmeA0jh1W0FeJdEZCMOyzV3ADTsn6zxaJT0HFN6p65BmUkF+CQilayi6Tb40xsUuA
+         xQBp9zQvL6DN1VbA0KTv8SnJp86aX8mh2dtUYUFoS0PEFe529kKXmWcgb9KMow3betDB
+         X8zg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] net: designware: add DM_MDIO support
-References: <20210224140239.2617642-1-narmstrong@baylibre.com>
- <CAGi-RULpnr=Sd0vDhfdTf5GuHibOh321q6CX2wojtnVtP0M44w@mail.gmail.com>
+Subject: Re: [PATCH] net: add MMIO Register MDIO MUX driver
+References: <20210224140223.2617536-1-narmstrong@baylibre.com>
+ <CAGi-RUKneXusE5JUyEa0U=nsKyeCk77TL6mvNpzrtK6V6-K-0Q@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <e315ab3c-a290-79b5-259d-392fdcfa5c50@baylibre.com>
-Date: Mon, 8 Mar 2021 10:43:08 +0100
+Message-ID: <3b549c76-c7ee-2ea3-2c25-f3992203bf18@baylibre.com>
+Date: Mon, 8 Mar 2021 10:43:14 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAGi-RULpnr=Sd0vDhfdTf5GuHibOh321q6CX2wojtnVtP0M44w@mail.gmail.com>
+In-Reply-To: <CAGi-RUKneXusE5JUyEa0U=nsKyeCk77TL6mvNpzrtK6V6-K-0Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -32,159 +32,182 @@ To: Ramon Fried <rfried.dev@gmail.com>
 Cc: Joe Hershberger <joe.hershberger@ni.com>, Tom Rini <trini@konsulko.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 25/02/2021 20:34, Ramon Fried wrote:
+On 25/02/2021 20:36, Ramon Fried wrote:
 > On Wed, Feb 24, 2021 at 4:02 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> Add support for DM_MDIO to connect to PHY and expose a MDIO device for the
->> internal MDIO bus in order to dynamically connect to MDIO PHYs with DT
->> with eventual MDIO muxes in between.
+>> Add support for MMIO register MDIO muxes based on the Linux mdio-mux-mmioreg driver.
 >>
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 >> ---
->>  drivers/net/designware.c | 93 +++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 92 insertions(+), 1 deletion(-)
+>>  drivers/net/Kconfig            |   7 ++
+>>  drivers/net/Makefile           |   1 +
+>>  drivers/net/mdio_mux_mmioreg.c | 129 +++++++++++++++++++++++++++++++++
+>>  3 files changed, 137 insertions(+)
+>>  create mode 100644 drivers/net/mdio_mux_mmioreg.c
 >>
->> diff --git a/drivers/net/designware.c b/drivers/net/designware.c
->> index 9dba55adaa..acf3a82828 100644
->> --- a/drivers/net/designware.c
->> +++ b/drivers/net/designware.c
->> @@ -21,7 +21,9 @@
->>  #include <reset.h>
->>  #include <asm/cache.h>
->>  #include <dm/device_compat.h>
->> +#include <dm/device-internal.h>
->>  #include <dm/devres.h>
->> +#include <dm/lists.h>
->>  #include <linux/compiler.h>
->>  #include <linux/delay.h>
->>  #include <linux/err.h>
->> @@ -122,6 +124,55 @@ static int dw_mdio_reset(struct mii_dev *bus)
->>  }
->>  #endif
+>> diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+>> index 0e84c22b50..41fa2fe566 100644
+>> --- a/drivers/net/Kconfig
+>> +++ b/drivers/net/Kconfig
+>> @@ -790,4 +790,11 @@ config FSL_LS_MDIO
+>>           This driver supports the MDIO bus found on the Fman 10G Ethernet MACs and
+>>           on the mEMAC (which supports both Clauses 22 and 45).
 >>
->> +#if IS_ENABLED(CONFIG_DM_MDIO)
->> +int designware_eth_mdio_read(struct udevice *mdio_dev, int addr, int devad, int reg)
->> +{
->> +       struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
+>> +config MDIO_MUX_MMIOREG
+>> +       bool "MDIO MUX accessed as a MMIO register access"
+>> +       depends on DM_MDIO_MUX
+>> +       help
+>> +         This driver is used for MDIO muxes driven by writing to a register in
+>> +         the MMIO physical memory.
 >> +
->> +       return dw_mdio_read(pdata->mii_bus, addr, devad, reg);
->> +}
+>>  endif # NETDEVICES
+>> diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+>> index a19511aaa7..511c87c3a5 100644
+>> --- a/drivers/net/Makefile
+>> +++ b/drivers/net/Makefile
+>> @@ -43,6 +43,7 @@ obj-$(CONFIG_MACB) += macb.o
+>>  obj-$(CONFIG_MCFFEC) += mcffec.o mcfmii.o
+>>  obj-$(CONFIG_MDIO_IPQ4019) += mdio-ipq4019.o
+>>  obj-$(CONFIG_MDIO_MUX_I2CREG) += mdio_mux_i2creg.o
+>> +obj-$(CONFIG_MDIO_MUX_MMIOREG) += mdio_mux_mmioreg.o
+>>  obj-$(CONFIG_MDIO_MUX_SANDBOX) += mdio_mux_sandbox.o
+>>  obj-$(CONFIG_MPC8XX_FEC) += mpc8xx_fec.o
+>>  obj-$(CONFIG_MT7620_ETH) += mt7620-eth.o
+>> diff --git a/drivers/net/mdio_mux_mmioreg.c b/drivers/net/mdio_mux_mmioreg.c
+>> new file mode 100644
+>> index 0000000000..e1a23e40a2
+>> --- /dev/null
+>> +++ b/drivers/net/mdio_mux_mmioreg.c
+>> @@ -0,0 +1,129 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * (C) Copyright 2021 BayLibre, SAS
+>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+>> + *
+>> + * Based on linux/drivers/net/phy/mdio-mux-mmioreg.c :
+>> + *   Copyright 2012 Freescale Semiconductor, Inc.
+>> + */
 >> +
->> +int designware_eth_mdio_write(struct udevice *mdio_dev, int addr, int devad, int reg, u16 val)
->> +{
->> +       struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
+>> +#include <dm.h>
+>> +#include <errno.h>
+>> +#include <log.h>
+>> +#include <miiphy.h>
+>> +#include <linux/io.h>
 >> +
->> +       return dw_mdio_write(pdata->mii_bus, addr, devad, reg, val);
->> +}
->> +
->> +#if CONFIG_IS_ENABLED(DM_GPIO)
->> +int designware_eth_mdio_reset(struct udevice *mdio_dev)
->> +{
->> +       struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
->> +
->> +       return dw_mdio_reset(pdata->mii_bus);
->> +}
->> +#endif
->> +
->> +static const struct mdio_ops designware_eth_mdio_ops = {
->> +       .read = designware_eth_mdio_read,
->> +       .write = designware_eth_mdio_write,
->> +#if CONFIG_IS_ENABLED(DM_GPIO)
->> +       .reset = designware_eth_mdio_reset,
->> +#endif
+>> +struct mdio_mux_mmioreg_priv {
+>> +       struct udevice *chip;
+>> +       phys_addr_t phys;
+>> +       unsigned int iosize;
+>> +       unsigned int mask;
 >> +};
 >> +
->> +static int designware_eth_mdio_probe(struct udevice *dev)
+>> +static int mdio_mux_mmioreg_select(struct udevice *mux, int cur, int sel)
 >> +{
->> +       /* Use the priv data of parent */
->> +       dev_set_priv(dev, dev_get_priv(dev->parent));
+>> +       struct mdio_mux_mmioreg_priv *priv = dev_get_priv(mux);
+>> +
+>> +       debug("%s: %x -> %x\n", __func__, (u32)cur, (u32)sel);
+>> +
+>> +       /* if last selection didn't change we're good to go */
+>> +       if (cur == sel)
+>> +               return 0;
+>> +
+>> +       switch (priv->iosize) {
+>> +       case sizeof(u8): {
+>> +               u8 x, y;
+>> +
+>> +               x = ioread8((void *)priv->phys);
+>> +               y = (x & ~priv->mask) | (u32)sel;
+>> +               if (x != y) {
+>> +                       iowrite8((x & ~priv->mask) | sel, (void *)priv->phys);
+>> +                       debug("%s: %02x -> %02x\n", __func__, x, y);
+>> +               }
+>> +
+>> +               break;
+>> +       }
+>> +       case sizeof(u16): {
+>> +               u16 x, y;
+>> +
+>> +               x = ioread16((void *)priv->phys);
+>> +               y = (x & ~priv->mask) | (u32)sel;
+>> +               if (x != y) {
+>> +                       iowrite16((x & ~priv->mask) | sel, (void *)priv->phys);
+>> +                       debug("%s: %04x -> %04x\n", __func__, x, y);
+>> +               }
+>> +
+>> +               break;
+>> +       }
+>> +       case sizeof(u32): {
+>> +               u32 x, y;
+>> +
+>> +               x = ioread32((void *)priv->phys);
+>> +               y = (x & ~priv->mask) | (u32)sel;
+>> +               if (x != y) {
+>> +                       iowrite32((x & ~priv->mask) | sel, (void *)priv->phys);
+>> +                       debug("%s: %08x -> %08x\n", __func__, x, y);
+>> +               }
+>> +
+>> +               break;
+>> +       }
+>> +       }
 >> +
 >> +       return 0;
 >> +}
 >> +
->> +U_BOOT_DRIVER(designware_eth_mdio) = {
->> +       .name = "eth_designware_mdio",
->> +       .id = UCLASS_MDIO,
->> +       .probe = designware_eth_mdio_probe,
->> +       .ops = &designware_eth_mdio_ops,
->> +       .plat_auto = sizeof(struct mdio_perdev_priv),
+>> +static const struct mdio_mux_ops mdio_mux_mmioreg_ops = {
+>> +       .select = mdio_mux_mmioreg_select,
 >> +};
->> +#endif
 >> +
->>  static int dw_mdio_init(const char *name, void *priv)
->>  {
->>         struct mii_dev *bus = mdio_alloc();
->> @@ -143,6 +194,34 @@ static int dw_mdio_init(const char *name, void *priv)
->>         return mdio_register(bus);
->>  }
->>
->> +#if IS_ENABLED(CONFIG_DM_MDIO)
->> +static int dw_dm_mdio_init(const char *name, void *priv)
+>> +static int mdio_mux_mmioreg_probe(struct udevice *dev)
 >> +{
->> +       struct udevice *dev = priv;
->> +       ofnode node;
->> +       int ret;
+>> +       struct mdio_mux_mmioreg_priv *priv = dev_get_priv(dev);
+>> +       phys_addr_t reg_base, reg_size;
+>> +       u32 reg_mask;
+>> +       int err;
 >> +
->> +       ofnode_for_each_subnode(node, dev_ofnode(dev)) {
->> +               const char *subnode_name = ofnode_get_name(node);
->> +               struct udevice *mdiodev;
+>> +       reg_base = ofnode_get_addr_size_index(dev_ofnode(dev), 0, &reg_size);
+>> +       if (reg_base == FDT_ADDR_T_NONE)
+>> +               return -EINVAL;
 >> +
->> +               if (strcmp(subnode_name, "mdio"))
->> +                       continue;
->> +
->> +               ret = device_bind_driver_to_node(dev, "eth_designware_mdio",
->> +                                                subnode_name, node, &mdiodev);
->> +               if (ret)
->> +                       debug("%s: not able to bind mdio device node\n", __func__);
->> +
->> +               return 0;
+>> +       if (reg_size != sizeof(u8) &&
+>> +           reg_size != sizeof(u16) &&
+>> +           reg_size != sizeof(u32)) {
+>> +               printf("%s: only 8/16/32-bit registers are supported\n", __func__);
+>> +               return -EINVAL;
 >> +       }
 >> +
->> +       printf("%s: mdio node is missing, registering legacy mdio bus", __func__);
+>> +       err = dev_read_u32(dev, "mux-mask", &reg_mask);
+>> +       if (err) {
+>> +               debug("%s: error reading mux-mask property\n", __func__);
+>> +               return err;
+>> +       }
 >> +
->> +       return dw_mdio_init(name, priv);
+>> +       if (reg_mask >= BIT(reg_size * 8)) {
+>> +               printf("%s: mask doesn't fix in register width\n", __func__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       priv->phys = reg_base;
+>> +       priv->iosize = reg_size;
+>> +       priv->mask = reg_mask;
+>> +
+>> +       debug("%s: %llx@%lld / %x\n", __func__, reg_base, reg_size, reg_mask);
+>> +
+>> +       return 0;
 >> +}
->> +#endif
 >> +
->>  static void tx_descs_init(struct dw_eth_dev *priv)
->>  {
->>         struct eth_dma_regs *dma_p = priv->dma_regs_p;
->> @@ -487,7 +566,14 @@ static int _dw_free_pkt(struct dw_eth_dev *priv)
->>  static int dw_phy_init(struct dw_eth_dev *priv, void *dev)
->>  {
->>         struct phy_device *phydev;
->> -       int phy_addr = -1, ret;
->> +       int ret;
+>> +static const struct udevice_id mdio_mux_mmioreg_ids[] = {
+>> +       { .compatible = "mdio-mux-mmioreg" },
+>> +       { }
+>> +};
 >> +
->> +#if IS_ENABLED(CONFIG_DM_MDIO) && IS_ENABLED(CONFIG_DM_ETH)
->> +       phydev = dm_eth_phy_connect(dev);
->> +       if (!phydev)
->> +               return -ENODEV;
->> +#else
->> +       int phy_addr = -1;
->>
->>  #ifdef CONFIG_PHY_ADDR
->>         phy_addr = CONFIG_PHY_ADDR;
->> @@ -496,6 +582,7 @@ static int dw_phy_init(struct dw_eth_dev *priv, void *dev)
->>         phydev = phy_connect(priv->bus, phy_addr, dev, priv->interface);
->>         if (!phydev)
->>                 return -ENODEV;
->> +#endif
->>
->>         phydev->supported &= PHY_GBIT_FEATURES;
->>         if (priv->max_speed) {
->> @@ -759,7 +846,11 @@ int designware_eth_probe(struct udevice *dev)
->>         priv->interface = pdata->phy_interface;
->>         priv->max_speed = pdata->max_speed;
->>
->> +#if IS_ENABLED(CONFIG_DM_MDIO)
->> +       ret = dw_dm_mdio_init(dev->name, dev);
->> +#else
->>         ret = dw_mdio_init(dev->name, dev);
->> +#endif
->>         if (ret) {
->>                 err = ret;
->>                 goto mdio_err;
+>> +U_BOOT_DRIVER(mdio_mux_mmioreg) = {
+>> +       .name           = "mdio_mux_mmioreg",
+>> +       .id             = UCLASS_MDIO_MUX,
+>> +       .of_match       = mdio_mux_mmioreg_ids,
+>> +       .probe          = mdio_mux_mmioreg_probe,
+>> +       .ops            = &mdio_mux_mmioreg_ops,
+>> +       .priv_auto      = sizeof(struct mdio_mux_mmioreg_priv),
+>> +};
 >> --
 >> 2.25.1
 >>
