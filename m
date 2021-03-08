@@ -1,30 +1,30 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web10.33358.1615196585201438217
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web10.33359.1615196591758251151
  for <u-boot-amlogic@groups.io>;
- Mon, 08 Mar 2021 01:43:05 -0800
-Received: by mail-wr1-f50.google.com with SMTP id d15so10708865wrv.5
-        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:43:04 -0800 (PST)
+ Mon, 08 Mar 2021 01:43:12 -0800
+Received: by mail-wr1-f48.google.com with SMTP id b18so10700164wrn.6
+        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:43:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ljHGHDKFJlI6EhCR5FU/nVpwBahowd/9jFHamCuiYio=;
-        b=X6LNIYNHZ5gMKMgP0ohGd1xn9B2AGgCSQdoSKxxaeqIjGk821rwCCifXiIoTSOzEm3
-         7Y376glljGQHUbFubNeiUMFFfK9RYFRD6mh44Xh6ofvF2+Vz7V1Cdq9jjIJXG9lashRP
-         wWkavjA2lmueKwC+ABB2B4TEsTD7b2ORLEuD+goxBSiBewBDbm3kSLH/eKp8v5ceToax
-         CR+72DIURVRgj+5LpbpnyCxXgTVFjp5SF1cEPjBOX5ZhiHuKUuwj3uu+e+0K4FTdSSTo
-         MB6rAY/rkcQqzcPullbin0TFaRkn4eYlNIZUN26/vdHFdewnHg78oHOEsHqFxodcOO2Z
-         JC7w==
+        bh=Xr/0yPbz/esfw37JxYp6ebjI0lkVlAmLBF5h6l90I8Q=;
+        b=as0WIl2diVwyGNeW0TC2nit0wkLxWpbwUL4r7EkRGUSTdHSno1BYooHlmV2YplQFLs
+         Jvt+jOf7i+dDVwgSiqTyeezhJ3JUfsLzPXBJqqqb8UgtJMxb8SKLwjNJZu69tU4WCutM
+         08pTSRjMFhnzlNhPX+z5q0/d6SW0VsqGEtbbYg7RdCG8lGkg6SVsRvtbA9f6q5QukzjB
+         LyiiuN9yNrRqBZUOqGRUmISpgrIDjZbLyQZhTdsg5J6J5yFlFG+irHACyiQFYUwJDin2
+         sSALt03vjv8J3cfFj+r26JVfs/zgFEf+wNL/J0jk5gvSMTwTAl8lUxD3sy+ZL31E1QtA
+         tRMA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] net: add Amlogic Meson G12A MDIO MUX driver
-References: <20210224163153.2678768-1-narmstrong@baylibre.com>
- <CAGi-RUJCfFTkzPqSjsigwLzw6O+st=Z8Pub1Ae803RfrFTx=Yg@mail.gmail.com>
+Subject: Re: [PATCH] net: designware: add DM_MDIO support
+References: <20210224140239.2617642-1-narmstrong@baylibre.com>
+ <CAGi-RULpnr=Sd0vDhfdTf5GuHibOh321q6CX2wojtnVtP0M44w@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <b2541c86-e70f-0b0d-ecea-fac15638f36b@baylibre.com>
-Date: Mon, 8 Mar 2021 10:43:01 +0100
+Message-ID: <e315ab3c-a290-79b5-259d-392fdcfa5c50@baylibre.com>
+Date: Mon, 8 Mar 2021 10:43:08 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAGi-RUJCfFTkzPqSjsigwLzw6O+st=Z8Pub1Ae803RfrFTx=Yg@mail.gmail.com>
+In-Reply-To: <CAGi-RULpnr=Sd0vDhfdTf5GuHibOh321q6CX2wojtnVtP0M44w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,204 +33,158 @@ Cc: Joe Hershberger <joe.hershberger@ni.com>, Tom Rini <trini@konsulko.com>, U-B
 List-ID: <u-boot-amlogic@groups.io>
 
 On 25/02/2021 20:34, Ramon Fried wrote:
-> On Wed, Feb 24, 2021 at 6:31 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On Wed, Feb 24, 2021 at 4:02 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> The Amlogic G12A & compatible SoCs embeds a mux to either communicate with
->> the external PHY or the internal 10/100 PHY.
->>
->> This adds support for this mux as a MDIO MUX device.
+>> Add support for DM_MDIO to connect to PHY and expose a MDIO device for the
+>> internal MDIO bus in order to dynamically connect to MDIO PHYs with DT
+>> with eventual MDIO muxes in between.
 >>
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 >> ---
->>  drivers/net/Kconfig               |   7 ++
->>  drivers/net/Makefile              |   1 +
->>  drivers/net/mdio_mux_meson_g12a.c | 149 ++++++++++++++++++++++++++++++
->>  3 files changed, 157 insertions(+)
->>  create mode 100644 drivers/net/mdio_mux_meson_g12a.c
+>>  drivers/net/designware.c | 93 +++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 92 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
->> index 41fa2fe566..e1d3b26687 100644
->> --- a/drivers/net/Kconfig
->> +++ b/drivers/net/Kconfig
->> @@ -797,4 +797,11 @@ config MDIO_MUX_MMIOREG
->>           This driver is used for MDIO muxes driven by writing to a register in
->>           the MMIO physical memory.
+>> diff --git a/drivers/net/designware.c b/drivers/net/designware.c
+>> index 9dba55adaa..acf3a82828 100644
+>> --- a/drivers/net/designware.c
+>> +++ b/drivers/net/designware.c
+>> @@ -21,7 +21,9 @@
+>>  #include <reset.h>
+>>  #include <asm/cache.h>
+>>  #include <dm/device_compat.h>
+>> +#include <dm/device-internal.h>
+>>  #include <dm/devres.h>
+>> +#include <dm/lists.h>
+>>  #include <linux/compiler.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/err.h>
+>> @@ -122,6 +124,55 @@ static int dw_mdio_reset(struct mii_dev *bus)
+>>  }
+>>  #endif
 >>
->> +config MDIO_MUX_MESON_G12A
->> +       bool "MDIO MUX for Amlogic Meson G12A SoCs"
->> +       depends on DM_MDIO_MUX
->> +       help
->> +         This driver is used for the MDIO mux found on the Amlogic G12A & compatible
->> +         SoCs.
+>> +#if IS_ENABLED(CONFIG_DM_MDIO)
+>> +int designware_eth_mdio_read(struct udevice *mdio_dev, int addr, int devad, int reg)
+>> +{
+>> +       struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
 >> +
->>  endif # NETDEVICES
->> diff --git a/drivers/net/Makefile b/drivers/net/Makefile
->> index 511c87c3a5..070ae7662c 100644
->> --- a/drivers/net/Makefile
->> +++ b/drivers/net/Makefile
->> @@ -43,6 +43,7 @@ obj-$(CONFIG_MACB) += macb.o
->>  obj-$(CONFIG_MCFFEC) += mcffec.o mcfmii.o
->>  obj-$(CONFIG_MDIO_IPQ4019) += mdio-ipq4019.o
->>  obj-$(CONFIG_MDIO_MUX_I2CREG) += mdio_mux_i2creg.o
->> +obj-$(CONFIG_MDIO_MUX_MESON_G12A) += mdio_mux_meson_g12a.o
->>  obj-$(CONFIG_MDIO_MUX_MMIOREG) += mdio_mux_mmioreg.o
->>  obj-$(CONFIG_MDIO_MUX_SANDBOX) += mdio_mux_sandbox.o
->>  obj-$(CONFIG_MPC8XX_FEC) += mpc8xx_fec.o
->> diff --git a/drivers/net/mdio_mux_meson_g12a.c b/drivers/net/mdio_mux_meson_g12a.c
->> new file mode 100644
->> index 0000000000..b520bf98f0
->> --- /dev/null
->> +++ b/drivers/net/mdio_mux_meson_g12a.c
->> @@ -0,0 +1,149 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * (C) Copyright 2021 BayLibre, SAS
->> + * Author: Neil Armstrong <narmstrong@baylibre.com>
->> + */
+>> +       return dw_mdio_read(pdata->mii_bus, addr, devad, reg);
+>> +}
 >> +
->> +#include <dm.h>
->> +#include <errno.h>
->> +#include <log.h>
->> +#include <miiphy.h>
->> +#include <asm/io.h>
->> +#include <linux/bitfield.h>
+>> +int designware_eth_mdio_write(struct udevice *mdio_dev, int addr, int devad, int reg, u16 val)
+>> +{
+>> +       struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
 >> +
->> +#define ETH_PLL_STS            0x40
->> +#define ETH_PLL_CTL0           0x44
->> +#define  PLL_CTL0_LOCK_DIG     BIT(30)
->> +#define  PLL_CTL0_RST          BIT(29)
->> +#define  PLL_CTL0_EN           BIT(28)
->> +#define  PLL_CTL0_SEL          BIT(23)
->> +#define  PLL_CTL0_N            GENMASK(14, 10)
->> +#define  PLL_CTL0_M            GENMASK(8, 0)
->> +#define  PLL_LOCK_TIMEOUT      1000000
->> +#define  PLL_MUX_NUM_PARENT    2
->> +#define ETH_PLL_CTL1           0x48
->> +#define ETH_PLL_CTL2           0x4c
->> +#define ETH_PLL_CTL3           0x50
->> +#define ETH_PLL_CTL4           0x54
->> +#define ETH_PLL_CTL5           0x58
->> +#define ETH_PLL_CTL6           0x5c
->> +#define ETH_PLL_CTL7           0x60
+>> +       return dw_mdio_write(pdata->mii_bus, addr, devad, reg, val);
+>> +}
 >> +
->> +#define ETH_PHY_CNTL0          0x80
->> +#define   EPHY_G12A_ID         0x33010180
->> +#define ETH_PHY_CNTL1          0x84
->> +#define  PHY_CNTL1_ST_MODE     GENMASK(2, 0)
->> +#define  PHY_CNTL1_ST_PHYADD   GENMASK(7, 3)
->> +#define   EPHY_DFLT_ADD                8
->> +#define  PHY_CNTL1_MII_MODE    GENMASK(15, 14)
->> +#define   EPHY_MODE_RMII       0x1
->> +#define  PHY_CNTL1_CLK_EN      BIT(16)
->> +#define  PHY_CNTL1_CLKFREQ     BIT(17)
->> +#define  PHY_CNTL1_PHY_ENB     BIT(18)
->> +#define ETH_PHY_CNTL2          0x88
->> +#define  PHY_CNTL2_USE_INTERNAL        BIT(5)
->> +#define  PHY_CNTL2_SMI_SRC_MAC BIT(6)
->> +#define  PHY_CNTL2_RX_CLK_EPHY BIT(9)
+>> +#if CONFIG_IS_ENABLED(DM_GPIO)
+>> +int designware_eth_mdio_reset(struct udevice *mdio_dev)
+>> +{
+>> +       struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
 >> +
->> +#define MESON_G12A_MDIO_EXTERNAL_ID 0
->> +#define MESON_G12A_MDIO_INTERNAL_ID 1
+>> +       return dw_mdio_reset(pdata->mii_bus);
+>> +}
+>> +#endif
 >> +
->> +struct mdio_mux_meson_g12a_priv {
->> +       struct udevice *chip;
->> +       phys_addr_t phys;
+>> +static const struct mdio_ops designware_eth_mdio_ops = {
+>> +       .read = designware_eth_mdio_read,
+>> +       .write = designware_eth_mdio_write,
+>> +#if CONFIG_IS_ENABLED(DM_GPIO)
+>> +       .reset = designware_eth_mdio_reset,
+>> +#endif
 >> +};
 >> +
->> +static int meson_g12a_ephy_pll_init(struct mdio_mux_meson_g12a_priv *priv)
+>> +static int designware_eth_mdio_probe(struct udevice *dev)
 >> +{
->> +       /* Fire up the PHY PLL */
->> +       writel(0x29c0040a, priv->phys + ETH_PLL_CTL0);
->> +       writel(0x927e0000, priv->phys + ETH_PLL_CTL1);
->> +       writel(0xac5f49e5, priv->phys + ETH_PLL_CTL2);
->> +       writel(0x00000000, priv->phys + ETH_PLL_CTL3);
->> +       writel(0x00000000, priv->phys + ETH_PLL_CTL4);
->> +       writel(0x20200000, priv->phys + ETH_PLL_CTL5);
->> +       writel(0x0000c002, priv->phys + ETH_PLL_CTL6);
->> +       writel(0x00000023, priv->phys + ETH_PLL_CTL7);
->> +       writel(0x39c0040a, priv->phys + ETH_PLL_CTL0);
->> +       writel(0x19c0040a, priv->phys + ETH_PLL_CTL0);
+>> +       /* Use the priv data of parent */
+>> +       dev_set_priv(dev, dev_get_priv(dev->parent));
 >> +
 >> +       return 0;
 >> +}
 >> +
->> +static int meson_g12a_enable_internal_mdio(struct mdio_mux_meson_g12a_priv *priv)
+>> +U_BOOT_DRIVER(designware_eth_mdio) = {
+>> +       .name = "eth_designware_mdio",
+>> +       .id = UCLASS_MDIO,
+>> +       .probe = designware_eth_mdio_probe,
+>> +       .ops = &designware_eth_mdio_ops,
+>> +       .plat_auto = sizeof(struct mdio_perdev_priv),
+>> +};
+>> +#endif
+>> +
+>>  static int dw_mdio_init(const char *name, void *priv)
+>>  {
+>>         struct mii_dev *bus = mdio_alloc();
+>> @@ -143,6 +194,34 @@ static int dw_mdio_init(const char *name, void *priv)
+>>         return mdio_register(bus);
+>>  }
+>>
+>> +#if IS_ENABLED(CONFIG_DM_MDIO)
+>> +static int dw_dm_mdio_init(const char *name, void *priv)
 >> +{
->> +       /* Initialize ephy control */
->> +       writel(EPHY_G12A_ID, priv->phys + ETH_PHY_CNTL0);
->> +       writel(FIELD_PREP(PHY_CNTL1_ST_MODE, 3) |
->> +              FIELD_PREP(PHY_CNTL1_ST_PHYADD, EPHY_DFLT_ADD) |
->> +              FIELD_PREP(PHY_CNTL1_MII_MODE, EPHY_MODE_RMII) |
->> +              PHY_CNTL1_CLK_EN |
->> +              PHY_CNTL1_CLKFREQ |
->> +              PHY_CNTL1_PHY_ENB,
->> +              priv->phys + ETH_PHY_CNTL1);
->> +       writel(PHY_CNTL2_USE_INTERNAL |
->> +              PHY_CNTL2_SMI_SRC_MAC |
->> +              PHY_CNTL2_RX_CLK_EPHY,
->> +              priv->phys + ETH_PHY_CNTL2);
+>> +       struct udevice *dev = priv;
+>> +       ofnode node;
+>> +       int ret;
 >> +
->> +       return 0;
->> +}
+>> +       ofnode_for_each_subnode(node, dev_ofnode(dev)) {
+>> +               const char *subnode_name = ofnode_get_name(node);
+>> +               struct udevice *mdiodev;
 >> +
->> +static int meson_g12a_enable_external_mdio(struct mdio_mux_meson_g12a_priv *priv)
->> +{
->> +       /* Reset the mdio bus mux */
->> +       writel(0x0, priv->phys + ETH_PHY_CNTL2);
+>> +               if (strcmp(subnode_name, "mdio"))
+>> +                       continue;
 >> +
->> +       return 0;
->> +}
+>> +               ret = device_bind_driver_to_node(dev, "eth_designware_mdio",
+>> +                                                subnode_name, node, &mdiodev);
+>> +               if (ret)
+>> +                       debug("%s: not able to bind mdio device node\n", __func__);
 >> +
->> +static int mdio_mux_meson_g12a_select(struct udevice *mux, int cur, int sel)
->> +{
->> +       struct mdio_mux_meson_g12a_priv *priv = dev_get_priv(mux);
->> +
->> +       debug("%s: %x -> %x\n", __func__, (u32)cur, (u32)sel);
->> +
->> +       /* if last selection didn't change we're good to go */
->> +       if (cur == sel)
 >> +               return 0;
->> +
->> +       switch (sel) {
->> +       case MESON_G12A_MDIO_EXTERNAL_ID:
->> +               return meson_g12a_enable_external_mdio(priv);
->> +       case MESON_G12A_MDIO_INTERNAL_ID:
->> +               return meson_g12a_enable_internal_mdio(priv);
->> +       default:
->> +               return -EINVAL;
 >> +       }
 >> +
->> +       return 0;
+>> +       printf("%s: mdio node is missing, registering legacy mdio bus", __func__);
+>> +
+>> +       return dw_mdio_init(name, priv);
 >> +}
+>> +#endif
 >> +
->> +static const struct mdio_mux_ops mdio_mux_meson_g12a_ops = {
->> +       .select = mdio_mux_meson_g12a_select,
->> +};
+>>  static void tx_descs_init(struct dw_eth_dev *priv)
+>>  {
+>>         struct eth_dma_regs *dma_p = priv->dma_regs_p;
+>> @@ -487,7 +566,14 @@ static int _dw_free_pkt(struct dw_eth_dev *priv)
+>>  static int dw_phy_init(struct dw_eth_dev *priv, void *dev)
+>>  {
+>>         struct phy_device *phydev;
+>> -       int phy_addr = -1, ret;
+>> +       int ret;
 >> +
->> +static int mdio_mux_meson_g12a_probe(struct udevice *dev)
->> +{
->> +       struct mdio_mux_meson_g12a_priv *priv = dev_get_priv(dev);
->> +
->> +       priv->phys = dev_read_addr(dev);
->> +
->> +       meson_g12a_ephy_pll_init(priv);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct udevice_id mdio_mux_meson_g12a_ids[] = {
->> +       { .compatible = "amlogic,g12a-mdio-mux" },
->> +       { }
->> +};
->> +
->> +U_BOOT_DRIVER(mdio_mux_meson_g12a) = {
->> +       .name           = "mdio_mux_meson_g12a",
->> +       .id             = UCLASS_MDIO_MUX,
->> +       .of_match       = mdio_mux_meson_g12a_ids,
->> +       .probe          = mdio_mux_meson_g12a_probe,
->> +       .ops            = &mdio_mux_meson_g12a_ops,
->> +       .priv_auto      = sizeof(struct mdio_mux_meson_g12a_priv),
->> +};
+>> +#if IS_ENABLED(CONFIG_DM_MDIO) && IS_ENABLED(CONFIG_DM_ETH)
+>> +       phydev = dm_eth_phy_connect(dev);
+>> +       if (!phydev)
+>> +               return -ENODEV;
+>> +#else
+>> +       int phy_addr = -1;
+>>
+>>  #ifdef CONFIG_PHY_ADDR
+>>         phy_addr = CONFIG_PHY_ADDR;
+>> @@ -496,6 +582,7 @@ static int dw_phy_init(struct dw_eth_dev *priv, void *dev)
+>>         phydev = phy_connect(priv->bus, phy_addr, dev, priv->interface);
+>>         if (!phydev)
+>>                 return -ENODEV;
+>> +#endif
+>>
+>>         phydev->supported &= PHY_GBIT_FEATURES;
+>>         if (priv->max_speed) {
+>> @@ -759,7 +846,11 @@ int designware_eth_probe(struct udevice *dev)
+>>         priv->interface = pdata->phy_interface;
+>>         priv->max_speed = pdata->max_speed;
+>>
+>> +#if IS_ENABLED(CONFIG_DM_MDIO)
+>> +       ret = dw_dm_mdio_init(dev->name, dev);
+>> +#else
+>>         ret = dw_mdio_init(dev->name, dev);
+>> +#endif
+>>         if (ret) {
+>>                 err = ret;
+>>                 goto mdio_err;
 >> --
 >> 2.25.1
 >>
