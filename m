@@ -1,111 +1,99 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web08.33853.1615196628706030182
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.33365.1615196665100095671
  for <u-boot-amlogic@groups.io>;
- Mon, 08 Mar 2021 01:43:49 -0800
-Received: by mail-wr1-f46.google.com with SMTP id 7so10729665wrz.0
-        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:43:48 -0800 (PST)
+ Mon, 08 Mar 2021 01:44:25 -0800
+Received: by mail-wm1-f49.google.com with SMTP id e23so5631815wmh.3
+        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:44:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ydzx+HlMTP2VowxE4Rk5kCzprXBVckpcqv7qY1weRMk=;
-        b=HyaIkzVr05wbhxGeTsbRyv+//Bf0DIh4CmBgrP6IQC3WNoDrpGZmT75zgRi9XNoI6L
-         B6eCK86BUwRNnUF7Jy1X3tBHxFUJSyI4oKSQgk86LCjdB5/phoIJuylmTej01mMvnsBe
-         i2pZoH1tFWQOPPdhsmkIcJH7/uhc9tqx03D2IwI6ANsDNjw9B5pcBz2N+wPcv/2QudXh
-         WLjwfZl3nCWcUnUGX9Ddby6UGdEo9qfnUH+3KK8Ltuqo9bmhqG/9AGybe5OgmL8zgQkA
-         QFo4pluHSLjTamFAIkOZJ6IQCGjJU/T+fkFCEoxVFQNBfjm4rmhg4lhGhtf1fgzre72n
-         fyVg==
+        bh=mYDMkvcqb26xp43QzZGV5X8OPS7S79y+1kCfiLWdVdc=;
+        b=2GFpSF0Oj53MeJIBr0YY1dsByCaVW7Iy3Ac6sysxbfTI3CsTfk3i5VFONRgg2DCfqB
+         V+u9xAH3768NKKEKIx80fyIQdlPEoQR6lvM4jRbsYQAebUS7uJocJo6XNczsq9NdleM9
+         fWzF4l8q2bI0JSLnonSEIClW/u52gNFt/8JczRzu4aUh+Rp9D7X6vnbxdcisuUskqn8A
+         HDHHRV+jULZVyvsAF2UpkNOtDeV3QwzWViILz9nNltqW8gHOKN5bQ6JeV3Guj+H/o4NX
+         tgfRdGSmjSbXl+BDZoY2/ipRHtlxAeIEpPjCsI790zjSWpxbB8AHEPpaGMH6dKYsEy7t
+         6aog==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [RFC/RFT 0/7] arm: meson: static ethernet init cleanup
-References: <20210225084438.2964558-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH] button: adc: fix treshold typo
+References: <CGME20210223151049eucas1p2f45c23f278c93b83e1a0812e4370b090@eucas1p2.samsung.com>
+ <20210223151040.2201981-1-narmstrong@baylibre.com>
+ <2073014a-cdb9-9848-8a39-b02446f0a2ce@samsung.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <b656a51b-83c9-a0f1-bcab-eda1cc1f3091@baylibre.com>
-Date: Mon, 8 Mar 2021 10:43:45 +0100
+Message-ID: <41a4b1f3-916e-c00f-53f8-f512ea1f941f@baylibre.com>
+Date: Mon, 8 Mar 2021 10:44:21 +0100
 MIME-Version: 1.0
-In-Reply-To: <20210225084438.2964558-1-narmstrong@baylibre.com>
+In-Reply-To: <2073014a-cdb9-9848-8a39-b02446f0a2ce@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, christianshewitt@gmail.com, b.galvani@gmail.com
+To: Marek Szyprowski <m.szyprowski@samsung.com>, trini@konsulko.com
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 25/02/2021 09:44, Neil Armstrong wrote:
-> This serie finally removes the static ethernet link setup, MDIO mux & memory
-> power domain after introduction of :
->  - "net: add MMIO Register MDIO MUX driver" at [1]
->  - "net: designware: add DM_MDIO support" at [2]
->  - "net: add Amlogic Meson G12A MDIO MUX driver" at [3]
->  - "net: designware: add Amlogic Meson8b & later glue driver" at [4]
+On 23/02/2021 19:18, Marek Szyprowski wrote:
+> On 23.02.2021 16:10, Neil Armstrong wrote:
+>> Fix the treshold typo in code by threshold.
+>>
+>> Fixes: c0165c85c3 ("button: add a simple Analog to Digital Converter device based button driver")
+>> Suggested-by: Tom Rini <trini@konsulko.com>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>   drivers/button/button-adc.c | 14 +++++++-------
+>>   1 file changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/button/button-adc.c b/drivers/button/button-adc.c
+>> index eed86564fb..fd896c76f9 100644
+>> --- a/drivers/button/button-adc.c
+>> +++ b/drivers/button/button-adc.c
+>> @@ -55,7 +55,7 @@ static int button_adc_of_to_plat(struct udevice *dev)
+>>   	struct button_uc_plat *uc_plat = dev_get_uclass_plat(dev);
+>>   	struct button_adc_priv *priv = dev_get_priv(dev);
+>>   	struct ofnode_phandle_args args;
+>> -	u32 treshold, up_treshold, t;
+>> +	u32 threshold, up_threshold, t;
+>>   	ofnode node;
+>>   	int ret;
+>>   
+>> @@ -73,12 +73,12 @@ static int button_adc_of_to_plat(struct udevice *dev)
+>>   		return ret;
+>>   
+>>   	ret = ofnode_read_u32(dev_ofnode(dev->parent),
+>> -			      "keyup-threshold-microvolt", &up_treshold);
+>> +			      "keyup-threshold-microvolt", &up_threshold);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>>   	ret = ofnode_read_u32(dev_ofnode(dev), "press-threshold-microvolt",
+>> -			      &treshold);
+>> +			      &threshold);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> @@ -87,13 +87,13 @@ static int button_adc_of_to_plat(struct udevice *dev)
+>>   		if (ret)
+>>   			return ret;
+>>   
+>> -		if (t > treshold)
+>> -			up_treshold = t;
+>> +		if (t > threshold)
+>> +			up_threshold = t;
+>>   	}
+>>   
+>>   	priv->channel = args.args[0];
+>> -	priv->min = treshold;
+>> -	priv->max = up_treshold;
+>> +	priv->min = threshold;
+>> +	priv->max = up_threshold;
+>>   
+>>   	return ret;
+>>   }
 > 
-> These patches makes all this happen automagically thanks to DM_MDIO introduced
-> last year.
-> 
-> This has been tested on libretech-ac and Khadas VIM3 to check to most opposite
-> setups, but the GXBB boards hasn't been tested.
-> 
-> Note, you'll need [1], [2], [3], [4] applied before these patches
-> 
-> [1] https://patchwork.ozlabs.org/project/uboot/patch/20210224140223.2617536-1-narmstrong@baylibre.com/
-> [2] https://patchwork.ozlabs.org/project/uboot/patch/20210224140239.2617642-1-narmstrong@baylibre.com/
-> [3] https://patchwork.ozlabs.org/project/uboot/patch/20210224163153.2678768-1-narmstrong@baylibre.com/
-> [4] https://patchwork.ozlabs.org/project/uboot/patch/20210224193356.2948805-1-narmstrong@baylibre.com/
-> 
-> Neil Armstrong (7):
->   configs: update Amlogic Meson GXL & GXM config for MDIO MUX
->   configs: update Amlogic Meson G12A, G12B & SM1 configs for MDIO MUX
->   arm: meson: remove static MDIO mux handling
->   configs: meson: use Designware glue driver for Amlogic Meson8b & later
->     SoCs
->   net: designware: remove amlogic compatibles
->   arm: meson: remove static ethernet memory power domain enable
->   arm: meson: remove static ethernet link setup
-> 
->  arch/arm/include/asm/arch-meson/axg.h       | 22 -------
->  arch/arm/include/asm/arch-meson/eth.h       | 12 ----
->  arch/arm/include/asm/arch-meson/g12a.h      | 35 -----------
->  arch/arm/include/asm/arch-meson/gx.h        | 20 ------
->  arch/arm/mach-meson/board-axg.c             | 34 -----------
->  arch/arm/mach-meson/board-g12a.c            | 67 ---------------------
->  arch/arm/mach-meson/board-gx.c              | 48 ---------------
->  board/amlogic/beelink-s922x/beelink-s922x.c |  2 -
->  board/amlogic/odroid-n2/odroid-n2.c         |  2 -
->  board/amlogic/p200/p200.c                   |  2 -
->  board/amlogic/p201/p201.c                   |  2 -
->  board/amlogic/p212/p212.c                   |  3 -
->  board/amlogic/q200/q200.c                   |  2 -
->  board/amlogic/s400/s400.c                   |  2 -
->  board/amlogic/sei510/sei510.c               |  3 -
->  board/amlogic/sei610/sei610.c               |  3 -
->  board/amlogic/u200/u200.c                   |  3 +-
->  board/amlogic/vim3/vim3.c                   |  2 -
->  board/amlogic/w400/w400.c                   |  2 +-
->  configs/beelink-gtking_defconfig            |  5 +-
->  configs/beelink-gtkingpro_defconfig         |  5 +-
->  configs/khadas-vim2_defconfig               |  5 +-
->  configs/khadas-vim3_defconfig               |  5 +-
->  configs/khadas-vim3l_defconfig              |  5 +-
->  configs/khadas-vim_defconfig                |  7 ++-
->  configs/libretech-ac_defconfig              |  7 ++-
->  configs/libretech-cc_defconfig              |  7 ++-
->  configs/libretech-cc_v2_defconfig           |  7 ++-
->  configs/libretech-s905d-pc_defconfig        |  5 +-
->  configs/libretech-s912-pc_defconfig         |  5 +-
->  configs/nanopi-k2_defconfig                 |  2 +-
->  configs/odroid-c2_defconfig                 |  2 +-
->  configs/odroid-c4_defconfig                 |  5 +-
->  configs/odroid-n2_defconfig                 |  5 +-
->  configs/p200_defconfig                      |  2 +-
->  configs/p201_defconfig                      |  2 +-
->  configs/p212_defconfig                      |  7 ++-
->  configs/s400_defconfig                      |  2 +-
->  configs/sei510_defconfig                    |  7 ++-
->  configs/sei610_defconfig                    |  7 ++-
->  configs/u200_defconfig                      |  7 ++-
->  configs/wetek-core2_defconfig               |  5 +-
->  drivers/net/designware.c                    |  3 -
->  43 files changed, 79 insertions(+), 306 deletions(-)
+> Best regards
 > 
 
-Applied to u-boot-amlogic-next
+
+Applied to u-boot-amlogic
