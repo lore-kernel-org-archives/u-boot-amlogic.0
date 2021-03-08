@@ -1,219 +1,111 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web09.33641.1615196598278240303
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web08.33853.1615196628706030182
  for <u-boot-amlogic@groups.io>;
- Mon, 08 Mar 2021 01:43:18 -0800
-Received: by mail-wr1-f45.google.com with SMTP id f12so10683768wrx.8
-        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:43:17 -0800 (PST)
+ Mon, 08 Mar 2021 01:43:49 -0800
+Received: by mail-wr1-f46.google.com with SMTP id 7so10729665wrz.0
+        for <u-boot-amlogic@groups.io>; Mon, 08 Mar 2021 01:43:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=jS5QYrR7cni6ws0lFaUjtUmhdgwQkel5cljEjt3SQwc=;
-        b=BEErFYSUwNeCVIaNid81k59O77827gotZjy811VqEzHsp+qLKUTYP81+9Fwe5cvC4I
-         9OnC5NJ3TjHxU4lcNdD0IjjUG7mMwVkyzrwbEjb/Rd/tldZwJsct4UjEv35YU+nD3isB
-         UQKw1IXvd/iMrJHg6ErOZc0jbHa+jeAB3/woB757Ua04qh/QEVjHGDAbuRq3aCMtxmGy
-         saZnmeA0jh1W0FeJdEZCMOyzV3ADTsn6zxaJT0HFN6p65BmUkF+CQilayi6Tb40xsUuA
-         xQBp9zQvL6DN1VbA0KTv8SnJp86aX8mh2dtUYUFoS0PEFe529kKXmWcgb9KMow3betDB
-         X8zg==
+        bh=ydzx+HlMTP2VowxE4Rk5kCzprXBVckpcqv7qY1weRMk=;
+        b=HyaIkzVr05wbhxGeTsbRyv+//Bf0DIh4CmBgrP6IQC3WNoDrpGZmT75zgRi9XNoI6L
+         B6eCK86BUwRNnUF7Jy1X3tBHxFUJSyI4oKSQgk86LCjdB5/phoIJuylmTej01mMvnsBe
+         i2pZoH1tFWQOPPdhsmkIcJH7/uhc9tqx03D2IwI6ANsDNjw9B5pcBz2N+wPcv/2QudXh
+         WLjwfZl3nCWcUnUGX9Ddby6UGdEo9qfnUH+3KK8Ltuqo9bmhqG/9AGybe5OgmL8zgQkA
+         QFo4pluHSLjTamFAIkOZJ6IQCGjJU/T+fkFCEoxVFQNBfjm4rmhg4lhGhtf1fgzre72n
+         fyVg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] net: add MMIO Register MDIO MUX driver
-References: <20210224140223.2617536-1-narmstrong@baylibre.com>
- <CAGi-RUKneXusE5JUyEa0U=nsKyeCk77TL6mvNpzrtK6V6-K-0Q@mail.gmail.com>
+Subject: Re: [RFC/RFT 0/7] arm: meson: static ethernet init cleanup
+References: <20210225084438.2964558-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <3b549c76-c7ee-2ea3-2c25-f3992203bf18@baylibre.com>
-Date: Mon, 8 Mar 2021 10:43:14 +0100
+Message-ID: <b656a51b-83c9-a0f1-bcab-eda1cc1f3091@baylibre.com>
+Date: Mon, 8 Mar 2021 10:43:45 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAGi-RUKneXusE5JUyEa0U=nsKyeCk77TL6mvNpzrtK6V6-K-0Q@mail.gmail.com>
+In-Reply-To: <20210225084438.2964558-1-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Ramon Fried <rfried.dev@gmail.com>
-Cc: Joe Hershberger <joe.hershberger@ni.com>, Tom Rini <trini@konsulko.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, christianshewitt@gmail.com, b.galvani@gmail.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On 25/02/2021 20:36, Ramon Fried wrote:
-> On Wed, Feb 24, 2021 at 4:02 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Add support for MMIO register MDIO muxes based on the Linux mdio-mux-mmioreg driver.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  drivers/net/Kconfig            |   7 ++
->>  drivers/net/Makefile           |   1 +
->>  drivers/net/mdio_mux_mmioreg.c | 129 +++++++++++++++++++++++++++++++++
->>  3 files changed, 137 insertions(+)
->>  create mode 100644 drivers/net/mdio_mux_mmioreg.c
->>
->> diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
->> index 0e84c22b50..41fa2fe566 100644
->> --- a/drivers/net/Kconfig
->> +++ b/drivers/net/Kconfig
->> @@ -790,4 +790,11 @@ config FSL_LS_MDIO
->>           This driver supports the MDIO bus found on the Fman 10G Ethernet MACs and
->>           on the mEMAC (which supports both Clauses 22 and 45).
->>
->> +config MDIO_MUX_MMIOREG
->> +       bool "MDIO MUX accessed as a MMIO register access"
->> +       depends on DM_MDIO_MUX
->> +       help
->> +         This driver is used for MDIO muxes driven by writing to a register in
->> +         the MMIO physical memory.
->> +
->>  endif # NETDEVICES
->> diff --git a/drivers/net/Makefile b/drivers/net/Makefile
->> index a19511aaa7..511c87c3a5 100644
->> --- a/drivers/net/Makefile
->> +++ b/drivers/net/Makefile
->> @@ -43,6 +43,7 @@ obj-$(CONFIG_MACB) += macb.o
->>  obj-$(CONFIG_MCFFEC) += mcffec.o mcfmii.o
->>  obj-$(CONFIG_MDIO_IPQ4019) += mdio-ipq4019.o
->>  obj-$(CONFIG_MDIO_MUX_I2CREG) += mdio_mux_i2creg.o
->> +obj-$(CONFIG_MDIO_MUX_MMIOREG) += mdio_mux_mmioreg.o
->>  obj-$(CONFIG_MDIO_MUX_SANDBOX) += mdio_mux_sandbox.o
->>  obj-$(CONFIG_MPC8XX_FEC) += mpc8xx_fec.o
->>  obj-$(CONFIG_MT7620_ETH) += mt7620-eth.o
->> diff --git a/drivers/net/mdio_mux_mmioreg.c b/drivers/net/mdio_mux_mmioreg.c
->> new file mode 100644
->> index 0000000000..e1a23e40a2
->> --- /dev/null
->> +++ b/drivers/net/mdio_mux_mmioreg.c
->> @@ -0,0 +1,129 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * (C) Copyright 2021 BayLibre, SAS
->> + * Author: Neil Armstrong <narmstrong@baylibre.com>
->> + *
->> + * Based on linux/drivers/net/phy/mdio-mux-mmioreg.c :
->> + *   Copyright 2012 Freescale Semiconductor, Inc.
->> + */
->> +
->> +#include <dm.h>
->> +#include <errno.h>
->> +#include <log.h>
->> +#include <miiphy.h>
->> +#include <linux/io.h>
->> +
->> +struct mdio_mux_mmioreg_priv {
->> +       struct udevice *chip;
->> +       phys_addr_t phys;
->> +       unsigned int iosize;
->> +       unsigned int mask;
->> +};
->> +
->> +static int mdio_mux_mmioreg_select(struct udevice *mux, int cur, int sel)
->> +{
->> +       struct mdio_mux_mmioreg_priv *priv = dev_get_priv(mux);
->> +
->> +       debug("%s: %x -> %x\n", __func__, (u32)cur, (u32)sel);
->> +
->> +       /* if last selection didn't change we're good to go */
->> +       if (cur == sel)
->> +               return 0;
->> +
->> +       switch (priv->iosize) {
->> +       case sizeof(u8): {
->> +               u8 x, y;
->> +
->> +               x = ioread8((void *)priv->phys);
->> +               y = (x & ~priv->mask) | (u32)sel;
->> +               if (x != y) {
->> +                       iowrite8((x & ~priv->mask) | sel, (void *)priv->phys);
->> +                       debug("%s: %02x -> %02x\n", __func__, x, y);
->> +               }
->> +
->> +               break;
->> +       }
->> +       case sizeof(u16): {
->> +               u16 x, y;
->> +
->> +               x = ioread16((void *)priv->phys);
->> +               y = (x & ~priv->mask) | (u32)sel;
->> +               if (x != y) {
->> +                       iowrite16((x & ~priv->mask) | sel, (void *)priv->phys);
->> +                       debug("%s: %04x -> %04x\n", __func__, x, y);
->> +               }
->> +
->> +               break;
->> +       }
->> +       case sizeof(u32): {
->> +               u32 x, y;
->> +
->> +               x = ioread32((void *)priv->phys);
->> +               y = (x & ~priv->mask) | (u32)sel;
->> +               if (x != y) {
->> +                       iowrite32((x & ~priv->mask) | sel, (void *)priv->phys);
->> +                       debug("%s: %08x -> %08x\n", __func__, x, y);
->> +               }
->> +
->> +               break;
->> +       }
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct mdio_mux_ops mdio_mux_mmioreg_ops = {
->> +       .select = mdio_mux_mmioreg_select,
->> +};
->> +
->> +static int mdio_mux_mmioreg_probe(struct udevice *dev)
->> +{
->> +       struct mdio_mux_mmioreg_priv *priv = dev_get_priv(dev);
->> +       phys_addr_t reg_base, reg_size;
->> +       u32 reg_mask;
->> +       int err;
->> +
->> +       reg_base = ofnode_get_addr_size_index(dev_ofnode(dev), 0, &reg_size);
->> +       if (reg_base == FDT_ADDR_T_NONE)
->> +               return -EINVAL;
->> +
->> +       if (reg_size != sizeof(u8) &&
->> +           reg_size != sizeof(u16) &&
->> +           reg_size != sizeof(u32)) {
->> +               printf("%s: only 8/16/32-bit registers are supported\n", __func__);
->> +               return -EINVAL;
->> +       }
->> +
->> +       err = dev_read_u32(dev, "mux-mask", &reg_mask);
->> +       if (err) {
->> +               debug("%s: error reading mux-mask property\n", __func__);
->> +               return err;
->> +       }
->> +
->> +       if (reg_mask >= BIT(reg_size * 8)) {
->> +               printf("%s: mask doesn't fix in register width\n", __func__);
->> +               return -EINVAL;
->> +       }
->> +
->> +       priv->phys = reg_base;
->> +       priv->iosize = reg_size;
->> +       priv->mask = reg_mask;
->> +
->> +       debug("%s: %llx@%lld / %x\n", __func__, reg_base, reg_size, reg_mask);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct udevice_id mdio_mux_mmioreg_ids[] = {
->> +       { .compatible = "mdio-mux-mmioreg" },
->> +       { }
->> +};
->> +
->> +U_BOOT_DRIVER(mdio_mux_mmioreg) = {
->> +       .name           = "mdio_mux_mmioreg",
->> +       .id             = UCLASS_MDIO_MUX,
->> +       .of_match       = mdio_mux_mmioreg_ids,
->> +       .probe          = mdio_mux_mmioreg_probe,
->> +       .ops            = &mdio_mux_mmioreg_ops,
->> +       .priv_auto      = sizeof(struct mdio_mux_mmioreg_priv),
->> +};
->> --
->> 2.25.1
->>
-> Reviewed-by: Ramon Fried <rfried.dev@gmail.com>
+On 25/02/2021 09:44, Neil Armstrong wrote:
+> This serie finally removes the static ethernet link setup, MDIO mux & memory
+> power domain after introduction of :
+>  - "net: add MMIO Register MDIO MUX driver" at [1]
+>  - "net: designware: add DM_MDIO support" at [2]
+>  - "net: add Amlogic Meson G12A MDIO MUX driver" at [3]
+>  - "net: designware: add Amlogic Meson8b & later glue driver" at [4]
 > 
-
-Thanks !
+> These patches makes all this happen automagically thanks to DM_MDIO introduced
+> last year.
+> 
+> This has been tested on libretech-ac and Khadas VIM3 to check to most opposite
+> setups, but the GXBB boards hasn't been tested.
+> 
+> Note, you'll need [1], [2], [3], [4] applied before these patches
+> 
+> [1] https://patchwork.ozlabs.org/project/uboot/patch/20210224140223.2617536-1-narmstrong@baylibre.com/
+> [2] https://patchwork.ozlabs.org/project/uboot/patch/20210224140239.2617642-1-narmstrong@baylibre.com/
+> [3] https://patchwork.ozlabs.org/project/uboot/patch/20210224163153.2678768-1-narmstrong@baylibre.com/
+> [4] https://patchwork.ozlabs.org/project/uboot/patch/20210224193356.2948805-1-narmstrong@baylibre.com/
+> 
+> Neil Armstrong (7):
+>   configs: update Amlogic Meson GXL & GXM config for MDIO MUX
+>   configs: update Amlogic Meson G12A, G12B & SM1 configs for MDIO MUX
+>   arm: meson: remove static MDIO mux handling
+>   configs: meson: use Designware glue driver for Amlogic Meson8b & later
+>     SoCs
+>   net: designware: remove amlogic compatibles
+>   arm: meson: remove static ethernet memory power domain enable
+>   arm: meson: remove static ethernet link setup
+> 
+>  arch/arm/include/asm/arch-meson/axg.h       | 22 -------
+>  arch/arm/include/asm/arch-meson/eth.h       | 12 ----
+>  arch/arm/include/asm/arch-meson/g12a.h      | 35 -----------
+>  arch/arm/include/asm/arch-meson/gx.h        | 20 ------
+>  arch/arm/mach-meson/board-axg.c             | 34 -----------
+>  arch/arm/mach-meson/board-g12a.c            | 67 ---------------------
+>  arch/arm/mach-meson/board-gx.c              | 48 ---------------
+>  board/amlogic/beelink-s922x/beelink-s922x.c |  2 -
+>  board/amlogic/odroid-n2/odroid-n2.c         |  2 -
+>  board/amlogic/p200/p200.c                   |  2 -
+>  board/amlogic/p201/p201.c                   |  2 -
+>  board/amlogic/p212/p212.c                   |  3 -
+>  board/amlogic/q200/q200.c                   |  2 -
+>  board/amlogic/s400/s400.c                   |  2 -
+>  board/amlogic/sei510/sei510.c               |  3 -
+>  board/amlogic/sei610/sei610.c               |  3 -
+>  board/amlogic/u200/u200.c                   |  3 +-
+>  board/amlogic/vim3/vim3.c                   |  2 -
+>  board/amlogic/w400/w400.c                   |  2 +-
+>  configs/beelink-gtking_defconfig            |  5 +-
+>  configs/beelink-gtkingpro_defconfig         |  5 +-
+>  configs/khadas-vim2_defconfig               |  5 +-
+>  configs/khadas-vim3_defconfig               |  5 +-
+>  configs/khadas-vim3l_defconfig              |  5 +-
+>  configs/khadas-vim_defconfig                |  7 ++-
+>  configs/libretech-ac_defconfig              |  7 ++-
+>  configs/libretech-cc_defconfig              |  7 ++-
+>  configs/libretech-cc_v2_defconfig           |  7 ++-
+>  configs/libretech-s905d-pc_defconfig        |  5 +-
+>  configs/libretech-s912-pc_defconfig         |  5 +-
+>  configs/nanopi-k2_defconfig                 |  2 +-
+>  configs/odroid-c2_defconfig                 |  2 +-
+>  configs/odroid-c4_defconfig                 |  5 +-
+>  configs/odroid-n2_defconfig                 |  5 +-
+>  configs/p200_defconfig                      |  2 +-
+>  configs/p201_defconfig                      |  2 +-
+>  configs/p212_defconfig                      |  7 ++-
+>  configs/s400_defconfig                      |  2 +-
+>  configs/sei510_defconfig                    |  7 ++-
+>  configs/sei610_defconfig                    |  7 ++-
+>  configs/u200_defconfig                      |  7 ++-
+>  configs/wetek-core2_defconfig               |  5 +-
+>  drivers/net/designware.c                    |  3 -
+>  43 files changed, 79 insertions(+), 306 deletions(-)
+> 
 
 Applied to u-boot-amlogic-next
