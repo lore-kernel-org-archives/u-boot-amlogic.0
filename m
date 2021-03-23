@@ -1,81 +1,48 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.10141.1616405431071217271
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web08.5674.1616487278542892683
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Mar 2021 02:30:31 -0700
-Received: by mail-wr1-f54.google.com with SMTP id b9so15870160wrt.8
-        for <u-boot-amlogic@groups.io>; Mon, 22 Mar 2021 02:30:30 -0700 (PDT)
+ Tue, 23 Mar 2021 01:14:39 -0700
+Received: by mail-wr1-f42.google.com with SMTP id 61so19746677wrm.12
+        for <u-boot-amlogic@groups.io>; Tue, 23 Mar 2021 01:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qrgEXSu6mp2vzO2VpX0WpVmmnnMoXFKgMuvQE3yJ0sE=;
-        b=owbYgnXD2okw2NAnOGmtUyq1+eT2VaKRV8B1MB/Bbnz3TuUa+UwAXGR9vyUt0XG+PU
-         zYCbch1M0u86Y9isigHpWJZgOwFxtPE1ofCvrdCWbKa+0Z6RS5Ck9Y+7e+lri4HaVcjf
-         hLreEyhBo/EMEY0dGxpM9nKU163icfV0z+Izx5D78SF68kWVatcZzvgqrigJSV2vjrWF
-         swhS+JZ1A2fVTCa0H3Ws9P7fBNkNCxvE+IIELeagySRnvaKFlTn8mZuBCmnqq1mO3k2X
-         BDPOn9Tr2tDKtYoxIFKLwCO9PhoBbYTUWviNSkBuOqGn2RoLsvD5LFJpJnrUgHzB9oMw
-         YW/Q==
+        h=subject:to:references:from:organization:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=S2Q0StPcREQsUgV974PtLOAP6LwESZhDW3B+26jGDik=;
+        b=zqyRM2TlcGpVErjPsxfP0EoPRRQ0R/nRO0ZrxmXyDOp0w6QIR4bO39uUErv6uG203m
+         dsM+idStYT/iV1k8yfXJhwaGJmbNdD7X8VgoWkWD7a7aNiMEgmhqUTQ81lfTgCbqIN8E
+         qm2DzxfEMaac4Qd2d904LdqXjN8YIhQT8HaGGXi99cX0F2njt94KYdSYJ8DA8OBXQJHy
+         Mdc17tN7QcjnQ9bGRLXAo3WJah2itEJNJRxlOH4gaf7yyl+5sw1P2OaLZ2PbKimS/CGe
+         zM0XJa2uuuvPYq+Eccc0ntKXnHZXxOi7avP+lqsSHwE7c5tqjgW1fYo1CvVo/2n7eFOq
+         AGFg==
 Return-Path: <narmstrong@baylibre.com>
 Subject: Re: [PATCH RFT 0/4] pci: add common Designware PCIe functions and support Amlogic Meson PCIe controller
-References: <20210322091812.2511462-1-narmstrong@baylibre.com>
- <8cb80b89-8305-35fe-a876-6bf613646c1c@rock-chips.com>
+References: <CAJivOr7megRMZ+ESqRbRicuJVLC9X7F0DBeFh1bC7g0zdN21bg@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <385bb9af-ad2f-4871-0cc1-432dba4d964a@baylibre.com>
-Date: Mon, 22 Mar 2021 10:30:27 +0100
+Message-ID: <8dc37449-e8fd-c70a-ccbe-9201932e8b92@baylibre.com>
+Date: Tue, 23 Mar 2021 09:14:35 +0100
 MIME-Version: 1.0
-In-Reply-To: <8cb80b89-8305-35fe-a876-6bf613646c1c@rock-chips.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAJivOr7megRMZ+ESqRbRicuJVLC9X7F0DBeFh1bC7g0zdN21bg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Shawn Lin <shawn.lin@rock-chips.com>, lokeshvutla@ti.com, nsekhar@ti.com
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 7bit
+To: Green Wan <green.wan@sifive.com>, U-Boot Mailing List <u-boot@lists.denx.de>, "cc: Lokesh Vutla" <lokeshvutla@ti.com>, Sekhar Nori <nsekhar@ti.com>, shawn.lin@rock-chips.com, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 22/03/2021 10:27, Shawn Lin wrote:
+Hi Green,
+
+
+On 23/03/2021 05:36, Green Wan wrote:
 > Hi Neil,
 > 
-> On 2021/3/22 17:18, Neil Armstrong wrote:
->> With the introduction of pcie_dw_rockchip, and need to support the DW PCIe in the
->> Amlogic AXG & G12 SoCs, most of the DW PCIe helpers would be duplicated.
->>
->> This introduce a "common" DW PCIe helpers file with common code merged from the
->> dw_ti and dw_rockchip drivers and adapted to fit with the upcoming dw_meson.
-> 
-> That's a good idea.
-> 
-> BTW, pcie_dw_mvebu.c and  pcie_imx.c also should need a migration.
+> pcie_dw_common.* is a good starting point. I'd like to spend time on this. Please add me into the loop. Thanks.
 
-Exact, same for the recently submitted pci_sifive, they should probably wait for a second round
+Sure, I'll CC you on the next revision, in the meantime don't hesitate to comment and/or post the changes
+needed for sifive.
 
 Neil
 
 > 
->>
->> The following changes will switch the dw_ti and dw_rockchip, and introduce a new
->> driver to support the Amlogic AXG & G12 SoCs using these new common helpers.
->>
->> The dw_meson has been validated, but the dw_ti and dw_rockchip would need testing
->> on hardware to validate nothing has been broken.
->>
->> Neil Armstrong (4):
->>    pci: add common Designware PCIe functions
->>    pci: pcie_dw_ti: migrate to common Designware PCIe functions
->>    pci: pcie_dw_rockchip: migrate to common Designware PCIe functions
->>    pci: add Amlogic Meson Designware PCIe controller
->>
->>   drivers/pci/Kconfig            |  15 +-
->>   drivers/pci/Makefile           |   2 +
->>   drivers/pci/pcie_dw_common.c   | 352 ++++++++++++++++++++++++
->>   drivers/pci/pcie_dw_common.h   | 153 +++++++++++
->>   drivers/pci/pcie_dw_meson.c    | 459 ++++++++++++++++++++++++++++++++
->>   drivers/pci/pcie_dw_rockchip.c | 472 ++-------------------------------
->>   drivers/pci/pcie_dw_ti.c       | 444 +++----------------------------
->>   7 files changed, 1046 insertions(+), 851 deletions(-)
->>   create mode 100644 drivers/pci/pcie_dw_common.c
->>   create mode 100644 drivers/pci/pcie_dw_common.h
->>   create mode 100644 drivers/pci/pcie_dw_meson.c
->>
-> 
-> 
+> -
+> Green
 
