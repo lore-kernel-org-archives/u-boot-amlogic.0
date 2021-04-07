@@ -1,79 +1,117 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web08.11028.1617711721398754140
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web08.7186.1617802273609861550
  for <u-boot-amlogic@groups.io>;
- Tue, 06 Apr 2021 05:22:02 -0700
-Received: by mail-wm1-f50.google.com with SMTP id k128so7273626wmk.4
-        for <u-boot-amlogic@groups.io>; Tue, 06 Apr 2021 05:22:01 -0700 (PDT)
+ Wed, 07 Apr 2021 06:31:14 -0700
+Received: by mail-wr1-f46.google.com with SMTP id x15so8801828wrq.3
+        for <u-boot-amlogic@groups.io>; Wed, 07 Apr 2021 06:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=AG/SYdEBUeDMQPDar4AVuTQH0dQpAgziRGjNkF4IQvs=;
-        b=01Gc2O/LsO8B0LcTfVT0DT/H+w0pHn5Y+nBW+7eLWXXbFTAf9Vk/8Xxf38FCppnHNK
-         zO1kGnFPotUjn3udtuyygpzATJoN/3ME/pqxuVejNXEoc8/UsEkWeMqm9lv28BMsI6AR
-         4GgDsE5nAWF5vjA4MeiDniDAcgnPmZEn4/QhQ7Iq7B3exxxhFe8hd5n8/wAM1R46a1TZ
-         GcB6VhfC5XxG4GvZ0x3L3rDj+mez32xd1oQ44scv++LdXmYzDVVNx2y7orxDcuXMd8Kv
-         JNx9VhrCeXOZgBmXhpW4H33bxU2LnleayqA9tJomDvn0gZA/1wLqTs1N1EpYIlQLE5Ni
-         qnZg==
+        bh=OC1yJVEZtCyrG6ihgy02H5vNdkYLKKowaRzL6Cnmqm0=;
+        b=jDz+D5VLYko1qmU6vIfgjKHR5AX7+lHmYWLxmSIbmxWRjc7l0It4g9YgLwG6/MTOiA
+         uLBjlm2ZINylwU0LYLDrmfIoYO9PHkmxp8+8zn8Jm08/IpYrZGjYWhDBWKXzE/1qgpou
+         n5eAew49pVq/88D9jc0B8dAIgJA06cPZxVmdCu5l1QicZscjTag2kYCwQyVa3G6/QCHX
+         D/Ep9MqPvaFWT+zY1CB5sltojAhvPkPS9AqBUlIh5IATQudJJA9g7eNbfQoCpSKBCJjP
+         HfvqHzOMaq+B5FfmDi3+PrgbWRZ6Wz7xPcAQ3C7NhE73lIhRjOp5ynXmAaTehLIzQCw1
+         w8uQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH RFT v2 0/4] pci: add common Designware PCIe functions and support Amlogic Meson PCIe controller
-References: <20210325144921.1791892-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson: fix PHY deassert timing requirements
+References: <ad76ec471d131339985c1f6766069ef3fd317a33.1617731144.git.stefan@agner.ch>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <d5f05f02-22e8-1faf-5754-715cd8dcfebd@baylibre.com>
-Date: Tue, 6 Apr 2021 14:21:58 +0200
+Message-ID: <5a3579cd-1326-dd88-d30a-8440376e79c5@baylibre.com>
+Date: Wed, 7 Apr 2021 15:31:10 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210325144921.1791892-1-narmstrong@baylibre.com>
+In-Reply-To: <ad76ec471d131339985c1f6766069ef3fd317a33.1617731144.git.stefan@agner.ch>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: bmeng.cn@gmail.com
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, lokeshvutla@ti.com, nsekhar@ti.com, shawn.lin@rock-chips.com, green.wan@sifive.com
+To: Stefan Agner <stefan@agner.ch>
+Cc: jbrunet@baylibre.com, khilman@baylibre.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Bin,
+Hi,
 
-On 25/03/2021 15:49, Neil Armstrong wrote:
-> With the introduction of pcie_dw_rockchip, and need to support the DW PCIe in the
-> Amlogic AXG & G12 SoCs, most of the DW PCIe helpers would be duplicated.
+On 06/04/2021 19:47, Stefan Agner wrote:
+> The sync of the device tree and dt-bindings from Linux v5.6-rc2
+> 11a48a5a18c6 ("Linux 5.6-rc2") causes Ethernet to break on some
+> ODROID-C2.
 > 
-> This introduce a "common" DW PCIe helpers file with common code merged from the
-> dw_ti and dw_rockchip drivers and adapted to fit with the upcoming dw_meson.
+> Meanwhile a fix to increase the reset timing has been added to Linux.
+> Instead of reverting the offending commit, use the new reset timing
+> from upstream Linux commit c183c406c432 ("arm64: dts: meson: fix PHY
+> deassert timing requirements").
 > 
-> The following changes will switch the dw_ti and dw_rockchip, and introduce a new
-> driver to support the Amlogic AXG & G12 SoCs using these new common helpers.
+> Fixes: dd5f2351e99a ("arm64: dts: meson: sync dt and bindings from v5.6-rc2")
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  arch/arm/dts/meson-g12b-odroid-n2.dtsi | 2 +-
+>  arch/arm/dts/meson-gxbb-nanopi-k2.dts  | 2 +-
+>  arch/arm/dts/meson-gxbb-odroidc2.dts   | 2 +-
+>  arch/arm/dts/meson-gxm-khadas-vim2.dts | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> The dw_meson has been validated, but the dw_ti and dw_rockchip would need testing
-> on hardware to validate nothing has been broken.
+> diff --git a/arch/arm/dts/meson-g12b-odroid-n2.dtsi b/arch/arm/dts/meson-g12b-odroid-n2.dtsi
+> index 6982632ae6..39a09661c5 100644
+> --- a/arch/arm/dts/meson-g12b-odroid-n2.dtsi
+> +++ b/arch/arm/dts/meson-g12b-odroid-n2.dtsi
+> @@ -413,7 +413,7 @@
+>  		max-speed = <1000>;
+>  
+>  		reset-assert-us = <10000>;
+> -		reset-deassert-us = <30000>;
+> +		reset-deassert-us = <80000>;
 
-How should be proceed ? I can't possibly test patches 2 & 3, but Green has tested it
-on Sifive, should patch 1 & 4 be merged then we should wait feedback from the Ti & Rockchip
-owners ?
+In fact, these are not used by current U-boot, support for reset/deassert in PHY node
+is not yet supported in U-Boot. This first step was to switch to DM_MDIO and use the
+proper Designware glue, the second step is to find how to make use of these properties.
+
+Concerning the patch, I'll prefer you sync the DT with v5.11 instead.
 
 Neil
 
-> 
-> Changes since v1:
-> - added prefetch memory region support
-> - switched to __iomem
-> - fixed circular dependency for PCI_KEYSTONE
-> 
-> Neil Armstrong (4):
->   pci: add common Designware PCIe functions
->   pci: pcie_dw_ti: migrate to common Designware PCIe functions
->   pci: pcie_dw_rockchip: migrate to common Designware PCIe functions
->   pci: add Amlogic Meson Designware PCIe controller
-> 
->  drivers/pci/Kconfig            |  16 +-
->  drivers/pci/Makefile           |   2 +
->  drivers/pci/pcie_dw_common.c   | 366 +++++++++++++++++++++++++
->  drivers/pci/pcie_dw_common.h   | 155 +++++++++++
->  drivers/pci/pcie_dw_meson.c    | 459 ++++++++++++++++++++++++++++++++
->  drivers/pci/pcie_dw_rockchip.c | 472 ++-------------------------------
->  drivers/pci/pcie_dw_ti.c       | 444 +++----------------------------
->  7 files changed, 1062 insertions(+), 852 deletions(-)
->  create mode 100644 drivers/pci/pcie_dw_common.c
->  create mode 100644 drivers/pci/pcie_dw_common.h
->  create mode 100644 drivers/pci/pcie_dw_meson.c
+>  		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+>  
+>  		interrupt-parent = <&gpio_intc>;
+> diff --git a/arch/arm/dts/meson-gxbb-nanopi-k2.dts b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+> index 7be3e35409..de27beafe9 100644
+> --- a/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+> +++ b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+> @@ -165,7 +165,7 @@
+>  			reg = <0>;
+>  
+>  			reset-assert-us = <10000>;
+> -			reset-deassert-us = <30000>;
+> +			reset-deassert-us = <80000>;
+>  			reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
+>  
+>  			interrupt-parent = <&gpio_intc>;
+> diff --git a/arch/arm/dts/meson-gxbb-odroidc2.dts b/arch/arm/dts/meson-gxbb-odroidc2.dts
+> index 70fcfb7b06..50de1d01e5 100644
+> --- a/arch/arm/dts/meson-gxbb-odroidc2.dts
+> +++ b/arch/arm/dts/meson-gxbb-odroidc2.dts
+> @@ -200,7 +200,7 @@
+>  			reg = <0>;
+>  
+>  			reset-assert-us = <10000>;
+> -			reset-deassert-us = <30000>;
+> +			reset-deassert-us = <80000>;
+>  			reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
+>  
+>  			interrupt-parent = <&gpio_intc>;
+> diff --git a/arch/arm/dts/meson-gxm-khadas-vim2.dts b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+> index bff8ec2c1c..e38d9e50ca 100644
+> --- a/arch/arm/dts/meson-gxm-khadas-vim2.dts
+> +++ b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+> @@ -194,7 +194,7 @@
+>  		reg = <0>;
+>  
+>  		reset-assert-us = <10000>;
+> -		reset-deassert-us = <30000>;
+> +		reset-deassert-us = <80000>;
+>  		reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
+>  
+>  		interrupt-parent = <&gpio_intc>;
 > 
 
