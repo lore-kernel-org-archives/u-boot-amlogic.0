@@ -1,25 +1,25 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web12.5061.1617868254464491460
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web12.5062.1617868255462595272
  for <u-boot-amlogic@groups.io>;
- Thu, 08 Apr 2021 00:50:54 -0700
-Received: by mail-wm1-f51.google.com with SMTP id t5-20020a1c77050000b029010e62cea9deso720714wmi.0
-        for <u-boot-amlogic@groups.io>; Thu, 08 Apr 2021 00:50:54 -0700 (PDT)
+ Thu, 08 Apr 2021 00:50:55 -0700
+Received: by mail-wm1-f49.google.com with SMTP id w203-20020a1c49d40000b029010c706d0642so3561195wma.0
+        for <u-boot-amlogic@groups.io>; Thu, 08 Apr 2021 00:50:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tb8M8QOEl257nH/eabm+ltI7boDH6IICiso7Y/HTfJo=;
-        b=j9kDlhiKoniVlKB01rBVA3NcffhPRq8wizcvSdHKW56YU13isov09JKz4rrr6mFnTu
-         12aaMXFnXC7VyGqwlErPl8K4pOmvgiObEsUVbd1SiYMJf3rXq8dqUyv3TSmeU8rjoeUR
-         Ki6ZVQ/cJVPc4UR/jFapT7WLj/SNxJF/zqykNV8eqqkypIY5Zs62weB0G7cfUoBwwQ02
-         M7affNWjdD/vd3nxYuBkmkk9jczLIQJ5+U7SZAkZ6JZtQVhxPwIHKJFDvpTPBEUQ4ksS
-         NNGYbI32+17Tu3UYW8tTnLpHy+2ImSkX/e12Hli95Gw1HXGH+aZL5TOnp4cGgwaglC5E
-         L5DQ==
+        bh=Jcc0oYrKoBrDbwqyVm5pzOtSyAFTFpTZBjmPgAUYSvU=;
+        b=Cz+mqlgOEPN+C6uV3HjA5QqYSNbtsj4NW4fDbxQBcc+Oyh6jkB1NHzGiUlVpfgPDYY
+         YImcIkBi6wUAZNstLBtyEzz/hgMeU2vx7JMGQgbS9ucBi7aNlT9DOHuj9ipjlRC8UA7e
+         lqu8+h0/nnwStMYzMycjELgS87wX/mox1TMishvEH3s0yIpMhrVoUTnlMLV+12yjU0Jt
+         qh9WJ0WRoJrJlRIoiAalhisTBn7QnaOkzvF43RT8BA7mZCvLJlxKARBfaVOcTCNCXhUW
+         QiMrBvRtdQNRiBsaTrARK1yBW7wKafpI87KBeYWByyyt7dyl7JI7X7gxxl3rlOk6Pfjr
+         4kyw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 2/5] phy: meson-g12a-usb3-pcie: add support for PCIe ops
-Date: Thu,  8 Apr 2021 09:50:44 +0200
-Message-Id: <20210408075047.4076954-3-narmstrong@baylibre.com>
+Subject: [PATCH 3/5] arm: dts: meson-khadas-vim3: enable PCIe in U-boot
+Date: Thu,  8 Apr 2021 09:50:45 +0200
+Message-Id: <20210408075047.4076954-4-narmstrong@baylibre.com>
 In-Reply-To: <20210408075047.4076954-1-narmstrong@baylibre.com>
 References: <20210408075047.4076954-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,127 +28,29 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add the PCIe part of the G12A USB3 PCIe Combo PHY driver.
+Enable PCIe by default in u-boot, this should eventually be made dynamic
+in the runtime board config depending on the MCU configuration.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/phy/meson-g12a-usb3-pcie.c | 81 ++++++++++++++++++++++++++++--
- 1 file changed, 77 insertions(+), 4 deletions(-)
+ arch/arm/dts/meson-khadas-vim3-u-boot.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/phy/meson-g12a-usb3-pcie.c b/drivers/phy/meson-g12a-usb3-pcie.c
-index 0433d93474..8f72b5a6a7 100644
---- a/drivers/phy/meson-g12a-usb3-pcie.c
-+++ b/drivers/phy/meson-g12a-usb3-pcie.c
-@@ -23,6 +23,9 @@
- #include <linux/compat.h>
- #include <linux/bitfield.h>
- 
-+#define PHY_TYPE_PCIE           2
-+#define PHY_TYPE_USB3           4
-+
- #define PHY_R0							0x00
- 	#define PHY_R0_PCIE_POWER_STATE				GENMASK(4, 0)
- 	#define PHY_R0_PCIE_USB3_SWITCH				GENMASK(6, 5)
-@@ -55,6 +58,8 @@
- 	#define PHY_R5_PHY_CR_ACK				BIT(16)
- 	#define PHY_R5_PHY_BS_OUT				BIT(17)
- 
-+#define PCIE_RESET_DELAY					500
-+
- struct phy_g12a_usb3_pcie_priv {
- 	struct regmap		*regmap;
- #if CONFIG_IS_ENABLED(CLK)
-@@ -202,8 +207,6 @@ static int phy_meson_g12a_usb3_init(struct phy *phy)
- 	unsigned int data;
- 	int ret;
- 
--	/* TOFIX Handle PCIE mode */
--
- 	ret = reset_assert_bulk(&priv->resets);
- 	udelay(1);
- 	ret |= reset_deassert_bulk(&priv->resets);
-@@ -296,9 +299,79 @@ static int phy_meson_g12a_usb3_exit(struct phy *phy)
- 	return reset_assert_bulk(&priv->resets);
- }
- 
-+static int phy_meson_g12a_usb3_pcie_init(struct phy *phy)
-+{
-+	if (phy->id == PHY_TYPE_USB3)
-+		return phy_meson_g12a_usb3_init(phy);
-+
-+	return 0;
-+}
-+
-+static int phy_meson_g12a_usb3_pcie_exit(struct phy *phy)
-+{
-+	if (phy->id == PHY_TYPE_USB3)
-+		return phy_meson_g12a_usb3_exit(phy);
-+
-+	return 0;
-+}
-+
-+static int phy_meson_g12a_usb3_pcie_power_on(struct phy *phy)
-+{
-+	struct phy_g12a_usb3_pcie_priv *priv = dev_get_priv(phy->dev);
-+
-+	if (phy->id == PHY_TYPE_USB3)
-+		return 0;
-+
-+	regmap_update_bits(priv->regmap, PHY_R0,
-+			   PHY_R0_PCIE_POWER_STATE,
-+			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
-+
-+	return 0;
-+}
-+
-+static int phy_meson_g12a_usb3_pcie_power_off(struct phy *phy)
-+{
-+	struct phy_g12a_usb3_pcie_priv *priv = dev_get_priv(phy->dev);
-+
-+	if (phy->id == PHY_TYPE_USB3)
-+		return 0;
-+
-+	regmap_update_bits(priv->regmap, PHY_R0,
-+			   PHY_R0_PCIE_POWER_STATE,
-+			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1d));
-+
-+	return 0;
-+}
-+
-+static int phy_meson_g12a_usb3_pcie_reset(struct phy *phy)
-+{
-+	struct phy_g12a_usb3_pcie_priv *priv = dev_get_priv(phy->dev);
-+	int ret;
-+
-+	if (phy->id == PHY_TYPE_USB3)
-+		return 0;
-+
-+	ret = reset_assert_bulk(&priv->resets);
-+	if (ret)
-+		return ret;
-+
-+	udelay(PCIE_RESET_DELAY);
-+
-+	ret = reset_deassert_bulk(&priv->resets);
-+	if (ret)
-+		return ret;
-+
-+	udelay(PCIE_RESET_DELAY);
-+
-+	return 0;
-+}
-+
- struct phy_ops meson_g12a_usb3_pcie_phy_ops = {
--	.init = phy_meson_g12a_usb3_init,
--	.exit = phy_meson_g12a_usb3_exit,
-+	.init = phy_meson_g12a_usb3_pcie_init,
-+	.exit = phy_meson_g12a_usb3_pcie_exit,
-+	.power_on = phy_meson_g12a_usb3_pcie_power_on,
-+	.power_off = phy_meson_g12a_usb3_pcie_power_off,
-+	.reset = phy_meson_g12a_usb3_pcie_reset,
+diff --git a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+index 81fd5be378..24dbf8ca2c 100644
+--- a/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
++++ b/arch/arm/dts/meson-khadas-vim3-u-boot.dtsi
+@@ -10,6 +10,10 @@
+ 	};
  };
  
- int meson_g12a_usb3_pcie_phy_probe(struct udevice *dev)
++&pcie {
++	status = "okay";
++};
++
+ &sd_emmc_c {
+ 	status = "okay";
+ 	pinctrl-0 = <&emmc_ctrl_pins>, <&emmc_data_4b_pins>, <&emmc_ds_pins>;
 -- 
 2.25.1
 
