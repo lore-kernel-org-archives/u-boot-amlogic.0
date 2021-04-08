@@ -1,65 +1,68 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web10.4903.1617868257977536522
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web10.5420.1617872298984497183
  for <u-boot-amlogic@groups.io>;
- Thu, 08 Apr 2021 00:50:58 -0700
-Received: by mail-wr1-f51.google.com with SMTP id a4so1041106wrr.2
-        for <u-boot-amlogic@groups.io>; Thu, 08 Apr 2021 00:50:57 -0700 (PDT)
+ Thu, 08 Apr 2021 01:58:19 -0700
+Received: by mail-wr1-f52.google.com with SMTP id a6so1241577wrw.8
+        for <u-boot-amlogic@groups.io>; Thu, 08 Apr 2021 01:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZOH4sgk4Iiaygb2dOblf6xMYF8u5nvROYz0A3bw/hfM=;
-        b=ikirk24kTIKfmsvrC9hyE9mbRz3MXdDz6bWPxeQWsMY7pggKaIE1Dl9AgLtOAWzsy1
-         /wAO+vMPLR+P/82HUfhLnbz5EcPiHceHLv0Z3j7FNrQPxq9iiLpJJQPqgsdAGewkqmGC
-         txd1RBAhFtr8ZpaZTgMSlSBJS12WfU9qBfgsFb2F7Tf+hPRoJdnx9zuhpRgbCb2wxKYu
-         sPwq2i46glcKkInz2Ksu/nS8C58rZC1ScAYiSBg477DdAjkZicA6phrFq/051HodfZRK
-         Cvi+iZ30jBMwm4rCPnx4EAQ6o91PX8HS4VIvrmal28+kwpGrvwsfAg/KiG+D0XENe/fg
-         flhg==
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bklqqkrvz4prxWUwfpoDhG4rYr3a9KlPNjS9Se4of1c=;
+        b=VIx8deRrONmS84ozIzRc0zITDmm1vSI5HqebZmKx6ufNxsYrprdwBcgjSzLTz9N4ZE
+         AJcIANeSBa4wgDrPh2nMyiPdliNVluCOUxqVeGVBUGq9ymTtJ/tailAghQnQ8B0v2rHU
+         dKasExFnKC5fN8HIaVEn6xuHH9VL7OPSRaDgOnDjSkOHdxI3jgvZa62P1/tg0mCYVMZP
+         pS1D14AxDVM259TB8NAT/04TwAXtUg+Zy2WcYf0fYO0GbTUogjBw3WLmm7wwLHwzQPGE
+         mZFiDrdRirHsK9hFt6HYcwdu8zG2BLTdy5nDBcmfmA+m3lCBeqjKpi+260iEATUWvANT
+         YiNA==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2] arm64: dts: meson: odroidc2: readd PHY reset properties
+References: <68934d1271af9afa7854ced37e72765381be6421.1617870301.git.stefan@agner.ch>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH 5/5] configs: meson64: add NVME boot target
-Date: Thu,  8 Apr 2021 09:50:47 +0200
-Message-Id: <20210408075047.4076954-6-narmstrong@baylibre.com>
-In-Reply-To: <20210408075047.4076954-1-narmstrong@baylibre.com>
-References: <20210408075047.4076954-1-narmstrong@baylibre.com>
+Message-ID: <dd8f6326-147d-e5ed-68b7-57913c0f31c4@baylibre.com>
+Date: Thu, 8 Apr 2021 10:58:16 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <68934d1271af9afa7854ced37e72765381be6421.1617870301.git.stefan@agner.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Stefan Agner <stefan@agner.ch>
+Cc: jbrunet@baylibre.com, khilman@baylibre.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Let's add a boot target for NVMe so we can do a full boot over NVMe.
+On 08/04/2021 10:25, Stefan Agner wrote:
+> The sync of the device tree and dt-bindings from Linux v5.6-rc2
+> 11a48a5a18c6 ("Linux 5.6-rc2") causes Ethernet to break on some
+> ODROID-C2. The PHY seems to need proper reset timing to be functional
+> in U-Boot and Linux afterwards. Readd the old PHY reset bindings for
+> dwmac until we support the new bindings in the PHY node.
+> 
+> Fixes: dd5f2351e99a ("arm64: dts: meson: sync dt and bindings from v5.6-rc2")
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi b/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
+> index 90087b00db..5a2be8171e 100644
+> --- a/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
+> +++ b/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
+> @@ -29,6 +29,12 @@
+>  	};
+>  };
+>  
+> +&ethmac {
+> +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+> +	snps,reset-delays-us = <0 10000 1000000>;
+> +	snps,reset-active-low;
+> +};
+> +
+>  &usb0 {
+>  	status = "disabled";
+>  };
+> 
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- include/configs/meson64.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks,
 
-diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index 7e97f89052..17ebccd2c4 100644
---- a/include/configs/meson64.h
-+++ b/include/configs/meson64.h
-@@ -58,6 +58,12 @@
- #define BOOT_TARGET_DEVICES_USB(func)
- #endif
- 
-+#ifdef CONFIG_CMD_NVME
-+	#define BOOT_TARGET_NVME(func) func(NVME, nvme, 0)
-+#else
-+	#define BOOT_TARGET_NVME(func)
-+#endif
-+
- #ifndef BOOT_TARGET_DEVICES
- #define BOOT_TARGET_DEVICES(func) \
- 	func(ROMUSB, romusb, na)  \
-@@ -65,6 +71,7 @@
- 	func(MMC, mmc, 1) \
- 	func(MMC, mmc, 2) \
- 	BOOT_TARGET_DEVICES_USB(func) \
-+	BOOT_TARGET_NVME(func) \
- 	func(PXE, pxe, na) \
- 	func(DHCP, dhcp, na)
- #endif
--- 
-2.25.1
-
+Applied to u-boot-amlogic
