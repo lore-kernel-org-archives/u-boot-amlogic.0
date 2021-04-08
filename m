@@ -1,77 +1,53 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web12.4994.1617867716298236155
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web11.4936.1617868252275785936
  for <u-boot-amlogic@groups.io>;
- Thu, 08 Apr 2021 00:41:57 -0700
-Received: by mail-wr1-f49.google.com with SMTP id q26so991990wrz.9
-        for <u-boot-amlogic@groups.io>; Thu, 08 Apr 2021 00:41:56 -0700 (PDT)
+ Thu, 08 Apr 2021 00:50:52 -0700
+Received: by mail-wr1-f42.google.com with SMTP id i18so1036436wrm.5
+        for <u-boot-amlogic@groups.io>; Thu, 08 Apr 2021 00:50:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=cb05Nl8X+w8Ee/bLbrhe7sRB7ckf5PrQbU3ucT9//z4=;
-        b=obvwbntaLVKEL1ZxJtJqB64fKnMJLTimb8MyA3T9bPgEygkQKz2HoWRPkBk81zYa7h
-         y3KjHUVtJEYEcoXFee08eAsmuFxg7Xsj/2mGA0MwnifOnFY7kayf0sochklWmPzN5SSX
-         ap0qGI/E7x+IEcptAQuN9rvGpwMT2OoLVjVEGRIqXtfsPaYsKHKj00w6jFy0nyLfOdyK
-         OYYWImgc8hKsKu81mXFoRl6fsrgL2yZH1aO27hxvdnblC5c48AJJuPD3ZUSiMoY1qKJb
-         Sxmv2Th/agvnD+ExWWpAHrGPGQmVcm/t4yNRzNldaMWTRvzN0KOimn+ljjKennHStmPV
-         rxvA==
+        bh=qPzwK4r4YeKXcIsvlQaAXJPT5ldS52xtjO38xWtsBhQ=;
+        b=QB77ZC1l9eYO2kaVuXq6/kfAwFxU2iEJZSCNPYXF+0t6jtkcQSrJQXs6rms+KiiuJX
+         SarF5u3qIFWFN2F+cpEtwUaQWL2LD+7ZsaCJhMa/FmEy+Jdt0+ljGvch3cLrAN13/gRj
+         vDVEXKYzWQimdoHsOltEWGjct1exjVvvd++7Z/hbDdBpF7RvxjVOBVlWdXVvwMrx3rCB
+         aBwa5syzyjgQm2cy36aH8obg8u0tUexQvJONmp4OY/KG+VhEJ/9M3IeZFd2bAMjps8br
+         Yk/5xhJlemiJ14FMBqPOu+oU3q4cK4neN9RCIgE8NQKqHGigxZcySqF8GYf9J4TuqeeX
+         rvWw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH RFT v2 0/4] pci: add common Designware PCIe functions and support Amlogic Meson PCIe controller
-References: <20210325144921.1791892-1-narmstrong@baylibre.com>
- <d5f05f02-22e8-1faf-5754-715cd8dcfebd@baylibre.com>
- <CAEUhbmWtr93MGjEL9yfEz+ou5v-8y5w8eA+BxNeYLhxjkvZ+Tw@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <a4cc1629-c2a9-95bf-771e-2c48cec2af4e@baylibre.com>
-Date: Thu, 8 Apr 2021 09:41:53 +0200
+Subject: [PATCH 0/5] ARM: khadas-vim3: enable PCIe and NVMe
+Date: Thu,  8 Apr 2021 09:50:42 +0200
+Message-Id: <20210408075047.4076954-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <CAEUhbmWtr93MGjEL9yfEz+ou5v-8y5w8eA+BxNeYLhxjkvZ+Tw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Bin Meng <bmeng.cn@gmail.com>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Lokesh Vutla <lokeshvutla@ti.com>, Sekhar Nori <nsekhar@ti.com>, shawn.lin@rock-chips.com, Green Wan <green.wan@sifive.com>
+Content-Transfer-Encoding: 8bit
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 08/04/2021 07:29, Bin Meng wrote:
-> Hi Neil,
-> 
-> On Tue, Apr 6, 2021 at 8:22 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Hi Bin,
->>
->> On 25/03/2021 15:49, Neil Armstrong wrote:
->>> With the introduction of pcie_dw_rockchip, and need to support the DW PCIe in the
->>> Amlogic AXG & G12 SoCs, most of the DW PCIe helpers would be duplicated.
->>>
->>> This introduce a "common" DW PCIe helpers file with common code merged from the
->>> dw_ti and dw_rockchip drivers and adapted to fit with the upcoming dw_meson.
->>>
->>> The following changes will switch the dw_ti and dw_rockchip, and introduce a new
->>> driver to support the Amlogic AXG & G12 SoCs using these new common helpers.
->>>
->>> The dw_meson has been validated, but the dw_ti and dw_rockchip would need testing
->>> on hardware to validate nothing has been broken.
->>
->> How should be proceed ? I can't possibly test patches 2 & 3, but Green has tested it
->> on Sifive, should patch 1 & 4 be merged then we should wait feedback from the Ti & Rockchip
->> owners ?
-> 
-> This series is not assigned to me in patchwork so I cannot decide anything :)
+This adds the missing bits to enable PCIe and NVMe support in U-Boot for
+the Khadas VIM3 & VIM3L board.
 
-I can switch them to you, but I never know who to assign for these multi-vendor series...
+This serie depends on [1].
 
-> 
-> But my opinion was that let's wait for some more time, and if nobody
-> jumps out let's merge this series.
+[1] https://patchwork.ozlabs.org/project/uboot/cover/20210325144921.1791892-1-narmstrong@baylibre.com/
 
-Fine fore me !
+Neil Armstrong (5):
+  clk: meson-g12a: add PCIe gates
+  phy: meson-g12a-usb3-pcie: add support for PCIe ops
+  arm: dts: meson-khadas-vim3: enable PCIe in U-boot
+  configs: khadas-vim3: enable PCIe and NVMe
+  configs: meson64: add NVME boot target
 
-Thanks,
-Neil
+ arch/arm/dts/meson-khadas-vim3-u-boot.dtsi |  4 ++
+ configs/khadas-vim3_defconfig              |  5 ++
+ configs/khadas-vim3l_defconfig             |  5 ++
+ drivers/clk/meson/g12a.c                   |  2 +
+ drivers/phy/meson-g12a-usb3-pcie.c         | 81 ++++++++++++++++++++--
+ include/configs/meson64.h                  |  7 ++
+ 6 files changed, 100 insertions(+), 4 deletions(-)
 
-> 
-> Regards,
-> Bin
-> 
+-- 
+2.25.1
 
