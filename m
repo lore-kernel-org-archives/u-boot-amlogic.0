@@ -1,16 +1,17 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.77])
- by mx.groups.io with SMTP id smtpd.web09.8734.1618500209729150621
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.71])
+ by mx.groups.io with SMTP id smtpd.web10.9018.1618500842111384007
  for <u-boot-amlogic@groups.io>;
- Thu, 15 Apr 2021 08:23:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ Thu, 15 Apr 2021 08:34:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B/oGPs7CTfw7QwIdiIwHXAUbO2FIXETEoHexOjD5u8U=;
- b=SDWsFoHl1ZG7Lc5xB51LmfC2ikezY9BycH4NcowtKzGWXiU+EthkvoELxKXWK+fGChckS1xjlnI2eP4wL/KkwH8AqBpAeMB2KHVBLO7wwkzTcXv/gRQMrehpGTL5L7BmkzjsZIpib5d2Wo46bAqTMvZFQ+1RYS/vrgRuAXej92I=
-From: Priyanka Jain <priyanka.jain@nxp.com>
+ bh=g5DrT/Iba5eNKxBT0VSZckZxEI8+k0TTiMcTAgpNGik=;
+ b=ftDTvxv4I/CnUZVnr9V8GEMuXYeyl3/pHf9CQXnj7NJgTxD7HLdLK5SDEcyc57il2x1omyoOWbZw0nz23dJyjzgNXK8+qr+7hVSAEJKkZb+l2rRWJ+HfDxHHpk2jgKya34Hv20971HSCKpyWwX45v3Gh0EXGwybl+jbdfbja/+s=
+From: "Priyanka Jain (OSS)" <priyanka.jain@oss.nxp.com>
 Subject: Re: [PATCH 2/2] Rename CONFIG_DM_RESET to CONFIG_RESET
-Date: Thu, 15 Apr 2021 15:23:24 +0000
+Date: Thu, 15 Apr 2021 15:33:57 +0000
 Message-ID: 
- <AM6PR04MB51442D7B75B02890788EBAE0E64D9@AM6PR04MB5144.eurprd04.prod.outlook.com>
+ <AM6PR04MB5144193831459E3B67053E91E64D9@AM6PR04MB5144.eurprd04.prod.outlook.com>
 References: <20210326031303.833293-1-sjg@chromium.org>
  <20210326031303.833293-2-sjg@chromium.org>
 In-Reply-To: <20210326031303.833293-2-sjg@chromium.org>
@@ -95,8 +96,10 @@ List-ID: <u-boot-amlogic@groups.io>
 >
 >Signed-off-by: Simon Glass <sjg@chromium.org>
 >---
+>
 <snip>
 I merged 1/2. This patch needs to be rebased on top of tree.
 
 Regards
 Priyanka
+
