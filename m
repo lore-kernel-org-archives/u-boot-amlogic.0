@@ -1,36 +1,89 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
- by mx.groups.io with SMTP id smtpd.web08.8.1618504611819453945
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+ by mx.groups.io with SMTP id smtpd.web08.11388.1618928362941455110
  for <u-boot-amlogic@groups.io>;
- Thu, 15 Apr 2021 09:36:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1618504607;
-	bh=S9ocFICtTnZ1eYW3We8zgpgIDPImv/kcX2WTeyefX2c=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-	b=UfreHLuIm+F0DgUtEH4N8A1icUz/aNMmw1q2jOJB9u5yjKrB8EhbhyQutIB28dfYK
-	 bliKWK2fOa0vbIHtwBY8DbmnSEjC+1KrsqHSZYKl7KJaN8XCJq7dPLuxzLe/wCfwey
-	 MaYXcoLZEcuk1u+gglbM78FLndQp7rnoUeCVADdjVr6KeyiTOV76fYUR1o/JQ1moZx
-	 8j+65cS1bMUCCdjxOHku1ow6iy8xRLol5t5BoudMiL8tfwTQx31Ec/FjelzoAGIvXY
-	 NvfLWRYxZg4zumoSMeyFyPiS7KpHHYD33u7LmXlE7UNwI9CLWzfDpqkzB6+EphZgMN
-	 P16gZFJ9BzcSw==
-Subject: Re: [PATCH 2/2] Rename CONFIG_DM_RESET to CONFIG_RESET
-References: <20210326031303.833293-1-sjg@chromium.org>
- <20210326031303.833293-2-sjg@chromium.org>
-From: Marek Vasut <marex@denx.de>
-Message-ID: <3b3de37f-90ea-b745-8145-0fe63e8941a6@denx.de>
-Date: Thu, 15 Apr 2021 18:36:34 +0200
+ Tue, 20 Apr 2021 07:19:23 -0700
+Received: by mail-qk1-f177.google.com with SMTP id q136so18485230qka.7
+        for <u-boot-amlogic@groups.io>; Tue, 20 Apr 2021 07:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=awdSDJIrBFzs3uZRvHybsjC2n2R75Yanbi21ou4qz70=;
+        b=OR58jaWiuQbCNMrJQQo/JS5sBEb/aUgV0wwhjXwKiQTEwTCNQL0UXVoVNGDdcUf7xw
+         lzwtNr+QVAB+UkEGqk35/HTBdBHrs16OwT/mcN5zfSYCsrAOmAHqQr/vu8ggEsrrGGi3
+         IBsEZnv4SRjWxfZg74y7IgHI1rZ20nosoYb1g=
+Return-Path: <trini@konsulko.com>
+Date: Tue, 20 Apr 2021 10:19:19 -0400
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20210419
+Message-ID: <20210420141919.GM1310@bill-the-cat>
+References: <08d42f1d-2d55-0bc2-2e7f-fc2993fd4726@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20210326031303.833293-2-sjg@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>, U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Adam Ford <aford173@gmail.com>, Akash Gajjar <akash@openedev.com>, Alifer Moraes <alifer.wsdm@gmail.com>, Anatolij Gustschin <agust@denx.de>, Andre Przywara <andre.przywara@arm.com>, "Andrew F. Davis" <afd@ti.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Yan <andy.yan@rock-chips.com>, Anup Patel <anup.patel@wdc.com>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Atish Patra <atish.patra@wdc.com>, Banglang Huang <banglang.huang@foxmail.com>, Beniamino Galvani <b.galvani@gmail.com>, Bharat Gooty <bharat.gooty@broadcom.com>, Bin Meng <bmeng.cn@gmail.com>, Chee Hong Ang <chee.hong.ang@intel.com>, Chen-Yu Tsai <wens@csie.org>, Chia-Wei Wang <chiawei_wang@aspeedtech.com>, Chin-Liang See <clsee@altera.com>, Christian Hewitt <christianshewitt@gmail.com>, Dalon Westergreen <dwesterg@gmail.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, David Bauer <mail@david-bauer.net>, Dinh Nguyen <dinguyen@kernel.org>, Dirk Eibach <dirk.eibach@gdsys.cc>, Etienne Carriere <etienne.carriere@linaro.org>, Eugeniy Paltsev <paltsev@synopsys.com>, Fabio Estevam <festevam@gmail.com>, Harald Seiler <hws@denx.de>, Heiko Stuebner <heiko.stuebner@theobroma-systems.com>, Holger Brunck <holger.brunck@hitachi-powergrids.com>, Jack Mitchell <ml@embed.me.uk>, Jagan Teki <jagan@amarulasolutions.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>, Jernej Skrabec <jernej.skrabec@siol.net>, Joao Marcos Costa <joaomarcos.costa@bootlin.com>, Joe Hershberger <joe.hershberger@ni.com>, Joel Johnson <mrjoel@lixil.net>, Kever Yang <kever.yang@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Levin Du <djw@t-chip.com.cn>, Ley Foon Tan <ley.foon.tan@intel.com>, Loic Devulder <ldevulder@suse.com>, Lokesh Vutla <lokeshvutla@ti.com>, Lukasz Majewski <lukma@denx.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Marco Franchi <marcofrk@gmail.com>, Mario Six <mario.six@gdsys.cc>, Masahiro Yamada <yamada.masahiro@socionext.com>, Matthias Brugger <mbrugger@suse.com>, "Matwey V. Kornilov" <matwey.kornilov@gmail.com>, Maxim Sloyko <maxims@google.com>, Michal Simek <michal.simek@xilinx.com>, Neil Armstrong <narmstrong@baylibre.com>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>, Ovidiu Panait <ovidiu.panait@windriver.com>, Palmer Dabbelt <palmer@dabbelt.com>, Patrice Chotard <patrice.chotard@foss.st.com>, Patrick Delaunay <patrick.delaunay@foss.st.com>, Paul Walmsley <paul.walmsley@sifive.com>, Pavel Machek <pavel@denx.de>, Peng Fan <peng.fan@nxp.com>, Peter Robinson <pbrobinson@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Philippe Reynes <philippe.reynes@softathome.com>, Pratyush Yadav <p.yadav@ti.com>, Ramon Fried <rfried.dev@gmail.com>, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Reuben Dowle <reubendowle0@gmail.com>, Robert Marko <robert.marko@sartura.hr>, Ryan Chen <ryan_chen@aspeedtech.com>, Sagar Shrikant Kadam <sagar.kadam@sifive.com>, Samuel Holland <samuel@sholland.org>, Sean Anderson <seanga2@gmail.com>, Sebastian Reichel <sebastian.reichel@collabora.com>, Siew Chin Lim <elly.siew.chin.lim@intel.com>, Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Stefan Roese <sr@denx.de>, Suniel Mahesh <sunil@amarulasolutions.com>, Tom Warren <twarren@nvidia.com>, Trevor Woerner <twoerner@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>, Wolfgang Grandegger <wg@aries-embedded.de>, u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com, =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <08d42f1d-2d55-0bc2-2e7f-fc2993fd4726@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/vFoH9b99aVotZEy"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 3/26/21 4:13 AM, Simon Glass wrote:
-> This config was misnamed at birth since there has never been a
-> CONFIG_RESET option used before driver model. Rename it so that it is
-> clear that driver model is the only option here.
+--/vFoH9b99aVotZEy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'd say it should be kept as CONFIG_DM_*, to make it clear it is a DM 
-option.
+On Mon, Apr 19, 2021 at 05:35:01PM +0200, Neil Armstrong wrote:
+
+> Hi Tom,
+>=20
+> This serie fixes Ethernet on Odroid-C2 and enables support for PCIe on th=
+e Khadas VIM3 & VIM3L
+> with all the necessary bits after Bin merged the PCIe driver.
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/7216
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit 3a9aaefcaa3efc2a1cef86fbe0bf229a1bff99=
+02:
+>=20
+>   Merge tag 'efi-2021-07-rc1-2' of https://source.denx.de/u-boot/custodia=
+ns/u-boot-efi (2021-04-18 08:47:27 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20210419
+>=20
+> for you to fetch changes up to fcf3c9deae1acfda81051c8c211fcbefd4217e1d:
+>=20
+>   boards: amlogic: update documentation for PCIe support (2021-04-19 16:5=
+9:33 +0200)
+>=20
+
+Applied to u-boot/master, thanks!
+
+--=20
+Tom
+
+--/vFoH9b99aVotZEy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmB+4ucACgkQFHw5/5Y0
+tyxZYwv+Mt+7J6ZuTVyXVX0ZDosdSeyFN8Ahb3jWlrsREDkO6kkldkxvCesFvYHl
+T1+4ehlxfaQqaed0P5+PyvWSCoAlHNRfpJyTst0nOTl9YKQDgwNkJfVJWMShxMJF
+PF5kIW8EPgoupriCMeYs/vZYMzUf+hglbAyl9SKsDZBP+DEdB2NomF+rpr71vioG
+f45kDTWQlOZHFxnbvGB5dnuWFwngRyLYFSYbHt2Gzrn7DQMCkhNWYvByl186R7QI
+e/TjXieFCV+C52CALHQZgUUlbCCz+qbA7I2Wz+f4Fo+cF46LmkzQC6mKs2tpxxGN
+jIYMT49PrQYH5RkWKf1sf4jgtTWTVppwbGB/HYkcfsLDtLkouTzJzjnvDJzrdqIG
+HGgHajUZXmva2opYub4rDakKESyFlTv5EIPDshqSGGZj10+qKbDhR6NvBIuYrj+P
+C7VCRNvfTC0r0baGWn29Zvf+f7tNiiVSNBBSknPsPwqvUb7M1IWlzrlEUemYKB51
+Gd8BL1Lm
+=H1LI
+-----END PGP SIGNATURE-----
+
+--/vFoH9b99aVotZEy--
