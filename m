@@ -1,86 +1,52 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.9545.1618995485646157796
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web08.9692.1618996696254212743
  for <u-boot-amlogic@groups.io>;
- Wed, 21 Apr 2021 01:58:06 -0700
-Received: by mail-wm1-f47.google.com with SMTP id o9-20020a1c41090000b029012c8dac9d47so827747wma.1
-        for <u-boot-amlogic@groups.io>; Wed, 21 Apr 2021 01:58:05 -0700 (PDT)
+ Wed, 21 Apr 2021 02:18:16 -0700
+Received: by mail-wr1-f52.google.com with SMTP id a4so40577156wrr.2
+        for <u-boot-amlogic@groups.io>; Wed, 21 Apr 2021 02:18:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YY4EKbPZ4X3TRNYd7ZaxnPwykoIyEAcm254c4mw5+/Q=;
-        b=C7En6djEAA9MQGaAZjphYUZ+irg0F3TmXWfzZJTYUZhzkSZ59AQYrpPYIHkQKcyFQo
-         EoOTF0nyjSGPTPiS/wbAKqkT2T6LVk1KemXRMtdZgJPOt6CZOGJJ1Hhm0pEQRaFJcHxk
-         2Zx+xjypbJRscru6WcJh2OM931tsCAtLlQnjmZH9itk2TSQyZsFO3459pUJcnNgyNllO
-         VGdSo4C91lKxrAxyb4DBJucx3XPwJDOLbhPjBchhq+euSKngcqJXwCiy4boHw4rrtdbP
-         +rvzj2iQYgynbofDIFtyPOzHJCEp8snjjYz/wJL+1bHO3TXINcWCg0Cq2JbMds91nvuF
-         niug==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Hy4dJzhueDt9v2FLPUg4E8fZqMtq/V2s68tHwQAYXEI=;
+        b=S1gYMFrWJW3T0yxEOBR7Wd4nUNouiv+U+Ct/7TBjd8MuPB2wE2FfFHy1oEJvNmB27P
+         3S1cIpWN8K8kjnlHVNFF6my1JDlXMd/8FRyemvLv8yEJWFTJkuxgToOZHpV34aGL2x7G
+         knX2QOOI1eZHGBhwNWgXabH5eeuW9JRVBcr5DRqTcW59DVMZUGMSH0/dcekRE7CAKYya
+         N4Pw2MSDglNhJPh+knrp7dJctecuE3vHepdVDnRFYZ+99M2Fhsw3d2d+LubFYv5yAvvd
+         Rbg8eI8atSfQ8Nw9zAr+eaLnJXdG0MFwHb3N+Bk8Joke2aYt/oBDZYdpc7/oYoJZIv96
+         b2Ig==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] net: designware: fix PHY reset with DM_MDIO
-Date: Wed, 21 Apr 2021 10:58:01 +0200
-Message-Id: <20210421085801.3100215-1-narmstrong@baylibre.com>
+Subject: [PATCH 2/8] net: designware: meson8b: add g12a compatible
+Date: Wed, 21 Apr 2021 11:18:03 +0200
+Message-Id: <20210421091809.3103002-2-narmstrong@baylibre.com>
+In-Reply-To: <20210421091809.3103002-1-narmstrong@baylibre.com>
+References: <20210421091809.3103002-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: joe.hershberger@ni.com, rfried.dev@gmail.com
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Mark Kettenis <mark.kettenis@xs4all.nl>
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The dw_eth_pdata is not accessible from the mdio device, it gets the mdio bus plat
-leading to random sleeps (-10174464 on Odroid-HC4).
+Add support for the Meson G12A dwmac glue compatible needed after Linux 5.12 sync.
 
-This moves the dw_mdio_reset function to a common one taking the ethernet
-device as parameter and use it from the dw_mdio_reset and dm_mdio variant functions.
-
-Fixes: 5160b4567c net: designware: add DM_MDIO support
-Reported-by: Mark Kettenis <mark.kettenis@xs4all.nl>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/net/designware.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/net/dwmac_meson8b.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/designware.c b/drivers/net/designware.c
-index b8ba00b7c0..5d92257e74 100644
---- a/drivers/net/designware.c
-+++ b/drivers/net/designware.c
-@@ -91,9 +91,8 @@ static int dw_mdio_write(struct mii_dev *bus, int addr, int devad, int reg,
- }
+diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
+index c0b6ef4994..069bf1724d 100644
+--- a/drivers/net/dwmac_meson8b.c
++++ b/drivers/net/dwmac_meson8b.c
+@@ -133,6 +133,7 @@ static int dwmac_meson8b_probe(struct udevice *dev)
  
- #if defined(CONFIG_DM_ETH) && CONFIG_IS_ENABLED(DM_GPIO)
--static int dw_mdio_reset(struct mii_dev *bus)
-+static int __dw_mdio_reset(struct udevice *dev)
- {
--	struct udevice *dev = bus->priv;
- 	struct dw_eth_dev *priv = dev_get_priv(dev);
- 	struct dw_eth_pdata *pdata = dev_get_plat(dev);
- 	int ret;
-@@ -122,6 +121,13 @@ static int dw_mdio_reset(struct mii_dev *bus)
- 
- 	return 0;
- }
-+
-+static int dw_mdio_reset(struct mii_dev *bus)
-+{
-+	struct udevice *dev = bus->priv;
-+
-+	return __dw_mdio_reset(dev);
-+}
- #endif
- 
- #if IS_ENABLED(CONFIG_DM_MDIO)
-@@ -142,9 +148,10 @@ int designware_eth_mdio_write(struct udevice *mdio_dev, int addr, int devad, int
- #if CONFIG_IS_ENABLED(DM_GPIO)
- int designware_eth_mdio_reset(struct udevice *mdio_dev)
- {
--	struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
-+	struct mdio_perdev_priv *mdio_pdata = dev_get_uclass_priv(mdio_dev);
-+	struct udevice *dev = mdio_pdata->mii_bus->priv;
- 
--	return dw_mdio_reset(pdata->mii_bus);
-+	return __dw_mdio_reset(dev->parent);
- }
- #endif
- 
+ static const struct udevice_id dwmac_meson8b_ids[] = {
+ 	{ .compatible = "amlogic,meson-gxbb-dwmac", .data = (ulong)dwmac_setup_gx },
++	{ .compatible = "amlogic,meson-g12a-dwmac", .data = (ulong)dwmac_setup_axg },
+ 	{ .compatible = "amlogic,meson-axg-dwmac", .data = (ulong)dwmac_setup_axg },
+ 	{ }
+ };
 -- 
 2.25.1
 
