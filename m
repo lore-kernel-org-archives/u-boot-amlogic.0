@@ -1,89 +1,86 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
- by mx.groups.io with SMTP id smtpd.web08.11388.1618928362941455110
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.9545.1618995485646157796
  for <u-boot-amlogic@groups.io>;
- Tue, 20 Apr 2021 07:19:23 -0700
-Received: by mail-qk1-f177.google.com with SMTP id q136so18485230qka.7
-        for <u-boot-amlogic@groups.io>; Tue, 20 Apr 2021 07:19:22 -0700 (PDT)
+ Wed, 21 Apr 2021 01:58:06 -0700
+Received: by mail-wm1-f47.google.com with SMTP id o9-20020a1c41090000b029012c8dac9d47so827747wma.1
+        for <u-boot-amlogic@groups.io>; Wed, 21 Apr 2021 01:58:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=awdSDJIrBFzs3uZRvHybsjC2n2R75Yanbi21ou4qz70=;
-        b=OR58jaWiuQbCNMrJQQo/JS5sBEb/aUgV0wwhjXwKiQTEwTCNQL0UXVoVNGDdcUf7xw
-         lzwtNr+QVAB+UkEGqk35/HTBdBHrs16OwT/mcN5zfSYCsrAOmAHqQr/vu8ggEsrrGGi3
-         IBsEZnv4SRjWxfZg74y7IgHI1rZ20nosoYb1g=
-Return-Path: <trini@konsulko.com>
-Date: Tue, 20 Apr 2021 10:19:19 -0400
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20210419
-Message-ID: <20210420141919.GM1310@bill-the-cat>
-References: <08d42f1d-2d55-0bc2-2e7f-fc2993fd4726@baylibre.com>
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YY4EKbPZ4X3TRNYd7ZaxnPwykoIyEAcm254c4mw5+/Q=;
+        b=C7En6djEAA9MQGaAZjphYUZ+irg0F3TmXWfzZJTYUZhzkSZ59AQYrpPYIHkQKcyFQo
+         EoOTF0nyjSGPTPiS/wbAKqkT2T6LVk1KemXRMtdZgJPOt6CZOGJJ1Hhm0pEQRaFJcHxk
+         2Zx+xjypbJRscru6WcJh2OM931tsCAtLlQnjmZH9itk2TSQyZsFO3459pUJcnNgyNllO
+         VGdSo4C91lKxrAxyb4DBJucx3XPwJDOLbhPjBchhq+euSKngcqJXwCiy4boHw4rrtdbP
+         +rvzj2iQYgynbofDIFtyPOzHJCEp8snjjYz/wJL+1bHO3TXINcWCg0Cq2JbMds91nvuF
+         niug==
+Return-Path: <narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Subject: [PATCH] net: designware: fix PHY reset with DM_MDIO
+Date: Wed, 21 Apr 2021 10:58:01 +0200
+Message-Id: <20210421085801.3100215-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <08d42f1d-2d55-0bc2-2e7f-fc2993fd4726@baylibre.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/vFoH9b99aVotZEy"
-Content-Disposition: inline
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Transfer-Encoding: 8bit
+To: joe.hershberger@ni.com, rfried.dev@gmail.com
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Mark Kettenis <mark.kettenis@xs4all.nl>
 List-ID: <u-boot-amlogic@groups.io>
 
---/vFoH9b99aVotZEy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The dw_eth_pdata is not accessible from the mdio device, it gets the mdio bus plat
+leading to random sleeps (-10174464 on Odroid-HC4).
 
-On Mon, Apr 19, 2021 at 05:35:01PM +0200, Neil Armstrong wrote:
+This moves the dw_mdio_reset function to a common one taking the ethernet
+device as parameter and use it from the dw_mdio_reset and dm_mdio variant functions.
 
-> Hi Tom,
->=20
-> This serie fixes Ethernet on Odroid-C2 and enables support for PCIe on th=
-e Khadas VIM3 & VIM3L
-> with all the necessary bits after Bin merged the PCIe driver.
->=20
-> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/7216
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit 3a9aaefcaa3efc2a1cef86fbe0bf229a1bff99=
-02:
->=20
->   Merge tag 'efi-2021-07-rc1-2' of https://source.denx.de/u-boot/custodia=
-ns/u-boot-efi (2021-04-18 08:47:27 -0400)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20210419
->=20
-> for you to fetch changes up to fcf3c9deae1acfda81051c8c211fcbefd4217e1d:
->=20
->   boards: amlogic: update documentation for PCIe support (2021-04-19 16:5=
-9:33 +0200)
->=20
+Fixes: 5160b4567c net: designware: add DM_MDIO support
+Reported-by: Mark Kettenis <mark.kettenis@xs4all.nl>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/net/designware.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Applied to u-boot/master, thanks!
+diff --git a/drivers/net/designware.c b/drivers/net/designware.c
+index b8ba00b7c0..5d92257e74 100644
+--- a/drivers/net/designware.c
++++ b/drivers/net/designware.c
+@@ -91,9 +91,8 @@ static int dw_mdio_write(struct mii_dev *bus, int addr, int devad, int reg,
+ }
+ 
+ #if defined(CONFIG_DM_ETH) && CONFIG_IS_ENABLED(DM_GPIO)
+-static int dw_mdio_reset(struct mii_dev *bus)
++static int __dw_mdio_reset(struct udevice *dev)
+ {
+-	struct udevice *dev = bus->priv;
+ 	struct dw_eth_dev *priv = dev_get_priv(dev);
+ 	struct dw_eth_pdata *pdata = dev_get_plat(dev);
+ 	int ret;
+@@ -122,6 +121,13 @@ static int dw_mdio_reset(struct mii_dev *bus)
+ 
+ 	return 0;
+ }
++
++static int dw_mdio_reset(struct mii_dev *bus)
++{
++	struct udevice *dev = bus->priv;
++
++	return __dw_mdio_reset(dev);
++}
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_DM_MDIO)
+@@ -142,9 +148,10 @@ int designware_eth_mdio_write(struct udevice *mdio_dev, int addr, int devad, int
+ #if CONFIG_IS_ENABLED(DM_GPIO)
+ int designware_eth_mdio_reset(struct udevice *mdio_dev)
+ {
+-	struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
++	struct mdio_perdev_priv *mdio_pdata = dev_get_uclass_priv(mdio_dev);
++	struct udevice *dev = mdio_pdata->mii_bus->priv;
+ 
+-	return dw_mdio_reset(pdata->mii_bus);
++	return __dw_mdio_reset(dev->parent);
+ }
+ #endif
+ 
+-- 
+2.25.1
 
---=20
-Tom
-
---/vFoH9b99aVotZEy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmB+4ucACgkQFHw5/5Y0
-tyxZYwv+Mt+7J6ZuTVyXVX0ZDosdSeyFN8Ahb3jWlrsREDkO6kkldkxvCesFvYHl
-T1+4ehlxfaQqaed0P5+PyvWSCoAlHNRfpJyTst0nOTl9YKQDgwNkJfVJWMShxMJF
-PF5kIW8EPgoupriCMeYs/vZYMzUf+hglbAyl9SKsDZBP+DEdB2NomF+rpr71vioG
-f45kDTWQlOZHFxnbvGB5dnuWFwngRyLYFSYbHt2Gzrn7DQMCkhNWYvByl186R7QI
-e/TjXieFCV+C52CALHQZgUUlbCCz+qbA7I2Wz+f4Fo+cF46LmkzQC6mKs2tpxxGN
-jIYMT49PrQYH5RkWKf1sf4jgtTWTVppwbGB/HYkcfsLDtLkouTzJzjnvDJzrdqIG
-HGgHajUZXmva2opYub4rDakKESyFlTv5EIPDshqSGGZj10+qKbDhR6NvBIuYrj+P
-C7VCRNvfTC0r0baGWn29Zvf+f7tNiiVSNBBSknPsPwqvUb7M1IWlzrlEUemYKB51
-Gd8BL1Lm
-=H1LI
------END PGP SIGNATURE-----
-
---/vFoH9b99aVotZEy--
