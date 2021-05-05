@@ -1,95 +1,55 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web10.4957.1620201330567743414
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web08.5070.1620204115172029386
  for <u-boot-amlogic@groups.io>;
- Wed, 05 May 2021 00:55:31 -0700
-Received: by mail-wr1-f49.google.com with SMTP id d11so727458wrw.8
-        for <u-boot-amlogic@groups.io>; Wed, 05 May 2021 00:55:30 -0700 (PDT)
+ Wed, 05 May 2021 01:41:55 -0700
+Received: by mail-wm1-f41.google.com with SMTP id l24-20020a7bc4580000b029014ac3b80020so2914260wmi.1
+        for <u-boot-amlogic@groups.io>; Wed, 05 May 2021 01:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zAPn2NgYZwoHilGE4P4M0ZJ34sdcPcsp6Mem7ihXxd8=;
-        b=WGPlWmPpmFVJrO/oUDjRpLMQhATb6sYeC7oJ85jolgKD2uPggzQblNLfRa0E7XzOdP
-         nZs8iToCNx7Q2o9xD+DuWjvbv0C+naHQMohRuwvoHnB6cKRFCm1tFathaFd28Yv8PzaU
-         /My5NZKqOri+q5+vabYbRB7Vd2dBaH9kny1Zv4LvQg+n5EqOHliuZqySl7oluF2inEuw
-         TmB3O3R8SGLLowySU0dpEHwAe8cn5eoRK8c/XdzvqlUaUUQ3PXLljlByY7zwIwiEZatn
-         vl5X32WYlPUiclR2iiPK/1RO0CN+Rl2u85ciWdB1QTEaAUJ1r7WXUbgplLLLtHNeu/kt
-         SJzA==
+        bh=MSBZFLrkO4bRgaq/RwJ1ZGVkf0QEoOwjCn5y1DIy6Kk=;
+        b=UpnzVl4aZTYYsOdN976CT7NVzQzNDWjPd1jgTTWVhsbc6jD8JD704C1g/7h2BxL98e
+         t1+o8iODm2BKtM57k+Kr5gEd0lnrbRHxKWJZ31LPInBIRRgyOvxnNac8Cl8rd6y7v1zy
+         WseOJeIhOCyAS+Un7zOKkE5PdVtIVcBVi//vXOWxSD/NA4JR2h5ykrIeKQ5avmYEU76F
+         OoVCd1iyY+QMydXtMZX3xUWWbt0b6VpWHxD4TmiRxelMYFh2mG6v9CDeKx6GDW+hzBAG
+         cqmRT1n254PQI46Q6Ynpg8Yc4SdhXT0jcdMYRQXwTKujpH8thCYmvhjSjGyMbYiqtT1/
+         wTyA==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] net: dwmac_meson8b: do not set TX delay in TXID & RXID
-Date: Wed,  5 May 2021 09:55:26 +0200
-Message-Id: <20210505075526.3838291-1-narmstrong@baylibre.com>
+Subject: [PATCH] usb: dwc3-meson-g12a: skip phy on -ENODATA aswell
+Date: Wed,  5 May 2021 10:41:50 +0200
+Message-Id: <20210505084150.3862010-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: joe.hershberger@ni.com, rfried.dev@gmail.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, martin.blumenstingl@googlemail.com, Neil Armstrong <narmstrong@baylibre.com>
+To: marex@denx.de
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-When the PHY interface is set as TXID & RXID, the delays should be taken from DT,
-but first they should not be hardcoded since the PHY driver will set them.
+If the PHY isn't specified in the DT, -ENODATA means it should be skipped,
+handle it like -ENOENT.
 
-Fixes: 798424e857 ("net: designware: add Amlogic Meson8b & later glue driver")
+With that, devices without USB3 supported can have USB working (Odroid-HC4).
+
+Fixes: adb049abf7 ("usb: dwc3: Add Meson G12A USB Glue")
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/net/dwmac_meson8b.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/usb/dwc3/dwc3-meson-g12a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
-index c0b6ef4994..40cd8370b0 100644
---- a/drivers/net/dwmac_meson8b.c
-+++ b/drivers/net/dwmac_meson8b.c
-@@ -59,8 +59,6 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
- 	switch (edata->phy_interface) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 	case PHY_INTERFACE_MODE_RGMII_ID:
--	case PHY_INTERFACE_MODE_RGMII_RXID:
--	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		/* Set RGMII mode */
- 		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
- 						     AXG_ETH_REG_0_TX_PHASE(1) |
-@@ -69,6 +67,15 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
- 						     AXG_ETH_REG_0_CLK_EN);
- 		break;
+diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+index bd8bf227c8..90418ddc1d 100644
+--- a/drivers/usb/dwc3/dwc3-meson-g12a.c
++++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+@@ -298,7 +298,7 @@ static int dwc3_meson_g12a_get_phys(struct dwc3_meson_g12a *priv)
+ 	for (i = 0 ; i < PHY_COUNT ; ++i) {
+ 		ret = generic_phy_get_by_name(priv->dev, phy_names[i],
+ 					      &priv->phys[i]);
+-		if (ret == -ENOENT)
++		if (ret == -ENOENT || ret == -ENODATA)
+ 			continue;
  
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		/* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
-+		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
-+						     AXG_ETH_REG_0_TX_RATIO(4) |
-+						     AXG_ETH_REG_0_PHY_CLK_EN |
-+						     AXG_ETH_REG_0_CLK_EN);
-+		break;
-+
- 	case PHY_INTERFACE_MODE_RMII:
- 		/* Set RMII mode */
- 		out_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RMII |
-@@ -90,8 +97,6 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
- 	switch (edata->phy_interface) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 	case PHY_INTERFACE_MODE_RGMII_ID:
--	case PHY_INTERFACE_MODE_RGMII_RXID:
--	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		/* Set RGMII mode */
- 		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
- 						     GX_ETH_REG_0_TX_PHASE(1) |
-@@ -101,6 +106,16 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
- 
- 		break;
- 
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		/* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
-+		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
-+						     GX_ETH_REG_0_TX_RATIO(4) |
-+						     GX_ETH_REG_0_PHY_CLK_EN |
-+						     GX_ETH_REG_0_CLK_EN);
-+
-+		break;
-+
- 	case PHY_INTERFACE_MODE_RMII:
- 		/* Set RMII mode */
- 		out_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_INVERT_RMII_CLK |
+ 		if (ret)
 -- 
 2.25.1
 
