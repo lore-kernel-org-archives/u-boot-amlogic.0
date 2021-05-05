@@ -1,62 +1,95 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web09.13998.1619625044221758274
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web10.4957.1620201330567743414
  for <u-boot-amlogic@groups.io>;
- Wed, 28 Apr 2021 08:50:44 -0700
-Received: by mail-wr1-f43.google.com with SMTP id m9so50847516wrx.3
-        for <u-boot-amlogic@groups.io>; Wed, 28 Apr 2021 08:50:44 -0700 (PDT)
+ Wed, 05 May 2021 00:55:31 -0700
+Received: by mail-wr1-f49.google.com with SMTP id d11so727458wrw.8
+        for <u-boot-amlogic@groups.io>; Wed, 05 May 2021 00:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:reply-to:to:cc:organization:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=Uel8cI22BAaiXI8bvCXZagf21WYsn2sSBWt+MSb7Ai0=;
-        b=av2/bsZCjjHGItdBvz6kegD0RATGk3ZOpdWnDOehYEIZgJ3iA7//PQ+lOmGdTx12az
-         BuYwrd6//G2mvmT944wpOZ1XWTDU0BvrZ7qkoSVHSNcs2S3jifVkyA2Xp7FOz8wc+id5
-         i6jr6pnOqpROHtRpEZI+tv9IwtMDbCBjilYe3CRtkV/TT98eSMrebdKJl2lZT44+oApY
-         6ly1gqFsSoup2DFn93CjEwKSF+67a9I9RKky21o1QL3wdZam8YimhIYX5waNejuwKw2H
-         WfN6Kf6pWzc3u/A7XuxuLO36a8CAbuPucCz8vM84NuzmSRiJeyJjC6i/OCp6Gx1sEisd
-         ApjA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zAPn2NgYZwoHilGE4P4M0ZJ34sdcPcsp6Mem7ihXxd8=;
+        b=WGPlWmPpmFVJrO/oUDjRpLMQhATb6sYeC7oJ85jolgKD2uPggzQblNLfRa0E7XzOdP
+         nZs8iToCNx7Q2o9xD+DuWjvbv0C+naHQMohRuwvoHnB6cKRFCm1tFathaFd28Yv8PzaU
+         /My5NZKqOri+q5+vabYbRB7Vd2dBaH9kny1Zv4LvQg+n5EqOHliuZqySl7oluF2inEuw
+         TmB3O3R8SGLLowySU0dpEHwAe8cn5eoRK8c/XdzvqlUaUUQ3PXLljlByY7zwIwiEZatn
+         vl5X32WYlPUiclR2iiPK/1RO0CN+Rl2u85ciWdB1QTEaAUJ1r7WXUbgplLLLtHNeu/kt
+         SJzA==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20210428
-Reply-To: narmstrong@baylibre.com
-Message-ID: <bfecf72a-6bbd-abd0-9ac9-cc3d7cb0715c@baylibre.com>
-Date: Wed, 28 Apr 2021 17:50:41 +0200
+Subject: [PATCH] net: dwmac_meson8b: do not set TX delay in TXID & RXID
+Date: Wed,  5 May 2021 09:55:26 +0200
+Message-Id: <20210505075526.3838291-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Transfer-Encoding: 8bit
+To: joe.hershberger@ni.com, rfried.dev@gmail.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, martin.blumenstingl@googlemail.com, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+When the PHY interface is set as TXID & RXID, the delays should be taken from DT,
+but first they should not be hardcoded since the PHY driver will set them.
 
-A single patch to fix boot on (at least) Odroid-C4, where the MDIO bus reset used random
-sleep values instead of the proper pdata values.
+Fixes: 798424e857 ("net: designware: add Amlogic Meson8b & later glue driver")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/net/dwmac_meson8b.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/7337
+diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
+index c0b6ef4994..40cd8370b0 100644
+--- a/drivers/net/dwmac_meson8b.c
++++ b/drivers/net/dwmac_meson8b.c
+@@ -59,8 +59,6 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
+ 	switch (edata->phy_interface) {
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+-	case PHY_INTERFACE_MODE_RGMII_RXID:
+-	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		/* Set RGMII mode */
+ 		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
+ 						     AXG_ETH_REG_0_TX_PHASE(1) |
+@@ -69,6 +67,15 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
+ 						     AXG_ETH_REG_0_CLK_EN);
+ 		break;
+ 
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		/* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
++		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
++						     AXG_ETH_REG_0_TX_RATIO(4) |
++						     AXG_ETH_REG_0_PHY_CLK_EN |
++						     AXG_ETH_REG_0_CLK_EN);
++		break;
++
+ 	case PHY_INTERFACE_MODE_RMII:
+ 		/* Set RMII mode */
+ 		out_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RMII |
+@@ -90,8 +97,6 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
+ 	switch (edata->phy_interface) {
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+-	case PHY_INTERFACE_MODE_RGMII_RXID:
+-	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		/* Set RGMII mode */
+ 		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
+ 						     GX_ETH_REG_0_TX_PHASE(1) |
+@@ -101,6 +106,16 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
+ 
+ 		break;
+ 
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		/* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
++		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
++						     GX_ETH_REG_0_TX_RATIO(4) |
++						     GX_ETH_REG_0_PHY_CLK_EN |
++						     GX_ETH_REG_0_CLK_EN);
++
++		break;
++
+ 	case PHY_INTERFACE_MODE_RMII:
+ 		/* Set RMII mode */
+ 		out_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_INVERT_RMII_CLK |
+-- 
+2.25.1
 
-Thanks,
-Neil
-
-The following changes since commit 79b0f08d6af498e6fda8cd257d62e2095764410c:
-
-  configs: Resync with savedefconfig (2021-04-27 08:28:38 -0400)
-
-are available in the Git repository at:
-
-  https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20210428
-
-for you to fetch changes up to 98b8204626ac2837e927e79d3dfe77246e506c02:
-
-  net: designware: fix PHY reset with DM_MDIO (2021-04-28 17:45:26 +0200)
-
-----------------------------------------------------------------
-- net: designware: fix PHY reset with DM_MDIO, fixing boot of (at least) Odroid-C4
-
-----------------------------------------------------------------
-Neil Armstrong (1):
-      net: designware: fix PHY reset with DM_MDIO
-
- drivers/net/designware.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
