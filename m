@@ -1,63 +1,114 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web11.10545.1621006928891185204
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web11.10579.1621007063033688656
  for <u-boot-amlogic@groups.io>;
- Fri, 14 May 2021 08:42:09 -0700
-Received: by mail-wm1-f53.google.com with SMTP id p14-20020a05600c358eb029015c01f207d7so1656077wmq.5
-        for <u-boot-amlogic@groups.io>; Fri, 14 May 2021 08:42:08 -0700 (PDT)
+ Fri, 14 May 2021 08:44:23 -0700
+Received: by mail-wr1-f41.google.com with SMTP id q5so10985260wrs.4
+        for <u-boot-amlogic@groups.io>; Fri, 14 May 2021 08:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=e0xW5VZu2sOZqb1kCFEt3DnOlqWoJgZz3C0+JGQAy9Y=;
-        b=MngKt+FH1d+iv6qoJ4od7qEWjANgyZZzoqbZKmismgWrrC0ZjyOTiIP5FPW6ZYdaDY
-         cko0FZy4M1HFbTZ3GuwCpjRNToo+6jZaGL6DYs332zttL1bFtEvEksJUZdpTdOL2daQn
-         hMBBpxA4XolPt4/Cgu/ShnnKswxa4Gs4MbXig1XZA6zodhHrwaeKLYHAg5FNlP72piCN
-         72ElzZk2erAQc2+lEpnMNmzdWkBWkqENnBYt19WZHdsE8sXJVaTaQC+uvEjElHHAQIJG
-         KcjuJimUNq5fcvGRha0W7KdRGcZEat4GcSjJIwUgvBet5d8Mfr3DjQ9O2IXv7T0ftoYC
-         w3zA==
+        bh=eXrnlyrt3MqDYArsVpMYKmImT4OP790ioGyEInWNnXw=;
+        b=FJliVbK//yQcg5aKx1u8PqQyxHQz1Fi/lj3MikkMNgMkDsI9WiLYKYmNSjzQtOXYkH
+         tAW69WecATMcFiBo7Zxy7G/FAdePvxWBLYhiEY/h/M/wqRCYJifrgJpDUqKVxqrIgx4a
+         /VbsPX2bEP6Xoab/KEGrT6h/9eIs8KvpYnHjbWlXn3GWX0dXfyiGDIj3tCmMccKgrcVk
+         IgcLnvMzZ7/fEXCWxQ3IAMwBsYd7SzHU5D1k/7aihKd8nmJDYQcyJHJOAQYO9NlQlJz4
+         aPD/ogrHYI7ixJPbvzmAfig6VntkyZNjVXYkwkDuXQ+yYgRU+cA2jvwHnZYkQn8S340g
+         h1lg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] usb: dwc3-meson-g12a: skip phy on -ENODATA aswell
-References: <20210505084150.3862010-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH] net: dwmac_meson8b: do not set TX delay in TXID & RXID
+References: <20210505075526.3838291-1-narmstrong@baylibre.com>
+ <CAGi-RUKfw-VQ0MJKDJkPo6kOOGkKVfMqzrX86tK47REx9tdLww@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <e0f17f32-7317-4b97-b619-ee7e10a22b75@baylibre.com>
-Date: Fri, 14 May 2021 17:42:06 +0200
+Message-ID: <286d5df2-7a32-6b76-af61-bd9b72f5955b@baylibre.com>
+Date: Fri, 14 May 2021 17:44:19 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210505084150.3862010-1-narmstrong@baylibre.com>
+In-Reply-To: <CAGi-RUKfw-VQ0MJKDJkPo6kOOGkKVfMqzrX86tK47REx9tdLww@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io
-Cc: u-boot@lists.denx.de, marex@denx.de
+To: Ramon Fried <rfried.dev@gmail.com>
+Cc: Joe Hershberger <joe.hershberger@ni.com>, u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>, martin.blumenstingl@googlemail.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On 05/05/2021 10:41, Neil Armstrong wrote:
-> If the PHY isn't specified in the DT, -ENODATA means it should be skipped,
-> handle it like -ENOENT.
-> 
-> With that, devices without USB3 supported can have USB working (Odroid-HC4).
-> 
-> Fixes: adb049abf7 ("usb: dwc3: Add Meson G12A USB Glue")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/usb/dwc3/dwc3-meson-g12a.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> index bd8bf227c8..90418ddc1d 100644
-> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> @@ -298,7 +298,7 @@ static int dwc3_meson_g12a_get_phys(struct dwc3_meson_g12a *priv)
->  	for (i = 0 ; i < PHY_COUNT ; ++i) {
->  		ret = generic_phy_get_by_name(priv->dev, phy_names[i],
->  					      &priv->phys[i]);
-> -		if (ret == -ENOENT)
-> +		if (ret == -ENOENT || ret == -ENODATA)
->  			continue;
->  
->  		if (ret)
+On 05/05/2021 20:47, Ramon Fried wrote:
+> On Wed, May 5, 2021 at 10:55 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> When the PHY interface is set as TXID & RXID, the delays should be taken from DT,
+>> but first they should not be hardcoded since the PHY driver will set them.
+>>
+>> Fixes: 798424e857 ("net: designware: add Amlogic Meson8b & later glue driver")
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/net/dwmac_meson8b.c | 23 +++++++++++++++++++----
+>>  1 file changed, 19 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
+>> index c0b6ef4994..40cd8370b0 100644
+>> --- a/drivers/net/dwmac_meson8b.c
+>> +++ b/drivers/net/dwmac_meson8b.c
+>> @@ -59,8 +59,6 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
+>>         switch (edata->phy_interface) {
+>>         case PHY_INTERFACE_MODE_RGMII:
+>>         case PHY_INTERFACE_MODE_RGMII_ID:
+>> -       case PHY_INTERFACE_MODE_RGMII_RXID:
+>> -       case PHY_INTERFACE_MODE_RGMII_TXID:
+>>                 /* Set RGMII mode */
+>>                 setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
+>>                                                      AXG_ETH_REG_0_TX_PHASE(1) |
+>> @@ -69,6 +67,15 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
+>>                                                      AXG_ETH_REG_0_CLK_EN);
+>>                 break;
+>>
+>> +       case PHY_INTERFACE_MODE_RGMII_RXID:
+>> +       case PHY_INTERFACE_MODE_RGMII_TXID:
+>> +               /* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
+>> +               setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
+>> +                                                    AXG_ETH_REG_0_TX_RATIO(4) |
+>> +                                                    AXG_ETH_REG_0_PHY_CLK_EN |
+>> +                                                    AXG_ETH_REG_0_CLK_EN);
+>> +               break;
+>> +
+>>         case PHY_INTERFACE_MODE_RMII:
+>>                 /* Set RMII mode */
+>>                 out_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RMII |
+>> @@ -90,8 +97,6 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
+>>         switch (edata->phy_interface) {
+>>         case PHY_INTERFACE_MODE_RGMII:
+>>         case PHY_INTERFACE_MODE_RGMII_ID:
+>> -       case PHY_INTERFACE_MODE_RGMII_RXID:
+>> -       case PHY_INTERFACE_MODE_RGMII_TXID:
+>>                 /* Set RGMII mode */
+>>                 setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
+>>                                                      GX_ETH_REG_0_TX_PHASE(1) |
+>> @@ -101,6 +106,16 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
+>>
+>>                 break;
+>>
+>> +       case PHY_INTERFACE_MODE_RGMII_RXID:
+>> +       case PHY_INTERFACE_MODE_RGMII_TXID:
+>> +               /* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
+>> +               setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
+>> +                                                    GX_ETH_REG_0_TX_RATIO(4) |
+>> +                                                    GX_ETH_REG_0_PHY_CLK_EN |
+>> +                                                    GX_ETH_REG_0_CLK_EN);
+>> +
+>> +               break;
+>> +
+>>         case PHY_INTERFACE_MODE_RMII:
+>>                 /* Set RMII mode */
+>>                 out_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_INVERT_RMII_CLK |
+>> --
+>> 2.25.1
+>>
+> Reviewed-by: Ramon Fried <rfried.dev@gmail.com>
 > 
 
-Applied to u-boot-amlogic
+
+Thanks,
+
+Applied to u-boot-amlogic,
 
 Neil
+
