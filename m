@@ -1,103 +1,64 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.15900.1625263313838247893
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web11.15951.1625263603123268797
  for <u-boot-amlogic@groups.io>;
- Fri, 02 Jul 2021 15:01:54 -0700
-Received: by mail-wr1-f51.google.com with SMTP id i94so14120353wri.4
-        for <u-boot-amlogic@groups.io>; Fri, 02 Jul 2021 15:01:53 -0700 (PDT)
+ Fri, 02 Jul 2021 15:06:43 -0700
+Received: by mail-wm1-f53.google.com with SMTP id a5-20020a7bc1c50000b02901e3bbe0939bso7280858wmj.0
+        for <u-boot-amlogic@groups.io>; Fri, 02 Jul 2021 15:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vDTgW18Sefby2eBbYwTtzqqR0tg9TEfGaetqy27lxP4=;
-        b=K946qhXJW8gmKISnOHbeyzKFPFLNft24iC+VD45gAyFL8yQuzcnU5HV90syCTE7pB3
-         bLCXOxDlM7jxo1e/S5GSSEQWLmZX08ig0XG7OXHkyFb0R2K/78tgpM6bzAkQSTpt+x+V
-         IpJZ/lvytAcz0Be/PeiYi2IpAl3SZd8kLPLTG5v0r7FO4MFl+u5lcXi8LTCTHH1c+1iZ
-         PzIs/bjgwfY3OruKU3Q+Pk/XqyB5KMmivXux/RGv4BFEKnhj0LvgW2+4TBeH9XRfx7Iw
-         Fv8DlLt6QhIF3QK5LUhioowCbjVezLnMQL0GzF4xEhrVWGRw9VVZtXY0Sz8INr+rCSt+
-         QQpQ==
+        h=from:subject:reply-to:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=D5qjS0fGJiAShSTRh1O66OnJGhY+CkvBUceCMQ7dF1w=;
+        b=IQb0xTKj0epBpEfghveQf8JILg/qP3KYd10FqcPdnGK+CLLWbmngYy2zXDw7bJxIGn
+         3ocKXAcmsqJh0c+sI9M39cj9G+H5/+i3iDxjR4jY0jzzy1Ggk4qpgTUSULIFroZH1swy
+         zjVlqsJQx80znkEwfWpGEdBB3UX+ZVVEOzeuE7AxrejNUISHtOSSKj2jcIlkZUViBhAQ
+         3sKAWJlu4ER4IlGJNrsghnbIkMa1zWREEDwlU0zbwcPLKwDCD983MBBPW7Nd3o6NGbJY
+         Vk89Tde2/wCoHdO64TBxbPE3nd/x84+42rfTsFbyLe8x+38KP36M+70DGubl7uVUAkha
+         YwHA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] configs: libretech: set SPI mode to 0
-References: <CACdvmAhd8GA=7wpF=b4nMG3pKRX7XV8NMBZLvT+DDR27CPuOGg@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <d19279ae-9cd6-9b74-2f57-bc0513e0317d@baylibre.com>
-Date: Sat, 3 Jul 2021 00:01:50 +0200
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20210703
+Reply-To: narmstrong@baylibre.com
+Message-ID: <a1cbacc6-042d-32c1-eb91-8baa577598b4@baylibre.com>
+Date: Sat, 3 Jul 2021 00:06:40 +0200
 MIME-Version: 1.0
-In-Reply-To: <CACdvmAhd8GA=7wpF=b4nMG3pKRX7XV8NMBZLvT+DDR27CPuOGg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Da Xue <da@libre.computer>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Marek Vasut <marex@denx.de>, Tom Rini <trini@konsulko.com>
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 02/07/2021 23:11, Da Xue wrote:
-> Kconfig defaults to mode 3 if CONFIG_SF_DEFAULT_MODE is not set.
-> It becomes an issue since meson_spifc does not support SPI_CPHA.
-> Needed after commit e2e95e5e25421fbef499e21bf94a5339701f9a99.
-> 
-> Signed-off-by:Da Xue <da@libre.computer>
-> ---
->  configs/libretech-ac_defconfig       | 1 +
->  configs/libretech-cc_v2_defconfig    | 1 +
->  configs/libretech-s905d-pc_defconfig | 1 +
->  configs/libretech-s912-pc_defconfig  | 1 +
->  4 files changed, 4 insertions(+)
-> 
-> diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
-> index ec51f2ad38..9abbcad3c0 100644
-> --- a/configs/libretech-ac_defconfig
-> +++ b/configs/libretech-ac_defconfig
-> @@ -39,6 +39,7 @@ CONFIG_MMC_MESON_GX=y
->  CONFIG_MTD=y
->  CONFIG_DM_MTD=y
->  CONFIG_DM_SPI_FLASH=y
-> +CONFIG_SF_DEFAULT_MODE=0x0
->  CONFIG_SPI_FLASH_GIGADEVICE=y
->  CONFIG_SPI_FLASH_SPANSION=y
->  CONFIG_PHY_MESON_GXL=y
-> diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
-> index 97c8a9e47b..7dc6ed2f29 100644
-> --- a/configs/libretech-cc_v2_defconfig
-> +++ b/configs/libretech-cc_v2_defconfig
-> @@ -35,6 +35,7 @@ CONFIG_MMC_MESON_GX=y
->  CONFIG_MTD=y
->  CONFIG_DM_MTD=y
->  CONFIG_DM_SPI_FLASH=y
-> +CONFIG_SF_DEFAULT_MODE=0x0
->  CONFIG_SPI_FLASH_GIGADEVICE=y
->  CONFIG_PHY_MESON_GXL=y
->  CONFIG_DM_ETH=y
-> diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
-> index c0301a0aa0..93523c23cf 100644
-> --- a/configs/libretech-s905d-pc_defconfig
-> +++ b/configs/libretech-s905d-pc_defconfig
-> @@ -36,6 +36,7 @@ CONFIG_SARADC_MESON=y
->  CONFIG_MMC_MESON_GX=y
->  CONFIG_MTD=y
->  CONFIG_DM_SPI_FLASH=y
-> +CONFIG_SF_DEFAULT_MODE=0x0
->  CONFIG_SPI_FLASH_GIGADEVICE=y
->  CONFIG_PHY_REALTEK=y
->  CONFIG_DM_ETH=y
-> diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
-> index e2faea6242..669f000f7f 100644
-> --- a/configs/libretech-s912-pc_defconfig
-> +++ b/configs/libretech-s912-pc_defconfig
-> @@ -35,6 +35,7 @@ CONFIG_SARADC_MESON=y
->  CONFIG_MMC_MESON_GX=y
->  CONFIG_MTD=y
->  CONFIG_DM_SPI_FLASH=y
-> +CONFIG_SF_DEFAULT_MODE=0x0
->  CONFIG_SPI_FLASH_GIGADEVICE=y
->  CONFIG_PHY_REALTEK=y
->  CONFIG_DM_ETH=y
-> -- 
-> 2.30.2
-> 
-> 
+Hi Tom,
+
+Please find a very late fix for a SPI NOR Flash probe fail on the Amlogic based libretech boards.
+
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/8015
 
 Thanks,
-Applying to u-boot-amlogic & sending PR to have it in this release
-
 Neil
+
+The following changes since commit b7ad721c83fdbeeb71189d5f259c109cb1c38895:
+
+  Revert "TEST: USB_HOST not USB" (2021-06-30 13:10:02 -0400)
+
+are available in the Git repository at:
+
+  https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20210703
+
+for you to fetch changes up to 8c6d8c32192049f8dafaaafae68eb9124b21c1e0:
+
+  configs: libretech: set SPI mode to 0 (2021-07-02 23:59:27 +0200)
+
+----------------------------------------------------------------
+- configs: libretech: set SPI mode to 0 to fix SPI NOR Flash probe
+
+----------------------------------------------------------------
+Da Xue (1):
+      configs: libretech: set SPI mode to 0
+
+ configs/libretech-ac_defconfig       | 1 +
+ configs/libretech-cc_v2_defconfig    | 1 +
+ configs/libretech-s905d-pc_defconfig | 1 +
+ configs/libretech-s912-pc_defconfig  | 1 +
+ 4 files changed, 4 insertions(+)
