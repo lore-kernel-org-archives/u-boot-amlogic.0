@@ -1,59 +1,103 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web09.3929.1622101564422449889
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web11.15900.1625263313838247893
  for <u-boot-amlogic@groups.io>;
- Thu, 27 May 2021 00:46:04 -0700
-Received: by mail-wm1-f54.google.com with SMTP id l11-20020a05600c4f0bb029017a7cd488f5so1926058wmq.0
-        for <u-boot-amlogic@groups.io>; Thu, 27 May 2021 00:46:04 -0700 (PDT)
+ Fri, 02 Jul 2021 15:01:54 -0700
+Received: by mail-wr1-f51.google.com with SMTP id i94so14120353wri.4
+        for <u-boot-amlogic@groups.io>; Fri, 02 Jul 2021 15:01:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Rflc6De9JUWRW+9nDSA5kKRINlKLYOja+bYCQrzJi4U=;
-        b=dVGNTimClvqATiOQoj+KfqlpGeKvF4Tye2NNnFGrRY+mBAmaPHUsr3AXrau3lDq8AF
-         lk5YTf3lA4xaUboL0YCaVl0MQaS7ZQKDRRyl/fRJAqAyttPsEzwO9lZEuRXWwhc9lBTx
-         qjGYmYBdwLve9nT/j2X/SK7qICQDAb4HNQulZMIH/79bZRpRxmj7gPTywt7QNF7+wQgb
-         DaL+nnFvMZzKSR4eFzx96FKDG/rXaD4CfmeIWyfX1EcJdOWAjQbygOc7iBPhYCBWPp0y
-         sIB5G/7rTJADGDOWptXyYlBeE/ZMCt3jl7zYYqotFIXDr1QRUKCAKIZ74MnMJAHpUhnm
-         Mgxg==
+        bh=vDTgW18Sefby2eBbYwTtzqqR0tg9TEfGaetqy27lxP4=;
+        b=K946qhXJW8gmKISnOHbeyzKFPFLNft24iC+VD45gAyFL8yQuzcnU5HV90syCTE7pB3
+         bLCXOxDlM7jxo1e/S5GSSEQWLmZX08ig0XG7OXHkyFb0R2K/78tgpM6bzAkQSTpt+x+V
+         IpJZ/lvytAcz0Be/PeiYi2IpAl3SZd8kLPLTG5v0r7FO4MFl+u5lcXi8LTCTHH1c+1iZ
+         PzIs/bjgwfY3OruKU3Q+Pk/XqyB5KMmivXux/RGv4BFEKnhj0LvgW2+4TBeH9XRfx7Iw
+         Fv8DlLt6QhIF3QK5LUhioowCbjVezLnMQL0GzF4xEhrVWGRw9VVZtXY0Sz8INr+rCSt+
+         QQpQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] meson64: add kernel compression vars
-References: <20210527064351.3102968-1-art@khadas.com>
+Subject: Re: [PATCH] configs: libretech: set SPI mode to 0
+References: <CACdvmAhd8GA=7wpF=b4nMG3pKRX7XV8NMBZLvT+DDR27CPuOGg@mail.gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <89473d20-fbbf-bdd5-70f5-5f0bb8860d26@baylibre.com>
-Date: Thu, 27 May 2021 09:46:00 +0200
+Message-ID: <d19279ae-9cd6-9b74-2f57-bc0513e0317d@baylibre.com>
+Date: Sat, 3 Jul 2021 00:01:50 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210527064351.3102968-1-art@khadas.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CACdvmAhd8GA=7wpF=b4nMG3pKRX7XV8NMBZLvT+DDR27CPuOGg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Artem Lapkin <email2tema@gmail.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, khilman@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+Content-Transfer-Encoding: 8bit
+To: Da Xue <da@libre.computer>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Marek Vasut <marex@denx.de>, Tom Rini <trini@konsulko.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 27/05/2021 08:43, Artem Lapkin wrote:
-> make possible to load simple compressed linux kernel for meson64
+On 02/07/2021 23:11, Da Xue wrote:
+> Kconfig defaults to mode 3 if CONFIG_SF_DEFAULT_MODE is not set.
+> It becomes an issue since meson_spifc does not support SPI_CPHA.
+> Needed after commit e2e95e5e25421fbef499e21bf94a5339701f9a99.
 > 
-> Signed-off-by: Artem Lapkin <art@khadas.com>
+> Signed-off-by:Da Xue <da@libre.computer>
 > ---
->  include/configs/meson64.h | 2 ++
->  1 file changed, 2 insertions(+)
+>  configs/libretech-ac_defconfig       | 1 +
+>  configs/libretech-cc_v2_defconfig    | 1 +
+>  configs/libretech-s905d-pc_defconfig | 1 +
+>  configs/libretech-s912-pc_defconfig  | 1 +
+>  4 files changed, 4 insertions(+)
 > 
-> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-> index e3d25493..552a08c2 100644
-> --- a/include/configs/meson64.h
-> +++ b/include/configs/meson64.h
-> @@ -113,6 +113,8 @@
->  	"stdin=" STDIN_CFG "\0" \
->  	"stdout=" STDOUT_CFG "\0" \
->  	"stderr=" STDOUT_CFG "\0" \
-> +	"kernel_comp_addr_r=0x0d080000\0" \
-> +	"kernel_comp_size=0x2000000\0" \
->  	"fdt_addr_r=0x08008000\0" \
->  	"loadaddr=0x01000000\0" \
->  	"scriptaddr=0x08000000\0" \
+> diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
+> index ec51f2ad38..9abbcad3c0 100644
+> --- a/configs/libretech-ac_defconfig
+> +++ b/configs/libretech-ac_defconfig
+> @@ -39,6 +39,7 @@ CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_MTD=y
+>  CONFIG_DM_SPI_FLASH=y
+> +CONFIG_SF_DEFAULT_MODE=0x0
+>  CONFIG_SPI_FLASH_GIGADEVICE=y
+>  CONFIG_SPI_FLASH_SPANSION=y
+>  CONFIG_PHY_MESON_GXL=y
+> diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+> index 97c8a9e47b..7dc6ed2f29 100644
+> --- a/configs/libretech-cc_v2_defconfig
+> +++ b/configs/libretech-cc_v2_defconfig
+> @@ -35,6 +35,7 @@ CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_MTD=y
+>  CONFIG_DM_SPI_FLASH=y
+> +CONFIG_SF_DEFAULT_MODE=0x0
+>  CONFIG_SPI_FLASH_GIGADEVICE=y
+>  CONFIG_PHY_MESON_GXL=y
+>  CONFIG_DM_ETH=y
+> diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
+> index c0301a0aa0..93523c23cf 100644
+> --- a/configs/libretech-s905d-pc_defconfig
+> +++ b/configs/libretech-s905d-pc_defconfig
+> @@ -36,6 +36,7 @@ CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_SPI_FLASH=y
+> +CONFIG_SF_DEFAULT_MODE=0x0
+>  CONFIG_SPI_FLASH_GIGADEVICE=y
+>  CONFIG_PHY_REALTEK=y
+>  CONFIG_DM_ETH=y
+> diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
+> index e2faea6242..669f000f7f 100644
+> --- a/configs/libretech-s912-pc_defconfig
+> +++ b/configs/libretech-s912-pc_defconfig
+> @@ -35,6 +35,7 @@ CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_SPI_FLASH=y
+> +CONFIG_SF_DEFAULT_MODE=0x0
+>  CONFIG_SPI_FLASH_GIGADEVICE=y
+>  CONFIG_PHY_REALTEK=y
+>  CONFIG_DM_ETH=y
+> -- 
+> 2.30.2
+> 
 > 
 
-Looks fine, I'll let other comment on it and apply it if it's ok for everyone
+Thanks,
+Applying to u-boot-amlogic & sending PR to have it in this release
 
 Neil
