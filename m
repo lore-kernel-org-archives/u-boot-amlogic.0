@@ -1,57 +1,168 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
- by mx.groups.io with SMTP id smtpd.web09.1167.1626158938114370632
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+ by mx.groups.io with SMTP id smtpd.web12.3922.1626325236976938686
  for <u-boot-amlogic@groups.io>;
- Mon, 12 Jul 2021 23:48:58 -0700
-Received: by mail-pl1-f180.google.com with SMTP id d1so5375555plg.0
-        for <u-boot-amlogic@groups.io>; Mon, 12 Jul 2021 23:48:58 -0700 (PDT)
+ Wed, 14 Jul 2021 22:00:37 -0700
+Received: by mail-pf1-f181.google.com with SMTP id p22so3985161pfh.8
+        for <u-boot-amlogic@groups.io>; Wed, 14 Jul 2021 22:00:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=heSID91KULWbzteWuUhPXQxqA7/VUrvEkD1n/YJiyiM=;
-        b=r+AzT3fTbh0bQkDu/AGe9FbIhcY389m7Lv6jTCDzMlFn7lLrk7VbxtDR+YpwwVigcy
-         Z8oP10CYlmdn8UDyh9oLT1aIk2XVaJiGp/niFyQCvkmFy6ENvJ2QXSEtXSCllkoUBlsp
-         DQ821H0Gtq+w1ACIfWi2TiUKaZBU8AAG8RQ7yf8FvOz0rsFAxFlQWf4QENKJWGdcRGz7
-         5Hwd+c+IUN+y2OqaWEKeLypwWCYGC2LDATziUPkY8C1ykE6qhojMxI+b8tN2Ng3J8b6n
-         0TUr9cDflJYyD5+K11RSxNMEGIJPOHWQmqVRX99FKY/liSD3dLCZGWoEnIG6RN6ddCa4
-         S0YQ==
+        bh=M02kRbAGaCRN6r1pV6yzsZpE9MyVVXy2TmaKam6o6gg=;
+        b=Sl6KOh/Zqinm9PmfS4+ZhJza0VN+jhd/SRQUpDPP7Frupr9J5lLwqQ20ujV7iOsaa9
+         WeBsBMB7aHXDy8PJEf2D7xHmUREI2n7nX5yAlI5ttFTtb02adDfvHCGs5Hq/pbZ3kW50
+         wKn4NgqaD7PhmHZ1LbdJN8auZ/k/T1a9Q7ZCdUBVT+ATJ/FKwh8jPMXqRbglp6uNy96N
+         6k8cW0RqjKRwFduzJWs1MqstroMECMR7xHZCvTkDMUWoBE0E8dICplY3F548FU/nVOHc
+         noEck8pL2A7QeqzG0QHtrAuh3jBzzXYrhjpil4WT1KSOQx0vFFvb7Begl3Q5xbw8rJ/j
+         mLiA==
 Return-Path: <email2tema@gmail.com>
 From: Artem Lapkin <email2tema@gmail.com>
-Subject: [PATCH] board: amlogic: vim3: fix phy-names property setup
-Date: Tue, 13 Jul 2021 14:48:47 +0800
-Message-Id: <20210713064847.2468652-1-art@khadas.com>
+Subject: [PATCH] dts: khadas vim series: Use devicetree for SMBIOS settings
+Date: Thu, 15 Jul 2021 13:00:25 +0800
+Message-Id: <20210715050026.2940786-1-art@khadas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: narmstrong@baylibre.com
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, khilman@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
 List-ID: <u-boot-amlogic@groups.io>
 
-phy-names was improperly implemented resulting in an inoperable USB-OTG
-port.
-
-- phy-names = "usb2-phy0\0\0usb2-phy1\0";
-+ phy-names = "usb2-phy0\0usb2-phy1";
+Khadas vim series: Use devicetree for SMBIOS settings
+Add settings and enable the default sysinfo driver so that these can come
+from the device tree.
 
 Signed-off-by: Artem Lapkin <art@khadas.com>
 ---
- board/amlogic/vim3/vim3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../meson-g12b-a311d-khadas-vim3-u-boot.dtsi  | 23 +++++++++++++++++++
+ .../meson-gxl-s905x-khadas-vim-u-boot.dtsi    | 23 +++++++++++++++++++
+ .../arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi | 21 +++++++++++++++++
+ .../dts/meson-sm1-khadas-vim3l-u-boot.dtsi    | 23 +++++++++++++++++++
+ 4 files changed, 90 insertions(+)
 
-diff --git a/board/amlogic/vim3/vim3.c b/board/amlogic/vim3/vim3.c
-index c8ebd676..6a67a39c 100644
---- a/board/amlogic/vim3/vim3.c
-+++ b/board/amlogic/vim3/vim3.c
-@@ -109,8 +109,8 @@ int meson_ft_board_setup(void *blob, struct bd_info *bd)
- 		}
+diff --git a/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi b/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
+index 489efa15..fcd6f053 100644
+--- a/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
++++ b/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
+@@ -6,3 +6,26 @@
  
- 		/* Update PHY names (mandatory to disable USB3.0) */
--		len = strlcpy(data, "usb2-phy0", 32) + 1;
--		len += strlcpy(&data[len], "usb2-phy1", 32 - len) + 1;
-+		len = strlcpy(data, "usb2-phy0", 32);
-+		len += strlcpy(&data[len], "usb2-phy1", 32 - len);
- 		ret = fdt_setprop(blob, node, "phy-names", data, len);
- 		if (ret < 0) {
- 			printf("vim3: failed to update usb phy names property (%d)\n", ret);
+ #include "meson-g12-common-u-boot.dtsi"
+ #include "meson-khadas-vim3-u-boot.dtsi"
++
++/ {
++	smbios {
++		compatible = "u-boot,sysinfo-smbios";
++
++		smbios {
++			system {
++				manufacturer = "khadas";
++				product = "VIM3";
++			};
++
++			baseboard {
++				manufacturer = "khadas";
++				product = "VIM3";
++			};
++
++			chassis {
++				manufacturer = "khadas";
++				product = "VIM3";
++			};
++		};
++	};
++};
+diff --git a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
+index 39270ea7..20e36d1b 100644
+--- a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
+@@ -5,3 +5,26 @@
+  */
+ 
+ #include "meson-gxl-u-boot.dtsi"
++
++/ {
++	smbios {
++		compatible = "u-boot,sysinfo-smbios";
++
++		smbios {
++			system {
++				manufacturer = "khadas";
++				product = "VIM";
++			};
++
++			baseboard {
++				manufacturer = "khadas";
++				product = "VIM";
++			};
++
++			chassis {
++				manufacturer = "khadas";
++				product = "VIM";
++			};
++		};
++	};
++};
+diff --git a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
+index c1763336..41480c9a 100644
+--- a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
+@@ -10,6 +10,27 @@
+ 	aliases {
+ 		spi0 = &spifc;
+ 	};
++
++	smbios {
++		compatible = "u-boot,sysinfo-smbios";
++
++		smbios {
++			system {
++				manufacturer = "khadas";
++				product = "VIM2";
++			};
++
++			baseboard {
++				manufacturer = "khadas";
++				product = "VIM2";
++			};
++
++			chassis {
++				manufacturer = "khadas";
++				product = "VIM2";
++			};
++		};
++	};
+ };
+ 
+ &sd_emmc_c {
+diff --git a/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi b/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
+index a591c0c9..06b81f23 100644
+--- a/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
++++ b/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
+@@ -6,3 +6,26 @@
+ 
+ #include "meson-sm1-u-boot.dtsi"
+ #include "meson-khadas-vim3-u-boot.dtsi"
++
++/ {
++	smbios {
++		compatible = "u-boot,sysinfo-smbios";
++
++		smbios {
++			system {
++				manufacturer = "khadas";
++				product = "VIM3L";
++			};
++
++			baseboard {
++				manufacturer = "khadas";
++				product = "VIM3L";
++			};
++
++			chassis {
++				manufacturer = "khadas";
++				product = "VIM3L";
++			};
++		};
++	};
++};
 -- 
 2.25.1
 
