@@ -1,76 +1,67 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
- by mx.groups.io with SMTP id smtpd.web12.773.1626848359636358204
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web11.27192.1627284946340081253
  for <u-boot-amlogic@groups.io>;
- Tue, 20 Jul 2021 23:19:19 -0700
-Received: by mail-pg1-f172.google.com with SMTP id r21so894445pgv.13
-        for <u-boot-amlogic@groups.io>; Tue, 20 Jul 2021 23:19:19 -0700 (PDT)
+ Mon, 26 Jul 2021 00:35:47 -0700
+Received: by mail-wr1-f54.google.com with SMTP id c16so7020wrp.13
+        for <u-boot-amlogic@groups.io>; Mon, 26 Jul 2021 00:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=MhAsZ8VCXI0f2xxk15CTJFd4NBoMiTgL9GgPwLwWcmU=;
-        b=V7axgiBkIH+6QKBe3mWLBTnxYJK7PTwoH3RHs/wQYuZOtmYHiwuvnIvKLOZV6EMkkm
-         WjsbLZrKgMnzA9nDAePzt406sWeWqeGjaRBx97goDpn3up4jE9sy4U4FDC1NMCQHtM/5
-         /+vtG2ngBL+KbaGiX1XxVpfala9GcvN9WIWfhLAVWwYywIUjijahWDjGjUsiLgiEs3RM
-         Zh556lKrkTCj2XLZOw/aKJ2jaNhN8aI8y6PDyP5kT/uJhqtwcdS7K4dxW7YK8UJo2LIo
-         QIgTObS14IrbSq27tYOPF/4BX9YMLCT3eB4ObrCG0ImW/s0j+GZ/BP66DTSlLLYIxis8
-         GaCQ==
-Return-Path: <email2tema@gmail.com>
-From: Artem Lapkin <email2tema@gmail.com>
-Subject: [PATCH] net: designware: improve ethernet DMA reset
-Date: Wed, 21 Jul 2021 14:19:10 +0800
-Message-Id: <20210721061910.776977-1-art@khadas.com>
+        bh=hJJq1l93dksRUl+keknM+4ifXjXS3uRAwFm1cXl1DzU=;
+        b=Cl9LXBpJM3knTLCR5NVpgSU+vaccL9ECuhMGKfiKAxbgeirXeCis2BWH4l3VhJ6Aq6
+         T1r69vJny9+9bzdQf8Dvf669T7xsPtBwCsjuL75M0UkOYfb+Tp0WPHUQgh71Sn7feBIU
+         cQiyQ6p5jdde4QkYgE890AdRXfWNHfmIyvCaPKlDLnf17tYPt+6FlE73XR+FDdDFzDeJ
+         wisyVNV+uAoT19ZVtzxTtorbSdBGVKDatfi1TNLVi/O18BUr2mAsl7Kjsqzf2hmCC+oD
+         wrMLkPRNTvNntRDFMDIIXdlPLjRLJmjYRdWFjiCIjRLVT5U6wN0OQdy81uXFuSSWy4YE
+         fZtA==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] board: amlogic: vim3: fix phy-names property setup
+References: <20210713064847.2468652-1-art@khadas.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <6e5ee9ea-f787-01a9-083d-c828a933381d@baylibre.com>
+Date: Mon, 26 Jul 2021 09:35:43 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: narmstrong@baylibre.com, joe.hershberger@ni.com, rfried.dev@gmail.com
+In-Reply-To: <20210713064847.2468652-1-art@khadas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Artem Lapkin <email2tema@gmail.com>
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, khilman@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Problem: uboot ethernet always have "DMA reset timeout" after
-linux usage, detected on VIM2 VIM3 VIM3L amlogic devices,
-mainline uboot and mainline linux > 5.1? .
+On 13/07/2021 08:48, Artem Lapkin wrote:
+> phy-names was improperly implemented resulting in an inoperable USB-OTG
+> port.
+> 
+> - phy-names = "usb2-phy0\0\0usb2-phy1\0";
+> + phy-names = "usb2-phy0\0usb2-phy1";
+> 
+> Signed-off-by: Artem Lapkin <art@khadas.com>
+> ---
+>  board/amlogic/vim3/vim3.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/board/amlogic/vim3/vim3.c b/board/amlogic/vim3/vim3.c
+> index c8ebd676..6a67a39c 100644
+> --- a/board/amlogic/vim3/vim3.c
+> +++ b/board/amlogic/vim3/vim3.c
+> @@ -109,8 +109,8 @@ int meson_ft_board_setup(void *blob, struct bd_info *bd)
+>  		}
+>  
+>  		/* Update PHY names (mandatory to disable USB3.0) */
+> -		len = strlcpy(data, "usb2-phy0", 32) + 1;
+> -		len += strlcpy(&data[len], "usb2-phy1", 32 - len) + 1;
+> +		len = strlcpy(data, "usb2-phy0", 32);
+> +		len += strlcpy(&data[len], "usb2-phy1", 32 - len);
+>  		ret = fdt_setprop(blob, node, "phy-names", data, len);
+>  		if (ret < 0) {
+>  			printf("vim3: failed to update usb phy names property (%d)\n", ret);
+> 
 
-How-to reproduce:
+Good catch,
 
-1) Poweron device => ethernet uboot work fine.
-2) Linux start and ethernet interface up and same works.
-3) Reboot to uboot again and we cant use ethernet anymore.
-uboot always have "DMA reset timeout" inside designware_eth_init()
-only poweroff/poweron cycle can solve this problem.
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Solution: add phy_reset() into waiting DMA reset cycle,
-this insertion doesn't break normal behaviour (maybe).
-
-Note: same need explore real problem why its happens! because this 
-patch may be just hack.
-
-Signed-off-by: Artem Lapkin <art@khadas.com>
----
- drivers/net/designware.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/net/designware.c b/drivers/net/designware.c
-index 5d92257e..6485c46d 100644
---- a/drivers/net/designware.c
-+++ b/drivers/net/designware.c
-@@ -371,6 +371,7 @@ int designware_eth_init(struct dw_eth_dev *priv, u8 *enetaddr)
- 	struct eth_dma_regs *dma_p = priv->dma_regs_p;
- 	unsigned int start;
- 	int ret;
-+	int phy_reset_force = 0;
- 
- 	writel(readl(&dma_p->busmode) | DMAMAC_SRST, &dma_p->busmode);
- 
-@@ -389,6 +390,9 @@ int designware_eth_init(struct dw_eth_dev *priv, u8 *enetaddr)
- 			printf("DMA reset timeout\n");
- 			return -ETIMEDOUT;
- 		}
-+		// forced phy reset after 0.2s can help with DMAMAC_SRST
-+		if (phy_reset_force++ == 2)
-+			phy_reset(priv->phydev);
- 
- 		mdelay(100);
- 	};
--- 
-2.25.1
-
+Neil
