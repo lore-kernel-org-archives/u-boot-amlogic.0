@@ -1,101 +1,72 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web08.8496.1627374832227510526
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web08.8501.1627374864124625107
  for <u-boot-amlogic@groups.io>;
- Tue, 27 Jul 2021 01:33:52 -0700
-Received: by mail-wm1-f48.google.com with SMTP id f14-20020a05600c154eb02902519e4abe10so1224645wmg.4
-        for <u-boot-amlogic@groups.io>; Tue, 27 Jul 2021 01:33:52 -0700 (PDT)
+ Tue, 27 Jul 2021 01:34:24 -0700
+Received: by mail-wr1-f52.google.com with SMTP id c16so4312433wrp.13
+        for <u-boot-amlogic@groups.io>; Tue, 27 Jul 2021 01:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=9RkMN3GAtM8HgUerQcoefG3JAiHq/1LwBdG84sga/BY=;
-        b=rpXwiAmbbBWREemd85DgdsTj1+sqdNJWLly5XDWeoyyUqfi9/8gIURRtaCsVRlrgkW
-         8DRcUrhdYW6PR4CQj5Ukye7uRgVLatYGEShiC7Hj0haIl4MU5tggAaNO1tGyyfOuDJvK
-         w/cpg9yeHHkFOfH1Sb4eUYfNfMByKyCTkBG5moS/RrxRt/TnJbt3HEEwOqStCiwVHhVC
-         uYWOzF9J8ocfweYBjijPc0m0MgU5VslJoknTY+RHxV1e5oXXKe/IzsNkXUs1l8u/mxkb
-         BAbhi9jrdE0sdjgde1geEb4pLCopf+JXkSsq0gydg1KtWj0xYB1Cyk79ky7TZs9wtMxl
-         SayQ==
+        bh=DEFcPe1SbilL9f5ZDCEkK3o5dKWdWbqvOUS/UxIdaa0=;
+        b=XXXkMZPkhi3jSSWhwsuyp/EybXHY0pADRBW/FFrCMZ5aHKXXc6wMAHaahifjI7D4tO
+         5/+JDRuGZavpP0nkQSTsZ8t/tpLIELlltnlNKO3Yz7QxfAoKKq38gFnjSmIbAChsOhNE
+         P/TN2lWzQf5OuYG6vc14lm0JQxMP/IZA3fzMJpyHKbK01mtIHkEU/DVn520iAHbc4QF4
+         usrgHzbAg+pTVLbG3vy85TNdcPAz3/EnVw1pWNCLd1mUe4uUQdap0GrkmlT4JDf99ABx
+         +S37z7XtBOYWdyXOLSXb0IpFA1ndeXeN8w16T7tikJ6avZs9DYj96cSE8VgNGuCa3BS8
+         sLpw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] configs: Enable SMBIOS for Khadas VIM boards
-References: <20210727012319.1024276-1-art@khadas.com>
- <20210727012319.1024276-2-art@khadas.com>
+Subject: Re: [PATCH 1/2] phy: meson-axg-mipi: Rename "priv_auto_alloc_size" to "priv_auto"
+References: <20210514205421.65093-1-alpernebiyasak@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <0dc762d3-7ef5-f158-0deb-212305885bb5@baylibre.com>
-Date: Tue, 27 Jul 2021 10:33:49 +0200
+Message-ID: <54092893-ea21-172d-036d-a67431b569c2@baylibre.com>
+Date: Tue, 27 Jul 2021 10:34:21 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210727012319.1024276-2-art@khadas.com>
+In-Reply-To: <20210514205421.65093-1-alpernebiyasak@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Artem Lapkin <email2tema@gmail.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, khilman@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+To: Alper Nebi Yasak <alpernebiyasak@gmail.com>, u-boot@lists.denx.de
+Cc: Joe Hershberger <joe.hershberger@ni.com>, Simon Glass <sjg@chromium.org>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 27/07/2021 03:23, Artem Lapkin wrote:
-> Enable configs to support SMBIOS for all Khadas VIM boards
+On 14/05/2021 22:54, Alper Nebi Yasak wrote:
+> With commit 41575d8e4c33 ("dm: treewide: Rename auto_alloc_size members
+> to be shorter") "priv_auto_alloc_size" was renamed to "priv_auto". Apply
+> the rename to these two drivers as well.
 > 
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Artem Lapkin <art@khadas.com>
+> Fixes: 4547551aa019 ("phy: Add Amlogic AXG MIPI PCIe Analog PHY driver")
+> Fixes: 7ef19503bacf ("phy: Add Amlogic AXG MIPI D-PHY driver")
+> Signed-off-by: Alper Nebi Yasak <alpernebiyasak@gmail.com>
 > ---
->  configs/khadas-vim2_defconfig  | 2 ++
->  configs/khadas-vim3_defconfig  | 2 ++
->  configs/khadas-vim3l_defconfig | 2 ++
->  configs/khadas-vim_defconfig   | 2 ++
->  4 files changed, 8 insertions(+)
 > 
-> diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
-> index 32513998..5d673463 100644
-> --- a/configs/khadas-vim2_defconfig
-> +++ b/configs/khadas-vim2_defconfig
-> @@ -50,6 +50,8 @@ CONFIG_DM_RESET=y
->  CONFIG_DEBUG_UART_ANNOUNCE=y
->  CONFIG_DEBUG_UART_SKIP_INIT=y
->  CONFIG_MESON_SERIAL=y
-> +CONFIG_SYSINFO=y
-> +CONFIG_SYSINFO_SMBIOS=y
->  CONFIG_SPI=y
->  CONFIG_DM_SPI=y
->  CONFIG_MESON_SPIFC=y
-> diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
-> index c4b24fc3..5a7a9006 100644
-> --- a/configs/khadas-vim3_defconfig
-> +++ b/configs/khadas-vim3_defconfig
-> @@ -61,6 +61,8 @@ CONFIG_DM_RESET=y
->  CONFIG_DEBUG_UART_ANNOUNCE=y
->  CONFIG_DEBUG_UART_SKIP_INIT=y
->  CONFIG_MESON_SERIAL=y
-> +CONFIG_SYSINFO=y
-> +CONFIG_SYSINFO_SMBIOS=y
->  CONFIG_SPI=y
->  CONFIG_DM_SPI=y
->  CONFIG_MESON_SPIFC=y
-> diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
-> index 0c731d4c..d719511f 100644
-> --- a/configs/khadas-vim3l_defconfig
-> +++ b/configs/khadas-vim3l_defconfig
-> @@ -61,6 +61,8 @@ CONFIG_DM_RESET=y
->  CONFIG_DEBUG_UART_ANNOUNCE=y
->  CONFIG_DEBUG_UART_SKIP_INIT=y
->  CONFIG_MESON_SERIAL=y
-> +CONFIG_SYSINFO=y
-> +CONFIG_SYSINFO_SMBIOS=y
->  CONFIG_SPI=y
->  CONFIG_DM_SPI=y
->  CONFIG_MESON_SPIFC=y
-> diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
-> index 2df00d54..dc6365fc 100644
-> --- a/configs/khadas-vim_defconfig
-> +++ b/configs/khadas-vim_defconfig
-> @@ -44,6 +44,8 @@ CONFIG_DM_RESET=y
->  CONFIG_DEBUG_UART_ANNOUNCE=y
->  CONFIG_DEBUG_UART_SKIP_INIT=y
->  CONFIG_MESON_SERIAL=y
-> +CONFIG_SYSINFO=y
-> +CONFIG_SYSINFO_SMBIOS=y
->  CONFIG_USB=y
->  CONFIG_DM_USB=y
->  CONFIG_USB_XHCI_HCD=y
+>  drivers/phy/meson-axg-mipi-dphy.c        | 2 +-
+>  drivers/phy/meson-axg-mipi-pcie-analog.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/phy/meson-axg-mipi-dphy.c b/drivers/phy/meson-axg-mipi-dphy.c
+> index 8b2469793ddc..cf2a1cd14c7f 100644
+> --- a/drivers/phy/meson-axg-mipi-dphy.c
+> +++ b/drivers/phy/meson-axg-mipi-dphy.c
+> @@ -389,5 +389,5 @@ U_BOOT_DRIVER(meson_axg_mipi_dphy) = {
+>  	.of_match = meson_axg_mipi_dphy_ids,
+>  	.probe = meson_axg_mipi_dphy_probe,
+>  	.ops = &meson_axg_mipi_dphy_ops,
+> -	.priv_auto_alloc_size = sizeof(struct phy_meson_axg_mipi_dphy_priv),
+> +	.priv_auto = sizeof(struct phy_meson_axg_mipi_dphy_priv),
+>  };
+> diff --git a/drivers/phy/meson-axg-mipi-pcie-analog.c b/drivers/phy/meson-axg-mipi-pcie-analog.c
+> index 276e6004e5ee..7106c23d508f 100644
+> --- a/drivers/phy/meson-axg-mipi-pcie-analog.c
+> +++ b/drivers/phy/meson-axg-mipi-pcie-analog.c
+> @@ -229,5 +229,5 @@ U_BOOT_DRIVER(meson_axg_mipi_pcie_analog) = {
+>  	.of_match = meson_axg_mipi_pcie_analog_ids,
+>  	.probe = meson_axg_mipi_pcie_analog_probe,
+>  	.ops = &meson_axg_mipi_pcie_analog_ops,
+> -	.priv_auto_alloc_size = sizeof(struct phy_meson_axg_mipi_pcie_analog_priv),
+> +	.priv_auto = sizeof(struct phy_meson_axg_mipi_pcie_analog_priv),
+>  };
 > 
 
 
