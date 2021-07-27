@@ -1,29 +1,30 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.8595.1627374827035362910
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web08.8496.1627374832227510526
  for <u-boot-amlogic@groups.io>;
- Tue, 27 Jul 2021 01:33:47 -0700
-Received: by mail-wr1-f52.google.com with SMTP id l4so14164695wrs.4
-        for <u-boot-amlogic@groups.io>; Tue, 27 Jul 2021 01:33:46 -0700 (PDT)
+ Tue, 27 Jul 2021 01:33:52 -0700
+Received: by mail-wm1-f48.google.com with SMTP id f14-20020a05600c154eb02902519e4abe10so1224645wmg.4
+        for <u-boot-amlogic@groups.io>; Tue, 27 Jul 2021 01:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ZI9pj5OBGk8o116wGXyX6Dmg5L9tHbv5KW32q3fI7eQ=;
-        b=z7+e/31K4pQBUFr+Va28DlcfdWaWrDbCACtcYvhcdJLzPjxcpSP0xFIW8/tgWV5Ctt
-         BS5jPe3UaifbT9pJDzdICDdJVCYu80qhNSXseks8PsO5q5dlqXXfvqT+eacXovTQRjXW
-         JDcI4X8JyktgE9XjYV5HMgGEUAiFNeDAh+O0gH6+mlNMnCGHqQj0H/pycMokJ6qoMJym
-         YogYMOh5OEDvsA/zrETHkVLDgPtcfNURBL5AWEib1TsmR70pyj1yqR33ZukhBQR7wZtv
-         6+mmeKC6IVdeUfyfYEfGTK4adMdl8e34Rse5OcrGpA88FCjXg0l3g67lSFdERWlWQGZ2
-         shEw==
+        bh=9RkMN3GAtM8HgUerQcoefG3JAiHq/1LwBdG84sga/BY=;
+        b=rpXwiAmbbBWREemd85DgdsTj1+sqdNJWLly5XDWeoyyUqfi9/8gIURRtaCsVRlrgkW
+         8DRcUrhdYW6PR4CQj5Ukye7uRgVLatYGEShiC7Hj0haIl4MU5tggAaNO1tGyyfOuDJvK
+         w/cpg9yeHHkFOfH1Sb4eUYfNfMByKyCTkBG5moS/RrxRt/TnJbt3HEEwOqStCiwVHhVC
+         uYWOzF9J8ocfweYBjijPc0m0MgU5VslJoknTY+RHxV1e5oXXKe/IzsNkXUs1l8u/mxkb
+         BAbhi9jrdE0sdjgde1geEb4pLCopf+JXkSsq0gydg1KtWj0xYB1Cyk79ky7TZs9wtMxl
+         SayQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: meson: Use devicetree for SMBIOS settings for Khadas VIM boards
+Subject: Re: [PATCH] configs: Enable SMBIOS for Khadas VIM boards
 References: <20210727012319.1024276-1-art@khadas.com>
+ <20210727012319.1024276-2-art@khadas.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <6cff934d-8f44-88e1-a106-8d4f0882a1c1@baylibre.com>
-Date: Tue, 27 Jul 2021 10:33:44 +0200
+Message-ID: <0dc762d3-7ef5-f158-0deb-212305885bb5@baylibre.com>
+Date: Tue, 27 Jul 2021 10:33:49 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210727012319.1024276-1-art@khadas.com>
+In-Reply-To: <20210727012319.1024276-2-art@khadas.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -32,144 +33,69 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, khilman@baylibre.com, christ
 List-ID: <u-boot-amlogic@groups.io>
 
 On 27/07/2021 03:23, Artem Lapkin wrote:
-> Khadas vim series: Use devicetree for SMBIOS settings
-> Add settings and enable the default sysinfo driver so that these can come
-> from the device tree.
+> Enable configs to support SMBIOS for all Khadas VIM boards
 > 
 > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 > Signed-off-by: Artem Lapkin <art@khadas.com>
 > ---
->  .../meson-g12b-a311d-khadas-vim3-u-boot.dtsi  | 23 +++++++++++++++++++
->  .../meson-gxl-s905x-khadas-vim-u-boot.dtsi    | 23 +++++++++++++++++++
->  .../arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi | 21 +++++++++++++++++
->  .../dts/meson-sm1-khadas-vim3l-u-boot.dtsi    | 23 +++++++++++++++++++
->  4 files changed, 90 insertions(+)
+>  configs/khadas-vim2_defconfig  | 2 ++
+>  configs/khadas-vim3_defconfig  | 2 ++
+>  configs/khadas-vim3l_defconfig | 2 ++
+>  configs/khadas-vim_defconfig   | 2 ++
+>  4 files changed, 8 insertions(+)
 > 
-> diff --git a/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi b/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
-> index 489efa15..fcd6f053 100644
-> --- a/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
-> +++ b/arch/arm/dts/meson-g12b-a311d-khadas-vim3-u-boot.dtsi
-> @@ -6,3 +6,26 @@
->  
->  #include "meson-g12-common-u-boot.dtsi"
->  #include "meson-khadas-vim3-u-boot.dtsi"
-> +
-> +/ {
-> +	smbios {
-> +		compatible = "u-boot,sysinfo-smbios";
-> +
-> +		smbios {
-> +			system {
-> +				manufacturer = "khadas";
-> +				product = "VIM3";
-> +			};
-> +
-> +			baseboard {
-> +				manufacturer = "khadas";
-> +				product = "VIM3";
-> +			};
-> +
-> +			chassis {
-> +				manufacturer = "khadas";
-> +				product = "VIM3";
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
-> index 39270ea7..20e36d1b 100644
-> --- a/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
-> +++ b/arch/arm/dts/meson-gxl-s905x-khadas-vim-u-boot.dtsi
-> @@ -5,3 +5,26 @@
->   */
->  
->  #include "meson-gxl-u-boot.dtsi"
-> +
-> +/ {
-> +	smbios {
-> +		compatible = "u-boot,sysinfo-smbios";
-> +
-> +		smbios {
-> +			system {
-> +				manufacturer = "khadas";
-> +				product = "VIM";
-> +			};
-> +
-> +			baseboard {
-> +				manufacturer = "khadas";
-> +				product = "VIM";
-> +			};
-> +
-> +			chassis {
-> +				manufacturer = "khadas";
-> +				product = "VIM";
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
-> index c1763336..41480c9a 100644
-> --- a/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
-> +++ b/arch/arm/dts/meson-gxm-khadas-vim2-u-boot.dtsi
-> @@ -10,6 +10,27 @@
->  	aliases {
->  		spi0 = &spifc;
->  	};
-> +
-> +	smbios {
-> +		compatible = "u-boot,sysinfo-smbios";
-> +
-> +		smbios {
-> +			system {
-> +				manufacturer = "khadas";
-> +				product = "VIM2";
-> +			};
-> +
-> +			baseboard {
-> +				manufacturer = "khadas";
-> +				product = "VIM2";
-> +			};
-> +
-> +			chassis {
-> +				manufacturer = "khadas";
-> +				product = "VIM2";
-> +			};
-> +		};
-> +	};
->  };
->  
->  &sd_emmc_c {
-> diff --git a/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi b/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
-> index a591c0c9..06b81f23 100644
-> --- a/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
-> +++ b/arch/arm/dts/meson-sm1-khadas-vim3l-u-boot.dtsi
-> @@ -6,3 +6,26 @@
->  
->  #include "meson-sm1-u-boot.dtsi"
->  #include "meson-khadas-vim3-u-boot.dtsi"
-> +
-> +/ {
-> +	smbios {
-> +		compatible = "u-boot,sysinfo-smbios";
-> +
-> +		smbios {
-> +			system {
-> +				manufacturer = "khadas";
-> +				product = "VIM3L";
-> +			};
-> +
-> +			baseboard {
-> +				manufacturer = "khadas";
-> +				product = "VIM3L";
-> +			};
-> +
-> +			chassis {
-> +				manufacturer = "khadas";
-> +				product = "VIM3L";
-> +			};
-> +		};
-> +	};
-> +};
+> diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
+> index 32513998..5d673463 100644
+> --- a/configs/khadas-vim2_defconfig
+> +++ b/configs/khadas-vim2_defconfig
+> @@ -50,6 +50,8 @@ CONFIG_DM_RESET=y
+>  CONFIG_DEBUG_UART_ANNOUNCE=y
+>  CONFIG_DEBUG_UART_SKIP_INIT=y
+>  CONFIG_MESON_SERIAL=y
+> +CONFIG_SYSINFO=y
+> +CONFIG_SYSINFO_SMBIOS=y
+>  CONFIG_SPI=y
+>  CONFIG_DM_SPI=y
+>  CONFIG_MESON_SPIFC=y
+> diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
+> index c4b24fc3..5a7a9006 100644
+> --- a/configs/khadas-vim3_defconfig
+> +++ b/configs/khadas-vim3_defconfig
+> @@ -61,6 +61,8 @@ CONFIG_DM_RESET=y
+>  CONFIG_DEBUG_UART_ANNOUNCE=y
+>  CONFIG_DEBUG_UART_SKIP_INIT=y
+>  CONFIG_MESON_SERIAL=y
+> +CONFIG_SYSINFO=y
+> +CONFIG_SYSINFO_SMBIOS=y
+>  CONFIG_SPI=y
+>  CONFIG_DM_SPI=y
+>  CONFIG_MESON_SPIFC=y
+> diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
+> index 0c731d4c..d719511f 100644
+> --- a/configs/khadas-vim3l_defconfig
+> +++ b/configs/khadas-vim3l_defconfig
+> @@ -61,6 +61,8 @@ CONFIG_DM_RESET=y
+>  CONFIG_DEBUG_UART_ANNOUNCE=y
+>  CONFIG_DEBUG_UART_SKIP_INIT=y
+>  CONFIG_MESON_SERIAL=y
+> +CONFIG_SYSINFO=y
+> +CONFIG_SYSINFO_SMBIOS=y
+>  CONFIG_SPI=y
+>  CONFIG_DM_SPI=y
+>  CONFIG_MESON_SPIFC=y
+> diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
+> index 2df00d54..dc6365fc 100644
+> --- a/configs/khadas-vim_defconfig
+> +++ b/configs/khadas-vim_defconfig
+> @@ -44,6 +44,8 @@ CONFIG_DM_RESET=y
+>  CONFIG_DEBUG_UART_ANNOUNCE=y
+>  CONFIG_DEBUG_UART_SKIP_INIT=y
+>  CONFIG_MESON_SERIAL=y
+> +CONFIG_SYSINFO=y
+> +CONFIG_SYSINFO_SMBIOS=y
+>  CONFIG_USB=y
+>  CONFIG_DM_USB=y
+>  CONFIG_USB_XHCI_HCD=y
 > 
 
 
