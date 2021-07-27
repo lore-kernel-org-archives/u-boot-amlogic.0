@@ -1,88 +1,67 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web08.27085.1627285101247951287
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web12.8534.1627374599389694571
  for <u-boot-amlogic@groups.io>;
- Mon, 26 Jul 2021 00:38:21 -0700
-Received: by mail-wm1-f51.google.com with SMTP id z8-20020a1c4c080000b029022d4c6cfc37so7490354wmf.5
-        for <u-boot-amlogic@groups.io>; Mon, 26 Jul 2021 00:38:21 -0700 (PDT)
+ Tue, 27 Jul 2021 01:30:00 -0700
+Received: by mail-wm1-f49.google.com with SMTP id m20-20020a05600c4f54b029024e75a15716so1733109wmq.2
+        for <u-boot-amlogic@groups.io>; Tue, 27 Jul 2021 01:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0RlrJhJDsGRyCjI1zVJxSh96rWjZmaU6a6a/vRVLAZU=;
-        b=gDaEFWe8hwT1d2VP77NgxWrNCkfkXdIJm5VqOLmytcS58i56cSA/lJLOJIEiaZ20o0
-         st1MuqGrXxvg0eu/KuzsukB7wWtuXM7ud9e3j+7ADQUlB9b6+9i6v/8g/rDXvqmD2t65
-         fGgPGL5MdppZ02pkuWePAgMlj3rkkPMU5oHcTYFEq40l2YpMbXyYR6N8EIaFsyI53sRB
-         RJXO1OXL84NF41JZxCJrvjcNVnGpu49/45GrcFdZaFvUw8rvjkl7jeYtzPyLibUblQtx
-         QYeztxplGe6u5JgbbEEEXgnxW6eg8aMuHdu5zOaIe5wxOuft/MEPcGWj3410YxNDS7qQ
-         HX7g==
+        bh=T49yyFD3Meqc61vJ1Z42JLkWqV2sb8It9/WAU00vzSs=;
+        b=EWYRnghNwIRrK+rrYWrSlmvsZmcBpOTdFqwT+AzVioLder0M3uysmOIydinywIS9vS
+         PK6YvwUF9duS4B/iD8mrlF33xPBq00qDdWAkSiphzLk//2qmv89thJUWWZJSIcjP8V9Q
+         rRX+KSucGXHGzUcO4KkH7c13aiP53w0sfAbt16OTsuTKtrOOgFRYE3nySQ/59csIT8xb
+         zMx4ZXk8S8BiqkjwvvA7jUm0q9YgkPvhhNnmaMVNgHCLW2w1PQLv7SNMrtyw5vKifLQ6
+         l3MhmhDus7vihI054UltmYiY0CLOMwYBgte9PLOWWERsW9mS86f94SO+VXcdyzEIQWTA
+         0oiQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] net: designware: improve ethernet DMA reset
-References: <20210721061910.776977-1-art@khadas.com>
+Subject: Re: [PATCH] board: amlogic: vim3: fix phy-names property setup
+References: <20210713064847.2468652-1-art@khadas.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <18a83243-3a80-1ab2-ea4f-04351120fb10@baylibre.com>
-Date: Mon, 26 Jul 2021 09:38:18 +0200
+Message-ID: <5a4f5e9f-cc76-2795-4761-5c85a00f9ccf@baylibre.com>
+Date: Tue, 27 Jul 2021 10:29:56 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210721061910.776977-1-art@khadas.com>
+In-Reply-To: <20210713064847.2468652-1-art@khadas.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Artem Lapkin <email2tema@gmail.com>, joe.hershberger@ni.com, rfried.dev@gmail.com
+To: Artem Lapkin <email2tema@gmail.com>
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, khilman@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
-
-On 21/07/2021 08:19, Artem Lapkin wrote:
-> Problem: uboot ethernet always have "DMA reset timeout" after
-> linux usage, detected on VIM2 VIM3 VIM3L amlogic devices,
-> mainline uboot and mainline linux > 5.1? .
+On 13/07/2021 08:48, Artem Lapkin wrote:
+> phy-names was improperly implemented resulting in an inoperable USB-OTG
+> port.
 > 
-> How-to reproduce:
-> 
-> 1) Poweron device => ethernet uboot work fine.
-> 2) Linux start and ethernet interface up and same works.
-> 3) Reboot to uboot again and we cant use ethernet anymore.
-> uboot always have "DMA reset timeout" inside designware_eth_init()
-> only poweroff/poweron cycle can solve this problem.
-> 
-> Solution: add phy_reset() into waiting DMA reset cycle,
-> this insertion doesn't break normal behaviour (maybe).
-> 
-> Note: same need explore real problem why its happens! because this 
-> patch may be just hack.
-
-Interesting, maybe add this phy_reset() call only if the GPIO reset is not available ?
-
-Neil
-
+> - phy-names = "usb2-phy0\0\0usb2-phy1\0";
+> + phy-names = "usb2-phy0\0usb2-phy1";
 > 
 > Signed-off-by: Artem Lapkin <art@khadas.com>
 > ---
->  drivers/net/designware.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  board/amlogic/vim3/vim3.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/designware.c b/drivers/net/designware.c
-> index 5d92257e..6485c46d 100644
-> --- a/drivers/net/designware.c
-> +++ b/drivers/net/designware.c
-> @@ -371,6 +371,7 @@ int designware_eth_init(struct dw_eth_dev *priv, u8 *enetaddr)
->  	struct eth_dma_regs *dma_p = priv->dma_regs_p;
->  	unsigned int start;
->  	int ret;
-> +	int phy_reset_force = 0;
->  
->  	writel(readl(&dma_p->busmode) | DMAMAC_SRST, &dma_p->busmode);
->  
-> @@ -389,6 +390,9 @@ int designware_eth_init(struct dw_eth_dev *priv, u8 *enetaddr)
->  			printf("DMA reset timeout\n");
->  			return -ETIMEDOUT;
+> diff --git a/board/amlogic/vim3/vim3.c b/board/amlogic/vim3/vim3.c
+> index c8ebd676..6a67a39c 100644
+> --- a/board/amlogic/vim3/vim3.c
+> +++ b/board/amlogic/vim3/vim3.c
+> @@ -109,8 +109,8 @@ int meson_ft_board_setup(void *blob, struct bd_info *bd)
 >  		}
-> +		// forced phy reset after 0.2s can help with DMAMAC_SRST
-> +		if (phy_reset_force++ == 2)
-> +			phy_reset(priv->phydev);
 >  
->  		mdelay(100);
->  	};
+>  		/* Update PHY names (mandatory to disable USB3.0) */
+> -		len = strlcpy(data, "usb2-phy0", 32) + 1;
+> -		len += strlcpy(&data[len], "usb2-phy1", 32 - len) + 1;
+> +		len = strlcpy(data, "usb2-phy0", 32);
+> +		len += strlcpy(&data[len], "usb2-phy1", 32 - len);
+>  		ret = fdt_setprop(blob, node, "phy-names", data, len);
+>  		if (ret < 0) {
+>  			printf("vim3: failed to update usb phy names property (%d)\n", ret);
 > 
 
+
+Applied to u-boot-amlogic,
+
+Thanks,
+Neil
