@@ -1,30 +1,30 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web08.7296.1627550574106153286
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web10.7192.1627550619556205880
  for <u-boot-amlogic@groups.io>;
- Thu, 29 Jul 2021 02:22:54 -0700
-Received: by mail-wr1-f50.google.com with SMTP id d8so6044067wrm.4
-        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 02:22:53 -0700 (PDT)
+ Thu, 29 Jul 2021 02:23:39 -0700
+Received: by mail-wr1-f52.google.com with SMTP id n12so6070934wrr.2
+        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 02:23:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=N5mv82+6uvEdd1UI47c0D3iqT0WCpVm/rYfDNHMncnA=;
-        b=QnYQuKW48SuXxlm1/ggJQZPQzJJrc3+sD6sUrB7LfTjjtEuz81U602yOKH+8KGo87A
-         5VY2+XmvjCP/3SDrc24bDMN6sugNLrwIOu4UJfHECcHMIIn8Wyup7Q+tQptGOWlEwSQT
-         KKQ/nxZW7tsc5LT2Gaz7bHVlxIYXCZp5Z/MZoFmpI+vmh5w8utAl8fL8aaU1RkwlcARh
-         mvgHzw/+FjvSWaJqmspXovD7pZmSAFsXoI2fD6qf5S0c+Bqms86Nn3JD0Izvq0iAZ43W
-         rotmtGaCqesxBKS+tDFsD7CK4ZXZEilgW5OZQ0oCxw3GpHCkY8x9fA8nNwb2TJwL7vrI
-         h0lQ==
+        bh=mrwILQRIwT6qavYUdvWJ3f/OQY0XTwD9IoSexieFgco=;
+        b=FA/aj+j9N6P+0wPBj7IFCH/4H5QXdQeX8KrgIvbLKepz618X2xnjI5bAa5unbFhgBI
+         H4sU+netuBxkydUsbggTEPRWfK3kq96mJk/N+i1t2Se9S1CR273j/Rsb62sfiGIZTdyi
+         hqKcZn5L4M74O4hCIwHbi93jRPrhtxmmg67B43Uv9ShbyxmDOGNGDcnlJPI9DymHEy35
+         OwSc7aYwspdbYaWEGGA+m3JO4T4LLF8MHM61ePPuX2guQlu2lxSsXFnALGNtiIJrlmpS
+         wy471F6DVznCUeLkD5DzlQXTGk0GFwpgKeT/sROEfSUhDbYp8qoM+kAr2E/vG/Gc1ntB
+         jYDQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 5/6] configs: meson64_android: use logo part label instead of index
+Subject: Re: [PATCH 6/6] configs: meson64_android: don't set console bootargs
 References: <20210729072113.208099-1-mkorpershoek@baylibre.com>
- <20210729072113.208099-6-mkorpershoek@baylibre.com>
+ <20210729072113.208099-7-mkorpershoek@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <13e2b768-c713-65de-3805-930a7893ca59@baylibre.com>
-Date: Thu, 29 Jul 2021 11:22:52 +0200
+Message-ID: <59050a6f-8a97-4c14-05cc-e22fbe71c1da@baylibre.com>
+Date: Thu, 29 Jul 2021 11:23:38 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210729072113.208099-6-mkorpershoek@baylibre.com>
+In-Reply-To: <20210729072113.208099-7-mkorpershoek@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,53 +33,40 @@ Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
 On 29/07/2021 09:21, Mattijs Korpershoek wrote:
-> To display the bootup logo, we read the gpt and assume that the
-> partition with index "2" will be the "logo" partition.
+> The console bootargs are already set from the kernel commandline.
+> On Android, this is done in yukawa at [1]
 > 
-> This might not always be the case, and it's very error-prone.
+> Don't set it in the bootloader since it's overridden by the kernel anyways.
 > 
-> Load the logo partition by label instead of by index.
-> 
+> [1] https://android-review.googlesource.com/c/device/amlogic/yukawa/+/1112994
 > Signed-off-by: Guillaume La Roque <mkorpershoek@baylibre.com>
 > Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 > ---
->  include/configs/meson64_android.h | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  include/configs/meson64_android.h | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
 > diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index e22f05c889..56545a72f8 100644
+> index 56545a72f8..3b61d5f703 100644
 > --- a/include/configs/meson64_android.h
 > +++ b/include/configs/meson64_android.h
-> @@ -13,6 +13,10 @@
->  #define BOOT_PARTITION "boot"
->  #endif
->  
-> +#ifndef LOGO_PARTITION
-> +#define LOGO_PARTITION "logo"
-> +#endif
-> +
->  #define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
->  	"bootcmd_fastboot=" \
->  		"sm reboot_reason reason;" \
-> @@ -104,8 +108,8 @@
->  	"if test \"${boot_source}\" != \"usb\" && " \
->  		"gpt verify mmc ${mmcdev} ${partitions}; then; " \
+> @@ -86,7 +86,7 @@
+>  	"bootcmd_system=" \
+>  		"echo Loading Android " BOOT_PARTITION " partition...;" \
 >  		"mmc dev ${mmcdev};" \
-> -		"part start mmc ${mmcdev} ${logopart} boot_start;" \
-> -		"part size mmc ${mmcdev} ${logopart} boot_size;" \
-> +		"part start mmc ${mmcdev} " LOGO_PARTITION " boot_start;" \
-> +		"part size mmc ${mmcdev} " LOGO_PARTITION " boot_size;" \
+> -		"setenv bootargs ${bootargs} console=${console} androidboot.serialno=${serial#};" \
+> +		"setenv bootargs ${bootargs} androidboot.serialno=${serial#};" \
+>  		"part start mmc ${mmcdev} " BOOT_PARTITION " boot_start;" \
+>  		"part size mmc ${mmcdev} " BOOT_PARTITION " boot_size;" \
 >  		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
->  			"bmp display ${loadaddr} m m;" \
->  		"fi;" \
-> @@ -114,7 +118,6 @@
->  #define CONFIG_EXTRA_ENV_SETTINGS                                     \
->  	"partitions=" PARTS_DEFAULT "\0"                              \
->  	"mmcdev=2\0"                                                  \
-> -	"logopart=2\0"                                                \
+> @@ -121,8 +121,6 @@
 >  	"gpio_recovery=88\0"                                          \
 >  	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
 >  	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
+> -	"console=/dev/ttyAML0\0"                                      \
+> -	"bootargs=no_console_suspend\0"                               \
+>  	"stdin=" STDIN_CFG "\0"                                       \
+>  	"stdout=" STDOUT_CFG "\0"                                     \
+>  	"stderr=" STDOUT_CFG "\0"                                     \
 > 
 
 
