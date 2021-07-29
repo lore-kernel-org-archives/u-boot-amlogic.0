@@ -1,25 +1,25 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web11.6383.1627543279839740596
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web12.6505.1627543280745964700
  for <u-boot-amlogic@groups.io>;
- Thu, 29 Jul 2021 00:21:20 -0700
-Received: by mail-wm1-f47.google.com with SMTP id l11-20020a7bcf0b0000b0290253545c2997so3301193wmg.4
-        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 00:21:19 -0700 (PDT)
+ Thu, 29 Jul 2021 00:21:21 -0700
+Received: by mail-wm1-f42.google.com with SMTP id b128so3034912wmb.4
+        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 00:21:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B85v4AHjaHlgDF7ucYK1MEmIdKZ9FLBYgFJAGaWKLi0=;
-        b=xrsvJnCCRdjyJlntNrOuxaBtOq+uj/PsqO3Anj2D+wKfuPd2cCdODT3hhPuV4VGT9a
-         WqEhR31pyxD7AWLPfUIo4phZQWu350hVJP3JVHUlHyrtZbHle2B4tGSF9LGMbHDLKdqN
-         19SMVWOeinKHHztLqZRVjSx9ChApx2Ho9Bf4qtg6CYujrTc9qtE5L4kB48XsnE+3ANpI
-         CNWl0rp0+sz7OudU2M4Lm5WjBFEKC6+MyblXC03w7pzPB5KhmWxTpbnyV85Lwuv7ihkf
-         39201VCxlrDp8RMOCHj651E+5BmjLgy0DvncR3MNxeBmgtf8ZZhSmPoxH/Jj5JRNlxPR
-         y8hQ==
+        bh=wOdHuJ8bzGKrTZoaGkHFTl2j8CkHaoIFOL5h1XfWE6s=;
+        b=wQyQ4RRvtnzhBTbWhofCPSUbvlL5jwbOMZPa5kttxurSejzFsSM1qrxzpkprQLi674
+         +7fChvHD3rhSUkuvdmJiTj6GhCxbnHAespEQUx7Hnv1ubo2+YhSMEd00lwO2MgZpfEAN
+         j+90EyYPFTCXLIo77gI6WBLfNoJNR9TVmh7/bCPNIgImRSD7DtrjGnoFaFvJ9i+KbS5V
+         cXRfyqHcc6Q/xHVjpkVSeVFNodJZeCOWmUWrkL7CeFl7iitFPiqfJ/yOVaAaVRJo65+e
+         KvF8f0bO7tt6xT6+8Qem2T68Nvsf53u6Iio5lGldoajAa11aUg8OXI7OVwWKtXh3nnBT
+         TO4Q==
 Return-Path: <mkorpershoek@baylibre.com>
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Subject: [PATCH 2/6] configs: meson64_android: fix bad indent in EXTRA_ENV_SETTINGS
-Date: Thu, 29 Jul 2021 09:21:09 +0200
-Message-Id: <20210729072113.208099-3-mkorpershoek@baylibre.com>
+Subject: [PATCH 3/6] configs: meson64_android: use CONFIG_FASTBOOT_USB_DEV
+Date: Thu, 29 Jul 2021 09:21:10 +0200
+Message-Id: <20210729072113.208099-4-mkorpershoek@baylibre.com>
 In-Reply-To: <20210729072113.208099-1-mkorpershoek@baylibre.com>
 References: <20210729072113.208099-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
@@ -28,31 +28,39 @@ To: Neil Armstrong <narmstrong@baylibre.com>
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-both lines seem to be joined together which is not the case for the
-meson64.h EXTRA_ENV_SETTINGS.
+Right now, when running fastboot we use a hard-coded "0" for the
+device number.
 
-Add a newline for consistency.
+Use the Kconfig option named CONFIG_FASTBOOT_USB_DEV instead.
 
 Signed-off-by: Guillaume La Roque <mkorpershoek@baylibre.com>
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 ---
- include/configs/meson64_android.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/configs/meson64_android.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-index c47d51c853..661de76fd7 100644
+index 661de76fd7..4027a7fe0d 100644
 --- a/include/configs/meson64_android.h
 +++ b/include/configs/meson64_android.h
-@@ -127,7 +127,8 @@
- 	"kernel_addr_r=0x01080000\0"                                  \
- 	"pxefile_addr_r=0x01080000\0"                                 \
- 	"ramdisk_addr_r=0x13000000\0"                                 \
--	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" BOOTENV
-+	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0"        \
-+	BOOTENV
+@@ -38,7 +38,7 @@
+ 		"fi;" \
+ 		"if test \"${run_fastboot}\" -eq 1; then " \
+ 			"echo Running Fastboot...;" \
+-			"fastboot 0;" \
++			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
+ 		"fi\0"
  
- #include <configs/meson64.h>
+ #define BOOTENV_DEV_NAME_FASTBOOT(devtypeu, devtypel, instance)	\
+@@ -69,7 +69,7 @@
+ 		"fi;" \
+ 		"if test \"${run_recovery}\" -eq 1; then " \
+ 			"echo Running Recovery...;" \
+-			"fastboot 0;" \
++			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
+ 		"fi\0"
  
+ #define BOOTENV_DEV_NAME_RECOVERY(devtypeu, devtypel, instance)	\
 -- 
 2.30.2
 
