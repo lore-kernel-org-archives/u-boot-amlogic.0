@@ -1,30 +1,30 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web09.7181.1627550536874564565
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web08.7294.1627550559182986952
  for <u-boot-amlogic@groups.io>;
- Thu, 29 Jul 2021 02:22:17 -0700
-Received: by mail-wr1-f46.google.com with SMTP id q3so6099240wrx.0
-        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 02:22:16 -0700 (PDT)
+ Thu, 29 Jul 2021 02:22:39 -0700
+Received: by mail-wr1-f45.google.com with SMTP id b7so6039206wri.8
+        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 02:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vb70hq2mmmZpy8OmLe6j4Nps4lJhZF4grHh/R/G9nQA=;
-        b=LAyqd9F3de23FeqgHFMoKo3nast7oNQWx/NkECOMVTk7iECzWkKRxc/pIH1+/iqGgR
-         7MCoPCT3XTnQo+d2EjV7lNOAlp2AyWFwwepWCQiRlJnhdlSES4nPaLd0swMsT3+asiED
-         t+8scfLX5jG/0rQ7COiFMvAbwjxVJh2JfK/8/587/sWBa+2bZ0rx+Ml+M4ev63YUQIDN
-         /OGJQW0Yqkn1+aGYRieksMrldTZ5ZA04wVEXAh5Ut2sV1hMZsyEuX1Q19MFgcnb1gOMl
-         hyi5utR1WyJ4MVd4ClLKU0Rkw/6wG3eMiiCJohI5AZfpJjP1jMtD+fs256n7rPD4nRED
-         A76g==
+        bh=T8EK84UTVgr0D7nMyUp31RjSD3kEftHQLqfOa3V0NOY=;
+        b=FaoxHqwu5XZb8IUOrTf21IyvwMmBL3lLYIZT365zLfug6PpfOZanLjy5/etrNixtIQ
+         bGrAYqD3XYm36ovYv5AK6T0+Ts5c3ByI8sldC5SpbT93Z6xOV+glLXGEzE8A4sQLfthe
+         yX4z/nHgRqrXrkX5OCNO1HasiYrcdt0TC024e40hF7dI/j6E+BT/lGtprqxe9L7rXqlC
+         XtQDrsrBCmUZXbdmR9ykekjPr5rAQLv/RZt2M4ChE37STGQZkSt0wI4s/uxmR3j0uTpM
+         5BMfoCqwraXEtWnkgpLohU27arOgJzP8sr9e7zOBtuQlxFGUYhl8V/+veFLs/hT6efw4
+         /9zg==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/6] configs: meson64_android: use CONFIG_FASTBOOT_USB_DEV
+Subject: Re: [PATCH 4/6] configs: meson64_android: use boot part label instead of index
 References: <20210729072113.208099-1-mkorpershoek@baylibre.com>
- <20210729072113.208099-4-mkorpershoek@baylibre.com>
+ <20210729072113.208099-5-mkorpershoek@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <02c1da08-a03d-5e48-c2c9-cdaef7ea54b8@baylibre.com>
-Date: Thu, 29 Jul 2021 11:22:15 +0200
+Message-ID: <519c9f93-58fd-1d9d-013a-10821e6c5aa4@baylibre.com>
+Date: Thu, 29 Jul 2021 11:22:37 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210729072113.208099-4-mkorpershoek@baylibre.com>
+In-Reply-To: <20210729072113.208099-5-mkorpershoek@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,39 +33,61 @@ Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
 On 29/07/2021 09:21, Mattijs Korpershoek wrote:
-> Right now, when running fastboot we use a hard-coded "0" for the
-> device number.
+> To boot Android, we read the gpt and assume that the partition with
+> index "1" will be the "boot" partition.
 > 
-> Use the Kconfig option named CONFIG_FASTBOOT_USB_DEV instead.
+> This might not always be the case, as there are no requirements from
+> Android on the partition order.
 > 
+> However, Android does seem to use the "boot" label quite a lot on their
+> public documentation [1]
+> 
+> Load the boot partition by label instead of by index
+> 
+> [1] https://source.android.com/devices/bootloader/partitions
 > Signed-off-by: Guillaume La Roque <mkorpershoek@baylibre.com>
 > Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 > ---
->  include/configs/meson64_android.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  include/configs/meson64_android.h | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
 > diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index 661de76fd7..4027a7fe0d 100644
+> index 4027a7fe0d..e22f05c889 100644
 > --- a/include/configs/meson64_android.h
 > +++ b/include/configs/meson64_android.h
-> @@ -38,7 +38,7 @@
->  		"fi;" \
->  		"if test \"${run_fastboot}\" -eq 1; then " \
->  			"echo Running Fastboot...;" \
-> -			"fastboot 0;" \
-> +			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
->  		"fi\0"
+> @@ -9,6 +9,9 @@
+>  #ifndef __MESON64_ANDROID_CONFIG_H
+>  #define __MESON64_ANDROID_CONFIG_H
 >  
->  #define BOOTENV_DEV_NAME_FASTBOOT(devtypeu, devtypel, instance)	\
-> @@ -69,7 +69,7 @@
->  		"fi;" \
->  		"if test \"${run_recovery}\" -eq 1; then " \
->  			"echo Running Recovery...;" \
-> -			"fastboot 0;" \
-> +			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
->  		"fi\0"
+> +#ifndef BOOT_PARTITION
+> +#define BOOT_PARTITION "boot"
+> +#endif
 >  
->  #define BOOTENV_DEV_NAME_RECOVERY(devtypeu, devtypel, instance)	\
+>  #define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
+>  	"bootcmd_fastboot=" \
+> @@ -77,11 +80,11 @@
+>  
+>  #define BOOTENV_DEV_SYSTEM(devtypeu, devtypel, instance) \
+>  	"bootcmd_system=" \
+> -		"echo Loading Android boot partition...;" \
+> +		"echo Loading Android " BOOT_PARTITION " partition...;" \
+>  		"mmc dev ${mmcdev};" \
+>  		"setenv bootargs ${bootargs} console=${console} androidboot.serialno=${serial#};" \
+> -		"part start mmc ${mmcdev} ${bootpart} boot_start;" \
+> -		"part size mmc ${mmcdev} ${bootpart} boot_size;" \
+> +		"part start mmc ${mmcdev} " BOOT_PARTITION " boot_start;" \
+> +		"part size mmc ${mmcdev} " BOOT_PARTITION " boot_size;" \
+>  		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+>  			"echo Running Android...;" \
+>  			"bootm ${loadaddr};" \
+> @@ -111,7 +114,6 @@
+>  #define CONFIG_EXTRA_ENV_SETTINGS                                     \
+>  	"partitions=" PARTS_DEFAULT "\0"                              \
+>  	"mmcdev=2\0"                                                  \
+> -	"bootpart=1\0"                                                \
+>  	"logopart=2\0"                                                \
+>  	"gpio_recovery=88\0"                                          \
+>  	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
 > 
 
 
