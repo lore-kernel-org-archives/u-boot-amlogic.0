@@ -1,30 +1,30 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web11.7214.1627550519778280584
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web09.7181.1627550536874564565
  for <u-boot-amlogic@groups.io>;
- Thu, 29 Jul 2021 02:22:00 -0700
-Received: by mail-wr1-f41.google.com with SMTP id c16so6012116wrp.13
-        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 02:21:59 -0700 (PDT)
+ Thu, 29 Jul 2021 02:22:17 -0700
+Received: by mail-wr1-f46.google.com with SMTP id q3so6099240wrx.0
+        for <u-boot-amlogic@groups.io>; Thu, 29 Jul 2021 02:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=QS6xf5H/9+2yq2x9Roj5Qok40hsDZ1EOH5hZeHHRDVU=;
-        b=CVTJGd/dIO+jHRpSn4gkRTeo9xK2LGixHVZ2CCtNGlD/S5gI557d34nxKJUY6/69tx
-         V/y/d+OCcapIa44iJYE99TnjJg+hGRDCQTV/nmeyqeCgaLmiobRFifWEe7IpfzCNgyT1
-         Cq4oPA2dUYgir4OjSx4wV8127rwOU3I3TUeSYBVZ8ELzpgJO7Lx1/KdZAUobgmiEvB3+
-         25+b8JCBIJW5Nj+2+TPsEqn5YcRWE8usTz6J1sms8v62tDF5svDfeRAeRymUPYx9ncx/
-         p/ULg7nL3CC4WdUxVRSsQurPjqyDSDJLCIdzNMEJ9oq2sr5ZYMObtoV6jMeB3Jwvja4t
-         48ug==
+        bh=vb70hq2mmmZpy8OmLe6j4Nps4lJhZF4grHh/R/G9nQA=;
+        b=LAyqd9F3de23FeqgHFMoKo3nast7oNQWx/NkECOMVTk7iECzWkKRxc/pIH1+/iqGgR
+         7MCoPCT3XTnQo+d2EjV7lNOAlp2AyWFwwepWCQiRlJnhdlSES4nPaLd0swMsT3+asiED
+         t+8scfLX5jG/0rQ7COiFMvAbwjxVJh2JfK/8/587/sWBa+2bZ0rx+Ml+M4ev63YUQIDN
+         /OGJQW0Yqkn1+aGYRieksMrldTZ5ZA04wVEXAh5Ut2sV1hMZsyEuX1Q19MFgcnb1gOMl
+         hyi5utR1WyJ4MVd4ClLKU0Rkw/6wG3eMiiCJohI5AZfpJjP1jMtD+fs256n7rPD4nRED
+         A76g==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/6] configs: meson64_android: fix bad indent in EXTRA_ENV_SETTINGS
+Subject: Re: [PATCH 3/6] configs: meson64_android: use CONFIG_FASTBOOT_USB_DEV
 References: <20210729072113.208099-1-mkorpershoek@baylibre.com>
- <20210729072113.208099-3-mkorpershoek@baylibre.com>
+ <20210729072113.208099-4-mkorpershoek@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <344b228d-5042-1e72-eed1-c40a589ec5f2@baylibre.com>
-Date: Thu, 29 Jul 2021 11:21:57 +0200
+Message-ID: <02c1da08-a03d-5e48-c2c9-cdaef7ea54b8@baylibre.com>
+Date: Thu, 29 Jul 2021 11:22:15 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210729072113.208099-3-mkorpershoek@baylibre.com>
+In-Reply-To: <20210729072113.208099-4-mkorpershoek@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,31 +33,39 @@ Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
 On 29/07/2021 09:21, Mattijs Korpershoek wrote:
-> both lines seem to be joined together which is not the case for the
-> meson64.h EXTRA_ENV_SETTINGS.
+> Right now, when running fastboot we use a hard-coded "0" for the
+> device number.
 > 
-> Add a newline for consistency.
+> Use the Kconfig option named CONFIG_FASTBOOT_USB_DEV instead.
 > 
 > Signed-off-by: Guillaume La Roque <mkorpershoek@baylibre.com>
 > Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 > ---
->  include/configs/meson64_android.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  include/configs/meson64_android.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index c47d51c853..661de76fd7 100644
+> index 661de76fd7..4027a7fe0d 100644
 > --- a/include/configs/meson64_android.h
 > +++ b/include/configs/meson64_android.h
-> @@ -127,7 +127,8 @@
->  	"kernel_addr_r=0x01080000\0"                                  \
->  	"pxefile_addr_r=0x01080000\0"                                 \
->  	"ramdisk_addr_r=0x13000000\0"                                 \
-> -	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" BOOTENV
-> +	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0"        \
-> +	BOOTENV
+> @@ -38,7 +38,7 @@
+>  		"fi;" \
+>  		"if test \"${run_fastboot}\" -eq 1; then " \
+>  			"echo Running Fastboot...;" \
+> -			"fastboot 0;" \
+> +			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
+>  		"fi\0"
 >  
->  #include <configs/meson64.h>
+>  #define BOOTENV_DEV_NAME_FASTBOOT(devtypeu, devtypel, instance)	\
+> @@ -69,7 +69,7 @@
+>  		"fi;" \
+>  		"if test \"${run_recovery}\" -eq 1; then " \
+>  			"echo Running Recovery...;" \
+> -			"fastboot 0;" \
+> +			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
+>  		"fi\0"
 >  
+>  #define BOOTENV_DEV_NAME_RECOVERY(devtypeu, devtypel, instance)	\
 > 
 
 
