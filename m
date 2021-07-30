@@ -1,25 +1,25 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web12.23102.1627648103184943656
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web10.23218.1627648103933534050
  for <u-boot-amlogic@groups.io>;
- Fri, 30 Jul 2021 05:28:23 -0700
-Received: by mail-wr1-f42.google.com with SMTP id b7so11115284wri.8
-        for <u-boot-amlogic@groups.io>; Fri, 30 Jul 2021 05:28:22 -0700 (PDT)
+ Fri, 30 Jul 2021 05:28:24 -0700
+Received: by mail-wr1-f51.google.com with SMTP id b13so242769wrs.3
+        for <u-boot-amlogic@groups.io>; Fri, 30 Jul 2021 05:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Um4xMNLtpnXAHSbdw3xyZRQbMwTCm27xxuxWxDhzXTg=;
-        b=RgLgrS6fA3Z2tsh6nSGUTReaIAMi0C5WPq79fTcw7G8NBZYcwXCXdbZgYx1fTwAJRW
-         hes8v3COddgVHIkm1FIwb+spGf47XeSKxzgGArmx948DgYLsYtUKD0Wsdzii6VohETar
-         joNVQ1ObOzErcop/2VigDq3gk9ihx0jduzccvpRE8KbequfqiplDdNkNE2Lv24/an8WI
-         bJFNkJbObQV8SRLHWnGuXAmExrsDmlAmcAz9/m+1UMEAZ+BXqIn3Sv+BE7uLZnWj0n5D
-         YYtEjut0h4/T3ELWSPGnXO7rjJWewaaY7CLiXO62Ov7RhdYfFGy3W/cH+ayKNzUh3yBW
-         H4ZA==
+        bh=aAPWITdfytWB3WSOGm9UhvBKEIUsc0K86kBMnUQRzpw=;
+        b=WrNJC7ink4vYxTH0euXjJnBlBoTj2eKhJTLrTzc1/PYN4+hfXzl7v5rnlWoIQv1ysH
+         mYA74h7AduDnlO85oAQLGqr7vXC4ph2uYtI5wWDlrIlwlzWrbQe/IO7BCzTPLOxEZUbu
+         h8tjqPLdmlofTpvUX/rZHxr8YPDWKv20650PsjCVYPU/2ua6EgOF6nEvd3vf9lxVrh2K
+         uxsfNC7JANI7bYX6dQCDgerhrDlQ4D2HZK9ILB4KNx+Nqn4GUek3pUM6W7G34yQpUtA2
+         nz7l/gBrymz9g9Hsj+io6wD3j/5xs/1WxDN6QP9bACLiNkdCJyN/48CE1+vwa59XLhcp
+         FjvQ==
 Return-Path: <mkorpershoek@baylibre.com>
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Subject: [PATCH v2 4/5] configs: sei610/sei510: set CONFIG_CMD_BCB=y
-Date: Fri, 30 Jul 2021 14:28:11 +0200
-Message-Id: <20210730122812.3011529-5-mkorpershoek@baylibre.com>
+Subject: [PATCH v2 5/5] Revert "ARM: meson: Add support for fastboot_set_reboot_flag()"
+Date: Fri, 30 Jul 2021 14:28:12 +0200
+Message-Id: <20210730122812.3011529-6-mkorpershoek@baylibre.com>
 In-Reply-To: <20210730122812.3011529-1-mkorpershoek@baylibre.com>
 References: <20210730122812.3011529-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
@@ -28,42 +28,72 @@ To: Neil Armstrong <narmstrong@baylibre.com>
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-SEI-610 and SEI-510 are both for Android boards based on Yukawa[1]
+With the introduction of a generic reboot flag implemented in commit
+a362ce214f ("fastboot: Implement generic fastboot_set_reboot_flag"), we
+no longer need the custom PSCI implementation to handle the reboot reason.
 
-Enable the BCB command to enable the standard Android boot flow.
+This reverts commit 9a34dedfae0ebb031a45324c2fed8c39b2c6fcf2.
 
-[1] https://android.googlesource.com/device/amlogic/yukawa/
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- configs/sei510_defconfig | 1 +
- configs/sei610_defconfig | 1 +
- 2 files changed, 2 insertions(+)
+ arch/arm/mach-meson/board-common.c | 34 ------------------------------
+ 1 file changed, 34 deletions(-)
 
-diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
-index 63b3043a15..74328f2fd4 100644
---- a/configs/sei510_defconfig
-+++ b/configs/sei510_defconfig
-@@ -22,6 +22,7 @@ CONFIG_PREBOOT="run load_logo"
- CONFIG_MISC_INIT_R=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
-+CONFIG_CMD_BCB=y
- CONFIG_CMD_GPIO=y
- CONFIG_CMD_GPT=y
- # CONFIG_CMD_LOADS is not set
-diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
-index 56f136ed96..2a6d0e5995 100644
---- a/configs/sei610_defconfig
-+++ b/configs/sei610_defconfig
-@@ -22,6 +22,7 @@ CONFIG_PREBOOT="run load_logo"
- CONFIG_MISC_INIT_R=y
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
-+CONFIG_CMD_BCB=y
- CONFIG_CMD_GPIO=y
- CONFIG_CMD_GPT=y
- # CONFIG_CMD_LOADS is not set
+diff --git a/arch/arm/mach-meson/board-common.c b/arch/arm/mach-meson/board-common.c
+index 1690b6b1e6..7ceba7cede 100644
+--- a/arch/arm/mach-meson/board-common.c
++++ b/arch/arm/mach-meson/board-common.c
+@@ -22,10 +22,7 @@
+ #include <efi_loader.h>
+ #include <u-boot/crc.h>
+ 
+-#if CONFIG_IS_ENABLED(FASTBOOT)
+ #include <asm/psci.h>
+-#include <fastboot.h>
+-#endif
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -152,38 +149,7 @@ int board_late_init(void)
+ 	return meson_board_late_init();
+ }
+ 
+-#if CONFIG_IS_ENABLED(FASTBOOT)
+-static unsigned int reboot_reason = REBOOT_REASON_NORMAL;
+-
+-int fastboot_set_reboot_flag(enum fastboot_reboot_reason reason)
+-{
+-	if (reason != FASTBOOT_REBOOT_REASON_BOOTLOADER)
+-		return -ENOTSUPP;
+-
+-	reboot_reason = REBOOT_REASON_BOOTLOADER;
+-
+-	printf("Using reboot reason: 0x%x\n", reboot_reason);
+-
+-	return 0;
+-}
+-
+-void reset_cpu(void)
+-{
+-	struct pt_regs regs;
+-
+-	regs.regs[0] = ARM_PSCI_0_2_FN_SYSTEM_RESET;
+-	regs.regs[1] = reboot_reason;
+-
+-	printf("Rebooting with reason: 0x%lx\n", regs.regs[1]);
+-
+-	smc_call(&regs);
+-
+-	while (1)
+-		;
+-}
+-#else
+ void reset_cpu(void)
+ {
+ 	psci_system_reset();
+ }
+-#endif
 -- 
 2.30.2
 
