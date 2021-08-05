@@ -1,110 +1,168 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.11149.1628180485122838067
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web08.11183.1628180503710273260
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Aug 2021 09:21:25 -0700
-Received: by mail-wr1-f44.google.com with SMTP id k4so7361117wrc.0
-        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:24 -0700 (PDT)
+ Thu, 05 Aug 2021 09:21:44 -0700
+Received: by mail-wr1-f48.google.com with SMTP id z4so7303262wrv.11
+        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=fa0bCi+nMZwdvl0JGiq/xnCLA8kHcEM6oi2gZrLXVJ0=;
-        b=h6OG6qqGzsM4Ubg3o/euTlVPPtdQ+nBTnAS3ZTOEQ6EVYGEmJ7MPUxtUqMGzWIExsR
-         sxwDu05Ifbr/CNwGWcyEOX+Zl59EHU4C6a/ZuMm1Rq0geqKMh8F1Mc9e+v+SX+fcstrK
-         kpsJoIne8kB9rhqqrNjQeYGncO4tEGYhm0a/x+uliotnMB8kmOPUno+RjrZDpghd6iDb
-         EKKE+OSuw4vmbhjq4+1EE2quZBPYNXA9XgS4GCHwdJNdyxjAmlA/uWa8nHErv+Tf0YwK
-         yd8ZHab/lAb8qGS+sQSdF7mAfYJ00zFaRfvg9hwF+US+0MfIk1EikgMWTgiKWAfB5xwH
-         BfOA==
+        bh=wIB75vnWqdaBOSMBHSUVMLEvvb5pX5jj8YUeyJgrX60=;
+        b=IL7Gb4rvH+cDAo+IS7pdfDZAiR6sApFrMnGJsa66q5AzPIZ3cBKj9xtHWYzhMGcRzX
+         8FrHE3Q5x8tJzqAju7cPtHdphNn/mNJoYl0tBOhtXT41wwjIQSu1XEPpimKSKNG5HtAk
+         TybU0r45RM7mj1al5g60OickdVy1MYe19/WZUTPPZtAmO6tfrvQWLp+bMEPFC5plwzAY
+         ZIkpJhOPLXkmd6gP1JxbFFJXg+pu4BROK6aA3xamYvj3cmXhoEy5BfZzR5dUa8bbHWbM
+         X9F4jjPwSJXyO007cY+aCWPW6CcNyTmknTuCmb5+e4a2JmtxhK9RpWMOgVfRMOzFdb+B
+         xdcA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 8/9] configs: sei510/sei610: don't use hard-coded gpt uuids
+Subject: Re: [PATCH 9/9] configs: sei510/610: android bootflow via abootimg
 References: <20210805151728.422329-1-mkorpershoek@baylibre.com>
- <20210805151728.422329-9-mkorpershoek@baylibre.com>
+ <20210805151728.422329-10-mkorpershoek@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <1169860d-7030-fb83-bb48-5dc47ad908a3@baylibre.com>
-Date: Thu, 5 Aug 2021 18:21:12 +0200
+Message-ID: <f52aeb6a-60ec-765d-64e1-788d4bd33098@baylibre.com>
+Date: Thu, 5 Aug 2021 18:21:14 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210805151728.422329-9-mkorpershoek@baylibre.com>
+In-Reply-To: <20210805151728.422329-10-mkorpershoek@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Guillaume La Roque <glaroque@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
 On 05/08/2021 17:17, Mattijs Korpershoek wrote:
-> doc/README.gpt states:
+> From: Guillaume La Roque <glaroque@baylibre.com>
 > 
->> The fields 'uuid' and 'uuid_disk' are optional if CONFIG_RANDOM_UUID is
->> enabled. A random uuid will be used if omitted or they point to an empty/
->> non-existent environment variable. The environment variable will be
->> set to the generated UUID.  The 'gpt guid' command reads the current
->> value of the uuid_disk from the GPT.
+> Activate the following Kconfig options:
+> * AVB       for Android Verified Boot support
+> * ADTIMG    for merging DTBOs
+> * ABOOTIMG  for extracting Android boot image
 > 
-> Since we have CONFIG_RANDOM_UUID=y, remove the hard-coded uuids
-> and use meaningful variable names instead.
+> Also rework the partitioning tables:
+> - add a misc partition to handle BCB messages
+> - add a dtbo partition to store various DTBOs
+> - add a vbmeta partition for AVB hashes
+> - Merge vendor and system into the "super" partition
 > 
+> Note: avb support is disables by default. To activate it:
+>  => setenv force_avb 1;
+>  => saveenv;
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 > ---
->  include/configs/sei510.h | 12 ++++--------
->  include/configs/sei610.h | 12 ++++--------
->  2 files changed, 8 insertions(+), 16 deletions(-)
+>  configs/sei510_defconfig |  5 +++++
+>  configs/sei610_defconfig |  5 +++++
+>  include/configs/sei510.h | 11 +++++++----
+>  include/configs/sei610.h | 13 ++++++++-----
+>  4 files changed, 25 insertions(+), 9 deletions(-)
 > 
+> diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
+> index 74328f2fd4..8099b40b55 100644
+> --- a/configs/sei510_defconfig
+> +++ b/configs/sei510_defconfig
+> @@ -20,7 +20,10 @@ CONFIG_PREBOOT="run load_logo"
+>  # CONFIG_CONSOLE_MUX is not set
+>  # CONFIG_DISPLAY_CPUINFO is not set
+>  CONFIG_MISC_INIT_R=y
+> +CONFIG_AVB_VERIFY=y
+>  # CONFIG_CMD_BDI is not set
+> +CONFIG_CMD_ADTIMG=y
+> +CONFIG_CMD_ABOOTIMG=y
+>  # CONFIG_CMD_IMI is not set
+>  CONFIG_CMD_BCB=y
+>  CONFIG_CMD_GPIO=y
+> @@ -32,6 +35,7 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  # CONFIG_CMD_SETEXPR is not set
+>  CONFIG_CMD_BMP=y
+>  CONFIG_CMD_REGULATOR=y
+> +CONFIG_CMD_AVB=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_ENV_IS_IN_MMC=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> @@ -84,4 +88,5 @@ CONFIG_VIDEO_BMP_RLE8=y
+>  CONFIG_BMP_16BPP=y
+>  CONFIG_BMP_24BPP=y
+>  CONFIG_BMP_32BPP=y
+> +CONFIG_LIBAVB=y
+>  CONFIG_OF_LIBFDT_OVERLAY=y
+> diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
+> index 2a6d0e5995..e11f36ac79 100644
+> --- a/configs/sei610_defconfig
+> +++ b/configs/sei610_defconfig
+> @@ -20,7 +20,10 @@ CONFIG_PREBOOT="run load_logo"
+>  # CONFIG_CONSOLE_MUX is not set
+>  # CONFIG_DISPLAY_CPUINFO is not set
+>  CONFIG_MISC_INIT_R=y
+> +CONFIG_AVB_VERIFY=y
+>  # CONFIG_CMD_BDI is not set
+> +CONFIG_CMD_ADTIMG=y
+> +CONFIG_CMD_ABOOTIMG=y
+>  # CONFIG_CMD_IMI is not set
+>  CONFIG_CMD_BCB=y
+>  CONFIG_CMD_GPIO=y
+> @@ -32,6 +35,7 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  # CONFIG_CMD_SETEXPR is not set
+>  CONFIG_CMD_BMP=y
+>  CONFIG_CMD_REGULATOR=y
+> +CONFIG_CMD_AVB=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_ENV_IS_IN_MMC=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> @@ -84,4 +88,5 @@ CONFIG_VIDEO_BMP_RLE8=y
+>  CONFIG_BMP_16BPP=y
+>  CONFIG_BMP_24BPP=y
+>  CONFIG_BMP_32BPP=y
+> +CONFIG_LIBAVB=y
+>  CONFIG_OF_LIBFDT_OVERLAY=y
 > diff --git a/include/configs/sei510.h b/include/configs/sei510.h
-> index 16a34c717d..5bf2668803 100644
+> index 5bf2668803..ea91a06157 100644
 > --- a/include/configs/sei510.h
 > +++ b/include/configs/sei510.h
-> @@ -10,20 +10,16 @@
->  #define __CONFIG_H
->  
->  #define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
-> -#define CACHE_UUID "99207ae6-5207-11e9-999e-6f77a3612069;"
-> -#define SYSTEM_UUID "99f9b7ac-5207-11e9-8507-c3c037e393f3;"
-> -#define VENDOR_UUID "9d082802-5207-11e9-954c-cbbce08ba108;"
-> -#define USERDATA_UUID "9b976e42-5207-11e9-8f16-ff47ac594b22;"
->  #define ROOT_UUID "ddb8c3f6-d94d-4394-b633-3134139cc2e0;"
+> @@ -14,12 +14,15 @@
 >  
 >  #define PARTS_DEFAULT \
 >  	"uuid_disk=${uuid_gpt_disk};" \
->  	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
+> -	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
 >  	"name=logo,size=2M,uuid=" LOGO_UUID \
-> -	"name=cache,size=256M,uuid=" CACHE_UUID \
-> -	"name=system,size=1536M,uuid=" SYSTEM_UUID \
-> -	"name=vendor,size=256M,uuid=" VENDOR_UUID \
-> -	"name=userdata,size=5341M,uuid=" USERDATA_UUID \
-> +	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
-> +	"name=system,size=1536M,uuid=${uuid_gpt_system};" \
-> +	"name=vendor,size=256M,uuid=${uuid_gpt_vendor};" \
-> +	"name=userdata,size=5341M,uuid={uuid_gpt_userdata};" \
+> +	"name=misc,size=128K,uuid=${uuid_gpt_misc};" \
+> +	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
+> +	"name=vbmeta,size=64K,uuid=${uuid_gpt_vbmeta};" \
+> +	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
+> +	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
+>  	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
+> -	"name=system,size=1536M,uuid=${uuid_gpt_system};" \
+> -	"name=vendor,size=256M,uuid=${uuid_gpt_vendor};" \
+> -	"name=userdata,size=5341M,uuid={uuid_gpt_userdata};" \
+> +	"name=super,size=2304M,uuid=${uuid_gpt_super};" \
+> +	"name=userdata,size=4820M,uuid=${uuid_gpt_userdata};" \
 >  	"name=rootfs,size=-,uuid=" ROOT_UUID
 >  
 >  
 > diff --git a/include/configs/sei610.h b/include/configs/sei610.h
-> index 6d13fd143b..baace75a02 100644
+> index baace75a02..783eece271 100644
 > --- a/include/configs/sei610.h
 > +++ b/include/configs/sei610.h
-> @@ -10,20 +10,16 @@
->  #define __CONFIG_H
->  
->  #define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
-> -#define CACHE_UUID "99207ae6-5207-11e9-999e-6f77a3612069;"
-> -#define SYSTEM_UUID "99f9b7ac-5207-11e9-8507-c3c037e393f3;"
-> -#define VENDOR_UUID "9d082802-5207-11e9-954c-cbbce08ba108;"
-> -#define USERDATA_UUID "9b976e42-5207-11e9-8f16-ff47ac594b22;"
->  #define ROOT_UUID "ddb8c3f6-d94d-4394-b633-3134139cc2e0;"
+> @@ -14,12 +14,15 @@
 >  
 >  #define PARTS_DEFAULT \
 >  	"uuid_disk=${uuid_gpt_disk};" \
->  	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
->  	"name=logo,size=2M,uuid=" LOGO_UUID \
-> -	"name=cache,size=256M,uuid=" CACHE_UUID \
-> -	"name=system,size=1536M,uuid=" SYSTEM_UUID \
-> -	"name=vendor,size=256M,uuid=" VENDOR_UUID \
-> -	"name=userdata,size=12795M,uuid=" USERDATA_UUID \
-> +	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
-> +	"name=system,size=1536M,uuid=${uuid_gpt_system};" \
-> +	"name=vendor,size=256M,uuid=${uuid_gpt_vendor};" \
-> +	"name=userdata,size=12795M,uuid=${uuid_gpt_userdata};" \
+> -	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
+> -	"name=logo,size=2M,uuid=" LOGO_UUID \
+> +	"name=logo,start=512K,size=2M,uuid=" LOGO_UUID \
+> +	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
+> +	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
+> +	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
+> +	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
+> +	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
+>  	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
+> -	"name=system,size=1536M,uuid=${uuid_gpt_system};" \
+> -	"name=vendor,size=256M,uuid=${uuid_gpt_vendor};" \
+> -	"name=userdata,size=12795M,uuid=${uuid_gpt_userdata};" \
+> +	"name=super,size=2304M,uuid=${uuid_gpt_super};" \
+> +	"name=userdata,size=12274M,uuid=${uuid_gpt_userdata};" \
 >  	"name=rootfs,size=-,uuid=" ROOT_UUID
 >  
 >  #include <configs/meson64_android.h>
