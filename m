@@ -1,166 +1,62 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web09.10172.1628176661915807437
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web09.11169.1628180471399154750
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Aug 2021 08:17:42 -0700
-Received: by mail-wm1-f42.google.com with SMTP id f9-20020a05600c1549b029025b0f5d8c6cso6614304wmg.4
-        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 08:17:41 -0700 (PDT)
+ Thu, 05 Aug 2021 09:21:11 -0700
+Received: by mail-wm1-f43.google.com with SMTP id a192-20020a1c7fc90000b0290253b32e8796so5840673wmd.0
+        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=irJ8LFOROTEsyHI5TdS5tpyiUn+QWoR8r1YZdEyDfE8=;
-        b=u3U0URp5rRaeKvU+vgRwe5SX50tPJtJRUdCGkZOAlWl2McawVUL+8D2e4MqmidIn4Q
-         as44whlHKn7h7IVBF9S+NyJ07iYl66LDw23ovexIk2n7IjnQMLOHKdJcsiHlvgHHDqoq
-         rAsHCHgeadjeTH8MuzvF8uW9r0nxN1wCdNWG7dr6emVGAyNW97kX5bZik30aPEBy6Poq
-         F9xA2pFTqvHtZRJ0zxofws4HW1oetnVFeguduJuqEQvltaOwjrcYGIDD4sPlyjYrFk9p
-         tiMpNt5L7hcmQ60bDlEG9MxWvA91aLLrF2vIw1QPt2CNnCR75r++Q/900cWmGzDPDvXT
-         Z5HA==
-Return-Path: <mkorpershoek@baylibre.com>
-From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Subject: [PATCH 9/9] configs: sei510/610: android bootflow via abootimg
-Date: Thu,  5 Aug 2021 17:17:28 +0200
-Message-Id: <20210805151728.422329-10-mkorpershoek@baylibre.com>
-In-Reply-To: <20210805151728.422329-1-mkorpershoek@baylibre.com>
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QRAtyweFGU/uzPtMK6BXNtwXijFjuPXk5bkgY++4ZVM=;
+        b=THLvRk/INdyTmYIoNagDo4X8tM43DadFaCdEAFSXHZBFMEJvsfFEUbkSjnKTGUt1Kq
+         ndzIOzDuXZoqFq7hmuHuOX5u2sMDrKmbElZ1nsr97ExajCU+XkJrse+4B4cgVQFuYJxb
+         2fc0FLUlmUwJuhj3YS8j92qskQ+WxdBQfYAX41JbVeleBDfR2NTGiacdJEaIIVerZUkm
+         Yqij9gQWFzuByehHawA/9F45/nxT8LkceST+JQX2MAXyJstEpttetpdL/4Ooycvg3FI0
+         mRTAwQ6ryG/OnulVuQTIIVZvQ9cPFCv8L8Cbj89kwMrKtM8KYMbb1znWx3bJlTxYPyTR
+         tkRA==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/9] configs: meson64: permit redefining SYS_MALLOC_LEN
 References: <20210805151728.422329-1-mkorpershoek@baylibre.com>
+ <20210805151728.422329-2-mkorpershoek@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <c68ec64e-5309-be21-db7b-452c8f01e0f8@baylibre.com>
+Date: Thu, 5 Aug 2021 18:20:53 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Guillaume La Roque <glaroque@baylibre.com>, Mattijs Korpershoek <mkorpershoek@baylibre.com>
+In-Reply-To: <20210805151728.422329-2-mkorpershoek@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Guillaume La Roque <glaroque@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-From: Guillaume La Roque <glaroque@baylibre.com>
+On 05/08/2021 17:17, Mattijs Korpershoek wrote:
+> Permit redefining SYS_MALLOC_LEN for board specific configs.
+> This is especially useful for Android with AVB, which requires a malloc
+> length of 128M.
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+> ---
+>  include/configs/meson64.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+> index fb7f16d148..f9bb0240d2 100644
+> --- a/include/configs/meson64.h
+> +++ b/include/configs/meson64.h
+> @@ -32,7 +32,9 @@
+>  #define CONFIG_CPU_ARMV8
+>  #define CONFIG_REMAKE_ELF
+>  #define CONFIG_SYS_MAXARGS		32
+> +#ifndef CONFIG_SYS_MALLOC_LEN
+>  #define CONFIG_SYS_MALLOC_LEN		(32 << 20)
+> +#endif
+>  #define CONFIG_SYS_CBSIZE		1024
+>  
+>  #define CONFIG_SYS_SDRAM_BASE		0
+> 
 
-Activate the following Kconfig options:
-* AVB       for Android Verified Boot support
-* ADTIMG    for merging DTBOs
-* ABOOTIMG  for extracting Android boot image
-
-Also rework the partitioning tables:
-- add a misc partition to handle BCB messages
-- add a dtbo partition to store various DTBOs
-- add a vbmeta partition for AVB hashes
-- Merge vendor and system into the "super" partition
-
-Note: avb support is disables by default. To activate it:
- => setenv force_avb 1;
- => saveenv;
-
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
----
- configs/sei510_defconfig |  5 +++++
- configs/sei610_defconfig |  5 +++++
- include/configs/sei510.h | 11 +++++++----
- include/configs/sei610.h | 13 ++++++++-----
- 4 files changed, 25 insertions(+), 9 deletions(-)
-
-diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
-index 74328f2fd4..8099b40b55 100644
---- a/configs/sei510_defconfig
-+++ b/configs/sei510_defconfig
-@@ -20,7 +20,10 @@ CONFIG_PREBOOT="run load_logo"
- # CONFIG_CONSOLE_MUX is not set
- # CONFIG_DISPLAY_CPUINFO is not set
- CONFIG_MISC_INIT_R=y
-+CONFIG_AVB_VERIFY=y
- # CONFIG_CMD_BDI is not set
-+CONFIG_CMD_ADTIMG=y
-+CONFIG_CMD_ABOOTIMG=y
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_BCB=y
- CONFIG_CMD_GPIO=y
-@@ -32,6 +35,7 @@ CONFIG_CMD_USB_MASS_STORAGE=y
- # CONFIG_CMD_SETEXPR is not set
- CONFIG_CMD_BMP=y
- CONFIG_CMD_REGULATOR=y
-+CONFIG_CMD_AVB=y
- CONFIG_OF_CONTROL=y
- CONFIG_ENV_IS_IN_MMC=y
- CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-@@ -84,4 +88,5 @@ CONFIG_VIDEO_BMP_RLE8=y
- CONFIG_BMP_16BPP=y
- CONFIG_BMP_24BPP=y
- CONFIG_BMP_32BPP=y
-+CONFIG_LIBAVB=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
-index 2a6d0e5995..e11f36ac79 100644
---- a/configs/sei610_defconfig
-+++ b/configs/sei610_defconfig
-@@ -20,7 +20,10 @@ CONFIG_PREBOOT="run load_logo"
- # CONFIG_CONSOLE_MUX is not set
- # CONFIG_DISPLAY_CPUINFO is not set
- CONFIG_MISC_INIT_R=y
-+CONFIG_AVB_VERIFY=y
- # CONFIG_CMD_BDI is not set
-+CONFIG_CMD_ADTIMG=y
-+CONFIG_CMD_ABOOTIMG=y
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_BCB=y
- CONFIG_CMD_GPIO=y
-@@ -32,6 +35,7 @@ CONFIG_CMD_USB_MASS_STORAGE=y
- # CONFIG_CMD_SETEXPR is not set
- CONFIG_CMD_BMP=y
- CONFIG_CMD_REGULATOR=y
-+CONFIG_CMD_AVB=y
- CONFIG_OF_CONTROL=y
- CONFIG_ENV_IS_IN_MMC=y
- CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-@@ -84,4 +88,5 @@ CONFIG_VIDEO_BMP_RLE8=y
- CONFIG_BMP_16BPP=y
- CONFIG_BMP_24BPP=y
- CONFIG_BMP_32BPP=y
-+CONFIG_LIBAVB=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-diff --git a/include/configs/sei510.h b/include/configs/sei510.h
-index 5bf2668803..ea91a06157 100644
---- a/include/configs/sei510.h
-+++ b/include/configs/sei510.h
-@@ -14,12 +14,15 @@
- 
- #define PARTS_DEFAULT \
- 	"uuid_disk=${uuid_gpt_disk};" \
--	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
- 	"name=logo,size=2M,uuid=" LOGO_UUID \
-+	"name=misc,size=128K,uuid=${uuid_gpt_misc};" \
-+	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
-+	"name=vbmeta,size=64K,uuid=${uuid_gpt_vbmeta};" \
-+	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
-+	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
- 	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
--	"name=system,size=1536M,uuid=${uuid_gpt_system};" \
--	"name=vendor,size=256M,uuid=${uuid_gpt_vendor};" \
--	"name=userdata,size=5341M,uuid={uuid_gpt_userdata};" \
-+	"name=super,size=2304M,uuid=${uuid_gpt_super};" \
-+	"name=userdata,size=4820M,uuid=${uuid_gpt_userdata};" \
- 	"name=rootfs,size=-,uuid=" ROOT_UUID
- 
- 
-diff --git a/include/configs/sei610.h b/include/configs/sei610.h
-index baace75a02..783eece271 100644
---- a/include/configs/sei610.h
-+++ b/include/configs/sei610.h
-@@ -14,12 +14,15 @@
- 
- #define PARTS_DEFAULT \
- 	"uuid_disk=${uuid_gpt_disk};" \
--	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
--	"name=logo,size=2M,uuid=" LOGO_UUID \
-+	"name=logo,start=512K,size=2M,uuid=" LOGO_UUID \
-+	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
-+	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
-+	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
-+	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
-+	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
- 	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
--	"name=system,size=1536M,uuid=${uuid_gpt_system};" \
--	"name=vendor,size=256M,uuid=${uuid_gpt_vendor};" \
--	"name=userdata,size=12795M,uuid=${uuid_gpt_userdata};" \
-+	"name=super,size=2304M,uuid=${uuid_gpt_super};" \
-+	"name=userdata,size=12274M,uuid=${uuid_gpt_userdata};" \
- 	"name=rootfs,size=-,uuid=" ROOT_UUID
- 
- #include <configs/meson64_android.h>
--- 
-2.30.2
-
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
