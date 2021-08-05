@@ -1,58 +1,100 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.10218.1628176656508822623
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.10219.1628176657209201177
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Aug 2021 08:17:36 -0700
-Received: by mail-wm1-f49.google.com with SMTP id m28-20020a05600c3b1cb02902b5a8c22575so3768216wms.0
+ Thu, 05 Aug 2021 08:17:37 -0700
+Received: by mail-wm1-f45.google.com with SMTP id u15so3600309wmj.1
         for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 08:17:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A94euIs+oi1jrBIZrCCQiiV1yZfIktz5TDSAM6NedDg=;
-        b=mYbcAPXbJwEQzkmdMtBPIQOF1gWV3OtLUDhYbVH+djf18ZtmEjmhnwMrXRaRwoaZFu
-         O+ZMzUGVYj+8XTAx1eagewg8LhdDKY4mHTtd31+K8t+N2/at0CgPddzmviwhuM3GZ3vV
-         FSvbvqRhiqUTgh+T287cKL0Vtkkn1jp5yOIUX9hbuQB3TQnPTg+5DI2cHuRZZjSSmVEs
-         dX6gu4+ZnDbzJGhVAseNjyi2UJeS4PqpyUzW7Fsh8TmcVsAykxqbqqwMRRvpnpPHYFYM
-         xz1m2ITSdBfxzwrr/tEmbFSciZp5IrEo+QAw/RLr/LKwBRx8VIYU1th/zdJhD7hMjTSG
-         /e8w==
+        bh=7G233Z/nsEmw3ml1knD5a3G7CkfabTWR9eG6Z9Vj8c4=;
+        b=ud17pusSKPeHUUW1PMrm+jEC86LzU0+Lio2x2bQXJJpZiNmLQrH5EezzClAWA0wLba
+         UGTNF7zSXQfTVpUP2q6jy0B1JmGSVuCC1ctvLv+OH65ZGqFtWTPsLnwe+awYCvWA2hRC
+         43adFH1gAF9SzZXbqi1fp+vPrc6YLoPA91TuTtFYDfXXrXaxNjJwRucoGknNs9iWISXv
+         I7f78CWTmPAPEbrZNmWDOF38YsWdvAwXSbWArm2JLPLq/rTmcYeBlyiT4nqNFlOX/Bus
+         3mJSG2svJHW1p44e7nMzRgFkDpwuHKnxDwVciZWJN0wTu8kBaLohBvffB59IT9TYHowq
+         pQsQ==
 Return-Path: <mkorpershoek@baylibre.com>
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Subject: [PATCH 2/9] configs: meson64_android: increase SYS_MALLOC_LEN to 128M for AVB
-Date: Thu,  5 Aug 2021 17:17:21 +0200
-Message-Id: <20210805151728.422329-3-mkorpershoek@baylibre.com>
+Subject: [PATCH 3/9] configs: meson64_android: implement AVB support
+Date: Thu,  5 Aug 2021 17:17:22 +0200
+Message-Id: <20210805151728.422329-4-mkorpershoek@baylibre.com>
 In-Reply-To: <20210805151728.422329-1-mkorpershoek@baylibre.com>
 References: <20210805151728.422329-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>, Guillaume La Roque <glaroque@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-To prepare for AVB support, increase SYS_MALLOC_LEN to 128M.
-This value has been found by testing the following on khadas vim3l:
-  => avb init
-  => avb verify
+AVB (Android Verified Boot) is well supported in U-Boot already.
+Add support for it in meson64_android.
 
+This is controlled by the "force_avb" environment variable and the
+CONFIG_CMD_AVB option.
+
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 ---
- include/configs/meson64_android.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/configs/meson64_android.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-index f9f2b26416..bc3ffb9ca5 100644
+index bc3ffb9ca5..48a23b6e41 100644
 --- a/include/configs/meson64_android.h
 +++ b/include/configs/meson64_android.h
-@@ -9,6 +9,10 @@
- #ifndef __MESON64_ANDROID_CONFIG_H
- #define __MESON64_ANDROID_CONFIG_H
+@@ -27,6 +27,25 @@
  
-+#include <linux/sizes.h>
+ #ifndef RECOVERY_PARTITION
+ #define RECOVERY_PARTITION "recovery"
 +
-+#define CONFIG_SYS_MALLOC_LEN	       SZ_128M
++#if defined(CONFIG_CMD_AVB)
++#define AVB_VERIFY_CHECK \
++	"if test \"${force_avb}\" -eq 1; then " \
++		"if run avb_verify; then " \
++			"echo AVB verification OK.;" \
++			"setenv bootargs \"$bootargs $avb_bootargs\";" \
++		"else " \
++			"echo AVB verification failed.;" \
++		"exit; fi;" \
++	"else " \
++		"setenv bootargs \"$bootargs androidboot.verifiedbootstate=orange\";" \
++		"echo Running without AVB...; "\
++	"fi;"
 +
- #ifndef BOOT_PARTITION
- #define BOOT_PARTITION "boot"
++#define AVB_VERIFY_CMD "avb_verify=avb init ${mmcdev}; avb verify;\0"
++#else
++#define AVB_VERIFY_CHECK ""
++#define AVB_VERIFY_CMD ""
  #endif
+ 
+ #define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
+@@ -93,6 +112,7 @@
+ 			"echo Running Recovery...;" \
+ 			"mmc dev ${mmcdev};" \
+ 			"setenv bootargs \"${bootargs} androidboot.serialno=${serial#}\";" \
++			AVB_VERIFY_CHECK \
+ 			"part start mmc ${mmcdev} " RECOVERY_PARTITION " boot_start;" \
+ 			"part size mmc ${mmcdev} " RECOVERY_PARTITION " boot_size;" \
+ 			"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+@@ -111,6 +131,7 @@
+ 		"echo Loading Android " BOOT_PARTITION " partition...;" \
+ 		"mmc dev ${mmcdev};" \
+ 		"setenv bootargs ${bootargs} androidboot.serialno=${serial#};" \
++		AVB_VERIFY_CHECK \
+ 		"part start mmc ${mmcdev} " BOOT_PARTITION " boot_start;" \
+ 		"part size mmc ${mmcdev} " BOOT_PARTITION " boot_size;" \
+ 		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+@@ -142,6 +163,8 @@
+ #define CONFIG_EXTRA_ENV_SETTINGS                                     \
+ 	"partitions=" PARTS_DEFAULT "\0"                              \
+ 	"mmcdev=2\0"                                                  \
++	AVB_VERIFY_CMD                                                \
++	"force_avb=0\0"                                               \
+ 	"gpio_recovery=88\0"                                          \
+ 	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
+ 	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
 -- 
 2.30.2
 
