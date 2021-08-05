@@ -1,78 +1,69 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web12.8327.1628081073823856014
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web11.10217.1628176655364053203
  for <u-boot-amlogic@groups.io>;
- Wed, 04 Aug 2021 05:44:34 -0700
-Received: by mail-wm1-f54.google.com with SMTP id e25-20020a05600c4b99b0290253418ba0fbso1385443wmp.1
-        for <u-boot-amlogic@groups.io>; Wed, 04 Aug 2021 05:44:33 -0700 (PDT)
+ Thu, 05 Aug 2021 08:17:35 -0700
+Received: by mail-wr1-f50.google.com with SMTP id c9so7024352wri.8
+        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 08:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:organization:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lrTwnHoERuORHpP8BmbxNQaxIFslmRzMvjQ2TSzQzHg=;
-        b=j+1tb86A7NTfge67ZbX4FCyjr7UqNJspwWPsBSbvVk+2kOkkUSUrKS8BeP5dGFC6aY
-         GW5p0jfFy+lkST1oF2lwROnR8XvOI4iGOg2t3kTgZ07EF0DM9AgFWXDZzBlqNSWQwD3U
-         bsksGK+5Z0L84I49hzpbBiGjgn53dcVEJcRFNH16QuEheG7+yHwoRRIfkuVo10OkoWs5
-         y01TNJobw2Ca/Lny3mA8DGt/sRTUwZQZLLh71TT1wLHVE+zHHtyd1owUJmt0sOsS/Qfj
-         GijWUmYZDQ6OBu0GPmBNeZ0L+lYR4XqXHFfiyXP9qnTGgBE8P8AHo0Wv126ivwnAJAzI
-         nrQA==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] board: amlogic: odroid-n2: fix fdtfile suffix for n2-plus
-References: <20210804110107.2127-1-christianshewitt@gmail.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <c892e443-78f5-4a77-9d17-d83b6b2df0a8@baylibre.com>
-Date: Wed, 4 Aug 2021 14:44:30 +0200
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2At7FbT/M7VQiKOx4K1VoUemwd+9VWKsnd73THjElpQ=;
+        b=Wkc+4N9QrckqXQFFJcj/WGT5uUNfW9EoveLwLtQoFcnuBQ6FRT0sYOvRX4HCaq9LQQ
+         6POK4q/BfzVR+3/2vA3PAbc5mFLF59Cn6iqdAIAD5PGTr7LP0Xe5UjbzapWXpquBaJ6R
+         q4quPGXxPHFg0RQwa2zXTRCrAwZ9oy1kqvsPDyIAlOWciP795eWair/GDmCD7CyAzT/b
+         oT5mrABVi0polEI1scK4Oq/U3I2tMyn8NdAtg7ZPkrQ8p0KfaPC4xHWTkCHqteqdVjpE
+         hRmenBGjAmmR0XQfiOZ8lJ0MC/vs+XuYKZzWVEP8Qv6gU+WJ3GdGiBtITrc7bMqFVwnN
+         LOkQ==
+Return-Path: <mkorpershoek@baylibre.com>
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Subject: [PATCH 0/9] meson64_android: Android boot flow using abootimg
+Date: Thu,  5 Aug 2021 17:17:19 +0200
+Message-Id: <20210805151728.422329-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20210804110107.2127-1-christianshewitt@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Christian Hewitt <christianshewitt@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 04/08/2021 13:01, Christian Hewitt wrote:
-> The N2+ dtb is meson-g12b-odroid-n2-plus.dtb, not n2_plus, so
-> correct the suffix provided in the board file. Also align the
-> board ident string shown during boot to match.
-> 
-> Fixes: 8bc780106c13 ("board: amlogic: odroid: add runtime detection of the N2/N2+/C4/HC4 variants")
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  board/amlogic/odroid-n2/odroid-n2.c | 2 +-
->  configs/odroid-n2_defconfig         | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/board/amlogic/odroid-n2/odroid-n2.c b/board/amlogic/odroid-n2/odroid-n2.c
-> index 88a60f34fe..acfd107fc5 100644
-> --- a/board/amlogic/odroid-n2/odroid-n2.c
-> +++ b/board/amlogic/odroid-n2/odroid-n2.c
-> @@ -48,7 +48,7 @@ static struct meson_odroid_boards {
->  	/* OdroidN2 rev 2019,2,7 */
->  	{ MESON_SOC_ID_G12B, 330 * 4, 350 * 4, "n2" },
->  	/* OdroidN2plus rev 2019,11,20 */
-> -	{ MESON_SOC_ID_G12B, 410 * 4, 430 * 4, "n2_plus" },
-> +	{ MESON_SOC_ID_G12B, 410 * 4, 430 * 4, "n2-plus" },
->  	/* OdroidC4 rev 2020,01,29 */
->  	{ MESON_SOC_ID_SM1,   80 * 4, 100 * 4, "c4" },
->  	/* OdroidHC4 rev 2019,12,10 */
-> diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
-> index bac44b61ab..1f718a3154 100644
-> --- a/configs/odroid-n2_defconfig
-> +++ b/configs/odroid-n2_defconfig
-> @@ -9,7 +9,7 @@ CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-odroid-n2"
->  CONFIG_MESON_G12A=y
->  CONFIG_DEBUG_UART_BASE=0xff803000
->  CONFIG_DEBUG_UART_CLOCK=24000000
-> -CONFIG_IDENT_STRING=" odroid-n2/n2_plus"
-> +CONFIG_IDENT_STRING=" odroid-n2/n2-plus"
->  CONFIG_DEBUG_UART=y
->  CONFIG_OF_BOARD_SETUP=y
->  # CONFIG_DISPLAY_CPUINFO is not set
-> 
+The SEI-610 and SEI-510 boards are well supported in the
+Android Open Source project via the yukawa [1] platform.
 
-Indeed, thx for the fix
+Their U-Boot version, despite being public [2] is not in mainline.
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Android 10 and higher have significantly reworked the bootloader
+requirements:
 
-If nobody complains I'll push it at the end of the week !
+* bootloader should pass slot information in case of A/B
+* bootloader should perform AVB verification in case it's supported
+* bootloader should read and apply dtb overlays from a dtbo partition
 
-Neil
+These series add support for all the above.
+
+[1] https://android.googlesource.com/device/amlogic/yukawa
+[2] https://gitlab.com/baylibre/amlogic/atv/u-boot/-/tree/u-boot/v2021.07/integ
+
+Guillaume La Roque (2):
+  configs: meson64_android: boot android via abootimg
+  configs: sei510/610: android bootflow via abootimg
+
+Mattijs Korpershoek (7):
+  configs: meson64: permit redefining SYS_MALLOC_LEN
+  configs: meson64_android: increase SYS_MALLOC_LEN to 128M for AVB
+  configs: meson64_android: implement AVB support
+  configs: meson64_android: implement A/B slot support
+  configs: meson64_android: define BOOT_CMD macro
+  configs: sei510/sei610: reformat PARTS_default
+  configs: sei510/sei610: don't use hard-coded gpt uuids
+
+ configs/sei510_defconfig          |   5 ++
+ configs/sei610_defconfig          |   5 ++
+ include/configs/meson64.h         |   2 +
+ include/configs/meson64_android.h | 139 ++++++++++++++++++++++++++++--
+ include/configs/sei510.h          |  23 +++--
+ include/configs/sei610.h          |  23 +++--
+ 6 files changed, 165 insertions(+), 32 deletions(-)
+
+-- 
+2.30.2
+
