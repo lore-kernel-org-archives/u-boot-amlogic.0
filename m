@@ -1,30 +1,30 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.web12.11130.1628180478884927879
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web08.11172.1628180480085314203
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Aug 2021 09:21:19 -0700
-Received: by mail-wr1-f41.google.com with SMTP id p5so7338946wro.7
-        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:18 -0700 (PDT)
+ Thu, 05 Aug 2021 09:21:20 -0700
+Received: by mail-wm1-f49.google.com with SMTP id f9-20020a05600c1549b029025b0f5d8c6cso6757741wmg.4
+        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=PPdaWT+JzzDUe7qsRK7jjsme9Y1i7NtcKl3QyMm+cwM=;
-        b=iC0djHS1oCBlhuvh3cRBD9Bgl3fkQ4V11lFkllpslgPQq3mheRA0N9REsGa2jbUkyX
-         pp7YesKWSyZ1x4B91f5izJS+Ap6sWhr9rKAB8IAovadFz2XRd69EfMMGnT7BNPJIe22n
-         +ZKg476BjFxD3mQbam//FPvIgKtmv43NdITWDDWr0liRkVZ/LuJTiJw076JvH6HFg0/k
-         HvOFFEeL9kgoE84+s1cPuqEdJaVuIk2nKPcMZqL2K7u+h1SO/zI099cYsjAX+/ByF5/y
-         R8oKiBv16Hjt68/IyiVlE3Fu0DXU4Q9VL3jO2xDh6nNVJQsKnPt9QCDqtJ0k2lpUcFL/
-         WwMQ==
+        bh=y5hbYcNq4Yrjj7eyNHUZNHsE8J5AsqQkZnNfPmij0LI=;
+        b=zPHWpDaU4OK6Cx+WXg2PhKWdOqmEQmV7GmS2Pm/+7yhVVxvpPfSHYVFHMmV59bE0qZ
+         nN2sj7DXZUYwjZ3hhKgg5ILgIELOhNwdFqLyXvtKHi/xLJN+KEOj3d6ODgkQSUPalN72
+         GDB3uAvrRDlyGevkM7yoCk4Cch9/V8OULkN98/pbEdC5xXimzDUDkTLlAjUFJNa6Yfov
+         UuwJQVZojDFR+CplH8m4C5hPhDM3q50RIU6a+j/GxcHfJx+qm/6gKj5O8TB7xOihXhqz
+         DS29QQAwKgSVdcLmh1GiF5mjExJBrJbVOB+EOmxRnd/4gGAHd9YVQ+U/PrR5mzna85ep
+         0mPA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 4/9] configs: meson64_android: implement A/B slot support
+Subject: Re: [PATCH 6/9] configs: meson64_android: boot android via abootimg
 References: <20210805151728.422329-1-mkorpershoek@baylibre.com>
- <20210805151728.422329-5-mkorpershoek@baylibre.com>
+ <20210805151728.422329-7-mkorpershoek@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <c16e95a2-599a-543a-09d3-24b82e19aeb8@baylibre.com>
-Date: Thu, 5 Aug 2021 18:21:02 +0200
+Message-ID: <448f032d-787f-0926-92e5-b096cc4f1274@baylibre.com>
+Date: Thu, 5 Aug 2021 18:21:07 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210805151728.422329-5-mkorpershoek@baylibre.com>
+In-Reply-To: <20210805151728.422329-7-mkorpershoek@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,122 +33,115 @@ Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Guillaume La Roque <glaroque
 List-ID: <u-boot-amlogic@groups.io>
 
 On 05/08/2021 17:17, Mattijs Korpershoek wrote:
-> Implement A/B slot selection using the U-Boot ab_select command.
+> From: Guillaume La Roque <glaroque@baylibre.com>
 > 
-> Keep support for non A/B.
+> Since Android 10, we are required to use a "dtbo" partition which
+> includes the various device-tree overlays [1].
+> It's also possible to provide a "dtb" partition.
 > 
-> Not: We need to redefine the recovery partition label, as RecoveryOS
-> is included in the boot image for A/B systems [1]
+> This is supported via the "abootimg" command.
 > 
-> [1] https://source.android.com/devices/tech/ota/ab/ab_implement#recovery
+> On Yukawa, the assumption is that we have only a "dtbo" partition, which
+> includes all board dtbs and their dtbos [2]
+> 
+> [1] https://source.android.com/devices/architecture/dto/partitions
+> [2] https://android.googlesource.com/device/amlogic/yukawa/+/refs/heads/master/build/tasks/dtimages.mk#16
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 > ---
->  include/configs/meson64_android.h | 55 ++++++++++++++++++++++++++-----
->  1 file changed, 47 insertions(+), 8 deletions(-)
+>  include/configs/meson64_android.h | 57 ++++++++++++++++++++++++++++++-
+>  1 file changed, 56 insertions(+), 1 deletion(-)
 > 
 > diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index 48a23b6e41..83fa25bfb1 100644
+> index 0ce616c17e..358e0a5c71 100644
 > --- a/include/configs/meson64_android.h
 > +++ b/include/configs/meson64_android.h
-> @@ -25,9 +25,6 @@
->  #define CONTROL_PARTITION "misc"
+> @@ -81,7 +81,59 @@
+>  #define RECOVERY_PARTITION "recovery"
 >  #endif
 >  
-> -#ifndef RECOVERY_PARTITION
-> -#define RECOVERY_PARTITION "recovery"
-> -
->  #if defined(CONFIG_CMD_AVB)
->  #define AVB_VERIFY_CHECK \
->  	"if test \"${force_avb}\" -eq 1; then " \
-> @@ -42,12 +39,48 @@
->  		"echo Running without AVB...; "\
->  	"fi;"
->  
-> -#define AVB_VERIFY_CMD "avb_verify=avb init ${mmcdev}; avb verify;\0"
-> +#define AVB_VERIFY_CMD "avb_verify=avb init ${mmcdev}; avb verify $slot_suffix;\0"
->  #else
->  #define AVB_VERIFY_CHECK ""
->  #define AVB_VERIFY_CMD ""
->  #endif
->  
-> +#if defined(CONFIG_CMD_AB_SELECT)
-> +#define ANDROIDBOOT_GET_CURRENT_SLOT_CMD "get_current_slot=" \
-> +	"if part number mmc ${mmcdev} " CONTROL_PARTITION " control_part_number; " \
-> +	"then " \
-> +		"echo " CONTROL_PARTITION \
-> +			" partition number:${control_part_number};" \
-> +		"ab_select current_slot mmc ${mmcdev}:${control_part_number};" \
+> +#if defined(CONFIG_CMD_ABOOTIMG)
+> +/*
+> + * Prepares complete device tree blob for current board (for Android boot).
+> + *
+> + * Boot image or recovery image should be loaded into $loadaddr prior to running
+> + * these commands. The logic of these commnads is next:
+> + *
+> + *   1. Read correct DTB for current SoC/board from boot image in $loadaddr
+> + *      to $fdtaddr
+> + *   2. Merge all needed DTBO for current board from 'dtbo' partition into read
+> + *      DTB
+> + *   3. User should provide $fdtaddr as 3rd argument to 'bootm'
+> + */
+> +#define PREPARE_FDT \
+> +	"echo Preparing FDT...; " \
+> +	"if test $board_name = sei510; then " \
+> +		"echo \"  Reading DTB for sei510...\"; " \
+> +		"setenv dtb_index 0;" \
+> +	"elif test $board_name = sei610; then " \
+> +		"echo \"  Reading DTB for sei610...\"; " \
+> +		"setenv dtb_index 1;" \
 > +	"else " \
-> +		"echo " CONTROL_PARTITION " partition not found;" \
-> +	"fi;\0"
-> +
-> +#define AB_SELECT_SLOT \
-> +	"run get_current_slot; " \
-> +	"if test -e \"${current_slot}\"; " \
-> +	"then " \
-> +		"setenv slot_suffix _${current_slot}; " \
+> +		"echo Error: Android boot is not supported for $board_name; " \
+> +		"exit; " \
+> +	"fi; " \
+> +	"abootimg get dtb --index=$dtb_index dtb_start dtb_size; " \
+> +	"cp.b $dtb_start $fdt_addr_r $dtb_size; " \
+> +	"fdt addr $fdt_addr_r  0x80000; " \
+> +	"if test $board_name = sei510; then " \
+> +		"echo \"  Reading DTBO for sei510...\"; " \
+> +		"setenv dtbo_index 0;" \
+> +	"elif test $board_name = sei610; then " \
+> +		"echo \"  Reading DTBO for sei610...\"; " \
+> +		"setenv dtbo_index 1;" \
 > +	"else " \
-> +		"echo current_slot not found;" \
-> +		"exit;" \
-> +	"fi;"
+> +		"echo Error: Android boot is not supported for $board_name; " \
+> +		"exit; " \
+> +	"fi; " \
+> +	"part start mmc ${mmcdev} dtbo${slot_suffix} p_dtbo_start; " \
+> +	"part size mmc ${mmcdev} dtbo${slot_suffix} p_dtbo_size; " \
+> +	"mmc read ${dtboaddr} ${p_dtbo_start} ${p_dtbo_size}; " \
+> +	"echo \"  Applying DTBOs...\"; " \
+> +	"adtimg addr $dtboaddr; " \
+> +	"adtimg get dt --index=$dtbo_index dtbo0_addr; " \
+> +	"fdt apply $dtbo0_addr;" \
+> +	"setenv bootargs \"$bootargs androidboot.dtbo_idx=$dtbo_index \";"\
 > +
-> +#define AB_SELECT_ARGS \
-> +	"setenv bootargs_ab androidboot.slot_suffix=${slot_suffix}; " \
-> +	"echo A/B cmdline addition: ${bootargs_ab};" \
-> +	"setenv bootargs ${bootargs} ${bootargs_ab};"
+> +#define BOOT_CMD "bootm ${loadaddr} ${loadaddr} ${fdt_addr_r};"
 > +
-> +#define AB_BOOTARGS " androidboot.force_normal_boot=1"
-> +#define RECOVERY_PARTITION "boot"
 > +#else
-> +#define AB_SELECT_SLOT ""
-> +#define AB_SELECT_ARGS " "
-> +#define ANDROIDBOOT_GET_CURRENT_SLOT_CMD ""
-> +#define AB_BOOTARGS " "
-> +#define RECOVERY_PARTITION "recovery"
+> +#define PREPARE_FDT " "
+>  #define BOOT_CMD "bootm ${loadaddr};"
 > +#endif
-> +
+>  
 >  #define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
 >  	"bootcmd_fastboot=" \
->  		"setenv run_fastboot 0;" \
-> @@ -112,9 +145,11 @@
->  			"echo Running Recovery...;" \
->  			"mmc dev ${mmcdev};" \
->  			"setenv bootargs \"${bootargs} androidboot.serialno=${serial#}\";" \
-> +			AB_SELECT_SLOT \
-> +			AB_SELECT_ARGS \
->  			AVB_VERIFY_CHECK \
-> -			"part start mmc ${mmcdev} " RECOVERY_PARTITION " boot_start;" \
-> -			"part size mmc ${mmcdev} " RECOVERY_PARTITION " boot_size;" \
-> +			"part start mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_start;" \
-> +			"part size mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_size;" \
+> @@ -153,6 +205,7 @@
+>  			"part start mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_start;" \
+>  			"part size mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_size;" \
 >  			"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+> +				PREPARE_FDT \
 >  				"echo Running Android Recovery...;" \
->  				"bootm ${loadaddr};" \
-> @@ -131,10 +166,13 @@
->  		"echo Loading Android " BOOT_PARTITION " partition...;" \
->  		"mmc dev ${mmcdev};" \
->  		"setenv bootargs ${bootargs} androidboot.serialno=${serial#};" \
-> +		AB_SELECT_SLOT \
-> +		AB_SELECT_ARGS \
->  		AVB_VERIFY_CHECK \
-> -		"part start mmc ${mmcdev} " BOOT_PARTITION " boot_start;" \
-> -		"part size mmc ${mmcdev} " BOOT_PARTITION " boot_size;" \
-> +		"part start mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_start;" \
-> +		"part size mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_size;" \
+>  				BOOT_CMD \
+>  			"fi;" \
+> @@ -174,6 +227,7 @@
+>  		"part start mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_start;" \
+>  		"part size mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_size;" \
 >  		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
-> +			"setenv bootargs \"${bootargs} " AB_BOOTARGS "\"  ; " \
+> +			PREPARE_FDT \
+>  			"setenv bootargs \"${bootargs} " AB_BOOTARGS "\"  ; " \
 >  			"echo Running Android...;" \
->  			"bootm ${loadaddr};" \
->  		"fi;" \
-> @@ -163,6 +201,7 @@
->  #define CONFIG_EXTRA_ENV_SETTINGS                                     \
->  	"partitions=" PARTS_DEFAULT "\0"                              \
->  	"mmcdev=2\0"                                                  \
-> +	ANDROIDBOOT_GET_CURRENT_SLOT_CMD                              \
->  	AVB_VERIFY_CMD                                                \
->  	"force_avb=0\0"                                               \
->  	"gpio_recovery=88\0"                                          \
+>  			BOOT_CMD \
+> @@ -212,7 +266,8 @@
+>  	"stdin=" STDIN_CFG "\0"                                       \
+>  	"stdout=" STDOUT_CFG "\0"                                     \
+>  	"stderr=" STDOUT_CFG "\0"                                     \
+> -	"loadaddr=0x01000000\0"                                       \
+> +	"dtboaddr=0x08200000\0"                                       \
+> +	"loadaddr=0x01080000\0"                                       \
+>  	"fdt_addr_r=0x01000000\0"                                     \
+>  	"scriptaddr=0x08000000\0"                                     \
+>  	"kernel_addr_r=0x01080000\0"                                  \
 > 
 
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
