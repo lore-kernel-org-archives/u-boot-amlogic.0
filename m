@@ -1,63 +1,105 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web12.11127.1628180471625676544
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web08.11168.1628180475991028527
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Aug 2021 09:21:11 -0700
-Received: by mail-wm1-f52.google.com with SMTP id d131-20020a1c1d890000b02902516717f562so4114495wmd.3
-        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:11 -0700 (PDT)
+ Thu, 05 Aug 2021 09:21:16 -0700
+Received: by mail-wr1-f52.google.com with SMTP id p5so7338798wro.7
+        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vayjRoXlWpMijpjKEjv01EfmEdQ98lbaf5rxOuDfKKY=;
-        b=jzkOzkKOI0mE+gdRWehvDtEaXUpZfk1VghkKuSWFqMRrOq200adpcINh2oGmbGF8cJ
-         c4hWg+EnnxBXhuPLDWDwkQIhCx4JH52hCw97426qhffeEpLCkgOI6J+2qGOwWgtHOHGh
-         bAU7WJcvtaPWzzETJ4bdB20G4WufWIt6wdFolatjjlrvroQlSXOlR4EzNAUc6ZDwDwzO
-         35/nTnbZzmL4RNGY9JpFuAVp1+CqhBZquiDevGfGB/bj3lBEcYljnWrFsksCSWyBrLnk
-         trUSc5wLOzXevPHe5NAsexCMFDmUP+1WLdJDBqQEKN3bE0X5fUvh5pSulCMSwVxtbkwj
-         Yf2g==
+        bh=SLuzHapQSvw1NC06rlP/p1OoTWfxrSQW31tNBjO7llQ=;
+        b=EzxAXRedSnYEGjBZwCGqs/n1wTxiKAreQHrOsjjq1T4EHKd8W1HlsIwYdGM09GgAoz
+         w5+TRknAxcp4Apsu90ekGJtN2+aty1tuWnXmpkATDjiox/owQmRgcyQRvvCRL2GDL+YY
+         j3p8pBk2M6PFUm9sjoCO6T4fmFZ9ZSqXAYpqImLabfh0mbaHeTDeOw5FGGRIlJDobFrp
+         wHYlX2eBnUnMDkm9Agdzh1APntXgsw1MrKvJUaQOQTs3nLNZdrhVuKwr+hoZMAs9g5x7
+         nd9efmTYR/2d0ziQ3+FNyUYqQOKNCenWXRq2kT9kRdhGUCeQNcUhU75qkv0MuCk+hTrO
+         zSoA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/9] configs: meson64_android: increase SYS_MALLOC_LEN to 128M for AVB
+Subject: Re: [PATCH 3/9] configs: meson64_android: implement AVB support
 References: <20210805151728.422329-1-mkorpershoek@baylibre.com>
- <20210805151728.422329-3-mkorpershoek@baylibre.com>
+ <20210805151728.422329-4-mkorpershoek@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <b8635d23-23c6-fbd2-2e2f-291f98f3e59a@baylibre.com>
-Date: Thu, 5 Aug 2021 18:20:56 +0200
+Message-ID: <5667bca3-034f-7af8-158f-61d3452df008@baylibre.com>
+Date: Thu, 5 Aug 2021 18:20:59 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210805151728.422329-3-mkorpershoek@baylibre.com>
+In-Reply-To: <20210805151728.422329-4-mkorpershoek@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Guillaume La Roque <glaroque@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
 On 05/08/2021 17:17, Mattijs Korpershoek wrote:
-> To prepare for AVB support, increase SYS_MALLOC_LEN to 128M.
-> This value has been found by testing the following on khadas vim3l:
->   => avb init
->   => avb verify
+> AVB (Android Verified Boot) is well supported in U-Boot already.
+> Add support for it in meson64_android.
 > 
+> This is controlled by the "force_avb" environment variable and the
+> CONFIG_CMD_AVB option.
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 > ---
->  include/configs/meson64_android.h | 4 ++++
->  1 file changed, 4 insertions(+)
+>  include/configs/meson64_android.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
 > diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index f9f2b26416..bc3ffb9ca5 100644
+> index bc3ffb9ca5..48a23b6e41 100644
 > --- a/include/configs/meson64_android.h
 > +++ b/include/configs/meson64_android.h
-> @@ -9,6 +9,10 @@
->  #ifndef __MESON64_ANDROID_CONFIG_H
->  #define __MESON64_ANDROID_CONFIG_H
+> @@ -27,6 +27,25 @@
 >  
-> +#include <linux/sizes.h>
+>  #ifndef RECOVERY_PARTITION
+>  #define RECOVERY_PARTITION "recovery"
 > +
-> +#define CONFIG_SYS_MALLOC_LEN	       SZ_128M
+> +#if defined(CONFIG_CMD_AVB)
+> +#define AVB_VERIFY_CHECK \
+> +	"if test \"${force_avb}\" -eq 1; then " \
+> +		"if run avb_verify; then " \
+> +			"echo AVB verification OK.;" \
+> +			"setenv bootargs \"$bootargs $avb_bootargs\";" \
+> +		"else " \
+> +			"echo AVB verification failed.;" \
+> +		"exit; fi;" \
+> +	"else " \
+> +		"setenv bootargs \"$bootargs androidboot.verifiedbootstate=orange\";" \
+> +		"echo Running without AVB...; "\
+> +	"fi;"
 > +
->  #ifndef BOOT_PARTITION
->  #define BOOT_PARTITION "boot"
+> +#define AVB_VERIFY_CMD "avb_verify=avb init ${mmcdev}; avb verify;\0"
+> +#else
+> +#define AVB_VERIFY_CHECK ""
+> +#define AVB_VERIFY_CMD ""
 >  #endif
+>  
+>  #define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
+> @@ -93,6 +112,7 @@
+>  			"echo Running Recovery...;" \
+>  			"mmc dev ${mmcdev};" \
+>  			"setenv bootargs \"${bootargs} androidboot.serialno=${serial#}\";" \
+> +			AVB_VERIFY_CHECK \
+>  			"part start mmc ${mmcdev} " RECOVERY_PARTITION " boot_start;" \
+>  			"part size mmc ${mmcdev} " RECOVERY_PARTITION " boot_size;" \
+>  			"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+> @@ -111,6 +131,7 @@
+>  		"echo Loading Android " BOOT_PARTITION " partition...;" \
+>  		"mmc dev ${mmcdev};" \
+>  		"setenv bootargs ${bootargs} androidboot.serialno=${serial#};" \
+> +		AVB_VERIFY_CHECK \
+>  		"part start mmc ${mmcdev} " BOOT_PARTITION " boot_start;" \
+>  		"part size mmc ${mmcdev} " BOOT_PARTITION " boot_size;" \
+>  		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+> @@ -142,6 +163,8 @@
+>  #define CONFIG_EXTRA_ENV_SETTINGS                                     \
+>  	"partitions=" PARTS_DEFAULT "\0"                              \
+>  	"mmcdev=2\0"                                                  \
+> +	AVB_VERIFY_CMD                                                \
+> +	"force_avb=0\0"                                               \
+>  	"gpio_recovery=88\0"                                          \
+>  	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
+>  	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
 > 
 
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
