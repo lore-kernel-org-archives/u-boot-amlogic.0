@@ -1,30 +1,30 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web08.11168.1628180475991028527
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web08.11169.1628180478538853306
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Aug 2021 09:21:16 -0700
-Received: by mail-wr1-f52.google.com with SMTP id p5so7338798wro.7
-        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:15 -0700 (PDT)
+ Thu, 05 Aug 2021 09:21:18 -0700
+Received: by mail-wm1-f44.google.com with SMTP id l8-20020a05600c1d08b02902b5acf7d8b5so3401753wms.2
+        for <u-boot-amlogic@groups.io>; Thu, 05 Aug 2021 09:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=SLuzHapQSvw1NC06rlP/p1OoTWfxrSQW31tNBjO7llQ=;
-        b=EzxAXRedSnYEGjBZwCGqs/n1wTxiKAreQHrOsjjq1T4EHKd8W1HlsIwYdGM09GgAoz
-         w5+TRknAxcp4Apsu90ekGJtN2+aty1tuWnXmpkATDjiox/owQmRgcyQRvvCRL2GDL+YY
-         j3p8pBk2M6PFUm9sjoCO6T4fmFZ9ZSqXAYpqImLabfh0mbaHeTDeOw5FGGRIlJDobFrp
-         wHYlX2eBnUnMDkm9Agdzh1APntXgsw1MrKvJUaQOQTs3nLNZdrhVuKwr+hoZMAs9g5x7
-         nd9efmTYR/2d0ziQ3+FNyUYqQOKNCenWXRq2kT9kRdhGUCeQNcUhU75qkv0MuCk+hTrO
-         zSoA==
+        bh=Db7gAnkiq5WcyfHH1LbMJPt+6zUN1AABzXG+jubz9rc=;
+        b=zRPaUHFwVENCnKRws8o5cbbDi7GoZIS2fWb9bXWwfVu7Cc1bADtdVHccLiNqtjU46U
+         /qayFQmmtezVRT6gSTtG5QM55Eagct/USQVBYjyw3XxYvbs7pnc23k15nx6QTApFExrV
+         N7bNkjl7BE79irj+MRpMa1B6LEZRX3c49HsYXzRfVmxvITIdfvKFVf0C60n5blybriY5
+         fp3Z0jQtsqWNqwx15Rq8GLzgX6O79grtVZb01CG6tl0XteQOopA0B3iAqkiIZNJzr6/0
+         8jv5/O1iI5iWLEeAG4OjSRQnSlpgkr2epsroNARnrEuMWH4YIvzPHv/mt1NEPIICZWsl
+         bq3w==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/9] configs: meson64_android: implement AVB support
+Subject: Re: [PATCH 5/9] configs: meson64_android: define BOOT_CMD macro
 References: <20210805151728.422329-1-mkorpershoek@baylibre.com>
- <20210805151728.422329-4-mkorpershoek@baylibre.com>
+ <20210805151728.422329-6-mkorpershoek@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <5667bca3-034f-7af8-158f-61d3452df008@baylibre.com>
-Date: Thu, 5 Aug 2021 18:20:59 +0200
+Message-ID: <835219db-78ee-92ac-746b-0fd0750da8fb@baylibre.com>
+Date: Thu, 5 Aug 2021 18:21:05 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210805151728.422329-4-mkorpershoek@baylibre.com>
+In-Reply-To: <20210805151728.422329-6-mkorpershoek@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -33,73 +33,48 @@ Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Guillaume La Roque <glaroque
 List-ID: <u-boot-amlogic@groups.io>
 
 On 05/08/2021 17:17, Mattijs Korpershoek wrote:
-> AVB (Android Verified Boot) is well supported in U-Boot already.
-> Add support for it in meson64_android.
+> BOOT_CMD might be different based on CONFIG_CMD_ABOOTIMG.
 > 
-> This is controlled by the "force_avb" environment variable and the
-> CONFIG_CMD_AVB option.
+> To prepare for abootimg support, extract the boot command
+> to a dedicated macro.
 > 
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 > ---
->  include/configs/meson64_android.h | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  include/configs/meson64_android.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
 > diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index bc3ffb9ca5..48a23b6e41 100644
+> index 83fa25bfb1..0ce616c17e 100644
 > --- a/include/configs/meson64_android.h
 > +++ b/include/configs/meson64_android.h
-> @@ -27,6 +27,25 @@
->  
->  #ifndef RECOVERY_PARTITION
+> @@ -81,6 +81,8 @@
 >  #define RECOVERY_PARTITION "recovery"
-> +
-> +#if defined(CONFIG_CMD_AVB)
-> +#define AVB_VERIFY_CHECK \
-> +	"if test \"${force_avb}\" -eq 1; then " \
-> +		"if run avb_verify; then " \
-> +			"echo AVB verification OK.;" \
-> +			"setenv bootargs \"$bootargs $avb_bootargs\";" \
-> +		"else " \
-> +			"echo AVB verification failed.;" \
-> +		"exit; fi;" \
-> +	"else " \
-> +		"setenv bootargs \"$bootargs androidboot.verifiedbootstate=orange\";" \
-> +		"echo Running without AVB...; "\
-> +	"fi;"
-> +
-> +#define AVB_VERIFY_CMD "avb_verify=avb init ${mmcdev}; avb verify;\0"
-> +#else
-> +#define AVB_VERIFY_CHECK ""
-> +#define AVB_VERIFY_CMD ""
 >  #endif
 >  
+> +#define BOOT_CMD "bootm ${loadaddr};"
+> +
 >  #define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
-> @@ -93,6 +112,7 @@
->  			"echo Running Recovery...;" \
->  			"mmc dev ${mmcdev};" \
->  			"setenv bootargs \"${bootargs} androidboot.serialno=${serial#}\";" \
-> +			AVB_VERIFY_CHECK \
->  			"part start mmc ${mmcdev} " RECOVERY_PARTITION " boot_start;" \
->  			"part size mmc ${mmcdev} " RECOVERY_PARTITION " boot_size;" \
+>  	"bootcmd_fastboot=" \
+>  		"setenv run_fastboot 0;" \
+> @@ -152,7 +154,7 @@
+>  			"part size mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_size;" \
 >  			"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
-> @@ -111,6 +131,7 @@
->  		"echo Loading Android " BOOT_PARTITION " partition...;" \
->  		"mmc dev ${mmcdev};" \
->  		"setenv bootargs ${bootargs} androidboot.serialno=${serial#};" \
-> +		AVB_VERIFY_CHECK \
->  		"part start mmc ${mmcdev} " BOOT_PARTITION " boot_start;" \
->  		"part size mmc ${mmcdev} " BOOT_PARTITION " boot_size;" \
+>  				"echo Running Android Recovery...;" \
+> -				"bootm ${loadaddr};" \
+> +				BOOT_CMD \
+>  			"fi;" \
+>  			"echo Failed to boot Android...;" \
+>  			"reset;" \
+> @@ -174,7 +176,7 @@
 >  		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
-> @@ -142,6 +163,8 @@
->  #define CONFIG_EXTRA_ENV_SETTINGS                                     \
->  	"partitions=" PARTS_DEFAULT "\0"                              \
->  	"mmcdev=2\0"                                                  \
-> +	AVB_VERIFY_CMD                                                \
-> +	"force_avb=0\0"                                               \
->  	"gpio_recovery=88\0"                                          \
->  	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
->  	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
+>  			"setenv bootargs \"${bootargs} " AB_BOOTARGS "\"  ; " \
+>  			"echo Running Android...;" \
+> -			"bootm ${loadaddr};" \
+> +			BOOT_CMD \
+>  		"fi;" \
+>  		"echo Failed to boot Android...;" \
+>  		"reset\0"
 > 
 
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
