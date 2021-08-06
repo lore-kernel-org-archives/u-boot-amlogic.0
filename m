@@ -1,77 +1,84 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web09.2040.1628236658153505126
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web10.2570.1628241897836181324
  for <u-boot-amlogic@groups.io>;
- Fri, 06 Aug 2021 00:57:38 -0700
-Received: by mail-wr1-f51.google.com with SMTP id p5so9922022wro.7
-        for <u-boot-amlogic@groups.io>; Fri, 06 Aug 2021 00:57:37 -0700 (PDT)
+ Fri, 06 Aug 2021 02:24:58 -0700
+Received: by mail-wm1-f54.google.com with SMTP id l11-20020a7bcf0b0000b0290253545c2997so5631228wmg.4
+        for <u-boot-amlogic@groups.io>; Fri, 06 Aug 2021 02:24:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V1Wgr0qUjc/TBwDb51jM/HlVaS/UulASz5hyzGbR108=;
-        b=WA1TMVFa2Ebv7CxBF1dlztltdoD5aWzlvZ2FDW3QhSFQP1dW5X6Mu/Krl9tdk3XHC2
-         HnMt0x/VxswgE0bpQJHNLuzY+FDQDhcElvq0w3J70J6ML9O4vKaBNXWd+Ln3M6847j1Z
-         6AtpGps8m28EOoBxoCUZo/p7zGP7NDsMJkhkVSSkxfyLyiQ6veI9g+Z76kkDjwI8NGZD
-         zAv5JACKsOIcvhSaTR0S+iSI+gqt18s/5LReEZMM4NpEv+p6ZMspacNg37oYLf2ViSD+
-         fA6U5XoYyQISOLG1KL/Vwu7YZuJyz0ZyL6QAl74LWqq3eU9UUmLhiRriPhsrMxG5JyYW
-         8tqA==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/9] meson64_android: Android boot flow using abootimg
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Xo8levsB7uabEcV3nZ0vexg9oqS0Hn9rhmXJ/V6tTak=;
+        b=iZh519gWz8uk2fAxpfy97fuPKWlhMLEy6RSoLxMD6OjdxxSJ5mMlu+/7tUp1BY38jb
+         4HrCIdcX6zpKPDtgjjXo/1Uin+Y3boRAPibT+eZPPkjVEY6zIaYboiMmFJq41DTgLt/I
+         8i7lKaJ7DIm8nYUAeQeq9bWbWledcmfBjPDU0Sbdc+sruq7M3z8Gjp7fCsPcr/l4OAJb
+         mcisB1TmFyy28AUb6jGr3LA1QIOu/noXHSm4HovRhFF0y2kFa4mjrgjGkhLHRrymVTyE
+         vf2++Refubt510dukRRvixFWDE40JI4i4Yd0xcLFQyV4SQ1S8UiKRDmtqBq+eQdy/fhe
+         z5eg==
+Return-Path: <mkorpershoek@baylibre.com>
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Subject: Re: [PATCH 1/9] configs: meson64: permit redefining SYS_MALLOC_LEN
+In-Reply-To: <23fcf0b5-201c-7518-0113-f2397283b344@baylibre.com>
 References: <20210805151728.422329-1-mkorpershoek@baylibre.com>
- <20210805172332.GO858@bill-the-cat>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <fcd676dd-b2b1-c201-8177-5419eae9f00d@baylibre.com>
-Date: Fri, 6 Aug 2021 09:57:35 +0200
+ <20210805151728.422329-2-mkorpershoek@baylibre.com>
+ <c68ec64e-5309-be21-db7b-452c8f01e0f8@baylibre.com>
+ <20210805171601.GN858@bill-the-cat>
+ <23fcf0b5-201c-7518-0113-f2397283b344@baylibre.com>
+Date: Fri, 06 Aug 2021 11:24:54 +0200
+Message-ID: <87pmurj57d.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20210805172332.GO858@bill-the-cat>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Tom Rini <trini@konsulko.com>, Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Type: text/plain
+To: Neil Armstrong <narmstrong@baylibre.com>, Tom Rini <trini@konsulko.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Guillaume La Roque <glaroque@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 05/08/2021 19:23, Tom Rini wrote:
-> On Thu, Aug 05, 2021 at 05:17:19PM +0200, Mattijs Korpershoek wrote:
-> 
->> The SEI-610 and SEI-510 boards are well supported in the
->> Android Open Source project via the yukawa [1] platform.
->>
->> Their U-Boot version, despite being public [2] is not in mainline.
->>
->> Android 10 and higher have significantly reworked the bootloader
->> requirements:
->>
->> * bootloader should pass slot information in case of A/B
->> * bootloader should perform AVB verification in case it's supported
->> * bootloader should read and apply dtb overlays from a dtbo partition
->>
->> These series add support for all the above.
->>
->> [1] https://android.googlesource.com/device/amlogic/yukawa
->> [2] https://gitlab.com/baylibre/amlogic/atv/u-boot/-/tree/u-boot/v2021.07/integ
-> 
-> My high level concern with this series is that it takes what I assume is
-> the Android-only boot path, and adds further abstractions to it, it
-> looks like.  Can we just say "Here is the Android 10 boot path" (since
-> AVB has been around for a while) and here is the generic distro boot
-> path for non-Android?  Reading this over it looks like it becomes "Here
-> is the Android + AVB boot path", "Here is the Androidd non-AVB boot
-> path" and then I assume "Here is the generic distro boot path".
-> 
-> I'd also like to know if in general we can make some generic environment
-> macros for "Here is Android AVB boot path", so that we don't need to
-> duplicate this between SoCs.  At the very high level, something like the
-> generic distro boot framework, but that does Android instead.
-> 
+Hi Tom, Neil,
 
-We've been thinking about that, but the Android boot flow doesn't really leave place
-for other methods.
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-In our implementation we decided to use the distro_bootcmd helper to setup the different
-Android boot flow steps, it permits to have a much simpler cmd definition than the other
-implementation, but makes mixing with the default boot steps more complex (or maybe there
-is something we can use to enable/disable easily some distro BOOT_TARGET_DEVICES ?)
+> On 05/08/2021 19:16, Tom Rini wrote:
+>> On Thu, Aug 05, 2021 at 06:20:53PM +0200, Neil Armstrong wrote:
+>>> On 05/08/2021 17:17, Mattijs Korpershoek wrote:
+>>>> Permit redefining SYS_MALLOC_LEN for board specific configs.
+>>>> This is especially useful for Android with AVB, which requires a malloc
+>>>> length of 128M.
+>>>>
+>>>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+>>>> Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+>>>> ---
+>>>>  include/configs/meson64.h | 2 ++
+>>>>  1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+>>>> index fb7f16d148..f9bb0240d2 100644
+>>>> --- a/include/configs/meson64.h
+>>>> +++ b/include/configs/meson64.h
+>>>> @@ -32,7 +32,9 @@
+>>>>  #define CONFIG_CPU_ARMV8
+>>>>  #define CONFIG_REMAKE_ELF
+>>>>  #define CONFIG_SYS_MAXARGS		32
+>>>> +#ifndef CONFIG_SYS_MALLOC_LEN
+>>>>  #define CONFIG_SYS_MALLOC_LEN		(32 << 20)
+>>>> +#endif
+>>>>  #define CONFIG_SYS_CBSIZE		1024
+>>>>  
+>>>>  #define CONFIG_SYS_SDRAM_BASE		0
+>>>>
+>>>
+>>> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+>> 
+>> I prefer to see these as SZ_xxx, but also what's the minimum DRAM you're
+>> going to see on a meson64 platform?  And if it's 1GB or more, why not
+>> just use 128MB for everyone?
+>> 
+>
+> We can get down to 256MiB DRAM (very rare), but 512MiB is used on La Frite.
+In that case, I think it's more reasonable to keep the change as-is.
+I'll send a v2 replacing (32 << 20) by SZ_32M
 
-Neil
+Do you agree ?
+
+Mattijs
+
+>
+> Neil
