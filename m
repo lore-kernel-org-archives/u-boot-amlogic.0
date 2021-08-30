@@ -1,103 +1,58 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.4667.1628667685341242975
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web11.13948.1630309989582318665
  for <u-boot-amlogic@groups.io>;
- Wed, 11 Aug 2021 00:41:26 -0700
-Received: by mail-wr1-f47.google.com with SMTP id q11so1687717wrr.9
-        for <u-boot-amlogic@groups.io>; Wed, 11 Aug 2021 00:41:24 -0700 (PDT)
+ Mon, 30 Aug 2021 00:53:10 -0700
+Received: by mail-wm1-f49.google.com with SMTP id c129-20020a1c35870000b02902e6b6135279so8791175wma.0
+        for <u-boot-amlogic@groups.io>; Mon, 30 Aug 2021 00:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:reply-to:to:cc:organization:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=FKqtM0Tw98A46ts+vKU25ek2RXDCN8clWO3lgDX0dy8=;
-        b=GpaLkTLhLYCwnLrOqEBpNWAKLrP5J9eGMEpw87QSkpVXeCkdZnvaSHyRsItV++zkWd
-         9CizupgAAbewIohRbURFpcW09nVVGPNzJ/4ePW8NelP7j/euZEXZo+pjj8/gPFfHIaYC
-         XC1qScmMlgyUPHKN4lWLfqqiZbdNYZPmWgl9f0hTog0wPvqgG2Mz7kF9YOfy77SEbaCn
-         ipNDWB9YcBsRcKcu7ocyTCe+/2GzyKDC5t0WxhYyxQem/fEmotrCCOwibMJYaVbdEt6N
-         AvE0k+z3uJyZMj5qKD9Q4kN2ypZK9INpwmteHXfY47EIvbFPc+NAsqS6dd7KIXhLn58h
-         j7Sw==
+        h=subject:to:references:from:organization:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZrLDblg+umHBGeI1VjxWmfZIEDgjzyBb0DrpQ9tl9GA=;
+        b=pAifsPeau8pmEKt4bWJHt+8nBuyxzMb1ThBax/89K8fH8CeoXTWlRciY8PnSpDJcAo
+         a+IGvnM601Kp6WLVmiP02SFWyQSJeoDVF27DIQuvl5G5Myl8P6hzxFl4qExvimJ8vkS3
+         N2bb6bSMW/5a0b7LXs++YJxEqVMG6kE6Yg9s9gcLwawXHtrFxRuLXKHDUUbUTHG/v+av
+         puNvbMjCbCSCc/tBR49+DskabKdmbSPalirXQl65TnGwozX1K9YuUStKWvAXRfbxZFdj
+         AfR4pjeeMluawJnwz6V0S/+OTprtJ/wy7BT0IUZyi2tQIb81CTVUCRNq8OlCxZMONeaA
+         t1oA==
 Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH] ARM: meson: Add S905Y2 SOC ID
+References: <20210820021836.1024-1-christianshewitt@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-202107810
-Reply-To: narmstrong@baylibre.com
-Message-ID: <a3fc8b7f-34e1-05c3-4bc6-d9435d6b84a0@baylibre.com>
-Date: Wed, 11 Aug 2021 09:41:21 +0200
+Message-ID: <06547fcd-2881-3601-d02f-77df56b9a258@baylibre.com>
+Date: Mon, 30 Aug 2021 09:53:06 +0200
 MIME-Version: 1.0
+In-Reply-To: <20210820021836.1024-1-christianshewitt@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
+To: Christian Hewitt <christianshewitt@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+On 20/08/2021 04:18, Christian Hewitt wrote:
+> Add the SOC ID for the S905Y2 to board info, see below for before/after
+> tested with a Radxa Zero board:
+> 
+> SoC:   Amlogic Meson G12A (Unknown) Revision 28:b (30:2)
+> SoC:   Amlogic Meson G12A (S905Y2) Revision 28:b (30:2)
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  arch/arm/mach-meson/board-info.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
+> index d16d3f194d..2421acd817 100644
+> --- a/arch/arm/mach-meson/board-info.c
+> +++ b/arch/arm/mach-meson/board-info.c
+> @@ -64,6 +64,7 @@ static const struct meson_gx_package_id {
+>  	{ "A113X",  0x25, 0x37, 0xff },
+>  	{ "A113D",  0x25, 0x22, 0xff },
+>  	{ "S905D2", 0x28, 0x10, 0xf0 },
+> +	{ "S905Y2", 0x28, 0x30, 0xf0 },
+>  	{ "S905X2", 0x28, 0x40, 0xf0 },
+>  	{ "A311D",  0x29, 0x10, 0xf0 },
+>  	{ "S922X",  0x29, 0x40, 0xf0 },
+> 
 
-Here's a bunch of changes concerning:
-- single fix for odroid-n2+ detection
-- HW reboot_reason drop in favor of BCB for Android boot state tracking
-- meson64_android config cleanups and support for A/V, AVB and fastbootd via recovery
-
-While the actual meson64_android config removes distro defaults targets and makes booting non-Android
-possible but complex, we are working toward either adding back the default targets or trying to
-leverage boot_android at some point to avoid building android-only u-boot binaries.
-
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/8655
-
-Thanks,
-Neil
-
-The following changes since commit bbcacdf4cd23f2e5deb9ef916096c956c955243d:
-
-  Merge branch '2021-07-28-build-improvements' (2021-07-28 18:51:16 -0400)
-
-are available in the Git repository at:
-
-  https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20210810
-
-for you to fetch changes up to 33b51765583e6cbe1888f068da795bea599bad18:
-
-  configs: sei510/610: android bootflow via abootimg (2021-08-10 10:43:54 +0200)
-
-----------------------------------------------------------------
-- odroid-n2: fix fdtfile suffix for n2-plus
-- sei610 & meson64_android cleanups to prepare android 11 boot support
-- use Android BCB mechanism for reboot reason instead of HW reboot flag
-- Switch meson64_android boot flow to use abootimg for A/B, AVB and DTBO support
-
-----------------------------------------------------------------
-Christian Hewitt (1):
-      board: amlogic: odroid-n2: fix fdtfile suffix for n2-plus
-
-Guillaume La Roque (2):
-      configs: meson64_android: boot android via abootimg
-      configs: sei510/610: android bootflow via abootimg
-
-Mattijs Korpershoek (18):
-      configs: sei610: fix typo in header comment
-      configs: meson64_android: fix bad indent in EXTRA_ENV_SETTINGS
-      configs: meson64_android: use CONFIG_FASTBOOT_USB_DEV
-      configs: meson64_android: use boot part label instead of index
-      configs: meson64_android: use logo part label instead of index
-      configs: meson64_android: don't set console bootargs
-      configs: meson64_android: use BCB for reboot to bootloader
-      configs: meson64_android: implement recovery boot via BCB
-      configs: meson64_android: reboot to fastbootd from bootloader
-      configs: sei610/sei510: set CONFIG_CMD_BCB=y
-      Revert "ARM: meson: Add support for fastboot_set_reboot_flag()"
-      configs: meson64: permit redefining SYS_MALLOC_LEN
-      configs: meson64_android: increase SYS_MALLOC_LEN to 128M for AVB
-      configs: meson64_android: implement AVB support
-      configs: meson64_android: implement A/B slot support
-      configs: meson64_android: define BOOT_CMD macro
-      configs: sei510/sei610: reformat PARTS_default
-      configs: sei510/sei610: don't use hard-coded gpt uuids
-
- arch/arm/mach-meson/board-common.c  |  34 ------
- board/amlogic/odroid-n2/odroid-n2.c |   2 +-
- configs/odroid-n2_defconfig         |   2 +-
- configs/sei510_defconfig            |   6 +
- configs/sei610_defconfig            |   6 +
- include/configs/meson64.h           |   2 +
- include/configs/meson64_android.h   | 215 ++++++++++++++++++++++++++++++------
- include/configs/sei510.h            |  23 ++--
- include/configs/sei610.h            |  25 ++---
- 9 files changed, 220 insertions(+), 95 deletions(-)
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
