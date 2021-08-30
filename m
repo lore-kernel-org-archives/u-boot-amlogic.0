@@ -1,26 +1,26 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.13948.1630309989582318665
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web09.14109.1630310103343842585
  for <u-boot-amlogic@groups.io>;
- Mon, 30 Aug 2021 00:53:10 -0700
-Received: by mail-wm1-f49.google.com with SMTP id c129-20020a1c35870000b02902e6b6135279so8791175wma.0
-        for <u-boot-amlogic@groups.io>; Mon, 30 Aug 2021 00:53:08 -0700 (PDT)
+ Mon, 30 Aug 2021 00:55:04 -0700
+Received: by mail-wr1-f50.google.com with SMTP id x6so12879587wrv.13
+        for <u-boot-amlogic@groups.io>; Mon, 30 Aug 2021 00:55:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:organization:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZrLDblg+umHBGeI1VjxWmfZIEDgjzyBb0DrpQ9tl9GA=;
-        b=pAifsPeau8pmEKt4bWJHt+8nBuyxzMb1ThBax/89K8fH8CeoXTWlRciY8PnSpDJcAo
-         a+IGvnM601Kp6WLVmiP02SFWyQSJeoDVF27DIQuvl5G5Myl8P6hzxFl4qExvimJ8vkS3
-         N2bb6bSMW/5a0b7LXs++YJxEqVMG6kE6Yg9s9gcLwawXHtrFxRuLXKHDUUbUTHG/v+av
-         puNvbMjCbCSCc/tBR49+DskabKdmbSPalirXQl65TnGwozX1K9YuUStKWvAXRfbxZFdj
-         AfR4pjeeMluawJnwz6V0S/+OTprtJ/wy7BT0IUZyi2tQIb81CTVUCRNq8OlCxZMONeaA
-         t1oA==
+        bh=Ihqat5eH1ui12ytw3o9f1yD8UgfpycEVbQo3mkJQlgA=;
+        b=aVh9GU1N3OaMC5hM+h6H9draGQT5S9VyF6cy0MxDuPb7MvvgxgFMimRy9rf3VHIVvJ
+         O7HECOPndFSqHrF6JVx13XaA1UyYrptj53FF5olxIXBfUwxgJuZxE/FmxYcZ68XKCOdd
+         IK/cuOBJDGGgodW0D4sZA7WWiW/tSNKFBwyvM63q/9/foj0FXP7TxBDSlCp5v8nHXQs7
+         hl2EsZ1VruX68cYWdnzW8RAA5OpfdT6PghFWJTCyZy6cwh+8Dl0zarKawSXaPtDQ0d4v
+         lLOiVq54Nd6pRvWIebkmDE6+282819MFJriACGh/y1dOL8wTqQ2HD3dqM/4I6bU/N+V6
+         /GgA==
 Return-Path: <narmstrong@baylibre.com>
 Subject: Re: [PATCH] ARM: meson: Add S905Y2 SOC ID
 References: <20210820021836.1024-1-christianshewitt@gmail.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <06547fcd-2881-3601-d02f-77df56b9a258@baylibre.com>
-Date: Mon, 30 Aug 2021 09:53:06 +0200
+Message-ID: <c8e6a514-b0ac-7a2c-eef7-0939c2121eb2@baylibre.com>
+Date: Mon, 30 Aug 2021 09:55:01 +0200
 MIME-Version: 1.0
 In-Reply-To: <20210820021836.1024-1-christianshewitt@gmail.com>
 Content-Type: text/plain; charset=utf-8
@@ -55,4 +55,7 @@ On 20/08/2021 04:18, Christian Hewitt wrote:
 >  	{ "S922X",  0x29, 0x40, 0xf0 },
 > 
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Applied to u-boot-amlogic
+
+Thanks,
+Neil
