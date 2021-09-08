@@ -1,66 +1,80 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.10623.1631104339924884951
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web08.12158.1631110654905279494
  for <u-boot-amlogic@groups.io>;
- Wed, 08 Sep 2021 05:32:20 -0700
-Received: by mail-wm1-f45.google.com with SMTP id j17-20020a05600c1c1100b002e754875260so1397964wms.4
-        for <u-boot-amlogic@groups.io>; Wed, 08 Sep 2021 05:32:19 -0700 (PDT)
+ Wed, 08 Sep 2021 07:17:35 -0700
+Received: by mail-wr1-f41.google.com with SMTP id m9so3580972wrb.1
+        for <u-boot-amlogic@groups.io>; Wed, 08 Sep 2021 07:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vkGSXCNIYfCVQ8amCl9paK4c51GF6SIppItIlMLMHzg=;
-        b=Zx1wvWDG+Ib4GGvK+1FsfMxaaYonNQ5KXF/NbTY7FYwM2SlXoxdeuQHQ2VAzM6BmeB
-         uEWPfcOFSWlQXfZz1A2dECMhXHvDOHDspDohTsN9c4cW3xslX1AEtBvzPZdbYv1E0FEZ
-         i3H3ymO78Nh/LUeB2M4kCTM3lB4Y68R0gEvHtpdi6NSbpFUFWjs4PBaC3T95WqdFkQO1
-         +U/BsCbvVdbigdmDswJGlCF2hXAA8UPJoxyHtKRrtrscKVFRH/GgXowmMSpa26p3MeEe
-         EVfEolv2IFEHyk6mI40FFYyYYAUXewGjZVNSu+dEsEhfCzK3yUf+yFydtRpJNTqZpTqX
-         UntQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4yxiGi92Gef9QvxgoWqHRzJn0ukWDWVBdqleEHaPfwU=;
+        b=e5p19LPRv84ph2FmahUwn6PgQgl2UijPgB2aX9GO8UqL6dWKZL8/V6JgV2mKnNyysY
+         as5iULSl4Ns+NhLklS9ioRn5Vky47JuYoXHq0nbM5suugMtvPbieeujxmE65CCNqcY5u
+         ym+ECQtvSrp3dKgSkjJ1BrmWFocNt8+o8G4lWKH2w+Su3w86e7epHOb6mLtNEXFHBIUe
+         ubyXU09mT7aNj4Q187YakZ4FglbjJzDZWxcATJi3YD9tLa+oq6Gi/QAK8Kg3JM+CzxRc
+         bAvFzn0jMhaHYE3HWT9Y2z9u2YJJAjynCwxykMVBUIxmOBvPRusUspkmu8o8HdOHEVXM
+         ++xA==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH] pci: pcie_dw_meson: fix usb fail when pci link fails to go up
-Date: Wed,  8 Sep 2021 14:32:12 +0200
-Message-Id: <20210908123212.382716-1-narmstrong@baylibre.com>
+Subject: [PATCH v2 2/9] ARM: meson: keep HW order for MMC devices
+Date: Wed,  8 Sep 2021 16:17:21 +0200
+Message-Id: <20210908141728.585797-2-narmstrong@baylibre.com>
+In-Reply-To: <20210908141728.585797-1-narmstrong@baylibre.com>
+References: <20210908141728.585797-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1135; h=from:subject; bh=1MZY+CrwxrvhU7rQuGe/tdF0RLVoBTlWHbtnPKVQRbI=; b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBhOK01fXiJ32d8A9mpXRceXktD5Ki9qtSwSW5P+G5V OiVM1NiJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCYTitNQAKCRB33NvayMhJ0WsVEA C7Zze4JRF8/DJ4+TtXfeVKXb5O3VlEJ8/c9ufnvcIanf8oMXmcEEFSaChntG5RBX7n3Ni70Sz1sHG3 rem+c3y+MFacbSNcH4wkJ1lYofg8NijxHpEhdEbW8Aku43Twd5ovejDoFIgYQwqjmdkf1YZrji5mrD zoC2gUoQM6OaOH/QKi/sE+IWsLyYH36vkT3PthhfBLO3xtQHXl6AuNv3lVpq4oRdxOSMCM55/JGMzT 9liIKJfByAZRzxmqrKFxSkhyzsBizeD+/IObg3j0/d+e69EmEfYejkKZY3GmCCFbojzekAKRApnQoe Jt9EYpPAKjncyJ4NFP8WMSNhA7PIZ+4c68kj/uU0SrHJ2yWkjVGCxIEkW3ajh0zBTy9OWS9DJo8bxU IOYOJbJDg/6NF4hnzjHQxlWvawEs2aACkZkCtY0JlIOt2Dt5+vaCcPym0wjB5N5zE8Qub0coUsdU1b 8JjiB29sTFitxh4JRmDO0tsxHeIhTgziJUcG9NqaNl49vbH7qOj7YcatTiRWRPlOJ/4MIwiGgCmRIx zHYBSd+OtZiBeXteU40Wjqx0yHrt0ftwVE5sNNNlJck4uRcgC3/fr+mibPUh1h7r1JjfOx5ODYibIs OeVs2p5OrGB/2Yl7KtNGgrQLJNuXWZGXwUKCAg13fKccKoQNbeADyx627rNA==
-X-Developer-Key: i=narmstrong@baylibre.com; a=openpgp; fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Art Nikpal <email2tema@gmail.com>
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On Amlogic A311D, when the PCIe link fails disabling the related clocks
-makes USB fail. For an unknown reason, this doesn happen on the S905D3 SoC.
+Since Linux commmit [1], the order is fixed with aliases, in order to keep the
+MMC device order, set it back to HW order in U-Boot dtsi files.
 
-Mimic the Linux behavior by not considering a link failure a probe failure,
-and continue even if the PCIe link is down.
+[1] ab547c4fb39f ("arm64: dts: amlogic: Assign a fixed index to mmc devices")
 
-Reported-by: Art Nikpal <email2tema@gmail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pci/pcie_dw_meson.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/arm/dts/meson-g12-common-u-boot.dtsi | 7 +++++++
+ arch/arm/dts/meson-gx-u-boot.dtsi         | 7 +++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/pci/pcie_dw_meson.c b/drivers/pci/pcie_dw_meson.c
-index 0525ecbea6..07da9fa533 100644
---- a/drivers/pci/pcie_dw_meson.c
-+++ b/drivers/pci/pcie_dw_meson.c
-@@ -319,15 +319,9 @@ static int meson_pcie_init_port(struct udevice *dev)
+diff --git a/arch/arm/dts/meson-g12-common-u-boot.dtsi b/arch/arm/dts/meson-g12-common-u-boot.dtsi
+index 38fd3d3feb..b1f60b15c9 100644
+--- a/arch/arm/dts/meson-g12-common-u-boot.dtsi
++++ b/arch/arm/dts/meson-g12-common-u-boot.dtsi
+@@ -5,6 +5,13 @@
+  */
  
- 	pcie_dw_setup_host(&priv->dw);
+ / {
++	/* Keep HW order from U-boot */
++	aliases {
++		/delete-property/ mmc0;
++		/delete-property/ mmc1;
++		/delete-property/ mmc2;
++	};
++
+ 	soc {
+ 		u-boot,dm-pre-reloc;
+ 	};
+diff --git a/arch/arm/dts/meson-gx-u-boot.dtsi b/arch/arm/dts/meson-gx-u-boot.dtsi
+index 17d2cb95c1..fb6952f1d8 100644
+--- a/arch/arm/dts/meson-gx-u-boot.dtsi
++++ b/arch/arm/dts/meson-gx-u-boot.dtsi
+@@ -5,6 +5,13 @@
+  */
  
--	ret = meson_pcie_link_up(priv, LINK_SPEED_GEN_2);
--	if (ret < 0)
--		goto err_link_up;
-+	meson_pcie_link_up(priv, LINK_SPEED_GEN_2);
- 
- 	return 0;
--err_link_up:
--	clk_disable(&priv->clk_port);
--	clk_disable(&priv->clk_general);
--	clk_disable(&priv->clk_pclk);
- err_deassert_bulk:
- 	reset_assert_bulk(&priv->rsts);
- err_power_off_phy:
+ / {
++	/* Keep HW order from U-boot */
++	aliases {
++		/delete-property/ mmc0;
++		/delete-property/ mmc1;
++		/delete-property/ mmc2;
++	};
++
+ 	soc {
+ 		u-boot,dm-pre-reloc;
+ 	};
 -- 
 2.25.1
 
