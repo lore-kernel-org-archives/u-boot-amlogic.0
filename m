@@ -1,168 +1,56 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.11925.1631110665408744734
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web12.4983.1631180557495099496
  for <u-boot-amlogic@groups.io>;
- Wed, 08 Sep 2021 07:17:45 -0700
-Received: by mail-wm1-f43.google.com with SMTP id m25-20020a7bcb99000000b002e751bcb5dbso1682747wmi.5
-        for <u-boot-amlogic@groups.io>; Wed, 08 Sep 2021 07:17:45 -0700 (PDT)
+ Thu, 09 Sep 2021 02:42:38 -0700
+Received: by mail-wr1-f42.google.com with SMTP id n5so1596357wro.12
+        for <u-boot-amlogic@groups.io>; Thu, 09 Sep 2021 02:42:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7PfdNww45puXFgpWvNQWvEcE1tWyjeaw6cU0bM9kxLs=;
-        b=fmlVKWnOX/rGvKWYee+m6hQ4LKwT6Hue31nn7aDaHLBETzNwUndtEHR7onbZGGwlZ5
-         1kbb/2T7XOvY3vZGgVMrpnk09sVlI8GmnyCmuwD+SwPTygEEYPfw+g2XqrIA8sODqJb4
-         hwqDrvd8ZRiFQSlwW2Jaa6GVmGNvXWtt/vOD3hMWGsczb/eCkdZC4LehhkOrrtxr4Syy
-         JyKkK3m7Kk5eXXwUrpe+hQmWb39Qtuadk6XAscZDPnmMg0CsOOlzom+4Hnq733B5vS23
-         uRA6HYx9fpc5etBW75tLMePsjr3bCytARSJlz4YyEMdallOq/yaQb+LaS9UmaWQ8MpIE
-         AY+Q==
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Htx1V7x2idQcs5ZoxOj5x8w0LryhGlvpPuudgDvlxUs=;
+        b=EBpfFMZ5AB91h536om3iUTz6dNaC/xZQJuAe3jEDybd1G2LWFrhP8qWDzCPpoaigaZ
+         K1SZrXJJaMfJSL6mkYta+pC3/gSe77GehRgVZdWHajR3iKWflSOub4AQusC8QJHAZKmX
+         UzDGXsCtihgoHTQVsFB7Sc7z3OYdpDK0PSkeQht4g14RmZAxXJZlETLQfqLj59l/Wr+K
+         lhMH6FHwAc1I3h0F6kugtwfZ2XBqCN/MDLXNQkUauXECQF1Eu9Q2zhyfSDWALFFooqRF
+         A+N+OpJC+IL6j/gqULqh6X7rXIiqeD9J0RIZLElpis7G028nVfraQ3z26UajcCQ7SuDj
+         ZksA==
 Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v2 9/9] ARM: amlogic: add Banana Pi M5
-Date: Wed,  8 Sep 2021 16:17:28 +0200
-Message-Id: <20210908141728.585797-9-narmstrong@baylibre.com>
-In-Reply-To: <20210908141728.585797-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 1/9] ARM: meson: Sync Amlogic DT from Linux 5.14
 References: <20210908141728.585797-1-narmstrong@baylibre.com>
+ <20210908154606.GF12964@bill-the-cat>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <e5cbdedc-5c62-ba35-c5fc-194042870875@baylibre.com>
+Date: Thu, 9 Sep 2021 11:42:34 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de
-Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <20210908154606.GF12964@bill-the-cat>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Tom Rini <trini@konsulko.com>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Banana Pi BPI-M5 is a credit card format SBC with the following features:
-- Amlogic S905X3 quad core Cortex-A55
-- Mali-G31 GPU
-- 4GB LPDDR4
-- 16GB eMMC flash
-- 4 USB 3.0
-- 1 GbE ethernet
-- HDMI output
-- 2x LEDS
-- SDCard
-- 2.5mm Jack with Stereo Audio + CVBS
-- Infrared Received
-- ADC Button
-- GPIO Button
-- 40 pins header + 3pins debug header
+Hi Tom,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi | 13 ++++
- configs/bananapi-m5_defconfig                 | 73 +++++++++++++++++++
- doc/board/amlogic/index.rst                   |  1 +
- 3 files changed, 87 insertions(+)
- create mode 100644 arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi
- create mode 100644 configs/bananapi-m5_defconfig
+On 08/09/2021 17:46, Tom Rini wrote:
+> On Wed, Sep 08, 2021 at 04:17:20PM +0200, Neil Armstrong wrote:
+> 
+>> Import Amlogic DT changes from Linux commit 7d2a07b76933 ("Linux 5.14"),
+>> dt-bindings clock changes and new meson-g12b-gsking-x.dts,
+>> meson-sm1-bananapi-m5 & odroid-hc4 boards.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> Given some other related email threads, I'm curious.  Does this mean
+> that everything U-Boot specific is currently in -u-boot.dtsi files?  Or
+> is there some manual syncing within the main dts files (aside from
+> perhaps needing to #include a -u-boot.dtsi) ?  Thanks!
 
-diff --git a/arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi b/arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi
-new file mode 100644
-index 0000000000..a86fdb5668
---- /dev/null
-+++ b/arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2021 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-sm1-u-boot.dtsi"
-+
-+&ethmac {
-+	snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+};
-diff --git a/configs/bananapi-m5_defconfig b/configs/bananapi-m5_defconfig
-new file mode 100644
-index 0000000000..a088761622
---- /dev/null
-+++ b/configs/bananapi-m5_defconfig
-@@ -0,0 +1,73 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_SYS_TEXT_BASE=0x01000000
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_ENV_SIZE=0x2000
-+CONFIG_DM_GPIO=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-bananapi-m5"
-+CONFIG_MESON_G12A=y
-+CONFIG_DEBUG_UART_BASE=0xff803000
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING="bpi-m5"
-+CONFIG_DEBUG_UART=y
-+CONFIG_OF_BOARD_SETUP=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+CONFIG_MISC_INIT_R=y
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+CONFIG_CMD_USB=y
-+CONFIG_CMD_USB_MASS_STORAGE=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_ADC=y
-+CONFIG_SARADC_MESON=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_PHY_REALTEK=y
-+CONFIG_DM_ETH=y
-+CONFIG_DM_MDIO=y
-+CONFIG_DM_MDIO_MUX=y
-+CONFIG_ETH_DESIGNWARE_MESON8B=y
-+CONFIG_MDIO_MUX_MESON_G12A=y
-+CONFIG_MESON_G12A_USB_PHY=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_EE_POWER_DOMAIN=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_USB=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_DWC3=y
-+# CONFIG_USB_DWC3_GADGET is not set
-+CONFIG_USB_DWC3_MESON_G12A=y
-+CONFIG_USB_KEYBOARD=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-+CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-+CONFIG_USB_GADGET_DWC2_OTG=y
-+CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
-+CONFIG_USB_GADGET_DOWNLOAD=y
-+CONFIG_DM_VIDEO=y
-+# CONFIG_VIDEO_BPP8 is not set
-+# CONFIG_VIDEO_BPP16 is not set
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
-+CONFIG_SPLASH_SCREEN=y
-+CONFIG_SPLASH_SCREEN_ALIGN=y
-+CONFIG_VIDEO_BMP_RLE8=y
-+CONFIG_BMP_16BPP=y
-+CONFIG_BMP_24BPP=y
-+CONFIG_BMP_32BPP=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
-diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index de1a9ce284..2913ab281a 100644
---- a/doc/board/amlogic/index.rst
-+++ b/doc/board/amlogic/index.rst
-@@ -19,6 +19,7 @@ This matrix concerns the actual source code version.
- |        			| Nanopi-K2 | Khadas-VIM      | Libretech-PC |	          | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
- |        			| P200	    | LibreTech-CC v1 |	WeTek Core2  |	          |            | GT-King/Pro | Odroid-C4    |
- |        			| P201	    | LibreTech-AC v2 |	             |	          |            | GSKing-X    | Odroid-HC4   |
-+|                               |           |                 |              |            |            |             | BananaPi-M5  |
- +-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
- | UART                       	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
- +-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
--- 
-2.25.1
+The dts, dtsi and bindings files are copied verbatim from Linux and all
+the U-Boot specific changes are in the -u-boot.dtsi files indeed.
 
+Is this an issue somehow ?
+
+Neil
