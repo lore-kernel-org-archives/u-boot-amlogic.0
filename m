@@ -1,58 +1,55 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.4640.1631693729569716616
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web09.9410.1631864234118687749
  for <u-boot-amlogic@groups.io>;
- Wed, 15 Sep 2021 01:15:30 -0700
-Received: by mail-wm1-f45.google.com with SMTP id g128so1421575wma.5
-        for <u-boot-amlogic@groups.io>; Wed, 15 Sep 2021 01:15:29 -0700 (PDT)
+ Fri, 17 Sep 2021 00:37:15 -0700
+Received: by mail-wr1-f54.google.com with SMTP id g16so13601974wrb.3
+        for <u-boot-amlogic@groups.io>; Fri, 17 Sep 2021 00:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:references:from:organization:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6e2x0akOMNS7f8Q1CGXrFTjZjLUKTZcF2K7uEKxqqlo=;
-        b=5vU8NxNqlGVi9mmBnZSiSHuOa9R86JmKZTJLpW+kCdKk1JFb/LWa4j4KHcXkMBcaoW
-         JBfPmp4DK6rzmcndUMgyFmJ8e+QGQpMGOceA5iZ5s41QZM6yJS1BeviLxk70yDvR3nFn
-         m7lmonwlK6GtsYsu7HUkbtJNnKbs+JX+ZveRtD9S6/hgpxjd1eol/k3vD906Lno/dTgG
-         nn0kN5cBzlzYJUryD5IlLZlvRueiz1VvDejXFs9wK2d/D70hPiGeti15NsDO3Ye8Otux
-         FJPzscauzyRuW2gNye3MOeshBarofri3HfXSP7i93ukNP2ehMIFTc/axzaSw9x8R/2eI
-         Pa9A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AoFjSCLZwSXmxyHhhk/Ax597M/UUEWobKLtvTw4CaqY=;
+        b=dmbARtsKvcnC0PvCe6WWtvhWpdCe3zEhMfbwMumIStKvLHhL/Zdwssf5XS4Nzq2Evp
+         VtJ+Bf4X37V3r5fBn0gAUCyPH+CySdF8fNnKJSdTc7tdPdmcuBVJpcxt/cGZDT5HMqSJ
+         Oa6tZN8tcmL0fN3PAIdLqDxWsmfB5/ne6nPVxQlJaDOoPNOUyO9i72v2KOFFfyLnOkOM
+         nhpNHNWkxezZQTB/EzMkX6ZWcZtC+Eda7qFsxYryP+qf4wdYoItBku0ScpJoLkURTKIn
+         9O2a7HXQKklUFaR3EE3pnEPd7/2+6OhLfSXdZ02SEKeZ0jl+LfbiBGjovpxhl9MQ5+FA
+         h4Pw==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 1/9] ARM: meson: Sync Amlogic DT from Linux 5.14
-References: <20210908141728.585797-1-narmstrong@baylibre.com>
- <978e5c89-fafb-def9-a9ca-f6891f46eef2@lexina.in>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <f2990b55-5e3e-6e43-96d7-fcf207dad7f0@baylibre.com>
-Date: Wed, 15 Sep 2021 10:15:26 +0200
+Subject: [PATCH v3 02/10] usb: dwc3: meson-gxl: add AXG compatible
+Date: Fri, 17 Sep 2021 09:37:01 +0200
+Message-Id: <20210917073709.1052133-2-narmstrong@baylibre.com>
+In-Reply-To: <20210917073709.1052133-1-narmstrong@baylibre.com>
+References: <20210917073709.1052133-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <978e5c89-fafb-def9-a9ca-f6891f46eef2@lexina.in>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To: Vyacheslav <adeep@lexina.in>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+To: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Vyacheslav Bocharov <adeep@lexina.in>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+Upstream Linux uses the "amlogic,meson-axg-usb-ctrl" for AXG SoCs.
 
-On 15/09/2021 09:49, Vyacheslav wrote:
-> 08.09.2021 17:17, Neil Armstrong via groups.io wrote:
->> diff --git a/arch/arm/dts/meson-axg.dtsi b/arch/arm/dts/meson-axg.dtsi
->> index b9efc84692..3f5254eeb4 100644
->> --- a/arch/arm/dts/meson-axg.dtsi
->> +++ b/arch/arm/dts/meson-axg.dtsi
-> ...
->> +
->> +        usb: usb@ffe09080 {
->> +            compatible = "amlogic,meson-axg-usb-ctrl";
->> +            reg = <0x0 0xffe09080 0x0 0x20>;
->> +            interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
->> +            #address-cells = <2>;
-> 
-> Hi.
-> I have looked through the dts for axg and found that a usb node use "amlogic,meson-axg-usb-ctrl" that is not supported in uboot. In linux-kernel it exists in drivers/usb/dwc3/dwc3-meson-g12a.c
-> In previous dts usb node used amlogic,meson-gxl-usb-ctrl and it worked good.
-> 
+This adds it to the compatible list for this driver.
 
-You're right, "amlogic,meson-axg-usb-ctrl" is missing in the drivers/usb/dwc3/dwc3-meson-gxl.c driver
+Reported-by: Vyacheslav Bocharov <adeep@lexina.in>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/usb/dwc3/dwc3-meson-gxl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'll add and resend the serie.
+diff --git a/drivers/usb/dwc3/dwc3-meson-gxl.c b/drivers/usb/dwc3/dwc3-meson-gxl.c
+index 08467d6210..b8f3886173 100644
+--- a/drivers/usb/dwc3/dwc3-meson-gxl.c
++++ b/drivers/usb/dwc3/dwc3-meson-gxl.c
+@@ -409,6 +409,7 @@ static int dwc3_meson_gxl_remove(struct udevice *dev)
+ }
+ 
+ static const struct udevice_id dwc3_meson_gxl_ids[] = {
++	{ .compatible = "amlogic,meson-axg-usb-ctrl" },
+ 	{ .compatible = "amlogic,meson-gxl-usb-ctrl" },
+ 	{ .compatible = "amlogic,meson-gxm-usb-ctrl" },
+ 	{ }
+-- 
+2.25.1
 
-Neil
