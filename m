@@ -1,25 +1,25 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web09.9411.1631864240730831490
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.9496.1631864242483410351
  for <u-boot-amlogic@groups.io>;
- Fri, 17 Sep 2021 00:37:21 -0700
-Received: by mail-wr1-f45.google.com with SMTP id u18so11856258wrg.5
-        for <u-boot-amlogic@groups.io>; Fri, 17 Sep 2021 00:37:20 -0700 (PDT)
+ Fri, 17 Sep 2021 00:37:22 -0700
+Received: by mail-wm1-f45.google.com with SMTP id j134-20020a1c238c000000b0030b32367649so2845153wmj.3
+        for <u-boot-amlogic@groups.io>; Fri, 17 Sep 2021 00:37:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4eGreGfsjikpTY3s082Lehjw2MhvJ48NsZ/3/zDUmuQ=;
-        b=Pimqizw2ofT8HndzfUlyi0jQoQmySl1BsNjYEJm6kOStqo0FuDwyX6fHUZOG99Gyvz
-         wcipmVNoXg+WgPO813TFJcMRbjEYH4kdrqtEh1xeByS+jKbU2sA3dsYw0hiNN2gEan/1
-         OP22t91597AopQjup/e9qy/CXbSR58yAV5M1fchBEkjnoNNN8rq1Rjti2VN6Or3Blvxf
-         mbxeDxvJyi8v9AwVFcqt8BqlV8f758YcGz8mO/c2CtSWSo+X5fP0XJf2XJCDOlycWvMi
-         fQELkTz46zebqZd3tYTI6CY3YeULAtX6cuymvwCjHFv1NayZQSiym7aK/UV0d0zLLJLk
-         JGtA==
+        bh=Ija7go++JdZdt7PJ+31MN/9qT2e81Xggn52oE/2Sahc=;
+        b=Q98ENKuYXdhOiMD5RJEbbsFnV4GDwbQd3/XRcJMukvznrZi1kWMpFkDchOsHmVpLMj
+         +ryErr3oODuuNlguh8EMAAEfDNg/F1dut1Z4E82KBD3dy49m6DRR+3/vToLdCxn5Qv0l
+         Xs2CqWLJeqZf/GpW+MfM1oWgLu9Te7udXaLFbp5HnkArr2/tGAXUmv3p6TxBszFCHgP8
+         o5R7g4/XBT9qBj4PtXdzCkceIKmdWuQ/Bwg3FhNZeDMRo8tXG5GA06ltEHJ8ThXDJ5yq
+         pUdVOjotkEc/AFqcQwEbHuxlfGriyCJOc2cT3e2JUSMUcfzc+heIptxKS6fBhGQ6xFYd
+         VmZw==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v3 09/10] ARM: meson: add Beelink GS-King X board
-Date: Fri, 17 Sep 2021 09:37:08 +0200
-Message-Id: <20210917073709.1052133-9-narmstrong@baylibre.com>
+Subject: [PATCH v3 10/10] ARM: amlogic: add Banana Pi M5
+Date: Fri, 17 Sep 2021 09:37:09 +0200
+Message-Id: <20210917073709.1052133-10-narmstrong@baylibre.com>
 In-Reply-To: <20210917073709.1052133-1-narmstrong@baylibre.com>
 References: <20210917073709.1052133-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,61 +28,78 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The Beelink GS-King X is a variant of the GS King boards but with an internal
-USB to SATA bridge and advanced audio features.
+Banana Pi BPI-M5 is a credit card format SBC with the following features:
+- Amlogic S905X3 quad core Cortex-A55
+- Mali-G31 GPU
+- 4GB LPDDR4
+- 16GB eMMC flash
+- 4 USB 3.0
+- 1 GbE ethernet
+- HDMI output
+- 2x LEDS
+- SDCard
+- 2.5mm Jack with Stereo Audio + CVBS
+- Infrared Received
+- ADC Button
+- GPIO Button
+- 40 pins header + 3pins debug header
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/dts/meson-g12b-gsking-x-u-boot.dtsi |  7 ++
- board/amlogic/beelink-s922x/MAINTAINERS      |  1 +
- configs/beelink-gsking-x_defconfig           | 70 ++++++++++++++++++++
- doc/board/amlogic/index.rst                  |  2 +-
- 4 files changed, 79 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/dts/meson-g12b-gsking-x-u-boot.dtsi
- create mode 100644 configs/beelink-gsking-x_defconfig
+ .../arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi | 13 ++++
+ board/amlogic/u200/MAINTAINERS                |  1 +
+ configs/bananapi-m5_defconfig                 | 73 +++++++++++++++++++
+ doc/board/amlogic/index.rst                   |  1 +
+ 4 files changed, 88 insertions(+)
+ create mode 100644 arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi
+ create mode 100644 configs/bananapi-m5_defconfig
 
-diff --git a/arch/arm/dts/meson-g12b-gsking-x-u-boot.dtsi b/arch/arm/dts/meson-g12b-gsking-x-u-boot.dtsi
+diff --git a/arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi b/arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi
 new file mode 100644
-index 0000000000..236f2468dc
+index 0000000000..a86fdb5668
 --- /dev/null
-+++ b/arch/arm/dts/meson-g12b-gsking-x-u-boot.dtsi
-@@ -0,0 +1,7 @@
++++ b/arch/arm/dts/meson-sm1-bananapi-m5-u-boot.dtsi
+@@ -0,0 +1,13 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
-+ * Copyright (c) 2019 BayLibre, SAS.
++ * Copyright (c) 2021 BayLibre, SAS
 + * Author: Neil Armstrong <narmstrong@baylibre.com>
 + */
 +
-+#include "meson-g12-common-u-boot.dtsi"
-diff --git a/board/amlogic/beelink-s922x/MAINTAINERS b/board/amlogic/beelink-s922x/MAINTAINERS
-index 7f223df4ae..47b622765a 100644
---- a/board/amlogic/beelink-s922x/MAINTAINERS
-+++ b/board/amlogic/beelink-s922x/MAINTAINERS
-@@ -5,5 +5,6 @@ L:	u-boot-amlogic@groups.io
- F:	board/amlogic/beelink-s922x/
- F:	configs/beelink-gtking_defconfig
- F:	configs/beelink-gtkingpro_defconfig
-+F:	configs/beelink-gsking-x_defconfig
- F:	doc/board/amlogic/beelink-gtking.rst
- F:	doc/board/amlogic/beelink-gtkingpro.rst
-diff --git a/configs/beelink-gsking-x_defconfig b/configs/beelink-gsking-x_defconfig
++#include "meson-sm1-u-boot.dtsi"
++
++&ethmac {
++	snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++};
+diff --git a/board/amlogic/u200/MAINTAINERS b/board/amlogic/u200/MAINTAINERS
+index 8c23f9a7d3..655cf64a3d 100644
+--- a/board/amlogic/u200/MAINTAINERS
++++ b/board/amlogic/u200/MAINTAINERS
+@@ -4,4 +4,5 @@ S:	Maintained
+ L:	u-boot-amlogic@groups.io
+ F:	board/amlogic/u200/
+ F:	configs/u200_defconfig
++F:	configs/bananapi-m5_defconfig
+ F:	doc/board/amlogic/u200.rst
+diff --git a/configs/bananapi-m5_defconfig b/configs/bananapi-m5_defconfig
 new file mode 100644
-index 0000000000..8a76e8829a
+index 0000000000..a088761622
 --- /dev/null
-+++ b/configs/beelink-gsking-x_defconfig
-@@ -0,0 +1,70 @@
++++ b/configs/bananapi-m5_defconfig
+@@ -0,0 +1,73 @@
 +CONFIG_ARM=y
-+CONFIG_SYS_BOARD="beelink-s922x"
 +CONFIG_ARCH_MESON=y
 +CONFIG_SYS_TEXT_BASE=0x01000000
 +CONFIG_NR_DRAM_BANKS=1
 +CONFIG_ENV_SIZE=0x2000
 +CONFIG_DM_GPIO=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-gsking-x"
++CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-bananapi-m5"
 +CONFIG_MESON_G12A=y
 +CONFIG_DEBUG_UART_BASE=0xff803000
 +CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" beelink"
++CONFIG_IDENT_STRING="bpi-m5"
 +CONFIG_DEBUG_UART=y
 +CONFIG_OF_BOARD_SETUP=y
 +# CONFIG_DISPLAY_CPUINFO is not set
@@ -99,9 +116,9 @@ index 0000000000..8a76e8829a
 +CONFIG_OF_CONTROL=y
 +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
 +CONFIG_NET_RANDOM_ETHADDR=y
++CONFIG_ADC=y
++CONFIG_SARADC_MESON=y
 +CONFIG_MMC_MESON_GX=y
-+CONFIG_MTD=y
-+CONFIG_DM_MTD=y
 +CONFIG_PHY_REALTEK=y
 +CONFIG_DM_ETH=y
 +CONFIG_DM_MDIO=y
@@ -140,17 +157,20 @@ index 0000000000..8a76e8829a
 +CONFIG_VIDEO_DT_SIMPLEFB=y
 +CONFIG_SPLASH_SCREEN=y
 +CONFIG_SPLASH_SCREEN_ALIGN=y
++CONFIG_VIDEO_BMP_RLE8=y
++CONFIG_BMP_16BPP=y
++CONFIG_BMP_24BPP=y
++CONFIG_BMP_32BPP=y
 +CONFIG_OF_LIBFDT_OVERLAY=y
 diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index af12f94fde..de1a9ce284 100644
+index de1a9ce284..2913ab281a 100644
 --- a/doc/board/amlogic/index.rst
 +++ b/doc/board/amlogic/index.rst
-@@ -18,7 +18,7 @@ This matrix concerns the actual source code version.
- | Boards                       	| Odroid-C2 | P212            | Khadas VIM2  | S400       | U200       | Odroid-N2   | SEI610       |
+@@ -19,6 +19,7 @@ This matrix concerns the actual source code version.
  |        			| Nanopi-K2 | Khadas-VIM      | Libretech-PC |	          | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
  |        			| P200	    | LibreTech-CC v1 |	WeTek Core2  |	          |            | GT-King/Pro | Odroid-C4    |
--|        			| P201	    | LibreTech-AC v2 |	             |	          |            |             | Odroid-HC4   |
-+|        			| P201	    | LibreTech-AC v2 |	             |	          |            | GSKing-X    | Odroid-HC4   |
+ |        			| P201	    | LibreTech-AC v2 |	             |	          |            | GSKing-X    | Odroid-HC4   |
++|                               |           |                 |              |            |            |             | BananaPi-M5  |
  +-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
  | UART                       	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
  +-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
