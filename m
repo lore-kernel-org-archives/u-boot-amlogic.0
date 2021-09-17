@@ -1,25 +1,25 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web11.9542.1631864236757160245
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web12.9604.1631864237812283714
  for <u-boot-amlogic@groups.io>;
- Fri, 17 Sep 2021 00:37:17 -0700
-Received: by mail-wr1-f46.google.com with SMTP id t18so13658415wrb.0
-        for <u-boot-amlogic@groups.io>; Fri, 17 Sep 2021 00:37:16 -0700 (PDT)
+ Fri, 17 Sep 2021 00:37:18 -0700
+Received: by mail-wr1-f41.google.com with SMTP id u15so13592002wru.6
+        for <u-boot-amlogic@groups.io>; Fri, 17 Sep 2021 00:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=C8E2qbaf7N0jIDuLpNYyFY9uxgua9aYGDxUzGtqDqMQ=;
-        b=4QPgh1NkXAQJ0H/xdyOrjQUfZRZNHUi2+/RN3g+rhrE7tn+vmkc6MSaBMDu/rhum6Y
-         HYbAeeW/5JALXP/d4FttKh+ChQCBX8ECzX5IDYGjqpTLed9RLQ2loST9P04ASibi/V4V
-         ZGlV5jSepiyx14xkvSNAS6DbUJkhDyvGbHrO/uTkVjdAE91OfzPiZwOszVOP/Scyuyxk
-         JJm2w5Pi5aycJdvSUfJ6MBRlY4I/fQyppbDpDCSMDGBMdRHLIG6MAGdnlnrSZekUUQye
-         fxVO+OrLghi2ZOeQHbUr8xHlWKsqdxQUlf7kCzKH9FLiSHGuDaHYy9FLjsS4L/GoJ8nM
-         PekA==
+        bh=tJgbbqo/6bQo2p9nmIFUbGQJBxvosMwO730hx+ONHCc=;
+        b=nrlGOgWiDipPZsDam5fspk6SMxm2y9Dkozb/4p6K9QeKeMiaS3JWHuqRcjUsiYDp1+
+         vGzl+m5hXoPZd82KpIxGUvJikP9EUmpCPBtD+F0g1VFZJ3ivS6rwTe+ipSHG9YhtkODQ
+         /nnIx+ydH5IzZTeXJhAwXMhS7xRR1VtzOJjgwEvVeWlu9dt/iRHds+uxBTe7GvrieMqo
+         Ev3yw0WiODlLks9sdz/8sKuNNFn7MqwWki71Jexw9THMl7OvRE/QTU3fHj8+58FDTst1
+         OnjZFPQSTjU68A18TOkNqJP3pU9QX4Z8CiZCqXzzA5q7z3P97eMwc2abnJNRPKxgbT6g
+         gzUg==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PATCH v3 05/10] configs: meson64: add SCSI boot target
-Date: Fri, 17 Sep 2021 09:37:04 +0200
-Message-Id: <20210917073709.1052133-5-narmstrong@baylibre.com>
+Subject: [PATCH v3 06/10] distro_bootcmd: run pci enum for scsi_boot just like it is done for nvme_boot
+Date: Fri, 17 Sep 2021 09:37:05 +0200
+Message-Id: <20210917073709.1052133-6-narmstrong@baylibre.com>
 In-Reply-To: <20210917073709.1052133-1-narmstrong@baylibre.com>
 References: <20210917073709.1052133-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
@@ -28,40 +28,26 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Mark Kettenis <kettenis@openbsd.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add SCSI target to be able to boot from the SATA disks on the Odroid HC4 using
-an on-board AHCI PCIe controller.
+The SCSI device can be a PCIe adapter, so run pcie enum if enabled.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- include/configs/meson64.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/config_distro_bootcmd.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index f9bb0240d2..08816fff1f 100644
---- a/include/configs/meson64.h
-+++ b/include/configs/meson64.h
-@@ -66,6 +66,12 @@
- 	#define BOOT_TARGET_NVME(func)
- #endif
- 
-+#ifdef CONFIG_CMD_SCSI
-+	#define BOOT_TARGET_SCSI(func) func(SCSI, scsi, 0)
-+#else
-+	#define BOOT_TARGET_SCSI(func)
-+#endif
-+
- #ifndef BOOT_TARGET_DEVICES
- #define BOOT_TARGET_DEVICES(func) \
- 	func(ROMUSB, romusb, na)  \
-@@ -74,6 +80,7 @@
- 	func(MMC, mmc, 2) \
- 	BOOT_TARGET_DEVICES_USB(func) \
- 	BOOT_TARGET_NVME(func) \
-+	BOOT_TARGET_SCSI(func) \
- 	func(PXE, pxe, na) \
- 	func(DHCP, dhcp, na)
- #endif
+diff --git a/include/config_distro_bootcmd.h b/include/config_distro_bootcmd.h
+index 750e9e04e8..3f724aa10f 100644
+--- a/include/config_distro_bootcmd.h
++++ b/include/config_distro_bootcmd.h
+@@ -226,6 +226,7 @@
+ 		"fi\0" \
+ 	\
+ 	"scsi_boot=" \
++		BOOTENV_RUN_PCI_ENUM \
+ 		BOOTENV_RUN_SCSI_INIT \
+ 		BOOTENV_SHARED_BLKDEV_BODY(scsi)
+ #define BOOTENV_DEV_SCSI	BOOTENV_DEV_BLKDEV
 -- 
 2.25.1
 
