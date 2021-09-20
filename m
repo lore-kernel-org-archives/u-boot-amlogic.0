@@ -1,30 +1,30 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web12.7984.1632120227688808837
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web11.8109.1632120391912057465
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Sep 2021 23:43:48 -0700
-Received: by mail-wr1-f50.google.com with SMTP id x6so26842292wrv.13
-        for <u-boot-amlogic@groups.io>; Sun, 19 Sep 2021 23:43:47 -0700 (PDT)
+ Sun, 19 Sep 2021 23:46:33 -0700
+Received: by mail-wr1-f42.google.com with SMTP id g16so26899308wrb.3
+        for <u-boot-amlogic@groups.io>; Sun, 19 Sep 2021 23:46:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=E9pOBOXzVOnPNThSXNs9yWIoDhHIeE/XqwJXhlS0Qmg=;
-        b=omcMHdgYvmJCUmO+MfGCvgo26Qhh49WN4h/p3imVjew8s3d+3k6oHckxuRAJfWxG6+
-         OPCdiIi5REE8VrXXNzHZ3WBuh5hVJJsS8rC13AK+q3spQ6q9w6M7dqHOk2bR6qe91nee
-         kA9B39GIpvgFhh8C/EZ/Um3hEDjKs0Q1am4jerW7L8NZWa+H7l66BCa4eoz4wMKEBRD8
-         456JbECamG9fa9EN/Azu6m8/YJXGl/t50hAoUSh/PPbkQcRGmd9tEbQRcqPRdQMWBd9U
-         qkKzix7Fltfy8QTjrpUKsr71P2hqN61XwE1/qy1bxZEzBJVlvOkATS+hDnWEF9WbEqEg
-         kp3w==
+        bh=9rWczdNs+c7KN8xMXpRVVo9C91IlSs3kqv4RzRefe5c=;
+        b=pxjwbtUXgbclaYrzlBrajBYLBJhs+pCbXX7J6XGboRIy16CSO4cRLl0hF2Hmty2AVx
+         QV1sg0lJZNxjau9i/UgDUn+ne7FJc2B/O3wG9D3qk/KAIW/w2Ksv4LotDz3IKocYJDgC
+         T6KR5LQmPN6TAQrCLyRO1DTEcJmv92ooszwUyTtLoByFlcxbVJK2x3DfrEJWiKURGkYf
+         rOO+TX9VQUj26mY87DrX9vMwimVJjTkXEETxF14HdBLEyK16E+8/j9BtXVRD22szketd
+         ZAJBlP1zayXWuE0UfX8s/n7ZaGizN2y0UbhZMrnM+JDzMR7xhco8WXdysXvLaQGGp9fI
+         yYFQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 2/3] ARM: amlogic: add JetHub D1/H1 device support
+Subject: Re: [PATCH v2 3/3] ARM: amlogic: add JetHub D1/H1 docs
 References: <20210919155216.4000369-1-adeep@lexina.in>
- <20210919155216.4000369-3-adeep@lexina.in>
+ <20210919155216.4000369-4-adeep@lexina.in>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <4ef4798b-33a3-76f9-f4a7-83ec7e4b893a@baylibre.com>
-Date: Mon, 20 Sep 2021 08:43:45 +0200
+Message-ID: <0226ea58-cf5d-45d9-9df5-d41541fdd259@baylibre.com>
+Date: Mon, 20 Sep 2021 08:46:31 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210919155216.4000369-3-adeep@lexina.in>
+In-Reply-To: <20210919155216.4000369-4-adeep@lexina.in>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -35,951 +35,400 @@ List-ID: <u-boot-amlogic@groups.io>
 Hi,
 
 On 19/09/2021 17:52, Vyacheslav Bocharov wrote:
-> Add support for new home automation devices.
-
-While applying I had a few warnings:
-
+> Fix doc/board/amlogic/index.rst:
+> - Add S905W to S905X column.
+> - Add JetHub devices to the corresponding columns.
+> - Fix tabs to spaces for table alignment
 > 
-> JetHome Jethub D1 (http://jethome.ru/jethub-d1) is a home automation controller with the following features:
-> - DIN Rail Mounting case
-> - Amlogic A113X (ARM Cortex-A53) quad-core up to 1.5GHz
-> - no video out
-> - 512Mb/1GB DDR3
-> - 8/16GB eMMC flash
-> - 1 x USB 2.0
-> - 1 x 10/100Mbps ethernet
-> - WiFi / Bluetooth AMPAK AP6255 (Broadcom BCM43455) IEEE 802.11a/b/g/n/ac, Bluetooth 4.2.
-> - TI CC2538 + CC2592 Zigbee Wireless Module with up to 20dBm output power and Zigbee 3.0 support.
-> - 2 x gpio LEDS
-> - GPIO user Button
-> - 1 x 1-Wire
-> - 2 x RS-485
-> - 4 x dry contact digital GPIO inputs
-> - 3 x relay GPIO outputs
-> - DC source with a voltage of 9 to 56 V / Passive POE
-> 
-> JetHome Jethub H1 (http://jethome.ru/jethub-h1) is a home automation controller with the following features:
-> - Square plastic case
-> - Amlogic S905W (ARM Cortex-A53) quad-core up to 1.5GHz
-> - no video out
-> - 1GB DDR3
-> - 8/16GB eMMC flash
-> - 2 x USB 2.0
-> - 1 x 10/100Mbps ethernet
-> - WiFi / Bluetooth RTL8822CS IEEE 802.11a/b/g/n/ac, Bluetooth 5.0.
-> - TI CC2538 + CC2592 Zigbee Wireless Module with up to 20dBm output power and Zigbee 3.0 support.
-> - MicroSD 2.x/3.x/4.x DS/HS cards.
-> - 1 x gpio LED
-> - ADC user Button
-> - DC source 5V microUSB with serial console
-> 
-> Patches from:
-> - JetHub H1
->   https://lore.kernel.org/r/20210915085715.1134940-4-adeep@lexina.in
->   https://git.kernel.org/amlogic/c/abfaae24ecf3e7f00508b60fa05e2b6789b8f607
-> - JetHub D1
->   https://lore.kernel.org/r/20210915085715.1134940-5-adeep@lexina.in
->   https://git.kernel.org/amlogic/c/8e279fb2903990cc6296ec56b3b80b2f854b6c79
+> Add doc/board/amlogic files:
+> - jethub-j100.rst
+> - jethub-j80.rst
 > 
 > Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
 > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  arch/arm/dts/Makefile                         |   2 +
->  .../arm/dts/meson-axg-jethome-jethub-j100.dts | 361 ++++++++++++++++++
->  .../meson-gxl-s905w-jethome-jethub-j80.dts    | 241 ++++++++++++
->  board/amlogic/jethub-j80/MAINTAINERS          |   6 +
->  board/amlogic/jethub-j80/Makefile             |   6 +
->  board/amlogic/jethub-j80/jethub-j80.c         |  68 ++++
->  configs/jethub_j100_defconfig                 |  55 +++
->  configs/jethub_j80_defconfig                  |  63 +++
->  8 files changed, 802 insertions(+)
->  create mode 100644 arch/arm/dts/meson-axg-jethome-jethub-j100.dts
->  create mode 100644 arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts
->  create mode 100644 board/amlogic/jethub-j80/MAINTAINERS
->  create mode 100644 board/amlogic/jethub-j80/Makefile
->  create mode 100644 board/amlogic/jethub-j80/jethub-j80.c
->  create mode 100644 configs/jethub_j100_defconfig
->  create mode 100644 configs/jethub_j80_defconfig
+>  doc/board/amlogic/index.rst       | 128 +++++++++++++++---------------
+>  doc/board/amlogic/jethub-j100.rst | 108 +++++++++++++++++++++++++
+>  doc/board/amlogic/jethub-j80.rst  |  97 ++++++++++++++++++++++
+>  3 files changed, 270 insertions(+), 63 deletions(-)
+>  create mode 100644 doc/board/amlogic/jethub-j100.rst
+>  create mode 100644 doc/board/amlogic/jethub-j80.rst
 > 
-> diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-> index f0160d2dc0..d1893a9812 100644
-> --- a/arch/arm/dts/Makefile
-> +++ b/arch/arm/dts/Makefile
-> @@ -169,10 +169,12 @@ dtb-$(CONFIG_ARCH_MESON) += \
->  	meson-gxl-s905x-libretech-cc-v2.dtb \
->  	meson-gxl-s905x-khadas-vim.dtb \
->  	meson-gxl-s905d-libretech-pc.dtb \
-> +	meson-gxl-s905w-jethome-jethub-j80.dtb \
->  	meson-gxm-khadas-vim2.dtb \
->  	meson-gxm-s912-libretech-pc.dtb \
->  	meson-gxm-wetek-core2.dtb \
->  	meson-axg-s400.dtb \
-> +	meson-axg-jethome-jethub-j100.dtb \
->  	meson-g12a-u200.dtb \
->  	meson-g12a-sei510.dtb \
->  	meson-g12b-gtking.dtb \
-> diff --git a/arch/arm/dts/meson-axg-jethome-jethub-j100.dts b/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
+> diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+> index 2913ab281a..c18f1b7e71 100644
+> --- a/doc/board/amlogic/index.rst
+> +++ b/doc/board/amlogic/index.rst
+> @@ -10,69 +10,69 @@ An up-do-date matrix is also available on: http://linux-meson.com
+>  
+>  This matrix concerns the actual source code version.
+>  
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -|                            	| S905      | S905X           | S912         | A113X      | S905X2     | S922X       | S905X3       |
+> -|        			|	    | S805X   	      | S905D        |	          | S905D2     | A311D       | S905D3       |
+> -|        			|	    |		      |	             |            | S905Y2     |	     |              |
+> -+===============================+===========+=================+==============+============+============+=============+==============+
+> -| Boards                       	| Odroid-C2 | P212            | Khadas VIM2  | S400       | U200       | Odroid-N2   | SEI610       |
+> -|        			| Nanopi-K2 | Khadas-VIM      | Libretech-PC |	          | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
+> -|        			| P200	    | LibreTech-CC v1 |	WeTek Core2  |	          |            | GT-King/Pro | Odroid-C4    |
+> -|        			| P201	    | LibreTech-AC v2 |	             |	          |            | GSKing-X    | Odroid-HC4   |
+> -|                               |           |                 |              |            |            |             | BananaPi-M5  |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| UART                       	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Pinctrl/GPIO               	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Clock Control              	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| PWM                        	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Reset Control              	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Infrared Decoder           	| No        | No              | No           | No         | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Ethernet                   	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Multi-core                 	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Fuse access                	| **Yes**   | **Yes**         |**Yes**       |**Yes**     |**Yes**     |**Yes**      | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| SPI (FC)                  	| **Yes**   | **Yes**         | **Yes**      | **Yes**    |**Yes**     | **Yes**     | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| SPI (CC)                   	| No        | No              | No           | No         | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| I2C                       	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| USB                       	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| USB OTG                  	| No        | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| eMMC                      	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| SDCard                    	| **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| NAND                      	| No        | No              | No           | No         | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| ADC                       	| **Yes**   | **Yes**         | **Yes**      | No         | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| CVBS Output                	| **Yes**   | **Yes**         | **Yes**      | *N/A*      | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| HDMI Output                	| **Yes**   | **Yes**         | **Yes**      | *N/A*      | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| CEC                        	| No        | No              | No           | *N/A*      | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| Thermal Sensor             	| No        | No              | No           | No         | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| LCD/LVDS Output            	| No        | *N/A*           | No           | No         | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| MIPI DSI Output            	| *N/A*     | *N/A*           | *N/A*        | No         | No         | No          | No           |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| SoC (version) information     | **Yes**   | **Yes**         | **Yes**      | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> -| PCIe (+NVMe)                  | *N/A*     | *N/A*           | *N/A*        | **Yes**    | **Yes**    | **Yes**     | **Yes**      |
+> -+-------------------------------+-----------+-----------------+--------------+------------+------------+-------------+--------------+
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +|                               | S905      | S905X           | S912         | A113X       | S905X2     | S922X       | S905X3       |
+> +|                               |           | S805X           | S905D        |             | S905D2     | A311D       | S905D3       |
+> +|                               |           | S905W           |              |             | S905Y2     |             |              |
+> ++===============================+===========+=================+==============+=============+============+=============+==============+
+> +| Boards                        | Odroid-C2 | P212            | Khadas VIM2  | S400        | U200       | Odroid-N2   | SEI610       |
+> +|                               | Nanopi-K2 | Khadas-VIM      | Libretech-PC | JetHub J100 | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
+> +|                               | P200      | LibreTech-CC v1 | WeTek Core2  |             |            | GT-King/Pro | Odroid-C4    |
+> +|                               | P201      | LibreTech-AC v2 |              |             |            | GSKing-X    | Odroid-HC4   |
+> +|                               |           | JetHub J80      |              |             |            |             | BananaPi-M5  |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| UART                          | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Pinctrl/GPIO                  | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Clock Control                 | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| PWM                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Reset Control                 | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Infrared Decoder              | No        | No              | No           | No          | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Ethernet                      | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Multi-core                    | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Fuse access                   | **Yes**   | **Yes**         |**Yes**       |**Yes**      |**Yes**     |**Yes**      | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| SPI (FC)                      | **Yes**   | **Yes**         | **Yes**      | **Yes**     |**Yes**     | **Yes**     | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| SPI (CC)                      | No        | No              | No           | No          | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| I2C                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| USB                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| USB OTG                       | No        | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| eMMC                          | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| SDCard                        | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| NAND                          | No        | No              | No           | No          | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| ADC                           | **Yes**   | **Yes**         | **Yes**      | No          | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| CVBS Output                   | **Yes**   | **Yes**         | **Yes**      | *N/A*       | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| HDMI Output                   | **Yes**   | **Yes**         | **Yes**      | *N/A*       | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| CEC                           | No        | No              | No           | *N/A*       | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| Thermal Sensor                | No        | No              | No           | No          | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| LCD/LVDS Output               | No        | *N/A*           | No           | No          | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| MIPI DSI Output               | *N/A*     | *N/A*           | *N/A*        | No          | No         | No          | No           |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| SoC (version) information     | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> +| PCIe (+NVMe)                  | *N/A*     | *N/A*           | *N/A*        | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+> ++-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+>  
+>  Board Documentation
+>  -------------------
+> @@ -82,6 +82,8 @@ Board Documentation
+>  
+>     beelink-gtking
+>     beelink-gtkingpro
+> +   jethub-j100
+> +   jethub-j80
+>     khadas-vim2
+>     khadas-vim3l
+>     khadas-vim3
+> diff --git a/doc/board/amlogic/jethub-j100.rst b/doc/board/amlogic/jethub-j100.rst
 > new file mode 100644
-> index 0000000000..5783732dc6
+> index 0000000000..f728711c5c
 > --- /dev/null
-> +++ b/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
-> @@ -0,0 +1,361 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2021 Vyacheslav Bocharov <adeep@lexina.in>
-> + * Copyright (c) 2020 JetHome
-> + * Author: Aleksandr Kazantsev <ak@tvip.ru>
-> + * Author: Alexey Shevelkin <ash@tvip.ru>
-> + * Author: Vyacheslav Bocharov <adeep@lexina.in>
-> + */
+> +++ b/doc/board/amlogic/jethub-j100.rst
+> @@ -0,0 +1,108 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
 > +
-> +/dts-v1/;
+> +U-Boot for JetHub J100
+> +=======================
 > +
-> +#include "meson-axg.dtsi"
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/thermal/thermal.h>
+> +JetHome Jethub D1 (http://jethome.ru/jethub-d1) is a home automation
+> +controller manufactured by JetHome with the following specifications:
 > +
-> +/ {
-> +	compatible = "jethome,jethub-j100", "amlogic,a113d", "amlogic,meson-axg";
-> +	model = "JetHome JetHub J100";
-> +	aliases {
-> +		serial0 = &uart_AO;   /* Console */
-> +		serial1 = &uart_AO_B; /* External UART (Wireless Module) */
-> +		ethernet0 = &ethmac;
-> +	};
+> + - Amlogic A113X (ARM Cortex-A53) quad-core up to 1.5GHz
+> + - no video out
+> + - 512Mb/1GB DDR3
+> + - 8/16GB eMMC flash
+> + - 1 x USB 2.0
+> + - 1 x 10/100Mbps ethernet
+> + - WiFi / Bluetooth AMPAK AP6255 (Broadcom BCM43455) IEEE
+> +802.11a/b/g/n/ac, Bluetooth 4.2.
+
+I got the error:
+
+Warning, treated as error:
+/home/narmstrong/projects/amlogic/u-boot-upstream/doc/board/amlogic/jethub-j100.rst:16:Block quote ends without a blank line; unexpected unindent.
+
+> + - TI CC2538 + CC2592 Zigbee Wireless Module with up to 20dBm output
+> +power and Zigbee 3.0 support.
+
+same here.
+
+> + - 2 x gpio LEDS
+> + - GPIO user Button
+> + - 1 x 1-Wire
+> + - 2 x RS-485
+> + - 4 x dry contact digital GPIO inputs
+> + - 3 x relay GPIO outputs
+> + - DC source with a voltage of 9 to 56 V / Passive POE
+> + - DIN Rail Mounting case
 > +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +U-Boot compilation
+> +------------------
 > +
-> +	/* 1024MB RAM */
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x40000000>;
-> +	};
+> +.. code-block:: bash
 > +
-> +	reserved-memory {
-> +		linux,cma {
-> +			size = <0x0 0x400000>;
-> +		};
-> +	};
+> +    $ export CROSS_COMPILE=aarch64-none-elf-
+> +    $ make jethub_j100_defconfig
+> +    $ make
 > +
-> +	emmc_pwrseq: emmc-pwrseq {
-> +		compatible = "mmc-pwrseq-emmc";
-> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +	};
+> +Image creation
+> +--------------
 > +
-> +	vcc_3v3: regulator-vcc_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vddao_3v3>;
-> +		regulator-always-on;
-> +	};
+> +Amlogic doesn't provide sources for the firmware and for tools needed
+> +to create the bootloader image, so it is necessary to obtain binaries
+> +from the git tree published by the board vendor:
 > +
-> +	vcc_5v: regulator-vcc_5v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +	};
+> +.. code-block:: bash
 > +
-> +	vddao_3v3: regulator-vddao_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDAO_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vcc_5v>;
-> +		regulator-always-on;
-> +	};
+> +    $ git clone https://github.com/jethome-ru/jethub-aml-tools jethub-u-boot
+> +    $ cd jethub-u-boot
+> +    $ export FIPDIR=$PWD
 > +
-> +	vddio_ao18: regulator-vddio_ao18 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO18";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&vddao_3v3>;
-> +		regulator-always-on;
-> +	};
+> +Go back to mainline U-boot source tree then :
 > +
-> +	vddio_boot: regulator-vddio_boot {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_BOOT";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&vddao_3v3>;
-> +		regulator-always-on;
-> +	};
+> +.. code-block:: bash
 > +
-> +	usb_pwr: regulator-usb_pwr {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "USB_PWR";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vcc_5v>;
-> +		regulator-always-on;
-> +	};
+> +    $ mkdir fip
 > +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&gpio GPIOX_7 GPIO_ACTIVE_LOW>;
-> +		clocks = <&wifi32k>;
-> +		clock-names = "ext_clock";
-> +	};
+> +    $ cp $FIPDIR/j100/bl2.bin fip/
+> +    $ cp $FIPDIR/j100/acs.bin fip/
+> +    $ cp $FIPDIR/j100/bl21.bin fip/
+> +    $ cp $FIPDIR/j100/bl30.bin fip/
+> +    $ cp $FIPDIR/j100/bl301.bin fip/
+> +    $ cp $FIPDIR/j100/bl31.img fip/
+> +    $ cp u-boot.bin fip/bl33.bin
 > +
-> +	wifi32k: wifi32k {
-> +		compatible = "pwm-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		pwms = <&pwm_ab 0 30518 0>; /* PWM_A at 32.768KHz */
-> +	};
+> +    $ $FIPDIR/blx_fix.sh \
+> +        fip/bl30.bin \
+> +        fip/zero_tmp \
+> +        fip/bl30_zero.bin \
+> +        fip/bl301.bin \
+> +        fip/bl301_zero.bin \
+> +        fip/bl30_new.bin \
+> +        bl30
 > +
-> +	thermal-zones {
-> +		cpu_thermal: cpu-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +			thermal-sensors = <&scpi_sensors 0>;
-> +			trips {
-> +				cpu_passive: cpu-passive {
-> +					temperature = <70000>; /* millicelsius */
-> +					hysteresis = <2000>; /* millicelsius */
-> +					type = "passive";
-> +				};
+> +    $ $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
 > +
-> +				cpu_hot: cpu-hot {
-> +					temperature = <80000>; /* millicelsius */
-> +					hysteresis = <2000>; /* millicelsius */
-> +					type = "hot";
-> +				};
+> +    $ $FIPDIR/blx_fix.sh \
+> +        fip/bl2_acs.bin \
+> +        fip/zero_tmp \
+> +        fip/bl2_zero.bin \
+> +        fip/bl21.bin \
+> +        fip/bl21_zero.bin \
+> +        fip/bl2_new.bin \
+> +        bl2
 > +
-> +				cpu_critical: cpu-critical {
-> +					temperature = <100000>; /* millicelsius */
-> +					hysteresis = <2000>; /* millicelsius */
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
+> +    $ $FIPDIR/j100/aml_encrypt_axg --bl3sig --input fip/bl30_new.bin \
+> +                                        --output fip/bl30_new.bin.enc \
+> +                                        --level v3 --type bl30
+> +    $ $FIPDIR/j100/aml_encrypt_axg --bl3sig --input fip/bl31.img \
+> +                                        --output fip/bl31.img.enc \
+> +                                        --level v3 --type bl31
+> +    $ $FIPDIR/j100/aml_encrypt_axg --bl3sig --input fip/bl33.bin --compress lz4 \
+> +                                        --output fip/bl33.bin.enc \
+> +                                        --level v3 --type bl33
+> +    $ $FIPDIR/j100/aml_encrypt_axg --bl2sig --input fip/bl2_new.bin \
+> +                                        --output fip/bl2.n.bin.sig
+> +    $ $FIPDIR/j100/aml_encrypt_axg --bootmk \
+> +                --output fip/u-boot.bin \
+> +                --bl2 fip/bl2.n.bin.sig \
+> +                --bl30 fip/bl30_new.bin.enc \
+> +                --bl31 fip/bl31.img.enc \
+> +                --bl33 fip/bl33.bin.enc --level v3
 > +
-> +		cpu_cooling_maps: cooling-maps {
-> +			map0 {
-> +				trip = <&cpu_passive>;
-> +				cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +			};
+> +and then write the image to eMMC with:
 > +
-> +			map1 {
-> +				trip = <&cpu_hot>;
-> +				cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +			};
-> +		};
-> +	};
-> +	onewire {
-> +		compatible = "w1-gpio";
-> +		gpios = <&gpio GPIOA_14 GPIO_ACTIVE_HIGH>;
-> +		#gpio-cells = <1>;
-> +	};
-> +};
+> +.. code-block:: bash
 > +
-> +&efuse {
-> +	sn: sn@32 {
-> +		reg = <0x32 0x20>;
-> +	};
-> +
-> +	eth_mac: eth_mac@0 {
-> +		reg = <0x0 0x6>;
-> +	};
-> +
-> +	bt_mac: bt_mac@6 {
-> +		reg = <0x6 0x6>;
-> +	};
-> +
-> +	wifi_mac: wifi_mac@c {
-> +		reg = <0xc 0x6>;
-> +	};
-> +
-> +	bid: bid@12 {
-> +		reg = <0x12 0x20>;
-> +	};
-> +};
-> +
-> +&ethmac {
-> +	status = "okay";
-> +	pinctrl-0 = <&eth_rmii_x_pins>;
-> +	pinctrl-names = "default";
-> +	phy-handle = <&eth_phy0>;
-> +	phy-mode = "rmii";
-> +
-> +	mdio {
-> +		compatible = "snps,dwmac-mdio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* ICPlus IP101A/G Ethernet PHY (vendor_id=0x0243, model_id=0x0c54) */
-> +		eth_phy0: ethernet-phy@0 {
-> +			/* compatible = "ethernet-phy-id0243.0c54";*/
-> +			max-speed = <100>;
-> +			reg = <0>;
-> +
-> +			reset-assert-us = <10000>;
-> +			reset-deassert-us = <10000>;
-> +			reset-gpios = <&gpio GPIOZ_5 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> +
-> +/* Internal I2C bus (on CPU module) */
-> +&i2c1 {
-> +	status = "okay";
-> +	pinctrl-0 = <&i2c1_z_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	/* RTC */
-> +	pcf8563: pcf8563@51 {
-> +		compatible = "nxp,pcf8563";
-> +		reg = <0x51>;
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +/* Peripheral I2C bus (on motherboard) */
-> +&i2c_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&i2c_ao_sck_10_pins>, <&i2c_ao_sda_11_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&pwm_ab {
-> +	status = "okay";
-> +	pinctrl-0 = <&pwm_a_x20_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +/* wifi module */
-> +&sd_emmc_b {
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	pinctrl-0 = <&sdio_pins>;
-> +	pinctrl-1 = <&sdio_clk_gate_pins>;
-> +	pinctrl-names = "default", "clk-gate";
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	sd-uhs-sdr104;
-> +	max-frequency = <200000000>;
-> +	non-removable;
-> +	disable-wp;
-> +
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +
-> +	brcmf: wifi@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +	};
-> +};
-> +
-> +/* emmc storage */
-> +&sd_emmc_c {
-> +	status = "okay";
-> +	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-> +	pinctrl-1 = <&emmc_clk_gate_pins>;
-> +	pinctrl-names = "default", "clk-gate";
-> +
-> +	bus-width = <8>;
-> +	cap-mmc-highspeed;
-> +	max-frequency = <200000000>;
-> +	non-removable;
-> +	disable-wp;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs200-1_8v;
-> +
-> +	mmc-pwrseq = <&emmc_pwrseq>;
-> +
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* UART Bluetooth */
-> +&uart_B {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_b_z_pins>, <&uart_b_z_cts_rts_pins>;
-> +	pinctrl-names = "default";
-> +	uart-has-rtscts;
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm43438-bt";
-> +		shutdown-gpios = <&gpio GPIOZ_7 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
-> +/* UART Console */
-> +&uart_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +/* UART Wireless module */
-> +&uart_AO_B {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_b_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&usb {
-> +	status = "okay";
-> +	phy-supply = <&usb_pwr>;
-> +};
-> +
-> +&spicc1 {
-> +	status = "okay";
-> +	pinctrl-0 = <&spi1_x_pins>, <&spi1_ss0_x_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&gpio {
-> +	gpio-line-names =
-> +		"", "", "", "", "", // 0 - 4
-> +		"", "", "", "", "", // 5 - 9
-> +		"UserButton", "", "", "", "", // 10 - 14
-> +		"", "", "", "", "", // 15 - 19
-> +		"", "", "", "", "", // 20 - 24
-> +		"", "LedRed", "LedGreen", "Output3", "Output2", // 25 - 29
-> +		"Output1", "", "", "", "", // 30 - 34
-> +		"", "ZigBeeBOOT", "", "", "", // 35 - 39
-> +		"", "ZigBeeRESET", "", "Input4", "Input3", // 40 - 44
-> +		"Input2", "Input1", "", "", "", // 45 - 49
-> +		"", "", "", "", "", // 50 - 54
-> +		"", "", "", "", "", // 55 - 59
-> +		"", "", "", "", "", // 60 - 64
-> +		"", "", "", "", "", // 65 - 69
-> +		"", "", "", "", "", // 70 - 74
-> +		"", "", "", "", "", // 75 - 79
-> +		"", "", "", "", "", // 80 - 84
-> +		"", ""; // 85-86
-> +};
-> +
-> +&cpu0 {
-> +	#cooling-cells = <2>;
-> +};
-> +
-> +&cpu1 {
-> +	#cooling-cells = <2>;
-> +};
-> +
-> +&cpu2 {
-> +	#cooling-cells = <2>;
-> +};
-> +
-> +&cpu3 {
-> +	#cooling-cells = <2>;
-> +};
-> diff --git a/arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts b/arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts
+> +    $ DEV=/dev/your_emmc_device
+> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
+> diff --git a/doc/board/amlogic/jethub-j80.rst b/doc/board/amlogic/jethub-j80.rst
 > new file mode 100644
-> index 0000000000..6eafb90869
+> index 0000000000..75a2136b20
 > --- /dev/null
-> +++ b/arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts
-> @@ -0,0 +1,241 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2021 Vyacheslav Bocharov <adeep@lexina.in>
-> + * Copyright (c) 2020 JetHome
-> + * Author: Aleksandr Kazantsev <ak@tvip.ru>
-> + * Author: Alexey Shevelkin <ash@tvip.ru>
-> + * Author: Vyacheslav Bocharov <adeep@lexina.in>
-> + */
+> +++ b/doc/board/amlogic/jethub-j80.rst
+> @@ -0,0 +1,97 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
 > +
-> +/dts-v1/;
+> +U-Boot for JetHub J80
+> +======================
 > +
-> +#include "meson-gxl.dtsi"
+> +JetHome Jethub H1 (http://jethome.ru/jethub-h1) is a home automation
+> +controller manufactured by JetHome with the following specifications:
 > +
-> +/ {
-> +	compatible = "jethome,jethub-j80", "amlogic,s905w", "amlogic,meson-gxl";
-> +	model = "JetHome JetHub J80";
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x40000000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		linux,cma {
-> +			size = <0x0 0x1000000>;
-> +		};
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart_AO;   /* Console */
-> +		serial1 = &uart_A;    /* Bluetooth */
-> +		serial2 = &uart_AO_B; /* Wireless module 1 */
-> +		serial3 = &uart_C;    /* Wireless module 2 */
-> +		ethernet0 = &ethmac;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	vddio_ao18: regulator-vddio_ao18 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO18";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vddio_boot: regulator-vddio_boot {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_BOOT";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vddao_3v3: regulator-vddao_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDAO_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	vcc_3v3: regulator-vcc_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	emmc_pwrseq: emmc-pwrseq {
-> +		compatible = "mmc-pwrseq-emmc";
-> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	wifi32k: wifi32k {
-> +		compatible = "pwm-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-> +	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-> +		clocks = <&wifi32k>;
-> +		clock-names = "ext_clock";
-> +	};
-> +};
-> +
-> +&efuse {
-> +	bt_mac: bt_mac@6 {
-> +		reg = <0x6 0x6>;
-> +	};
-> +
-> +	wifi_mac: wifi_mac@C {
-> +		reg = <0xc 0x6>;
-> +	};
-> +};
-> +
-> +&sn {
-> +	reg = <0x32 0x20>;
-> +};
-> +
-> +&eth_mac {
-> +	reg = <0x0 0x6>;
-> +};
-> +
-> +&bid {
-> +	reg = <0x12 0x20>;
-> +};
-> +
-> +&usb {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +};
-> +
-> +&pwm_ef {
-> +	status = "okay";
-> +	pinctrl-0 = <&pwm_e_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +};
-> +
-> +&saradc {
-> +	status = "okay";
-> +	vref-supply = <&vddio_ao18>;
-> +};
-> +
-> +/* Wireless SDIO Module */
-> +&sd_emmc_a {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdio_pins>;
-> +	pinctrl-1 = <&sdio_clk_gate_pins>;
-> +	pinctrl-names = "default", "clk-gate";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <50000000>;
-> +
-> +	non-removable;
-> +	disable-wp;
-> +
-> +	/* WiFi firmware requires power to be kept while in suspend */
-> +	keep-power-in-suspend;
-> +
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* SD card */
-> +&sd_emmc_b {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdcard_pins>;
-> +	pinctrl-1 = <&sdcard_clk_gate_pins>;
-> +	pinctrl-names = "default", "clk-gate";
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <50000000>;
-> +	disable-wp;
-> +
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* eMMC */
-> +&sd_emmc_c {
-> +	status = "okay";
-> +	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-> +	pinctrl-1 = <&emmc_clk_gate_pins>;
-> +	pinctrl-names = "default", "clk-gate";
-> +
-> +	bus-width = <8>;
-> +	cap-mmc-highspeed;
-> +	max-frequency = <200000000>;
-> +	non-removable;
-> +	disable-wp;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs200-1_8v;
-> +
-> +	mmc-pwrseq = <&emmc_pwrseq>;
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* Console UART */
-> +&uart_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +/* S905W only has access to its internal PHY */
-> +&ethmac {
-> +	status = "okay";
-> +	phy-mode = "rmii";
-> +	phy-handle = <&internal_phy>;
-> +};
-> +
-> +&internal_phy {
-> +	status = "okay";
-> +	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&uart_A {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-> +	pinctrl-names = "default";
-> +	uart-has-rtscts;
-> +};
-> +
-> +&uart_C {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_c_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&uart_AO_B {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_b_pins>, <&uart_ao_b_cts_rts_pins>;
-> +	pinctrl-names = "default";
-> +	uart-has-rtscts;
-> +};
-> +
-> +&i2c_B {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c_b_pins>;
-> +
-> +	pcf8563: pcf8563@51 {
-> +		compatible = "nxp,pcf8563";
-> +		reg = <0x51>;
-> +		status = "okay";
-> +	};
-> +};
-> diff --git a/board/amlogic/jethub-j80/MAINTAINERS b/board/amlogic/jethub-j80/MAINTAINERS
-> new file mode 100644
-> index 0000000000..1b8fbf8c35
-> --- /dev/null
-> +++ b/board/amlogic/jethub-j80/MAINTAINERS
-> @@ -0,0 +1,6 @@
-> +JetHome JetHub J80
-> +M:	Vyacheslav Bocharov <adeep@lexina.in>
-> +S:	Maintained
-> +L:	u-boot-amlogic@groups.io
-> +F:	board/amlogic/jethub-j80/
-> +F:	configs/jethub_j80_defconfig
-> diff --git a/board/amlogic/jethub-j80/Makefile b/board/amlogic/jethub-j80/Makefile
-> new file mode 100644
-> index 0000000000..a727a4b222
-> --- /dev/null
-> +++ b/board/amlogic/jethub-j80/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +#
-> +# (C) Copyright 2021 Vyacheslav Bocharov
-> +# Author: Vyacheslav Bocharov <adeep@lexina.in>
-> +
-> +obj-y	:= jethub-j80.o
-> diff --git a/board/amlogic/jethub-j80/jethub-j80.c b/board/amlogic/jethub-j80/jethub-j80.c
-> new file mode 100644
-> index 0000000000..2a9ffb794f
-> --- /dev/null
-> +++ b/board/amlogic/jethub-j80/jethub-j80.c
-> @@ -0,0 +1,68 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2021 Vyacheslav Bocharov
-> + * Author: Vyacheslav Bocharov <adeep@lexina.in>
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + *
-> + */
-> +
-> +#include <common.h>
-> +#include <dm.h>
-> +#include <adc.h>
-> +#include <env.h>
-> +#include <init.h>
-> +#include <net.h>
-> +#include <asm/io.h>
-> +#include <asm/arch/gx.h>
-> +#include <asm/arch/sm.h>
-> +#include <asm/arch/eth.h>
-> +#include <asm/arch/mem.h>
-> +
-> +#define EFUSE_SN_OFFSET		50
-> +#define EFUSE_SN_SIZE		32
-> +#define EFUSE_MAC_OFFSET	0
-> +#define EFUSE_MAC_SIZE		6
-> +#define EFUSE_USID_OFFSET	18
-> +#define EFUSE_USID_SIZE		32
-> +
-> +int misc_init_r(void)
-> +{
-> +	u8 mac_addr[EFUSE_MAC_SIZE];
-> +	char serial[EFUSE_SN_SIZE];
-> +	char usid[EFUSE_USID_SIZE];
-> +	ssize_t len;
-> +	unsigned int adcval;
-> +	int ret;
-> +	char value[16];
-> +
-> +	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
-> +		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
-> +					  mac_addr, EFUSE_MAC_SIZE);
-> +		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
-> +			eth_env_set_enetaddr("ethaddr", mac_addr);
-> +		else
-> +			meson_generate_serial_ethaddr();
-> +	}
-> +
-> +	if (!env_get("serial")) {
-> +		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial, 
+> + - Amlogic S905W (ARM Cortex-A53) quad-core up to 1.5GHz
+> + - No video out
+> + - 1GB DDR3
+> + - 8/16GB eMMC flash
+> + - 2 x USB 2.0
+> + - 1 x 10/100Mbps ethernet
+> + - SDIO WiFi / Bluetooth RTL8822CS IEEE 802.11a/b/g/n/ac, Bluetooth 5.0.
+> + - TI CC2538 + CC2592 Zigbee Wireless Module with up to 20dBm output
+> +power and Zigbee 3.0 support.
 
-ERROR: trailing whitespace
-#777: FILE: board/amlogic/jethub-j80/jethub-j80.c:48:
-+^I^Ilen = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial, $
+same here
 
-CHECK: Alignment should match open parenthesis
-#778: FILE: board/amlogic/jethub-j80/jethub-j80.c:49:
-+		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
-+			EFUSE_SN_SIZE);
-
-CHECK: Alignment should match open parenthesis
-#785: FILE: board/amlogic/jethub-j80/jethub-j80.c:56:
-+		len = meson_sm_read_efuse(EFUSE_USID_OFFSET, usid,
-+			EFUSE_USID_SIZE);
-
-
-> +			EFUSE_SN_SIZE);
-> +		if (len == EFUSE_SN_SIZE)
-> +			env_set("serial", serial);
-> +	}
+> + - MicroSD 2.x/3.x/4.x DS/HS cards.
+> + - 1 x gpio LED
+> + - ADC user Button
+> + - DC source 5V microUSB
+> + - Square plastic case
 > +
-> +	if (!env_get("usid")) {
-> +		len = meson_sm_read_efuse(EFUSE_USID_OFFSET, usid,
-> +			EFUSE_USID_SIZE);
-> +		if (len == EFUSE_USID_SIZE)
-> +			env_set("usid", usid);
-> +	}
+> +U-Boot compilation
+> +------------------
 > +
-> +	ret = adc_channel_single_shot("adc@8680", 0, &adcval);
-> +	if (adcval < 3000)
-> +		env_set("userbutton", "true");
-> +	else
-> +		env_set("userbutton", "false");
+> +.. code-block:: bash
 > +
-> +	return 0;
-> +}
-> diff --git a/configs/jethub_j100_defconfig b/configs/jethub_j100_defconfig
-> new file mode 100644
-> index 0000000000..290ce4db85
-> --- /dev/null
-> +++ b/configs/jethub_j100_defconfig
-
-This file isn't part of any MAINTAINERS file, either add it to the s400 one or the j80 one.
-
-> @@ -0,0 +1,55 @@
-> +CONFIG_ARM=y
-> +CONFIG_SYS_CONFIG_NAME="jethub"
-> +CONFIG_ARCH_MESON=y
-> +CONFIG_SYS_TEXT_BASE=0x01000000
-> +CONFIG_NR_DRAM_BANKS=1
-> +CONFIG_ENV_SIZE=0x2000
-> +CONFIG_DM_GPIO=y
-> +CONFIG_DEFAULT_DEVICE_TREE="meson-axg-jethome-jethub-j100"
-> +CONFIG_MESON_AXG=y
-> +CONFIG_DEBUG_UART_BASE=0xff803000
-> +CONFIG_DEBUG_UART_CLOCK=24000000
-> +CONFIG_IDENT_STRING=" jethubj100"
-> +CONFIG_DEBUG_UART=y
-> +CONFIG_OF_BOARD_SETUP=y
-> +# CONFIG_DISPLAY_CPUINFO is not set
-> +CONFIG_MISC_INIT_R=y
-> +# CONFIG_CMD_BDI is not set
-> +# CONFIG_CMD_IMI is not set
-> +CONFIG_CMD_GPIO=y
-> +CONFIG_RANDOM_UUID=y
-> +# CONFIG_CMD_LOADS is not set
-> +CONFIG_CMD_MMC=y
-> +CONFIG_CMD_USB=y
-> +CONFIG_CMD_USB_MASS_STORAGE=y
-> +CONFIG_CMD_REGULATOR=y
-> +CONFIG_PARTITION_TYPE_GUID=y
-> +CONFIG_OF_CONTROL=y
-> +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-> +CONFIG_MMC_MESON_GX=y
-> +CONFIG_MTD_UBI=y
-> +CONFIG_PHY_REALTEK=y
-> +CONFIG_DM_ETH=y
-> +CONFIG_ETH_DESIGNWARE_MESON8B=y
-> +CONFIG_MESON_GXL_USB_PHY=y
-> +CONFIG_PINCTRL=y
-> +CONFIG_PINCTRL_MESON_AXG=y
-> +CONFIG_DM_REGULATOR=y
-> +CONFIG_DM_REGULATOR_FIXED=y
-> +CONFIG_DM_RESET=y
-> +CONFIG_DEBUG_UART_ANNOUNCE=y
-> +CONFIG_DEBUG_UART_SKIP_INIT=y
-> +CONFIG_MESON_SERIAL=y
-> +CONFIG_USB=y
-> +CONFIG_USB_XHCI_HCD=y
-> +CONFIG_USB_XHCI_DWC3=y
-> +CONFIG_USB_DWC2=y
-> +CONFIG_USB_DWC3=y
-> +# CONFIG_USB_DWC3_GADGET is not set
-> +CONFIG_USB_DWC3_MESON_GXL=y
-> +CONFIG_USB_GADGET=y
-> +CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-> +CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-> +CONFIG_USB_GADGET_DWC2_OTG=y
-> +CONFIG_USB_GADGET_DOWNLOAD=y
-> +CONFIG_OF_LIBFDT_OVERLAY=y
-> diff --git a/configs/jethub_j80_defconfig b/configs/jethub_j80_defconfig
-> new file mode 100644
-> index 0000000000..7db05af3b0
-> --- /dev/null
-> +++ b/configs/jethub_j80_defconfig
-> @@ -0,0 +1,63 @@
-> +CONFIG_ARM=y
-> +CONFIG_SYS_BOARD="jethub-j80"
-> +CONFIG_SYS_CONFIG_NAME="jethub"
-> +CONFIG_ARCH_MESON=y
-> +CONFIG_SYS_TEXT_BASE=0x01000000
-> +CONFIG_NR_DRAM_BANKS=1
-> +CONFIG_ENV_SIZE=0x2000
-> +CONFIG_DM_GPIO=y
-> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxl-s905w-jethome-jethub-j80"
-> +CONFIG_MESON_GXL=y
-> +CONFIG_DEBUG_UART_BASE=0xc81004c0
-> +CONFIG_DEBUG_UART_CLOCK=24000000
-> +CONFIG_IDENT_STRING=" jethubj80"
-> +CONFIG_DEBUG_UART=y
-> +CONFIG_OF_BOARD_SETUP=y
-> +CONFIG_CONSOLE_MUX=y
-> +# CONFIG_DISPLAY_CPUINFO is not set
-> +CONFIG_MISC_INIT_R=y
-> +# CONFIG_CMD_BDI is not set
-> +# CONFIG_CMD_IMI is not set
-> +CONFIG_CMD_ADC=y
-> +CONFIG_CMD_GPIO=y
-> +CONFIG_RANDOM_UUID=y
-> +# CONFIG_CMD_LOADS is not set
-> +CONFIG_CMD_MMC=y
-> +CONFIG_CMD_USB=y
-> +CONFIG_CMD_USB_MASS_STORAGE=y
-> +CONFIG_CMD_REGULATOR=y
-> +CONFIG_PARTITION_TYPE_GUID=y
-> +CONFIG_OF_CONTROL=y
-> +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-> +CONFIG_NET_RANDOM_ETHADDR=y
-> +CONFIG_SARADC_MESON=y
-> +CONFIG_MMC_MESON_GX=y
-> +CONFIG_MTD_UBI=y
-> +CONFIG_PHY_MESON_GXL=y
-> +CONFIG_DM_ETH=y
-> +CONFIG_DM_MDIO=y
-> +CONFIG_DM_MDIO_MUX=y
-> +CONFIG_ETH_DESIGNWARE_MESON8B=y
-> +CONFIG_MDIO_MUX_MMIOREG=y
-> +CONFIG_MESON_GXL_USB_PHY=y
-> +CONFIG_PINCTRL=y
-> +CONFIG_PINCTRL_MESON_GXL=y
-> +CONFIG_DM_REGULATOR=y
-> +CONFIG_DM_REGULATOR_FIXED=y
-> +CONFIG_DM_RESET=y
-> +CONFIG_DEBUG_UART_ANNOUNCE=y
-> +CONFIG_DEBUG_UART_SKIP_INIT=y
-> +CONFIG_MESON_SERIAL=y
-> +CONFIG_USB=y
-> +CONFIG_USB_XHCI_HCD=y
-> +CONFIG_USB_XHCI_DWC3=y
-> +CONFIG_USB_DWC2=y
-> +CONFIG_USB_DWC3=y
-> +# CONFIG_USB_DWC3_GADGET is not set
-> +CONFIG_USB_DWC3_MESON_GXL=y
-> +CONFIG_USB_GADGET=y
-> +CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-> +CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-> +CONFIG_USB_GADGET_DWC2_OTG=y
-> +CONFIG_USB_GADGET_DOWNLOAD=y
-> +CONFIG_OF_LIBFDT_OVERLAY=y
+> +    $ export CROSS_COMPILE=aarch64-none-elf-
+> +    $ make jethub_j80_defconfig
+> +    $ make
+> +
+> +Image creation
+> +--------------
+> +
+> +Amlogic doesn't provide sources for the firmware and for tools needed
+> +to create the bootloader image, so it is necessary to obtain binaries
+> +from the git tree published by the board vendor:
+> +
+> +.. code-block:: bash
+> +
+> +    $ git clone https://github.com/jethome-ru/jethub-aml-tools jethub-u-boot
+> +    $ cd jethub-u-boot
+> +    $ export FIPDIR=$PWD
+> +
+> +Go back to mainline U-Boot source tree then :
+> +
+> +.. code-block:: bash
+> +
+> +    $ mkdir fip
+> +
+> +    $ cp $FIPDIR/j80/bl2.bin fip/
+> +    $ cp $FIPDIR/j80/acs.bin fip/
+> +    $ cp $FIPDIR/j80/bl21.bin fip/
+> +    $ cp $FIPDIR/j80/bl30.bin fip/
+> +    $ cp $FIPDIR/j80/bl301.bin fip/
+> +    $ cp $FIPDIR/j80/bl31.img fip/
+> +    $ cp u-boot.bin fip/bl33.bin
+> +
+> +    $ $FIPDIR/blx_fix.sh \
+> +        fip/bl30.bin \
+> +        fip/zero_tmp \
+> +        fip/bl30_zero.bin \
+> +        fip/bl301.bin \
+> +        fip/bl301_zero.bin \
+> +        fip/bl30_new.bin \
+> +        bl30
+> +
+> +    $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
+> +
+> +    $ $FIPDIR/blx_fix.sh \
+> +        fip/bl2_acs.bin \
+> +        fip/zero_tmp \
+> +        fip/bl2_zero.bin \
+> +        fip/bl21.bin \
+> +        fip/bl21_zero.bin \
+> +        fip/bl2_new.bin \
+> +        bl2
+> +
+> +    $ $FIPDIR/j80/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
+> +    $ $FIPDIR/j80/aml_encrypt_gxl --bl3enc --input fip/bl31.img
+> +    $ $FIPDIR/j80/aml_encrypt_gxl --bl3enc --input fip/bl33.bin --compress lz4
+> +    $ $FIPDIR/j80/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
+> +    $ $FIPDIR/j80/aml_encrypt_gxl --bootmk \
+> +                --output fip/u-boot.bin \
+> +                --bl2 fip/bl2.n.bin.sig \
+> +                --bl30 fip/bl30_new.bin.enc \
+> +                --bl31 fip/bl31.img.enc \
+> +                --bl33 fip/bl33.bin.enc
+> +
+> +and then write the image to SD/eMMC with:
+> +
+> +.. code-block:: bash
+> +
+> +    $ DEV=/dev/your_sd_device
+> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
 > 
 
-Thanks,
 Neil
