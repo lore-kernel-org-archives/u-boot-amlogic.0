@@ -1,89 +1,58 @@
 Received: from mx.msync.work (mx.msync.work [95.217.35.189])
- by mx.groups.io with SMTP id smtpd.web11.23184.1633426516090762276
+ by mx.groups.io with SMTP id smtpd.web10.24076.1633432386581933193
  for <u-boot-amlogic@groups.io>;
- Tue, 05 Oct 2021 02:35:20 -0700
+ Tue, 05 Oct 2021 04:13:10 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1633426512; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language;
-	bh=gBwALDp9zxpskHd5LDtLOlt6Xuw5+OgVQ5PjlsbJdp4=;
-	b=ihjEudHX9TcoOJVJ1gZHpn4y+4n+nS6DI9FPj/ulvUnFQ1ndXgyV2pW2M+5U2yG/F4SQhZ
-	518P97L6kzffFnL/iH+iT9C21XgNtbXzIZ6BZ4FjYtgZHUqNTxVfDZtX/WvSvRA1Rv71cp
-	kdqC3KdKTctS19yhpUywkvs85TwVkyj/9IavW8zMY+tGVBy/v82BqogGC00VDxF8shcZB6
-	QIQQfbay/+yc/MfN47lwmIC/uttMDlw2HeKDfhNz51E74/LhXl5JKq0c2zvGN+FHPykqrC
-	W+yi1SM1wGrEO3Anh72hGAvdvG7mUrMV7MgwsEmeaE5A8jw5qi/vIS1N0RHjmw==
+	t=1633432383; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=CJHkHLVw11N9S5vloUNxbykbz528HKiVidVEnWatWWQ=;
+	b=SaNk8e74wL+1VnfC+j4f7Q9dTtpjXu7Wm2dAmp54SROMX+wVQyXevURu2fjMGL8/cOdSv8
+	2ZgmCHZZ5d3I/BKYzRXfSgcEP4pY6e8oDbffv8X3vzuAozavSWHWyXqjPLDKHf3nM4Enbv
+	cvr2VyNRH/ch+pSD8Q6+ffiqQtg7Seb79lVEKYoz79tLMCXNsAFcDaNEqi2+a7JtlKNtQb
+	XaxN4enoIK/XVLHqHlUlObZE1vn5s/rzOGn8L21Dn7a+V0VKRcQE6rDrOHg8LvQu8aRDeU
+	c3rWeU2DAf7FP7VRexSfV9HkwRtBgJ8Q7qS99fqSG6/JpFKIaR2OIHV2qKJU8Q==
 From: "Vyacheslav Bocharov" <adeep@lexina.in>
-Subject: ARM: amlogic: RFC: meson_sm_get_serial secure call update
-Message-ID: <58647dfe-714b-cef4-94a9-8507c59c707d@lexina.in>
-Date: Tue, 5 Oct 2021 12:35:11 +0300
+Subject: [PATCH] ARM: amlogic: add SYS_LOAD_ADDR to JetHub D1/H1 configs
+Date: Tue,  5 Oct 2021 14:12:21 +0300
+Message-Id: <20211005111221.1035730-1-adeep@lexina.in>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi.
+Late fix for 49c8ef0e45a91ec894ef15e7d043dafe8f1c5efd commit by Tom Rini.
 
-I am investigating the source code of uboot from amlogic and found=20
-differences in the function to get the cpu serial. In amlogic-uboot it=20
-looks like this:
+Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
+---
+ configs/jethub_j100_defconfig | 1 +
+ configs/jethub_j80_defconfig  | 1 +
+ 2 files changed, 2 insertions(+)
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 int version =3D *=
-((unsigned int *)sharemem_output_base);
-
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (version =3D=
-=3D 2) {
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 memcpy(buff, (void *)sharemem_output_base + 4, 16);
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 }
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 else {
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 /**
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0* Legacy 12-byte chip ID read out, transform data
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0* to expected order format.
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0*/
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 uint32_t chip_info =3D readl(P_AO_SEC_SD_CFG8);
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 uint8_t *ch;
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 int i;
-
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 ((uint32_t *)buff)[0] =3D
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 ((chip_info & 0xff000000)=C2=A0=C2=A0=C2=A0 |=C2=A0=
-=C2=A0=C2=A0 // Family ID
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 ((chip_info << 8) & 0xff0000) |=C2=A0=C2=A0=C2=A0 //=
- Chip Revision
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 ((chip_info >> 8) & 0xff00)); // Package ID
-
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 ((uint32_t *)buff)[0] =3D htonl(((uint32_t *)buff)[0]);
-
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 /* Transform into expected order for display */
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 ch =3D (uint8_t *)(sharemem_output_base + 4);
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 for (i =3D 0; i < 12; i++)
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 buff[i + 4] =3D ch[11 - i];
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 }
-
-
-Where P_AO_SEC_SD_CFG8 is offset (0x88<<2) of the AOBUS_BASE register.
-
-The current uboot source code uses only the read 12 bytes as cpu serial=20
-ignoring the chipID and the existence of a 16-byte version of the serial=20
-number.
-
-Does it make sense to transfer the code to the uboot project?
-
+diff --git a/configs/jethub_j100_defconfig b/configs/jethub_j100_defconfi=
+g
+index 290ce4db850..25aee5a1471 100644
+--- a/configs/jethub_j100_defconfig
++++ b/configs/jethub_j100_defconfig
+@@ -2,6 +2,7 @@ CONFIG_ARM=3Dy
+ CONFIG_SYS_CONFIG_NAME=3D"jethub"
+ CONFIG_ARCH_MESON=3Dy
+ CONFIG_SYS_TEXT_BASE=3D0x01000000
++CONFIG_SYS_LOAD_ADDR=3D0x01000000
+ CONFIG_NR_DRAM_BANKS=3D1
+ CONFIG_ENV_SIZE=3D0x2000
+ CONFIG_DM_GPIO=3Dy
+diff --git a/configs/jethub_j80_defconfig b/configs/jethub_j80_defconfig
+index 7db05af3b0d..524d4cc9b7b 100644
+--- a/configs/jethub_j80_defconfig
++++ b/configs/jethub_j80_defconfig
+@@ -3,6 +3,7 @@ CONFIG_SYS_BOARD=3D"jethub-j80"
+ CONFIG_SYS_CONFIG_NAME=3D"jethub"
+ CONFIG_ARCH_MESON=3Dy
+ CONFIG_SYS_TEXT_BASE=3D0x01000000
++CONFIG_SYS_LOAD_ADDR=3D0x01000000
+ CONFIG_NR_DRAM_BANKS=3D1
+ CONFIG_ENV_SIZE=3D0x2000
+ CONFIG_DM_GPIO=3Dy
+--=20
+2.30.2
 
