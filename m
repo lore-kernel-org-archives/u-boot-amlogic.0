@@ -1,72 +1,89 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web11.6563.1635842670203804217
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+ by mx.groups.io with SMTP id smtpd.web09.621.1635863841807070875
  for <u-boot-amlogic@groups.io>;
- Tue, 02 Nov 2021 01:44:30 -0700
-Received: by mail-wm1-f41.google.com with SMTP id b184-20020a1c1bc1000000b0033140bf8dd5so1476240wmb.5
-        for <u-boot-amlogic@groups.io>; Tue, 02 Nov 2021 01:44:29 -0700 (PDT)
+ Tue, 02 Nov 2021 07:37:22 -0700
+Received: by mail-qv1-f44.google.com with SMTP id gh1so13395454qvb.8
+        for <u-boot-amlogic@groups.io>; Tue, 02 Nov 2021 07:37:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:subject:reply-to:to:cc:organization:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=vme2zJUL36IdYeIPWvxFGStsSQ94QNc0YWiKJr/6nzE=;
-        b=70xx6JXhAcJKPYxWqRYDgyPrhghFU29fezlssr8XPtvv8+Siw0Hk8TWycloE9X3vOC
-         IfVXcJWNhz7bMLWXArJIOuPG9X1p8KAk2mhGJbzo9LW7W/AZC5QKHVqZFgHkSZe0KjNY
-         RBy2sw4VzAf8Sk7l6T8jhw6hzci6WrMY0DVjyNB+omkTWNTx+7NvFswVMtrsilRWXu/t
-         l++SgYNwF5+DKXqKGBqQ+B7E3lw1uoGYIsmigPjswVemL7jYQfDWZ3/RGb9q9LwDVWR7
-         TEnmEQqhLg1rAK1MIbnnN9D6TPinaR7INMixC0JKG2ShHR+05hWtuMxmxSrv/pFTolOb
-         UJhw==
-Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [PULL u-boot] Please pull u-boot-amlogic-20211102
-Reply-To: narmstrong@baylibre.com
-Message-ID: <cde80735-f811-68f1-1b47-3daf4f597d6e@baylibre.com>
-Date: Tue, 2 Nov 2021 09:44:32 +0100
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UBFR4kvII+Eqgzi8on4MuOckgeYQSPyDxBroi7Y0+oQ=;
+        b=l8HJC6bdp8bIlosnLN4AZozMJTSyKivd3ghgQug+4crzO1ifRDntP37VRKU/+loKeA
+         rkBWd37IgoopQqODTyTb1MT2F07NxtjM4FlKf5z1WgdEXalGGregFvAaOQE1Fwz1EWaT
+         /v1wEwuYMgtifRJ9Prip6cOzan1telPWHPPTg=
+Return-Path: <trini@konsulko.com>
+Date: Tue, 2 Nov 2021 10:37:18 -0400
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20211102
+Message-ID: <20211102143718.GO24579@bill-the-cat>
+References: <cde80735-f811-68f1-1b47-3daf4f597d6e@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
+In-Reply-To: <cde80735-f811-68f1-1b47-3daf4f597d6e@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rEhM+w5krfX9Wpv9"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
 Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Tom,
+--rEhM+w5krfX9Wpv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here's 2 simple changes, one to add commands to read/write fuses and another to add
-proper MAC generation for the JetHub D1 product.
+On Tue, Nov 02, 2021 at 09:44:32AM +0100, Neil Armstrong wrote:
 
-The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/9712
+> Hi Tom,
+>=20
+> Here's 2 simple changes, one to add commands to read/write fuses and anot=
+her to add
+> proper MAC generation for the JetHub D1 product.
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/9712
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit aafc378a6caef453a40f2f9f3d6bef69e592c2=
+8d:
+>=20
+>   Merge https://source.denx.de/u-boot/custodians/u-boot-marvell (2021-10-=
+28 07:57:54 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20211102
+>=20
+> for you to fetch changes up to 4f4f974a46244270c1c6723017711c0aa8250206:
+>=20
+>   ARM: amlogic: add JetHub D1 eth mac generation with manufacturer OUI (2=
+021-10-29 19:16:07 +0200)
+>=20
 
-Thanks,
-Neil
+Applied to u-boot/master, thanks!
 
-The following changes since commit aafc378a6caef453a40f2f9f3d6bef69e592c28d:
+--=20
+Tom
 
-  Merge https://source.denx.de/u-boot/custodians/u-boot-marvell (2021-10-28 07:57:54 -0400)
+--rEhM+w5krfX9Wpv9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-are available in the Git repository at:
+-----BEGIN PGP SIGNATURE-----
 
-  https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20211102
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmGBTRsACgkQFHw5/5Y0
+tyyTEgv/RBc8FuAjiMM3NmrGuaIBxGEnQuAgf0JwgWYK6OVqMnIgzUOdwuUOq87i
+69i6Uqm8R/l0d2f+SqjiXmaay5p6fj2Ea3cAmPvRbjX9qHkiE0QFZnNayjhWj26E
+a3q4YOz/DusOJdikthEMOzoOC8qLNHCKUU26y7W5qyCdqkeJTnwEY+sw0ZnImytg
+p956ns6X8ezVB7rCfBw7QNozp4kVqBYnNRL6wb4RVjn+cRN6ybCe+2yTsV+7VSDp
+MVQPwHb/8YLlu23KCwLF+TR2GBWmPtTg2iinuDTeO2kAc7Ccn1XE7rZr9M+xpnIy
+lkA07D2YjRbhl5rc8ZZJZcQDMq68peRpEdVTAs/odlCNGvYQeKSJomylw4efgFiD
+akxcgmL+nkoUuHgg7yOwv7sk+wISJXaIc/OyN2TX5pVAVQYJ1Tiqev+JWsoHI3+n
+aOaaLjbvgR+TsvIRrCjvo3yFc4yPek6d7fyYRZj93nuHHQtV7IvcPQ5ZJhXSw5bX
+GScrC0BE
+=Sju+
+-----END PGP SIGNATURE-----
 
-for you to fetch changes up to 4f4f974a46244270c1c6723017711c0aa8250206:
-
-  ARM: amlogic: add JetHub D1 eth mac generation with manufacturer OUI (2021-10-29 19:16:07 +0200)
-
-----------------------------------------------------------------
-- add sm efuse write support and cmd for read/write efuse
-- add JetHub D1 eth mac generation with manufacturer OUI
-
-----------------------------------------------------------------
-Vyacheslav Bocharov (2):
-      ARM: amlogic: add sm efuse write support and cmd for read/write efuse
-      ARM: amlogic: add JetHub D1 eth mac generation with manufacturer OUI
-
- arch/arm/mach-meson/sm.c                | 68 ++++++++++++++++++++++++++++++++-
- board/amlogic/jethub-j100/MAINTAINERS   |  8 ++++
- board/amlogic/jethub-j100/Makefile      |  6 +++
- board/amlogic/jethub-j100/jethub-j100.c | 42 ++++++++++++++++++++
- board/amlogic/jethub-j80/MAINTAINERS    |  3 +-
- configs/jethub_j100_defconfig           |  1 +
- 6 files changed, 125 insertions(+), 3 deletions(-)
- create mode 100644 board/amlogic/jethub-j100/MAINTAINERS
- create mode 100644 board/amlogic/jethub-j100/Makefile
- create mode 100644 board/amlogic/jethub-j100/jethub-j100.c
+--rEhM+w5krfX9Wpv9--
