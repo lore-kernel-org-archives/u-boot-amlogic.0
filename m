@@ -1,82 +1,191 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
- by mx.groups.io with SMTP id smtpd.web10.40857.1635750059111745653
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+ by mx.groups.io with SMTP id smtpd.web12.6093.1635837576260692638
  for <u-boot-amlogic@groups.io>;
- Mon, 01 Nov 2021 00:00:59 -0700
-Received: by mail-io1-f52.google.com with SMTP id z144so19224935iof.0
-        for <u-boot-amlogic@groups.io>; Mon, 01 Nov 2021 00:00:59 -0700 (PDT)
+ Tue, 02 Nov 2021 00:19:36 -0700
+Received: by mail-pl1-f182.google.com with SMTP id o14so4504765plg.5
+        for <u-boot-amlogic@groups.io>; Tue, 02 Nov 2021 00:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7aAz7VRs9hMsMltcFn0yQwyLlCiWGQTGyItu97x2qpU=;
-        b=RmOz2EETPNp0wbN+pWLK10w3LpbsafJMSJAfu4DbZIx4NxMFPXAbQxifoP7NPqLa+L
-         ozxbW8sd4UTvFjNQZohuQrvLkAT6gqKow75b+n2BQXahpaay+3GsM4FMvBZVkXKji6s7
-         DivXIP6krHEnvL8lgfnJthbe+GUxfZP/DkrtONJzzaf02Pz1nveFRDJuMKUmM6i+VE8p
-         i1zex1Lzf9vYKEyn87Lad1qIIpzqlAGQ8o6v1CTFIqf44agVrNVP1/eQw93N2kkMhL3+
-         HsbRwPAQr9UCQmVbLyWBh0aUOZUZgFu5HyNScrlV5dPhemZH0rkz3ta/7MrKmCJaHIcO
-         HC0Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y1oLocf3LQA7vYfRA+ROIdh39qncgv9jSckrQmIoaCQ=;
+        b=BFjL7c2SRtaveBKeZpJXaPLvDQaMBdGxypYhnt+UQ5xZz1VBo4fEAr6X9XGQ4ofD+h
+         P5eHBp04+Lvr50xL/8A6ciya0wjAWUaVkWHWgpgL+N8bs/2gCRbLJjfUkiP4YIIwIQ6U
+         FwxnT94mNzF5BoHPewkAkSGMLGIWEyCHtt5XbVbA5YRnnWrTXChIgMV18tkzCoh0Ve1c
+         89feq3VNxWJ8gYIKbwHZ6+YOlAVs5mqzh+oCf4CXW/Eb7tVNFQCrQuEsQqXE9pT3BslT
+         ME2CtjKcxfd3pKJiULgh3RfyNa58L+hLeHTVYVQQU1r6oPaCGqLf7zIDDzrV2cY+9MPT
+         ydkA==
+Return-Path: <email2tema@gmail.com>
+From: Artem Lapkin <email2tema@gmail.com>
+Subject: [PATCH v1] env: setenv add resolve value option
+Date: Tue,  2 Nov 2021 15:19:14 +0800
+Message-Id: <20211102071914.696963-1-art@khadas.com>
 MIME-Version: 1.0
-References: <20211015101501.4091141-1-art@khadas.com> <AN6A0QAgIIdLnqeOIKHW84rw.9.1635724039553.Hmail.art@khadas.com>
-In-Reply-To: <AN6A0QAgIIdLnqeOIKHW84rw.9.1635724039553.Hmail.art@khadas.com>
-From: Art Nikpal <email2tema@gmail.com>
-Date: Mon, 1 Nov 2021 15:00:47 +0800
-Message-ID: <CAKaHn9JQyO06-nKftOmMEXaywLt-7Z8wYimtwFfq26R_mgd62A@mail.gmail.com>
-Subject: Re: [PATCH] image: fix select_ramdisk for raw initrd
-Content-Type: text/plain; charset="UTF-8"
-To: Simon Glass <sjg@chromium.org>
-Cc: Tom Rini <trini@konsulko.com>, Neil Armstrong <narmstrong@baylibre.com>, Tom Warren <TWarren@nvidia.com>, Andre Przywara <andre.przywara@arm.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>, Gouwa Wang <gouwa@khadas.com>
+Content-Transfer-Encoding: 8bit
+To: sjg@chromium.org
+Cc: trini@konsulko.com, marek.behun@nic.cz, narmstrong@baylibre.com, twarren@nvidia.com, andre.przywara@arm.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, art@khadas.com, nick@khadas.com, gouwa@khadas.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Simon, Tom , and ...
+Add possibility setup env variable with additional resolving vars inside
+value.
 
-> Do we need this patch as well as the other one? If so, can you combine them?
-> Also, is it possible to drop the assignment to rd_addr at the top of
-the function?
+Usage examples
 
-this patch must be replaced by another one
-https://patchwork.ozlabs.org/project/uboot/patch/20211016051915.4157293-1-art@khadas.com/
-( last patch will be enough alone)
+=> setenv a hello
+=> setenv b world
+=> setenv c '${a} ${b}'
+=> setenv -r d '${c}! ${a}...'
+=> printenv d
+d=hello world! hello...
 
-On Mon, Nov 1, 2021 at 7:47 AM Simon Glass <sjg@chromium.org> wrote:
->
-> Hi Artem,
->
-> On Fri, 15 Oct 2021 at 04:15, Artem Lapkin <email2tema@gmail.com> wrote:
-> >
-> > Problem
-> >
-> > We have unbootable raw initrd images because, select_ramdisk for raw
-> > initrd images ignore submited select addr and setup rd_datap value to 0
-> >
-> > Solution: setup rd_datap value from select
-> >
-> > Signed-off-by: Artem Lapkin <art@khadas.com>
-> > ---
-> >  common/image-board.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> Do we need this patch as well as the other one? If so, can you combine them?
->
-> Also, is it possible to drop the assignment to rd_addr at the top of
-> the function?
->
-> >
-> > diff --git a/common/image-board.c b/common/image-board.c
-> > index e7660352e9..e3c6ea806a 100644
-> > --- a/common/image-board.c
-> > +++ b/common/image-board.c
-> > @@ -439,7 +439,7 @@ static int select_ramdisk(bootm_headers_t *images, const char *select, u8 arch,
-> >                                 end = strchr(select, ':');
-> >                         if (end) {
-> >                                 *rd_lenp = hextoul(++end, NULL);
-> > -                               *rd_datap = rd_addr;
-> > +                               *rd_datap = hextoul(select, NULL);
-> >                                 processed = true;
-> >                         }
-> >                 }
-> > --
-> > 2.25.1
-> >
->
-> Regards,
-> Simon
+/* internal usage example */
+env_resolve("d", "${c}! ${a}...");
+/* d="hello world! hello..." */
+
+Notes
+
+Resolving works only for ${var} "bracket" and didn't workd for
+"unbracket" $var
+
+=> setenv -r d '$c! $a...'
+=> printenv d
+d=$c! $a...
+
+Signed-off-by: Artem Lapkin <art@khadas.com>
+---
+ cmd/nvedit.c       | 42 +++++++++++++++++++++++++++++++++++++++++-
+ include/_exports.h |  1 +
+ include/env.h      | 11 +++++++++++
+ include/exports.h  |  1 +
+ 4 files changed, 54 insertions(+), 1 deletion(-)
+
+diff --git a/cmd/nvedit.c b/cmd/nvedit.c
+index 3bb6e764c0..6608932dc0 100644
+--- a/cmd/nvedit.c
++++ b/cmd/nvedit.c
+@@ -229,6 +229,7 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
+ 	int   i, len;
+ 	char  *name, *value, *s;
+ 	struct env_entry e, *ep;
++	bool  resolve = 0;
+ 
+ 	debug("Initial value for argc=%d\n", argc);
+ 
+@@ -246,6 +247,9 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
+ 			case 'f':		/* force */
+ 				env_flag |= H_FORCE;
+ 				break;
++			case 'r':		/* resolve */
++				resolve = 1;
++				break;
+ 			default:
+ 				return CMD_RET_USAGE;
+ 			}
+@@ -291,6 +295,26 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
+ 	if (s != value)
+ 		*--s = '\0';
+ 
++	/*
++	 * deep resolve value vars
++	 */
++	if (resolve) {
++		int max_loop = 32;
++		char value2[CONFIG_SYS_CBSIZE];
++
++		do {
++			cli_simple_process_macros(value, value2, CONFIG_SYS_CBSIZE);
++			if (!strcmp(value, value2))
++				break;
++			value = realloc(value, strlen(value2));
++			if (!value) {
++				printf("## Can't realloc %d bytes\n", len);
++				return 1;
++			}
++			strcpy(value, value2);
++		} while (max_loop--);
++	}
++
+ 	e.key	= name;
+ 	e.data	= value;
+ 	hsearch_r(e, ENV_ENTER, &ep, &env_htab, env_flag);
+@@ -304,6 +328,20 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
+ 	return 0;
+ }
+ 
++int env_resolve(const char *varname, const char *varvalue)
++{
++	const char * const argv[5] = { "setenv", "-r", varname, varvalue, NULL };
++
++	/* before import into hashtable */
++	if (!(gd->flags & GD_FLG_ENV_READY))
++		return 1;
++
++	if (!varvalue || varvalue[0] == '\0')
++		return _do_env_set(0, 3, (char * const *)argv, H_PROGRAMMATIC);
++	else
++		return _do_env_set(0, 4, (char * const *)argv, H_PROGRAMMATIC);
++}
++
+ int env_set(const char *varname, const char *varvalue)
+ {
+ 	const char * const argv[4] = { "setenv", varname, varvalue, NULL };
+@@ -1371,7 +1409,9 @@ U_BOOT_CMD_COMPLETE(
+ 	"setenv [-f] name value ...\n"
+ 	"    - [forcibly] set environment variable 'name' to 'value ...'\n"
+ 	"setenv [-f] name\n"
+-	"    - [forcibly] delete environment variable 'name'",
++	"    - [forcibly] delete environment variable 'name'\n"
++	"setenv [-r] name value ...\n"
++	"    - [resolve] resolve 'value ...' to environment variable\n",
+ 	var_complete
+ );
+ 
+diff --git a/include/_exports.h b/include/_exports.h
+index 8030d70c0b..86bc07f051 100644
+--- a/include/_exports.h
++++ b/include/_exports.h
+@@ -32,6 +32,7 @@
+ 	EXPORT_FUNC(do_reset, int, do_reset, struct cmd_tbl *,
+ 		    int , int , char * const [])
+ 	EXPORT_FUNC(env_get, char  *, env_get, const char*)
++	EXPORT_FUNC(env_resolve, int, env_resolve, const char *, const char *)
+ 	EXPORT_FUNC(env_set, int, env_set, const char *, const char *)
+ 	EXPORT_FUNC(simple_strtoul, unsigned long, simple_strtoul,
+ 		    const char *, char **, unsigned int)
+diff --git a/include/env.h b/include/env.h
+index ee5e30d036..c4efc5b7e5 100644
+--- a/include/env.h
++++ b/include/env.h
+@@ -133,6 +133,17 @@ int env_get_f(const char *name, char *buf, unsigned int len);
+  */
+ int env_get_yesno(const char *var);
+ 
++/**
++ * env_resolve() - resolve to environment variable
++ *
++ * Same as env_set but make deep resolve for variable
++ *
++ * @varname: Variable to adjust
++ * @value: Value to resolve for the variable, or NULL or "" to delete the variable
++ * @return 0 if OK, 1 on error
++ */
++int env_resolve(const char *varname, const char *value);
++
+ /**
+  * env_set() - set an environment variable
+  *
+diff --git a/include/exports.h b/include/exports.h
+index 550cafdc7a..a54b997988 100644
+--- a/include/exports.h
++++ b/include/exports.h
+@@ -44,6 +44,7 @@ int vprintf(const char *, va_list);
+ unsigned long simple_strtoul(const char *cp, char **endp, unsigned int base);
+ int strict_strtoul(const char *cp, unsigned int base, unsigned long *res);
+ char *env_get(const char *name);
++int env_resolve(const char *varname, const char *value);
+ int env_set(const char *varname, const char *value);
+ long simple_strtol(const char *cp, char **endp, unsigned int base);
+ int strcmp(const char *cs, const char *ct);
+-- 
+2.25.1
+
