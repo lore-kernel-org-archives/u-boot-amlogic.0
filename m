@@ -1,191 +1,72 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
- by mx.groups.io with SMTP id smtpd.web12.6093.1635837576260692638
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web11.6563.1635842670203804217
  for <u-boot-amlogic@groups.io>;
- Tue, 02 Nov 2021 00:19:36 -0700
-Received: by mail-pl1-f182.google.com with SMTP id o14so4504765plg.5
-        for <u-boot-amlogic@groups.io>; Tue, 02 Nov 2021 00:19:36 -0700 (PDT)
+ Tue, 02 Nov 2021 01:44:30 -0700
+Received: by mail-wm1-f41.google.com with SMTP id b184-20020a1c1bc1000000b0033140bf8dd5so1476240wmb.5
+        for <u-boot-amlogic@groups.io>; Tue, 02 Nov 2021 01:44:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y1oLocf3LQA7vYfRA+ROIdh39qncgv9jSckrQmIoaCQ=;
-        b=BFjL7c2SRtaveBKeZpJXaPLvDQaMBdGxypYhnt+UQ5xZz1VBo4fEAr6X9XGQ4ofD+h
-         P5eHBp04+Lvr50xL/8A6ciya0wjAWUaVkWHWgpgL+N8bs/2gCRbLJjfUkiP4YIIwIQ6U
-         FwxnT94mNzF5BoHPewkAkSGMLGIWEyCHtt5XbVbA5YRnnWrTXChIgMV18tkzCoh0Ve1c
-         89feq3VNxWJ8gYIKbwHZ6+YOlAVs5mqzh+oCf4CXW/Eb7tVNFQCrQuEsQqXE9pT3BslT
-         ME2CtjKcxfd3pKJiULgh3RfyNa58L+hLeHTVYVQQU1r6oPaCGqLf7zIDDzrV2cY+9MPT
-         ydkA==
-Return-Path: <email2tema@gmail.com>
-From: Artem Lapkin <email2tema@gmail.com>
-Subject: [PATCH v1] env: setenv add resolve value option
-Date: Tue,  2 Nov 2021 15:19:14 +0800
-Message-Id: <20211102071914.696963-1-art@khadas.com>
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=from:subject:reply-to:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=vme2zJUL36IdYeIPWvxFGStsSQ94QNc0YWiKJr/6nzE=;
+        b=70xx6JXhAcJKPYxWqRYDgyPrhghFU29fezlssr8XPtvv8+Siw0Hk8TWycloE9X3vOC
+         IfVXcJWNhz7bMLWXArJIOuPG9X1p8KAk2mhGJbzo9LW7W/AZC5QKHVqZFgHkSZe0KjNY
+         RBy2sw4VzAf8Sk7l6T8jhw6hzci6WrMY0DVjyNB+omkTWNTx+7NvFswVMtrsilRWXu/t
+         l++SgYNwF5+DKXqKGBqQ+B7E3lw1uoGYIsmigPjswVemL7jYQfDWZ3/RGb9q9LwDVWR7
+         TEnmEQqhLg1rAK1MIbnnN9D6TPinaR7INMixC0JKG2ShHR+05hWtuMxmxSrv/pFTolOb
+         UJhw==
+Return-Path: <narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20211102
+Reply-To: narmstrong@baylibre.com
+Message-ID: <cde80735-f811-68f1-1b47-3daf4f597d6e@baylibre.com>
+Date: Tue, 2 Nov 2021 09:44:32 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: sjg@chromium.org
-Cc: trini@konsulko.com, marek.behun@nic.cz, narmstrong@baylibre.com, twarren@nvidia.com, andre.przywara@arm.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add possibility setup env variable with additional resolving vars inside
-value.
+Hi Tom,
 
-Usage examples
+Here's 2 simple changes, one to add commands to read/write fuses and another to add
+proper MAC generation for the JetHub D1 product.
 
-=> setenv a hello
-=> setenv b world
-=> setenv c '${a} ${b}'
-=> setenv -r d '${c}! ${a}...'
-=> printenv d
-d=hello world! hello...
+The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/9712
 
-/* internal usage example */
-env_resolve("d", "${c}! ${a}...");
-/* d="hello world! hello..." */
+Thanks,
+Neil
 
-Notes
+The following changes since commit aafc378a6caef453a40f2f9f3d6bef69e592c28d:
 
-Resolving works only for ${var} "bracket" and didn't workd for
-"unbracket" $var
+  Merge https://source.denx.de/u-boot/custodians/u-boot-marvell (2021-10-28 07:57:54 -0400)
 
-=> setenv -r d '$c! $a...'
-=> printenv d
-d=$c! $a...
+are available in the Git repository at:
 
-Signed-off-by: Artem Lapkin <art@khadas.com>
----
- cmd/nvedit.c       | 42 +++++++++++++++++++++++++++++++++++++++++-
- include/_exports.h |  1 +
- include/env.h      | 11 +++++++++++
- include/exports.h  |  1 +
- 4 files changed, 54 insertions(+), 1 deletion(-)
+  https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20211102
 
-diff --git a/cmd/nvedit.c b/cmd/nvedit.c
-index 3bb6e764c0..6608932dc0 100644
---- a/cmd/nvedit.c
-+++ b/cmd/nvedit.c
-@@ -229,6 +229,7 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
- 	int   i, len;
- 	char  *name, *value, *s;
- 	struct env_entry e, *ep;
-+	bool  resolve = 0;
- 
- 	debug("Initial value for argc=%d\n", argc);
- 
-@@ -246,6 +247,9 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
- 			case 'f':		/* force */
- 				env_flag |= H_FORCE;
- 				break;
-+			case 'r':		/* resolve */
-+				resolve = 1;
-+				break;
- 			default:
- 				return CMD_RET_USAGE;
- 			}
-@@ -291,6 +295,26 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
- 	if (s != value)
- 		*--s = '\0';
- 
-+	/*
-+	 * deep resolve value vars
-+	 */
-+	if (resolve) {
-+		int max_loop = 32;
-+		char value2[CONFIG_SYS_CBSIZE];
-+
-+		do {
-+			cli_simple_process_macros(value, value2, CONFIG_SYS_CBSIZE);
-+			if (!strcmp(value, value2))
-+				break;
-+			value = realloc(value, strlen(value2));
-+			if (!value) {
-+				printf("## Can't realloc %d bytes\n", len);
-+				return 1;
-+			}
-+			strcpy(value, value2);
-+		} while (max_loop--);
-+	}
-+
- 	e.key	= name;
- 	e.data	= value;
- 	hsearch_r(e, ENV_ENTER, &ep, &env_htab, env_flag);
-@@ -304,6 +328,20 @@ static int _do_env_set(int flag, int argc, char *const argv[], int env_flag)
- 	return 0;
- }
- 
-+int env_resolve(const char *varname, const char *varvalue)
-+{
-+	const char * const argv[5] = { "setenv", "-r", varname, varvalue, NULL };
-+
-+	/* before import into hashtable */
-+	if (!(gd->flags & GD_FLG_ENV_READY))
-+		return 1;
-+
-+	if (!varvalue || varvalue[0] == '\0')
-+		return _do_env_set(0, 3, (char * const *)argv, H_PROGRAMMATIC);
-+	else
-+		return _do_env_set(0, 4, (char * const *)argv, H_PROGRAMMATIC);
-+}
-+
- int env_set(const char *varname, const char *varvalue)
- {
- 	const char * const argv[4] = { "setenv", varname, varvalue, NULL };
-@@ -1371,7 +1409,9 @@ U_BOOT_CMD_COMPLETE(
- 	"setenv [-f] name value ...\n"
- 	"    - [forcibly] set environment variable 'name' to 'value ...'\n"
- 	"setenv [-f] name\n"
--	"    - [forcibly] delete environment variable 'name'",
-+	"    - [forcibly] delete environment variable 'name'\n"
-+	"setenv [-r] name value ...\n"
-+	"    - [resolve] resolve 'value ...' to environment variable\n",
- 	var_complete
- );
- 
-diff --git a/include/_exports.h b/include/_exports.h
-index 8030d70c0b..86bc07f051 100644
---- a/include/_exports.h
-+++ b/include/_exports.h
-@@ -32,6 +32,7 @@
- 	EXPORT_FUNC(do_reset, int, do_reset, struct cmd_tbl *,
- 		    int , int , char * const [])
- 	EXPORT_FUNC(env_get, char  *, env_get, const char*)
-+	EXPORT_FUNC(env_resolve, int, env_resolve, const char *, const char *)
- 	EXPORT_FUNC(env_set, int, env_set, const char *, const char *)
- 	EXPORT_FUNC(simple_strtoul, unsigned long, simple_strtoul,
- 		    const char *, char **, unsigned int)
-diff --git a/include/env.h b/include/env.h
-index ee5e30d036..c4efc5b7e5 100644
---- a/include/env.h
-+++ b/include/env.h
-@@ -133,6 +133,17 @@ int env_get_f(const char *name, char *buf, unsigned int len);
-  */
- int env_get_yesno(const char *var);
- 
-+/**
-+ * env_resolve() - resolve to environment variable
-+ *
-+ * Same as env_set but make deep resolve for variable
-+ *
-+ * @varname: Variable to adjust
-+ * @value: Value to resolve for the variable, or NULL or "" to delete the variable
-+ * @return 0 if OK, 1 on error
-+ */
-+int env_resolve(const char *varname, const char *value);
-+
- /**
-  * env_set() - set an environment variable
-  *
-diff --git a/include/exports.h b/include/exports.h
-index 550cafdc7a..a54b997988 100644
---- a/include/exports.h
-+++ b/include/exports.h
-@@ -44,6 +44,7 @@ int vprintf(const char *, va_list);
- unsigned long simple_strtoul(const char *cp, char **endp, unsigned int base);
- int strict_strtoul(const char *cp, unsigned int base, unsigned long *res);
- char *env_get(const char *name);
-+int env_resolve(const char *varname, const char *value);
- int env_set(const char *varname, const char *value);
- long simple_strtol(const char *cp, char **endp, unsigned int base);
- int strcmp(const char *cs, const char *ct);
--- 
-2.25.1
+for you to fetch changes up to 4f4f974a46244270c1c6723017711c0aa8250206:
 
+  ARM: amlogic: add JetHub D1 eth mac generation with manufacturer OUI (2021-10-29 19:16:07 +0200)
+
+----------------------------------------------------------------
+- add sm efuse write support and cmd for read/write efuse
+- add JetHub D1 eth mac generation with manufacturer OUI
+
+----------------------------------------------------------------
+Vyacheslav Bocharov (2):
+      ARM: amlogic: add sm efuse write support and cmd for read/write efuse
+      ARM: amlogic: add JetHub D1 eth mac generation with manufacturer OUI
+
+ arch/arm/mach-meson/sm.c                | 68 ++++++++++++++++++++++++++++++++-
+ board/amlogic/jethub-j100/MAINTAINERS   |  8 ++++
+ board/amlogic/jethub-j100/Makefile      |  6 +++
+ board/amlogic/jethub-j100/jethub-j100.c | 42 ++++++++++++++++++++
+ board/amlogic/jethub-j80/MAINTAINERS    |  3 +-
+ configs/jethub_j100_defconfig           |  1 +
+ 6 files changed, 125 insertions(+), 3 deletions(-)
+ create mode 100644 board/amlogic/jethub-j100/MAINTAINERS
+ create mode 100644 board/amlogic/jethub-j100/Makefile
+ create mode 100644 board/amlogic/jethub-j100/jethub-j100.c
