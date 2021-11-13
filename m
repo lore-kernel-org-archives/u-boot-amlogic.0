@@ -1,67 +1,87 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web08.48.1636818587061829506
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+ by mx.groups.io with SMTP id smtpd.web12.1429.1636768838941563780
  for <u-boot-amlogic@groups.io>;
- Sat, 13 Nov 2021 07:49:47 -0800
-Received: by mail-qk1-f172.google.com with SMTP id a11so5521522qkh.13
-        for <u-boot-amlogic@groups.io>; Sat, 13 Nov 2021 07:49:46 -0800 (PST)
+ Fri, 12 Nov 2021 18:00:39 -0800
+Received: by mail-oi1-f173.google.com with SMTP id s139so21198420oie.13
+        for <u-boot-amlogic@groups.io>; Fri, 12 Nov 2021 18:00:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VJx0ZrQ4+sm0mtTVQHimbLZR5oNJ/xE1gGYDKcnHjD8=;
-        b=VCNbdfXwzDkWtsgq8nWkzu5tXMHJvq4ClyAkQQL+VtFwM9RjByD7A0TAhi8b5Pg8sF
-         NMue2avegfo6kawnSLUuug+vp4fjh342kjSnN2aciR8qZH2+yrnhlnoFSR7/14J1KgXo
-         cjdlAc/O+5sGuBhXFgIpOh33TPo3f09xLkWhc=
-Return-Path: <trini@konsulko.com>
-Date: Sat, 13 Nov 2021 10:49:43 -0500
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PATCH v2] pinctrl: meson: Correct the driver GPIO declaration
-Message-ID: <20211113154943.GX24579@bill-the-cat>
-References: <20211113140716.371496-1-sjg@chromium.org>
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Un0gU8iwDhsASPn5KiXy5QabZ1lejvMeToi4Dj9wqKM=;
+        b=H4AtQeoX+/hpUpHhoyWI7zFCpIla91P+2dzUy4pdxUAQJalYoi/2wBWLjqHx6yfsMp
+         bUXLYTADLsTJPiJAzlgcft395BiKuvAJzkhR0oEJIEODoOp7uV8lHPLp6EOmoFHTLcFD
+         wlEwBYWOWWC4GmHaT9FzqAzUK/CcuevxLVtc0=
+Return-Path: <sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH] pinctrl: meson: Correct the driver GPIO declaration
+Date: Fri, 12 Nov 2021 19:00:34 -0700
+Message-Id: <20211113020034.263468-1-sjg@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20211113140716.371496-1-sjg@chromium.org>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="34iIHvrQgZwTUPuz"
-Content-Disposition: inline
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
---34iIHvrQgZwTUPuz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This should use the provided U_BOOT_DRIVER() macro so that the driver gets
+added to the appropriate linker list. Fix it.
 
-On Sat, Nov 13, 2021 at 07:07:15AM -0700, Simon Glass wrote:
+Signed-off-by: Simon Glass <sjg@chromium.org>
+Fixes: 7c9dcfed50f ("pinctrl: meson: rework gx pmx function")
+---
 
-> This should use the provided U_BOOT_DRIVER() macro so that the driver gets
-> added to the appropriate linker list. Fix it.
->=20
-> Signed-off-by: Simon Glass <sjg@chromium.org>
-> Fixes: 7c9dcfed50f ("pinctrl: meson: rework gx pmx function")
+ drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c | 2 +-
+ drivers/pinctrl/meson/pinctrl-meson-gx.h     | 2 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c   | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Reported-by: Tom Rini <trini@konsulko.com>
-Tested-by: Tom Rini <trini@konsulko.com> on libretech-cc
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c b/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
+index 159f3406a20..99502d89c6c 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
+@@ -145,7 +145,7 @@ static const struct dm_gpio_ops meson_gx_gpio_ops = {
+ 	.direction_output = meson_gpio_direction_output,
+ };
+ 
+-const struct driver meson_gx_gpio_driver = {
++U_BOOT_DRIVER(meson_gx_gpio_driver) = {
+ 	.name	= "meson-gx-gpio",
+ 	.id	= UCLASS_GPIO,
+ 	.probe	= meson_gpio_probe,
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gx.h b/drivers/pinctrl/meson/pinctrl-meson-gx.h
+index 4c1aa1a3002..c70c1f51c6d 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gx.h
++++ b/drivers/pinctrl/meson/pinctrl-meson-gx.h
+@@ -43,6 +43,6 @@ struct meson_gx_pmx_data {
+ 	}
+ 
+ extern const struct pinctrl_ops meson_gx_pinctrl_ops;
+-extern const struct driver meson_gx_gpio_driver;
++extern U_BOOT_DRIVER(meson_gx_gpio_driver);
+ 
+ #endif /* __PINCTRL_MESON_GX_H__ */
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+index 8c01c739068..93a895c9fa7 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+@@ -439,7 +439,7 @@ struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
+ 	.num_groups	= ARRAY_SIZE(meson_gxbb_periphs_groups),
+ 	.num_funcs	= ARRAY_SIZE(meson_gxbb_periphs_functions),
+ 	.num_banks	= ARRAY_SIZE(meson_gxbb_periphs_banks),
+-	.gpio_driver	= &meson_gx_gpio_driver,
++	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
+ };
+ 
+ struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data = {
+@@ -452,7 +452,7 @@ struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data = {
+ 	.num_groups	= ARRAY_SIZE(meson_gxbb_aobus_groups),
+ 	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
+ 	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
+-	.gpio_driver	= &meson_gx_gpio_driver,
++	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
+ };
+ 
+ static const struct udevice_id meson_gxbb_pinctrl_match[] = {
+-- 
+2.34.0.rc1.387.gb447b232ab-goog
 
---=20
-Tom
-
---34iIHvrQgZwTUPuz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmGP3pQACgkQFHw5/5Y0
-tyxgCgv8DR1Dl6pjWb7cqCM5jo68jRsM/LGlfTtwQj9Ar/DEV+wOmu2NskG95mCh
-Kjj/tlNqOS8GP18iru/h+vAr6KkhgFE3Ca2ilpE3MFzRhAVYsNEACYjCjOD9sSb+
-P4n8YOYTiQSjmgRr5iQFXoM27XtKt7Ji9M29DQWlxTVN9rPYWPs6+P0f6heSey8R
-uzPkI5FGAXEYHsevsJl075f3Zgpgt7F1v5l9/0kKdRgjSlysyUyyJqqnIMrPcvn9
-jscdV8Sd95/313DbsTR+HMQLkBCRL7soq06IBDZZlr9mJnN4gNXpiAxkPKkqAfQK
-tO5374iTM73uJ5BHSf0xm7vaa1h4rG6O8qiRa4aRG//N2HnJIg6c2tWwhXKAe47b
-EiVfwrWmKiR7Q3yIayq5GOEE2F1l/0nlh/RVtrLKsKDMmymHf9sC9u/v5pXKWe2F
-tVgHI6+76X+jlTtYUyS0R4DXBi6QmzyMcbs+RJErpHyeBzQEtwnmY9CwI8UJW8sk
-5+ZWvzSx
-=wCu2
------END PGP SIGNATURE-----
-
---34iIHvrQgZwTUPuz--
