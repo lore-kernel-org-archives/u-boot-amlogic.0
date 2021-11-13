@@ -1,129 +1,113 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
- by mx.groups.io with SMTP id smtpd.web10.6399.1637312800702703833
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+ by mx.groups.io with SMTP id smtpd.web11.6257.1636812444513481778
  for <u-boot-amlogic@groups.io>;
- Fri, 19 Nov 2021 01:06:40 -0800
-Received: by mail-io1-f50.google.com with SMTP id p23so11911755iod.7
-        for <u-boot-amlogic@groups.io>; Fri, 19 Nov 2021 01:06:40 -0800 (PST)
+ Sat, 13 Nov 2021 06:07:24 -0800
+Received: by mail-oi1-f180.google.com with SMTP id bf8so23914376oib.6
+        for <u-boot-amlogic@groups.io>; Sat, 13 Nov 2021 06:07:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2cUav5o24drH1NrhOZ83vEwS1F7GxL11UxnzeA/m3ZU=;
-        b=HB9Wq+pxsRagR2dC0fGUjo3OtyIGjbbg/+laeWTTSD+s92e8GF89bVl1X/MtOQQh2G
-         6SiPIxE/LQpNfRsrI3eb528X/11lMdeD6p+7aZ0NHxT54ipYf0ogBIv5WlQ9+FqlMKHx
-         d+Sb8y/bl86qnomRb+psPCuT1EJoi9DpKhgSUof9eqXcwqMCRijKySV8Up3pkTTE47eK
-         aGiVJ7R7Qgu1WKXAo454U0M3o6U+i0lOij3YkAcBgmAE1vR7os2bLuetiinOvYVGGe1u
-         IAetquyDUlK62v9Vqf764wnQQU6yy5YAiyX/r0I97p0Yac6o/UO5wue/IrIgJh06oiSV
-         VeXw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uRqehDfL1pX1AzgZ3QYTaQ7y/fWBA0IKO8+kDxZmUoQ=;
+        b=Dx1BMWSUB9xJCFW4tf/b+XxGgtkRFp39XehqRzCbXbT6aHFEpMcBE4YFjGZCeTDAe6
+         CjVG+0CqOf5hs20PaO1ysqY7w0U7vC8mYUI3ZG4h9DdNz00L0eJHsogPrJcA/BevJuUk
+         ID96RUkOBgMw++j7OazwuNoFH3FhaaiOSt3pg=
+Return-Path: <sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v2] pinctrl: meson: Correct the driver GPIO declaration
+Date: Sat, 13 Nov 2021 07:07:15 -0700
+Message-Id: <20211113140716.371496-1-sjg@chromium.org>
 MIME-Version: 1.0
-References: <20211119043647.1251416-1-art@khadas.com> <2004466.1637308134@gemini.denx.de>
-In-Reply-To: <2004466.1637308134@gemini.denx.de>
-From: Art Nikpal <email2tema@gmail.com>
-Date: Fri, 19 Nov 2021 17:06:28 +0800
-Message-ID: <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] env: setenv add resolve value option
-Content-Type: text/plain; charset="UTF-8"
-To: Wolfgang Denk <wd@denx.de>
-Cc: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, marek.behun@nic.cz, Neil Armstrong <narmstrong@baylibre.com>, Tom Warren <twarren@nvidia.com>, Andre Przywara <andre.przywara@arm.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Christian Hewitt <christianshewitt@gmail.com>, Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>, Gouwa Wang <gouwa@khadas.com>, Francis Laniel <francis.laniel@amarulasolutions.com>
+Content-Transfer-Encoding: 8bit
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-hi Wolfgang
-tnx for your comments
+This should use the provided U_BOOT_DRIVER() macro so that the driver gets
+added to the appropriate linker list. Fix it.
 
-On Fri, Nov 19, 2021 at 3:49 PM Wolfgang Denk <wd@denx.de> wrote:
->
-> Dear Artem,
->
-> In message <20211119043647.1251416-1-art@khadas.com> you wrote:
-> > Add possibility setup env variable with additional resolving vars inside
-> > value.
->
-> Hm... if you want to evaluate variables, you should not prevent the
-> shell to do that by enclosing them in apostrophes?
->
+Signed-off-by: Simon Glass <sjg@chromium.org>
+Fixes: 7c9dcfed50f ("pinctrl: meson: rework gx pmx function")
+---
 
-next examples just demonstrate how its works for already defined env
-variables which contain other variables (like storred env variables)
+Changes in v2:
+- Fix the gxl driver also
 
-> > Usage examples:
-> >
-> > => setenv a hello; setenv b world; setenv c '${a} ${b}'
-> > => setenv -r d '${c}! ${a}...'
-> > => printenv d
-> > d=hello world! hello...
->
-> Without any new code added:
->
+ drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c | 2 +-
+ drivers/pinctrl/meson/pinctrl-meson-gx.h     | 2 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c   | 4 ++--
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c    | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-sure I know about this ! see my prev message please .
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c b/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
+index 159f3406a20..99502d89c6c 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
+@@ -145,7 +145,7 @@ static const struct dm_gpio_ops meson_gx_gpio_ops = {
+ 	.direction_output = meson_gpio_direction_output,
+ };
+ 
+-const struct driver meson_gx_gpio_driver = {
++U_BOOT_DRIVER(meson_gx_gpio_driver) = {
+ 	.name	= "meson-gx-gpio",
+ 	.id	= UCLASS_GPIO,
+ 	.probe	= meson_gpio_probe,
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gx.h b/drivers/pinctrl/meson/pinctrl-meson-gx.h
+index 4c1aa1a3002..c70c1f51c6d 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gx.h
++++ b/drivers/pinctrl/meson/pinctrl-meson-gx.h
+@@ -43,6 +43,6 @@ struct meson_gx_pmx_data {
+ 	}
+ 
+ extern const struct pinctrl_ops meson_gx_pinctrl_ops;
+-extern const struct driver meson_gx_gpio_driver;
++extern U_BOOT_DRIVER(meson_gx_gpio_driver);
+ 
+ #endif /* __PINCTRL_MESON_GX_H__ */
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+index 8c01c739068..93a895c9fa7 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+@@ -439,7 +439,7 @@ struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
+ 	.num_groups	= ARRAY_SIZE(meson_gxbb_periphs_groups),
+ 	.num_funcs	= ARRAY_SIZE(meson_gxbb_periphs_functions),
+ 	.num_banks	= ARRAY_SIZE(meson_gxbb_periphs_banks),
+-	.gpio_driver	= &meson_gx_gpio_driver,
++	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
+ };
+ 
+ struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data = {
+@@ -452,7 +452,7 @@ struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data = {
+ 	.num_groups	= ARRAY_SIZE(meson_gxbb_aobus_groups),
+ 	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
+ 	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
+-	.gpio_driver	= &meson_gx_gpio_driver,
++	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
+ };
+ 
+ static const struct udevice_id meson_gxbb_pinctrl_match[] = {
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+index 51a0b4c5cad..a44145e2d4e 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -701,7 +701,7 @@ struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data = {
+ 	.num_groups	= ARRAY_SIZE(meson_gxl_periphs_groups),
+ 	.num_funcs	= ARRAY_SIZE(meson_gxl_periphs_functions),
+ 	.num_banks	= ARRAY_SIZE(meson_gxl_periphs_banks),
+-	.gpio_driver	= &meson_gx_gpio_driver,
++	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
+ };
+ 
+ struct meson_pinctrl_data meson_gxl_aobus_pinctrl_data = {
+@@ -714,7 +714,7 @@ struct meson_pinctrl_data meson_gxl_aobus_pinctrl_data = {
+ 	.num_groups	= ARRAY_SIZE(meson_gxl_aobus_groups),
+ 	.num_funcs	= ARRAY_SIZE(meson_gxl_aobus_functions),
+ 	.num_banks	= ARRAY_SIZE(meson_gxl_aobus_banks),
+-	.gpio_driver	= &meson_gx_gpio_driver,
++	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
+ };
+ 
+ static const struct udevice_id meson_gxl_pinctrl_match[] = {
+-- 
+2.34.0.rc1.387.gb447b232ab-goog
 
-> => setenv a hello; setenv b world; setenv c ${a} ${b}
-> => setenv d ${c}! ${a}...
-> => printenv d
-> d=hello world! hello...
->
->
-> I know very well that this does not cover all use cases you might
-
-Why not have this new opportunity ?
-
-> have in mind, as you speak of "deep resolve". But then, I'm first
-> missing an explanation (and documentation) of what "deep resolve"
-
-recurrent  resolving for variables
-
-> actually means in this context, i. e. how many levels down you
-> evaluat.   Oh...  the code has "int max_loop = 32;" - this is a
-
-i think its will be enough
-
-> limitation mentioned nowhere.  And are you really sure this is a
-> clever idea?  I am not convinced.  If we do something like this, we
-> should not invent a new non-standard way.  We should implement
-
-I believe it's a good idea ;-)
-
-> standard shell behaviour instead (i. e. for example something like
-> the eval command).
-
-1) this option did not broke any exist compatibilities
-2) there we talk not only about uboot shell, same time will be useful
-to have env_resolve for internal c usage, because env_set dont have
-this feature
-
->
-> > Artem Lapkin (2):
-> >   env: setenv add resolve value option
-> >   test: env: deep resolve value testing
->
-> This is one more of the patches that actually try to fix existing
-> problems with our ancient verion of the hush shell.  As far as I
-> understand, Francis (added to Cc:) has started working on an update
-> of hush to a current version.  We should rather help him with that
-> instead of implementing non-standard workarounds.
-
-yes i'm informed  about this plans  (and think its happens  not  so
-soon - but i provide some simple elegant solution already)
-but again we dont have env_resolve for internal c usage which must be
-very useful
-
-for example: pxe_utils.c: and some other places
-env_set("bootargs", finalbootargs);
-can be replaced by env_resolve("bootargs", ..... )
-will be easy get useful features via simple solution ( deep resolve
-all vars by one line )
-
->
-> Best regards,
->
-
-Big tnx again ! and waiting any other ideas about this
-
-> Wolfgang Denk
->
-> --
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-> When choosing between two evils, I always like to take the  one  I've
-> never tried before.                     -- Mae West, "Klondike Annie"
