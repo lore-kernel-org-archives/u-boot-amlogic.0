@@ -1,87 +1,76 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
- by mx.groups.io with SMTP id smtpd.web12.1429.1636768838941563780
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+ by mx.groups.io with SMTP id smtpd.web09.2256.1636776517655697924
  for <u-boot-amlogic@groups.io>;
- Fri, 12 Nov 2021 18:00:39 -0800
-Received: by mail-oi1-f173.google.com with SMTP id s139so21198420oie.13
-        for <u-boot-amlogic@groups.io>; Fri, 12 Nov 2021 18:00:38 -0800 (PST)
+ Fri, 12 Nov 2021 20:08:37 -0800
+Received: by mail-qt1-f174.google.com with SMTP id j17so10435479qtx.2
+        for <u-boot-amlogic@groups.io>; Fri, 12 Nov 2021 20:08:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Un0gU8iwDhsASPn5KiXy5QabZ1lejvMeToi4Dj9wqKM=;
-        b=H4AtQeoX+/hpUpHhoyWI7zFCpIla91P+2dzUy4pdxUAQJalYoi/2wBWLjqHx6yfsMp
-         bUXLYTADLsTJPiJAzlgcft395BiKuvAJzkhR0oEJIEODoOp7uV8lHPLp6EOmoFHTLcFD
-         wlEwBYWOWWC4GmHaT9FzqAzUK/CcuevxLVtc0=
-Return-Path: <sjg@chromium.org>
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH] pinctrl: meson: Correct the driver GPIO declaration
-Date: Fri, 12 Nov 2021 19:00:34 -0700
-Message-Id: <20211113020034.263468-1-sjg@chromium.org>
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Nm49UL9xp9NOlqnPQl9VxiuhBmVOo3RIaC59+SEub2k=;
+        b=NFmO6cGNpDm7yYvaTKz34ivy+zRHWmzngTApV+LPsUYvvYQEsc+Fjh4S1d66Jmh9mn
+         +ARfDvoGJI0cRv+Vqj3Sl0IO5hzViBTNc43xVGZKjtfRsTrTFB3hqiIDwZthqDNSImlO
+         SXtBn4VBaqpN4gKAJ2FXW+IXuLDvck2m8VBdQ=
+Return-Path: <trini@konsulko.com>
+Date: Fri, 12 Nov 2021 23:08:34 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PATCH] pinctrl: meson: Correct the driver GPIO declaration
+Message-ID: <20211113040834.GV24579@bill-the-cat>
+References: <20211113020034.263468-1-sjg@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
+In-Reply-To: <20211113020034.263468-1-sjg@chromium.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t3KuK5VE1Y0LRBuV"
+Content-Disposition: inline
+To: Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-This should use the provided U_BOOT_DRIVER() macro so that the driver gets
-added to the appropriate linker list. Fix it.
+--t3KuK5VE1Y0LRBuV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
-Fixes: 7c9dcfed50f ("pinctrl: meson: rework gx pmx function")
----
+On Fri, Nov 12, 2021 at 07:00:34PM -0700, Simon Glass wrote:
 
- drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c | 2 +-
- drivers/pinctrl/meson/pinctrl-meson-gx.h     | 2 +-
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c   | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+> This should use the provided U_BOOT_DRIVER() macro so that the driver gets
+> added to the appropriate linker list. Fix it.
+>=20
+> Signed-off-by: Simon Glass <sjg@chromium.org>
+> Fixes: 7c9dcfed50f ("pinctrl: meson: rework gx pmx function")
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c b/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
-index 159f3406a20..99502d89c6c 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gx-pmx.c
-@@ -145,7 +145,7 @@ static const struct dm_gpio_ops meson_gx_gpio_ops = {
- 	.direction_output = meson_gpio_direction_output,
- };
- 
--const struct driver meson_gx_gpio_driver = {
-+U_BOOT_DRIVER(meson_gx_gpio_driver) = {
- 	.name	= "meson-gx-gpio",
- 	.id	= UCLASS_GPIO,
- 	.probe	= meson_gpio_probe,
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gx.h b/drivers/pinctrl/meson/pinctrl-meson-gx.h
-index 4c1aa1a3002..c70c1f51c6d 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gx.h
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gx.h
-@@ -43,6 +43,6 @@ struct meson_gx_pmx_data {
- 	}
- 
- extern const struct pinctrl_ops meson_gx_pinctrl_ops;
--extern const struct driver meson_gx_gpio_driver;
-+extern U_BOOT_DRIVER(meson_gx_gpio_driver);
- 
- #endif /* __PINCTRL_MESON_GX_H__ */
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 8c01c739068..93a895c9fa7 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -439,7 +439,7 @@ struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
- 	.num_groups	= ARRAY_SIZE(meson_gxbb_periphs_groups),
- 	.num_funcs	= ARRAY_SIZE(meson_gxbb_periphs_functions),
- 	.num_banks	= ARRAY_SIZE(meson_gxbb_periphs_banks),
--	.gpio_driver	= &meson_gx_gpio_driver,
-+	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
- };
- 
- struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data = {
-@@ -452,7 +452,7 @@ struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data = {
- 	.num_groups	= ARRAY_SIZE(meson_gxbb_aobus_groups),
- 	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
- 	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
--	.gpio_driver	= &meson_gx_gpio_driver,
-+	.gpio_driver	= DM_DRIVER_REF(meson_gx_gpio_driver),
- };
- 
- static const struct udevice_id meson_gxbb_pinctrl_match[] = {
--- 
-2.34.0.rc1.387.gb447b232ab-goog
+Doesn't build for me:
+/home/trini/work/u-boot/u-boot/drivers/pinctrl/meson/pinctrl-meson-gxl.c:70=
+4:28:
+error: 'meson_
+gx_gpio_driver' undeclared here (not in a function); did you mean
+'meson_gpio_probe'?
+  704 |         .gpio_driver    =3D &meson_gx_gpio_driver,
+        |                            ^~~~~~~~~~~~~~~~~~~~
+	      |                            meson_gpio_probe
 
+For libretech-cc
+
+--=20
+Tom
+
+--t3KuK5VE1Y0LRBuV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmGPOjsACgkQFHw5/5Y0
+tyxnKwv+NXP5J5Y80LiuN5Y+fLadnTe6jdCDb8IyOV8TiJ4YYyTispoGXmZ+KJ2R
+hJfdmjRZlleT0Xqb0UoJEirMPY9J2Zt/c7eYxPZnLE0P0XtsM9mJvANkd6fDMBeI
+mOvAe86qXPUPanZpGkwpAuhBMK0MXT6hHVmmvTHUlGz9BTkc5l3AwXhrunPj9pyk
+AL2VRAQXtiHOLmRoa57M1SSurLpDh5OfvQK25r51AvKBJPRTJACSeLo1iwymqy34
+c9EhAASEFOLDv/n8ob160pthk8etSMXMV8HxUS+hbdDqweTslH0Ff4LH3SR2S6Fh
+omkIeUdg4U2V9vJo8ugwIb7sXPWrTssqR/ksXrraT6HAAAvOH/k7G9dVpVDR1MsU
+GiIx3PXRIhQzgsAHU4/k/OAx0KQsdE51v1CLY1nxA0+AxgRXXDRndYM62UmHWqlx
+fTrKBLekdCGl8Ny77HJPdjuzAVvceUIVaE9/RL1RJHv5aU+4/5qz9doA/kwO7TXA
+sR2xlFk4
+=d6rk
+-----END PGP SIGNATURE-----
+
+--t3KuK5VE1Y0LRBuV--
