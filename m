@@ -1,83 +1,54 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
- by mx.groups.io with SMTP id smtpd.web10.4562.1635925304401414339
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.19898.1636967626625899898
  for <u-boot-amlogic@groups.io>;
- Wed, 03 Nov 2021 00:41:44 -0700
-Received: by mail-il1-f176.google.com with SMTP id i9so1628095ilu.8
-        for <u-boot-amlogic@groups.io>; Wed, 03 Nov 2021 00:41:44 -0700 (PDT)
+ Mon, 15 Nov 2021 01:13:47 -0800
+Received: by mail-wr1-f43.google.com with SMTP id a9so3014284wrr.8
+        for <u-boot-amlogic@groups.io>; Mon, 15 Nov 2021 01:13:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SEKefpCihTmG8BzY1mCdS5xpg/kClNms6rjOSyCKgAY=;
-        b=IBjTDQDyvU8wOgsQeAnbYPbdbJF05IjL1TTBSgCzoHniBAEXmjLVnHNc9cmQYjWspT
-         gTf4YUxmshKYBn6zxMZ9wlbuhYBwMSgKmS93NmvMfPjFIdoIlGmTpZXeDOq2TgMuGc+n
-         87PPf1p0WLQyDkQiJreJ2HXWjmNYZT0xOtjmvoPHRsl/6IG8RdFnGJ8EYvEOs7DwUST4
-         DnAPG/1OQEAoXcU6tAo1RMZlhcYQYDyoXNauJ0xPwxBH7OpuVlIeOIZVi4zIRdzkT1Bw
-         gAAXprwYXvZiimzVHEyebRuDMReSyuwNNcEyQV+ZsgZoNiVuPHZC+ZxBHlDqIsohSpDj
-         ab+w==
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eLFG6ZVDLYrsZCb9R8/7Q1neY+/cmUtU8QQO/xsjmdM=;
+        b=3TyAmncRhi8ngHrkA5um3YcwSbtPLDKq3H8LI+VZs9F9j6PtYQ3rLKbJ3SSHMqDJAp
+         cW331z/bV/VhBvp1g8gbZOfwYJr0ZE216y/UpebI4xngNXwuPiRtKDynoP20JZoVxtks
+         kdhnY/BDVvxTGSgIEbCUpKPWKUlwS7bWBYrchiwe11SxyfFc5fz6/BNvN98ioOeLCJJ0
+         i8vpEqHZuiN2m1EtThr/3/uTnQvDhoe+aR5tiT5/8rw2k394EE992V7vkcwpXu12Pm9q
+         A5+6CrgUom0Y6D9UPU2jPqDXv8rUQlLQG6HFRgkHvj3eBpv8Pbfl50bVHKoMWjGGrIqB
+         a04Q==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2] pinctrl: meson: Correct the driver GPIO declaration
+References: <20211113140716.371496-1-sjg@chromium.org>
+ <20211113154943.GX24579@bill-the-cat>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <1e3c853a-9b95-89f2-aed2-78512f6eddd6@baylibre.com>
+Date: Mon, 15 Nov 2021 10:13:43 +0100
 MIME-Version: 1.0
-References: <20211102071914.696963-1-art@khadas.com> <20211102164454.GQ24579@bill-the-cat>
-In-Reply-To: <20211102164454.GQ24579@bill-the-cat>
-From: Art Nikpal <email2tema@gmail.com>
-Date: Wed, 3 Nov 2021 15:41:32 +0800
-Message-ID: <CAKaHn9LVEoiJDtCVdyHzYoi-0yQsFnJ5+jXVw-YYXznTsjdKMw@mail.gmail.com>
-Subject: Re: [PATCH v1] env: setenv add resolve value option
-Content-Type: text/plain; charset="UTF-8"
-To: Tom Rini <trini@konsulko.com>
-Cc: Simon Glass <sjg@chromium.org>, marek.behun@nic.cz, Neil Armstrong <narmstrong@baylibre.com>, Tom Warren <twarren@nvidia.com>, Andre Przywara <andre.przywara@arm.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>, Gouwa Wang <gouwa@khadas.com>
+In-Reply-To: <20211113154943.GX24579@bill-the-cat>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-> The high level problem I have with this patch is that we keep going back
-> to "we really need to update to a modern hush (or other shell) rather
-> than patching new features in to our ancient fork".
+On 13/11/2021 16:49, Tom Rini wrote:
+> On Sat, Nov 13, 2021 at 07:07:15AM -0700, Simon Glass wrote:
+> 
+>> This should use the provided U_BOOT_DRIVER() macro so that the driver gets
+>> added to the appropriate linker list. Fix it.
+>>
+>> Signed-off-by: Simon Glass <sjg@chromium.org>
+>> Fixes: 7c9dcfed50f ("pinctrl: meson: rework gx pmx function")
+> 
+> Reported-by: Tom Rini <trini@konsulko.com>
+> Tested-by: Tom Rini <trini@konsulko.com> on libretech-cc
+> 
 
-Yes it will be fine ! Does anybody have information about these plans ?
-but in any case my patch didn't broke  compatibility like next patch
+thanks !
 
-> See also this old patch:
-> https://patchwork.ozlabs.org/project/uboot/patch/1449255744-25787-1-git-send-email-nm@ti.com/
+Applied to u-boot-amlogic
 
-> Can you please add to the env tests?
-> please add function comment
-> ...
+I'll build all amlogic boards & test on all soc variants,
 
-tnx for suggestions ...
-i can make v2 variant for my patch , if no one is against this idea
-
-On Wed, Nov 3, 2021 at 12:44 AM Tom Rini <trini@konsulko.com> wrote:
->
-> On Tue, Nov 02, 2021 at 03:19:14PM +0800, Artem Lapkin wrote:
->
-> > Add possibility setup env variable with additional resolving vars inside
-> > value.
-> >
-> > Usage examples
-> >
-> > => setenv a hello
-> > => setenv b world
-> > => setenv c '${a} ${b}'
-> > => setenv -r d '${c}! ${a}...'
-> > => printenv d
-> > d=hello world! hello...
-> >
-> > /* internal usage example */
-> > env_resolve("d", "${c}! ${a}...");
-> > /* d="hello world! hello..." */
-> >
-> > Notes
-> >
-> > Resolving works only for ${var} "bracket" and didn't workd for
-> > "unbracket" $var
-> >
-> > => setenv -r d '$c! $a...'
-> > => printenv d
-> > d=$c! $a...
-> >
-> > Signed-off-by: Artem Lapkin <art@khadas.com>
->
-> The high level problem I have with this patch is that we keep going back
-> to "we really need to update to a modern hush (or other shell) rather
-> than patching new features in to our ancient fork".
->
-> --
-> Tom
+Neil
