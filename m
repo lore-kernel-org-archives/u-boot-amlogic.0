@@ -1,54 +1,54 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web10.19898.1636967626625899898
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.5624.1637147059817838477
  for <u-boot-amlogic@groups.io>;
- Mon, 15 Nov 2021 01:13:47 -0800
-Received: by mail-wr1-f43.google.com with SMTP id a9so3014284wrr.8
-        for <u-boot-amlogic@groups.io>; Mon, 15 Nov 2021 01:13:46 -0800 (PST)
+ Wed, 17 Nov 2021 03:04:20 -0800
+Received: by mail-wm1-f54.google.com with SMTP id k37-20020a05600c1ca500b00330cb84834fso4424736wms.2
+        for <u-boot-amlogic@groups.io>; Wed, 17 Nov 2021 03:04:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=eLFG6ZVDLYrsZCb9R8/7Q1neY+/cmUtU8QQO/xsjmdM=;
-        b=3TyAmncRhi8ngHrkA5um3YcwSbtPLDKq3H8LI+VZs9F9j6PtYQ3rLKbJ3SSHMqDJAp
-         cW331z/bV/VhBvp1g8gbZOfwYJr0ZE216y/UpebI4xngNXwuPiRtKDynoP20JZoVxtks
-         kdhnY/BDVvxTGSgIEbCUpKPWKUlwS7bWBYrchiwe11SxyfFc5fz6/BNvN98ioOeLCJJ0
-         i8vpEqHZuiN2m1EtThr/3/uTnQvDhoe+aR5tiT5/8rw2k394EE992V7vkcwpXu12Pm9q
-         A5+6CrgUom0Y6D9UPU2jPqDXv8rUQlLQG6HFRgkHvj3eBpv8Pbfl50bVHKoMWjGGrIqB
-         a04Q==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2] pinctrl: meson: Correct the driver GPIO declaration
-References: <20211113140716.371496-1-sjg@chromium.org>
- <20211113154943.GX24579@bill-the-cat>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <1e3c853a-9b95-89f2-aed2-78512f6eddd6@baylibre.com>
-Date: Mon, 15 Nov 2021 10:13:43 +0100
+        bh=Hz5Xv7YmLg6cgi6PwjWHr2g/RUFNDMhbWiWyYjThw4c=;
+        b=oImk974DNA0+0pU4paVTu6xOrrNhbyKeYqHQ58goHsnE0QlnZT2RpjuiBtImK2waV8
+         amKlEO89k4TRh8jlbXD6GZC0Y2XbRB6Li5P7Wl5CVolLkAk/x/+NBb7+H27lY/Ge5qOE
+         Tf1fX2Tnqh9/W5Hmz/9jWZH1MncPa9WN50ydakG22HuJnMCwo98hKJtoQtD3KGxrWxdG
+         PJKsgWMkAdl0Elv8B+F5ojwaZLgjfwb8mHfblDUDNNzoRwEJrJBBZEXXzMPwsWwvhBiJ
+         DVncJ1vcUIg4kDwDoPO189RwBSImneaooHbVmpz1gMpoPPnq3yCcAEbeN0C+t0Csn+cl
+         hhRw==
+Return-Path: <mkorpershoek@baylibre.com>
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Subject: [PATCH 0/2] meson64_android: fix initial flashing failures
+Date: Wed, 17 Nov 2021 12:04:09 +0100
+Message-Id: <20211117110411.710190-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20211113154943.GX24579@bill-the-cat>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: "To : Neil Armstrong" <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 13/11/2021 16:49, Tom Rini wrote:
-> On Sat, Nov 13, 2021 at 07:07:15AM -0700, Simon Glass wrote:
-> 
->> This should use the provided U_BOOT_DRIVER() macro so that the driver gets
->> added to the appropriate linker list. Fix it.
->>
->> Signed-off-by: Simon Glass <sjg@chromium.org>
->> Fixes: 7c9dcfed50f ("pinctrl: meson: rework gx pmx function")
-> 
-> Reported-by: Tom Rini <trini@konsulko.com>
-> Tested-by: Tom Rini <trini@konsulko.com> on libretech-cc
-> 
+The SEI-610 and SEI-510 boards are well supported in the
+Android Open Source project via the yukawa [1] platform.
 
-thanks !
+Their U-Boot version, despite being public [2] is not in mainline.
 
-Applied to u-boot-amlogic
+For initial boards, with an empty eMMC, we can have boot loops
+while using the flashing process described in [3].
 
-I'll build all amlogic boards & test on all soc variants,
+This series add 2 fixes for these bootloops.
 
-Neil
+[1] https://android.googlesource.com/device/amlogic/yukawa
+[2] https://gitlab.com/baylibre/amlogic/atv/u-boot/-/tree/u-boot/v2021.07/integ
+[3] https://gitlab.com/baylibre/amlogic/atv/aosp/device/amlogic/yukawa/-/wikis/Khadas_VIM3#flash-android-bootloader
+
+Neil Armstrong (2):
+  configs: meson64_android: bypass other checks on run_fastboot=1
+  configs: meson64_android: add PANIC stage for SYSTEM fails
+
+ include/configs/meson64_android.h | 47 +++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 18 deletions(-)
+
+
+base-commit: 4f4f974a46244270c1c6723017711c0aa8250206
+-- 
+2.32.0
+
