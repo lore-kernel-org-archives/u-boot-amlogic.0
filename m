@@ -1,77 +1,65 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web10.5480.1637147061542507668
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web12.6337.1637152264843309313
  for <u-boot-amlogic@groups.io>;
- Wed, 17 Nov 2021 03:04:21 -0800
-Received: by mail-wm1-f53.google.com with SMTP id n33-20020a05600c502100b0032fb900951eso4418652wmr.4
-        for <u-boot-amlogic@groups.io>; Wed, 17 Nov 2021 03:04:21 -0800 (PST)
+ Wed, 17 Nov 2021 04:31:05 -0800
+Received: by mail-wr1-f45.google.com with SMTP id w29so4307367wra.12
+        for <u-boot-amlogic@groups.io>; Wed, 17 Nov 2021 04:31:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SJxnSwV2hsIsQ7Oum0dsqr6RxiYLzb481swo0dfk2xo=;
-        b=4/B2YZYZ0WsJvIJI6mLJmVov2+V3FzQqlroUiivCfAFqBXbi7tzx/sNzRaEonpbQ9z
-         LbId70GzGWKPIHg5XDbBOWX0O8GlCE3KNhixgsIwZZTzvv2IMgo9iKEGoj/GnxaLIGf7
-         XElD4AfDvV0ap0mFBXrEjNLFAaiqCxLYhW1RvdHtqU6nk0fohChcLmS7sZEvO31QM5/k
-         nBRNfuhCjzsoRYu9149XNGzCw/WfqFKSYJ730EGbQi0ytcp8l0P8vHJ7LAOPeqCwbkN6
-         c0RfCPsZ6PAZDIHWGhNn8e5hGZN3aE7cSgvOJU6mPZeabsWr+OhD31JWVYmtXh7A+wzF
-         Y+pg==
-Return-Path: <mkorpershoek@baylibre.com>
-From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Subject: [PATCH 2/2] configs: meson64_android: add PANIC stage for SYSTEM fails
-Date: Wed, 17 Nov 2021 12:04:11 +0100
-Message-Id: <20211117110411.710190-3-mkorpershoek@baylibre.com>
-In-Reply-To: <20211117110411.710190-1-mkorpershoek@baylibre.com>
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0pTEmm/ypT/c4lnt4/Pc/nEwGWFAT5YMnKyHI9D3oVA=;
+        b=60HMaJS1MmMOseVBhWAAupDwvADJJRYR0/y/FfqvHzCuKKS18nTosNSxqdtg51/uaY
+         WkS52iUZ/Yd2ff9c/tM5oQWu9+bBVO5uVsqD3oa9ymuKfUsVgV7tWS2INjFLWtCmSuk0
+         QqD0hLyGfSKv9KWkl52TttWknRQcpRWCAD/OwlZSPxSy5DmQzhUfKkb759ltZHz6JKk2
+         1IALcu4R+Gxj5ebeGft697f1IW/KMzuscqAuJMnBxBqq5sDV2x10neXTRxK2yphxc2Py
+         r8FLiDUBf3JCBWF8VGO9B2iQKtcnQU3sC9gADC/Bbv2LzqxaLcdOjDLbw3vHWGjJ1XsN
+         9ItA==
+Return-Path: <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/2] meson64_android: fix initial flashing failures
 References: <20211117110411.710190-1-mkorpershoek@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Message-ID: <dbcb4a53-ddbd-78c9-210b-9a38fc09005f@baylibre.com>
+Date: Wed, 17 Nov 2021 13:31:02 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: "To : Neil Armstrong" <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
+In-Reply-To: <20211117110411.710190-1-mkorpershoek@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+Hi,
 
-If bootloader was updated without running oem format, reboot will cause
-boot loop because the SYSTEM stage fails.
+On 17/11/2021 12:04, Mattijs Korpershoek wrote:
+> The SEI-610 and SEI-510 boards are well supported in the
+> Android Open Source project via the yukawa [1] platform.
+> 
+> Their U-Boot version, despite being public [2] is not in mainline.
+> 
+> For initial boards, with an empty eMMC, we can have boot loops
+> while using the flashing process described in [3].
+> 
+> This series add 2 fixes for these bootloops.
+> 
+> [1] https://android.googlesource.com/device/amlogic/yukawa
+> [2] https://gitlab.com/baylibre/amlogic/atv/u-boot/-/tree/u-boot/v2021.07/integ
+> [3] https://gitlab.com/baylibre/amlogic/atv/aosp/device/amlogic/yukawa/-/wikis/Khadas_VIM3#flash-android-bootloader
+> 
+> Neil Armstrong (2):
+>   configs: meson64_android: bypass other checks on run_fastboot=1
+>   configs: meson64_android: add PANIC stage for SYSTEM fails
+> 
+>  include/configs/meson64_android.h | 47 +++++++++++++++++++------------
+>  1 file changed, 29 insertions(+), 18 deletions(-)
+> 
+> 
+> base-commit: 4f4f974a46244270c1c6723017711c0aa8250206
+> 
 
-Add a final PANIC stage running fastboot to permit recovery.
+Thanks,
+Applied to u-boot-amlogic
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
----
- include/configs/meson64_android.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-index 93d8f8ec99de..7cd1ab034118 100644
---- a/include/configs/meson64_android.h
-+++ b/include/configs/meson64_android.h
-@@ -233,16 +233,24 @@
- 			"echo Running Android...;" \
- 			BOOT_CMD \
- 		"fi;" \
--		"echo Failed to boot Android...;" \
--		"reset\0"
-+		"echo Failed to boot Android...;\0"
- 
- #define BOOTENV_DEV_NAME_SYSTEM(devtypeu, devtypel, instance)	\
- 		"system "
- 
-+#define BOOTENV_DEV_PANIC(devtypeu, devtypel, instance) \
-+	"bootcmd_panic=" \
-+		"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
-+		"reset\0"
-+
-+#define BOOTENV_DEV_NAME_PANIC(devtypeu, devtypel, instance)	\
-+		"panic "
-+
- #define BOOT_TARGET_DEVICES(func) \
- 	func(FASTBOOT, fastboot, na) \
- 	func(RECOVERY, recovery, na) \
- 	func(SYSTEM, system, na) \
-+	func(PANIC, panic, na) \
- 
- #define PREBOOT_LOAD_LOGO \
- 	"if test \"${boot_source}\" != \"usb\" && " \
--- 
-2.32.0
-
+Neil
