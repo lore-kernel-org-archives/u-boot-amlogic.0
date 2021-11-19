@@ -1,65 +1,65 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web12.6337.1637152264843309313
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web12.7007.1637316519602900600
  for <u-boot-amlogic@groups.io>;
- Wed, 17 Nov 2021 04:31:05 -0800
-Received: by mail-wr1-f45.google.com with SMTP id w29so4307367wra.12
-        for <u-boot-amlogic@groups.io>; Wed, 17 Nov 2021 04:31:04 -0800 (PST)
+ Fri, 19 Nov 2021 02:08:40 -0800
+Received: by mail-wr1-f44.google.com with SMTP id w29so17167177wra.12
+        for <u-boot-amlogic@groups.io>; Fri, 19 Nov 2021 02:08:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0pTEmm/ypT/c4lnt4/Pc/nEwGWFAT5YMnKyHI9D3oVA=;
-        b=60HMaJS1MmMOseVBhWAAupDwvADJJRYR0/y/FfqvHzCuKKS18nTosNSxqdtg51/uaY
-         WkS52iUZ/Yd2ff9c/tM5oQWu9+bBVO5uVsqD3oa9ymuKfUsVgV7tWS2INjFLWtCmSuk0
-         QqD0hLyGfSKv9KWkl52TttWknRQcpRWCAD/OwlZSPxSy5DmQzhUfKkb759ltZHz6JKk2
-         1IALcu4R+Gxj5ebeGft697f1IW/KMzuscqAuJMnBxBqq5sDV2x10neXTRxK2yphxc2Py
-         r8FLiDUBf3JCBWF8VGO9B2iQKtcnQU3sC9gADC/Bbv2LzqxaLcdOjDLbw3vHWGjJ1XsN
-         9ItA==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/2] meson64_android: fix initial flashing failures
-References: <20211117110411.710190-1-mkorpershoek@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <dbcb4a53-ddbd-78c9-210b-9a38fc09005f@baylibre.com>
-Date: Wed, 17 Nov 2021 13:31:02 +0100
+        bh=sfGm1QrY3wutz4clEtezIITM8vXLANbTk+KL49Hqp/k=;
+        b=SqHYpl771iz4X3V7QKoVbJGWtuikQgQKD+Tqt5Be8jF8pU9wJVpz5Pxhw+4iqvboVg
+         vNQbE2khVgSqRWXLnvMxuCNvAMK3UfG72imPhUIV/vyT7b+F0krweVaiPRx6mth9+Umn
+         Er31ZvJqwnEn/moOCoaJAOOc4ts/uvfO70H/9Ymt0600OvWfO5S1ItJIKqDUEWm12x7i
+         4wd7BFIlcbOuA7x/v6vjC3yVFFBoGdyxu7ChrB0F1Nh8EOZlOqEYqE3VzKzU+kZZb5HL
+         7HwjAPFvd+v+xfqrf/4d6vhtdujWBBE1uzFBn8lF769O/vXIXGePd3O1tzG8Qi9yyKaK
+         zr2Q==
+Return-Path: <mkorpershoek@baylibre.com>
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Subject: [PATCH 0/5] meson64_android: add support for vim3/vim3l boards
+Date: Fri, 19 Nov 2021 11:08:24 +0100
+Message-Id: <20211119100829.843139-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20211117110411.710190-1-mkorpershoek@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+The VIM3 and VIM3L boards are well supported in the
+Android Open Source project via the yukawa [1] platform.
 
-On 17/11/2021 12:04, Mattijs Korpershoek wrote:
-> The SEI-610 and SEI-510 boards are well supported in the
-> Android Open Source project via the yukawa [1] platform.
-> 
-> Their U-Boot version, despite being public [2] is not in mainline.
-> 
-> For initial boards, with an empty eMMC, we can have boot loops
-> while using the flashing process described in [3].
-> 
-> This series add 2 fixes for these bootloops.
-> 
-> [1] https://android.googlesource.com/device/amlogic/yukawa
-> [2] https://gitlab.com/baylibre/amlogic/atv/u-boot/-/tree/u-boot/v2021.07/integ
-> [3] https://gitlab.com/baylibre/amlogic/atv/aosp/device/amlogic/yukawa/-/wikis/Khadas_VIM3#flash-android-bootloader
-> 
-> Neil Armstrong (2):
->   configs: meson64_android: bypass other checks on run_fastboot=1
->   configs: meson64_android: add PANIC stage for SYSTEM fails
-> 
->  include/configs/meson64_android.h | 47 +++++++++++++++++++------------
->  1 file changed, 29 insertions(+), 18 deletions(-)
-> 
-> 
-> base-commit: 4f4f974a46244270c1c6723017711c0aa8250206
-> 
+Their U-Boot version, despite being public [2] is not in mainline.
 
-Thanks,
-Applied to u-boot-amlogic
+[1] https://android.googlesource.com/device/amlogic/yukawa
+[2] https://gitlab.com/baylibre/amlogic/atv/u-boot/-/tree/u-boot/v2021.07/integ
 
-Neil
+Add defconfigs for both vim3, vim3l to support
+traditional and A/B booting/partitioning schemes.
+
+Mattijs Korpershoek (5):
+  configs: meson64_android: add board specific env settings
+  configs: prepare khadas-vim3{l}_android for AOSP support
+  boards: meson: add khadas vim3{l} android support
+  configs: prepare khadas-vim3{l}_ab_android for AOSP support
+  configs: khadas-vim3{l}_android_ab: enable A/B support
+
+ board/amlogic/vim3/MAINTAINERS            |   4 +
+ configs/khadas-vim3_android_ab_defconfig  | 109 ++++++++++++++++++++++
+ configs/khadas-vim3_android_defconfig     | 107 +++++++++++++++++++++
+ configs/khadas-vim3l_android_ab_defconfig | 109 ++++++++++++++++++++++
+ configs/khadas-vim3l_android_defconfig    | 107 +++++++++++++++++++++
+ include/configs/khadas-vim3_android.h     |  50 ++++++++++
+ include/configs/khadas-vim3l_android.h    |  50 ++++++++++
+ include/configs/meson64_android.h         |  17 ++++
+ 8 files changed, 553 insertions(+)
+ create mode 100644 configs/khadas-vim3_android_ab_defconfig
+ create mode 100644 configs/khadas-vim3_android_defconfig
+ create mode 100644 configs/khadas-vim3l_android_ab_defconfig
+ create mode 100644 configs/khadas-vim3l_android_defconfig
+ create mode 100644 include/configs/khadas-vim3_android.h
+ create mode 100644 include/configs/khadas-vim3l_android.h
+
+-- 
+2.32.0
+
