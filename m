@@ -1,109 +1,90 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
- by mx.groups.io with SMTP id smtpd.web08.7315.1637411783100364164
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+ by mx.groups.io with SMTP id smtpd.web10.3451.1637379761233579415
  for <u-boot-amlogic@groups.io>;
- Sat, 20 Nov 2021 04:36:24 -0800
-Received: from janitor.denx.de (unknown [62.91.23.180])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: noc@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id C6790834AC
-	for <u-boot-amlogic@groups.io>; Sat, 20 Nov 2021 13:36:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1637411779;
-	bh=4m9hp1rOf3Pj7SfVk1xnmyewDVjJhwPH+AAApfOz+rw=;
-	h=To:cc:From:Subject:In-reply-to:References:Date:From;
-	b=X4Hl3DRELfd+s7IwIl/u0q+siok5kBAt/Hyua0RAUx9Ktay5xyx04JSHypekF36d2
-	 XcuvOyjZjlDyVNt2+20bSk08I8Jl+SCG/99xkuWP1Rd9Q0XE2N96ZCTltgWSJdL7Wa
-	 YS0FlcSZsyhcK5STNz+YoXqz8MKnoSVIFDpiJfKvQWeZ2CKHW4suByfFN3PzzLuKjz
-	 WIJLb1+utJ8SzlMGE5TI1U/vvtpI3UM6ZC7rg/2yF2+TcA4tC//k5izi+lFeWSPbac
-	 QF8BKWVAZJXAfAa5hnFeHE8s8s4YwAbfdnlSAQJHX6RyZXhGths6s/ud5M3Nq9iUFT
-	 F42EkJ1tXqMdg==
-From: Wolfgang Denk <wd@denx.de>
-Subject: Re: [PATCH v2 0/2] env: setenv add resolve value option
+ Fri, 19 Nov 2021 19:42:41 -0800
+Received: by mail-qt1-f175.google.com with SMTP id 8so11394241qtx.5
+        for <u-boot-amlogic@groups.io>; Fri, 19 Nov 2021 19:42:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=doQb+q0mias76hrT04DFWGUu9H04cO2fAcdgQOFzCsE=;
+        b=ePWO56QZnEDvHWuJKPRr19xfqG1nqUKFrPBOzZWB1jmYuh2uBveiA9VQtyosTOLNy4
+         4Q/Bcm/ELf2Rmj5yLQJM6yAjskkmfQ6Ih9uQ/pJZwYQm/Ph/nm7XI8+VMYaj3wNnjE+m
+         cYg77RUQCYin7hvN0rsaEGyCU0oMm8YA97xEA=
+Return-Path: <trini@konsulko.com>
+Date: Fri, 19 Nov 2021 22:42:38 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20211119
+Message-ID: <20211120034238.GN24579@bill-the-cat>
+References: <eec6afbf-97d1-2e65-3c16-3ea75f0aefe2@baylibre.com>
 MIME-Version: 1.0
-In-reply-to: <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com>
-References: <20211119043647.1251416-1-art@khadas.com> <2004466.1637308134@gemini.denx.de> <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com>
-Date: Sat, 20 Nov 2021 13:36:09 +0100
-Message-ID: <2235982.1637411769@gemini.denx.de>
-Content-type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Art Nikpal <email2tema@gmail.com>
-Cc: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, marek.behun@nic.cz, Neil Armstrong <narmstrong@baylibre.com>, Tom Warren <twarren@nvidia.com>, Andre Przywara <andre.przywara@arm.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Christian Hewitt <christianshewitt@gmail.com>, Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>, Gouwa Wang <gouwa@khadas.com>, Francis Laniel <francis.laniel@amarulasolutions.com>
+In-Reply-To: <eec6afbf-97d1-2e65-3c16-3ea75f0aefe2@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="x40GMfxvo2H+SiQC"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Dear Artem,
+--x40GMfxvo2H+SiQC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In message <CAKaHn9KZg13r=3DpGCo=3DLv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.=
-gmail.com> you wrote:
->
-> next examples just demonstrate how its works for already defined env
-> variables which contain other variables (like storred env variables)
+On Fri, Nov 19, 2021 at 06:45:12PM +0100, Neil Armstrong wrote:
 
-Which next examples?
+> Hi Tom,
+>=20
+> Here's a change to fix GPIO declaration in the Meson PINCTRL driver, and =
+a couple
+> of changes to handle boot errors when using the meson64 android config an=
+d permit
+> recovering the board via fastboot when the boot media is invalid.
+>=20
+> The CI job is at https://gitlab.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/9918
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit 8391a0f3d97c0300d7eafe7581b6712afb18f2=
+83:
+>=20
+>   Merge branch '2021-11-18-regression-fixes' (2021-11-18 18:25:19 -0500)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20211119
+>=20
+> for you to fetch changes up to 28f70cfcfd82ac509c8da772b74e5dc2df795fd2:
+>=20
+>   configs: meson64_android: add PANIC stage for SYSTEM fails (2021-11-19 =
+18:15:26 +0100)
+>=20
 
-> sure I know about this ! see my prev message please .
-
-Which exact message are you referring to here?
-
-> Why not have this new opportunity ?
-
-I think the suggested code is adding more problems than it solves.
-
-> > have in mind, as you speak of "deep resolve". But then, I'm first
-> > missing an explanation (and documentation) of what "deep resolve"
->
-> recurrent  resolving for variables
-
-Your implementation of recursion has an arbiotrary and undocumented
-depth limit. Also, I cannot see a way to prevent resolving in case I
-want to keep something like "$foo" in the result.
-
-But that's to be expected from such a non-standard way.
-
-Why don't you stick with what "eval" in a standard shell does?
-
-> > actually means in this context, i. e. how many levels down you
-> > evaluat.   Oh...  the code has "int max_loop =3D 32;" - this is a
->
-> i think its will be enough
-
-It is a reallybad habt to implement code with arbitrary limits, as
-it will blow into your face (or more likely that of an innocent
-user) rather sooner than later.  It's even worse that this limit is
-nowhere documented.
-
-> 1) this option did not broke any exist compatibilities
-> 2) there we talk not only about uboot shell, same time will be useful
-> to have env_resolve for internal c usage, because env_set dont have
-> this feature
-
-I did not say that an "eval" like construct would not be useful.
-But uncontrolled recursion with an undocumented depth limit is
-a problem.
-
-> yes i'm informed  about this plans  (and think its happens  not  so
-> soon - but i provide some simple elegant solution already)
-> but again we dont have env_resolve for internal c usage which must be
-> very useful
-
-On the CLI, we use the "run" command to get the desired effect. Yes,
-this is neither perfect nor elegant. But you can use that in C code
-as well.
-
-> will be easy get useful features via simple solution ( deep resolve
-> all vars by one line )
-
-I understand what you want, but this is not a good way to solve the
-problem.  I'd really rather see such efforts invested in helping
-Francis with the hush update - which will make such code unnecessary.
-
-Best regards,
-
-Wolfgang Denk
+Applied to u-boot/master, thanks!
 
 --=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-Success in marriage is not so much finding the right person as it  is
-being the right person.
+Tom
+
+--x40GMfxvo2H+SiQC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmGYbq4ACgkQFHw5/5Y0
+tyxiqAwAlO6Cb5/NhyGLyX6YSWthJIgssuepEvTAZRbhOQBabMNxHbDwssMgHWUD
+d/gS7REl36KqcaUxqZx822WGD3uY/v5Ps45CXdMLJCnrG/Aei1F6cNwrfnIddwqE
+SE+g8X+LgVHvXBR1bwkYeFqNC+ktobOYeb5aiWHugLqxS6oAaa6VcNTjRy3kbtFt
+GuH0Mm5sMJdZBVMdZYk5CHuTLwCGwLU1G/0VvB6zivODpKNkvXgXG2v8Z6+c24CZ
+Kn+Q/cANuKT9xGEhrBhiS1mPPhj3js1lIG79jTNYGHhG60SRTRqqi09OjjqiyAo0
+JHyBx9yszkzp5ZuUR0YIEHpQnjIE1gMMdQSqKyAVgesTaauj3jZ12gvZnNRySN6d
+zVGxIBNu5MeWx+iGOVl9mRqeW9xJpNDK9DetvOXjHp/V9CvZSwdfrrLNalinss/z
+a+jaVByVbkj0MPni5IAnrVCYSosqm0yG0SFYsHEfRfcVpsbnbYWQJKTnXGRPaQw5
+RSjmReAh
+=tatH
+-----END PGP SIGNATURE-----
+
+--x40GMfxvo2H+SiQC--
