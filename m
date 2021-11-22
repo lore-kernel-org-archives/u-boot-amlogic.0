@@ -1,27 +1,27 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
- by mx.groups.io with SMTP id smtpd.web12.3851.1637568562687410475
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+ by mx.groups.io with SMTP id smtpd.web11.3807.1637569558589165316
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Nov 2021 00:09:22 -0800
-Received: by mail-il1-f182.google.com with SMTP id l8so17191559ilv.3
-        for <u-boot-amlogic@groups.io>; Mon, 22 Nov 2021 00:09:22 -0800 (PST)
+ Mon, 22 Nov 2021 00:25:58 -0800
+Received: by mail-io1-f41.google.com with SMTP id y16so22181395ioc.8
+        for <u-boot-amlogic@groups.io>; Mon, 22 Nov 2021 00:25:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pSCFnOfNfaAvPsWD9zwpP5lrer+shsb/NnyQ3FfYfVU=;
-        b=Q+dL4uZMEXhkp54W9jqdgFHDbgniWZSD3xU6JgiFlLVLN5P02MVoRrF5ngFUb38bcv
-         5KigsdnMvltNgM9ojGfOUr/uDabvpNPCVXWUuX+qwv9OjxMFif3fK/O7RHTM8ytEVwXK
-         NmZURh74G+rO0gSfAYJAJu7xU+QzRZ6pUdIxTR1DqZ1nPLUwmxZsaUoKGRVoRNXnvS0H
-         msORNYwdzdt6ApJvrhLWbc2V7L+WpJtbUYtu9bQ2IRsUlBxcIgHdCvOPWYLho3LInOBX
-         5tO7lb7Usu+T+tzmuAGPuJzH8lcdfE0BH9BGARpVa9AzGk/G6Ak3yF+/1+1fzk3FaI8/
-         KqQw==
+        bh=xQ6xdwi6OHbfDYkTcEMU2gvw86rK16od4iYu8DGImGs=;
+        b=N4frTrAyoUvfPV19PPS0lVsdosWWn38Gi7Lzt+I7UnLYusxhbW/aNYiEKbtrGLyNap
+         g+HvE9rpQw7F1kRSGsLvJIGeOvr3hu9MMMeKYvqR6DG9kijn7yJVlncy0qWqhjCmO4PS
+         exnhzgtACWPztEoVdfqI4hR/5Ezq3Pk4jOUajJ7UjnOQCz3iFxsT9i8BF2mhZ7duvih0
+         wuY3+R7KYBwO6mZH11gykG2TDa3WdYUeiTzwGaJbuYn4heOd6FUHYfaGX4BINo64aOir
+         lqatKQOWC+IEUwsmsUexdQTme5liHxrzuO6XNqE/fOye5G/l3Saq9IanPzaEPFdj0jRf
+         vroA==
 MIME-Version: 1.0
 References: <20211119043647.1251416-1-art@khadas.com> <2004466.1637308134@gemini.denx.de>
- <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com> <6198ebca.1c69fb81.fc50c.bf0bSMTPIN_ADDED_BROKEN@mx.google.com>
-In-Reply-To: <6198ebca.1c69fb81.fc50c.bf0bSMTPIN_ADDED_BROKEN@mx.google.com>
+ <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com> <2235982.1637411769@gemini.denx.de>
+In-Reply-To: <2235982.1637411769@gemini.denx.de>
 From: Art Nikpal <email2tema@gmail.com>
-Date: Mon, 22 Nov 2021 16:09:10 +0800
-Message-ID: <CAKaHn9+yL3naiDqbsQJWQ0Po=g=TmjjcPSKxkx5C4ay1M1AsUA@mail.gmail.com>
+Date: Mon, 22 Nov 2021 16:25:46 +0800
+Message-ID: <CAKaHn9+w0pJ87AgBYV8HTJnhOEF2Cm8mHaY_MUj-rb2g9pegZg@mail.gmail.com>
 Subject: Re: [PATCH v2 0/2] env: setenv add resolve value option
 Content-Type: text/plain; charset="UTF-8"
 To: Wolfgang Denk <wd@denx.de>
@@ -38,14 +38,6 @@ On Sat, Nov 20, 2021 at 8:36 PM Wolfgang Denk <wd@denx.de> wrote:
 > > variables which contain other variables (like storred env variables)
 >
 > Which next examples?
-
-Usage examples (from commit message):
-
-=> setenv a hello; setenv b world; setenv c '${a} ${b}'
-=> setenv -r d '${c}! ${a}...'
-=> printenv d
-d=hello world! hello...
-
 >
 > > sure I know about this ! see my prev message please .
 >
@@ -61,13 +53,30 @@ d=hello world! hello...
 > > recurrent  resolving for variables
 >
 > Your implementation of recursion has an arbiotrary and undocumented
-> depth limit. Also, I cannot see a way to prevent resolving in case I
+> depth limit.
+
+we can improve it if it will be really necessary
+
+> Also, I cannot see a way to prevent resolving in case I
 > want to keep something like "$foo" in the result.
 >
+
+`setenv -r` resolve only bracked vars like ${VAR} if u need keen some
+$VAR just use it without brackets
+or just use same setenv without -r option - whats a problem ?
+
 > But that's to be expected from such a non-standard way.
 >
+
+we can use setenv with -r or without this option (default standard way)
+again didn't see problems  (setenv -r is special option especially for
+non standard way )
+
 > Why don't you stick with what "eval" in a standard shell does?
 >
+
+show me please how can i do it via standard way maybe i miss something ?
+
 > > > actually means in this context, i. e. how many levels down you
 > > > evaluat.   Oh...  the code has "int max_loop = 32;" - this is a
 > >
