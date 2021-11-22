@@ -1,286 +1,115 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web08.9789.1637829079526380010
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+ by mx.groups.io with SMTP id smtpd.web12.3851.1637568562687410475
  for <u-boot-amlogic@groups.io>;
- Thu, 25 Nov 2021 00:31:20 -0800
-Received: by mail-wr1-f52.google.com with SMTP id l16so9836280wrp.11
-        for <u-boot-amlogic@groups.io>; Thu, 25 Nov 2021 00:31:18 -0800 (PST)
+ Mon, 22 Nov 2021 00:09:22 -0800
+Received: by mail-il1-f182.google.com with SMTP id l8so17191559ilv.3
+        for <u-boot-amlogic@groups.io>; Mon, 22 Nov 2021 00:09:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5QMzBWKmmGXy4oYHL9w33v46UF/SKb3I0YOncqLptBE=;
-        b=YuyQkEv0bc70sf6fnHXiA4Y67n+jdfGTUempsjbytW5xCA1C26VTzu1HIDDyG02vGu
-         7zoROnRBp6tMfltRwF16dQAwfYXBWUTg9gaVdtzr6EXWMRyLOTtxVctkn0YzS2mFx0bP
-         GfVij1DFF/KWom9uNdWTp61Q91ewbu5XaoGdy+XOe0e6xaQkDLcTmxriZkNxAcP07jaN
-         TVoy/N6OOeYksHPcS3lQdQ2ME/0Msjad02vFq+zlysFrhm0T1TVHGNIpMIy3ii9GPYz8
-         +ODYmqheHWewNlhlqxfyAU+YZKSZTXWZKW5NgOY2X3dZk14Vpch7R3EwzU6bYPdjWimp
-         9oaw==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 7/7] RFC: Move Odroid-C2 to use binman to produce the image
-References: <20211124040954.699821-1-sjg@chromium.org>
- <20211124040954.699821-8-sjg@chromium.org>
- <cb1a9b01-cc7c-1c74-d945-0c06faaff8f3@baylibre.com>
- <CAPnjgZ250SXDxSGYM-K5+oK5wT-8NjC=h3hT1c8YU4O0QwKLfA@mail.gmail.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <250391b7-c810-421b-caf7-0b08ba16cd86@baylibre.com>
-Date: Thu, 25 Nov 2021 09:31:15 +0100
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pSCFnOfNfaAvPsWD9zwpP5lrer+shsb/NnyQ3FfYfVU=;
+        b=Q+dL4uZMEXhkp54W9jqdgFHDbgniWZSD3xU6JgiFlLVLN5P02MVoRrF5ngFUb38bcv
+         5KigsdnMvltNgM9ojGfOUr/uDabvpNPCVXWUuX+qwv9OjxMFif3fK/O7RHTM8ytEVwXK
+         NmZURh74G+rO0gSfAYJAJu7xU+QzRZ6pUdIxTR1DqZ1nPLUwmxZsaUoKGRVoRNXnvS0H
+         msORNYwdzdt6ApJvrhLWbc2V7L+WpJtbUYtu9bQ2IRsUlBxcIgHdCvOPWYLho3LInOBX
+         5tO7lb7Usu+T+tzmuAGPuJzH8lcdfE0BH9BGARpVa9AzGk/G6Ak3yF+/1+1fzk3FaI8/
+         KqQw==
 MIME-Version: 1.0
-In-Reply-To: <CAPnjgZ250SXDxSGYM-K5+oK5wT-8NjC=h3hT1c8YU4O0QwKLfA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Jaehoon Chung <jh80.chung@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, u-boot-amlogic@groups.io
+References: <20211119043647.1251416-1-art@khadas.com> <2004466.1637308134@gemini.denx.de>
+ <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com> <6198ebca.1c69fb81.fc50c.bf0bSMTPIN_ADDED_BROKEN@mx.google.com>
+In-Reply-To: <6198ebca.1c69fb81.fc50c.bf0bSMTPIN_ADDED_BROKEN@mx.google.com>
+From: Art Nikpal <email2tema@gmail.com>
+Date: Mon, 22 Nov 2021 16:09:10 +0800
+Message-ID: <CAKaHn9+yL3naiDqbsQJWQ0Po=g=TmjjcPSKxkx5C4ay1M1AsUA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] env: setenv add resolve value option
+Content-Type: text/plain; charset="UTF-8"
+To: Wolfgang Denk <wd@denx.de>
+Cc: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, marek.behun@nic.cz, Neil Armstrong <narmstrong@baylibre.com>, Tom Warren <twarren@nvidia.com>, Andre Przywara <andre.przywara@arm.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Christian Hewitt <christianshewitt@gmail.com>, Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>, Gouwa Wang <gouwa@khadas.com>, Francis Laniel <francis.laniel@amarulasolutions.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 25/11/2021 01:12, Simon Glass wrote:
-> Hi Neil,
-> 
-> On Wed, 24 Nov 2021 at 07:26, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Hi Simon,
->>
->> On 24/11/2021 05:09, Simon Glass wrote:
->>> This shows how binman can be used to replace the long and complicated
->>> instructions with an automated build. It is still complicated to read
->>> but users don't have to worry about the details.
->>
->> Thanks for demonstarting that !
-> 
-> Thanks for looking at it.
-> 
->>
->> I'm really not confident about using proprietary tools from mainline u-boot
->> source tree.
-> 
-> Arguably people already are doing this. At least this way it is in the
-> open. If people have the right tools installed it will just work, with
-> no extra steps.
+On Sat, Nov 20, 2021 at 8:36 PM Wolfgang Denk <wd@denx.de> wrote:
+>
+> Dear Artem,
+>
+> In message <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com> you wrote:
+> >
+> > next examples just demonstrate how its works for already defined env
+> > variables which contain other variables (like storred env variables)
+>
+> Which next examples?
 
-OK, no problem then
+Usage examples (from commit message):
 
-> 
->>
->> Will the binman step quietly fail if tools/bins aren't available ?
-> 
-> It handles the case where binaries are missing (that's the
-> --allow-missing) but not tools. I think we can do a similar thing,
-> where it just warns that the image won't work because of a missing
-> tool.
-> 
-> When a blob is missing there are instructions to tell the user how to
-> create it. For tools we could have instructions on where to download
-> the tool.
+=> setenv a hello; setenv b world; setenv c '${a} ${b}'
+=> setenv -r d '${c}! ${a}...'
+=> printenv d
+d=hello world! hello...
 
-Is there a easy way to bypass the binman step ? In case for example we
-want to chainload the original u-boot binary, or wrap it using other
-tools afterwards like for secure boot ?
-
-> 
-> Is someone working on upstreaming the tools?
-
-There is some alternate open-source tools in C:
-
-https://github.com/afaerber/meson-tools (GXBB, GXL & GXM only)
-https://github.com/repk/gxlimg (GXBB, GXL, GXM & AXG only)
-https://github.com/angerman/meson64-tools (developed for G12B, should work on G12A & SM1)
-
-But no unified tool, all this should probably be rewritten in a binman plugin at some point.
-
-> 
->>
->>> It needs some tidying up and only supports Odroid-C2 at present.
->>
->> --------------------------------------------------- C4
->>
->> But i get the spirit !
->>
->> Seems it should work as-is on allmost all boards except Odroid-C2 which has
->> only pre-signed binaries provided by HK.
-> 
-> OK. There are a lot of instructions in doc/board/amlogic - are they
-> all mostly the same If so we can use a common binman description for
-> all boards.
-> 
->>
->> The only work will be to replace acs_tool.py for pre-G12 SoCs.
->>
->>>
->>> Signed-off-by: Simon Glass <sjg@chromium.org>
->>> ---
->>>
->>>  arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi | 107 ++++++++++++++++
->>>  arch/arm/mach-meson/Kconfig                  |   1 +
->>>  doc/board/amlogic/odroid-c4.rst              | 127 +++++--------------
->>>  scripts/pylint.base                          |   1 +
->>>  tools/binman/etype/aml_encrypt.py            | 124 ++++++++++++++++++
->>>  tools/binman/ftest.py                        |   3 +
->>>  tools/binman/missing-blob-help               |   6 +
->>>  tools/binman/test/213_aml_encrypt.dts        |  38 ++++++
->>>  tools/binman/test/214_list_no_dtb.dts        |  23 ++++
->>>  9 files changed, 338 insertions(+), 92 deletions(-)
->>>  create mode 100644 tools/binman/etype/aml_encrypt.py
->>>  create mode 100644 tools/binman/test/213_aml_encrypt.dts
->>>  create mode 100644 tools/binman/test/214_list_no_dtb.dts
->>>
->>> diff --git a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
->>> index 963bf96b256..b221ce6920b 100644
->>> --- a/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
->>> +++ b/arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi
->>> @@ -6,6 +6,113 @@
->>>
->>>  #include "meson-sm1-u-boot.dtsi"
->>>
->>> +/{
->>> +     binman {
->>> +             /* run --bootmk on all the included inputs */
->>> +             aml-encrypt {
->>> +                     missing-msg = "aml-encrypt";
->>> +                     aml-algo = "g12a";
->>> +                     aml-op = "bootmk";
->>> +                     aml-level = "v3";
->>> +
->>> +                     /* produce a bl2, containing signed bl2 binaries */
->>> +                     bl2 {
->>> +                             type = "aml-encrypt";
->>> +                             aml-algo = "g12a";
->>> +                             aml-op = "bl2sig";
->>> +
->>> +                             /* sign the binary contaiing bl2 and acs */
->>> +                             aml-input {
->>> +                                     type = "section";
->>> +                                     bl2 {
->>> +                                             type = "blob-ext";
->>> +                                             size = <0xe000>;
->>> +                                             filename = "bl2.bin";
->>> +                                     };
->>> +                                     acs {
->>> +                                             type = "blob-ext";
->>> +                                             size = <0x1000>;
->>> +                                             filename = "acs.bin";
->>> +                                     };
->>> +                             };
->>
->> This is nice way to get rid of blx_fix.sh !
-> 
-> Yes that sort of thing is easy with Binman.
-> 
->>
->>> +                     };
->>> +
->>> +                     /* produce a bl30, containing signed bl30 binaries */
->>> +                     bl30 {
->>> +                             type = "aml-encrypt";
->>> +                             aml-algo = "g12a";
->>> +                             aml-op = "bl3sig";
->>> +                             aml-level = "v3";
->>> +                             aml-type = "bl30";
->>> +
->>> +                             /* sign the binary contaiing bl30 and bl301 */
->>> +                             aml-input {
->>> +                                     type = "aml-encrypt";
->>> +                                     aml-algo = "g12a";
->>> +                                     aml-op = "bl30sig";
->>> +                                     aml-level = "v3";
->>> +
->>> +                                     /*
->>> +                                      * put bl30 and bl301 together, with
->>> +                                      * the necessary paddiung
->>> +                                      */
->>> +                                     aml-input {
->>> +                                             type = "section";
->>> +                                             bl30 {
->>> +                                                     type = "blob-ext";
->>> +                                                     size = <0xa000>;
->>> +                                                     filename = "bl30.bin";
->>> +                                             };
->>> +                                             bl301 {
->>> +                                                     type = "blob-ext";
->>> +                                                     size = <0x3400>;
->>> +                                                     filename = "bl301.bin";
->>> +                                             };
->>> +                                     };
->>> +                             };
->>> +                     };
->>> +
->>> +                     /* sign the bl31 binary */
->>> +                     bl31 {
->>> +                             type = "aml-encrypt";
->>> +                             aml-algo = "g12a";
->>> +                             aml-op = "bl3sig";
->>> +                             aml-input = "bl31.img";
->>> +                             aml-level = "v3";
->>> +                             aml-type = "bl31";
->>> +                     };
->>> +
->>> +                     /* sign the bl33 binary (which is U-Boot) */
->>> +                     bl33 {
->>> +                             type = "aml-encrypt";
->>> +                             aml-algo = "g12a";
->>> +                             aml-op = "bl3sig";
->>> +                             aml-compress = "lz4";
->>> +                             aml-level = "v3";
->>> +                             aml-type = "bl33";
->>> +
->>> +                             aml-input {
->>> +                                     type = "u-boot";
->>> +                             };
->>> +                     };
->>> +
->>> +                     /* add the various DDR blobs */
->>> +                     aml-ddrfw {
->>> +                             missing-msg = "aml-ddrfw";
->>> +                             type = "blob-ext-list";
->>> +                             filenames = "ddr4_1d.fw", "ddr4_2d.fw",
->>> +                                     "ddr3_1d.fw", "piei.fw",
->>> +                                     "lpddr4_1d.fw", "lpddr4_2d.fw",
->>> +                                     "diag_lpddr4.fw", "aml_ddr.fw",
->>> +                                     "lpddr3_1d.fw";
->>> +                     };
->>> +             };
->>> +
->>> +             fdtmap {
->>> +             };
->>> +     };
->>> +};
->>> +
->>>  &ethmac {
->>>       snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
->>>       snps,reset-delays-us = <0 10000 1000000>;
->>> diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
->>> index 6cba2c40dda..bcb87ea243c 100644
->>> --- a/arch/arm/mach-meson/Kconfig
->>> +++ b/arch/arm/mach-meson/Kconfig
->>> @@ -48,6 +48,7 @@ config MESON_AXG
->>>  config MESON_G12A
->>>       bool "G12A"
->>>       select MESON64_COMMON
->>> +     select BINMAN
->>>       help
->>>         Select this if your SoC is an S905X/D2
->>>
->>> diff --git a/doc/board/amlogic/odroid-c4.rst b/doc/board/amlogic/odroid-c4.rst
->>> index f66d60a54d1..5eae1e66e3a 100644
->>> --- a/doc/board/amlogic/odroid-c4.rst
->>> +++ b/doc/board/amlogic/odroid-c4.rst
->>> @@ -22,17 +22,8 @@ applies for HC4.
->>>
->>>  Schematics are available on the manufacturer website.
->>>
->>> -U-Boot compilation
->>> -------------------
->>> -
->>> -.. code-block:: bash
->>> -
->>> -    $ export CROSS_COMPILE=aarch64-none-elf-
->>> -    $ make odroid-c4_defconfig
->>> -    $ make
->>> -
-> 
-> [..]
-> 
-> Regards,
-> Simon
-> 
-
+>
+> > sure I know about this ! see my prev message please .
+>
+> Which exact message are you referring to here?
+>
+> > Why not have this new opportunity ?
+>
+> I think the suggested code is adding more problems than it solves.
+>
+> > > have in mind, as you speak of "deep resolve". But then, I'm first
+> > > missing an explanation (and documentation) of what "deep resolve"
+> >
+> > recurrent  resolving for variables
+>
+> Your implementation of recursion has an arbiotrary and undocumented
+> depth limit. Also, I cannot see a way to prevent resolving in case I
+> want to keep something like "$foo" in the result.
+>
+> But that's to be expected from such a non-standard way.
+>
+> Why don't you stick with what "eval" in a standard shell does?
+>
+> > > actually means in this context, i. e. how many levels down you
+> > > evaluat.   Oh...  the code has "int max_loop = 32;" - this is a
+> >
+> > i think its will be enough
+>
+> It is a reallybad habt to implement code with arbitrary limits, as
+> it will blow into your face (or more likely that of an innocent
+> user) rather sooner than later.  It's even worse that this limit is
+> nowhere documented.
+>
+> > 1) this option did not broke any exist compatibilities
+> > 2) there we talk not only about uboot shell, same time will be useful
+> > to have env_resolve for internal c usage, because env_set dont have
+> > this feature
+>
+> I did not say that an "eval" like construct would not be useful.
+> But uncontrolled recursion with an undocumented depth limit is
+> a problem.
+>
+> > yes i'm informed  about this plans  (and think its happens  not  so
+> > soon - but i provide some simple elegant solution already)
+> > but again we dont have env_resolve for internal c usage which must be
+> > very useful
+>
+> On the CLI, we use the "run" command to get the desired effect. Yes,
+> this is neither perfect nor elegant. But you can use that in C code
+> as well.
+>
+> > will be easy get useful features via simple solution ( deep resolve
+> > all vars by one line )
+>
+> I understand what you want, but this is not a good way to solve the
+> problem.  I'd really rather see such efforts invested in helping
+> Francis with the hush update - which will make such code unnecessary.
+>
+> Best regards,
+>
+> Wolfgang Denk
+>
+> --
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+> Success in marriage is not so much finding the right person as it  is
+> being the right person.
