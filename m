@@ -1,77 +1,78 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web09.7767.1637594538078252227
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web11.7626.1637594538572322598
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Nov 2021 07:22:18 -0800
-Received: by mail-wm1-f54.google.com with SMTP id d72-20020a1c1d4b000000b00331140f3dc8so139657wmd.1
-        for <u-boot-amlogic@groups.io>; Mon, 22 Nov 2021 07:22:17 -0800 (PST)
+ Mon, 22 Nov 2021 07:22:19 -0800
+Received: by mail-wm1-f46.google.com with SMTP id n33-20020a05600c502100b0032fb900951eso17113799wmr.4
+        for <u-boot-amlogic@groups.io>; Mon, 22 Nov 2021 07:22:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=w9VH9vJ0zuFREPPxeoiZUFQcbeP3ci2FcA/XWupJ8n8=;
-        b=P5PHsiJEdtgBpRmMXVoXL3OGXd46ClEUl/nE+7IH8T4gNaboOLjwYPiFghhCIt30gk
-         relZujz/ZqmG7N9QU+wRcfnafGjlrnEl20OIB9COPPAQGuIBZ5oLXm6mGsuCjP8F6+Mw
-         DwxeGH7evxtUrDKrnwwEtOFW4v9I1rLcq2Kg42Leykkuzrx7HGdmoTIdKAiZXU/YlpYE
-         M83r1wJojnTED5X2M9ROH5QptWScPiuSq0QewWlVRYUGX8BRyNR3m9zj8+DxOhHHHZHm
-         g5G102C3yU/vVeGuZBV+VUuIS+jyOxLKtder3Pd6IhlXQ+MkrAlXy0uf7Xf2IFWJImDJ
-         9QmQ==
+        bh=JXffb14r2MCjzP1T/jNxvDHPgQkjLmjkQRluCd91ENI=;
+        b=LKoQMUpL2bRhZXV9Qb9Pxlos53IEm2A2rbsRcwSu+16xeRqM45mSxIfe2iWN28V16G
+         bP4Qmr+60z9rH+uv6Rm5foFAThqs9s43hErBMFjflI4zPmEHXPzZUhAaVmomwrEHrxZa
+         tzpO7NJZM1JOKbhXx+izY/Mw+LyDd+67WndIFtdUXJQedddiDcvZh+yKEkWbRUAY50Zm
+         oFEKxbnv6M1H6NArNuISGlyCEly817Q6unQY9TiZ7eh76PT30G65i+8X3Wv0RmT9XNbf
+         VMl784GsRpHWB9eLjYfws/sXWpE/DBJaJYnci0epvFK1H56cSffcMkxL2gvqR2YXYdCk
+         Fv1w==
 Return-Path: <mkorpershoek@baylibre.com>
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Subject: [PATCH v2 2/4] configs: add khadas-vim3{l}_android for AOSP support
-Date: Mon, 22 Nov 2021 16:22:05 +0100
-Message-Id: <20211122152207.219023-3-mkorpershoek@baylibre.com>
+Subject: [PATCH v2 3/4] configs: prepare khadas-vim3{l}_ab_android for AOSP support
+Date: Mon, 22 Nov 2021 16:22:06 +0100
+Message-Id: <20211122152207.219023-4-mkorpershoek@baylibre.com>
 In-Reply-To: <20211122152207.219023-1-mkorpershoek@baylibre.com>
 References: <20211122152207.219023-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>, Guillaume La Roque <glaroque@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-The Khadas VIM3 and VIM3L board are well supported in AOSP[1].
-However, there is no mainline U-Boot support for it.
-The U-Boot used in AOSP is based on a vendor tree [2]
+In AOSP, both VIM3 and VIM3L have 2 bootloader flavors,
+depending on A/B enablement.
 
-Add all the necessary bits to flash and boot Android for both Khadas
-VIM3 and VIM3L boards.
+For example, for vim3l, the naming is:
+- u-boot_kvim3l_noab.bin : legacy support
+- u-boot_kvim3l_ab.bin   : A/B support
 
-For Android instructions, refer to [1]
+Prepare a defconfig to support u-boot_kvim3_ab.bin and
+u-boot_kvim3l_ab.bin.
 
-[1] https://source.android.com/setup/build/devices#vim3_and_vim3l_boards
-[2] https://gitlab.com/baylibre/amlogic/atv/u-boot
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+This is identical to khadas-vim3{l}_ab_android but will be updated in
+the next commit.
+
+Also update partitioning tables for A/B support.
+
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 ---
- board/amlogic/vim3/MAINTAINERS         |   2 +
- configs/khadas-vim3_android_defconfig  | 107 +++++++++++++++++++++++++
- configs/khadas-vim3l_android_defconfig | 107 +++++++++++++++++++++++++
- include/configs/khadas-vim3_android.h  |  34 ++++++++
- include/configs/khadas-vim3l_android.h |  34 ++++++++
- include/configs/meson64_android.h      |  12 +++
- 6 files changed, 296 insertions(+)
- create mode 100644 configs/khadas-vim3_android_defconfig
- create mode 100644 configs/khadas-vim3l_android_defconfig
- create mode 100644 include/configs/khadas-vim3_android.h
- create mode 100644 include/configs/khadas-vim3l_android.h
+ board/amlogic/vim3/MAINTAINERS            |   2 +
+ configs/khadas-vim3_android_ab_defconfig  | 107 ++++++++++++++++++++++
+ configs/khadas-vim3l_android_ab_defconfig | 107 ++++++++++++++++++++++
+ include/configs/khadas-vim3_android.h     |  16 ++++
+ include/configs/khadas-vim3l_android.h    |  16 ++++
+ 5 files changed, 248 insertions(+)
+ create mode 100644 configs/khadas-vim3_android_ab_defconfig
+ create mode 100644 configs/khadas-vim3l_android_ab_defconfig
 
 diff --git a/board/amlogic/vim3/MAINTAINERS b/board/amlogic/vim3/MAINTAINERS
-index 92b426f66d..e185d80ce1 100644
+index e185d80ce1..d8848495c7 100644
 --- a/board/amlogic/vim3/MAINTAINERS
 +++ b/board/amlogic/vim3/MAINTAINERS
-@@ -4,6 +4,8 @@ S:	Maintained
- L:	u-boot-amlogic@groups.io
+@@ -5,7 +5,9 @@ L:	u-boot-amlogic@groups.io
  F:	board/amlogic/vim3/
  F:	configs/khadas-vim3_defconfig
-+F:	configs/khadas-vim3_android_defconfig
+ F:	configs/khadas-vim3_android_defconfig
++F:	configs/khadas-vim3_android_ab_defconfig
  F:	configs/khadas-vim3l_defconfig
-+F:	configs/khadas-vim3l_android_defconfig
+ F:	configs/khadas-vim3l_android_defconfig
++F:	configs/khadas-vim3l_android_ab_defconfig
  F:	doc/board/amlogic/khadas-vim3.rst
  F:	doc/board/amlogic/khadas-vim3l.rst
-diff --git a/configs/khadas-vim3_android_defconfig b/configs/khadas-vim3_android_defconfig
+diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
 new file mode 100644
 index 0000000000..9305a54b1b
 --- /dev/null
-+++ b/configs/khadas-vim3_android_defconfig
++++ b/configs/khadas-vim3_android_ab_defconfig
 @@ -0,0 +1,107 @@
 +CONFIG_ARM=y
 +CONFIG_SYS_BOARD="vim3"
@@ -180,11 +181,11 @@ index 0000000000..9305a54b1b
 +CONFIG_BMP_32BPP=y
 +CONFIG_LIBAVB=y
 +CONFIG_OF_LIBFDT_OVERLAY=y
-diff --git a/configs/khadas-vim3l_android_defconfig b/configs/khadas-vim3l_android_defconfig
+diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
 new file mode 100644
 index 0000000000..5eed79b263
 --- /dev/null
-+++ b/configs/khadas-vim3l_android_defconfig
++++ b/configs/khadas-vim3l_android_ab_defconfig
 @@ -0,0 +1,107 @@
 +CONFIG_ARM=y
 +CONFIG_SYS_BOARD="vim3"
@@ -294,115 +295,73 @@ index 0000000000..5eed79b263
 +CONFIG_LIBAVB=y
 +CONFIG_OF_LIBFDT_OVERLAY=y
 diff --git a/include/configs/khadas-vim3_android.h b/include/configs/khadas-vim3_android.h
-new file mode 100644
-index 0000000000..a6f6dd0a7a
---- /dev/null
+index a6f6dd0a7a..da6adf6c41 100644
+--- a/include/configs/khadas-vim3_android.h
 +++ b/include/configs/khadas-vim3_android.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Configuration for the khadas VIM3 Android
-+ *
-+ * Copyright (C) 2021 Baylibre, SAS
-+ * Author: Guillaume LA ROQUE <glaroque@baylibre.com>
-+ */
-+
-+#ifndef __CONFIG_H
-+#define __CONFIG_H
-+
-+#define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
-+#define ROOT_UUID "ddb8c3f6-d94d-4394-b633-3134139cc2e0;"
-+
+@@ -12,6 +12,21 @@
+ #define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
+ #define ROOT_UUID "ddb8c3f6-d94d-4394-b633-3134139cc2e0;"
+ 
++#if defined(CONFIG_CMD_AB_SELECT)
 +#define PARTS_DEFAULT \
 +	"uuid_disk=${uuid_gpt_disk};" \
 +	"name=logo,start=512K,size=2M,uuid=" LOGO_UUID \
 +	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
-+	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
-+	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
-+	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
-+	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
-+	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
-+	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
-+	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
++	"name=dtbo_a,size=8M,uuid=${uuid_gpt_dtbo_a};" \
++	"name=dtbo_b,size=8M,uuid=${uuid_gpt_dtbo_b};" \
++	"name=vbmeta_a,size=512K,uuid=${uuid_gpt_vbmeta_a};" \
++	"name=vbmeta_b,size=512K,uuid=${uuid_gpt_vbmeta_b};" \
++	"name=boot_a,size=32M,bootable,uuid=${uuid_gpt_boot_a};" \
++	"name=boot_b,size=32M,bootable,uuid=${uuid_gpt_boot_b};" \
++	"name=super,size=3072M,uuid=${uuid_gpt_super};" \
++	"name=userdata,size=11282M,uuid=${uuid_gpt_userdata};" \
 +	"name=rootfs,size=-,uuid=" ROOT_UUID
-+
-+#define EXTRA_ANDROID_ENV_SETTINGS \
-+	"board=vim3\0" \
-+	"board_name=vim3\0" \
-+
-+#include <configs/meson64_android.h>
-+
-+#endif /* __CONFIG_H */
++#else
+ #define PARTS_DEFAULT \
+ 	"uuid_disk=${uuid_gpt_disk};" \
+ 	"name=logo,start=512K,size=2M,uuid=" LOGO_UUID \
+@@ -24,6 +39,7 @@
+ 	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
+ 	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
+ 	"name=rootfs,size=-,uuid=" ROOT_UUID
++#endif
+ 
+ #define EXTRA_ANDROID_ENV_SETTINGS \
+ 	"board=vim3\0" \
 diff --git a/include/configs/khadas-vim3l_android.h b/include/configs/khadas-vim3l_android.h
-new file mode 100644
-index 0000000000..7affc3e448
---- /dev/null
+index 7affc3e448..b1768e2d82 100644
+--- a/include/configs/khadas-vim3l_android.h
 +++ b/include/configs/khadas-vim3l_android.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Configuration for the khadas VIM3L Android
-+ *
-+ * Copyright (C) 2021 Baylibre, SAS
-+ * Author: Guillaume LA ROQUE <glaroque@baylibre.com>
-+ */
-+
-+#ifndef __CONFIG_H
-+#define __CONFIG_H
-+
-+#define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
-+#define ROOT_UUID "ddb8c3f6-d94d-4394-b633-3134139cc2e0;"
-+
+@@ -12,6 +12,21 @@
+ #define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
+ #define ROOT_UUID "ddb8c3f6-d94d-4394-b633-3134139cc2e0;"
+ 
++#if defined(CONFIG_CMD_AB_SELECT)
 +#define PARTS_DEFAULT \
 +	"uuid_disk=${uuid_gpt_disk};" \
 +	"name=logo,start=512K,size=2M,uuid=" LOGO_UUID \
 +	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
-+	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
-+	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
-+	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
-+	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
-+	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
-+	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
-+	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
++	"name=dtbo_a,size=8M,uuid=${uuid_gpt_dtbo_a};" \
++	"name=dtbo_b,size=8M,uuid=${uuid_gpt_dtbo_b};" \
++	"name=vbmeta_a,size=512K,uuid=${uuid_gpt_vbmeta_a};" \
++	"name=vbmeta_b,size=512K,uuid=${uuid_gpt_vbmeta_b};" \
++	"name=boot_a,size=32M,bootable,uuid=${uuid_gpt_boot_a};" \
++	"name=boot_b,size=32M,bootable,uuid=${uuid_gpt_boot_b};" \
++	"name=super,size=3072M,uuid=${uuid_gpt_super};" \
++	"name=userdata,size=11282M,uuid=${uuid_gpt_userdata};" \
 +	"name=rootfs,size=-,uuid=" ROOT_UUID
-+
-+#define EXTRA_ANDROID_ENV_SETTINGS \
-+	"board=vim3l\0" \
-+	"board_name=vim3l\0" \
-+
-+#include <configs/meson64_android.h>
-+
-+#endif /* __CONFIG_H */
-diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-index 56dc9fcb07..0303d187de 100644
---- a/include/configs/meson64_android.h
-+++ b/include/configs/meson64_android.h
-@@ -104,6 +104,12 @@
- 	"elif test $board_name = sei610; then " \
- 		"echo \"  Reading DTB for sei610...\"; " \
- 		"setenv dtb_index 1;" \
-+	"elif test $board_name = vim3l; then " \
-+		"echo \"  Reading DTB for vim3l...\"; " \
-+		"setenv dtb_index 2;" \
-+	"elif test $board_name = vim3; then " \
-+		"echo \"  Reading DTB for vim3...\"; " \
-+		"setenv dtb_index 3;" \
- 	"else " \
- 		"echo Error: Android boot is not supported for $board_name; " \
- 		"exit; " \
-@@ -117,6 +123,12 @@
- 	"elif test $board_name = sei610; then " \
- 		"echo \"  Reading DTBO for sei610...\"; " \
- 		"setenv dtbo_index 1;" \
-+	"elif test $board_name = vim3l; then " \
-+		"echo \"  Reading DTBO for vim3l...\"; " \
-+		"setenv dtbo_index 2;" \
-+	"elif test $board_name = vim3; then " \
-+		"echo \"  Reading DTBO for vim3...\"; " \
-+		"setenv dtbo_index 3;" \
- 	"else " \
- 		"echo Error: Android boot is not supported for $board_name; " \
- 		"exit; " \
++#else
+ #define PARTS_DEFAULT \
+ 	"uuid_disk=${uuid_gpt_disk};" \
+ 	"name=logo,start=512K,size=2M,uuid=" LOGO_UUID \
+@@ -24,6 +39,7 @@
+ 	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
+ 	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
+ 	"name=rootfs,size=-,uuid=" ROOT_UUID
++#endif
+ 
+ #define EXTRA_ANDROID_ENV_SETTINGS \
+ 	"board=vim3l\0" \
 -- 
 2.32.0
 
