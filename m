@@ -1,161 +1,85 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
- by mx.groups.io with SMTP id smtpd.web08.4651.1637575601745006971
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+ by mx.groups.io with SMTP id smtpd.web11.1913.1637727017102489078
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Nov 2021 02:06:41 -0800
-Received: by mail-il1-f169.google.com with SMTP id j21so11900792ila.5
-        for <u-boot-amlogic@groups.io>; Mon, 22 Nov 2021 02:06:41 -0800 (PST)
+ Tue, 23 Nov 2021 20:10:17 -0800
+Received: by mail-il1-f181.google.com with SMTP id r2so1189011ilb.10
+        for <u-boot-amlogic@groups.io>; Tue, 23 Nov 2021 20:10:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r99/OjTfOOJSNWaQ+R6Hyulm5SLTaGj+HpOLbDXoV18=;
-        b=AfAGZcxbZbnJLgV0BfeYuucqtUaEpusFl+lKvyTEM6JBsRxZlWrq7v9IdE7ZLgq0O6
-         PM87YBY9rKCHAaIGP4dU80X3Tqm/+SYJwzQIdqqrynitSrpLz4+Hc/RbXgaA4VTJLpFY
-         dBg0GAzpjy7jrjbSlbhRZHTwxnvexGylEsExyCHDJIu7I6ZUo7wDzILtqMA8tQeTDOKN
-         hsob6O11TXundOLWQZCqO5iWJdTzfEg5B43TBqLAq8d0ihmRpyniKOLGIopJljtidakx
-         1vGC7l1/hbb/V2nJdGoOSLkA3vYVY3LQ1JdCivwKtH4sUaFAViJO0lXOu5uoHBdQAkx6
-         yiIA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dk/HmavR4Ikj/O45wXrs9+uk6JdxTf9WYE8x57Xbtv0=;
+        b=UJw6tgKDhD4uT+kEvuFLlZBAifoUduZQ99ebMt+wBz9nm8d3jO9Afc2uYYYcLVthzu
+         31njPucGkNbO9m+hGI+mOj9bcOrtRVmvMZjRWCfedrVwO6oA1Lo1d+6zHp7iiVds7O9o
+         KTmt1JWuQkh5pqQbVglD9Gx0c+l427d6D1Qxw=
+Return-Path: <sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH 0/7] meson: Demonstration of using binman to produce the image
+Date: Tue, 23 Nov 2021 21:09:47 -0700
+Message-Id: <20211124040954.699821-1-sjg@chromium.org>
 MIME-Version: 1.0
-References: <20211119043647.1251416-1-art@khadas.com> <2004466.1637308134@gemini.denx.de>
- <CAKaHn9KZg13r=pGCo=Lv69pBP-s-EW4uxjBVuH9veT+o5j9v+g@mail.gmail.com>
- <6198ebca.1c69fb81.fc50c.bf0bSMTPIN_ADDED_BROKEN@mx.google.com>
- <CAKaHn9+yL3naiDqbsQJWQ0Po=g=TmjjcPSKxkx5C4ay1M1AsUA@mail.gmail.com> <2497688.1637571119@gemini.denx.de>
-In-Reply-To: <2497688.1637571119@gemini.denx.de>
-From: Art Nikpal <email2tema@gmail.com>
-Date: Mon, 22 Nov 2021 18:06:30 +0800
-Message-ID: <CAKaHn9K2Y1Ct5fe1Z2J3E=WLuZ6NW8Xb1U+Myg1Dt_6MD60-Lw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] env: setenv add resolve value option
-Content-Type: text/plain; charset="UTF-8"
-To: Wolfgang Denk <wd@denx.de>
-Cc: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, marek.behun@nic.cz, Neil Armstrong <narmstrong@baylibre.com>, Tom Warren <twarren@nvidia.com>, Andre Przywara <andre.przywara@arm.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Christian Hewitt <christianshewitt@gmail.com>, Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>, Gouwa Wang <gouwa@khadas.com>, Francis Laniel <francis.laniel@amarulasolutions.com>
+Content-Transfer-Encoding: 8bit
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Simon Glass <sjg@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Marek Szyprowski <m.szyprowski@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>, Walter Lozano <walter.lozano@collabora.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On Mon, Nov 22, 2021 at 4:52 PM Wolfgang Denk <wd@denx.de> wrote:
->
-> Dear Artem,
->
-> In message <CAKaHn9+yL3naiDqbsQJWQ0Po=g=TmjjcPSKxkx5C4ay1M1AsUA@mail.gmail.com> you wrote:
-> > > >
-> > > > next examples just demonstrate how its works for already defined env
-> > > > variables which contain other variables (like storred env variables)
-> > >
-> > > Which next examples?
-> >
-> > Usage examples (from commit message):
-> >
-> > => setenv a hello; setenv b world; setenv c '${a} ${b}'
-> > => setenv -r d '${c}! ${a}...'
-> > => printenv d
-> > d=hello world! hello...
->
-> This is a very simple example, and I showed you how you can solve
-> this one by just omitting the apostrophes:
->
-> => setenv a hello; setenv b world; setenv c ${a} ${b}
-> => setenv d ${c}! ${a}...
-> => printenv d
-> d=hello world! hello...
->
+The Odroid-C2 is quite a complicated image with many steps. It is an ideal
+example for how Binman can be used.
 
-sure i know it and its easy, but we still have some misunderstanding,
-and i will try explain again our problem
-
-our problem (TASK)
-
-we have:
-some env variables which already defined and we totally dont know
-about content ( for example its was improved by `env import` or loaded
-from env storage  and  "setenv a hello; setenv b world; setenv c '${a}
-${b}'; setenv d '${c}! ${a}...' ;"  just example how emulate this env
-state )
-
-we need:
-setup/resolve env variable for example from d (and need resolve all
-sub included vars)
-=> setenv -r e $d
-=> printenv e
-=> e=hello world! hello...
-
-please explain how we can get it without -r (deep resolve option) via
-standard way ?
+Add a binman description and update the instructions accordingly.
 
 
->
-> I _think_ what you actually have in mind is something like this:
->
-> => setenv a hello
-> => setenv b world
-> => setenv c '${a} ${b}'
-> => setenv a goodbye
-> => setenv b sunshine
->
-> something to set d to: '${c}! ${a}...'
->
-> => printenv d
->
-> Here my simple approach does not show what you want to have:
->
-> => setenv a hello
-> => setenv b world
-> => setenv c ${a} ${b}
-> => setenv a goodbye
-> => setenv b sunshine
-> => setenv d ${c}! ${a}...
-> => printenv d
-> d=hello world! goodbye...
->
-> That's because here evaluation takes place at assignment, but you
-> want it when used - but being recursive here is neither a good idea
-> nor standard.
->
-> How would you do it in a standard posix shell?  You would have to
-> use "eval", like that:
->
-> $ a=hello
-> $ b=world
-> $ c='${a} ${b}'
-> $ a=goodbye
-> $ b=sunshine
-> $ d=$(eval echo $c)
-> $ echo $d
-> goodbye sunshine
->
-> But please note that "eval" is _not_ recursive!!
->
-> $ a='$b'
-> $ eval echo $c
-> $b sunshine
->
-> And this is why I object against this patch.
->
-> Oh, and in U-Boot you could write this as:
->
-> => setenv a hello
-> => setenv b world
-> => setenv c '${a} ${b}'
-> => setenv a goodbye
-> => setenv b sunshine
-> => setenv foo "setenv d ${c}! ${a}..."
-> => run foo
-> => printenv d
-> d=goodbye sunshine! goodbye...
->
-> And yes, here you have to be careful about using ' or " as there is
-> no recursion like you might expect.
->
-> So yes, it would be nice if we had "eval" (which will ocme with the
-> hush update), and no, "eval" does not recurse either.
->
->
->
-> Best regards,
->
-> Wolfgang Denk
->
-> --
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-> Real computer scientists despise the idea of actual  hardware.  Hard-
-> ware has limitations, software doesn't. It's a real shame that Turing
-> machines are so poor at I/O.
+Simon Glass (7):
+  binman: Allow providing tools and blob directories
+  binman: Allow listing an image created by a newer version
+  binman: Allow extracting a file in an alternative format
+  dtoc: Add support for reading string-list properties
+  binman: Support lists of external blobs
+  binman: Rename _ReadSubnodes() to ReadEntries()
+  RFC: Move Odroid-C2 to use binman to produce the image
+
+ Makefile                                      |   2 +
+ arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi  | 107 +++++++++++++++
+ arch/arm/mach-meson/Kconfig                   |   1 +
+ doc/board/amlogic/odroid-c4.rst               | 127 +++++-------------
+ scripts/pylint.base                           |   2 +
+ tools/binman/binman.rst                       |  65 ++++++++-
+ tools/binman/cmdline.py                       |   2 +
+ tools/binman/control.py                       |  28 +++-
+ tools/binman/entries.rst                      |  25 +++-
+ tools/binman/entry.py                         | 102 +++++++++++---
+ tools/binman/entry_test.py                    |   9 ++
+ tools/binman/etype/aml_encrypt.py             | 124 +++++++++++++++++
+ tools/binman/etype/atf_fip.py                 |  16 ++-
+ tools/binman/etype/blob.py                    |  16 ++-
+ tools/binman/etype/blob_ext_list.py           |  58 ++++++++
+ tools/binman/etype/cbfs.py                    |   8 +-
+ tools/binman/etype/fdtmap.py                  |  12 ++
+ tools/binman/etype/fit.py                     |   4 +-
+ tools/binman/etype/intel_ifwi.py              |   4 +-
+ tools/binman/etype/mkimage.py                 |   4 +-
+ tools/binman/etype/section.py                 |  26 +++-
+ tools/binman/ftest.py                         |  57 ++++++++
+ tools/binman/image.py                         |  12 +-
+ tools/binman/missing-blob-help                |   6 +
+ tools/binman/test/213_aml_encrypt.dts         |  38 ++++++
+ tools/binman/test/213_fdtmap_alt_format.dts   |  15 +++
+ tools/binman/test/214_list_no_dtb.dts         |  23 ++++
+ tools/binman/test/214_no_alt_format.dts       |  13 ++
+ tools/binman/test/215_blob_ext_list.dts       |  14 ++
+ .../binman/test/216_blob_ext_list_missing.dts |  14 ++
+ tools/dtoc/fdt_util.py                        |  21 +++
+ tools/dtoc/test_fdt.py                        |   9 ++
+ 32 files changed, 822 insertions(+), 142 deletions(-)
+ create mode 100644 tools/binman/etype/aml_encrypt.py
+ create mode 100644 tools/binman/etype/blob_ext_list.py
+ create mode 100644 tools/binman/test/213_aml_encrypt.dts
+ create mode 100644 tools/binman/test/213_fdtmap_alt_format.dts
+ create mode 100644 tools/binman/test/214_list_no_dtb.dts
+ create mode 100644 tools/binman/test/214_no_alt_format.dts
+ create mode 100644 tools/binman/test/215_blob_ext_list.dts
+ create mode 100644 tools/binman/test/216_blob_ext_list_missing.dts
+
+-- 
+2.34.0.rc2.393.gf8c9666880-goog
+
