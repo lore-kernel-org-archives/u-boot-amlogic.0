@@ -1,77 +1,53 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
- by mx.groups.io with SMTP id smtpd.web08.7683.1637809747416007947
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+ by mx.groups.io with SMTP id smtpd.web08.1056.1638384223781424651
  for <u-boot-amlogic@groups.io>;
- Wed, 24 Nov 2021 19:09:07 -0800
-Received: by mail-pj1-f50.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso4517289pjb.2
-        for <u-boot-amlogic@groups.io>; Wed, 24 Nov 2021 19:09:07 -0800 (PST)
+ Wed, 01 Dec 2021 10:43:43 -0800
+Received: by mail-qt1-f170.google.com with SMTP id n15so25104811qta.0
+        for <u-boot-amlogic@groups.io>; Wed, 01 Dec 2021 10:43:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gty+fyacM/AGt5HD1oDWWLpUuczab02jCSI0bTm7XP0=;
-        b=NdLLokK4UE/lrv/kkSeQD418sLkJ+qL+wS0Mrl2/JhscHTOm7VH0Z6iYUt4eJxdPQt
-         G1QDQLxwenx0mIa9x5RbPQQInAxqivS3Wxnyx2OxcbKxwUyjMC9F9PNDSD3aM4h+p2oB
-         RDYhkR2Bpl2en5SD1WiysKu6yW7qLm5Of11FhZCQP0dl6FPkwKGawZgi0Wlq5WLJTUOS
-         1mXjzjyZlpRKOYV0dv/UsXG71r2T20KiQC9o+IvGt7gzblND+ICX2qgQfIXV3Ab14275
-         873eUkTUtiFh/5R+039pL7lHROxsbaOtdfhkrisYH65Xkir3LBONQ4gHfzqdUAa9LVhB
-         HEfw==
-Return-Path: <email2tema@gmail.com>
-From: Artem Lapkin <email2tema@gmail.com>
-Subject: [PATCH v2] image-board: fix wrong implementation ram disk address setup from cmdline
-Date: Thu, 25 Nov 2021 11:08:59 +0800
-Message-Id: <20211125030859.2896352-1-art@khadas.com>
+        bh=3pwXgj6NWZRCnSoEPGVibBGSgV5QvTyqW4SBj7Gc3Yw=;
+        b=Ap7zen9aY+3IDE+7XSL7WanKaAu0EYDvKRJ+acnjSQh8tyJ9Qd2uQ28IPDFGzHzklY
+         6OHdPUJZXdl+AxR3ToOd3ea/FgPPKrNkO/I9bwBe2j4GKXiho+inATjVRcQtgqNt2t83
+         7w3gtWYDxJk+dWxbrgHyFFqfNmfGoFpebT7XaIXzradtVSupluKhSoU4vQoL4mx7brbt
+         CsEvXZFxT7cv5zV+XX4kGVnoAr1uBL4AmZVxzCXfDHDK13F2MvxMsHV+XWNc+KYCAGFQ
+         6+b6gf8gk4nW21KFS/41Bgo1ghmsMASH+fIbuFAfqOgYzMosZMc3xyoGO+fdfJr4ZUYC
+         FZbA==
+Return-Path: <seanga2@gmail.com>
+From: Sean Anderson <seanga2@gmail.com>
+Subject: [PATCH 0/5] clk: Clean up optional helpers, and add API docs to HTML
+Date: Wed,  1 Dec 2021 13:43:27 -0500
+Message-Id: <20211201184332.2166897-1-seanga2@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: sjg@chromium.org
-Cc: trini@konsulko.com, narmstrong@baylibre.com, twarren@nvidia.com, andre.przywara@arm.com, u-boot@lists.denx.de, u-boot-amlogic@groups.io, christianshewitt@gmail.com, art@khadas.com, nick@khadas.com, gouwa@khadas.com
+To: u-boot@lists.denx.de
+Cc: Dario Binacchi <dariobin@libero.it>, Simon Glass <sjg@chromium.org>, Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Michal Simek <monstr@monstr.eu>, Neil Armstrong <narmstrong@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Problem
+This cleans up the various optional helpers for clocks, and adds a new one.
+While we're at it, also convert the existing API docs to our HTML documentation.
 
-Wrong implementation logic: ramdisk cmdline image address always ignored!
-Next block { rd_addr = hextoul(select, NULL) } unusable for raw initrd.
 
-We have unbootable raw initrd images because, select_ramdisk for raw
-initrd images ignore submited select addr and setup rd_datap value to 0
+Sean Anderson (5):
+  clk: Rename clk_get_optional_nodev
+  clk: Inline clk_get_*_optional
+  clk: Add client API to HTML docs
+  clk: Add driver API to HTML docs
+  clk: Add clk_get_by_name_optional
 
-Signed-off-by: Artem Lapkin <art@khadas.com>
----
-V2 changes
-_ rebase to master
-_ from https://patchwork.ozlabs.org/project/uboot/patch/20211016051915.4157293-1-art@khadas.com/
----
- boot/image-board.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ doc/api/clk.rst            |  19 +++
+ doc/api/index.rst          |   1 +
+ drivers/clk/clk-uclass.c   |  21 ---
+ drivers/clk/clk_zynq.c     |   5 +-
+ drivers/phy/phy-mtk-tphy.c |   8 +-
+ drivers/rng/meson-rng.c    |   4 +-
+ include/clk-uclass.h       | 187 +++++++++++++----------
+ include/clk.h              | 306 +++++++++++++++++++++----------------
+ 8 files changed, 310 insertions(+), 241 deletions(-)
+ create mode 100644 doc/api/clk.rst
 
-diff --git a/boot/image-board.c b/boot/image-board.c
-index bf8817165c..87a8f07432 100644
---- a/boot/image-board.c
-+++ b/boot/image-board.c
-@@ -334,7 +334,7 @@ static int select_ramdisk(bootm_headers_t *images, const char *select, u8 arch,
- 
- 	if (select) {
- 		ulong default_addr;
--		bool done = true;
-+		bool done = false;
- 
- 		if (CONFIG_IS_ENABLED(FIT)) {
- 			/*
-@@ -352,13 +352,13 @@ static int select_ramdisk(bootm_headers_t *images, const char *select, u8 arch,
- 					   &fit_uname_config)) {
- 				debug("*  ramdisk: config '%s' from image at 0x%08lx\n",
- 				      fit_uname_config, rd_addr);
-+				done = true;
- 			} else if (fit_parse_subimage(select, default_addr,
- 						      &rd_addr,
- 						      &fit_uname_ramdisk)) {
- 				debug("*  ramdisk: subimage '%s' from image at 0x%08lx\n",
- 				      fit_uname_ramdisk, rd_addr);
--			} else {
--				done = false;
-+				done = true;
- 			}
- 		}
- 		if (!done) {
 -- 
-2.25.1
+2.33.0
 
