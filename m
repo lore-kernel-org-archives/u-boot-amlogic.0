@@ -1,118 +1,95 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.6597.1638441344492265067
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web12.9214.1639762839829542036
  for <u-boot-amlogic@groups.io>;
- Thu, 02 Dec 2021 02:35:45 -0800
-Received: by mail-wr1-f47.google.com with SMTP id q3so35779180wru.5
-        for <u-boot-amlogic@groups.io>; Thu, 02 Dec 2021 02:35:44 -0800 (PST)
+ Fri, 17 Dec 2021 09:40:40 -0800
+Received: by mail-wr1-f52.google.com with SMTP id a9so5451232wrr.8
+        for <u-boot-amlogic@groups.io>; Fri, 17 Dec 2021 09:40:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=OoSiLmPEZGOMFzlX475pJcvAcqYuqI+vtMF1xH/HWuQ=;
-        b=m0K5O3RZNB5iQSWlNVdWiBBwlLVDG4vzN8SMY8e7CPFcH6QtrOkF1ml1Qm+D1PcTHi
-         4aFGSoBcpcR7hGJFQ+6kNdn9fqLrYKnwBMPtQItCo3ZsWSqCi0m+e11uOk3vAwe/1/Nv
-         1+JAts3O1NGVJjBXOqnlGqg/iG+q5WZnULQedxdRoCnr1jNR9EOpK1FAoq/ITlSEsT/0
-         hYlsABaRGV8e4TFv0sioJkvBdaO3FeueeORavwc8x2nfG/F7QVaEDcHtbSZt0vmITbOR
-         it3iExmJZ0hGb9n1797gtY6tzplr8LBIgCT+POWkyVLbirruQbCxl6OxoiZyJYcA4Ao2
-         It+A==
+        bh=87wcgj1wwhiS8621Aye0xioyBZPOX7F5nj3vDjZB0sw=;
+        b=RU1YC1S/05qfRqX+vWjTgmu90daOVQakeNdSMsFbYvuz4BZfAPi5nqh8zI0qLHrJ6A
+         VlS5PMkLHaFkoOCt7suAyik5DTNjqA5XxRC9eyWb5XPDemHtjbgrDIevyzM5bqcNTEps
+         oTlPNiKoUXINI+7Bvr1bcyZUrDdgCSoSlnkEkgNdot/c4mVN+cN8iS4qhC+cCewmVdUF
+         n1bY1Kb46pp+LqdEqJjoyv+hM4YGCzP8dEJgsUzxHROw57qoXcegeIb9wMt8f3ZrRjVl
+         jwkrobAFq2trGxOkkN0O5NYu0hmhkdnpC6YGB00LXrfA6CAdzNMNg7twaJEjmdTRR9kd
+         ZQqQ==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH 5/5] clk: Add clk_get_by_name_optional
-References: <20211201184332.2166897-1-seanga2@gmail.com>
- <20211201184332.2166897-6-seanga2@gmail.com>
+Subject: Re: [PATCH v5 25/29] image: Remove #ifdefs from select_ramdisk()
+References: <20210926014342.127913-1-sjg@chromium.org>
+ <20210926014342.127913-19-sjg@chromium.org>
+ <20211009014130.GL7964@bill-the-cat>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <a1241f79-cd60-c81b-7f77-9ee0da068d3e@baylibre.com>
-Date: Thu, 2 Dec 2021 11:35:41 +0100
+Message-ID: <f153017b-c41a-0d32-67b9-f288e695f900@baylibre.com>
+Date: Fri, 17 Dec 2021 18:40:36 +0100
 MIME-Version: 1.0
-In-Reply-To: <20211201184332.2166897-6-seanga2@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20211009014130.GL7964@bill-the-cat>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Sean Anderson <seanga2@gmail.com>, u-boot@lists.denx.de
-Cc: Dario Binacchi <dariobin@libero.it>, Simon Glass <sjg@chromium.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, u-boot-amlogic@groups.io
+To: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Alexandru Gagniuc <mr.nuke.me@gmail.com>, Andre Przywara <andre.przywara@arm.com>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, Robert Marko <robert.marko@sartura.hr>, Masahiro Yamada <masahiroy@kernel.org>, Joe Hershberger <joe.hershberger@ni.com>, Marek Vasut <marex@denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 01/12/2021 19:43, Sean Anderson wrote:
-> This adds a helper function for clk_get_by_name in cases where the clock is
-> optional. Hopefully this helps point driver writers in the right direction.
-> Also convert some existing users.
+Hi,
+
+On 09/10/2021 03:41, Tom Rini wrote:
+> On Sat, Sep 25, 2021 at 07:43:38PM -0600, Simon Glass wrote:
 > 
-> Signed-off-by: Sean Anderson <seanga2@gmail.com>
-> ---
+>> Use boolean variables to deal with the strange #ifdef logic of this
+>> function, so we can remove the #ifdefs.
+>>
+>> Signed-off-by: Simon Glass <sjg@chromium.org>
 > 
->  drivers/clk/clk_zynq.c  |  5 +++--
->  drivers/rng/meson-rng.c |  4 ++--
->  include/clk.h           | 24 ++++++++++++++++++++++++
->  3 files changed, 29 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/clk_zynq.c b/drivers/clk/clk_zynq.c
-> index 18915c3e04..e80500e382 100644
-> --- a/drivers/clk/clk_zynq.c
-> +++ b/drivers/clk/clk_zynq.c
-> @@ -472,8 +472,9 @@ static int zynq_clk_probe(struct udevice *dev)
->  
->  	for (i = 0; i < 2; i++) {
->  		sprintf(name, "gem%d_emio_clk", i);
-> -		ret = clk_get_by_name(dev, name, &priv->gem_emio_clk[i]);
-> -		if (ret < 0 && ret != -ENODATA) {
-> +		ret = clk_get_by_name_optional(dev, name,
-> +					       &priv->gem_emio_clk[i]);
-> +		if (ret) {
->  			dev_err(dev, "failed to get %s clock\n", name);
->  			return ret;
->  		}
-> diff --git a/drivers/rng/meson-rng.c b/drivers/rng/meson-rng.c
-> index 5a4f45ad5a..e0a1e8c7e0 100644
-> --- a/drivers/rng/meson-rng.c
-> +++ b/drivers/rng/meson-rng.c
-> @@ -91,8 +91,8 @@ static int meson_rng_of_to_plat(struct udevice *dev)
->  		return -ENODEV;
->  
->  	/* Get optional "core" clock */
-> -	err = clk_get_by_name(dev, "core", &pdata->clk);
-> -	if (err && err != -ENODATA)
-> +	err = clk_get_by_name_optional(dev, "core", &pdata->clk);
-> +	if (err)
->  		return err;
->  
->  	return 0;
-> diff --git a/include/clk.h b/include/clk.h
-> index 103ef16bf9..36721188d0 100644
-> --- a/include/clk.h
-> +++ b/include/clk.h
-> @@ -292,6 +292,30 @@ static inline int clk_release_all(struct clk *clk, int count)
->  }
->  #endif
->  
-> +/**
-> + * clk_get_by_name_optional() - Get/request a optional clock by name.
-> + * @dev:	The client device.
-> + * @name:	The name of the clock to request, within the client's list of
-> + *		clocks.
-> + * @clk:	A pointer to a clock struct to initialize.
-> + *
-> + * Behaves the same as clk_get_by_name(), except when there is no clock
-> + * provider. In the latter case, return 0.
-> + *
-> + * Return: 0 if OK, or a negative error code.
-> + */
-> +static inline int clk_get_by_name_optional(struct udevice *dev,
-> +					   const char *name, struct clk *clk)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_get_by_name_optional(dev, name, clk);
-> +	if (ret == -ENODATA)
-> +		return 0;
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * clk_get_by_name_nodev_optional - Get/request an optinonal clock by name
->   *		without a device.
+> Applied to u-boot/master, thanks!
 > 
 
+This commit causes an abort on Libretech-CC when trying to load an initrd (using libretech-cc_defconfig & gcc-arm-9.2-2019.12):
 
-For meson-rng:
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+U-Boot 2021.10-00076-gf33a2c1bd0 (Dec 17 2021 - 18:21:08 +0100) libretech-cc
+
+Model: Libre Computer AML-S905X-CC
+SoC:   Amlogic Meson GXL (S905X) Revision 21:d (84:2)
+DRAM:  2 GiB
+MMC:   mmc@72000: 0, mmc@74000: 1
+Loading Environment from nowhere... OK
+In:    serial
+Out:   serial
+Err:   serial
+[BL31]: tee size: 0
+[BL31]: tee size: 0
+Net:   eth0: ethernet@c9410000
+Hit any key to stop autoboot:  0
+(ROM USB boot)
+## Executing script at 08000000
+
+Moving Image from 0x8080000 to 0x8200000, end=a6c0000
+"Synchronous Abort" handler, esr 0x96000210
+elr: 000000000101bd44 lr : 000000000101bf3c (reloc)
+elr: 000000007df70d44 lr : 000000007df70f3c
+x0 : 0000000000000000 x1 : 000000007dfcd6fc
+x2 : 0000000000000003 x3 : 0000000000000000
+x4 : 000000007bf74b20 x5 : 0000000000000030
+x6 : 0000000000000000 x7 : 0000000000000002
+x8 : 000000007bf441c0 x9 : 0000000000000000
+x10: 000000007fffffff x11: 0000000000000000
+x12: 000000000a6c0000 x13: 000000000a6bffff
+x14: 000000007bf49210 x15: 0000000000000020
+x16: 000000007df853bc x17: 0000000000000000
+x18: 000000007bf52dd0 x19: 000000007dff4e98
+x20: 000000007dff4f88 x21: 000000007dff4f90
+x22: 0000000000000016 x23: 000000007bf74b20
+x24: 0000000000000000 x25: 000000007bf74b48
+x26: 0000000000000000 x27: 0000000000000000
+x28: 000000007bf74b70 x29: 000000007bf481f0
+
+Code: a9017fff 97fffff5 a8c27bfd d65f03c0 (b9400002)
+Resetting CPU ...
+
+Abort is probably in genimg_get_format()
+
+Reverting on master fixes the issue.
+
+Neil
