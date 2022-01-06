@@ -1,81 +1,77 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web08.4342.1641546788958824113
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+ by mx.groups.io with SMTP id smtpd.web11.14074.1641498953002202855
  for <u-boot-amlogic@groups.io>;
- Fri, 07 Jan 2022 01:13:09 -0800
-Received: by mail-wm1-f54.google.com with SMTP id bg19-20020a05600c3c9300b0034565e837b6so3290104wmb.1
-        for <u-boot-amlogic@groups.io>; Fri, 07 Jan 2022 01:13:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WXwQnLfFSW0PnZHuwxoJAnx/QsKgz9n0lHqO/vbIMQY=;
-        b=cKVlsbhXOAXQB+86QeP/Hro0tXCwhwAdPSvrl9P9SSEqtYYCf6Yk+wFLfJyuJehsNZ
-         GtrvEtsZWz8lSmFS3OLu+LqkyneMz24fhaT0S9pEnhcAYNR3bGGZcRX4hsJjDJRqOnzI
-         2mtkJEVJa6in3ryfWIGNUqPFLKe64aCXJarishetlFKaQ0wINyP2Ih8VhqxX5swgJLoj
-         Y8pMeZnwarmRNx4jL8YLb7BItF54WQB0lI2ph3iwKVRgW+sSDWe7HTu0q3Iu1pJm60bI
-         2Akd947rE5J7/EmWBytvQ571TeliybxADL7G8peM7nzkNUuBHU0epgK13T7tkvBHpCaU
-         wv2w==
-Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 0/4] meson64_android: add support for vim3/vim3l boards
-References: <20211122152207.219023-1-mkorpershoek@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <e95854dd-1fdb-141f-cf12-fab1f45781b3@baylibre.com>
-Date: Fri, 7 Jan 2022 10:13:07 +0100
+ Thu, 06 Jan 2022 11:55:54 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1641498950;
+	bh=vriSaTI2W/PpatWousDLsdWPLYzhyfrmBMfxmFzvh9g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dKiepXNvZ1rEuk1NYP1zRBpXzDLreMvaIcU0NvABQowfjwO+hj6NR+Q/Uyp+kyrHd
+	 32FxUalKxPkSmVqycAPEPjWXVbRBbOsXRm7XY9rVXdeaAWhEw+XiqPcLUXrhKIWMiX
+	 KArcosvvaqyAJ6YALQX/XfT70Gb6pHFfK+mTAZFI92zhfhRx8RkMSuvGgL5rXarH7H
+	 BMK4LomQmtsY3TeqjXQhXcQVfTZ+WJtap0qCSgedRKlQ1qXoY4wwZFHh2zU+/F0SsV
+	 FQNn7vA2MxVjLT6V+OD5zqt+uUFRikE1D6o9AIx67YLO+0SyBR8H13pwTi8xLFNHJn
+	 DxpwF+KUULMlQ==
+Message-ID: <f2b7e565-9dd1-ba71-a143-6c629694be4c@denx.de>
+Date: Thu, 6 Jan 2022 20:55:48 +0100
 MIME-Version: 1.0
-In-Reply-To: <20211122152207.219023-1-mkorpershoek@baylibre.com>
-Content-Type: text/plain; charset=utf-8
+Subject: Re: [PATCH] usb: gadget: dwc2_udc_otg: set ep's desc during enable/disable
+References: <20220106150208.1316946-1-gary.bisson@boundarydevices.com>
+ <8a9ab2a9-a4fe-0b06-de58-4e225fbe13e8@baylibre.com>
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <8a9ab2a9-a4fe-0b06-de58-4e225fbe13e8@baylibre.com>
 Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+To: Neil Armstrong <narmstrong@baylibre.com>, Gary Bisson <gary.bisson@boundarydevices.com>, u-boot@lists.denx.de, Tom Rini <trini@konsulko.com>
+Cc: lukma@denx.de, peter.chen@nxp.com, jun.li@nxp.com, peng.fan@nxp.com, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 22/11/2021 16:22, Mattijs Korpershoek wrote:
-> The VIM3 and VIM3L boards are well supported in the
-> Android Open Source project via the yukawa [1] platform.
+On 1/6/22 16:21, Neil Armstrong wrote:
+> Hi,
 > 
-> Their U-Boot version, despite being public [2] is not in mainline.
+> On 06/01/2022 16:02, Gary Bisson wrote:
+>> Fastboot support has been broken on platforms using dwc2 controller
+>> since the gadget gets its max packet size from it.
+>> This patch is the equivalent of 723fd5668ff which fixed the same issue
+>> but for the chipidea controller.
+>>
+>> Fixes: 27c9141b111 ("usb: gadget: fastboot: use correct max packet size")
+>>
+>> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+>> ---
+>>   drivers/usb/gadget/dwc2_udc_otg.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/usb/gadget/dwc2_udc_otg.c b/drivers/usb/gadget/dwc2_udc_otg.c
+>> index 2f318144421..fb10884755b 100644
+>> --- a/drivers/usb/gadget/dwc2_udc_otg.c
+>> +++ b/drivers/usb/gadget/dwc2_udc_otg.c
+>> @@ -655,6 +655,7 @@ static int dwc2_ep_enable(struct usb_ep *_ep,
+>>   		return -ESHUTDOWN;
+>>   	}
+>>   
+>> +	_ep->desc = desc;
+>>   	ep->stopped = 0;
+>>   	ep->desc = desc;
 > 
-> [1] https://android.googlesource.com/device/amlogic/yukawa
-> [2] https://gitlab.com/baylibre/amlogic/atv/u-boot/-/tree/u-boot/v2021.07/integ
+> Indeed the _ep and ep was confusing when looking code
 > 
-> Add defconfigs for both vim3, vim3l to support
-> traditional and A/B booting/partitioning schemes.
+>>   	ep->pio_irqs = 0;
+>> @@ -695,6 +696,7 @@ static int dwc2_ep_disable(struct usb_ep *_ep)
+>>   	/* Nuke all pending requests */
+>>   	nuke(ep, -ESHUTDOWN);
+>>   
+>> +	_ep->desc = NULL;
+>>   	ep->desc = 0;
+>>   	ep->stopped = 1;
+>>   
+>>
 > 
-> Changes in v2:
-> * Squashed defconfig changes for initial support
-> * Split out partitition changes for A/B
+> An off-tree patch removed from our Yukawa backlog, thanks !
 > 
-> v1:
-> * https://lore.kernel.org/u-boot/20211119100829.843139-1-mkorpershoek@baylibre.com/T/#t
-> 
-> 
-> Mattijs Korpershoek (4):
->   configs: meson64_android: add board specific env settings
->   configs: add khadas-vim3{l}_android for AOSP support
->   configs: prepare khadas-vim3{l}_ab_android for AOSP support
->   configs: khadas-vim3{l}_android_ab: enable A/B support
-> 
->  board/amlogic/vim3/MAINTAINERS            |   4 +
->  configs/khadas-vim3_android_ab_defconfig  | 109 ++++++++++++++++++++++
->  configs/khadas-vim3_android_defconfig     | 107 +++++++++++++++++++++
->  configs/khadas-vim3l_android_ab_defconfig | 109 ++++++++++++++++++++++
->  configs/khadas-vim3l_android_defconfig    | 107 +++++++++++++++++++++
->  include/configs/khadas-vim3_android.h     |  50 ++++++++++
->  include/configs/khadas-vim3l_android.h    |  50 ++++++++++
->  include/configs/meson64_android.h         |  17 ++++
->  8 files changed, 553 insertions(+)
->  create mode 100644 configs/khadas-vim3_android_ab_defconfig
->  create mode 100644 configs/khadas-vim3_android_defconfig
->  create mode 100644 configs/khadas-vim3l_android_ab_defconfig
->  create mode 100644 configs/khadas-vim3l_android_defconfig
->  create mode 100644 include/configs/khadas-vim3_android.h
->  create mode 100644 include/configs/khadas-vim3l_android.h
-> 
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
++CC Tom, can you pick this one for CURRENT 2022.01 release?
 
-Applied to u-boot-amlogic
-
-Thanks,
-Neil
+Thank you
