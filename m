@@ -1,78 +1,354 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.9930.1641482475965742922
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web08.4338.1641546752258673393
  for <u-boot-amlogic@groups.io>;
- Thu, 06 Jan 2022 07:21:16 -0800
-Received: by mail-wr1-f54.google.com with SMTP id r9so3663986wrg.0
-        for <u-boot-amlogic@groups.io>; Thu, 06 Jan 2022 07:21:15 -0800 (PST)
+ Fri, 07 Jan 2022 01:12:33 -0800
+Received: by mail-wm1-f43.google.com with SMTP id n19-20020a7bc5d3000000b003466ef16375so5031758wmk.1
+        for <u-boot-amlogic@groups.io>; Fri, 07 Jan 2022 01:12:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=x83SKdw94IFEu8QKm0tZCAocafq6zLK6WhbESHEOCRU=;
-        b=Pv2NgIeyQnA6tZ6tQS2W6xJTfPF8JvlWivY/dlOvGsXPtcLYu8Ae/BFrpVWn5t51lL
-         cwp5p3h9EZJD/j3PfP0V2GsMm1jkkSsFawJPAf8lGZS/oQ/ALpLkFpTlj8UMbBxuUthS
-         AQg1pIvnnEF/fvMue4FeLHSgwt6a4FzYaln1ebAwlfyIE7cGHhFUOkyDa4to9+2vIdZp
-         sO7iUJ0s8B/lk4XGJRZTYw0m2M4ZXzAfJ7dlvuDmdvH0D9ThoTtH+47vLQZMc6TvMxy7
-         JHf8At7cUgWU1tR8KOsAW2Wm+D2Am5xBcRfnDOYWGNWAzTIEXpcjkTFQ4keD0u/E4tL9
-         v0xQ==
+        bh=PnN7/v7jNDO77YFTmA8ppsyljtNBkqliCgJ0OrZeU2c=;
+        b=7zv9nSnU456U0r7O80lhA2iVpglxRemwUaStafrDj1ZT+l2MsmpnqWyKI4GM+JBVDq
+         rMqdBb/xcpv8AuYn40HOOS0+R18lWgA0zywJ9dplcGQpSK912lXK6YilKDefh3oB5v9w
+         AmUbhjotYIub3QuMh7vP7nbTD5GUVQK5vtgWk2fVuXX02HCdfRoUwLRUtzIQ3ppZEY/z
+         8KNXbO1NvDyoMUw03SqL9xtvMn2yK0o52roiZO6FZuR1glmCs7Z6cEbudQa9C0/4waWi
+         MaBZNJNxnmhwThBxzeADM+3syTPtkSMovQLOC3V12wVCwk3K8dhISSKt7RRw6cV+KvBX
+         1iSA==
 Return-Path: <narmstrong@baylibre.com>
-Subject: Re: [PATCH] usb: gadget: dwc2_udc_otg: set ep's desc during enable/disable
-References: <20220106150208.1316946-1-gary.bisson@boundarydevices.com>
+Subject: Re: [PATCH] configs: amlogic: Disable CONFIG_NET_RANDOM_ETHADDR when unnecessary
+References: <20211122110710.1038893-1-narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Message-ID: <8a9ab2a9-a4fe-0b06-de58-4e225fbe13e8@baylibre.com>
-Date: Thu, 6 Jan 2022 16:21:12 +0100
+Message-ID: <cad23539-0fae-bcbe-ee8a-75f8fc625d1c@baylibre.com>
+Date: Fri, 7 Jan 2022 10:12:29 +0100
 MIME-Version: 1.0
-In-Reply-To: <20220106150208.1316946-1-gary.bisson@boundarydevices.com>
+In-Reply-To: <20211122110710.1038893-1-narmstrong@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Gary Bisson <gary.bisson@boundarydevices.com>, u-boot@lists.denx.de
-Cc: lukma@denx.de, marex@denx.de, peter.chen@nxp.com, jun.li@nxp.com, peng.fan@nxp.com, u-boot-amlogic@groups.io
+To: christianshewitt@gmail.com, adeep@lexina.in, trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
-
-On 06/01/2022 16:02, Gary Bisson wrote:
-> Fastboot support has been broken on platforms using dwc2 controller
-> since the gadget gets its max packet size from it.
-> This patch is the equivalent of 723fd5668ff which fixed the same issue
-> but for the chipidea controller.
+On 22/11/2021 12:07, Neil Armstrong wrote:
+> On Meson GXL, GXM, AXG, G12A, G12B & SM1 SoCs, we can generate an unique
+> MAC address if none valid found in the eFuses storage.
 > 
-> Fixes: 27c9141b111 ("usb: gadget: fastboot: use correct max packet size")
+> Only the GXBB based boards doesn't have a fallback way to generate an
+> unique MAC address, so we rely on CONFIG_NET_RANDOM_ETHADDR to have
+> a valid one.
 > 
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+> An exception is the Radxa Zero board who doesn't have Ethernet on board
+> so depends on an (or multiple) eventual USB adapters, so leaving the
+> CONFIG_NET_RANDOM_ETHADDR configs seems safer.
+> 
+> Suggested-by: Tom Rini <trini@konsulko.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  drivers/usb/gadget/dwc2_udc_otg.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  configs/bananapi-m5_defconfig        | 1 -
+>  configs/beelink-gsking-x_defconfig   | 1 -
+>  configs/beelink-gtking_defconfig     | 1 -
+>  configs/beelink-gtkingpro_defconfig  | 1 -
+>  configs/jethub_j80_defconfig         | 1 -
+>  configs/khadas-vim2_defconfig        | 1 -
+>  configs/khadas-vim3_defconfig        | 1 -
+>  configs/khadas-vim3l_defconfig       | 1 -
+>  configs/khadas-vim_defconfig         | 1 -
+>  configs/libretech-ac_defconfig       | 1 -
+>  configs/libretech-cc_defconfig       | 1 -
+>  configs/libretech-cc_v2_defconfig    | 1 -
+>  configs/libretech-s905d-pc_defconfig | 1 -
+>  configs/libretech-s912-pc_defconfig  | 1 -
+>  configs/odroid-c4_defconfig          | 1 -
+>  configs/odroid-hc4_defconfig         | 1 -
+>  configs/odroid-n2_defconfig          | 1 -
+>  configs/p212_defconfig               | 1 -
+>  configs/s400_defconfig               | 1 -
+>  configs/sei510_defconfig             | 1 -
+>  configs/sei610_defconfig             | 1 -
+>  configs/u200_defconfig               | 1 -
+>  configs/wetek-core2_defconfig        | 1 -
+>  23 files changed, 23 deletions(-)
 > 
-> diff --git a/drivers/usb/gadget/dwc2_udc_otg.c b/drivers/usb/gadget/dwc2_udc_otg.c
-> index 2f318144421..fb10884755b 100644
-> --- a/drivers/usb/gadget/dwc2_udc_otg.c
-> +++ b/drivers/usb/gadget/dwc2_udc_otg.c
-> @@ -655,6 +655,7 @@ static int dwc2_ep_enable(struct usb_ep *_ep,
->  		return -ESHUTDOWN;
->  	}
->  
-> +	_ep->desc = desc;
->  	ep->stopped = 0;
->  	ep->desc = desc;
-
-Indeed the _ep and ep was confusing when looking code
-
->  	ep->pio_irqs = 0;
-> @@ -695,6 +696,7 @@ static int dwc2_ep_disable(struct usb_ep *_ep)
->  	/* Nuke all pending requests */
->  	nuke(ep, -ESHUTDOWN);
->  
-> +	_ep->desc = NULL;
->  	ep->desc = 0;
->  	ep->stopped = 1;
->  
+> diff --git a/configs/bananapi-m5_defconfig b/configs/bananapi-m5_defconfig
+> index 7ca14a5f6a..4bf81b2faa 100644
+> --- a/configs/bananapi-m5_defconfig
+> +++ b/configs/bananapi-m5_defconfig
+> @@ -25,7 +25,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_ADC=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+> diff --git a/configs/beelink-gsking-x_defconfig b/configs/beelink-gsking-x_defconfig
+> index 54ac1c9315..e60e754f56 100644
+> --- a/configs/beelink-gsking-x_defconfig
+> +++ b/configs/beelink-gsking-x_defconfig
+> @@ -26,7 +26,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_MTD=y
+> diff --git a/configs/beelink-gtking_defconfig b/configs/beelink-gtking_defconfig
+> index 7735c70e3f..2ec3221563 100644
+> --- a/configs/beelink-gtking_defconfig
+> +++ b/configs/beelink-gtking_defconfig
+> @@ -26,7 +26,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_MTD=y
+> diff --git a/configs/beelink-gtkingpro_defconfig b/configs/beelink-gtkingpro_defconfig
+> index 93c5739672..60d316d80a 100644
+> --- a/configs/beelink-gtkingpro_defconfig
+> +++ b/configs/beelink-gtkingpro_defconfig
+> @@ -26,7 +26,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_MTD=y
+> diff --git a/configs/jethub_j80_defconfig b/configs/jethub_j80_defconfig
+> index ad6bec0c43..eb1e4c4a53 100644
+> --- a/configs/jethub_j80_defconfig
+> +++ b/configs/jethub_j80_defconfig
+> @@ -33,7 +33,6 @@ CONFIG_CMD_REGULATOR=y
+>  CONFIG_PARTITION_TYPE_GUID=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_DM_I2C=y
+>  CONFIG_SYS_I2C_MESON=y
+> diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
+> index c852f7f3f9..81cff3cee8 100644
+> --- a/configs/khadas-vim2_defconfig
+> +++ b/configs/khadas-vim2_defconfig
+> @@ -29,7 +29,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+> diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
+> index a225a564b2..65050efd3f 100644
+> --- a/configs/khadas-vim3_defconfig
+> +++ b/configs/khadas-vim3_defconfig
+> @@ -30,7 +30,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_ADC=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_BUTTON=y
+> diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
+> index 9d94c31891..b9162c9f1e 100644
+> --- a/configs/khadas-vim3l_defconfig
+> +++ b/configs/khadas-vim3l_defconfig
+> @@ -30,7 +30,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_ADC=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_BUTTON=y
+> diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
+> index 5565635ab1..81eeff4982 100644
+> --- a/configs/khadas-vim_defconfig
+> +++ b/configs/khadas-vim_defconfig
+> @@ -27,7 +27,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_PHY_MESON_GXL=y
+> diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
+> index fa4427a815..7dcd8540a9 100644
+> --- a/configs/libretech-ac_defconfig
+> +++ b/configs/libretech-ac_defconfig
+> @@ -34,7 +34,6 @@ CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_ENV_IS_IN_SPI_FLASH=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+> diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+> index b729308c8e..b4413ed9b7 100644
+> --- a/configs/libretech-cc_defconfig
+> +++ b/configs/libretech-cc_defconfig
+> @@ -26,7 +26,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_PHY_MESON_GXL=y
+> diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+> index 9f8a914bb7..99a0b28d16 100644
+> --- a/configs/libretech-cc_v2_defconfig
+> +++ b/configs/libretech-cc_v2_defconfig
+> @@ -30,7 +30,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_ENV_IS_IN_SPI_FLASH=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+> diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
+> index bde2bb877c..6e8c8a497e 100644
+> --- a/configs/libretech-s905d-pc_defconfig
+> +++ b/configs/libretech-s905d-pc_defconfig
+> @@ -32,7 +32,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_ENV_IS_IN_SPI_FLASH=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+> diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
+> index 536f9e8d12..b08ca44abe 100644
+> --- a/configs/libretech-s912-pc_defconfig
+> +++ b/configs/libretech-s912-pc_defconfig
+> @@ -31,7 +31,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_ENV_IS_IN_SPI_FLASH=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+> diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
+> index bc778a641a..1ea003f3f8 100644
+> --- a/configs/odroid-c4_defconfig
+> +++ b/configs/odroid-c4_defconfig
+> @@ -26,7 +26,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_ADC=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+> diff --git a/configs/odroid-hc4_defconfig b/configs/odroid-hc4_defconfig
+> index 2fe761e939..d632670db0 100644
+> --- a/configs/odroid-hc4_defconfig
+> +++ b/configs/odroid-hc4_defconfig
+> @@ -29,7 +29,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_ADC=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_SATA=y
+> diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
+> index 8e9e8f8fb7..7f87504a9c 100644
+> --- a/configs/odroid-n2_defconfig
+> +++ b/configs/odroid-n2_defconfig
+> @@ -26,7 +26,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_ADC=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+> diff --git a/configs/p212_defconfig b/configs/p212_defconfig
+> index b1d2ca8350..bca0fa8404 100644
+> --- a/configs/p212_defconfig
+> +++ b/configs/p212_defconfig
+> @@ -25,7 +25,6 @@ CONFIG_CMD_USB=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_PHY_MESON_GXL=y
+>  CONFIG_DM_ETH=y
+> diff --git a/configs/s400_defconfig b/configs/s400_defconfig
+> index 4467e66929..8483694685 100644
+> --- a/configs/s400_defconfig
+> +++ b/configs/s400_defconfig
+> @@ -25,7 +25,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_PHY_REALTEK=y
+>  CONFIG_DM_ETH=y
+> diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
+> index 690a0ca8d4..5e2496edbe 100644
+> --- a/configs/sei510_defconfig
+> +++ b/configs/sei510_defconfig
+> @@ -43,7 +43,6 @@ CONFIG_ENV_IS_IN_MMC=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+>  CONFIG_SYS_MMC_ENV_DEV=2
+>  CONFIG_SYS_MMC_ENV_PART=1
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_USB_FUNCTION_FASTBOOT=y
+>  CONFIG_FASTBOOT_BUF_ADDR=0x6000000
+>  CONFIG_FASTBOOT_FLASH=y
+> diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
+> index 63080aec2d..df53c91d8b 100644
+> --- a/configs/sei610_defconfig
+> +++ b/configs/sei610_defconfig
+> @@ -43,7 +43,6 @@ CONFIG_ENV_IS_IN_MMC=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+>  CONFIG_SYS_MMC_ENV_DEV=2
+>  CONFIG_SYS_MMC_ENV_PART=1
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_USB_FUNCTION_FASTBOOT=y
+>  CONFIG_FASTBOOT_BUF_ADDR=0x6000000
+>  CONFIG_FASTBOOT_FLASH=y
+> diff --git a/configs/u200_defconfig b/configs/u200_defconfig
+> index 144c394010..7f46dcf5c2 100644
+> --- a/configs/u200_defconfig
+> +++ b/configs/u200_defconfig
+> @@ -25,7 +25,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_DM_ETH=y
+>  CONFIG_DM_MDIO=y
+> diff --git a/configs/wetek-core2_defconfig b/configs/wetek-core2_defconfig
+> index ce947b5625..006cebc711 100644
+> --- a/configs/wetek-core2_defconfig
+> +++ b/configs/wetek-core2_defconfig
+> @@ -26,7 +26,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> -CONFIG_NET_RANDOM_ETHADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
 > 
 
-An off-tree patch removed from our Yukawa backlog, thanks !
-
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Applied to u-boot-amlogic
 
 Neil
