@@ -1,33 +1,90 @@
-Received: from mail.nic.cz (mail.nic.cz [217.31.204.67])
- by mx.groups.io with SMTP id smtpd.web11.5303.1641555194366701420
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+ by mx.groups.io with SMTP id smtpd.web10.26225.1641779370882376369
  for <u-boot-amlogic@groups.io>;
- Fri, 07 Jan 2022 03:33:15 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-	t=1641555186; bh=5SrKZsnd69acqs5peOLZHgy3XL/gAb7otjIG9lEes0M=;
-	h=Date:From:To;
-	b=ZLWVcy+cxo0czD1wOYtIDTZYgOj0LUfNGRi3Wv90iLPaUAcXT2p2SrOkOW/j/QVX/
-	 tC79XdPIijYlSkq26Zw2murZiIFpnrqDm9iN/I/0D9eh1BtTPVdpFvQSVREitEEJn7
-	 czjZe17C4WxO+RYg0eHAVSxd7nK46qW4ZcZkGsWY=
-Date: Fri, 7 Jan 2022 12:33:05 +0100
-From: Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>
-Subject: Re: [PATCH u-boot-dm] fdt_support: Add fdt_for_each_node_by_compatible() helper macro
-Message-ID: <20220107123305.59429722@thinkpad>
-In-Reply-To: <20220107101329.25836-1-kabel@kernel.org>
-References: <20220107101329.25836-1-kabel@kernel.org>
+ Sun, 09 Jan 2022 17:49:31 -0800
+Received: by mail-qk1-f170.google.com with SMTP id t66so13326609qkb.4
+        for <u-boot-amlogic@groups.io>; Sun, 09 Jan 2022 17:49:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3tARD80uxV8cc+buBcZ4x38n1221dTsovyu+QZLQQw8=;
+        b=REMs6Xs62BFUq8mr3d4qZbL1/nfCOOpM7L6dNFafA00MCepvXhLENRxvTDcSxDrGZI
+         N1J6Q4MTblIPcafCYY3mn+LrarQQo0kYkTlpfFG2h8n0/34nEFLv0i5oN9WFBjwhrn4r
+         EnzYe/wf3nLaAtHuNfjrAAR0puMq7DCrTSsA0=
+Return-Path: <trini@konsulko.com>
+Date: Sun, 9 Jan 2022 20:49:27 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PULL u-boot] Please pull u-boot-amlogic-20220107
+Message-ID: <20220110014927.GM2773246@bill-the-cat>
+References: <a62eb809-699c-0f94-0e6a-e119bcea28dd@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>, Stefan Roese <sr@denx.de>
-Cc: Albert Aribaud <albert.u.boot@aribaud.net>, Tom Warren <twarren@nvidia.com>, Aaron Williams <awilliams@marvell.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, York Sun <yorksun@freescale.com>, Priyanka Jain <priyanka.jain@nxp.com>, Wolfgang Denk <wd@denx.de>, Oliver Graute <oliver.graute@kococonnector.com>, Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>, Wasim Khan <wasim.khan@nxp.com>, Joe Hershberger <joe.hershberger@ni.com>, Ramon Fried <rfried.dev@gmail.com>, Anatolij Gustschin <agust@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Andre Przywara <andre.przywara@arm.com>, Biwen Li <biwen.li@nxp.com>, Chaitanya Sakinam <chaitanya.sakinam@nxp.com>, Anji J <anji.jagarlmudi@nxp.com>, Michael Walle <michael@walle.cc>, Vladimir Oltean <vladimir.oltean@nxp.com>, Bin Meng <bmeng.cn@gmail.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>, Igal Liberman <igall@marvell.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+In-Reply-To: <a62eb809-699c-0f94-0e6a-e119bcea28dd@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pQC2pbIvkpPv3Ssp"
+Content-Disposition: inline
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hello Simon, Stefan,
+--pQC2pbIvkpPv3Ssp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-this patch is for u-boot-dm, but will apply only after marvell/next is
-merged.
+On Fri, Jan 07, 2022 at 04:14:29PM +0100, Neil Armstrong wrote:
 
-Could we perhaps review it and let Stefan apply it on marvell/next?
+> Hi Tom,
+>=20
+> Here's changes for next release, nothing particular, no new boards either:
+> - CONFIG_NET_RANDOM_ETHADDR cleanup as you suggested
+> - android boot support for Khadas VIM3/L, and will ease support android b=
+oot for any amlogic boards
+>=20
+> The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/=
+pipelines/10491
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit c00c147dae51f06e012841371f9baffb4b9dc1=
+b3:
+>=20
+>   Merge https://source.denx.de/u-boot/custodians/u-boot-marvell (2022-01-=
+05 13:08:45 -0500)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20220107
+>=20
+> for you to fetch changes up to 4c8d067bc520fc2ce6dcd7c5833b090f22c67185:
+>=20
+>   configs: khadas-vim3{l}_android_ab: enable A/B support (2022-01-07 10:1=
+2:43 +0100)
+>=20
 
-BTW it passed CI on github.
+Applied to u-boot/next, thanks!
 
-Marek
+--=20
+Tom
+
+--pQC2pbIvkpPv3Ssp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmHbkJwACgkQFHw5/5Y0
+tyxrGwv/VeNCSanvGkzg3PJvaQkUEizZlQlVhTYyu40rXcKv94ivslFMuwhLwtBB
+Mp9d1z2PEnjVzqIVmMAQGhqzFA2/LpjIGXOB1GR4kAXUGMPBPp6qIzO0kKqNZ+Sh
+wZx7NV8bllFNYvKyUqKlkZjeqgVlR4TD7Cy4E90G5JtA3wlQNEiBdDQ4RM8+q6oD
+zZNufrIRQ9cZ/LKO9UnWwnfdk3Zc7A63nKy4Bn+EEChx5q77vlMeZzWHbtUr1zPl
+AJ+gGc/BYoOLlzy4cKgcOUlm20g/Z9b4joUNLKGvynOscw/PFfQS9RRwLwrWjjT0
+u/uVazFx1mV2wLRUDOCWRrNfioLoK5ec0JOc2h64udcFXmaDSSe5qxr07ZWFD7xb
+OVw30DK7wC8+QUwaNzA9VO9wlZ0GqBjfULGQQS0Hg20hmm32TWs8IimNXkvDMM7p
+2ytmQ82zOQpYVz2IllSbAVjKrYhsuBWC9K+qNDK9qtz4zs7fyet4WeBl0NFlyt2c
+RBYs68F0
+=c554
+-----END PGP SIGNATURE-----
+
+--pQC2pbIvkpPv3Ssp--
