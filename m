@@ -1,116 +1,69 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
- by mx.groups.io with SMTP id smtpd.web10.8646.1642081295451141622
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+ by mx.groups.io with SMTP id smtpd.web09.6877.1642602253121399348
  for <u-boot-amlogic@groups.io>;
- Thu, 13 Jan 2022 05:41:35 -0800
-Received: by mail-ua1-f51.google.com with SMTP id u6so11205341uaq.0
-        for <u-boot-amlogic@groups.io>; Thu, 13 Jan 2022 05:41:35 -0800 (PST)
+ Wed, 19 Jan 2022 06:24:13 -0800
+Received: by mail-ed1-f50.google.com with SMTP id c24so10342665edy.4
+        for <u-boot-amlogic@groups.io>; Wed, 19 Jan 2022 06:24:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=V+j5u2jp6eytLiDaOm79BeeQwffU0BPWXPKpvrRhfuI=;
-        b=Fv59F5L+CHkB41R8o/V4WKZ9ZbG+h1dlTg+oiJmNCVAb0vByfaCCTvjNxOiOVKBjPI
-         BW9CsUMbUDzUFlPIkwwHkDsK1v4319Gyw96ADRnTxgViaJcj9tFTu2P9M9xMsUIq0IfJ
-         j2DQs/KHLkIUZavO0oQui2So9Zfg2+D31BRrw=
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vdR+k1/d3/O4q1d+IQOWoMrdgyVhIzhfctJZPZxWdDE=;
+        b=mCHJC0HJOrvw0ha3Wphjhk+ieUABbNaC3K0fMHtLVJvZd9uTt+/fh/YdW9SWh9L0Ln
+         olm20HPErf8WFbsPvVpjF9iuqsASdpWBCPtj0jbxQSCjOU0GoZONxPlTkEaWyRxvtOUx
+         gjlYNZQKKz0KCWMLvpQwCPZ2Aig+TRM7VkRq6g7BJ68QwTH5F509W6EjrZqnSGA5n/LG
+         9NHbpuyq8Nt7vHHg+WqIfJlnsKaNN96fhew3WdzSD1MSLsuDpG4dXriJik5NepOU8PAT
+         FgXId3J6RZ4O2YQQ8TyA66eWkFieWL47sfOQtmDNs0FdYoCo9rK2SbdEjZU7GzrZdegX
+         d1cQ==
+Return-Path: <mkorpershoek@baylibre.com>
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Subject: [PATCH] board: amlogic: vim3: configure serial# from ethaddr
+Date: Wed, 19 Jan 2022 15:24:00 +0100
+Message-Id: <20220119142400.127342-1-mkorpershoek@baylibre.com>
 MIME-Version: 1.0
-References: <20220110104639.13744-1-kabel@kernel.org> <CAPnjgZ2Y4p1U8cK6-jng7_8W09FhmoNNEYSz8vviTyFh5ZQ3yg@mail.gmail.com>
- <20220112232426.7214a3e4@thinkpad>
-In-Reply-To: <20220112232426.7214a3e4@thinkpad>
-From: Simon Glass <sjg@chromium.org>
-Date: Thu, 13 Jan 2022 06:41:23 -0700
-Message-ID: <CAPnjgZ3s8N+TaEYZaOkfwXCi8mHrOh_ecAWSR+_KU-yRmJpiMg@mail.gmail.com>
-Subject: Re: [PATCH u-boot-dm v2] fdt_support: Add fdt_for_each_node_by_compatible() helper macro
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc: Albert Aribaud <albert.u.boot@aribaud.net>, Tom Warren <twarren@nvidia.com>, Aaron Williams <awilliams@marvell.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, York Sun <yorksun@freescale.com>, Priyanka Jain <priyanka.jain@nxp.com>, Oliver Graute <oliver.graute@kococonnector.com>, Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>, Wasim Khan <wasim.khan@nxp.com>, Joe Hershberger <joe.hershberger@ni.com>, Ramon Fried <rfried.dev@gmail.com>, Anatolij Gustschin <agust@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Jagan Teki <jagan@amarulasolutions.com>, Andre Przywara <andre.przywara@arm.com>, Biwen Li <biwen.li@nxp.com>, Chaitanya Sakinam <chaitanya.sakinam@nxp.com>, Anji J <anji.jagarlmudi@nxp.com>, Michael Walle <michael@walle.cc>, Stefan Roese <sr@denx.de>, =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>, Vladimir Oltean <vladimir.oltean@nxp.com>, Bin Meng <bmeng.cn@gmail.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, Igal Liberman <igall@marvell.com>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Marek,
+The Khadas VIM3 and VIM3L boards, which are supported in Android via
+Yukawa [1] need a serial number for usb/fastboot enumeration.
 
-On Wed, 12 Jan 2022 at 15:24, Marek Beh=C3=BAn <kabel@kernel.org> wrote:
->
-> On Wed, 12 Jan 2022 13:04:08 -0700
-> Simon Glass <sjg@chromium.org> wrote:
->
-> > Hi Marek,
-> >
-> > On Mon, 10 Jan 2022 at 03:46, Marek Beh=C3=BAn <kabel@kernel.org> wrote=
-:
-> > >
-> > > From: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> > >
-> > > Add macro fdt_for_each_node_by_compatible() to allow iterating over
-> > > fdt nodes by compatible string.
-> > >
-> > > Convert various usages of
-> > >     off =3D fdt_node_offset_by_compatible(fdt, start, compat);
-> > >     while (off > 0) {
-> > >         code();
-> > >         off =3D fdt_node_offset_by_compatible(fdt, off, compat);
-> > >     }
-> > > and similar, to
-> > >     fdt_for_each_node_by_compatible(off, fdt, start, compat)
-> > >         code();
-> > >
-> > > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> > > Reviewed-by: Stefan Roese <sr@denx.de>
-> > > ---
-> > > Simon, as in v1, this applies on top of marvell/next and we have anot=
-her
-> > > patch for marvell/next that depends on this.
-> > > Could we let him apply it there after it is reviewed?
-> > > Thanks.
-> > >
-> > > Changes since v1:
-> > > - removed extra space after macro name:
-> > >     fdt_for_each_node_by_compatible (...)
-> > >   to
-> > >     fdt_for_each_node_by_compatible(...)
-> > >   as requested by Stefan
-> > > ---
-> > >  arch/arm/cpu/armv8/fsl-layerscape/fdt.c    |  9 ++-------
-> > >  arch/arm/cpu/armv8/fsl-layerscape/icid.c   |  5 +----
-> > >  arch/arm/mach-tegra/gpu.c                  |  5 +----
-> > >  arch/mips/mach-octeon/octeon_fdt.c         | 11 ++---------
-> > >  arch/powerpc/cpu/mpc85xx/liodn.c           |  9 ++-------
-> > >  board/Marvell/octeon_ebb7304/board.c       |  9 +++------
-> > >  board/congatec/cgtqmx8/spl.c               |  7 ++-----
-> > >  board/freescale/lx2160a/lx2160a.c          |  5 +----
-> > >  common/fdt_support.c                       | 22 ++++++++------------=
---
-> > >  drivers/misc/fsl_portals.c                 |  6 +-----
-> > >  drivers/net/fm/fdt.c                       |  3 +--
-> > >  drivers/pci/pcie_layerscape_fixup_common.c | 12 ++----------
-> > >  drivers/phy/marvell/comphy_a3700.c         | 10 +++++-----
-> > >  drivers/video/meson/simplefb_common.c      |  7 ++-----
-> > >  drivers/video/sunxi/simplefb_common.c      |  5 ++---
-> > >  include/fdt_support.h                      |  6 ++++++
-> > >  16 files changed, 41 insertions(+), 90 deletions(-)
-> >
-> > Reviewed-by: Simon Glass <sjg@chromium.org>
-> >
-> > In general we should not be doing this sort of thing. There should be
-> > a driver for each string, so we don't need this kind of ad-hoc code.
->
-> Dear Simon,
->
-> you are right for when this is used for U-Boot functionality.
->
-> But when we need to fixup devicetree for Linux, this is the right thing
-> to do.
->
-> I need this macro for ft_board_setup().
+Whenever the environment does not provide a serial#, use the eth mac
+address as serial#.
 
-Yes, understood. I think some sort of driver interface would be nice,
-perhaps using driver model. Another option would be to register
-handlers using the compatible string and have a function that works
-through those.
+[1] https://source.android.com/setup/build/devices#vim3_and_vim3l_boards
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+---
+ board/amlogic/vim3/vim3.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-See also the event series here:
+diff --git a/board/amlogic/vim3/vim3.c b/board/amlogic/vim3/vim3.c
+index 5d9ac6458d68..fcd60ab1e058 100644
+--- a/board/amlogic/vim3/vim3.c
++++ b/board/amlogic/vim3/vim3.c
+@@ -153,6 +153,7 @@ int misc_init_r(void)
+ {
+ 	u8 mac_addr[MAC_ADDR_LEN];
+ 	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
++	char serial_string[EFUSE_MAC_SIZE + 1];
+ 	ssize_t len;
+ 
+ 	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
+@@ -177,5 +178,13 @@ int misc_init_r(void)
+ 		eth_env_get_enetaddr("ethaddr", mac_addr);
+ 	}
+ 
++	if (!env_get("serial#")) {
++		eth_env_get_enetaddr("ethaddr", mac_addr);
++		sprintf(serial_string, "%02X%02X%02X%02X%02X%02X",
++			mac_addr[0], mac_addr[1], mac_addr[2],
++			mac_addr[3], mac_addr[4], mac_addr[5]);
++		env_set("serial#", serial_string);
++	}
++
+ 	return 0;
+ }
+-- 
+2.32.0
 
-https://patchwork.ozlabs.org/project/uboot/list/?series=3D278607
-https://lore.kernel.org/u-boot/20211228082854.1255732-1-sjg@chromium.org/
-
-Regards,
-Simon
