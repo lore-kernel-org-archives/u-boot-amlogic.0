@@ -1,51 +1,73 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web12.7040.1642603634958281582
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web11.9271.1642668951888332494
  for <u-boot-amlogic@groups.io>;
- Wed, 19 Jan 2022 06:47:15 -0800
-Received: by mail-wm1-f45.google.com with SMTP id l35-20020a05600c1d2300b0034d477271c1so5893322wms.3
-        for <u-boot-amlogic@groups.io>; Wed, 19 Jan 2022 06:47:14 -0800 (PST)
+ Thu, 20 Jan 2022 00:55:52 -0800
+Received: by mail-wm1-f48.google.com with SMTP id e9-20020a05600c4e4900b0034d23cae3f0so12016541wmq.2
+        for <u-boot-amlogic@groups.io>; Thu, 20 Jan 2022 00:55:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a0HeRYnDkBwDKieeuuRpwgFhqXJHj8tjyEK5YduvfIA=;
-        b=S2+KmhGKC5rWnIjv8+QMxddAb04H9p8NlGdzo3yOgC5ITQG7WHdFtXoM/4YJYg78Q0
-         7nKicY3phZE2tmI7Sjw2Wh2h/tBX4qKLnvhkSI0x0Tl2TGHgXLuXwVxEQVnsEAPXmcBT
-         xQ8vV27mUCVVBl5Sl3KjRMheTO00te4y8z4nYLJd40gm50o3MVThXnD7PYlLKbcmuK9n
-         vd7SvBhnn9SjTiRWHINYpVqvCk1Zj6+5C2A7DcPREo/zKp/ewa6JBnRDF1mbblG6Bdrm
-         gKn4jhv0GnJZ6L4k/CSVZdJUGJwSfccu/bVEDQbF4g1zdSmRqpVZj5sgJLFbZhZgQwEt
-         w0lw==
+        h=from:subject:reply-to:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=Z4QttmG/qf9nU+IClsTOZFK7eJK3g4WMgQ5iG8jZT8Q=;
+        b=NSHHIQ7DxtNRDA6hjQEGvXzqnFupjIen7DvM+y+nOdOYhxbEBVGvFmAyKnoS2P9qbb
+         KoeW942Drt2PYKUMIvcBMIUXwK5134zL8Z8YheT5WZubQM/Qlla+oNu5bxVWjo6oE2S5
+         ukte8DI5BXwG0hZNFN1wAdKSt0hiSn1iV7IHnf/E4GEXrOUhO+GdbhU+/CXPBFLAV3sP
+         HkMlYXAcELfvsuDfWRSW/Yn0SNfl8bj5Z/4iogWjSVJsy+n7IE7soeX+uisoMbVsVnNM
+         cAFAxTEBIKFY5qVYwf95UENxcC/ds6Po1cgmwyrNFrQGXPFs0PrjHpJxQ4lQjbBaPWXP
+         scfg==
 Return-Path: <narmstrong@baylibre.com>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: Re: [PATCH] board: amlogic: vim3: configure serial# from ethaddr
-Date: Wed, 19 Jan 2022 15:47:11 +0100
-Message-Id: <164260361416.1460537.2796215771750762151.b4-ty@baylibre.com>
-In-Reply-To: <20220119142400.127342-1-mkorpershoek@baylibre.com>
-References: <20220119142400.127342-1-mkorpershoek@baylibre.com>
+Subject: [PULL u-boot] Please pull u-boot-amlogic-20220120
+Reply-To: narmstrong@baylibre.com
+Message-ID: <4972104f-d6c4-c0c0-5ce3-bd057e2c6cb9@baylibre.com>
+Date: Thu, 20 Jan 2022 09:55:49 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+Hi Tom,
 
-On Wed, 19 Jan 2022 15:24:00 +0100, Mattijs Korpershoek wrote:
-> The Khadas VIM3 and VIM3L boards, which are supported in Android via
-> Yukawa [1] need a serial number for usb/fastboot enumeration.
-> 
-> Whenever the environment does not provide a serial#, use the eth mac
-> address as serial#.
-> 
-> [1] https://source.android.com/setup/build/devices#vim3_and_vim3l_boards
-> 
-> [...]
+Here's a few changes :
+- CONFIG_NET_RANDOM_ETHADDR cleanup for VIM3/L Android configs I missed
+- raw parts for bootloader to flash bootloader with fastboot with Android configs
+- Add missing serial# like sei510/610 in order to satisfy fastboot
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
+The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/10491
 
-[1/1] board: amlogic: vim3: configure serial# from ethaddr
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/522c51839a6f31d66054c44aeffda00888e731ad
-
--- 
+Thanks,
 Neil
+
+The following changes since commit 068415eadefbbc81f14d4ce61fcf7a7eb39650d4:
+
+  Merge tag 'xilinx-for-v2022.04-rc1' of https://source.denx.de/u-boot/custodians/u-boot-microblaze (2022-01-19 11:43:44 -0500)
+
+are available in the Git repository at:
+
+  https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20220120
+
+for you to fetch changes up to 09c2debab70271fdb3b1ff89e0e7d186502c548d:
+
+  board: amlogic: vim3: configure serial# from ethaddr (2022-01-20 09:50:54 +0100)
+
+----------------------------------------------------------------
+- Disable CONFIG_NET_RANDOM_ETHADDR for android configs
+- meson64_android: define raw parts for bootloader to permit flashing with fastboot
+- vim3: configure serial# from ethaddr to permit using fastboot like sei510/610
+
+----------------------------------------------------------------
+Mattijs Korpershoek (3):
+      configs: amlogic: Disable CONFIG_NET_RANDOM_ETHADDR for android
+      configs: meson64_android: define raw parts for bootloader
+      board: amlogic: vim3: configure serial# from ethaddr
+
+ board/amlogic/vim3/vim3.c                 | 9 +++++++++
+ configs/khadas-vim3_android_ab_defconfig  | 1 -
+ configs/khadas-vim3_android_defconfig     | 1 -
+ configs/khadas-vim3l_android_ab_defconfig | 1 -
+ configs/khadas-vim3l_android_defconfig    | 1 -
+ include/configs/meson64_android.h         | 2 ++
+ 6 files changed, 11 insertions(+), 4 deletions(-)
