@@ -1,49 +1,48 @@
 Received: from mx.msync.work (mx.msync.work [185.250.0.168])
- by mx.groups.io with SMTP id smtpd.web08.11022.1650477314254168336
+ by mx.groups.io with SMTP id smtpd.web08.11023.1650477314258164016
  for <u-boot-amlogic@groups.io>;
  Wed, 20 Apr 2022 10:55:16 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1650477310; h=from:subject:date:message-id:to:mime-version:
-	 content-transfer-encoding; bh=4Jm305w9YA8P7Y3AduS9qCUJfb14SUJIZiCceA+a6Mc=;
-	b=dp6iaVzynYGLajlTQ88/lGeq1tJAbB0od0qYid3ZHwOmvAc7/9bN796a4wsTJX7oh4FVwX
-	Mcu4buBUJdngj9Gk+dp09R2JPZvXt66bb+9kU5c/udC6lAD7YbQSHTYjVDUH47U5xmejeL
-	vP60bgofPqL2SOnM1bK+BIszi+vH/4JhcMc5yeot0qIsu5rxL2FHBYgJohPW7hc8tZ7EHX
-	2nKmHAZhxAmO1LlCiYCysqULYE9o6YUkrpa858WjNIkAfjE28z/iPLat85nbtFjbnFf/jm
-	TgodCkqdOST+dZO6zF8XABJktqBOJZnYjROi3vwQ4ES8utMue77PQNLEvX1mZg==
+	t=1650477312; h=from:subject:date:message-id:to:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=3HDYPTv2ZrEdESFqdHyi6VUpGcIr9xRdeG+VE+zgwhw=;
+	b=qiEAdJ0keFyRj8kFF3H8McXxkL32jxsmsdvq/FUPqnPpfhsxj84NYP7R96XsiVl4YiWjM8
+	oT5Wziihe5zXkznEUZJv2j5WsKLk6Iz64xwtgzdDK95YDK9Aeftsh7H849dVPA4cfqjX4e
+	/Q+vrRoClIpdT95gsXAOf9qQgWHhMWJF9acVq64pWST4AiML1czEC8u7NMZ8Se50rqPgY3
+	PHRoyz80TJmZRtXyRIbcURHxdOJfjMI27p1R+2elpfbt1R5io8Nz/33RIrz8SGZA4V7H62
+	R8t7yDjDEMayus84jsfA0Sy4FLiIw/ws/JmnianxA/SlqLVYNv+VL7bhzE0swg==
 From: "Vyacheslav Bocharov" <adeep@lexina.in>
-Subject: [PATCH 0/5] meson: add clk and adc support for JetHub D1 (j100)
-Date: Wed, 20 Apr 2022 20:54:57 +0300
-Message-Id: <20220420175502.2449249-1-adeep@lexina.in>
+Subject: [PATCH 3/5] adc: meson-saradc: add AXG variant
+Date: Wed, 20 Apr 2022 20:55:00 +0300
+Message-Id: <20220420175502.2449249-4-adeep@lexina.in>
+In-Reply-To: <20220420175502.2449249-1-adeep@lexina.in>
+References: <20220420175502.2449249-1-adeep@lexina.in>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 To: Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Prepare to use ADC channel 1 in JetHub D1 (j100) to check the hardware=20
-revision of the board.
+Add support for the SARADC variant found on the AXG SoCs family.
 
-- add support for AXG in saradc driver
-- add simple clk-ao driver for AXG (base is taken from g12a)
-- enable saradc in dts and board config file
-- fix typo in the g12a-clk-ao driver name
+Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
+---
+ drivers/adc/meson-saradc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-Vyacheslav Bocharov (5):
-  clk: meson: add minimal driver for axg-ao clocks
-  clk: meson: fix driver name for g12a-ao clocks
-  adc: meson-saradc: add AXG variant
-  board: amlogic: jethub j100: enable saradc in dts
-  board: amlogic: jethub j100: enable saradc in config
-
- .../arm/dts/meson-axg-jethome-jethub-j100.dts |  5 ++
- configs/jethub_j100_defconfig                 |  5 ++
- drivers/adc/meson-saradc.c                    |  2 +
- drivers/clk/meson/Makefile                    |  1 +
- drivers/clk/meson/axg-ao.c                    | 83 +++++++++++++++++++
- drivers/clk/meson/g12a-ao.c                   |  2 +-
- 6 files changed, 97 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/meson/axg-ao.c
-
+diff --git a/drivers/adc/meson-saradc.c b/drivers/adc/meson-saradc.c
+index 1a45a3a265..37023512f0 100644
+--- a/drivers/adc/meson-saradc.c
++++ b/drivers/adc/meson-saradc.c
+@@ -737,6 +737,8 @@ static const struct udevice_id meson_saradc_ids[] =3D=
+ {
+ 	  .data =3D (ulong)&gxl_saradc_data },
+ 	{ .compatible =3D "amlogic,meson-g12a-saradc",
+ 	  .data =3D (ulong)&gxl_saradc_data },
++	{ .compatible =3D "amlogic,meson-axg-saradc",
++	  .data =3D (ulong)&gxl_saradc_data },
+ 	{ }
+ };
+=20
 --=20
 2.30.2
 
