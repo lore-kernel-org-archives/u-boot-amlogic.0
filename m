@@ -1,29 +1,29 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web11.8617.1650633983785288105
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web12.8642.1650634019332596714
  for <u-boot-amlogic@groups.io>;
- Fri, 22 Apr 2022 06:26:24 -0700
-Received: by mail-wr1-f49.google.com with SMTP id b19so11029585wrh.11
-        for <u-boot-amlogic@groups.io>; Fri, 22 Apr 2022 06:26:23 -0700 (PDT)
+ Fri, 22 Apr 2022 06:26:59 -0700
+Received: by mail-wm1-f53.google.com with SMTP id n40-20020a05600c3ba800b0038ff1939b16so5374805wms.2
+        for <u-boot-amlogic@groups.io>; Fri, 22 Apr 2022 06:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :references:from:organization:in-reply-to:content-transfer-encoding;
-        bh=5ys2IaZLshsCrMecW+65lRijl3MJANIdfhTIhne35/s=;
-        b=8CoUf35QaVnEhcZInKE2B6CyyN1CcilQ41SKoFs3I9my6GINKQpht38jZOmE6RujVv
-         AhroFMgWBjwf54Z5i2mSxGPSOrm53O5HafZhedos8NyIFUOn3F8ghLAPzEfb1vzlCGBV
-         z8hbV6loENIDeIQoth02u2kGu6whDDuYPMcIfMp9iTUrzGcqXE8tuXZY78R3FTcByZi9
-         YMCRwy7+4BHcNmhNW1MtHJN0LQJG2332Jk57+DDksOX0pzMFBmcGqOs9ZOm0hXYiEIn/
-         qI664svh2YMHOo8SxZr4VeFH5ZSk6T1hD+CYZ+ROFEoIlQ+lKArYMhn2xofZV5p+QFAq
-         aVdA==
+        bh=mmxovyI8phFcgwLKS2z9Il/UUjJwqqMwQHxHTSsyPfM=;
+        b=bsSlZ3ORAW3GrMBWVjxmJLDlLeLm2jAr2D/InT/CJ2j4HqjdFronbZgXDL7bzDxEm6
+         QzHOtRWXv/vlUfA6l6oaSeACdNN3nKQrIPcECUMCObAom1bAlwFjyz0YufjgzasK1tlf
+         vVXYsaS8b/vY7s5SmxhOYyyxUvJUVVyIC2h5yTnAYQR81oF+vOI9MrKGYYb4t6QDX7si
+         si0gJ79DWuGK9QXGSoqskLBmoJdYmmYuiADpE/CxK8RVYm07+AF7xnQBayoF8W/IOdQy
+         leP51zZx64wa9Zxn/XcdnZJzIOiwXWT3nkmuHRrpmaReehfXEnSplolunbrE3q7JKbT2
+         u0HQ==
 Return-Path: <narmstrong@baylibre.com>
-Message-ID: <4bb9a066-97ef-35e2-d5d8-2953b8717f97@baylibre.com>
-Date: Fri, 22 Apr 2022 15:26:20 +0200
+Message-ID: <93ba1522-906d-dc05-0fcc-01fa294ef05c@baylibre.com>
+Date: Fri, 22 Apr 2022 15:26:56 +0200
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 4/6] adc: meson-saradc: add AXG variant
+Subject: Re: [PATCH v2 5/6] board: amlogic: jethub j100: enable saradc in dts
 References: <20220422052914.1836694-1-adeep@lexina.in>
- <20220422052914.1836694-5-adeep@lexina.in>
+ <20220422052914.1836694-6-adeep@lexina.in>
 From: "Neil Armstrong" <narmstrong@baylibre.com>
-In-Reply-To: <20220422052914.1836694-5-adeep@lexina.in>
+In-Reply-To: <20220422052914.1836694-6-adeep@lexina.in>
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -31,25 +31,27 @@ To: Vyacheslav Bocharov <adeep@lexina.in>, Lukasz Majewski <lukma@denx.de>, Sean
 List-ID: <u-boot-amlogic@groups.io>
 
 On 22/04/2022 07:29, Vyacheslav Bocharov wrote:
-> Add support for the SARADC variant found on the AXG SoCs family.
+> Prepare to use ADC channel 1 to check the hardware revision of the board.
 > 
 > Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
 > ---
->   drivers/adc/meson-saradc.c | 2 ++
->   1 file changed, 2 insertions(+)
+>   arch/arm/dts/meson-axg-jethome-jethub-j100.dts | 5 +++++
+>   1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/adc/meson-saradc.c b/drivers/adc/meson-saradc.c
-> index 1a45a3a265..37023512f0 100644
-> --- a/drivers/adc/meson-saradc.c
-> +++ b/drivers/adc/meson-saradc.c
-> @@ -737,6 +737,8 @@ static const struct udevice_id meson_saradc_ids[] = {
->   	  .data = (ulong)&gxl_saradc_data },
->   	{ .compatible = "amlogic,meson-g12a-saradc",
->   	  .data = (ulong)&gxl_saradc_data },
-> +	{ .compatible = "amlogic,meson-axg-saradc",
-> +	  .data = (ulong)&gxl_saradc_data },
->   	{ }
+> diff --git a/arch/arm/dts/meson-axg-jethome-jethub-j100.dts b/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
+> index 5783732dc6..00a0b268af 100644
+> --- a/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
+> +++ b/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
+> @@ -359,3 +359,8 @@
+>   &cpu3 {
+>   	#cooling-cells = <2>;
 >   };
->   
+> +
+> +&saradc {
+> +	status = "okay";
+> +	vref-supply = <&vddio_ao18>;
+> +};
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Please move this in a -u-boot.dtsi file to keep the main DT in sync with Linux.
+
+Neil
