@@ -1,20 +1,20 @@
 Received: from mx.msync.work (mx.msync.work [185.250.0.168])
- by mx.groups.io with SMTP id smtpd.web10.4936.1650605370210671046
+ by mx.groups.io with SMTP id smtpd.web09.4933.1650605370209096222
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Apr 2022 22:29:30 -0700
+ Thu, 21 Apr 2022 22:29:31 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
 	t=1650605365; h=from:subject:date:message-id:to:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=bmnaoWXZLCIjUnMK61K8on4MKuYnakE+ZVh2wzJyGtQ=;
-	b=HlpP0KLNclhpL2ZD5f+owI8cP2zFUrRV/jcuMOb6vsp3JolfStuwdYdjhqceC6oJ+Snmy8
-	EydFQ+IpOloTRcoE8NGgyZMJ1gC4cFzv8HWzwUeiQJTm0vxEr8Y2emm16Z7pDOgKPTf3mF
-	745LBhLTk9yOXW0uVpI2piq0htW+LGAeROpZnn/oe8tlK4YpG9/M5BJsfr8r611iWWHb2X
-	s6QDavZ7iiNI705FgFknaU4H7nuk8AFYgmil5XfnIcja1pSAPOqJ1m40xurdKQWtTlb/k0
-	g8x0+YXSNyIUPEBruWB2Mxd8R5RpBnpJzZw38XDCe3TICBqvd7ofkS9oAtilCg==
+	bh=T+JPQUl18J2MLEDZj2fmotScxq6Oi+HgMC9DWngqrn8=;
+	b=jsq90jvCgwJaQnPGibVXET0r8Ww+nZxDa83pLv8uMWoxIIYJl8y2ND/FvrFIfGsyaqbd8Q
+	UNPzjJJqEaWb7FwxTu8wHBr2c87+hzBDxGMjtRgPnoL4mvbyVd4eYtgX/DEOi4wK1ncw4R
+	m5H/Vh2XOKEqEt27gTyOtSwmhoCR7jfI0QFALy68d6Pb1TgtnSylhSplxfYWxgblhvU1aD
+	f8iqwPOO6/j2sfdW0woovU2t5d5MAqRiAU4rIegJhwAZxWRSV59l+2JbcKFBAWK9kgryyu
+	mICMjovPqpTKPxcVwD525V6Qm6y9zz+/uuvjXkcrJgLarX6WN/0R4xdg0tJ2sA==
 From: "Vyacheslav Bocharov" <adeep@lexina.in>
-Subject: [PATCH v2 5/6] board: amlogic: jethub j100: enable saradc in dts
-Date: Fri, 22 Apr 2022 08:29:13 +0300
-Message-Id: <20220422052914.1836694-6-adeep@lexina.in>
+Subject: [PATCH v2 6/6] board: amlogic: jethub j100: enable saradc in config
+Date: Fri, 22 Apr 2022 08:29:14 +0300
+Message-Id: <20220422052914.1836694-7-adeep@lexina.in>
 In-Reply-To: <20220422052914.1836694-1-adeep@lexina.in>
 References: <20220422052914.1836694-1-adeep@lexina.in>
 MIME-Version: 1.0
@@ -22,27 +22,37 @@ Content-Transfer-Encoding: quoted-printable
 To: Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Prepare to use ADC channel 1 to check the hardware revision of the board.
+Enable ADC in board config file
 
 Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
 ---
- arch/arm/dts/meson-axg-jethome-jethub-j100.dts | 5 +++++
+ configs/jethub_j100_defconfig | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/dts/meson-axg-jethome-jethub-j100.dts b/arch/arm/dt=
-s/meson-axg-jethome-jethub-j100.dts
-index 5783732dc6..00a0b268af 100644
---- a/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
-+++ b/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
-@@ -359,3 +359,8 @@
- &cpu3 {
- 	#cooling-cells =3D <2>;
- };
-+
-+&saradc {
-+	status =3D "okay";
-+	vref-supply =3D <&vddio_ao18>;
-+};
+diff --git a/configs/jethub_j100_defconfig b/configs/jethub_j100_defconfi=
+g
+index 1c6db9f6a0..a30940bf1c 100644
+--- a/configs/jethub_j100_defconfig
++++ b/configs/jethub_j100_defconfig
+@@ -17,6 +17,7 @@ CONFIG_REMAKE_ELF=3Dy
+ CONFIG_OF_BOARD_SETUP=3Dy
+ # CONFIG_DISPLAY_CPUINFO is not set
+ CONFIG_MISC_INIT_R=3Dy
++CONFIG_CMD_ADC=3Dy
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+ CONFIG_CMD_EEPROM=3Dy
+@@ -34,6 +35,10 @@ CONFIG_OF_CONTROL=3Dy
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=3Dy
+ CONFIG_DM_I2C=3Dy
+ CONFIG_SYS_I2C_MESON=3Dy
++CONFIG_ADC=3Dy
++CONFIG_SARADC_MESON=3Dy
++CONFIG_CLK=3Dy
++CONFIG_CLK_MESON_AXG=3Dy
+ CONFIG_MMC_MESON_GX=3Dy
+ CONFIG_MTD_UBI=3Dy
+ CONFIG_PHY_REALTEK=3Dy
 --=20
 2.30.2
 
