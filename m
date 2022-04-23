@@ -1,166 +1,62 @@
 Received: from mx.msync.work (mx.msync.work [185.250.0.168])
- by mx.groups.io with SMTP id smtpd.web10.4072.1650697431358570488
+ by mx.groups.io with SMTP id smtpd.web11.4163.1650697579120850856
  for <u-boot-amlogic@groups.io>;
- Sat, 23 Apr 2022 00:03:54 -0700
+ Sat, 23 Apr 2022 00:06:21 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1650697427; h=from:subject:date:message-id:to:mime-version:content-type:
+	t=1650697576; h=from:subject:date:message-id:to:mime-version:content-type:
 	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=00bUWUsjn3OPE99Mz5MlSAwv+cq7lzm0I9BK40qiHPk=;
-	b=JpsUVXwjO7FdfOy2ssp5B8xNvoh28mnbGZb1muJyqRA0b5nMXbX62UUG847OVHO+eAsbab
-	I1ovKJdwH0SRQAlPVNLWY6MrierSrc+j2gLeN2D7RiHGOjcPf2okXnUhfBWBfGnc0HzO1E
-	JfOF/+rak2ku4zcSTsGwAicsEhm7XaeHrI44bHBJSid/6drc/6PIp+xsqU+TL5ALhGQel9
-	iNl9Bq4QUZZ7fHYNWbSOqeX11KjsvQtNKAI8jD9QHWWXotaJaXq/KGpEQuh0Datt30i0/d
-	1AeJ55jpzfpeeyjYafDmDbgt2B22wvTv8Evyr7jjwHM4/qPJm5/Dpzw6xbnPfA==
-Message-ID: <ef7c685a-940e-8ad0-1079-1a961cb06957@lexina.in>
-Date: Sat, 23 Apr 2022 10:03:42 +0300
+	bh=FUli5SnL1gFRLJPxQ9V3UbN7faKf7CLD3ytJHWYDOXc=;
+	b=wndyzgWfxhI9KN2rc3ZwDWg+nVe35PILRP5bqpVszET0YII9OWQ5MIW+Y5ezctC+Rtu8md
+	aAL/mQBL/AuK4yOjLtie6d2yBiyhTDetje3HMSYLd1ZFHuKSfKQyBsESKh94atCaI+zKrD
+	PuH1sRoNYkdP2XQuPQd8VL4r9sRrxbe02Bd0kwu5n6SPsHXI+JpGG32KHdN8nCfPX4v8G0
+	Qqj4K5/qZbMdy2wslO1exTuohlPwRCCDc87+bGl3/JldYtOT4mWbw21mM2zbU5pm+b8A8M
+	6twD47bYKJT1Sc967LEHLWqo9BqWR8jvuSDJm0utGLf7qONenJVHbIaFXhrCqQ==
+Message-ID: <56aff112-d559-eadd-5dc0-d12cca1dc9ee@lexina.in>
+Date: Sat, 23 Apr 2022 10:06:15 +0300
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/6] clk: meson: add minimal driver for axg-ao clocks
+Subject: Re: [PATCH v2 5/6] board: amlogic: jethub j100: enable saradc in dts
 References: <20220422052914.1836694-1-adeep@lexina.in>
- <20220422052914.1836694-2-adeep@lexina.in>
- <868d6185-339c-59a1-8113-a5eb00f84ec2@gmail.com>
+ <20220422052914.1836694-6-adeep@lexina.in>
+ <93ba1522-906d-dc05-0fcc-01fa294ef05c@baylibre.com>
 From: "Vyacheslav Bocharov" <adeep@lexina.in>
-In-Reply-To: <868d6185-339c-59a1-8113-a5eb00f84ec2@gmail.com>
+In-Reply-To: <93ba1522-906d-dc05-0fcc-01fa294ef05c@baylibre.com>
 Content-Language: ru
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-To: Sean Anderson <seanga2@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+To: Neil Armstrong <narmstrong@baylibre.com>, Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
 
 
-23.04.2022 1:55, Sean Anderson wrote:
-> On 4/22/22 1:29 AM, Vyacheslav Bocharov wrote:
->> Add minimal driver AO clocks on meson AXG family. Only ADC related clock=
-s
->> are supported.
+22.04.2022 16:26, Neil Armstrong wrote:
+> On 22/04/2022 07:29, Vyacheslav Bocharov wrote:
+>> Prepare to use ADC channel 1 to check the hardware revision of the board=
+.
 >>
 >> Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
 >> ---
->> =C2=A0 drivers/clk/meson/Makefile |=C2=A0 1 +
->> =C2=A0 drivers/clk/meson/axg-ao.c | 89 +++++++++++++++++++++++++++++++++=
-+++++
->> =C2=A0 2 files changed, 90 insertions(+)
->> =C2=A0 create mode 100644 drivers/clk/meson/axg-ao.c
+>> =C2=A0 arch/arm/dts/meson-axg-jethome-jethub-j100.dts | 5 +++++
+>> =C2=A0 1 file changed, 5 insertions(+)
 >>
->> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
->> index b9c6bd66cf..a486b13e9c 100644
->> --- a/drivers/clk/meson/Makefile
->> +++ b/drivers/clk/meson/Makefile
->> @@ -5,5 +5,6 @@
->> =C2=A0 obj-$(CONFIG_CLK_MESON_GX) +=3D gxbb.o
->> =C2=A0 obj-$(CONFIG_CLK_MESON_AXG) +=3D axg.o
->> +obj-$(CONFIG_CLK_MESON_AXG) +=3D axg-ao.o
->> =C2=A0 obj-$(CONFIG_CLK_MESON_G12A) +=3D g12a.o
->> =C2=A0 obj-$(CONFIG_CLK_MESON_G12A) +=3D g12a-ao.o
->> diff --git a/drivers/clk/meson/axg-ao.c b/drivers/clk/meson/axg-ao.c
->> new file mode 100644
->> index 0000000000..3f9617e9f7
->> --- /dev/null
->> +++ b/drivers/clk/meson/axg-ao.c
->> @@ -0,0 +1,89 @@
->> +// SPDX-License-Identifier: GPL-2.0+
+>> diff --git a/arch/arm/dts/meson-axg-jethome-jethub-j100.dts=20
+>> b/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
+>> index 5783732dc6..00a0b268af 100644
+>> --- a/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
+>> +++ b/arch/arm/dts/meson-axg-jethome-jethub-j100.dts
+>> @@ -359,3 +359,8 @@
+>> =C2=A0 &cpu3 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #cooling-cells =3D <2>;
+>> =C2=A0 };
 >> +
->> +#include <common.h>
->> +#include <log.h>
->> +#include <asm/io.h>
->> +#include <clk-uclass.h>
->> +#include <dm.h>
->> +#include <regmap.h>
->> +#include <syscon.h>
->> +#include <dt-bindings/clock/axg-aoclkc.h>
->> +
->> +#include "clk_meson.h"
->> +
->> +struct meson_clk {
->> +=C2=A0=C2=A0=C2=A0 struct regmap *map;
+>> +&saradc {
+>> +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+>> +=C2=A0=C2=A0=C2=A0 vref-supply =3D <&vddio_ao18>;
 >> +};
->> +
->> +#define AO_CLK_GATE0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x40
->> +#define AO_SAR_CLK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x90
->> +
->> +static struct meson_gate gates[] =3D {
->> +=C2=A0=C2=A0=C2=A0 MESON_GATE(CLKID_AO_SAR_ADC, AO_CLK_GATE0, 7),
->> +=C2=A0=C2=A0=C2=A0 MESON_GATE(CLKID_AO_SAR_ADC_CLK, AO_SAR_CLK, 7),
->> +};
->> +
->> +static int meson_set_gate(struct clk *clk, bool on)
->> +{
->> +=C2=A0=C2=A0=C2=A0 struct meson_clk *priv =3D dev_get_priv(clk->dev);
->> +=C2=A0=C2=A0=C2=A0 struct meson_gate *gate;
->> +
->> +=C2=A0=C2=A0=C2=A0 gate =3D &gates[clk->id];
->> +
->> +=C2=A0=C2=A0=C2=A0 if (gate->reg =3D=3D 0)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
 >=20
-> I don't think you need this.
-Hmm. You're right. The gates is all predefined. Therefore zero values=20
-cannot be there. I will fix it in g12-ao-clk as well.
+> Please move this in a -u-boot.dtsi file to keep the main DT in sync with=
+=20
+> Linux.
 
->=20
->> +
->> +=C2=A0=C2=A0=C2=A0 regmap_update_bits(priv->map, gate->reg,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 BIT(gate->bit), on ? BIT(gate->bit) : 0);
->> +
->> +=C2=A0=C2=A0=C2=A0 return 0;
->> +}
->> +
->> +static int meson_clk_enable(struct clk *clk)
->> +{
->> +=C2=A0=C2=A0=C2=A0 return meson_set_gate(clk, true);
->> +}
->> +
->> +static int meson_clk_disable(struct clk *clk)
->> +{
->> +=C2=A0=C2=A0=C2=A0 return meson_set_gate(clk, false);
->> +}
->> +
->> +static int meson_clk_probe(struct udevice *dev)
->> +{
->> +=C2=A0=C2=A0=C2=A0 struct meson_clk *priv =3D dev_get_priv(dev);
->> +
->> +=C2=A0=C2=A0=C2=A0 priv->map =3D syscon_node_to_regmap(dev_ofnode(dev_g=
-et_parent(dev)));
->> +=C2=A0=C2=A0=C2=A0 if (IS_ERR(priv->map))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(priv->map);
->> +
->> +=C2=A0=C2=A0=C2=A0 return 0;
->> +}
->> +
->> +static int meson_clk_request(struct clk *clk)
->> +{
->> +=C2=A0=C2=A0=C2=A0 if (clk->id >=3D ARRAY_SIZE(gates))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOENT;
->> +
->> +=C2=A0=C2=A0=C2=A0 return 0;
->> +}
->> +
->> +static struct clk_ops meson_clk_ops =3D {
->> +=C2=A0=C2=A0=C2=A0 .disable=C2=A0=C2=A0=C2=A0 =3D meson_clk_disable,
->> +=C2=A0=C2=A0=C2=A0 .enable=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-=3D meson_clk_enable,
->> +=C2=A0=C2=A0=C2=A0 .request=C2=A0=C2=A0=C2=A0 =3D meson_clk_request,
->> +};
->> +
->> +static const struct udevice_id meson_clk_ids[] =3D {
->> +=C2=A0=C2=A0=C2=A0 { .compatible =3D "amlogic,meson-axg-aoclkc" },
->> +=C2=A0=C2=A0=C2=A0 { }
->> +};
->> +
->> +U_BOOT_DRIVER(meson_clk_axg_ao) =3D {
->> +=C2=A0=C2=A0=C2=A0 .name=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D =
-"meson_clk_axg_ao",
->> +=C2=A0=C2=A0=C2=A0 .id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D UC=
-LASS_CLK,
->> +=C2=A0=C2=A0=C2=A0 .of_match=C2=A0=C2=A0=C2=A0 =3D meson_clk_ids,
->> +=C2=A0=C2=A0=C2=A0 .priv_auto=C2=A0=C2=A0=C2=A0 =3D sizeof(struct meson=
-_clk),
->> +=C2=A0=C2=A0=C2=A0 .ops=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D &=
-meson_clk_ops,
->> +=C2=A0=C2=A0=C2=A0 .probe=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D=
- meson_clk_probe,
->> +};
->>
->=20
-> Reviewed-by: Sean Anderson <seanga2@gmail.com>
+Thanks. Anyway, I will submit patch to the kernel later.
+
+> Neil
