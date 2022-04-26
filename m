@@ -1,80 +1,52 @@
-Received: from mx.msync.work (mx.msync.work [185.250.0.168])
- by mx.groups.io with SMTP id smtpd.web11.2747.1650950832951448152
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web09.3398.1650957516983747044
  for <u-boot-amlogic@groups.io>;
- Mon, 25 Apr 2022 22:27:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1650950830; h=from:subject:date:message-id:to:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=sSBaDMwHhydAYG3P+twpVDnxs//ASAm1iVY4iP+db+0=;
-	b=c1uP3tEYUEso9S0V4vCusU6qCPIci7LV279fsMJQPqyzTojMsALZbiLlOufGkBVnhDGmUO
-	xDp3WJAuQxGk3G/7E6nY0zdwc7UpcPPa0h3gPFHmsgO03o1wp4RGpVZ8c27LqGmL7XDkU7
-	8ndP5BxSyHHMe2GARM3FCo3iRmwza4vo0y+5ZfyGS2YoNxqBGL978QNoDoMr8BwYbfjTS9
-	MoRElytEHcqpUYihBmQJnaphUymrFqecXd0IvpBxzu7nrgwgJkmRGOOFmksEg7WHef5Ek6
-	kVrLgqs84GhFPsC1aNvEBNVNVS3e21mRLtrnwRTFy6Ngyjz6L98cO99wAnSpDQ==
-From: "Vyacheslav Bocharov" <adeep@lexina.in>
-Subject: [PATCH 2/2] doc: boards: amlogic: update jethub d1 specifications
-Date: Tue, 26 Apr 2022 08:26:33 +0300
-Message-Id: <20220426052633.3027932-2-adeep@lexina.in>
-In-Reply-To: <20220426052633.3027932-1-adeep@lexina.in>
-References: <20220426052633.3027932-1-adeep@lexina.in>
+ Tue, 26 Apr 2022 00:18:37 -0700
+Received: by mail-wm1-f51.google.com with SMTP id q20so10600660wmq.1
+        for <u-boot-amlogic@groups.io>; Tue, 26 Apr 2022 00:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:organization:in-reply-to:content-transfer-encoding;
+        bh=j9/3x3pgne7jqu4cjIzZMBHx8sAfi63aF52xxmy2EIo=;
+        b=yb2JiwZP1hxtaSbfRRmgCTfTP+3FxSpyDbYwdqmW3Yk3Wqhlq8qGcV6r1Nas6ZAycK
+         MOd+h3pudr/u2XektSvICb/OhOAtBVu8UuajYyZop78vhiHgpkdWvbP9WSXzIseUKfza
+         tF7Xy8KByzXsoK1aRHJZkKHSIuVQZ1SbhPrR0sIkqryGadAUmLvEHNyQyeikCAq2NMsv
+         i/feEqDu4+8bfxaFeCunJy6xnnJMWuQET4GsI4nSu++Btqm9dJ26/Zt0zDlyaBMWIh9h
+         UlPnMA9SXvCSzcAljQHXCjnqkqGw6ityXzdW8ji3p3NTadwYlBxDhHkZwjrJN42E8FLM
+         scVQ==
+Return-Path: <narmstrong@baylibre.com>
+Message-ID: <a62044d7-c10b-c0a4-3aa0-3834e5a9c68f@baylibre.com>
+Date: Tue, 26 Apr 2022 09:18:33 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-To: Neil Armstrong <narmstrong@baylibre.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+Subject: Re: [PATCH 1/2] doc: boards: amlogic: update documentation for ADC support for AXG
+References: <20220426052633.3027932-1-adeep@lexina.in>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+In-Reply-To: <20220426052633.3027932-1-adeep@lexina.in>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Vyacheslav Bocharov <adeep@lexina.in>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
----
- doc/board/amlogic/jethub-j100.rst | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+On 26/04/2022 07:26, Vyacheslav Bocharov wrote:
+> Signed-off-by: Vyacheslav Bocharov <adeep@lexina.in>
+> ---
+>   doc/board/amlogic/index.rst | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+> index 9ef1440433..9c7fadf2c0 100644
+> --- a/doc/board/amlogic/index.rst
+> +++ b/doc/board/amlogic/index.rst
+> @@ -55,7 +55,7 @@ This matrix concerns the actual source code version.
+>   +-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+>   | NAND                          | No        | No              | No           | No          | No         | No          | No           |
+>   +-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+> -| ADC                           | **Yes**   | **Yes**         | **Yes**      | No          | No         | No          | No           |
+> +| ADC                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | No         | No          | No           |
+>   +-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+>   | CVBS Output                   | **Yes**   | **Yes**         | **Yes**      | *N/A*       | **Yes**    | **Yes**     | **Yes**      |
+>   +-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
 
-diff --git a/doc/board/amlogic/jethub-j100.rst b/doc/board/amlogic/jethub=
--j100.rst
-index d54519aaef..8081569bba 100644
---- a/doc/board/amlogic/jethub-j100.rst
-+++ b/doc/board/amlogic/jethub-j100.rst
-@@ -3,27 +3,31 @@
- U-Boot for JetHub J100
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
--JetHome Jethub D1 (http://jethome.ru/jethub-d1) is a home automation
--controller manufactured by JetHome with the following specifications:
-+JetHome Jethub D1 (http://jethome.ru/jethub-d1) is a series of home=20
-+automation controller manufactured by JetHome with the following=20
-+specifications:
-=20
-  - Amlogic A113X (ARM Cortex-A53) quad-core up to 1.5GHz
-  - no video out
-- - 512Mb/1GB DDR3
-- - 8/16GB eMMC flash
-+ - 512MB/1GB DDR3 or 2GB DDR4 SDRAM
-+ - 8/16/32GB eMMC flash
-  - 1 x USB 2.0
-  - 1 x 10/100Mbps ethernet
-- - WiFi / Bluetooth AMPAK AP6255 (Broadcom BCM43455) IEEE
--   802.11a/b/g/n/ac, Bluetooth 4.2.
-- - TI CC2538 + CC2592 Zigbee Wireless Module with up to 20dBm output
--   power and Zigbee 3.0 support.
-+ - WiFi / Bluetooth one from:
-+   - AMPAK AP6255 (Broadcom BCM43455) IEEE 802.11a/b/g/n/ac, Bluetooth 4=
-.2
-+   - RTL8822CS IEEE 802.11a/b/g/n/ac, Bluetooth 5.0
-+   - Amlogic W155S1 WiFi5 IEEE 802.11a/b/g/n/ac, Bluetooth 5.2
-  - 2 x gpio LEDS
-  - GPIO user Button
-+ - DC source with a voltage of 9 to 56 V / Passive POE
-+ - DIN Rail Mounting case
-+Basic version also has:
-+ - TI CC2538 + CC2592 Zigbee Wireless Module with up to 20dBm output
-+   power and Zigbee 3.0 support.
-  - 1 x 1-Wire
-  - 2 x RS-485
-  - 4 x dry contact digital GPIO inputs
-  - 3 x relay GPIO outputs
-- - DC source with a voltage of 9 to 56 V / Passive POE
-- - DIN Rail Mounting case
-=20
- U-Boot compilation
- ------------------
---=20
-2.30.2
-
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
