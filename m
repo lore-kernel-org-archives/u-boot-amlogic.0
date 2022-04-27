@@ -1,46 +1,79 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web09.5784.1650976479814916691
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web10.5516.1651045943040075782
  for <u-boot-amlogic@groups.io>;
- Tue, 26 Apr 2022 05:34:40 -0700
-Received: by mail-wr1-f46.google.com with SMTP id i5so6207821wrc.13
-        for <u-boot-amlogic@groups.io>; Tue, 26 Apr 2022 05:34:39 -0700 (PDT)
+ Wed, 27 Apr 2022 00:52:24 -0700
+Received: by mail-wr1-f50.google.com with SMTP id k2so1282034wrd.5
+        for <u-boot-amlogic@groups.io>; Wed, 27 Apr 2022 00:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GX/NXkC6voXGjJtr65v+8EiJHYRAQUerTl6QpL63NU0=;
-        b=Yzq5ILOLeThhFd2wd96/LAzg3OGFF76wZ9X7uFYN/TNaaIGjb+NnkZ8VvnUhZn+2sP
-         yjZp2dTXVpmvo1YoZxDlWG+vdwwLzLRpznEPX1ODILI4ZzcwYiuW2zDMoms5L97mZe0b
-         lYZe1ta5BVv3rXP4kFS/NEnFoaNeL2Pz+twSxAJRyAbADd7JK1ei/54lH9ZvSz0qIbEM
-         2stvkUrYREF/6Q+Glug05V4Vz/F01rNrEhw1KUq7AM3Zpzp1T1rrmWhcK5k9Mp9yp7jV
-         apgU0xwhHQL9butAgSbg+PKqDRenC9rZ2tXH3ho+QB5QtLcwE6itiG5T5GLbTsm0Gq99
-         NJlA==
+        h=message-id:date:mime-version:user-agent:from:to:cc:subject
+         :content-language:organization:content-transfer-encoding;
+        bh=0VkuTjG7hEJS9C2rIGhiskPzxKgpEPF/g9mJ8r+MdJQ=;
+        b=CGNhJHPGsFaZfDqaN7S4B29n8McuVcWciKi92VdyU3Pbqt9ElJJBPQUDTb7ttojv89
+         4UnDj8gzyP2gg9FfJfSnnZGpn9dbsIX0rhwHQGB+5NBJS+VP6fpWpOZjIrTx5y+PbtAS
+         U4wBoXKYxLx+1EK46AgUZJpmat4sx51TSSCu78aKM+e+iu4DU4XowwjpMxdnZd0A838m
+         zewAcbuG/jGtwzAAPZ9hSGToi281MChsIEyhKaITC1KW7cmTiMfXkPBmdsbikUhcBwqU
+         O/k77Ew3SRY9idaJemUEfwU2R/o6gQHKG4sQrBfbQWWC4xMRliVngQmeBEFp+kkDChuq
+         Zqjg==
 Return-Path: <narmstrong@baylibre.com>
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] doc: boards: amlogic: update documentation for ADC support for AXG
-Date: Tue, 26 Apr 2022 14:34:35 +0200
-Message-Id: <165097646225.2900940.6271234573208864728.b4-ty@baylibre.com>
-In-Reply-To: <20220426052633.3027932-1-adeep@lexina.in>
-References: <20220426052633.3027932-1-adeep@lexina.in>
+Message-ID: <37171ed2-cdc6-4c62-3722-9752c57ac16e@baylibre.com>
+Date: Wed, 27 Apr 2022 09:52:20 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: u-boot-amlogic@groups.io, Vyacheslav Bocharov <adeep@lexina.in>, u-boot@lists.denx.de
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+From: "Neil Armstrong" <narmstrong@baylibre.com>
+Subject: [GIT PULL] Please pull u-boot-amlogic-20220427
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Tom Rini <trini@konsulko.com>
+Cc: u-boot-amlogic@groups.io, U-Boot Mailing List <u-boot@lists.denx.de>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+Hi Tom,
 
-On Tue, 26 Apr 2022 08:26:32 +0300, Vyacheslav Bocharov wrote:
-> 
+Here's changes for next release, nothing big, no new boards either:
+- Add AXG support for SARADC, including minimal ao-clk driver
+- Update Amlogic documentation for Matrix & Jethub D1
 
+The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/11877
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-test)
-
-[1/2] doc: boards: amlogic: update documentation for ADC support for AXG
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/39a40a90c87b1925efb59db729664b12c2852f81
-[2/2] doc: boards: amlogic: update jethub d1 specifications
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/35cd09397240bd3c01fbd1bf9d1e5588773b9996
-
--- 
+Thanks,
 Neil
+
+The following changes since commit 9bb99fa95826d1a608737ca821977b4136a1a278:
+
+   Merge branch '2022-04-22-assorted-updates' (2022-04-23 08:06:28 -0400)
+
+are available in the Git repository at:
+
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20220427
+
+for you to fetch changes up to 5a9e5922ceccd55dc6427b3cf61b4dc74c7322ab:
+
+   doc: boards: amlogic: update jethub d1 specifications (2022-04-26 14:35:27 +0200)
+
+----------------------------------------------------------------
+- Add AXG support for SARADC, including minimal ao-clk driver
+- Update Amlogic documentation for Matrix & Jethub D1
+
+----------------------------------------------------------------
+Vyacheslav Bocharov (8):
+       clk: meson: add minimal driver for axg-ao clocks
+       clk: meson: fix driver name for g12a-ao clocks
+       clk: meson: update driver for g12a-ao clocks
+       adc: meson-saradc: add AXG variant
+       board: amlogic: jethub j100: enable saradc in dts
+       board: amlogic: jethub j100: enable saradc in config
+       doc: boards: amlogic: update documentation for ADC support for AXG
+       doc: boards: amlogic: update jethub d1 specifications
+
+  .../dts/meson-axg-jethome-jethub-j100-u-boot.dtsi  | 10 +++
+  configs/jethub_j100_defconfig                      |  5 ++
+  doc/board/amlogic/index.rst                        |  2 +-
+  doc/board/amlogic/jethub-j100.rst                  | 26 ++++---
+  drivers/adc/meson-saradc.c                         |  2 +
+  drivers/clk/meson/Makefile                         |  1 +
+  drivers/clk/meson/axg-ao.c                         | 86 ++++++++++++++++++++++
+  drivers/clk/meson/g12a-ao.c                        | 17 +++--
+  8 files changed, 131 insertions(+), 18 deletions(-)
+  create mode 100644 arch/arm/dts/meson-axg-jethome-jethub-j100-u-boot.dtsi
+  create mode 100644 drivers/clk/meson/axg-ao.c
