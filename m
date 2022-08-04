@@ -1,70 +1,80 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web09.9297.1660033305677191245
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web09.5692.1659624127732045283
  for <u-boot-amlogic@groups.io>;
- Tue, 09 Aug 2022 01:21:46 -0700
-Received: by mail-wr1-f45.google.com with SMTP id z12so13450388wrs.9
-        for <u-boot-amlogic@groups.io>; Tue, 09 Aug 2022 01:21:45 -0700 (PDT)
+ Thu, 04 Aug 2022 07:42:08 -0700
+Received: by mail-wr1-f47.google.com with SMTP id j15so17432364wrr.2
+        for <u-boot-amlogic@groups.io>; Thu, 04 Aug 2022 07:42:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:organization:content-language:subject:cc
-         :to:from:user-agent:mime-version:date:message-id:from:to:cc;
-        bh=x8yIzKXrTMP0V+Du0boiCheeLZsQLh3aPtLSsKeP+2k=;
-        b=OlKpf0fVmRTpm8T7AnxVF7xt3tN2vkROEeCjfFxwxs8XQh7FJE2LeKu+f3PnMISx/h
-         kcYT912RsYM0mEm/ti3hPcCrmeNDQzdaFaSn6z6hi5R9hI8AU6giTlAEk0oMew5JFb39
-         5khTsbsuOoC5lC3uuuqINxQ+423Uavvzs4OW0cJUBzjDJZfKDMhmUR7fDy/YdqK4OCaT
-         lPMP85KL6grJZEWUzgS+TNoKp85TMxfP6mbc8nC1oq2c2tJEalPvmSzUSRvdj2trM0Ms
-         I9QX7pjZuu1xsE3U2ZPzFEU2SuSNzd9IBwJB6equ7RXetKBJipga0HKN5jN5+envsej+
-         0vOA==
-Return-Path: <narmstrong@baylibre.com>
-Message-ID: <7635ad28-344c-4a83-03aa-c23c3fd866d0@baylibre.com>
-Date: Tue, 9 Aug 2022 10:21:42 +0200
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=lJq4MgsHDRHYamBJyXAKllSC+HzQpkj6rtYbyRwxHHQ=;
+        b=Sro8SBvaW/6f/ypwy1fD4nDzC3e6WpIK32hjI4zurMHKmUUyrdQ0FAkqfJPeLsxfbd
+         BW9f4VgG4Ff1J7KUZPNidJyDOCqazuBkj8YLS1rmNfPgKUoEdz5w+dDRM0AnJmqt9OTI
+         QxTQLQCvwFVq0ZbqppsCxzsN2vCjC2QJZwehxOjitaNeQg9Y/GmFZ+eVLblHmeRleWZY
+         7hMZZnpspXPt9YrnRM4AsL3jNsPSOstQnxCyyoTcn8uzw/rAdTHMS+h+1TA75PNWb+Yn
+         f32gXfmWQQdvU6xR6bmvkZdJ0VH62ARocB6CUG2DuE03IkD+9jvHEDYp4na4CkDp/WMU
+         7zvw==
+Return-Path: <jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM: meson: fixup error on efuse commands return
+Date: Thu,  4 Aug 2022 16:41:38 +0200
+Message-Id: <20220804144138.33809-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-From: "Neil Armstrong" <narmstrong@baylibre.com>
-Subject: [GIT PULL] Please pull u-boot-amlogic-20220809
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
+All `sm efuseread/efusewrite` commands exit with an error, even if the fuse
+have actually been dealt with correctly.
 
-Hi Tom,
+This is because the smc call return the size it actually processed but this
+result is checked against 0.
 
-Here's changes for next release:
-- fixup error on efuse commands return
-- add documentation on boot flow
+Return failure in do_efuse_read/write if the return value of
+meson_sm_read/write_efuse() is not the requested size.
 
-The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/13087
+Fixes: 52195ba5f579 ("ARM: amlogic: add sm efuse write support and cmd for read/write efuse")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm/mach-meson/sm.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Thanks,
-Neil
+diff --git a/arch/arm/mach-meson/sm.c b/arch/arm/mach-meson/sm.c
+index 6c28c0f5e445..d6eb910689f4 100644
+--- a/arch/arm/mach-meson/sm.c
++++ b/arch/arm/mach-meson/sm.c
+@@ -82,10 +82,7 @@ ssize_t meson_sm_write_efuse(uintptr_t offset, void *buffer, size_t size)
+ 
+ 	smc_call(&regs);
+ 
+-	if (regs.regs[0] == 0)
+-		return -1;
+-
+-	return 0;
++	return regs.regs[0];
+ }
+ 
+ #define SM_CHIP_ID_LENGTH	119
+@@ -222,7 +219,7 @@ static int do_efuse_read(struct cmd_tbl *cmdtp, int flag, int argc,
+         address = simple_strtoul(argv[3], NULL, 0);
+ 
+ 	ret = meson_sm_read_efuse(offset, (void *)address, size);
+-	if (ret)
++	if (ret != size)
+ 		return CMD_RET_FAILURE;
+ 
+ 	return CMD_RET_SUCCESS;
+@@ -243,7 +240,7 @@ static int do_efuse_write(struct cmd_tbl *cmdtp, int flag, int argc,
+         address = simple_strtoul(argv[3], NULL, 0);
+ 
+ 	ret = meson_sm_write_efuse(offset, (void *)address, size);
+-	if (ret)
++	if (ret != size)
+ 		return CMD_RET_FAILURE;
+ 
+ 	return CMD_RET_SUCCESS;
+-- 
+2.36.1
 
-The following changes since commit 2d2c61ff0460740d9ec5a44dbef9255a8c690696:
-
-   Merge tag 'efi-2022-07-rc7' of https://source.denx.de/u-boot/custodians/u-boot-efi (2022-07-06 09:17:08 -0400)
-
-are available in the Git repository at:
-
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20220809
-
-for you to fetch changes up to 3145e0d0ff0837647351f2ca261b4cde779f83e0:
-
-   ARM: meson: fixup error on efuse commands return (2022-08-08 09:56:38 +0200)
-
-----------------------------------------------------------------
-- fixup error on efuse commands return
-- add documentation on boot flow
-
-----------------------------------------------------------------
-Jerome Brunet (1):
-       ARM: meson: fixup error on efuse commands return
-
-Neil Armstrong (1):
-       doc: board: amlogic: add documentation on boot flow
-
-  arch/arm/mach-meson/sm.c        |   9 +--
-  doc/board/amlogic/boot-flow.rst | 134 ++++++++++++++++++++++++++++++++++++++++
-  doc/board/amlogic/index.rst     |   1 +
-  3 files changed, 138 insertions(+), 6 deletions(-)
-  create mode 100644 doc/board/amlogic/boot-flow.rst
