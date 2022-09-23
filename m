@@ -1,194 +1,143 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web09.1313.1663865500348267299
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web09.5272.1663921412689901546
  for <u-boot-amlogic@groups.io>;
- Thu, 22 Sep 2022 09:51:50 -0700
-Received: by mail-wr1-f53.google.com with SMTP id n15so9585516wrq.5
-        for <u-boot-amlogic@groups.io>; Thu, 22 Sep 2022 09:51:49 -0700 (PDT)
+ Fri, 23 Sep 2022 01:23:33 -0700
+Received: by mail-wr1-f54.google.com with SMTP id x18so13221820wrm.7
+        for <u-boot-amlogic@groups.io>; Fri, 23 Sep 2022 01:23:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:reply-to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date;
-        bh=swLG15CrXyRjB9OJeowvCsVacmogvkbO8sDPhJHnhns=;
-        b=Jw3dAlpr9QVLN6qOTpvm+hyZHxLAvUUuSa2oAfCvC34FmyEl9x20NXWWzzQCAW+puH
-         5yIyRKhUZppjDofYPDQR39JK7r/qklVOxaAAZurPPLWSwjLAHIqFCxs/2vDxlhy0oRoV
-         K3xCpW1n6XbkxbiAXAAUOEnL2r2C2/kt0bwm9M0lb5Q0Lb2R5fBFt5cbV0a4ju9AZJuR
-         EXHPmCxzeFlXHV4Z2ewWHF3QBdhQjQE9Y8y8jaKEEDOu+xFDEajGlMlV1akonlI8kaWT
-         H3ahZ9BHqkMM0A6jesRsOeEs8RhmYknsgz1qofIszwNU4V3PHGjEg6xvkYPHdyfKn4RM
-         b4IA==
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date;
+        bh=c/Iouo5lF7uMwmQ9+8pP7zgbki4nUCpU/ro85laaATU=;
+        b=OcvNrgCdWPCbQrRMkN1gvZakNz8ATfdVDqmNoeVKJj/nQG57eoeq6S3nZ4QFnmUtgV
+         s0pL5KFYe1Hbej7ZzIKAn4V0AVIUVnYKsfy6LgNNoOlSPsrNPbca0HgZ2KoI7+ygpWWe
+         w18ZKvzPplm5tFR4TKQ3YahF3ry4JcWb2mmk2CVSiI6F1krdPXuZsi2ylIXpn5pbm+hy
+         OPcGUeMSm7d+rOcs+wRz7nVw3UlhjPCSQqI/x6K7k/I4D9EqbNBoZnnjOX0lIxRmZ2dL
+         Dbrbs9G89ruCv8aTD18Y6mTIBxh1Lsq26pIIavKhZws8XXwGmgliqER6WhgFSjGWAJE3
+         dv7g==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <e9c204ce-bdbb-89da-70b6-3ee721fe3cd7@linaro.org>
-Date: Thu, 22 Sep 2022 18:51:47 +0200
+Message-ID: <1203b787-f728-7127-eafd-ac2ed2435217@linaro.org>
+Date: Fri, 23 Sep 2022 10:23:29 +0200
 MIME-Version: 1.0
+From: "Neil Armstrong" <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
 Subject: Re: [PATCH] arm: amlogic: add setbrg op to serial device
 References: <20220918161701.572814-1-e.tomell@gmail.com>
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20220918161701.572814-1-e.tomell@gmail.com>
+ <e9c204ce-bdbb-89da-70b6-3ee721fe3cd7@linaro.org>
+ <CAMRTVOnQO+G+wsKFVurHUXFH2Jc8JCBwST=NmtioBMiX5R959g@mail.gmail.com>
+In-Reply-To: <CAMRTVOnQO+G+wsKFVurHUXFH2Jc8JCBwST=NmtioBMiX5R959g@mail.gmail.com>
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io, e.tomell@gmail.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de
+To: Edoardo Tomelleri <e.tomell@gmail.com>
+Cc: u-boot-amlogic@groups.io, Neil Armstrong <narmstrong@baylibre.com>, Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
 Hi,
 
-Sorry for the delay...
-
-On 18/09/2022 18:17, Edoardo Tomelleri wrote:
-> Implement setbrg in amlogic/meson serial device with driver model
-> similar to how the meson_uart.c driver does it in Linux. Also
-> configure (probe) the serial device with the new reg5 register.
+On 22/09/2022 20:51, Edoardo Tomelleri wrote:
+> Hello,
+> Il giorno gio 22 set 2022 alle ore 18:51 Neil Armstrong
+> <neil.armstrong@linaro.org> ha scritto:
+>>
+>> Hi,
+>>
+>> Sorry for the delay...
+> No problem, don't worry
 > 
-> Signed-off-by: Edoardo Tomelleri <e.tomell@gmail.com>
-> ---
+>> Looks good !
+>>
+>> If someone can test it ? otherwise I'll take it for next release.
+> ...does it count if I've tested it? I have a radxa zero board (S905Y2
+> chip), this started as an experimentation
+> with editing register values in memory "for fun" and I decided to try
+> to make a patch out of it.
+
+Yes it's perfect, thanks a lot for the test results !
+
+> I do not have an oscilloscope so I can not accurately measure the baud
+> rate, but the logic is the same as
+> in linux and using an USB to UART (PL2303) adapter console input and
+> loady command work fine.
+> I've just repeated a small test: I'm using picocom and lrzsz in ymodem
+> mode under WSL, the usb adapter
+> is forwarded to WSL using usbip, but this should not change anything
+> at this kind of speed (I hope).
+> Here are some results sending a 1 MB test file (created once from /dev/urandom):
+> picocom v3.1
 > 
->   drivers/serial/serial_meson.c | 70 +++++++++++++++++++++++++++++++++++
->   include/configs/meson64.h     |  7 ++++
->   2 files changed, 77 insertions(+)
+> port is        : /dev/ttyUSB0
+> flowcontrol    : none
+> baudrate is    : 115200
+> parity is      : none
+> databits are   : 8
+> stopbits are   : 1
+> [...]
+> send_cmd is    : sz --ymodem -vv
+> receive_cmd is : rz -vv -E
+> [...]
+> @115200
+> Bytes Sent:1048576   BPS:7762
+> @230400
+> Bytes Sent:1048576   BPS:16372
+> @460800
+> Bytes Sent:1048576   BPS:26681
+> @500000
+> Bytes Sent:1048576   BPS:27689
+> @500000 (2nd run)
+> Bytes Sent:1048576   BPS:27207
 > 
-> diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson.c
-> index d69ec221..90c370cf 100644
-> --- a/drivers/serial/serial_meson.c
-> +++ b/drivers/serial/serial_meson.c
-> @@ -7,9 +7,11 @@
->   #include <dm.h>
->   #include <errno.h>
->   #include <fdtdec.h>
-> +#include <linux/kernel.h>
->   #include <linux/bitops.h>
->   #include <linux/compiler.h>
->   #include <serial.h>
-> +#include <clk.h>
->   
->   struct meson_uart {
->   	u32 wfifo;
-> @@ -17,6 +19,7 @@ struct meson_uart {
->   	u32 control;
->   	u32 status;
->   	u32 misc;
-> +	u32 reg5; /* New baud control register */
->   };
->   
->   struct meson_serial_plat {
-> @@ -42,6 +45,35 @@ struct meson_serial_plat {
->   #define AML_UART_RX_RST			BIT(23)
->   #define AML_UART_CLR_ERR		BIT(24)
->   
-> +/* AML_UART_REG5 bits */
-> +#define AML_UART_REG5_XTAL_DIV2		BIT(27)
-> +#define AML_UART_REG5_XTAL_CLK_SEL	BIT(26) /* default 0 (div by 3), 1 for no div */
-> +#define AML_UART_REG5_USE_XTAL_CLK	BIT(24) /* default 1 (use crystal as clock source) */
-> +#define AML_UART_REG5_USE_NEW_BAUD	BIT(23) /* default 1 (use new baud rate register) */
-> +#define AML_UART_REG5_BAUD_MASK		0x7fffff
-> +
-> +static u32 meson_calc_baud_divisor(ulong src_rate, u32 baud)
-> +{
-> +	/*
-> +	 * Usually src_rate is 24 MHz (from crystal) as clock source for serial
-> +	 * device. Since 8 Mb/s is the maximum supported baud rate, use div by 3
-> +	 * to derive baud rate. This choice is used also in meson_serial_setbrg.
-> +	 */
-> +	return DIV_ROUND_CLOSEST(src_rate / 3, baud) - 1;
-> +}
-> +
-> +static void meson_serial_set_baud(struct meson_uart *uart, ulong src_rate, u32 baud)
-> +{
-> +	/*
-> +	 * Set crystal divided by 3 (regardless of device tree clock property)
-> +	 * as clock source and the corresponding divisor to approximate baud
-> +	 */
-> +	u32 divisor = meson_calc_baud_divisor(src_rate, baud);
-> +	u32 val = AML_UART_REG5_USE_XTAL_CLK | AML_UART_REG5_USE_NEW_BAUD |
-> +		(divisor & AML_UART_REG5_BAUD_MASK);
-> +	writel(val, &uart->reg5);
-> +}
-> +
->   static void meson_serial_init(struct meson_uart *uart)
->   {
->   	u32 val;
-> @@ -59,7 +91,14 @@ static int meson_serial_probe(struct udevice *dev)
->   {
->   	struct meson_serial_plat *plat = dev_get_plat(dev);
->   	struct meson_uart *const uart = plat->reg;
-> +	struct clk per_clk;
-> +	int ret = clk_get_by_name(dev, "baud", &per_clk);
-> +
-> +	if (ret)
-> +		return ret;
-> +	ulong rate = clk_get_rate(&per_clk);
->   
-> +	meson_serial_set_baud(uart, rate, CONFIG_BAUDRATE);
->   	meson_serial_init(uart);
->   
->   	return 0;
-> @@ -111,6 +150,36 @@ static int meson_serial_putc(struct udevice *dev, const char ch)
->   	return 0;
->   }
->   
-> +static int meson_serial_setbrg(struct udevice *dev, const int baud)
-> +{
-> +	/*
-> +	 * Change device baud rate if baud is reasonable (considering a 23 bit
-> +	 * counter with an 8 MHz clock input) and the actual baud
-> +	 * rate is within 2% of the requested value (2% is arbitrary).
-> +	 */
-> +	if (baud < 1 || baud > 8000000)
-> +		return -EINVAL;
-> +
-> +	struct meson_serial_plat *const plat = dev_get_plat(dev);
-> +	struct meson_uart *const uart = plat->reg;
-> +	struct clk per_clk;
-> +	int ret = clk_get_by_name(dev, "baud", &per_clk);
-> +
-> +	if (ret)
-> +		return ret;
-> +	ulong rate = clk_get_rate(&per_clk);
-> +	u32 divisor = meson_calc_baud_divisor(rate, baud);
-> +	u32 calc_baud = (rate / 3) / (divisor + 1);
-> +	u32 calc_err = baud > calc_baud ? baud - calc_baud : calc_baud - baud;
-> +
-> +	if (((calc_err * 100) / baud) > 2)
-> +		return -EINVAL;
-> +
-> +	meson_serial_set_baud(uart, rate, baud);
-> +
-> +	return 0;
-> +}
-> +
->   static int meson_serial_pending(struct udevice *dev, bool input)
->   {
->   	struct meson_serial_plat *plat = dev_get_plat(dev);
-> @@ -154,6 +223,7 @@ static const struct dm_serial_ops meson_serial_ops = {
->   	.putc = meson_serial_putc,
->   	.pending = meson_serial_pending,
->   	.getc = meson_serial_getc,
-> +	.setbrg = meson_serial_setbrg,
->   };
->   
->   static const struct udevice_id meson_serial_ids[] = {
-> diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-> index 196e58ed..01413a02 100644
-> --- a/include/configs/meson64.h
-> +++ b/include/configs/meson64.h
-> @@ -16,6 +16,13 @@
->   #define GICC_BASE			0xc4302000
->   #endif
->   
-> +/* Serial drivers */
-> +/* The following table includes the supported baudrates */
-> +#define CONFIG_SYS_BAUDRATE_TABLE  \
-> +	{300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, \
-> +		230400, 250000, 460800, 500000, 1000000, 2000000, 4000000, \
-> +		8000000 }
-> +
->   /* For splashscreen */
->   #ifdef CONFIG_DM_VIDEO
->   #define STDOUT_CFG "vidconsole,serial"
+> At this point I stopped testing, I think my adapter is not good enough
+> and that the logic
+> is correct (I've read amlogic's public datasheets [1], but I've not
+> found a formula specified there),
+> Reading address (for hardware device UARTAO1, that _of course_ is not
+> listed there)
+> md.l 0xff803014 1
+> ff803014: 0180000f
+> This corresponds to REG5 of device UARTAO1, with bits 24 (USE_XTAL_CLK), 23
+> (use new baud rate) set, and bits 27 and 26 clear (so 24 MHz crystal
+> clock is divided by 3),
+> NEW_BAUD_RATE is f, so baud rate should be (8 MHz / (15 + 1)) = 500K.
+> 
+> Other than that, I noticed that setting the env variable baudrate is
+> restricted to values allowed
+> in a compile time config, loady is not and loady ignores the return
+> value of meson_serial_setbrg
+> (it returns -EINVAL if for example a baudrate higher than 8'000'000 is
+> requested), here's a test
+> (with env variable baudrate=500000):
+> => loady 0x01000000 8000001
+> ## Switch baudrate to 8000001 bps and press ENTER ...
+> ## Ready for binary (ymodem) download to 0x01000000 at 8000001 bps...
+> C
+> *** file: ./dest
+> $ sz --ymodem -vv ./dest
+> Sending: dest
+> Bytes Sent:1048576   BPS:27781
+> Sending:
+> Ymodem sectors/kbytes sent:   0/ 0k
+> Transfer complete
+> 
+> *** exit status: 0 ***
+> ## Total Size      = 0x00100000 = 1048576 Bytes
+> ## Start Addr      = 0x01000000
+> ## Switch baudrate to 500000 bps and press ESC ...
+> =>
+> 
+> setbrg fails, the baud rate register is left at the 500'000 setting
+> and that's it.
+> I think the "for fun" experiment has gone a bit too far.
+> 
+> Edoardo
+> [1] https://dl.radxa.com/zero/docs/hw/IO%20Interface%ef%bc%8dS905Y2%20Datasheet.pdf
 
-Looks good !
+I'll apply it then.
 
-If someone can test it ? otherwise I'll take it for next release.
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
+Please send more patches with such quality !
+
+Thanks,
 Neil
