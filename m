@@ -1,27 +1,27 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.2664.1665135524069300112
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web11.2665.1665135524681757874
  for <u-boot-amlogic@groups.io>;
- Fri, 07 Oct 2022 02:38:44 -0700
-Received: by mail-wr1-f52.google.com with SMTP id a3so6477827wrt.0
-        for <u-boot-amlogic@groups.io>; Fri, 07 Oct 2022 02:38:43 -0700 (PDT)
+ Fri, 07 Oct 2022 02:38:45 -0700
+Received: by mail-wr1-f50.google.com with SMTP id f11so6432037wrm.6
+        for <u-boot-amlogic@groups.io>; Fri, 07 Oct 2022 02:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Hdk1fsXI4jiBc5/neSRY6TnId8pIZ9EPHdkJRqBa8gM=;
-        b=kO3o6uS0DyeGerfGwL7HFD1zoR93Q7E5hVzAi7/N0vNcyKCgbgw4sc1fLJSYbZObCa
-         TFQkqvnhRw3D/deAdp98jIihgtWt5tCwLsE3wzxe+kmiwBBIiQd8mYdlTHIgm5es3iM3
-         2uFJVjmkD2/gnbC06AqgnK9i7HHTfAQDxnLeuw8l3iX9Z9bBZba0Db0dhQxEpXTc8RD5
-         0R4I2ZAthUvki1j7Psn6JUSuR7j+M3ndLlXN41Xi1CCWrUuxrehMB5IXy2MOUh0UV316
-         6kcJoNBKQhwGAkviCJHgB4IUwRHygqOU2QfxZTTVtRSdiu/IW44mw+igB1AS0JpMJnaN
-         CBzw==
+        bh=IB0plN+Gl9vtheQcWKhz80Cq7j0X82O7hpR1UNdWLCs=;
+        b=hLajrrN9VXUeIbHacAkO8peMwJXY0vf/SEbCydXN/hYEPfVeJkycti/bMut4eTqiDR
+         qsnlg4GxwsIiSfmtTG1cXHftqozYe1ZsL63iYC2w1EDWDSsICRaSmQHyZAs3rInroI5T
+         jUp9zFPWstAB5/FPI2MVsGJtqh1j5NSaqrAANtCIXmmqfv4NwTDQp4jle0fpsII9Wvb/
+         GqaWcsr2iPOAR30x7uIvm2SmVOm5Hk5g/jDR9VuZTLJVLWbGPrbeAuuC1N8jxa7I9PAj
+         2FiqCaIYKrSxD1I2mQ0Zry/JJbvbzv3GJQIEDewvdxUBz+u13GZ9VU9svRWg09+nATyM
+         IMzg==
 Return-Path: <mkorpershoek@baylibre.com>
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Date: Fri, 07 Oct 2022 11:38:22 +0200
-Subject: [PATCH v2 1/2] usb: gadget: fastboot: detach usb on reboot commands
+Date: Fri, 07 Oct 2022 11:38:23 +0200
+Subject: [PATCH v2 2/2] mach-meson: g12a: reset usb controller in reset_misc()
 MIME-Version: 1.0
-Message-Id: <20220728-reset-usb-controller-v2-1-ef7657ce78b1@baylibre.com>
+Message-Id: <20220728-reset-usb-controller-v2-2-ef7657ce78b1@baylibre.com>
 References: <20220728-reset-usb-controller-v2-0-ef7657ce78b1@baylibre.com>
 In-Reply-To: <20220728-reset-usb-controller-v2-0-ef7657ce78b1@baylibre.com>
 Content-Type: text/plain; charset="utf-8"
@@ -30,64 +30,372 @@ To: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <neil.armstron
 Cc: u-boot@lists.denx.de, Simon Glass <sjg@chromium.org>, Mattijs Korpershoek <mkorpershoek@baylibre.com>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-When host issues "fastboot reboot fastboot", it's expected that the
-board drops the USB connection before resetting.
+On some g12a boards like the VIM3L and the SEI610, with some
+USB cables/hosts, there is a long (5s) delay before
+between "fastboot reboot" and the host detecting a USB reset.
 
-On some boards, such as Khadas VIM3L and SEI610, this is not the case.
+This breaks tools relying on "fastboot reboot fastboot" which assume
+that 1s after the command send, the board should disconnect on usb.
 
-We observe the following error:
-$ fastboot reboot fastboot
-Rebooting into fastboot                            OKAY [  0.004s]
-fastboot: error: Failed to boot into userspace fastboot; one or more components might be unbootable.
+To reproduce, enable fastboot in U-Boot console:
+=> fastboot usb 0
 
-This does not happen when we use the RST button on the board.
-It can be reproduced in linux with:
-  # echo b > /proc/sysrq-trigger
+Then, on the host, run:
+  # echo "running fastboot reboot bootloader" > /dev/kmsg && fastboot reboot bootloader
+  Rebooting into bootloader                          OKAY [  0.003s]
+  Finished. Total time: 3.033s
 
-In this case, we hit a undefined hardware behavior, where D+ and D-
-are in an unknown state. Therefore the host can't detect usb
-disconnection.
+  [54074.251551] running fastboot reboot bootloader
+  ... there is a delay of 5s before we detect a disconnection ...
+  [54079.041238] usb 1-7.4: USB disconnect, device number 72
+  [54079.239625] usb 1-7.4: new high-speed USB device number 73 using xhci_hcd
+  [54079.359103] usb 1-7.4: New USB device found, idVendor=1b8e, idProduct=fada, bcdDevice= 2.27
+  [54079.359110] usb 1-7.4: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+  [54079.359112] usb 1-7.4: Product: USB download gadget
+  [54079.359114] usb 1-7.4: Manufacturer: U-Boot
+  [54079.359116] usb 1-7.4: SerialNumber: C8631470CC41
 
-Make sure we always call usb_gadget_release() when a "fastboot reboot"
-command is issued.
+Note: this does not happen when we use the RST button on the board.
 
-Note: usb_gadget_release() should be called before g_dnl_unregister()
-because g_dnl_unregister() triggers a complete() call on each
-endpoint (thus calling do_reset()).
+To fix this, re-implement a platform reset which calls
+board_usb_cleanup() before resetting the board.
 
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 ---
- cmd/fastboot.c                  | 2 +-
- drivers/usb/gadget/f_fastboot.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mach-meson/board-g12a.c          | 14 ++++++++++++++
+ configs/bananapi-m5_defconfig             |  2 ++
+ configs/beelink-gsking-x_defconfig        |  2 ++
+ configs/beelink-gtking_defconfig          |  2 ++
+ configs/beelink-gtkingpro_defconfig       |  2 ++
+ configs/khadas-vim3_android_ab_defconfig  |  2 ++
+ configs/khadas-vim3_android_defconfig     |  2 ++
+ configs/khadas-vim3_defconfig             |  2 ++
+ configs/khadas-vim3l_android_ab_defconfig |  2 ++
+ configs/khadas-vim3l_android_defconfig    |  2 ++
+ configs/khadas-vim3l_defconfig            |  2 ++
+ configs/odroid-c4_defconfig               |  2 ++
+ configs/odroid-hc4_defconfig              |  2 ++
+ configs/odroid-n2_defconfig               |  2 ++
+ configs/radxa-zero_defconfig              |  2 ++
+ configs/u200_defconfig                    |  2 ++
+ 16 files changed, 44 insertions(+)
 
-diff --git a/cmd/fastboot.c b/cmd/fastboot.c
-index dd223b1554da..b498e4b22bb3 100644
---- a/cmd/fastboot.c
-+++ b/cmd/fastboot.c
-@@ -83,9 +83,9 @@ static int do_fastboot_usb(int argc, char *const argv[],
- 	ret = CMD_RET_SUCCESS;
- 
- exit:
-+	usb_gadget_release(controller_index);
- 	g_dnl_unregister();
- 	g_dnl_clear_detach();
--	usb_gadget_release(controller_index);
- 
- 	return ret;
- #else
-diff --git a/drivers/usb/gadget/f_fastboot.c b/drivers/usb/gadget/f_fastboot.c
-index d0e92c7a071f..07b1681c8a9a 100644
---- a/drivers/usb/gadget/f_fastboot.c
-+++ b/drivers/usb/gadget/f_fastboot.c
-@@ -544,6 +544,7 @@ static void rx_handler_command(struct usb_ep *ep, struct usb_request *req)
- 		case FASTBOOT_COMMAND_REBOOT_FASTBOOTD:
- 		case FASTBOOT_COMMAND_REBOOT_RECOVERY:
- 			fastboot_func->in_req->complete = compl_do_reset;
-+			g_dnl_trigger_detach();
- 			break;
- #if CONFIG_IS_ENABLED(FASTBOOT_UUU_SUPPORT)
- 		case FASTBOOT_COMMAND_ACMD:
+diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
+index 2e59eee8f792..df7d1959aa74 100644
+--- a/arch/arm/mach-meson/board-g12a.c
++++ b/arch/arm/mach-meson/board-g12a.c
+@@ -17,7 +17,9 @@
+ #include <asm/io.h>
+ #include <asm/armv8/mmu.h>
+ #include <linux/sizes.h>
++#include <linux/psci.h>
+ #include <usb.h>
++#include <reset.h>
+ #include <linux/usb/otg.h>
+ #include <asm/arch/usb.h>
+ #include <usb/dwc2_udc.h>
+@@ -217,3 +219,15 @@ int board_usb_cleanup(int index, enum usb_init_type init)
+ 	return 0;
+ }
+ #endif
++
++#if !CONFIG_IS_ENABLED(PSCI_RESET)
++void reset_misc(void)
++{
++	struct udevice *dev;
++
++	board_usb_cleanup(0, USB_INIT_UNKNOWN);
++
++	uclass_get_device_by_name(UCLASS_FIRMWARE, "psci", &dev);
++	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
++}
++#endif
+diff --git a/configs/bananapi-m5_defconfig b/configs/bananapi-m5_defconfig
+index 6ab2d8ef0c44..df4fbb292a61 100644
+--- a/configs/bananapi-m5_defconfig
++++ b/configs/bananapi-m5_defconfig
+@@ -1,4 +1,5 @@
+ CONFIG_ARM=y
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -9,6 +10,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING="bpi-m5"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/beelink-gsking-x_defconfig b/configs/beelink-gsking-x_defconfig
+index 2c8c642dcb2d..aa90e49f715e 100644
+--- a/configs/beelink-gsking-x_defconfig
++++ b/configs/beelink-gsking-x_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="beelink-s922x"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" beelink"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/beelink-gtking_defconfig b/configs/beelink-gtking_defconfig
+index 9848252e7e95..c5ff7821997e 100644
+--- a/configs/beelink-gtking_defconfig
++++ b/configs/beelink-gtking_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="beelink-s922x"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" beelink"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/beelink-gtkingpro_defconfig b/configs/beelink-gtkingpro_defconfig
+index 484e039fe034..2f698a2f5210 100644
+--- a/configs/beelink-gtkingpro_defconfig
++++ b/configs/beelink-gtkingpro_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="beelink-s922x"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" beelink"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
+index f3e9f11a8edf..73916ea3b2db 100644
+--- a/configs/khadas-vim3_android_ab_defconfig
++++ b/configs/khadas-vim3_android_ab_defconfig
+@@ -1,6 +1,7 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="vim3"
+ CONFIG_SYS_CONFIG_NAME="khadas-vim3_android"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -11,6 +12,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" khadas-vim3"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/khadas-vim3_android_defconfig b/configs/khadas-vim3_android_defconfig
+index f076b6e4e564..fe10741adf89 100644
+--- a/configs/khadas-vim3_android_defconfig
++++ b/configs/khadas-vim3_android_defconfig
+@@ -1,6 +1,7 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="vim3"
+ CONFIG_SYS_CONFIG_NAME="khadas-vim3_android"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -11,6 +12,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" khadas-vim3"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
+index 0cf4bac809b9..bff664726df9 100644
+--- a/configs/khadas-vim3_defconfig
++++ b/configs/khadas-vim3_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="vim3"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" khadas-vim3"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
+index 828ce6dee9dd..66676dca609a 100644
+--- a/configs/khadas-vim3l_android_ab_defconfig
++++ b/configs/khadas-vim3l_android_ab_defconfig
+@@ -1,6 +1,7 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="vim3"
+ CONFIG_SYS_CONFIG_NAME="khadas-vim3l_android"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -11,6 +12,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" khadas-vim3l"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/khadas-vim3l_android_defconfig b/configs/khadas-vim3l_android_defconfig
+index ee1fa5c31f82..03ccff90e275 100644
+--- a/configs/khadas-vim3l_android_defconfig
++++ b/configs/khadas-vim3l_android_defconfig
+@@ -1,6 +1,7 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="vim3"
+ CONFIG_SYS_CONFIG_NAME="khadas-vim3l_android"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -11,6 +12,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" khadas-vim3l"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
+index f1524f562acb..6b26fedd22c2 100644
+--- a/configs/khadas-vim3l_defconfig
++++ b/configs/khadas-vim3l_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="vim3"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" khadas-vim3l"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
+index d244e71866e7..5c2dd96c62b9 100644
+--- a/configs/odroid-c4_defconfig
++++ b/configs/odroid-c4_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="odroid-n2"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" odroid-c4/hc4"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/odroid-hc4_defconfig b/configs/odroid-hc4_defconfig
+index fe70d5f12a16..418fc0271ad7 100644
+--- a/configs/odroid-hc4_defconfig
++++ b/configs/odroid-hc4_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="odroid-n2"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" odroid-hc4"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_AHCI=y
+diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
+index 3703d7e17cee..1d6384817555 100644
+--- a/configs/odroid-n2_defconfig
++++ b/configs/odroid-n2_defconfig
+@@ -1,5 +1,6 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="odroid-n2"
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -10,6 +11,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" odroid-n2/n2-plus"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/radxa-zero_defconfig b/configs/radxa-zero_defconfig
+index d3744f48a31b..a0a0a82a650f 100644
+--- a/configs/radxa-zero_defconfig
++++ b/configs/radxa-zero_defconfig
+@@ -1,4 +1,5 @@
+ CONFIG_ARM=y
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -9,6 +10,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" radxa-zero"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+diff --git a/configs/u200_defconfig b/configs/u200_defconfig
+index b4f2f21d7eda..d4eb0123c3d7 100644
+--- a/configs/u200_defconfig
++++ b/configs/u200_defconfig
+@@ -1,4 +1,5 @@
+ CONFIG_ARM=y
++CONFIG_ARM_SMCCC=y
+ CONFIG_ARCH_MESON=y
+ CONFIG_SYS_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -9,6 +10,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_IDENT_STRING=" u200"
++# CONFIG_PSCI_RESET is not set
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART=y
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
 
 -- 
 b4 0.11.0-dev-5166b
