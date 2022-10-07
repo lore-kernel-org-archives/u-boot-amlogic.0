@@ -1,26 +1,29 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web12.2569.1665135523226526709
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web11.2664.1665135524069300112
  for <u-boot-amlogic@groups.io>;
- Fri, 07 Oct 2022 02:38:43 -0700
-Received: by mail-wm1-f51.google.com with SMTP id c3-20020a1c3503000000b003bd21e3dd7aso4279750wma.1
-        for <u-boot-amlogic@groups.io>; Fri, 07 Oct 2022 02:38:42 -0700 (PDT)
+ Fri, 07 Oct 2022 02:38:44 -0700
+Received: by mail-wr1-f52.google.com with SMTP id a3so6477827wrt.0
+        for <u-boot-amlogic@groups.io>; Fri, 07 Oct 2022 02:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=h2S4+OYsJNXvqbW83QyBS5/ZPM1IJHbVoYCFOhgfyaM=;
-        b=TME9EE6gMdPiYdJH9shSrBLbrTZev3UEnYOlSXOH2NSvrddQovrH3jJQu3OzGz4w9x
-         AqdvIjnpn8lxYACDEffzE6BZmDnGapniKnM4O7JKpc8H2qOmKi5luYi1bE4yZopbnvmu
-         WchSu9WKIMeAu/2y0ou1mOGnVGGfQqBOD/mBsvxH23PlG5rG3ooyLmv5tXpYNv/hE9AS
-         mqZlbpwF/+mXookNm3XJ8FXSvk5KLCbWhiTGcIIc39hp+pD8Xc9uqXRmPQ3Sjc/YvA1h
-         Y0V4ETZgTj/LOTLeuVVFxDoJUBs+XiNg+wLvp2+hygu0isEbt4JFcTHYT9SWzZJl1gwC
-         Kgug==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hdk1fsXI4jiBc5/neSRY6TnId8pIZ9EPHdkJRqBa8gM=;
+        b=kO3o6uS0DyeGerfGwL7HFD1zoR93Q7E5hVzAi7/N0vNcyKCgbgw4sc1fLJSYbZObCa
+         TFQkqvnhRw3D/deAdp98jIihgtWt5tCwLsE3wzxe+kmiwBBIiQd8mYdlTHIgm5es3iM3
+         2uFJVjmkD2/gnbC06AqgnK9i7HHTfAQDxnLeuw8l3iX9Z9bBZba0Db0dhQxEpXTc8RD5
+         0R4I2ZAthUvki1j7Psn6JUSuR7j+M3ndLlXN41Xi1CCWrUuxrehMB5IXy2MOUh0UV316
+         6kcJoNBKQhwGAkviCJHgB4IUwRHygqOU2QfxZTTVtRSdiu/IW44mw+igB1AS0JpMJnaN
+         CBzw==
 Return-Path: <mkorpershoek@baylibre.com>
-Subject: [PATCH v2 0/2] fastboot/mach-meson: release usb_gadget on reboot commands
-MIME-Version: 1.0
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Date: Fri, 07 Oct 2022 11:38:21 +0200
-Message-Id: <20220728-reset-usb-controller-v2-0-ef7657ce78b1@baylibre.com>
+Date: Fri, 07 Oct 2022 11:38:22 +0200
+Subject: [PATCH v2 1/2] usb: gadget: fastboot: detach usb on reboot commands
+MIME-Version: 1.0
+Message-Id: <20220728-reset-usb-controller-v2-1-ef7657ce78b1@baylibre.com>
+References: <20220728-reset-usb-controller-v2-0-ef7657ce78b1@baylibre.com>
+In-Reply-To: <20220728-reset-usb-controller-v2-0-ef7657ce78b1@baylibre.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 To: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, Marek Vasut <marex@denx.de>, Lukasz Majewski <lukma@denx.de>
@@ -39,54 +42,52 @@ fastboot: error: Failed to boot into userspace fastboot; one or more components 
 
 This does not happen when we use the RST button on the board.
 It can be reproduced in linux with:
-$ echo b > /proc/sysrq-trigger
+  # echo b > /proc/sysrq-trigger
 
 In this case, we hit a undefined hardware behavior, where D+ and D-
 are in an unknown state. Therefore the host can't detect usb
 disconnection.
 
-This series proposes 2 approaches for this problem:
-* generic fix, which ensures that usb_gadget_disconnect() is called
-  when the board receives any "fastboot reboot" commands
-* platform specific reset implementation for g12a to ensure
-  that the usb controller gets properly reset.
+Make sure we always call usb_gadget_release() when a "fastboot reboot"
+command is issued.
 
-Changes in v2:
-* Transformed into a series to provide both generic and platform
-  specific fix (Marek)
-* Simplified generic fix via g_dnl_trigger_detach() (Marek)
-* Link to v1: https://lore.kernel.org/r/20220721135955.360195-1-mkorpershoek@baylibre.com
+Note: usb_gadget_release() should be called before g_dnl_unregister()
+because g_dnl_unregister() triggers a complete() call on each
+endpoint (thus calling do_reset()).
 
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-
 ---
-Mattijs Korpershoek (2):
-      usb: gadget: fastboot: detach usb on reboot commands
-      mach-meson: g12a: reset usb controller in reset_misc()
+ cmd/fastboot.c                  | 2 +-
+ drivers/usb/gadget/f_fastboot.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
- arch/arm/mach-meson/board-g12a.c          | 14 ++++++++++++++
- cmd/fastboot.c                            |  2 +-
- configs/bananapi-m5_defconfig             |  2 ++
- configs/beelink-gsking-x_defconfig        |  2 ++
- configs/beelink-gtking_defconfig          |  2 ++
- configs/beelink-gtkingpro_defconfig       |  2 ++
- configs/khadas-vim3_android_ab_defconfig  |  2 ++
- configs/khadas-vim3_android_defconfig     |  2 ++
- configs/khadas-vim3_defconfig             |  2 ++
- configs/khadas-vim3l_android_ab_defconfig |  2 ++
- configs/khadas-vim3l_android_defconfig    |  2 ++
- configs/khadas-vim3l_defconfig            |  2 ++
- configs/odroid-c4_defconfig               |  2 ++
- configs/odroid-hc4_defconfig              |  2 ++
- configs/odroid-n2_defconfig               |  2 ++
- configs/radxa-zero_defconfig              |  2 ++
- configs/u200_defconfig                    |  2 ++
- drivers/usb/gadget/f_fastboot.c           |  1 +
- 18 files changed, 46 insertions(+), 1 deletion(-)
----
-base-commit: 2d4591353452638132d711551fec3495b7644731
-change-id: 20220728-reset-usb-controller-1b54be54b9d8
+diff --git a/cmd/fastboot.c b/cmd/fastboot.c
+index dd223b1554da..b498e4b22bb3 100644
+--- a/cmd/fastboot.c
++++ b/cmd/fastboot.c
+@@ -83,9 +83,9 @@ static int do_fastboot_usb(int argc, char *const argv[],
+ 	ret = CMD_RET_SUCCESS;
+ 
+ exit:
++	usb_gadget_release(controller_index);
+ 	g_dnl_unregister();
+ 	g_dnl_clear_detach();
+-	usb_gadget_release(controller_index);
+ 
+ 	return ret;
+ #else
+diff --git a/drivers/usb/gadget/f_fastboot.c b/drivers/usb/gadget/f_fastboot.c
+index d0e92c7a071f..07b1681c8a9a 100644
+--- a/drivers/usb/gadget/f_fastboot.c
++++ b/drivers/usb/gadget/f_fastboot.c
+@@ -544,6 +544,7 @@ static void rx_handler_command(struct usb_ep *ep, struct usb_request *req)
+ 		case FASTBOOT_COMMAND_REBOOT_FASTBOOTD:
+ 		case FASTBOOT_COMMAND_REBOOT_RECOVERY:
+ 			fastboot_func->in_req->complete = compl_do_reset;
++			g_dnl_trigger_detach();
+ 			break;
+ #if CONFIG_IS_ENABLED(FASTBOOT_UUU_SUPPORT)
+ 		case FASTBOOT_COMMAND_ACMD:
 
-Best regards,
 -- 
-Mattijs Korpershoek <mkorpershoek@baylibre.com>
+b4 0.11.0-dev-5166b
