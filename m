@@ -1,51 +1,71 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web11.8407.1666710982555238714
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.20798.1669212506297732447
  for <u-boot-amlogic@groups.io>;
- Tue, 25 Oct 2022 08:16:22 -0700
-Received: by mail-wr1-f50.google.com with SMTP id l14so14404670wrw.2
-        for <u-boot-amlogic@groups.io>; Tue, 25 Oct 2022 08:16:22 -0700 (PDT)
+ Wed, 23 Nov 2022 06:08:26 -0800
+Received: by mail-wr1-f53.google.com with SMTP id cl5so29574663wrb.9
+        for <u-boot-amlogic@groups.io>; Wed, 23 Nov 2022 06:08:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vlhclRXrpi15eP5veKrpsxoPmhuZ9sMxnY9PN21CLSo=;
-        b=K3CCs46NYW6swH5+Ru6/aJtLYjyFHpf2ZDucIc7NhHumD6YNIBmhk9AuLcWXtxZbvV
-         anRJbDUSyYYR1lxT/aRkPlD/atL4B49eb6l6DQ2L0PzvqbjGX7e81eZdWeA19GtWHYsZ
-         TmNKJhJwNE31bTSArzrEiJ5rPmzqnGQdq/20xzAUtc3DsUrAQOyXcrFGn7FKZMSmlFZT
-         8jrkfpoNVPomKCCp/3gTVslPoAjk2DMFmR3bJl9lxGhPl9kDf3nhSjZPuAYzXQObnoLe
-         +eMJ4Th8R5x83Xvv9wUC03uDE+nhAXiltR5bKbg1OpvPTq3yUMbPB/QIpZopi6egX0Lw
-         voLw==
+        h=content-transfer-encoding:organization:reply-to:content-language:cc
+         :to:subject:from:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G9mqUWakKZscLjh1f5j8y2u57CFzSYg7Mveb5XFbpBk=;
+        b=ki284ijM0lHA5aNa+Id2sLquLGLA5TJ7Lkc8mKhr/pGu8RZkEWCHD6WoCOq7yV0S5P
+         siC1Mvmg3667yWROGZ9iMPR7UtLNbsjiam/i6FrWJIGzoAIrUSNU4Dyffl1A/QZhPFCr
+         8DSIluI/0D3otHOSn0in1Svu3eioBymJqllSHzHwxhZZvl3uvEhwDQzc+qqywwiAlQxl
+         8swNzcM/LzCgh2T9hj6z/9bFuzPqgtmyQFN0THQHmlaN1Suwhl6ds+Za2A4ctHMOfkmK
+         WkgWGg+4HJrLcdoz3Pum9BwdRKwbwv36IbGsMZnVs45XFeu1rSWhaI0VwqLcBRGCXtCO
+         AyEw==
 Return-Path: <neil.armstrong@linaro.org>
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20221025143205.14470-1-christianshewitt@gmail.com>
-References: <20221025143205.14470-1-christianshewitt@gmail.com>
-Subject: Re: [PATCH] arm64: dts: meson: nanopi-k2: readd PHY reset properties
-Message-Id: <166671098029.66253.1659888075300795635.b4-ty@linaro.org>
-Date: Tue, 25 Oct 2022 17:16:20 +0200
+Message-ID: <816cc05d-fdac-3b03-ce68-e57f45f62ffe@linaro.org>
+Date: Wed, 23 Nov 2022 15:08:23 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: u-boot@lists.denx.de, linux-amlogic@lists.infradead.org, Christian Hewitt <christianshewitt@gmail.com>, u-boot-amlogic@groups.io
+From: "Neil Armstrong" <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-20221122
+Reply-To: neil.armstrong@linaro.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
 
-On Tue, 25 Oct 2022 14:32:05 +0000, Christian Hewitt wrote:
-> The sync of device-tree/bindings in 11a48a5a18c6 ("Linux 5.6-rc2") causes
-> Ethernet to break on some GXBB boards; the PHY seems to need proper reset
-> timing to function in u-boot and Linux. Re-add the old PHY reset binding
-> for dwmac until we support new bindings in the PHY node. This borrows the
-> same fix applied to the Odroid C2 board [0].
-> 
-> [0] https://lists.denx.de/pipermail/u-boot/2021-April/446658.html
-> 
-> [...]
+Hi Tom,
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-test)
+Here's changes for next release:
+- Implement setbrg op to meson serial device
+- Re-add the old PHY reset binding for nanopi-k2
 
-[1/1] arm64: dts: meson: nanopi-k2: readd PHY reset properties
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/7b70f68977578360d9c47bb25d6d1937075153b4
+The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/14199
 
--- 
+Thanks,
 Neil
+
+The following changes since commit 536c642ffef545b4b5b02d065a0c1de9785549d7:
+
+   Merge tag 'efi-2023-01-rc2-2' of https://source.denx.de/u-boot/custodians/u-boot-efi (2022-11-22 08:30:53 -0500)
+
+are available in the Git repository at:
+
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20221122
+
+for you to fetch changes up to e0638f1d09b9e9caead4e3909e7dc8aaa41febe1:
+
+   arm64: dts: meson: nanopi-k2: readd PHY reset properties (2022-11-22 18:53:21 +0100)
+
+----------------------------------------------------------------
+- Implement setbrg op to meson serial device
+- Re-add the old PHY reset binding for nanopi-k2
+
+----------------------------------------------------------------
+Christian Hewitt (1):
+       arm64: dts: meson: nanopi-k2: readd PHY reset properties
+
+Edoardo Tomelleri (1):
+       arm: amlogic: add setbrg op to serial device
+
+  arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi |  7 +++
+  drivers/serial/serial_meson.c                 | 70 +++++++++++++++++++++++++++
+  include/configs/meson64.h                     |  7 +++
+  3 files changed, 84 insertions(+)
