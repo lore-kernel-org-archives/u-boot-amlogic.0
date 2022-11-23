@@ -1,413 +1,138 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web10.23272.1669218189650192739
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web11.23674.1669218327590890520
  for <u-boot-amlogic@groups.io>;
- Wed, 23 Nov 2022 07:43:10 -0800
-Received: by mail-wr1-f51.google.com with SMTP id v1so29931928wrt.11
-        for <u-boot-amlogic@groups.io>; Wed, 23 Nov 2022 07:43:09 -0800 (PST)
+ Wed, 23 Nov 2022 07:45:27 -0800
+Received: by mail-wr1-f49.google.com with SMTP id x5so25931393wrt.7
+        for <u-boot-amlogic@groups.io>; Wed, 23 Nov 2022 07:45:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=G0vru+2y+YkV/tsfTUF8e7PG64OdxLixARXcU8UCE5M=;
-        b=e38zaGChhYSqag6DFx6WgSEUz/L2s/XyfWNapK+sAkbuAtz9Z9PAdDSjpcwy1j1trk
-         3hcKHQHgd459LByHRuKHLzrmstvY6ap4u7G2T8LCFs3FjnwjmsR8fjwhzgedfgXSJWgi
-         jZGKHAQsX2qTxSxFMLSVhJwwLlf1+wHEszROJBT3FK3HcuCOw2a3//AgrJuP8OBy478n
-         PbOiGjIO/wYYR+2W0EWJ+nTRJODNcipHZ5MtgaLjzuYlpHF7ZthLioZDwpEk0jVrFJaT
-         qWgK2FMm2xQ9CXjyl9V0AclLfMzkuAbnPMCFVU6nSQJyP7Z/3VDoax//R7iLnNTFznPy
-         LMJg==
+        bh=UhaBtsoeRCb5s6l1CrzgyXJUzjcO8+TFgFgrXFop6yE=;
+        b=HhHggtmN1ziRWCYcIEWgDj8Ucn8kvqNDh4d7BeiOwMuJK2wpVwkcq0VGI5/mdYXVzF
+         c3+/EuXPoqPu8dIYRLhA/y/OqYIGTjgi4CIfTf49ITMXVxwA5bJoQ5V6Oa+1AidAgmBe
+         1/97d+KPFB+xFdRa7ve9Rd2xkjKrxt76fG/jPUIfAV/7zKklgUdizpGzbLIXwIid7FNh
+         MUcV3UHhGzcOJ/6Zq+Bgj1mG6t3mSHaH2jgaZFULwzQ1lRY+SReaLiM4CZVsp1h+S6Gf
+         ZrMIMCYcXXK9jBqQgo2mfFWdmG2haU5BU4KlQjPQYWub1b0IpHSNyvl9I9RMUt4y3o7o
+         KeTg==
 Return-Path: <mkorpershoek@baylibre.com>
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Date: Wed, 23 Nov 2022 16:42:50 +0100
-Subject: [PATCH 2/2] ARM: meson: g12a: switch dwc2 otg to DM
+Subject: Re: [PATCH v2 2/2] mach-meson: g12a: reset usb controller in reset_misc()
+In-Reply-To: <2fa3ba46-7a63-1a95-1961-9a1268aff709@linaro.org>
+References: <20220728-reset-usb-controller-v2-0-ef7657ce78b1@baylibre.com>
+ <20220728-reset-usb-controller-v2-2-ef7657ce78b1@baylibre.com>
+ <503f0753-e3be-6e86-5973-2843f5267f1c@denx.de>
+ <d6d054bd-370f-4da8-808b-94b23fab4c5b@linaro.org>
+ <8c083cfa-4d15-e71c-ba67-8077b282fd96@denx.de>
+ <938b9439-9014-5ee8-1627-16af508bface@linaro.org>
+ <6b1237b8-746c-c9aa-4be4-ef323396b2f8@denx.de>
+ <87czay2u7p.fsf@baylibre.com>
+ <2fa3ba46-7a63-1a95-1961-9a1268aff709@linaro.org>
+Date: Wed, 23 Nov 2022 16:45:23 +0100
+Message-ID: <87zgch1xpo.fsf@baylibre.com>
 MIME-Version: 1.0
-Message-Id: <20221024-meson-dm-usb-v1-2-2ab077a503b9@baylibre.com>
-References: <20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com>
-In-Reply-To: <20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: Neil Armstrong <neil.armstrong@linaro.org>, Christian Hewitt <christianshewitt@gmail.com>
-Cc: u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>, Marek Vasut <marex@denx.de>, u-boot-amlogic@groups.io
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+To: neil.armstrong@linaro.org, Marek Vasut <marex@denx.de>, Christian Hewitt <christianshewitt@gmail.com>, Lukasz Majewski <lukma@denx.de>
+Cc: u-boot@lists.denx.de, Simon Glass <sjg@chromium.org>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-With CONFIG_DM_USB_GADGET=y, we no longer need any board_usb_*() logic
-because:
-* the dwc2 driver is DM compatible, and handles its own clock enabling
-* the dwc3-meson-g12a glue drivers handles "force mode switching"
+On Tue, Oct 11, 2022 at 19:57, neil.armstrong@linaro.org wrote:
 
-Remove all mach-meson/g12a usb code and enable CONFIG_DM_USB_GADGET.
+> On 11/10/2022 18:36, Mattijs Korpershoek wrote:
+>> On Tue, Oct 11, 2022 at 17:39, Marek Vasut <marex@denx.de> wrote:
+>>=20
+>>> On 10/11/22 09:12, neil.armstrong@linaro.org wrote:
+>>>> On 10/10/2022 19:16, Marek Vasut wrote:
+>>>>> On 10/10/22 18:22, Neil Armstrong wrote:
+>>>>>> Hi,
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>>> On 10/10/2022 18:09, Marek Vasut wrote:
+>>>>>>> On 10/7/22 11:38, Mattijs Korpershoek wrote:
+>>>>>>>> On some g12a boards like the VIM3L and the SEI610, with some
+>>>>>>>> USB cables/hosts, there is a long (5s) delay before
+>>>>>>>> between "fastboot reboot" and the host detecting a USB reset.
+>>>>>>>>
+>>>>>>>> This breaks tools relying on "fastboot reboot fastboot" which assu=
+me
+>>>>>>>> that 1s after the command send, the board should disconnect on usb=
+.
+>>>>>>>>
+>>>>>>>> To reproduce, enable fastboot in U-Boot console:
+>>>>>>>> =3D> fastboot usb 0
+>>>>>>>>
+>>>>>>>> Then, on the host, run:
+>>>>>>>>  =C2=A0=C2=A0 # echo "running fastboot reboot bootloader" > /dev/k=
+msg &&
+>>>>>>>> fastboot reboot bootloader
+>>>>>>>>  =C2=A0=C2=A0 Rebooting into bootloader=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 OKAY [=C2=A0 0.003s]
+>>>>>>>>  =C2=A0=C2=A0 Finished. Total time: 3.033s
+>>>>>>>>
+>>>>>>>>  =C2=A0=C2=A0 [54074.251551] running fastboot reboot bootloader
+>>>>>>>>  =C2=A0=C2=A0 ... there is a delay of 5s before we detect a discon=
+nection ...
+>>>>>>>>  =C2=A0=C2=A0 [54079.041238] usb 1-7.4: USB disconnect, device num=
+ber 72
+>>>>>>>>  =C2=A0=C2=A0 [54079.239625] usb 1-7.4: new high-speed USB device =
+number 73
+>>>>>>>> using xhci_hcd
+>>>>>>>>  =C2=A0=C2=A0 [54079.359103] usb 1-7.4: New USB device found, idVe=
+ndor=3D1b8e,
+>>>>>>>> idProduct=3Dfada, bcdDevice=3D 2.27
+>>>>>>>>  =C2=A0=C2=A0 [54079.359110] usb 1-7.4: New USB device strings: Mf=
+r=3D1,
+>>>>>>>> Product=3D2, SerialNumber=3D3
+>>>>>>>>  =C2=A0=C2=A0 [54079.359112] usb 1-7.4: Product: USB download gadg=
+et
+>>>>>>>>  =C2=A0=C2=A0 [54079.359114] usb 1-7.4: Manufacturer: U-Boot
+>>>>>>>>  =C2=A0=C2=A0 [54079.359116] usb 1-7.4: SerialNumber: C8631470CC41
+>>>>>>>>
+>>>>>>>> Note: this does not happen when we use the RST button on the board=
+.
+>>>>>>>>
+>>>>>>>> To fix this, re-implement a platform reset which calls
+>>>>>>>> board_usb_cleanup() before resetting the board.
+>>>>>>>
+>>>>>>> Shouldn't that call happen somewhere in drivers/usb/ .remove()
+>>>>>>> callback instead ?
+>>>>>>
+>>>>>> No since dwc2 isn't DM yet, handling is done in arch/arm/mac-meson
+>>>>>> board_usb_*() for now
+>>>>>
+>>>>> Seems DWC2 is DM:
+>>>>>
+>>>>> $ git grep U_BOOT_DRIVER drivers/usb/ | grep dwc2
+>>>>> drivers/usb/gadget/dwc2_udc_otg.c:U_BOOT_DRIVER(dwc2_udc_otg) =3D {
+>>>>> drivers/usb/host/dwc2.c:U_BOOT_DRIVER(usb_dwc2) =3D {
+>>>>>
+>>>>
+>>>> My bad, seems I missed the dwc2 otg DM wagon...
+>>>>
+>>>> We will need to switch to this now then, thanks,
+>>>
+>>> Thanks. I picked 1/2 at least, so you can only focus on 2/2 and send
+>>> just that.
+>>=20
+>> Yes, thank you for picking 1/2
+>>=20
+>> Neil, do you want me to look into converting the meson arch which uses
+>> DWC2 to DM?
+>> I'm not sure I'm confident to do these changes properly but I'm willing
+>> to give it a try.
+>> If you plan to do it yourself, fine by me. I'll respin 2/2 after that.
+>
+> Sure, give a try, if you don't manage I can help!
 
-Note: Only configs having both CONFIG_USB_DWC3_MESON_G12A=y *and*
-      USB_GADGET_DWC2_OTG=y have been updated.
+Done here:
 
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
----
- arch/arm/mach-meson/board-g12a.c          | 127 ------------------------------
- configs/bananapi-m5_defconfig             |   1 +
- configs/beelink-gsking-x_defconfig        |   1 +
- configs/beelink-gtking_defconfig          |   1 +
- configs/beelink-gtkingpro_defconfig       |   1 +
- configs/khadas-vim3_android_ab_defconfig  |   1 +
- configs/khadas-vim3_android_defconfig     |   1 +
- configs/khadas-vim3_defconfig             |   1 +
- configs/khadas-vim3l_android_ab_defconfig |   1 +
- configs/khadas-vim3l_android_defconfig    |   1 +
- configs/khadas-vim3l_defconfig            |   1 +
- configs/odroid-c4_defconfig               |   1 +
- configs/odroid-hc4_defconfig              |   1 +
- configs/odroid-n2_defconfig               |   1 +
- configs/radxa-zero_defconfig              |   1 +
- configs/sei510_defconfig                  |   1 +
- configs/sei610_defconfig                  |   1 +
- configs/u200_defconfig                    |   1 +
- 18 files changed, 17 insertions(+), 127 deletions(-)
+https://lore.kernel.org/u-boot/20221024-meson-dm-usb-v1-0-2ab077a503b9@bayl=
+ibre.com/
 
-diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
-index 2e59eee8f792..d5a830fb1db8 100644
---- a/arch/arm/mach-meson/board-g12a.c
-+++ b/arch/arm/mach-meson/board-g12a.c
-@@ -17,12 +17,6 @@
- #include <asm/io.h>
- #include <asm/armv8/mmu.h>
- #include <linux/sizes.h>
--#include <usb.h>
--#include <linux/usb/otg.h>
--#include <asm/arch/usb.h>
--#include <usb/dwc2_udc.h>
--#include <phy.h>
--#include <clk.h>
- 
- DECLARE_GLOBAL_DATA_PTR;
- 
-@@ -96,124 +90,3 @@ static struct mm_region g12a_mem_map[] = {
- };
- 
- struct mm_region *mem_map = g12a_mem_map;
--
--#if CONFIG_IS_ENABLED(USB_DWC3_MESON_G12A) && \
--	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
--static struct dwc2_plat_otg_data meson_g12a_dwc2_data;
--
--int board_usb_init(int index, enum usb_init_type init)
--{
--	struct fdtdec_phandle_args args;
--	const void *blob = gd->fdt_blob;
--	int node, dwc2_node;
--	struct udevice *dev, *clk_dev;
--	struct clk clk;
--	int ret;
--
--	/* find the usb glue node */
--	node = fdt_node_offset_by_compatible(blob, -1,
--					     "amlogic,meson-g12a-usb-ctrl");
--	if (node < 0) {
--		debug("Not found usb-control node\n");
--		return -ENODEV;
--	}
--
--	if (!fdtdec_get_is_enabled(blob, node)) {
--		debug("usb is disabled in the device tree\n");
--		return -ENODEV;
--	}
--
--	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
--	if (ret) {
--		debug("Not found usb-control device\n");
--		return ret;
--	}
--
--	/* find the dwc2 node */
--	dwc2_node = fdt_node_offset_by_compatible(blob, node,
--						  "amlogic,meson-g12a-usb");
--	if (dwc2_node < 0) {
--		debug("Not found dwc2 node\n");
--		return -ENODEV;
--	}
--
--	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
--		debug("dwc2 is disabled in the device tree\n");
--		return -ENODEV;
--	}
--
--	meson_g12a_dwc2_data.regs_otg = fdtdec_get_addr(blob, dwc2_node, "reg");
--	if (meson_g12a_dwc2_data.regs_otg == FDT_ADDR_T_NONE) {
--		debug("usbotg: can't get base address\n");
--		return -ENODATA;
--	}
--
--	/* Enable clock */
--	ret = fdtdec_parse_phandle_with_args(blob, dwc2_node, "clocks",
--					     "#clock-cells", 0, 0, &args);
--	if (ret) {
--		debug("usbotg has no clocks defined in the device tree\n");
--		return ret;
--	}
--
--	ret = uclass_get_device_by_of_offset(UCLASS_CLK, args.node, &clk_dev);
--	if (ret)
--		return ret;
--
--	if (args.args_count != 1) {
--		debug("Can't find clock ID in the device tree\n");
--		return -ENODATA;
--	}
--
--	clk.dev = clk_dev;
--	clk.id = args.args[0];
--
--	ret = clk_enable(&clk);
--	if (ret) {
--		debug("Failed to enable usbotg clock\n");
--		return ret;
--	}
--
--	meson_g12a_dwc2_data.rx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--						     "g-rx-fifo-size", 0);
--	meson_g12a_dwc2_data.np_tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--							"g-np-tx-fifo-size", 0);
--	meson_g12a_dwc2_data.tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--						     "g-tx-fifo-size", 0);
--
--	/* Switch to peripheral mode */
--	ret = dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_PERIPHERAL);
--	if (ret)
--		return ret;
--
--	return dwc2_udc_probe(&meson_g12a_dwc2_data);
--}
--
--int board_usb_cleanup(int index, enum usb_init_type init)
--{
--	const void *blob = gd->fdt_blob;
--	struct udevice *dev;
--	int node;
--	int ret;
--
--	/* find the usb glue node */
--	node = fdt_node_offset_by_compatible(blob, -1,
--					     "amlogic,meson-g12a-usb-ctrl");
--	if (node < 0)
--		return -ENODEV;
--
--	if (!fdtdec_get_is_enabled(blob, node))
--		return -ENODEV;
--
--	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
--	if (ret)
--		return ret;
--
--	/* Switch to OTG mode */
--	ret = dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_HOST);
--	if (ret)
--		return ret;
--
--	return 0;
--}
--#endif
-diff --git a/configs/bananapi-m5_defconfig b/configs/bananapi-m5_defconfig
-index 6ab2d8ef0c44..49cf0495dd91 100644
---- a/configs/bananapi-m5_defconfig
-+++ b/configs/bananapi-m5_defconfig
-@@ -49,6 +49,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/beelink-gsking-x_defconfig b/configs/beelink-gsking-x_defconfig
-index 2c8c642dcb2d..f9fdfa41a860 100644
---- a/configs/beelink-gsking-x_defconfig
-+++ b/configs/beelink-gsking-x_defconfig
-@@ -50,6 +50,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/beelink-gtking_defconfig b/configs/beelink-gtking_defconfig
-index 9848252e7e95..46bd18b666be 100644
---- a/configs/beelink-gtking_defconfig
-+++ b/configs/beelink-gtking_defconfig
-@@ -50,6 +50,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/beelink-gtkingpro_defconfig b/configs/beelink-gtkingpro_defconfig
-index 484e039fe034..dbb2ce83ea95 100644
---- a/configs/beelink-gtkingpro_defconfig
-+++ b/configs/beelink-gtkingpro_defconfig
-@@ -50,6 +50,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
-index f3e9f11a8edf..6266a288bbd7 100644
---- a/configs/khadas-vim3_android_ab_defconfig
-+++ b/configs/khadas-vim3_android_ab_defconfig
-@@ -84,6 +84,7 @@ CONFIG_MESON_SPIFC=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/khadas-vim3_android_defconfig b/configs/khadas-vim3_android_defconfig
-index f076b6e4e564..ab7666c5a128 100644
---- a/configs/khadas-vim3_android_defconfig
-+++ b/configs/khadas-vim3_android_defconfig
-@@ -82,6 +82,7 @@ CONFIG_MESON_SPIFC=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/khadas-vim3_defconfig b/configs/khadas-vim3_defconfig
-index 0cf4bac809b9..bd264dd2bb15 100644
---- a/configs/khadas-vim3_defconfig
-+++ b/configs/khadas-vim3_defconfig
-@@ -70,6 +70,7 @@ CONFIG_MESON_SPIFC=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
-index 828ce6dee9dd..f72c7adda7f4 100644
---- a/configs/khadas-vim3l_android_ab_defconfig
-+++ b/configs/khadas-vim3l_android_ab_defconfig
-@@ -84,6 +84,7 @@ CONFIG_MESON_SPIFC=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/khadas-vim3l_android_defconfig b/configs/khadas-vim3l_android_defconfig
-index ee1fa5c31f82..871f77dde8cb 100644
---- a/configs/khadas-vim3l_android_defconfig
-+++ b/configs/khadas-vim3l_android_defconfig
-@@ -82,6 +82,7 @@ CONFIG_MESON_SPIFC=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/khadas-vim3l_defconfig b/configs/khadas-vim3l_defconfig
-index f1524f562acb..32d6a00410e4 100644
---- a/configs/khadas-vim3l_defconfig
-+++ b/configs/khadas-vim3l_defconfig
-@@ -70,6 +70,7 @@ CONFIG_MESON_SPIFC=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
-index d244e71866e7..3253b0a53556 100644
---- a/configs/odroid-c4_defconfig
-+++ b/configs/odroid-c4_defconfig
-@@ -50,6 +50,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/odroid-hc4_defconfig b/configs/odroid-hc4_defconfig
-index fe70d5f12a16..2b6b6e9d51ad 100644
---- a/configs/odroid-hc4_defconfig
-+++ b/configs/odroid-hc4_defconfig
-@@ -68,6 +68,7 @@ CONFIG_SPI=y
- CONFIG_DM_SPI=y
- CONFIG_MESON_SPIFC=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/odroid-n2_defconfig b/configs/odroid-n2_defconfig
-index 3703d7e17cee..2fff63c753dc 100644
---- a/configs/odroid-n2_defconfig
-+++ b/configs/odroid-n2_defconfig
-@@ -50,6 +50,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/radxa-zero_defconfig b/configs/radxa-zero_defconfig
-index d3744f48a31b..dcd0b9b9ffcf 100644
---- a/configs/radxa-zero_defconfig
-+++ b/configs/radxa-zero_defconfig
-@@ -45,6 +45,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
-index b26e065a3dab..36306612451f 100644
---- a/configs/sei510_defconfig
-+++ b/configs/sei510_defconfig
-@@ -70,6 +70,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
-index 2302c9eeef07..c15e81b0600b 100644
---- a/configs/sei610_defconfig
-+++ b/configs/sei610_defconfig
-@@ -70,6 +70,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/u200_defconfig b/configs/u200_defconfig
-index b4f2f21d7eda..cbe0f945a57d 100644
---- a/configs/u200_defconfig
-+++ b/configs/u200_defconfig
-@@ -44,6 +44,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-
--- 
-b4 0.10.1
+>
+>
+> Neil
