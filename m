@@ -1,71 +1,86 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web10.20798.1669212506297732447
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web11.23607.1669218188439872479
  for <u-boot-amlogic@groups.io>;
- Wed, 23 Nov 2022 06:08:26 -0800
-Received: by mail-wr1-f53.google.com with SMTP id cl5so29574663wrb.9
-        for <u-boot-amlogic@groups.io>; Wed, 23 Nov 2022 06:08:26 -0800 (PST)
+ Wed, 23 Nov 2022 07:43:08 -0800
+Received: by mail-wr1-f51.google.com with SMTP id i12so26114919wrb.0
+        for <u-boot-amlogic@groups.io>; Wed, 23 Nov 2022 07:43:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:organization:reply-to:content-language:cc
-         :to:subject:from:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G9mqUWakKZscLjh1f5j8y2u57CFzSYg7Mveb5XFbpBk=;
-        b=ki284ijM0lHA5aNa+Id2sLquLGLA5TJ7Lkc8mKhr/pGu8RZkEWCHD6WoCOq7yV0S5P
-         siC1Mvmg3667yWROGZ9iMPR7UtLNbsjiam/i6FrWJIGzoAIrUSNU4Dyffl1A/QZhPFCr
-         8DSIluI/0D3otHOSn0in1Svu3eioBymJqllSHzHwxhZZvl3uvEhwDQzc+qqywwiAlQxl
-         8swNzcM/LzCgh2T9hj6z/9bFuzPqgtmyQFN0THQHmlaN1Suwhl6ds+Za2A4ctHMOfkmK
-         WkgWGg+4HJrLcdoz3Pum9BwdRKwbwv36IbGsMZnVs45XFeu1rSWhaI0VwqLcBRGCXtCO
-         AyEw==
-Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <816cc05d-fdac-3b03-ce68-e57f45f62ffe@linaro.org>
-Date: Wed, 23 Nov 2022 15:08:23 +0100
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=tR1mGpm/ef5PnmB+HivZwcg/0quU/v4LYGRoQWYkE1c=;
+        b=TDWMk0NeGDSocxvW4t6E+Ewm1xc6G9OKwwiewUMq5fVjt4f0OmgtU/i1KslJX89hmV
+         resCxjs/fmJj0tQjdFdczff3H7tuSucyICxCH02UPwMhpEJb8DmNA4VQoxiqtb2mckP4
+         gfrt5kyx7Eb83TrdEuipfgYRuhy5JrrENuWdYTJb++gjL8MFyxDvTEUFJ0BP2ZaOoQST
+         slKosDI4mICrSagobFR5Vjs2RzF3G5/3lGl0ToXzRHSdVT/W8TClqXLMIjFa6Q65SLoB
+         qCP0YH3vOvXXyP2n88VXLG7jcYotHNgYj23Ex3H0AzCcFoMNcwCVLD8SeuajCs9YkVOn
+         pMjg==
+Return-Path: <mkorpershoek@baylibre.com>
+Subject: [PATCH 0/2] mach-meson: port dwc2_otg usage to CONFIG_DM_USB_GADGET=y
 MIME-Version: 1.0
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Subject: [GIT PULL] Please pull u-boot-amlogic-20221122
-Reply-To: neil.armstrong@linaro.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Date: Wed, 23 Nov 2022 16:42:48 +0100
+Message-Id: <20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+To: Neil Armstrong <neil.armstrong@linaro.org>, Christian Hewitt <christianshewitt@gmail.com>
+Cc: u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>, Marek Vasut <marex@denx.de>, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
+While working on some USB bugs on the VIM3L board, we stumbled upon the fact
+that mach-meson still uses legacy board_usb_*() functions instead of using DM [1]
 
-Hi Tom,
+This series aim to switch the g12a based boards to use CONFIG_DM_USB_GADGET and
+removes the board_usb_*() logic.
 
-Here's changes for next release:
-- Implement setbrg op to meson serial device
-- Re-add the old PHY reset binding for nanopi-k2
+* The first patch adds mode switching in the dwc3-meson-g12a glue driver whenever
+  the dwc2 otg driver is probed()/removed().
 
-The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/14199
+* The second patch enables the config option and cleans up all board_usb_*().
 
-Thanks,
-Neil
+This has been mainly tested with khadas-vim3l_android_defconfig using fastboot:
 
-The following changes since commit 536c642ffef545b4b5b02d065a0c1de9785549d7:
+=> fastboot usb 0
 
-   Merge tag 'efi-2023-01-rc2-2' of https://source.denx.de/u-boot/custodians/u-boot-efi (2022-11-22 08:30:53 -0500)
+=> # hit Ctrl-c
 
-are available in the Git repository at:
+Other tests:
+* ums 0 mmc 2 # can list / mount partitions from host
+* usb start; usb storage # list usb thumb drive
+* all defconfigs have been build tested
 
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20221122
+[1] https://lore.kernel.org/u-boot/938b9439-9014-5ee8-1627-16af508bface@linaro.org/
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
-for you to fetch changes up to e0638f1d09b9e9caead4e3909e7dc8aaa41febe1:
+---
+Mattijs Korpershoek (2):
+      usb: dwc3-meson-g12a: force mode on child add/removal
+      ARM: meson: g12a: switch dwc2 otg to DM
 
-   arm64: dts: meson: nanopi-k2: readd PHY reset properties (2022-11-22 18:53:21 +0100)
+ arch/arm/mach-meson/board-g12a.c          | 127 ------------------------------
+ configs/bananapi-m5_defconfig             |   1 +
+ configs/beelink-gsking-x_defconfig        |   1 +
+ configs/beelink-gtking_defconfig          |   1 +
+ configs/beelink-gtkingpro_defconfig       |   1 +
+ configs/khadas-vim3_android_ab_defconfig  |   1 +
+ configs/khadas-vim3_android_defconfig     |   1 +
+ configs/khadas-vim3_defconfig             |   1 +
+ configs/khadas-vim3l_android_ab_defconfig |   1 +
+ configs/khadas-vim3l_android_defconfig    |   1 +
+ configs/khadas-vim3l_defconfig            |   1 +
+ configs/odroid-c4_defconfig               |   1 +
+ configs/odroid-hc4_defconfig              |   1 +
+ configs/odroid-n2_defconfig               |   1 +
+ configs/radxa-zero_defconfig              |   1 +
+ configs/sei510_defconfig                  |   1 +
+ configs/sei610_defconfig                  |   1 +
+ configs/u200_defconfig                    |   1 +
+ drivers/usb/dwc3/dwc3-meson-g12a.c        |  18 +++++
+ 19 files changed, 35 insertions(+), 127 deletions(-)
+---
+base-commit: 7b70f68977578360d9c47bb25d6d1937075153b4
+change-id: 20221024-meson-dm-usb-60e413696519
 
-----------------------------------------------------------------
-- Implement setbrg op to meson serial device
-- Re-add the old PHY reset binding for nanopi-k2
-
-----------------------------------------------------------------
-Christian Hewitt (1):
-       arm64: dts: meson: nanopi-k2: readd PHY reset properties
-
-Edoardo Tomelleri (1):
-       arm: amlogic: add setbrg op to serial device
-
-  arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi |  7 +++
-  drivers/serial/serial_meson.c                 | 70 +++++++++++++++++++++++++++
-  include/configs/meson64.h                     |  7 +++
-  3 files changed, 84 insertions(+)
+Best regards,
+-- 
+Mattijs Korpershoek <mkorpershoek@baylibre.com>
