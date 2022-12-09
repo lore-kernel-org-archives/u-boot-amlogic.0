@@ -1,98 +1,106 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web10.19783.1669282455665253466
+Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
+ by mx.groups.io with SMTP id smtpd.web11.40.1670590342011339383
  for <u-boot-amlogic@groups.io>;
- Thu, 24 Nov 2022 01:34:16 -0800
-Received: by mail-wm1-f53.google.com with SMTP id l39-20020a05600c1d2700b003cf93c8156dso806296wms.4
-        for <u-boot-amlogic@groups.io>; Thu, 24 Nov 2022 01:34:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=sF8lCJ4hU5Y6g+CGlg1vIjc+nwdIDlJ1X7vZ09QazKc=;
-        b=jokdatV9rNTpvc6O4bMcMiCtwtz8LCDu4mIUc36lgfuKNFE4iZm4IumVsMh/bQ2ssg
-         KMPIoaYqOsK70+6mvafe7F6Ks1MAhd9+A/gKxV4AJDdFYzCRlBm2kA4/a87Pbg4Ygmw9
-         5EfuT6mB2z4gG1sAtt3ufmB8eouPofBzx5EF4gb+fS0qZBvTQrqdbvkio2KHKEyEl3Tx
-         lFYu7jM4zrnWOIpv61fOBxJUQSH9ogivDAVejS4bK5RzW61YOB2/Pwvzpe8mI2Wf5YwQ
-         77SeUBy8cg2O0qq2lfnxAnf/JzvE1bAQIrWDKWe/84ArKzD+HRr46tHqoV8HL/pSwb7O
-         xosw==
-Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <55e46ad9-63cb-ff2c-d087-ab9af41d20ea@linaro.org>
-Date: Thu, 24 Nov 2022 10:34:12 +0100
+ Fri, 09 Dec 2022 04:52:23 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+	s=mail; t=1670590339;
+	bh=a019PLUP1b3gAkADAfLjh39rpimKg1APKDQNTKTe+/k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=l8e1iWNYcJnpdVFwg2m0x9MtMvE9sFGCdV6ahHYRpoSuiMZ7x6MEAl5W/+IQcjcWu
+	 jYOMd2mmysdCz1PZwa38nqwFhPZMLoA67P8SWbsqNd9VxlvwTt4x53ZJvgZJQWFhTE
+	 PbBKSjoIBxjya7SByIAf/F2c+lKcUctBIscqDRWSDw498Y3iNvK1ddg5xhYzNxDuwW
+	 UGlvE38xwD9lMYgsiv772irM7bmqXkLYdQczM3jl+J3wfJcIDadnPXzsHn74D2yjgJ
+	 d8yG4DETpS4CW2J5RUXi5xPnJZa1HdeYSa0igFZhuqy343ZzzL7gVVlPaNDGBRvmYE
+	 BEn+pzWo6j0jA==
+From: Alexey Romanov <avromanov@sberdevices.ru>
+Subject: [PATCH v1] arch/arm: sm: introduce efusedump command
+Date: Fri, 9 Dec 2022 15:52:04 +0300
+Message-ID: <20221209125204.62960-1-avromanov@sberdevices.ru>
 MIME-Version: 1.0
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 0/2] mach-meson: port dwc2_otg usage to CONFIG_DM_USB_GADGET=y
-References: <20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com>
-In-Reply-To: <20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, Christian Hewitt <christianshewitt@gmail.com>
-Cc: u-boot@lists.denx.de, Marek Vasut <marex@denx.de>, u-boot-amlogic@groups.io
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+To: narmstrong@baylibre.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@sberdevices.ru>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Mattijs,
+Using this command user can print efuse memory:
 
-On 23/11/2022 16:42, Mattijs Korpershoek wrote:
-> While working on some USB bugs on the VIM3L board, we stumbled upon the fact
-> that mach-meson still uses legacy board_usb_*() functions instead of using DM [1]
-> 
-> This series aim to switch the g12a based boards to use CONFIG_DM_USB_GADGET and
-> removes the board_usb_*() logic.
-> 
-> * The first patch adds mode switching in the dwc3-meson-g12a glue driver whenever
->    the dwc2 otg driver is probed()/removed().
-> 
-> * The second patch enables the config option and cleans up all board_usb_*().
-> 
-> This has been mainly tested with khadas-vim3l_android_defconfig using fastboot:
-> 
-> => fastboot usb 0
-> 
-> => # hit Ctrl-c
-> 
-> Other tests:
-> * ums 0 mmc 2 # can list / mount partitions from host
-> * usb start; usb storage # list usb thumb drive
-> * all defconfigs have been build tested
-> 
-> [1] https://lore.kernel.org/u-boot/938b9439-9014-5ee8-1627-16af508bface@linaro.org/
-> Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+$ sm efusedump 0 10
+  00000000: ff 00 31 00 00 ff 66 00 00 00      ..1...f...
 
-I'll run some tests on other G12 boards but so far this looks very good, thanks !
+Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
+---
+ arch/arm/mach-meson/sm.c | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-Neil
-
-> 
-> ---
-> Mattijs Korpershoek (2):
->        usb: dwc3-meson-g12a: force mode on child add/removal
->        ARM: meson: g12a: switch dwc2 otg to DM
-> 
->   arch/arm/mach-meson/board-g12a.c          | 127 ------------------------------
->   configs/bananapi-m5_defconfig             |   1 +
->   configs/beelink-gsking-x_defconfig        |   1 +
->   configs/beelink-gtking_defconfig          |   1 +
->   configs/beelink-gtkingpro_defconfig       |   1 +
->   configs/khadas-vim3_android_ab_defconfig  |   1 +
->   configs/khadas-vim3_android_defconfig     |   1 +
->   configs/khadas-vim3_defconfig             |   1 +
->   configs/khadas-vim3l_android_ab_defconfig |   1 +
->   configs/khadas-vim3l_android_defconfig    |   1 +
->   configs/khadas-vim3l_defconfig            |   1 +
->   configs/odroid-c4_defconfig               |   1 +
->   configs/odroid-hc4_defconfig              |   1 +
->   configs/odroid-n2_defconfig               |   1 +
->   configs/radxa-zero_defconfig              |   1 +
->   configs/sei510_defconfig                  |   1 +
->   configs/sei610_defconfig                  |   1 +
->   configs/u200_defconfig                    |   1 +
->   drivers/usb/dwc3/dwc3-meson-g12a.c        |  18 +++++
->   19 files changed, 35 insertions(+), 127 deletions(-)
-> ---
-> base-commit: 7b70f68977578360d9c47bb25d6d1937075153b4
-> change-id: 20221024-meson-dm-usb-60e413696519
-> 
-> Best regards,
+diff --git a/arch/arm/mach-meson/sm.c b/arch/arm/mach-meson/sm.c
+index d6eb910689f..87dff2b4c61 100644
+--- a/arch/arm/mach-meson/sm.c
++++ b/arch/arm/mach-meson/sm.c
+@@ -20,6 +20,7 @@
+ #include <linux/bitfield.h>
+ #include <regmap.h>
+ #include <syscon.h>
++#include <hexdump.h>
+=20
+ #define FN_GET_SHARE_MEM_INPUT_BASE	0x82000020
+ #define FN_GET_SHARE_MEM_OUTPUT_BASE	0x82000021
+@@ -246,11 +247,43 @@ static int do_efuse_write(struct cmd_tbl *cmdtp, int =
+flag, int argc,
+ 	return CMD_RET_SUCCESS;
+ }
+=20
++static int do_efuse_dump(struct cmd_tbl *cmdtp, int flag, int argc,
++			char *const argv[])
++{
++	ulong offset, size;
++	u8 *buffer;
++	int ret;
++
++	if (argc !=3D 3)
++		return CMD_RET_USAGE;
++
++	offset =3D simple_strtoul(argv[1], NULL, 0);
++	size =3D simple_strtoul(argv[2], NULL, 0);
++	buffer =3D malloc(size);
++	if (!buffer) {
++		pr_err("Failed to allocate %lu bytes\n", size);
++		return CMD_RET_FAILURE;
++	}
++
++	ret =3D meson_sm_read_efuse(offset, (void *)buffer, size);
++	if (ret !=3D size) {
++		ret =3D CMD_RET_FAILURE;
++		goto free_buffer;
++	}
++
++	print_buffer(0, buffer, 1, size, 0);
++
++free_buffer:
++	free(buffer);
++	return ret;
++}
++
+ static struct cmd_tbl cmd_sm_sub[] =3D {
+ 	U_BOOT_CMD_MKENT(serial, 2, 1, do_sm_serial, "", ""),
+ 	U_BOOT_CMD_MKENT(reboot_reason, 1, 1, do_sm_reboot_reason, "", ""),
+ 	U_BOOT_CMD_MKENT(efuseread, 4, 1, do_efuse_read, "", ""),
+ 	U_BOOT_CMD_MKENT(efusewrite, 4, 0, do_efuse_write, "", ""),
++	U_BOOT_CMD_MKENT(efusedump, 3, 1, do_efuse_dump, "", ""),
+ };
+=20
+ static int do_sm(struct cmd_tbl *cmdtp, int flag, int argc,
+@@ -279,5 +312,6 @@ U_BOOT_CMD(
+ 	"serial <address> - read chip unique id to memory address\n"
+ 	"sm reboot_reason [name] - get reboot reason and store to to environment\=
+n"
+ 	"sm efuseread <offset> <size> <address> - read efuse to memory address\n"
+-	"sm efusewrite <offset> <size> <address> - write into efuse from memory a=
+ddress"
++	"sm efusewrite <offset> <size> <address> - write into efuse from memory a=
+ddress\n"
++	"sm efusedump <offset> <size> - dump efuse data range to console"
+ );
+--=20
+2.30.1
 
