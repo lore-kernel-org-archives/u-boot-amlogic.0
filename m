@@ -1,106 +1,68 @@
-Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
- by mx.groups.io with SMTP id smtpd.web11.40.1670590342011339383
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+ by mx.groups.io with SMTP id smtpd.web11.47421.1670861317224687104
  for <u-boot-amlogic@groups.io>;
- Fri, 09 Dec 2022 04:52:23 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-	s=mail; t=1670590339;
-	bh=a019PLUP1b3gAkADAfLjh39rpimKg1APKDQNTKTe+/k=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=l8e1iWNYcJnpdVFwg2m0x9MtMvE9sFGCdV6ahHYRpoSuiMZ7x6MEAl5W/+IQcjcWu
-	 jYOMd2mmysdCz1PZwa38nqwFhPZMLoA67P8SWbsqNd9VxlvwTt4x53ZJvgZJQWFhTE
-	 PbBKSjoIBxjya7SByIAf/F2c+lKcUctBIscqDRWSDw498Y3iNvK1ddg5xhYzNxDuwW
-	 UGlvE38xwD9lMYgsiv772irM7bmqXkLYdQczM3jl+J3wfJcIDadnPXzsHn74D2yjgJ
-	 d8yG4DETpS4CW2J5RUXi5xPnJZa1HdeYSa0igFZhuqy343ZzzL7gVVlPaNDGBRvmYE
-	 BEn+pzWo6j0jA==
-From: Alexey Romanov <avromanov@sberdevices.ru>
-Subject: [PATCH v1] arch/arm: sm: introduce efusedump command
-Date: Fri, 9 Dec 2022 15:52:04 +0300
-Message-ID: <20221209125204.62960-1-avromanov@sberdevices.ru>
+ Mon, 12 Dec 2022 08:08:37 -0800
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-143ffc8c2b2so8942341fac.2
+        for <u-boot-amlogic@groups.io>; Mon, 12 Dec 2022 08:08:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ERQtGAu8FD6iHkLZ3AVsV3I85jBSuZUkegmPM5dzZ8A=;
+        b=DIsefykREhWVIhuqkTY/TRjukErOt+ffwCvooaCc+aR4jJZIHzAkaV/YpCfHJUjzW+
+         VmLNtE65id1pnzPX0iZIwDA0uGpLJ4dO3K6JRRwX1V4P9YW4ekKVXLvvhGumEghK/lXT
+         bs2o6mtKIPIws08dG0iV08TZzI8gMxrd25X7k=
+Return-Path: <trini@konsulko.com>
+Date: Mon, 12 Dec 2022 11:08:34 -0500
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PATCH v1] arch/arm: sm: introduce efusedump command
+Message-ID: <20221212160834.GX3787616@bill-the-cat>
+References: <20221209125204.62960-1-avromanov@sberdevices.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-To: narmstrong@baylibre.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@sberdevices.ru>
+In-Reply-To: <20221209125204.62960-1-avromanov@sberdevices.ru>
+Content-Type: multipart/mixed; boundary="Groupsio=Ks3fnhhxofqqsaDvWbTT"
+To: Alexey Romanov <avromanov@sberdevices.ru>
+Cc: narmstrong@baylibre.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru
 List-ID: <u-boot-amlogic@groups.io>
 
-Using this command user can print efuse memory:
+--Groupsio=Ks3fnhhxofqqsaDvWbTT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-$ sm efusedump 0 10
-  00000000: ff 00 31 00 00 ff 66 00 00 00      ..1...f...
+On Fri, Dec 09, 2022 at 03:52:04PM +0300, Alexey Romanov wrote:
 
-Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
----
- arch/arm/mach-meson/sm.c | 36 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+> Using this command user can print efuse memory:
+>=20
+> $ sm efusedump 0 10
+>   00000000: ff 00 31 00 00 ff 66 00 00 00      ..1...f...
+>=20
+> Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
+> ---
+>  arch/arm/mach-meson/sm.c | 36 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-meson/sm.c b/arch/arm/mach-meson/sm.c
-index d6eb910689f..87dff2b4c61 100644
---- a/arch/arm/mach-meson/sm.c
-+++ b/arch/arm/mach-meson/sm.c
-@@ -20,6 +20,7 @@
- #include <linux/bitfield.h>
- #include <regmap.h>
- #include <syscon.h>
-+#include <hexdump.h>
-=20
- #define FN_GET_SHARE_MEM_INPUT_BASE	0x82000020
- #define FN_GET_SHARE_MEM_OUTPUT_BASE	0x82000021
-@@ -246,11 +247,43 @@ static int do_efuse_write(struct cmd_tbl *cmdtp, int =
-flag, int argc,
- 	return CMD_RET_SUCCESS;
- }
-=20
-+static int do_efuse_dump(struct cmd_tbl *cmdtp, int flag, int argc,
-+			char *const argv[])
-+{
-+	ulong offset, size;
-+	u8 *buffer;
-+	int ret;
-+
-+	if (argc !=3D 3)
-+		return CMD_RET_USAGE;
-+
-+	offset =3D simple_strtoul(argv[1], NULL, 0);
-+	size =3D simple_strtoul(argv[2], NULL, 0);
-+	buffer =3D malloc(size);
-+	if (!buffer) {
-+		pr_err("Failed to allocate %lu bytes\n", size);
-+		return CMD_RET_FAILURE;
-+	}
-+
-+	ret =3D meson_sm_read_efuse(offset, (void *)buffer, size);
-+	if (ret !=3D size) {
-+		ret =3D CMD_RET_FAILURE;
-+		goto free_buffer;
-+	}
-+
-+	print_buffer(0, buffer, 1, size, 0);
-+
-+free_buffer:
-+	free(buffer);
-+	return ret;
-+}
-+
- static struct cmd_tbl cmd_sm_sub[] =3D {
- 	U_BOOT_CMD_MKENT(serial, 2, 1, do_sm_serial, "", ""),
- 	U_BOOT_CMD_MKENT(reboot_reason, 1, 1, do_sm_reboot_reason, "", ""),
- 	U_BOOT_CMD_MKENT(efuseread, 4, 1, do_efuse_read, "", ""),
- 	U_BOOT_CMD_MKENT(efusewrite, 4, 0, do_efuse_write, "", ""),
-+	U_BOOT_CMD_MKENT(efusedump, 3, 1, do_efuse_dump, "", ""),
- };
-=20
- static int do_sm(struct cmd_tbl *cmdtp, int flag, int argc,
-@@ -279,5 +312,6 @@ U_BOOT_CMD(
- 	"serial <address> - read chip unique id to memory address\n"
- 	"sm reboot_reason [name] - get reboot reason and store to to environment\=
-n"
- 	"sm efuseread <offset> <size> <address> - read efuse to memory address\n"
--	"sm efusewrite <offset> <size> <address> - write into efuse from memory a=
-ddress"
-+	"sm efusewrite <offset> <size> <address> - write into efuse from memory a=
-ddress\n"
-+	"sm efusedump <offset> <size> - dump efuse data range to console"
- );
+This needs to be moved done under cmd/ somewhere, perhaps cmd/meson/
+
 --=20
-2.30.1
+Tom
 
+--Groupsio=Ks3fnhhxofqqsaDvWbTT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmOXUfgACgkQFHw5/5Y0
+tywTWgv+MjiJfUpA7opb6mmC3bFNtppXgw74+ZNp4LNddtB6ooiyVrYVWps2vJ+i
+i3imCr6bl3regZf2KvvG3RN2SevUWp05db6wJVIvumaBjy9E082MYcxk3cAn7py7
+VaZwS/Jl5GEGkEcVQUim/K/ggakweyJu0gR88vfqQhb5D6tFdY0GfygfQ/JBHWDx
+2PMR4HpG+Zqf6OVcl7W1Zr3m1CoNsKeh/WBztWgZQqhvHnTP4g4w6QzTAwKl3f+C
+f1Z+pLnyskoc872NN6aN1kH37CpIKBWE57RoCOdcBWArBkdY/NlwW6HwD88to7WT
+vIwz8ETJhT7dl2rz0TdOShza/oT0pw8+Cy4KbxELHTb8LzxmvDPlIMBAZcug/mLU
+JDA9PWVM4vU+QDi5cLaZd5vPygdMBe4VPNbWH16qH1mgPvpYmSxidlfOoba0tcXR
+V79lCzu5eTV6q8rfRRdSIh298oS1DcOJADACuoJa/DKNekxblKnRualr9LY53h2b
+hLt0nL15
+=ejq9
+-----END PGP SIGNATURE-----
+
+--Groupsio=Ks3fnhhxofqqsaDvWbTT--
