@@ -1,99 +1,121 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
- by mx.groups.io with SMTP id smtpd.web11.11127.1672836647617131514
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+ by mx.groups.io with SMTP id smtpd.web11.11754.1672838498511564075
  for <u-boot-amlogic@groups.io>;
- Wed, 04 Jan 2023 04:50:48 -0800
+ Wed, 04 Jan 2023 05:21:39 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1672836636; bh=NIcLtSrGBLXlEu4KrdkOBtj81sTlg1NukJV/luPbQAc=;
+	t=1672838494; bh=6WizkjT2kciM/DKH+zmOMXQqcWzj1Cbw6RuO/WsDkMg=;
 	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iPWKbFAUe7e7rkrr4gcka8qnf72YvO+GJyHntjTfdGXFgnOO/KurwxHkCsoDwqQXh
-	 nS9JY6tw+C4/DHod5MLoMYQQWLtSMwF2W/T435O+OWpA5F6kv9FgO6iRqJN9C9ZcPX
-	 bmDQzc9HjE1nkWX3vkYygznfws7IWr2uhDAmpPxS5jY1ex7ioGXEHbflq7zoMcppvM
-	 GNepNbeGwXF5EgJkfU0OBN1MeSEiultF7Zt7YgGYzNRjhv8+K0VNtIZJAJ0jkp3o6R
-	 i7pVDg2qKj5tzh9sdjDOdMlLZo2wjqP4vrKzyb9QHjL/Qm9+L+pBFUXxjF/j8Gup6j
-	 LY9nchni+X0ig==
-Message-ID: <9a6fa7c3-7ff2-1530-f884-fad0e54da72f@gmx.de>
-Date: Wed, 4 Jan 2023 13:50:33 +0100
+	b=U6ga0zGLfgMhLI3KnB8qNp27cjQwEM8uCbmP0g9uIEuqjL/qpmelwKXtAHfLvoeZC
+	 bwSK92p44EyZAbbCgCWqnG4gcAII0K9XQD1l79au+QRRWzFMzQyuiosaufYIG2+Ij8
+	 LHro42yec8hOeMtBl+NJEE0I84NoJEQ3JU6cAiGFzyC2D2fvMcUytme7t3HRPW8rgy
+	 0RjYOepG7I57bjRQUcDYdIDDzzgc66AyepW8Xr9Rqe+DqT3Yu76pt7az1b9jYK5DD2
+	 ClPwcbSoPQzDscc98v/HoPHkHve9FYj0atpmg7SRW1qEuiKaigDbL2m7MYzrGG0SRA
+	 CJJnQ5jpH/Dug==
+Message-ID: <d3f7f072-dc75-9601-ab6f-7f01aedcbefd@gmx.de>
+Date: Wed, 4 Jan 2023 14:21:33 +0100
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 5/9] efi_loader: GOP: Add damage notification on BLT
-References: <20230103215004.22646-1-agraf@csgraf.de>
- <20230103215004.22646-6-agraf@csgraf.de>
+Subject: Re: [PATCH v3 3/5] doc/usage: cmd: documentation for meson/sm command
+References: <20221222125727.47893-1-avromanov@sberdevices.ru>
+ <20221222125727.47893-4-avromanov@sberdevices.ru>
+ <d4b8016b-b47e-c101-d9f6-622bf166e4d9@linaro.org>
 From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-In-Reply-To: <20230103215004.22646-6-agraf@csgraf.de>
+In-Reply-To: <d4b8016b-b47e-c101-d9f6-622bf166e4d9@linaro.org>
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-To: Alexander Graf <agraf@csgraf.de>
-Cc: Matthias Brugger <mbrugger@suse.com>, Anatolij Gustschin <agust@denx.de>, Simon Glass <sjg@chromium.org>, Da Xue <da@libre.computer>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Jagan Teki <jagan@amarulasolutions.com>, Andre Przywara <andre.przywara@arm.com>, Neil Armstrong <neil.armstrong@linaro.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Patrick Delaunay <patrick.delaunay@foss.st.com>, Patrice Chotard <patrice.chotard@foss.st.com>, uboot-stm32@st-md-mailman.stormreply.com, u-boot-amlogic@groups.io, u-boot@lists.denx.de, Kever Yang <kever.yang@rock-chips.com>
+To: avromanov@sberdevices.ru
+Cc: u-boot@lists.denx.de, kernel@sberdevices.ru, Neil Armstrong <neil.armstrong@linaro.org>, mkorpershoek@baylibre.com, sjg@chromium.org, trini@konsulko.com, narmstrong@baylibre.com, u-boot-amlogic@groups.io
 List-ID: <u-boot-amlogic@groups.io>
 
-On 1/3/23 22:50, Alexander Graf wrote:
-> Now that we have a damage tracking API, let's populate damage done by
-> UEFI payloads when they BLT data onto the screen.
+On 1/4/23 13:35, Neil Armstrong wrote:
+> Le 22/12/2022 =C3=A0 13:57, Alexey Romanov via groups.io a =C3=A9crit=C2=
+=A0:
 >
-> Signed-off-by: Alexander Graf <agraf@csgraf.de>
-> Reported-by: Da Xue <da@libre.computer>
+> Please add a short description of the change in the commit message.
 >
-> ---
+> With this added:
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 >
-> v1 -> v2:
->
->    - Remove ifdefs from gop
->
-> v2 -> v3:
->
->    - Adapt to always assume DM is used
->
-> v3 -> v4:
->
->    - Skip damage on EfiBltVideoToBltBuffer
-> ---
->   lib/efi_loader/efi_gop.c | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/lib/efi_loader/efi_gop.c b/lib/efi_loader/efi_gop.c
-> index d1dc2f22d0..425dcbf6b1 100644
-> --- a/lib/efi_loader/efi_gop.c
-> +++ b/lib/efi_loader/efi_gop.c
-> @@ -32,6 +32,7 @@ struct efi_gop_obj {
->   	struct efi_gop ops;
->   	struct efi_gop_mode_info info;
->   	struct efi_gop_mode mode;
-> +	struct udevice *vdev;
->   	/* Fields we only have access to during init */
->   	u32 bpix;
->   	void *fb;
-> @@ -120,6 +121,7 @@ static __always_inline efi_status_t gop_blt_int(struc=
-t efi_gop *this,
->   	u32 *fb32 =3D gopobj->fb;
->   	u16 *fb16 =3D gopobj->fb;
->   	struct efi_gop_pixel *buffer =3D __builtin_assume_aligned(bufferp, 4);
-> +	bool blt_to_video =3D (operation !=3D EFI_BLT_VIDEO_TO_BLT_BUFFER);
+>> Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
+>> ---
+>> =C2=A0 doc/usage/cmd/sm.rst | 44 +++++++++++++++++++++++++++++++++++++++=
++++++
 
-Using a variable is not really necessary but it could make the code more
-accessible to readers.
+This lacks an addition to doc/usage/index.rst.
 
-Reviewed-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+>> =C2=A0 1 file changed, 44 insertions(+)
+>> =C2=A0 create mode 100644 doc/usage/cmd/sm.rst
+>>
+>> diff --git a/doc/usage/cmd/sm.rst b/doc/usage/cmd/sm.rst
+>> new file mode 100644
+>> index 00000000000..3a70c137ec9
+>> --- /dev/null
+>> +++ b/doc/usage/cmd/sm.rst
+>> @@ -0,0 +1,44 @@
+>> +.. SPDX-License-Identifier: GPL-2.0+:
+>> +
+>> +Meson Security Monitor command
 
+sm command
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+We always use the actual command name here as it appears in the index.
+
+You can mention the Meson Security Monitor in the text below.
+
+Best regards
+
+Heinrich
+
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +Synopis
+>> +-------
+>> +
+>> +::
+>> +
+>> +=C2=A0=C2=A0=C2=A0 sm serial <address>
+>> +=C2=A0=C2=A0=C2=A0 sm reboot_reason [name]
+>> +=C2=A0=C2=A0=C2=A0 sm efuseread <offset> <size> <address>
+>> +=C2=A0=C2=A0=C2=A0 sm efusewrite <offset> <size> <address>
+>> +=C2=A0=C2=A0=C2=A0 sm efusedump <offset> <size>
+>> +
+>> +Description
+>> +-----------
+>> +
+>> +The sm command is used to request services from the secure monitor. Use=
+r
+>> +can call secure monitor to request special TEE function, for example
+>> chip
+>> +serial number info, reboot reason, etc.
+>> +
+>> +sm serial
+>> +=C2=A0 Retrieve chip unique serial number from sm and write it to memor=
+y on
+>> +=C2=A0 appropriate address.
+>> +
+>> +sm reboot_reason
+>> +=C2=A0 Print reboot reason to the console, if parameter [name] isn't
+>> specified.
+>> +=C2=A0 If parameter specified, set reboot reason string to environment
+>> variable
+>> +=C2=A0 with this name.
+>> +
+>> +sm efuseread
+>> +=C2=A0 Read <size> bytes starting from <offset> from efuse memory bank =
+and
+>> write
+>> +=C2=A0 result to the address <address>.
+>> +
+>> +sm efusewrite
+>> +=C2=A0 Write into efuse memory bank, starting from <offset>, the <size>=
+ bytes
+>> +=C2=A0 of data, located at address <address>.
+>> +
+>> +Configuration
+>> +-------------
+>> +
+>> +To use the sm command you must specify CONFIG_CMD_MESON=3Dy
 >
->   	if (delta) {
->   		/* Check for 4 byte alignment */
-> @@ -243,6 +245,9 @@ static __always_inline efi_status_t gop_blt_int(struc=
-t efi_gop *this,
->   		dlineoff +=3D dwidth;
->   	}
->
-> +	if (blt_to_video)
-> +		video_damage(gopobj->vdev, dx, dy, width, height);
-> +
->   	return EFI_SUCCESS;
->   }
->
-> @@ -547,6 +552,7 @@ efi_status_t efi_gop_register(void)
->   	gopobj->info.pixels_per_scanline =3D col;
->   	gopobj->bpix =3D bpix;
->   	gopobj->fb =3D fb;
-> +	gopobj->vdev =3D vdev;
->
->   	return EFI_SUCCESS;
->   }
 
