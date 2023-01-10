@@ -1,121 +1,64 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.104695.1673360723799373963
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.104764.1673360860906231559
  for <u-boot-amlogic@groups.io>;
- Tue, 10 Jan 2023 06:25:24 -0800
-Received: by mail-wm1-f45.google.com with SMTP id ay12-20020a05600c1e0c00b003d9ea12bafcso6616594wmb.3
-        for <u-boot-amlogic@groups.io>; Tue, 10 Jan 2023 06:25:23 -0800 (PST)
+ Tue, 10 Jan 2023 06:27:57 -0800
+Received: by mail-wm1-f46.google.com with SMTP id m26-20020a05600c3b1a00b003d9811fcaafso10096826wms.5
+        for <u-boot-amlogic@groups.io>; Tue, 10 Jan 2023 06:27:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=KtarQl98aIpePo/5BlJGT/iJvJzbUCaQV8QUWKCcPPs=;
-        b=dlPityKeNNle/FVQsCWUOE/8ssEFdb4wCFJrCIogwdIhImB1MjjN6VWJbhgUTZPVcb
-         q2k3oBhMn1nZ3vGCP/2yypU+vZPJ14cAa27JHx/yZ9PKvLlCyasHIOEm1FJz/Sw3lmK1
-         9JiZn8m2AjLkInjGiwADkzNAIqdHMe/hC1mmiUj7K+nQFxAHrn9ExGTtrYNGmlAoDUub
-         4RQYi5UEp1zW3b8VUxpDxBMjJZv/hMV9Xs0BfNOEfZmX0fY457KNC/D8Uk2nnO7EMkby
-         8PnZFJbQSvjwzgR+42WbOy3wvc0CQD1lUbkJkGEldGkWGd+FhJUcq1WLXyjYjHVlmYhC
-         ECiw==
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zfJFvFFJ2jUn6KqjthcKZ7wOYUf5fooT4kY/gVAdX3M=;
+        b=GhY2woQPe5sE/c1DnVupHh6w/hL1iWhWsSH2F1EnE7t/nfniK13eaATbdOeDJ1fNvC
+         qmIvEKemSbFcWxKa3pM28YKn+VZmQvS+9jBcuneirUMHLCMGNWkkxqgmoHRfwbAMKEtt
+         r2LRi9FPhfQUkUDzphYSvvnm95UU7/ByFFlqMKTOJzQNgGoml4dgnjfsAuFnVvHscg0K
+         pDwvaLq3AS5IMRU3JS3a49FoJjchF/wWgABWYcMcgnQuprWgpDWITyELy51DSEMF+7cB
+         LuzcQ7jCPrvduXjf1TVPkfRWMCInErOS1z964VrPiJ9gskPmZTuu2rsuSj+hLR0vSqZh
+         Ze3Q==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <1e7a6e16-d03f-10c8-3186-55bec4b68f89@linaro.org>
-Date: Tue, 10 Jan 2023 15:25:21 +0100
-MIME-Version: 1.0
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 0/2] mach-meson: port dwc2_otg usage to CONFIG_DM_USB_GADGET=y
-References: <20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com>
- <55e46ad9-63cb-ff2c-d087-ab9af41d20ea@linaro.org>
- <87cz8mcadj.fsf@baylibre.com>
- <3a844610-20e3-cbd1-f00c-88f1f2f3e5ed@linaro.org>
- <87h6wy8xgh.fsf@baylibre.com>
-In-Reply-To: <87h6wy8xgh.fsf@baylibre.com>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20230110105650.54580-1-avromanov@sberdevices.ru>
+References: <20230110105650.54580-1-avromanov@sberdevices.ru>
+Subject: Re: [PATCH v4 0/5] arch-meson: introduce efusedump command
+Message-Id: <167336087600.1975362.17451337193505877896.b4-ty@linaro.org>
+Date: Tue, 10 Jan 2023 15:27:56 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, Marek Vasut <marex@denx.de>
-Cc: u-boot@lists.denx.de, Christian Hewitt <christianshewitt@gmail.com>, u-boot-amlogic@groups.io
+To: trini@konsulko.com, sjg@chromium.org, mkorpershoek@baylibre.com, Neil Armstrong <neil.armstrong@linaro.org>, Alexey Romanov <avromanov@sberdevices.ru>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru
 List-ID: <u-boot-amlogic@groups.io>
 
-On 10/01/2023 12:01, Mattijs Korpershoek wrote:
-> On Wed, Dec 14, 2022 at 15:49, neil.armstrong@linaro.org wrote:
-> 
->> Hi,
->>
->> On 14/12/2022 15:45, Mattijs Korpershoek wrote:
->>> Hi Neil,
->>
->> <snip>
->>
->>>>
->>>> I'll run some tests on other G12 boards but so far this looks very good, thanks !
->>>
->>> I got my hands on an odroid-c4 board and I also tested:
->>> => fastboot usb 0
->>> => # hit Ctrl-c
->>> # disconnection is ok
->>>
->>> And tested "usb start" and could list a usb thumb drive.
->>>
->>> Any other tests you would like me to do?
->>
->> No it's enough, thx for testing on the C4, this test the Device/Host
->> switch is still working !
->>
->> Marek, can you take the whole patchset with my Acked-by or should I take it ?
->>
->> Neil
-> 
-> Hi Neil, Marek,
-> 
-> Anything blocking to pick this up?
-> I see it's assigned to Neil on patchwork, but it's mostly usb related.
-> 
-> I've just re-tested the series on top of usb/master, if that helps.
+Hi,
 
-Marek,
+On Tue, 10 Jan 2023 13:56:45 +0300, Alexey Romanov wrote:
+> Keeping the commands code in an arch/ is not correct. This patchset
+> moves the meson smc commands from arch/arm/mach-meson to cmd/meson
+> folder and also adds a new 'efusedump' command with which user can
+> print efuse memory.
+> 
+> Alexey Romanov (5):
+>   asm/arch-meson: add missing meson_sm_write_efuse signature
+>   arm/mach-meson: move smc commands in cmd/meson
+>   doc/usage: cmd: documentation for meson/sm command
+>   cmd/arm: meson: sm: introduce efusedump command
+>   doc/usage: cmd: sm: documentation efusedump cmd
+> 
+> [...]
 
-I'm ready to merge it, is it ok for you ?
+Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-test)
 
+[1/5] asm/arch-meson: add missing meson_sm_write_efuse signature
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/12d782734927818b9d2f197e3905410632b01fcc
+[2/5] arm/mach-meson: move smc commands in cmd/meson
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/311106a1c6eebdc5d0284faae30bf9087227a6c1
+[3/5] doc/usage: cmd: documentation for meson/sm command
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/23435cfb3a2b672d7006d2d7e04276bd39fbb1a5
+[4/5] cmd/arm: meson: sm: introduce efusedump command
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/38e29404b8630ff7e761c37d6d9fd927135a7810
+[5/5] doc/usage: cmd: sm: documentation efusedump cmd
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/12e561f63a16e29b89a9138a929719427736da27
+
+-- 
 Neil
-
-> 
-> Thanks you,
-> Mattijs
-> 
->>
->>>
->>>>
->>>> Neil
->>>>
->>>>>
->>>>> ---
->>>>> Mattijs Korpershoek (2):
->>>>>          usb: dwc3-meson-g12a: force mode on child add/removal
->>>>>          ARM: meson: g12a: switch dwc2 otg to DM
->>>>>
->>>>>     arch/arm/mach-meson/board-g12a.c          | 127 ------------------------------
->>>>>     configs/bananapi-m5_defconfig             |   1 +
->>>>>     configs/beelink-gsking-x_defconfig        |   1 +
->>>>>     configs/beelink-gtking_defconfig          |   1 +
->>>>>     configs/beelink-gtkingpro_defconfig       |   1 +
->>>>>     configs/khadas-vim3_android_ab_defconfig  |   1 +
->>>>>     configs/khadas-vim3_android_defconfig     |   1 +
->>>>>     configs/khadas-vim3_defconfig             |   1 +
->>>>>     configs/khadas-vim3l_android_ab_defconfig |   1 +
->>>>>     configs/khadas-vim3l_android_defconfig    |   1 +
->>>>>     configs/khadas-vim3l_defconfig            |   1 +
->>>>>     configs/odroid-c4_defconfig               |   1 +
->>>>>     configs/odroid-hc4_defconfig              |   1 +
->>>>>     configs/odroid-n2_defconfig               |   1 +
->>>>>     configs/radxa-zero_defconfig              |   1 +
->>>>>     configs/sei510_defconfig                  |   1 +
->>>>>     configs/sei610_defconfig                  |   1 +
->>>>>     configs/u200_defconfig                    |   1 +
->>>>>     drivers/usb/dwc3/dwc3-meson-g12a.c        |  18 +++++
->>>>>     19 files changed, 35 insertions(+), 127 deletions(-)
->>>>> ---
->>>>> base-commit: 7b70f68977578360d9c47bb25d6d1937075153b4
->>>>> change-id: 20221024-meson-dm-usb-60e413696519
->>>>>
->>>>> Best regards,
-
