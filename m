@@ -1,107 +1,96 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web10.100883.1673348513714373523
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.103534.1673358059361555837
  for <u-boot-amlogic@groups.io>;
- Tue, 10 Jan 2023 03:01:54 -0800
-Received: by mail-wm1-f49.google.com with SMTP id p1-20020a05600c1d8100b003d8c9b191e0so9553213wms.4
-        for <u-boot-amlogic@groups.io>; Tue, 10 Jan 2023 03:01:53 -0800 (PST)
+ Tue, 10 Jan 2023 05:41:00 -0800
+Received: by mail-wm1-f46.google.com with SMTP id g19-20020a05600c4ed300b003d9eb1dbc0aso6988505wmq.3
+        for <u-boot-amlogic@groups.io>; Tue, 10 Jan 2023 05:40:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g4wysKX1nxokw6o+DTPLe4d7KKFiXEmnmBbiDaU5WOQ=;
-        b=CU+J9YaU/tvPkgCV3I5KDNS2Nq4dVPB8eeeQDgOyLb4FHfnfhZczKGzfOUwQa1ysTr
-         ZIdETqkznZlrkFdSgQZ4rpmuNwAMI6MSmOQmHkakICZCsyXVZnOI9li1b3zaAEZbyFlZ
-         u2ssjulUhEuGkhrmruh82kSLYijhy1DuNIrG95onEq9viJbjcn9kkhKDprgNX9rybV5Q
-         +1TKlQu3DCZZvAvB6gVuzAbttqdZSife8O9EI2MeKBROQdeif0yuNVFSPU327V+Avqvb
-         uNoPyY54emXfwDD3SIUScjQ/ohXe7ZQPHkk55SDwLXBZH8zSGhx7vddTNZJW67HThKki
-         CJkQ==
+        bh=aHothP/PBUXaTEGoPRYkQ/DsflCm9NFEWkeqeprbyrI=;
+        b=NSSajHMQEWNbiMe57Gv8GEN3m2H+DAjNpI8WIF74ZKkY3ndnNJLHjZV1W+T+Kel7sT
+         iq0cVbIL3lI0yxvgjwJYoAQovNopDUhagiWNwqLi1Gz1oKzp0ZJJT79JmXQmeIeMEohs
+         1GzAElDtG5F00AGW2wkIgV768h0eipEeJypgebD/Wks1zyl+y60t0cEG/er7q4XPg9Zy
+         s4YfFSbsiuv+glCMXJ2LTg+BO5ktgwphvJ77tewukUQEoIvy90dHjLjmO2yPa6kvb+RX
+         VWbXd3/+LTACZW3fzcqN0PB2hQydG2ed2Zwk7Z7UUo376GboxSX+WPpOun41P3Lkmbfc
+         IjAw==
 Return-Path: <mkorpershoek@baylibre.com>
 From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
-Subject: Re: [PATCH 0/2] mach-meson: port dwc2_otg usage to CONFIG_DM_USB_GADGET=y
-In-Reply-To: <3a844610-20e3-cbd1-f00c-88f1f2f3e5ed@linaro.org>
-References: <20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com>
- <55e46ad9-63cb-ff2c-d087-ab9af41d20ea@linaro.org>
- <87cz8mcadj.fsf@baylibre.com>
- <3a844610-20e3-cbd1-f00c-88f1f2f3e5ed@linaro.org>
-Date: Tue, 10 Jan 2023 12:01:50 +0100
-Message-ID: <87h6wy8xgh.fsf@baylibre.com>
+Subject: Re: [PATCH v4 1/5] asm/arch-meson: add missing meson_sm_write_efuse signature
+In-Reply-To: <20230110105650.54580-2-avromanov@sberdevices.ru>
+References: <20230110105650.54580-1-avromanov@sberdevices.ru>
+ <20230110105650.54580-2-avromanov@sberdevices.ru>
+Date: Tue, 10 Jan 2023 14:40:56 +0100
+Message-ID: <87bkn68q3b.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: neil.armstrong@linaro.org, Marek Vasut <marex@denx.de>
-Cc: u-boot@lists.denx.de, Christian Hewitt <christianshewitt@gmail.com>, u-boot-amlogic@groups.io
+To: Alexey Romanov <avromanov@sberdevices.ru>, narmstrong@baylibre.com, trini@konsulko.com, sjg@chromium.org
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@sberdevices.ru>, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-On Wed, Dec 14, 2022 at 15:49, neil.armstrong@linaro.org wrote:
+On Tue, Jan 10, 2023 at 13:56, Alexey Romanov <avromanov@sberdevices.ru> wrote:
 
-> Hi,
+> This function can be used by other modules. Also add comments.
 >
-> On 14/12/2022 15:45, Mattijs Korpershoek wrote:
->> Hi Neil,
->
-> <snip>
->
->>>
->>> I'll run some tests on other G12 boards but so far this looks very good, thanks !
->> 
->> I got my hands on an odroid-c4 board and I also tested:
->> => fastboot usb 0
->> => # hit Ctrl-c
->> # disconnection is ok
->> 
->> And tested "usb start" and could list a usb thumb drive.
->> 
->> Any other tests you would like me to do?
->
-> No it's enough, thx for testing on the C4, this test the Device/Host
-> switch is still working !
->
-> Marek, can you take the whole patchset with my Acked-by or should I take it ?
->
-> Neil
+> Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Hi Neil, Marek,
+Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
-Anything blocking to pick this up?
-I see it's assigned to Neil on patchwork, but it's mostly usb related.
-
-I've just re-tested the series on top of usb/master, if that helps.
-
-Thanks you,
-Mattijs
-
+> ---
+>  arch/arm/include/asm/arch-meson/sm.h | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 >
->> 
->>>
->>> Neil
->>>
->>>>
->>>> ---
->>>> Mattijs Korpershoek (2):
->>>>         usb: dwc3-meson-g12a: force mode on child add/removal
->>>>         ARM: meson: g12a: switch dwc2 otg to DM
->>>>
->>>>    arch/arm/mach-meson/board-g12a.c          | 127 ------------------------------
->>>>    configs/bananapi-m5_defconfig             |   1 +
->>>>    configs/beelink-gsking-x_defconfig        |   1 +
->>>>    configs/beelink-gtking_defconfig          |   1 +
->>>>    configs/beelink-gtkingpro_defconfig       |   1 +
->>>>    configs/khadas-vim3_android_ab_defconfig  |   1 +
->>>>    configs/khadas-vim3_android_defconfig     |   1 +
->>>>    configs/khadas-vim3_defconfig             |   1 +
->>>>    configs/khadas-vim3l_android_ab_defconfig |   1 +
->>>>    configs/khadas-vim3l_android_defconfig    |   1 +
->>>>    configs/khadas-vim3l_defconfig            |   1 +
->>>>    configs/odroid-c4_defconfig               |   1 +
->>>>    configs/odroid-hc4_defconfig              |   1 +
->>>>    configs/odroid-n2_defconfig               |   1 +
->>>>    configs/radxa-zero_defconfig              |   1 +
->>>>    configs/sei510_defconfig                  |   1 +
->>>>    configs/sei610_defconfig                  |   1 +
->>>>    configs/u200_defconfig                    |   1 +
->>>>    drivers/usb/dwc3/dwc3-meson-g12a.c        |  18 +++++
->>>>    19 files changed, 35 insertions(+), 127 deletions(-)
->>>> ---
->>>> base-commit: 7b70f68977578360d9c47bb25d6d1937075153b4
->>>> change-id: 20221024-meson-dm-usb-60e413696519
->>>>
->>>> Best regards,
+> diff --git a/arch/arm/include/asm/arch-meson/sm.h b/arch/arm/include/asm/arch-meson/sm.h
+> index f3ae46a6d6b..53b75176493 100644
+> --- a/arch/arm/include/asm/arch-meson/sm.h
+> +++ b/arch/arm/include/asm/arch-meson/sm.h
+> @@ -6,10 +6,35 @@
+>  #ifndef __MESON_SM_H__
+>  #define __MESON_SM_H__
+>  
+> +/**
+> + * meson_sm_read_efuse - read efuse memory into buffer
+> + *
+> + * @offset: offset from the start efuse memory
+> + * @buffer: pointer to buffer
+> + * @size: number of bytes to read
+> + * @return: number of bytes read
+> + */
+>  ssize_t meson_sm_read_efuse(uintptr_t offset, void *buffer, size_t size);
+>  
+> +/**
+> + * meson_sm_write_efuse - write into efuse memory from buffer
+> + *
+> + * @offset: offset from the start efuse memory
+> + * @buffer: pointer to buffer
+> + * @size: number of bytes to write
+> + * @return: number of bytes written
+> + */
+> +ssize_t meson_sm_write_efuse(uintptr_t offset, void *buffer, size_t size);
+> +
+>  #define SM_SERIAL_SIZE	12
+>  
+> +/**
+> + * meson_sm_get_serial - read chip unique id into buffer
+> + *
+> + * @buffer: pointer to buffer
+> + * @size: buffer size.
+> + * @return: zero on success or -errno on failure
+> + */
+>  int meson_sm_get_serial(void *buffer, size_t size);
+>  
+>  enum {
+> @@ -28,6 +53,9 @@ enum {
+>  	REBOOT_REASON_WATCHDOG_REBOOT = 13,
+>  };
+>  
+> +/**
+> + * meson_sm_get_reboot_reason - get reboot reason
+> + */
+>  int meson_sm_get_reboot_reason(void);
+>  
+>  #endif /* __MESON_SM_H__ */
+> -- 
+> 2.25.1
