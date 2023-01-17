@@ -1,69 +1,102 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.192337.1673946710276768442
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.192338.1673946711035838320
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Jan 2023 01:11:50 -0800
-Received: by mail-wm1-f49.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so20465809wma.1
-        for <u-boot-amlogic@groups.io>; Tue, 17 Jan 2023 01:11:49 -0800 (PST)
+ Tue, 17 Jan 2023 01:11:51 -0800
+Received: by mail-wm1-f45.google.com with SMTP id k16so1049185wms.2
+        for <u-boot-amlogic@groups.io>; Tue, 17 Jan 2023 01:11:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SF5s2IX+3Xh7hC+IDwpzzbovesvDaJnFzQQWTrU1/IA=;
-        b=uBX7E8u02Dkhb5m/CpaD0TXNV0ZOqiqsgFT3sZ002Q+fMlYuhFmAqbHi91adJTnvIi
-         VJupB67k7fPiqPZfOc6fj+gYgHvgoxHSoXsv2snzBfnQDJU8ytdI8/NUUo6cIhxW9Mpi
-         WG1GRpsheG9rWa2dn84KA78w5A5jMoHfcKpYrIcaPavi+7WjEWEEaf8HXzeSR+rs5wSj
-         fH8euvUrdng/zGxHwXu4rdKssa10E4wD8eWPN72svELVzfl/YJpgNGpcpBLiSpy9+410
-         47X80lc64QqN09N/LxnrGGZ+p1oVJIB/BMwmcMBlUAxx4KLub0L1SnFi5KGVtojjbKvi
-         sXKQ==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5eDO8coD4YDnAYZyi8dwFLbs2H58cSViybgQ0P3IFyQ=;
+        b=o0S1gx3oBv3Mi9H5rDrMVYzHcVq5bJehpHmQUx2UGepHVLI56GLHIGLJtPMwxu3CJJ
+         N2GvkQbbZepBaIlrh9OH/IyQ3cGGgmqSs/QW9jLknCu4ECBWZVx3V8kBKsfQYDfkDiPM
+         4lDy74G8dO9dgihPRsVvDHGtTCyHnkMb+rI64SIRSVia9G28PbgT/HUlUXrNsGVknGKL
+         xeKG+aOxNCnpA4Em8i2PDUkGIvAWufYAMl72Ugxwg34vwdcpR6LzWkjFBchGy2KErXQV
+         H1/hAQ/WkZv5/x1q+nstKbkPNmI/1MXMa4a8EsDPvD4Zk/T2QDIJdlDGCLXQXDOplRGF
+         8lJg==
 Return-Path: <neil.armstrong@linaro.org>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Subject: [PATCH 0/2] mach-meson: port GXL & AXG dwc2_otg usage to CONFIG_DM_USB_GADGET=y
 Date: Tue, 17 Jan 2023 10:11:45 +0100
-Message-Id: <20230117-u-boot-usb-gxl-otg-dm-v1-0-2853f6d75b06@linaro.org>
+Subject: [PATCH 1/2] usb: dwc3-meson-gxl: force mode on child add/removal
 MIME-Version: 1.0
+Message-Id: <20230117-u-boot-usb-gxl-otg-dm-v1-1-2853f6d75b06@linaro.org>
+References: <20230117-u-boot-usb-gxl-otg-dm-v1-0-2853f6d75b06@linaro.org>
+In-Reply-To: <20230117-u-boot-usb-gxl-otg-dm-v1-0-2853f6d75b06@linaro.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 To: Marek Vasut <marex@denx.de>, Vyacheslav Bocharov <adeep@lexina.in>
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-This is the port of Mattijs work at [1] for G12A over GXL & AXG.
+arch/mach-meson has some custom usb logic, in particular:
+* on board_usb_init(), we force USB_DR_MODE_PERIPHERAL
+* on board_usb_cleanup(), we force USB_DR_MODE_HOST
 
-It uses the same design and should work as-is, it still needs to be
-be extensively tested over the main GXL & AXG boards.
+With DM_USB_GADGET=y, board_usb_init/cleanup() are no
+longer used when we call usb_gadget_initialize().
+Instead, the generic (from udc-uclass) initialization/release is
+called, which itself calls the controller driver's probe()/remove().
 
-[1] https://lore.kernel.org/all/20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com/
+Therefore, enabling DM_USB_GADGET=y will mean that this mode
+switching will break.
 
-To: Marek Vasut <marex@denx.de>
-To: Vyacheslav Bocharov <adeep@lexina.in>
-Cc: u-boot-amlogic@groups.io
-Cc: u-boot@lists.denx.de
-Cc: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+To prepare for enabling DM_USB_GADGET, perform the mode switching
+when the "amlogic,meson-g12a-usb" (dwc2) driver is
+probed()/removed() instead.
+
+This is achieved via the glue driver, which gets notified each time one
+of its children is probed()/removed.
+
+Note: this change should be harmless without DM_USB_GADGET=y
+because the amlogic-g12a-usb driver is not probed via driver model.
+
+Thanks for Mattijs for the original work at [1].
+
+[1] https://lore.kernel.org/all/20221024-meson-dm-usb-v1-1-2ab077a503b9@baylibre.com/
+
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-
 ---
-Neil Armstrong (2):
-      usb: dwc3-meson-gxl: force mode on child add/removal
-      ARM: meson: switch AXG & GX dwc2 otg to DM
+ drivers/usb/dwc3/dwc3-meson-gxl.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
- arch/arm/mach-meson/board-axg.c      | 129 ---------------------------------
- arch/arm/mach-meson/board-gx.c       | 137 -----------------------------------
- configs/jethub_j100_defconfig        |   1 +
- configs/jethub_j80_defconfig         |   1 +
- configs/khadas-vim2_defconfig        |   1 +
- configs/khadas-vim_defconfig         |   1 +
- configs/libretech-ac_defconfig       |   1 +
- configs/libretech-cc_defconfig       |   1 +
- configs/libretech-s905d-pc_defconfig |   1 +
- configs/libretech-s912-pc_defconfig  |   1 +
- configs/s400_defconfig               |   1 +
- configs/wetek-core2_defconfig        |   1 +
- drivers/usb/dwc3/dwc3-meson-gxl.c    |  18 +++++
- 13 files changed, 28 insertions(+), 266 deletions(-)
----
-base-commit: b96640cbfb319071aea7915cfa2f7aefe08bbc08
-change-id: 20230117-u-boot-usb-gxl-otg-dm-013ee8718190
+diff --git a/drivers/usb/dwc3/dwc3-meson-gxl.c b/drivers/usb/dwc3/dwc3-meson-gxl.c
+index 6c6d463203..d56f2747b6 100644
+--- a/drivers/usb/dwc3/dwc3-meson-gxl.c
++++ b/drivers/usb/dwc3/dwc3-meson-gxl.c
+@@ -408,6 +408,22 @@ static int dwc3_meson_gxl_remove(struct udevice *dev)
+ 	return dm_scan_fdt_dev(dev);
+ }
+ 
++static int dwc3_meson_gxl_child_pre_probe(struct udevice *dev)
++{
++	if (ofnode_device_is_compatible(dev_ofnode(dev), "amlogic,meson-g12a-usb"))
++		return dwc3_meson_gxl_force_mode(dev->parent, USB_DR_MODE_PERIPHERAL);
++
++	return 0;
++}
++
++static int dwc3_meson_gxl_child_post_remove(struct udevice *dev)
++{
++	if (ofnode_device_is_compatible(dev_ofnode(dev), "amlogic,meson-g12a-usb"))
++		return dwc3_meson_gxl_force_mode(dev->parent, USB_DR_MODE_HOST);
++
++	return 0;
++}
++
+ static const struct udevice_id dwc3_meson_gxl_ids[] = {
+ 	{ .compatible = "amlogic,meson-axg-usb-ctrl" },
+ 	{ .compatible = "amlogic,meson-gxl-usb-ctrl" },
+@@ -421,6 +437,8 @@ U_BOOT_DRIVER(dwc3_generic_wrapper) = {
+ 	.of_match = dwc3_meson_gxl_ids,
+ 	.probe = dwc3_meson_gxl_probe,
+ 	.remove = dwc3_meson_gxl_remove,
++	.child_pre_probe = dwc3_meson_gxl_child_pre_probe,
++	.child_post_remove = dwc3_meson_gxl_child_post_remove,
+ 	.plat_auto	= sizeof(struct dwc3_meson_gxl),
+ 
+ };
 
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
