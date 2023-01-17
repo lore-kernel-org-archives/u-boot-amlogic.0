@@ -1,481 +1,108 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web11.192339.1673946711847226418
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web10.192429.1673948601152197288
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Jan 2023 01:11:52 -0800
-Received: by mail-wm1-f50.google.com with SMTP id k16so1049207wms.2
-        for <u-boot-amlogic@groups.io>; Tue, 17 Jan 2023 01:11:51 -0800 (PST)
+ Tue, 17 Jan 2023 01:43:22 -0800
+Received: by mail-wr1-f54.google.com with SMTP id bk16so29917531wrb.11
+        for <u-boot-amlogic@groups.io>; Tue, 17 Jan 2023 01:43:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M7vh9JV654cNb4XByu9Y+K0Mf44Rfv8d+9YzfnQCpOI=;
-        b=s8zveUT24174F/1sRoKRx6sa+xGY0s3tZArZpTOscpAa4+ZzexpqZTHlEjNArWH8h1
-         oj53IL2YC31+UFaJ8TQ8Iq1EZxXCOq7mSnwVp6VuA173Kn95P5npIH986aAy9noJkJBH
-         Wo0f7KwTLTT+R8OYQN5WGFKSR3DF00LJR8Ug9knOF/X4Pdo72zL34tsyup9YcDkcOtsP
-         cMs4xzAN9P2TcDfmHugFGpx27KX2blTAeVdoQGxxX5+7y0NdFSI9WkB/kRfU2kEy0yua
-         JI8WSIh8lLzGrcOE0fLhhnTaZSw+B7NU5+LZxe88z5OmS2ley8vyo7xH9OyU0tJioo8i
-         fKQA==
-Return-Path: <neil.armstrong@linaro.org>
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Date: Tue, 17 Jan 2023 10:11:46 +0100
-Subject: [PATCH 2/2] ARM: meson: switch AXG & GX dwc2 otg to DM
-MIME-Version: 1.0
-Message-Id: <20230117-u-boot-usb-gxl-otg-dm-v1-2-2853f6d75b06@linaro.org>
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DH1nIgiRCOR4y1RKzEzTfXVa13g1IH+s/b48+91yyhs=;
+        b=07S/KP1m9L8Xa9L4UfuKBPzprhsETyywOQwMlz1535JsyGDIhEIalxQMptEMpoQMX1
+         QseSka8/jBvGTBmyZKeP/XawhQwPrSGo2yg3417IE3i2Od39b8tGiPiJl4sthE/28nTi
+         pw4AcyhSW/lwZYwxkymYZBimL5U7NHkefQtOl9h2/3eGktqSW0AJyC8rLBDCh3S/d89o
+         m+0+zFJzqckgesxL0/LKzooF4e1647QgjzZ7kdVzuUBU41a90OaJWf82TPvSsTOfY40L
+         GNc310pA0xeMDmJ6wCAoBvdNU2CIoevJpVZeeRtbzJu5PuBIa1sxocpzlNMufAOy2X35
+         O8Xg==
+Return-Path: <mkorpershoek@baylibre.com>
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Subject: Re: [PATCH 1/2] usb: dwc3-meson-gxl: force mode on child add/removal
+In-Reply-To: <20230117-u-boot-usb-gxl-otg-dm-v1-1-2853f6d75b06@linaro.org>
 References: <20230117-u-boot-usb-gxl-otg-dm-v1-0-2853f6d75b06@linaro.org>
-In-Reply-To: <20230117-u-boot-usb-gxl-otg-dm-v1-0-2853f6d75b06@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: Marek Vasut <marex@denx.de>, Vyacheslav Bocharov <adeep@lexina.in>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>
+ <20230117-u-boot-usb-gxl-otg-dm-v1-1-2853f6d75b06@linaro.org>
+Date: Tue, 17 Jan 2023 10:43:17 +0100
+Message-ID: <87tu0pmr7u.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Neil Armstrong <neil.armstrong@linaro.org>, Marek Vasut <marex@denx.de>, Vyacheslav Bocharov <adeep@lexina.in>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-With CONFIG_DM_USB_GADGET=y, we no longer need any board_usb_*() logic
-because:
-* the dwc2 driver is DM compatible, and handles its own clock enabling
-* the dwc3-meson-gxl glue drivers handles "force mode switching"
+On Tue, Jan 17, 2023 at 10:11, Neil Armstrong <neil.armstrong@linaro.org> wrote:
 
-Remove all mach-meson gx & axg usb code and enable CONFIG_DM_USB_GADGET.
+> arch/mach-meson has some custom usb logic, in particular:
+> * on board_usb_init(), we force USB_DR_MODE_PERIPHERAL
+> * on board_usb_cleanup(), we force USB_DR_MODE_HOST
+>
+> With DM_USB_GADGET=y, board_usb_init/cleanup() are no
+> longer used when we call usb_gadget_initialize().
+> Instead, the generic (from udc-uclass) initialization/release is
+> called, which itself calls the controller driver's probe()/remove().
+>
+> Therefore, enabling DM_USB_GADGET=y will mean that this mode
+> switching will break.
+>
+> To prepare for enabling DM_USB_GADGET, perform the mode switching
+> when the "amlogic,meson-g12a-usb" (dwc2) driver is
+> probed()/removed() instead.
+>
+> This is achieved via the glue driver, which gets notified each time one
+> of its children is probed()/removed.
+>
+> Note: this change should be harmless without DM_USB_GADGET=y
+> because the amlogic-g12a-usb driver is not probed via driver model.
+>
+> Thanks for Mattijs for the original work at [1].
+>
+> [1] https://lore.kernel.org/all/20221024-meson-dm-usb-v1-1-2ab077a503b9@baylibre.com/
+>
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Note: Only configs having both CONFIG_USB_DWC3_MESON_GXL=y *and*
-      USB_GADGET_DWC2_OTG=y have been updated.
+Thank you for mentioning me, I appreciate it.
 
-Thanks for the original work from Mattijs at [1]
+Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
-[1] https://lore.kernel.org/all/20221024-meson-dm-usb-v1-2-2ab077a503b9@baylibre.com/
-
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- arch/arm/mach-meson/board-axg.c      | 129 ---------------------------------
- arch/arm/mach-meson/board-gx.c       | 137 -----------------------------------
- configs/jethub_j100_defconfig        |   1 +
- configs/jethub_j80_defconfig         |   1 +
- configs/khadas-vim2_defconfig        |   1 +
- configs/khadas-vim_defconfig         |   1 +
- configs/libretech-ac_defconfig       |   1 +
- configs/libretech-cc_defconfig       |   1 +
- configs/libretech-s905d-pc_defconfig |   1 +
- configs/libretech-s912-pc_defconfig  |   1 +
- configs/s400_defconfig               |   1 +
- configs/wetek-core2_defconfig        |   1 +
- 12 files changed, 10 insertions(+), 266 deletions(-)
-
-diff --git a/arch/arm/mach-meson/board-axg.c b/arch/arm/mach-meson/board-axg.c
-index 236ec81579..fdf18752cd 100644
---- a/arch/arm/mach-meson/board-axg.c
-+++ b/arch/arm/mach-meson/board-axg.c
-@@ -15,12 +15,6 @@
- #include <asm/io.h>
- #include <asm/armv8/mmu.h>
- #include <linux/sizes.h>
--#include <usb.h>
--#include <linux/usb/otg.h>
--#include <asm/arch/usb-gx.h>
--#include <usb/dwc2_udc.h>
--#include <clk.h>
--#include <phy.h>
- 
- DECLARE_GLOBAL_DATA_PTR;
- 
-@@ -90,126 +84,3 @@ static struct mm_region axg_mem_map[] = {
- };
- 
- struct mm_region *mem_map = axg_mem_map;
--
--#if CONFIG_IS_ENABLED(USB_DWC3_MESON_GXL) && \
--	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
--static struct dwc2_plat_otg_data meson_gx_dwc2_data;
--
--int board_usb_init(int index, enum usb_init_type init)
--{
--	struct fdtdec_phandle_args args;
--	const void *blob = gd->fdt_blob;
--	int node, dwc2_node;
--	struct udevice *dev, *clk_dev;
--	struct clk clk;
--	int ret;
--
--	/* find the usb glue node */
--	node = fdt_node_offset_by_compatible(blob, -1,
--					     "amlogic,meson-axg-usb-ctrl");
--	if (node < 0) {
--		debug("Not found usb-control node\n");
--		return -ENODEV;
--	}
--
--	if (!fdtdec_get_is_enabled(blob, node)) {
--		debug("usb is disabled in the device tree\n");
--		return -ENODEV;
--	}
--
--	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
--	if (ret) {
--		debug("Not found usb-control device\n");
--		return ret;
--	}
--
--	/* find the dwc2 node */
--	dwc2_node = fdt_node_offset_by_compatible(blob, node,
--						  "amlogic,meson-g12a-usb");
--	if (dwc2_node < 0) {
--		debug("Not found dwc2 node\n");
--		return -ENODEV;
--	}
--
--	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
--		debug("dwc2 is disabled in the device tree\n");
--		return -ENODEV;
--	}
--
--	meson_gx_dwc2_data.regs_otg = fdtdec_get_addr(blob, dwc2_node, "reg");
--	if (meson_gx_dwc2_data.regs_otg == FDT_ADDR_T_NONE) {
--		debug("usbotg: can't get base address\n");
--		return -ENODATA;
--	}
--
--	/* Enable clock */
--	ret = fdtdec_parse_phandle_with_args(blob, dwc2_node, "clocks",
--					     "#clock-cells", 0, 0, &args);
--	if (ret) {
--		debug("usbotg has no clocks defined in the device tree\n");
--		return ret;
--	}
--
--	ret = uclass_get_device_by_of_offset(UCLASS_CLK, args.node, &clk_dev);
--	if (ret)
--		return ret;
--
--	if (args.args_count != 1) {
--		debug("Can't find clock ID in the device tree\n");
--		return -ENODATA;
--	}
--
--	clk.dev = clk_dev;
--	clk.id = args.args[0];
--
--	ret = clk_enable(&clk);
--	if (ret) {
--		debug("Failed to enable usbotg clock\n");
--		return ret;
--	}
--
--	meson_gx_dwc2_data.rx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--						     "g-rx-fifo-size", 0);
--	meson_gx_dwc2_data.np_tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--							"g-np-tx-fifo-size", 0);
--	meson_gx_dwc2_data.tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--						     "g-tx-fifo-size", 0);
--
--	/* Switch to peripheral mode */
--	ret = dwc3_meson_gxl_force_mode(dev, USB_DR_MODE_PERIPHERAL);
--	if (ret)
--		return ret;
--
--	return dwc2_udc_probe(&meson_gx_dwc2_data);
--}
--
--int board_usb_cleanup(int index, enum usb_init_type init)
--{
--	const void *blob = gd->fdt_blob;
--	struct udevice *dev;
--	int node;
--	int ret;
--
--	/* find the usb glue node */
--	node = fdt_node_offset_by_compatible(blob, -1,
--					     "amlogic,meson-axg-usb-ctrl");
--	if (node < 0) {
--		debug("Not found usb-control node\n");
--		return -ENODEV;
--	}
--
--	if (!fdtdec_get_is_enabled(blob, node))
--		return -ENODEV;
--
--	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
--	if (ret)
--		return ret;
--
--	/* Switch to OTG mode */
--	ret = dwc3_meson_gxl_force_mode(dev, USB_DR_MODE_HOST);
--	if (ret)
--		return ret;
--
--	return 0;
--}
--#endif
-diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
-index 01fafd81c4..f28f84d86f 100644
---- a/arch/arm/mach-meson/board-gx.c
-+++ b/arch/arm/mach-meson/board-gx.c
-@@ -16,12 +16,6 @@
- #include <asm/io.h>
- #include <asm/armv8/mmu.h>
- #include <linux/sizes.h>
--#include <usb.h>
--#include <linux/usb/otg.h>
--#include <asm/arch/usb-gx.h>
--#include <usb/dwc2_udc.h>
--#include <clk.h>
--#include <phy.h>
- 
- DECLARE_GLOBAL_DATA_PTR;
- 
-@@ -108,134 +102,3 @@ static struct mm_region gx_mem_map[] = {
- };
- 
- struct mm_region *mem_map = gx_mem_map;
--
--#if CONFIG_IS_ENABLED(USB_DWC3_MESON_GXL) && \
--	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
--static struct dwc2_plat_otg_data meson_gx_dwc2_data;
--
--int board_usb_init(int index, enum usb_init_type init)
--{
--	struct fdtdec_phandle_args args;
--	const void *blob = gd->fdt_blob;
--	int node, dwc2_node;
--	struct udevice *dev, *clk_dev;
--	struct clk clk;
--	int ret;
--
--	/* find the usb glue node */
--	node = fdt_node_offset_by_compatible(blob, -1,
--					     "amlogic,meson-gxl-usb-ctrl");
--	if (node < 0) {
--		node = fdt_node_offset_by_compatible(blob, -1,
--					"amlogic,meson-gxm-usb-ctrl");
--		if (node < 0) {
--			debug("Not found usb-control node\n");
--			return -ENODEV;
--		}
--	}
--
--	if (!fdtdec_get_is_enabled(blob, node)) {
--		debug("usb is disabled in the device tree\n");
--		return -ENODEV;
--	}
--
--	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
--	if (ret) {
--		debug("Not found usb-control device\n");
--		return ret;
--	}
--
--	/* find the dwc2 node */
--	dwc2_node = fdt_node_offset_by_compatible(blob, node,
--						  "amlogic,meson-g12a-usb");
--	if (dwc2_node < 0) {
--		debug("Not found dwc2 node\n");
--		return -ENODEV;
--	}
--
--	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
--		debug("dwc2 is disabled in the device tree\n");
--		return -ENODEV;
--	}
--
--	meson_gx_dwc2_data.regs_otg = fdtdec_get_addr(blob, dwc2_node, "reg");
--	if (meson_gx_dwc2_data.regs_otg == FDT_ADDR_T_NONE) {
--		debug("usbotg: can't get base address\n");
--		return -ENODATA;
--	}
--
--	/* Enable clock */
--	ret = fdtdec_parse_phandle_with_args(blob, dwc2_node, "clocks",
--					     "#clock-cells", 0, 0, &args);
--	if (ret) {
--		debug("usbotg has no clocks defined in the device tree\n");
--		return ret;
--	}
--
--	ret = uclass_get_device_by_of_offset(UCLASS_CLK, args.node, &clk_dev);
--	if (ret)
--		return ret;
--
--	if (args.args_count != 1) {
--		debug("Can't find clock ID in the device tree\n");
--		return -ENODATA;
--	}
--
--	clk.dev = clk_dev;
--	clk.id = args.args[0];
--
--	ret = clk_enable(&clk);
--	if (ret) {
--		debug("Failed to enable usbotg clock\n");
--		return ret;
--	}
--
--	meson_gx_dwc2_data.rx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--						     "g-rx-fifo-size", 0);
--	meson_gx_dwc2_data.np_tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--							"g-np-tx-fifo-size", 0);
--	meson_gx_dwc2_data.tx_fifo_sz = fdtdec_get_int(blob, dwc2_node,
--						     "g-tx-fifo-size", 0);
--
--	/* Switch to peripheral mode */
--	ret = dwc3_meson_gxl_force_mode(dev, USB_DR_MODE_PERIPHERAL);
--	if (ret)
--		return ret;
--
--	return dwc2_udc_probe(&meson_gx_dwc2_data);
--}
--
--int board_usb_cleanup(int index, enum usb_init_type init)
--{
--	const void *blob = gd->fdt_blob;
--	struct udevice *dev;
--	int node;
--	int ret;
--
--	/* find the usb glue node */
--	node = fdt_node_offset_by_compatible(blob, -1,
--					     "amlogic,meson-gxl-usb-ctrl");
--	if (node < 0) {
--		node = fdt_node_offset_by_compatible(blob, -1,
--					"amlogic,meson-gxm-usb-ctrl");
--		if (node < 0) {
--			debug("Not found usb-control node\n");
--			return -ENODEV;
--		}
--	}
--
--	if (!fdtdec_get_is_enabled(blob, node))
--		return -ENODEV;
--
--	ret = uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
--	if (ret)
--		return ret;
--
--	/* Switch to OTG mode */
--	ret = dwc3_meson_gxl_force_mode(dev, USB_DR_MODE_HOST);
--	if (ret)
--		return ret;
--
--	return 0;
--}
--#endif
-diff --git a/configs/jethub_j100_defconfig b/configs/jethub_j100_defconfig
-index c2651580f8..dac775bd3b 100644
---- a/configs/jethub_j100_defconfig
-+++ b/configs/jethub_j100_defconfig
-@@ -55,6 +55,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC2=y
-diff --git a/configs/jethub_j80_defconfig b/configs/jethub_j80_defconfig
-index f3c47a001a..1d11a961b9 100644
---- a/configs/jethub_j80_defconfig
-+++ b/configs/jethub_j80_defconfig
-@@ -59,6 +59,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC2=y
-diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
-index a8d11a83c9..3af6b446ec 100644
---- a/configs/khadas-vim2_defconfig
-+++ b/configs/khadas-vim2_defconfig
-@@ -59,6 +59,7 @@ CONFIG_MESON_SPIFC=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
-index d1ed45ff88..6bb2200a6b 100644
---- a/configs/khadas-vim_defconfig
-+++ b/configs/khadas-vim_defconfig
-@@ -50,6 +50,7 @@ CONFIG_MESON_SERIAL=y
- CONFIG_SYSINFO=y
- CONFIG_SYSINFO_SMBIOS=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
-index a333106692..2f44771a84 100644
---- a/configs/libretech-ac_defconfig
-+++ b/configs/libretech-ac_defconfig
-@@ -65,6 +65,7 @@ CONFIG_SPI=y
- CONFIG_DM_SPI=y
- CONFIG_MESON_SPIFC=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index 60b40e6270..05311d8e08 100644
---- a/configs/libretech-cc_defconfig
-+++ b/configs/libretech-cc_defconfig
-@@ -49,6 +49,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
-index d3e600ec02..4e3aee7542 100644
---- a/configs/libretech-s905d-pc_defconfig
-+++ b/configs/libretech-s905d-pc_defconfig
-@@ -61,6 +61,7 @@ CONFIG_SPI=y
- CONFIG_DM_SPI=y
- CONFIG_MESON_SPIFC=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
-index 8b4f052d08..c9ceb35ff6 100644
---- a/configs/libretech-s912-pc_defconfig
-+++ b/configs/libretech-s912-pc_defconfig
-@@ -60,6 +60,7 @@ CONFIG_SPI=y
- CONFIG_DM_SPI=y
- CONFIG_MESON_SPIFC=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/s400_defconfig b/configs/s400_defconfig
-index 827bd548c7..91930d7f48 100644
---- a/configs/s400_defconfig
-+++ b/configs/s400_defconfig
-@@ -42,6 +42,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-diff --git a/configs/wetek-core2_defconfig b/configs/wetek-core2_defconfig
-index 13940dd56f..b730700630 100644
---- a/configs/wetek-core2_defconfig
-+++ b/configs/wetek-core2_defconfig
-@@ -51,6 +51,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
- CONFIG_DEBUG_UART_SKIP_INIT=y
- CONFIG_MESON_SERIAL=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_DWC3=y
-
--- 
-2.34.1
+> ---
+>  drivers/usb/dwc3/dwc3-meson-gxl.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/drivers/usb/dwc3/dwc3-meson-gxl.c b/drivers/usb/dwc3/dwc3-meson-gxl.c
+> index 6c6d463203..d56f2747b6 100644
+> --- a/drivers/usb/dwc3/dwc3-meson-gxl.c
+> +++ b/drivers/usb/dwc3/dwc3-meson-gxl.c
+> @@ -408,6 +408,22 @@ static int dwc3_meson_gxl_remove(struct udevice *dev)
+>  	return dm_scan_fdt_dev(dev);
+>  }
+>  
+> +static int dwc3_meson_gxl_child_pre_probe(struct udevice *dev)
+> +{
+> +	if (ofnode_device_is_compatible(dev_ofnode(dev), "amlogic,meson-g12a-usb"))
+> +		return dwc3_meson_gxl_force_mode(dev->parent, USB_DR_MODE_PERIPHERAL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc3_meson_gxl_child_post_remove(struct udevice *dev)
+> +{
+> +	if (ofnode_device_is_compatible(dev_ofnode(dev), "amlogic,meson-g12a-usb"))
+> +		return dwc3_meson_gxl_force_mode(dev->parent, USB_DR_MODE_HOST);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct udevice_id dwc3_meson_gxl_ids[] = {
+>  	{ .compatible = "amlogic,meson-axg-usb-ctrl" },
+>  	{ .compatible = "amlogic,meson-gxl-usb-ctrl" },
+> @@ -421,6 +437,8 @@ U_BOOT_DRIVER(dwc3_generic_wrapper) = {
+>  	.of_match = dwc3_meson_gxl_ids,
+>  	.probe = dwc3_meson_gxl_probe,
+>  	.remove = dwc3_meson_gxl_remove,
+> +	.child_pre_probe = dwc3_meson_gxl_child_pre_probe,
+> +	.child_post_remove = dwc3_meson_gxl_child_post_remove,
+>  	.plat_auto	= sizeof(struct dwc3_meson_gxl),
+>  
+>  };
+>
+> -- 
+> 2.34.1
