@@ -1,1133 +1,223 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web11.45484.1674135862415902127
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web10.45218.1674135862888189243
  for <u-boot-amlogic@groups.io>;
- Thu, 19 Jan 2023 05:44:22 -0800
-Received: by mail-wm1-f50.google.com with SMTP id m5-20020a05600c4f4500b003db03b2559eso1290895wmq.5
+ Thu, 19 Jan 2023 05:44:23 -0800
+Received: by mail-wm1-f51.google.com with SMTP id f19-20020a1c6a13000000b003db0ef4dedcso3593505wmc.4
         for <u-boot-amlogic@groups.io>; Thu, 19 Jan 2023 05:44:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d1uhMJ2jpV6ZxAnjBijhQfRoZZK4hgTtlxOuBZrYOHI=;
-        b=V+lq2uFGG9dm+81o8D9Z2sJ5UhMIke1sFsIplnSEbFNfn9EkLxKDg1nYCSMOIfIxVL
-         MdmGcflr/WPkC0AjrDBHhYBaNRlpXFIhKNNn6UTd1DlKtz6dy7FD3QXaa/6wmWF6np8b
-         Wb/ZfLkkbbo3OtG9ZqFHO7Ih96VXc9/h4W5GKgR1QcFYBWz9LRioRpxyvtyEhB0daMn1
-         FX93mxpKwJCD/n1F5Em3YLOMx/n+tMOxKF0NtoLB9SLuD+ZvHsOnm2Vv6eMftXmVBdQK
-         LFnj09jh+FrRydSD4qgIug3L89RzfCSHAx4Ke5OvPMsJ69JOa1+ebCx9NMJgDEeTRyyr
-         O8zQ==
+        bh=UjdsykXBrE0REl43ikDHvOfEsE8NxaTIb8Vg/gD/bog=;
+        b=hbmD73NrLj0v7U4QPxyRcnSeGJoLS2NZrTQHPgHJYXXImvWwsicOK+rF9HivvlUm1T
+         WuZFH410pQZHevDoNdDpp3Thwnv6twMbKENLcnFep3owfEAh9a7xX0iknwjolSwK9qyh
+         h8NVFa6aP6xnizvN2Y/WAsa3rfEwfN4Y3x20YwplJsECzomG0E/9sP1ipbXTWIIFiCOR
+         hCScHe+O4ZuinIHv6xbccNhU3kDepqBH6Z3z0AN+JDtjdlGd4lf4Flsm/V7P3jXrxuO6
+         oaWmRQX/ZeSjG++WTp0OsuR7By9SQo8Eq5y+ANiJDVGBJBiJZFtoMKTuTiDJo293Djr7
+         /3Dw==
 Return-Path: <neil.armstrong@linaro.org>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Date: Thu, 19 Jan 2023 14:44:17 +0100
-Subject: [PATCH 1/2] ARM: dts: sync Amlogic ARM64 DT from v6.2-rc1
+Date: Thu, 19 Jan 2023 14:44:18 +0100
+Subject: [PATCH 2/2] ARM: meson: add support for Odroid Go Ultra
 MIME-Version: 1.0
-Message-Id: <20230119-u-boot-odroid-go-ultra-v1-1-f96bab9db396@linaro.org>
+Message-Id: <20230119-u-boot-odroid-go-ultra-v1-2-f96bab9db396@linaro.org>
 References: <20230119-u-boot-odroid-go-ultra-v1-0-f96bab9db396@linaro.org>
 In-Reply-To: <20230119-u-boot-odroid-go-ultra-v1-0-f96bab9db396@linaro.org>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-This syncs the Amlogic G12A, G12B & SM1 base DT + the
-Odroid Go Ultra DT from Linux v6.2-rc1 from commmit [1].
+This adds initial support for the Hardkernel Odroid Go Ultra.
 
-[1] 1b929c02afd3 ("Linux 6.2-rc1")
+The Odroid Go Ultra is a portable gaming device with the following
+characteristics:
+- Amlogic S922X SoC
+- RK817 & RK818 PMICs
+- 2GiB LPDDR4
+- On board 16GiB eMMC
+- Micro SD Card slot
+- 5inch 854×480 MIPI-DSI TFT LCD
+- Earphone stereo jack, 0.5Watt 8Ω Mono speaker
+- Li-Polymer 3.7V/4000mAh Battery
+- USB-A 2.0 Host Connector
+- x16 GPIO Input Buttons
+- 2x ADC Analog Joysticks
+- USB-C Port for USB2 Device and Charging
+
+The following are not yet handled:
+- Battery RK818 Gauge and Charging
+- 5inch 854×480 MIPI-DSI TFT LCD
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- arch/arm/dts/Makefile                       |   1 +
- arch/arm/dts/meson-g12-common.dtsi          | 167 ++++---
- arch/arm/dts/meson-g12a.dtsi                |   5 +
- arch/arm/dts/meson-g12b-odroid-go-ultra.dts | 722 ++++++++++++++++++++++++++++
- arch/arm/dts/meson-g12b.dtsi                |   5 +
- arch/arm/dts/meson-sm1.dtsi                 |  52 +-
- 6 files changed, 876 insertions(+), 76 deletions(-)
+ .../arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi | 16 +++++
+ configs/odroid-go-ultra_defconfig                  | 70 ++++++++++++++++++++++
+ doc/board/amlogic/index.rst                        |  4 +-
+ doc/board/amlogic/odroid-go-ultra.rst              | 34 +++++++++++
+ 4 files changed, 123 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 43951a7731..fc43e953e6 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -198,6 +198,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
- 	meson-g12b-gtking.dtb \
- 	meson-g12b-gtking-pro.dtb \
- 	meson-g12b-gsking-x.dtb \
-+	meson-g12b-odroid-go-ultra.dtb \
- 	meson-g12b-odroid-n2.dtb \
- 	meson-g12b-odroid-n2-plus.dtb \
- 	meson-sm1-bananapi-m5.dtb \
-diff --git a/arch/arm/dts/meson-g12-common.dtsi b/arch/arm/dts/meson-g12-common.dtsi
-index 00c6f53290..9dbd50820b 100644
---- a/arch/arm/dts/meson-g12-common.dtsi
-+++ b/arch/arm/dts/meson-g12-common.dtsi
-@@ -58,7 +58,7 @@
- 		secure-monitor = <&sm>;
- 	};
- 
--	gpu_opp_table: gpu-opp-table {
-+	gpu_opp_table: opp-table-gpu {
- 		compatible = "operating-points-v2";
- 
- 		opp-124999998 {
-@@ -107,6 +107,12 @@
- 			no-map;
- 		};
- 
-+		/* 32 MiB reserved for ARM Trusted Firmware (BL32) */
-+		secmon_reserved_bl32: secmon@5300000 {
-+			reg = <0x0 0x05300000 0x0 0x2000000>;
-+			no-map;
-+		};
-+
- 		linux,cma {
- 			compatible = "shared-dma-pool";
- 			reusable;
-@@ -159,61 +165,6 @@
- 			status = "disabled";
- 		};
- 
--		thermal-zones {
--			cpu_thermal: cpu-thermal {
--				polling-delay = <1000>;
--				polling-delay-passive = <100>;
--				thermal-sensors = <&cpu_temp>;
--
--				trips {
--					cpu_passive: cpu-passive {
--						temperature = <85000>; /* millicelsius */
--						hysteresis = <2000>; /* millicelsius */
--						type = "passive";
--					};
--
--					cpu_hot: cpu-hot {
--						temperature = <95000>; /* millicelsius */
--						hysteresis = <2000>; /* millicelsius */
--						type = "hot";
--					};
--
--					cpu_critical: cpu-critical {
--						temperature = <110000>; /* millicelsius */
--						hysteresis = <2000>; /* millicelsius */
--						type = "critical";
--					};
--				};
--			};
--
--			ddr_thermal: ddr-thermal {
--				polling-delay = <1000>;
--				polling-delay-passive = <100>;
--				thermal-sensors = <&ddr_temp>;
--
--				trips {
--					ddr_passive: ddr-passive {
--						temperature = <85000>; /* millicelsius */
--						hysteresis = <2000>; /* millicelsius */
--						type = "passive";
--					};
--
--					ddr_critical: ddr-critical {
--						temperature = <110000>; /* millicelsius */
--						hysteresis = <2000>; /* millicelsius */
--						type = "critical";
--					};
--				};
--
--				cooling-maps {
--					map {
--						trip = <&ddr_passive>;
--						cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
--					};
--				};
--			};
--		};
--
- 		ethmac: ethernet@ff3f0000 {
- 			compatible = "amlogic,meson-g12a-dwmac",
- 				     "snps,dwmac-3.70a",
-@@ -894,6 +845,22 @@
- 						};
- 					};
- 
-+					pwm_f_z_pins: pwm-f-z {
-+						mux {
-+							groups = "pwm_f_z";
-+							function = "pwm_f";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_f_a_pins: pwm-f-a {
-+						mux {
-+							groups = "pwm_f_a";
-+							function = "pwm_f";
-+							bias-disable;
-+						};
-+					};
-+
- 					pwm_f_x_pins: pwm-f-x {
- 						mux {
- 							groups = "pwm_f_x";
-@@ -1738,6 +1705,12 @@
- 			};
- 		};
- 
-+		pmu: pmu@ff638000 {
-+			reg = <0x0 0xff638000 0x0 0x100>,
-+			      <0x0 0xff638c00 0x0 0x100>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_EDGE_RISING>;
-+		};
-+
- 		aobus: bus@ff800000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xff800000 0x0 0x100000>;
-@@ -1936,6 +1909,33 @@
- 						};
- 					};
- 
-+					uart_ao_b_2_3_pins: uart-ao-b-2-3 {
-+						mux {
-+							groups = "uart_ao_b_tx_2",
-+								 "uart_ao_b_rx_3";
-+							function = "uart_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_ao_b_8_9_pins: uart-ao-b-8-9 {
-+						mux {
-+							groups = "uart_ao_b_tx_8",
-+								 "uart_ao_b_rx_9";
-+							function = "uart_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					uart_ao_b_cts_rts_pins: uart-ao-b-cts-rts {
-+						mux {
-+							groups = "uart_ao_b_cts",
-+								 "uart_ao_b_rts";
-+							function = "uart_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
- 					pwm_a_e_pins: pwm-a-e {
- 						mux {
- 							groups = "pwm_a_e";
-@@ -2415,6 +2415,61 @@
- 		};
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal: cpu-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <100>;
-+			thermal-sensors = <&cpu_temp>;
-+
-+			trips {
-+				cpu_passive: cpu-passive {
-+					temperature = <85000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+
-+				cpu_hot: cpu-hot {
-+					temperature = <95000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "hot";
-+				};
-+
-+				cpu_critical: cpu-critical {
-+					temperature = <110000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		ddr_thermal: ddr-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <100>;
-+			thermal-sensors = <&ddr_temp>;
-+
-+			trips {
-+				ddr_passive: ddr-passive {
-+					temperature = <85000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+
-+				ddr_critical: ddr-critical {
-+					temperature = <110000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map {
-+					trip = <&ddr_passive>;
-+					cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
-diff --git a/arch/arm/dts/meson-g12a.dtsi b/arch/arm/dts/meson-g12a.dtsi
-index fb0ab27d1f..7677764eee 100644
---- a/arch/arm/dts/meson-g12a.dtsi
-+++ b/arch/arm/dts/meson-g12a.dtsi
-@@ -50,6 +50,7 @@
- 
- 		l2: l2-cache0 {
- 			compatible = "cache";
-+			cache-level = <2>;
- 		};
- 	};
- 
-@@ -133,3 +134,7 @@
- 		};
- 	};
- };
-+
-+&pmu {
-+	compatible = "amlogic,g12a-ddr-pmu";
-+};
-diff --git a/arch/arm/dts/meson-g12b-odroid-go-ultra.dts b/arch/arm/dts/meson-g12b-odroid-go-ultra.dts
+diff --git a/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi b/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
 new file mode 100644
-index 0000000000..1e40709610
+index 0000000000..00852f5e54
 --- /dev/null
-+++ b/arch/arm/dts/meson-g12b-odroid-go-ultra.dts
-@@ -0,0 +1,722 @@
++++ b/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
+@@ -0,0 +1,16 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
-+ * Copyright (c) 2022 Neil Armstrong <neil.armstrong@linaro.org>
++ * Copyright (c) 2023 Neil Armstrong <neil.armstrong@linaro.org>
 + */
 +
-+/dts-v1/;
++#include "meson-g12-common-u-boot.dtsi"
 +
-+#include "meson-g12b-s922x.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-toacodec.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
-+
-+/ {
-+	compatible = "hardkernel,odroid-go-ultra", "amlogic,s922x", "amlogic,g12b";
-+	model = "Hardkernel ODROID-GO-Ultra";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		rtc0 = &vrtc;
-+	};
-+
-+	adc-joystick-left {
-+		compatible = "adc-joystick";
-+		io-channels = <&saradc 2>, <&saradc 3>;
-+		poll-interval = <10>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		axis@0 {
-+			reg = <0>;
-+			linux,code = <ABS_Y>;
-+			abs-range = <3150 950>;
-+			abs-fuzz = <32>;
-+			abs-flat = <64>;
-+		};
-+		axis@1 {
-+			reg = <1>;
-+			linux,code = <ABS_X>;
-+			abs-range = <700 2900>;
-+			abs-fuzz = <32>;
-+			abs-flat = <64>;
-+		};
-+	};
-+
-+	adc-joystick-right {
-+		compatible = "adc-joystick";
-+		io-channels = <&saradc 0>, <&saradc 1>;
-+		poll-interval = <10>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		axis@0 {
-+			reg = <0>;
-+			linux,code = <ABS_RY>;
-+			abs-range = <3150 950>;
-+			abs-fuzz = <32>;
-+			abs-flat = <64>;
-+		};
-+		axis@1 {
-+			reg = <1>;
-+			linux,code = <ABS_RX>;
-+			abs-range = <800 3000>;
-+			abs-fuzz = <32>;
-+			abs-flat = <64>;
-+		};
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	codec_clk: codec-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <12288000>;
-+		clock-output-names = "codec_clk";
-+		#clock-cells = <0>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <10>;
-+		pinctrl-0 = <&keypad_gpio_pins>;
-+		pinctrl-names = "default";
-+
-+		volume-up-button {
-+			label = "VOLUME-UP";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&gpio GPIOX_8 GPIO_ACTIVE_LOW>;
-+		};
-+		volume-down-button {
-+			label = "VOLUME-DOWN";
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			gpios = <&gpio GPIOX_9 GPIO_ACTIVE_LOW>;
-+		};
-+		dpad-up-button {
-+			label = "DPAD-UP";
-+			linux,code = <BTN_DPAD_UP>;
-+			gpios = <&gpio GPIOX_0 GPIO_ACTIVE_LOW>;
-+		};
-+		dpad-down-button {
-+			label = "DPAD-DOWN";
-+			linux,code = <BTN_DPAD_DOWN>;
-+			gpios = <&gpio GPIOX_1 GPIO_ACTIVE_LOW>;
-+		};
-+		dpad-left-button {
-+			label = "DPAD-LEFT";
-+			linux,code = <BTN_DPAD_LEFT>;
-+			gpios = <&gpio GPIOX_2 GPIO_ACTIVE_LOW>;
-+		};
-+		dpad-right-button {
-+			label = "DPAD-RIGHT";
-+			linux,code = <BTN_DPAD_RIGHT>;
-+			gpios = <&gpio GPIOX_3 GPIO_ACTIVE_LOW>;
-+		};
-+		a-button {
-+			label = "A";
-+			linux,code = <BTN_EAST>;
-+			gpios = <&gpio GPIOX_4 GPIO_ACTIVE_LOW>;
-+		};
-+		b-button {
-+			label = "B";
-+			linux,code = <BTN_SOUTH>;
-+			gpios = <&gpio GPIOX_5 GPIO_ACTIVE_LOW>;
-+		};
-+		y-button {
-+			label = "Y";
-+			linux,code = <BTN_WEST>;
-+			gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		};
-+		x-button {
-+			label = "X";
-+			linux,code = <BTN_NORTH>;
-+			gpios = <&gpio GPIOX_7 GPIO_ACTIVE_LOW>;
-+		};
-+		f1-button {
-+			label = "F1";
-+			linux,code = <BTN_TRIGGER_HAPPY1>;
-+			gpios = <&gpio GPIOX_17 GPIO_ACTIVE_LOW>;
-+		};
-+		f2-button {
-+			label = "F2";
-+			linux,code = <BTN_TRIGGER_HAPPY2>;
-+			gpios = <&gpio GPIOX_10 GPIO_ACTIVE_LOW>;
-+		};
-+		f3-button {
-+			label = "F3";
-+			linux,code = <BTN_TRIGGER_HAPPY3>;
-+			gpios = <&gpio GPIOX_11 GPIO_ACTIVE_LOW>;
-+		};
-+		f4-button {
-+			label = "F4";
-+			linux,code = <BTN_TRIGGER_HAPPY4>;
-+			gpios = <&gpio GPIOX_12 GPIO_ACTIVE_LOW>;
-+		};
-+		f5-button {
-+			label = "F5";
-+			linux,code = <BTN_TRIGGER_HAPPY5>;
-+			gpios = <&gpio GPIOX_13 GPIO_ACTIVE_LOW>;
-+		};
-+		f6-button {
-+			label = "F6";
-+			linux,code = <BTN_TRIGGER_HAPPY6>;
-+			gpios = <&gpio GPIOX_16 GPIO_ACTIVE_LOW>;
-+		};
-+		top-left-button {
-+			label = "TOP Left";
-+			linux,code = <BTN_TL>;
-+			gpios = <&gpio GPIOX_14 GPIO_ACTIVE_LOW>;
-+		};
-+		top-left2-button {
-+			label = "TOP Left 2";
-+			linux,code = <BTN_TL2>;
-+			gpios = <&gpio GPIOX_19 GPIO_ACTIVE_LOW>;
-+		};
-+		top-right-button {
-+			label = "TOP Right";
-+			linux,code = <BTN_TR>;
-+			gpios = <&gpio GPIOX_15 GPIO_ACTIVE_LOW>;
-+		};
-+		top-right2-button {
-+			label = "TOP Right 2";
-+			linux,code = <BTN_TR2>;
-+			gpios = <&gpio GPIOX_18 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&gpio_ao GPIOAO_11 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	vdd_sys: regulator-vdd-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDD_SYS";
-+		regulator-min-microvolt = <3800000>;
-+		regulator-max-microvolt = <3800000>;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "Odroid GO Ultra";
-+		audio-widgets = "Microphone", "Mic Jack",
-+				"Headphone", "Headphones",
-+				"Speaker", "Internal Speakers";
-+		audio-aux-devs = <&tdmout_b>, <&tdmin_b>, <&speaker_amp>;
-+		audio-routing =	"TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT",
-+				"TDMIN_B IN 1", "TDM_B Capture",
-+				"TDMIN_B IN 4", "TDM_B Loopback",
-+				"TODDR_A IN 1", "TDMIN_B OUT",
-+				"MICL", "Mic Jack",
-+				"Headphones", "HPOL",
-+				"Headphones", "HPOR",
-+				"Speaker Amplifier INL", "HPOL",
-+				"Speaker Amplifier INR", "HPOR",
-+				"Internal Speakers", "Speaker Amplifier OUTL",
-+				"Internal Speakers", "Speaker Amplifier OUTR";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&toddr_a>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&rk817>;
-+			};
-+		};
-+	};
-+
-+	speaker_amp: speaker-amplifier {
-+		compatible = "simple-audio-amplifier";
-+		sound-name-prefix = "Speaker Amplifier";
-+		VCC-supply = <&hp_5v>;
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vddcpu_b>;
-+	operating-points-v2 = <&cpu_opp_table_0>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu_b>;
-+	operating-points-v2 = <&cpu_opp_table_0>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu100 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu101 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu102 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu103 {
-+	cpu-supply = <&vddcpu_a>;
-+	operating-points-v2 = <&cpub_opp_table_1>;
-+	clocks = <&clkc CLKID_CPUB_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+/* RK817 only supports 12.5mV steps, round up the values */
-+&cpu_opp_table_0 {
-+	opp-1000000000 {
-+		opp-microvolt = <737500>;
-+	};
-+	opp-1200000000 {
-+		opp-microvolt = <737500>;
-+	};
-+	opp-1398000000 {
-+		opp-microvolt = <762500>;
-+	};
-+	opp-1512000000 {
-+		opp-microvolt = <800000>;
-+	};
-+	opp-1608000000 {
-+		opp-microvolt = <837500>;
-+	};
-+	opp-1704000000 {
-+		opp-microvolt = <862500>;
-+	};
-+	opp-1896000000 {
-+		opp-microvolt = <987500>;
-+	};
-+	opp-1992000000 {
-+		opp-microvolt = <1012500>;
-+	};
-+};
-+
-+/* RK818 only supports 12.5mV steps, round up the values */
-+&cpub_opp_table_1 {
-+	opp-1000000000 {
-+		opp-microvolt = <775000>;
-+	};
-+	opp-1200000000 {
-+		opp-microvolt = <775000>;
-+	};
-+	opp-1398000000 {
-+		opp-microvolt = <800000>;
-+	};
-+	opp-1512000000 {
-+		opp-microvolt = <825000>;
-+	};
-+	opp-1608000000 {
-+		opp-microvolt = <862500>;
-+	};
-+	opp-1704000000 {
-+		opp-microvolt = <900000>;
-+	};
-+	opp-1800000000 {
-+		opp-microvolt = <987500>;
-+	};
-+	opp-1908000000 {
-+		opp-microvolt = <1025000>;
-+	};
-+};
-+
-+&i2c_AO {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
-+	pinctrl-names = "default";
-+
-+	rk818: pmic@1c {
-+		compatible = "rockchip,rk818";
-+		reg = <0x1c>;
-+		interrupt-parent = <&gpio_intc>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>; /* GPIOAO_7 */
-+
-+		vcc1-supply = <&vdd_sys>;
-+		vcc2-supply = <&vdd_sys>;
-+		vcc3-supply = <&vdd_sys>;
-+		vcc4-supply = <&vdd_sys>;
-+		vcc6-supply = <&vdd_sys>;
-+		vcc7-supply = <&vcc_2v3>;
-+		vcc8-supply = <&vcc_2v3>;
-+		vcc9-supply = <&vddao_3v3>;
-+		boost-supply = <&vdd_sys>;
-+		switch-supply = <&vdd_sys>;
-+
-+		regulators {
-+			vddcpu_a: DCDC_REG1 {
-+				regulator-name = "vddcpu_a";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <775000>;
-+				regulator-max-microvolt = <1025000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <775000>;
-+				};
-+			};
-+
-+			vdd_ee: DCDC_REG2 {
-+				regulator-name = "vdd_ee";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <875000>;
-+				regulator-max-microvolt = <1250000>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <875000>;
-+				};
-+			};
-+
-+			vddq_1v1: DCDC_REG3 {
-+				regulator-name = "vddq_1v1";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vddao_3v3: DCDC_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vddao_3v3";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			hp_5v: DCDC_BOOST {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "hp_5v";
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5000000>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vddio_ao1v8: LDO_REG5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vddio_ao1v8";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vddq_1v8: LDO_REG7 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vddq_1v8";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vddio_c: LDO_REG9 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vddio_c";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vcc_sd: SWITCH_REG {
-+				regulator-name = "vcc_sd";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			OTG_SWITCH {
-+				regulator-name = "otg_switch";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
-+	pinctrl-names = "default";
-+
-+	rk817: pmic@20 {
-+		compatible = "rockchip,rk817";
-+		reg = <0x20>;
-+		interrupt-parent = <&gpio_intc>;
-+
-+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>; /* GPIOAO_5 */
-+
-+		vcc1-supply = <&vdd_sys>;
-+		vcc2-supply = <&vdd_sys>;
-+		vcc3-supply = <&vdd_sys>;
-+		vcc4-supply = <&vdd_sys>;
-+		vcc5-supply = <&vdd_sys>;
-+		vcc6-supply = <&vdd_sys>;
-+		vcc7-supply = <&vdd_sys>;
-+		vcc8-supply = <&vdd_sys>;
-+		vcc9-supply = <&rk817_boost>;
-+
-+		#sound-dai-cells = <0>;
-+		clocks = <&codec_clk>;
-+		clock-names = "mclk";
-+
-+		#clock-cells = <1>;
-+
-+		regulators {
-+			vddcpu_b: DCDC_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <737500>;
-+				regulator-max-microvolt = <1012500>;
-+				regulator-ramp-delay = <6001>;
-+				regulator-initial-mode = <0x2>;
-+				regulator-name = "vddcpu_b";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1000000>;
-+				};
-+			};
-+
-+			vcc_2v3: DCDC_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <2300000>;
-+				regulator-max-microvolt = <2400000>;
-+				regulator-initial-mode = <0x2>;
-+				regulator-name = "vcc_2v3";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			LDO_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vdd_codec";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_lcd: LDO_REG8 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_lcd";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			rk817_boost: BOOST {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5400000>;
-+				regulator-name = "rk817_boost";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			usb_host: OTG_SWITCH {
-+				regulator-name = "usb_host";
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5000000>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&clkc_audio {
-+	status = "okay";
-+};
-+
-+&eth_phy {
-+	status = "disabled";
-+};
-+
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&periphs_pinctrl {
-+	keypad_gpio_pins: keypad-gpio {
-+		mux {
-+			groups = "GPIOX_0", "GPIOX_1", "GPIOX_2", "GPIOX_3",
-+			         "GPIOX_4", "GPIOX_5", "GPIOX_6", "GPIOX_7",
-+				 "GPIOX_8", "GPIOX_9", "GPIOX_10", "GPIOX_11",
-+				 "GPIOX_12", "GPIOX_13", "GPIOX_14",  "GPIOX_15",
-+				 "GPIOX_16", "GPIOX_17", "GPIOX_18",  "GPIOX_19";
-+			function = "gpio_periphs";
-+			bias-pull-up;
-+			output-disable;
-+		};
-+	};
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao1v8>;
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_c_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vddio_c>;
-+
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_ctrl_pins>, <&emmc_data_8b_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vddio_ao1v8>;
-+};
-+
-+
-+&tdmif_b {
-+	pinctrl-0 = <&tdm_b_dout0_pins>, <&tdm_b_fs_pins>, <&tdm_b_sclk_pins>, <&tdm_b_din1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	assigned-clocks = <&clkc_audio AUD_CLKID_TDM_SCLK_PAD1>,
-+			  <&clkc_audio AUD_CLKID_TDM_LRCLK_PAD1>;
-+	assigned-clock-parents = <&clkc_audio AUD_CLKID_MST_B_SCLK>,
-+				 <&clkc_audio AUD_CLKID_MST_B_LRCLK>;
-+	assigned-clock-rates = <0>, <0>;
-+};
-+
-+&tdmin_b {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&toddr_a {
-+	status = "okay";
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb {
-+	status = "okay";
-+	dr_mode = "peripheral";
-+};
-+
-+&usb2_phy0 {
-+	status = "okay";
-+};
++/* RK817/818 BOOST regulator aren't supported yet, so remove phandles from PHY nodes */
 +
 +&usb2_phy1 {
-+	status = "okay";
-+	phy-supply = <&usb_host>;
-+};
-diff --git a/arch/arm/dts/meson-g12b.dtsi b/arch/arm/dts/meson-g12b.dtsi
-index ee8fcae9f9..75ff00fb2e 100644
---- a/arch/arm/dts/meson-g12b.dtsi
-+++ b/arch/arm/dts/meson-g12b.dtsi
-@@ -105,6 +105,7 @@
- 
- 		l2: l2-cache0 {
- 			compatible = "cache";
-+			cache-level = <2>;
- 		};
- 	};
- };
-@@ -139,3 +140,7 @@
- &mali {
- 	dma-coherent;
- };
-+
-+&pmu {
-+	compatible = "amlogic,g12b-ddr-pmu";
-+};
-diff --git a/arch/arm/dts/meson-sm1.dtsi b/arch/arm/dts/meson-sm1.dtsi
-index 3d8b1f4f20..56ca0ba224 100644
---- a/arch/arm/dts/meson-sm1.dtsi
-+++ b/arch/arm/dts/meson-sm1.dtsi
-@@ -88,6 +88,7 @@
- 
- 		l2: l2-cache0 {
- 			compatible = "cache";
-+			cache-level = <2>;
- 		};
- 	};
- 
-@@ -95,26 +96,6 @@
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp-100000000 {
--			opp-hz = /bits/ 64 <100000000>;
--			opp-microvolt = <730000>;
--		};
--
--		opp-250000000 {
--			opp-hz = /bits/ 64 <250000000>;
--			opp-microvolt = <730000>;
--		};
--
--		opp-500000000 {
--			opp-hz = /bits/ 64 <500000000>;
--			opp-microvolt = <730000>;
--		};
--
--		opp-667000000 {
--			opp-hz = /bits/ 64 <666666666>;
--			opp-microvolt = <750000>;
--		};
--
- 		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <770000>;
-@@ -356,6 +337,33 @@
- 			status = "disabled";
- 		};
- 
-+		spdifin: audio-controller@400 {
-+			compatible = "amlogic,g12a-spdifin",
-+				     "amlogic,axg-spdifin";
-+			reg = <0x0 0x400 0x0 0x30>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SPDIFIN";
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
-+			<&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
-+			clock-names = "pclk", "refclk";
-+			resets = <&clkc_audio AUD_RESET_SPDIFIN>;
-+			status = "disabled";
-+		};
-+
-+		spdifout_a: audio-controller@480 {
-+			compatible = "amlogic,g12a-spdifout",
-+				     "amlogic,axg-spdifout";
-+			reg = <0x0 0x480 0x0 0x50>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SPDIFOUT_A";
-+			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
-+			<&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
-+			clock-names = "pclk", "mclk";
-+			resets = <&clkc_audio AUD_RESET_SPDIFOUT>;
-+			status = "disabled";
-+		};
-+
- 		tdmout_a: audio-controller@500 {
- 			compatible = "amlogic,sm1-tdmout";
- 			reg = <0x0 0x500 0x0 0x40>;
-@@ -513,6 +521,10 @@
- 	power-domains = <&pwrc PWRC_SM1_PCIE_ID>;
- };
- 
-+&pmu {
-+	compatible = "amlogic,sm1-ddr-pmu";
++	/delete-property/ phy-supply;
 +};
 +
- &pwrc {
- 	compatible = "amlogic,meson-sm1-pwrc";
- };
++&usb3_pcie_phy {
++	/delete-property/ phy-supply;
++};
+diff --git a/configs/odroid-go-ultra_defconfig b/configs/odroid-go-ultra_defconfig
+new file mode 100644
+index 0000000000..a4d349fba4
+--- /dev/null
++++ b/configs/odroid-go-ultra_defconfig
+@@ -0,0 +1,70 @@
++CONFIG_ARM=y
++CONFIG_SYS_BOARD="w400"
++CONFIG_ARCH_MESON=y
++CONFIG_TEXT_BASE=0x01000000
++CONFIG_NR_DRAM_BANKS=1
++CONFIG_ENV_SIZE=0x2000
++CONFIG_DM_GPIO=y
++CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-odroid-go-ultra"
++CONFIG_MESON_G12A=y
++CONFIG_DEBUG_UART_BASE=0xff803000
++CONFIG_DEBUG_UART_CLOCK=24000000
++CONFIG_IDENT_STRING=" odroid-go-ultra"
++CONFIG_SYS_LOAD_ADDR=0x1000000
++CONFIG_DEBUG_UART=y
++CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
++CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
++CONFIG_REMAKE_ELF=y
++CONFIG_OF_BOARD_SETUP=y
++# CONFIG_DISPLAY_CPUINFO is not set
++CONFIG_MISC_INIT_R=y
++CONFIG_SYS_MAXARGS=32
++# CONFIG_CMD_BDI is not set
++# CONFIG_CMD_IMI is not set
++CONFIG_CMD_GPIO=y
++# CONFIG_CMD_LOADS is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_USB=y
++CONFIG_CMD_USB_MASS_STORAGE=y
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_REGULATOR=y
++CONFIG_OF_CONTROL=y
++CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_ADC=y
++CONFIG_SARADC_MESON=y
++CONFIG_BUTTON=y
++CONFIG_BUTTON_ADC=y
++CONFIG_BUTTON_GPIO=y
++CONFIG_DM_I2C=y
++CONFIG_SYS_I2C_MESON=y
++CONFIG_MMC_MESON_GX=y
++CONFIG_MESON_G12A_USB_PHY=y
++CONFIG_PINCTRL=y
++CONFIG_PINCTRL_MESON_G12A=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_EE_POWER_DOMAIN=y
++CONFIG_DM_PMIC=y
++CONFIG_PMIC_RK8XX=y
++CONFIG_DM_REGULATOR=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_REGULATOR_GPIO=y
++CONFIG_DM_RESET=y
++CONFIG_REGULATOR_RK8XX=y
++CONFIG_DEBUG_UART_ANNOUNCE=y
++CONFIG_DEBUG_UART_SKIP_INIT=y
++CONFIG_MESON_SERIAL=y
++CONFIG_SYSINFO=y
++CONFIG_SYSINFO_SMBIOS=y
++CONFIG_USB=y
++CONFIG_USB_XHCI_HCD=y
++CONFIG_USB_XHCI_DWC3=y
++CONFIG_USB_DWC3=y
++# CONFIG_USB_DWC3_GADGET is not set
++CONFIG_USB_DWC3_MESON_G12A=y
++CONFIG_USB_GADGET=y
++CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
++CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
++CONFIG_USB_GADGET_DWC2_OTG=y
++CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
++CONFIG_USB_GADGET_DOWNLOAD=y
++CONFIG_OF_LIBFDT_OVERLAY=y
+diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+index 4d407f9362..11443d9f2c 100644
+--- a/doc/board/amlogic/index.rst
++++ b/doc/board/amlogic/index.rst
+@@ -19,7 +19,8 @@ This matrix concerns the actual source code version.
+ |                               | Nanopi-K2 | Khadas-VIM      | Libretech-PC | JetHub J100 | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
+ |                               | P200      | LibreTech-CC v1 | WeTek Core2  |             | Radxa Zero | GT-King/Pro | Odroid-C4    |
+ |                               | P201      | LibreTech-AC v2 |              |             |            | GSKing-X    | Odroid-HC4   |
+-|                               |           | JetHub J80      |              |             |            |             | BananaPi-M5  |
++|                               |           | JetHub J80      |              |             |            | Odroid-Go-  | BananaPi-M5  |
++|                               |           |                 |              |             |            | Ultra       |              |
+ +-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+ | UART                          | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
+ +-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
+@@ -105,6 +106,7 @@ Board Documentation
+    odroid-c2
+    odroid-c4
+    odroid-n2
++   odroid-go-ultra
+    p200
+    p201
+    p212
+diff --git a/doc/board/amlogic/odroid-go-ultra.rst b/doc/board/amlogic/odroid-go-ultra.rst
+new file mode 100644
+index 0000000000..8df9e0cb79
+--- /dev/null
++++ b/doc/board/amlogic/odroid-go-ultra.rst
+@@ -0,0 +1,34 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++U-Boot for ODROID-GO-ULTRA
++==========================
++
++The Odroid Go Ultra is a portable gaming device with the following
++characteristics:
++
++ - Amlogic S922X SoC
++ - RK817 & RK818 PMICs
++ - 2GiB LPDDR4
++ - On board 16GiB eMMC
++ - Micro SD Card slot
++ - 5inch 854×480 MIPI-DSI TFT LCD
++ - Earphone stereo jack, 0.5Watt 8Ω Mono speaker
++ - Li-Polymer 3.7V/4000mAh Battery
++ - USB-A 2.0 Host Connector
++ - x16 GPIO Input Buttons
++ - 2x ADC Analog Joysticks
++ - USB-C Port for USB2 Device and Charging
++
++U-Boot compilation
++------------------
++
++.. code-block:: bash
++
++    $ export CROSS_COMPILE=aarch64-none-elf-
++    $ make odroid-go-ultra_defconfig
++    $ make
++
++Image creation
++--------------
++
++Pleaser refer to :doc:`pre-generated-fip` with codename `odroid-go-ultra`
 
 -- 
 2.34.1
