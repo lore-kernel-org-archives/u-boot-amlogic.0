@@ -1,53 +1,63 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web11.77195.1674228083624674687
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web11.10547.1674548707810555155
  for <u-boot-amlogic@groups.io>;
- Fri, 20 Jan 2023 07:21:51 -0800
-Received: by mail-wm1-f46.google.com with SMTP id m15so4357319wms.4
-        for <u-boot-amlogic@groups.io>; Fri, 20 Jan 2023 07:21:50 -0800 (PST)
+ Tue, 24 Jan 2023 00:25:08 -0800
+Received: by mail-wm1-f49.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so12246897wma.1
+        for <u-boot-amlogic@groups.io>; Tue, 24 Jan 2023 00:25:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5cIHJ6UqvM8K7IzPsVK8Dwhicid852Dhm5f0U37LQ8w=;
-        b=nXN1FvuOkq0tyT1uxGrA7gpDh6+qOvhwQ7ITQCOyqimD1G/zMbBJmynNoQda+DIqBZ
-         FD8ka4L15HBC7QNcv9VaC6gbvim5aYAX5hcTNYxrJ6GFPDcNgXoXmlEKEQHEU5T8Zkal
-         /Hb980/oPDaOrHJOgqAWHoRSxfAuJLeEkYjjVjJKVyCk1nU0+xgaHPplJ0TwycyfeFqI
-         n5HaT+wI0vuQeEsQbBVg8m7U0eo0Q8+c9zWhaMy2aI9YLBva1l7F8NH8jyxeqas8pPe2
-         gFwhy0hQsTSGJnrEhikpBNzgMqdAPfBKcO7xjN6o2RP6bMAjC/KjiACqCovuc4Riy1T4
-         TS9g==
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Iq7drxR/iPXEJkTtiiQsWawwEBC/FB4dJO2krGtIa6c=;
+        b=ClehyN0zCwnQZRHlbkQuObBxEn76JFoKdaOEqmuxsFG9BvNdQHGJTs+q7UNZzbJpNv
+         8rf+pT0CXrWxhv8hm04gLXt0YqJTv6Lx1cYLnK22QOC7G/IYFtN0Tgo9ALaFxCyhL5mk
+         kuADcGhwVDeT1ka96MPQvXlFV/TuML1Rq2ROrZraP7wbdbuBKJvVaEJRbDVvGL2iWvWR
+         JFwTuEeYTf925W0fYLoEFENAV+rdISOWD9BwWtwoegsQM9O8jsIMa/Gv96+aw0VULKxH
+         I9m8LbrAHD+hnAu9bDhGXUCuIJzaZzxYlKdPzVSNG402aVhfhro61e+GTBXX2luXt5QV
+         01pw==
 Return-Path: <neil.armstrong@linaro.org>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20230117-u-boot-usb-gxl-otg-dm-v1-0-2853f6d75b06@linaro.org>
-References: <20230117-u-boot-usb-gxl-otg-dm-v1-0-2853f6d75b06@linaro.org>
-Subject: Re: [PATCH 0/2] mach-meson: port GXL & AXG dwc2_otg usage to CONFIG_DM_USB_GADGET=y
-Message-Id: <167422810944.1545782.3812840441174387290.b4-ty@linaro.org>
-Date: Fri, 20 Jan 2023 16:21:49 +0100
+In-Reply-To: <20230119-u-boot-odroid-go-ultra-v1-0-f96bab9db396@linaro.org>
+References: <20230119-u-boot-odroid-go-ultra-v1-0-f96bab9db396@linaro.org>
+Subject: Re: [PATCH 0/2] ARM: arch-meson: add support for Odroid Go Ultra
+Message-Id: <167454870559.2974637.16320055978262936528.b4-ty@linaro.org>
+Date: Tue, 24 Jan 2023 09:25:05 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: Marek Vasut <marex@denx.de>, Vyacheslav Bocharov <adeep@lexina.in>, Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Content-Transfer-Encoding: 8bit
+To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
 Hi,
 
-On Tue, 17 Jan 2023 10:11:45 +0100, Neil Armstrong wrote:
-> This is the port of Mattijs work at [1] for G12A over GXL & AXG.
+On Thu, 19 Jan 2023 14:44:17 +0100, Neil Armstrong wrote:
+> This adds initial support for the Hardkernel Odroid Go Ultra.
 > 
-> It uses the same design and should work as-is, it still needs to be
-> be extensively tested over the main GXL & AXG boards.
-> 
-> [1] https://lore.kernel.org/all/20221024-meson-dm-usb-v1-0-2ab077a503b9@baylibre.com/
+> The Odroid Go Ultra is a portable gaming device with the following
+> characteristics:
+> - Amlogic S922X SoC
+> - RK817 & RK818 PMICs
+> - 2GiB LPDDR4
+> - On board 16GiB eMMC
+> - Micro SD Card slot
+> - 5inch 854×480 MIPI-DSI TFT LCD
+> - Earphone stereo jack, 0.5Watt 8Ω Mono speaker
+> - Li-Polymer 3.7V/4000mAh Battery
+> - USB-A 2.0 Host Connector
+> - x16 GPIO Input Buttons
+> - 2x ADC Analog Joysticks
+> - USB-C Port for USB2 Device and Charging
 > 
 > [...]
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-test)
 
-[1/2] usb: dwc3-meson-gxl: force mode on child add/removal
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/043a9674b64741e02b99e9c5ad2e4ee5a1c841d5
-[2/2] ARM: meson: switch AXG & GX dwc2 otg to DM
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/e327e2affd302b7fd15b655624fdacb2f0492eab
+[1/2] ARM: dts: sync Amlogic ARM64 DT from v6.2-rc1
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/2acbc33b3d19128cb673a980116e9e33fbc5161f
+[2/2] ARM: meson: add support for Odroid Go Ultra
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/640192d04f9c4003959c967d11b2f98c3756c451
 
 -- 
 Neil
+
