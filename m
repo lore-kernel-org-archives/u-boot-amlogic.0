@@ -1,63 +1,72 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.10547.1674548707810555155
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web10.70096.1674726514737733847
  for <u-boot-amlogic@groups.io>;
- Tue, 24 Jan 2023 00:25:08 -0800
-Received: by mail-wm1-f49.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so12246897wma.1
-        for <u-boot-amlogic@groups.io>; Tue, 24 Jan 2023 00:25:07 -0800 (PST)
+ Thu, 26 Jan 2023 01:48:38 -0800
+Received: by mail-wm1-f44.google.com with SMTP id o17-20020a05600c511100b003db021ef437so725367wms.4
+        for <u-boot-amlogic@groups.io>; Thu, 26 Jan 2023 01:48:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Iq7drxR/iPXEJkTtiiQsWawwEBC/FB4dJO2krGtIa6c=;
-        b=ClehyN0zCwnQZRHlbkQuObBxEn76JFoKdaOEqmuxsFG9BvNdQHGJTs+q7UNZzbJpNv
-         8rf+pT0CXrWxhv8hm04gLXt0YqJTv6Lx1cYLnK22QOC7G/IYFtN0Tgo9ALaFxCyhL5mk
-         kuADcGhwVDeT1ka96MPQvXlFV/TuML1Rq2ROrZraP7wbdbuBKJvVaEJRbDVvGL2iWvWR
-         JFwTuEeYTf925W0fYLoEFENAV+rdISOWD9BwWtwoegsQM9O8jsIMa/Gv96+aw0VULKxH
-         I9m8LbrAHD+hnAu9bDhGXUCuIJzaZzxYlKdPzVSNG402aVhfhro61e+GTBXX2luXt5QV
-         01pw==
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E2QdupnyyFdxIVgVbjalyK3fdtSstFzKtHOZCo+U9MM=;
+        b=ty174gPzVuyKqM+Z4DQaIFe9xLPvip9WZI/qio7087OdfvCajoPo4JiJT5zmpoMq01
+         QRSyRTrIfdT5Q0jdCtfOnJKKeCddv6/S/kXVl+QthVWdyAFaylz6r80vk4gN5/lplCk9
+         JjWOh0SE6CbImjwGCkQTs8hG5PdbiUvMALHdfUfwcIPCiEI2BGlGI1n6Zje4bfWza2Xd
+         swn4g0OW05yJG+KSgIwZ1CnyT6ERv3M73E17u6yIgg95zF0oKFhpqrZYUzmr8+U9kbhb
+         DnDlMg6JWlU25nSOyBZYZYfAvk/W4xIShWAuYgsnKc9TfMFjH5oX9PNuMhvwCMXVNREJ
+         aF+g==
 Return-Path: <neil.armstrong@linaro.org>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20230119-u-boot-odroid-go-ultra-v1-0-f96bab9db396@linaro.org>
-References: <20230119-u-boot-odroid-go-ultra-v1-0-f96bab9db396@linaro.org>
-Subject: Re: [PATCH 0/2] ARM: arch-meson: add support for Odroid Go Ultra
-Message-Id: <167454870559.2974637.16320055978262936528.b4-ty@linaro.org>
-Date: Tue, 24 Jan 2023 09:25:05 +0100
+Subject: [PATCH 0/2] ARM: meson: Add support for Odroid-N2L
+Date: Thu, 26 Jan 2023 10:48:19 +0100
+Message-Id: <20230126-u-boot-odroid-n2l-v1-0-c60f695e0f6c@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+ODROID-N2L is a variant SBC in small form factor and some peripherals
+are removed from ODROID-N2PLUS based on S922X SoC.
 
-On Thu, 19 Jan 2023 14:44:17 +0100, Neil Armstrong wrote:
-> This adds initial support for the Hardkernel Odroid Go Ultra.
-> 
-> The Odroid Go Ultra is a portable gaming device with the following
-> characteristics:
-> - Amlogic S922X SoC
-> - RK817 & RK818 PMICs
-> - 2GiB LPDDR4
-> - On board 16GiB eMMC
-> - Micro SD Card slot
-> - 5inch 854×480 MIPI-DSI TFT LCD
-> - Earphone stereo jack, 0.5Watt 8Ω Mono speaker
-> - Li-Polymer 3.7V/4000mAh Battery
-> - USB-A 2.0 Host Connector
-> - x16 GPIO Input Buttons
-> - 2x ADC Analog Joysticks
-> - USB-C Port for USB2 Device and Charging
-> 
-> [...]
+- On-board ethernet is removed
+- On-board RTC is removed
+- USB 3.0 hub is removed, so one USB 2.0 and one USB 3.0 host ports
+  are available
+- Huge heatsink is replaced with 40x40mm heatsink, 5V active heatsink
+  is recommended or a tall passive sink is optional
+- 3.5mm earjack is removed
+- IR remote receiver is removed
+- MIPI DSI port is added
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-test)
+Is uses Odroid-N2L support posted at [1] and merged for Linux v6.3-rc1.
 
-[1/2] ARM: dts: sync Amlogic ARM64 DT from v6.2-rc1
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/2acbc33b3d19128cb673a980116e9e33fbc5161f
-[2/2] ARM: meson: add support for Odroid Go Ultra
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/640192d04f9c4003959c967d11b2f98c3756c451
+It doesn't use the odroid-n2 board support since ADC revision
+collides with Odroid-N2+ and since it doesn't have on-board ethernet
+no need to load the MAC address from eFuses.
 
+[1] https://lore.kernel.org/all/20230122-topic-odroid-n2l-upstream-initial-v2-0-8d3fea6d403d@linaro.org/
+
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Neil Armstrong (2):
+      ARM: dts: Import Odroid-N2L support
+      ARM: meson: Add support for Odroid-N2L
+
+ arch/arm/dts/Makefile                          |   1 +
+ arch/arm/dts/meson-g12b-odroid-n2.dtsi         | 410 +----------------------
+ arch/arm/dts/meson-g12b-odroid-n2l-u-boot.dtsi |   7 +
+ arch/arm/dts/meson-g12b-odroid-n2l.dts         | 125 +++++++
+ arch/arm/dts/meson-g12b-odroid.dtsi            | 445 +++++++++++++++++++++++++
+ configs/odroid-n2l_defconfig                   |  70 ++++
+ doc/board/amlogic/index.rst                    |   2 +
+ doc/board/amlogic/odroid-n2l.rst               |  31 ++
+ 8 files changed, 693 insertions(+), 398 deletions(-)
+---
+base-commit: 640192d04f9c4003959c967d11b2f98c3756c451
+change-id: 20230126-u-boot-odroid-n2l-dc8b370b43c6
+
+Best regards,
 -- 
-Neil
+Neil Armstrong <neil.armstrong@linaro.org>
 
