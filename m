@@ -1,88 +1,151 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web11.7982.1675154983383769295
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web11.11071.1676024710271436386
  for <u-boot-amlogic@groups.io>;
- Tue, 31 Jan 2023 00:49:43 -0800
-Received: by mail-wr1-f42.google.com with SMTP id y1so13489820wru.2
-        for <u-boot-amlogic@groups.io>; Tue, 31 Jan 2023 00:49:43 -0800 (PST)
+ Fri, 10 Feb 2023 02:25:10 -0800
+Received: by mail-wm1-f42.google.com with SMTP id j32-20020a05600c1c2000b003dc4fd6e61dso5925589wms.5
+        for <u-boot-amlogic@groups.io>; Fri, 10 Feb 2023 02:25:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=18tB/IIL8IweANTyGwc4apfI5buwobJEHFpIIW7HfnY=;
-        b=yNI9H6W4yDGV9Q/FAjYaOe1Zld4a16dN+MGWb/8dhOQ8UGrYYL8BIJkRzBa3xPk5ol
-         0eQL7c0IwOrLNdjR8v0t/8YgA3hKNErRKPh4j+Q7GKWUX4IRO8qtPFFZ4oFNgRsR4ioJ
-         gh8ETsivcuPg4hPixD0XghO2oeaqUIL2vBMn9bYaCRTo0ix+T/kyjyHdipoShi63Kcz/
-         IAKZVKpnLOSNRji1E1D+4UqLiJVPhJWzSI7EwO8Oa17DOEZ0H5Ermg2F5ZTjLgY7PVFL
-         Vl8OqTUiqkVJkIzIPAge7ugmo8ob3sCsAqoH038crssLpyQS53MT35RJBOHLgdwHWq5G
-         95xQ==
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NB2/33kgEn+HQCOrg0iRaMKV5CoxKJ9F2y8Ldb2Ffxc=;
+        b=NAa2AuIvoUUGAXKFr30p6U7Vum+zBascm5Xvc8pm1xe1JlHxTFIYs5xgSy4ipAjOvV
+         +5VByVLUrEspTdoIzoMfb9Njb14OHGnxSyNvNFgo3A2yUQKb2wjVlBHQcL+MPwGfAnPu
+         FdyzemO8vHOswVUQs3Wu10oTJa2Bfm46cfvfDH1A8BeKceIwLmrJzMT9wWu/G8aUSaqb
+         q0Rf1/4Vxk8fY1oDtcWj81/UQQXfiLtaJTwtfKW8Htwtbz0H9PBRIzFgOh6B1HiTwhnG
+         FDnKTxRAaSj4DiZh5x7wAKFVqC1wfPD3x8b8LSc+vhR1djERkxy0e3Z95LLpu0jxsCHB
+         Fh4g==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <8d27bdbd-a633-9f08-1845-7333d00e49a4@linaro.org>
-Date: Tue, 31 Jan 2023 09:49:40 +0100
-MIME-Version: 1.0
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 162/171] Correct SPL uses of USB_GADGET_DWC2_OTG
-References: <20230130151612.212732-102-sjg@chromium.org>
- <20230130151612.212732-163-sjg@chromium.org>
-In-Reply-To: <20230130151612.212732-163-sjg@chromium.org>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date: Fri, 10 Feb 2023 11:25:07 +0100
+Subject: [PATCH] ARM: meson: odroid-go-ultra: setup PMIC regulators are board init
+MIME-Version: 1.0
+Message-Id: <20230210-u-boot-odroid-go-ultra-pmics-setup-v1-1-1f16d62b76af@linaro.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>, U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io
+To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-On 30/01/2023 16:16, Simon Glass wrote:
-> This converts 3 usages of this option to the non-SPL form, since there is
-> no SPL_USB_GADGET_DWC2_OTG defined in Kconfig
-> 
-> Signed-off-by: Simon Glass <sjg@chromium.org>
-> ---
-> 
->   arch/arm/mach-meson/board-axg.c  | 2 +-
->   arch/arm/mach-meson/board-g12a.c | 2 +-
->   arch/arm/mach-meson/board-gx.c   | 2 +-
->   3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/mach-meson/board-axg.c b/arch/arm/mach-meson/board-axg.c
-> index 8bcb0b3a212..4baf045d416 100644
-> --- a/arch/arm/mach-meson/board-axg.c
-> +++ b/arch/arm/mach-meson/board-axg.c
-> @@ -92,7 +92,7 @@ static struct mm_region axg_mem_map[] = {
->   struct mm_region *mem_map = axg_mem_map;
->   
->   #if IS_ENABLED(CONFIG_USB_DWC3_MESON_GXL) && \
-> -	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
-> +	IS_ENABLED(CONFIG_USB_GADGET_DWC2_OTG)
->   static struct dwc2_plat_otg_data meson_gx_dwc2_data;
->   
->   int board_usb_init(int index, enum usb_init_type init)
-> diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
-> index d9f1acdef74..46507c6a0f9 100644
-> --- a/arch/arm/mach-meson/board-g12a.c
-> +++ b/arch/arm/mach-meson/board-g12a.c
-> @@ -98,7 +98,7 @@ static struct mm_region g12a_mem_map[] = {
->   struct mm_region *mem_map = g12a_mem_map;
->   
->   #if IS_ENABLED(CONFIG_USB_DWC3_MESON_G12A) && \
-> -	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
-> +	IS_ENABLED(CONFIG_USB_GADGET_DWC2_OTG)
->   static struct dwc2_plat_otg_data meson_g12a_dwc2_data;
->   
->   int board_usb_init(int index, enum usb_init_type init)
-> diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
-> index 41f767302ec..b850460c26c 100644
-> --- a/arch/arm/mach-meson/board-gx.c
-> +++ b/arch/arm/mach-meson/board-gx.c
-> @@ -110,7 +110,7 @@ static struct mm_region gx_mem_map[] = {
->   struct mm_region *mem_map = gx_mem_map;
->   
->   #if IS_ENABLED(CONFIG_USB_DWC3_MESON_GXL) && \
-> -	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
-> +	IS_ENABLED(CONFIG_USB_GADGET_DWC2_OTG)
->   static struct dwc2_plat_otg_data meson_gx_dwc2_data;
->   
->   int board_usb_init(int index, enum usb_init_type init)
+The Odroid Go Ultra has 2 chained PMICs RK818 and RK818, and needs
+an adjustment on the BUCK and LDO values.
 
-Same as 160, this code is getting removed in This code is getting removed in the last PR I sent at https://lore.kernel.org/all/ec3802ba-6e79-5370-e41e-cd2487cd618f@linaro.org/
+Add the initial regulators values in -u-boot.dtsi & run the initial
+regulator setup in a new odroid-go-ultra board.
+
+Proper OTG and BOOST regulators are still missing to have USB-A
+host properly working.
+
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ .../arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi |  8 ++++++++
+ board/amlogic/odroid-go-ultra/MAINTAINERS          |  7 +++++++
+ board/amlogic/odroid-go-ultra/Makefile             |  5 +++++
+ board/amlogic/odroid-go-ultra/odroid-go-ultra.c    | 22 ++++++++++++++++++++++
+ configs/odroid-go-ultra_defconfig                  |  4 ++--
+ 5 files changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi b/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
+index 00852f5e54..1c0f9765eb 100644
+--- a/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
++++ b/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
+@@ -14,3 +14,11 @@
+ &usb3_pcie_phy {
+ 	/delete-property/ phy-supply;
+ };
++
++&vcc_2v3 {
++	regulator-init-microvolt = <2400000>;
++};
++
++&vdd_ee {
++	regulator-init-microvolt = <875000>;
++};
+diff --git a/board/amlogic/odroid-go-ultra/MAINTAINERS b/board/amlogic/odroid-go-ultra/MAINTAINERS
+new file mode 100644
+index 0000000000..c22951b4e7
+--- /dev/null
++++ b/board/amlogic/odroid-go-ultra/MAINTAINERS
+@@ -0,0 +1,7 @@
++ODROID-GO-ULTRA
++M:	Neil Armstrong <neil.armstrong@linaro.org>
++S:	Maintained
++L:	u-boot-amlogic@groups.io
++F:	board/amlogic/odroid-go-ultra
++F:	configs/odroid-go-ultra_defconfig
++F:	doc/board/amlogic/odroid-go-ultra.rst
+diff --git a/board/amlogic/odroid-go-ultra/Makefile b/board/amlogic/odroid-go-ultra/Makefile
+new file mode 100644
+index 0000000000..8ebaa0c215
+--- /dev/null
++++ b/board/amlogic/odroid-go-ultra/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# (C) Copyright 2023 Neil Armstrong <neil.armstrong@linaro.org>
++
++obj-y	:= odroid-go-ultra.o
+diff --git a/board/amlogic/odroid-go-ultra/odroid-go-ultra.c b/board/amlogic/odroid-go-ultra/odroid-go-ultra.c
+new file mode 100644
+index 0000000000..bbd23e20fc
+--- /dev/null
++++ b/board/amlogic/odroid-go-ultra/odroid-go-ultra.c
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2023 Neil Armstrong <neil.armstrong@linaro.org>
++ */
++
++#include <common.h>
++#include <asm/arch/boot.h>
++#include <power/regulator.h>
++
++int mmc_get_env_dev(void)
++{
++	if (meson_get_boot_device() == BOOT_DEVICE_EMMC)
++		return 1;
++	return 0;
++}
++
++int board_init(void)
++{
++	regulators_enable_boot_on(_DEBUG);
++
++	return 0;
++}
+diff --git a/configs/odroid-go-ultra_defconfig b/configs/odroid-go-ultra_defconfig
+index a4d349fba4..c71c82dd1d 100644
+--- a/configs/odroid-go-ultra_defconfig
++++ b/configs/odroid-go-ultra_defconfig
+@@ -1,5 +1,5 @@
+ CONFIG_ARM=y
+-CONFIG_SYS_BOARD="w400"
++CONFIG_SYS_BOARD="odroid-go-ultra"
+ CONFIG_ARCH_MESON=y
+ CONFIG_TEXT_BASE=0x01000000
+ CONFIG_NR_DRAM_BANKS=1
+@@ -17,7 +17,6 @@ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_REMAKE_ELF=y
+ CONFIG_OF_BOARD_SETUP=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+-CONFIG_MISC_INIT_R=y
+ CONFIG_SYS_MAXARGS=32
+ # CONFIG_CMD_BDI is not set
+ # CONFIG_CMD_IMI is not set
+@@ -27,6 +26,7 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_USB_MASS_STORAGE=y
+ # CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_PMIC=y
+ CONFIG_CMD_REGULATOR=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+
+---
+base-commit: d1f5dbe6645ad51e318dd322033fe6a08bce357b
+change-id: 20230210-u-boot-odroid-go-ultra-pmics-setup-0e79dad28de6
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
+
