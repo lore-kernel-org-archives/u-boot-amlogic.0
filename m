@@ -1,149 +1,65 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.11071.1676024710271436386
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web11.9804.1678177222457139509
  for <u-boot-amlogic@groups.io>;
- Fri, 10 Feb 2023 02:25:10 -0800
-Received: by mail-wm1-f42.google.com with SMTP id j32-20020a05600c1c2000b003dc4fd6e61dso5925589wms.5
-        for <u-boot-amlogic@groups.io>; Fri, 10 Feb 2023 02:25:09 -0800 (PST)
+ Tue, 07 Mar 2023 00:20:27 -0800
+Received: by mail-wr1-f53.google.com with SMTP id bw19so11227673wrb.13
+        for <u-boot-amlogic@groups.io>; Tue, 07 Mar 2023 00:20:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NB2/33kgEn+HQCOrg0iRaMKV5CoxKJ9F2y8Ldb2Ffxc=;
-        b=NAa2AuIvoUUGAXKFr30p6U7Vum+zBascm5Xvc8pm1xe1JlHxTFIYs5xgSy4ipAjOvV
-         +5VByVLUrEspTdoIzoMfb9Njb14OHGnxSyNvNFgo3A2yUQKb2wjVlBHQcL+MPwGfAnPu
-         FdyzemO8vHOswVUQs3Wu10oTJa2Bfm46cfvfDH1A8BeKceIwLmrJzMT9wWu/G8aUSaqb
-         q0Rf1/4Vxk8fY1oDtcWj81/UQQXfiLtaJTwtfKW8Htwtbz0H9PBRIzFgOh6B1HiTwhnG
-         FDnKTxRAaSj4DiZh5x7wAKFVqC1wfPD3x8b8LSc+vhR1djERkxy0e3Z95LLpu0jxsCHB
-         Fh4g==
+        d=linaro.org; s=google; t=1678177226;
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8IY//EFR9Naxv4UZVVC/BSwaqu/lDvK2UCnXVDE65eI=;
+        b=Zqyd+oHg3eXRUPfzj5cx2NrS89wgaR7YE2R1J10qmtG3LRVkb8YDSnQIcJoAjLJud+
+         QwHlBGdrdJlmIgejojn2Z7gWFcs4pa0DsfuQLAyFZCZs7gYeDlJdpdfKLeEOPKfkTOsY
+         JTilCCvZMXJmrwoXA/Nmr8iHv1SOdehsWo9pMbYSc5aAuB+Np5DInp+wZKX58TABtOXN
+         ZhHFop0v1dJrDwD52CmZQA1MQ5odj/1keFXXb8m0P4MowDy+2h42tauy1PpCKuW+cuyD
+         l5pzDtnhuffpm1eHUuHWVkrker0ME9tpODKaKFcP1pQdtGZNm9kXGZ/Ri8TzaWJ7lSR7
+         1wNw==
 Return-Path: <neil.armstrong@linaro.org>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Date: Fri, 10 Feb 2023 11:25:07 +0100
-Subject: [PATCH] ARM: meson: odroid-go-ultra: setup PMIC regulators are board init
+Subject: [PATCH 0/2] ARM: meson: Add initial support for BPI-CM4 module with BPI-CM4IO baseboard
+Date: Tue, 07 Mar 2023 09:20:23 +0100
+Message-Id: <20230307-u-boot-cm4-v1-0-43f5a393cd37@linaro.org>
 MIME-Version: 1.0
-Message-Id: <20230210-u-boot-odroid-go-ultra-pmics-setup-v1-1-1f16d62b76af@linaro.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Cc: Neil Armstrong <neil.armstrong@linaro.org>
+To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-The Odroid Go Ultra has 2 chained PMICs RK818 and RK818, and needs
-an adjustment on the BUCK and LDO values.
+Add support for both the BananaPi BPI-CM4 module and the BananaPi
+baseboard which is compatible with the RaspberryPi CM4IO baseboard.
+                                                                                            
+The BananaPi BPI-CM4 module follows the CM4 specifications at [1],
+but with a single HDMI port and a single DSI output.
 
-Add the initial regulators values in -u-boot.dtsi & run the initial
-regulator setup in a new odroid-go-ultra board.
+The current CM4IO baseboard DT should work fine on the Raspberry CM4
+baseboard and other derivatives baseboards, but proper DT should
+be written for other baseboards.
 
-Proper OTG and BOOST regulators are still missing to have USB-A
-host properly working.
+The DT is imported from the submission done at [2] and applied
+at [3].
+
+[1] https://datasheets.raspberrypi.com/cm4io/cm4io-datasheet.pdf
+[2] https://lore.kernel.org/all/20230303-topic-amlogic-upstream-bpi-cm4-v2-0-2ecfde76fc4d@linaro.org/
+[3] https://git.kernel.org/amlogic/c/0262f2736978b1763363224698f47112a148dab0
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- .../arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi |  8 ++++++++
- board/amlogic/odroid-go-ultra/MAINTAINERS          |  7 +++++++
- board/amlogic/odroid-go-ultra/Makefile             |  5 +++++
- board/amlogic/odroid-go-ultra/odroid-go-ultra.c    | 22 ++++++++++++++++++++++
- configs/odroid-go-ultra_defconfig                  |  4 ++--
- 5 files changed, 44 insertions(+), 2 deletions(-)
+Neil Armstrong (2):
+      ARM: dts: import initial DT for BPI-CM4 module with BPI-CM4IO baseboard
+      ARM: meson: Add initial support for BPI-CM4 module with BPI-CM4IO baseboard
 
-diff --git a/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi b/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
-index 00852f5e54..1c0f9765eb 100644
---- a/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
-+++ b/arch/arm/dts/meson-g12b-odroid-go-ultra-u-boot.dtsi
-@@ -14,3 +14,11 @@
- &usb3_pcie_phy {
- 	/delete-property/ phy-supply;
- };
-+
-+&vcc_2v3 {
-+	regulator-init-microvolt = <2400000>;
-+};
-+
-+&vdd_ee {
-+	regulator-init-microvolt = <875000>;
-+};
-diff --git a/board/amlogic/odroid-go-ultra/MAINTAINERS b/board/amlogic/odroid-go-ultra/MAINTAINERS
-new file mode 100644
-index 0000000000..c22951b4e7
---- /dev/null
-+++ b/board/amlogic/odroid-go-ultra/MAINTAINERS
-@@ -0,0 +1,7 @@
-+ODROID-GO-ULTRA
-+M:	Neil Armstrong <neil.armstrong@linaro.org>
-+S:	Maintained
-+L:	u-boot-amlogic@groups.io
-+F:	board/amlogic/odroid-go-ultra
-+F:	configs/odroid-go-ultra_defconfig
-+F:	doc/board/amlogic/odroid-go-ultra.rst
-diff --git a/board/amlogic/odroid-go-ultra/Makefile b/board/amlogic/odroid-go-ultra/Makefile
-new file mode 100644
-index 0000000000..8ebaa0c215
---- /dev/null
-+++ b/board/amlogic/odroid-go-ultra/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# (C) Copyright 2023 Neil Armstrong <neil.armstrong@linaro.org>
-+
-+obj-y	:= odroid-go-ultra.o
-diff --git a/board/amlogic/odroid-go-ultra/odroid-go-ultra.c b/board/amlogic/odroid-go-ultra/odroid-go-ultra.c
-new file mode 100644
-index 0000000000..bbd23e20fc
---- /dev/null
-+++ b/board/amlogic/odroid-go-ultra/odroid-go-ultra.c
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2023 Neil Armstrong <neil.armstrong@linaro.org>
-+ */
-+
-+#include <common.h>
-+#include <asm/arch/boot.h>
-+#include <power/regulator.h>
-+
-+int mmc_get_env_dev(void)
-+{
-+	if (meson_get_boot_device() == BOOT_DEVICE_EMMC)
-+		return 1;
-+	return 0;
-+}
-+
-+int board_init(void)
-+{
-+	regulators_enable_boot_on(_DEBUG);
-+
-+	return 0;
-+}
-diff --git a/configs/odroid-go-ultra_defconfig b/configs/odroid-go-ultra_defconfig
-index a4d349fba4..c71c82dd1d 100644
---- a/configs/odroid-go-ultra_defconfig
-+++ b/configs/odroid-go-ultra_defconfig
-@@ -1,5 +1,5 @@
- CONFIG_ARM=y
--CONFIG_SYS_BOARD="w400"
-+CONFIG_SYS_BOARD="odroid-go-ultra"
- CONFIG_ARCH_MESON=y
- CONFIG_TEXT_BASE=0x01000000
- CONFIG_NR_DRAM_BANKS=1
-@@ -17,7 +17,6 @@ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
- CONFIG_REMAKE_ELF=y
- CONFIG_OF_BOARD_SETUP=y
- # CONFIG_DISPLAY_CPUINFO is not set
--CONFIG_MISC_INIT_R=y
- CONFIG_SYS_MAXARGS=32
- # CONFIG_CMD_BDI is not set
- # CONFIG_CMD_IMI is not set
-@@ -27,6 +26,7 @@ CONFIG_CMD_MMC=y
- CONFIG_CMD_USB=y
- CONFIG_CMD_USB_MASS_STORAGE=y
- # CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_PMIC=y
- CONFIG_CMD_REGULATOR=y
- CONFIG_OF_CONTROL=y
- CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-
+ arch/arm/dts/Makefile                              |   1 +
+ .../dts/meson-g12b-bananapi-cm4-cm4io-u-boot.dtsi  |   6 +
+ arch/arm/dts/meson-g12b-bananapi-cm4-cm4io.dts     | 165 +++++++++
+ arch/arm/dts/meson-g12b-bananapi-cm4.dtsi          | 388 +++++++++++++++++++++
+ board/amlogic/u200/MAINTAINERS                     |   1 +
+ configs/bananapi-cm4-cm4io_defconfig               |  84 +++++
+ doc/board/amlogic/index.rst                        |   1 +
+ 7 files changed, 646 insertions(+)
 ---
-base-commit: d1f5dbe6645ad51e318dd322033fe6a08bce357b
-change-id: 20230210-u-boot-odroid-go-ultra-pmics-setup-0e79dad28de6
+base-commit: b08ffdffdce95e267e782366f4a77bf6b5537b28
+change-id: 20230307-u-boot-cm4-1311815d8371
 
 Best regards,
 -- 
