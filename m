@@ -1,35 +1,35 @@
 Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
- by mx.groups.io with SMTP id smtpd.web10.21371.1679245475548547060
+ by mx.groups.io with SMTP id smtpd.web10.21372.1679245478185846318
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:04:35 -0700
+ Sun, 19 Mar 2023 10:04:38 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1679245474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3dsCrBqWbtMbthUNGbLjq013Sdx5XjIlrpTS0AbRoVQ=;
+	b=AwqKiXFg5LCnSAJNviNjSLu+/35A1cHIfX8d/bzasC7W4cLEkhISY2guwec4c5D01wOwDl
+	9UVlOoR3fpGfld4UuT6iYHa+Ksxs7SZvu4CZe7AiiS7CpqZo/UAoH+AJMTONe90TRxTey/
+	UyksQOjUy//w1WZQTqp/qwPs7P+zocJ7HcAc+rwSw0yrxdgrW9tQeizCRAqHEAPe1dcOXV
+	Y3sRWKkXlXqE2luKdmbQWOtIoRqduA5Ujmgs9BNzIzFif9HPUtRJCIKM9ozCCRvrONAg5R
+	DlZe4vEzRKrof/Uh7vcz4o8RGlU1wzdDxBDUOi28iBALoTQimUyaY82R+/YbGQ==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
 	t=1679245472;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=F/g6fytIaAiqx06zSk5hva4z1hyDtxLednGctuVUSbs=;
-	b=xLHklSS1QWe9kghuc3GY04IJqGCVvV1T7mKuBnNavWRNe11Pc2s3hO3wp0UhufDNvjGIt2
-	p00HlHZJ9pqd4VWwumHAzbf7zgSP75yuzzmq+DtOtVYqEGb0SgjFkOSTSb+VYEyPRbP2dQ
-	8hR7AA/ZHTgyUM6i0g5mLMbuItawjWOwNfRW6tcYDhlmK5EqlTy8l52W+gDeMAaMVKuzW1
-	vomzXGhkDYzJ0w2z9/g1UUnMs2uG6565EQjIoTzBhglEG8/sub3278VkICB5Z5hoLz3zq6
-	fzHTTwQffN7mO2O3OyVyoV+Xk+ReDuJxoQore2l7v4xr113aeEByPOUgtOhtfw==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F/g6fytIaAiqx06zSk5hva4z1hyDtxLednGctuVUSbs=;
-	b=mEzWvphQl3xwy+PJA82FwvPLvb2lj/cABoL/8nH7HJAnQLavWP+CYqhnjALV6RUN2vHmNU
-	L0WhdmFFh+BeDqBUrrmAwgtIi62Q8y5o+IYkd2RFCJwkARs+lwyOV3ZKCtM4El3jGlimej
-	lsInjQSEQxPv9jXVXjd0BJnBN9051BSUg6EOIYNXvOKNMENIwA5udGvuLkgbKik4+FWDPX
-	zLVeyPkD4U7bbMWTxqzm8sx97jr/4T2/HhPKFBlygcR1qe9efgUq7NgQ5CcazB0EBdKORI
-	OpL2LGt7SfPDhhS36UWj6QOgVgDyVRUZEjHR38h0jFXJ9wjycNUIxYrk6pCvbg==
-Subject: [PATCH 11/41] net: phy: broadcom: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:02:47 +0100
-Message-Id: <20230319170317.27711-11-marek.vasut+renesas@mailbox.org>
+	bh=3dsCrBqWbtMbthUNGbLjq013Sdx5XjIlrpTS0AbRoVQ=;
+	b=eXMgG5QLbufy7J0Sa0RPwMXKYEre280gx/Q/YYsQ5innUvKlja1l/ejfvjSLU7r3XX2EJk
+	vvKhWjEwa9dXiV+S8IRP1InzsgtaD8CW/FTJQY+c9OqCtx5LCHQNKwLwq+eAlC3pQpQVsL
+	Qw31/CAdON/1eGjxGiY4wcnd6eIo/dQ87Y4WwEVDKPts/OjKD7L96oYkXSGse1vAEv5YDe
+	D5R9ch1vuZwWfCM6twwwfiKaW5gtLySYIG404xyisjio0Hk+huWPU4bdMAVwQJEEBdhf3U
+	CV8wgqWG3l36Xo/SoObES9K5qfS9hopjmfhA6SnuxmSseDE3SOOaut8PlFSekA==
+Subject: [PATCH 12/41] net: phy: ca_phy: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:02:48 +0100
+Message-Id: <20230319170317.27711-12-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,91 +71,70 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/broadcom.c | 18 ++++--------------
- drivers/net/phy/phy.c      |  3 ---
- include/phy.h              |  1 -
- 3 files changed, 4 insertions(+), 18 deletions(-)
+ drivers/net/phy/ca_phy.c | 11 ++---------
+ drivers/net/phy/phy.c    |  3 ---
+ include/phy.h            |  1 -
+ 3 files changed, 2 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 566fcb8de73..ea98cfcc1b5 100644
---- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -323,7 +323,7 @@ static int bcm5482_startup(struct phy_device *phydev)
- 	return bcm54xx_parse_status(phydev);
+diff --git a/drivers/net/phy/ca_phy.c b/drivers/net/phy/ca_phy.c
+index 9180a41111c..edef21867b0 100644
+--- a/drivers/net/phy/ca_phy.c
++++ b/drivers/net/phy/ca_phy.c
+@@ -104,7 +104,7 @@ static int rtl8211_probe(struct phy_device *phydev)
  }
 =20
--static struct phy_driver BCM5461S_driver =3D {
-+U_BOOT_PHY_DRIVER(bcm5461s) =3D {
- 	.name =3D "Broadcom BCM5461S",
- 	.uid =3D 0x2060c0,
- 	.mask =3D 0xfffff0,
-@@ -333,7 +333,7 @@ static struct phy_driver BCM5461S_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
+ /* Support for RTL8211 External PHY */
+-static struct phy_driver rtl8211_external_driver =3D {
++U_BOOT_PHY_DRIVER(rtl8211_external) =3D {
+ 	.name =3D "Cortina RTL8211 External",
+ 	.uid =3D PHY_ID_RTL8211_EXT,
+ 	.mask =3D PHY_ID_MASK,
+@@ -115,7 +115,7 @@ static struct phy_driver rtl8211_external_driver =3D {
  };
 =20
--static struct phy_driver BCM5464S_driver =3D {
-+U_BOOT_PHY_DRIVER(bcm5464s) =3D {
- 	.name =3D "Broadcom BCM5464S",
- 	.uid =3D 0x2060b0,
- 	.mask =3D 0xfffff0,
-@@ -343,7 +343,7 @@ static struct phy_driver BCM5464S_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver BCM5482S_driver =3D {
-+U_BOOT_PHY_DRIVER(bcm5482s) =3D {
- 	.name =3D "Broadcom BCM5482S",
- 	.uid =3D 0x143bcb0,
- 	.mask =3D 0xffffff0,
-@@ -353,7 +353,7 @@ static struct phy_driver BCM5482S_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver BCM_CYGNUS_driver =3D {
-+U_BOOT_PHY_DRIVER(bcm_cygnus) =3D {
- 	.name =3D "Broadcom CYGNUS GPHY",
- 	.uid =3D 0xae025200,
- 	.mask =3D 0xfffff0,
-@@ -362,13 +362,3 @@ static struct phy_driver BCM_CYGNUS_driver =3D {
- 	.startup =3D &bcm_cygnus_startup,
- 	.shutdown =3D &genphy_shutdown,
+ /* Support for RTL8211 Internal PHY */
+-static struct phy_driver rtl8211_internal_driver =3D {
++U_BOOT_PHY_DRIVER(rtl8211_internal) =3D {
+ 	.name =3D "Cortina RTL8211 Inrernal",
+ 	.uid =3D PHY_ID_RTL8211_INT,
+ 	.mask =3D PHY_ID_MASK,
+@@ -124,10 +124,3 @@ static struct phy_driver rtl8211_internal_driver =3D {
+ 	.probe =3D &rtl8211_probe,
+ 	.startup =3D &genphy_startup,
  };
 -
--int phy_broadcom_init(void)
+-int phy_cortina_access_init(void)
 -{
--	phy_register(&BCM5482S_driver);
--	phy_register(&BCM5464S_driver);
--	phy_register(&BCM5461S_driver);
--	phy_register(&BCM_CYGNUS_driver);
--
+-	phy_register(&rtl8211_external_driver);
+-	phy_register(&rtl8211_internal_driver);
 -	return 0;
 -}
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 7a7762377b6..4b1fed1ff6f 100644
+index 4b1fed1ff6f..4446902ab63 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
-@@ -517,9 +517,6 @@ int phy_init(void)
- #ifdef CONFIG_MV88E61XX_SWITCH
- 	phy_mv88e61xx_init();
- #endif
--#ifdef CONFIG_PHY_BROADCOM
--	phy_broadcom_init();
--#endif
+@@ -520,9 +520,6 @@ int phy_init(void)
  #ifdef CONFIG_PHY_CORTINA
  	phy_cortina_init();
  #endif
+-#ifdef CONFIG_PHY_CORTINA_ACCESS
+-	phy_cortina_access_init();
+-#endif
+ #ifdef CONFIG_PHY_DAVICOM
+ 	phy_davicom_init();
+ #endif
 diff --git a/include/phy.h b/include/phy.h
-index 88c9013f1f8..cecfbe6968f 100644
+index cecfbe6968f..50a53982810 100644
 --- a/include/phy.h
 +++ b/include/phy.h
-@@ -316,7 +316,6 @@ int gen10g_shutdown(struct phy_device *phydev);
- int gen10g_discover_mmds(struct phy_device *phydev);
+@@ -317,7 +317,6 @@ int gen10g_discover_mmds(struct phy_device *phydev);
 =20
  int phy_mv88e61xx_init(void);
--int phy_broadcom_init(void);
  int phy_cortina_init(void);
- int phy_cortina_access_init(void);
+-int phy_cortina_access_init(void);
  int phy_davicom_init(void);
+ int phy_et1011c_init(void);
+ int phy_lxt_init(void);
 --=20
 2.39.2
 
