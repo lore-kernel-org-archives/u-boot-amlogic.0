@@ -1,35 +1,35 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
- by mx.groups.io with SMTP id smtpd.web11.21063.1679245470229339509
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+ by mx.groups.io with SMTP id smtpd.web11.21066.1679245472860416628
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:04:30 -0700
+ Sun, 19 Mar 2023 10:04:33 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245466;
+	t=1679245469;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=64b8q/fcJlUlBRDn6Ull1+Py589VdYNDKEU91EOsWeA=;
-	b=veTzP7gfQMgXQDwiNaR4srJ74qUxq389kqVN0cH8UqXgYuuvnhOpaXPTSJx2m2Ol1U/SbX
-	ocKEL9vpEsSuiGZGwA0hR5I6a1JZ53NJbMtp+lrO+P0tfhD8kXLIAn1fLkgAdEG0B/AMzo
-	nNaZHtOLHq2bnR2E48/VNb1spl63Vczln+k9t+bNNQfiJLYRte823Rd+fpDyQUqiRImSik
-	L239T2cJFssNSU7RXe4W3E9YTsYUvSyT5Ton5OJg+CQBK7KasOA8wiyzcXVqpOV+qeVyY7
-	jd/B7Ccu+ajwDHs4tPPljDv1NfYKL2XUgmWersQ3tXx/YRjo6LKSd2+2vrum3Q==
+	bh=RQ+/j+mBowqySqXCPSivz4YM9rHkOsR7tkWdFsT5koA=;
+	b=jdbSS+QZWJU+yb9Hgg1/X7PhdPv9RAMZIB9WufWcJ0nNBQJZQq+gPZ5BJgCEdDwrdksU+W
+	LGJL4ek3Uij3A9v7Mqk3P2SBVmLl1pHJfVcJOH5/9C5H3OtidhSTXloEqBWzea2lBFYuXq
+	4yb+//xW7lzKriR9T7nt/MpOx5OEQi1sRcZC2tkLnveCRC+wjvyKGJfbfzcJ0U+5xR3rXL
+	QL5NkSa3k+a94U61e2ykmBvsihfwOG69g84R65HNWPVnwtlMNphtnRPKxiZfipqIR7UEX5
+	lvGB07iLUFBDZs2J8+SQri51CcJTlu1zl2I+R/IfMUbbB4QPrzSn1Ovc6ZsI1Q==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245464;
+	t=1679245467;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=64b8q/fcJlUlBRDn6Ull1+Py589VdYNDKEU91EOsWeA=;
-	b=wovZM3SFI2CaVy4kKsUH0SKBjVlUAjqRCj3WFY4cAhPqqWqvBu5JQx4rPV+Gf8LeqPq1Zr
-	COK+NWEZanYBYpk4RU2s0qbOxE0Olh2OvCoaMQTOPT0cJeyoN1Wu4YkeNzQ7Th0CgVbKJ9
-	f0wFNkzQSIyK+XmxNwET4COqx/gNELGlIg/9ni+5DMSiqZ7ZZidbOSSJZKDEql+wc9R07O
-	EfX8KzmJnCSoTJHk0rjl0G0YdHNd0Gty2oBYiD4WWLjlQ8bfRr1P/VELFnT6sSmU1ls+3v
-	zPmP9q4gG4TbV1qZjEYWf+B2JH1YK0R47nwPbeCoUwYxdNDtwaL3H4VjjGXGrg==
-Subject: [PATCH 09/41] net: phy: atheros: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:02:45 +0100
-Message-Id: <20230319170317.27711-9-marek.vasut+renesas@mailbox.org>
+	bh=RQ+/j+mBowqySqXCPSivz4YM9rHkOsR7tkWdFsT5koA=;
+	b=gSHItQ4qZQnBEQhbKhBUQNwFwyaD+3+iMpFPdht7EgtzQD+I7bS0GvuMXUjHLdLWdAIvuw
+	OxuUEGndFTXmHm+O+xinCYgFFT6MhEBkdAKETiMImCWDACgXiT7m7nwnKWj57BBp6EWEGI
+	JyrsfWFuRUmbPBHk9P6BbkGdIeexvWg9ZK+ZPMrdcpr29ArGX6tUJn/e52sTTWtQC6e7pK
+	gF+iF6ICOV6M9xzTBn/3/USC9tvJ0zAp8D5pEyRXXqAVHFJ6FOAV66of7vwkyggRlyKGBJ
+	fzSrjkGi5P45fSBalL0TeJz52lexL31NeCU2cGCCmrDHDf0q8RPu2belpVnVbA==
+Subject: [PATCH 10/41] net: phy: b53: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:02:46 +0100
+Message-Id: <20230319170317.27711-10-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,81 +71,64 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/atheros.c | 15 +++------------
- drivers/net/phy/phy.c     |  3 ---
- include/phy.h             |  1 -
- 3 files changed, 3 insertions(+), 16 deletions(-)
+ drivers/net/phy/b53.c | 9 +--------
+ drivers/net/phy/phy.c | 3 ---
+ include/phy.h         | 1 -
+ 3 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/net/phy/atheros.c b/drivers/net/phy/atheros.c
-index c6f9f916459..abb7bdf537c 100644
---- a/drivers/net/phy/atheros.c
-+++ b/drivers/net/phy/atheros.c
-@@ -333,7 +333,7 @@ static int ar803x_config(struct phy_device *phydev)
+diff --git a/drivers/net/phy/b53.c b/drivers/net/phy/b53.c
+index c706e2b9bde..26e8e2fe64f 100644
+--- a/drivers/net/phy/b53.c
++++ b/drivers/net/phy/b53.c
+@@ -612,7 +612,7 @@ static int b53_phy_startup(struct phy_device *phydev)
  	return 0;
  }
 =20
--static struct phy_driver AR8021_driver =3D  {
-+U_BOOT_PHY_DRIVER(AR8021) =3D {
- 	.name =3D "AR8021",
- 	.uid =3D AR8021_PHY_ID,
- 	.mask =3D 0xfffffff0,
-@@ -343,7 +343,7 @@ static struct phy_driver AR8021_driver =3D  {
- 	.shutdown =3D genphy_shutdown,
+-static struct phy_driver b53_driver =3D {
++U_BOOT_PHY_DRIVER(b53) =3D {
+ 	.name =3D "Broadcom BCM53125",
+ 	.uid =3D 0x03625c00,
+ 	.mask =3D 0xfffffc00,
+@@ -623,13 +623,6 @@ static struct phy_driver b53_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
  };
 =20
--static struct phy_driver AR8031_driver =3D  {
-+U_BOOT_PHY_DRIVER(AR8031) =3D {
- 	.name =3D "AR8031/AR8033",
- 	.uid =3D AR8031_PHY_ID,
- 	.mask =3D 0xffffffef,
-@@ -353,7 +353,7 @@ static struct phy_driver AR8031_driver =3D  {
- 	.shutdown =3D genphy_shutdown,
- };
-=20
--static struct phy_driver AR8035_driver =3D  {
-+U_BOOT_PHY_DRIVER(AR8035) =3D {
- 	.name =3D "AR8035",
- 	.uid =3D AR8035_PHY_ID,
- 	.mask =3D 0xffffffef,
-@@ -362,12 +362,3 @@ static struct phy_driver AR8035_driver =3D  {
- 	.startup =3D genphy_startup,
- 	.shutdown =3D genphy_shutdown,
- };
--
--int phy_atheros_init(void)
+-int phy_b53_init(void)
 -{
--	phy_register(&AR8021_driver);
--	phy_register(&AR8031_driver);
--	phy_register(&AR8035_driver);
+-	phy_register(&b53_driver);
 -
 -	return 0;
 -}
+-
+ int do_b53_reg_read(const char *name, int argc, char *const argv[])
+ {
+ 	u8 page, offset, width;
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 4f17f98876e..853302cf974 100644
+index 853302cf974..7a7762377b6 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
-@@ -520,9 +520,6 @@ int phy_init(void)
+@@ -514,9 +514,6 @@ int phy_init(void)
+ 		phy_drv_reloc(drv);
+ #endif
+=20
+-#ifdef CONFIG_B53_SWITCH
+-	phy_b53_init();
+-#endif
  #ifdef CONFIG_MV88E61XX_SWITCH
  	phy_mv88e61xx_init();
  #endif
--#ifdef CONFIG_PHY_ATHEROS
--	phy_atheros_init();
--#endif
- #ifdef CONFIG_PHY_BROADCOM
- 	phy_broadcom_init();
- #endif
 diff --git a/include/phy.h b/include/phy.h
-index a0060cd19ea..a1be1fbe1a1 100644
+index a1be1fbe1a1..88c9013f1f8 100644
 --- a/include/phy.h
 +++ b/include/phy.h
-@@ -317,7 +317,6 @@ int gen10g_discover_mmds(struct phy_device *phydev);
+@@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
+ int gen10g_shutdown(struct phy_device *phydev);
+ int gen10g_discover_mmds(struct phy_device *phydev);
 =20
- int phy_b53_init(void);
+-int phy_b53_init(void);
  int phy_mv88e61xx_init(void);
--int phy_atheros_init(void);
  int phy_broadcom_init(void);
  int phy_cortina_init(void);
- int phy_cortina_access_init(void);
 --=20
 2.39.2
 
