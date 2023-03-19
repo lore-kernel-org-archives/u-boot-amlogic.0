@@ -1,35 +1,35 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web11.21101.1679245525886149559
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+ by mx.groups.io with SMTP id smtpd.web10.21393.1679245528399148409
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:05:26 -0700
+ Sun, 19 Mar 2023 10:05:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1679245524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cllsqzs/Ce/9i+PClbAexmxdRyz4xXWwr2LbanZBXFk=;
+	b=uoplPU5aPdMlsudHEAOptKTp7ygkCVbNPqu4cKWWO7LsKwiIYikQzpPlpZf/1Jo/Vx5Cil
+	iAW9uC71MoR3+me2nms76n6TcNgpUZ+J9VIA59QrHW/ENcC87Lf4NoylbYsb+2J+iUWzYi
+	xXISZl2YNa4gf68zUvnAitD6fEToHHpcJ6h6np4Dwvv2esnlRyBumyR8lY/b4m13XB6LhU
+	ec8098tgp6+kAl9/KfknXyV2Qm9CzLroWz9oQtVvolUImXd+TB3zmZPNmv1opWm9NHi4bC
+	GxE3RGB6AG0Y3YgxJkX5FxsKFb/DmNva3Z9mJm51ttrYcWGKfBlCoHvbjToPrw==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
 	t=1679245522;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6Y2U16fd3KB7Gn51fYw11k0v59EE2U3jvzTEfVbxo9U=;
-	b=NX/BstaegU3/zZWViFOzGh4W5A5KOBKHiIjv6kujEoBFaOVTgoOGJdV7BNLhBalfGiWANF
-	KBT1nak3M/YufgpQ7PKWLD8HoG/6S6PaUGEwiuI1iCQrrBoGI+cc/H/Ir8ZiUrP4NK7ffR
-	XDwcghJXsJ4dvzaNXllVOhORYwhIOSx2eblO3OtpiuxDJFmqkoBiFNehAtwqIgGhLpunfR
-	199okB9XuS0RvdxKBNP8E0EG2MK/oNHMKxpyDypjOW2qWh5I8RPYfg49skH3p2SB0mgZCC
-	iuQjaE4ahd8huDbb3Tpw9fffH0+4Qvkq1KZ4CWTKxn11kqgYeuES96bAUEA0ng==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Y2U16fd3KB7Gn51fYw11k0v59EE2U3jvzTEfVbxo9U=;
-	b=JYvbYIix3rN1FoPxfXuwXSH10/at5CQmcbp9F4ROgGtR/JQQI/d/dKZ9kWV/lsI4kEMhjr
-	sh/eIHdWbAHYIEHrxe2x34xenqTYiz69+mVQshoHF0ZnA9D+T2SW7SoJ0oQJCa8E6TR/yG
-	BfS4Dq4AJTlNOqT6VXswUufBgfwkXMdRVdqONuD2ljxKm+/dbbaKmYj03igGOOb6tcSEqJ
-	YW9Q6ILK8bvvRHCkukrfLkvoh2jywX2vt7+W4aLXjxq42tJII3vElEIJNJG7fPNWPXqP/i
-	ZiAJnqcI23nNa/PQwyTl6ArMSMEU7AmVIaSz4n/n+RIhqFhG94oU/Ym9LY+VYw==
-Subject: [PATCH 29/41] net: phy: vitesse: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:03:05 +0100
-Message-Id: <20230319170317.27711-29-marek.vasut+renesas@mailbox.org>
+	bh=cllsqzs/Ce/9i+PClbAexmxdRyz4xXWwr2LbanZBXFk=;
+	b=yWAspM92NR7z6LbpuCYhkcWeuTkzPZMhznW2ruYHjyYqIHe9MmiXrwUGmBQ27UUBHhc6du
+	KRCozbjUKTY1XNMuDJqk157skigVemF6DvzR8SvfookxsUSnjE2mjLAXxDiPULW++s/DhQ
+	8ggy5vSlQyDkM0J0CFCBp2QIK2dAdKwLi7XhZEngtOV2vVkpg6dBzoDzlOvbqAK/kSfc6z
+	HR8sKy3w7vjHrWmN0dzeVkW+IwKpH6P5wXudBVaY94wjmaDKTAPQLn6RkInWFO/pGw172K
+	QMtUTc0MMKqCPgzUUfRtMz0HfW7WTLQMBGobx2UCl8ys6gY171ttqT/PO1eXtw==
+Subject: [PATCH 30/41] net: phy: xilinx: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:03:06 +0100
+Message-Id: <20230319170317.27711-30-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,181 +71,62 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/phy.c     |  3 ---
- drivers/net/phy/vitesse.c | 45 +++++++++++----------------------------
- include/phy.h             |  1 -
- 3 files changed, 13 insertions(+), 36 deletions(-)
+ drivers/net/phy/phy.c        |  3 ---
+ drivers/net/phy/xilinx_phy.c | 10 +---------
+ include/phy.h                |  1 -
+ 3 files changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 404d61c5ab3..fff1d669fcd 100644
+index fff1d669fcd..b85d5c4566d 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
 @@ -514,9 +514,6 @@ int phy_init(void)
  		phy_drv_reloc(drv);
  #endif
 =20
--#ifdef CONFIG_PHY_VITESSE
--	phy_vitesse_init();
+-#ifdef CONFIG_PHY_XILINX
+-	phy_xilinx_init();
 -#endif
- #ifdef CONFIG_PHY_XILINX
- 	phy_xilinx_init();
+ #ifdef CONFIG_PHY_XWAY
+ 	phy_xway_init();
  #endif
-diff --git a/drivers/net/phy/vitesse.c b/drivers/net/phy/vitesse.c
-index eca26c98938..c5cf0d7dfbd 100644
---- a/drivers/net/phy/vitesse.c
-+++ b/drivers/net/phy/vitesse.c
-@@ -293,7 +293,7 @@ static int vsc8664_config(struct phy_device *phydev)
+diff --git a/drivers/net/phy/xilinx_phy.c b/drivers/net/phy/xilinx_phy.c
+index 39dbfdb7da8..1df639d6f44 100644
+--- a/drivers/net/phy/xilinx_phy.c
++++ b/drivers/net/phy/xilinx_phy.c
+@@ -127,7 +127,7 @@ static int xilinxphy_config(struct phy_device *phydev)
  	return 0;
  }
 =20
--static struct phy_driver VSC8211_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8211) =3D {
- 	.name	=3D "Vitesse VSC8211",
- 	.uid	=3D 0xfc4b0,
- 	.mask	=3D 0xffff0,
-@@ -303,7 +303,7 @@ static struct phy_driver VSC8211_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8221_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8221) =3D {
- 	.name =3D "Vitesse VSC8221",
- 	.uid =3D 0xfc550,
- 	.mask =3D 0xffff0,
-@@ -313,7 +313,7 @@ static struct phy_driver VSC8221_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8244_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8244) =3D {
- 	.name =3D "Vitesse VSC8244",
- 	.uid =3D 0xfc6c0,
- 	.mask =3D 0xffff0,
-@@ -323,7 +323,7 @@ static struct phy_driver VSC8244_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8234_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8234) =3D {
- 	.name =3D "Vitesse VSC8234",
- 	.uid =3D 0xfc620,
- 	.mask =3D 0xffff0,
-@@ -333,7 +333,7 @@ static struct phy_driver VSC8234_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8574_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8574) =3D {
- 	.name =3D "Vitesse VSC8574",
- 	.uid =3D 0x704a0,
- 	.mask =3D 0xffff0,
-@@ -343,7 +343,7 @@ static struct phy_driver VSC8574_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8514_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8514) =3D {
- 	.name =3D "Vitesse VSC8514",
- 	.uid =3D 0x70670,
- 	.mask =3D 0xffff0,
-@@ -353,7 +353,7 @@ static struct phy_driver VSC8514_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8584_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8584) =3D {
- 	.name =3D "Vitesse VSC8584",
- 	.uid =3D 0x707c0,
- 	.mask =3D 0xffff0,
-@@ -363,7 +363,7 @@ static struct phy_driver VSC8584_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8601_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8601) =3D {
- 	.name =3D "Vitesse VSC8601",
- 	.uid =3D 0x70420,
- 	.mask =3D 0xffff0,
-@@ -373,7 +373,7 @@ static struct phy_driver VSC8601_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8641_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8641) =3D {
- 	.name =3D "Vitesse VSC8641",
- 	.uid =3D 0x70430,
- 	.mask =3D 0xffff0,
-@@ -383,7 +383,7 @@ static struct phy_driver VSC8641_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8662_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8662) =3D {
- 	.name =3D "Vitesse VSC8662",
- 	.uid =3D 0x70660,
- 	.mask =3D 0xffff0,
-@@ -393,7 +393,7 @@ static struct phy_driver VSC8662_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver VSC8664_driver =3D {
-+U_BOOT_PHY_DRIVER(vsc8664) =3D {
- 	.name =3D "Vitesse VSC8664",
- 	.uid =3D 0x70660,
- 	.mask =3D 0xffff0,
-@@ -404,7 +404,7 @@ static struct phy_driver VSC8664_driver =3D {
- };
-=20
- /* Vitesse bought Cicada, so we'll put these here */
--static struct phy_driver cis8201_driver =3D {
-+U_BOOT_PHY_DRIVER(cis8201) =3D {
- 	.name =3D "CIS8201",
- 	.uid =3D 0xfc410,
- 	.mask =3D 0xffff0,
-@@ -414,7 +414,7 @@ static struct phy_driver cis8201_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver cis8204_driver =3D {
-+U_BOOT_PHY_DRIVER(cis8204) =3D {
- 	.name =3D "Cicada Cis8204",
- 	.uid =3D 0xfc440,
- 	.mask =3D 0xffff0,
-@@ -423,22 +423,3 @@ static struct phy_driver cis8204_driver =3D {
- 	.startup =3D &vitesse_startup,
+-static struct phy_driver xilinxphy_driver =3D {
++U_BOOT_PHY_DRIVER(xilinxphy) =3D {
+ 	.uid =3D XILINX_PHY_ID,
+ 	.mask =3D XILINX_PHY_ID_MASK,
+ 	.name =3D "Xilinx PCS/PMA PHY",
+@@ -136,11 +136,3 @@ static struct phy_driver xilinxphy_driver =3D {
+ 	.startup =3D &xilinxphy_startup,
  	.shutdown =3D &genphy_shutdown,
  };
 -
--int phy_vitesse_init(void)
+-int phy_xilinx_init(void)
 -{
--	phy_register(&VSC8641_driver);
--	phy_register(&VSC8601_driver);
--	phy_register(&VSC8234_driver);
--	phy_register(&VSC8244_driver);
--	phy_register(&VSC8211_driver);
--	phy_register(&VSC8221_driver);
--	phy_register(&VSC8574_driver);
--	phy_register(&VSC8584_driver);
--	phy_register(&VSC8514_driver);
--	phy_register(&VSC8662_driver);
--	phy_register(&VSC8664_driver);
--	phy_register(&cis8201_driver);
--	phy_register(&cis8204_driver);
+-	debug("%s\n", __func__);
+-	phy_register(&xilinxphy_driver);
 -
 -	return 0;
 -}
 diff --git a/include/phy.h b/include/phy.h
-index e6508a132d0..74f3ada2491 100644
+index 74f3ada2491..e128ddf0037 100644
 --- a/include/phy.h
 +++ b/include/phy.h
 @@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
  int gen10g_shutdown(struct phy_device *phydev);
  int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_vitesse_init(void);
- int phy_xilinx_init(void);
+-int phy_xilinx_init(void);
  int phy_xway_init(void);
  int phy_mscc_init(void);
+ int phy_fixed_init(void);
 --=20
 2.39.2
 
