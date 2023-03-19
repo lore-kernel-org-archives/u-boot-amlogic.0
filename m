@@ -1,35 +1,35 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web11.21056.1679245454420137117
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+ by mx.groups.io with SMTP id smtpd.web11.21057.1679245457157829070
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:04:14 -0700
+ Sun, 19 Mar 2023 10:04:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1679245453;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0dutRxJrY3pIRDEn8Vsej7etzs9Nglz5FeMUvHdzq3w=;
+	b=s4MRI5hr8TUzK+JWJskFn6U/PhrdHRfKHUB1qE5Ev0zg5VMLsKTrCQgWIaVlEsI/zTOf8n
+	GL0gT3Fs91qEPs9hTHCGRbQpJMCf+uFGn64Ej490YFM4gqzNsEqNynW0Q4ENPPNkvoISsd
+	PtvAJikxObfFH03RMhxY0tsJhBoVHwW8ojZJKvpMv+clS8puv0EcEq0oP7148J88mdY091
+	XZJTUsYU0vPcSq70nVPROyxS8gSsjBL0qZa68T2RLIdPlgLxk++Gvle0OTDc881ic3GcYS
+	MB+Yf4E5jHWrGl3xvT9zQvQsav+US841FQiYvfqTSQ2cN+T9oU/5YgZQc+hA+w==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
 	t=1679245450;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KfN+L8S424MBjOAEOoUJwQ+EkeFaIsDYW1FIdTpMY5I=;
-	b=JGruEuTNE9HpFrUv+abanRrQtn/EG5VaNGNRYRNOvwyJJk2L0atT1pRlpdwp9Q7LRYgt8h
-	BReVpeXfQ9d5SCmRkyEZSCeclpqq0w01nqCfD56WffJvHgARg4GCvXIe/xBkCh7Hh+Upoi
-	8sYE+AtQQLFjl8GUH/m10dc1XzptVXw3+j+LXeEm0jUkkH/zOhIKtOZ8Y+caL1gTUtK554
-	E8HK4EW9gpuYiAhMKginJaxuzjie92u8tSeUyZwCUW7oZlzCRyEIkJESC2TqatBULCT2EJ
-	zR4iITp+IGjac6tfx6xWpmEnC0D0mxeR5q/uVfiRhYSEY2xKP2Ag+JUCKzhCdg==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KfN+L8S424MBjOAEOoUJwQ+EkeFaIsDYW1FIdTpMY5I=;
-	b=eD/Thf8HGRqvFvzYbcFL9DH2sXdFtv4tz5L1InHckMuTdRILq3l9qUxmwaF2/L6wSEjXFp
-	B4YOdxWoxWN7srJ3/mEACwNrLluFMDGOwPN0VzJUIxuNZbwIKw8fBFci/Vz5CDB5jpe7Cq
-	wTdUVb8ApxtV7RVMPUFyuteufSof2iq1xyuwkp2/dWIt7k9EQCrKZwytFrfzDCU4L6FU/M
-	2bRvzIotGVGIOKdW9GZO1i78Gud/ppyU83883aVmAlUffkxY5KGlj2eUngkwG5XClV/8fz
-	Gmbkx8uwinjqtq0BjwZ7AfLCtuy65dEhSVAT3NqtOnLaBJh7H4HzOCS4s1nLeg==
-Subject: [PATCH 03/41] net: phy: cortina: Staticize PHY driver entries
-Date: Sun, 19 Mar 2023 18:02:39 +0100
-Message-Id: <20230319170317.27711-3-marek.vasut+renesas@mailbox.org>
+	bh=0dutRxJrY3pIRDEn8Vsej7etzs9Nglz5FeMUvHdzq3w=;
+	b=RkjlitGhSMEIAQDXmJ0t5FKbbyI2O9MUJJrBI2WNQSUhMaAnBZWaA3/igXokED3vExci2U
+	R9r4RCwmhVKGVzuzsUCa0rqDFLMDzHR9k1splA/JYrcG8YvkQfwZrTIDmCjSu3mjbosu/B
+	vaeQpOOuB8xVQQsqJI9ZrMVLkJAPIlj+TQfdtRDMQjXkpiuPMit3h5dUr1m2OJDq9vzRGR
+	v32tpL1dhXugPTnkaGIvnKwAttaSuMCsk9O7pZJ0yqa1NGq4xCkFP3wVM3SImVTyfBapew
+	ocuG9nTvjKRHHwG45ye9aenHsTjOXryksD01z3IxLjnK0k4oElN4DhlwLihEEQ==
+Subject: [PATCH 04/41] net: phy: teranetics: Staticize PHY driver entries
+Date: Sun, 19 Mar 2023 18:02:40 +0100
+Message-Id: <20230319170317.27711-4-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -67,31 +67,22 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/cortina.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/phy/teranetics.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/cortina.c b/drivers/net/phy/cortina.c
-index 778d93e609c..df5a73d6112 100644
---- a/drivers/net/phy/cortina.c
-+++ b/drivers/net/phy/cortina.c
-@@ -382,7 +382,7 @@ int cs4223_startup(struct phy_device *phydev)
+diff --git a/drivers/net/phy/teranetics.c b/drivers/net/phy/teranetics.c
+index 60049c2074f..c402bad88c6 100644
+--- a/drivers/net/phy/teranetics.c
++++ b/drivers/net/phy/teranetics.c
+@@ -90,7 +90,7 @@ int tn2020_startup(struct phy_device *phydev)
  	return 0;
  }
 =20
--struct phy_driver cs4340_driver =3D {
-+static struct phy_driver cs4340_driver =3D {
- 	.name =3D "Cortina CS4315/CS4340",
- 	.uid =3D PHY_UID_CS4340,
+-struct phy_driver tn2020_driver =3D {
++static struct phy_driver tn2020_driver =3D {
+ 	.name =3D "Teranetics TN2020",
+ 	.uid =3D PHY_UID_TN2020,
  	.mask =3D 0xfffffff0,
-@@ -396,7 +396,7 @@ struct phy_driver cs4340_driver =3D {
- 	.shutdown =3D &gen10g_shutdown,
- };
-=20
--struct phy_driver cs4223_driver =3D {
-+static struct phy_driver cs4223_driver =3D {
- 	.name =3D "Cortina CS4223",
- 	.uid =3D PHY_UID_CS4223,
- 	.mask =3D 0x0ffff00f,
 --=20
 2.39.2
 
