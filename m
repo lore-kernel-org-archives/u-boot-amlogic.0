@@ -1,35 +1,35 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
- by mx.groups.io with SMTP id smtpd.web11.21066.1679245472860416628
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+ by mx.groups.io with SMTP id smtpd.web10.21371.1679245475548547060
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:04:33 -0700
+ Sun, 19 Mar 2023 10:04:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1679245472;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F/g6fytIaAiqx06zSk5hva4z1hyDtxLednGctuVUSbs=;
+	b=xLHklSS1QWe9kghuc3GY04IJqGCVvV1T7mKuBnNavWRNe11Pc2s3hO3wp0UhufDNvjGIt2
+	p00HlHZJ9pqd4VWwumHAzbf7zgSP75yuzzmq+DtOtVYqEGb0SgjFkOSTSb+VYEyPRbP2dQ
+	8hR7AA/ZHTgyUM6i0g5mLMbuItawjWOwNfRW6tcYDhlmK5EqlTy8l52W+gDeMAaMVKuzW1
+	vomzXGhkDYzJ0w2z9/g1UUnMs2uG6565EQjIoTzBhglEG8/sub3278VkICB5Z5hoLz3zq6
+	fzHTTwQffN7mO2O3OyVyoV+Xk+ReDuJxoQore2l7v4xr113aeEByPOUgtOhtfw==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
 	t=1679245469;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RQ+/j+mBowqySqXCPSivz4YM9rHkOsR7tkWdFsT5koA=;
-	b=jdbSS+QZWJU+yb9Hgg1/X7PhdPv9RAMZIB9WufWcJ0nNBQJZQq+gPZ5BJgCEdDwrdksU+W
-	LGJL4ek3Uij3A9v7Mqk3P2SBVmLl1pHJfVcJOH5/9C5H3OtidhSTXloEqBWzea2lBFYuXq
-	4yb+//xW7lzKriR9T7nt/MpOx5OEQi1sRcZC2tkLnveCRC+wjvyKGJfbfzcJ0U+5xR3rXL
-	QL5NkSa3k+a94U61e2ykmBvsihfwOG69g84R65HNWPVnwtlMNphtnRPKxiZfipqIR7UEX5
-	lvGB07iLUFBDZs2J8+SQri51CcJTlu1zl2I+R/IfMUbbB4QPrzSn1Ovc6ZsI1Q==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245467;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RQ+/j+mBowqySqXCPSivz4YM9rHkOsR7tkWdFsT5koA=;
-	b=gSHItQ4qZQnBEQhbKhBUQNwFwyaD+3+iMpFPdht7EgtzQD+I7bS0GvuMXUjHLdLWdAIvuw
-	OxuUEGndFTXmHm+O+xinCYgFFT6MhEBkdAKETiMImCWDACgXiT7m7nwnKWj57BBp6EWEGI
-	JyrsfWFuRUmbPBHk9P6BbkGdIeexvWg9ZK+ZPMrdcpr29ArGX6tUJn/e52sTTWtQC6e7pK
-	gF+iF6ICOV6M9xzTBn/3/USC9tvJ0zAp8D5pEyRXXqAVHFJ6FOAV66of7vwkyggRlyKGBJ
-	fzSrjkGi5P45fSBalL0TeJz52lexL31NeCU2cGCCmrDHDf0q8RPu2belpVnVbA==
-Subject: [PATCH 10/41] net: phy: b53: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:02:46 +0100
-Message-Id: <20230319170317.27711-10-marek.vasut+renesas@mailbox.org>
+	bh=F/g6fytIaAiqx06zSk5hva4z1hyDtxLednGctuVUSbs=;
+	b=mEzWvphQl3xwy+PJA82FwvPLvb2lj/cABoL/8nH7HJAnQLavWP+CYqhnjALV6RUN2vHmNU
+	L0WhdmFFh+BeDqBUrrmAwgtIi62Q8y5o+IYkd2RFCJwkARs+lwyOV3ZKCtM4El3jGlimej
+	lsInjQSEQxPv9jXVXjd0BJnBN9051BSUg6EOIYNXvOKNMENIwA5udGvuLkgbKik4+FWDPX
+	zLVeyPkD4U7bbMWTxqzm8sx97jr/4T2/HhPKFBlygcR1qe9efgUq7NgQ5CcazB0EBdKORI
+	OpL2LGt7SfPDhhS36UWj6QOgVgDyVRUZEjHR38h0jFXJ9wjycNUIxYrk6pCvbg==
+Subject: [PATCH 11/41] net: phy: broadcom: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:02:47 +0100
+Message-Id: <20230319170317.27711-11-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,64 +71,91 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/b53.c | 9 +--------
- drivers/net/phy/phy.c | 3 ---
- include/phy.h         | 1 -
- 3 files changed, 1 insertion(+), 12 deletions(-)
+ drivers/net/phy/broadcom.c | 18 ++++--------------
+ drivers/net/phy/phy.c      |  3 ---
+ include/phy.h              |  1 -
+ 3 files changed, 4 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/phy/b53.c b/drivers/net/phy/b53.c
-index c706e2b9bde..26e8e2fe64f 100644
---- a/drivers/net/phy/b53.c
-+++ b/drivers/net/phy/b53.c
-@@ -612,7 +612,7 @@ static int b53_phy_startup(struct phy_device *phydev)
- 	return 0;
+diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+index 566fcb8de73..ea98cfcc1b5 100644
+--- a/drivers/net/phy/broadcom.c
++++ b/drivers/net/phy/broadcom.c
+@@ -323,7 +323,7 @@ static int bcm5482_startup(struct phy_device *phydev)
+ 	return bcm54xx_parse_status(phydev);
  }
 =20
--static struct phy_driver b53_driver =3D {
-+U_BOOT_PHY_DRIVER(b53) =3D {
- 	.name =3D "Broadcom BCM53125",
- 	.uid =3D 0x03625c00,
- 	.mask =3D 0xfffffc00,
-@@ -623,13 +623,6 @@ static struct phy_driver b53_driver =3D {
+-static struct phy_driver BCM5461S_driver =3D {
++U_BOOT_PHY_DRIVER(bcm5461s) =3D {
+ 	.name =3D "Broadcom BCM5461S",
+ 	.uid =3D 0x2060c0,
+ 	.mask =3D 0xfffff0,
+@@ -333,7 +333,7 @@ static struct phy_driver BCM5461S_driver =3D {
  	.shutdown =3D &genphy_shutdown,
  };
 =20
--int phy_b53_init(void)
+-static struct phy_driver BCM5464S_driver =3D {
++U_BOOT_PHY_DRIVER(bcm5464s) =3D {
+ 	.name =3D "Broadcom BCM5464S",
+ 	.uid =3D 0x2060b0,
+ 	.mask =3D 0xfffff0,
+@@ -343,7 +343,7 @@ static struct phy_driver BCM5464S_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver BCM5482S_driver =3D {
++U_BOOT_PHY_DRIVER(bcm5482s) =3D {
+ 	.name =3D "Broadcom BCM5482S",
+ 	.uid =3D 0x143bcb0,
+ 	.mask =3D 0xffffff0,
+@@ -353,7 +353,7 @@ static struct phy_driver BCM5482S_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver BCM_CYGNUS_driver =3D {
++U_BOOT_PHY_DRIVER(bcm_cygnus) =3D {
+ 	.name =3D "Broadcom CYGNUS GPHY",
+ 	.uid =3D 0xae025200,
+ 	.mask =3D 0xfffff0,
+@@ -362,13 +362,3 @@ static struct phy_driver BCM_CYGNUS_driver =3D {
+ 	.startup =3D &bcm_cygnus_startup,
+ 	.shutdown =3D &genphy_shutdown,
+ };
+-
+-int phy_broadcom_init(void)
 -{
--	phy_register(&b53_driver);
+-	phy_register(&BCM5482S_driver);
+-	phy_register(&BCM5464S_driver);
+-	phy_register(&BCM5461S_driver);
+-	phy_register(&BCM_CYGNUS_driver);
 -
 -	return 0;
 -}
--
- int do_b53_reg_read(const char *name, int argc, char *const argv[])
- {
- 	u8 page, offset, width;
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 853302cf974..7a7762377b6 100644
+index 7a7762377b6..4b1fed1ff6f 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
-@@ -514,9 +514,6 @@ int phy_init(void)
- 		phy_drv_reloc(drv);
- #endif
-=20
--#ifdef CONFIG_B53_SWITCH
--	phy_b53_init();
--#endif
+@@ -517,9 +517,6 @@ int phy_init(void)
  #ifdef CONFIG_MV88E61XX_SWITCH
  	phy_mv88e61xx_init();
  #endif
+-#ifdef CONFIG_PHY_BROADCOM
+-	phy_broadcom_init();
+-#endif
+ #ifdef CONFIG_PHY_CORTINA
+ 	phy_cortina_init();
+ #endif
 diff --git a/include/phy.h b/include/phy.h
-index a1be1fbe1a1..88c9013f1f8 100644
+index 88c9013f1f8..cecfbe6968f 100644
 --- a/include/phy.h
 +++ b/include/phy.h
-@@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
- int gen10g_shutdown(struct phy_device *phydev);
+@@ -316,7 +316,6 @@ int gen10g_shutdown(struct phy_device *phydev);
  int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_b53_init(void);
  int phy_mv88e61xx_init(void);
- int phy_broadcom_init(void);
+-int phy_broadcom_init(void);
  int phy_cortina_init(void);
+ int phy_cortina_access_init(void);
+ int phy_davicom_init(void);
 --=20
 2.39.2
 
