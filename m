@@ -1,35 +1,35 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web10.21394.1679245531062822364
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+ by mx.groups.io with SMTP id smtpd.web11.21102.1679245533625782974
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:05:31 -0700
+ Sun, 19 Mar 2023 10:05:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1679245530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Ee+F/ykc97LIjy8MRZU34S4jplrozEx2DFoAXIu61E=;
+	b=F6h77W5pFv7BzqJOXg4dZyd5hh/J0dPUQl/Cd4MLj99PxJJXTLhqHbJVv6CuKccNNn0bs/
+	RPkrfa02tro8O/ES1wuU1vYcgbzJaNoO9iUsDQz6t23GtqPaCgWuFrPdLz3HLiocJjIfhA
+	ggK+zBPcFXuoRnS5uUnyJB4tpa7j1zdxr/q3NkJ/4/83CG0+TS9893cmyThWnJyqrSFn0X
+	aN6ZLJUdJ0rP42MwxBq0jt7971M/Tybrpxz7tC2yS1w6mclfcIfzGZGMUjnJ2fkVLWmKZB
+	p7Z0XHdF7q1aMiRWc2q4Ks5SOHVC+5ULiyurOyGJczeF3kODLrRWSSzdDf7dVA==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
 	t=1679245527;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YwJrJ3mgCaImkU+ySO5MXFcA373VIYq4kPju7roJP4w=;
-	b=PZNmminKBOsy360d7LnEG4yD3JbiKWhyjDnA0kgTz7cu1sTOt+idlpgBsj2NwDU+sspoo3
-	HAi2WYI1J+35HfWFyp6O78Qp54bSAPd85wkNZatdKwhOoX6sCEAJZEhtDBoKAdE97Yds0v
-	HletCxTT2DUt0lqgWtz86AJRZR1iVC4VpOBTfs/vyIbwajqnyCXW70c5LF9+qj+/PfkrZk
-	q9irpPfJLLP6btGDeMNnfaz8zG21S3ZuHvBlc7pCc/Ll3UIgUgtsp8Vl8vKhPxcZkKOHsv
-	2ijV9yfpaTE+ETJ4Y+I5lGBtmsU0b8eciEFNjhKyQl/tkwk7iBNfs9MIjU0d+A==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245525;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YwJrJ3mgCaImkU+ySO5MXFcA373VIYq4kPju7roJP4w=;
-	b=rhieVqZDscI16P+14rGql6QqJLyMpIawmWEq00RVfF6exKtgAjh90EciYUWksTsvpSC1r1
-	8TkRvlW0sAUt0EpkMLOvX8KBXgcqQ0RVATMobqv3H9OSixDXZyL687Iio1d0nKxBjzr83u
-	zk0fSnwu/iXVrCqR7Phh7dthq79j/+Ir0/qfGBfRZV3Y3WZQFsfoDd3ne6hXiPCHGN/leL
-	j8pSu/l3gwEWIz+4UfMNbzYNMgm/lzgtQihG5EkdBJY8be381KWCjYHXjLHZO7xA6wqUGK
-	kUw4DDrSuF0Z9FdC8/MVYHcNm5z3Rk+Z0WP+62TAQ+bOxe6mUh4arQodCvKX0w==
-Subject: [PATCH 31/41] net: phy: intel-xway: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:03:07 +0100
-Message-Id: <20230319170317.27711-31-marek.vasut+renesas@mailbox.org>
+	bh=9Ee+F/ykc97LIjy8MRZU34S4jplrozEx2DFoAXIu61E=;
+	b=Rii4IKhDfr/feVDoJEJxIsE5Tqpxb1cUf7JBVcPcA+cSfyH7kl8c30wgOJ4uw11OBUMGHT
+	gAmj5/DJCGxkF/xFSR6UDX/rTnjpjmyrCpTP09+QxUwjlTEkfa8SAxjown1g9hyvqnVr/2
+	AWEVN76SQd9DmF1bgrPioaFDu2sIdNkGUGd0cEoMyg9dGNoxvKdi0cmp7bH/cjppYWQnmR
+	OsJ+AbOQWk0fsliUh0fYe79E5XTX+9SWHEJHzfdbfsOqpe4Q/2vNW01aGjjt+ctxrTiRx7
+	1PfNmOLIM/hY0ycJ+oDfcw9Bg94YQfjPkPFOlQG6wv+97+FKakyM+P+PvqMt6Q==
+Subject: [PATCH 32/41] net: phy: mscc: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:03:08 +0100
+Message-Id: <20230319170317.27711-32-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,61 +71,121 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/intel_xway.c | 9 +--------
- drivers/net/phy/phy.c        | 3 ---
- include/phy.h                | 1 -
- 3 files changed, 1 insertion(+), 12 deletions(-)
+ drivers/net/phy/mscc.c | 27 +++++++--------------------
+ drivers/net/phy/phy.c  |  3 ---
+ include/phy.h          |  1 -
+ 3 files changed, 7 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/net/phy/intel_xway.c b/drivers/net/phy/intel_xway.c
-index dfce3f8332e..9d1b97d349f 100644
---- a/drivers/net/phy/intel_xway.c
-+++ b/drivers/net/phy/intel_xway.c
-@@ -30,7 +30,7 @@ static int xway_config(struct phy_device *phydev)
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index f9482b21a01..ef1761a8bda 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -1558,7 +1558,7 @@ static int vsc8502_config(struct phy_device *phydev)
  	return 0;
  }
 =20
--static struct phy_driver XWAY_driver =3D {
-+U_BOOT_PHY_DRIVER(xway) =3D {
- 	.name =3D "XWAY",
- 	.uid =3D 0xD565A400,
- 	.mask =3D 0xffffff00,
-@@ -39,10 +39,3 @@ static struct phy_driver XWAY_driver =3D {
- 	.startup =3D genphy_startup,
- 	.shutdown =3D genphy_shutdown,
+-static struct phy_driver VSC8530_driver =3D {
++U_BOOT_PHY_DRIVER(vsc8530) =3D {
+ 	.name =3D "Microsemi VSC8530",
+ 	.uid =3D PHY_ID_VSC8530,
+ 	.mask =3D 0x000ffff0,
+@@ -1568,7 +1568,7 @@ static struct phy_driver VSC8530_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver VSC8531_driver =3D {
++U_BOOT_PHY_DRIVER(vsc8531) =3D {
+ 	.name =3D "Microsemi VSC8531",
+ 	.uid =3D PHY_ID_VSC8531,
+ 	.mask =3D 0x000ffff0,
+@@ -1578,7 +1578,7 @@ static struct phy_driver VSC8531_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver VSC8502_driver =3D {
++U_BOOT_PHY_DRIVER(vsc8502) =3D {
+ 	.name =3D "Microsemi VSC8502",
+ 	.uid =3D PHY_ID_VSC8502,
+ 	.mask =3D 0x000ffff0,
+@@ -1588,7 +1588,7 @@ static struct phy_driver VSC8502_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver VSC8540_driver =3D {
++U_BOOT_PHY_DRIVER(vsc8540) =3D {
+ 	.name =3D "Microsemi VSC8540",
+ 	.uid =3D PHY_ID_VSC8540,
+ 	.mask =3D 0x000ffff0,
+@@ -1598,7 +1598,7 @@ static struct phy_driver VSC8540_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver VSC8541_driver =3D {
++U_BOOT_PHY_DRIVER(vsc8541) =3D {
+ 	.name =3D "Microsemi VSC8541",
+ 	.uid =3D PHY_ID_VSC8541,
+ 	.mask =3D 0x000ffff0,
+@@ -1608,7 +1608,7 @@ static struct phy_driver VSC8541_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver VSC8574_driver =3D {
++U_BOOT_PHY_DRIVER(vsc8574) =3D {
+ 	.name =3D "Microsemi VSC8574",
+ 	.uid =3D PHY_ID_VSC8574,
+ 	.mask =3D 0x000ffff0,
+@@ -1618,7 +1618,7 @@ static struct phy_driver VSC8574_driver =3D {
+ 	.shutdown =3D &genphy_shutdown,
+ };
+=20
+-static struct phy_driver VSC8584_driver =3D {
++U_BOOT_PHY_DRIVER(vsc8584) =3D {
+ 	.name =3D "Microsemi VSC8584",
+ 	.uid =3D PHY_ID_VSC8584,
+ 	.mask =3D 0x000ffff0,
+@@ -1627,16 +1627,3 @@ static struct phy_driver VSC8584_driver =3D {
+ 	.startup =3D &mscc_startup,
+ 	.shutdown =3D &genphy_shutdown,
  };
 -
--int phy_xway_init(void)
+-int phy_mscc_init(void)
 -{
--	phy_register(&XWAY_driver);
+-	phy_register(&VSC8530_driver);
+-	phy_register(&VSC8531_driver);
+-	phy_register(&VSC8502_driver);
+-	phy_register(&VSC8540_driver);
+-	phy_register(&VSC8541_driver);
+-	phy_register(&VSC8574_driver);
+-	phy_register(&VSC8584_driver);
 -
 -	return 0;
 -}
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index b85d5c4566d..1542fe89252 100644
+index 1542fe89252..c20e750aa16 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
 @@ -514,9 +514,6 @@ int phy_init(void)
  		phy_drv_reloc(drv);
  #endif
 =20
--#ifdef CONFIG_PHY_XWAY
--	phy_xway_init();
+-#ifdef CONFIG_PHY_MSCC
+-	phy_mscc_init();
 -#endif
- #ifdef CONFIG_PHY_MSCC
- 	phy_mscc_init();
+ #ifdef CONFIG_PHY_FIXED
+ 	phy_fixed_init();
  #endif
 diff --git a/include/phy.h b/include/phy.h
-index e128ddf0037..fc8300d5d97 100644
+index fc8300d5d97..e4a3e10c48b 100644
 --- a/include/phy.h
 +++ b/include/phy.h
 @@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
  int gen10g_shutdown(struct phy_device *phydev);
  int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_xway_init(void);
- int phy_mscc_init(void);
+-int phy_mscc_init(void);
  int phy_fixed_init(void);
  int phy_ncsi_init(void);
+ int phy_xilinx_gmii2rgmii_init(void);
 --=20
 2.39.2
 
