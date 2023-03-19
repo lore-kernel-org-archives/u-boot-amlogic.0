@@ -1,35 +1,35 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web10.21381.1679245494566199002
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+ by mx.groups.io with SMTP id smtpd.web11.21080.1679245497150193123
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:04:55 -0700
+ Sun, 19 Mar 2023 10:04:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1679245493;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xg7v6rOrWShdLt5WeXJr39ZOxemC9D4ctKGdE+B81Uw=;
+	b=shCMfuSUM+iSAAK48F+QzzxzJQJep/5llvNkatbB5/gegHLKK2MgfdFsk0nmlfuPHZtICs
+	F1SIW6xgTwjwMHrnIOrB+Wr6VEBUkDlMz/HDHuogBx8CxuxFjXhYKBg1DVP9pJb5ChRKP/
+	kCTh0z0QHGi+UQGmMvOhCiB0YxZ/nj7gLwInaDP2fH2nC5PR+Rz1wEILw8VXkiGQ9t0eBu
+	eN4n09QkW013Z/YSQuq9DHmc/giYx5RIcvqrRXIaLoNDGdIv1jG41ORwf1xp3Uw3ekA11o
+	F4Iagzyty9irlds7Cg1bjPiLxeix8emHAmBneqN6MjUiTIJAoKsOIeMEM4DCZw==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
 	t=1679245491;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ex8qlmEOiee+xAjQL9CfY0uLzeuWdrlY3r1aQPk/aOs=;
-	b=l9j8xVEZV2a6SlZj8iCx76vHG1HPKc9v0NqWuoR3bnLvynk3aw8YHScVIrdIlJL99gJCsh
-	RhiI2fDFo83fvyExWa6qg/PTNWLx21azf/pxRXkIt2y+7Jv/ndmWjvh5JOnfi9+GBeEh2h
-	R5zLOY3GkvZWdv7nMLSNi4blcqI7odhU915PGcNN8PgAAyQEA2quc4vV//SUB8hjz8GDfS
-	9exrJisBFU9n1reBLHBt0WxKNXfzluQD4AkFYhVH76Q7LxMbokNA9ChXyOWLjP5MrM6jcM
-	7eA7PBxQXGPo9CkBbRwUE43/1DlnAmuLVbMZhmRArmm/NLwE+LqjwPPTcIU+/A==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ex8qlmEOiee+xAjQL9CfY0uLzeuWdrlY3r1aQPk/aOs=;
-	b=JGHcE77houHW8EiCXNCG8O/nCV5aaqJ04DIhzGJnrAp43GpOS0jTr639yiD65KCwkl2p/s
-	h2y1j6H8gizd6yJcFNyWFdUDJPc1ZP9UCf28apQdd6E4eM2VxAOggnghrzutvFQUJg4iNu
-	E/CPp+fPdVHwrYKI/siGM0i5hucKzEJsApy9N3Wd5KtDVsv+i2fcDS7svfUj43YS7goSB+
-	QjfYYe5/9It5kinzl2+N3nSMBz2aArFfM3drqr2HOYQgpF73LooNbiKJJqgK9tkY8aogV7
-	qzJDMkTVSilLibJMxI+T0NrHdda1U+RGojwWZUmXZnpzOOaFBSDWUv6VaHuweA==
-Subject: [PATCH 18/41] net: phy: marvell: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:02:54 +0100
-Message-Id: <20230319170317.27711-18-marek.vasut+renesas@mailbox.org>
+	bh=xg7v6rOrWShdLt5WeXJr39ZOxemC9D4ctKGdE+B81Uw=;
+	b=IjnxpeR0wJvaXpVyu3f1keV7eUtRE8c8TzQH9CrDWIDiZ+eWgZA+11Gvvuxw8GitRr8Y2Q
+	BQ9AO6WbMhR5R3s1L/3TW4mYK8RP6/yIUJRkKKexqu10eO83YhJpIZLoLOx0yq994R3ORU
+	AXWRFuBBxr01XF2XAbyBHPaz3bggoGWtwBIVyHun58MyJj7fbnU3NCNFgPpyClAyv8ev0o
+	ZGhR0bVIDzpWLpo3L0bsiSnEBgFzV04W8ErlEusZ37Qchbs43uoJWt6noIg9gEMMacS4ku
+	tM1qQXnd+CS61IqqWHgHG+plsjBpWiSJmkYuiQHm08tqJ5OtNDSD0v+b9SsZVw==
+Subject: [PATCH 19/41] net: phy: ksz8xxx: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:02:55 +0100
+Message-Id: <20230319170317.27711-19-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,161 +71,132 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/marvell.c | 39 +++++++++++----------------------------
- drivers/net/phy/phy.c     |  3 ---
- include/phy.h             |  1 -
- 3 files changed, 11 insertions(+), 32 deletions(-)
+ drivers/net/phy/micrel_ksz8xxx.c | 29 ++++++++---------------------
+ drivers/net/phy/phy.c            |  3 ---
+ include/phy.h                    |  1 -
+ 3 files changed, 8 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index 1a25775eee6..8992be6e89e 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -693,7 +693,7 @@ static int m88e1680_config(struct phy_device *phydev)
+diff --git a/drivers/net/phy/micrel_ksz8xxx.c b/drivers/net/phy/micrel_ksz8=
+xxx.c
+index 60d42fe9840..b0f3abcb037 100644
+--- a/drivers/net/phy/micrel_ksz8xxx.c
++++ b/drivers/net/phy/micrel_ksz8xxx.c
+@@ -14,7 +14,7 @@
+ #include <phy.h>
+ #include <linux/bitops.h>
+=20
+-static struct phy_driver KSZ804_driver =3D {
++U_BOOT_PHY_DRIVER(ksz804) =3D {
+ 	.name =3D "Micrel KSZ804",
+ 	.uid =3D 0x221510,
+ 	.mask =3D 0xfffff0,
+@@ -44,7 +44,7 @@ static int ksz_genconfig_bcastoff(struct phy_device *phyd=
+ev)
+ 	return genphy_config(phydev);
+ }
+=20
+-static struct phy_driver KSZ8031_driver =3D {
++U_BOOT_PHY_DRIVER(ksz8031) =3D {
+ 	.name =3D "Micrel KSZ8021/KSZ8031",
+ 	.uid =3D 0x221550,
+ 	.mask =3D 0xfffff0,
+@@ -72,7 +72,7 @@ static int ksz8051_config(struct phy_device *phydev)
+ 	return genphy_config(phydev);
+ }
+=20
+-static struct phy_driver KSZ8051_driver =3D {
++U_BOOT_PHY_DRIVER(ksz8051) =3D {
+ 	.name =3D "Micrel KSZ8051",
+ 	.uid =3D 0x221550,
+ 	.mask =3D 0xfffff0,
+@@ -87,7 +87,7 @@ static int ksz8061_config(struct phy_device *phydev)
+ 	return phy_write(phydev, MDIO_MMD_PMAPMD, MDIO_DEVID1, 0xB61A);
+ }
+=20
+-static struct phy_driver KSZ8061_driver =3D {
++U_BOOT_PHY_DRIVER(ksz8061) =3D {
+ 	.name =3D "Micrel KSZ8061",
+ 	.uid =3D 0x00221570,
+ 	.mask =3D 0xfffff0,
+@@ -115,7 +115,7 @@ static int ksz8081_config(struct phy_device *phydev)
+ 	return genphy_config(phydev);
+ }
+=20
+-static struct phy_driver KSZ8081_driver =3D {
++U_BOOT_PHY_DRIVER(ksz8081) =3D {
+ 	.name =3D "Micrel KSZ8081",
+ 	.uid =3D 0x221560,
+ 	.mask =3D 0xfffff0,
+@@ -172,7 +172,7 @@ static int ksz8895_startup(struct phy_device *phydev)
  	return 0;
  }
 =20
--static struct phy_driver M88E1011S_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1011s) =3D {
- 	.name =3D "Marvell 88E1011S",
- 	.uid =3D 0x1410c60,
- 	.mask =3D 0xffffff0,
-@@ -703,7 +703,7 @@ static struct phy_driver M88E1011S_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
+-static struct phy_driver ksz8895_driver =3D {
++U_BOOT_PHY_DRIVER(ksz8895) =3D {
+ 	.name =3D "Micrel KSZ8895/KSZ8864",
+ 	.uid  =3D 0x221450,
+ 	.mask =3D 0xffffe1,
+@@ -185,7 +185,7 @@ static struct phy_driver ksz8895_driver =3D {
+ /* Micrel used the exact same model number for the KSZ9021,
+  * so the revision number is used to distinguish them.
+  */
+-static struct phy_driver KS8721_driver =3D {
++U_BOOT_PHY_DRIVER(ks8721) =3D {
+ 	.name =3D "Micrel KS8721BL",
+ 	.uid =3D 0x221618,
+ 	.mask =3D 0xfffffc,
+@@ -210,7 +210,7 @@ static int ksz886x_startup(struct phy_device *phydev)
+ 	return 0;
+ }
 =20
--static struct phy_driver M88E1111S_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1111s) =3D {
- 	.name =3D "Marvell 88E1111S",
- 	.uid =3D 0x1410cc0,
- 	.mask =3D 0xffffff0,
-@@ -713,7 +713,7 @@ static struct phy_driver M88E1111S_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E1118_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1118) =3D {
- 	.name =3D "Marvell 88E1118",
- 	.uid =3D 0x1410e10,
- 	.mask =3D 0xffffff0,
-@@ -723,7 +723,7 @@ static struct phy_driver M88E1118_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E1118R_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1118r) =3D {
- 	.name =3D "Marvell 88E1118R",
- 	.uid =3D 0x1410e40,
- 	.mask =3D 0xffffff0,
-@@ -733,7 +733,7 @@ static struct phy_driver M88E1118R_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E1121R_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1121r) =3D {
- 	.name =3D "Marvell 88E1121R",
- 	.uid =3D 0x1410cb0,
- 	.mask =3D 0xffffff0,
-@@ -743,7 +743,7 @@ static struct phy_driver M88E1121R_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E1145_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1145) =3D {
- 	.name =3D "Marvell 88E1145",
- 	.uid =3D 0x1410cd0,
- 	.mask =3D 0xffffff0,
-@@ -753,7 +753,7 @@ static struct phy_driver M88E1145_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E1149S_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1149s) =3D {
- 	.name =3D "Marvell 88E1149S",
- 	.uid =3D 0x1410ca0,
- 	.mask =3D 0xffffff0,
-@@ -763,7 +763,7 @@ static struct phy_driver M88E1149S_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E1240_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1240) =3D {
- 	.name =3D "Marvell 88E1240",
- 	.uid =3D 0x1410e30,
- 	.mask =3D 0xffffff0,
-@@ -773,7 +773,7 @@ static struct phy_driver M88E1240_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E151x_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e151x) =3D {
- 	.name =3D "Marvell 88E151x",
- 	.uid =3D 0x1410dd0,
- 	.mask =3D 0xffffff0,
-@@ -785,7 +785,7 @@ static struct phy_driver M88E151x_driver =3D {
- 	.writeext =3D &m88e1xxx_phy_extwrite,
- };
-=20
--static struct phy_driver M88E1310_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1310) =3D {
- 	.name =3D "Marvell 88E1310",
- 	.uid =3D 0x01410e90,
- 	.mask =3D 0xffffff0,
-@@ -795,7 +795,7 @@ static struct phy_driver M88E1310_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver M88E1680_driver =3D {
-+U_BOOT_PHY_DRIVER(m88e1680) =3D {
- 	.name =3D "Marvell 88E1680",
- 	.uid =3D 0x1410ed0,
- 	.mask =3D 0xffffff0,
-@@ -804,20 +804,3 @@ static struct phy_driver M88E1680_driver =3D {
- 	.startup =3D &genphy_startup,
+-static struct phy_driver ksz886x_driver =3D {
++U_BOOT_PHY_DRIVER(ksz886x) =3D {
+ 	.name =3D "Micrel KSZ886x Switch",
+ 	.uid  =3D 0x00221430,
+ 	.mask =3D 0xfffff0,
+@@ -219,16 +219,3 @@ static struct phy_driver ksz886x_driver =3D {
+ 	.startup =3D &ksz886x_startup,
  	.shutdown =3D &genphy_shutdown,
  };
 -
--int phy_marvell_init(void)
+-int phy_micrel_ksz8xxx_init(void)
 -{
--	phy_register(&M88E1310_driver);
--	phy_register(&M88E1149S_driver);
--	phy_register(&M88E1145_driver);
--	phy_register(&M88E1121R_driver);
--	phy_register(&M88E1118_driver);
--	phy_register(&M88E1118R_driver);
--	phy_register(&M88E1111S_driver);
--	phy_register(&M88E1011S_driver);
--	phy_register(&M88E1240_driver);
--	phy_register(&M88E151x_driver);
--	phy_register(&M88E1680_driver);
--
+-	phy_register(&KSZ804_driver);
+-	phy_register(&KSZ8031_driver);
+-	phy_register(&KSZ8051_driver);
+-	phy_register(&KSZ8061_driver);
+-	phy_register(&KSZ8081_driver);
+-	phy_register(&KS8721_driver);
+-	phy_register(&ksz8895_driver);
+-	phy_register(&ksz886x_driver);
 -	return 0;
 -}
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index e2e31773f6a..efc75808ead 100644
+index efc75808ead..b2b2d6edfa7 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
 @@ -514,9 +514,6 @@ int phy_init(void)
  		phy_drv_reloc(drv);
  #endif
 =20
--#ifdef CONFIG_PHY_MARVELL
--	phy_marvell_init();
+-#ifdef CONFIG_PHY_MICREL_KSZ8XXX
+-	phy_micrel_ksz8xxx_init();
 -#endif
- #ifdef CONFIG_PHY_MICREL_KSZ8XXX
- 	phy_micrel_ksz8xxx_init();
+ #ifdef CONFIG_PHY_MICREL_KSZ90X1
+ 	phy_micrel_ksz90x1_init();
  #endif
 diff --git a/include/phy.h b/include/phy.h
-index a309056ce77..77e46ebac83 100644
+index 77e46ebac83..27d9742c6c4 100644
 --- a/include/phy.h
 +++ b/include/phy.h
 @@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
  int gen10g_shutdown(struct phy_device *phydev);
  int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_marvell_init(void);
- int phy_micrel_ksz8xxx_init(void);
+-int phy_micrel_ksz8xxx_init(void);
  int phy_micrel_ksz90x1_init(void);
  int phy_meson_gxl_init(void);
+ int phy_natsemi_init(void);
 --=20
 2.39.2
 
