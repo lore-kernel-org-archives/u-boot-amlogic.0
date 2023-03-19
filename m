@@ -1,35 +1,35 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web11.21109.1679245545032351179
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+ by mx.groups.io with SMTP id smtpd.web11.21110.1679245547682999831
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:05:45 -0700
+ Sun, 19 Mar 2023 10:05:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1679245544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PE9FNZtK7usLaV+fTcW0VuU7FKFr9OnKgiIC6WJO07c=;
+	b=uYhFQ8h1DpjbRZCabWgT/vPfvtPl6fRDYUQl0WyuKPAgPup/BHhPONrM6odVVJewdJdyNq
+	l1Gqy6n3Ev3FKsxnV5T2R5lrllVMD3NrDW3Iu/jmdbyiEekIgWl8HNY21q0e+Mnt7pdo0S
+	8ZFDq90PGPYMuQcL9ji9Bkb8PuIeMgbShwf6LMZRiBaCs78kxsM3avmaC/6AstKds5jwuc
+	mrh8WNSeeMKnUl2ir7LPWFcDmoa8DbPhzJzKr3pQzsiZMwva0MMx0MSAE0kd9X2xSgTeGu
+	ZCT24X3JY102Msnkl0HXn5ImmvL+xGU4YZTH+DIYknpsI+5mu9lDbPVAIoIhUQ==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
 	t=1679245541;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kaQ2FIoGmMea0G4ffBFMVgc7YEciVf19DWeF+S9F8ow=;
-	b=bw131oNChW9GeVwkI3cjJrhinjk1L6JWWbvitFeeX/MSyTxoLBqda+Yru8LJULDrNPWXqF
-	4z1GDarJudoPFJBxsXqqUtEyJY5YOrL/3/BTrj3+PyMh//WQj1p7dlLmnci779NvG9mQCm
-	YmqvEbc5jtjWIeU3Re27BimvqBRakh3KoV3TsVInCJlPZ8evqp/QR6ce3yiNO/MjrmWl+2
-	mdKs9Z5izQhP1EeBy1uZFL8PGm2+Kg4waw8i1bqrr3jqaD5zJp+REVhJRPfgdYjpqFFhGF
-	PmGj36+bZz1qnLXC8MyHO9z0XYTGghH4JoxCrHMPK0Cffglc6XeBLHoQEdqcbw==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245539;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kaQ2FIoGmMea0G4ffBFMVgc7YEciVf19DWeF+S9F8ow=;
-	b=ojniq4/4TVXpx0+dqlKeJuXHsqvUQuhHzET5MxoPrRoNiJ2X2Ha5Qzf4nlKD9Qa6XNEO29
-	n60YdWR+khjXB6cyNLfgO8+ormlfcvHdSSBlpIn+bKi1DrRiM0sEEAhzO2VxNTOLBiHF9y
-	5TJCd9sQcPTaaBivfVOrMLTNXToWF1/hQYH5VJFmQk9cvssSvxKEqVimnQmfGYgSmUI5m0
-	kJRNQJmihOISxgVdeZyDXo4CcAmV/P/y5SVQzYioOp5ZrgdyrKDx8JGQ81vcgN3oQTUWI9
-	vLE9387rQMYQPTd7tcRHiTdgxhm8IytSJhv/XcIeAR15f/QPB3/9x++7BLyISQ==
-Subject: [PATCH 36/41] net: phy: genphy: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:03:12 +0100
-Message-Id: <20230319170317.27711-36-marek.vasut+renesas@mailbox.org>
+	bh=PE9FNZtK7usLaV+fTcW0VuU7FKFr9OnKgiIC6WJO07c=;
+	b=dbCNpNxD8IYZVZ/7ai+SL33linoP7TcUrOhsaQ+Py9rqfXKjfFk2ruiKkIYAlqfpFiwSLL
+	D0KXKuf4VeLXrQvo/OubrGaPh1vVtaub8sFFf8x6LesqwWJDgpbtHNCGM0aYPQHHsxkpmk
+	rdpdfcaEVL3DEGd2LE8hCbPGdfpNyY0+Mqt/MLlhlHbS5HuPcmVTqqX0eDp0wa0njPK/nr
+	IC/M+Pm83U5jXcykZJbcpw6W0VVqW43397VXtLrbM1HFqpRYGECVjjuoVwhjyZsKzr+eaz
+	h8ku6hBqZ2T3rx1pujQ+If3kgUnzjQQyqb6+U4wazJhD5Fn9ByVm3faGoMJtPA==
+Subject: [PATCH 37/41] net: phy: gen10g: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:03:13 +0100
+Message-Id: <20230319170317.27711-37-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,53 +71,53 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/phy.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/net/phy/generic_10g.c | 2 +-
+ drivers/net/phy/phy.c         | 2 +-
+ include/phy.h                 | 4 ----
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 9d5d1494616..b1e9861c6f3 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -451,7 +451,7 @@ int genphy_shutdown(struct phy_device *phydev)
- 	return 0;
+diff --git a/drivers/net/phy/generic_10g.c b/drivers/net/phy/generic_10g.c
+index b4384e1f781..34ac51ea070 100644
+--- a/drivers/net/phy/generic_10g.c
++++ b/drivers/net/phy/generic_10g.c
+@@ -80,7 +80,7 @@ int gen10g_config(struct phy_device *phydev)
+ 	return gen10g_discover_mmds(phydev);
  }
 =20
--static struct phy_driver genphy_driver =3D {
-+U_BOOT_PHY_DRIVER(genphy) =3D {
+-struct phy_driver gen10g_driver =3D {
++U_BOOT_PHY_DRIVER(gen10g) =3D {
  	.uid		=3D 0xffffffff,
  	.mask		=3D 0xffffffff,
- 	.name		=3D "Generic PHY",
-@@ -463,11 +463,6 @@ static struct phy_driver genphy_driver =3D {
- 	.shutdown	=3D genphy_shutdown,
+ 	.name		=3D "Generic 10G PHY",
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index b1e9861c6f3..bd9c576f459 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -566,7 +566,7 @@ static struct phy_driver *generic_for_phy(struct phy_de=
+vice *phydev)
+ {
+ #ifdef CONFIG_PHYLIB_10G
+ 	if (phydev->is_c45)
+-		return &gen10g_driver;
++		return ll_entry_get(struct phy_driver, gen10g, phy_driver);
+ #endif
+=20
+ 	return ll_entry_get(struct phy_driver, genphy, phy_driver);
+diff --git a/include/phy.h b/include/phy.h
+index df2586f89ea..5f4967cb150 100644
+--- a/include/phy.h
++++ b/include/phy.h
+@@ -173,10 +173,6 @@ struct fixed_link {
+ 	int asym_pause;
  };
 =20
--static int genphy_init(void)
--{
--	return phy_register(&genphy_driver);
--}
+-#ifdef CONFIG_PHYLIB_10G
+-extern struct phy_driver gen10g_driver;
+-#endif
 -
- static LIST_HEAD(phy_drivers);
-=20
- #ifdef CONFIG_NEEDS_MANUAL_RELOC
-@@ -514,8 +509,6 @@ int phy_init(void)
- 		phy_drv_reloc(drv);
- #endif
-=20
--	genphy_init();
--
- 	return 0;
- }
-=20
-@@ -576,7 +569,7 @@ static struct phy_driver *generic_for_phy(struct phy_de=
-vice *phydev)
- 		return &gen10g_driver;
- #endif
-=20
--	return &genphy_driver;
-+	return ll_entry_get(struct phy_driver, genphy, phy_driver);
- }
-=20
- static struct phy_driver *get_phy_driver(struct phy_device *phydev)
+ /**
+  * phy_init() - Initializes the PHY drivers
+  * This function registers all available PHY drivers
 --=20
 2.39.2
 
