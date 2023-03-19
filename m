@@ -1,35 +1,35 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
- by mx.groups.io with SMTP id smtpd.web10.21383.1679245502429900848
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+ by mx.groups.io with SMTP id smtpd.web11.21091.1679245505262281172
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:05:02 -0700
+ Sun, 19 Mar 2023 10:05:05 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245498;
+	t=1679245501;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xJNnQv9/9o+pIuM1g0OhgGd6L0LomFxhM58TzInaCSQ=;
-	b=NFHNoF841ajEonGFcclydWKbyeA6pcnai8nmZMjoevwtlG1Rmt9IW5HakH/qV7zvnLL3Ir
-	bB+Rze8+PnnFe2XTocYF1+u4J2diw4V/HnN0U5ZO5G6ASF9ePeoo/wOl5H9Gp838Cqp6bw
-	Kqp/fUW8Mbg9w2bWiDBhreKSQdLnA60kjtDfYjZKohz6rohFWN7BA73dYGhGnBLzT1RfvM
-	G6mdSHW1cyZgSLMJ7RLyMt4o5Bz50DCCqDYxud/g4zkCNKVL/y0WfBaE70FEscSjxzwe2n
-	l9o9b20qMSlYNtSydL9UjY5PCE+bZS7imFj5+/peGO1uMJjFPq79gUuPxnoXdw==
+	bh=+6QK1HM6IwkRKQq4HaTeV91A9H/3KpmCX9BvW/WaJ8E=;
+	b=qlQqCPuZcrrLUahYqcVkAvn8u5hQLGTMJxOfJW6upWfTLRo46KNOgKeDefUYHPMv75CbWc
+	UBAp9UXQtXz7Efs+3f9tY+moX1pjSW2/8cML4L4s6r85ThFLsPg98IC0PgGyBi7YXzVyvw
+	v5S/nkeYcsXnlWgpHpwiBF3DyWb+qrJ3pz4T0s2USw6+zuJ4I+HYp0nW8UzYlYm4Q/7bj1
+	4XqhGQEOugNvraGY21qsyyimzZ+nushaU5s2+3HD26gCveMi8EfUhaxTGTBEt0I700dT8U
+	xlH1OwszfV/IckYFcX4+pY/t1qK2kHfzLw6tn0pmcFATHgSdk1L1RPfGB4nvqQ==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245496;
+	t=1679245499;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xJNnQv9/9o+pIuM1g0OhgGd6L0LomFxhM58TzInaCSQ=;
-	b=n0EL2p2HABeGGSG1hjM/hLLO7NrRyEMUMKh09mbwnxyuEoOWMmF7nd33rWEUTlxCQXrQ5P
-	LLQuV7UpfUlmeZxQvBiJrNz5eH5XXtRVJ6fYR8gZsqnMA5nqzddru3f6rcefhOp/sHE152
-	ucTSge5QmnozAXsg0q1Wej3GZVbMUFSuTlYN3jeef972tMi1Rj5OvfaQT+c2s10jNDg4nX
-	2SRVZNtKLFlGVIla54O0J4L2SL2nddI9zXNC5WUCin2BfI80PdIiHKGlGNQQJk06p2GvKn
-	kiTM00492qrBfhjf8TzmbvKuk9uD69+f/xw9NyzAmpmlbahT9m+92OcdA8JlaA==
-Subject: [PATCH 21/41] net: phy: meson-gxl: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:02:57 +0100
-Message-Id: <20230319170317.27711-21-marek.vasut+renesas@mailbox.org>
+	bh=+6QK1HM6IwkRKQq4HaTeV91A9H/3KpmCX9BvW/WaJ8E=;
+	b=ZW7qydQ8A4+pS+2qYigHgGhNDh6WsJRbzYeW1YK39k+cZLW03FXjUfy569o8laPui/33F1
+	gtBaWhY0R9kcQl8hVQZXbAhrv02CzR+FQz6JuJ6oZDLX+kIS3b0f665aZxRxWwPs4229Xf
+	835qnHdGxHGzveNlTthpBcyz0mbcAocAK6XD7Mt19JoZ09UlR3SVaQQLF8fhBrFgmDMtZs
+	GLV05FLmBAM4eUh8p/1mbqNOKGF64lW8EH6epDvcm1VGTubkk4ZLAx7Gu2G8NKen9dDo+d
+	JBL4IW6GF7lJ4z/u3UlUvoGRPjaYsbl6hl2oC+rYx7pWmA37kych7hDbGv6STQ==
+Subject: [PATCH 22/41] net: phy: natsemi: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:02:58 +0100
+Message-Id: <20230319170317.27711-22-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,62 +71,81 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/meson-gxl.c | 9 +--------
- drivers/net/phy/phy.c       | 3 ---
- include/phy.h               | 1 -
- 3 files changed, 1 insertion(+), 12 deletions(-)
+ drivers/net/phy/natsemi.c | 15 +++------------
+ drivers/net/phy/phy.c     |  3 ---
+ include/phy.h             |  1 -
+ 3 files changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/phy/meson-gxl.c b/drivers/net/phy/meson-gxl.c
-index 753ca727686..b49c9b5f495 100644
---- a/drivers/net/phy/meson-gxl.c
-+++ b/drivers/net/phy/meson-gxl.c
-@@ -124,7 +124,7 @@ static int meson_gxl_phy_config(struct phy_device *phyd=
-ev)
- 	return genphy_config(phydev);
+diff --git a/drivers/net/phy/natsemi.c b/drivers/net/phy/natsemi.c
+index efde4574deb..6b9e99ea115 100644
+--- a/drivers/net/phy/natsemi.c
++++ b/drivers/net/phy/natsemi.c
+@@ -33,7 +33,7 @@ static int dp83630_config(struct phy_device *phydev)
+ 	return 0;
  }
 =20
--static struct phy_driver meson_gxl_phy_driver =3D {
-+U_BOOT_PHY_DRIVER(meson_gxl_phy) =3D {
- 	.name =3D "Meson GXL Internal PHY",
- 	.uid =3D 0x01814400,
+-static struct phy_driver DP83630_driver =3D {
++U_BOOT_PHY_DRIVER(dp83630) =3D {
+ 	.name =3D "NatSemi DP83630",
+ 	.uid =3D 0x20005ce1,
  	.mask =3D 0xfffffff0,
-@@ -133,10 +133,3 @@ static struct phy_driver meson_gxl_phy_driver =3D {
- 	.startup =3D &meson_gxl_startup,
+@@ -103,7 +103,7 @@ static int dp83865_startup(struct phy_device *phydev)
+ }
+=20
+=20
+-static struct phy_driver DP83865_driver =3D {
++U_BOOT_PHY_DRIVER(dp83865) =3D {
+ 	.name =3D "NatSemi DP83865",
+ 	.uid =3D 0x20005c70,
+ 	.mask =3D 0xfffffff0,
+@@ -146,7 +146,7 @@ static int dp83848_startup(struct phy_device *phydev)
+ 	return dp83848_parse_status(phydev);
+ }
+=20
+-static struct phy_driver DP83848_driver =3D {
++U_BOOT_PHY_DRIVER(dp83848) =3D {
+ 	.name =3D "NatSemi DP83848",
+ 	.uid =3D 0x20005c90,
+ 	.mask =3D 0x2000ff90,
+@@ -155,12 +155,3 @@ static struct phy_driver DP83848_driver =3D {
+ 	.startup =3D &dp83848_startup,
  	.shutdown =3D &genphy_shutdown,
  };
 -
--int phy_meson_gxl_init(void)
+-int phy_natsemi_init(void)
 -{
--	phy_register(&meson_gxl_phy_driver);
+-	phy_register(&DP83630_driver);
+-	phy_register(&DP83865_driver);
+-	phy_register(&DP83848_driver);
 -
 -	return 0;
 -}
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 4747011cda2..27cc9f5ec60 100644
+index 27cc9f5ec60..3d6fc8080e5 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
 @@ -514,9 +514,6 @@ int phy_init(void)
  		phy_drv_reloc(drv);
  #endif
 =20
--#ifdef CONFIG_PHY_MESON_GXL
--	phy_meson_gxl_init();
+-#ifdef CONFIG_PHY_NATSEMI
+-	phy_natsemi_init();
 -#endif
- #ifdef CONFIG_PHY_NATSEMI
- 	phy_natsemi_init();
+ #ifdef CONFIG_NXP_C45_TJA11XX_PHY
+ 	phy_nxp_c45_tja11xx_init();
  #endif
 diff --git a/include/phy.h b/include/phy.h
-index 570524a21f5..f69f379fc2b 100644
+index f69f379fc2b..647d23595d1 100644
 --- a/include/phy.h
 +++ b/include/phy.h
 @@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
  int gen10g_shutdown(struct phy_device *phydev);
  int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_meson_gxl_init(void);
- int phy_natsemi_init(void);
+-int phy_natsemi_init(void);
  int phy_nxp_c45_tja11xx_init(void);
  int phy_nxp_tja11xx_init(void);
+ int phy_realtek_init(void);
 --=20
 2.39.2
 
