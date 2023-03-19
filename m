@@ -1,35 +1,35 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
- by mx.groups.io with SMTP id smtpd.web10.21360.1679245450877753908
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+ by mx.groups.io with SMTP id smtpd.web11.21056.1679245454420137117
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:04:12 -0700
+ Sun, 19 Mar 2023 10:04:14 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245446;
+	t=1679245450;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QaUTZhBqUzHJsWL4TYyJBN3VMkKy20W7m+jrZi3g6A8=;
-	b=ZEmzvNj73Wv0nwetpsboyv8gTGnGDuBXtFP7VuQVZLqMcJckI/LNBk+GOwyKKpIk3NjbZA
-	5ippVny6/OrivybVqwBeN19/dLzuhcDSvsA9eUUfKfFHgdVDAXFRSDEozw8OmIJJZ4fs6Y
-	RVeALpnIJAxgzjpMn2k45saBJ+OUb9dB1It9Pfy2677vuCZ2vhpQt21EpDGfW6JpBRvoTF
-	mDpsbTN+VywTX+vvc3cZoORpLKm/FNTG1i7Sz1y2HFBlcI42fK6mn7nfK9eCEkK5tVjdEs
-	G0auqo6bam8jjYEj93trdt2LvFKdCPCGnMJ3PnZrZTcrpLyY6yRJLLDxE0gF/g==
+	bh=KfN+L8S424MBjOAEOoUJwQ+EkeFaIsDYW1FIdTpMY5I=;
+	b=JGruEuTNE9HpFrUv+abanRrQtn/EG5VaNGNRYRNOvwyJJk2L0atT1pRlpdwp9Q7LRYgt8h
+	BReVpeXfQ9d5SCmRkyEZSCeclpqq0w01nqCfD56WffJvHgARg4GCvXIe/xBkCh7Hh+Upoi
+	8sYE+AtQQLFjl8GUH/m10dc1XzptVXw3+j+LXeEm0jUkkH/zOhIKtOZ8Y+caL1gTUtK554
+	E8HK4EW9gpuYiAhMKginJaxuzjie92u8tSeUyZwCUW7oZlzCRyEIkJESC2TqatBULCT2EJ
+	zR4iITp+IGjac6tfx6xWpmEnC0D0mxeR5q/uVfiRhYSEY2xKP2Ag+JUCKzhCdg==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245444;
+	t=1679245448;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QaUTZhBqUzHJsWL4TYyJBN3VMkKy20W7m+jrZi3g6A8=;
-	b=gFSH/BvAvevVw0xx2dxpbEftANda4ufILErhnUxLIlBwDerYLiJ7UZKCBiWqU3Vg0q8+Mf
-	KouNRwPConhi5SNX74OgP8PTTyqiE+r5XRWVlA8CqPaLSmzY0c/d8N3XdjjwuPp5d8vY1f
-	+QiHznZXh0+vltmgXP6x4sf2bNxP484GbpqzjIKlLbuo/iGAMmQEWj5z7UzO7+btUpfhax
-	Ckb9C71ldyNYjxIVdQmHVlXaUoRLeNhql1H5KR+RjdYvle6+0BndZM+ZSwbPHaQRsqWJLg
-	nv4pgzAD3QqcWL3PN4S0Z86vTRW9bik6mPMV4X+pdylDmZLK3w1tNNGCDx3oxg==
-Subject: [PATCH 02/41] net: phy: ca_phy: Staticize PHY driver entries
-Date: Sun, 19 Mar 2023 18:02:38 +0100
-Message-Id: <20230319170317.27711-2-marek.vasut+renesas@mailbox.org>
+	bh=KfN+L8S424MBjOAEOoUJwQ+EkeFaIsDYW1FIdTpMY5I=;
+	b=eD/Thf8HGRqvFvzYbcFL9DH2sXdFtv4tz5L1InHckMuTdRILq3l9qUxmwaF2/L6wSEjXFp
+	B4YOdxWoxWN7srJ3/mEACwNrLluFMDGOwPN0VzJUIxuNZbwIKw8fBFci/Vz5CDB5jpe7Cq
+	wTdUVb8ApxtV7RVMPUFyuteufSof2iq1xyuwkp2/dWIt7k9EQCrKZwytFrfzDCU4L6FU/M
+	2bRvzIotGVGIOKdW9GZO1i78Gud/ppyU83883aVmAlUffkxY5KGlj2eUngkwG5XClV/8fz
+	Gmbkx8uwinjqtq0BjwZ7AfLCtuy65dEhSVAT3NqtOnLaBJh7H4HzOCS4s1nLeg==
+Subject: [PATCH 03/41] net: phy: cortina: Staticize PHY driver entries
+Date: Sun, 19 Mar 2023 18:02:39 +0100
+Message-Id: <20230319170317.27711-3-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -67,31 +67,31 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/ca_phy.c | 4 ++--
+ drivers/net/phy/cortina.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/ca_phy.c b/drivers/net/phy/ca_phy.c
-index 16851a6820f..9180a41111c 100644
---- a/drivers/net/phy/ca_phy.c
-+++ b/drivers/net/phy/ca_phy.c
-@@ -104,7 +104,7 @@ static int rtl8211_probe(struct phy_device *phydev)
+diff --git a/drivers/net/phy/cortina.c b/drivers/net/phy/cortina.c
+index 778d93e609c..df5a73d6112 100644
+--- a/drivers/net/phy/cortina.c
++++ b/drivers/net/phy/cortina.c
+@@ -382,7 +382,7 @@ int cs4223_startup(struct phy_device *phydev)
+ 	return 0;
  }
 =20
- /* Support for RTL8211 External PHY */
--struct phy_driver rtl8211_external_driver =3D {
-+static struct phy_driver rtl8211_external_driver =3D {
- 	.name =3D "Cortina RTL8211 External",
- 	.uid =3D PHY_ID_RTL8211_EXT,
- 	.mask =3D PHY_ID_MASK,
-@@ -115,7 +115,7 @@ struct phy_driver rtl8211_external_driver =3D {
+-struct phy_driver cs4340_driver =3D {
++static struct phy_driver cs4340_driver =3D {
+ 	.name =3D "Cortina CS4315/CS4340",
+ 	.uid =3D PHY_UID_CS4340,
+ 	.mask =3D 0xfffffff0,
+@@ -396,7 +396,7 @@ struct phy_driver cs4340_driver =3D {
+ 	.shutdown =3D &gen10g_shutdown,
  };
 =20
- /* Support for RTL8211 Internal PHY */
--struct phy_driver rtl8211_internal_driver =3D {
-+static struct phy_driver rtl8211_internal_driver =3D {
- 	.name =3D "Cortina RTL8211 Inrernal",
- 	.uid =3D PHY_ID_RTL8211_INT,
- 	.mask =3D PHY_ID_MASK,
+-struct phy_driver cs4223_driver =3D {
++static struct phy_driver cs4223_driver =3D {
+ 	.name =3D "Cortina CS4223",
+ 	.uid =3D PHY_UID_CS4223,
+ 	.mask =3D 0x0ffff00f,
 --=20
 2.39.2
 
