@@ -1,35 +1,35 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
- by mx.groups.io with SMTP id smtpd.web10.21395.1679245536299489145
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+ by mx.groups.io with SMTP id smtpd.web10.21397.1679245539003333343
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:05:36 -0700
+ Sun, 19 Mar 2023 10:05:39 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245532;
+	t=1679245535;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=euqT65yXedau26WbmMSLdY9hWzf6yxSZXbsx8mlfxSo=;
-	b=j8KTu0oL851t/EW/h7o7GAZuai8ge8C/UYtB2N36faxEyJ8q2rndg/FT/Va2K97BpAao6m
-	piJl+TTMOxmRuaNnbz3FpP0M2ZbBepatdn33rDEaivU4m9wAwaiIAoOgpd+QhSFUNtoHpk
-	3nUkVXeqFkpEIcqVOyi2Vavmu4oTRph7UrZNxB/V7E3sm57X429j3vtSmVgYMf2d6ktvm1
-	Rl2o4l8ODV94YTI0EAzWbZFXBntpry2HDi5dkGRygzVXjSyOGczz/GFmMBxApyoDlMB0L+
-	w9t+Xo9yDrlxzcm/5d+dz1oe3LCFX5glZXbX/WOhRBSx8HysxZXXyEv/rqn0OA==
+	bh=rOTD3eEWGbgKjosuyJgEVsiGNpRMSo620KyZde1pqaw=;
+	b=uxrA5Np+VWdXrYo9xLOyQyo3g4YL24WXfG1zRBn0zkF5+AAYFEF8QUKTejmm7gUjXhyZR5
+	JD7OZ5y+54pfGas2+8MSN5nX2cH3kc7E7xbaV4x4BJHshH7KQa67wf24YIH2d3QIsTkisL
+	lcMX61KH//IV/oPAp8bCfIaTVUbFhWBXYuZMmeNTl2+DCsuayqGNpEJDiJL412HZR2Cz7L
+	jkxzevuVKxj/z1VHlJITGR2TvUkygyJi4LuakNXONDkTsFe1zpGPKRtIcDXBWYQ8jZNgpT
+	Y1WthtrnhG1/QuzVrFcsxWfoWq8OAMV0dYVwE2w60Sawe7szE2+Kijb92cWrAQ==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245530;
+	t=1679245533;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=euqT65yXedau26WbmMSLdY9hWzf6yxSZXbsx8mlfxSo=;
-	b=bxwchd4cjS4vwNlRaH5pZ2ZMbp7UxCjS1yolqwEFf8l6l+CzuLe2JI4vMfoERk2fqcBFue
-	ppMUqx56KtuI2Lxt1mpx1aREsyvovKDHaBhBa6ljZODkF3ap/nlAb7bbsWF9pKUPIot9lS
-	7GbJ3H36LJFnzse4Fo702DgZVuwrMkPu+c+1fymOtesA3ehscWwOVn4ccQk3OMkMeFGnnB
-	bMUSpZ5yirf7/34Tjk7J4ZkD6F4dewrURATdw7qWrycB/lT1Yb5Ohx0eGB75nJRhRYLZ6n
-	iq5uEPu6jEeeC4zS8LRZi8HcRG7zs2PWdY0n2gNcLEALo6fgQ1VC4h+RQjtiew==
-Subject: [PATCH 33/41] net: phy: fixed: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:03:09 +0100
-Message-Id: <20230319170317.27711-33-marek.vasut+renesas@mailbox.org>
+	bh=rOTD3eEWGbgKjosuyJgEVsiGNpRMSo620KyZde1pqaw=;
+	b=S1en6Q9Y2mDtvvF2HjQAA2TWVP/lXiPj63QsKnj9WyWeiPij9oj7N9R5qBLrz4+rE6gtdf
+	bX97dtuPksooS1fdoUZWRTyltnvrKGTFE57BWa/MVaoZJjh/9vhg2O/05rtEnjd8sDQ2Af
+	44/p+MQ3yD7IIXfVmIFH2CpOlDv2xNH1/HpMogw/KpxoCImIS1CaQOqF9/2oGE6aL+UxEh
+	Y5i6YvERPWxWmUgy/c4bpCiQHxvA4hQanGSswteOkAOMrUk80pFM/uoI5+m7K0JFGZWBeG
+	BJMv5tJpnlosfxSamECuufs1//FX3vuw3G/nLYi7igGzZA++Kb+Pys89uhxD5g==
+Subject: [PATCH 34/41] net: phy: ncsi: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:03:10 +0100
+Message-Id: <20230319170317.27711-34-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,60 +71,60 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/fixed.c | 8 +-------
- drivers/net/phy/phy.c   | 3 ---
- include/phy.h           | 1 -
+ drivers/net/phy/ncsi.c | 8 +-------
+ drivers/net/phy/phy.c  | 3 ---
+ include/phy.h          | 1 -
  3 files changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/net/phy/fixed.c b/drivers/net/phy/fixed.c
-index 1192915ee52..2f0823b8365 100644
---- a/drivers/net/phy/fixed.c
-+++ b/drivers/net/phy/fixed.c
-@@ -93,7 +93,7 @@ static int fixedphy_shutdown(struct phy_device *phydev)
+diff --git a/drivers/net/phy/ncsi.c b/drivers/net/phy/ncsi.c
+index bb7ecebed38..eb3fd65bb47 100644
+--- a/drivers/net/phy/ncsi.c
++++ b/drivers/net/phy/ncsi.c
+@@ -881,7 +881,7 @@ int ncsi_shutdown(struct phy_device *phydev)
  	return 0;
  }
 =20
--static struct phy_driver fixedphy_driver =3D {
-+U_BOOT_PHY_DRIVER(fixedphy) =3D {
- 	.uid		=3D PHY_FIXED_ID,
+-static struct phy_driver ncsi_driver =3D {
++U_BOOT_PHY_DRIVER(ncsi) =3D {
+ 	.uid		=3D PHY_NCSI_ID,
  	.mask		=3D 0xffffffff,
- 	.name		=3D "Fixed PHY",
-@@ -103,9 +103,3 @@ static struct phy_driver fixedphy_driver =3D {
- 	.startup	=3D fixedphy_startup,
- 	.shutdown	=3D fixedphy_shutdown,
+ 	.name		=3D "NC-SI",
+@@ -891,9 +891,3 @@ static struct phy_driver ncsi_driver =3D {
+ 	.startup	=3D ncsi_startup,
+ 	.shutdown	=3D ncsi_shutdown,
  };
 -
--int phy_fixed_init(void)
+-int phy_ncsi_init(void)
 -{
--	phy_register(&fixedphy_driver);
+-	phy_register(&ncsi_driver);
 -	return 0;
 -}
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index c20e750aa16..245357c31dc 100644
+index 245357c31dc..69db79f79e0 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
 @@ -514,9 +514,6 @@ int phy_init(void)
  		phy_drv_reloc(drv);
  #endif
 =20
--#ifdef CONFIG_PHY_FIXED
--	phy_fixed_init();
+-#ifdef CONFIG_PHY_NCSI
+-	phy_ncsi_init();
 -#endif
- #ifdef CONFIG_PHY_NCSI
- 	phy_ncsi_init();
+ #ifdef CONFIG_PHY_XILINX_GMII2RGMII
+ 	phy_xilinx_gmii2rgmii_init();
  #endif
 diff --git a/include/phy.h b/include/phy.h
-index e4a3e10c48b..9cabfeedec8 100644
+index 9cabfeedec8..001c998db47 100644
 --- a/include/phy.h
 +++ b/include/phy.h
 @@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
  int gen10g_shutdown(struct phy_device *phydev);
  int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_fixed_init(void);
- int phy_ncsi_init(void);
+-int phy_ncsi_init(void);
  int phy_xilinx_gmii2rgmii_init(void);
 =20
+ /**
 --=20
 2.39.2
 
