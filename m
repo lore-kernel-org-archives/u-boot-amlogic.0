@@ -1,35 +1,35 @@
 Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web10.21400.1679245541919017220
+ by mx.groups.io with SMTP id smtpd.web11.21109.1679245545032351179
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:05:42 -0700
+ Sun, 19 Mar 2023 10:05:45 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245538;
+	t=1679245541;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9d2tY+2sF6dwspdNJ4JcX6UQCy9A/20jq+njEP9bcBg=;
-	b=vtSnmdyUxL3NeOwyCWgPgBCXE/4ZTAtRYN6KqOwCzCpM3A1hvjo/mMbK9vrAHjU1jRJLf+
-	6ArgilAe2jxs8Spki3QSERXXEyXJ6FusSMxbeqZe0H46/fO2CQI8Zm4nIAkaAI5fu3Ym49
-	C15SHT0Ayn708sUcsMuX/fhFP8P5+OgRcY5EHwrf6rW7IoJcXZ1fzySnvxNEkpBjT01Lvi
-	SSUQl0Q2z1sWEOO+F+H4lfCo/rXMSbvRchGw5ctQCD8KySyHgXpGFp3zS4dJep0sS9PPwk
-	vs/4Onzu/Pfkq1omtaXZgtnk8n9iEsITDxbS2MlSum0myfO8e0x0sjIQwlV2pg==
+	bh=kaQ2FIoGmMea0G4ffBFMVgc7YEciVf19DWeF+S9F8ow=;
+	b=bw131oNChW9GeVwkI3cjJrhinjk1L6JWWbvitFeeX/MSyTxoLBqda+Yru8LJULDrNPWXqF
+	4z1GDarJudoPFJBxsXqqUtEyJY5YOrL/3/BTrj3+PyMh//WQj1p7dlLmnci779NvG9mQCm
+	YmqvEbc5jtjWIeU3Re27BimvqBRakh3KoV3TsVInCJlPZ8evqp/QR6ce3yiNO/MjrmWl+2
+	mdKs9Z5izQhP1EeBy1uZFL8PGm2+Kg4waw8i1bqrr3jqaD5zJp+REVhJRPfgdYjpqFFhGF
+	PmGj36+bZz1qnLXC8MyHO9z0XYTGghH4JoxCrHMPK0Cffglc6XeBLHoQEdqcbw==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245536;
+	t=1679245539;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9d2tY+2sF6dwspdNJ4JcX6UQCy9A/20jq+njEP9bcBg=;
-	b=t4gRq5kraDFVPaU4A6lcvalPeeHmwQIYZ+lq3CsUEcwj7BowIRGVkiyk5Mzlt305gQaUGT
-	Dj/bYAd71jvY4481Nnj3iI/Bax8ce69BkbqNK9JWnRPmSX1NyOE+zMKU0h3eYWJ5dMOqRP
-	nGNe3QmUYWRw0qxWk6RxR7IEkq8JfmdJIwB10pjA0pCu4dVN7f6UL0kDbVKp7MHjdM8sX6
-	uqFQfYvdgBWE/bv9ig2uHYZIL2lVvWjxxdI0L2Yskyb1TTRQZ4/ANEn71UtYEOH1b9qHHq
-	hv9gEKKT1WTACXgixGdqvkf/0Cr1xvWDaCSDCqw7VfevI4GLstpa+xnAXaMWDw==
-Subject: [PATCH 35/41] net: phy: xilinx-gmii2rgmii: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:03:11 +0100
-Message-Id: <20230319170317.27711-35-marek.vasut+renesas@mailbox.org>
+	bh=kaQ2FIoGmMea0G4ffBFMVgc7YEciVf19DWeF+S9F8ow=;
+	b=ojniq4/4TVXpx0+dqlKeJuXHsqvUQuhHzET5MxoPrRoNiJ2X2Ha5Qzf4nlKD9Qa6XNEO29
+	n60YdWR+khjXB6cyNLfgO8+ormlfcvHdSSBlpIn+bKi1DrRiM0sEEAhzO2VxNTOLBiHF9y
+	5TJCd9sQcPTaaBivfVOrMLTNXToWF1/hQYH5VJFmQk9cvssSvxKEqVimnQmfGYgSmUI5m0
+	kJRNQJmihOISxgVdeZyDXo4CcAmV/P/y5SVQzYioOp5ZrgdyrKDx8JGQ81vcgN3oQTUWI9
+	vLE9387rQMYQPTd7tcRHiTdgxhm8IytSJhv/XcIeAR15f/QPB3/9x++7BLyISQ==
+Subject: [PATCH 36/41] net: phy: genphy: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:03:12 +0100
+Message-Id: <20230319170317.27711-36-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,64 +71,53 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/phy.c               | 3 ---
- drivers/net/phy/xilinx_gmii2rgmii.c | 9 +--------
- include/phy.h                       | 2 --
- 3 files changed, 1 insertion(+), 13 deletions(-)
+ drivers/net/phy/phy.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 69db79f79e0..9d5d1494616 100644
+index 9d5d1494616..b1e9861c6f3 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
-@@ -514,9 +514,6 @@ int phy_init(void)
- 		phy_drv_reloc(drv);
- #endif
-=20
--#ifdef CONFIG_PHY_XILINX_GMII2RGMII
--	phy_xilinx_gmii2rgmii_init();
--#endif
- 	genphy_init();
-=20
- 	return 0;
-diff --git a/drivers/net/phy/xilinx_gmii2rgmii.c b/drivers/net/phy/xilinx_g=
-mii2rgmii.c
-index 73762839565..0b7436a7e1e 100644
---- a/drivers/net/phy/xilinx_gmii2rgmii.c
-+++ b/drivers/net/phy/xilinx_gmii2rgmii.c
-@@ -124,7 +124,7 @@ static int xilinxgmiitorgmii_probe(struct phy_device *p=
-hydev)
+@@ -451,7 +451,7 @@ int genphy_shutdown(struct phy_device *phydev)
  	return 0;
  }
 =20
--static struct phy_driver gmii2rgmii_driver =3D {
-+U_BOOT_PHY_DRIVER(gmii2rgmii) =3D {
- 	.name =3D "XILINX GMII2RGMII",
- 	.uid =3D PHY_GMII2RGMII_ID,
- 	.mask =3D 0xffffffff,
-@@ -135,10 +135,3 @@ static struct phy_driver gmii2rgmii_driver =3D {
- 	.writeext =3D xilinxgmiitorgmii_extwrite,
- 	.readext =3D xilinxgmiitorgmii_extread,
+-static struct phy_driver genphy_driver =3D {
++U_BOOT_PHY_DRIVER(genphy) =3D {
+ 	.uid		=3D 0xffffffff,
+ 	.mask		=3D 0xffffffff,
+ 	.name		=3D "Generic PHY",
+@@ -463,11 +463,6 @@ static struct phy_driver genphy_driver =3D {
+ 	.shutdown	=3D genphy_shutdown,
  };
--
--int phy_xilinx_gmii2rgmii_init(void)
--{
--	phy_register(&gmii2rgmii_driver);
--
--	return 0;
--}
-diff --git a/include/phy.h b/include/phy.h
-index 001c998db47..df2586f89ea 100644
---- a/include/phy.h
-+++ b/include/phy.h
-@@ -315,8 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
- int gen10g_shutdown(struct phy_device *phydev);
- int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_xilinx_gmii2rgmii_init(void);
+-static int genphy_init(void)
+-{
+-	return phy_register(&genphy_driver);
+-}
 -
- /**
-  * U_BOOT_PHY_DRIVER() - Declare a new U-Boot driver
-  * @__name: name of the driver
+ static LIST_HEAD(phy_drivers);
+=20
+ #ifdef CONFIG_NEEDS_MANUAL_RELOC
+@@ -514,8 +509,6 @@ int phy_init(void)
+ 		phy_drv_reloc(drv);
+ #endif
+=20
+-	genphy_init();
+-
+ 	return 0;
+ }
+=20
+@@ -576,7 +569,7 @@ static struct phy_driver *generic_for_phy(struct phy_de=
+vice *phydev)
+ 		return &gen10g_driver;
+ #endif
+=20
+-	return &genphy_driver;
++	return ll_entry_get(struct phy_driver, genphy, phy_driver);
+ }
+=20
+ static struct phy_driver *get_phy_driver(struct phy_device *phydev)
 --=20
 2.39.2
 
