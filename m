@@ -1,35 +1,35 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
- by mx.groups.io with SMTP id smtpd.web10.21378.1679245486334989571
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+ by mx.groups.io with SMTP id smtpd.web10.21380.1679245489082949865
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Mar 2023 10:04:46 -0700
+ Sun, 19 Mar 2023 10:04:49 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245482;
+	t=1679245485;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DBgTpaVdCzE0r853JuaNtyo/kjvIigGzmOEpCCtqpxk=;
-	b=uPboXUTTY2VVqGVjMDunxdhlKcsXeDLjifUx/fyc8rSe/Uc++QAhChxK/hkm4H3RFMMUMg
-	2cwdv9Oyj2sNcGYbreoiugKBDECFmH0419kP8NjbTUpgIJbpZ3NudXIhEJS/AOYgGLwg35
-	tEkjoeiLecV78VOeuUvYSOroRaSIFZc3Km4nq6hmUjYtWhH/X739vCjOwEIOXgYkrmEDQJ
-	8jlJ+H+XOS5K6OO7yFpK9uwb+DoxQeHwJN6dB7JgNQmQ6WpLo7mE/Mk59LbNwgsCag+OU3
-	hjkG8jxEeevGNSuBfvBvaoGoJtg3RSNfRjurCbMGGUlvBzS9z7DizUrpd4j/sg==
+	bh=WrHaWUO9DQWqnPhRo292uD14rJJj7UQUYONajsB3sko=;
+	b=AIITD9oJZJWv1xCm6zpdZCclxu5AaZ3Ze6WG9oyGqxOuCHa4GDd7yq61v+lSQyRoQOAGcx
+	FPuyXmQtjpphGCZ41R+KUvYKo6kgA/0BWNaXySG3ym3FTyvnE5J+qixxUkW9WRV75+4XIU
+	kEHib+sfPwCZPpWw8OrGo4tEXtDCu+d/AwmnkYFRpXsiGJ4C3xttD5ypw7WVI1SRLMFlOA
+	3EO3KYDIsl+GcDAzt0wvVUrtR5pTTji5z+bm7szTh4gfFyzcRQgen05PTVwMTHw6jnjWJv
+	1/jPaYU1fhHtQGjG8tXXveDzreKv+p+SSM3+pkv8MNVPSNNJ5Zc6cHujJdA/Yw==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1679245480;
+	t=1679245483;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DBgTpaVdCzE0r853JuaNtyo/kjvIigGzmOEpCCtqpxk=;
-	b=XYK9BeB4TXSwaZsSJ7VVT+RdsMlfTNp2xM777YUcCtdFW1y0vEzoMMYsByE+3s+F2HFnu2
-	DFhyaREZGtGcOo/SVtY3ebME3MpygX+9/iZiKeYNbtJLo6W7MgUK6vIhrqTevVt8MLe0oT
-	D/RtbqUmVAM7ct6zNMxePJM0AFSe8pyWSmRCU4OR97uDidN9uz0F9tX+sl+HmEoxLIKQco
-	REqPVzMSy5u4zL6k7WfFd06mIfpcM0OuMsdiqdDb2lE8cjiv0YxwlJL1Uk+9DFFOyY1J6n
-	jbf8tnqgviFWs2D+onIYy53CAqU8473wSSPs5JlZOhZKAvGd1AxNCIeWyl2vaw==
-Subject: [PATCH 15/41] net: phy: mv88e61xx: Convert to U_BOOT_PHY_DRIVER()
-Date: Sun, 19 Mar 2023 18:02:51 +0100
-Message-Id: <20230319170317.27711-15-marek.vasut+renesas@mailbox.org>
+	bh=WrHaWUO9DQWqnPhRo292uD14rJJj7UQUYONajsB3sko=;
+	b=xA0gd77wjJPbYYnZpY1e6uP0+fzxC7beGTWR9wHDDxot/OmMzoKwSE8SQD2SCDxLVN65sX
+	0ZcJGcWXGtrDT7WI1ffZRXXSV2p4xiTuKdI35k3fBs/9w0PPaIyOMZSkLC06R7p2owlLoX
+	lVrK35R5vGFd+qqC17VPpaT40IpasDMVYvF+Zl4p5dQkcJxNom3AzQGjQUBgJFtq3Yl7lb
+	wBBhNuhJYvj9onUUmYdNKpUpvyfKbxbUyXdpBiqfhAL6fqKniNvGY9M7+Y6YPKsp/wgSIr
+	5gtdaW6NBywYE5sC54Sl1qSrE+hGiKyX4/eVfFq1gD+/Vz5dE5zyhoZhgplNoQ==
+Subject: [PATCH 16/41] net: phy: et1011c: Convert to U_BOOT_PHY_DRIVER()
+Date: Sun, 19 Mar 2023 18:02:52 +0100
+Message-Id: <20230319170317.27711-16-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 References: <20230319170317.27711-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
@@ -71,86 +71,61 @@ Cc: Tim Harvey <tharvey@gateworks.com>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: u-boot-amlogic@groups.io
 ---
- drivers/net/phy/mv88e61xx.c | 15 +++------------
- drivers/net/phy/phy.c       |  3 ---
- include/phy.h               |  1 -
- 3 files changed, 3 insertions(+), 16 deletions(-)
+ drivers/net/phy/et1011c.c | 9 +--------
+ drivers/net/phy/phy.c     | 3 ---
+ include/phy.h             | 1 -
+ 3 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/net/phy/mv88e61xx.c b/drivers/net/phy/mv88e61xx.c
-index 7ab60164c77..85778106edd 100644
---- a/drivers/net/phy/mv88e61xx.c
-+++ b/drivers/net/phy/mv88e61xx.c
-@@ -1127,7 +1127,7 @@ static int mv88e61xx_phy_startup(struct phy_device *p=
-hydev)
- 	return 0;
+diff --git a/drivers/net/phy/et1011c.c b/drivers/net/phy/et1011c.c
+index 7eff5ec7cac..fa4831427d5 100644
+--- a/drivers/net/phy/et1011c.c
++++ b/drivers/net/phy/et1011c.c
+@@ -87,7 +87,7 @@ static int et1011c_startup(struct phy_device *phydev)
+ 	return et1011c_parse_status(phydev);
  }
 =20
--static struct phy_driver mv88e61xx_driver =3D {
-+U_BOOT_PHY_DRIVER(mv88e61xx) =3D {
- 	.name =3D "Marvell MV88E61xx",
- 	.uid =3D 0x01410eb1,
- 	.mask =3D 0xfffffff0,
-@@ -1138,7 +1138,7 @@ static struct phy_driver mv88e61xx_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
+-static struct phy_driver et1011c_driver =3D {
++U_BOOT_PHY_DRIVER(et1011c) =3D {
+ 	.name		=3D "ET1011C",
+ 	.uid		=3D 0x0282f014,
+ 	.mask		=3D 0xfffffff0,
+@@ -95,10 +95,3 @@ static struct phy_driver et1011c_driver =3D {
+ 	.config		=3D &et1011c_config,
+ 	.startup	=3D &et1011c_startup,
  };
-=20
--static struct phy_driver mv88e609x_driver =3D {
-+U_BOOT_PHY_DRIVER(mv88e609x) =3D {
- 	.name =3D "Marvell MV88E609x",
- 	.uid =3D 0x1410c89,
- 	.mask =3D 0xfffffff0,
-@@ -1149,7 +1149,7 @@ static struct phy_driver mv88e609x_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--static struct phy_driver mv88e6071_driver =3D {
-+U_BOOT_PHY_DRIVER(mv88e6071) =3D {
- 	.name =3D "Marvell MV88E6071",
- 	.uid =3D 0x1410db0,
- 	.mask =3D 0xfffffff0,
-@@ -1160,15 +1160,6 @@ static struct phy_driver mv88e6071_driver =3D {
- 	.shutdown =3D &genphy_shutdown,
- };
-=20
--int phy_mv88e61xx_init(void)
+-
+-int phy_et1011c_init(void)
 -{
--	phy_register(&mv88e61xx_driver);
--	phy_register(&mv88e609x_driver);
--	phy_register(&mv88e6071_driver);
+-	phy_register(&et1011c_driver);
 -
 -	return 0;
 -}
--
- /*
-  * Overload weak get_phy_id definition since we need non-standard function=
-s
-  * to read PHY registers
 diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 6d7e07c25a5..7312719cdbb 100644
+index 7312719cdbb..5b6e6294377 100644
 --- a/drivers/net/phy/phy.c
 +++ b/drivers/net/phy/phy.c
 @@ -514,9 +514,6 @@ int phy_init(void)
  		phy_drv_reloc(drv);
  #endif
 =20
--#ifdef CONFIG_MV88E61XX_SWITCH
--	phy_mv88e61xx_init();
+-#ifdef CONFIG_PHY_ET1011C
+-	phy_et1011c_init();
 -#endif
- #ifdef CONFIG_PHY_ET1011C
- 	phy_et1011c_init();
+ #ifdef CONFIG_PHY_LXT
+ 	phy_lxt_init();
  #endif
 diff --git a/include/phy.h b/include/phy.h
-index 51c2ddb7e4e..9e5a9196cbd 100644
+index 9e5a9196cbd..3bc4a0de724 100644
 --- a/include/phy.h
 +++ b/include/phy.h
 @@ -315,7 +315,6 @@ int gen10g_startup(struct phy_device *phydev);
  int gen10g_shutdown(struct phy_device *phydev);
  int gen10g_discover_mmds(struct phy_device *phydev);
 =20
--int phy_mv88e61xx_init(void);
- int phy_et1011c_init(void);
+-int phy_et1011c_init(void);
  int phy_lxt_init(void);
  int phy_marvell_init(void);
+ int phy_micrel_ksz8xxx_init(void);
 --=20
 2.39.2
 
