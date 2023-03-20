@@ -1,26 +1,26 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.11613.1679312777389177766
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web10.11614.1679312778988081767
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:17 -0700
-Received: by mail-wr1-f46.google.com with SMTP id v25so6576342wra.12
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:17 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:19 -0700
+Received: by mail-wr1-f44.google.com with SMTP id t15so10034696wrz.7
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312776;
+        d=gmail.com; s=20210112; t=1679312777;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nPc4uGn1eC+DLrvkciSKBLSftxTo1x7LcT00DweY+Rk=;
-        b=LOKHoAN+7jADfDSFnUivXX51V9iDLc/kYrGJ/niZ521QkHBYQR8f0hf8p9jyo/wNgD
-         FhKfORuo3HN0oXrUVYqcfPg+0eGaMVig1YS6goRph8/uk8m5/75CzS9uc/pwdjccDoHZ
-         61CT/oncEINfI8zMVntrddqBz4U+DwY6GuliQ2NPwI66RNHTkUe7iBnFes2Y+J9C5qLg
-         XjNRXJyii2EC3OHPF+tyT6DDA7/2OP7lHhl/4eG0eLe38H9pYHFplvMr02zuXfaXspQb
-         aIzp+W3bMEd0REgxmRw/4NAJo84mh/+275OEPcsBJj5eYrAo70YHq+nz5M1uDbvcDwUL
-         esQQ==
+        bh=PtLZz3+pquEcU8HzOf+k36RUHv2uWugpdgCBCali/z8=;
+        b=TdYNIQY65NwCkccTwR/6PQbHYtoBny7zsJjU8rkn/98eqEW7+s5nptS8uR4t+9OZD8
+         YWB6hacVStLjykFDMxWj1uuQ03zV158F5ubtYFm6P3yjaPrLQiuTQdjc1NecAM60oL3Z
+         DVeE/D6/DuV5g/bNmGCClScVF+EhYZ22QOc2AbxAa1EL4ktRjzTWRNO9gKvKisLyCFgg
+         ovhaNBn3dUZrE22FfFy/fxUM13k/LmWy/6OsyFsTSh40djh0OP24Na+jK5HFtrYTyqXQ
+         NF1lYXw2FRcXaywj6BN/Y9XNAofp2kPbKVDp+64Z0QeXZy+y4k59GDHibHD9GvjC9aas
+         juEw==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 02/33] doc: boards: amlogic: update documentation for boot-flow
-Date: Mon, 20 Mar 2023 11:45:38 +0000
-Message-Id: <20230320114609.930145-3-christianshewitt@gmail.com>
+Subject: [PATCH 03/33] doc: boards: amlogic: update documentation for pre-generated-fip's
+Date: Mon, 20 Mar 2023 11:45:39 +0000
+Message-Id: <20230320114609.930145-4-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -33,236 +33,176 @@ Improve documentation.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/boot-flow.rst | 178 ++++++++++++++++----------------
- 1 file changed, 90 insertions(+), 88 deletions(-)
+ doc/board/amlogic/pre-generated-fip.rst | 138 +++++++++++++++---------
+ 1 file changed, 88 insertions(+), 50 deletions(-)
 
-diff --git a/doc/board/amlogic/boot-flow.rst b/doc/board/amlogic/boot-flow.rst
-index 2049672b1b..041297c512 100644
---- a/doc/board/amlogic/boot-flow.rst
-+++ b/doc/board/amlogic/boot-flow.rst
-@@ -3,132 +3,134 @@
- Amlogic SoC Boot Flow
- =====================
+diff --git a/doc/board/amlogic/pre-generated-fip.rst b/doc/board/amlogic/pre-generated-fip.rst
+index c63ea616b8..6a43d776d4 100644
+--- a/doc/board/amlogic/pre-generated-fip.rst
++++ b/doc/board/amlogic/pre-generated-fip.rst
+@@ -1,24 +1,57 @@
+ .. SPDX-License-Identifier: GPL-2.0+
  
--The Amlogic SoCs have a pre-defined boot sequence in the SoC ROM code. Here are
--the possible boot sources of different SoC families supported by U-Boot:
-+Amlogic SoCs follow a pre-defined boot sequence stored in SoC ROM code. The possible boot
-+sequences of the different SoC families are:
+-Pre-Generated FIP file set
+-==========================
++Pre-Generated FIP File Repo
++===========================
  
--GX* & AXG family
-+GX* & AXG Family
- ----------------
+-The Amlogic ARMv8 based SoCs uses a vendor variant of the Trusted Firmware-A
+-boot architecture.
++Pre-built Flattened Image Package (FIP) sources and Amlogic signing binaries for many
++commercially available boards and some Android STB devices are collected for use with
++distro build-systems here: https://github.com/LibreELEC/amlogic-boot-fip
  
--+----------+--------------------+-------+-------+---------------+---------------+
--|          |   1                | 2     | 3     |    4          |     5         |
--+==========+====================+=======+=======+===============+===============+
--| S905     | POC=0: SPI NOR     | eMMC  | NAND  | SD Card       | USB Device    |
--| S905X    |                    |       |       |               |               |
--| S905L    |                    |       |       |               |               |
--| S905W    |                    |       |       |               |               |
--| S912     |                    |       |       |               |               |
--+----------+--------------------+-------+-------+---------------+---------------+
--| S805X    | POC=0: SPI NOR     | eMMC  | NAND  | USB Device    | -             |
--| A113D    |                    |       |       |               |               |
--| A113X    |                    |       |       |               |               |
--+----------+--------------------+-------+-------+---------------+---------------+
-++----------+-------------------+---------+---------+---------+---------+
-+|          |   1               | 2       | 3       | 4       | 5       |
-++==========+===================+=========+=========+=========+=========+
-+| S905     | POC=0: SPI NOR    | eMMC    | NAND    | SD      | USB     |
-+| S905D    |                   |         |         |         |         |
-+| S905L    |                   |         |         |         |         |
-+| S905W    |                   |         |         |         |         |
-+| S905X    |                   |         |         |         |         |
-+| S905Y    |                   |         |         |         |         |
-+| S912     |                   |         |         |         |         |
-++----------+-------------------+---------+---------+---------+---------+
-+| S805X    | POC=0: SPI NOR    | eMMC    | NAND    | USB     | -       |
-+| A113D    |                   |         |         |         |         |
-+| A113X    |                   |         |         |         |         |
-++----------+-------------------+---------+---------+---------+---------+
+-You can find documentation on the Trusted Firmware-A architecture on: https://www.trustedfirmware.org/projects/tf-a/
++Using the pre-built FIP sources to sign U-Boot is simple, e.g. for LePotato:
  
- POC pin: `NAND_CLE`
- 
--Some boards provide a button to force USB BOOT which disables the eMMC clock signal
--to bypass the eMMC stage. Others have removable eMMC modules; removing the eMMC and
--SDCard will allow boot from USB.
-+Some boards provide a button to force USB boot by disabling the eMMC clock signal and
-+allowing the eMMC step to be bypassed. Others have removable eMMC modules; removing an
-+eMMC module and SD card will allow boot from USB.
- 
--An exception is the lafrite board (aml-s805x-xx) which has no SDCard slot and boots
--from SPI. The only ways to boot the lafrite board from USB are:
-+An exception is the Libre Computer AML-S805X-XX (LaFrite) board which has no SD card
-+slot and boots from SPI. Booting a LaFrite board from USB requires either:
- 
-- - Erase the first sectors of SPI NOR flash
-- - Insert an HDMI boot plug forcing boot over USB
-+ - Erasing the first sectors of SPI NOR flash
-+ - Inserting an HDMI boot plug forcing boot over USB
- 
--The VIM1 and initial VIM2 boards provide a test point on the eMMC signals to block
--the storage from answering and continue to the next boot step.
-+The VIM1 and initial VIM2 boards provide a test point on the eMMC signals to block the
-+storage from answering, allowing boot to continue with the next boot step.
- 
--The USB Device boot uses the first USB interface. On some boards this port is only
--available on an USB-A type connector and needs an special Type-A to Type-A cable to
--communicate with the BootROM.
-+USB boot uses the first USB interface. On some boards this port is only available on a
-+USB-A type connector and requires a special Type-A to Type-A cable to communicate with
-+the BootROM.
- 
--G12* & SM1 family
-+G12* & SM1 Family
- -----------------
- 
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| POC0  | POC1  | POC2  | 1             | 2             | 3             | 4             |
--+=======+=======+=======+===============+===============+===============+===============+
--| 0     | 0     | 0     | USB Device    | SPI NOR       | NAND/eMMC     | SDCard        |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| 0     | 0     | 1     | USB Device    | NAND/eMMC     | SDCard        | -             |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| 0     | 1     | 0     | SPI NOR       | NAND/eMMC     | SDCard        | USB Device    |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| 0     | 1     | 1     | SPI NAND      | NAND/eMMC     | USB Device    | -             |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| 1     | 0     | 0     | USB Device    | SPI NOR       | NAND/eMMC     | SDCard        |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| 1     | 0     | 1     | USB Device    | NAND/eMMC     | SDCard        | -             |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| 1     | 1     | 0     | SPI NOR       | NAND/eMMC     | SDCard        | USB Device    |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--| 1     | 1     | 1     | NAND/eMMC     | SDCard        | USB Device    | -             |
--+-------+-------+-------+---------------+---------------+---------------+---------------+
--
--The last option (1/1/1) is the normal default seen on production devices.
-++-------+-------+-------+------------+------------+------------+-----------+
-+| POC0  | POC1  | POC2  | 1          | 2          | 3          | 4         |
-++=======+=======+=======+============+============+============+===========+
-+| 0     | 0     | 0     | USB        | SPI-NOR    | NAND/eMMC  | SD        |
-++-------+-------+-------+------------+------------+-------------+----------+
-+| 0     | 0     | 1     | USB        | NAND/eMMC  | SD         | -         |
-++-------+-------+-------+------------+------------+------------+-----------+
-+| 0     | 1     | 0     | SPI-NOR    | NAND/eMMC  | SD         | USB       |
-++-------+-------+-------+------------+------------+------------+-----------+
-+| 0     | 1     | 1     | SPI-NAND   | NAND/eMMC  | USB        | -         |
-++-------+-------+-------+------------+------------+------------+-----------+
-+| 1     | 0     | 0     | USB        | SPI-NOR    | NAND/eMMC  | SD        |
-++-------+-------+-------+------------+------------+------------+-----------+
-+| 1     | 0     | 1     | USB        | NAND/eMMC  | SD         | -         |
-++-------+-------+-------+------------+------------+------------+-----------+
-+| 1     | 1     | 0     | SPI-NOR    | NAND/eMMC  | SD         | USB       |
-++-------+-------+-------+------------+------------+------------+-----------+
-+| 1     | 1     | 1     | NAND/eMMC  | SD         | USB        | -         |
-++-------+-------+-------+------------+------------+------------+-----------+
+-The Trusted Firmware-A uses the following boot elements (simplified):
++.. code-block:: bash
 +
-+The last option (1/1/1) is the normal default seen on production devices:
++    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
++    $ cd amlogic-boot-fip
++    $ mkdir my-output-dir
++    $ ./build-fip.sh lepotato /path/to/u-boot/u-boot.bin my-output-dir
++
++Then write U-Boot to SD or eMMC with:
++
++.. code-block:: bash
++
++    $ DEV=/dev/boot_device
++    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
++    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
++
++Files Included
++--------------
++
++Amlogic ARMv8 SoCs use a vendor modified variant of the ARM Trusted Firmware-A boot
++architecture. See documentation here: https://www.trustedfirmware.org/projects/tf-a/
++
++Trusted Firmware-A uses the following boot elements (simplified):
++
++- BL1: First boot step implemented in ROM on Amlogic SoCs
++
++- BL2: Second boot step used to initialize the SoC main clocks & DDR interface. BL21
++  and ACS board-specific binaries must be "inserted" into the BL2 binary before signing
++  and packaging in order to be flashed on the platform
++
++- BL30: Amlogic Secure Co-Processor (SCP) firmware used to handle all system management
++  operations (DVFS, suspend/resume, ..)
++
++- BL301: Amlogic Secure Co-Processor (SCP) board-specific firmware "plug-in" to handle
++  custom DVFS & suspend-resume parameters
  
-  * POC0 pin: `BOOT_4` (0 and all other 1 means SPI NAND boot first)
-  * POC1 pin: `BOOT_5` (0 and all other 1 means USB Device boot first
-  * POC2 pin: `BOOT_6` (0 and all other 1 means SPI NOR boot first)
+-- BL1: First boot step, implemented in ROM on Amlogic SoCs
+-- BL2: Second boot step, used to initialize the SoC main clocks & DDR interface. The BL21 and ACS board-specific binaries are "inserted" in the BL32 binary before signing/packaging in order to be flashed on the platform.
+-- BL30: Amlogic Secure Co-Processor (SCP) firmware used to handle all the system management operations (DVFS, suspend/resume, ...)
+-- BL301: Amlogic Secure Co-Processor (SCP) board-specific firmware "plug-in" to handle custom DVFS & suspend-resume parameters
+ - BL31: Initializes the interrupt controller and the system management interface (PSCI)
+-- BL32 (Optional): Is the Trusted Environment Execution (TEE) Operating System to run secure Trusted Apps, e.g. OP-TEE
++
++- BL32 (Optional): Is the Trusted Environment Execution (TEE) Operating System used to
++  run secure Trusted Apps, e.g. OP-TEE
++
+ - BL33: Is the last non-secure step, usually U-Boot which loads Linux
  
- Most boards provide a button to force USB BOOT which lowers `BOOT_5` to 0. Some boards
--provide a test point on the eMMC or SPI NOR clock signals to block the storage from
--answering and continue to the next boot step.
-+provide a test point on eMMC or SPI NOR clock signals to block storage from answering
-+and allowing boot to continue from the next boot step.
+-Amlogic provides in binary form:
++Amlogic sources provide the following binaries:
  
--The Khadas VIM3/3L boards embed a microcontroller which sets POC signals according
--to its configuration or a specific key press sequence to either boot from SPI NOR
--or eMMC then SDCard, or boot as an USB Device.
-+The Khadas VIM3/3L boards embed a microcontroller which sets POC signals according to
-+its configuration or a specific key press sequence to either boot from SPI NOR or eMMC
-+then SD card, or boot as a USB device.
+ - bl2.bin
+ - bl30.bin
+@@ -26,10 +59,50 @@ Amlogic provides in binary form:
+ - bl31.img
+ - bl32.bin
  
--The Odroid N2/N2+ has a hardware switch to select between SPI NOR or eMMC boot.
-+The Odroid N2/N2+ has a hardware switch to select between SPI NOR or eMMC boot. The
-+Odroid HC4 has a button to disable SPI-NOR allowing boot from SD card.
+-And for lastest SoCs, Amlogic also provides the DDR drivers used by the BL2 binary.
++For G12A/B and SM1 Amlogic also provides DDR drivers used by the BL2 binary:
++
++- ddr4_1d.fw
++- ddr4_2d.fw
++- ddr3_1d.fw
++- piei.fw
++- lpddr4_1d.fw
++- lpddr4_2d.fw
++- diag_lpddr4.fw
++- aml_ddr.fw
++
++The following files are generated from the Amlogic U-Boot fork:
++
++- acs.bin: Contains the PLL & DDR parameters for the board
++- bl301.bin: Contains the DVFS & suspend-resume handling code for the board
++- bl33.bin: U-boot binary image
++
++The acs.bin and bl301.bin files use U-Boot GPL-2.0+ headers and U-Boot build system and
++are thus considered to be issued from GPL-2.0+ source code.
++
++Amlogic alo provides pre-compiled x86_64 and Python2 binaries:
  
- Boot Modes
- ----------
+-The licence of these files wasn't clear until recently, the currently Amlogic distribution licence
+-is the following:
++- aml_encrypt_gxb
++- aml_encrypt_gxl
++- aml_encrypt_g12a
++- aml_encrypt_g12b
++- acs_tool.pyc
++
++The repo replaces the pre-compiled acs_tool.pyc with a Python3 acs_tool.py that can be
++used with modern build hosts.
++
++The repo also provides the following files used with GXBB boards:
++
++- bl1.bin.hardkernel
++- aml_chksum
++
++The repo also supports the open-source 'gxlimg' signing tool that can be used to sign
++U-Boot binaries for GXL/GXM/G12A/G12B/SM1 boards: https://github.com/repk/gxlimg
++
++Licensing
++---------
++
++The licence of Amlogic provided binaries was not historically clear but has now been
++clarified. The current Amlogic distribution licence is below:
  
-- * SDCard
-+ * SD
+ .. code-block:: C
  
--The BootROM fetches the first SDCard sectors in one sequence, then checks the content
--of the data. The BootROM expects to find the FIP binary in sector 1, 512 bytes offset
--from the start.
-+The BootROM fetches the first SD card sectors in one sequence then checks the content of
-+the data. It expects to find the FIP binary in sector 1, 512 bytes offset from the start.
- 
-  * eMMC
- 
--The BootROM fetches the first sectors in one sequence, first on the main partition,
--and then on the Boot0 followed by Boot1 HW partitions. After each read, the BootROM
--checks the data and looks to the next partition if it fails. The BootROM expects to
--find the FIP binary in sector 1, 512 bytes offset from the start.
-+The BootROM fetches the first sectors of the main partition in one sequence then checks
-+the content of the data. On GXL and newer boards it expects to find the FIP binary in
-+sector 1, 512 bytes offset from the start. If not found it checks the boot0 partition,
-+then the boot1 partition. On GXBB it expects to find the FIP binary at an offset that
-+conflicts with MBR partition tables, but this has been worked around (thus avoiding the
-+need for a partition scheme that relocates the MBR). For a more detailed explanation
-+please see: https://github.com/LibreELEC/amlogic-boot-fip/pull/8
- 
-- * SPI NOR
-+ * SPI-NOR
- 
--The BootROM fetches the first SPI NOR sectors in one sequence, then checks the content
--of the data. The BootROM expects to find the FIP binary in sector 1, 512 bytes offset
--from the start.
-+The BootROM fetches the first SPI NOR sectors in one sequence then checks the content of
-+the data. It expects to find the FIP binary in sector 1, 512 bytes offset from the start.
- 
-- * NAND & SPI NAND
-+ * NAND & SPI-NAND
- 
- These modes are rarely used in open platforms and no details are available.
- 
-- * USB Device
-+ * USB
- 
--The BootROM sets the USB Gadget interface to serve a custom USB protocol with the
--USB ID 1b8e:c003. The Amlogic `update` utility is designed to use this protocol. It
--is also implemented in the Amlogic Vendor U-Boot.
-+The BootROM supports a custom USB protocol and sets the USB Gadget interface to use the
-+USB ID 1b8e:c003. The Amlogic `update` utility uses this protocol. It is also supported
-+in the Amlogic vendor U-Boot sources.
- 
--The open-source `pyamlboot` utility https://github.com/superna9999/pyamlboot also
--implements this protocol and can load U-Boot in memory in order to start the SoC
--without any attached storage or to recover from a failed/incorrect image flash.
-+The `pyamlboot` utility https://github.com/superna9999/pyamlboot is open-source and also
-+implements the USB protocol. It can load U-Boot into memory to start the SoC without the
-+storage being attached, or to recover the device from a failed/incorrect image flash.
- 
--HDMI Recovery
---------------
-+HDMI Recovery Dongle
-+--------------------
- 
--The BootROM also briefly reads 8 bytes at address I2C 0x52 offset 0xf8 (248) on the
--HDMI DDC bus. If the content is `boot@USB` it will force USB boot mode. If the content
--is `boot@SDC` it will force SDCard boot mode.
-+The BootROM also reads 8 bytes at address I2C 0x52 offset 0xf8 (248) on the HDMI DDC bus
-+during startup. The content `boot@USB` forces USB boot. The content `boot@SDC` forces SD
-+card boot. The content `boot@SPI` forces SPI-NOT boot. If an SD card or USB device does
-+not enumerate the BootROM continues with the normal boot sequence.
- 
--If USB Device doesn't enumerate or SD Card boot step doesn't work, the BootROM will
--continue with the normal boot sequence.
-+HDMI boot dongles can be created by connecting a 256bytes EEPROM set to answer on address
-+0x52, with `boot@USB` or `boot@SDC` or `boot@SPI` programmed at offset 0xf8 (248).
- 
--Special boot dongles can be built by connecting a 256bytes EEPROM set to answer on
--address 0x52, and program `boot@USB` or `boot@SDC` at offset 0xf8 (248).
+@@ -56,38 +129,3 @@ is the following:
+     // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+     // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+     // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -
--Note: If the SoC is booted with USB Device forced at first step, it will keep the boot
--order on warm reboot. Only cold reboot (power removed) will reset the boot order.
-+If the SoC is booted with USB Device forced at first step, it will retain the forced boot
-+order on warm reboot. Only cold reboot (removing power) will reset the boot order.
+-The following files are generated from the Amlogic U-Boot fork:
+-
+-- acs.bin: contains the PLL & DDR parameters for the board
+-- bl301.bin: contains the DVFS & suspend-resume handling code for the board
+-- bl33.bin: U-boot binary image
+-
+-The acs.bin & bl301.bin uses the U-Boot GPL-2.0+ headers & build systems, thus those
+-are considered issued from GPL-2.0+ source code.
+-
+-The tools used to sign & package those binary files are delivered in binary format
+-for Intel x86-64 and Python 2.x only.
+-
+-A collection of pre-built with the corresponding Amlogic binaries for the common
+-commercially available boards were collected in the https://github.com/LibreELEC/amlogic-boot-fip
+-repository.
+-
+-Using this collection for a commercially available board is very easy.
+-
+-Here considering the Libre Computer AML-S905X-CC, which codename is `lepotato`:
+-
+-.. code-block:: bash
+-
+-    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
+-    $ cd amlogic-boot-fip
+-    $ mkdir my-output-dir
+-    $ ./build-fip.sh lepotato /path/to/u-boot/u-boot.bin my-output-dir
+-
+-and then write the image to SD with:
+-
+-.. code-block:: bash
+-
+-    $ DEV=/dev/your_sd_device
+-    $ dd if=my-output-dir/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+-    $ dd if=my-output-dir/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=444
 -- 
 2.34.1
 
