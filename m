@@ -1,26 +1,26 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.11698.1679312775991322545
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web10.11613.1679312777389177766
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:16 -0700
-Received: by mail-wm1-f54.google.com with SMTP id iw17so1942532wmb.0
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:15 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:17 -0700
+Received: by mail-wr1-f46.google.com with SMTP id v25so6576342wra.12
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312774;
+        d=gmail.com; s=20210112; t=1679312776;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vAnpEYXiX4sB0kjK50ard/j1uHGPKqU9tsDeuY5SwEM=;
-        b=bgKC3EdedGWe232tCj+P2FJvLxLlm9F6/WfOXxKTD0tcnxxUiGR0HlAfEbcpPqfq4V
-         yKtVc/D8bxZ1eY9LV6uhxy+F342wJjMfkEJGYn1fitjsqpCZEKL6/DrKqRlWKHWIW7u2
-         JOotTqEZtWnA+XqiwEGFh1czsEbfb/3M5XjQhzJ4+W+ro5xZ2hmKo2rPWd0MNY52DVF5
-         h1SWUtRkBCtq/VgB4ZCVr6iOGgVyv5tpLJnrmi9kW6T0P87NGMBGvyMx28mlzHpl5MMC
-         RTjr+JegC0jRW1kr3akgx8dYH7Ry4EjMzTtMmK+dJ5GG6V43lQ78va2kpr30TxLFrsaa
-         XjJA==
+        bh=nPc4uGn1eC+DLrvkciSKBLSftxTo1x7LcT00DweY+Rk=;
+        b=LOKHoAN+7jADfDSFnUivXX51V9iDLc/kYrGJ/niZ521QkHBYQR8f0hf8p9jyo/wNgD
+         FhKfORuo3HN0oXrUVYqcfPg+0eGaMVig1YS6goRph8/uk8m5/75CzS9uc/pwdjccDoHZ
+         61CT/oncEINfI8zMVntrddqBz4U+DwY6GuliQ2NPwI66RNHTkUe7iBnFes2Y+J9C5qLg
+         XjNRXJyii2EC3OHPF+tyT6DDA7/2OP7lHhl/4eG0eLe38H9pYHFplvMr02zuXfaXspQb
+         aIzp+W3bMEd0REgxmRw/4NAJo84mh/+275OEPcsBJj5eYrAo70YHq+nz5M1uDbvcDwUL
+         esQQ==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 01/33] doc: boards: amlogic: update documentation for index page
-Date: Mon, 20 Mar 2023 11:45:37 +0000
-Message-Id: <20230320114609.930145-2-christianshewitt@gmail.com>
+Subject: [PATCH 02/33] doc: boards: amlogic: update documentation for boot-flow
+Date: Mon, 20 Mar 2023 11:45:38 +0000
+Message-Id: <20230320114609.930145-3-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -29,192 +29,240 @@ To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradea
 Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Improve documentation. Notably we remove all the board names from the
-feature matrix to reduce table width. SoC types have been added to the
-titles in individual board documents so readers can still correlate a
-board against the features. This makes it easier to add new boards to
-to the document in the future.
+Improve documentation.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/index.rst | 137 +++++++++++++++++-------------------
- 1 file changed, 64 insertions(+), 73 deletions(-)
+ doc/board/amlogic/boot-flow.rst | 178 ++++++++++++++++----------------
+ 1 file changed, 90 insertions(+), 88 deletions(-)
 
-diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index e51b904582..3eb1cf46e0 100644
---- a/doc/board/amlogic/index.rst
-+++ b/doc/board/amlogic/index.rst
-@@ -10,74 +10,65 @@ An up-do-date matrix is also available on: http://linux-meson.com
+diff --git a/doc/board/amlogic/boot-flow.rst b/doc/board/amlogic/boot-flow.rst
+index 2049672b1b..041297c512 100644
+--- a/doc/board/amlogic/boot-flow.rst
++++ b/doc/board/amlogic/boot-flow.rst
+@@ -3,132 +3,134 @@
+ Amlogic SoC Boot Flow
+ =====================
  
- This matrix concerns the actual source code version.
+-The Amlogic SoCs have a pre-defined boot sequence in the SoC ROM code. Here are
+-the possible boot sources of different SoC families supported by U-Boot:
++Amlogic SoCs follow a pre-defined boot sequence stored in SoC ROM code. The possible boot
++sequences of the different SoC families are:
  
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--|                               | S905      | S905X           | S912         | A113X       | S905X2     | S922X       | S905X3       |
--|                               |           | S805X           | S905D        |             | S905D2     | A311D       | S905D3       |
--|                               |           | S905W           |              |             | S905Y2     |             |              |
--+===============================+===========+=================+==============+=============+============+=============+==============+
--| Boards                        | Odroid-C2 | P212            | Khadas VIM2  | S400        | U200       | Odroid-N2   | SEI610       |
--|                               | Nanopi-K2 | Khadas-VIM      | Libretech-PC | JetHub J100 | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
--|                               | P200      | LibreTech-CC v1 | WeTek Core2  |             | Radxa Zero | GT-King/Pro | Odroid-C4    |
--|                               | P201      | LibreTech-AC v2 |              |             |            | GSKing-X    | Odroid-HC4   |
--|                               |           | JetHub J80      |              |             |            | Odroid-Go-  | BananaPi-M5  |
--|                               |           |                 |              |             |            | Ultra       |              |
--|                               |           |                 |              |             |            | Odroid-N2L  |              |
--|                               |           |                 |              |             |            | BPI-M4      |              |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| UART                          | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Pinctrl/GPIO                  | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Clock Control                 | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| PWM                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Reset Control                 | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Infrared Decoder              | No        | No              | No           | No          | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Ethernet                      | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Multi-core                    | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Fuse access                   | **Yes**   | **Yes**         |**Yes**       |**Yes**      |**Yes**     |**Yes**      | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| SPI (FC)                      | **Yes**   | **Yes**         | **Yes**      | **Yes**     |**Yes**     | **Yes**     | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| SPI (CC)                      | No        | No              | No           | No          | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| I2C                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| USB                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| USB OTG                       | No        | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| eMMC                          | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| SDCard                        | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| NAND                          | No        | No              | No           | No          | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| ADC                           | **Yes**   | **Yes**         | **Yes**      | **Yes**     | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| CVBS Output                   | **Yes**   | **Yes**         | **Yes**      | *N/A*       | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| HDMI Output                   | **Yes**   | **Yes**         | **Yes**      | *N/A*       | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| CEC                           | No        | No              | No           | *N/A*       | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Thermal Sensor                | No        | No              | No           | No          | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| LCD/LVDS Output               | No        | *N/A*           | No           | No          | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| MIPI DSI Output               | *N/A*     | *N/A*           | *N/A*        | No          | No         | No          | No           |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| SoC (version) information     | **Yes**   | **Yes**         | **Yes**      | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| PCIe (+NVMe)                  | *N/A*     | *N/A*           | *N/A*        | **Yes**     | **Yes**    | **Yes**     | **Yes**      |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
--| Watchdog                      | *N/A*     | **Yes**         | *N/A*        | *N/A*       | *N/A*      | *N/A*       | *N/A*        |
--+-------------------------------+-----------+-----------------+--------------+-------------+------------+-------------+--------------+
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| SoCs              | S905      | S805X    | S912     | A113X    | S905X2   | S922X    | S905X3   |
-+|                   |           | S905X    | S905D    |          | S905D2   | A311D    | S905D3   |
-+|                   |           | S905W    |          |          | S905Y2   |          |          |
-++===================+===========+==========+==========+==========+==========+==========+==========+
-+| UART              | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Pinctrl/GPIO      | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Clock Control     | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| PWM               | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Reset Control     | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Infrared Decoder  | No        | No       | No       | No       | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Ethernet          | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Multi-core        | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Fuse access       | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| SPI (FC)          | **Yes**   | **Yes**  | **Yes**  | **Yes**  |**Yes**   | **Yes**  | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| SPI (CC)          | No        | No       | No       | No       | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| I2C               | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| USB               | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| USB OTG           | No        | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| eMMC              | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| SDCard            | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| NAND              | No        | No       | No       | No       | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| ADC               | **Yes**   | **Yes**  | **Yes**  | **Yes**  | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| CVBS Output       | **Yes**   | **Yes**  | **Yes**  | *N/A*    | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| HDMI Output       | **Yes**   | **Yes**  | **Yes**  | *N/A*    | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| CEC               | No        | No       | No       | *N/A*    | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Thermal Sensor    | No        | No       | No       | No       | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| LCD/LVDS Output   | No        | *N/A*    | No       | No       | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| MIPI DSI Output   | *N/A*     | *N/A*    | *N/A*    | No       | No       | No       | No       |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| SoC Rev/Info      | **Yes**   | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| PCIe (+NVMe)      | *N/A*     | *N/A*    | *N/A*    | **Yes**  | **Yes**  | **Yes**  | **Yes**  |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
-+| Watchdog          | *N/A*     | **Yes**  | *N/A*    | *N/A*    | *N/A*    | *N/A*    | *N/A*    |
-++-------------------+-----------+----------+----------+----------+----------+----------+----------+
+-GX* & AXG family
++GX* & AXG Family
+ ----------------
  
- Boot Documentation
- ------------------
-@@ -85,8 +76,8 @@ Boot Documentation
- .. toctree::
-    :maxdepth: 1
+-+----------+--------------------+-------+-------+---------------+---------------+
+-|          |   1                | 2     | 3     |    4          |     5         |
+-+==========+====================+=======+=======+===============+===============+
+-| S905     | POC=0: SPI NOR     | eMMC  | NAND  | SD Card       | USB Device    |
+-| S905X    |                    |       |       |               |               |
+-| S905L    |                    |       |       |               |               |
+-| S905W    |                    |       |       |               |               |
+-| S912     |                    |       |       |               |               |
+-+----------+--------------------+-------+-------+---------------+---------------+
+-| S805X    | POC=0: SPI NOR     | eMMC  | NAND  | USB Device    | -             |
+-| A113D    |                    |       |       |               |               |
+-| A113X    |                    |       |       |               |               |
+-+----------+--------------------+-------+-------+---------------+---------------+
+++----------+-------------------+---------+---------+---------+---------+
++|          |   1               | 2       | 3       | 4       | 5       |
+++==========+===================+=========+=========+=========+=========+
++| S905     | POC=0: SPI NOR    | eMMC    | NAND    | SD      | USB     |
++| S905D    |                   |         |         |         |         |
++| S905L    |                   |         |         |         |         |
++| S905W    |                   |         |         |         |         |
++| S905X    |                   |         |         |         |         |
++| S905Y    |                   |         |         |         |         |
++| S912     |                   |         |         |         |         |
+++----------+-------------------+---------+---------+---------+---------+
++| S805X    | POC=0: SPI NOR    | eMMC    | NAND    | USB     | -       |
++| A113D    |                   |         |         |         |         |
++| A113X    |                   |         |         |         |         |
+++----------+-------------------+---------+---------+---------+---------+
  
--   pre-generated-fip
-    boot-flow
-+   pre-generated-fip
+ POC pin: `NAND_CLE`
  
- Board Documentation
- -------------------
-@@ -96,12 +87,12 @@ Board Documentation
+-Some boards provide a button to force USB BOOT which disables the eMMC clock signal
+-to bypass the eMMC stage. Others have removable eMMC modules; removing the eMMC and
+-SDCard will allow boot from USB.
++Some boards provide a button to force USB boot by disabling the eMMC clock signal and
++allowing the eMMC step to be bypassed. Others have removable eMMC modules; removing an
++eMMC module and SD card will allow boot from USB.
  
-    beelink-gtking
-    beelink-gtkingpro
--   jethub-j100
-    jethub-j80
-+   jethub-j100
-+   khadas-vim
-    khadas-vim2
--   khadas-vim3l
-    khadas-vim3
--   khadas-vim
-+   khadas-vim3l
-    libretech-ac
-    libretech-cc
-    nanopi-k2
-@@ -115,9 +106,9 @@ Board Documentation
-    p212
-    q200
-    radxa-zero
--   s400
-    sei510
-    sei610
-+   s400
-    u200
-    wetek-core2
-    w400
+-An exception is the lafrite board (aml-s805x-xx) which has no SDCard slot and boots
+-from SPI. The only ways to boot the lafrite board from USB are:
++An exception is the Libre Computer AML-S805X-XX (LaFrite) board which has no SD card
++slot and boots from SPI. Booting a LaFrite board from USB requires either:
+ 
+- - Erase the first sectors of SPI NOR flash
+- - Insert an HDMI boot plug forcing boot over USB
++ - Erasing the first sectors of SPI NOR flash
++ - Inserting an HDMI boot plug forcing boot over USB
+ 
+-The VIM1 and initial VIM2 boards provide a test point on the eMMC signals to block
+-the storage from answering and continue to the next boot step.
++The VIM1 and initial VIM2 boards provide a test point on the eMMC signals to block the
++storage from answering, allowing boot to continue with the next boot step.
+ 
+-The USB Device boot uses the first USB interface. On some boards this port is only
+-available on an USB-A type connector and needs an special Type-A to Type-A cable to
+-communicate with the BootROM.
++USB boot uses the first USB interface. On some boards this port is only available on a
++USB-A type connector and requires a special Type-A to Type-A cable to communicate with
++the BootROM.
+ 
+-G12* & SM1 family
++G12* & SM1 Family
+ -----------------
+ 
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| POC0  | POC1  | POC2  | 1             | 2             | 3             | 4             |
+-+=======+=======+=======+===============+===============+===============+===============+
+-| 0     | 0     | 0     | USB Device    | SPI NOR       | NAND/eMMC     | SDCard        |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| 0     | 0     | 1     | USB Device    | NAND/eMMC     | SDCard        | -             |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| 0     | 1     | 0     | SPI NOR       | NAND/eMMC     | SDCard        | USB Device    |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| 0     | 1     | 1     | SPI NAND      | NAND/eMMC     | USB Device    | -             |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| 1     | 0     | 0     | USB Device    | SPI NOR       | NAND/eMMC     | SDCard        |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| 1     | 0     | 1     | USB Device    | NAND/eMMC     | SDCard        | -             |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| 1     | 1     | 0     | SPI NOR       | NAND/eMMC     | SDCard        | USB Device    |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-| 1     | 1     | 1     | NAND/eMMC     | SDCard        | USB Device    | -             |
+-+-------+-------+-------+---------------+---------------+---------------+---------------+
+-
+-The last option (1/1/1) is the normal default seen on production devices.
+++-------+-------+-------+------------+------------+------------+-----------+
++| POC0  | POC1  | POC2  | 1          | 2          | 3          | 4         |
+++=======+=======+=======+============+============+============+===========+
++| 0     | 0     | 0     | USB        | SPI-NOR    | NAND/eMMC  | SD        |
+++-------+-------+-------+------------+------------+-------------+----------+
++| 0     | 0     | 1     | USB        | NAND/eMMC  | SD         | -         |
+++-------+-------+-------+------------+------------+------------+-----------+
++| 0     | 1     | 0     | SPI-NOR    | NAND/eMMC  | SD         | USB       |
+++-------+-------+-------+------------+------------+------------+-----------+
++| 0     | 1     | 1     | SPI-NAND   | NAND/eMMC  | USB        | -         |
+++-------+-------+-------+------------+------------+------------+-----------+
++| 1     | 0     | 0     | USB        | SPI-NOR    | NAND/eMMC  | SD        |
+++-------+-------+-------+------------+------------+------------+-----------+
++| 1     | 0     | 1     | USB        | NAND/eMMC  | SD         | -         |
+++-------+-------+-------+------------+------------+------------+-----------+
++| 1     | 1     | 0     | SPI-NOR    | NAND/eMMC  | SD         | USB       |
+++-------+-------+-------+------------+------------+------------+-----------+
++| 1     | 1     | 1     | NAND/eMMC  | SD         | USB        | -         |
+++-------+-------+-------+------------+------------+------------+-----------+
++
++The last option (1/1/1) is the normal default seen on production devices:
+ 
+  * POC0 pin: `BOOT_4` (0 and all other 1 means SPI NAND boot first)
+  * POC1 pin: `BOOT_5` (0 and all other 1 means USB Device boot first
+  * POC2 pin: `BOOT_6` (0 and all other 1 means SPI NOR boot first)
+ 
+ Most boards provide a button to force USB BOOT which lowers `BOOT_5` to 0. Some boards
+-provide a test point on the eMMC or SPI NOR clock signals to block the storage from
+-answering and continue to the next boot step.
++provide a test point on eMMC or SPI NOR clock signals to block storage from answering
++and allowing boot to continue from the next boot step.
+ 
+-The Khadas VIM3/3L boards embed a microcontroller which sets POC signals according
+-to its configuration or a specific key press sequence to either boot from SPI NOR
+-or eMMC then SDCard, or boot as an USB Device.
++The Khadas VIM3/3L boards embed a microcontroller which sets POC signals according to
++its configuration or a specific key press sequence to either boot from SPI NOR or eMMC
++then SD card, or boot as a USB device.
+ 
+-The Odroid N2/N2+ has a hardware switch to select between SPI NOR or eMMC boot.
++The Odroid N2/N2+ has a hardware switch to select between SPI NOR or eMMC boot. The
++Odroid HC4 has a button to disable SPI-NOR allowing boot from SD card.
+ 
+ Boot Modes
+ ----------
+ 
+- * SDCard
++ * SD
+ 
+-The BootROM fetches the first SDCard sectors in one sequence, then checks the content
+-of the data. The BootROM expects to find the FIP binary in sector 1, 512 bytes offset
+-from the start.
++The BootROM fetches the first SD card sectors in one sequence then checks the content of
++the data. It expects to find the FIP binary in sector 1, 512 bytes offset from the start.
+ 
+  * eMMC
+ 
+-The BootROM fetches the first sectors in one sequence, first on the main partition,
+-and then on the Boot0 followed by Boot1 HW partitions. After each read, the BootROM
+-checks the data and looks to the next partition if it fails. The BootROM expects to
+-find the FIP binary in sector 1, 512 bytes offset from the start.
++The BootROM fetches the first sectors of the main partition in one sequence then checks
++the content of the data. On GXL and newer boards it expects to find the FIP binary in
++sector 1, 512 bytes offset from the start. If not found it checks the boot0 partition,
++then the boot1 partition. On GXBB it expects to find the FIP binary at an offset that
++conflicts with MBR partition tables, but this has been worked around (thus avoiding the
++need for a partition scheme that relocates the MBR). For a more detailed explanation
++please see: https://github.com/LibreELEC/amlogic-boot-fip/pull/8
+ 
+- * SPI NOR
++ * SPI-NOR
+ 
+-The BootROM fetches the first SPI NOR sectors in one sequence, then checks the content
+-of the data. The BootROM expects to find the FIP binary in sector 1, 512 bytes offset
+-from the start.
++The BootROM fetches the first SPI NOR sectors in one sequence then checks the content of
++the data. It expects to find the FIP binary in sector 1, 512 bytes offset from the start.
+ 
+- * NAND & SPI NAND
++ * NAND & SPI-NAND
+ 
+ These modes are rarely used in open platforms and no details are available.
+ 
+- * USB Device
++ * USB
+ 
+-The BootROM sets the USB Gadget interface to serve a custom USB protocol with the
+-USB ID 1b8e:c003. The Amlogic `update` utility is designed to use this protocol. It
+-is also implemented in the Amlogic Vendor U-Boot.
++The BootROM supports a custom USB protocol and sets the USB Gadget interface to use the
++USB ID 1b8e:c003. The Amlogic `update` utility uses this protocol. It is also supported
++in the Amlogic vendor U-Boot sources.
+ 
+-The open-source `pyamlboot` utility https://github.com/superna9999/pyamlboot also
+-implements this protocol and can load U-Boot in memory in order to start the SoC
+-without any attached storage or to recover from a failed/incorrect image flash.
++The `pyamlboot` utility https://github.com/superna9999/pyamlboot is open-source and also
++implements the USB protocol. It can load U-Boot into memory to start the SoC without the
++storage being attached, or to recover the device from a failed/incorrect image flash.
+ 
+-HDMI Recovery
+--------------
++HDMI Recovery Dongle
++--------------------
+ 
+-The BootROM also briefly reads 8 bytes at address I2C 0x52 offset 0xf8 (248) on the
+-HDMI DDC bus. If the content is `boot@USB` it will force USB boot mode. If the content
+-is `boot@SDC` it will force SDCard boot mode.
++The BootROM also reads 8 bytes at address I2C 0x52 offset 0xf8 (248) on the HDMI DDC bus
++during startup. The content `boot@USB` forces USB boot. The content `boot@SDC` forces SD
++card boot. The content `boot@SPI` forces SPI-NOT boot. If an SD card or USB device does
++not enumerate the BootROM continues with the normal boot sequence.
+ 
+-If USB Device doesn't enumerate or SD Card boot step doesn't work, the BootROM will
+-continue with the normal boot sequence.
++HDMI boot dongles can be created by connecting a 256bytes EEPROM set to answer on address
++0x52, with `boot@USB` or `boot@SDC` or `boot@SPI` programmed at offset 0xf8 (248).
+ 
+-Special boot dongles can be built by connecting a 256bytes EEPROM set to answer on
+-address 0x52, and program `boot@USB` or `boot@SDC` at offset 0xf8 (248).
+-
+-Note: If the SoC is booted with USB Device forced at first step, it will keep the boot
+-order on warm reboot. Only cold reboot (power removed) will reset the boot order.
++If the SoC is booted with USB Device forced at first step, it will retain the forced boot
++order on warm reboot. Only cold reboot (removing power) will reset the boot order.
 -- 
 2.34.1
 
