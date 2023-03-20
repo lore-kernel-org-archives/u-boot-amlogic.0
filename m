@@ -1,26 +1,26 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.11612.1679312774262615127
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web10.11616.1679312782152739864
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:19 -0700
-Received: by mail-wr1-f54.google.com with SMTP id y14so10041851wrq.4
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:19 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:22 -0700
+Received: by mail-wr1-f49.google.com with SMTP id h17so10026285wrt.8
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312779;
+        d=gmail.com; s=20210112; t=1679312780;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MGszLQhz+ukONY+m+KL8QiBbUNTXcMZFNhCjnvm98bU=;
-        b=IpSqyp45p4SuKKwfu+deQAjdPLOjQLKpvHwxrRwyXQqYImtcX05eLeHlRkMv4RRnxh
-         8SsyP8f5itE+Q1skxtI2NeGKzuFCkPGx2qYrm0tPdNIul8jeABwcuhJgWFpz6FjbGs8r
-         D+VJEJE0CFOHPrCIJQB8MXP920y7LnZwp2bXNgeL+fAe74bhMZDCXuoaK3QDu8h+grtG
-         BtIj9zXVD9aKL3HZWmSex8mAb7f9lX72uvVWfhHAsBVSMa5P/Ooyu8eAWBUTNlD0K5pG
-         plGSNfV/fb428Tn00e46+1CrsOFyqa2ZxmHZT+y4RKlLLOn6hQT4yEksFfLjjCG/8bmS
-         PONQ==
+        bh=pIelX5cDcYvZ2BR37oAOKw+1iFz4JqaD5QMst5RKypY=;
+        b=csi7G6B4XNOqrJLgNY/qXrq4OJhKM37D1M8nJAtim+1Dvo12kebIqRDbpQ5tTxzHbt
+         NwvT1pB5gIUmEojxd38is+SAetgOtDW/5yH82hwMxeLmfbwbaG5ugR43xtq28rU7vFAu
+         7Dj/9WlpdTK0zXU/J2NHzBicmoGQB56qq1r0QPM7gqS3ZvKrW0LMgL1ZqZ91TZS51lSK
+         ZvsRh0zSGxvIR1k6WsWx2D2rjjqgJLHUOaAU/Rg8DBfZZsqkTfB1DIZ8lFbAO5/IxEAe
+         WUDuiBVSDLAaovprpGlNKXP8rqPgm47YVDDZ+PbJOKkyBdKFvlsVpOzF7mKx1jjusc0V
+         tWdA==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 04/33] doc: boards: amlogic: update documentation for Beelink GT-King
-Date: Mon, 20 Mar 2023 11:45:40 +0000
-Message-Id: <20230320114609.930145-5-christianshewitt@gmail.com>
+Subject: [PATCH 05/33] doc: boards: amlogic: update documentation for Beelink GT-King Pro
+Date: Mon, 20 Mar 2023 11:45:41 +0000
+Message-Id: <20230320114609.930145-6-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -33,35 +33,35 @@ Improve documentation.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/beelink-gtking.rst | 120 +++++++++++++--------------
+ doc/board/amlogic/beelink-gtkingpro.rst | 120 ++++++++++++------------
  1 file changed, 60 insertions(+), 60 deletions(-)
 
-diff --git a/doc/board/amlogic/beelink-gtking.rst b/doc/board/amlogic/beelink-gtking.rst
-index 2fb50c5f7b..342887d584 100644
---- a/doc/board/amlogic/beelink-gtking.rst
-+++ b/doc/board/amlogic/beelink-gtking.rst
+diff --git a/doc/board/amlogic/beelink-gtkingpro.rst b/doc/board/amlogic/beelink-gtkingpro.rst
+index 07bb04bb36..541938b103 100644
+--- a/doc/board/amlogic/beelink-gtkingpro.rst
++++ b/doc/board/amlogic/beelink-gtkingpro.rst
 @@ -1,10 +1,10 @@
  .. SPDX-License-Identifier: GPL-2.0+
  
--U-Boot for Beelink GT-King
--==========================
-+U-Boot for Beelink GT-King (S922X)
-+==================================
+-U-Boot for Beelink GT-King Pro
+-==============================
++U-Boot for Beelink GT-King Pro (S922X)
++======================================
  
--The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference
+-The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference
 -board with an S922X-H chip.
-+The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference board with an
-+S922X-H chip and the following specifications:
++The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference board with
++an S922X-H chip and the following specifications:
  
  - 4GB LPDDR4 RAM
  - 64GB eMMC storage
-@@ -18,10 +18,10 @@ board with an S922X-H chip.
- - IR receiver
- - 1x micro SD card slot
+@@ -19,10 +19,10 @@ board with an S922X-H chip.
+ - 1x SD card slot
+ - 1x Power on/off button
  
 -Beelink do not provide public schematics, but have been willing
 -to share them with known distro developers on request.
-+Beelink do not provide public schematics, but have been willing to share them with known
++Beelink do not provide public schematics, but have been willing to share them with known  
 +distro developers to assist with development.
  
 -U-Boot compilation
@@ -69,8 +69,8 @@ index 2fb50c5f7b..342887d584 100644
  ------------------
  
  .. code-block:: bash
-@@ -30,21 +30,21 @@ U-Boot compilation
-     $ make beelink-gtking_defconfig
+@@ -31,21 +31,21 @@ U-Boot compilation
+     $ make beelink-gtkingpro_defconfig
      $ make
  
 -Image creation
@@ -103,7 +103,7 @@ index 2fb50c5f7b..342887d584 100644
  
  .. code-block:: bash
  
-@@ -61,57 +61,57 @@ Go back to the mainline U-Boot source tree then:
+@@ -62,57 +62,57 @@ Go back to the mainline U-Boot source tree then:
      $ cp u-boot.bin fip/bl33.bin
  
      $ sh fip/blx_fix.sh \
