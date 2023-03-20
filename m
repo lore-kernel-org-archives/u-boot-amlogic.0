@@ -1,26 +1,26 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.11711.1679312804687239775
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web10.11624.1679312811465747821
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:49 -0700
-Received: by mail-wr1-f45.google.com with SMTP id j24so1129157wrd.0
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:48 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:51 -0700
+Received: by mail-wr1-f52.google.com with SMTP id j2so10026596wrh.9
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312808;
+        d=gmail.com; s=20210112; t=1679312810;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Atcu05uLW0E88v6JSwvj9fA2sSk5Aok0ROhgBvPOm2I=;
-        b=g5/cPjWuMR0nNDgt0w5e7OWk9a8phhD9XO8WdCMKHuPWkqmAt01zEysRrx4ZON5cf+
-         5noUhZc6cnRAEg3gDFrqQUteLaXhRrO56pEyywLfz0zLV5caaOBJshRNgi0hBsARTaSP
-         iz/ZjQmExa9c5pzp/6T9WB+IuTvTInnZEZ6d1JiIrPprP9JJyxklCgbvugXtw/npIHiw
-         HOfZCX9rhZgXxpspxCy9ZEq1TEBJxCmcbMNhJW+nNqpB3NrqaRwNOQZBBnn+TJ3ah+xu
-         RcjFxT+qQ9dWk41yGYxMUj4p7WbO5Yk93IKn+4FdZLdBra3wUpdGsNoLimoIvuqtqG28
-         x9Hg==
+        bh=S7cjgEYI29KMpo57s2rb53lbtSRPUWD30me1nYvBnTc=;
+        b=FnN/BII+srkmdFKf94GZ/ZocC6Tdd5uk6upz+b/KabXgMVGSwGzdAzQISOmTUiB4aT
+         i5WYeSUrHDcE24OJab2R55h3m9xXSpRSegESwQjz+m0LyZsjkCQ4XReoxolwpY49tv5R
+         09Pj0tJ8efu5tOrYLlnQp2g3iqUGy6kH4xhyyoo8jOjJtOSPDdT4Slo/OkhcAgsPpONA
+         5HameRJfIAVVtUNDACCgSnp8MGITp77B1NXVFhZSY0aB+7ukLu63BmaR1aQFQOgkj4+F
+         GMJ3Tthi+tc1i5pVHypcZb5zVI/djWeTNaZKiCgMpMjjju2uO/fcOwnChJ3W7QrwyhlW
+         n6GQ==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 22/33] doc: boards: amlogic: update documentation for Q200
-Date: Mon, 20 Mar 2023 11:45:58 +0000
-Message-Id: <20230320114609.930145-23-christianshewitt@gmail.com>
+Subject: [PATCH 23/33] doc: boards: amlogic: update documentation for Radxa Zero
+Date: Mon, 20 Mar 2023 11:45:59 +0000
+Message-Id: <20230320114609.930145-24-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -33,133 +33,87 @@ Improve documentation.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/q200.rst | 76 +++++++++++++++++++++-----------------
- 1 file changed, 42 insertions(+), 34 deletions(-)
+ doc/board/amlogic/radxa-zero.rst | 45 +++++++++++++++++---------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/doc/board/amlogic/q200.rst b/doc/board/amlogic/q200.rst
-index 3ac4116be4..c304980579 100644
---- a/doc/board/amlogic/q200.rst
-+++ b/doc/board/amlogic/q200.rst
-@@ -1,24 +1,24 @@
+diff --git a/doc/board/amlogic/radxa-zero.rst b/doc/board/amlogic/radxa-zero.rst
+index f5611f52ec..e8a8d87320 100644
+--- a/doc/board/amlogic/radxa-zero.rst
++++ b/doc/board/amlogic/radxa-zero.rst
+@@ -1,14 +1,13 @@
  .. SPDX-License-Identifier: GPL-2.0+
  
--U-Boot for Amlogic Q200
--=======================
-+U-Boot for Amlogic Q200 (S912)
+-U-Boot for Radxa Zero
+-=====================
++U-Boot for Radxa Zero (S905Y2)
 +==============================
  
--Q200 is a reference board manufactured by Amlogic with the following
--specifications:
-+Q200 is a reference board manufactured by Amlogic with the following specifications:
+-Radxa Zero is a small form factor SBC based on the Amlogic S905Y2
+-chipset that ships in a number of RAM/eMMC configurations:
++Radxa Zero is a small form factor SBC based on the Amlogic S905Y2 chipset that ships in
++a number of RAM/eMMC configurations:
  
-  - Amlogic S912 ARM Cortex-A53 octo-core SoC @ 1.5GHz
-  - ARM Mali T860 GPU
-  - 2/3GB DDR4 SDRAM
-  - 10/100/1000 Ethernet
-  - HDMI 2.0 4K/60Hz display
-- - 2 x USB 2.0 Host, 1 x USB 2.0 Device
-+ - 2x USB 2.0 Host
-+ - 1x USB 2.0 Device
-  - 16GB/32GB/64GB eMMC
-  - 2MB SPI Flash
-  - microSD
-  - SDIO Wifi Module, Bluetooth
-  - IR receiver
+-Boards with 512MB/1GB LPDDR4 RAM have no eMMC storage and BCM43436
+-wireless (2.4GHz b/g/n) while 2GB/4GB boards have 8/16/32/64/128GB
+-eMMC storage and BCM4345 wireless (2.4/5GHz a/b/g/n/ac).
++512MB/1GB LPDDR4 RAM boards have no eMMC and BCM43436 wireless (2.4GHz b/g/n) while the
++2GB/4GB boards have 8/16/32/64/128GB eMMC and BCM4345 wireless (2.4/5GHz a/b/g/n/ac).
  
+ - Amlogic S905Y2 quad-core Cortex-A53
+ - Mali G31-MP2 GPU
+@@ -18,11 +17,9 @@ eMMC storage and BCM4345 wireless (2.4/5GHz a/b/g/n/ac).
+ - 1x micro SD Card slot
+ - 40 Pin GPIO header
+ 
+-Schematics are available on the manufacturer website:
++Schematics are available on the manufacturer website: https://dl.radxa.com/zero/docs/hw
+ 
+-https://dl.radxa.com/zero/docs/hw/RADAX_ZERO_V13_SCH_20210309.pdf
+-
 -U-Boot compilation
 +U-Boot Compilation
  ------------------
  
  .. code-block:: bash
-@@ -27,12 +27,20 @@ U-Boot compilation
-     $ make khadas-vim2_defconfig
+@@ -31,14 +28,20 @@ U-Boot compilation
+     $ make radxa-zero_defconfig
      $ make
  
 -Image creation
 ---------------
 +U-Boot Signing with Pre-Built FIP repo
 +--------------------------------------
- 
--Amlogic doesn't provide sources for the firmware and for tools needed
--to create the bootloader image, so it is necessary to obtain them from
--the git tree published by the board vendor:
++
 +.. code-block:: bash
 +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
 +    $ cd amlogic-boot-fip
 +    $ mkdir my-output-dir
-+    $ ./build-fip.sh q200 /path/to/u-boot/u-boot.bin my-output-dir
-+
++    $ ./build-fip.sh radxa-zero /path/to/u-boot/u-boot.bin my-output-dir
+ 
+-For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `radxa-zero`
 +U-Boot Manual Signing
 +---------------------
-+
+ 
+-Amlogic does not provide sources for the firmware and for tools needed
+-to create the bootloader image, so it is necessary to obtain them from
+-git trees published by the board vendor:
 +Amlogic does not provide sources for the firmware and tools needed to create a bootloader
-+image but sources have been shared by Linux development contractor, Baylibre:
++image so it is necessary to obtain binaries from sources published by the board vendor:
  
  .. code-block:: bash
  
-@@ -47,7 +55,7 @@ the git tree published by the board vendor:
+@@ -61,16 +64,16 @@ git trees published by the board vendor:
+     $ cd ../fip/radxa-zero
      $ make
-     $ export FIPDIR=$PWD/fip
  
--Go back to mainline U-Boot source tree then :
-+Go back to the mainline U-Boot source tree then:
+-This will generate:
++This will generate the signed U-Boot binaries:
  
  .. code-block:: bash
  
-@@ -62,40 +70,40 @@ Go back to mainline U-Boot source tree then :
-     $ cp u-boot.bin fip/bl33.bin
+     $ u-boot.bin u-boot.bin.sd.bin u-boot.bin.usb.bl2 u-boot.bin.usb.tpl
  
-     $ $FIPDIR/blx_fix.sh \
--    	fip/bl30.bin \
--    	fip/zero_tmp \
--    	fip/bl30_zero.bin \
--    	fip/bl301.bin \
--    	fip/bl301_zero.bin \
--    	fip/bl30_new.bin \
--    	bl30
-+              fip/bl30.bin \
-+              fip/zero_tmp \
-+              fip/bl30_zero.bin \
-+              fip/bl301.bin \
-+              fip/bl301_zero.bin \
-+              fip/bl30_new.bin \
-+              bl30
- 
-     $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
- 
-     $ $FIPDIR/blx_fix.sh \
--    	fip/bl2_acs.bin \
--    	fip/zero_tmp \
--    	fip/bl2_zero.bin \
--    	fip/bl21.bin \
--    	fip/bl21_zero.bin \
--    	fip/bl2_new.bin \
--    	bl2
-+              fip/bl2_acs.bin \
-+              fip/zero_tmp \
-+              fip/bl2_zero.bin \
-+              fip/bl21.bin \
-+              fip/bl21_zero.bin \
-+              fip/bl2_new.bin \
-+              bl2
- 
-     $ $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
-     $ $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl31.img
-     $ $FIPDIR/gxl/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
-     $ $FIPDIR/gxl/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
-     $ $FIPDIR/gxl/aml_encrypt_gxl --bootmk \
--    		--output fip/u-boot.bin \
--    		--bl2 fip/bl2.n.bin.sig \
--    		--bl30 fip/bl30_new.bin.enc \
--    		--bl31 fip/bl31.img.enc \
--    		--bl33 fip/bl33.bin.enc
-+                                  --output fip/u-boot.bin \
-+                                  --bl2 fip/bl2.n.bin.sig \
-+                                  --bl30 fip/bl30_new.bin.enc \
-+                                  --bl31 fip/bl31.img.enc \
-+                                  --bl33 fip/bl33.bin.enc
- 
--and then write the image to SD with:
+-Then write the image to SD with:
 +Then write U-Boot to SD or eMMC with:
  
  .. code-block:: bash
