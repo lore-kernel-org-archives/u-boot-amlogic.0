@@ -1,26 +1,26 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.11612.1679312774262615127
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web11.11707.1679312791591760481
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:29 -0700
-Received: by mail-wr1-f54.google.com with SMTP id y14so10042403wrq.4
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:28 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:31 -0700
+Received: by mail-wm1-f52.google.com with SMTP id i5-20020a05600c354500b003edd24054e0so2210664wmq.4
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312788;
+        d=gmail.com; s=20210112; t=1679312790;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tsncpsLbv6Sdy2201gEVqEmK6Z5ULiz02P3xkFi5QSI=;
-        b=SKmNseR7A3WoUf51Rxt7ISgUi4LE52+OM0M0yWCvNALl9QyT2e2OK5XOfrn8EpswOd
-         KGekvTkZs/FTaca4J0V4esMu4akjRWRtMGM2B1uAlsMbrlb0BwcgZN4ITINUDjN5ZO86
-         g+j79zt9WFME6eYa9ri4Kt2rqy+o4Pl46+9vRqH0rf0mgX6mKyPQp2Rn0mdGO6Qn4SKk
-         zVnCAAFC1Wfq4wI6yw5knkzpM77gtw7UsFFWMMzqYzAxh1OYyO+6ioV/P+6rDyUAdfw+
-         MfU2Zmv5UF8Bo6OE+iHpHhZ9Cd72hwT8c8F6x+PJCmhPQsjamBuyBbLUHCUIkOOvy0mN
-         kwrA==
+        bh=UXxkF+XbVbc4FJBnwx+bZ4z+3Rqpu6bv55HLEWO0AlI=;
+        b=gZfN6ARN5/zMky3GK8v7su3CaiqX8Pf/cUtrb1nHIn3i9OULU9rda+X62KjmPdG3O9
+         /arAdmhO3WJxCBuFw7g3dpOEAd+tUAvPdE2s2LKR7QZl43RdB6N60RzeGUnqRLJXHGv/
+         GQwJT18gbFpd7N/sxNVoqBTGAeeHQdE1veA8SbWeW8ZNoVKQ+fyorVoiF+bVcvKPA7Ca
+         ViOXvMAQAt5BIMhuRKGb8uDCDjROb6ZewvwOEZXX3QUDjioFj4ZrlZnSyUexEAoeD56I
+         H2HZRl//Tu0Z+fYje7Ua4n7S440Qfe9xZKkoAA0ZAiPur805SMfXZn2NnQAiHb94C7oo
+         Xk1w==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 10/33] doc: boards: amlogic: update documentation for Khadas VIM3
-Date: Mon, 20 Mar 2023 11:45:46 +0000
-Message-Id: <20230320114609.930145-11-christianshewitt@gmail.com>
+Subject: [PATCH 11/33] doc: boards: amlogic: update documentation for Khadas VIM3L
+Date: Mon, 20 Mar 2023 11:45:47 +0000
+Message-Id: <20230320114609.930145-12-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -33,28 +33,28 @@ Improve documentation.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/khadas-vim3.rst | 137 +++++++++++++++---------------
+ doc/board/amlogic/khadas-vim3l.rst | 137 ++++++++++++++---------------
  1 file changed, 68 insertions(+), 69 deletions(-)
 
-diff --git a/doc/board/amlogic/khadas-vim3.rst b/doc/board/amlogic/khadas-vim3.rst
-index 73dc32b79b..88f2e0ebbe 100644
---- a/doc/board/amlogic/khadas-vim3.rst
-+++ b/doc/board/amlogic/khadas-vim3.rst
+diff --git a/doc/board/amlogic/khadas-vim3l.rst b/doc/board/amlogic/khadas-vim3l.rst
+index 692ab3d21d..935f43c725 100644
+--- a/doc/board/amlogic/khadas-vim3l.rst
++++ b/doc/board/amlogic/khadas-vim3l.rst
 @@ -1,10 +1,10 @@
  .. SPDX-License-Identifier: GPL-2.0+
  
--U-Boot for Khadas VIM3
--======================
-+U-Boot for Khadas VIM3 (A311D)
-+==============================
+-U-Boot for Khadas VIM3L
+-=======================
++U-Boot for Khadas VIM3L (S905D3)
++================================
  
--Khadas VIM3 is a single board computer manufactured by Shenzhen Wesion
+-Khadas VIM3L is a single board computer manufactured by Shenzhen Wesion
 -Technology Co., Ltd. with the following specifications:
-+Khadas VIM3 is a Single Board Computer manufactured by Shenzhen Wesion Technology Co. Ltd
++Khadas VIM3L is a Single Board Computer manufactured by Shenzhen Wesion Technology Co. Ltd
 +with the following specifications:
  
-  - Amlogic A311D Arm Cortex-A53 dual-core + Cortex-A73 quad-core SoC
-  - 4GB LPDDR4 SDRAM
+  - Amlogic S905D3 Arm Cortex-A55 quad-core SoC
+  - 2GB LPDDR4 SDRAM
 @@ -20,32 +20,27 @@ Schematics are available on the manufacturer website.
  
  PCIe Setup
@@ -68,7 +68,7 @@ index 73dc32b79b..88f2e0ebbe 100644
  
 -To setup for PCIe, run the following commands from U-Boot:
 +The on-board MCU can mux the PCIe/USB3.0 shared differential lines using a FUSB340TMX USB
-+3.1 SuperSpeed Data Switch between a USB3.0 Type-A connector and an M.2 Key M slot. The
++3.1 SuperSpeed Data Switch between a USB3.0 Type-A connector and an M.2 Key-M slot. The
 +PHY driving these differential lines is shared between the USB3.0 controller and the PCIe
 +Controller, thus only a single controller can use it.
 +
@@ -97,7 +97,7 @@ index 73dc32b79b..88f2e0ebbe 100644
  
  .. code-block:: bash
 @@ -54,14 +49,20 @@ U-Boot compilation
-     $ make khadas-vim3_defconfig
+     $ make khadas-vim3l_defconfig
      $ make
  
 -Image creation
@@ -109,9 +109,9 @@ index 73dc32b79b..88f2e0ebbe 100644
 +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
 +    $ cd amlogic-boot-fip
 +    $ mkdir my-output-dir
-+    $ ./build-fip.sh khadas-vim3 /path/to/u-boot/u-boot.bin my-output-dir
++    $ ./build-fip.sh khadas-vim3l /path/to/u-boot/u-boot.bin my-output-dir
  
--For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `khadas-vim3`
+-For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `khadas-vim3l`
 +U-Boot Manual Signing
 +---------------------
  
@@ -126,14 +126,14 @@ index 73dc32b79b..88f2e0ebbe 100644
 @@ -72,16 +73,14 @@ the git tree published by the board vendor:
      $ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
  
-     $ DIR=vim3-u-boot
+     $ DIR=vim3l-u-boot
 -    $ git clone --depth 1 \
 -       https://github.com/khadas/u-boot.git -b khadas-vims-v2015.01 \
 -       $DIR
 +    $ git clone --depth 1 https://github.com/khadas/u-boot.git -b khadas-vims-v2015.01 $DIR
  
-     $ cd vim3-u-boot
-     $ make kvim3_defconfig
+     $ cd vim3l-u-boot
+     $ make kvim3l_defconfig
      $ make CROSS_COMPILE=aarch64-none-elf-
      $ export UBOOTDIR=$PWD
  
@@ -177,30 +177,30 @@ index 73dc32b79b..88f2e0ebbe 100644
 +           fip/bl2_new.bin \
 +           bl2
  
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl30sig --input fip/bl30_new.bin \
+     $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl30sig --input fip/bl30_new.bin \
 -    					--output fip/bl30_new.bin.g12a.enc \
 -    					--level v3
 +                                          --output fip/bl30_new.bin.g12a.enc \
 +                                          --level v3
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl30_new.bin.g12a.enc \
+     $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl30_new.bin.g12a.enc \
 -    					--output fip/bl30_new.bin.enc \
 -    					--level v3 --type bl30
 +                                          --output fip/bl30_new.bin.enc \
 +                                          --level v3 --type bl30
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl31.img \
+     $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl31.img \
 -    					--output fip/bl31.img.enc \
 -    					--level v3 --type bl31
 +                                          --output fip/bl31.img.enc \
 +                                          --level v3 --type bl31
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
+     $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl33.bin --compress lz4 \
 -    					--output fip/bl33.bin.enc \
 -    					--level v3 --type bl33 --compress lz4
 +                                          --output fip/bl33.bin.enc \
 +                                          --level v3 --type bl33 --compress lz4
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
+     $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl2sig --input fip/bl2_new.bin \
 -    					--output fip/bl2.n.bin.sig
 +                                          --output fip/bl2.n.bin.sig
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bootmk \
+     $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bootmk \
 -    		--output fip/u-boot.bin \
 -    		--bl2 fip/bl2.n.bin.sig \
 -    		--bl30 fip/bl30_new.bin.enc \
