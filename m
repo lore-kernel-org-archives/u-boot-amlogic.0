@@ -1,26 +1,26 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.11712.1679312806409388984
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.11711.1679312804687239775
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:55 -0700
-Received: by mail-wr1-f47.google.com with SMTP id j24so1129479wrd.0
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:54 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:56 -0700
+Received: by mail-wr1-f45.google.com with SMTP id j24so1129550wrd.0
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312814;
+        d=gmail.com; s=20210112; t=1679312816;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vAtnln5Ywi5ePclZoX20T/TmZufEC2pp0oMOI8VQoEk=;
-        b=bvOd/rEcJjOoDtiEErlMGACkOHq2Qm1X68QqDBX122FBiljfMNsPZAAbL15/ohCnY9
-         0Kegu6JOK2QTtMslncC/L11N7R7DN1hxJ5OXYqMkW27aAiSsvBBqC1MY6mVC1uLoGl27
-         XpLe9JNUyhWAYgHLzVKbXnGGRQuW2YgasQHN7LD4SwR8k/vbZ82H8euMB+usY6LeRhIB
-         eOiWCuckF/bdSAClu+xVXX8t5qRtDLDXdeHBt9Nr/4EUn12UTD8EfmqpX+zJi6OoeH30
-         bWXCYhpsRP28mkJ87KU39REtpwP7pzy2eEBgYrAUwjmEvi3snEV51tM/JxexHD3DSboY
-         LW6Q==
+        bh=ZmcVnpXoBYjxiK6PzinhKQ1A5neoyZ/06WqfZdqy/O4=;
+        b=lvCSbjLvNehou79aEj41MlM42kMjhSe+Vx02tFHzWxYyJIi6eg7G7eqqHSwfnjRm9p
+         HnRyuOm3F5kZ1spTthm5LvF9XTZy4QmHbpcTX62VCreJzZQKP24KLDZYHIDqWx32/+73
+         +UmR5mBL1+szcxRJn1W+WaK1CKftlBsUnoQEgzoWdyDln6QTeMNHSHsSD9Ae57kezSgo
+         NE9gU6KCAD5RmBmwIJTDXt8UEqwfG9aVknnv2le6csvQHse3qAV6QTKmIJp6xcr1IBxc
+         Krp14ikh7GU0LioUvoDYGLJ7826qE37y3EsQM6vMBX7+PvjOTpVwReR6D8i/7cHOnj00
+         L2SQ==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 26/33] doc: boards: amlogic: update documentation for SEI610
-Date: Mon, 20 Mar 2023 11:46:02 +0000
-Message-Id: <20230320114609.930145-27-christianshewitt@gmail.com>
+Subject: [PATCH 27/33] doc: boards: amlogic: update documentation for U200
+Date: Mon, 20 Mar 2023 11:46:03 +0000
+Message-Id: <20230320114609.930145-28-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -29,50 +29,46 @@ To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradea
 Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Improve documentation.
-
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/sei610.rst | 118 ++++++++++++++++++-----------------
- 1 file changed, 61 insertions(+), 57 deletions(-)
+ doc/board/amlogic/u200.rst | 113 +++++++++++++++++++------------------
+ 1 file changed, 59 insertions(+), 54 deletions(-)
 
-diff --git a/doc/board/amlogic/sei610.rst b/doc/board/amlogic/sei610.rst
-index 2d754497cc..84aaeff4ed 100644
---- a/doc/board/amlogic/sei610.rst
-+++ b/doc/board/amlogic/sei610.rst
-@@ -1,23 +1,22 @@
+diff --git a/doc/board/amlogic/u200.rst b/doc/board/amlogic/u200.rst
+index 53213fdb68..6d1d66b4ea 100644
+--- a/doc/board/amlogic/u200.rst
++++ b/doc/board/amlogic/u200.rst
+@@ -1,15 +1,14 @@
  .. SPDX-License-Identifier: GPL-2.0+
  
--U-Boot for Amlogic SEI610
--=========================
-+U-Boot for Amlogic SEI610 (S905X3)
-+==================================
+-U-Boot for Amlogic U200
+-=======================
++U-Boot for Amlogic U200 (S905X2)
++================================
  
--SEI610 is a customer board manufactured by SEI Robotics with the following
+-U200 is a reference board manufactured by Amlogic with the following
 -specifications:
-+SEI610 is a customer board manufactured by SEI Robotics with the following specification:
++U200 is a reference board manufactured by Amlogic with the following specification:
  
-  - Amlogic S905X3 ARM Cortex-A55 quad-core SoC
+  - Amlogic S905D2 ARM Cortex-A53 quad-core SoC
   - 2GB DDR4 SDRAM
   - 10/100 Ethernet (Internal PHY)
 - - 1 x USB 3.0 Host
-- - 1 x USB Type-C DRD
-- - 1 x FTDI USB Serial Debug Interface
 + - 1x USB 3.0 Host
-+ - 1x USB Type-C DRD
-+ - 1x FTDI USB Serial Debug Interface
   - eMMC
   - SDcard
   - Infrared receiver
-  - SDIO WiFi Module
+@@ -20,7 +19,7 @@ specifications:
+ 
+ Schematics are available from Amlogic on demand.
  
 -U-Boot compilation
 +U-Boot Compilation
  ------------------
  
  .. code-block:: bash
-@@ -26,14 +25,20 @@ U-Boot compilation
-     $ make sei610_defconfig
+@@ -29,14 +28,20 @@ U-Boot compilation
+     $ make u200_defconfig
      $ make
  
 -Image creation
@@ -80,12 +76,12 @@ index 2d754497cc..84aaeff4ed 100644
 +U-Boot Signing with Pre-Built FIP repo
 +--------------------------------------
  
--For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `sei610`
+-For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `u200`
 +.. code-block:: bash
 +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
 +    $ cd amlogic-boot-fip
 +    $ mkdir my-output-dir
-+    $ ./build-fip.sh sei610 /path/to/u-boot/u-boot.bin my-output-dir
++    $ ./build-fip.sh u200 /path/to/u-boot/u-boot.bin my-output-dir
 +
 +U-Boot Manual Signing
 +---------------------
@@ -98,7 +94,7 @@ index 2d754497cc..84aaeff4ed 100644
  
  .. code-block:: bash
  
-@@ -48,7 +53,7 @@ the git tree published by the board vendor:
+@@ -51,7 +56,7 @@ the git tree published by the board vendor:
      $ make
      $ export UBOOTDIR=$PWD
  
@@ -107,17 +103,16 @@ index 2d754497cc..84aaeff4ed 100644
  
  .. code-block:: bash
  
-@@ -57,8 +62,7 @@ Download the latest Amlogic Buildroot package, and extract it :
-     $ export BRDIR=$PWD/buildroot-openlinux-A113-201901
+@@ -60,7 +65,7 @@ Download the latest Amlogic Buildroot package, and extract it :
+     $ export BRDIR=$PWD/buildroot_openlinux_kernel_4.9_fbdev_20180706
      $ export FIPDIR=$BRDIR/bootloader/uboot-repo/fip
  
 -Go back to mainline U-Boot source tree then :
--
 +Go back to the mainline U-Boot source tree then:
  
  .. code-block:: bash
  
-@@ -80,56 +84,56 @@ Go back to mainline U-Boot source tree then :
+@@ -82,56 +87,56 @@ Go back to mainline U-Boot source tree then :
      $ cp u-boot.bin fip/bl33.bin
  
      $ sh fip/blx_fix.sh \
