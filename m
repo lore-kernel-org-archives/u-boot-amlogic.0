@@ -1,26 +1,26 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web10.11617.1679312785070843563
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web10.11621.1679312798296815692
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:36 -0700
-Received: by mail-wr1-f50.google.com with SMTP id d17so1608576wrb.11
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:35 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:38 -0700
+Received: by mail-wm1-f42.google.com with SMTP id l15-20020a05600c4f0f00b003ed58a9a15eso7291375wmq.5
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312795;
+        d=gmail.com; s=20210112; t=1679312797;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HxnHVYKNCE/GVy5zjfpoO6N7DVnCQIkYWWe8AnYCmdM=;
-        b=fnSboEXCJulyFxFta06RIg6NksExFjstwLMrC71YYz2tA7+Dona8D09KXndbpVD1r4
-         FjAsw8yarbYPLWYgP88IlB0m15Kpt937eVhQWkSCOONdrb85weV0bc6wzSGxWeVSzkRb
-         dRETCFYClXARixjI32/l5HmIiNiFCHg9fti7i6FeVr0kEUwsblNGhXiIth0h8i7jkesC
-         qNOJihnT4xCAFKChNYvenroosKFPbGr8RZGW9JvBgT8a3M9KDKYi5JLsfQXueFKZKalH
-         bDCiYe7RV8fYXlwWSAAviPV/ljx7v3Vsm3+0Iow/Pvf/zB87IcnQBvruPBc2ignPRofY
-         5CUA==
+        bh=YTDW0SCqpNfpSHS0rXT+ze4p7/dNzF26TO6fxVNniNc=;
+        b=N80UnbmLnO7fZ+2Rfqx2YXlz/Mf4DRMbP0vesJg1dDF4WsV68qmGqzlHBO2wKzby+l
+         yny8EgifxdCiCRCKVxUHc8ON5OIatZITR31VSop4WBWUYvZnNMBCEzfFWk0SD1jV0xOO
+         lqltDDnFKtvuIvBhS2mdXd1IeoK+HNFdsw6UYgRlME1Rm844XwI9rpNpdcxCnc1ecQ2a
+         Ac6p4PXMB8Q7Xjurkpvxpr/MYDeRuxmJ8MdtR1BCQiJs3Jaq3IKd2tEzModPJ0RKXRTV
+         36flo9HSXga1pWd92WqXUG62abjrKITwYcDznhPMeuinxkwk0dKnWQ70UMxJFlDKrzn7
+         SXpg==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 14/33] doc: boards: amlogic: update documentation for NanoPi-K2
-Date: Mon, 20 Mar 2023 11:45:50 +0000
-Message-Id: <20230320114609.930145-15-christianshewitt@gmail.com>
+Subject: [PATCH 15/33] doc: boards: amlogic: update documentation for ODROID-C2
+Date: Mon, 20 Mar 2023 11:45:51 +0000
+Message-Id: <20230320114609.930145-16-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -29,44 +29,49 @@ To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradea
 Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Improve documentation. Notably we can now support U-Boot install to
-the removable eMMC storage module in addition to SD cards.
+Improve documentation.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/nanopi-k2.rst | 93 +++++++++++++++++++--------------
- 1 file changed, 54 insertions(+), 39 deletions(-)
+ doc/board/amlogic/odroid-c2.rst | 54 ++++++++++++++++++---------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/doc/board/amlogic/nanopi-k2.rst b/doc/board/amlogic/nanopi-k2.rst
-index 76ff874434..2316dae0ec 100644
---- a/doc/board/amlogic/nanopi-k2.rst
-+++ b/doc/board/amlogic/nanopi-k2.rst
-@@ -1,10 +1,10 @@
+diff --git a/doc/board/amlogic/odroid-c2.rst b/doc/board/amlogic/odroid-c2.rst
+index 8a1be4bf55..82eea3820e 100644
+--- a/doc/board/amlogic/odroid-c2.rst
++++ b/doc/board/amlogic/odroid-c2.rst
+@@ -1,12 +1,12 @@
  .. SPDX-License-Identifier: GPL-2.0+
  
--U-Boot for NanoPi-K2
+-U-Boot for ODROID-C2
 -====================
-+U-Boot for NanoPi-K2 (S905)
++U-Boot for ODROID-C2 (S905)
 +===========================
  
--NanoPi-K2 is a single board computer manufactured by FriendlyElec
--with the following specifications:
-+NanoPi-K2 is a single board computer manufactured by FriendlyElec with the following
+-ODROID-C2 is a single board computer manufactured by Hardkernel
+-Co. Ltd with the following specifications:
++ODROID-C2 is a single board computer manufactured by Hardkernel with the following
 +specifications:
  
-  - Amlogic S905 ARM Cortex-A53 quad-core SoC @ 1.5GHz
+- - Amlogic S905 ARM Cortex-A53 quad-core SoC @ 2GHz
++ - Amlogic S905 ARM Cortex-A53 quad-core SoC @ 1.5GHz
   - ARM Mali 450 GPU
-@@ -18,7 +18,7 @@ with the following specifications:
+  - 2GB DDR3 SDRAM
+  - Gigabit Ethernet
+@@ -16,9 +16,9 @@ Co. Ltd with the following specifications:
+  - eMMC, microSD
+  - Infrared receiver
  
- Schematics are available on the manufacturer website.
+-Schematics are available on the manufacturer website.
++Schematics are available on the manufacturer website: https://wiki.odroid.com
  
 -U-Boot compilation
 +U-Boot Compilation
  ------------------
  
  .. code-block:: bash
-@@ -27,14 +27,20 @@ U-Boot compilation
-     $ make nanopi-k2_defconfig
+@@ -27,38 +27,44 @@ U-Boot compilation
+     $ make odroid-c2_defconfig
      $ make
  
 -Image creation
@@ -74,12 +79,12 @@ index 76ff874434..2316dae0ec 100644
 +U-Boot Signing with Pre-Built FIP repo
 +--------------------------------------
  
--For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `nanopi-k2`
+-For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `odroid-c2`
 +.. code-block:: bash
 +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
 +    $ cd amlogic-boot-fip
 +    $ mkdir my-output-dir
-+    $ ./build-fip.sh nanopi-k2 /path/to/u-boot/u-boot.bin my-output-dir
++    $ ./build-fip.sh odroid-c2 /path/to/u-boot/u-boot.bin my-output-dir
 +
 +U-Boot Manual Signing
 +---------------------
@@ -92,86 +97,30 @@ index 76ff874434..2316dae0ec 100644
  
  .. code-block:: bash
  
-@@ -43,7 +49,6 @@ the git tree published by the board vendor:
-     $ tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-     $ tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-     $ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
--    $ git clone https://github.com/BayLibre/u-boot.git -b libretech-cc amlogic-u-boot
-     $ git clone https://github.com/friendlyarm/u-boot.git -b nanopi-k2-v2015.01 amlogic-u-boot
-     $ cd amlogic-u-boot
-     $ sed -i 's/aarch64-linux-gnu-/aarch64-none-elf-/' Makefile
-@@ -52,7 +57,7 @@ the git tree published by the board vendor:
-     $ make
-     $ export FIPDIR=$PWD/fip
- 
--Go back to mainline U-Boot source tree then :
-+Go back to the mainline U-Boot source tree then:
- 
- .. code-block:: bash
- 
-@@ -65,42 +70,52 @@ Go back to mainline U-Boot source tree then :
-     $ cp $FIPDIR/gxb/bl301.bin fip/
-     $ cp $FIPDIR/gxb/bl31.img fip/
-     $ cp u-boot.bin fip/bl33.bin
-+    $ wget https://github.com/LibreELEC/amlogic-boot-fip/raw/master/nanopi-k2/bl1.bin.hardkernel fip/bl1.bin.hardkernel
-+    $ chmod +x fip/bl1.bin.hardkernel
-+    $ wget https://github.com/LibreELEC/amlogic-boot-fip/raw/master/nanopi-k2/aml_chksum fip/aml_chksum
-+    $ chmod +x fip/aml_chksum
- 
-     $ $FIPDIR/blx_fix.sh \
--    	fip/bl30.bin \
--    	fip/zero_tmp \
--    	fip/bl30_zero.bin \
--    	fip/bl301.bin \
--    	fip/bl301_zero.bin \
--    	fip/bl30_new.bin \
--    	bl30
--
--    $ $FIPDIR/fip_create \
--    	 --bl30 fip/bl30_new.bin \
--    	 --bl31 fip/bl31.img \
--    	 --bl33 fip/bl33.bin \
--    	 fip/fip.bin
--
-+              fip/bl30.bin \
-+              fip/zero_tmp \
-+              fip/bl30_zero.bin \
-+              fip/bl301.bin \
-+              fip/bl301_zero.bin \
-+              fip/bl30_new.bin \
-+              bl30
+     $ DIR=odroid-c2
+-    $ git clone --depth 1 \
+-       https://github.com/hardkernel/u-boot.git -b odroidc2-v2015.01 \
+-       $DIR
++    $ git clone --depth 1 https://github.com/hardkernel/u-boot.git -b odroidc2-v2015.01 $DIR
 +
-+    $ $FIPDIR/fip_create --bl30 fip/bl30_new.bin \
-+                         --bl31 fip/bl31.img \
-+                         --bl33 fip/bl33.bin \
-+                         fip/fip.bin
+     $ $DIR/fip/fip_create --bl30  $DIR/fip/gxb/bl30.bin \
+-                       --bl301 $DIR/fip/gxb/bl301.bin \
+-                       --bl31  $DIR/fip/gxb/bl31.bin \
+-                       --bl33  u-boot.bin \
+-                       $DIR/fip.bin
++                          --bl301 $DIR/fip/gxb/bl301.bin \
++                          --bl31  $DIR/fip/gxb/bl31.bin \
++                          --bl33  u-boot.bin \
++                          $DIR/fip.bin
 +
-+    $ sed -i 's/\x73\x02\x08\x91/\x1F\x20\x03\xD5/' fip/bl2.bin
-     $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
- 
-     $ $FIPDIR/blx_fix.sh \
--    	fip/bl2_acs.bin \
--    	fip/zero_tmp \
--    	fip/bl2_zero.bin \
--    	fip/bl21.bin \
--    	fip/bl21_zero.bin \
--    	fip/bl2_new.bin \
--    	bl2
-+              fip/bl2_acs.bin \
-+              fip/zero_tmp \
-+              fip/bl2_zero.bin \
-+              fip/bl21.bin \
-+              fip/bl21_zero.bin \
-+              fip/bl2_new.bin \
-+              bl2
- 
-     $ cat fip/bl2_new.bin fip/fip.bin > fip/boot_new.bin
- 
-     $ $FIPDIR/gxb/aml_encrypt_gxb --bootsig \
--    		--input fip/boot_new.bin
--    		--output fip/u-boot.bin
-+                                  --input fip/boot_new.bin
-+                                  --output fip/u-boot.bin
+     $ $DIR/fip/fip_create --dump $DIR/fip.bin
+     $ cat $DIR/fip/gxb/bl2.package $DIR/fip.bin > $DIR/boot_new.bin
+     $ $DIR/fip/gxb/aml_encrypt_gxb --bootsig \
+-                                --input $DIR/boot_new.bin \
+-                                --output $DIR/u-boot.img
++                                   --input $DIR/boot_new.bin \
++                                   --output $DIR/u-boot.img
+     $ dd if=$DIR/u-boot.img of=$DIR/u-boot.gxbb bs=512 skip=96
  
 -and then write the image to SD with:
 +Then write U-Boot to SD or eMMC with:
@@ -179,15 +128,10 @@ index 76ff874434..2316dae0ec 100644
  .. code-block:: bash
  
 -    $ DEV=/dev/your_sd_device
--    $ dd if=fip/u-boot.bin of=$DEV conv=fsync,notrunc bs=512 seek=1
-+    $ DEV=/dev/boot_device
-+    $ dd if=fip/u-boot.bin of=fip/u-boot.bin.gxbb bs=512 conv=fsync
-+    $ dd if=fip/u-boot.bin of=fip/u-boot.bin.gxbb bs=512 seek=9 skip=8 count=87 conv=fsync,notrunc
-+    $ dd if=/dev/zero of=fip/u-boot.bin.gxbb bs=512 seek=8 count=1 conv=fsync,notrunc
-+    $ dd if=bl1.bin.hardkernel of=fip/u-boot.bin.gxbb bs=512 seek=2 skip=2 count=1 conv=fsync,notrunc
-+    $ ./aml_chksum fip/u-boot.bin.gxbb
-+    $ dd if=fip/u-boot.gxbb of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+    $ dd if=fip/u-boot.gxbb of=$DEV conv=fsync,notrunc bs=1 count=440
++    $ DEV=/dev/your_boot_device
+     $ BL1=$DIR/sd_fuse/bl1.bin.hardkernel
+     $ dd if=$BL1 of=$DEV conv=fsync bs=1 count=442
+     $ dd if=$BL1 of=$DEV conv=fsync bs=512 skip=1 seek=1
 -- 
 2.34.1
 
