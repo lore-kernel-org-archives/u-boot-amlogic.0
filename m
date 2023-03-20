@@ -1,26 +1,26 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.11712.1679312806409388984
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web11.11715.1679312807760223513
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 04:46:46 -0700
-Received: by mail-wr1-f47.google.com with SMTP id j24so1128993wrd.0
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:46 -0700 (PDT)
+ Mon, 20 Mar 2023 04:46:48 -0700
+Received: by mail-wr1-f46.google.com with SMTP id l27so1720853wrb.2
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 04:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312805;
+        d=gmail.com; s=20210112; t=1679312806;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YPxxmWcR46ur14NKsEcVWS/WLKmARgpHeR6EHeDbDc8=;
-        b=Esb4FgqVInGJ1WHHC7+XazAfEC7bAkZoXA2ebFMJwgDYpXSQEPS2jsrRJDphIJgJVx
-         IcZ4sJtjkViShyy+EaPp+BA0auDXOlJ70O8WQ92vDapFU3LA+CGCaPIGbgVjo4hKMNcR
-         F/7w9v0U+538WbZ0m3RaglvvgZF4uAlJLLaylMjrCkrivu7Un3R7nFZKdpZ+ZXMZxU3a
-         lwZJV5effnyeJo4dO5G9CxE3lZy0ouixCJC/M5jdSYXUYThyiLjVZvuxQGE5KFSfQGF3
-         0vjPyFAYIG28rFFx6mYm4GCZA5fhAX8KFX4YOT4DDk+w9Unzyp1zRCZuXFn84Ym7VCdw
-         1QcQ==
+        bh=Q1j0pT0rKRqAnlEnQeXBE7k3l8qsVlNzG8h9gMj7DWs=;
+        b=PQrApTLRE61ivCIyBZd6lx5aRXW34D4mUxpmI8Qco1rGy57Wt93drJf4lKRQNrtUgJ
+         eS53AaOnOYOgGVzXCrRfIW0aO4miIGLiH+XXFrqhAmY+ft3t511UAlfFgdjZhybhfEK4
+         1Jv0pcmPTuDUgYi7ozz5em506IF/aRLU+uJfKkYo4KzvooGImQZ+HwFwPAboOyTLdk3L
+         VB2qY25WbyRMjOy/Ti5BYw9+WJFdLVAzH1OvLTL12LB5vfH+pIllETD93WA/Je4nZDJo
+         lA51Fwfu8L71oz8VgkAPoasARDbHKqmdmFO/x0jN5LwMZ8FUNZGYopEcmynodFwZeGvv
+         ewSg==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 20/33] doc: boards: amlogic: update documentation for P200
-Date: Mon, 20 Mar 2023 11:45:56 +0000
-Message-Id: <20230320114609.930145-21-christianshewitt@gmail.com>
+Subject: [PATCH 21/33] doc: boards: amlogic: update documentation for P201
+Date: Mon, 20 Mar 2023 11:45:57 +0000
+Message-Id: <20230320114609.930145-22-christianshewitt@gmail.com>
 In-Reply-To: <20230320114609.930145-1-christianshewitt@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -34,29 +34,29 @@ the internal eMMC storage in addition to SD cards.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- doc/board/amlogic/p200.rst | 87 +++++++++++++++++++++++---------------
+ doc/board/amlogic/p201.rst | 87 +++++++++++++++++++++++---------------
  1 file changed, 53 insertions(+), 34 deletions(-)
 
-diff --git a/doc/board/amlogic/p200.rst b/doc/board/amlogic/p200.rst
-index 5e7c6b0276..b5c6ad096e 100644
---- a/doc/board/amlogic/p200.rst
-+++ b/doc/board/amlogic/p200.rst
+diff --git a/doc/board/amlogic/p201.rst b/doc/board/amlogic/p201.rst
+index 2cd236582a..b3dce4204e 100644
+--- a/doc/board/amlogic/p201.rst
++++ b/doc/board/amlogic/p201.rst
 @@ -1,25 +1,24 @@
  .. SPDX-License-Identifier: GPL-2.0+
  
--U-Boot for Amlogic P200
+-U-Boot for Amlogic P201
 -=======================
-+U-Boot for Amlogic P200 (S905)
++U-Boot for Amlogic P201 (S905)
 +==============================
  
--P200 is a reference board manufactured by Amlogic with the following
+-P201 is a reference board manufactured by Amlogic with the following
 -specifications:
-+P200 is a reference board manufactured by Amlogic with the following specification:
++P201 is a reference board manufactured by Amlogic with the following specifications:
  
   - Amlogic S905 ARM Cortex-A53 quad-core SoC @ 1.5GHz
   - ARM Mali 450 GPU
   - 2GB DDR3 SDRAM
-  - Gigabit Ethernet
+  - 10/100 Ethernet
   - HDMI 2.0 4K/60Hz display
 - - 2 x USB 2.0 Host
 + - 2x USB 2.0 Host
@@ -74,7 +74,7 @@ index 5e7c6b0276..b5c6ad096e 100644
  
  .. code-block:: bash
 @@ -28,14 +27,20 @@ U-Boot compilation
-     $ make p200_defconfig
+     $ make p201_defconfig
      $ make
  
 -Image creation
@@ -82,12 +82,12 @@ index 5e7c6b0276..b5c6ad096e 100644
 +U-Boot Signing with Pre-Built FIP repo
 +--------------------------------------
  
--For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `p200`
+-For simplified usage, pleaser refer to :doc:`pre-generated-fip` with codename `p201`
 +.. code-block:: bash
 +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
 +    $ cd amlogic-boot-fip
 +    $ mkdir my-output-dir
-+    $ ./build-fip.sh p200 /path/to/u-boot/u-boot.bin my-output-dir
++    $ ./build-fip.sh p201 /path/to/u-boot/u-boot.bin my-output-dir
 +
 +U-Boot Manual Signing
 +---------------------
@@ -97,15 +97,6 @@ index 5e7c6b0276..b5c6ad096e 100644
 -the git tree published by the board vendor:
 +Amlogic does not provide sources for the firmware and tools needed to create a bootloader
 +image but sources have been shared by Linux development contractor, Baylibre:
- 
- .. code-block:: bash
- 
-@@ -50,7 +55,7 @@ the git tree published by the board vendor:
-     $ make
-     $ export FIPDIR=$PWD/fip
- 
--Go back to mainline U-boot source tree then :
-+Go back to the mainline U-Boot source tree then:
  
  .. code-block:: bash
  
@@ -166,7 +157,8 @@ index 5e7c6b0276..b5c6ad096e 100644
 +                                  --input fip/boot_new.bin \
 +                                  --output fip/u-boot.bin
  
- and then write the image to SD with:
+-and then write the image to SD with:
++Then write U-Boot to SD or eMMC with:
  
  .. code-block:: bash
  
