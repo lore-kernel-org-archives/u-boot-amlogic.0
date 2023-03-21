@@ -1,80 +1,68 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web11.12471.1679315110734055734
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web10.5972.1679375463198202989
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Mar 2023 05:25:11 -0700
-Received: by mail-wm1-f46.google.com with SMTP id l15-20020a05600c4f0f00b003ed58a9a15eso7369966wmq.5
-        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 05:25:10 -0700 (PDT)
+ Mon, 20 Mar 2023 22:11:03 -0700
+Received: by mail-wm1-f53.google.com with SMTP id m35so8777090wms.4
+        for <u-boot-amlogic@groups.io>; Mon, 20 Mar 2023 22:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679315109;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=hbYe87C1ax7n2gUxfYefOp4CtanFQWHmul8SCrZFOBg=;
-        b=Jnuru+ugnRyx+FSA1ergwvCdAydNXxsWVv3Ri6zD2IU2rKfgHJbCGh3M17afwv1oQB
-         Cum6Un6UsIqsOvgxT0ZQ8bpk3qXnSK8nV6J0H4KWm25XaYwR7KDa4ahmn7+UXuoaug0A
-         OH1cb93hharg0gk3KFjPVWbiaCXowamGonQM6uCDE/Kunob9J6P165fE5JyNcX9WZ4np
-         q/jwJEQlrM4zTqlI/R+GBczM8Ceea26CmFpMl7PHn/oA8OA0TDMmFuaI5N/lDLVwdymX
-         aut9ZNKDh4dhxIITz8JeZw2oRJw10/OKGvwdGJeQPYQ2iNffTLNHuMog+JviFvfSIRSS
-         W+Ew==
-Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <4a49100c-2ab4-09f5-780c-1a734f0bd1f1@linaro.org>
-Date: Mon, 20 Mar 2023 13:25:08 +0100
-MIME-Version: 1.0
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 30/33] doc: boards: amlogic: add documentation for BananaPi CM4IO
+        d=gmail.com; s=20210112; t=1679375461;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uCtWwQR28Tf7UMC/1iAqkjlhqVHUlwW/Ubw19PfkJIY=;
+        b=eiH13baf9XvbYOtixpZdx6iT9FxgMS/+Cf3V+wNSt2y0sN66RF6nKo44Z/IYBjD6JR
+         e/gb40Kb2GhOCHMwq7GKgPxLQI0POhGWIPD7b2wswBFg9xqCtYH5v01tMmqis3CInio2
+         oh1WpwDEL3b91e89mBZwk/sOoHeUHCfnH4UubLymCjuVi8N4jNgbnqi25vj6soLrBH9G
+         GCLB70NM7wa80lpGMb9VG1KV/GVAyzf1sTTZv1Rkfh0AXr/f+cpCKDpl/xgT7ttt8NqI
+         EXAfAk0PCrDjBXTVlui4EyoqQUICp0Bj535kCl757L0Cuc4IQgFELsxigFMncFm9cbT9
+         UfCQ==
+Return-Path: <christianshewitt@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.2\))
+Subject: Re: [PATCH 29/33] doc: boards: amlogic: update documentation for WeTek Core2
+From: "Christian Hewitt" <christianshewitt@gmail.com>
+In-Reply-To: <CAPnjgZ1HW1x3CJ27icDifh4+hjUJjpwCM--FtatzJhrWjkEueA@mail.gmail.com>
+Date: Tue, 21 Mar 2023 09:10:58 +0400
+Message-Id: <4DEEACF6-2D41-499E-A2E0-C2DD31E28B03@gmail.com>
 References: <20230320114609.930145-1-christianshewitt@gmail.com>
- <20230320114609.930145-31-christianshewitt@gmail.com>
- <5e29634d-0751-5b1b-5bfa-4a85f536f672@linaro.org>
- <3CBB7476-13B0-410F-9F19-1323157F1FFC@gmail.com>
-In-Reply-To: <3CBB7476-13B0-410F-9F19-1323157F1FFC@gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, linux-amlogic@lists.infradead.org
+ <20230320114609.930145-30-christianshewitt@gmail.com>
+ <CAPnjgZ1HW1x3CJ27icDifh4+hjUJjpwCM--FtatzJhrWjkEueA@mail.gmail.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+To: Simon Glass <sjg@chromium.org>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
 List-ID: <u-boot-amlogic@groups.io>
 
-On 20/03/2023 13:23, Christian Hewitt wrote:
-> 
->> On 20 Mar 2023, at 4:13 pm, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->>
->> On 20/03/2023 12:46, Christian Hewitt wrote:
->>> Add build instructions for the BananaPi BPI-CM4IO carrier board with
->>> BPI-CM4 module.
->>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
->>> ---
->>>   board/amlogic/u200/MAINTAINERS       |   1 -
->>>   board/amlogic/w400/MAINTAINERS       |   2 +
->>>   doc/board/amlogic/bananapi-cm4io.rst | 152 +++++++++++++++++++++++++++
->>>   doc/board/amlogic/index.rst          |   1 +
->>>   4 files changed, 155 insertions(+), 1 deletion(-)
->>>   create mode 100644 doc/board/amlogic/bananapi-cm4io.rst
->>
->> <snip>
->>
->>> +
->>> +U-Boot Signing with Pre-Built FIP repo
->>> +--------------------------------------
->>> +
->>> +.. code-block:: bash
->>> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
->>> +    $ cd amlogic-boot-fip
->>> +    $ mkdir my-output-dir
->>> +    $ ./build-fip.sh bananapi-cm4io /path/to/u-boot/u-boot.bin my-output-dir
->>
->>
->> This should be bananapi-m2s since the same is used, or we should duplicate it for cm4io/cm4.
-> 
-> https://github.com/LibreELEC/amlogic-boot-fip/tree/master/bananapi-cm4io
-> 
-> ^ It’s the same FIPs that were submitted for M2S but for packaging
-> reasons I cloned them (users struggle to find images not explicitly
-> named for their board). I’ll submit patches for the M2S and M2-Pro
-> boards once this series is accepted (hopefully).
 
-Ack, so no changes needed then !
+> On 20 Mar 2023, at 10:40 pm, Simon Glass <sjg@chromium.org> wrote:
+>=20
+> Hi Christian,
+>=20
+> On Tue, 21 Mar 2023 at 06:05, Christian Hewitt
+> <christianshewitt@gmail.com> wrote:
+>>=20
+>> Improve documentation.
+>>=20
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+>> ---
+>> doc/board/amlogic/wetek-core2.rst | 83 +++++++++++++++++--------------
+>> 1 file changed, 47 insertions(+), 36 deletions(-)
+>=20
+> This should really move to binman. Would you like to take a look?
+>=20
+> I sent a patch for this a while ago but it needs something to review
+> and try out.
+>=20
+> https://patchwork.ozlabs.org/project/uboot/patch/20220110031413.1970836-3=
+9-sjg@chromium.org/
+>=20
+> I am happy to do more on it as needed.
 
-> 
-> Christian
+Hello Simon,
 
+For now this is just a cleanup but longer-term (won=E2=80=99t be quick) I c=
+an
+take a look. Do you have that series rebased against current and in a
+repo somewhere for easier cherry-picking?
+
+Christian
