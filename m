@@ -1,8 +1,8 @@
-Subject: [PATCHv2 2/3] ARM: meson: Add initial support for beelink gt1
+Subject: [PATCHv2 3/3] ARM: meson: Add initial support for beelink gt1
 From: exkc_maillist@list.ru
 MIME-Version: 1.0
-Date: Wed, 22 Mar 2023 12:19:16 -0700
-Message-ID: <M5Yp.1679512756605742819.bwvE@groups.io>
+Date: Wed, 22 Mar 2023 12:21:18 -0700
+Message-ID: <jVsb.1679512878745007811.ZQlP@groups.io>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 To: u-boot-amlogic@groups.io
@@ -33,97 +33,127 @@ t-beelink-gt1/0001-add-basic-support-for-beelink-gt1.patch
  create mode 100644 configs/beelink_gt1_ultimate_defconfig
  create mode 100644 doc/board/amlogic/beelink-gt1.rst
 
-diff --git a/configs/beelink_gt1_ultimate_defconfig b/configs/beelink_gt1_u=
-ltimate_defconfig
+diff --git a/board/amlogic/q200/MAINTAINERS b/board/amlogic/q200/MAINTAINER=
+S
+index 9c84cca27e85..46beffe17feb 100644
+--- a/board/amlogic/q200/MAINTAINERS
++++ b/board/amlogic/q200/MAINTAINERS
+@@ -4,9 +4,11 @@ S:	Maintained
+ L:	u-boot-amlogic@groups.io
+ F:	board/amlogic/q200/
+ F:	include/configs/q200.h
++F:	configs/beelink-gt1_defconfig
+ F:	configs/khadas-vim2_defconfig
+ F:	configs/libretech-s905d-pc_defconfig
+ F:	configs/libretech-s912-pc_defconfig
+ F:	configs/wetek-core2_defconfig
++F:	doc/board/amlogic/beelink-gt1.rst
+ F:	doc/board/amlogic/khadas-vim2.rst
+ F:	doc/board/amlogic/wetek-core2.rst
+diff --git a/doc/board/amlogic/beelink-gt1.rst b/doc/board/amlogic/beelink-=
+gt1.rst
 new file mode 100644
-index 000000000000..b5ed30fab412
+index 000000000000..dca7165933b5
 --- /dev/null
-+++ b/configs/beelink_gt1_ultimate_defconfig
-@@ -0,0 +1,85 @@
-+CONFIG_ARM=3Dy
-+CONFIG_ARCH_MESON=3Dy
-+CONFIG_TEXT_BASE=3D0x01000000
-+CONFIG_NR_DRAM_BANKS=3D1
-+CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
-+CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x20000000
-+CONFIG_ENV_SIZE=3D0x10000
-+CONFIG_ENV_OFFSET=3D0xFFFF0000
-+CONFIG_ENV_SECT_SIZE=3D0x10000
-+CONFIG_DM_GPIO=3Dy
-+CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxm-gt1-ultimate"
-+CONFIG_DM_RESET=3Dy
-+CONFIG_MESON_GXM=3Dy
-+CONFIG_DEBUG_UART_BASE=3D0xc81004c0
-+CONFIG_DEBUG_UART_CLOCK=3D24000000
-+CONFIG_IDENT_STRING=3D" gt1-ultimate"
-+CONFIG_SYS_LOAD_ADDR=3D0x1000000
-+CONFIG_DEBUG_UART=3Dy
-+CONFIG_REMAKE_ELF=3Dy
-+CONFIG_OF_BOARD_SETUP=3Dy
-+CONFIG_USE_PREBOOT=3Dy
-+# CONFIG_DISPLAY_CPUINFO is not set
-+CONFIG_MISC_INIT_R=3Dy
-+CONFIG_SYS_MAXARGS=3D32
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_ADC=3Dy
-+CONFIG_CMD_GPIO=3Dy
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=3Dy
-+CONFIG_CMD_SF_TEST=3Dy
-+CONFIG_CMD_SPI=3Dy
-+CONFIG_CMD_USB=3Dy
-+CONFIG_CMD_USB_MASS_STORAGE=3Dy
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=3Dy
-+CONFIG_OF_CONTROL=3Dy
-+CONFIG_ENV_IS_IN_SPI_FLASH=3Dy
-+CONFIG_SARADC_MESON=3Dy
-+CONFIG_MMC_MESON_GX=3Dy
-+CONFIG_MTD=3Dy
-+CONFIG_DM_SPI_FLASH=3Dy
-+CONFIG_SPI_FLASH_GIGADEVICE=3Dy
-+CONFIG_PHY_REALTEK=3Dy
-+CONFIG_DM_MDIO=3Dy
-+CONFIG_DM_MDIO_MUX=3Dy
-+CONFIG_ETH_DESIGNWARE_MESON8B=3Dy
-+CONFIG_MDIO_MUX_MMIOREG=3Dy
-+CONFIG_MESON_GXL_USB_PHY=3Dy
-+CONFIG_PINCTRL=3Dy
-+CONFIG_PINCTRL_MESON_GXL=3Dy
-+CONFIG_POWER_DOMAIN=3Dy
-+CONFIG_MESON_EE_POWER_DOMAIN=3Dy
-+CONFIG_DM_REGULATOR=3Dy
-+CONFIG_DM_REGULATOR_FIXED=3Dy
-+CONFIG_DEBUG_UART_ANNOUNCE=3Dy
-+CONFIG_DEBUG_UART_SKIP_INIT=3Dy
-+CONFIG_MESON_SERIAL=3Dy
-+CONFIG_SPI=3Dy
-+CONFIG_DM_SPI=3Dy
-+CONFIG_MESON_SPIFC=3Dy
-+CONFIG_USB=3Dy
-+CONFIG_DM_USB_GADGET=3Dy
-+CONFIG_USB_XHCI_HCD=3Dy
-+CONFIG_USB_XHCI_DWC3=3Dy
-+CONFIG_USB_DWC3=3Dy
-+# CONFIG_USB_DWC3_GADGET is not set
-+CONFIG_USB_DWC3_MESON_GXL=3Dy
-+CONFIG_USB_KEYBOARD=3Dy
-+CONFIG_USB_GADGET=3Dy
-+CONFIG_USB_GADGET_VENDOR_NUM=3D0x1b8e
-+CONFIG_USB_GADGET_PRODUCT_NUM=3D0xfada
-+CONFIG_USB_GADGET_DWC2_OTG=3Dy
-+CONFIG_USB_GADGET_DOWNLOAD=3Dy
-+CONFIG_VIDEO=3Dy
-+CONFIG_SYS_WHITE_ON_BLACK=3Dy
-+CONFIG_VIDEO_MESON=3Dy
-+CONFIG_VIDEO_DT_SIMPLEFB=3Dy
-+CONFIG_SPLASH_SCREEN=3Dy
-+CONFIG_SPLASH_SCREEN_ALIGN=3Dy
-+CONFIG_VIDEO_BMP_RLE8=3Dy
-+CONFIG_BMP_16BPP=3Dy
-+CONFIG_BMP_24BPP=3Dy
-+CONFIG_BMP_32BPP=3Dy
-+CONFIG_OF_LIBFDT_OVERLAY=3Dy
---
++++ b/doc/board/amlogic/beelink-gt1.rst
+@@ -0,0 +1,65 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++U-Boot for Beelink GT1/GT1-Ultimate
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++The Shenzen AZW (Beelink) GT1 and GT1-Ultimate are based on the Amlogic
++Q200 reference board with an S912 chip.
++
++- 2GB or 3GB DDR3 RAM
++- 32GB eMMC
++- HDMI 2.1 video
++- S/PDIF optical output
++- 10/100/1000 Ethernet
++- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.2)
++- 3x USB 2.0 ports
++- IR receiver
++- 1x micro SD card slot
++- 1x Power LED (white)
++- 1x Reset button (internal)
++
++Beelink do not provide public schematics, but have been willing
++to share them with known distro developers on request.
++
++U-Boot compilation
++------------------
++
++.. code-block:: bash
++
++    $ export CROSS_COMPILE=3Daarch64-none-elf-
++    $ make beelink_gt1_ultimate_defconfig
++    $ make
++
++Image creation
++--------------
++
++Amlogic does not provide sources for the firmware and for tools needed
++to create the bootloader image. Beelink have provided the Amlogic SDK
++u-boot sources to known distro developers on-request, allowing FIPs to
++be generated. The GT1 (2GB) and GT1-Ultimate (3GB) models differ in=20
++RAM size and original Beelink devices use the same spec RAM chips and
++can share the same boot FIPs:
++
++https://github.com/LibreELEC/amlogic-boot-fip/tree/master/beelink-gt1
++
++For simplified usage, pleaser refer to :doc:`pre-generated-fip` with coden=
+ame `beelink-gt1`
++
++.. code-block:: bash
++
++    $ git clone https://github.com/LibreELEC/amlogic-boot-fip
++    $ mkdir ./fip
++    $ ./build-fip.sh beelink-gt1 ../u-boot.bin ./fip
++
++This will generate:
++
++.. code-block:: bash
++
++    $ u-boot.bin u-boot.bin.sd.bin u-boot.bin.usb.bl2 u-boot.bin.usb.tpl
++
++And then write the image to SD or eMMC with:
++
++.. code-block:: bash
++
++    $ DEV=3D/dev/your_sd_device
++    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D51=
+2 skip=3D1 seek=3D1
++    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D1 =
+count=3D440
+diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+index f945f672ddb0..6013588e8aa7 100644
+--- a/doc/board/amlogic/index.rst
++++ b/doc/board/amlogic/index.rst
+@@ -18,7 +18,7 @@ This matrix concerns the actual source code version.
+ | Boards                        | Odroid-C2 | P212            | Khadas VIM=
+2  | S400        | U200       | Odroid-N2   | SEI610       |
+ |                               | Nanopi-K2 | Khadas-VIM      | Libretech-=
+PC | JetHub J100 | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
+ |                               | P200      | LibreTech-CC v1 | WeTek Core=
+2  |             | Radxa Zero | GT-King/Pro | Odroid-C4    |
+-|                               | P201      | LibreTech-AC v2 |           =
+   |             |            | GSKing-X    | Odroid-HC4   |
++|                               | P201      | LibreTech-AC v2 | Beelink GT=
+1  |             |            | GSKing-X    | Odroid-HC4   |
+ |                               |           | JetHub J80      |           =
+   |             |            | Odroid-Go-  | BananaPi-M5  |
+ |                               |           |                 |           =
+   |             |            | Ultra       |              |
+ |                               |           |                 |           =
+   |             |            | Odroid-N2L  |              |
+@@ -95,6 +95,7 @@ Board Documentation
+=20
+    beelink-gtking
+    beelink-gtkingpro
++   beelink-gt1
+    jethub-j100
+    jethub-j80
+    khadas-vim2
+--=20
 2.39.1
