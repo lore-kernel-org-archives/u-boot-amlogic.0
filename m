@@ -1,31 +1,31 @@
 Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
  by mx.groups.io with SMTP id smtpd.web10.75343.1679583694435689057
  for <u-boot-amlogic@groups.io>;
- Thu, 23 Mar 2023 08:01:34 -0700
-Received: by mail-wr1-f52.google.com with SMTP id o7so20865866wrg.5
-        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 08:01:34 -0700 (PDT)
+ Thu, 23 Mar 2023 08:01:53 -0700
+Received: by mail-wr1-f52.google.com with SMTP id o7so20867234wrg.5
+        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 08:01:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679583693;
+        d=linaro.org; s=google; t=1679583712;
         h=content-transfer-encoding:in-reply-to:organization:from:references
          :to:content-language:subject:reply-to:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=VAKbXSHHB1LlrufQKB12VQknREQUqL04W6kkZXm4SAs=;
-        b=hrAwTzfTP4vNOyDiN5sqXdm0u+M37WfZwOx441yAjQxrVH6oHCNcN/26PMH2o95Ir4
-         4IX50VSaTi8cDhjeBXk3AmJhiOwOmZXbxSa4RqnqKmRVcjsk7i47FWpBDpfV4sPvO1to
-         cBGuhUURAg6wQJKtzACs22JE2w7JCVeWF/UcAxLf969nl7AnJO6vz0/nqrePh3Nnctuo
-         xD/CR27o9vy3X1c72kxvYoB/yd8uy0x0PbOry9Ouoyjj/w9M8wu0F+EXsCQcw0LlKSAm
-         bq2jl+IE6W2xyhmcJxPKb3scdcs8+3XJLUA9uC0vlR0ddWGtUlMDa2wLvwJsIBjUnZPr
-         1tTQ==
+        bh=uEHvgVa+LMqKq7QEat5OceTqZ/J0ejozXR/RKqCohbU=;
+        b=TrGatbLPt+7oXQgTgKiavdyRQskWVWYwahHszJiy6iY13ZbNxGgtAqYCGmoUVu14w7
+         /HZUSTkPuaQ3CFe5IqWRe539+f3+NRrzqfuuWMxeteUvJDN4CLIwEl3SY7G32hsWcnHp
+         GpF58NKuWfudeNh4YHO6BlSVhpkyciCBpZ04nxHPA/iTKypvEw3VfEZBBu/6DmSYYdmo
+         hEgA4UbR88je4mFFltZCviMx7m1xpZnVefKeONwQckHGTFFp090MePTjUKEX5XX2IQxB
+         f7mD0nmtdxIEn+xnXJpLzS/DjzpC63oaRcxmF4O1ijI+rIr02aJ3/4N0O88LbSDfr0fM
+         Ko/g==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <f8555a7c-8dfb-d803-e422-2534a4df2c8e@linaro.org>
-Date: Thu, 23 Mar 2023 16:01:31 +0100
+Message-ID: <5debe002-5973-58e1-8e86-ea2732c2faf5@linaro.org>
+Date: Thu, 23 Mar 2023 16:01:51 +0100
 MIME-Version: 1.0
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 08/14] docs: boards: amlogic: add documentation for BananaPi M2S
+Subject: Re: [PATCH v2 11/14] doc: boards: amlogic: add documentation for Radxa Zero2
 References: <20230323143142.780306-1-christianshewitt@gmail.com>
- <20230323143142.780306-9-christianshewitt@gmail.com>
+ <20230323143142.780306-12-christianshewitt@gmail.com>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20230323143142.780306-9-christianshewitt@gmail.com>
+In-Reply-To: <20230323143142.780306-12-christianshewitt@gmail.com>
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -33,66 +33,67 @@ To: u-boot-amlogic@groups.io, christianshewitt@gmail.com, u-boot@lists.denx.de, 
 List-ID: <u-boot-amlogic@groups.io>
 
 On 23/03/2023 15:31, Christian Hewitt wrote:
-> Add build docs for the BPI-M2S board.
+> Add build docs for the Radxa Zero2 board.
 > 
 > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->   board/amlogic/w400/MAINTAINERS     |   2 +
->   doc/board/amlogic/bananapi-m2s.rst | 153 +++++++++++++++++++++++++++++
->   doc/board/amlogic/index.rst        |   1 +
->   3 files changed, 156 insertions(+)
->   create mode 100644 doc/board/amlogic/bananapi-m2s.rst
+>   board/amlogic/w400/MAINTAINERS    |  2 +
+>   doc/board/amlogic/index.rst       |  1 +
+>   doc/board/amlogic/radxa-zero2.rst | 80 +++++++++++++++++++++++++++++++
+>   3 files changed, 83 insertions(+)
+>   create mode 100644 doc/board/amlogic/radxa-zero2.rst
 > 
 > diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
-> index 26a4c2c587..042b523056 100644
+> index 042b523056..117f79ea04 100644
 > --- a/board/amlogic/w400/MAINTAINERS
 > +++ b/board/amlogic/w400/MAINTAINERS
-> @@ -4,5 +4,7 @@ S:	Maintained
->   L:	u-boot-amlogic@groups.io
+> @@ -5,6 +5,8 @@ L:	u-boot-amlogic@groups.io
 >   F:	board/amlogic/w400/
 >   F:	configs/bananapi-cm4-cm4io_defconfig
-> +F:	configs/bananapi-m2s_defconfig
+>   F:	configs/bananapi-m2s_defconfig
+> +F:	configs/radxa-zero2_defconfig
 >   F:	doc/board/amlogic/w400.rst
 >   F:	doc/board/amlogic/bananapi-cm4io.rst
-> +F:	doc/board/amlogic/bananapi-m2s.rst
-> diff --git a/doc/board/amlogic/bananapi-m2s.rst b/doc/board/amlogic/bananapi-m2s.rst
+>   F:	doc/board/amlogic/bananapi-m2s.rst
+> +F:	doc/board/amlogic/radxa-zero2.rst
+> diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+> index fa1b362731..71b7e1f3ed 100644
+> --- a/doc/board/amlogic/index.rst
+> +++ b/doc/board/amlogic/index.rst
+> @@ -112,6 +112,7 @@ Board Documentation
+>      p212
+>      q200
+>      radxa-zero
+> +   radxa-zero2
+>      sei510
+>      sei610
+>      s400
+> diff --git a/doc/board/amlogic/radxa-zero2.rst b/doc/board/amlogic/radxa-zero2.rst
 > new file mode 100644
-> index 0000000000..4a1be47b35
+> index 0000000000..dccf592459
 > --- /dev/null
-> +++ b/doc/board/amlogic/bananapi-m2s.rst
-> @@ -0,0 +1,153 @@
+> +++ b/doc/board/amlogic/radxa-zero2.rst
+> @@ -0,0 +1,80 @@
 > +.. SPDX-License-Identifier: GPL-2.0+
 > +
-> +U-Boot for BananaPi M2S (A311D & S922X)
-> +=======================================
+> +U-Boot for Radxa Zero2 (A311D)
+> +==============================
 > +
-> +BananaPi BPI-M2S ships is a Single Board Computer manufactured by Sinovoip that ships in
-> +two variants with Amlogic S922X or A311D SoC and the following common specification:
+> +Radxa Zero2 is a small form factor SBC based on the Amlogic A311D chipset with the
+> +following specification:
 > +
-> +- 16GB eMMC
-> +- HDMI 2.1a video
-> +- 2x 10/100/1000 Base-T Ethernet (1x RTL8211F, 1x RTL811H)
-> +- 2x USB 2.0 ports
-> +- 2x Status LED's (green/blue)
-> +- 1x Power/Reset button
-> +- 1x micro SD card slot
-> +- 40-pin GPIO header
-> +- PWM fan header
-> +- UART header
-> +
-> +The S992X variant has:
-> +- 2GB LPDDR4 RAM
-> +
-> +The A311D variant has:
-> +
+> +- Amlogic A311D (Quad A73 + Dual A53) CPU
 > +- 4GB LPDDR4 RAM
-> +- NPU (5.0 TOPS)
-> +- MIPI DSI header
-> +- MIPI CSI header
+> +- 32/64/128GB eMMC
+> +- Mali G52-MP4 GPU
+> +- HDMI 2.1 output (micro)
+> +- BCM4345 WiFi (2.4/5GHz a/b/g/n/ac) and BT 5.0
+> +- 1x USB 2.0 port - Type C (OTG)
+> +- 1x USB 3.0 port - Type C (Host)
+> +- 1x micro SD Card slot
+> +- 40 Pin GPIO header
 > +
-> +An optional RTL8822CS SDIO WiFi/BT mezzanine is available for both board variants.
-> +
-> +Schematics are available from the manufacturer: https://wiki.banana-pi.org/Banana_Pi_BPI-M2S
+> +Schematics are available on request from Radxa.
 > +
 > +U-Boot Compilation
 > +------------------
@@ -100,7 +101,7 @@ On 23/03/2023 15:31, Christian Hewitt wrote:
 > +.. code-block:: bash
 > +
 > +    $ export CROSS_COMPILE=aarch64-none-elf-
-> +    $ make bananapi-m2s_defconfig
+> +    $ make radxa-zero2_defconfig
 > +    $ make
 > +
 > +U-Boot Signing with Pre-Built FIP repo
@@ -111,7 +112,7 @@ On 23/03/2023 15:31, Christian Hewitt wrote:
 > +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
 > +    $ cd amlogic-boot-fip
 > +    $ mkdir my-output-dir
-> +    $ ./build-fip.sh bananapi-m2s /path/to/u-boot/u-boot.bin my-output-dir
+> +    $ ./build-fip.sh radxa-zero2 /path/to/u-boot/u-boot.bin my-output-dir
 > +
 > +U-Boot Manual Signing
 > +---------------------
@@ -121,110 +122,37 @@ On 23/03/2023 15:31, Christian Hewitt wrote:
 > +
 > +.. code-block:: bash
 > +
-> +    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-> +    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-> +    $ tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-> +    $ tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-> +    $ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
+> +    $ git clone -b radxa-zero-v2021.07 https://github.com/radxa/u-boot.git
+> +    $ git clone https://github.com/radxa/fip.git
 > +
-> +    $ DIR=bananapi-m2s
-> +    $ git clone --depth 1 https://github.com/Dangku/amlogic-u-boot.git -b khadas-g12b-v2015.01-m2s $DIR
+> +    $ sudo apt-get install -y gcc-aarch64-linux-gnu device-tree-compiler libncurses5 libncurses5-dev
+> +    $ sudo apt-get install -y bc python dosfstools flex build-essential libssl-dev mtools
 > +
-> +    $ cd $DIR
-> +    $ make bananapi_m2s_defconfig
+> +    $ wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz
+> +    $ sudo tar xvf gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz -C /opt
+> +
+> +    $ export CROSS_COMPILE=/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
+> +    $ export ARCH=arm
+> +    $ cd u-boot
+> +    $ make radxa-zero2_defconfig
 > +    $ make
-> +    $ export UBDIR=$PWD
 > +
-> +Go back to the mainline U-Boot source tree then:
+> +    $ cp u-boot.bin ../fip/radxa-zero2/bl33.bin
+> +    $ cd ../fip/radxa-zero2
+> +    $ make
+> +
+> +This will generate the signed U-Boot binaries:
 > +
 > +.. code-block:: bash
 > +
-> +    $ mkdir fip
+> +    $ u-boot.bin u-boot.bin.sd.bin u-boot.bin.usb.bl2 u-boot.bin.usb.tpl
 > +
-> +    $ wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
-> +    $ cp $UBDIR/build/scp_task/bl301.bin fip/
-> +    $ cp $UBDIR/build/board/bananapi/bananpi_m2s/firmware/acs.bin fip/
-> +    $ cp $UBDIR/fip/g12a/bl2.bin fip/
-> +    $ cp $UBDIR/fip/g12a/bl30.bin fip/
-> +    $ cp $UBDIR/fip/g12a/bl31.img fip/
-> +    $ cp $UBDIR/fip/g12a/ddr3_1d.fw fip/
-> +    $ cp $UBDIR/fip/g12a/ddr4_1d.fw fip/
-> +    $ cp $UBDIR/fip/g12a/ddr4_2d.fw fip/
-> +    $ cp $UBDIR/fip/g12a/diag_lpddr4.fw fip/
-> +    $ cp $UBDIR/fip/g12a/lpddr3_1d.fw fip/
-> +    $ cp $UBDIR/fip/g12a/lpddr4_1d.fw fip/
-> +    $ cp $UBDIR/fip/g12a/lpddr4_2d.fw fip/
-> +    $ cp $UBDIR/fip/g12a/piei.fw fip/
-> +    $ cp $UBDIR/fip/g12a/aml_ddr.fw fip/
-> +    $ cp u-boot.bin fip/bl33.bin
-> +
-> +    $ sh fip/blx_fix.sh \
-> +         fip/bl30.bin \
-> +         fip/zero_tmp \
-> +         fip/bl30_zero.bin \
-> +         fip/bl301.bin \
-> +         fip/bl301_zero.bin \
-> +         fip/bl30_new.bin \
-> +         bl30
-> +
-> +    $ sh fip/blx_fix.sh \
-> +         fip/bl2.bin \
-> +         fip/zero_tmp \
-> +         fip/bl2_zero.bin \
-> +         fip/acs.bin \
-> +         fip/bl21_zero.bin \
-> +         fip/bl2_new.bin \
-> +         bl2
-> +
-> +    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl30sig --input fip/bl30_new.bin \
-> +                                       --output fip/bl30_new.bin.g12a.enc \
-> +                                       --level v3
-> +    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl30_new.bin.g12a.enc \
-> +                                       --output fip/bl30_new.bin.enc \
-> +                                       --level v3 --type bl30
-> +    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl31.img \
-> +                                       --output fip/bl31.img.enc \
-> +                                       --level v3 --type bl31
-> +    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
-> +                                       --output fip/bl33.bin.enc \
-> +                                       --level v3 --type bl33 --compress lz4
-> +    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
-> +                                       --output fip/bl2.n.bin.sig
-> +    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bootmk \
-> +                                       --output fip/u-boot.bin \
-> +                                       --bl2 fip/bl2.n.bin.sig \
-> +                                       --bl30 fip/bl30_new.bin.enc \
-> +                                       --bl31 fip/bl31.img.enc \
-> +                                       --bl33 fip/bl33.bin.enc \
-> +                                       --ddrfw1 fip/ddr4_1d.fw \
-> +                                       --ddrfw2 fip/ddr4_2d.fw \
-> +                                       --ddrfw3 fip/ddr3_1d.fw \
-> +                                       --ddrfw4 fip/piei.fw \
-> +                                       --ddrfw5 fip/lpddr4_1d.fw \
-> +                                       --ddrfw6 fip/lpddr4_2d.fw \
-> +                                       --ddrfw7 fip/diag_lpddr4.fw \
-> +                                       --ddrfw8 fip/aml_ddr.fw \
-> +                                       --ddrfw9 fip/lpddr3_1d.fw \
-> +                                       --level v3
-> +
-> +Then write the image to SD or eMMC with:
+> +Then write U-Boot to SD or eMMC with:
 > +
 > +.. code-block:: bash
 > +
 > +    $ DEV=/dev/boot_device
 > +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
 > +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
-> diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-> index 8388acdd11..fa1b362731 100644
-> --- a/doc/board/amlogic/index.rst
-> +++ b/doc/board/amlogic/index.rst
-> @@ -87,6 +87,7 @@ Board Documentation
->   
->      bananapi-cm4io
->      bananapi-m2pro
-> +   bananapi-m2s
->      bananapi-m5
->      beelink-gskingx
->      beelink-gtking
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
