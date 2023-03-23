@@ -1,126 +1,155 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.74397.1679581925194852210
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.73888.1679581926803543621
  for <u-boot-amlogic@groups.io>;
- Thu, 23 Mar 2023 07:32:05 -0700
-Received: by mail-wm1-f41.google.com with SMTP id j18-20020a05600c1c1200b003ee5157346cso1331440wms.1
-        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:32:04 -0700 (PDT)
+ Thu, 23 Mar 2023 07:32:07 -0700
+Received: by mail-wm1-f45.google.com with SMTP id bg16-20020a05600c3c9000b003eb34e21bdfso1347111wmb.0
+        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679581923;
+        d=gmail.com; s=20210112; t=1679581925;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lH0W5LfIvSL6UOOcdJmv7aj8I9PtjK4BS9WVUUeMGsM=;
-        b=VWQtlq5Rvl9g7asBjn81CQEMRz/tL+V4pxafbWPwWboKHc8pg0M1tutpiV1JNxnSHX
-         tH38WnHzxhDkpy1q9h/UV9no7smw25DiNXGpH+jHCpdvF0vZwxl3PB7VjSafScaEDobK
-         QnP5F/4diWvyeLtqqBsoLuPsvF5lF6q/3bV2F8zlGo2RYU/M0OG0AducmuHKUHxI/5FI
-         KBhoQVgezNOHLDEN8CjafNPlJdycmE1MVb+0vpJysWmBj0QTcNU96iIA8BN/MYr2Mfum
-         +Sja3BQJhXaRzDv/L/VQQs2uVJQFDyN9J4CoMk6dnR40poPm03ZvMXHxFCKkbTk/iT2Z
-         1T1Q==
+        bh=mI8vr3/36JLF0airk6gRoq/8WvqXSJmOsue8+mcEZp4=;
+        b=Ya09rERr9Wequlfelrx+8X+DvhdYFF5CE5oR/pJDtd32pknUMUH1wYowoBr3uCuHYy
+         Fsr+xZt/b58WExiIeX8FJnMqTyZ5m9sGcjpiDEVi5KVzrL9Xp7dOFo5/NBnZVteeVrl9
+         0A78pCUdnf8MzXMNlrj2HynD1czgK6EucL08+UQ+pnudYIAuGCvHc0c9h06mUu3Y87tl
+         B8/pALR/CO9i9I9wIRbeInCxMZdy64xDgbrHvEnfFpxP6hJHYqkVw7sfFDrS0hjiFrJE
+         uXa8xodzMmlzzan5Xw0RxMUlZl/AJ6azcMS9RElEfgSo8dd6sRHzhwFq2nLpkb7InYDW
+         gxwA==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH v2 10/14] boards: amlogic: add Radxa Zero2 defconfig
-Date: Thu, 23 Mar 2023 14:31:38 +0000
-Message-Id: <20230323143142.780306-11-christianshewitt@gmail.com>
+Subject: [PATCH v2 11/14] doc: boards: amlogic: add documentation for Radxa Zero2
+Date: Thu, 23 Mar 2023 14:31:39 +0000
+Message-Id: <20230323143142.780306-12-christianshewitt@gmail.com>
 In-Reply-To: <20230323143142.780306-1-christianshewitt@gmail.com>
 References: <20230323143142.780306-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add board configuration for the Radxa Zero2.
+Add build docs for the Radxa Zero2 board.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- configs/radxa-zero2_defconfig | 77 +++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 configs/radxa-zero2_defconfig
+ board/amlogic/w400/MAINTAINERS    |  2 +
+ doc/board/amlogic/index.rst       |  1 +
+ doc/board/amlogic/radxa-zero2.rst | 80 +++++++++++++++++++++++++++++++
+ 3 files changed, 83 insertions(+)
+ create mode 100644 doc/board/amlogic/radxa-zero2.rst
 
-diff --git a/configs/radxa-zero2_defconfig b/configs/radxa-zero2_defconfig
+diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
+index 042b523056..117f79ea04 100644
+--- a/board/amlogic/w400/MAINTAINERS
++++ b/board/amlogic/w400/MAINTAINERS
+@@ -5,6 +5,8 @@ L:	u-boot-amlogic@groups.io
+ F:	board/amlogic/w400/
+ F:	configs/bananapi-cm4-cm4io_defconfig
+ F:	configs/bananapi-m2s_defconfig
++F:	configs/radxa-zero2_defconfig
+ F:	doc/board/amlogic/w400.rst
+ F:	doc/board/amlogic/bananapi-cm4io.rst
+ F:	doc/board/amlogic/bananapi-m2s.rst
++F:	doc/board/amlogic/radxa-zero2.rst
+diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+index fa1b362731..71b7e1f3ed 100644
+--- a/doc/board/amlogic/index.rst
++++ b/doc/board/amlogic/index.rst
+@@ -112,6 +112,7 @@ Board Documentation
+    p212
+    q200
+    radxa-zero
++   radxa-zero2
+    sei510
+    sei610
+    s400
+diff --git a/doc/board/amlogic/radxa-zero2.rst b/doc/board/amlogic/radxa-zero2.rst
 new file mode 100644
-index 0000000000..2218b0db7d
+index 0000000000..dccf592459
 --- /dev/null
-+++ b/configs/radxa-zero2_defconfig
-@@ -0,0 +1,77 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_TEXT_BASE=0x01000000
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_ENV_SIZE=0x2000
-+CONFIG_DM_GPIO=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-radxa-zero2"
-+CONFIG_MESON_G12A=y
-+CONFIG_DEBUG_UART_BASE=0xff803000
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" radxa-zero2"
-+CONFIG_SYS_LOAD_ADDR=0x1000000
-+CONFIG_DEBUG_UART=y
-+CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
-+CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
-+CONFIG_REMAKE_ELF=y
-+CONFIG_OF_BOARD_SETUP=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+CONFIG_MISC_INIT_R=y
-+CONFIG_SYS_MAXARGS=32
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+CONFIG_CMD_USB=y
-+CONFIG_CMD_USB_MASS_STORAGE=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-+CONFIG_NET_RANDOM_ETHADDR=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_MTD=y
-+CONFIG_DM_MTD=y
-+# CONFIG_PHY_REALTEK is not set
-+CONFIG_DM_MDIO=y
-+CONFIG_DM_MDIO_MUX=y
-+# CONFIG_ETH_DESIGNWARE_MESON8B is not set
-+CONFIG_MDIO_MUX_MESON_G12A=y
-+CONFIG_MESON_G12A_USB_PHY=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_EE_POWER_DOMAIN=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_USB=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_DWC3=y
-+# CONFIG_USB_DWC3_GADGET is not set
-+CONFIG_USB_DWC3_MESON_G12A=y
-+CONFIG_USB_KEYBOARD=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-+CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-+CONFIG_USB_GADGET_DWC2_OTG=y
-+CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
-+CONFIG_USB_GADGET_DOWNLOAD=y
-+CONFIG_VIDEO=y
-+# CONFIG_VIDEO_BPP8 is not set
-+# CONFIG_VIDEO_BPP16 is not set
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
-+CONFIG_SPLASH_SCREEN=y
-+CONFIG_SPLASH_SCREEN_ALIGN=y
-+CONFIG_VIDEO_BMP_RLE8=y
-+CONFIG_BMP_16BPP=y
-+CONFIG_BMP_24BPP=y
-+CONFIG_BMP_32BPP=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
++++ b/doc/board/amlogic/radxa-zero2.rst
+@@ -0,0 +1,80 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++U-Boot for Radxa Zero2 (A311D)
++==============================
++
++Radxa Zero2 is a small form factor SBC based on the Amlogic A311D chipset with the
++following specification:
++
++- Amlogic A311D (Quad A73 + Dual A53) CPU
++- 4GB LPDDR4 RAM
++- 32/64/128GB eMMC
++- Mali G52-MP4 GPU
++- HDMI 2.1 output (micro)
++- BCM4345 WiFi (2.4/5GHz a/b/g/n/ac) and BT 5.0
++- 1x USB 2.0 port - Type C (OTG)
++- 1x USB 3.0 port - Type C (Host)
++- 1x micro SD Card slot
++- 40 Pin GPIO header
++
++Schematics are available on request from Radxa.
++
++U-Boot Compilation
++------------------
++
++.. code-block:: bash
++
++    $ export CROSS_COMPILE=aarch64-none-elf-
++    $ make radxa-zero2_defconfig
++    $ make
++
++U-Boot Signing with Pre-Built FIP repo
++--------------------------------------
++
++.. code-block:: bash
++
++    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
++    $ cd amlogic-boot-fip
++    $ mkdir my-output-dir
++    $ ./build-fip.sh radxa-zero2 /path/to/u-boot/u-boot.bin my-output-dir
++
++U-Boot Manual Signing
++---------------------
++
++Amlogic does not provide sources for the firmware and tools needed to create a bootloader
++image so it is necessary to obtain binaries from sources published by the board vendor:
++
++.. code-block:: bash
++
++    $ git clone -b radxa-zero-v2021.07 https://github.com/radxa/u-boot.git
++    $ git clone https://github.com/radxa/fip.git
++
++    $ sudo apt-get install -y gcc-aarch64-linux-gnu device-tree-compiler libncurses5 libncurses5-dev
++    $ sudo apt-get install -y bc python dosfstools flex build-essential libssl-dev mtools
++
++    $ wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz
++    $ sudo tar xvf gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz -C /opt
++
++    $ export CROSS_COMPILE=/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
++    $ export ARCH=arm
++    $ cd u-boot
++    $ make radxa-zero2_defconfig
++    $ make
++
++    $ cp u-boot.bin ../fip/radxa-zero2/bl33.bin
++    $ cd ../fip/radxa-zero2
++    $ make
++
++This will generate the signed U-Boot binaries:
++
++.. code-block:: bash
++
++    $ u-boot.bin u-boot.bin.sd.bin u-boot.bin.usb.bl2 u-boot.bin.usb.tpl
++
++Then write U-Boot to SD or eMMC with:
++
++.. code-block:: bash
++
++    $ DEV=/dev/boot_device
++    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
++    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
 -- 
 2.34.1
 
