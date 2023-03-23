@@ -1,155 +1,573 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.73888.1679581926803543621
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web10.74399.1679581928769463002
  for <u-boot-amlogic@groups.io>;
- Thu, 23 Mar 2023 07:32:07 -0700
-Received: by mail-wm1-f45.google.com with SMTP id bg16-20020a05600c3c9000b003eb34e21bdfso1347111wmb.0
-        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:32:06 -0700 (PDT)
+ Thu, 23 Mar 2023 07:32:09 -0700
+Received: by mail-wr1-f48.google.com with SMTP id r11so3941857wrr.12
+        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679581925;
+        d=gmail.com; s=20210112; t=1679581927;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mI8vr3/36JLF0airk6gRoq/8WvqXSJmOsue8+mcEZp4=;
-        b=Ya09rERr9Wequlfelrx+8X+DvhdYFF5CE5oR/pJDtd32pknUMUH1wYowoBr3uCuHYy
-         Fsr+xZt/b58WExiIeX8FJnMqTyZ5m9sGcjpiDEVi5KVzrL9Xp7dOFo5/NBnZVteeVrl9
-         0A78pCUdnf8MzXMNlrj2HynD1czgK6EucL08+UQ+pnudYIAuGCvHc0c9h06mUu3Y87tl
-         B8/pALR/CO9i9I9wIRbeInCxMZdy64xDgbrHvEnfFpxP6hJHYqkVw7sfFDrS0hjiFrJE
-         uXa8xodzMmlzzan5Xw0RxMUlZl/AJ6azcMS9RElEfgSo8dd6sRHzhwFq2nLpkb7InYDW
-         gxwA==
+        bh=LukbqGovKY+mEVDifejKok74JlH8mFQ+LBLMQ/zm+vo=;
+        b=BpDDVzdMBKAAiy29tp/ila3FWCRQymewhdky/ooc1MV2oh4n7L53PpMG7EKQJGzuSy
+         Hqavo77bnsF5V3lcn0QlyKFZTT4i+qc+jcQtvAtoCXq5e9nBCz1S+NcAC1PZtLhpNxn5
+         W4e7jWyqP61ZobFo6cD7kykzVLnm2pHWb6iXeKGG/zZwwPF7ffX4ncJb3hsU5OTgHMlB
+         LDVukOlrd3QyHwy/CwDg1mi6kE8i9uEQ3gAV3Db1qaI28cssDqpAllJJ3JJxPGKLw7n2
+         24nnCGpvD/DxpwKSbygBu64Z3Z6/mgFCZrwKqm5mVLmVCICi2vyova+YUmXxhuTIvEiR
+         5d3g==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH v2 11/14] doc: boards: amlogic: add documentation for Radxa Zero2
-Date: Thu, 23 Mar 2023 14:31:39 +0000
-Message-Id: <20230323143142.780306-12-christianshewitt@gmail.com>
+Subject: [PATCH v2 12/14] ARM: dts: add support for WeTek Hub and WeTek Play2
+Date: Thu, 23 Mar 2023 14:31:40 +0000
+Message-Id: <20230323143142.780306-13-christianshewitt@gmail.com>
 In-Reply-To: <20230323143142.780306-1-christianshewitt@gmail.com>
 References: <20230323143142.780306-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add build docs for the Radxa Zero2 board.
+Import the dts files from linux-amlogic/for-next (Linux 6.4-rc1) and
+add the old PHY reset bindings for dwmac to the u-boot.dtsi until we
+support the new bindings in the PHY node. Without this the PHY is not
+functional in u-boot or Linux.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- board/amlogic/w400/MAINTAINERS    |  2 +
- doc/board/amlogic/index.rst       |  1 +
- doc/board/amlogic/radxa-zero2.rst | 80 +++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
- create mode 100644 doc/board/amlogic/radxa-zero2.rst
+ arch/arm/dts/Makefile                     |   2 +
+ arch/arm/dts/meson-gxbb-wetek-hub.dts     |  58 +++++
+ arch/arm/dts/meson-gxbb-wetek-play2.dts   | 119 +++++++++
+ arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi |  13 +
+ arch/arm/dts/meson-gxbb-wetek.dtsi        | 292 ++++++++++++++++++++++
+ 5 files changed, 484 insertions(+)
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek-hub.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek.dtsi
 
-diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
-index 042b523056..117f79ea04 100644
---- a/board/amlogic/w400/MAINTAINERS
-+++ b/board/amlogic/w400/MAINTAINERS
-@@ -5,6 +5,8 @@ L:	u-boot-amlogic@groups.io
- F:	board/amlogic/w400/
- F:	configs/bananapi-cm4-cm4io_defconfig
- F:	configs/bananapi-m2s_defconfig
-+F:	configs/radxa-zero2_defconfig
- F:	doc/board/amlogic/w400.rst
- F:	doc/board/amlogic/bananapi-cm4io.rst
- F:	doc/board/amlogic/bananapi-m2s.rst
-+F:	doc/board/amlogic/radxa-zero2.rst
-diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index fa1b362731..71b7e1f3ed 100644
---- a/doc/board/amlogic/index.rst
-+++ b/doc/board/amlogic/index.rst
-@@ -112,6 +112,7 @@ Board Documentation
-    p212
-    q200
-    radxa-zero
-+   radxa-zero2
-    sei510
-    sei610
-    s400
-diff --git a/doc/board/amlogic/radxa-zero2.rst b/doc/board/amlogic/radxa-zero2.rst
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index 42da335bb5..1c843882d1 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -191,6 +191,8 @@ dtb-$(CONFIG_ARCH_MESON) += \
+ 	meson-gxbb-nanopi-k2.dtb \
+ 	meson-gxbb-p200.dtb \
+ 	meson-gxbb-p201.dtb \
++	meson-gxbb-wetek-hub.dtb \
++	meson-gxbb-wetek-play2.dtb \
+ 	meson-gxl-s805x-libretech-ac.dtb \
+ 	meson-gxl-s905d-libretech-pc.dtb \
+ 	meson-gxl-s905w-jethome-jethub-j80.dtb \
+diff --git a/arch/arm/dts/meson-gxbb-wetek-hub.dts b/arch/arm/dts/meson-gxbb-wetek-hub.dts
 new file mode 100644
-index 0000000000..dccf592459
+index 0000000000..58733017ed
 --- /dev/null
-+++ b/doc/board/amlogic/radxa-zero2.rst
-@@ -0,0 +1,80 @@
-+.. SPDX-License-Identifier: GPL-2.0+
++++ b/arch/arm/dts/meson-gxbb-wetek-hub.dts
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
 +
-+U-Boot for Radxa Zero2 (A311D)
-+==============================
++/dts-v1/;
 +
-+Radxa Zero2 is a small form factor SBC based on the Amlogic A311D chipset with the
-+following specification:
++#include "meson-gxbb-wetek.dtsi"
++#include <dt-bindings/sound/meson-aiu.h>
 +
-+- Amlogic A311D (Quad A73 + Dual A53) CPU
-+- 4GB LPDDR4 RAM
-+- 32/64/128GB eMMC
-+- Mali G52-MP4 GPU
-+- HDMI 2.1 output (micro)
-+- BCM4345 WiFi (2.4/5GHz a/b/g/n/ac) and BT 5.0
-+- 1x USB 2.0 port - Type C (OTG)
-+- 1x USB 3.0 port - Type C (Host)
-+- 1x micro SD Card slot
-+- 40 Pin GPIO header
++/ {
++	compatible = "wetek,hub", "amlogic,meson-gxbb";
++	model = "WeTek Hub";
 +
-+Schematics are available on request from Radxa.
++	sound {
++		compatible = "amlogic,gx-sound-card";
++		model = "WETEK-HUB";
++		assigned-clocks = <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>,
++				  <&clkc CLKID_MPLL2>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		status = "okay";
 +
-+U-Boot Compilation
-+------------------
++		dai-link-0 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
++		};
 +
-+.. code-block:: bash
++		dai-link-1 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
++			dai-format = "i2s";
++			mclk-fs = <256>;
 +
-+    $ export CROSS_COMPILE=aarch64-none-elf-
-+    $ make radxa-zero2_defconfig
-+    $ make
++			codec-0 {
++				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
++			};
++		};
 +
-+U-Boot Signing with Pre-Built FIP repo
-+--------------------------------------
++		dai-link-2 {
++			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
 +
-+.. code-block:: bash
++			codec-0 {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++	};
++};
 +
-+    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-+    $ cd amlogic-boot-fip
-+    $ mkdir my-output-dir
-+    $ ./build-fip.sh radxa-zero2 /path/to/u-boot/u-boot.bin my-output-dir
++&aiu {
++	status = "okay";
++};
 +
-+U-Boot Manual Signing
-+---------------------
++&ir {
++	linux,rc-map-name = "rc-wetek-hub";
++};
+diff --git a/arch/arm/dts/meson-gxbb-wetek-play2.dts b/arch/arm/dts/meson-gxbb-wetek-play2.dts
+new file mode 100644
+index 0000000000..505ffcd8eb
+--- /dev/null
++++ b/arch/arm/dts/meson-gxbb-wetek-play2.dts
+@@ -0,0 +1,119 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
 +
-+Amlogic does not provide sources for the firmware and tools needed to create a bootloader
-+image so it is necessary to obtain binaries from sources published by the board vendor:
++/dts-v1/;
 +
-+.. code-block:: bash
++#include "meson-gxbb-wetek.dtsi"
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/sound/meson-aiu.h>
 +
-+    $ git clone -b radxa-zero-v2021.07 https://github.com/radxa/u-boot.git
-+    $ git clone https://github.com/radxa/fip.git
++/ {
++	compatible = "wetek,play2", "amlogic,meson-gxbb";
++	model = "WeTek Play 2";
 +
-+    $ sudo apt-get install -y gcc-aarch64-linux-gnu device-tree-compiler libncurses5 libncurses5-dev
-+    $ sudo apt-get install -y bc python dosfstools flex build-essential libssl-dev mtools
++	spdif_dit: audio-codec-0 {
++		#sound-dai-cells = <0>;
++		compatible = "linux,spdif-dit";
++		status = "okay";
++		sound-name-prefix = "DIT";
++	};
 +
-+    $ wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz
-+    $ sudo tar xvf gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz -C /opt
++	leds {
++		led-wifi {
++			label = "wetek-play:wifi-status";
++			gpios = <&gpio GPIODV_26 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
 +
-+    $ export CROSS_COMPILE=/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
-+    $ export ARCH=arm
-+    $ cd u-boot
-+    $ make radxa-zero2_defconfig
-+    $ make
++		led-ethernet {
++			label = "wetek-play:ethernet-status";
++			gpios = <&gpio GPIODV_27 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
 +
-+    $ cp u-boot.bin ../fip/radxa-zero2/bl33.bin
-+    $ cd ../fip/radxa-zero2
-+    $ make
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		poll-interval = <100>;
 +
-+This will generate the signed U-Boot binaries:
++		button {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
++		};
++	};
 +
-+.. code-block:: bash
++	sound {
++		compatible = "amlogic,gx-sound-card";
++		model = "WETEK-PLAY2";
++		assigned-clocks = <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>,
++				  <&clkc CLKID_MPLL2>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		status = "okay";
 +
-+    $ u-boot.bin u-boot.bin.sd.bin u-boot.bin.usb.bl2 u-boot.bin.usb.tpl
++		dai-link-0 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
++		};
 +
-+Then write U-Boot to SD or eMMC with:
++		dai-link-1 {
++			sound-dai = <&aiu AIU_CPU CPU_SPDIF_FIFO>;
++		};
 +
-+.. code-block:: bash
++		dai-link-2 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
++			dai-format = "i2s";
++			mclk-fs = <256>;
 +
-+    $ DEV=/dev/boot_device
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
++			codec-0 {
++				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
++			};
++		};
++
++		dai-link-3 {
++			sound-dai = <&aiu AIU_CPU CPU_SPDIF_ENCODER>;
++
++			codec-0 {
++				sound-dai = <&spdif_dit>;
++			};
++		};
++
++		dai-link-4 {
++			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
++
++			codec-0 {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++	};
++};
++
++&aiu {
++	status = "okay";
++	pinctrl-0 = <&spdif_out_y_pins>;
++	pinctrl-names = "default";
++};
++
++&i2c_A {
++	status = "okay";
++	pinctrl-0 = <&i2c_a_pins>;
++	pinctrl-names = "default";
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&ir {
++	linux,rc-map-name = "rc-wetek-play2";
++};
+diff --git a/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
+new file mode 100644
+index 0000000000..3743053eb9
+--- /dev/null
++++ b/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#include "meson-gx-u-boot.dtsi"
++
++&ethmac {
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++};
+diff --git a/arch/arm/dts/meson-gxbb-wetek.dtsi b/arch/arm/dts/meson-gxbb-wetek.dtsi
+new file mode 100644
+index 0000000000..94dafb9553
+--- /dev/null
++++ b/arch/arm/dts/meson-gxbb-wetek.dtsi
+@@ -0,0 +1,292 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2016 Andreas Färber
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Kevin Hilman <khilman@kernel.org>
++ */
++
++#include "meson-gxbb.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++
++/ {
++	aliases {
++		serial0 = &uart_AO;
++		ethernet0 = &ethmac;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led-power {
++			/* red in suspend or power-off */
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_POWER;
++			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			panic-indicator;
++		};
++	};
++
++	usb_pwr: regulator-usb-pwrs {
++		compatible = "regulator-fixed";
++
++		regulator-name = "USB_PWR";
++
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vddio_ao18: regulator-vddio_ao18 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO18";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++
++	cvbs-connector {
++		compatible = "composite-video-connector";
++
++		port {
++			cvbs_connector_in: endpoint {
++				remote-endpoint = <&cvbs_vdac_out>;
++			};
++		};
++	};
++
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_tmds_out>;
++			};
++		};
++	};
++};
++
++&cec_AO {
++	status = "okay";
++	pinctrl-0 = <&ao_cec_pins>;
++	pinctrl-names = "default";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
++	};
++};
++
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rgmii_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
++
++	amlogic,tx-delay-ns = <2>;
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy0: ethernet-phy@0 {
++			/* Realtek RTL8211F (0x001cc916) */
++			reg = <0>;
++
++			reset-assert-us = <10000>;
++			reset-deassert-us = <80000>;
++			reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
++
++			interrupt-parent = <&gpio_intc>;
++			/* MAC_INTR on GPIOZ_15 */
++			interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++		};
++	};
++};
++
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
++	pinctrl-names = "default";
++	hdmi-supply = <&vddio_ao18>;
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&vddio_ao18>;
++};
++
++/* Wireless SDIO Module */
++&sd_emmc_a {
++	status = "okay";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-1 = <&sdio_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <50000000>;
++
++	non-removable;
++	disable-wp;
++
++	/* WiFi firmware requires power to be kept while in suspend */
++	keep-power-in-suspend;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-1 = <&sdcard_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <50000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vcc_3v3>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
++	pinctrl-1 = <&emmc_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
++
++/* This is connected to the Bluetooth module: */
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++/* This UART is brought out to the DB9 connector */
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&usb0_phy {
++	status = "okay";
++	phy-supply = <&usb_pwr>;
++};
++
++&usb0 {
++	status = "okay";
++};
 -- 
 2.34.1
 
