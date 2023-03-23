@@ -1,26 +1,26 @@
 Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web10.66612.1679554509737557166
+ by mx.groups.io with SMTP id smtpd.web11.66271.1679554514332508769
  for <u-boot-amlogic@groups.io>;
- Wed, 22 Mar 2023 23:55:12 -0700
-Received: by mail-wr1-f53.google.com with SMTP id h17so19319542wrt.8
-        for <u-boot-amlogic@groups.io>; Wed, 22 Mar 2023 23:55:11 -0700 (PDT)
+ Wed, 22 Mar 2023 23:55:14 -0700
+Received: by mail-wr1-f53.google.com with SMTP id t15so19320035wrz.7
+        for <u-boot-amlogic@groups.io>; Wed, 22 Mar 2023 23:55:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679554511;
+        d=gmail.com; s=20210112; t=1679554513;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/BQQUePXH68n6kF1UXhv+iM7/40cG2PC9kYIDupX0OA=;
-        b=WjJmTQI6i9ldm8hgcdczJnsClOrJDFyX4S580/NvtZMdexSypDc7tKJU1I9hrcn4sw
-         +fxBssuL9UbM3hN4wJ5toXnYyTLs2bwvRL0Vbd2vE0oB14oEUNvIb3GwSr0ED1JdADaT
-         DcTy6lc0QCAaHfslAYYXXvpuxwty/gb/RzMtRR5pJo1krpgUaz55WWvwDTjQWn7+4k/0
-         auoCg7dd2UHYFCZHc/SvYrVPhNiicOzbKwWdo+YuH5N0NCb/92ZgpLnxF1p+2IWyY9rS
-         AntZADzqsCoiiwCqYWa0sIKieS9cLbYNUB4RHYAVGruD70oRkz875LcTx2R1Ozai7M3P
-         Y3KQ==
+        bh=oixIykBMvoGFssHX9IC6fC2nDt3/+Xhw8quPMHo5CAM=;
+        b=GgQKT3Po/MAqsAyGbpAfxeg4qeVx9XEJeoqbouVI5kxNfe0kAthAfMUVLKabZTvGpd
+         1gh22xcYJh54+zKUC2HNh6JXMhF57KJNhHe5UsONHHnNIfnwAOQoL8E22x+fETx7sUkH
+         R2eCIhip2YLpWvHiBKndoajfskcXFOTC5P7vqzI1H4z6EdUb5uMYsga/QJgW/hZjql1M
+         D2LKjOw+RmijmR9T/9Z2lth7FTa+F7u231KIIuwZCJi7dg/TpDGhSsNYYQhxVogGmmCs
+         IGx68Dj6NP016qwYxqkboNcSHN9U9CWybB7BDOOhKUeC7GwO0M9tJui/bdeHWuVV32Mq
+         Qy/w==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 06/13] boards: add BananaPi M2S defconfig
-Date: Thu, 23 Mar 2023 06:54:51 +0000
-Message-Id: <20230323065458.776029-7-christianshewitt@gmail.com>
+Subject: [PATCH 07/13] docs: boards: amlogic: add documentation for BananaPi M2S
+Date: Thu, 23 Mar 2023 06:54:52 +0000
+Message-Id: <20230323065458.776029-8-christianshewitt@gmail.com>
 In-Reply-To: <20230323065458.776029-1-christianshewitt@gmail.com>
 References: <20230323065458.776029-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
@@ -29,102 +29,198 @@ To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradea
 Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add configuration for the Bananapi BPI-M2S.
+Add build docs for the BPI-M2S board.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- configs/bananapi-m2s_defconfig | 82 ++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 configs/bananapi-m2s_defconfig
+ board/amlogic/w400/MAINTAINERS     |   2 +
+ doc/board/amlogic/bananapi-m2s.rst | 152 +++++++++++++++++++++++++++++
+ doc/board/amlogic/index.rst        |   1 +
+ 3 files changed, 155 insertions(+)
+ create mode 100644 doc/board/amlogic/bananapi-m2s.rst
 
-diff --git a/configs/bananapi-m2s_defconfig b/configs/bananapi-m2s_defconfig
+diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
+index 26a4c2c587..042b523056 100644
+--- a/board/amlogic/w400/MAINTAINERS
++++ b/board/amlogic/w400/MAINTAINERS
+@@ -4,5 +4,7 @@ S:	Maintained
+ L:	u-boot-amlogic@groups.io
+ F:	board/amlogic/w400/
+ F:	configs/bananapi-cm4-cm4io_defconfig
++F:	configs/bananapi-m2s_defconfig
+ F:	doc/board/amlogic/w400.rst
+ F:	doc/board/amlogic/bananapi-cm4io.rst
++F:	doc/board/amlogic/bananapi-m2s.rst
+diff --git a/doc/board/amlogic/bananapi-m2s.rst b/doc/board/amlogic/bananapi-m2s.rst
 new file mode 100644
-index 0000000000..3109e0ce48
+index 0000000000..265df1aea7
 --- /dev/null
-+++ b/configs/bananapi-m2s_defconfig
-@@ -0,0 +1,82 @@
-+CONFIG_ARM=y
-+CONFIG_ARCH_MESON=y
-+CONFIG_TEXT_BASE=0x01000000
-+CONFIG_NR_DRAM_BANKS=1
-+CONFIG_ENV_SIZE=0x2000
-+CONFIG_DM_GPIO=y
-+CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-a311d-bananapi-m2s"
-+CONFIG_MESON_G12A=y
-+CONFIG_DEBUG_UART_BASE=0xff803000
-+CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" bpi-m2s"
-+CONFIG_SYS_LOAD_ADDR=0x1000000
-+CONFIG_DEBUG_UART=y
-+CONFIG_AHCI=y
-+CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
-+CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
-+CONFIG_REMAKE_ELF=y
-+CONFIG_OF_BOARD_SETUP=y
-+# CONFIG_DISPLAY_CPUINFO is not set
-+CONFIG_MISC_INIT_R=y
-+CONFIG_SYS_MAXARGS=32
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=y
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=y
-+CONFIG_CMD_PCI=y
-+CONFIG_CMD_USB=y
-+CONFIG_CMD_USB_MASS_STORAGE=y
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=y
-+CONFIG_OF_CONTROL=y
-+CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-+CONFIG_ADC=y
-+CONFIG_SARADC_MESON=y
-+CONFIG_AHCI_PCI=y
-+CONFIG_MMC_MESON_GX=y
-+CONFIG_PHY_REALTEK=y
-+CONFIG_DM_MDIO=y
-+CONFIG_DM_MDIO_MUX=y
-+CONFIG_ETH_DESIGNWARE_MESON8B=y
-+CONFIG_MDIO_MUX_MESON_G12A=y
-+CONFIG_PCI=y
-+CONFIG_PCIE_DW_MESON=y
-+CONFIG_MESON_G12A_USB_PHY=y
-+CONFIG_PINCTRL=y
-+CONFIG_PINCTRL_MESON_G12A=y
-+CONFIG_POWER_DOMAIN=y
-+CONFIG_MESON_EE_POWER_DOMAIN=y
-+CONFIG_DM_REGULATOR=y
-+CONFIG_DM_REGULATOR_FIXED=y
-+CONFIG_DM_REGULATOR_GPIO=y
-+CONFIG_DM_RESET=y
-+CONFIG_DEBUG_UART_ANNOUNCE=y
-+CONFIG_DEBUG_UART_SKIP_INIT=y
-+CONFIG_MESON_SERIAL=y
-+CONFIG_USB=y
-+CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_DWC3=y
-+CONFIG_USB_DWC3=y
-+# CONFIG_USB_DWC3_GADGET is not set
-+CONFIG_USB_DWC3_MESON_G12A=y
-+CONFIG_USB_KEYBOARD=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-+CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-+CONFIG_USB_GADGET_DWC2_OTG=y
-+CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
-+CONFIG_USB_GADGET_DOWNLOAD=y
-+CONFIG_VIDEO=y
-+# CONFIG_VIDEO_BPP8 is not set
-+# CONFIG_VIDEO_BPP16 is not set
-+CONFIG_SYS_WHITE_ON_BLACK=y
-+CONFIG_VIDEO_MESON=y
-+CONFIG_VIDEO_DT_SIMPLEFB=y
-+CONFIG_SPLASH_SCREEN=y
-+CONFIG_SPLASH_SCREEN_ALIGN=y
-+CONFIG_VIDEO_BMP_RLE8=y
-+CONFIG_BMP_16BPP=y
-+CONFIG_BMP_24BPP=y
-+CONFIG_BMP_32BPP=y
-+CONFIG_OF_LIBFDT_OVERLAY=y
++++ b/doc/board/amlogic/bananapi-m2s.rst
+@@ -0,0 +1,152 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++U-Boot for BananaPi M2S (A311D & S922X)
++=======================================
++
++BananaPi BPI-M2S ships is a Single Board Computer manufactured by Sinovoip that ships in
++two variants with Amlogic S922X or A311D SoC and the following common specification:
++
++- 16GB eMMC
++- HDMI 2.1a video
++- 2x 10/100/1000 Base-T Ethernet (1x RTL8211F, 1x RTL811H)
++- 2x USB 2.0 ports
++- 2x Status LED's (green/blue)
++- 1x Power/Reset button
++- 1x micro SD card slot
++- 40-pin GPIO header
++- PWM fan header
++- UART header
++
++The S992X variant has:
++- 2GB LPDDR4 RAM
++
++The A311D variant has:
++
++- 4GB LPDDR4 RAM
++- NPU (5.0 TOPS)
++- MIPI DSI header
++- MIPI CSI header
++
++An optional RTL8822CS SDIO WiFi/BT mezzanine is available for both board variants.
++
++Schematics are available from the manufacturer: https://wiki.banana-pi.org/Banana_Pi_BPI-M2S
++
++U-Boot Compilation
++------------------
++
++.. code-block:: bash
++
++    $ export CROSS_COMPILE=aarch64-none-elf-
++    $ make bananapi-m2s_defconfig
++    $ make
++
++U-Boot Signing with Pre-Built FIP repo
++--------------------------------------
++
++.. code-block:: bash
++    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
++    $ cd amlogic-boot-fip
++    $ mkdir my-output-dir
++    $ ./build-fip.sh bananapi-m2s /path/to/u-boot/u-boot.bin my-output-dir
++
++U-Boot Manual Signing
++---------------------
++
++Amlogic does not provide sources for the firmware and tools needed to create a bootloader
++image so it is necessary to obtain binaries from sources published by the board vendor:
++
++.. code-block:: bash
++
++    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
++    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
++    $ tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
++    $ tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
++    $ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
++
++    $ DIR=bananapi-m2s
++    $ git clone --depth 1 https://github.com/Dangku/amlogic-u-boot.git -b khadas-g12b-v2015.01-m2s $DIR
++
++    $ cd $DIR
++    $ make bananapi_m2s_defconfig
++    $ make
++    $ export UBDIR=$PWD
++
++Go back to the mainline U-Boot source tree then:
++
++.. code-block:: bash
++
++    $ mkdir fip
++
++    $ wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
++    $ cp $UBDIR/build/scp_task/bl301.bin fip/
++    $ cp $UBDIR/build/board/bananapi/bananpi_m2s/firmware/acs.bin fip/
++    $ cp $UBDIR/fip/g12a/bl2.bin fip/
++    $ cp $UBDIR/fip/g12a/bl30.bin fip/
++    $ cp $UBDIR/fip/g12a/bl31.img fip/
++    $ cp $UBDIR/fip/g12a/ddr3_1d.fw fip/
++    $ cp $UBDIR/fip/g12a/ddr4_1d.fw fip/
++    $ cp $UBDIR/fip/g12a/ddr4_2d.fw fip/
++    $ cp $UBDIR/fip/g12a/diag_lpddr4.fw fip/
++    $ cp $UBDIR/fip/g12a/lpddr3_1d.fw fip/
++    $ cp $UBDIR/fip/g12a/lpddr4_1d.fw fip/
++    $ cp $UBDIR/fip/g12a/lpddr4_2d.fw fip/
++    $ cp $UBDIR/fip/g12a/piei.fw fip/
++    $ cp $UBDIR/fip/g12a/aml_ddr.fw fip/
++    $ cp u-boot.bin fip/bl33.bin
++
++    $ sh fip/blx_fix.sh \
++         fip/bl30.bin \
++         fip/zero_tmp \
++         fip/bl30_zero.bin \
++         fip/bl301.bin \
++         fip/bl301_zero.bin \
++         fip/bl30_new.bin \
++         bl30
++
++    $ sh fip/blx_fix.sh \
++         fip/bl2.bin \
++         fip/zero_tmp \
++         fip/bl2_zero.bin \
++         fip/acs.bin \
++         fip/bl21_zero.bin \
++         fip/bl2_new.bin \
++         bl2
++
++    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl30sig --input fip/bl30_new.bin \
++                                       --output fip/bl30_new.bin.g12a.enc \
++                                       --level v3
++    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl30_new.bin.g12a.enc \
++                                       --output fip/bl30_new.bin.enc \
++                                       --level v3 --type bl30
++    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl31.img \
++                                       --output fip/bl31.img.enc \
++                                       --level v3 --type bl31
++    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
++                                       --output fip/bl33.bin.enc \
++                                       --level v3 --type bl33 --compress lz4
++    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
++                                       --output fip/bl2.n.bin.sig
++    $ $UBDIR/fip/g12b/aml_encrypt_g12b --bootmk \
++                                       --output fip/u-boot.bin \
++                                       --bl2 fip/bl2.n.bin.sig \
++                                       --bl30 fip/bl30_new.bin.enc \
++                                       --bl31 fip/bl31.img.enc \
++                                       --bl33 fip/bl33.bin.enc \
++                                       --ddrfw1 fip/ddr4_1d.fw \
++                                       --ddrfw2 fip/ddr4_2d.fw \
++                                       --ddrfw3 fip/ddr3_1d.fw \
++                                       --ddrfw4 fip/piei.fw \
++                                       --ddrfw5 fip/lpddr4_1d.fw \
++                                       --ddrfw6 fip/lpddr4_2d.fw \
++                                       --ddrfw7 fip/diag_lpddr4.fw \
++                                       --ddrfw8 fip/aml_ddr.fw \
++                                       --ddrfw9 fip/lpddr3_1d.fw \
++                                       --level v3
++
++Then write the image to SD or eMMC with:
++
++.. code-block:: bash
++
++    $ DEV=/dev/boot_device
++    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
++    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
+diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+index 8388acdd11..fa1b362731 100644
+--- a/doc/board/amlogic/index.rst
++++ b/doc/board/amlogic/index.rst
+@@ -87,6 +87,7 @@ Board Documentation
+ 
+    bananapi-cm4io
+    bananapi-m2pro
++   bananapi-m2s
+    bananapi-m5
+    beelink-gskingx
+    beelink-gtking
 -- 
 2.34.1
 
