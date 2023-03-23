@@ -1,220 +1,663 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web11.73880.1679581916465423284
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.74393.1679581918681417056
  for <u-boot-amlogic@groups.io>;
- Thu, 23 Mar 2023 07:31:56 -0700
-Received: by mail-wm1-f47.google.com with SMTP id l37so692574wms.2
-        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:31:56 -0700 (PDT)
+ Thu, 23 Mar 2023 07:31:59 -0700
+Received: by mail-wm1-f52.google.com with SMTP id p13-20020a05600c358d00b003ed346d4522so1238359wmq.2
+        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:31:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679581915;
+        d=gmail.com; s=20210112; t=1679581917;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3h/2763svh6ihBG0Xd+NIIQFgOrvvoNuBA6EsnL0kkI=;
-        b=CneGv29HUDskNeIKncdbmNM1lbXB14njwZFzCAsEYdvD1XHqzh9jcuraF5YfnZTPFo
-         abnLsXQ1hfX2fgbtUHlptSGxfrqBTD3STg0dljEbzNkga5J0jlHPKV6fr0pFjgS935K4
-         P6zUsUzwYO+PWIKjIJnko26k62XgL3vQ6msKlFJPdfB+GbtanAEld6ob6v4MPVGbJZzS
-         pBk4WTpSUYCW8fOjYmThkY99dvU9e2zDPWXZyiAz24ss2A38Ran9PYQVATJPdYnKkCM5
-         sIARvuxkt2JDPkxGa1rd3sQHiKDjNHU7j8QXIjfsd3/3rmqHuAkXOR23O40s3dzGoyC3
-         3+Hw==
+        bh=muIvf5xRkm51sYPkNjmow7rLFyXOLf3k3boFDJ+5ztE=;
+        b=e9pGsch4Jy4/gwfTyvCIRsNyozmhmd6F4CvKpYTS6a6a3sDkZL9sYO//66L0Pq2+8R
+         CG5KA/J9laGj0RAV2Czdq8IIcPbJ+LXmbWc5HvwCMesKPpARxIbJ1Nw0agJUpJTmomtk
+         1Eb3jvP4LUdJivkKoKXP12mSaCSWR4rvfoVmkp0MIi+cFhLp1hf/aQLuS6/GT7swo/aI
+         9YIpA3KZrTdmvL1cbhv+7lFza4tpYpgl1gY2JBrgHyhXMa6LI0zOFbDw2bzLnXOfO8X/
+         ZHRcNJHoybFFMU4vamT0La67Qh1fEPXVQgid0TOZCNweXDYauXg/TraTnh1eXBn6PWzq
+         QgIg==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH v2 05/14] docs: boards: amlogic: add documentation for BananaPi M2-Pro
-Date: Thu, 23 Mar 2023 14:31:33 +0000
-Message-Id: <20230323143142.780306-6-christianshewitt@gmail.com>
+Subject: [PATCH v2 06/14] ARM: dts: add support for BananaPi M2S
+Date: Thu, 23 Mar 2023 14:31:34 +0000
+Message-Id: <20230323143142.780306-7-christianshewitt@gmail.com>
 In-Reply-To: <20230323143142.780306-1-christianshewitt@gmail.com>
 References: <20230323143142.780306-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add build docs for the BPI-M2-PRO board.
+Import the device-tree from linux-amlogic/for-next (Linux 6.4-rc1)
+and omit the NPU node from the A311D board variant dts as this is
+not supported under U-Boot.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- board/amlogic/u200/MAINTAINERS       |   2 +
- doc/board/amlogic/bananapi-m2pro.rst | 143 +++++++++++++++++++++++++++
- doc/board/amlogic/index.rst          |   1 +
- 3 files changed, 146 insertions(+)
- create mode 100644 doc/board/amlogic/bananapi-m2pro.rst
+ arch/arm/dts/Makefile                         |   1 +
+ .../arm/dts/meson-g12b-a311d-bananapi-m2s.dts |  33 ++
+ arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi  |   7 +
+ arch/arm/dts/meson-g12b-bananapi.dtsi         | 521 ++++++++++++++++++
+ .../arm/dts/meson-g12b-s922x-bananapi-m2s.dts |  14 +
+ 5 files changed, 576 insertions(+)
+ create mode 100644 arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts
+ create mode 100644 arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-bananapi.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts
 
-diff --git a/board/amlogic/u200/MAINTAINERS b/board/amlogic/u200/MAINTAINERS
-index 919e349922..f429c212ba 100644
---- a/board/amlogic/u200/MAINTAINERS
-+++ b/board/amlogic/u200/MAINTAINERS
-@@ -4,8 +4,10 @@ S:	Maintained
- L:	u-boot-amlogic@groups.io
- F:	board/amlogic/u200/
- F:	configs/u200_defconfig
-+F:	configs/bananapi-m2pro_defconfig
- F:	configs/bananapi-m5_defconfig
- F:	configs/radxa-zero_defconfig
- F:	doc/board/amlogic/u200.rst
-+F:	doc/board/amlogic/bananapi-m2pro.rst
- F:	doc/board/amlogic/bananapi-m5.rst
- F:	doc/board/amlogic/radxa-zero.rst
-diff --git a/doc/board/amlogic/bananapi-m2pro.rst b/doc/board/amlogic/bananapi-m2pro.rst
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index d6139429e5..eb20524a99 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -204,6 +204,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
+ 	meson-g12a-radxa-zero.dtb \
+ 	meson-g12a-sei510.dtb \
+ 	meson-g12a-u200.dtb \
++	meson-g12b-a311d-bananapi-m2s.dtb \
+ 	meson-g12b-a311d-khadas-vim3.dtb \
+ 	meson-g12b-bananapi-cm4-cm4io.dtb \
+ 	meson-g12b-gsking-x.dtb \
+diff --git a/arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts b/arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts
 new file mode 100644
-index 0000000000..6c35943bac
+index 0000000000..31365316b2
 --- /dev/null
-+++ b/doc/board/amlogic/bananapi-m2pro.rst
-@@ -0,0 +1,143 @@
-+.. SPDX-License-Identifier: GPL-2.0+
++++ b/arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2023 Christian Hewitt <christianshewitt@gmail.com>
++ */
 +
-+U-Boot for BananaPi BPI-M2-PRO (S905X3)
-+=======================================
++/dts-v1/;
 +
-+BananaPi BPI-M2-PRO is a Single Board Computer manufactured by Sinovoip with the
-+following specification:
++#include "meson-g12b-a311d.dtsi"
++#include "meson-g12b-bananapi.dtsi"
 +
-+ - Amlogic S905X3 Arm Cortex-A55 quad-core SoC
-+ - 2GB DDR4 SDRAM
-+ - 16GB eMMC
-+ - Gigabit Ethernet
-+ - RTL8821CU USB WiFi (a/b/g/n/ac) + BT 5.0
-+ - HDMI 2.1 display
-+ - 40-pin GPIO header
-+ - 2x USB 3.0 Host
-+ - 1x DC Jack (power)
-+ - microSD
-+ - UART serial
-+ - Infrared receiver
++/ {
++	compatible = "bananapi,bpi-m2s", "amlogic,a311d", "amlogic,g12b";
++	model = "BananaPi M2S";
 +
-+Schematics are available from the manufacturer: https://wiki.banana-pi.org/Banana_Pi_BPI-M2_Pro
++	aliases {
++		i2c0 = &i2c1;
++		i2c1 = &i2c3;
++	};
++};
 +
-+U-Boot Compilation
-+------------------
++/* Camera (CSI) bus */
++&i2c1 {
++	status = "okay";
++	pinctrl-0 = <&i2c1_sda_h6_pins>, <&i2c1_sck_h7_pins>;
++	pinctrl-names = "default";
++};
 +
-+.. code-block:: bash
++/* Display (DSI) bus */
++&i2c3 {
++	status = "okay";
++	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi b/arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi
+new file mode 100644
+index 0000000000..236f2468dc
+--- /dev/null
++++ b/arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
 +
-+    $ export CROSS_COMPILE=aarch64-none-elf-
-+    $ make bananapi-m2pro_defconfig
-+    $ make
++#include "meson-g12-common-u-boot.dtsi"
+diff --git a/arch/arm/dts/meson-g12b-bananapi.dtsi b/arch/arm/dts/meson-g12b-bananapi.dtsi
+new file mode 100644
+index 0000000000..83709787eb
+--- /dev/null
++++ b/arch/arm/dts/meson-g12b-bananapi.dtsi
+@@ -0,0 +1,521 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ * Copyright (c) 2023 Christian Hewitt <christianshewitt@gmail.com>
++ */
 +
-+U-Boot Signing with Pre-Built FIP repo
-+--------------------------------------
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/gpio/meson-g12a-gpio.h>
++#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
 +
-+.. code-block:: bash
++/ {
++	aliases {
++		serial0 = &uart_AO;
++		ethernet0 = &ethmac;
++		rtc1 = &vrtc;
++	};
 +
-+    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-+    $ cd amlogic-boot-fip
-+    $ mkdir my-output-dir
-+    $ ./build-fip.sh bananapi-m2pro /path/to/u-boot/u-boot.bin my-output-dir
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
 +
-+U-Boot Manual Signing
-+---------------------
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 4 GiB */
++	};
 +
-+Amlogic does not provide sources for the firmware and tools needed to create a bootloader
-+image so it is necessary to obtain binaries from sources published by the board vendor:
++	adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 2>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1710000>;
 +
-+.. code-block:: bash
++		button-function {
++			label = "RST";
++			linux,code = <KEY_POWER>;
++			press-threshold-microvolt = <10000>;
++		};
++	};
 +
-+    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+    $ tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-+    $ tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-+    $ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
++	};
 +
-+    $ DIR=bananapi-m2pro
-+    $ git clone --depth 1 https://github.com/Dangku/amlogic-u-boot.git -b odroidg12-v2015.01-c4-m5 $DIR
++	fan0: pwm-fan {
++		compatible = "pwm-fan";
++		#cooling-cells = <2>;
++		cooling-min-state = <0>;
++		cooling-max-state = <3>;
++		cooling-levels = <0 120 170 220>;
++		pwms = <&pwm_cd 1 40000 0>;
++	};
 +
-+    $ cd $DIR
-+    $ make bananapi_m2pro_defconfig
-+    $ make
-+    $ export UBOOTDIR=$PWD
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
 +
-+Go back to the mainline U-Boot source tree then:
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_tmds_out>;
++			};
++		};
++	};
 +
-+.. code-block:: bash
++	leds {
++		compatible = "gpio-leds";
 +
-+    $ mkdir fip
++		led-0 {
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_STATUS;
++			gpios = <&gpio_ao GPIOAO_7 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
 +
-+    $ wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
-+    $ cp $UBOOTDIR/build/scp_task/bl301.bin fip/
-+    $ cp $UBOOTDIR/build/board/bananapi/bananpi_m5/firmware/acs.bin fip/
-+    $ cp $UBOOTDIR/fip/g12a/bl2.bin fip/
-+    $ cp $UBOOTDIR/fip/g12a/bl30.bin fip/
-+    $ cp $UBOOTDIR/fip/g12a/bl31.img fip/
-+    $ cp $UBOOTDIR/fip/g12a/ddr3_1d.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/ddr4_1d.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/ddr4_2d.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/diag_lpddr4.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/lpddr3_1d.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/lpddr4_1d.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/lpddr4_2d.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/piei.fw fip/
-+    $ cp $UBOOTDIR/fip/g12a/aml_ddr.fw fip/
-+    $ cp u-boot.bin fip/bl33.bin
++		led-1 {
++			color = <LED_COLOR_ID_GREEN>;
++			function = LED_FUNCTION_STATUS;
++			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
++		};
++	};
 +
-+    $ sh fip/blx_fix.sh \
-+         fip/bl30.bin \
-+         fip/zero_tmp \
-+         fip/bl30_zero.bin \
-+         fip/bl301.bin \
-+         fip/bl301_zero.bin \
-+         fip/bl30_new.bin \
-+         bl30
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
 +
-+    $ sh fip/blx_fix.sh \
-+         fip/bl2.bin \
-+         fip/zero_tmp \
-+         fip/bl2_zero.bin \
-+         fip/acs.bin \
-+         fip/bl21_zero.bin \
-+         fip/bl2_new.bin \
-+         bl2
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
 +
-+    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl30sig --input fip/bl30_new.bin \
-+                                          --output fip/bl30_new.bin.g12a.enc \
-+                                          --level v3
-+    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl30_new.bin.g12a.enc \
-+                                          --output fip/bl30_new.bin.enc \
-+                                          --level v3 --type bl30
-+    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl31.img \
-+                                          --output fip/bl31.img.enc \
-+                                          --level v3 --type bl31
-+    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl33.bin --compress lz4 \
-+                                          --output fip/bl33.bin.enc \
-+                                          --level v3 --type bl33 --compress lz4
-+    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl2sig --input fip/bl2_new.bin \
-+                                          --output fip/bl2.n.bin.sig
-+    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bootmk \
-+                                          --output fip/u-boot.bin \
-+                                          --bl2 fip/bl2.n.bin.sig \
-+                                          --bl30 fip/bl30_new.bin.enc \
-+                                          --bl31 fip/bl31.img.enc \
-+                                          --bl33 fip/bl33.bin.enc \
-+                                          --ddrfw1 fip/ddr4_1d.fw \
-+                                          --ddrfw2 fip/ddr4_2d.fw \
-+                                          --ddrfw3 fip/ddr3_1d.fw \
-+                                          --ddrfw4 fip/piei.fw \
-+                                          --ddrfw5 fip/lpddr4_1d.fw \
-+                                          --ddrfw6 fip/lpddr4_2d.fw \
-+                                          --ddrfw7 fip/diag_lpddr4.fw \
-+                                          --ddrfw8 fip/aml_ddr.fw \
-+                                          --ddrfw9 fip/lpddr3_1d.fw \
-+                                          --level v3
++	dc_in: regulator-dc-in {
++		compatible = "regulator-fixed";
++		regulator-name = "DC_IN";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
 +
-+Then write the image to SD or eMMC with:
++	vcc_5v: regulator-vcc-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_in>;
 +
-+.. code-block:: bash
++		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
++		enable-active-high;
++	};
 +
-+    $ DEV=/dev/boot_device
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-+    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
-diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index 9b76bca427..8388acdd11 100644
---- a/doc/board/amlogic/index.rst
-+++ b/doc/board/amlogic/index.rst
-@@ -86,6 +86,7 @@ Board Documentation
-    :maxdepth: 1
- 
-    bananapi-cm4io
-+   bananapi-m2pro
-    bananapi-m5
-    beelink-gskingx
-    beelink-gtking
++	vcc_3v3: regulator-vcc-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vsys_3v3>;
++		regulator-always-on;
++	};
++
++	vcc_1v8: regulator-vcc-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_3v3>;
++		regulator-always-on;
++	};
++
++	vddao_1v8: regulator-vddao-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vsys_3v3>;
++		regulator-always-on;
++	};
++
++	vddcpu_a: regulator-vddcpu-a {
++		compatible = "pwm-regulator";
++		regulator-name = "VDDCPU_A";
++		regulator-min-microvolt = <690000>;
++		regulator-max-microvolt = <1050000>;
++		pwm-supply = <&dc_in>;
++		pwms = <&pwm_ab 0 1250 0>;
++		pwm-dutycycle-range = <100 0>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vddcpu_b: regulator-vddcpu-b {
++		compatible = "pwm-regulator";
++		regulator-name = "VDDCPU_B";
++		regulator-min-microvolt = <690000>;
++		regulator-max-microvolt = <1050000>;
++		pwm-supply = <&vsys_3v3>;
++		pwms = <&pwm_AO_cd 1 1250 0>;
++		pwm-dutycycle-range = <100 0>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vsys_3v3: regulator-vsys-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VSYS_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
++
++	emmc_1v8: regulator-emmc-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "EMMC_AO1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_3v3>;
++		regulator-always-on;
++	};
++
++	usb_pwr: regulator-usb-pwr {
++		compatible = "regulator-fixed";
++		regulator-name = "USB_PWR";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc_5v>;
++
++		gpio = <&gpio GPIOA_6 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	sound {
++		compatible = "amlogic,axg-sound-card";
++		model = "BPI-M2S";
++		audio-aux-devs = <&tdmout_b>;
++		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
++				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
++				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
++				"TDM_B Playback", "TDMOUT_B OUT";
++
++		assigned-clocks = <&clkc CLKID_MPLL2>,
++				  <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++
++		dai-link-0 {
++			sound-dai = <&frddr_a>;
++		};
++
++		dai-link-1 {
++			sound-dai = <&frddr_b>;
++		};
++
++		dai-link-2 {
++			sound-dai = <&frddr_c>;
++		};
++
++		/* 8ch hdmi interface */
++		dai-link-3 {
++			sound-dai = <&tdmif_b>;
++			dai-format = "i2s";
++			dai-tdm-slot-tx-mask-0 = <1 1>;
++			dai-tdm-slot-tx-mask-1 = <1 1>;
++			dai-tdm-slot-tx-mask-2 = <1 1>;
++			dai-tdm-slot-tx-mask-3 = <1 1>;
++			mclk-fs = <256>;
++
++			codec {
++				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
++			};
++		};
++
++		/* hdmi glue */
++		dai-link-4 {
++			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
++
++			codec {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++	};
++};
++
++&arb {
++	status = "okay";
++};
++
++&clkc_audio {
++	status = "okay";
++};
++
++&cecb_AO {
++	pinctrl-0 = <&cec_ao_b_h_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&cpu0 {
++	cpu-supply = <&vddcpu_b>;
++	operating-points-v2 = <&cpu_opp_table_0>;
++	clocks = <&clkc CLKID_CPU_CLK>;
++	clock-latency = <50000>;
++};
++
++&cpu1 {
++	cpu-supply = <&vddcpu_b>;
++	operating-points-v2 = <&cpu_opp_table_0>;
++	clocks = <&clkc CLKID_CPU_CLK>;
++	clock-latency = <50000>;
++};
++
++&cpu100 {
++	cpu-supply = <&vddcpu_a>;
++	operating-points-v2 = <&cpub_opp_table_1>;
++	clocks = <&clkc CLKID_CPUB_CLK>;
++	clock-latency = <50000>;
++};
++
++&cpu101 {
++	cpu-supply = <&vddcpu_a>;
++	operating-points-v2 = <&cpub_opp_table_1>;
++	clocks = <&clkc CLKID_CPUB_CLK>;
++	clock-latency = <50000>;
++};
++
++&cpu102 {
++	cpu-supply = <&vddcpu_a>;
++	operating-points-v2 = <&cpub_opp_table_1>;
++	clocks = <&clkc CLKID_CPUB_CLK>;
++	clock-latency = <50000>;
++};
++
++&cpu103 {
++	cpu-supply = <&vddcpu_a>;
++	operating-points-v2 = <&cpub_opp_table_1>;
++	clocks = <&clkc CLKID_CPUB_CLK>;
++	clock-latency = <50000>;
++};
++
++&ethmac {
++	pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++	phy-mode = "rgmii";
++	phy-handle = <&external_phy>;
++	amlogic,tx-delay-ns = <2>;
++};
++
++&ext_mdio {
++	external_phy: ethernet-phy@0 {
++		/* Realtek RTL8211F (0x001cc916) */
++		reg = <0>;
++		max-speed = <1000>;
++
++		reset-assert-us = <10000>;
++		reset-deassert-us = <80000>;
++		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
++
++		interrupt-parent = <&gpio_intc>;
++		/* MAC_INTR on GPIOZ_14 */
++		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&frddr_a {
++	status = "okay";
++};
++
++&frddr_b {
++	status = "okay";
++};
++
++&frddr_c {
++	status = "okay";
++};
++
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
++	pinctrl-names = "default";
++	hdmi-supply = <&vcc_5v>;
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
++/* Main i2c bus */
++&i2c2 {
++	status = "okay";
++	pinctrl-0 = <&i2c2_sda_x_pins>, <&i2c2_sck_x_pins>;
++	pinctrl-names = "default";
++};
++
++&pcie {
++	status = "okay";
++	reset-gpios = <&gpio GPIOA_8 GPIO_ACTIVE_LOW>;
++};
++
++&pwm_ab {
++	status = "okay";
++	pinctrl-0 = <&pwm_a_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&xtal>;
++	clock-names = "clkin0";
++};
++
++&pwm_cd {
++	status = "okay";
++	pinctrl-0 = <&pwm_d_x6_pins>;
++	pinctrl-names = "default";
++	pwm-gpios = <&gpio GPIOAO_10 GPIO_ACTIVE_HIGH>;
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++};
++
++&pwm_AO_cd {
++	pinctrl-0 = <&pwm_ao_d_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&xtal>;
++	clock-names = "clkin1";
++	status = "okay";
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&vddao_1v8>;
++};
++
++/* SDIO */
++&sd_emmc_a {
++	/* enable if WiFi/BT board connected */
++	status = "disabled";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-1 = <&sdio_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	bus-width = <4>;
++	sd-uhs-sdr104;
++	max-frequency = <50000000>;
++
++	non-removable;
++	disable-wp;
++
++	/* WiFi firmware requires power in suspend */
++	keep-power-in-suspend;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vsys_3v3>;
++	vqmmc-supply = <&vddao_1v8>;
++
++	rtl8822cs: wifi@1 {
++		reg = <1>;
++	};
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_c_pins>;
++	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <50000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&vsys_3v3>;
++	vqmmc-supply = <&vsys_3v3>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_ctrl_pins>, <&emmc_data_8b_pins>, <&emmc_ds_pins>;
++	pinctrl-1 = <&emmc_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++	max-frequency = <200000000>;
++	disable-wp;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&emmc_1v8>;
++};
++
++&tdmif_b {
++	status = "okay";
++};
++
++&tdmout_b {
++	status = "okay";
++};
++
++&tohdmitx {
++	status = "okay";
++};
++
++&uart_A {
++	/* enable if WiFi/BT board connected */
++	status = "disabled";
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "realtek,rtl8822cs-bt";
++		enable-gpios  = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		host-wake-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
++		device-wake-gpios = <&gpio GPIOX_18 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&usb2_phy0 {
++	phy-supply = <&dc_in>;
++};
++
++&usb2_phy1 {
++	phy-supply = <&usb_pwr>;
++};
++
++&usb3_pcie_phy {
++	phy-supply = <&usb_pwr>;
++};
++
++&usb {
++	status = "okay";
++	dr_mode = "peripheral";
++	phys = <&usb2_phy0>, <&usb2_phy1>;
++	phy-names = "usb2-phy0", "usb2-phy1";
++};
+diff --git a/arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts b/arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts
+new file mode 100644
+index 0000000000..7f66f263a2
+--- /dev/null
++++ b/arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2023 Christian Hewitt <christianshewitt@gmail.com>
++ */
++
++/dts-v1/;
++
++#include "meson-g12b-s922x.dtsi"
++#include "meson-g12b-bananapi.dtsi"
++
++/ {
++	compatible = "bananapi,bpi-m2s", "amlogic,s922x", "amlogic,g12b";
++	model = "BananaPi M2S";
++};
 -- 
 2.34.1
 
