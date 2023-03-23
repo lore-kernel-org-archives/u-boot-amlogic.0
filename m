@@ -1,573 +1,210 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web10.74399.1679581928769463002
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web11.73893.1679581930340455896
  for <u-boot-amlogic@groups.io>;
- Thu, 23 Mar 2023 07:32:09 -0700
-Received: by mail-wr1-f48.google.com with SMTP id r11so3941857wrr.12
-        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:32:08 -0700 (PDT)
+ Thu, 23 Mar 2023 07:32:10 -0700
+Received: by mail-wr1-f54.google.com with SMTP id v1so14634739wrv.1
+        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 07:32:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679581927;
+        d=gmail.com; s=20210112; t=1679581929;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LukbqGovKY+mEVDifejKok74JlH8mFQ+LBLMQ/zm+vo=;
-        b=BpDDVzdMBKAAiy29tp/ila3FWCRQymewhdky/ooc1MV2oh4n7L53PpMG7EKQJGzuSy
-         Hqavo77bnsF5V3lcn0QlyKFZTT4i+qc+jcQtvAtoCXq5e9nBCz1S+NcAC1PZtLhpNxn5
-         W4e7jWyqP61ZobFo6cD7kykzVLnm2pHWb6iXeKGG/zZwwPF7ffX4ncJb3hsU5OTgHMlB
-         LDVukOlrd3QyHwy/CwDg1mi6kE8i9uEQ3gAV3Db1qaI28cssDqpAllJJ3JJxPGKLw7n2
-         24nnCGpvD/DxpwKSbygBu64Z3Z6/mgFCZrwKqm5mVLmVCICi2vyova+YUmXxhuTIvEiR
-         5d3g==
+        bh=EA9OzQtLNXUEwNbCzftIms+7+m5IIZ5knAsN9Ujyc9M=;
+        b=VaqMoFC33MWf/1hj2Olz1PHIpkbcc21DVaUK8NEiyrSddhXGAeizFSvSxJ7JaqGH4b
+         c2yuCVGluLxg72DNbBnVI95oEfeYwxx4h90alZOepYObQUql3cOK9C5t6rmZj0+R5k67
+         2mRK84iGr9P+KulZ7pS9eZie6klhH51crlLcqEyvTVaPpGIJ3TdJdog9p6VWlkEB/Qw3
+         W0x2pwMYODldzgYZFtybGKECc+hJDYAC1SEthsgTFeh2e35nUZuopGCSijobNYpMkiVY
+         Z++YA4mY9a3XOS5DDYcOtNb9zYv0PZg76xHj9n7y7lwLPej3BpT3f9s9N4Ab0yt/w6va
+         gcBg==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH v2 12/14] ARM: dts: add support for WeTek Hub and WeTek Play2
-Date: Thu, 23 Mar 2023 14:31:40 +0000
-Message-Id: <20230323143142.780306-13-christianshewitt@gmail.com>
+Subject: [PATCH v2 13/14] boards: amlogic: add WeTek Hub and WeTek Play2 defconfig
+Date: Thu, 23 Mar 2023 14:31:41 +0000
+Message-Id: <20230323143142.780306-14-christianshewitt@gmail.com>
 In-Reply-To: <20230323143142.780306-1-christianshewitt@gmail.com>
 References: <20230323143142.780306-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Import the dts files from linux-amlogic/for-next (Linux 6.4-rc1) and
-add the old PHY reset bindings for dwmac to the u-boot.dtsi until we
-support the new bindings in the PHY node. Without this the PHY is not
-functional in u-boot or Linux.
+Add configurations for the WeTek Hub and WeTek Play2 boards.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- arch/arm/dts/Makefile                     |   2 +
- arch/arm/dts/meson-gxbb-wetek-hub.dts     |  58 +++++
- arch/arm/dts/meson-gxbb-wetek-play2.dts   | 119 +++++++++
- arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi |  13 +
- arch/arm/dts/meson-gxbb-wetek.dtsi        | 292 ++++++++++++++++++++++
- 5 files changed, 484 insertions(+)
- create mode 100644 arch/arm/dts/meson-gxbb-wetek-hub.dts
- create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2.dts
- create mode 100644 arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-wetek.dtsi
+ board/amlogic/p200/MAINTAINERS |  2 +
+ configs/wetek-hub_defconfig    | 70 ++++++++++++++++++++++++++++++++++
+ configs/wetek-play2_defconfig  | 70 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 142 insertions(+)
+ create mode 100644 configs/wetek-hub_defconfig
+ create mode 100644 configs/wetek-play2_defconfig
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 42da335bb5..1c843882d1 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -191,6 +191,8 @@ dtb-$(CONFIG_ARCH_MESON) += \
- 	meson-gxbb-nanopi-k2.dtb \
- 	meson-gxbb-p200.dtb \
- 	meson-gxbb-p201.dtb \
-+	meson-gxbb-wetek-hub.dtb \
-+	meson-gxbb-wetek-play2.dtb \
- 	meson-gxl-s805x-libretech-ac.dtb \
- 	meson-gxl-s905d-libretech-pc.dtb \
- 	meson-gxl-s905w-jethome-jethub-j80.dtb \
-diff --git a/arch/arm/dts/meson-gxbb-wetek-hub.dts b/arch/arm/dts/meson-gxbb-wetek-hub.dts
+diff --git a/board/amlogic/p200/MAINTAINERS b/board/amlogic/p200/MAINTAINERS
+index 33ca3df5c6..264218e3be 100644
+--- a/board/amlogic/p200/MAINTAINERS
++++ b/board/amlogic/p200/MAINTAINERS
+@@ -7,6 +7,8 @@ F:	board/amlogic/p200/
+ F:	configs/nanopi-k2_defconfig
+ F:	configs/odroid-c2_defconfig
+ F:	configs/p200_defconfig
++F:	configs/wetek-hub_defconfig
++F:	configs/wetek-play2_defconfig
+ F:	doc/board/amlogic/p200.rst
+ F:	doc/board/amlogic/nanopi-k2.rst
+ F:	doc/board/amlogic/odroid-c2.rst
+diff --git a/configs/wetek-hub_defconfig b/configs/wetek-hub_defconfig
 new file mode 100644
-index 0000000000..58733017ed
+index 0000000000..634833f7fe
 --- /dev/null
-+++ b/arch/arm/dts/meson-gxbb-wetek-hub.dts
-@@ -0,0 +1,58 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2016 BayLibre, Inc.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxbb-wetek.dtsi"
-+#include <dt-bindings/sound/meson-aiu.h>
-+
-+/ {
-+	compatible = "wetek,hub", "amlogic,meson-gxbb";
-+	model = "WeTek Hub";
-+
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "WETEK-HUB";
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&aiu {
-+	status = "okay";
-+};
-+
-+&ir {
-+	linux,rc-map-name = "rc-wetek-hub";
-+};
-diff --git a/arch/arm/dts/meson-gxbb-wetek-play2.dts b/arch/arm/dts/meson-gxbb-wetek-play2.dts
++++ b/configs/wetek-hub_defconfig
+@@ -0,0 +1,70 @@
++CONFIG_ARM=y
++CONFIG_ARCH_MESON=y
++CONFIG_TEXT_BASE=0x01000000
++CONFIG_SYS_LOAD_ADDR=0x1000000
++CONFIG_NR_DRAM_BANKS=1
++CONFIG_ENV_SIZE=0x2000
++CONFIG_DM_GPIO=y
++CONFIG_DEBUG_UART_BASE=0xc81004c0
++CONFIG_DEBUG_UART_CLOCK=24000000
++CONFIG_IDENT_STRING=" wetek-hub"
++CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-hub"
++CONFIG_DEBUG_UART=y
++CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
++CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
++CONFIG_OF_BOARD_SETUP=y
++# CONFIG_DISPLAY_CPUINFO is not set
++CONFIG_MISC_INIT_R=y
++# CONFIG_CMD_BDI is not set
++# CONFIG_CMD_IMI is not set
++CONFIG_CMD_ADC=y
++CONFIG_CMD_GPIO=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_LOADS is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_USB=y
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_REGULATOR=y
++CONFIG_OF_CONTROL=y
++CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_NET_RANDOM_ETHADDR=y
++CONFIG_SARADC_MESON=y
++CONFIG_DM_I2C=y
++CONFIG_SYS_I2C_MESON=y
++CONFIG_DM_MMC=y
++CONFIG_MMC_MESON_GX=y
++CONFIG_PHY_REALTEK=y
++CONFIG_DM_ETH=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
++CONFIG_PHY=y
++CONFIG_MESON_GXBB_USB_PHY=y
++CONFIG_PINCTRL=y
++CONFIG_PINCTRL_MESON_GXBB=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_EE_POWER_DOMAIN=y
++CONFIG_DM_REGULATOR=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_REGULATOR_GPIO=y
++CONFIG_DM_RESET=y
++CONFIG_DEBUG_UART_ANNOUNCE=y
++CONFIG_DEBUG_UART_SKIP_INIT=y
++CONFIG_MESON_SERIAL=y
++CONFIG_SYSINFO=y
++CONFIG_SYSINFO_SMBIOS=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_DWC2=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_VIDEO=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_MESON=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_SPLASH_SCREEN=y
++CONFIG_SPLASH_SCREEN_ALIGN=y
++CONFIG_VIDEO_BMP_RLE8=y
++CONFIG_BMP_16BPP=y
++CONFIG_BMP_24BPP=y
++CONFIG_BMP_32BPP=y
++CONFIG_OF_LIBFDT_OVERLAY=y
+diff --git a/configs/wetek-play2_defconfig b/configs/wetek-play2_defconfig
 new file mode 100644
-index 0000000000..505ffcd8eb
+index 0000000000..6d33b09a94
 --- /dev/null
-+++ b/arch/arm/dts/meson-gxbb-wetek-play2.dts
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2016 BayLibre, Inc.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxbb-wetek.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/sound/meson-aiu.h>
-+
-+/ {
-+	compatible = "wetek,play2", "amlogic,meson-gxbb";
-+	model = "WeTek Play 2";
-+
-+	spdif_dit: audio-codec-0 {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+		status = "okay";
-+		sound-name-prefix = "DIT";
-+	};
-+
-+	leds {
-+		led-wifi {
-+			label = "wetek-play:wifi-status";
-+			gpios = <&gpio GPIODV_26 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		led-ethernet {
-+			label = "wetek-play:ethernet-status";
-+			gpios = <&gpio GPIODV_27 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <100>;
-+
-+		button {
-+			label = "reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "WETEK-PLAY2";
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_SPDIF_FIFO>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&aiu AIU_CPU CPU_SPDIF_ENCODER>;
-+
-+			codec-0 {
-+				sound-dai = <&spdif_dit>;
-+			};
-+		};
-+
-+		dai-link-4 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&aiu {
-+	status = "okay";
-+	pinctrl-0 = <&spdif_out_y_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&i2c_A {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&ir {
-+	linux,rc-map-name = "rc-wetek-play2";
-+};
-diff --git a/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
-new file mode 100644
-index 0000000000..3743053eb9
---- /dev/null
-+++ b/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gx-u-boot.dtsi"
-+
-+&ethmac {
-+	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+};
-diff --git a/arch/arm/dts/meson-gxbb-wetek.dtsi b/arch/arm/dts/meson-gxbb-wetek.dtsi
-new file mode 100644
-index 0000000000..94dafb9553
---- /dev/null
-+++ b/arch/arm/dts/meson-gxbb-wetek.dtsi
-@@ -0,0 +1,292 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2016 Andreas Färber
-+ * Copyright (c) 2016 BayLibre, Inc.
-+ * Author: Kevin Hilman <khilman@kernel.org>
-+ */
-+
-+#include "meson-gxbb.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-power {
-+			/* red in suspend or power-off */
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_POWER;
-+			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+			panic-indicator;
-+		};
-+	};
-+
-+	usb_pwr: regulator-usb-pwrs {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "USB_PWR";
-+
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+
-+		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cvbs_vdac_port {
-+	cvbs_vdac_out: endpoint {
-+		remote-endpoint = <&cvbs_connector_in>;
-+	};
-+};
-+
-+&ethmac {
-+	status = "okay";
-+	pinctrl-0 = <&eth_rgmii_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&eth_phy0>;
-+	phy-mode = "rgmii";
-+
-+	amlogic,tx-delay-ns = <2>;
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy0: ethernet-phy@0 {
-+			/* Realtek RTL8211F (0x001cc916) */
-+			reg = <0>;
-+
-+			reset-assert-us = <10000>;
-+			reset-deassert-us = <80000>;
-+			reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
-+
-+			interrupt-parent = <&gpio_intc>;
-+			/* MAC_INTR on GPIOZ_15 */
-+			interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+		};
-+	};
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&vddio_ao18>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
-+/* Wireless SDIO Module */
-+&sd_emmc_a {
-+	status = "okay";
-+	pinctrl-0 = <&sdio_pins>;
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+
-+	non-removable;
-+	disable-wp;
-+
-+	/* WiFi firmware requires power to be kept while in suspend */
-+	keep-power-in-suspend;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <50000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vcc_3v3>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	max-frequency = <200000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+/* This UART is brought out to the DB9 connector */
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+	phy-supply = <&usb_pwr>;
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
++++ b/configs/wetek-play2_defconfig
+@@ -0,0 +1,70 @@
++CONFIG_ARM=y
++CONFIG_ARCH_MESON=y
++CONFIG_TEXT_BASE=0x01000000
++CONFIG_SYS_LOAD_ADDR=0x1000000
++CONFIG_NR_DRAM_BANKS=1
++CONFIG_ENV_SIZE=0x2000
++CONFIG_DM_GPIO=y
++CONFIG_DEBUG_UART_BASE=0xc81004c0
++CONFIG_DEBUG_UART_CLOCK=24000000
++CONFIG_IDENT_STRING=" wetek-play2"
++CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-play2"
++CONFIG_DEBUG_UART=y
++CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
++CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
++CONFIG_OF_BOARD_SETUP=y
++# CONFIG_DISPLAY_CPUINFO is not set
++CONFIG_MISC_INIT_R=y
++# CONFIG_CMD_BDI is not set
++# CONFIG_CMD_IMI is not set
++CONFIG_CMD_ADC=y
++CONFIG_CMD_GPIO=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_LOADS is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_USB=y
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_REGULATOR=y
++CONFIG_OF_CONTROL=y
++CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_NET_RANDOM_ETHADDR=y
++CONFIG_SARADC_MESON=y
++CONFIG_DM_I2C=y
++CONFIG_SYS_I2C_MESON=y
++CONFIG_DM_MMC=y
++CONFIG_MMC_MESON_GX=y
++CONFIG_PHY_REALTEK=y
++CONFIG_DM_ETH=y
++CONFIG_ETH_DESIGNWARE_MESON8B=y
++CONFIG_PHY=y
++CONFIG_MESON_GXBB_USB_PHY=y
++CONFIG_PINCTRL=y
++CONFIG_PINCTRL_MESON_GXBB=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_EE_POWER_DOMAIN=y
++CONFIG_DM_REGULATOR=y
++CONFIG_DM_REGULATOR_FIXED=y
++CONFIG_DM_REGULATOR_GPIO=y
++CONFIG_DM_RESET=y
++CONFIG_DEBUG_UART_ANNOUNCE=y
++CONFIG_DEBUG_UART_SKIP_INIT=y
++CONFIG_MESON_SERIAL=y
++CONFIG_SYSINFO=y
++CONFIG_SYSINFO_SMBIOS=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_DWC2=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_VIDEO=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_MESON=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_SPLASH_SCREEN=y
++CONFIG_SPLASH_SCREEN_ALIGN=y
++CONFIG_VIDEO_BMP_RLE8=y
++CONFIG_BMP_16BPP=y
++CONFIG_BMP_24BPP=y
++CONFIG_BMP_32BPP=y
++CONFIG_OF_LIBFDT_OVERLAY=y
 -- 
 2.34.1
 
