@@ -1,31 +1,31 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web10.75343.1679583694435689057
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.75365.1679583732354574876
  for <u-boot-amlogic@groups.io>;
- Thu, 23 Mar 2023 08:01:53 -0700
-Received: by mail-wr1-f52.google.com with SMTP id o7so20867234wrg.5
-        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 08:01:52 -0700 (PDT)
+ Thu, 23 Mar 2023 08:02:12 -0700
+Received: by mail-wm1-f46.google.com with SMTP id j18-20020a05600c1c1200b003ee5157346cso1402518wms.1
+        for <u-boot-amlogic@groups.io>; Thu, 23 Mar 2023 08:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679583712;
+        d=linaro.org; s=google; t=1679583731;
         h=content-transfer-encoding:in-reply-to:organization:from:references
          :to:content-language:subject:reply-to:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=uEHvgVa+LMqKq7QEat5OceTqZ/J0ejozXR/RKqCohbU=;
-        b=TrGatbLPt+7oXQgTgKiavdyRQskWVWYwahHszJiy6iY13ZbNxGgtAqYCGmoUVu14w7
-         /HZUSTkPuaQ3CFe5IqWRe539+f3+NRrzqfuuWMxeteUvJDN4CLIwEl3SY7G32hsWcnHp
-         GpF58NKuWfudeNh4YHO6BlSVhpkyciCBpZ04nxHPA/iTKypvEw3VfEZBBu/6DmSYYdmo
-         hEgA4UbR88je4mFFltZCviMx7m1xpZnVefKeONwQckHGTFFp090MePTjUKEX5XX2IQxB
-         f7mD0nmtdxIEn+xnXJpLzS/DjzpC63oaRcxmF4O1ijI+rIr02aJ3/4N0O88LbSDfr0fM
-         Ko/g==
+        bh=C4A6Nr9KkQBOWVUJyqV9UJbQdXq4Pz/FbNPkIJmT0Ao=;
+        b=cmwHalRhBME2w5J4WJJOfz0pcRO/0miKACZlZtbILeKOTr3z931anTCW5q2K13KfJL
+         HqdlyXaDZ8G32Z07IHiyNdXRVMSAxqObZRQQuqv7H4J9YYxcP/GMX9BalmJt0q9qsMfd
+         GkdLuvEuBD3TXXgFSACBJzhW4AdwcZ61lQHyad/6K48tZQn8+OOjh42BAwdSvtduf3pu
+         VJbM/7G6/57+tqVGjmZ9GOZ2guTtjA08rMhvSQs09D6ttOUMBoK1Ie/DmIhrx9B0AAT+
+         9leY28dTIUDtGlnOSSNXyGXvE1qnmmvSt8H0tqJ3Ae4T11F4iSH6rSUstj5zHzvKSTOZ
+         7Z6Q==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <5debe002-5973-58e1-8e86-ea2732c2faf5@linaro.org>
-Date: Thu, 23 Mar 2023 16:01:51 +0100
+Message-ID: <6ef3b7a4-c740-77f8-dfe5-77906a172cc2@linaro.org>
+Date: Thu, 23 Mar 2023 16:02:09 +0100
 MIME-Version: 1.0
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 11/14] doc: boards: amlogic: add documentation for Radxa Zero2
+Subject: Re: [PATCH v2 13/14] boards: amlogic: add WeTek Hub and WeTek Play2 defconfig
 References: <20230323143142.780306-1-christianshewitt@gmail.com>
- <20230323143142.780306-12-christianshewitt@gmail.com>
+ <20230323143142.780306-14-christianshewitt@gmail.com>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20230323143142.780306-12-christianshewitt@gmail.com>
+In-Reply-To: <20230323143142.780306-14-christianshewitt@gmail.com>
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -33,126 +33,181 @@ To: u-boot-amlogic@groups.io, christianshewitt@gmail.com, u-boot@lists.denx.de, 
 List-ID: <u-boot-amlogic@groups.io>
 
 On 23/03/2023 15:31, Christian Hewitt wrote:
-> Add build docs for the Radxa Zero2 board.
+> Add configurations for the WeTek Hub and WeTek Play2 boards.
 > 
 > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->   board/amlogic/w400/MAINTAINERS    |  2 +
->   doc/board/amlogic/index.rst       |  1 +
->   doc/board/amlogic/radxa-zero2.rst | 80 +++++++++++++++++++++++++++++++
->   3 files changed, 83 insertions(+)
->   create mode 100644 doc/board/amlogic/radxa-zero2.rst
+>   board/amlogic/p200/MAINTAINERS |  2 +
+>   configs/wetek-hub_defconfig    | 70 ++++++++++++++++++++++++++++++++++
+>   configs/wetek-play2_defconfig  | 70 ++++++++++++++++++++++++++++++++++
+>   3 files changed, 142 insertions(+)
+>   create mode 100644 configs/wetek-hub_defconfig
+>   create mode 100644 configs/wetek-play2_defconfig
 > 
-> diff --git a/board/amlogic/w400/MAINTAINERS b/board/amlogic/w400/MAINTAINERS
-> index 042b523056..117f79ea04 100644
-> --- a/board/amlogic/w400/MAINTAINERS
-> +++ b/board/amlogic/w400/MAINTAINERS
-> @@ -5,6 +5,8 @@ L:	u-boot-amlogic@groups.io
->   F:	board/amlogic/w400/
->   F:	configs/bananapi-cm4-cm4io_defconfig
->   F:	configs/bananapi-m2s_defconfig
-> +F:	configs/radxa-zero2_defconfig
->   F:	doc/board/amlogic/w400.rst
->   F:	doc/board/amlogic/bananapi-cm4io.rst
->   F:	doc/board/amlogic/bananapi-m2s.rst
-> +F:	doc/board/amlogic/radxa-zero2.rst
-> diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-> index fa1b362731..71b7e1f3ed 100644
-> --- a/doc/board/amlogic/index.rst
-> +++ b/doc/board/amlogic/index.rst
-> @@ -112,6 +112,7 @@ Board Documentation
->      p212
->      q200
->      radxa-zero
-> +   radxa-zero2
->      sei510
->      sei610
->      s400
-> diff --git a/doc/board/amlogic/radxa-zero2.rst b/doc/board/amlogic/radxa-zero2.rst
+> diff --git a/board/amlogic/p200/MAINTAINERS b/board/amlogic/p200/MAINTAINERS
+> index 33ca3df5c6..264218e3be 100644
+> --- a/board/amlogic/p200/MAINTAINERS
+> +++ b/board/amlogic/p200/MAINTAINERS
+> @@ -7,6 +7,8 @@ F:	board/amlogic/p200/
+>   F:	configs/nanopi-k2_defconfig
+>   F:	configs/odroid-c2_defconfig
+>   F:	configs/p200_defconfig
+> +F:	configs/wetek-hub_defconfig
+> +F:	configs/wetek-play2_defconfig
+>   F:	doc/board/amlogic/p200.rst
+>   F:	doc/board/amlogic/nanopi-k2.rst
+>   F:	doc/board/amlogic/odroid-c2.rst
+> diff --git a/configs/wetek-hub_defconfig b/configs/wetek-hub_defconfig
 > new file mode 100644
-> index 0000000000..dccf592459
+> index 0000000000..634833f7fe
 > --- /dev/null
-> +++ b/doc/board/amlogic/radxa-zero2.rst
-> @@ -0,0 +1,80 @@
-> +.. SPDX-License-Identifier: GPL-2.0+
-> +
-> +U-Boot for Radxa Zero2 (A311D)
-> +==============================
-> +
-> +Radxa Zero2 is a small form factor SBC based on the Amlogic A311D chipset with the
-> +following specification:
-> +
-> +- Amlogic A311D (Quad A73 + Dual A53) CPU
-> +- 4GB LPDDR4 RAM
-> +- 32/64/128GB eMMC
-> +- Mali G52-MP4 GPU
-> +- HDMI 2.1 output (micro)
-> +- BCM4345 WiFi (2.4/5GHz a/b/g/n/ac) and BT 5.0
-> +- 1x USB 2.0 port - Type C (OTG)
-> +- 1x USB 3.0 port - Type C (Host)
-> +- 1x micro SD Card slot
-> +- 40 Pin GPIO header
-> +
-> +Schematics are available on request from Radxa.
-> +
-> +U-Boot Compilation
-> +------------------
-> +
-> +.. code-block:: bash
-> +
-> +    $ export CROSS_COMPILE=aarch64-none-elf-
-> +    $ make radxa-zero2_defconfig
-> +    $ make
-> +
-> +U-Boot Signing with Pre-Built FIP repo
-> +--------------------------------------
-> +
-> +.. code-block:: bash
-> +
-> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-> +    $ cd amlogic-boot-fip
-> +    $ mkdir my-output-dir
-> +    $ ./build-fip.sh radxa-zero2 /path/to/u-boot/u-boot.bin my-output-dir
-> +
-> +U-Boot Manual Signing
-> +---------------------
-> +
-> +Amlogic does not provide sources for the firmware and tools needed to create a bootloader
-> +image so it is necessary to obtain binaries from sources published by the board vendor:
-> +
-> +.. code-block:: bash
-> +
-> +    $ git clone -b radxa-zero-v2021.07 https://github.com/radxa/u-boot.git
-> +    $ git clone https://github.com/radxa/fip.git
-> +
-> +    $ sudo apt-get install -y gcc-aarch64-linux-gnu device-tree-compiler libncurses5 libncurses5-dev
-> +    $ sudo apt-get install -y bc python dosfstools flex build-essential libssl-dev mtools
-> +
-> +    $ wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz
-> +    $ sudo tar xvf gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz -C /opt
-> +
-> +    $ export CROSS_COMPILE=/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
-> +    $ export ARCH=arm
-> +    $ cd u-boot
-> +    $ make radxa-zero2_defconfig
-> +    $ make
-> +
-> +    $ cp u-boot.bin ../fip/radxa-zero2/bl33.bin
-> +    $ cd ../fip/radxa-zero2
-> +    $ make
-> +
-> +This will generate the signed U-Boot binaries:
-> +
-> +.. code-block:: bash
-> +
-> +    $ u-boot.bin u-boot.bin.sd.bin u-boot.bin.usb.bl2 u-boot.bin.usb.tpl
-> +
-> +Then write U-Boot to SD or eMMC with:
-> +
-> +.. code-block:: bash
-> +
-> +    $ DEV=/dev/boot_device
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
+> +++ b/configs/wetek-hub_defconfig
+> @@ -0,0 +1,70 @@
+> +CONFIG_ARM=y
+> +CONFIG_ARCH_MESON=y
+> +CONFIG_TEXT_BASE=0x01000000
+> +CONFIG_SYS_LOAD_ADDR=0x1000000
+> +CONFIG_NR_DRAM_BANKS=1
+> +CONFIG_ENV_SIZE=0x2000
+> +CONFIG_DM_GPIO=y
+> +CONFIG_DEBUG_UART_BASE=0xc81004c0
+> +CONFIG_DEBUG_UART_CLOCK=24000000
+> +CONFIG_IDENT_STRING=" wetek-hub"
+> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-hub"
+> +CONFIG_DEBUG_UART=y
+> +CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> +CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> +CONFIG_OF_BOARD_SETUP=y
+> +# CONFIG_DISPLAY_CPUINFO is not set
+> +CONFIG_MISC_INIT_R=y
+> +# CONFIG_CMD_BDI is not set
+> +# CONFIG_CMD_IMI is not set
+> +CONFIG_CMD_ADC=y
+> +CONFIG_CMD_GPIO=y
+> +CONFIG_CMD_I2C=y
+> +# CONFIG_CMD_LOADS is not set
+> +CONFIG_CMD_MMC=y
+> +CONFIG_CMD_USB=y
+> +# CONFIG_CMD_SETEXPR is not set
+> +CONFIG_CMD_REGULATOR=y
+> +CONFIG_OF_CONTROL=y
+> +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> +CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_SARADC_MESON=y
+> +CONFIG_DM_I2C=y
+> +CONFIG_SYS_I2C_MESON=y
+> +CONFIG_DM_MMC=y
+> +CONFIG_MMC_MESON_GX=y
+> +CONFIG_PHY_REALTEK=y
+> +CONFIG_DM_ETH=y
+> +CONFIG_ETH_DESIGNWARE_MESON8B=y
+> +CONFIG_PHY=y
+> +CONFIG_MESON_GXBB_USB_PHY=y
+> +CONFIG_PINCTRL=y
+> +CONFIG_PINCTRL_MESON_GXBB=y
+> +CONFIG_POWER_DOMAIN=y
+> +CONFIG_MESON_EE_POWER_DOMAIN=y
+> +CONFIG_DM_REGULATOR=y
+> +CONFIG_DM_REGULATOR_FIXED=y
+> +CONFIG_DM_REGULATOR_GPIO=y
+> +CONFIG_DM_RESET=y
+> +CONFIG_DEBUG_UART_ANNOUNCE=y
+> +CONFIG_DEBUG_UART_SKIP_INIT=y
+> +CONFIG_MESON_SERIAL=y
+> +CONFIG_SYSINFO=y
+> +CONFIG_SYSINFO_SMBIOS=y
+> +CONFIG_USB=y
+> +CONFIG_DM_USB=y
+> +CONFIG_USB_DWC2=y
+> +CONFIG_USB_KEYBOARD=y
+> +CONFIG_VIDEO=y
+> +# CONFIG_VIDEO_BPP8 is not set
+> +# CONFIG_VIDEO_BPP16 is not set
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+> +CONFIG_VIDEO_MESON=y
+> +CONFIG_VIDEO_DT_SIMPLEFB=y
+> +CONFIG_SPLASH_SCREEN=y
+> +CONFIG_SPLASH_SCREEN_ALIGN=y
+> +CONFIG_VIDEO_BMP_RLE8=y
+> +CONFIG_BMP_16BPP=y
+> +CONFIG_BMP_24BPP=y
+> +CONFIG_BMP_32BPP=y
+> +CONFIG_OF_LIBFDT_OVERLAY=y
+> diff --git a/configs/wetek-play2_defconfig b/configs/wetek-play2_defconfig
+> new file mode 100644
+> index 0000000000..6d33b09a94
+> --- /dev/null
+> +++ b/configs/wetek-play2_defconfig
+> @@ -0,0 +1,70 @@
+> +CONFIG_ARM=y
+> +CONFIG_ARCH_MESON=y
+> +CONFIG_TEXT_BASE=0x01000000
+> +CONFIG_SYS_LOAD_ADDR=0x1000000
+> +CONFIG_NR_DRAM_BANKS=1
+> +CONFIG_ENV_SIZE=0x2000
+> +CONFIG_DM_GPIO=y
+> +CONFIG_DEBUG_UART_BASE=0xc81004c0
+> +CONFIG_DEBUG_UART_CLOCK=24000000
+> +CONFIG_IDENT_STRING=" wetek-play2"
+> +CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-play2"
+> +CONFIG_DEBUG_UART=y
+> +CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> +CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> +CONFIG_OF_BOARD_SETUP=y
+> +# CONFIG_DISPLAY_CPUINFO is not set
+> +CONFIG_MISC_INIT_R=y
+> +# CONFIG_CMD_BDI is not set
+> +# CONFIG_CMD_IMI is not set
+> +CONFIG_CMD_ADC=y
+> +CONFIG_CMD_GPIO=y
+> +CONFIG_CMD_I2C=y
+> +# CONFIG_CMD_LOADS is not set
+> +CONFIG_CMD_MMC=y
+> +CONFIG_CMD_USB=y
+> +# CONFIG_CMD_SETEXPR is not set
+> +CONFIG_CMD_REGULATOR=y
+> +CONFIG_OF_CONTROL=y
+> +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+> +CONFIG_NET_RANDOM_ETHADDR=y
+> +CONFIG_SARADC_MESON=y
+> +CONFIG_DM_I2C=y
+> +CONFIG_SYS_I2C_MESON=y
+> +CONFIG_DM_MMC=y
+> +CONFIG_MMC_MESON_GX=y
+> +CONFIG_PHY_REALTEK=y
+> +CONFIG_DM_ETH=y
+> +CONFIG_ETH_DESIGNWARE_MESON8B=y
+> +CONFIG_PHY=y
+> +CONFIG_MESON_GXBB_USB_PHY=y
+> +CONFIG_PINCTRL=y
+> +CONFIG_PINCTRL_MESON_GXBB=y
+> +CONFIG_POWER_DOMAIN=y
+> +CONFIG_MESON_EE_POWER_DOMAIN=y
+> +CONFIG_DM_REGULATOR=y
+> +CONFIG_DM_REGULATOR_FIXED=y
+> +CONFIG_DM_REGULATOR_GPIO=y
+> +CONFIG_DM_RESET=y
+> +CONFIG_DEBUG_UART_ANNOUNCE=y
+> +CONFIG_DEBUG_UART_SKIP_INIT=y
+> +CONFIG_MESON_SERIAL=y
+> +CONFIG_SYSINFO=y
+> +CONFIG_SYSINFO_SMBIOS=y
+> +CONFIG_USB=y
+> +CONFIG_DM_USB=y
+> +CONFIG_USB_DWC2=y
+> +CONFIG_USB_KEYBOARD=y
+> +CONFIG_VIDEO=y
+> +# CONFIG_VIDEO_BPP8 is not set
+> +# CONFIG_VIDEO_BPP16 is not set
+> +CONFIG_SYS_WHITE_ON_BLACK=y
+> +CONFIG_VIDEO_MESON=y
+> +CONFIG_VIDEO_DT_SIMPLEFB=y
+> +CONFIG_SPLASH_SCREEN=y
+> +CONFIG_SPLASH_SCREEN_ALIGN=y
+> +CONFIG_VIDEO_BMP_RLE8=y
+> +CONFIG_BMP_16BPP=y
+> +CONFIG_BMP_24BPP=y
+> +CONFIG_BMP_32BPP=y
+> +CONFIG_OF_LIBFDT_OVERLAY=y
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
