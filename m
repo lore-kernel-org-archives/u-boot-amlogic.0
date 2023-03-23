@@ -1,85 +1,80 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
- by mx.groups.io with SMTP id smtpd.web11.42495.1679491680564773928
+Received: from m239-7.eu.mailgun.net (m239-7.eu.mailgun.net [185.250.239.7])
+ by mx.groups.io with SMTP id smtpd.web10.66780.1679555525829592884
  for <u-boot-amlogic@groups.io>;
- Wed, 22 Mar 2023 06:28:00 -0700
-Received: by mail-qt1-f172.google.com with SMTP id c19so22499649qtn.13
-        for <u-boot-amlogic@groups.io>; Wed, 22 Mar 2023 06:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1679491679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bd/W3Xf6isNJ05Focbx8LH8YwpmzS+zWox79kvAfBVw=;
-        b=YkTInJePMQZxKWliV28FOQU+5WXSOxThMoixfKShXgiYdWDsmyNkBProYXt6+zTdRp
-         QEDQT7UiQb+VHM0S81G8LO0jza5M0DTXLudvmk9cRjOyfnGEDbzeBX7Y/IXLXdSWNLnm
-         aqonVsy/msPdyPmGnku7m7G7MIbCWQXIEysTw=
-Return-Path: <trini@konsulko.com>
-Date: Wed, 22 Mar 2023 09:27:57 -0400
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [GIT PULL] Please pull u-boot-amlogic-20230131
-Message-ID: <20230322132757.GC8135@bill-the-cat>
-References: <1f1304e3-9f03-0420-c9d0-d36338f413d0@linaro.org>
-MIME-Version: 1.0
-In-Reply-To: <1f1304e3-9f03-0420-c9d0-d36338f413d0@linaro.org>
-Content-Type: multipart/mixed; boundary="Groupsio=SjamMFFsLViivTzOnTPX"
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+ Thu, 23 Mar 2023 00:12:06 -0700
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=hewittfamily.org.uk;
+ q=dns/txt; s=s1; t=1679555523; x=1679562723; h=To: To: References:
+ Message-Id: Content-Transfer-Encoding: Cc: Date: In-Reply-To: From: From:
+ Subject: Subject: Mime-Version: Content-Type: Sender: Sender;
+ bh=nIjx6vc9YmKyqvtaMg4lkFxKKT31vtia/D8IY56o1NM=;
+ b=VTcj15KuVOyvADYAB5DEjuWXwLWEtBvy37pJBMoYW6vaxfhPNlXjanFz4ygDwGhVuOWGaJUak65biXsa3NP5at2ajMwMg9FWXCSbHf4VcmvuGX9e1tnJGOleUhhIL3w4ZUD4BQtXrWPumEEJGIods+5Iguls+3Knq7QFwWtMGnqI6sGdfpmu5BLEBfQ37OcGamQaxioNltdGWSh6vfXHP8/4uI5T8KHCrLMf4TdZg12eEImA/Vaz2OQcGJxlNHGo82Otx1ZawWdU0AvDMro59/EnldRPYqTrPaYB3GxGYLMIO1Csf7aW/BYVw41kOZIHBjBYeR4WqDurhT9mLOpR7w==
+Sender: christian@hewittfamily.org.uk
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.2\))
+Subject: Re: [PATCHv2 0/3] ARM: meson: Add initial support for beelink gt1
+From: Christian Hewitt <christian@hewittfamily.org.uk>
+In-Reply-To: <KFid.1679512628339564284.oldC@groups.io>
+Date: Thu, 23 Mar 2023 11:11:50 +0400
+Message-Id: <CFFE1487-C407-4DA4-9A24-3D49D629D260@hewittfamily.org.uk>
+References: <KFid.1679512628339564284.oldC@groups.io>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+To: u-boot-amlogic@groups.io, exkc_maillist@list.ru
+Cc: Karl Chan <exxxxkc@getgoogleoff.me>
 List-ID: <u-boot-amlogic@groups.io>
 
---Groupsio=SjamMFFsLViivTzOnTPX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 22, 2023 at 11:46:42AM +0100, Neil Armstrong wrote:
-
+> On 22 Mar 2023, at 11:17 pm, exkc_maillist via groups.io <exkc_maillist=
+=3Dlist.ru@groups.io> wrote:
 >=20
-> Hi Tom,
+> Add initial support for beelink gt1
 >=20
-> A single change to enable the odroid-go-ultra PMIC regulator at boot.
+> Signed-off-by:  Karl Chan <exxxxkc@getgoogleoff.me>
 >=20
-> The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/15691
+> ---
 >=20
-> Thanks,
-> Neil
+> This patch is base on this patch from in pm os .
 >=20
-> The following changes since commit 88e08fc5f6e508eac46cd1dfb0379b11ae032c=
-0a:
->=20
->   Prepare v2023.04-rc4 (2023-03-13 20:52:48 -0400)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20230322
->=20
-> for you to fetch changes up to de58694f0d5431627d7389f50a6b2034a682ba24:
->=20
->   ARM: meson: odroid-go-ultra: setup PMIC regulators are board init (2023=
--03-14 09:03:16 +0100)
+> https://gitlab.com/postmarketOS/pmaports/-/blob/master/device/testing/u-b=
+oot-beelink-gt1/0001-add-basic-support-for-beelink-gt1.patch
 >=20
 
-Applied to u-boot/master, thanks!
+Hello Karl,
 
---=20
-Tom
+You=E2=80=99ve submitted each patch with the same subject/description; each
+patch must have its own subject line and description of the change
+in that patch. You can use the git log to crib the format from the
+previous submissions.
 
---Groupsio=SjamMFFsLViivTzOnTPX
-Content-Type: application/pgp-signature; name="signature.asc"
+Your changes need to be rebased on [0] which had a large patchset
+to revise documentation merged yesterday, so the doc patch will not
+apply now.
 
------BEGIN PGP SIGNATURE-----
+I=E2=80=99ve revised and rebased my original Beelink GT1 patches [1]. You
+are welcome to pick/reuse/reauthor them if you like. I have sent
+the other boards in that branch to the list this morning.
 
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmQbAl0ACgkQFHw5/5Y0
-tyzv+wv9EEcD2uos8/ZAmIecJ3HV01aQYpsVWKnR9AcMIe1Vn3QMusP3VqYDnzgD
-y99X3ZO5wM7S2npGrAGLzC3y7Dh7obAFCM4cUSa0nEx7iKU5ZUZ6cuMN6mMEq7fb
-qPSQEkD4itj6So/grAqFrsiz4bHtjyjQmy2wwnHPF9FFnIZfozWOAb2dM74tVkja
-HL2rY62O/TU9swuxrgdM9yIaFjJYySUcZsoiIBw7vWhk17U4Fo/YTANQBUD1sq0u
-i859kD2uY4vFT6Qwa6X83vPPpqYM8ORqhUSakKaVmfXLsfzz6HzyJmLzikJReNjL
-FG2QUDMEAJWS+D4jpW7LFP916WvD8SeA4OZEsFV58A4RfOf3AdmA7UOJTT3Pi9ml
-aEhMtEH/dxNGo79hpbD+T0JaDy2pyiy8OGUKJETXZjra3uvJOEMvfLtOvjsL0YYa
-xh3pg7U2tUiH7xF2G3FGqZXNYmXXTXsFpNUxDCn+v5GhAF6c1CIrZ9qpXzTc1btc
-4xA/U0p8
-=7qd+
------END PGP SIGNATURE-----
+Christian
 
---Groupsio=SjamMFFsLViivTzOnTPX--
+[0] https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commits/u-boo=
+t-amlogic
+[1] https://github.com/chewitt/u-boot/commits/amlogic-next-chewitt
+
+> ---
+>=20
+> .../dts/meson-gxm-gt1-ultimate-u-boot.dtsi    |  7 ++
+> arch/arm/dts/meson-gxm-gt1-ultimate.dts       | 91 +++++++++++++++++++
+> board/amlogic/q200/MAINTAINERS                |  2 +
+> configs/beelink_gt1_ultimate_defconfig        | 85 +++++++++++++++++
+> doc/board/amlogic/beelink-gt1.rst             | 65 +++++++++++++
+> doc/board/amlogic/index.rst                   |  3 +-
+> 6 files changed, 252 insertions(+), 1 deletion(-)
+> create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
+> create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate.dts
+> create mode 100644 configs/beelink_gt1_ultimate_defconfig
+> create mode 100644 doc/board/amlogic/beelink-gt1.rst
+>=20
+>=20
+>=20
+>=20
+>=20
+
