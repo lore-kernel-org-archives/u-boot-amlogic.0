@@ -1,159 +1,112 @@
-Subject: [PATCHv2 3/3] ARM: meson: Add initial support for beelink gt1
-From: exkc_maillist@list.ru
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web11.66269.1679554503916756096
+ for <u-boot-amlogic@groups.io>;
+ Wed, 22 Mar 2023 23:55:04 -0700
+Received: by mail-wr1-f51.google.com with SMTP id m2so19335718wrh.6
+        for <u-boot-amlogic@groups.io>; Wed, 22 Mar 2023 23:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679554502;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/rfveSi/7MiCJRpDSHMHlrwFV8N+wmoaO+LpWIFpDo=;
+        b=VTJdtqhOYJ5ujZXkK5vmcAJe/A0eTKipaP0zuxDhfV4TPIn5NE6wPAd0JaYRu9ZpLB
+         vyIJOnH+BT3OB2V8/BTKc8PSGLdy9GKLJ7rf/HubW93h6NfNLsitzNBWS0juWcg/QgKH
+         SUvkab9G5UGhagxExqdEaZsjebEVfFllJk1F8OXnPRPFo7K1M23wVlQCzkK19ptur1E0
+         gQdVvgII6NH5VY6W28IyipfMYZy4J/Ur4qTT1dtB3yfgUhRVdPPv4bhwzaL6agtkVkdF
+         hE/0f7O9ekEGPmoahbKPr3HHHNsW9eT1I5tOKVeNhp7xAg0Nm2oYlyv7kiw3F8xMgSaE
+         HHZQ==
+Return-Path: <christianshewitt@gmail.com>
+From: "Christian Hewitt" <christianshewitt@gmail.com>
+Subject: [PATCH 00/13] boards: amlogic: add BananaPi/Radxa/WeTek boards
+Date: Thu, 23 Mar 2023 06:54:45 +0000
+Message-Id: <20230323065458.776029-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
-Date: Wed, 22 Mar 2023 12:21:18 -0700
-Message-ID: <jVsb.1679512878745007811.ZQlP@groups.io>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-To: u-boot-amlogic@groups.io
+Content-Transfer-Encoding: 8bit
+To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
+Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Add initial support for beelink gt1
+This series adds support for the following boards which are
+tested and booting fine with 2023.04-rc4:
 
-Signed-off-by:  Karl Chan <exxxxkc@getgoogleoff.me>
+- BananaPi M2-Pro (S905X3)
+- BananaPi M2S (A311D or S922X)
+- Radxa Zero2 (A311D)
+- WeTek Hub (S905)
+- WeTek Play2 (S905)
 
----
+I also spotted that bananapi-m5 wasn't referrences in the u200
+maintainer file so there's a patch to correct that too.
 
-This patch is base on this patch from in pm os .
+Christian Hewitt (13):
+  docs: boards: amlogic: add bananapi-m5 to u200 maintainer file
+  ARM: dts: add support for BananaPi M2-Pro
+  boards: add BananaPi M2-Pro defconfig
+  docs: boards: amlogic: add documentation for BananaPi M2-Pro
+  ARM: dts: add support for BananaPi M2S
+  boards: add BananaPi M2S defconfig
+  docs: boards: amlogic: add documentation for BananaPi M2S
+  ARM: dts: add support for Radxa Zero2
+  boards: amlogic: add Radxa Zero2 defconfig
+  doc: boards: amlogic: add documentation for Radxa Zero2
+  ARM: dts: add support for WeTek Hub and WeTek Play2
+  boards: amlogic: add WeTek Hub and WeTek Play2 defconfig
+  doc: boards: amlogic: add documentation for WeTek Hub and WeTek Play2
 
-https://gitlab.com/postmarketOS/pmaports/-/blob/master/device/testing/u-boo=
-t-beelink-gt1/0001-add-basic-support-for-beelink-gt1.patch
+ arch/arm/dts/Makefile                         |   9 +-
+ .../arm/dts/meson-g12b-a311d-bananapi-m2s.dts |  33 ++
+ arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi  |   7 +
+ arch/arm/dts/meson-g12b-bananapi.dtsi         | 521 ++++++++++++++++++
+ .../dts/meson-g12b-radxa-zero2-u-boot.dtsi    |   7 +
+ arch/arm/dts/meson-g12b-radxa-zero2.dts       | 489 ++++++++++++++++
+ .../arm/dts/meson-g12b-s922x-bananapi-m2s.dts |  14 +
+ arch/arm/dts/meson-gxbb-wetek-hub.dts         |  58 ++
+ arch/arm/dts/meson-gxbb-wetek-play2.dts       | 119 ++++
+ arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi     |  13 +
+ arch/arm/dts/meson-gxbb-wetek.dtsi            | 292 ++++++++++
+ .../dts/meson-sm1-bananapi-m2-pro-u-boot.dtsi |  14 +
+ arch/arm/dts/meson-sm1-bananapi-m2-pro.dts    |  97 ++++
+ arch/arm/dts/meson-sm1-bananapi-m5.dts        | 427 +-------------
+ arch/arm/dts/meson-sm1-bananapi.dtsi          | 435 +++++++++++++++
+ board/amlogic/p200/MAINTAINERS                |   4 +
+ board/amlogic/u200/MAINTAINERS                |   3 +
+ board/amlogic/w400/MAINTAINERS                |   4 +
+ configs/bananapi-m2-pro_defconfig             |  76 +++
+ configs/bananapi-m2s_defconfig                |  82 +++
+ configs/radxa-zero2_defconfig                 |  77 +++
+ configs/wetek-hub_defconfig                   |  70 +++
+ configs/wetek-play2_defconfig                 |  70 +++
+ doc/board/amlogic/bananapi-m2pro.rst          | 142 +++++
+ doc/board/amlogic/bananapi-m2s.rst            | 152 +++++
+ doc/board/amlogic/index.rst                   |   5 +
+ doc/board/amlogic/radxa-zero2.rst             |  79 +++
+ doc/board/amlogic/wetek-hub.rst               | 109 ++++
+ doc/board/amlogic/wetek-play2.rst             | 114 ++++
+ 29 files changed, 3094 insertions(+), 428 deletions(-)
+ create mode 100644 arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts
+ create mode 100644 arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-bananapi.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-radxa-zero2-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-g12b-radxa-zero2.dts
+ create mode 100644 arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek-hub.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2.dts
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-gxbb-wetek.dtsi
+ create mode 100644 arch/arm/dts/meson-sm1-bananapi-m2-pro-u-boot.dtsi
+ create mode 100644 arch/arm/dts/meson-sm1-bananapi-m2-pro.dts
+ create mode 100644 arch/arm/dts/meson-sm1-bananapi.dtsi
+ create mode 100644 configs/bananapi-m2-pro_defconfig
+ create mode 100644 configs/bananapi-m2s_defconfig
+ create mode 100644 configs/radxa-zero2_defconfig
+ create mode 100644 configs/wetek-hub_defconfig
+ create mode 100644 configs/wetek-play2_defconfig
+ create mode 100644 doc/board/amlogic/bananapi-m2pro.rst
+ create mode 100644 doc/board/amlogic/bananapi-m2s.rst
+ create mode 100644 doc/board/amlogic/radxa-zero2.rst
+ create mode 100644 doc/board/amlogic/wetek-hub.rst
+ create mode 100644 doc/board/amlogic/wetek-play2.rst
 
----
+-- 
+2.34.1
 
- .../dts/meson-gxm-gt1-ultimate-u-boot.dtsi    |  7 ++
- arch/arm/dts/meson-gxm-gt1-ultimate.dts       | 91 +++++++++++++++++++
- board/amlogic/q200/MAINTAINERS                |  2 +
- configs/beelink_gt1_ultimate_defconfig        | 85 +++++++++++++++++
- doc/board/amlogic/beelink-gt1.rst             | 65 +++++++++++++
- doc/board/amlogic/index.rst                   |  3 +-
- 6 files changed, 252 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate.dts
- create mode 100644 configs/beelink_gt1_ultimate_defconfig
- create mode 100644 doc/board/amlogic/beelink-gt1.rst
-
-diff --git a/board/amlogic/q200/MAINTAINERS b/board/amlogic/q200/MAINTAINER=
-S
-index 9c84cca27e85..46beffe17feb 100644
---- a/board/amlogic/q200/MAINTAINERS
-+++ b/board/amlogic/q200/MAINTAINERS
-@@ -4,9 +4,11 @@ S:	Maintained
- L:	u-boot-amlogic@groups.io
- F:	board/amlogic/q200/
- F:	include/configs/q200.h
-+F:	configs/beelink-gt1_defconfig
- F:	configs/khadas-vim2_defconfig
- F:	configs/libretech-s905d-pc_defconfig
- F:	configs/libretech-s912-pc_defconfig
- F:	configs/wetek-core2_defconfig
-+F:	doc/board/amlogic/beelink-gt1.rst
- F:	doc/board/amlogic/khadas-vim2.rst
- F:	doc/board/amlogic/wetek-core2.rst
-diff --git a/doc/board/amlogic/beelink-gt1.rst b/doc/board/amlogic/beelink-=
-gt1.rst
-new file mode 100644
-index 000000000000..dca7165933b5
---- /dev/null
-+++ b/doc/board/amlogic/beelink-gt1.rst
-@@ -0,0 +1,65 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
-+U-Boot for Beelink GT1/GT1-Ultimate
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+The Shenzen AZW (Beelink) GT1 and GT1-Ultimate are based on the Amlogic
-+Q200 reference board with an S912 chip.
-+
-+- 2GB or 3GB DDR3 RAM
-+- 32GB eMMC
-+- HDMI 2.1 video
-+- S/PDIF optical output
-+- 10/100/1000 Ethernet
-+- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.2)
-+- 3x USB 2.0 ports
-+- IR receiver
-+- 1x micro SD card slot
-+- 1x Power LED (white)
-+- 1x Reset button (internal)
-+
-+Beelink do not provide public schematics, but have been willing
-+to share them with known distro developers on request.
-+
-+U-Boot compilation
-+------------------
-+
-+.. code-block:: bash
-+
-+    $ export CROSS_COMPILE=3Daarch64-none-elf-
-+    $ make beelink_gt1_ultimate_defconfig
-+    $ make
-+
-+Image creation
-+--------------
-+
-+Amlogic does not provide sources for the firmware and for tools needed
-+to create the bootloader image. Beelink have provided the Amlogic SDK
-+u-boot sources to known distro developers on-request, allowing FIPs to
-+be generated. The GT1 (2GB) and GT1-Ultimate (3GB) models differ in=20
-+RAM size and original Beelink devices use the same spec RAM chips and
-+can share the same boot FIPs:
-+
-+https://github.com/LibreELEC/amlogic-boot-fip/tree/master/beelink-gt1
-+
-+For simplified usage, pleaser refer to :doc:`pre-generated-fip` with coden=
-ame `beelink-gt1`
-+
-+.. code-block:: bash
-+
-+    $ git clone https://github.com/LibreELEC/amlogic-boot-fip
-+    $ mkdir ./fip
-+    $ ./build-fip.sh beelink-gt1 ../u-boot.bin ./fip
-+
-+This will generate:
-+
-+.. code-block:: bash
-+
-+    $ u-boot.bin u-boot.bin.sd.bin u-boot.bin.usb.bl2 u-boot.bin.usb.tpl
-+
-+And then write the image to SD or eMMC with:
-+
-+.. code-block:: bash
-+
-+    $ DEV=3D/dev/your_sd_device
-+    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D51=
-2 skip=3D1 seek=3D1
-+    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D1 =
-count=3D440
-diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index f945f672ddb0..6013588e8aa7 100644
---- a/doc/board/amlogic/index.rst
-+++ b/doc/board/amlogic/index.rst
-@@ -18,7 +18,7 @@ This matrix concerns the actual source code version.
- | Boards                        | Odroid-C2 | P212            | Khadas VIM=
-2  | S400        | U200       | Odroid-N2   | SEI610       |
- |                               | Nanopi-K2 | Khadas-VIM      | Libretech-=
-PC | JetHub J100 | SEI510     | Khadas-VIM3 | Khadas-VIM3L |
- |                               | P200      | LibreTech-CC v1 | WeTek Core=
-2  |             | Radxa Zero | GT-King/Pro | Odroid-C4    |
--|                               | P201      | LibreTech-AC v2 |           =
-   |             |            | GSKing-X    | Odroid-HC4   |
-+|                               | P201      | LibreTech-AC v2 | Beelink GT=
-1  |             |            | GSKing-X    | Odroid-HC4   |
- |                               |           | JetHub J80      |           =
-   |             |            | Odroid-Go-  | BananaPi-M5  |
- |                               |           |                 |           =
-   |             |            | Ultra       |              |
- |                               |           |                 |           =
-   |             |            | Odroid-N2L  |              |
-@@ -95,6 +95,7 @@ Board Documentation
-=20
-    beelink-gtking
-    beelink-gtkingpro
-+   beelink-gt1
-    jethub-j100
-    jethub-j80
-    khadas-vim2
---=20
-2.39.1
