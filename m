@@ -1,112 +1,51 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.66269.1679554503916756096
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.66610.1679554505258517498
  for <u-boot-amlogic@groups.io>;
- Wed, 22 Mar 2023 23:55:04 -0700
-Received: by mail-wr1-f51.google.com with SMTP id m2so19335718wrh.6
-        for <u-boot-amlogic@groups.io>; Wed, 22 Mar 2023 23:55:03 -0700 (PDT)
+ Wed, 22 Mar 2023 23:55:05 -0700
+Received: by mail-wm1-f47.google.com with SMTP id m6-20020a05600c3b0600b003ee6e324b19so443489wms.1
+        for <u-boot-amlogic@groups.io>; Wed, 22 Mar 2023 23:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679554502;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7/rfveSi/7MiCJRpDSHMHlrwFV8N+wmoaO+LpWIFpDo=;
-        b=VTJdtqhOYJ5ujZXkK5vmcAJe/A0eTKipaP0zuxDhfV4TPIn5NE6wPAd0JaYRu9ZpLB
-         vyIJOnH+BT3OB2V8/BTKc8PSGLdy9GKLJ7rf/HubW93h6NfNLsitzNBWS0juWcg/QgKH
-         SUvkab9G5UGhagxExqdEaZsjebEVfFllJk1F8OXnPRPFo7K1M23wVlQCzkK19ptur1E0
-         gQdVvgII6NH5VY6W28IyipfMYZy4J/Ur4qTT1dtB3yfgUhRVdPPv4bhwzaL6agtkVkdF
-         hE/0f7O9ekEGPmoahbKPr3HHHNsW9eT1I5tOKVeNhp7xAg0Nm2oYlyv7kiw3F8xMgSaE
-         HHZQ==
+        d=gmail.com; s=20210112; t=1679554504;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rN6aHfIsm9J0O0IQ057yFCHJ2uZZpYnxmMmMU+EKtRM=;
+        b=Gy+8Lu6v/bZlW+vbnMVC+IKKgO1JvfVKi0m/+A8kaCCB3fsXOenBF41+sD+VteMRty
+         n5pTU/r4+EIyLzcIpzKMiqJHzp/h2w1tB8iEKYJGlrmr8hp9r0wXRrrpQQ8rFhfQjRby
+         SaBgmkEnerfM+i6JERh/FgsRgVsHVLypCisfNXDNa29lOXRGTzXPqxY9AORMpmD+Hj6Q
+         1dzpHU9FoGodTxhDYGbIjKO6T9XWtFFqKtP1o4s24qi7p887aMhaFeEpb2h/HsMlHZ3g
+         Cuz5a2+l1HGTDI4oZ26/84rpUU2mFVE4FbiLhhqVUqBQ024KhSHrAMBvzrarLzTDE3bm
+         2QjQ==
 Return-Path: <christianshewitt@gmail.com>
 From: "Christian Hewitt" <christianshewitt@gmail.com>
-Subject: [PATCH 00/13] boards: amlogic: add BananaPi/Radxa/WeTek boards
-Date: Thu, 23 Mar 2023 06:54:45 +0000
-Message-Id: <20230323065458.776029-1-christianshewitt@gmail.com>
+Subject: [PATCH 01/13] docs: boards: amlogic: add bananapi-m5 to u200 maintainer file
+Date: Thu, 23 Mar 2023 06:54:46 +0000
+Message-Id: <20230323065458.776029-2-christianshewitt@gmail.com>
+In-Reply-To: <20230323065458.776029-1-christianshewitt@gmail.com>
+References: <20230323065458.776029-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org
 Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This series adds support for the following boards which are
-tested and booting fine with 2023.04-rc4:
+The bananapi-m5 docs are missing from the file, so add them.
 
-- BananaPi M2-Pro (S905X3)
-- BananaPi M2S (A311D or S922X)
-- Radxa Zero2 (A311D)
-- WeTek Hub (S905)
-- WeTek Play2 (S905)
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ board/amlogic/u200/MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-I also spotted that bananapi-m5 wasn't referrences in the u200
-maintainer file so there's a patch to correct that too.
-
-Christian Hewitt (13):
-  docs: boards: amlogic: add bananapi-m5 to u200 maintainer file
-  ARM: dts: add support for BananaPi M2-Pro
-  boards: add BananaPi M2-Pro defconfig
-  docs: boards: amlogic: add documentation for BananaPi M2-Pro
-  ARM: dts: add support for BananaPi M2S
-  boards: add BananaPi M2S defconfig
-  docs: boards: amlogic: add documentation for BananaPi M2S
-  ARM: dts: add support for Radxa Zero2
-  boards: amlogic: add Radxa Zero2 defconfig
-  doc: boards: amlogic: add documentation for Radxa Zero2
-  ARM: dts: add support for WeTek Hub and WeTek Play2
-  boards: amlogic: add WeTek Hub and WeTek Play2 defconfig
-  doc: boards: amlogic: add documentation for WeTek Hub and WeTek Play2
-
- arch/arm/dts/Makefile                         |   9 +-
- .../arm/dts/meson-g12b-a311d-bananapi-m2s.dts |  33 ++
- arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi  |   7 +
- arch/arm/dts/meson-g12b-bananapi.dtsi         | 521 ++++++++++++++++++
- .../dts/meson-g12b-radxa-zero2-u-boot.dtsi    |   7 +
- arch/arm/dts/meson-g12b-radxa-zero2.dts       | 489 ++++++++++++++++
- .../arm/dts/meson-g12b-s922x-bananapi-m2s.dts |  14 +
- arch/arm/dts/meson-gxbb-wetek-hub.dts         |  58 ++
- arch/arm/dts/meson-gxbb-wetek-play2.dts       | 119 ++++
- arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi     |  13 +
- arch/arm/dts/meson-gxbb-wetek.dtsi            | 292 ++++++++++
- .../dts/meson-sm1-bananapi-m2-pro-u-boot.dtsi |  14 +
- arch/arm/dts/meson-sm1-bananapi-m2-pro.dts    |  97 ++++
- arch/arm/dts/meson-sm1-bananapi-m5.dts        | 427 +-------------
- arch/arm/dts/meson-sm1-bananapi.dtsi          | 435 +++++++++++++++
- board/amlogic/p200/MAINTAINERS                |   4 +
- board/amlogic/u200/MAINTAINERS                |   3 +
- board/amlogic/w400/MAINTAINERS                |   4 +
- configs/bananapi-m2-pro_defconfig             |  76 +++
- configs/bananapi-m2s_defconfig                |  82 +++
- configs/radxa-zero2_defconfig                 |  77 +++
- configs/wetek-hub_defconfig                   |  70 +++
- configs/wetek-play2_defconfig                 |  70 +++
- doc/board/amlogic/bananapi-m2pro.rst          | 142 +++++
- doc/board/amlogic/bananapi-m2s.rst            | 152 +++++
- doc/board/amlogic/index.rst                   |   5 +
- doc/board/amlogic/radxa-zero2.rst             |  79 +++
- doc/board/amlogic/wetek-hub.rst               | 109 ++++
- doc/board/amlogic/wetek-play2.rst             | 114 ++++
- 29 files changed, 3094 insertions(+), 428 deletions(-)
- create mode 100644 arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts
- create mode 100644 arch/arm/dts/meson-g12b-bananapi-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-g12b-bananapi.dtsi
- create mode 100644 arch/arm/dts/meson-g12b-radxa-zero2-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-g12b-radxa-zero2.dts
- create mode 100644 arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts
- create mode 100644 arch/arm/dts/meson-gxbb-wetek-hub.dts
- create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2.dts
- create mode 100644 arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-gxbb-wetek.dtsi
- create mode 100644 arch/arm/dts/meson-sm1-bananapi-m2-pro-u-boot.dtsi
- create mode 100644 arch/arm/dts/meson-sm1-bananapi-m2-pro.dts
- create mode 100644 arch/arm/dts/meson-sm1-bananapi.dtsi
- create mode 100644 configs/bananapi-m2-pro_defconfig
- create mode 100644 configs/bananapi-m2s_defconfig
- create mode 100644 configs/radxa-zero2_defconfig
- create mode 100644 configs/wetek-hub_defconfig
- create mode 100644 configs/wetek-play2_defconfig
- create mode 100644 doc/board/amlogic/bananapi-m2pro.rst
- create mode 100644 doc/board/amlogic/bananapi-m2s.rst
- create mode 100644 doc/board/amlogic/radxa-zero2.rst
- create mode 100644 doc/board/amlogic/wetek-hub.rst
- create mode 100644 doc/board/amlogic/wetek-play2.rst
-
+diff --git a/board/amlogic/u200/MAINTAINERS b/board/amlogic/u200/MAINTAINERS
+index 47cec234a1..919e349922 100644
+--- a/board/amlogic/u200/MAINTAINERS
++++ b/board/amlogic/u200/MAINTAINERS
+@@ -7,4 +7,5 @@ F:	configs/u200_defconfig
+ F:	configs/bananapi-m5_defconfig
+ F:	configs/radxa-zero_defconfig
+ F:	doc/board/amlogic/u200.rst
++F:	doc/board/amlogic/bananapi-m5.rst
+ F:	doc/board/amlogic/radxa-zero.rst
 -- 
 2.34.1
 
