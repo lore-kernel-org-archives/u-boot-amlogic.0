@@ -1,10 +1,10 @@
-Subject: Re: [PATCHv5 1/3] ARM: dts: add support for Beelink GT1 Ultimate
+Subject: Re: [PATCHv5 2/3] boards: amlogic: add Beelink GT1 Ultimate defconfig
 From: exkc_maillist@list.ru
 MIME-Version: 1.0
-Date: Sun, 26 Mar 2023 10:13:57 -0700
-References: <CdyC.1679850665326358079.ekOu@groups.io>
-In-Reply-To: <CdyC.1679850665326358079.ekOu@groups.io>
-Message-ID: <32718.1679850837877299646@groups.io>
+Date: Sun, 26 Mar 2023 10:14:31 -0700
+References: <oRfz.1679850714553705423.CGc2@groups.io>
+In-Reply-To: <oRfz.1679850714553705423.CGc2@groups.io>
+Message-ID: <19486.1679850871304940251@groups.io>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 To: exkc_maillist@list.ru, u-boot-amlogic@groups.io
