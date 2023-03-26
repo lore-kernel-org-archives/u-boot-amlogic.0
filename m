@@ -1,166 +1,171 @@
-Subject: [PATCHv4 3/3] doc: boards: amlogic: add documentation for Beelink GT1 Ultimate
-From: exkc_maillist@list.ru
-MIME-Version: 1.0
-Date: Sun, 26 Mar 2023 05:44:49 -0700
-Message-ID: <LZnU.1679834689060423329.KDvX@groups.io>
-Content-Type: text/plain; charset="utf-8"
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web10.11531.1679842127089174335
+ for <u-boot-amlogic@groups.io>;
+ Sun, 26 Mar 2023 07:48:47 -0700
+Received: by mail-wr1-f45.google.com with SMTP id m2so6126808wrh.6
+        for <u-boot-amlogic@groups.io>; Sun, 26 Mar 2023 07:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679842125;
+        h=message-id:in-reply-to:to:references:date:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LTMuuvR9opaYTKwbwzCyjsoScTEaiBiaZ8rxJsgwJmk=;
+        b=NajHo9NAtucFQf48JpP2Cojeq9Xqix8QpbEz5FGGduPAKkyY+RH4OTw4TqCHTwj876
+         NXOpiWyrqvw2aeMb/MXS4VBDwKq6/ZGZUsfu1minR5Y4Iz8NHLmpa3LuAnNEHS85Qvqx
+         gHwquKgmx+WhVMu5RqZSShIXRHNrK9WpB17TmnAxNwYeALbu/NIkR6zHEnju9cJO+NxN
+         J6rLczKuAE3UCT61ewu+jcgHaJJvvENX19JvM75nc8NtbAs/4Mjq5+UPApEn0sYUoZyj
+         FsK/enc0Q5r8d7AW3ljMLu7vUUUPgpZvlETU/YULW6GxTjMOpRvT+WtTuYubwzJrWBCe
+         HiJQ==
+Return-Path: <christianshewitt@gmail.com>
+From: "Christian Hewitt" <christianshewitt@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.2\))
+Subject: Re: [PATCHv4 2/3] boards: amlogic: add Beelink GT1 Ultimate defconfig
+Date: Sun, 26 Mar 2023 18:48:42 +0400
+References: <ATp5.1679834635062570198.puAq@groups.io>
+In-Reply-To: <ATp5.1679834635062570198.puAq@groups.io>
+Message-Id: <C1C4DEF5-D2C9-429A-A064-9BC9CA31AADB@gmail.com>
+Content-Type: text/plain;
+	charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
-To: u-boot-amlogic@groups.io
+To: u-boot-amlogic@groups.io, exkc_maillist@list.ru
 List-ID: <u-boot-amlogic@groups.io>
 
-Add build instructions for the Beelink GT1 Ultimate board.
+> On 26 Mar 2023, at 4:43 pm, exkc_maillist via groups.io <exkc_maillist=3D=
+list.ru@groups.io> wrote:
+>=20
+> Add configuration for the Beelink GT1 Ultimate board.
+>=20
+> Signed-off-by:  Karl Chan <exxxxkc@getgoogleoff.me>
+> ---
+> configs/beelink-gt1-ultimate_defconfig | 85 ++++++++++++++++++++++++++
+> 1 file changed, 85 insertions(+)
+> create mode 100644 configs/beelink-gt1-ultimate_defconfig
+>=20
+> diff --git a/configs/beelink-gt1-ultimate_defconfig b/configs/beelink-gt1=
+-ultimate_defconfig
+> new file mode 100644
+> index 0000000000..b5ed30fab4
+> --- /dev/null
+> +++ b/configs/beelink-gt1-ultimate_defconfig
+> @@ -0,0 +1,85 @@
+> +CONFIG_ARM=3Dy
+> +CONFIG_ARCH_MESON=3Dy
+> +CONFIG_TEXT_BASE=3D0x01000000
+> +CONFIG_NR_DRAM_BANKS=3D1
+> +CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
+> +CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x20000000
+> +CONFIG_ENV_SIZE=3D0x10000
 
-Signed-off-by:  Karl Chan <exxxxkc@getgoogleoff.me>
----
- board/amlogic/q200/MAINTAINERS             |   2 +
- doc/board/amlogic/beelink-gt1-ultimate.rst | 110 +++++++++++++++++++++
- 2 files changed, 112 insertions(+)
- create mode 100644 doc/board/amlogic/beelink-gt1-ultimate.rst
+> +CONFIG_ENV_OFFSET=3D0xFFFF0000
+> +CONFIG_ENV_SECT_SIZE=3D0x10000
 
-diff --git a/board/amlogic/q200/MAINTAINERS b/board/amlogic/q200/MAINTAINER=
-S
-index 9c84cca27e..aece8d5e05 100644
---- a/board/amlogic/q200/MAINTAINERS
-+++ b/board/amlogic/q200/MAINTAINERS
-@@ -4,9 +4,11 @@ S:	Maintained
- L:	u-boot-amlogic@groups.io
- F:	board/amlogic/q200/
- F:	include/configs/q200.h
-+F:	configs/beelink-gt1-ultimate_defconfig
- F:	configs/khadas-vim2_defconfig
- F:	configs/libretech-s905d-pc_defconfig
- F:	configs/libretech-s912-pc_defconfig
- F:	configs/wetek-core2_defconfig
-+F:	doc/board/amlogic/beelink-gt1-ultimate.rst
- F:	doc/board/amlogic/khadas-vim2.rst
- F:	doc/board/amlogic/wetek-core2.rst
-diff --git a/doc/board/amlogic/beelink-gt1-ultimate.rst b/doc/board/amlogic=
-/beelink-gt1-ultimate.rst
-new file mode 100644
-index 0000000000..5161bdb609
---- /dev/null
-+++ b/doc/board/amlogic/beelink-gt1-ultimate.rst
-@@ -0,0 +1,110 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
-+U-Boot for Beelink GT1 Ultimate (S912)
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Beelink GT1 Ultimate is an Android STB manufactured by Shenzen AZW (Beelin=
-k) with the
-+following specification:
-+
-+- 2GB or 3GB DDR3 RAM
-+- 32GB eMMC
-+- HDMI 2.1 video
-+- S/PDIF optical output
-+- 10/100/1000 Ethernet
-+- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.2)
-+- 3x USB 2.0 ports
-+- IR receiver
-+- 1x micro SD card slot
-+- 1x Power LED (white)
-+- 1x Reset button (internal)
-+
-+The GT1 (non-ultimate) board has QCA9377 WiFi/BT but is otherwise identica=
-l and should
-+be capable of booting images prepared for the Ultimate box (NB: there are =
-known clones
-+of both boxes which may differ in specifications).
-+
-+Beelink do not provide public schematics, but have been willing to share t=
-hem with known
-+distro developers on request.
-+
-+U-Boot Compilation
-+------------------
-+
-+.. code-block:: bash
-+
-+    $ export CROSS_COMPILE=3Daarch64-none-elf-
-+    $ make beelink-gt1-ultimate_defconfig
-+    $ make
-+
-+U-Boot Signing with Pre-Built FIP repo
-+--------------------------------------
-+
-+.. code-block:: bash
-+
-+    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=3D1
-+    $ cd amlogic-boot-fip
-+    $ mkdir my-output-dir
-+    $ ./build-fip.sh beelink-gt1 /path/to/u-boot/u-boot.bin my-output-dir
-+
-+U-Boot Manual Signing
-+---------------------
-+
-+Amlogic does not provide firmware sources or tools needed to create the bo=
-otloader image
-+and Beelink has not publicly shared the U-Boot sources needed to build the=
- FIP binaries
-+for signing. However you can download them from the amlogic-fip-repo.
-+
-+.. code-block:: bash
-+  =20
-+    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=3D1
-+    $ cd amlogic-boot-fip/beelink-gt1
-+    $ export FIPDIR=3D$PWD
-+
-+Go back to the mainline U-Boot source tree then:
-+
-+.. code-block:: bash
-+
-+    $ mkdir fip
-+    $ cp $FIPDIR/bl2.bin fip/
-+    $ cp $FIPDIR/acs.bin fip/
-+    $ cp $FIPDIR/bl21.bin fip/
-+    $ cp $FIPDIR/bl30.bin fip/
-+    $ cp $FIPDIR/bl301.bin fip/
-+    $ cp $FIPDIR/bl31.img fip/
-+    $ cp u-boot.bin fip/bl33.bin
-+
-+    $ $FIPDIR/blx_fix.sh \
-+              fip/bl30.bin \
-+              fip/zero_tmp \
-+              fip/bl30_zero.bin \
-+              fip/bl301.bin \
-+              fip/bl301_zero.bin \
-+              fip/bl30_new.bin \
-+              bl30
-+
-+    $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin =
-0
-+
-+    $ $FIPDIR/blx_fix.sh \
-+              fip/bl2_acs.bin \
-+              fip/zero_tmp \
-+              fip/bl2_zero.bin \
-+              fip/bl21.bin \
-+              fip/bl21_zero.bin \
-+              fip/bl2_new.bin \
-+              bl2
-+
-+    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
-+    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl31.img
-+    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
-+    $ $FIPDIR/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fi=
-p/bl2.n.bin.sig
-+    $ $FIPDIR/aml_encrypt_gxl --bootmk \
-+                              --output fip/u-boot.bin \
-+                              --bl2 fip/bl2.n.bin.sig \
-+                              --bl30 fip/bl30_new.bin.enc \
-+                              --bl31 fip/bl31.img.enc \
-+                              --bl33 fip/bl33.bin.enc
-+
-+Then write U-Boot to SD or eMMC with:
-+
-+.. code-block:: bash
-+
-+    $ DEV=3D/dev/boot_device
-+    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D51=
-2 skip=3D1 seek=3D1
-+    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D1 =
-count=3D440
---=20
-2.39.2
+^ Are these two really needed?
+
+> +CONFIG_DM_GPIO=3Dy
+> +CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxm-gt1-ultimate"
+> +CONFIG_DM_RESET=3Dy
+> +CONFIG_MESON_GXM=3Dy
+> +CONFIG_DEBUG_UART_BASE=3D0xc81004c0
+> +CONFIG_DEBUG_UART_CLOCK=3D24000000
+> +CONFIG_IDENT_STRING=3D" gt1-ultimate"
+> +CONFIG_SYS_LOAD_ADDR=3D0x1000000
+> +CONFIG_DEBUG_UART=3Dy
+> +CONFIG_REMAKE_ELF=3Dy
+> +CONFIG_OF_BOARD_SETUP=3Dy
+> +CONFIG_USE_PREBOOT=3Dy
+> +# CONFIG_DISPLAY_CPUINFO is not set
+> +CONFIG_MISC_INIT_R=3Dy
+> +CONFIG_SYS_MAXARGS=3D32
+> +# CONFIG_CMD_BDI is not set
+> +# CONFIG_CMD_IMI is not set
+> +CONFIG_CMD_ADC=3Dy
+> +CONFIG_CMD_GPIO=3Dy
+> +# CONFIG_CMD_LOADS is not set
+> +CONFIG_CMD_MMC=3Dy
+> +CONFIG_CMD_SF_TEST=3Dy
+
+^ not required
+
+> +CONFIG_CMD_SPI=3Dy
+
+^ not required (board has no SPI)
+
+> +CONFIG_CMD_USB=3Dy
+> +CONFIG_CMD_USB_MASS_STORAGE=3Dy
+> +# CONFIG_CMD_SETEXPR is not set
+> +CONFIG_CMD_REGULATOR=3Dy
+> +CONFIG_OF_CONTROL=3Dy
+> +CONFIG_ENV_IS_IN_SPI_FLASH=3Dy
+
+^ not possible if no SPI
+
+> +CONFIG_SARADC_MESON=3Dy
+> +CONFIG_MMC_MESON_GX=3Dy
+> +CONFIG_MTD=3Dy
+
+> +CONFIG_DM_SPI_FLASH=3Dy
+> +CONFIG_SPI_FLASH_GIGADEVICE=3Dy
+
+^ These two not required if no SPI
+
+> +CONFIG_PHY_REALTEK=3Dy
+> +CONFIG_DM_MDIO=3Dy
+> +CONFIG_DM_MDIO_MUX=3Dy
+> +CONFIG_ETH_DESIGNWARE_MESON8B=3Dy
+> +CONFIG_MDIO_MUX_MMIOREG=3Dy
+> +CONFIG_MESON_GXL_USB_PHY=3Dy
+> +CONFIG_PINCTRL=3Dy
+> +CONFIG_PINCTRL_MESON_GXL=3Dy
+> +CONFIG_POWER_DOMAIN=3Dy
+> +CONFIG_MESON_EE_POWER_DOMAIN=3Dy
+> +CONFIG_DM_REGULATOR=3Dy
+> +CONFIG_DM_REGULATOR_FIXED=3Dy
+> +CONFIG_DEBUG_UART_ANNOUNCE=3Dy
+> +CONFIG_DEBUG_UART_SKIP_INIT=3Dy
+> +CONFIG_MESON_SERIAL=3Dy
+
+> +CONFIG_SPI=3Dy
+> +CONFIG_DM_SPI=3Dy
+> +CONFIG_MESON_SPIFC=3Dy
+
+^ These three not required if no SPI
+
+> +CONFIG_USB=3Dy
+> +CONFIG_DM_USB_GADGET=3Dy
+> +CONFIG_USB_XHCI_HCD=3Dy
+> +CONFIG_USB_XHCI_DWC3=3Dy
+> +CONFIG_USB_DWC3=3Dy
+> +# CONFIG_USB_DWC3_GADGET is not set
+> +CONFIG_USB_DWC3_MESON_GXL=3Dy
+> +CONFIG_USB_KEYBOARD=3Dy
+> +CONFIG_USB_GADGET=3Dy
+> +CONFIG_USB_GADGET_VENDOR_NUM=3D0x1b8e
+> +CONFIG_USB_GADGET_PRODUCT_NUM=3D0xfada
+> +CONFIG_USB_GADGET_DWC2_OTG=3Dy
+> +CONFIG_USB_GADGET_DOWNLOAD=3Dy
+> +CONFIG_VIDEO=3Dy
+> +CONFIG_SYS_WHITE_ON_BLACK=3Dy
+> +CONFIG_VIDEO_MESON=3Dy
+> +CONFIG_VIDEO_DT_SIMPLEFB=3Dy
+> +CONFIG_SPLASH_SCREEN=3Dy
+> +CONFIG_SPLASH_SCREEN_ALIGN=3Dy
+> +CONFIG_VIDEO_BMP_RLE8=3Dy
+> +CONFIG_BMP_16BPP=3Dy
+> +CONFIG_BMP_24BPP=3Dy
+> +CONFIG_BMP_32BPP=3Dy
+> +CONFIG_OF_LIBFDT_OVERLAY=3Dy
+
+GT1 does not have SPI-NOR flash on the board so SPI options
+are not required in the board config.
+
+Christian
+
+
+> --=20
+> 2.39.2
+>=20
+>=20
+>=20
+>=20
+>=20
+
