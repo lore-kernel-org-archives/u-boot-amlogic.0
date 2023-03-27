@@ -1,22 +1,22 @@
 Received: from knopi.disroot.org (knopi.disroot.org [178.21.23.139])
- by mx.groups.io with SMTP id smtpd.web10.41059.1679935678383457980
+ by mx.groups.io with SMTP id smtpd.web10.41092.1679935750635133429
  for <u-boot-amlogic@groups.io>;
- Mon, 27 Mar 2023 09:47:59 -0700
-Message-ID: <c826746c-a599-f1d4-e148-c5974b9639d9@getgoogleoff.me>
+ Mon, 27 Mar 2023 09:49:11 -0700
+Message-ID: <488a00d6-354f-1f31-ac01-abcf8c6f8016@getgoogleoff.me>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=getgoogleoff.me;
-	s=mail; t=1679935675;
-	bh=XhKpgcuBQ3rEydx4pp5wWqkEmmrxoii1sHp4oV4XCyE=;
+	s=mail; t=1679935747;
+	bh=rN8+x0IR8kWM7LbOEiJL/mmeMfYK+ag6RWAx+tcRZ10=;
 	h=Date:To:Cc:From:Subject;
-	b=F6KgPaEIEbXL/btVGDePrJR8hk/exy0LoP0cSfB9cq+M15/Drdh/n5YXUadkEg6t6
-	 EaEmrGDP+ewkTLp45LivmdemLbCFylenNWbZVwXYBYhL+WqI69b+zXMyb+hCGvJ492
-	 y3QNVrhqWztVwVtxjx8jw33EZ/UIyYrubTBiBpsJBVsYWmtDAAVgm3tVCsGmiyhtra
-	 D88+2v3eSw9Cv+GGECaDM+PALM2bbhjy27YV0WmE6mS2G9W7Zo4DrN7AtWl0eGTlhD
-	 74UCDS5U8YFVku3pT+IUwz+9dLpBqEh6Or7wL5I4+X4vR0tkzEcIo+KQlvWWGCbbsR
-	 qfzgmkkbcKQ9w==
-Date: Tue, 28 Mar 2023 04:01:10 +0800
+	b=FtaA+rI9t2Leo8HxNMnpeqsqIbp22sFTLG3hP0TOCjhfy3xkWZXnRKpVIgNIyhHR0
+	 AKwaZMzCOTyXH3kNuqBPhDGltIKjtgDpkyCshnI0Eq3pm7P2wWBskmEaU5ky9ziNgu
+	 GODpvO7OZgpL5amQ1p3kRaHefluhjZ06vOf4/TCIiPdv7GUH0BnblBD3iBhKjKN1Z1
+	 cH1KhI4rfZcJBbUmM/EDjdU1fZyQDvnHI2UO36+Pd57iPUBeDd52sBEd9doSD0UOBv
+	 7eMhQ/DgrC0UJ79p8i7w0DlIdaT4QDZYCP8fn7+P/0Ub6M4tZdWeJQVP3m8HxhgAuj
+	 m9QPJEfilQWIQ==
+Date: Tue, 28 Mar 2023 04:02:22 +0800
 MIME-Version: 1.0
 From: exkc <exxxxkc@getgoogleoff.me>
-Subject: [PATCHv7 1/3] ARM: dts: add support for Beelink GT1 Ultimate
+Subject: [PATCHv7 2/3] boards: amlogic: add Beelink GT1 Ultimate defconfig
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
@@ -24,157 +24,101 @@ To: u-boot-amlogic@groups.io
 Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Import the device-tree from linux-amlogic/for-next (Linux 6.3-rc1).
+Add configuration for the Beelink GT1 Ultimate board.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
+Signed-off-by:=C2=A0 Karl Chan <exxxxkc@getgoogleoff.me>
 ---
- =C2=A0arch/arm/dts/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
- =C2=A0.../dts/meson-gxm-gt1-ultimate-u-boot.dtsi=C2=A0=C2=A0=C2=A0 |=C2=A0=
- 7 ++
- =C2=A0arch/arm/dts/meson-gxm-gt1-ultimate.dts=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 91 +++++++++++++++++++
- =C2=A03 files changed, 99 insertions(+)
- =C2=A0create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
- =C2=A0create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate.dts
+ =C2=A0configs/beelink-gt1-ultimate_defconfig | 78 ++++++++++++++++++++++++=
+++
+ =C2=A01 file changed, 78 insertions(+)
+ =C2=A0create mode 100644 configs/beelink-gt1-ultimate_defconfig
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 1c843882d1..b4ac7e9877 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
-@@ -200,6 +200,7 @@ dtb-$(CONFIG_ARCH_MESON) +=3D \
- =C2=A0=C2=A0=C2=A0 =C2=A0meson-gxl-s905x-libretech-cc.dtb \
- =C2=A0=C2=A0=C2=A0 =C2=A0meson-gxl-s905x-libretech-cc-v2.dtb \
- =C2=A0=C2=A0=C2=A0 =C2=A0meson-gxl-s905x-p212.dtb \
-+=C2=A0=C2=A0 =C2=A0meson-gxm-gt1-ultimate.dtb \
- =C2=A0=C2=A0=C2=A0 =C2=A0meson-gxm-khadas-vim2.dtb \
- =C2=A0=C2=A0=C2=A0 =C2=A0meson-gxm-s912-libretech-pc.dtb \
- =C2=A0=C2=A0=C2=A0 =C2=A0meson-gxm-wetek-core2.dtb \
-diff --git a/arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi=20
-b/arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
+diff --git a/configs/beelink-gt1-ultimate_defconfig=20
+b/configs/beelink-gt1-ultimate_defconfig
 new file mode 100644
-index 0000000000..39270ea71c
+index 0000000000..4ec76cb9af
 --- /dev/null
-+++ b/arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gxl-u-boot.dtsi"
-diff --git a/arch/arm/dts/meson-gxm-gt1-ultimate.dts=20
-b/arch/arm/dts/meson-gxm-gt1-ultimate.dts
-new file mode 100644
-index 0000000000..2c267884cc
---- /dev/null
-+++ b/arch/arm/dts/meson-gxm-gt1-ultimate.dts
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) Christian Hewitt <christianshewitt@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxm.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+=C2=A0=C2=A0 =C2=A0compatible =3D "azw,gt1-ultimate", "amlogic,s912", "aml=
-ogic,meson-gxm";
-+=C2=A0=C2=A0 =C2=A0model =3D "Beelink GT1 Ultimate";
-+
-+=C2=A0=C2=A0 =C2=A0leds {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0compatible =3D "gpio-leds";
-+
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0led-white {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0color =3D <LED_CO=
-LOR_ID_WHITE>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0function =3D LED_=
-FUNCTION_POWER;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0gpios =3D <&gpio_=
-ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0default-state =3D=
- "on";
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0panic-indicator;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0};
-+=C2=A0=C2=A0 =C2=A0};
-+
-+=C2=A0=C2=A0 =C2=A0adc-keys {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0compatible =3D "adc-keys";
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0io-channels =3D <&saradc 0>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0io-channel-names =3D "buttons";
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0keyup-threshold-microvolt =3D <17100=
-00>;
-+
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0button-function {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0label =3D "update=
-";
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0linux,code =3D <K=
-EY_VENDOR>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0press-threshold-m=
-icrovolt =3D <10000>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0};
-+=C2=A0=C2=A0 =C2=A0};
-+};
-+
-+&ethmac {
-+=C2=A0=C2=A0 =C2=A0pinctrl-0 =3D <&eth_pins>;
-+=C2=A0=C2=A0 =C2=A0pinctrl-names =3D "default";
-+=C2=A0=C2=A0 =C2=A0phy-handle =3D <&external_phy>;
-+=C2=A0=C2=A0 =C2=A0amlogic,tx-delay-ns =3D <2>;
-+=C2=A0=C2=A0 =C2=A0phy-mode =3D "rgmii";
-+};
-+
-+&external_mdio {
-+=C2=A0=C2=A0 =C2=A0external_phy: ethernet-phy@0 {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0/* Realtek RTL8211F (0x001cc916) */
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0reg =3D <0>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0max-speed =3D <1000>;
-+
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0reset-assert-us =3D <10000>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0reset-deassert-us =3D <80000>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0reset-gpios =3D <&gpio GPIOZ_14 GPIO=
-_ACTIVE_LOW>;
-+
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0interrupt-parent =3D <&gpio_intc>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0/* MAC_INTR on GPIOZ_15 */
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0interrupts =3D <25 IRQ_TYPE_LEVEL_LO=
-W>;
-+=C2=A0=C2=A0 =C2=A0};
-+};
-+
-+&ir {
-+=C2=A0=C2=A0 =C2=A0linux,rc-map-name =3D "rc-beelink-gs1";
-+};
-+
-+&sd_emmc_a {
-+=C2=A0=C2=A0 =C2=A0brcmf: wifi@1 {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0reg =3D <1>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0compatible =3D "brcm,bcm4329-fmac";
-+=C2=A0=C2=A0 =C2=A0};
-+};
-+
-+&uart_A {
-+=C2=A0=C2=A0 =C2=A0status =3D "okay";
-+=C2=A0=C2=A0 =C2=A0pinctrl-0 =3D <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+=C2=A0=C2=A0 =C2=A0pinctrl-names =3D "default";
-+=C2=A0=C2=A0 =C2=A0uart-has-rtscts;
-+
-+=C2=A0=C2=A0 =C2=A0bluetooth {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0compatible =3D "brcm,bcm43438-bt";
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0shutdown-gpios =3D <&gpio GPIOX_17 G=
-PIO_ACTIVE_HIGH>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0max-speed =3D <2000000>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0clocks =3D <&wifi32k>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0clock-names =3D "lpo";
-+=C2=A0=C2=A0 =C2=A0};
-+};
++++ b/configs/beelink-gt1-ultimate_defconfig
+@@ -0,0 +1,78 @@
++CONFIG_ARM=3Dy
++CONFIG_ARCH_MESON=3Dy
++CONFIG_TEXT_BASE=3D0x01000000
++CONFIG_NR_DRAM_BANKS=3D1
++CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
++CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x20000000
++CONFIG_ENV_SIZE=3D0x2000
++CONFIG_DM_GPIO=3Dy
++CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxm-gt1-ultimate"
++CONFIG_DM_RESET=3Dy
++CONFIG_MESON_GXM=3Dy
++CONFIG_DEBUG_UART_BASE=3D0xc81004c0
++CONFIG_DEBUG_UART_CLOCK=3D24000000
++CONFIG_IDENT_STRING=3D" beelink-gt1"
++CONFIG_SYS_LOAD_ADDR=3D0x1000000
++CONFIG_DEBUG_UART=3Dy
++CONFIG_REMAKE_ELF=3Dy
++CONFIG_OF_BOARD_SETUP=3Dy
++# CONFIG_DISPLAY_CPUINFO is not set
++CONFIG_MISC_INIT_R=3Dy
++CONFIG_SYS_MAXARGS=3D32
++# CONFIG_CMD_BDI is not set
++# CONFIG_CMD_IMI is not set
++CONFIG_CMD_ADC=3Dy
++CONFIG_CMD_GPIO=3Dy
++# CONFIG_CMD_LOADS is not set
++CONFIG_CMD_MMC=3Dy
++CONFIG_CMD_USB=3Dy
++CONFIG_CMD_USB_MASS_STORAGE=3Dy
++# CONFIG_CMD_SETEXPR is not set
++CONFIG_CMD_REGULATOR=3Dy
++CONFIG_OF_CONTROL=3Dy
++CONFIG_SYS_RELOC_GD_ENV_ADDR=3Dy
++CONFIG_SARADC_MESON=3Dy
++CONFIG_MMC_MESON_GX=3Dy
++CONFIG_MTD=3Dy
++CONFIG_DM_MTD=3Dy
++CONFIG_PHY_REALTEK=3Dy
++CONFIG_DM_MDIO=3Dy
++CONFIG_DM_MDIO_MUX=3Dy
++CONFIG_ETH_DESIGNWARE_MESON8B=3Dy
++CONFIG_MDIO_MUX_MMIOREG=3Dy
++CONFIG_MESON_GXL_USB_PHY=3Dy
++CONFIG_PINCTRL=3Dy
++CONFIG_PINCTRL_MESON_GXL=3Dy
++CONFIG_POWER_DOMAIN=3Dy
++CONFIG_MESON_GX_VPU_POWER_DOMAIN=3Dy
++CONFIG_DM_REGULATOR=3Dy
++CONFIG_DM_REGULATOR_FIXED=3Dy
++CONFIG_DEBUG_UART_ANNOUNCE=3Dy
++CONFIG_DEBUG_UART_SKIP_INIT=3Dy
++CONFIG_MESON_SERIAL=3Dy
++CONFIG_USB=3Dy
++CONFIG_DM_USB_GADGET=3Dy
++CONFIG_USB_XHCI_HCD=3Dy
++CONFIG_USB_XHCI_DWC3=3Dy
++CONFIG_USB_DWC3=3Dy
++# CONFIG_USB_DWC3_GADGET is not set
++CONFIG_USB_DWC3_MESON_GXL=3Dy
++CONFIG_USB_KEYBOARD=3Dy
++CONFIG_USB_GADGET=3Dy
++CONFIG_USB_GADGET_VENDOR_NUM=3D0x1b8e
++CONFIG_USB_GADGET_PRODUCT_NUM=3D0xfada
++CONFIG_USB_GADGET_DWC2_OTG=3Dy
++CONFIG_USB_GADGET_DOWNLOAD=3Dy
++CONFIG_VIDEO=3Dy
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_SYS_WHITE_ON_BLACK=3Dy
++CONFIG_VIDEO_MESON=3Dy
++CONFIG_VIDEO_DT_SIMPLEFB=3Dy
++CONFIG_SPLASH_SCREEN=3Dy
++CONFIG_SPLASH_SCREEN_ALIGN=3Dy
++CONFIG_VIDEO_BMP_RLE8=3Dy
++CONFIG_BMP_16BPP=3Dy
++CONFIG_BMP_24BPP=3Dy
++CONFIG_BMP_32BPP=3Dy
++CONFIG_OF_LIBFDT_OVERLAY=3Dy
 --=20
 2.40.0
+
