@@ -1,174 +1,154 @@
-Received: from sonic304-47.consmr.mail.sg3.yahoo.com (sonic304-47.consmr.mail.sg3.yahoo.com [106.10.242.237])
- by mx.groups.io with SMTP id smtpd.web11.41014.1679935551514933679
+Received: from sonic313-46.consmr.mail.sg3.yahoo.com (sonic313-46.consmr.mail.sg3.yahoo.com [106.10.240.105])
+ by mx.groups.io with SMTP id smtpd.web10.41286.1679936104340036827
  for <u-boot-amlogic@groups.io>;
- Mon, 27 Mar 2023 09:45:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1679935548; bh=/o8QF0zhaDkzAY3CB1nmuMSncVAdKI6Gh+S3kiHRq5A=; h=Date:To:Cc:From:Subject:References:From:Subject:Reply-To; b=B6aFw/22jQjEPzXhvLf/hdHOCg5c3Wag3Mf3mKCnnkD7SkT3oLudF4uk/EErumq5nR56e2v5+Vn2pF728uJius54nXpvDmu9Jc/gplTqD8ITR52V/rLO77L49KAbx/2/Q6SmMY8hwagdiWfGUbqWjm/IyyqVTrjBVnx7BjXwkjCd92/3lwIlLv2Ws/6Q+xIQTCLXBsMKO7t9r2f8e04OuN7NnAFY+jlSYBWXivKV1yxu67W/qAxqBVLi0cc+wEKjM6iWNfWyXrvfNX8FjHkbuH4HRiN2myb/4xNp0LBpWQyYQvFJqAtiCKFcnRVwTmilxa2Eh5V601fwlZKv3/FLHw==
-Message-ID: <a2eb27e2-607b-71df-37c5-bd866d98c1f6@yahoo.com>
-Date: Tue, 28 Mar 2023 03:57:05 +0800
+ Mon, 27 Mar 2023 09:55:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1679936101; bh=vMH0FdG+pVVk72U+XwEXW5RnSQSwbWbkClV+syiEhkg=; h=Date:From:Subject:To:Cc:References:From:Subject:Reply-To; b=JFCYqG16ptjbofXqmOM35KgMb9FKBCnYKlta0s2accYDvBm7iRHAVDY2plt0kfmuSM5GpBLqLjcm/EYp/GdBVHPhmmnIgxiaI5MRDBOSmqb4jh4Whl2XfUMgr89uhlrQh/bPDiL4/kjI+h48gXMvV0k62yzBYImXc9HnF+7lafDJjJ8A5X6ncl9FQnR6FFg7Z/6COcL2Vrk/fWoKa29V8HA+PiM+NqBWsgAUZIbdMgLDiSBj7swsYKZIlML0n2prhYTueQAsqR3PEFIcEUF+WaMhW0Mzx6t81yFRxqNylBrSklxptEdyZGLrFULLUuoVYsMwVX+ZmpM8r9WHM7itug==
+Message-ID: <8aaf7344-e65b-4060-3cb8-34a8a2ea2441@yahoo.com>
+Date: Tue, 28 Mar 2023 04:06:12 +0800
 MIME-Version: 1.0
 From: "Karl Chan" <exkcmailist@yahoo.com>
-Subject: [PATCHv6 3/3] doc: boards: amlogic: add documentation for Beelink GT1 Ultimate
-References: <a2eb27e2-607b-71df-37c5-bd866d98c1f6.ref@yahoo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [RESENT][PATCHv7 1/3] ARM: dts: add support for Beelink GT1 Ultimate
+References: <8aaf7344-e65b-4060-3cb8-34a8a2ea2441.ref@yahoo.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 8bit
 To: u-boot-amlogic@groups.io
 Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Add build instructions for the Beelink GT1 Ultimate board.
+Import the device-tree from linux-amlogic/for-next (Linux 6.3-rc1).
 
-Signed-off-by: Christian Hewitt<christianshewitt@gmail.com>
-Signed-off-by:  Karl Chan<exxxxkc@getgoogleoff.me>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
 ---
-  board/amlogic/q200/MAINTAINERS             |   2 +
-  doc/board/amlogic/beelink-gt1-ultimate.rst | 110 +++++++++++++++++++++
-  2 files changed, 112 insertions(+)
-  create mode 100644 doc/board/amlogic/beelink-gt1-ultimate.rst
+  arch/arm/dts/Makefile                         |  1 +
+  .../dts/meson-gxm-gt1-ultimate-u-boot.dtsi    |  7 ++
+  arch/arm/dts/meson-gxm-gt1-ultimate.dts       | 91 +++++++++++++++++++
+  3 files changed, 99 insertions(+)
+  create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
+  create mode 100644 arch/arm/dts/meson-gxm-gt1-ultimate.dts
 
-diff --git a/board/amlogic/q200/MAINTAINERS b/board/amlogic/q200/MAINTAINER=
-S
-index 9c84cca27e..aece8d5e05 100644
---- a/board/amlogic/q200/MAINTAINERS
-+++ b/board/amlogic/q200/MAINTAINERS
-@@ -4,9 +4,11 @@ S:	Maintained
-  L:	u-boot-amlogic@groups.io
-  F:	board/amlogic/q200/
-  F:	include/configs/q200.h
-+F:	configs/beelink-gt1-ultimate_defconfig
-  F:	configs/khadas-vim2_defconfig
-  F:	configs/libretech-s905d-pc_defconfig
-  F:	configs/libretech-s912-pc_defconfig
-  F:	configs/wetek-core2_defconfig
-+F:	doc/board/amlogic/beelink-gt1-ultimate.rst
-  F:	doc/board/amlogic/khadas-vim2.rst
-  F:	doc/board/amlogic/wetek-core2.rst
-diff --git a/doc/board/amlogic/beelink-gt1-ultimate.rst b/doc/board/amlogic=
-/beelink-gt1-ultimate.rst
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index 1c843882d1..b4ac7e9877 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -200,6 +200,7 @@ dtb-$(CONFIG_ARCH_MESON) += \
+      meson-gxl-s905x-libretech-cc.dtb \
+      meson-gxl-s905x-libretech-cc-v2.dtb \
+      meson-gxl-s905x-p212.dtb \
++    meson-gxm-gt1-ultimate.dtb \
+      meson-gxm-khadas-vim2.dtb \
+      meson-gxm-s912-libretech-pc.dtb \
+      meson-gxm-wetek-core2.dtb \
+diff --git a/arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi 
+b/arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
 new file mode 100644
-index 0000000000..42779495df
+index 0000000000..39270ea71c
 --- /dev/null
-+++ b/doc/board/amlogic/beelink-gt1-ultimate.rst
-@@ -0,0 +1,110 @@
-+.. SPDX-License-Identifier: GPL-2.0+
++++ b/arch/arm/dts/meson-gxm-gt1-ultimate-u-boot.dtsi
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
 +
-+U-Boot for Beelink GT1 Ultimate (S912)
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++#include "meson-gxl-u-boot.dtsi"
+diff --git a/arch/arm/dts/meson-gxm-gt1-ultimate.dts 
+b/arch/arm/dts/meson-gxm-gt1-ultimate.dts
+new file mode 100644
+index 0000000000..2c267884cc
+--- /dev/null
++++ b/arch/arm/dts/meson-gxm-gt1-ultimate.dts
+@@ -0,0 +1,91 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) Christian Hewitt <christianshewitt@gmail.com>
++ */
 +
-+Beelink GT1 Ultimate is an Android STB manufactured by Shenzen AZW (Beelin=
-k) with the
-+following specification:
++/dts-v1/;
 +
-+- 2GB or 3GB DDR3 RAM
-+- 32GB eMMC
-+- HDMI 2.1 video
-+- S/PDIF optical output
-+- 10/100/1000 Ethernet
-+- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.2)
-+- 3x USB 2.0 ports
-+- IR receiver
-+- 1x micro SD card slot
-+- 1x Power LED (white)
-+- 1x Reset button (internal)
++#include "meson-gxm.dtsi"
++#include "meson-gx-p23x-q20x.dtsi"
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
 +
-+The GT1 (non-ultimate) board has QCA9377 WiFi/BT but is otherwise identica=
-l and should
-+be capable of booting images prepared for the Ultimate box (NB: there are =
-known clones
-+of both boxes which may differ in specifications).
++/ {
++    compatible = "azw,gt1-ultimate", "amlogic,s912", "amlogic,meson-gxm";
++    model = "Beelink GT1 Ultimate";
 +
-+Beelink do not provide public schematics, but have been willing to share t=
-hem with known
-+distro developers on request.
++    leds {
++        compatible = "gpio-leds";
 +
-+U-Boot Compilation
-+------------------
++        led-white {
++            color = <LED_COLOR_ID_WHITE>;
++            function = LED_FUNCTION_POWER;
++            gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
++            default-state = "on";
++            panic-indicator;
++        };
++    };
 +
-+.. code-block:: bash
++    adc-keys {
++        compatible = "adc-keys";
++        io-channels = <&saradc 0>;
++        io-channel-names = "buttons";
++        keyup-threshold-microvolt = <1710000>;
 +
-+    $ export CROSS_COMPILE=3Daarch64-none-elf-
-+    $ make beelink-gt1-ultimate_defconfig
-+    $ make
++        button-function {
++            label = "update";
++            linux,code = <KEY_VENDOR>;
++            press-threshold-microvolt = <10000>;
++        };
++    };
++};
 +
-+U-Boot Signing with Pre-Built FIP repo
-+--------------------------------------
++&ethmac {
++    pinctrl-0 = <&eth_pins>;
++    pinctrl-names = "default";
++    phy-handle = <&external_phy>;
++    amlogic,tx-delay-ns = <2>;
++    phy-mode = "rgmii";
++};
 +
-+.. code-block:: bash
++&external_mdio {
++    external_phy: ethernet-phy@0 {
++        /* Realtek RTL8211F (0x001cc916) */
++        reg = <0>;
++        max-speed = <1000>;
 +
-+    $ git clonehttps://github.com/LibreELEC/amlogic-boot-fip  --depth=3D1
-+    $ cd amlogic-boot-fip
-+    $ mkdir my-output-dir
-+    $ ./build-fip.sh beelink-gt1 /path/to/u-boot/u-boot.bin my-output-dir
++        reset-assert-us = <10000>;
++        reset-deassert-us = <80000>;
++        reset-gpios = <&gpio GPIOZ_14 GPIO_ACTIVE_LOW>;
 +
-+U-Boot Manual Signing
-+---------------------
++        interrupt-parent = <&gpio_intc>;
++        /* MAC_INTR on GPIOZ_15 */
++        interrupts = <25 IRQ_TYPE_LEVEL_LOW>;
++    };
++};
 +
-+Amlogic does not provide firmware sources or tools needed to create the bo=
-otloader image
-+and Beelink has not publicly shared the U-Boot sources needed to build the=
-  FIP binaries
-+for signing. However you can download them from the amlogic-fip-repo.
++&ir {
++    linux,rc-map-name = "rc-beelink-gs1";
++};
 +
-+.. code-block:: bash
++&sd_emmc_a {
++    brcmf: wifi@1 {
++        reg = <1>;
++        compatible = "brcm,bcm4329-fmac";
++    };
++};
 +
-+    $ git clonehttps://github.com/LibreELEC/amlogic-boot-fip  --depth=3D1
-+    $ cd amlogic-boot-fip/beelink-gt1
-+    $ export FIPDIR=3D$PWD
++&uart_A {
++    status = "okay";
++    pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++    pinctrl-names = "default";
++    uart-has-rtscts;
 +
-+Go back to the mainline U-Boot source tree then:
-+
-+.. code-block:: bash
-+
-+    $ mkdir fip
-+    $ cp $FIPDIR/bl2.bin fip/
-+    $ cp $FIPDIR/acs.bin fip/
-+    $ cp $FIPDIR/bl21.bin fip/
-+    $ cp $FIPDIR/bl30.bin fip/
-+    $ cp $FIPDIR/bl301.bin fip/
-+    $ cp $FIPDIR/bl31.img fip/
-+    $ cp u-boot.bin fip/bl33.bin
-+
-+    $ $FIPDIR/blx_fix.sh \
-+              fip/bl30.bin \
-+              fip/zero_tmp \
-+              fip/bl30_zero.bin \
-+              fip/bl301.bin \
-+              fip/bl301_zero.bin \
-+              fip/bl30_new.bin \
-+              bl30
-+
-+    $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin =
-0
-+
-+    $ $FIPDIR/blx_fix.sh \
-+              fip/bl2_acs.bin \
-+              fip/zero_tmp \
-+              fip/bl2_zero.bin \
-+              fip/bl21.bin \
-+              fip/bl21_zero.bin \
-+              fip/bl2_new.bin \
-+              bl2
-+
-+    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
-+    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl31.img
-+    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
-+    $ $FIPDIR/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fi=
-p/bl2.n.bin.sig
-+    $ $FIPDIR/aml_encrypt_gxl --bootmk \
-+                              --output fip/u-boot.bin \
-+                              --bl2 fip/bl2.n.bin.sig \
-+                              --bl30 fip/bl30_new.bin.enc \
-+                              --bl31 fip/bl31.img.enc \
-+                              --bl33 fip/bl33.bin.enc
-+
-+Then write U-Boot to SD or eMMC with:
-+
-+.. code-block:: bash
-+
-+    $ DEV=3D/dev/boot_device
-+    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D51=
-2 skip=3D1 seek=3D1
-+    $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,notrunc bs=3D1 =
-count=3D440
---=20
-2.40.0
++    bluetooth {
++        compatible = "brcm,bcm43438-bt";
++        shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++        max-speed = <2000000>;
++        clocks = <&wifi32k>;
++        clock-names = "lpo";
++    };
++};
