@@ -1,22 +1,22 @@
 Received: from knopi.disroot.org (knopi.disroot.org [178.21.23.139])
- by mx.groups.io with SMTP id smtpd.web10.41103.1679935763058101291
+ by mx.groups.io with SMTP id smtpd.web10.41145.1679935836473810787
  for <u-boot-amlogic@groups.io>;
- Mon, 27 Mar 2023 09:49:23 -0700
-Message-ID: <079119df-24ef-4bef-2d95-62e53d8d47d3@getgoogleoff.me>
+ Mon, 27 Mar 2023 09:50:36 -0700
+Message-ID: <3ccce46e-d8f1-9456-3875-b65547460c7e@getgoogleoff.me>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=getgoogleoff.me;
-	s=mail; t=1679935760;
-	bh=R9SljLlKAsmBgsbULmIj+2L2O6hmmKbs6Lm9LnszFVc=;
+	s=mail; t=1679935833;
+	bh=kOzY/iJluTxvwoPrQDmPaccAPSyyp7qOtXWmgIuU0qg=;
 	h=Date:To:Cc:From:Subject;
-	b=gdCC2xtncY4HwVT2j8el0b4nyaLrLpzTbxi4AnSY3Jrl9R/dFn1IC+uXsRZsmA7+M
-	 EsPc3Tw3Ds50V9tzUwIij4PMZiXdEWhYw0fnsUpiZtgrL1u4g/r/lb1to2GD3ENhUG
-	 zjzVIJ9219C540DX8/7cCVwF3z1K+aDWj39jC7hXt3uV0tZ1/Ga3YSKdEqzcdJZt0Z
-	 xMk+F0Tm0hPJqt4l+ChughSmOOQhPRDnwDjk1nprXgghYg+LOAlUY3FfKUdyyj53Qv
-	 o8+Ln9CWy14j1CwxTIEmPsAO7zR5GlAwtaNmbcF9gljFSYTUPuORhaREyDeHpA6wuH
-	 kpukRCG3Pn2fQ==
-Date: Tue, 28 Mar 2023 04:02:36 +0800
+	b=WfIn5p0xdUztmuH2PKN0aiLJ1oXclrjjlALxTdO0RZ2IPuLMiwdpG09SP4kl5PEii
+	 lolzdg2b/Gil0Uyklqw8L9k7O6teumUUJuorwdT8bxVjLR6Z0A5ydKc1nqcFvw777F
+	 dYKt6ua/VwguHsPec4fVU9s7WKWxGzAp3qV0h7Nz8wsFG7fhAbDJeI2A6rQc36O401
+	 Flf0XHQTVI0z0mQchOKSTHyVEnJwvMxlKcmBtcV5xpk0EXNQOINm3IqCuhHhsGIWK3
+	 jwWQX7oNlDC+hBA0HYMTNF2j7ggzklkoWyEGqBSLXacYcARQrkXCigc9P94gu5LHfZ
+	 VBBJ8Avt25nhg==
+Date: Tue, 28 Mar 2023 04:03:47 +0800
 MIME-Version: 1.0
 From: exkc <exxxxkc@getgoogleoff.me>
-Subject: [PATCHv7 2/3] boards: amlogic: add Beelink GT1 Ultimate defconfig
+Subject: [PATCHv7 3/3] doc: boards: amlogic: add documentation for Beelink GT1 Ultimate
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
@@ -24,101 +24,192 @@ To: u-boot-amlogic@groups.io
 Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Add configuration for the Beelink GT1 Ultimate board.
+Add build instructions for the Beelink GT1 Ultimate board.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
 ---
- =C2=A0configs/beelink-gt1-ultimate_defconfig | 78 ++++++++++++++++++++++++=
+ =C2=A0board/amlogic/q200/MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+ =C2=A0doc/board/amlogic/beelink-gt1-ultimate.rst | 110 +++++++++++++++++++=
 ++
- =C2=A01 file changed, 78 insertions(+)
- =C2=A0create mode 100644 configs/beelink-gt1-ultimate_defconfig
+ =C2=A02 files changed, 112 insertions(+)
+ =C2=A0create mode 100644 doc/board/amlogic/beelink-gt1-ultimate.rst
 
-diff --git a/configs/beelink-gt1-ultimate_defconfig=20
-b/configs/beelink-gt1-ultimate_defconfig
+diff --git a/board/amlogic/q200/MAINTAINERS b/board/amlogic/q200/MAINTAINER=
+S
+index 9c84cca27e..aece8d5e05 100644
+--- a/board/amlogic/q200/MAINTAINERS
++++ b/board/amlogic/q200/MAINTAINERS
+@@ -4,9 +4,11 @@ S:=C2=A0=C2=A0 =C2=A0Maintained
+ =C2=A0L:=C2=A0=C2=A0 =C2=A0u-boot-amlogic@groups.io
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0board/amlogic/q200/
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0include/configs/q200.h
++F:=C2=A0=C2=A0 =C2=A0configs/beelink-gt1-ultimate_defconfig
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0configs/khadas-vim2_defconfig
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0configs/libretech-s905d-pc_defconfig
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0configs/libretech-s912-pc_defconfig
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0configs/wetek-core2_defconfig
++F:=C2=A0=C2=A0 =C2=A0doc/board/amlogic/beelink-gt1-ultimate.rst
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0doc/board/amlogic/khadas-vim2.rst
+ =C2=A0F:=C2=A0=C2=A0 =C2=A0doc/board/amlogic/wetek-core2.rst
+diff --git a/doc/board/amlogic/beelink-gt1-ultimate.rst=20
+b/doc/board/amlogic/beelink-gt1-ultimate.rst
 new file mode 100644
-index 0000000000..4ec76cb9af
+index 0000000000..42779495df
 --- /dev/null
-+++ b/configs/beelink-gt1-ultimate_defconfig
-@@ -0,0 +1,78 @@
-+CONFIG_ARM=3Dy
-+CONFIG_ARCH_MESON=3Dy
-+CONFIG_TEXT_BASE=3D0x01000000
-+CONFIG_NR_DRAM_BANKS=3D1
-+CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
-+CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x20000000
-+CONFIG_ENV_SIZE=3D0x2000
-+CONFIG_DM_GPIO=3Dy
-+CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxm-gt1-ultimate"
-+CONFIG_DM_RESET=3Dy
-+CONFIG_MESON_GXM=3Dy
-+CONFIG_DEBUG_UART_BASE=3D0xc81004c0
-+CONFIG_DEBUG_UART_CLOCK=3D24000000
-+CONFIG_IDENT_STRING=3D" beelink-gt1"
-+CONFIG_SYS_LOAD_ADDR=3D0x1000000
-+CONFIG_DEBUG_UART=3Dy
-+CONFIG_REMAKE_ELF=3Dy
-+CONFIG_OF_BOARD_SETUP=3Dy
-+# CONFIG_DISPLAY_CPUINFO is not set
-+CONFIG_MISC_INIT_R=3Dy
-+CONFIG_SYS_MAXARGS=3D32
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_ADC=3Dy
-+CONFIG_CMD_GPIO=3Dy
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=3Dy
-+CONFIG_CMD_USB=3Dy
-+CONFIG_CMD_USB_MASS_STORAGE=3Dy
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=3Dy
-+CONFIG_OF_CONTROL=3Dy
-+CONFIG_SYS_RELOC_GD_ENV_ADDR=3Dy
-+CONFIG_SARADC_MESON=3Dy
-+CONFIG_MMC_MESON_GX=3Dy
-+CONFIG_MTD=3Dy
-+CONFIG_DM_MTD=3Dy
-+CONFIG_PHY_REALTEK=3Dy
-+CONFIG_DM_MDIO=3Dy
-+CONFIG_DM_MDIO_MUX=3Dy
-+CONFIG_ETH_DESIGNWARE_MESON8B=3Dy
-+CONFIG_MDIO_MUX_MMIOREG=3Dy
-+CONFIG_MESON_GXL_USB_PHY=3Dy
-+CONFIG_PINCTRL=3Dy
-+CONFIG_PINCTRL_MESON_GXL=3Dy
-+CONFIG_POWER_DOMAIN=3Dy
-+CONFIG_MESON_GX_VPU_POWER_DOMAIN=3Dy
-+CONFIG_DM_REGULATOR=3Dy
-+CONFIG_DM_REGULATOR_FIXED=3Dy
-+CONFIG_DEBUG_UART_ANNOUNCE=3Dy
-+CONFIG_DEBUG_UART_SKIP_INIT=3Dy
-+CONFIG_MESON_SERIAL=3Dy
-+CONFIG_USB=3Dy
-+CONFIG_DM_USB_GADGET=3Dy
-+CONFIG_USB_XHCI_HCD=3Dy
-+CONFIG_USB_XHCI_DWC3=3Dy
-+CONFIG_USB_DWC3=3Dy
-+# CONFIG_USB_DWC3_GADGET is not set
-+CONFIG_USB_DWC3_MESON_GXL=3Dy
-+CONFIG_USB_KEYBOARD=3Dy
-+CONFIG_USB_GADGET=3Dy
-+CONFIG_USB_GADGET_VENDOR_NUM=3D0x1b8e
-+CONFIG_USB_GADGET_PRODUCT_NUM=3D0xfada
-+CONFIG_USB_GADGET_DWC2_OTG=3Dy
-+CONFIG_USB_GADGET_DOWNLOAD=3Dy
-+CONFIG_VIDEO=3Dy
-+# CONFIG_VIDEO_BPP8 is not set
-+# CONFIG_VIDEO_BPP16 is not set
-+CONFIG_SYS_WHITE_ON_BLACK=3Dy
-+CONFIG_VIDEO_MESON=3Dy
-+CONFIG_VIDEO_DT_SIMPLEFB=3Dy
-+CONFIG_SPLASH_SCREEN=3Dy
-+CONFIG_SPLASH_SCREEN_ALIGN=3Dy
-+CONFIG_VIDEO_BMP_RLE8=3Dy
-+CONFIG_BMP_16BPP=3Dy
-+CONFIG_BMP_24BPP=3Dy
-+CONFIG_BMP_32BPP=3Dy
-+CONFIG_OF_LIBFDT_OVERLAY=3Dy
++++ b/doc/board/amlogic/beelink-gt1-ultimate.rst
+@@ -0,0 +1,110 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++U-Boot for Beelink GT1 Ultimate (S912)
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++Beelink GT1 Ultimate is an Android STB manufactured by Shenzen AZW=20
+(Beelink) with the
++following specification:
++
++- 2GB or 3GB DDR3 RAM
++- 32GB eMMC
++- HDMI 2.1 video
++- S/PDIF optical output
++- 10/100/1000 Ethernet
++- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.2)
++- 3x USB 2.0 ports
++- IR receiver
++- 1x micro SD card slot
++- 1x Power LED (white)
++- 1x Reset button (internal)
++
++The GT1 (non-ultimate) board has QCA9377 WiFi/BT but is otherwise=20
+identical and should
++be capable of booting images prepared for the Ultimate box (NB: there=20
+are known clones
++of both boxes which may differ in specifications).
++
++Beelink do not provide public schematics, but have been willing to=20
+share them with known
++distro developers on request.
++
++U-Boot Compilation
++------------------
++
++.. code-block:: bash
++
++=C2=A0=C2=A0=C2=A0 $ export CROSS_COMPILE=3Daarch64-none-elf-
++=C2=A0=C2=A0=C2=A0 $ make beelink-gt1-ultimate_defconfig
++=C2=A0=C2=A0=C2=A0 $ make
++
++U-Boot Signing with Pre-Built FIP repo
++--------------------------------------
++
++.. code-block:: bash
++
++=C2=A0=C2=A0=C2=A0 $ git clone https://github.com/LibreELEC/amlogic-boot-f=
+ip --depth=3D1
++=C2=A0=C2=A0=C2=A0 $ cd amlogic-boot-fip
++=C2=A0=C2=A0=C2=A0 $ mkdir my-output-dir
++=C2=A0=C2=A0=C2=A0 $ ./build-fip.sh beelink-gt1 /path/to/u-boot/u-boot.bin=
+ my-output-dir
++
++U-Boot Manual Signing
++---------------------
++
++Amlogic does not provide firmware sources or tools needed to create the=20
+bootloader image
++and Beelink has not publicly shared the U-Boot sources needed to build=20
+the FIP binaries
++for signing. However you can download them from the amlogic-fip-repo.
++
++.. code-block:: bash
++
++=C2=A0=C2=A0=C2=A0 $ git clone https://github.com/LibreELEC/amlogic-boot-f=
+ip --depth=3D1
++=C2=A0=C2=A0=C2=A0 $ cd amlogic-boot-fip/beelink-gt1
++=C2=A0=C2=A0=C2=A0 $ export FIPDIR=3D$PWD
++
++Go back to the mainline U-Boot source tree then:
++
++.. code-block:: bash
++
++=C2=A0=C2=A0=C2=A0 $ mkdir fip
++=C2=A0=C2=A0=C2=A0 $ cp $FIPDIR/bl2.bin fip/
++=C2=A0=C2=A0=C2=A0 $ cp $FIPDIR/acs.bin fip/
++=C2=A0=C2=A0=C2=A0 $ cp $FIPDIR/bl21.bin fip/
++=C2=A0=C2=A0=C2=A0 $ cp $FIPDIR/bl30.bin fip/
++=C2=A0=C2=A0=C2=A0 $ cp $FIPDIR/bl301.bin fip/
++=C2=A0=C2=A0=C2=A0 $ cp $FIPDIR/bl31.img fip/
++=C2=A0=C2=A0=C2=A0 $ cp u-boot.bin fip/bl33.bin
++
++=C2=A0=C2=A0=C2=A0 $ $FIPDIR/blx_fix.sh \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl30.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/zero_tmp \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl30_zero.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl301.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl301_zero.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl30_new.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 bl30
++
++=C2=A0=C2=A0=C2=A0 $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.b=
+in fip/acs.bin 0
++
++=C2=A0=C2=A0=C2=A0 $ $FIPDIR/blx_fix.sh \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl2_acs.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/zero_tmp \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl2_zero.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl21.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl21_zero.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 fip/bl2_new.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 bl2
++
++=C2=A0=C2=A0=C2=A0 $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl30_new=
+.bin
++=C2=A0=C2=A0=C2=A0 $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl31.img
++=C2=A0=C2=A0=C2=A0 $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
++=C2=A0=C2=A0=C2=A0 $ $FIPDIR/aml_encrypt_gxl --bl2sig --input fip/bl2_new.=
+bin --output=20
+fip/bl2.n.bin.sig
++=C2=A0=C2=A0=C2=A0 $ $FIPDIR/aml_encrypt_gxl --bootmk \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 --output fip/u-boot.bin \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 --bl2 fip/bl2.n.bin.sig \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 --bl30 fip/bl30_new.bin.enc \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 --bl31 fip/bl31.img.enc \
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 --bl33 fip/bl33.bin.enc
++
++Then write U-Boot to SD or eMMC with:
++
++.. code-block:: bash
++
++=C2=A0=C2=A0=C2=A0 $ DEV=3D/dev/boot_device
++=C2=A0=C2=A0=C2=A0 $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,=
+notrunc bs=3D512=20
+skip=3D1 seek=3D1
++=C2=A0=C2=A0=C2=A0 $ dd if=3Dfip/u-boot.bin.sd.bin of=3D$DEV conv=3Dfsync,=
+notrunc bs=3D1 count=3D440
 --=20
 2.40.0
-
