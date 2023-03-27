@@ -1,19 +1,19 @@
 Received: from knopi.disroot.org (knopi.disroot.org [178.21.23.139])
- by mx.groups.io with SMTP id smtpd.web10.41092.1679935750635133429
+ by mx.groups.io with SMTP id smtpd.web10.41103.1679935763058101291
  for <u-boot-amlogic@groups.io>;
- Mon, 27 Mar 2023 09:49:11 -0700
-Message-ID: <488a00d6-354f-1f31-ac01-abcf8c6f8016@getgoogleoff.me>
+ Mon, 27 Mar 2023 09:49:23 -0700
+Message-ID: <079119df-24ef-4bef-2d95-62e53d8d47d3@getgoogleoff.me>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=getgoogleoff.me;
-	s=mail; t=1679935747;
-	bh=rN8+x0IR8kWM7LbOEiJL/mmeMfYK+ag6RWAx+tcRZ10=;
+	s=mail; t=1679935760;
+	bh=R9SljLlKAsmBgsbULmIj+2L2O6hmmKbs6Lm9LnszFVc=;
 	h=Date:To:Cc:From:Subject;
-	b=FtaA+rI9t2Leo8HxNMnpeqsqIbp22sFTLG3hP0TOCjhfy3xkWZXnRKpVIgNIyhHR0
-	 AKwaZMzCOTyXH3kNuqBPhDGltIKjtgDpkyCshnI0Eq3pm7P2wWBskmEaU5ky9ziNgu
-	 GODpvO7OZgpL5amQ1p3kRaHefluhjZ06vOf4/TCIiPdv7GUH0BnblBD3iBhKjKN1Z1
-	 cH1KhI4rfZcJBbUmM/EDjdU1fZyQDvnHI2UO36+Pd57iPUBeDd52sBEd9doSD0UOBv
-	 7eMhQ/DgrC0UJ79p8i7w0DlIdaT4QDZYCP8fn7+P/0Ub6M4tZdWeJQVP3m8HxhgAuj
-	 m9QPJEfilQWIQ==
-Date: Tue, 28 Mar 2023 04:02:22 +0800
+	b=gdCC2xtncY4HwVT2j8el0b4nyaLrLpzTbxi4AnSY3Jrl9R/dFn1IC+uXsRZsmA7+M
+	 EsPc3Tw3Ds50V9tzUwIij4PMZiXdEWhYw0fnsUpiZtgrL1u4g/r/lb1to2GD3ENhUG
+	 zjzVIJ9219C540DX8/7cCVwF3z1K+aDWj39jC7hXt3uV0tZ1/Ga3YSKdEqzcdJZt0Z
+	 xMk+F0Tm0hPJqt4l+ChughSmOOQhPRDnwDjk1nprXgghYg+LOAlUY3FfKUdyyj53Qv
+	 o8+Ln9CWy14j1CwxTIEmPsAO7zR5GlAwtaNmbcF9gljFSYTUPuORhaREyDeHpA6wuH
+	 kpukRCG3Pn2fQ==
+Date: Tue, 28 Mar 2023 04:02:36 +0800
 MIME-Version: 1.0
 From: exkc <exxxxkc@getgoogleoff.me>
 Subject: [PATCHv7 2/3] boards: amlogic: add Beelink GT1 Ultimate defconfig
@@ -27,7 +27,7 @@ List-ID: <u-boot-amlogic@groups.io>
 Add configuration for the Beelink GT1 Ultimate board.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by:=C2=A0 Karl Chan <exxxxkc@getgoogleoff.me>
+Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
 ---
  =C2=A0configs/beelink-gt1-ultimate_defconfig | 78 ++++++++++++++++++++++++=
 ++
