@@ -1,21 +1,21 @@
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
- by mx.groups.io with SMTP id smtpd.web11.102770.1680617542587228338
+ by mx.groups.io with SMTP id smtpd.web10.102660.1680617543121761154
  for <u-boot-amlogic@groups.io>;
- Tue, 04 Apr 2023 07:12:22 -0700
+ Tue, 04 Apr 2023 07:12:23 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1680617540;
-	bh=WKHlMbHD1NwpB39cuiK3pQB/0tx/FiFlKbe3sOTJdmg=;
+	s=mail; t=1680617541;
+	bh=Av+nAjll95/V07i1rVX8QkEYQgPIiz9CocMeuCmFXTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SPBYiw3ughIy3xKzkwuzAun16+23gQocX14wX+Y91xFKkXOB3+K3CKudNzG9Y8OKw
-	 QyLruw67Y1zx0Zr7MbhlRfpkUMtbrYjMXkv3rUQ0QS6Jvenr5ReJrJB7VDm74vvF39
-	 ZSa2LJDSeS8JQmKNJnU4lRb9T1uhXwuljlq5JUEhf70/tYn1OBB2QexiqhhOe2Xb0S
-	 L2oucgUmv5Lrdo6fVVhcgEMMYKJPFqYsHlJVvayoLildp3yoFvRd1JPHPrUtcZEPrF
-	 3B/F/9JocHQZsD+pvzzIo4r3PbH65SwJbstFCh009FNziRsdEhoR/F4bG0a/FYie5p
-	 DxP/9zlLmer7A==
+	b=WFjEeBzmLG4R/PhszCHpXLapVOESfPXAKhsvH2OxG1FsbI2icmGI4Xno9Rm5A98mU
+	 wnPNO/mEq+5sUSN4oXFaht7KZeYkWoj4yuAF1IRkjOZxAS15HTSILbfZjRZTnG+YST
+	 l7edxeES0qvmc44HAurW4CQOJJaylK7s3CQMNDI9c1iB1F9mliaMItSVWcWFYy9iVA
+	 9kuqzeuh943eD1+YL7/f+ijEzy4Ig0vtdyvWGRI5FW2RjHBy0LodloFyEf+NuNWTir
+	 G3MXhUffOVa0nKbhC/CR+aubY9PQehefgKY/+6gqcGQuXgBapmEGwBux3+TaTqqWyz
+	 yGePUxdR9eF0g==
 From: Eugen Hristev <eugen.hristev@collabora.com>
-Subject: [PATCH v4 2/5] configs: rockchip: rock5b-rk3588: enable USB and regulators
-Date: Tue,  4 Apr 2023 17:11:52 +0300
-Message-Id: <20230404141155.283987-2-eugen.hristev@collabora.com>
+Subject: [PATCH v4 3/5] phy: add support for phy-supply
+Date: Tue,  4 Apr 2023 17:11:53 +0300
+Message-Id: <20230404141155.283987-3-eugen.hristev@collabora.com>
 In-Reply-To: <20230404141155.283987-1-eugen.hristev@collabora.com>
 References: <20230404141155.283987-1-eugen.hristev@collabora.com>
 MIME-Version: 1.0
@@ -24,57 +24,83 @@ To: u-boot@lists.denx.de
 Cc: u-boot-amlogic@groups.io, kever.yang@rock-chips.com, neil.armstrong@linaro.org, jagan@edgeble.ai, jonas@kwiboo.se, xdrudis@tinet.cat, anarsoul@gmail.com, Eugen Hristev <eugen.hristev@collabora.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Enable USB command, USB drivers, PHY and regulators, for USB host
-operations.
+Some phys require a phy-supply property that is a phandle to a regulator
+that needs to be enabled for phy operations.
+Implement basic supply lookup, enable and disabling, if DM_REGULATOR is
+available.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
 ---
- configs/rock5b-rk3588_defconfig | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/phy/phy-uclass.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/configs/rock5b-rk3588_defconfig b/configs/rock5b-rk3588_defc=
-onfig
-index f3026c7ea166..8d76c1eb4d42 100644
---- a/configs/rock5b-rk3588_defconfig
-+++ b/configs/rock5b-rk3588_defconfig
-@@ -41,7 +41,9 @@ CONFIG_SPL_STACK_R=3Dy
- CONFIG_SPL_ATF=3Dy
- CONFIG_CMD_GPT=3Dy
- CONFIG_CMD_MMC=3Dy
-+CONFIG_CMD_USB=3Dy
- # CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_REGULATOR=3Dy
- # CONFIG_SPL_DOS_PARTITION is not set
- CONFIG_SPL_OF_CONTROL=3Dy
- CONFIG_OF_LIVE=3Dy
-@@ -61,7 +63,9 @@ CONFIG_MMC_SDHCI_SDMA=3Dy
- CONFIG_MMC_SDHCI_ROCKCHIP=3Dy
- CONFIG_ETH_DESIGNWARE=3Dy
- CONFIG_GMAC_ROCKCHIP=3Dy
-+CONFIG_PHY_ROCKCHIP_INNO_USB2=3Dy
- CONFIG_REGULATOR_PWM=3Dy
-+CONFIG_DM_REGULATOR_FIXED=3Dy
- CONFIG_PWM_ROCKCHIP=3Dy
- CONFIG_SPL_RAM=3Dy
- CONFIG_BAUDRATE=3D1500000
-@@ -69,4 +73,17 @@ CONFIG_DEBUG_UART_SHIFT=3D2
- CONFIG_DEBUG_UART_ANNOUNCE=3Dy
- CONFIG_SYSRESET=3Dy
- # CONFIG_BINMAN_FDT is not set
-+CONFIG_USB=3Dy
-+CONFIG_USB_EHCI_HCD=3Dy
-+CONFIG_USB_EHCI_GENERIC=3Dy
-+CONFIG_USB_OHCI_HCD=3Dy
-+CONFIG_USB_OHCI_GENERIC=3Dy
-+CONFIG_USB_HOST_ETHER=3Dy
-+CONFIG_USB_ETHER_ASIX=3Dy
-+CONFIG_USB_ETHER_ASIX88179=3Dy
-+CONFIG_USB_ETHER_LAN75XX=3Dy
-+CONFIG_USB_ETHER_LAN78XX=3Dy
-+CONFIG_USB_ETHER_MCS7830=3Dy
-+CONFIG_USB_ETHER_RTL8152=3Dy
-+CONFIG_USB_ETHER_SMSC95XX=3Dy
- CONFIG_ERRNO_STR=3Dy
+diff --git a/drivers/phy/phy-uclass.c b/drivers/phy/phy-uclass.c
+index 3fef5135a9cb..475ac285df05 100644
+--- a/drivers/phy/phy-uclass.c
++++ b/drivers/phy/phy-uclass.c
+@@ -12,6 +12,7 @@
+ #include <dm/devres.h>
+ #include <generic-phy.h>
+ #include <linux/list.h>
++#include <power/regulator.h>
+=20
+ /**
+  * struct phy_counts - Init and power-on counts of a single PHY port
+@@ -29,12 +30,14 @@
+  *              without a matching generic_phy_exit() afterwards
+  * @list: Handle for a linked list of these structures corresponding to
+  *        ports of the same PHY provider
++ * @supply: Handle to a phy-supply device
+  */
+ struct phy_counts {
+ 	unsigned long id;
+ 	int power_on_count;
+ 	int init_count;
+ 	struct list_head list;
++	struct udevice *supply;
+ };
+=20
+ static inline struct phy_ops *phy_dev_ops(struct udevice *dev)
+@@ -224,6 +227,12 @@ int generic_phy_init(struct phy *phy)
+ 		return 0;
+ 	}
+=20
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	device_get_supply_regulator(phy->dev, "phy-supply", &counts->supply);
++	if (IS_ERR(counts->supply))
++		dev_dbg(phy->dev, "no phy-supply property found\n");
++#endif
++
+ 	ret =3D ops->init(phy);
+ 	if (ret)
+ 		dev_err(phy->dev, "PHY: Failed to init %s: %d.\n",
+@@ -272,6 +281,12 @@ int generic_phy_exit(struct phy *phy)
+ 		return 0;
+ 	}
+=20
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	if (!IS_ERR_OR_NULL(counts->supply)) {
++		ret =3D regulator_set_enable(counts->supply, false);
++		dev_dbg(phy->dev, "supply disable status: %d\n", ret);
++	}
++#endif
+ 	ret =3D ops->exit(phy);
+ 	if (ret)
+ 		dev_err(phy->dev, "PHY: Failed to exit %s: %d.\n",
+@@ -300,6 +315,13 @@ int generic_phy_power_on(struct phy *phy)
+ 		return 0;
+ 	}
+=20
++#if CONFIG_IS_ENABLED(DM_REGULATOR)
++	if (!IS_ERR_OR_NULL(counts->supply)) {
++		ret =3D regulator_set_enable(counts->supply, true);
++		dev_dbg(phy->dev, "supply enable status: %d\n", ret);
++	}
++#endif
++
+ 	ret =3D ops->power_on(phy);
+ 	if (ret)
+ 		dev_err(phy->dev, "PHY: Failed to power on %s: %d.\n",
 --=20
 2.34.1
 
