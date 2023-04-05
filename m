@@ -1,65 +1,110 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
- by mx.groups.io with SMTP id smtpd.web10.138816.1680719922433573528
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+ by mx.groups.io with SMTP id smtpd.web11.138929.1680719925800172867
  for <u-boot-amlogic@groups.io>;
- Wed, 05 Apr 2023 11:38:42 -0700
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5445009c26bso693942867b3.8
-        for <u-boot-amlogic@groups.io>; Wed, 05 Apr 2023 11:38:42 -0700 (PDT)
+ Wed, 05 Apr 2023 11:38:45 -0700
+Received: by mail-yb1-f178.google.com with SMTP id d3so15800373ybu.1
+        for <u-boot-amlogic@groups.io>; Wed, 05 Apr 2023 11:38:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680719921;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=96mMO5VfJymJIg1MTANPgIUd2oRzVUUEM3YC+4sy0ZU=;
-        b=C7pXO6K0bRNO3mXV5wy061iPFaoxlE4dcFSM2OH2pAsm9yEr2vroEl5UBxsIWm+3M/
-         CSO8GYILdnLqTkzm2TtGr1hV8jeDpIR01SjT1NFmlglYw5rRQpZzz+B6lYBh8Xl0mAMZ
-         WNECt+3MzZxMC5FlDIVlBhkZ4siLZSvArbdbA=
+        d=chromium.org; s=google; t=1680719925;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AJfLaFzbH/2Ju5QS0EeWlC1yCII1lYGihN/Kimg+OhA=;
+        b=hT4MJxMMHD7UI66WcUbX94YmXqOiXNLLU+BBZzVqCx2GtG9UdFoRkDqgDAvhnBTSid
+         d3HAUQeAnrHmkkDBnqfevdvMs8cizAZLU+y8smj5leVoHQEkUQvcNfktydu2AMptZUhW
+         PKWLX8n3skj3/ZtstukRPitUe9yASVqBYqI3Q=
 MIME-Version: 1.0
-References: <20230401185458.2280200-1-sjg@chromium.org> <20230402065454.v2.1.I2d7f563b6a82f32478a7874e36672622aebb7893@changeid>
- <d3308f32-275d-7b37-8c03-76984a2b9ddf@linaro.org>
-In-Reply-To: <d3308f32-275d-7b37-8c03-76984a2b9ddf@linaro.org>
+References: <20230401185458.2280200-1-sjg@chromium.org> <87zg7rb8dd.fsf@bloch.sibelius.xs4all.nl>
+ <CAPnjgZ0Js43JOi3xaeY8tYuELSPXWL-PCBq1-iANLs1074MzbQ@mail.gmail.com> <1973D65D-692D-4AA7-B074-942D4E9ADB4B@gmail.com>
+In-Reply-To: <1973D65D-692D-4AA7-B074-942D4E9ADB4B@gmail.com>
 From: Simon Glass <sjg@chromium.org>
-Date: Thu, 6 Apr 2023 06:38:19 +1200
-Message-ID: <CAPnjgZ2TNR2R+20WH_iaz0S-k8kwOSZcxFU_0_NnCfmFJo_rcA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] RFC: Move Odroid-C2 to use binman to produce the image
+Date: Thu, 6 Apr 2023 06:38:21 +1200
+Message-ID: <CAPnjgZ14t6KR5sPzaq9HbLG1ocUHtbpLrwfBPMJZXQdaq2ALRA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] meson: Demonstration of using binman to produce the image
 Content-Type: text/plain; charset="UTF-8"
-To: neil.armstrong@linaro.org
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, Christian Hewitt <christianshewitt@gmail.com>, linux-amlogic@lists.infradead.org, Alper Nebi Yasak <alpernebiyasak@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Mark Kettenis <mark.kettenis@xs4all.nl>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, AML <linux-amlogic@lists.infradead.org>, Alper Nebi Yasak <alpernebiyasak@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi Neil,
+Hi Christian,
 
-On Mon, 3 Apr 2023 at 19:31, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+On Mon, 3 Apr 2023 at 20:10, Christian Hewitt
+<christianshewitt@gmail.com> wrote:
 >
-> Hi Simon !
->
-> On 01/04/2023 20:54, Simon Glass wrote:
-> > This shows how binman can be used to replace the long and complicated
-> > instructions with an automated build. It is still complicated to read
-> > but users don't have to worry about the details.
+> > On 2 Apr 2023, at 6:41 am, Simon Glass <sjg@chromium.org> wrote:
 > >
-> > It needs some tidying up and only supports Odroid-C2 at present.
+> > Hi Mark,
+> >
+> > On Sun, 2 Apr 2023 at 09:28, Mark Kettenis <mark.kettenis@xs4all.nl> wr=
+ote:
+> > >
+> > > > From: Simon Glass <sjg@chromium.org>
+> > > > Date: Sun,  2 Apr 2023 06:54:57 +1200
+> > > >
+> > > > The Odroid-C2 is quite a complicated image with many steps. It is a=
+n ideal
+> > > > example for how Binman can be used.
+> > >
+> > > You say Odroid-C2, but the patches seem to address the Odroid-C4...
+> >
+> > Ah, yes. The difference seems to be an Amlogic S905 on the C2 and an S9=
+02X3 on the C4. I wonder if that affects the image makeup?
 >
-> Like the v1, the work is really nice, but the dependency on vendor binary-only
-> tools doesn't make feel confident about merging this.
+> There are currently four different signing recipes that depend on the
+> board family that you are building for:
+>
+> - GXBB
+> - GXL/GXM
+> - G12A/SM1
+> - G12B
+>
+> The G12A/SM1 and G12B recipes are identical except for a different
+> signing binary used. The latest Amlogic boards (S905X4, T7, etc.)
+> also have incremental changes, but none are currently supported in
+> Linux or u-boot.
+>
+> One of the challenges for binman will be the signing tools. Currently
+> this patchset depends upon Amlogic binaries. Apart from them being
+> closed-source and thus undesirable, they are also x86_64 only and
+> there are quite a few users (and at least one major distro) needing
+> to build on arm64 hardware.
+>
+> There is an open-source tool called gxlimg which supports GXL and newer
+> boards. IMHO it would make a lot of sense for u-boot to absorb the
+> functionality of gxlimg (and extend support backwards to GXBB) as this
+> would remove the dependency on Amlogic binaries and allow u-boot build
+> and binman signing to be done anywhere.
+>
+> https://github.com/repk/gxlimg
 
-So long as we can download it from somewhere, that is OK, or at least
-better than nothing. Is there a standard download location for the
-tools?
+Fair enough, but another option would be to allow 'binman tool -f
+gxlimg' to work, which should be easy. Then we can make use of the
+existing C code, using binary tools for the unsupported ones.
 
 >
-> We have open source implementation for all boards, but still dependeing on
-> tools we must manually build isn't optimal.
+> > The patch is for testing by Christian, who I hope can help get this lan=
+ded for all the Amlogic boards.
 >
-> What would be optimal would be to re-implement those tools into python
-> libraries and merge them into the u-boot tree then use them from binman.
+> I will try to find the time to test this, but it=E2=80=99s not something =
+I
+> could do more with (as only supporting 1/4 of the board families
+> that I need to build for, bu I do appreciate it=E2=80=99s a POC).
 
-Or C, perhaps? Then binman can call the tools.
+Yes, it's a start.
 
 >
-> But this could be merged as first step, them the python libaray could be
-> modified to support the binary tools & a probable python re-implementation.
+> In case you=E2=80=99re not aware, Makefile based signing is implemented i=
+n
+> the amlogic-boot-fip repo that I=E2=80=99m currently tooled around:
+>
+> https://github.com/LibreELEC/amlogic-boot-fip
+>
+> This is the =E2=80=9Ccompetition=E2=80=9D so to speak. It=E2=80=99s quite=
+ simple and widely
+> used by most of the Amlogic supporting distros right now.
 
-Yes I think it would good to get this in, even if it only supports a
-few boards. It is easy to add more, when possible.
+Well at least that provides the recipes.
 
 Regards,
-SImon
+Simon
