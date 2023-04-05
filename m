@@ -1,28 +1,28 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web11.125299.1680683399301999516
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web10.125200.1680683400190381105
  for <u-boot-amlogic@groups.io>;
- Wed, 05 Apr 2023 01:29:59 -0700
-Received: by mail-wm1-f51.google.com with SMTP id m8so9499395wmq.5
+ Wed, 05 Apr 2023 01:30:00 -0700
+Received: by mail-wm1-f48.google.com with SMTP id he13so789690wmb.2
         for <u-boot-amlogic@groups.io>; Wed, 05 Apr 2023 01:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1680683398;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E3PIaGM/JQHLq+AUpWeB1DxgRflZXBILY0Ozym7JJ6c=;
-        b=Vd6ixv1v3bbrNWfHnd4WITN78FVmpKTVCo5o14/YZUPC9dhdEGBlcLyUJdExawddca
-         JYi9X8fhD3IB9nbMHBButavRSOo0ejGh/o3kIB1qFes/kz9KE1r+veeibRNUXOb0+Z8V
-         KLyySRG2NCZMnIh2ea+Ov98sckiREjrXHyDqqgXgkXZpvIC7uiJlIYicHdTq5lsqUnsI
-         wpS8wh+0d/CYzH/bjPzh8LepBIps2sGKqEG4WFAixaDlhErdmrIGipP4djcHcKfrpJfV
-         Wo23aK6u5R8ZFpkkz4V7oQjuEJd/1nf/bRDIgdR1NhTGTyguKTTPqD3ggvkW8Py6KRNk
-         KlHw==
+        bh=zPGOis+/5JDBnip3UZb5NiU71SxCqzfzuLtkksk2dGg=;
+        b=E8KxZJx0tLFqrg6AiWpF9bWBE0V5pJPUms7gXHj4uceB+Fhgd6Ovv6qJSO1DqhupBA
+         /EUh33unuBom3BZOCWi6aeobHdDAM3Wg8DaJ2Wg0L2CH+uu2pUOkxqIjQ46gR+g/alFM
+         yvyRD4PU/Mpe1hHpoWuzqqlrgWYqNhPw7pRV8I1v00QqAqRhcgSjhPyFqZO6LncyfRLz
+         Dftsi9mX52KdaQCJ8Ys4zCK9TzgUN/Wnbpub/c2aUS/zJnR+BSTShQ7COUOdbN4G4n9s
+         0lKUsF+fAfGokw+j6rfuxAlqdD5+OTYqDaPfC9V0kWVXY0Ea6To1GfbBVfN8JSmkCB+N
+         q0kg==
 Return-Path: <neil.armstrong@linaro.org>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <f5a8db4e-b2d0-e00a-cc4f-01a4f794c761@yahoo.com>
-References: <f5a8db4e-b2d0-e00a-cc4f-01a4f794c761.ref@yahoo.com>
- <f5a8db4e-b2d0-e00a-cc4f-01a4f794c761@yahoo.com>
-Subject: Re: [PATCHv8 1/3] ARM: dts: add support for Beelink GT1 Ultimate
-Message-Id: <168068339700.1444622.9576912419325432437.b4-ty@linaro.org>
+In-Reply-To: <e3c87efd-4ac1-24a7-503d-71669aae5177@yahoo.com>
+References: <e3c87efd-4ac1-24a7-503d-71669aae5177.ref@yahoo.com>
+ <e3c87efd-4ac1-24a7-503d-71669aae5177@yahoo.com>
+Subject: Re: [PATCHv8 2/3] boards: amlogic: add Beelink GT1 Ultimate defconfig
+Message-Id: <168068339783.1444622.14348242716715530240.b4-ty@linaro.org>
 Date: Wed, 05 Apr 2023 10:29:57 +0200
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -33,15 +33,15 @@ List-ID: <u-boot-amlogic@groups.io>
 
 Hi,
 
-On Tue, 28 Mar 2023 04:11:52 +0800, Karl Chan wrote:
-> Import the device-tree from linux-amlogic/for-next (Linux 6.3-rc1).
+On Tue, 28 Mar 2023 04:13:14 +0800, Karl Chan wrote:
+> Add configuration for the Beelink GT1 Ultimate board.
 > 
 > 
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
 
-[1/3] ARM: dts: add support for Beelink GT1 Ultimate
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/e054cc7475d939c1bfce5833d16b43c8a75ebd67
+[2/3] boards: amlogic: add Beelink GT1 Ultimate defconfig
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/93a997d00b77402dea95bca79e45371b79d07708
 
 -- 
 Neil
