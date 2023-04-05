@@ -1,127 +1,48 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web11.64929.1680509441986837352
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web11.125299.1680683399301999516
  for <u-boot-amlogic@groups.io>;
- Mon, 03 Apr 2023 01:10:42 -0700
-Received: by mail-wm1-f48.google.com with SMTP id n10-20020a05600c4f8a00b003ee93d2c914so18866199wmq.2
-        for <u-boot-amlogic@groups.io>; Mon, 03 Apr 2023 01:10:41 -0700 (PDT)
+ Wed, 05 Apr 2023 01:29:59 -0700
+Received: by mail-wm1-f51.google.com with SMTP id m8so9499395wmq.5
+        for <u-boot-amlogic@groups.io>; Wed, 05 Apr 2023 01:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680509440; x=1683101440;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1680683398;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V4YTLsvZXuKPI+bQLaGf8VHiSKW8VyFtQuobtXNVM98=;
-        b=Vnrt282OBYDpYJHLFn0e99ZSW162hVi5JTKNZTnVkpwPnojkxj8tL5mLlD95lZAvox
-         9yKq/Ax1WpE5OoS5MVz+VT83JnMQXoFAhhLTkSoAR1x0g284kyYn0rvAQ6idBU+16raR
-         0pbKSasjKxF9rlzTzMNYavrN0EgvTMn6vVjsEazBm1JswHXbz+PrxGaXCw++6dRCIcAp
-         GqEViDg3/FwudEwo8Np1EtAYLVGCzsAZXBQzB17g88+2+BJBTICkjmJD/8b8s8eciPkr
-         b8odH7AlTV9kHzfmueyoGB508kQFZqCQKTQ4yiApL0WjEOawmz5j9o0Zg4AwGsa+yNtn
-         DEqg==
-Return-Path: <christianshewitt@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.2\))
-Subject: Re: [PATCH v2 0/1] meson: Demonstration of using binman to produce the image
-From: "Christian Hewitt" <christianshewitt@gmail.com>
-In-Reply-To: <CAPnjgZ0Js43JOi3xaeY8tYuELSPXWL-PCBq1-iANLs1074MzbQ@mail.gmail.com>
-Date: Mon, 3 Apr 2023 12:10:36 +0400
-Message-Id: <1973D65D-692D-4AA7-B074-942D4E9ADB4B@gmail.com>
-References: <20230401185458.2280200-1-sjg@chromium.org>
- <87zg7rb8dd.fsf@bloch.sibelius.xs4all.nl>
- <CAPnjgZ0Js43JOi3xaeY8tYuELSPXWL-PCBq1-iANLs1074MzbQ@mail.gmail.com>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-To: Simon Glass <sjg@chromium.org>
-Cc: Mark Kettenis <mark.kettenis@xs4all.nl>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, AML <linux-amlogic@lists.infradead.org>, Alper Nebi Yasak <alpernebiyasak@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>
+        bh=E3PIaGM/JQHLq+AUpWeB1DxgRflZXBILY0Ozym7JJ6c=;
+        b=Vd6ixv1v3bbrNWfHnd4WITN78FVmpKTVCo5o14/YZUPC9dhdEGBlcLyUJdExawddca
+         JYi9X8fhD3IB9nbMHBButavRSOo0ejGh/o3kIB1qFes/kz9KE1r+veeibRNUXOb0+Z8V
+         KLyySRG2NCZMnIh2ea+Ov98sckiREjrXHyDqqgXgkXZpvIC7uiJlIYicHdTq5lsqUnsI
+         wpS8wh+0d/CYzH/bjPzh8LepBIps2sGKqEG4WFAixaDlhErdmrIGipP4djcHcKfrpJfV
+         Wo23aK6u5R8ZFpkkz4V7oQjuEJd/1nf/bRDIgdR1NhTGTyguKTTPqD3ggvkW8Py6KRNk
+         KlHw==
+Return-Path: <neil.armstrong@linaro.org>
+From: "Neil Armstrong" <neil.armstrong@linaro.org>
+In-Reply-To: <f5a8db4e-b2d0-e00a-cc4f-01a4f794c761@yahoo.com>
+References: <f5a8db4e-b2d0-e00a-cc4f-01a4f794c761.ref@yahoo.com>
+ <f5a8db4e-b2d0-e00a-cc4f-01a4f794c761@yahoo.com>
+Subject: Re: [PATCHv8 1/3] ARM: dts: add support for Beelink GT1 Ultimate
+Message-Id: <168068339700.1444622.9576912419325432437.b4-ty@linaro.org>
+Date: Wed, 05 Apr 2023 10:29:57 +0200
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: u-boot-amlogic@groups.io, Karl Chan <exkcmailist@yahoo.com>
+Cc: u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-> On 2 Apr 2023, at 6:41 am, Simon Glass <sjg@chromium.org> wrote:
->=20
-> Hi Mark,
->=20
-> On Sun, 2 Apr 2023 at 09:28, Mark Kettenis <mark.kettenis@xs4all.nl> wrot=
-e:
-> >
-> > > From: Simon Glass <sjg@chromium.org>
-> > > Date: Sun,  2 Apr 2023 06:54:57 +1200
-> > >
-> > > The Odroid-C2 is quite a complicated image with many steps. It is an =
-ideal
-> > > example for how Binman can be used.
-> >
-> > You say Odroid-C2, but the patches seem to address the Odroid-C4...
->=20
-> Ah, yes. The difference seems to be an Amlogic S905 on the C2 and an S902=
-X3 on the C4. I wonder if that affects the image makeup?
+Hi,
 
-There are currently four different signing recipes that depend on the
-board family that you are building for:
+On Tue, 28 Mar 2023 04:11:52 +0800, Karl Chan wrote:
+> Import the device-tree from linux-amlogic/for-next (Linux 6.3-rc1).
+> 
+> 
 
-- GXBB
-- GXL/GXM
-- G12A/SM1
-- G12B
+Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
 
-The G12A/SM1 and G12B recipes are identical except for a different
-signing binary used. The latest Amlogic boards (S905X4, T7, etc.)
-also have incremental changes, but none are currently supported in
-Linux or u-boot.
+[1/3] ARM: dts: add support for Beelink GT1 Ultimate
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/e054cc7475d939c1bfce5833d16b43c8a75ebd67
 
-One of the challenges for binman will be the signing tools. Currently
-this patchset depends upon Amlogic binaries. Apart from them being
-closed-source and thus undesirable, they are also x86_64 only and
-there are quite a few users (and at least one major distro) needing
-to build on arm64 hardware.
-
-There is an open-source tool called gxlimg which supports GXL and newer
-boards. IMHO it would make a lot of sense for u-boot to absorb the
-functionality of gxlimg (and extend support backwards to GXBB) as this
-would remove the dependency on Amlogic binaries and allow u-boot build
-and binman signing to be done anywhere.
-
-https://github.com/repk/gxlimg
-
-> The patch is for testing by Christian, who I hope can help get this lande=
-d for all the Amlogic boards.
-
-I will try to find the time to test this, but it=E2=80=99s not something I
-could do more with (as only supporting 1/4 of the board families
-that I need to build for, bu I do appreciate it=E2=80=99s a POC).
-
-In case you=E2=80=99re not aware, Makefile based signing is implemented in
-the amlogic-boot-fip repo that I=E2=80=99m currently tooled around:
-
-https://github.com/LibreELEC/amlogic-boot-fip=20
-
-This is the =E2=80=9Ccompetition=E2=80=9D so to speak. It=E2=80=99s quite s=
-imple and widely
-used by most of the Amlogic supporting distros right now.
-
-Christian
-
-> >
-> > > Add a binman description and update the instructions accordingly.
-> > >
-> > > Changes in v2:
-> > > - Rebase to -next
-> > >
-> > > Simon Glass (1):
-> > >   RFC: Move Odroid-C2 to use binman to produce the image
-> > >
-> > >  arch/arm/dts/meson-sm1-odroid-c4-u-boot.dtsi | 107 ++++++++++++++++
-> > >  arch/arm/mach-meson/Kconfig                  |   1 +
-> > >  doc/board/amlogic/odroid-c4.rst              | 127 +++++------------=
---
-> > >  tools/binman/etype/aml_encrypt.py            | 124 +++++++++++++++++=
-+
-> > >  tools/binman/ftest.py                        |   3 +
-> > >  tools/binman/missing-blob-help               |   6 +
-> > >  tools/binman/test/213_aml_encrypt.dts        |  38 ++++++
-> > >  tools/binman/test/214_list_no_dtb.dts        |  23 ++++
-> > >  8 files changed, 337 insertions(+), 92 deletions(-)
-> > >  create mode 100644 tools/binman/etype/aml_encrypt.py
-> > >  create mode 100644 tools/binman/test/213_aml_encrypt.dts
-> > >  create mode 100644 tools/binman/test/214_list_no_dtb.dts
-> > >
->=20
-> Regards,
-> SImon
+-- 
+Neil
 
