@@ -1,130 +1,136 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
- by mx.groups.io with SMTP id smtpd.web10.4338.1680924897231172729
+Received: from s.wrqvwxzv.outbound-mail.sendgrid.net (s.wrqvwxzv.outbound-mail.sendgrid.net [149.72.154.232])
+ by mx.groups.io with SMTP id smtpd.web10.36767.1681282429195826205
  for <u-boot-amlogic@groups.io>;
- Fri, 07 Apr 2023 20:34:57 -0700
-Received: by mail-lf1-f41.google.com with SMTP id t14so300293lft.7
-        for <u-boot-amlogic@groups.io>; Fri, 07 Apr 2023 20:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lessconfused.com; s=lessconfused; t=1680924895; x=1683516895;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JKbxe1/6B4Joxh4rryylmIHwiyR8Uz8YIxCtjqorSH0=;
-        b=BFdF/OiyMv3Ph2UI9wA/cqSkEviiIsImtAP57ilGB38PY3cbc7fxfG0uNpce9f2Qby
-         4Oh9EXciOKq3/29qqNWj7edl/2leNK7/RRLrnUw9Zd72jjDLC3EPu4v9WImD6XJTALWD
-         mA2LW31FCHQkMMJ4Fzc0ATP/U8FzZWiR8d/CA=
+ Tue, 11 Apr 2023 23:53:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+	h=mime-version:subject:references:from:in-reply-to:to:cc:content-type:
+	content-transfer-encoding:cc:content-type:from:subject:to;
+	s=s1; bh=4y5omeKRxayPMVQjGGVb5pwbguyZ5EHNBtHIRvxhU4k=;
+	b=All1aIMR2ntZJYA9IYmcZQTqxN2EgUvNBXZjUwb5hbrC62IyUfNlR7oxLefMOtPSKNlF
+	m/LXz7rSXSgf5HzUnO7asIcjzBhKqeCeLJ01sMz66FwvgAiOZ79DC2MIM5ozOQs7iEI1he
+	d+fhdGpEP0AOR723gyi5VljMVOGQ6oQAvw22yuAycElrysJg7pTsYVYXSYNpWglSImQdOF
+	8oMyuSKi+znYAtpbi8gGc37evF0RZ7DLZJPYKGvOEOUoYBP9WJdrXEGnqxUV8ygbOSILBd
+	PF4jZa2g6KvHGmjOj6GR+tTuki1OvwZxkOo8ibixRkVxlNXnFSOrcTAp+gv+EDlQ==
+Message-ID: <82da257b-28f0-a4b9-9b74-257b36067380@kwiboo.se>
+Date: Wed, 12 Apr 2023 06:53:47 +0000 (UTC)
 MIME-Version: 1.0
-References: <20230401185458.2280200-1-sjg@chromium.org> <87zg7rb8dd.fsf@bloch.sibelius.xs4all.nl>
- <CAPnjgZ0Js43JOi3xaeY8tYuELSPXWL-PCBq1-iANLs1074MzbQ@mail.gmail.com>
- <1973D65D-692D-4AA7-B074-942D4E9ADB4B@gmail.com> <CAPnjgZ14t6KR5sPzaq9HbLG1ocUHtbpLrwfBPMJZXQdaq2ALRA@mail.gmail.com>
-In-Reply-To: <CAPnjgZ14t6KR5sPzaq9HbLG1ocUHtbpLrwfBPMJZXQdaq2ALRA@mail.gmail.com>
-From: "Da Xue" <da@lessconfused.com>
-Date: Fri, 7 Apr 2023 23:34:44 -0400
-Message-ID: <CACdvmAj2L4YdOZ3ykVTN+ZfJLupA4_Hk7rDG4jC2_p=+0pJphg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/1] meson: Demonstration of using binman to produce the image
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: Simon Glass <sjg@chromium.org>
-Cc: Christian Hewitt <christianshewitt@gmail.com>, Mark Kettenis <mark.kettenis@xs4all.nl>, U-Boot Mailing List <u-boot@lists.denx.de>, u-boot-amlogic@groups.io, AML <linux-amlogic@lists.infradead.org>, Alper Nebi Yasak <alpernebiyasak@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v4 3/5] phy: add support for phy-supply
+References: <20230404141155.283987-1-eugen.hristev@collabora.com>
+ <20230404141155.283987-3-eugen.hristev@collabora.com>
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20230404141155.283987-3-eugen.hristev@collabora.com>
+Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+To: Eugen Hristev <eugen.hristev@collabora.com>
+Cc: u-boot-amlogic@groups.io, kever.yang@rock-chips.com, neil.armstrong@linaro.org, jagan@edgeble.ai, xdrudis@tinet.cat, anarsoul@gmail.com, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On Wed, Apr 5, 2023 at 2:39=E2=80=AFPM Simon Glass <sjg@chromium.org> wrote=
-:
->
-> Hi Christian,
->
-> On Mon, 3 Apr 2023 at 20:10, Christian Hewitt
-> <christianshewitt@gmail.com> wrote:
-> >
-> > > On 2 Apr 2023, at 6:41 am, Simon Glass <sjg@chromium.org> wrote:
-> > >
-> > > Hi Mark,
-> > >
-> > > On Sun, 2 Apr 2023 at 09:28, Mark Kettenis <mark.kettenis@xs4all.nl> =
-wrote:
-> > > >
-> > > > > From: Simon Glass <sjg@chromium.org>
-> > > > > Date: Sun,  2 Apr 2023 06:54:57 +1200
-> > > > >
-> > > > > The Odroid-C2 is quite a complicated image with many steps. It is=
- an ideal
-> > > > > example for how Binman can be used.
-> > > >
-> > > > You say Odroid-C2, but the patches seem to address the Odroid-C4...
-> > >
-> > > Ah, yes. The difference seems to be an Amlogic S905 on the C2 and an =
-S902X3 on the C4. I wonder if that affects the image makeup?
-> >
-> > There are currently four different signing recipes that depend on the
-> > board family that you are building for:
-> >
-> > - GXBB
-> > - GXL/GXM
-> > - G12A/SM1
-> > - G12B
-> >
-> > The G12A/SM1 and G12B recipes are identical except for a different
-> > signing binary used. The latest Amlogic boards (S905X4, T7, etc.)
-> > also have incremental changes, but none are currently supported in
-> > Linux or u-boot.
-> >
-> > One of the challenges for binman will be the signing tools. Currently
-> > this patchset depends upon Amlogic binaries. Apart from them being
-> > closed-source and thus undesirable, they are also x86_64 only and
-> > there are quite a few users (and at least one major distro) needing
-> > to build on arm64 hardware.
-> >
-> > There is an open-source tool called gxlimg which supports GXL and newer
-> > boards. IMHO it would make a lot of sense for u-boot to absorb the
-> > functionality of gxlimg (and extend support backwards to GXBB) as this
-> > would remove the dependency on Amlogic binaries and allow u-boot build
-> > and binman signing to be done anywhere.
-> >
-> > https://github.com/repk/gxlimg
+Hi Eugen,
 
-gxlimg also does not have the full featureset of the Amlogic signer.
-The most important to me being lz4 compression.
-I'm still trying to get support from Amlogic for open source ATF at
-least for GXX but that has numerous hurdles to overcome and more
-hurdles for future designs.
+On 2023-04-04 16:11, Eugen Hristev wrote:
+> Some phys require a phy-supply property that is a phandle to a regulator
+> that needs to be enabled for phy operations.
+> Implement basic supply lookup, enable and disabling, if DM_REGULATOR is
+> available.
 
->
-> Fair enough, but another option would be to allow 'binman tool -f
-> gxlimg' to work, which should be easy. Then we can make use of the
-> existing C code, using binary tools for the unsupported ones.
->
-> >
-> > > The patch is for testing by Christian, who I hope can help get this l=
-anded for all the Amlogic boards.
-> >
-> > I will try to find the time to test this, but it=E2=80=99s not somethin=
-g I
-> > could do more with (as only supporting 1/4 of the board families
-> > that I need to build for, bu I do appreciate it=E2=80=99s a POC).
->
-> Yes, it's a start.
->
-> >
-> > In case you=E2=80=99re not aware, Makefile based signing is implemented=
- in
-> > the amlogic-boot-fip repo that I=E2=80=99m currently tooled around:
-> >
-> > https://github.com/LibreELEC/amlogic-boot-fip
+Thanks for looking at this, I have now had some time to test this and it
+turned out there was some minor issues.
 
-The issue with the boot fips is that they control too many things (CPU
-freq, DDR freq, M3 control code, and more) to make it universal.
+First, the regulator is enabled in power_on and disabled in exit. It
+should probably be disabled after power_off ops has been called.
 
-> >
-> > This is the =E2=80=9Ccompetition=E2=80=9D so to speak. It=E2=80=99s qui=
-te simple and widely
-> > used by most of the Amlogic supporting distros right now.
->
-> Well at least that provides the recipes.
->
-> Regards,
-> Simon
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+Second, the return value is ignored, this will change the meson code to
+continue with the call to the power_on ops, before it would have stopped
+and returned early with an error from the power_on ops.
+
+Third, there seem to be a possibility that the counts in regulator core
+can end up uneven when any of init/exit/power_on/power_off ops is NULL.
+
+I created "fixup! phy: add support for phy-supply" and "phy: Keep
+balance of counts when ops is missing" at [1] during my testing,
+please feel free to fixup/squash/rework any code :-)
+
+Tested with USB (multiple usb start/reset/stop cycles) and PCIe
+(multiple pci enum) on RK3568 together with your "regulator: implement
+basic reference counter".
+
+[1] https://github.com/Kwiboo/u-boot-rockchip/commits/rk3568-usb-v1
+
+Regards,
+Jonas
+
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+> ---
+>  drivers/phy/phy-uclass.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/phy/phy-uclass.c b/drivers/phy/phy-uclass.c
+> index 3fef5135a9cb..475ac285df05 100644
+> --- a/drivers/phy/phy-uclass.c
+> +++ b/drivers/phy/phy-uclass.c
+> @@ -12,6 +12,7 @@
+>  #include <dm/devres.h>
+>  #include <generic-phy.h>
+>  #include <linux/list.h>
+> +#include <power/regulator.h>
+>  
+>  /**
+>   * struct phy_counts - Init and power-on counts of a single PHY port
+> @@ -29,12 +30,14 @@
+>   *              without a matching generic_phy_exit() afterwards
+>   * @list: Handle for a linked list of these structures corresponding to
+>   *        ports of the same PHY provider
+> + * @supply: Handle to a phy-supply device
+>   */
+>  struct phy_counts {
+>  	unsigned long id;
+>  	int power_on_count;
+>  	int init_count;
+>  	struct list_head list;
+> +	struct udevice *supply;
+>  };
+>  
+>  static inline struct phy_ops *phy_dev_ops(struct udevice *dev)
+> @@ -224,6 +227,12 @@ int generic_phy_init(struct phy *phy)
+>  		return 0;
+>  	}
+>  
+> +#if CONFIG_IS_ENABLED(DM_REGULATOR)
+> +	device_get_supply_regulator(phy->dev, "phy-supply", &counts->supply);
+> +	if (IS_ERR(counts->supply))
+> +		dev_dbg(phy->dev, "no phy-supply property found\n");
+> +#endif
+> +
+>  	ret = ops->init(phy);
+>  	if (ret)
+>  		dev_err(phy->dev, "PHY: Failed to init %s: %d.\n",
+> @@ -272,6 +281,12 @@ int generic_phy_exit(struct phy *phy)
+>  		return 0;
+>  	}
+>  
+> +#if CONFIG_IS_ENABLED(DM_REGULATOR)
+> +	if (!IS_ERR_OR_NULL(counts->supply)) {
+> +		ret = regulator_set_enable(counts->supply, false);
+> +		dev_dbg(phy->dev, "supply disable status: %d\n", ret);
+> +	}
+> +#endif
+>  	ret = ops->exit(phy);
+>  	if (ret)
+>  		dev_err(phy->dev, "PHY: Failed to exit %s: %d.\n",
+> @@ -300,6 +315,13 @@ int generic_phy_power_on(struct phy *phy)
+>  		return 0;
+>  	}
+>  
+> +#if CONFIG_IS_ENABLED(DM_REGULATOR)
+> +	if (!IS_ERR_OR_NULL(counts->supply)) {
+> +		ret = regulator_set_enable(counts->supply, true);
+> +		dev_dbg(phy->dev, "supply enable status: %d\n", ret);
+> +	}
+> +#endif
+> +
+>  	ret = ops->power_on(phy);
+>  	if (ret)
+>  		dev_err(phy->dev, "PHY: Failed to power on %s: %d.\n",
+
