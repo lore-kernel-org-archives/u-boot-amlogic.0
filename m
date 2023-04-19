@@ -1,21 +1,21 @@
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
- by mx.groups.io with SMTP id smtpd.web11.38068.1681911638876395475
+ by mx.groups.io with SMTP id smtpd.web11.38070.1681911639760151503
  for <u-boot-amlogic@groups.io>;
- Wed, 19 Apr 2023 06:40:39 -0700
+ Wed, 19 Apr 2023 06:40:40 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1681911637;
-	bh=OPJCWA8SM8ALtuRFU+OFQWeRwKn/a3Y7mc0YD18t/nM=;
+	s=mail; t=1681911638;
+	bh=yMN6XEqM/zTEsnuN7Vqu7PJOxBCFsyZmpRgLlv9PxOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NUSjX8VWx1v5C1WNHatDGxBR0sgy1HduEsvDu2M3LmqTq+gEkrzWjU8PXTufkyfof
-	 ZhuWwd8y7APYvGU+tiJ2YmMP8UGnS5+4ut2zzpCxNPaosTLGLuuEGiNGdaugLkY/Tr
-	 pl55JUjgTbv8kqyitFDM7vUSxRxohnEuBLkCdtF1V+Nir2eE+YbmfgnwS4FKFppYOU
-	 LDc+tZ7dfXBkBfur9nRKKwCQJMVvM5pA3wVT96akynZTqITWgvFFpczzKx5IPf2US9
-	 lRs63zDukylVCb5fzI2EFe2Qe1RH5OGkzsjMp1+yzKMTmF6J72tMAeFsVFVM2xhlxk
-	 /0Bs8qGskXbew==
+	b=eJCCFZoVR8g9M7F49HWuYqv5c3Xp9RR/cya290jFcBjbbk6D9ZETYS81zKcY7uhsH
+	 DjaqHAUQx8eNdZbozfNvcpjasOIKt6MKTZGfg+BQeSSlN4oa/MXWxQry6fZv3dhTL5
+	 aRKH9MmRXC63wNuBwV50sqiijii5dzB8JFunDp6uMj13BXwKU4RaFqIehDrH/w+q1n
+	 LSsFZ3L7BAefYN01EsPc76F6BHGK5N+bdBOdlBTapskYQhH7JeyATpK10xFx0SXBQ3
+	 CE0qmZGWsMVWsd/FPSKgOPVZ+WZ6WtFT/ZO1HPw89S3i8Oo83XPSy9VsHbe9FJ907O
+	 q6eTarAWnLQog==
 From: Eugen Hristev <eugen.hristev@collabora.com>
-Subject: [PATCH v5 3/6] phy: add support for phy-supply
-Date: Wed, 19 Apr 2023 16:40:11 +0300
-Message-Id: <20230419134014.128461-3-eugen.hristev@collabora.com>
+Subject: [PATCH v5 4/6] phy: remove phy-supply related code
+Date: Wed, 19 Apr 2023 16:40:12 +0300
+Message-Id: <20230419134014.128461-4-eugen.hristev@collabora.com>
 In-Reply-To: <20230419134014.128461-1-eugen.hristev@collabora.com>
 References: <20230419134014.128461-1-eugen.hristev@collabora.com>
 MIME-Version: 1.0
@@ -24,149 +24,255 @@ To: kever.yang@rock-chips.com, jonas@kwiboo.se, eugen.hristev@collabora.com, u-b
 Cc: u-boot-amlogic@groups.io, xdrudis@tinet.cat, jagan@edgeble.ai, neil.armstrong@linaro.org, anarsoul@gmail.com
 List-ID: <u-boot-amlogic@groups.io>
 
-Some phys require a phy-supply property that is a phandle to a regulator
-that needs to be enabled for phy operations.
-Implement basic supply lookup, enable and disabling, if DM_REGULATOR is
-available.
+phy-supply is now handled at uclass level. Remove it from the drivers tha=
+t
+implement it at the driver level.
 
-[jonas@kwiboo.se:
-use regulator_set_enable_if_allowed and disable if power_on ops fails]
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Suggested-by: Jonas Karlman <jonas@kwiboo.se>
 Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
 ---
-Changes in v5:
-- add changes done by Jonas
+ drivers/phy/meson-g12a-usb2.c | 48 -----------------------------------
+ drivers/phy/meson-gxbb-usb2.c | 38 ---------------------------
+ drivers/phy/meson-gxl-usb2.c  | 30 ----------------------
+ 3 files changed, 116 deletions(-)
 
- drivers/phy/phy-uclass.c | 51 +++++++++++++++++++++++++++++++---------
- 1 file changed, 40 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/phy/phy-uclass.c b/drivers/phy/phy-uclass.c
-index 3fef5135a9cb..45ec1471d0ae 100644
---- a/drivers/phy/phy-uclass.c
-+++ b/drivers/phy/phy-uclass.c
-@@ -12,6 +12,7 @@
- #include <dm/devres.h>
- #include <generic-phy.h>
- #include <linux/list.h>
-+#include <power/regulator.h>
+diff --git a/drivers/phy/meson-g12a-usb2.c b/drivers/phy/meson-g12a-usb2.=
+c
+index 2fbba7fdae01..650b88bd1803 100644
+--- a/drivers/phy/meson-g12a-usb2.c
++++ b/drivers/phy/meson-g12a-usb2.c
+@@ -54,50 +54,12 @@
 =20
- /**
-  * struct phy_counts - Init and power-on counts of a single PHY port
-@@ -29,12 +30,14 @@
-  *              without a matching generic_phy_exit() afterwards
-  * @list: Handle for a linked list of these structures corresponding to
-  *        ports of the same PHY provider
-+ * @supply: Handle to a phy-supply device
-  */
- struct phy_counts {
- 	unsigned long id;
- 	int power_on_count;
- 	int init_count;
- 	struct list_head list;
-+	struct udevice *supply;
+ struct phy_meson_g12a_usb2_priv {
+ 	struct regmap		*regmap;
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	struct udevice		*phy_supply;
+-#endif
+ #if CONFIG_IS_ENABLED(CLK)
+ 	struct clk		clk;
+ #endif
+ 	struct reset_ctl	reset;
  };
 =20
- static inline struct phy_ops *phy_dev_ops(struct udevice *dev)
-@@ -58,7 +61,7 @@ static struct phy_counts *phy_get_counts(struct phy *ph=
-y)
- 	return NULL;
- }
-=20
--static int phy_alloc_counts(struct phy *phy)
-+static int phy_alloc_counts(struct phy *phy, struct udevice *supply)
+-
+-static int phy_meson_g12a_usb2_power_on(struct phy *phy)
+-{
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	struct udevice *dev =3D phy->dev;
+-	struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
+-
+-	if (priv->phy_supply) {
+-		int ret =3D regulator_set_enable(priv->phy_supply, true);
+-		if (ret)
+-			return ret;
+-	}
+-#endif
+-
+-	return 0;
+-}
+-
+-static int phy_meson_g12a_usb2_power_off(struct phy *phy)
+-{
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	struct udevice *dev =3D phy->dev;
+-	struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
+-
+-	if (priv->phy_supply) {
+-		int ret =3D regulator_set_enable(priv->phy_supply, false);
+-		if (ret) {
+-			pr_err("Error disabling PHY supply\n");
+-			return ret;
+-		}
+-	}
+-#endif
+-
+-	return 0;
+-}
+-
+ static int phy_meson_g12a_usb2_init(struct phy *phy)
  {
- 	struct list_head *uc_priv;
- 	struct phy_counts *counts;
-@@ -76,6 +79,7 @@ static int phy_alloc_counts(struct phy *phy)
- 	counts->id =3D phy->id;
- 	counts->power_on_count =3D 0;
- 	counts->init_count =3D 0;
-+	counts->supply =3D supply;
- 	list_add(&counts->list, uc_priv);
+ 	struct udevice *dev =3D phy->dev;
+@@ -155,8 +117,6 @@ static int phy_meson_g12a_usb2_exit(struct phy *phy)
+ struct phy_ops meson_g12a_usb2_phy_ops =3D {
+ 	.init =3D phy_meson_g12a_usb2_init,
+ 	.exit =3D phy_meson_g12a_usb2_exit,
+-	.power_on =3D phy_meson_g12a_usb2_power_on,
+-	.power_off =3D phy_meson_g12a_usb2_power_off,
+ };
 =20
+ int meson_g12a_usb2_phy_probe(struct udevice *dev)
+@@ -193,14 +153,6 @@ int meson_g12a_usb2_phy_probe(struct udevice *dev)
+ 	}
+ #endif
+=20
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	ret =3D device_get_supply_regulator(dev, "phy-supply", &priv->phy_suppl=
+y);
+-	if (ret && ret !=3D -ENOENT) {
+-		pr_err("Failed to get PHY regulator\n");
+-		return ret;
+-	}
+-#endif
+-
  	return 0;
-@@ -123,7 +127,7 @@ int generic_phy_get_by_index_nodev(ofnode node, int i=
-ndex, struct phy *phy)
- {
- 	struct ofnode_phandle_args args;
- 	struct phy_ops *ops;
--	struct udevice *phydev;
-+	struct udevice *phydev, *supply =3D NULL;
- 	int i, ret;
-=20
- 	debug("%s(node=3D%s, index=3D%d, phy=3D%p)\n",
-@@ -172,7 +176,17 @@ int generic_phy_get_by_index_nodev(ofnode node, int =
-index, struct phy *phy)
- 		goto err;
- 	}
-=20
--	ret =3D phy_alloc_counts(phy);
-+	if (CONFIG_IS_ENABLED(DM_REGULATOR)) {
-+		ret =3D device_get_supply_regulator(phydev, "phy-supply",
-+						  &supply);
-+		if (ret && ret !=3D -ENOENT) {
-+			debug("%s: device_get_supply_regulator failed: %d\n",
-+			      __func__, ret);
-+			goto err;
-+		}
-+	}
-+
-+	ret =3D phy_alloc_counts(phy, supply);
- 	if (ret) {
- 		debug("phy_alloc_counts() failed: %d\n", ret);
- 		goto err;
-@@ -300,14 +314,23 @@ int generic_phy_power_on(struct phy *phy)
- 		return 0;
- 	}
-=20
-+	ret =3D regulator_set_enable_if_allowed(counts->supply, true);
-+	if (ret && ret !=3D -ENOSYS) {
-+		dev_err(phy->dev, "PHY: Failed to enable regulator %s: %d.\n",
-+			counts->supply->name, ret);
-+		return ret;
-+	}
-+
- 	ret =3D ops->power_on(phy);
--	if (ret)
-+	if (ret) {
- 		dev_err(phy->dev, "PHY: Failed to power on %s: %d.\n",
- 			phy->dev->name, ret);
--	else
--		counts->power_on_count =3D 1;
-+		regulator_set_enable_if_allowed(counts->supply, false);
-+		return ret;
-+	}
-+	counts->power_on_count =3D 1;
-=20
--	return ret;
-+	return 0;
  }
 =20
- int generic_phy_power_off(struct phy *phy)
-@@ -331,13 +354,19 @@ int generic_phy_power_off(struct phy *phy)
- 	}
+diff --git a/drivers/phy/meson-gxbb-usb2.c b/drivers/phy/meson-gxbb-usb2.=
+c
+index 7a2e3d2739e8..70a80b863819 100644
+--- a/drivers/phy/meson-gxbb-usb2.c
++++ b/drivers/phy/meson-gxbb-usb2.c
+@@ -12,7 +12,6 @@
+ #include <clk.h>
+ #include <dm.h>
+ #include <generic-phy.h>
+-#include <power/regulator.h>
+ #include <regmap.h>
+ #include <reset.h>
+ #include <linux/bitops.h>
+@@ -81,9 +80,6 @@
+ struct phy_meson_gxbb_usb2_priv {
+ 	struct regmap *regmap;
+ 	struct reset_ctl_bulk resets;
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	struct udevice *phy_supply;
+-#endif
+ };
 =20
- 	ret =3D ops->power_off(phy);
--	if (ret)
-+	if (ret) {
- 		dev_err(phy->dev, "PHY: Failed to power off %s: %d.\n",
- 			phy->dev->name, ret);
--	else
--		counts->power_on_count =3D 0;
-+		return ret;
-+	}
-+	counts->power_on_count =3D 0;
+ static int phy_meson_gxbb_usb2_power_on(struct phy *phy)
+@@ -92,15 +88,6 @@ static int phy_meson_gxbb_usb2_power_on(struct phy *ph=
+y)
+ 	struct phy_meson_gxbb_usb2_priv *priv =3D dev_get_priv(dev);
+ 	uint val;
 =20
--	return ret;
-+	ret =3D regulator_set_enable_if_allowed(counts->supply, false);
-+	if (ret && ret !=3D -ENOSYS)
-+		dev_err(phy->dev, "PHY: Failed to disable regulator %s: %d.\n",
-+			counts->supply->name, ret);
-+
-+	return 0;
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	if (priv->phy_supply) {
+-		int ret =3D regulator_set_enable(priv->phy_supply, true);
+-
+-		if (ret)
+-			return ret;
+-	}
+-#endif
+-
+ 	regmap_update_bits(priv->regmap, REG_CONFIG,
+ 			   REG_CONFIG_CLK_32k_ALTSEL,
+ 			   REG_CONFIG_CLK_32k_ALTSEL);
+@@ -140,26 +127,8 @@ static int phy_meson_gxbb_usb2_power_on(struct phy *=
+phy)
+ 	return 0;
  }
 =20
- int generic_phy_configure(struct phy *phy, void *params)
+-static int phy_meson_gxbb_usb2_power_off(struct phy *phy)
+-{
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	struct udevice *dev =3D phy->dev;
+-	struct phy_meson_gxbb_usb2_priv *priv =3D dev_get_priv(dev);
+-
+-	if (priv->phy_supply) {
+-		int ret =3D regulator_set_enable(priv->phy_supply, false);
+-
+-		if (ret)
+-			return ret;
+-	}
+-#endif
+-
+-	return 0;
+-}
+-
+ static struct phy_ops meson_gxbb_usb2_phy_ops =3D {
+ 	.power_on =3D phy_meson_gxbb_usb2_power_on,
+-	.power_off =3D phy_meson_gxbb_usb2_power_off,
+ };
+=20
+ static int meson_gxbb_usb2_phy_probe(struct udevice *dev)
+@@ -192,13 +161,6 @@ static int meson_gxbb_usb2_phy_probe(struct udevice =
+*dev)
+ 		return ret;
+ 	}
+=20
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	ret =3D device_get_supply_regulator(dev, "phy-supply", &priv->phy_suppl=
+y);
+-	if (ret && ret !=3D -ENOENT) {
+-		pr_err("Failed to get PHY regulator\n");
+-		return ret;
+-	}
+-#endif
+ 	ret =3D reset_get_bulk(dev, &priv->resets);
+ 	if (!ret) {
+ 		ret =3D reset_deassert_bulk(&priv->resets);
+diff --git a/drivers/phy/meson-gxl-usb2.c b/drivers/phy/meson-gxl-usb2.c
+index 9fb376cec448..4c631310efac 100644
+--- a/drivers/phy/meson-gxl-usb2.c
++++ b/drivers/phy/meson-gxl-usb2.c
+@@ -16,7 +16,6 @@
+ #include <generic-phy.h>
+ #include <regmap.h>
+ #include <linux/delay.h>
+-#include <power/regulator.h>
+ #include <clk.h>
+ #include <linux/usb/otg.h>
+=20
+@@ -101,9 +100,6 @@
+=20
+ struct phy_meson_gxl_usb2_priv {
+ 	struct regmap		*regmap;
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	struct udevice		*phy_supply;
+-#endif
+ #if CONFIG_IS_ENABLED(CLK)
+ 	struct clk		clk;
+ #endif
+@@ -167,14 +163,6 @@ static int phy_meson_gxl_usb2_power_on(struct phy *p=
+hy)
+=20
+ 	phy_meson_gxl_usb2_set_mode(phy, USB_DR_MODE_HOST);
+=20
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	if (priv->phy_supply) {
+-		int ret =3D regulator_set_enable(priv->phy_supply, true);
+-		if (ret)
+-			return ret;
+-	}
+-#endif
+-
+ 	return 0;
+ }
+=20
+@@ -189,16 +177,6 @@ static int phy_meson_gxl_usb2_power_off(struct phy *=
+phy)
+ 	val |=3D U2P_R0_POWER_ON_RESET;
+ 	regmap_write(priv->regmap, U2P_R0, val);
+=20
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	if (priv->phy_supply) {
+-		int ret =3D regulator_set_enable(priv->phy_supply, false);
+-		if (ret) {
+-			pr_err("Error disabling PHY supply\n");
+-			return ret;
+-		}
+-	}
+-#endif
+-
+ 	return 0;
+ }
+=20
+@@ -229,14 +207,6 @@ int meson_gxl_usb2_phy_probe(struct udevice *dev)
+ 	}
+ #endif
+=20
+-#if CONFIG_IS_ENABLED(DM_REGULATOR)
+-	ret =3D device_get_supply_regulator(dev, "phy-supply", &priv->phy_suppl=
+y);
+-	if (ret && ret !=3D -ENOENT) {
+-		pr_err("Failed to get PHY regulator\n");
+-		return ret;
+-	}
+-#endif
+-
+ 	return 0;
+ }
+=20
 --=20
 2.34.1
 
