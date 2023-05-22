@@ -1,162 +1,63 @@
-Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
- by mx.groups.io with SMTP id smtpd.web10.26260.1683291419842438507
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web11.17070.1684743380070207549
  for <u-boot-amlogic@groups.io>;
- Fri, 05 May 2023 05:57:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-	s=mail; t=1683291414;
-	bh=wsAlbcfdKcfnHbB66ie9KemlxKu/i3cLrSDqjMKp7pU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=VktbK+LMUOO1/7cEq9rdiZvTvK/DJzPFjPamXv+4tbG9l+GWs1cWWL7zURuJtO65z
-	 bti0x9ifI9J780xZlfMoc+I+DgDwKuogiTcb3p+4J8wsDqcMP5CXJtbnjBQTA6bKBZ
-	 dEz+CkZYKq5AsBOu6Uf8X2i8hrFMXX8oWSoRLwwy6aGlcbh1IcwzSrTqvjkASTR8Ar
-	 V3TAFw29B7rIv6A/DS19vzSAkO/HcC7kjylpD2ZoYBXCo+gv6dk2pQccgmRFX64wbB
-	 PLS7HGwxlKDCKm0GG8CrqFzcnXaro2F72L6G+0MCVepCilYBBdm59+oJeMFgguk9bi
-	 iI0D9boxZEuag==
-From: Igor Prusov <ivprusov@sberdevices.ru>
-Subject: [RFC PATCH v2 5/5] board: amlogic: add support for AD401 board
-Date: Fri, 5 May 2023 15:56:39 +0300
-Message-ID: <20230505125639.3605-6-ivprusov@sberdevices.ru>
-In-Reply-To: <20230505125639.3605-1-ivprusov@sberdevices.ru>
-References: <20230505125639.3605-1-ivprusov@sberdevices.ru>
+ Mon, 22 May 2023 01:16:20 -0700
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3094910b150so4573590f8f.0
+        for <u-boot-amlogic@groups.io>; Mon, 22 May 2023 01:16:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684743378; x=1687335378;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=AgQHXRqBL6sIjekEHRGeb4d9imcdcXKEJ98OIw4yTKg=;
+        b=XBA9c08aavHUcbKsMbvGBuDaMjzzm1hyLnxUv/iESOzE6jn4Wiu/Yf3lO/PSv4rv1i
+         WD6l0cGyMEE7VwwYTnTZ7CyU76egcTtiK/VkSdx4mFAhcQz3GPmXCQ9e2bntSmr+dIUW
+         yKCwcu/h+KJ+2fF1Sj1h6k2L2l79R0RNy1pSjXu0qn/6/3CE8OPo1sqpeMX3+PUKZxaP
+         7xevqo3ao58RsmEz7ZFKsZtms4LLQnFNdKImCdu53HQnOvA/EGl9l8SYI3BCTJL03fHL
+         HNCI8pEa+AdY6AegGEzg8QTV8u1YdZqAeWKYL8W4RCG1osF6strkA2WjJ9OdMfkJz29Q
+         Q0YA==
+Return-Path: <neil.armstrong@linaro.org>
+Message-ID: <4e3a7b8f-b5e0-4f66-fa10-a37df0eee7c4@linaro.org>
+Date: Mon, 22 May 2023 10:16:13 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: prusovigor@gmail.com, kernel@sberdevices.ru, Igor Prusov <ivprusov@sberdevices.ru>, u-boot@lists.denx.de, u-boot-amlogic@groups.io
+From: "Neil Armstrong" <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] global: Use proper project name U-Boot
+References: <0dbdf0432405c1c38ffca55703b6737a48219e79.1684307818.git.michal.simek@amd.com>
+In-Reply-To: <0dbdf0432405c1c38ffca55703b6737a48219e79.1684307818.git.michal.simek@amd.com>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Michal Simek <michal.simek@amd.com>, u-boot@lists.denx.de, git@xilinx.com, Tom Rini <trini@konsulko.com>
+Cc: Alexey Brodkin <alexey.brodkin@synopsys.com>, Alper Nebi Yasak <alpernebiyasak@gmail.com>, Anastasiia Lukianenko <anastasiia_lukianenko@epam.com>, Chris Morgan <macromorgan@hotmail.com>, Dario Binacchi <dario.binacchi@amarulasolutions.com>, Dillon Min <dillon.minfei@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, FUKAUMI Naoki <naoki@radxa.com>, Fabio Estevam <festevam@denx.de>, Frieder Schrempf <frieder.schrempf@kontron.de>, Harald Seiler <hws@denx.de>, Heiko Schocher <hs@denx.de>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Holger Brunck <holger.brunck@hitachienergy.com>, Igor Opaniuk <igor.opaniuk@gmail.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Jagan Teki <jagan@amarulasolutions.com>, =?UTF-8?Q?Javier_Mart=c3=adnez_Canillas?= <javier@dowhile0.org>, Joe Hershberger <joe.hershberger@ni.com>, Johan Jonker <jbx6244@gmail.com>, Jonas Karlman <jonas@kwiboo.se>, Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>, Kamil Lulko <kamil.lulko@gmail.com>, Kever Yang <kever.yang@rock-chips.com>, Loic Poulain <loic.poulain@linaro.org>, Luka Kovacic <luka.kovacic@sartura.hr>, Luka Perkov <luka.perkov@sartura.hr>, Lukasz Majewski <lukma@denx.de>, Marc Zyngier <maz@kernel.org>, =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>, Marek Vasut <marek.vasut+renesas@mailbox.org>, Matthias Winker <matthias.winker@de.bosch.com>, Michael Trimarchi <michael@amarulasolutions.com>, Michael Walle <michael@walle.cc>, Mingkai Hu <mingkai.hu@nxp.com>, Nathan Barrett-Morrison <nathan.morrison@timesys.com>, Niel Fourie <lusus@denx.de>, Nikhil M Jain <n-jain1@ti.com>, Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>, Patrice Chotard <patrice.chotard@foss.st.com>, Patrick Delaunay <patrick.delaunay@foss.st.com>, Philip Oberfichtner <pro@denx.de>, Philipp Tomsich <philipp.tomsich@vrull.eu>, =?UTF-8?Q?Pierre-Cl=c3=a9ment_Tosi?= <ptosi@google.com>, Qu Wenruo <wqu@suse.com>, Quentin Schulz <quentin.schulz@theobroma-systems.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ralph Siemsen <ralph.siemsen@linaro.org>, Ramon Fried <rfried.dev@gmail.com>, Robert Marko <robert.marko@sartura.hr>, Roger Knecht <rknecht@pm.me>, Sean Anderson <seanga2@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Simon Glass <sjg@chromium.org>, Stefan Bosch <stefan_b@posteo.net>, Stefan Roese <sr@denx.de>, Uri Mashiach <uri.mashiach@compulab.co.il>, Vikas Manocha <vikas.manocha@st.com>, Will Deacon <willdeacon@google.com>, linux-btrfs@vger.kernel.org, u-boot-amlogic@groups.io, uboot-snps-arc@synopsys.com, uboot-stm32@st-md-mailman.stormreply.com
 List-ID: <u-boot-amlogic@groups.io>
 
-The AD401 board is the Amlogic A1 SoC reference board
+On 17/05/2023 09:17, Michal Simek wrote:
+> Use proper project name in comments, Kconfig, readmes.
+> 
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
 
-Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
+
+For amlogic changes:
+
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- arch/arm/mach-meson/Kconfig     |  1 +
- board/amlogic/ad401/MAINTAINERS |  6 ++++
- board/amlogic/ad401/Makefile    |  4 +++
- board/amlogic/ad401/ad401.c     | 15 +++++++++
- configs/ad401_defconfig         | 54 +++++++++++++++++++++++++++++++++
- 5 files changed, 80 insertions(+)
- create mode 100644 board/amlogic/ad401/MAINTAINERS
- create mode 100644 board/amlogic/ad401/Makefile
- create mode 100644 board/amlogic/ad401/ad401.c
- create mode 100644 configs/ad401_defconfig
 
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index 519ed563c0..669ca09a00 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -75,6 +75,7 @@ config SYS_VENDOR
-=20
- config SYS_BOARD
- 	string "Board name"
-+	default "ad401" if MESON_A1
- 	default "p200" if MESON_GXBB
- 	default "p212" if MESON_GXL
- 	default "q200" if MESON_GXM
-diff --git a/board/amlogic/ad401/MAINTAINERS b/board/amlogic/ad401/MAINTAIN=
-ERS
-new file mode 100644
-index 0000000000..52a44bd66c
---- /dev/null
-+++ b/board/amlogic/ad401/MAINTAINERS
-@@ -0,0 +1,6 @@
-+AD401
-+M:	Neil Armstrong <neil.armstrong@linaro.org>
-+S:	Maintained
-+L:	u-boot-amlogic@groups.io
-+F:	board/amlogic/ad401/
-+F:	configs/ad401_defconfig
-diff --git a/board/amlogic/ad401/Makefile b/board/amlogic/ad401/Makefile
-new file mode 100644
-index 0000000000..e65c1215f6
---- /dev/null
-+++ b/board/amlogic/ad401/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# (C) Copyright 2023 SberDevices, Inc.
-+
-+obj-y	:=3D ad401.o
-diff --git a/board/amlogic/ad401/ad401.c b/board/amlogic/ad401/ad401.c
-new file mode 100644
-index 0000000000..356b2880bd
---- /dev/null
-+++ b/board/amlogic/ad401/ad401.c
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * (C) Copyright 2023 SberDevices, Inc.
-+ * Author: Igor Prusov <ivprusov@sberdevices.ru>
-+ */
-+
-+#include <init.h>
-+#include <asm/arch/eth.h>
-+
-+int misc_init_r(void)
-+{
-+	meson_generate_serial_ethaddr();
-+
-+	return 0;
-+}
-diff --git a/configs/ad401_defconfig b/configs/ad401_defconfig
-new file mode 100644
-index 0000000000..529e553bac
---- /dev/null
-+++ b/configs/ad401_defconfig
-@@ -0,0 +1,54 @@
-+CONFIG_ARM=3Dy
-+CONFIG_ARCH_MESON=3Dy
-+CONFIG_TEXT_BASE=3D0x00000000
-+CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
-+CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x00200000
-+CONFIG_DM_GPIO=3Dy
-+CONFIG_DEFAULT_DEVICE_TREE=3D"meson-a1-ad401"
-+CONFIG_SYS_PROMPT=3D"ad401 # "
-+CONFIG_OF_LIBFDT_OVERLAY=3Dy
-+CONFIG_MESON_A1=3Dy
-+CONFIG_DEBUG_UART_BASE=3D0xfe001c00
-+CONFIG_DEBUG_UART_CLOCK=3D24000000
-+CONFIG_SYS_LOAD_ADDR=3D0x0
-+CONFIG_DEBUG_UART=3Dy
-+CONFIG_ANDROID_BOOT_IMAGE=3Dy
-+CONFIG_FIT=3Dy
-+CONFIG_FIT_SIGNATURE=3Dy
-+CONFIG_OF_BOARD_SETUP=3Dy
-+CONFIG_BOOTCOMMAND=3D"run storeboot"
-+# CONFIG_DISPLAY_CPUINFO is not set
-+# CONFIG_DISPLAY_BOARDINFO is not set
-+# CONFIG_CMD_BDI is not set
-+# CONFIG_CMD_IMI is not set
-+CONFIG_CMD_GPIO=3Dy
-+CONFIG_CMD_I2C=3Dy
-+# CONFIG_CMD_LOADB is not set
-+# CONFIG_CMD_LOADS is not set
-+CONFIG_CMD_MMC=3Dy
-+CONFIG_CMD_MTD=3Dy
-+# CONFIG_CMD_SETEXPR is not set
-+CONFIG_CMD_CACHE=3Dy
-+CONFIG_CMD_MTDPARTS=3Dy
-+CONFIG_CMD_UBI=3Dy
-+CONFIG_OF_CONTROL=3Dy
-+CONFIG_ADC=3Dy
-+CONFIG_SARADC_MESON=3Dy
-+CONFIG_DM_I2C=3Dy
-+CONFIG_SYS_I2C_MESON=3Dy
-+CONFIG_LED=3Dy
-+CONFIG_MISC=3Dy
-+CONFIG_MTD=3Dy
-+CONFIG_DM_SPI_FLASH=3Dy
-+CONFIG_PHY=3Dy
-+CONFIG_PINCTRL=3Dy
-+CONFIG_PINCTRL_MESON_A1=3Dy
-+CONFIG_DM_REGULATOR=3Dy
-+CONFIG_DM_PWM=3Dy
-+CONFIG_PWM_MESON=3Dy
-+CONFIG_DEBUG_UART_ANNOUNCE=3Dy
-+CONFIG_DEBUG_UART_SKIP_INIT=3Dy
-+CONFIG_MESON_SERIAL=3Dy
-+CONFIG_SPI=3Dy
-+CONFIG_DM_SPI=3Dy
-+CONFIG_WDT=3Dy
---=20
-2.34.1
+
+> ---
+> 
+> I am ignoring these for now because they can break automated scripts or
+> user setting that's why they should be fixed separately.
+> 
+
+<snip>
+
+> doc/board/amlogic/pre-generated-fip.rst:77:- bl33.bin: U-boot binary image
+
+You can add this change safely,
+
+Neil
+
+
+
+<snip>
 
