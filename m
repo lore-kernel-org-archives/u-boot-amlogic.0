@@ -1,56 +1,90 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.27425.1685614364421096686
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web11.565.1686067683460214172
  for <u-boot-amlogic@groups.io>;
- Thu, 01 Jun 2023 03:12:44 -0700
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-30af0aa4812so673320f8f.1
-        for <u-boot-amlogic@groups.io>; Thu, 01 Jun 2023 03:12:44 -0700 (PDT)
+ Tue, 06 Jun 2023 09:08:04 -0700
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f6ffc2b314so53662245e9.0
+        for <u-boot-amlogic@groups.io>; Tue, 06 Jun 2023 09:08:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685614363; x=1688206363;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VJKMiC+93dIit4FeHmor/5plzJ6hPYyfEMy8vZnqHeo=;
-        b=jCFvlmGca9gC3HlxpClZPaYeXjRFJ8eXiL3J6xHbvYqUe2YMTyVvcl5suC0D0W4uQ4
-         Q1aBgGI4lZ8bw3zIh6lepdtt/TBqFEQAYWVfvPEynO/RPLjNr4iez6oKQvMw3dB+oWd7
-         jld6Tfpo8k0hTl1OYJwV1FbhhMz9yL/1EV404zoWF7hRydk6qDAcn9HUPQn5/iw3JBiN
-         5Fm4lOXz4AlTBAb2Mawbi48XWJf1V0htRfvkzjwRshGenAwBWHJ8wVmV7KCiQjZKWgu+
-         L7lQ9esYLvtTVAVeOS/qunKPNhJ++JptYSyJRRAoTYVCx3KLUSH1KmiXxCzhG5Tfwpsi
-         tClA==
-Return-Path: <neil.armstrong@linaro.org>
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20230531093156.29240-1-avromanov@sberdevices.ru>
-References: <20230531093156.29240-1-avromanov@sberdevices.ru>
-Subject: Re: [PATCH v2 0/3] Meson Secure PWRC Driver
-Message-Id: <168561436226.3476897.12102323577915471336.b4-ty@linaro.org>
-Date: Thu, 01 Jun 2023 12:12:42 +0200
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1686067681; x=1688659681;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JswW6qm4n4gV1alhdWK4pPU4IJxG64iUPiwdoiSW7as=;
+        b=rCv/GCDpofO/r5AHyxCoKY96zHzlakUB7ydsb8RhT8xYY44bj2AmBrN/l3DRf1YGHE
+         ZtZo/ywyOUYzzac1HxeWvB59ALBDshhK9j0M/3lXzOmpkko2pLEWeXto2uCEh22E0mCY
+         w0C4YEHT71R/ck8NVDiqvP2hBOF5n391w50g9dboV8BYxlmGaC+/XhIOJ1AepxOXwRSu
+         n7v8q7//y5wbjGHIL6fV9mfnO/O6j0xVOqd6vQP6eIIBC/xDk9t851umEnmr6aCWHMhl
+         U8aDUru21PO+yOi5beNmDtesUJBA0M1HgP4w3ZzNOjrcrQx3Oj2rFYABmsJEYwqdwqNS
+         xXjQ==
+Return-Path: <mkorpershoek@baylibre.com>
+From: "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Date: Tue, 06 Jun 2023 18:07:48 +0200
+Subject: [PATCH] serial: meson: fix meson_serial_pending() tx logic
 MIME-Version: 1.0
+Message-Id: <20230606-fix-meson-serial-pending-v1-1-6a54d4a01f76@baylibre.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-To: jh80.chung@samsung.com, Alexey Romanov <avromanov@sberdevices.ru>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru
+To: Neil Armstrong <neil.armstrong@linaro.org>, u-boot-amlogic@groups.io
+Cc: u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hi,
+According to the dm_serial_ops documentation, pending() should:
+> @return number of waiting characters, 0 for none, -ve on error
 
-On Wed, 31 May 2023 12:31:53 +0300, Alexey Romanov wrote:
-> This patch set adds support (driver and sm functions) for working with
-> power domain controller using secure monitor for Amlogic A1-series.
-> Additionally, in the future, the driver can be used for other Amlgoic
-> SoC series, such as S4.
-> 
-> Changes v1 -> v2:
-> 
-> [...]
+And:
+> It is acceptable to return 1 if an indeterminant number
+> of characters is waiting.
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
+With the current implementation, we have:
+* FIFO is full           -> pending() returns 0
+* FIFO is partially used -> pending() returns 1
+* FIFO is empty          -> pending() returns 1
 
-[1/3] arch/arm: meson: sm: introduce power domain functions
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/9b5844975f3bcf4bc16858d32e12ce7a2832f8fd
-[2/3] dt-bindings: power: add Meson A1 PWRC bindings
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/6dc3373d71ecccf81ad2270c68ccaaaf5ff09929
-[3/3] drivers: meson: introduce secure power controller driver
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/a1fd9cb41fb1fda2283a089f9c97e5eed4d4940a
+This is not the same as what the documentation requires.
 
+Moreover, since [1], arm reset now flushes all console devices
+(including serial) before the cpu gets reset.
+Because of the flawed logic:
+
+  => reset # user calls reset
+  flush() is called
+  _serial_flush() is called
+  ops->pending(dev, false) # never returns false
+  # board hangs indefinitely without resetting.
+
+Fix it by using AML_UART_TX_EMPTY instead of AML_UART_TX_FULL.
+
+[1] commit c5f4cdb8eb60 ("console: Use flush() before panic and reset"),
+
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+---
+Tested with:
+=> reset # vim3 board no longer hangs
+---
+ drivers/serial/serial_meson.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson.c
+index d026f5a7a8e5..934de2ab2358 100644
+--- a/drivers/serial/serial_meson.c
++++ b/drivers/serial/serial_meson.c
+@@ -201,7 +201,10 @@ static int meson_serial_pending(struct udevice *dev, bool input)
+ 
+ 		return true;
+ 	} else {
+-		return !(status & AML_UART_TX_FULL);
++		if (status & AML_UART_TX_EMPTY)
++			return false;
++
++		return true;
+ 	}
+ }
+ 
+
+---
+base-commit: a1fd9cb41fb1fda2283a089f9c97e5eed4d4940a
+change-id: 20230606-fix-meson-serial-pending-890e11467215
+
+Best regards,
 -- 
-Neil
+Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
