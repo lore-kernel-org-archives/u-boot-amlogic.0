@@ -1,95 +1,64 @@
 Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.3303.1686125002317528443
+ by mx.groups.io with SMTP id smtpd.web10.6319.1686138489171076362
  for <u-boot-amlogic@groups.io>;
- Wed, 07 Jun 2023 01:03:22 -0700
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3f61530506aso70767415e9.1
-        for <u-boot-amlogic@groups.io>; Wed, 07 Jun 2023 01:03:22 -0700 (PDT)
+ Wed, 07 Jun 2023 04:48:09 -0700
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3f736e0c9a8so31064405e9.2
+        for <u-boot-amlogic@groups.io>; Wed, 07 Jun 2023 04:48:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686125000; x=1688717000;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=TmDY3snUqS1KGqYjrlBlc6GeUlyg5cWITIbFZdQYcCE=;
-        b=MuBVV94ZhRfbNDfM4WhNsIjP9Qa3du+GVRywmA9mJug55Ip3Zq2YhH8B2m9KCqDUQn
-         tch3IKYkcUYHZBKM+7JHVa8uoEse5Ib+nY7tqKyl95nTaD94IBoyASW4p/iCb4RRpIE+
-         Oo4vLFQkxenxzoOjFFmmQfl6rgd+SFs6Yj9nVBJ5DGoTJDMBe19TbAHfpTIz1GJWInHI
-         wiLKeIf6jPmEmSzBqFhjqdeDFXRLPIXEqc1gmu3HPIuY6F8QFoh7zpJs7YtCco6OHgTV
-         1/DNJh7r8eFjBA6ds0kMlIuRa1Bkp0Kza+9iH5URr8bbvtJZXLet0dHAjpC3MosuOx9i
-         yriA==
+        d=linaro.org; s=google; t=1686138487; x=1688730487;
+        h=content-transfer-encoding:organization:content-language:cc:to
+         :reply-to:subject:from:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SWGNA5zYMwgctsZUKT0HGnRNlcDTh1f75c4va7h3h1s=;
+        b=V/+u/jblqjxi5qNP37pgaA2cVrp/B0VEfdqpZ8SFqKbzaa5H7tkiQgwNQekzouJ2aT
+         l7186c3XXjkSg655E/yCoYR4w5zoNrLdCNvG1Uz3HCq6McOlGjH7pQsj7o7Tsg91AYac
+         ulSGxP7vQMtL5/cghAzvuIKCGXIeEgaX/eaM8CuG85rRcL0ZbdByU1o2ucazw9zDOEBq
+         +Jehuj9lTznUtSs1IcuwxtJmfsbaLDBgcQVP43cobQ9PK+PwttNOkNR7USpsETWr1sDZ
+         KORDRWio9uDvmJUm5F5tivV+nldWHcWOICoG/ltV/BJvzqHrFo56fkjMdLZdmr8ypaFi
+         05dQ==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <5699d7cb-0861-a21a-2928-eb2e7e80f63d@linaro.org>
-Date: Wed, 7 Jun 2023 10:03:19 +0200
+Message-ID: <fc521727-2c12-b75a-0913-1fcc05f5d290@linaro.org>
+Date: Wed, 7 Jun 2023 13:48:06 +0200
 MIME-Version: 1.0
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-20230607
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] serial: meson: fix meson_serial_pending() tx logic
-References: <20230606-fix-meson-serial-pending-v1-1-6a54d4a01f76@baylibre.com>
-In-Reply-To: <20230606-fix-meson-serial-pending-v1-1-6a54d4a01f76@baylibre.com>
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, u-boot-amlogic@groups.io
-Cc: u-boot@lists.denx.de
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 06/06/2023 18:07, Mattijs Korpershoek wrote:
-> According to the dm_serial_ops documentation, pending() should:
->> @return number of waiting characters, 0 for none, -ve on error
-> 
-> And:
->> It is acceptable to return 1 if an indeterminant number
->> of characters is waiting.
-> 
-> With the current implementation, we have:
-> * FIFO is full           -> pending() returns 0
-> * FIFO is partially used -> pending() returns 1
-> * FIFO is empty          -> pending() returns 1
-> 
-> This is not the same as what the documentation requires.
-> 
-> Moreover, since [1], arm reset now flushes all console devices
-> (including serial) before the cpu gets reset.
-> Because of the flawed logic:
-> 
->    => reset # user calls reset
->    flush() is called
->    _serial_flush() is called
->    ops->pending(dev, false) # never returns false
->    # board hangs indefinitely without resetting.
-> 
-> Fix it by using AML_UART_TX_EMPTY instead of AML_UART_TX_FULL.
-> 
-> [1] commit c5f4cdb8eb60 ("console: Use flush() before panic and reset"),
-> 
-> Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-> ---
-> Tested with:
-> => reset # vim3 board no longer hangs
-> ---
->   drivers/serial/serial_meson.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson.c
-> index d026f5a7a8e5..934de2ab2358 100644
-> --- a/drivers/serial/serial_meson.c
-> +++ b/drivers/serial/serial_meson.c
-> @@ -201,7 +201,10 @@ static int meson_serial_pending(struct udevice *dev, bool input)
->   
->   		return true;
->   	} else {
-> -		return !(status & AML_UART_TX_FULL);
-> +		if (status & AML_UART_TX_EMPTY)
-> +			return false;
-> +
-> +		return true;
->   	}
->   }
->   
-> 
-> ---
-> base-commit: a1fd9cb41fb1fda2283a089f9c97e5eed4d4940a
-> change-id: 20230606-fix-meson-serial-pending-890e11467215
-> 
-> Best regards,
 
-Acked-by: Neil Armstrong <neil.armstrong@linaro.org>
+Hi Tom,
+
+A single change to to fix the meson_serial_pending logic.
+
+The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/16505
+
+Thanks,
+Neil
+
+The following changes since commit fadf83c86d7252df2b50ba526ffeea95658cb5b5:
+
+   Merge tag 'ubifixes-for-v2023-07-rc4' of https://source.denx.de/u-boot/custodians/u-boot-ubi (2023-06-06 09:47:17 -0400)
+
+are available in the Git repository at:
+
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20230607
+
+for you to fetch changes up to afa85a2247297d660a63295bfbdd6e24e8e56902:
+
+   serial: meson: fix meson_serial_pending() tx logic (2023-06-07 10:09:20 +0200)
+
+----------------------------------------------------------------
+- meson_uart empty logic fix
+
+----------------------------------------------------------------
+Mattijs Korpershoek (1):
+       serial: meson: fix meson_serial_pending() tx logic
+
+  drivers/serial/serial_meson.c | 5 ++++-
+  1 file changed, 4 insertions(+), 1 deletion(-)
+
