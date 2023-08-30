@@ -1,109 +1,74 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web10.3715.1692692667421629143
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+ by mx.groups.io with SMTP id smtpd.web11.1411.1693418022237847726
  for <u-boot-amlogic@groups.io>;
- Tue, 22 Aug 2023 01:24:27 -0700
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-313e742a787so2537051f8f.1
-        for <u-boot-amlogic@groups.io>; Tue, 22 Aug 2023 01:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692692666; x=1693297466;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xky6lykeXWJ7KdcEhtptv9VMBp2Elqi4FU3Ze9PGhHA=;
-        b=PFEEc9uD+KzxWd4Nu/dQkGAgg9hGQwhyKfegCwVObgPSwFFkTWAOBHeoy/4qLpgBdk
-         AG+UdoDU/+6k4QZbofEz+Xpj4y52hgcMz6vNHKBbmAetUwpc4kZyR/fwxxJ5w/pi6ixc
-         y9Xq+s9H9/1CajOCvkntpexze8mxBtmLQC0qRAzO/dbOXJ9Caji1o9V//nYNkym13exy
-         4F6r62hgpNUR8TWcl65jvLn4lzf99vTy5Qkb6oWzEglYzMupXUnd78G+RG1ypYoTW1ZW
-         R3SO1DbPpAOckBphkh+4sYk4Q7WYD6lqi3NReQbb6gLDIl+uzdO1eimRPbCWH0cupYdM
-         0mww==
-Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <7a9f5cf0-d7b2-4477-8a56-a3aa7f764e2a@linaro.org>
-Date: Tue, 22 Aug 2023 10:24:23 +0200
+ Wed, 30 Aug 2023 10:53:42 -0700
+Date: Wed, 30 Aug 2023 17:53:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1693418018; x=1693677218;
+	bh=gaG7VuiuzeBoCrlddmGSrxFjPIdkHsg1kk6y2rsdpJ8=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=FHhphKz1hvI2qBXyszqDvoXPPB4cvftqd74i4Btt93ojsZC+OUHQ8YjLHe+ONSE3z
+	 fA1j6Eb5XlkKptW57MtE141YMNjrbQyIKE+BbtdQA/13zqL10UzIVJvbkchbpUqUZt
+	 00QmdfcpBcJAAFXmd8Hjbv/bkWkxEnEbExXYa27Jx+B5ELSLmN641hZmhjHPFE0gQF
+	 U2hihEGaOIpS30XiFjYAAcO18KFNuZYbdirk77kETCAvbdYWxGvMVvAOyV2DpfJRfh
+	 ZYmxLTJ+UN3KorQ2MFTlQ3QwI0bvHG9Ffr3fqo11HtGo/Mb/vKd1Xi4+uP754zatX7
+	 1MVGp03ggC8Xg==
+From: Ferass El Hafidi <vitali64pmemail@protonmail.com>
+Subject: Re: [PATCH v2 0/1] meson: Demonstration of using binman to produce the image
+Message-ID: <CV61D7ULLVZ0.3OCFZ743L1KSE@flaptop>
 MIME-Version: 1.0
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v1 1/2] drivers: firmware: introduce Meson Secure Monitor driver
-References: <20230706112020.24528-1-avromanov@sberdevices.ru>
- <20230706112020.24528-2-avromanov@sberdevices.ru>
- <CAPnjgZ1AqUYxAU0BNhxZLXc+y_h5XKbuoLBDekbkqzaJeon-1Q@mail.gmail.com>
- <20230707084313.vecmsr5z3aj4gqxs@cab-wsm-0029881>
- <CAPnjgZ3Wfnc_rMJBVZTv_eikUu7vpPWsL1MQ_SruXySV9EZi3A@mail.gmail.com>
- <20230710083443.fuw74gbvwoha75ab@cab-wsm-0029881>
- <CAPnjgZ1aZsFBaX2eBh35CXVExaE90YJHQ98S+2XOWJrJ9pz37w@mail.gmail.com>
- <20230711102459.phpyem2ehlya7osz@cab-wsm-0029881.sigma.sbrf.ru>
- <CAPnjgZ2t2xf05PSgCbQr7MUvJrpQPcRs_Zoux804h4UmTrZRKw@mail.gmail.com>
- <ZLDdaIyXjp9yN5aW@laputa>
- <CAPnjgZ3oQ1qZtWFpezNfV-dZhbCrnqbi1+B=JKb1sfJP6xk-cA@mail.gmail.com>
- <6303961e-3edc-4356-905b-89820a52b227@linaro.org>
- <CAPnjgZ2GA7ktNi9HVJ1Mw=4nuqcQJALVBqHQr1_JtVmkzEVgdw@mail.gmail.com>
-In-Reply-To: <CAPnjgZ2GA7ktNi9HVJ1Mw=4nuqcQJALVBqHQr1_JtVmkzEVgdw@mail.gmail.com>
-Content-Language: en-US, fr
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@google.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Alexey Romanov <AVRomanov@sberdevices.ru>, "narmstrong@baylibre.com" <narmstrong@baylibre.com>, "u-boot-amlogic@groups.io" <u-boot-amlogic@groups.io>, "u-boot@lists.denx.de" <u-boot@lists.denx.de>, kernel <kernel@sberdevices.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+To: sjg@chromium.org
+Cc: christianshewitt@gmail.com, mark.kettenis@xs4all.nl, u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org, alpernebiyasak@gmail.com, neil.armstrong@linaro.org, da@lessconfused.com
 List-ID: <u-boot-amlogic@groups.io>
 
-On 21/08/2023 21:11, Simon Glass wrote:
-> Hi Neil,
-> 
-> On Mon, 21 Aug 2023 at 03:16, neil.armstrong@linaro.org
-> <neil.armstrong@linaro.org> wrote:
->>
->> Hi,
->>
->> On 16/07/2023 01:40, Simon Glass wrote:
->>> Hi,
->>>
->>> On Thu, 13 Jul 2023 at 23:30, AKASHI Takahiro
->>> <takahiro.akashi@linaro.org> wrote:
->>>>
->>>> On Tue, Jul 11, 2023 at 01:13:29PM -0600, Simon Glass wrote:
->>>>> +AKASHI Takahiro
->>>>
->>>> Me?
->>>
->>> Yes, I'm asking for your help to try to clean this stuff up.
->>
->> The thread is long and hard to answer directly, but as AKASHI
->> said there's no point to add a SMC class since it's only the message
->> passing instruction, and there's no point using remoteproc since the
->> firmware runs on a separate secure state of the same CPU.
->>
->> And I don't see how we can actually define a finite set of ops because
->> none of the secure firmware interfaces has even similar functions.
->>
->> So a new UCLASS for each firmware interface should be added, not sure
->> this is scalable or required since those firmwares are mainly SoC or
->> vendor specific, except the PSCI or other ARM specific interfaces of course.
->>
->> So I think UCLASS_FIRMWARE is good enough since it avoids using UCLASS_MISC,
->> but it should be probably documented somewhere that the ops are implementation
->> defined.
-> 
-> Yes it needs docs...but what exactly is the 'firmware' uclass? I
-> assumed it was for loading firmware into a device, but it seems that
-> it is something else?
+Hi Simon,
 
-Nop, it's based on the same "firmware" naming as Linux, which is an interface
-with a system control firmware like PSCI, SCPI... not to interact with loadable
-co-processors.
+> So I wonder how best to move this forward so that we can build things
+> using binman and everything works?
 
-Systems do have multiple interfaces implemented like PSCI, SCPI, OPTEE and other
-vendor specific ones like Alexey is changing, all via the same instruction call.
+It's still not ready yet, but I'm working on porting U-Boot SPL to some
+Amlogic SoCs [1]. I'm currently working on Amlogic S905 boards, but
+eventually I'll work on Amlogic S905X devices too. And speaking of
+signing, Jonas Karlman wrote amlimage, and integrated it into mkimage,=20
+and I applied his patch to my tree. There's a few things to be aware of=20
+about Amlogic signing and binaries in general, however.
 
-> 
-> Perhaps we should have a UCLASS_SVC (supervisor call) or something
-> like that, rather than continuing with firmware?
+amlimage was intended for use with U-Boot SPL, which obviously has=20
+no support for Amlogic's FIP format and as such amlimage will only do as=20
+little as possible to get the bootROM to load U-Boot SPL. Most of the=20
+packaging format is handled by BL2. The fact that the signing process is
+completly different across SoC generations makes it difficult to
+implement them all into one single tool (and by which I mean all of it,
+not just signing BL2 for the bootROM to run it, that's mostly the same
+across SoCs). amlimage has been confirmed to work on GXBB (ODROID-C2 and
+the KII Pro set-top box), GXL (librecomputer lepotato), and SM1 (ODROID-C4)=
+.
 
-I have no opinion on that, I don't think the call type is significant here.
+My U-Boot SPL port is still rather incomplete. As of today, it still
+can't boot anything from any storage device. The goal eventually is to
+be able to load upstream TF-A BL31 and U-Boot+linux.
 
-Neil
+While Amlogic distributes proprietary BL31 binaries upstream Trusted=20
+Firmware-A has a port for some Amlogic SoCs [2], but as far as I know=20
+SM1 (which is the SoC generation your ODROID-C4 is using) is still
+unsupported. GXBB, GXL, AXG, and G12A are all supported however, but the
+overall port still lacks some features the proprietary implementation
+has.
 
-> 
-> [..]
-> 
-> Regards,
-> Simon
+As for the SCP firmware (aka. BL30) I'm not aware of any
+reverse-engineering efforts for that.
+
+Honestly, in my opinion, including proprietary and poorly-written=20
+Amlogic utilities lacking a proper license, into U-Boot looks like a bad id=
+ea.
+
+[1]: https://git.vitali64.duckdns.org/misc/u-boot-kii-pro.git/log/?h=3Dwip/=
+spl
+[2]: https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/plat/=
+amlogic
+
+Cheers.
 
