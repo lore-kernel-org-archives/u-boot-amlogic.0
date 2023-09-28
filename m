@@ -1,107 +1,121 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.11696.1693468454428321439
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web11.9603.1695891668479744822
  for <u-boot-amlogic@groups.io>;
- Thu, 31 Aug 2023 00:54:14 -0700
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-31c93d2a24fso328328f8f.2
-        for <u-boot-amlogic@groups.io>; Thu, 31 Aug 2023 00:54:14 -0700 (PDT)
+ Thu, 28 Sep 2023 02:01:08 -0700
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-405361bb94eso129129635e9.0
+        for <u-boot-amlogic@groups.io>; Thu, 28 Sep 2023 02:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693468453; x=1694073253; darn=groups.io;
+        d=linaro.org; s=google; t=1695891667; x=1696496467; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=J9o4jIzgTDzCS8keb/VJxcr5uR2GxGl78aPztqyoXlc=;
-        b=qXgIYbQHbdOK3ZZ6YW0BSm28KjHDqYg5XHK+xHWltSfrdrZwk4m2Ez6XvhAEjbzBpp
-         TNkIF6VLQiErPDitYqonu91L0+GPAUYT4LpZqQ3lqfjf8Pws7T214O2Z24NId/7vJLNv
-         O3Wo+nbAf26Ut1lXy4Ve8EP7C+e1CE8xhK1gYhHhxtjrolbtNI1V3ydxYAGjcofdKsSb
-         qAju2w68YOlcgeME2VpI/60DnKGD+6rW9zk18fZ2zwLowvWotD5Jk01K+3LmPkWt7KGH
-         x3ZteFy13TDlKxHpNVyOetWLw4ppShHwpb+Hul4ACM5WJi1VMubGF8CJ5FfhOe8IX0xZ
-         LQNQ==
+        bh=NcYm25a/EilSoFwSGe3SbRfK+UBHFB6MWlJ2lOpQFwM=;
+        b=QY+M9H9nknHhwFbCHAK4ByKA/14rytM59EUaaeS9+MVcP42Xm2sajS3xZpxubUBk2Y
+         lDiparxHEht6K3EAVMkDhhAcZtNz5kkb1AxbG63ukwaQu2t78HV50p1AFPxoGNgHvq11
+         KIaExmHOWocKXccBV+NsY3M80NDUVrp7C8YZjAGUZ4GMsT5jqBIqErU6Uzbc5NBnr07O
+         uw6ix5dIywMcvV0uRL7uIXXduck8T5fifRJu1on4yH4MaQMQk+fiZ7/54udHh94n7Rqe
+         Jar1fZIOhy1tVhShfV5WoA1xe4hAm3ZoiKPdeJezqHjN8cXklvv/AodWIuAT6VWeUigd
+         q84A==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <d94b0cae-99cc-4f8b-9d0d-52a5858f6e33@linaro.org>
-Date: Thu, 31 Aug 2023 09:54:10 +0200
+Message-ID: <88840967-5f39-4f21-ad0b-6b356398ec77@linaro.org>
+Date: Thu, 28 Sep 2023 11:01:05 +0200
 MIME-Version: 1.0
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 0/1] meson: Demonstration of using binman to produce the image
-References: <CV61D7ULLVZ0.3OCFZ743L1KSE@flaptop>
- <CAPnjgZ2iff6F3CFjnjEMUVoX3bO=kv3za4Q45YOcVeZqc96=rw@mail.gmail.com>
-In-Reply-To: <CAPnjgZ2iff6F3CFjnjEMUVoX3bO=kv3za4Q45YOcVeZqc96=rw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Add SM uclass and Meson SM driver
+References: <20230921081346.22157-1-avromanov@salutedevices.com>
+In-Reply-To: <20230921081346.22157-1-avromanov@salutedevices.com>
 Content-Language: en-US, fr
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-To: Simon Glass <sjg@chromium.org>, Ferass El Hafidi <vitali64pmemail@protonmail.com>
-Cc: christianshewitt@gmail.com, mark.kettenis@xs4all.nl, u-boot@lists.denx.de, u-boot-amlogic@groups.io, linux-amlogic@lists.infradead.org, alpernebiyasak@gmail.com, da@lessconfused.com
+To: Alexey Romanov <avromanov@salutedevices.com>, narmstrong@baylibre.com, sjg@google.com, takahiro.akashi@linaro.org, ilias.apalodimas@linaro.org, post@lespocky.de, marex@denx.de, msuchanek@suse.de, sughosh.ganu@linaro.org, jh80.chung@samsung.com, paul.barker@sancloud.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru
 List-ID: <u-boot-amlogic@groups.io>
 
-On 31/08/2023 05:37, Simon Glass wrote:
-> Hi Ferass,
+On 21/09/2023 10:13, Alexey Romanov wrote:
+> Hello!
 > 
-> On Wed, 30 Aug 2023 at 11:53, Ferass El Hafidi
-> <vitali64pmemail@protonmail.com> wrote:
->>
->> Hi Simon,
->>
->>> So I wonder how best to move this forward so that we can build things
->>> using binman and everything works?
->>
->> It's still not ready yet, but I'm working on porting U-Boot SPL to some
->> Amlogic SoCs [1]. I'm currently working on Amlogic S905 boards, but
->> eventually I'll work on Amlogic S905X devices too. And speaking of
->> signing, Jonas Karlman wrote amlimage, and integrated it into mkimage,
->> and I applied his patch to my tree. There's a few things to be aware of
->> about Amlogic signing and binaries in general, however.
->>
->> amlimage was intended for use with U-Boot SPL, which obviously has
->> no support for Amlogic's FIP format and as such amlimage will only do as
->> little as possible to get the bootROM to load U-Boot SPL. Most of the
->> packaging format is handled by BL2. The fact that the signing process is
->> completly different across SoC generations makes it difficult to
->> implement them all into one single tool (and by which I mean all of it,
->> not just signing BL2 for the bootROM to run it, that's mostly the same
->> across SoCs). amlimage has been confirmed to work on GXBB (ODROID-C2 and
->> the KII Pro set-top box), GXL (librecomputer lepotato), and SM1 (ODROID-C4).
->>
->> My U-Boot SPL port is still rather incomplete. As of today, it still
->> can't boot anything from any storage device. The goal eventually is to
->> be able to load upstream TF-A BL31 and U-Boot+linux.
->>
->> While Amlogic distributes proprietary BL31 binaries upstream Trusted
->> Firmware-A has a port for some Amlogic SoCs [2], but as far as I know
->> SM1 (which is the SoC generation your ODROID-C4 is using) is still
->> unsupported. GXBB, GXL, AXG, and G12A are all supported however, but the
->> overall port still lacks some features the proprietary implementation
->> has.
->>
->> As for the SCP firmware (aka. BL30) I'm not aware of any
->> reverse-engineering efforts for that.
->>
+> At the moment, there is no single general approach to using
+> secure monitor in U-Boot, there is only the smc_call() function,
+> over which everyone builds their own add-ons. This patchset
+> is designed to solve this problem by adding a new uclass -
+> SM_UCLASS. This UCLASS export following generic API:
 > 
-> Thanks for your efforts on this. I look forward to seeing where it ends up.
+> 1. sm_call() - generic SMC call to the secure-monitor
+> 2. sm_call_read() - retrieve data from secure-monitor
+> 3. sm_call_write() - send data to secure-monitor
 > 
->> Honestly, in my opinion, including proprietary and poorly-written
->> Amlogic utilities lacking a proper license, into U-Boot looks like a bad idea.
+> In the future, it is necessary to completely get rid of raw
+> smc_call() calls, replacing them with the use of SM_UCLASS
+> based drivers.
 > 
-> With Binman, we don't really include them in U-Boot; we allow them to
-> be fetched easily so that a complete build can be produced.
+> V2:
 > 
-> I don't like it either, but for users it is better than doing the
-> build manually.
+> - Add SM UCLASS
+> - Add SM sandbox driver
+> - Add test for sandbox driver
+> - Meson Secure Monitor driver now based on SM_UCLASS
+> - Fix include order in arch/arm/mach-meson/sm.c
+> 
+> Also, during the discussion in V1 of this patchset, it was
+> discussed to create MESON_SM_UCLASS, but I considered such
+> a uclass to be too arch-specific. That's why I suggest
+> SM_UCLASS, which is not so arch-specific: secure monitor can
+> used for whole ARM devices, not only for Amlogic SoC's.
+> 
+> V3:
+> 
+> - Fix typos in commit messages
+> - Use uclass_first_device_err() instead of uclass_get_device_by_name()
+> - Return -ENOSYS instead of -EPROTONOSUPPORT if SM_UCLASS option not
+> implemented
+> 
+> Alexey Romanov (8):
+>    drivers: introduce Secure Monitor uclass
+>    sandbox: add sandbox sm uclass driver
+>    sandbox: dts: add meson secure monitor node
+>    sandbox: add tests for UCLASS_SM
+>    sandbox: defconfig: enable CONFIG_SM option
+>    drivers: introduce Meson Secure Monitor driver
+>    arch: meson: sm: set correct order of the includes
+>    arch: meson: use secure monitor driver
+> 
+>   MAINTAINERS                 |   1 +
+>   arch/arm/mach-meson/Kconfig |   1 +
+>   arch/arm/mach-meson/sm.c    | 116 +++++++++++----------
+>   arch/sandbox/dts/test.dts   |   4 +
+>   configs/sandbox_defconfig   |   1 +
+>   drivers/Kconfig             |   2 +
+>   drivers/Makefile            |   1 +
+>   drivers/sm/Kconfig          |   9 ++
+>   drivers/sm/Makefile         |   5 +
+>   drivers/sm/meson-sm.c       | 198 ++++++++++++++++++++++++++++++++++++
+>   drivers/sm/sandbox-sm.c     |  76 ++++++++++++++
+>   drivers/sm/sm-uclass.c      |  55 ++++++++++
+>   include/dm/uclass-id.h      |   1 +
+>   include/meson/sm.h          |  19 ++++
+>   include/sandbox-sm.h        |  18 ++++
+>   include/sm-uclass.h         |  72 +++++++++++++
+>   include/sm.h                |  67 ++++++++++++
+>   test/dm/Makefile            |   1 +
+>   test/dm/sm.c                |  65 ++++++++++++
+>   19 files changed, 656 insertions(+), 56 deletions(-)
+>   create mode 100644 drivers/sm/Kconfig
+>   create mode 100644 drivers/sm/Makefile
+>   create mode 100644 drivers/sm/meson-sm.c
+>   create mode 100644 drivers/sm/sandbox-sm.c
+>   create mode 100644 drivers/sm/sm-uclass.c
+>   create mode 100644 include/meson/sm.h
+>   create mode 100644 include/sandbox-sm.h
+>   create mode 100644 include/sm-uclass.h
+>   create mode 100644 include/sm.h
+>   create mode 100644 test/dm/sm.c
+> 
 
-I'll rather spend time and effort to have a fully-upstream TF-A boot chain
-for Amlogic SoC (when possible) that maintaining support for bulky closed-source
-x86-64 binary only tools. The tools aren't even officially distributed.
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
+I'll apply it for next u-boot release,
+
+Thanks,
 Neil
-
-> 
->>
->> [1]: https://git.vitali64.duckdns.org/misc/u-boot-kii-pro.git/log/?h=wip/spl
->> [2]: https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/plat/amlogic
->>
->> Cheers.
->>
-> 
-> Regards,
-> Simon
-
