@@ -1,68 +1,54 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
- by mx.groups.io with SMTP id smtpd.web11.9677.1695892089218979828
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+ by mx.groups.io with SMTP id smtpd.web10.9863.1695892090040757719
  for <u-boot-amlogic@groups.io>;
- Thu, 28 Sep 2023 02:08:09 -0700
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-504b84d59cbso2302319e87.3
-        for <u-boot-amlogic@groups.io>; Thu, 28 Sep 2023 02:08:08 -0700 (PDT)
+ Thu, 28 Sep 2023 02:08:10 -0700
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-50317080342so21380848e87.2
+        for <u-boot-amlogic@groups.io>; Thu, 28 Sep 2023 02:08:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695892087; x=1696496887; darn=groups.io;
+        d=linaro.org; s=google; t=1695892088; x=1696496888; darn=groups.io;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=48oe697wjuP71+52tb7vf8tr+xTvdyJJinslg3eV4H4=;
-        b=qOZYQ8+bbb9C9+0Y/+JUVOM1Ru4A+uoL40+g51HrlLmXj8q+b1GUoSIsUxzGvrncJ4
-         qVr9b4MoOk5wvs8ZuC7F74zjXqM8B6495b6IPiXYfTLu7SoW/uUppi5ZXBbWpvpUwv3K
-         8D9PvC9u88+irumg2VSR8R4UprxyXxzMa6hmKdsJjdPkaZxLjYu68Nj0vzECPZnft2jx
-         vpZVwvApaqIdGRtjN7hhjBuiTdT2Mu1X+HVZ06d//XEqeZzv0MTM1kS2Z5hWOpSyOhnz
-         Q1bwpwCkUNGm/Dsg/99/zza/4F6vIHwyO7Sav4jtewvFyJFJVpfDeap/Rmn2L/+HhML8
-         sgXg==
+        bh=bhtpgkMV/3aq4wwpo2D6YCZZO9b3KYPcI68CRJRMN98=;
+        b=M8MoYdj+458Ttf13aCsN78+jCmvmcVAO/oQEwmFUITo6FLtuhbop8JdN3y1rqzB5q9
+         6grYJYKyqJGdM/Ppf8n20r1CL551ZNOUduURfhHjO6RMIFAuPsAd6rn40moPa/9BkkhB
+         zYdYiM+Pyf8A43RKd5uTGa4lMQAHlQl/m237WQIPZc0DRbKyP0ww8OVAdC3vJg6MpaaW
+         XbGQFzLllM1UiXNh+Cka0i3XpDM618VXpw36HSXk+ODKMff4RGQcDfW9TbPrcwRcYZdK
+         WAXwABQx8qvm2JtViNrkbXlQiQX/A1KgfgdVZ6H0x+YpuKDAjKW2rVXCfWv+X7jGhDWW
+         v4rg==
 Return-Path: <neil.armstrong@linaro.org>
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
-In-Reply-To: <20230921081346.22157-1-avromanov@salutedevices.com>
-References: <20230921081346.22157-1-avromanov@salutedevices.com>
-Subject: Re: [PATCH v3 0/8] Add SM uclass and Meson SM driver
-Message-Id: <169589208560.3562382.4777414752510341666.b4-ty@linaro.org>
-Date: Thu, 28 Sep 2023 11:08:05 +0200
+In-Reply-To: <20230925155209.130671-1-ivprusov@salutedevices.com>
+References: <20230925155209.130671-1-ivprusov@salutedevices.com>
+Subject: Re: [PATCH v2 0/2] clk: amlogic: a1: Add Amlogic A1 clock driver
+Message-Id: <169589208750.3562382.6261825128142750127.b4-ty@linaro.org>
+Date: Thu, 28 Sep 2023 11:08:07 +0200
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-To: sjg@google.com, takahiro.akashi@linaro.org, ilias.apalodimas@linaro.org, post@lespocky.de, marex@denx.de, msuchanek@suse.de, sughosh.ganu@linaro.org, jh80.chung@samsung.com, paul.barker@sancloud.com, Neil Armstrong <neil.armstrong@linaro.org>, Alexey Romanov <avromanov@salutedevices.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru
+To: Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, Simon Glass <sjg@chromium.org>, Igor Prusov <ivprusov@salutedevices.com>
+Cc: prusovigor@gmail.com, kernel@sberdevices.ru, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
 Hi,
 
-On Thu, 21 Sep 2023 11:13:33 +0300, Alexey Romanov wrote:
-> At the moment, there is no single general approach to using
-> secure monitor in U-Boot, there is only the smc_call() function,
-> over which everyone builds their own add-ons. This patchset
-> is designed to solve this problem by adding a new uclass -
-> SM_UCLASS. This UCLASS export following generic API:
+On Mon, 25 Sep 2023 18:52:07 +0300, Igor Prusov wrote:
+> This series adds dt-bindings and driver implementation for Amlogic A1
+> PLL and Peripherals clock controllers.
 > 
-> 1. sm_call() - generic SMC call to the secure-monitor
-> 2. sm_call_read() - retrieve data from secure-monitor
-> 3. sm_call_write() - send data to secure-monitor
+> V1: https://lore.kernel.org/all/20230917101308.1250-1-ivprusov@salutedevices.com/
+> 
+> V1 -> V2:
+>  - Add more verbose comments for driver
 > 
 > [...]
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
 
-[1/8] drivers: introduce Secure Monitor uclass
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/126fbbefd89e0baa7e1a8ecdc4e00b9ff9e776ea
-[2/8] sandbox: add sandbox sm uclass driver
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/ac830089c0075d1f6ee51e22d51244f7f1a2554f
-[3/8] sandbox: dts: add meson secure monitor node
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/0b488d719015c3b77685dd116a0095b4677e84a3
-[4/8] sandbox: add tests for UCLASS_SM
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/80da22b9e45d2cd7d1eaed4e94724def7d4c7970
-[5/8] sandbox: defconfig: enable CONFIG_SM option
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/b655672dabcf4f6f5ffe2fb92abd447ea0a20101
-[6/8] drivers: introduce Meson Secure Monitor driver
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/e7c31d9ee0606dc52a15eb6e8ef5e46978608681
-[7/8] arch: meson: sm: set correct order of the includes
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/a0fe285b1f625ff872b1cb8c79abb072cc154ece
-[8/8] arch: meson: use secure monitor driver
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/4908461153e8b194703c5ae757a5032df3af2c50
+[1/2] dt-bindings: clock: Add Amlogic A1 clock bindings
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/afc86079bff6e2f70df3eee9c2c30be07d9f7082
+[2/2] clk: Add clock driver for Amlogic A1
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/def23a39851d52cadd29854a33e3db29ee4a6d26
 
 -- 
 Neil
