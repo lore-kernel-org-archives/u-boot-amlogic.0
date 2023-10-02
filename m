@@ -1,22 +1,24 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web11.87627.1696265948522393435
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+ by mx.groups.io with SMTP id smtpd.web11.87626.1696265948249652383
  for <u-boot-amlogic@groups.io>;
  Mon, 02 Oct 2023 09:59:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8AAD2120007
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A0161100003
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1696265944;
-	bh=a05rhRH6lRb/b8LFTBK4OtmGi5eSDSw0jUUnpNO1BUQ=;
+	s=mail; t=1696265945;
+	bh=p/s7cm/xGcZ9cF0Xqg6WIcrD5JPQPIu0ZYchy5WwFqg=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=VmaOZAyfMaQ8VlAX9b9xtqsjp1GSoCBmtKV50vSjOD8m0kxELmPjzbao5YWOPviwZ
-	 5IqO9WsD5bQWTaRHrRPsNJX0gTwJH1J/Sa4cZlyWH0zrvaNzYyoYbOnLnrHCRYOJFI
-	 hE+fZDOyxVE1hQvOilgGcowuUIstQY1DTNBWcY3alX8gonQUlilgDV6EPx3ZHAZmpB
-	 Pj4WpHPjsl4mKsj78QoMKLEuuJKT4+TVqqjSwXO0bPra8mwTzyCVkBXRP/xOX4xv9q
-	 aQ2HHEiy0LELXkMI1TSfLFY3sgin1Pbt0hrm4Yfddhds1Aow4JSyhZsWfEbSI+utLQ
-	 Hjg8JVjpp3V6w==
+	b=jbOCRLmjRm5lRawluBhE1XZQu3Tpjas4EkXRW5hXbe6TTG4DEMK7OYZ7BR4RBvr3P
+	 kXXxA3lqiSea5RN2jjpsUjIJgOM1ZqeBS5M3pZ1zKQBOUJ9fJsNFHie12u0z+ubHAK
+	 yZrX4Sye3dzeKwyMIhPOXXNgWa8xx50hiduGzwdmVLrsp3Fhmmu88AT59SzLc+uCKE
+	 qbceYrMBzE6CVixWJkbVXAXbrd1t7pr/M+XgNgPoDd5eLgIwtaE83ddYBEZY5XzqCA
+	 m0IgyGthdnBOFayv8Ct8vJV+DWMl85XA5ddRODNzcNu/SOt5r6KSuHsKKADriU7mEf
+	 wBzP2+QtsHoKw==
 From: Alexey Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v1 0/8] Support USB for Meson A1
-Date: Mon, 2 Oct 2023 19:58:44 +0300
-Message-ID: <20231002165857.19512-1-avromanov@salutedevices.com>
+Subject: [PATCH v1 1/8] dt-bindings: reset: add Meson A1 reset bindings
+Date: Mon, 2 Oct 2023 19:58:45 +0300
+Message-ID: <20231002165857.19512-2-avromanov@salutedevices.com>
+In-Reply-To: <20231002165857.19512-1-avromanov@salutedevices.com>
+References: <20231002165857.19512-1-avromanov@salutedevices.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
@@ -24,34 +26,97 @@ To: neil.armstrong@linaro.org, narmstrong@baylibre.com, sjg@google.com, lukma@de
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@salutedevices.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Hello!
+Get this from Linux 6.6-rc3.
 
-This patchset adds USB stack support for Amlogic A1 SoC's
-series. Made reset / phy / dwc3 drivers more flexible and
-added support for A1 board.
-
-Alexey Romanov (7):
-  dt-bindings: reset: add Meson A1 reset bindings
-  reset: add support for Amlogic A1 family
-  phy: get rid of raw hex values
-  phy: move clk enable/disable in init/exit
-  phy: support Amlogic A1 family
-  dwc3: add support for Amlogic A1 family
-  arch: a1: introduce USB initialization functionality
-
-Igor Prusov (1):
-  a1: clk: Add missing CLKID_USB_PHY_IN gate
-
- arch/arm/mach-meson/board-a1.c                |  89 +++++++
- drivers/clk/meson/a1.c                        |   3 +
- drivers/phy/Kconfig                           |   2 +-
- drivers/phy/meson-g12a-usb2.c                 | 233 ++++++++++++++++--
- drivers/reset/reset-meson.c                   |  42 +++-
- drivers/usb/dwc3/dwc3-meson-g12a.c            |  73 +++++-
- .../reset/amlogic,meson-a1-reset.h            |  76 ++++++
- 7 files changed, 484 insertions(+), 34 deletions(-)
+Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+---
+ .../reset/amlogic,meson-a1-reset.h            | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
 
+diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/d=
+t-bindings/reset/amlogic,meson-a1-reset.h
+new file mode 100644
+index 0000000000..2c749c655e
+--- /dev/null
++++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+@@ -0,0 +1,76 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
++ * Author: Xingyu Chen <xingyu.chen@amlogic.com>
++ *
++ * Copyright (c) 2023, SberDevices, Inc.
++ * Author: Alexey Romanov <avromanov@salutedevices.com>
++ */
++
++#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
++#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
++
++/*	RESET0					*/
++/*					0	*/
++#define RESET_AM2AXI_VAD		1
++/*					2-3	*/
++#define RESET_PSRAM			4
++#define RESET_PAD_CTRL			5
++/*					6	*/
++#define RESET_TEMP_SENSOR		7
++#define RESET_AM2AXI_DEV		8
++/*					9	*/
++#define RESET_SPICC_A			10
++#define RESET_MSR_CLK			11
++#define RESET_AUDIO			12
++#define RESET_ANALOG_CTRL		13
++#define RESET_SAR_ADC			14
++#define RESET_AUDIO_VAD			15
++#define RESET_CEC			16
++#define RESET_PWM_EF			17
++#define RESET_PWM_CD			18
++#define RESET_PWM_AB			19
++/*					20	*/
++#define RESET_IR_CTRL			21
++#define RESET_I2C_S_A			22
++/*					23	*/
++#define RESET_I2C_M_D			24
++#define RESET_I2C_M_C			25
++#define RESET_I2C_M_B			26
++#define RESET_I2C_M_A			27
++#define RESET_I2C_PROD_AHB		28
++#define RESET_I2C_PROD			29
++/*					30-31	*/
++
++/*	RESET1					*/
++#define RESET_ACODEC			32
++#define RESET_DMA			33
++#define RESET_SD_EMMC_A			34
++/*					35	*/
++#define RESET_USBCTRL			36
++/*					37	*/
++#define RESET_USBPHY			38
++/*					39-41	*/
++#define RESET_RSA			42
++#define RESET_DMC			43
++/*					44	*/
++#define RESET_IRQ_CTRL			45
++/*					46	*/
++#define RESET_NIC_VAD			47
++#define RESET_NIC_AXI			48
++#define RESET_RAMA			49
++#define RESET_RAMB			50
++/*					51-52	*/
++#define RESET_ROM			53
++#define RESET_SPIFC			54
++#define RESET_GIC			55
++#define RESET_UART_C			56
++#define RESET_UART_B			57
++#define RESET_UART_A			58
++#define RESET_OSC_RING			59
++/*					60-63	*/
++
++/*	RESET2					*/
++/*					64-95	*/
++
++#endif
 --=20
 2.25.1
 
