@@ -1,22 +1,22 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web11.87631.1696265953291300345
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
+ by mx.groups.io with SMTP id smtpd.web10.87804.1696265954007097322
  for <u-boot-amlogic@groups.io>;
  Mon, 02 Oct 2023 09:59:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8CB64100003
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 525D8120007
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1696265950;
-	bh=A0DfJv78BZAlR6ZTJr8rUFQ8KTu5C2NvgdRnuUn79fo=;
+	s=mail; t=1696265951;
+	bh=f/z1DcuYBfjZ2kNEpnuYXXkIZllyCQtrwgIaVz+WtuY=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=kZ2/iKjDo9bUU3o23dvAvb6Lpcv1CAw5dkihoNNBvkt+VW0pNsyurF/5GUD8ZEebK
-	 5EOys2ivnfCl15KjkIsqOPmoz+qeUYHtLsFjulAIuwrkjt85pgiwdfNWnUin2Z8p3Z
-	 Os4z8r8RpO6GaCFZSpM3tZfkT+jN63NDhBUh1TgmqSnFJve6dEuEJiBNorEXXBoFpY
-	 4CQ3mmlFGBfWfrBSaOQqE9nuusC2iyoMoHTVfisc3+1egMJww0TtT7EAE6SVx2KFYf
-	 F7Kz0y2v+kAQQ4AVu8JlJY8FmvPbMYaXlT/ec0IsDP4CDEX6o9v0ZaDMB+arwYKNcd
-	 cTvT03oOAnlXw==
+	b=G6XnvTIGHoInjd66MKPsQw5iNG1fyjCwfyf2vHwaRsUQSnLqOIe22pdtsOmIk37C+
+	 oYXuhsuVJVKxn2BthtFL7DvxWPMmYm5XaiHncZOPkxUDV6+VHTGuXtN5luBJxkL9eA
+	 um8IknlzS6bPqTp/dZh9Z/WdnlERY87l+dZQBy2Bc9Zricsxycppp+gEpc5DZA9uO4
+	 VjRf/KIrkN9yne42d7HGJvta1iJEyWzCb3pCd2HXzkctAgnG5so2vOVBgVP84fkTu9
+	 9jFrDzN8pjcp386Jn8Rg8PpBa3LQzybz8ak306VG3QpcwYiaFi8W3WcGeeWTjfH/m0
+	 htZ0GFO9KpMow==
 From: Alexey Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v1 7/8] dwc3: add support for Amlogic A1 family
-Date: Mon, 2 Oct 2023 19:58:51 +0300
-Message-ID: <20231002165857.19512-8-avromanov@salutedevices.com>
+Subject: [PATCH v1 8/8] arch: a1: introduce USB initialization functionality
+Date: Mon, 2 Oct 2023 19:58:52 +0300
+Message-ID: <20231002165857.19512-9-avromanov@salutedevices.com>
 In-Reply-To: <20231002165857.19512-1-avromanov@salutedevices.com>
 References: <20231002165857.19512-1-avromanov@salutedevices.com>
 MIME-Version: 1.0
@@ -26,192 +26,125 @@ To: neil.armstrong@linaro.org, narmstrong@baylibre.com, sjg@google.com, lukma@de
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@salutedevices.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-Now the driver supports also A1 phy layer.
+This is entrypoint for USB stack initialization. Function
+board_usb_init will be called from cmd/fastboot.c code.
 
 Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
 ---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 73 ++++++++++++++++++++++++++----
- 1 file changed, 63 insertions(+), 10 deletions(-)
+ arch/arm/mach-meson/board-a1.c | 89 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-mes=
-on-g12a.c
-index 90418ddc1d..550e6682a2 100644
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -28,6 +28,7 @@
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/compat.h>
-+#include <dt-bindings/clock/amlogic,a1-peripherals-clkc.h>
+diff --git a/arch/arm/mach-meson/board-a1.c b/arch/arm/mach-meson/board-a1.=
+c
+index 967bb67182..781d5cfb33 100644
+--- a/arch/arm/mach-meson/board-a1.c
++++ b/arch/arm/mach-meson/board-a1.c
+@@ -4,12 +4,17 @@
+  */
 =20
- /* USB2 Ports Control Registers */
+ #include <common.h>
++#include <dm.h>
++#include <usb.h>
+ #include <asm/arch/a1.h>
+ #include <asm/arch/boot.h>
+ #include <asm/armv8/mmu.h>
+ #include <asm/io.h>
+ #include <linux/compiler.h>
+ #include <linux/sizes.h>
++#include <linux/usb/otg.h>
++#include <asm/arch/usb.h>
++#include <usb/dwc2_udc.h>
 =20
-@@ -102,10 +103,22 @@ enum {
- 	PHY_COUNT,
- };
-=20
--static const char *phy_names[PHY_COUNT] =3D {
-+static const char *const dwc3_meson_g12a_phy_names[] =3D {
- 	"usb2-phy0", "usb2-phy1", "usb3-phy0",
- };
-=20
-+static const char *const dwc3_meson_a1_phy_names[] =3D {
-+	"usb2-phy0", "usb2-phy1"
-+};
-+
-+struct dwc3_meson_g12a;
-+
-+struct dwc3_meson_g12a_drvdata {
-+	const char *const *phy_names;
-+	unsigned int phy_cnt;
-+	int (*clk_init)(struct dwc3_meson_g12a *priv);
-+};
-+
- struct dwc3_meson_g12a {
- 	struct udevice		*dev;
- 	struct regmap           *regmap;
-@@ -119,6 +132,7 @@ struct dwc3_meson_g12a {
- #if CONFIG_IS_ENABLED(DM_REGULATOR)
- 	struct udevice		*vbus_supply;
- #endif
-+	struct dwc3_meson_g12a_drvdata *drvdata;
- };
-=20
- #define U2P_REG_SIZE						0x20
-@@ -293,10 +307,11 @@ int dwc3_meson_g12a_force_mode(struct udevice *dev, e=
-num usb_dr_mode mode)
-=20
- static int dwc3_meson_g12a_get_phys(struct dwc3_meson_g12a *priv)
+ phys_size_t get_effective_memsize(void)
  {
-+	struct dwc3_meson_g12a_drvdata *data =3D priv->drvdata;
- 	int i, ret;
+@@ -57,3 +62,87 @@ static struct mm_region a1_mem_map[] =3D {
+ };
 =20
--	for (i =3D 0 ; i < PHY_COUNT ; ++i) {
--		ret =3D generic_phy_get_by_name(priv->dev, phy_names[i],
-+	for (i =3D 0 ; i < data->phy_cnt; ++i) {
-+		ret =3D generic_phy_get_by_name(priv->dev, data->phy_names[i],
- 					      &priv->phys[i]);
- 		if (ret =3D=3D -ENOENT || ret =3D=3D -ENODATA)
- 			continue;
-@@ -354,18 +369,36 @@ static int dwc3_meson_g12a_clk_init(struct dwc3_meson=
-_g12a *priv)
- 	return 0;
- }
-=20
-+static int dwc3_meson_a1_clk_init(struct dwc3_meson_g12a *priv)
+ struct mm_region *mem_map =3D a1_mem_map;
++
++#if CONFIG_IS_ENABLED(USB_DWC3_MESON_G12A) && \
++	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
++
++static struct dwc2_plat_otg_data meson_a1_dwc2_data;
++
++int board_usb_init(int index, enum usb_init_type init)
 +{
++	int node, dwc2_node;
++	const void *blob =3D gd->fdt_blob;
++	struct udevice *dev;
 +	int ret;
 +
-+	ret =3D clk_get_by_name(priv->dev, "usb_bus", &priv->clk);
-+	if (ret)
-+		return ret;
++	node =3D fdt_node_offset_by_compatible(blob, -1,
++					     "amlogic,meson-a1-usb-ctrl");
++	if (node < 0) {
++		pr_err("not found usb-control node\n");
++		return -ENODEV;
++	}
 +
-+	ret =3D clk_enable(&priv->clk);
-+	if (ret)
-+		return ret;
++	if (!fdtdec_get_is_enabled(blob, node)) {
++		pr_err("usb is disabled in the device tree\n");
++		return -ENODEV;
++	}
 +
-+	return 0;
++	ret =3D uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
++	if (ret) {
++		pr_err("not found usb-control device\n");
++		return ret;
++	}
++
++	dwc2_node =3D fdt_node_offset_by_compatible(blob, node,
++						  "amlogic,meson-a1-usb");
++	if (dwc2_node < 0) {
++		pr_err("not found dwc2 node\n");
++		return -ENODEV;
++	}
++
++	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
++		pr_err("dwc2 is disabled in the device tree\n");
++		return -ENODEV;
++	}
++
++	meson_a1_dwc2_data.regs_otg =3D fdtdec_get_addr(blob, dwc2_node, "reg");
++	if (meson_a1_dwc2_data.regs_otg =3D=3D FDT_ADDR_T_NONE) {
++		pr_err("can't get base address\n");
++		return -ENODATA;
++	}
++
++	meson_a1_dwc2_data.rx_fifo_sz =3D fdtdec_get_int(blob, dwc2_node,
++						"g-rx-fifo-size", 0);
++	if (meson_a1_dwc2_data.rx_fifo_sz < 0) {
++		pr_err("failed to get g-rx-fifo-size value\n");
++		return -ENODATA;
++	}
++
++	meson_a1_dwc2_data.np_tx_fifo_sz =3D fdtdec_get_int(blob, dwc2_node,
++						"g-np-tx-fifo-size", 0);
++	if (meson_a1_dwc2_data.np_tx_fifo_sz < 0) {
++		pr_err("failed to get g-np-tx-fifo-size value\n");
++		return -ENODATA;
++	}
++
++	meson_a1_dwc2_data.tx_fifo_sz =3D fdtdec_get_int(blob, dwc2_node,
++						"g-tx-fifo-size", 0);
++	if (meson_a1_dwc2_data.tx_fifo_sz < 0) {
++		pr_err("failed to get g-tx-fifo-size value\n");
++		return -ENODATA;
++	}
++
++	ret =3D dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_PERIPHERAL);
++	if (ret) {
++		pr_err("failed to force usb mode to peripheral\n");
++		return ret;
++	}
++
++	return dwc2_udc_probe(&meson_a1_dwc2_data);
 +}
 +
- static int dwc3_meson_g12a_probe(struct udevice *dev)
- {
- 	struct dwc3_meson_g12a *priv =3D dev_get_plat(dev);
-+	struct dwc3_meson_g12a_drvdata *data =3D
-+		(struct dwc3_meson_g12a_drvdata *)dev_get_driver_data(dev);
- 	int ret, i;
-=20
-+	priv->drvdata =3D data;
- 	priv->dev =3D dev;
-=20
- 	ret =3D regmap_init_mem(dev_ofnode(dev), &priv->regmap);
- 	if (ret)
- 		return ret;
-=20
--	ret =3D dwc3_meson_g12a_clk_init(priv);
-+	ret =3D data->clk_init(priv);
- 	if (ret)
- 		return ret;
-=20
-@@ -398,7 +431,7 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
- 	if (ret)
- 		return ret;
-=20
--	for (i =3D 0 ; i < PHY_COUNT ; ++i) {
-+	for (i =3D 0 ; i < data->phy_cnt; ++i) {
- 		if (!priv->phys[i].dev)
- 			continue;
-=20
-@@ -407,7 +440,7 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
- 			goto err_phy_init;
- 	}
-=20
--	for (i =3D 0; i < PHY_COUNT; ++i) {
-+	for (i =3D 0; i < data->phy_cnt; ++i) {
- 		if (!priv->phys[i].dev)
- 			continue;
-=20
-@@ -419,7 +452,7 @@ static int dwc3_meson_g12a_probe(struct udevice *dev)
- 	return 0;
-=20
- err_phy_init:
--	for (i =3D 0 ; i < PHY_COUNT ; ++i) {
-+	for (i =3D 0 ; i < data->phy_cnt ; ++i) {
- 		if (!priv->phys[i].dev)
- 			continue;
-=20
-@@ -432,20 +465,21 @@ err_phy_init:
- static int dwc3_meson_g12a_remove(struct udevice *dev)
- {
- 	struct dwc3_meson_g12a *priv =3D dev_get_plat(dev);
-+	struct dwc3_meson_g12a_drvdata *data =3D priv->drvdata;
- 	int i;
-=20
- 	reset_release_all(&priv->reset, 1);
-=20
- 	clk_release_all(&priv->clk, 1);
-=20
--	for (i =3D 0; i < PHY_COUNT; ++i) {
-+	for (i =3D 0; i < data->phy_cnt; ++i) {
- 		if (!priv->phys[i].dev)
- 			continue;
-=20
- 		 generic_phy_power_off(&priv->phys[i]);
- 	}
-=20
--	for (i =3D 0 ; i < PHY_COUNT ; ++i) {
-+	for (i =3D 0 ; i < data->phy_cnt; ++i) {
- 		if (!priv->phys[i].dev)
- 			continue;
-=20
-@@ -455,8 +489,27 @@ static int dwc3_meson_g12a_remove(struct udevice *dev)
- 	return dm_scan_fdt_dev(dev);
- }
-=20
-+static const struct dwc3_meson_g12a_drvdata meson_g12a_drvdata =3D {
-+	.phy_names =3D dwc3_meson_g12a_phy_names,
-+	.phy_cnt =3D ARRAY_SIZE(dwc3_meson_g12a_phy_names),
-+	.clk_init =3D dwc3_meson_g12a_clk_init,
-+};
-+
-+static const struct dwc3_meson_g12a_drvdata meson_a1_drvdata =3D {
-+	.phy_names =3D dwc3_meson_a1_phy_names,
-+	.phy_cnt =3D ARRAY_SIZE(dwc3_meson_a1_phy_names),
-+	.clk_init =3D dwc3_meson_a1_clk_init,
-+};
-+
- static const struct udevice_id dwc3_meson_g12a_ids[] =3D {
--	{ .compatible =3D "amlogic,meson-g12a-usb-ctrl" },
-+	{
-+		.compatible =3D "amlogic,meson-g12a-usb-ctrl",
-+		.data =3D (ulong)&meson_g12a_drvdata,
-+	},
-+	{
-+		.compatible =3D "amlogic,meson-a1-usb-ctrl",
-+		.data =3D (ulong)&meson_a1_drvdata,
-+	},
- 	{ }
- };
-=20
++int board_usb_cleanup(int index, enum usb_init_type init)
++{
++	return 0;
++}
++#endif
 --=20
 2.25.1
 
