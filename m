@@ -1,90 +1,59 @@
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web11.105635.1696332537852949242
+ by mx.groups.io with SMTP id smtpd.web10.106046.1696332538301999880
  for <u-boot-amlogic@groups.io>;
  Tue, 03 Oct 2023 04:28:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru CB1D6100007
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 383D510000C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1696332534;
-	bh=f6ZnH3Dtz73Vojy7+t1qCQ1MxL4DKJuwRa7GZWGCArE=;
+	s=mail; t=1696332536;
+	bh=UR0yEmUKLSaMRb9bayS9HVWVLhOqnWt3i4gAEsEyhNA=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=dw8vVuATW73tfHTKVQI6I44G4+U8HPxdEX1uX/HqFg7blptxsR7Y5worjl3HgMTuZ
-	 I2lifW/+L5MPuJb+iK52K51+auBDQJgmJ0hpZFphFwZxcLg4SV2gzPECOq11swV4u4
-	 kmY5jCTvSfBBZFQrKHgxl3xKkFiaGCnVZ+/h12PtvNj1m3ULIMzGr+LZ0EMNnwYQle
-	 fvMrVy/zd1aA3eKaggBs1W6mh+ScKbhNXX6GH+QsjaSB5rurBX7CM2a0Hvz1STw/TV
-	 OxATtMfD5FlIXn/W5v2jxvgp1cC5Kp0cHf5S4hxQpm8nEI674RxA3zQhvKqDqAoxhH
-	 40C+Uzqap4zng==
+	b=r0LsciQik8C50vZQmiSHzVrGQEp6mqV/Huo5fddMqc1HCYA8zzllWJJ6+bX1v1lnj
+	 l29nl8hgEYpjtg9LC8T0avYYlbtoFZjt0TW5R9HCplZvQkKkUYjSWql6aWFyTiLUyH
+	 jo9eYWodkLtoT4GkaI6KRE6xFbhGMlAPPcgJ6ja9jo377AeNCU6jllqfxkhnGJPYd8
+	 dIbCLmUOgdZYyWk4G3TjbFwauEZ6mbHtLbJ91aALuHh6+bnPgdgSnLzRMBqlfsJ5sN
+	 x16PMrhHj5N8h8i8CkWLvKxGTAEmdwudol5Z9VgVejFTr8SWXeKDXFMcMgzmtLAsCS
+	 i8z4UIOIeS8Fw==
 From: Alexey Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v2 4/8] phy: move clk enable/disable in init/exit
-Date: Tue, 3 Oct 2023 14:28:30 +0300
-Message-ID: <20231003112838.41503-5-avromanov@salutedevices.com>
+Subject: [PATCH v2 6/8] a1: clk: Add missing USB_PHY_IN and USB_PHY gates
+Date: Tue, 3 Oct 2023 14:28:32 +0300
+Message-ID: <20231003112838.41503-7-avromanov@salutedevices.com>
 In-Reply-To: <20231003112838.41503-1-avromanov@salutedevices.com>
 References: <20231003112838.41503-1-avromanov@salutedevices.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 To: neil.armstrong@linaro.org, narmstrong@baylibre.com, sjg@google.com, lukma@denx.de, seanga2@gmail.com, marex@denx.de
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@salutedevices.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Igor Prusov <ivprusov@salutedevices.com>, Alexey Romanov <avromanov@salutedevices.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-It is better to place clk_enable() in phy_meson_g12a_usb2_init()
-and clk_disable() in phy_meson_g12a_usb2_exit().
+From: Igor Prusov <ivprusov@salutedevices.com>
 
-For more detailed information, please see comments in the review of
-a similar driver in the Linux Kernel:
+We use this clocks in dwc3 driver.
 
-https://lore.kernel.org/all/CAFBinCCEhobbyKHuKDWzTYCQWgNT1-e8=3D7hMhq1mvT6C=
-uEOjGw@mail.gmail.com/
-
+Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
 Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/phy/meson-g12a-usb2.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/clk/meson/a1.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/phy/meson-g12a-usb2.c b/drivers/phy/meson-g12a-usb2.c
-index 2e366b16ae..7b028784a0 100644
---- a/drivers/phy/meson-g12a-usb2.c
-+++ b/drivers/phy/meson-g12a-usb2.c
-@@ -160,6 +160,14 @@ static int phy_meson_g12a_usb2_init(struct phy *phy)
- 	struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
- 	int ret;
-=20
-+#if CONFIG_IS_ENABLED(CLK)
-+	ret =3D clk_enable(&priv->clk);
-+	if (ret && ret !=3D -ENOSYS && ret !=3D -ENOTSUPP) {
-+		pr_err("failed to enable PHY clock\n");
-+		return ret;
-+	}
-+#endif
-+
- 	ret =3D reset_assert(&priv->reset);
- 	udelay(1);
- 	ret |=3D reset_deassert(&priv->reset);
-@@ -252,6 +260,10 @@ static int phy_meson_g12a_usb2_exit(struct phy *phy)
- 	struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
- 	int ret;
-=20
-+#if CONFIG_IS_ENABLED(CLK)
-+	clk_disable(&priv->clk);
-+#endif
-+
- 	ret =3D reset_assert(&priv->reset);
- 	if (ret)
- 		return ret;
-@@ -289,13 +301,6 @@ int meson_g12a_usb2_phy_probe(struct udevice *dev)
- 	ret =3D clk_get_by_index(dev, 0, &priv->clk);
- 	if (ret < 0)
- 		return ret;
--
--	ret =3D clk_enable(&priv->clk);
--	if (ret && ret !=3D -ENOSYS && ret !=3D -ENOTSUPP) {
--		pr_err("failed to enable PHY clock\n");
--		clk_free(&priv->clk);
--		return ret;
--	}
- #endif
-=20
- 	return 0;
+diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+index 3aec42f33b..1075ba7333 100644
+--- a/drivers/clk/meson/a1.c
++++ b/drivers/clk/meson/a1.c
+@@ -238,6 +238,12 @@ static const struct meson_clk_info *meson_clocks[] =3D=
+ {
+ 	[CLKID_FIXPLL_IN] =3D CLK_GATE("fixpll_in", A1_SYS_OSCIN_CTRL, 1,
+ 		EXTERNAL_XTAL
+ 	),
++	[CLKID_USB_PHY_IN] =3D CLK_GATE("usb_phy_in", A1_SYS_OSCIN_CTRL, 2,
++		EXTERNAL_XTAL
++	),
++	[CLKID_USB_PHY] =3D CLK_GATE("usb_phy", A1_SYS_CLK_EN0, 27,
++		CLKID_SYS
++	),
+ 	[CLKID_SARADC] =3D CLK_GATE("saradc", A1_SAR_ADC_CLK_CTR, 8,
+ 		-ENOENT
+ 	),
 --=20
 2.25.1
 
