@@ -1,52 +1,44 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web11.105638.1696332539705006459
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
+ by mx.groups.io with SMTP id smtpd.web10.1355.1696364977224772603
  for <u-boot-amlogic@groups.io>;
- Tue, 03 Oct 2023 04:29:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B5711100006
+ Tue, 03 Oct 2023 13:29:38 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 156DB120006
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1696332537;
-	bh=3F4Uk2alvwuEN4Hwjp7PJnAPyi65bY3vqxP9QG8HS4Q=;
+	s=mail; t=1696364974;
+	bh=s6jeEFzjsBh+weEvalez4WeFgPIWUdsftv18ab+XHc8=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=gSmSRuWOOa1JcqP60IP+qauKzERBpMr7O7zdn/QmJJQeViQ3IGRIUYJrjKXO22I18
-	 BJN+d2PiRLh8HsPilSYCpnADhr1oyIw2CyE2keLpPWfIwHjV4xmFhFgAGA6CgJvNzx
-	 Ws/vJHE51Wr5SPMk0j7PCOgDnuOVzFHllQY5BVJT/eM01RnDfH4foMl9z0mRSbTSEr
-	 IEhJkB+jGz3CCm1Zib4dn3NjSi9ReKgXCk906d2FunwunXP7mlpjESH3GgGlS0Sxh1
-	 +x3aSVhDh4cxgy8xHPQT3BprKfM/lAcRcnO9Npyk+SQWXa4eWa9uLq22pM7//ywR1o
-	 t+NwXCWDNWdmg==
-From: Alexey Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v2 8/8] ad401: enable USB stack
-Date: Tue, 3 Oct 2023 14:28:34 +0300
-Message-ID: <20231003112838.41503-9-avromanov@salutedevices.com>
-In-Reply-To: <20231003112838.41503-1-avromanov@salutedevices.com>
-References: <20231003112838.41503-1-avromanov@salutedevices.com>
+	b=m901MLbyaVhVWTIgDkOa8Mhq8ogI7oQdGLvxMAXn6k/sY/cT7pH3jeml4897BX9i+
+	 Hx4DOFjmf+Lrc7EFYb5o9+QRPZbF7Cd2ynpznJ/mlb50Q/pfU1txM4XA3LcfPII1OR
+	 xQuWzmKmYmDm0BrH02EtvEz24Zby46wFZgNV+eG2dukOZ3hGlcmKWqgCa77w9LQ6Oh
+	 ofd744akDR0Blr1pE79JvEHmFQ4EYcCGtfvQDnm7e2k9l9w1CIThSLPeecd3064ktE
+	 AVSW+AG1UEBQvFTryuTyhKE4maFY7O6D7iVFSTyne3Y6cvSGI6LXRr3S+1pU/Nz8QE
+	 btiUesTRkE7Xg==
+From: "Igor Prusov" <ivprusov@salutedevices.com>
+Subject: [PATCH v1 0/2] ARM: amlogic: Add A1 SPIFC support
+Date: Tue, 3 Oct 2023 23:29:06 +0300
+Message-ID: <20231003202908.16654-1-ivprusov@salutedevices.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
-To: neil.armstrong@linaro.org, narmstrong@baylibre.com, sjg@google.com, lukma@denx.de, seanga2@gmail.com, marex@denx.de
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@salutedevices.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: prusovigor@gmail.com, kernel@sberdevices.ru, Igor Prusov <ivprusov@salutedevices.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-Currently we have all drivers for use USB stack on A1-series
-SoC's. Let's enable USB options for the Amlogic AD401 reference A1
-SoC board.
+A1 family boards have new version of SPIFC controller, that is
+incompatible with meson_spifc driver. This series ports A1 SPIFC driver
+from Linux and enables it for ad401 board.
 
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
----
- configs/ad401_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+Igor Prusov (2):
+  spi: add support for Amlogic A1 SPI Flash Controller
+  ARM: amlogic: ad401: enable SPIFC
 
-diff --git a/configs/ad401_defconfig b/configs/ad401_defconfig
-index 529e553bac..b02ff47b7a 100644
---- a/configs/ad401_defconfig
-+++ b/configs/ad401_defconfig
-@@ -51,4 +51,7 @@ CONFIG_DEBUG_UART_SKIP_INIT=3Dy
- CONFIG_MESON_SERIAL=3Dy
- CONFIG_SPI=3Dy
- CONFIG_DM_SPI=3Dy
-+CONFIG_USB=3Dy
-+CONFIG_DM_USB_GADGET=3Dy
-+CONFIG_USB_GADGET=3Dy
- CONFIG_WDT=3Dy
+ configs/ad401_defconfig      |   1 +
+ drivers/spi/Kconfig          |   8 +
+ drivers/spi/Makefile         |   1 +
+ drivers/spi/meson_spifc_a1.c | 384 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 394 insertions(+)
+ create mode 100644 drivers/spi/meson_spifc_a1.c
+
 --=20
-2.25.1
+2.34.1
 
