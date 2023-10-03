@@ -1,24 +1,22 @@
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web10.87804.1696265954007097322
+ by mx.groups.io with SMTP id smtpd.web10.106039.1696332530598238217
  for <u-boot-amlogic@groups.io>;
- Mon, 02 Oct 2023 09:59:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 525D8120007
+ Tue, 03 Oct 2023 04:28:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru C96A1120006
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1696265951;
-	bh=f/z1DcuYBfjZ2kNEpnuYXXkIZllyCQtrwgIaVz+WtuY=;
+	s=mail; t=1696332525;
+	bh=Yvd+CKPMs6O6ncjOg65VrHCqjzGUyCaE29/EZthVP2M=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=G6XnvTIGHoInjd66MKPsQw5iNG1fyjCwfyf2vHwaRsUQSnLqOIe22pdtsOmIk37C+
-	 oYXuhsuVJVKxn2BthtFL7DvxWPMmYm5XaiHncZOPkxUDV6+VHTGuXtN5luBJxkL9eA
-	 um8IknlzS6bPqTp/dZh9Z/WdnlERY87l+dZQBy2Bc9Zricsxycppp+gEpc5DZA9uO4
-	 VjRf/KIrkN9yne42d7HGJvta1iJEyWzCb3pCd2HXzkctAgnG5so2vOVBgVP84fkTu9
-	 9jFrDzN8pjcp386Jn8Rg8PpBa3LQzybz8ak306VG3QpcwYiaFi8W3WcGeeWTjfH/m0
-	 htZ0GFO9KpMow==
+	b=rYoVvvnxdHy3PThHH8hvX9jQlIgW77WFRQqoXXhMkWxLdlFzuy4Br/VNNI139zULQ
+	 UIRbWWnytyx+siMJYstUlyJw5bUNfwRioMqc4Z+RETCl+1Z7FU2lYwq+mdYnCj+RKl
+	 DVa34nz2g/Q/HvoXcG+MAARhejvJFwPXpki6qc94afw1ddHEJVrGT1RXDDBdbr/AD5
+	 lFT3+AGX/96PL0DbGbo9W+PTmQIz4JKt0LMNoajyOj0Svn+95hB74CDtJnL+ye4haf
+	 VIQXHAuAm1pqxnEmeVcJFlTb/trsXThNSLqQTKv0KiU4ujKGIejGs3pOA2V8YdA6cQ
+	 lgY+UcahmTQmg==
 From: Alexey Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v1 8/8] arch: a1: introduce USB initialization functionality
-Date: Mon, 2 Oct 2023 19:58:52 +0300
-Message-ID: <20231002165857.19512-9-avromanov@salutedevices.com>
-In-Reply-To: <20231002165857.19512-1-avromanov@salutedevices.com>
-References: <20231002165857.19512-1-avromanov@salutedevices.com>
+Subject: [PATCH v2 0/8] Support USB for Meson A1
+Date: Tue, 3 Oct 2023 14:28:26 +0300
+Message-ID: <20231003112838.41503-1-avromanov@salutedevices.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
@@ -26,125 +24,44 @@ To: neil.armstrong@linaro.org, narmstrong@baylibre.com, sjg@google.com, lukma@de
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@salutedevices.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-This is entrypoint for USB stack initialization. Function
-board_usb_init will be called from cmd/fastboot.c code.
+Hello!
 
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
----
- arch/arm/mach-meson/board-a1.c | 89 ++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+This patchset adds USB stack support for Amlogic A1 SoC's
+series. Made reset / phy / dwc3 drivers more flexible and
+added support for A1 board.
 
-diff --git a/arch/arm/mach-meson/board-a1.c b/arch/arm/mach-meson/board-a1.=
-c
-index 967bb67182..781d5cfb33 100644
---- a/arch/arm/mach-meson/board-a1.c
-+++ b/arch/arm/mach-meson/board-a1.c
-@@ -4,12 +4,17 @@
-  */
-=20
- #include <common.h>
-+#include <dm.h>
-+#include <usb.h>
- #include <asm/arch/a1.h>
- #include <asm/arch/boot.h>
- #include <asm/armv8/mmu.h>
- #include <asm/io.h>
- #include <linux/compiler.h>
- #include <linux/sizes.h>
-+#include <linux/usb/otg.h>
-+#include <asm/arch/usb.h>
-+#include <usb/dwc2_udc.h>
-=20
- phys_size_t get_effective_memsize(void)
- {
-@@ -57,3 +62,87 @@ static struct mm_region a1_mem_map[] =3D {
- };
-=20
- struct mm_region *mem_map =3D a1_mem_map;
-+
-+#if CONFIG_IS_ENABLED(USB_DWC3_MESON_G12A) && \
-+	CONFIG_IS_ENABLED(USB_GADGET_DWC2_OTG)
-+
-+static struct dwc2_plat_otg_data meson_a1_dwc2_data;
-+
-+int board_usb_init(int index, enum usb_init_type init)
-+{
-+	int node, dwc2_node;
-+	const void *blob =3D gd->fdt_blob;
-+	struct udevice *dev;
-+	int ret;
-+
-+	node =3D fdt_node_offset_by_compatible(blob, -1,
-+					     "amlogic,meson-a1-usb-ctrl");
-+	if (node < 0) {
-+		pr_err("not found usb-control node\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!fdtdec_get_is_enabled(blob, node)) {
-+		pr_err("usb is disabled in the device tree\n");
-+		return -ENODEV;
-+	}
-+
-+	ret =3D uclass_get_device_by_of_offset(UCLASS_SIMPLE_BUS, node, &dev);
-+	if (ret) {
-+		pr_err("not found usb-control device\n");
-+		return ret;
-+	}
-+
-+	dwc2_node =3D fdt_node_offset_by_compatible(blob, node,
-+						  "amlogic,meson-a1-usb");
-+	if (dwc2_node < 0) {
-+		pr_err("not found dwc2 node\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!fdtdec_get_is_enabled(blob, dwc2_node)) {
-+		pr_err("dwc2 is disabled in the device tree\n");
-+		return -ENODEV;
-+	}
-+
-+	meson_a1_dwc2_data.regs_otg =3D fdtdec_get_addr(blob, dwc2_node, "reg");
-+	if (meson_a1_dwc2_data.regs_otg =3D=3D FDT_ADDR_T_NONE) {
-+		pr_err("can't get base address\n");
-+		return -ENODATA;
-+	}
-+
-+	meson_a1_dwc2_data.rx_fifo_sz =3D fdtdec_get_int(blob, dwc2_node,
-+						"g-rx-fifo-size", 0);
-+	if (meson_a1_dwc2_data.rx_fifo_sz < 0) {
-+		pr_err("failed to get g-rx-fifo-size value\n");
-+		return -ENODATA;
-+	}
-+
-+	meson_a1_dwc2_data.np_tx_fifo_sz =3D fdtdec_get_int(blob, dwc2_node,
-+						"g-np-tx-fifo-size", 0);
-+	if (meson_a1_dwc2_data.np_tx_fifo_sz < 0) {
-+		pr_err("failed to get g-np-tx-fifo-size value\n");
-+		return -ENODATA;
-+	}
-+
-+	meson_a1_dwc2_data.tx_fifo_sz =3D fdtdec_get_int(blob, dwc2_node,
-+						"g-tx-fifo-size", 0);
-+	if (meson_a1_dwc2_data.tx_fifo_sz < 0) {
-+		pr_err("failed to get g-tx-fifo-size value\n");
-+		return -ENODATA;
-+	}
-+
-+	ret =3D dwc3_meson_g12a_force_mode(dev, USB_DR_MODE_PERIPHERAL);
-+	if (ret) {
-+		pr_err("failed to force usb mode to peripheral\n");
-+		return ret;
-+	}
-+
-+	return dwc2_udc_probe(&meson_a1_dwc2_data);
-+}
-+
-+int board_usb_cleanup(int index, enum usb_init_type init)
-+{
-+	return 0;
-+}
-+#endif
+V2:
+
+- Made power domain for PHY optional.
+- Add missing CLKID_USB_PHY gate.
+- Drop patch with USB stack initialization in board-a1.c.
+Instead of, enable CONFIG_DM_USB_GADGET for AD401 board.
+- Support A1 in g12a_child_pre_probe/post_remove functions
+in dwc3 driver.
+
+
+Alexey Romanov (7):
+  dt-bindings: reset: add Meson A1 reset bindings
+  reset: add support for Amlogic A1 family
+  phy: get rid of raw hex values
+  phy: move clk enable/disable in init/exit
+  phy: support Amlogic A1 family
+  dwc3: add support for Amlogic A1 family
+  ad401: enable USB stack
+
+Igor Prusov (1):
+  a1: clk: Add missing USB_PHY_IN and USB_PHY gates
+
+ configs/ad401_defconfig                       |   3 +
+ drivers/clk/meson/a1.c                        |   6 +
+ drivers/phy/Kconfig                           |   2 +-
+ drivers/phy/meson-g12a-usb2.c                 | 235 ++++++++++++++++--
+ drivers/reset/reset-meson.c                   |  42 +++-
+ drivers/usb/dwc3/dwc3-meson-g12a.c            |  73 +++++-
+ .../reset/amlogic,meson-a1-reset.h            |  76 ++++++
+ 7 files changed, 403 insertions(+), 34 deletions(-)
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+
 --=20
 2.25.1
 
