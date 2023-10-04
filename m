@@ -1,60 +1,58 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.107703.1696339270437309119
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.14254.1696411532611726040
  for <u-boot-amlogic@groups.io>;
- Tue, 03 Oct 2023 06:21:10 -0700
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-32487efc319so948347f8f.1
-        for <u-boot-amlogic@groups.io>; Tue, 03 Oct 2023 06:21:10 -0700 (PDT)
+ Wed, 04 Oct 2023 02:25:32 -0700
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3248ac76acbso1749835f8f.1
+        for <u-boot-amlogic@groups.io>; Wed, 04 Oct 2023 02:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696339269; x=1696944069; darn=groups.io;
+        d=linaro.org; s=google; t=1696411531; x=1697016331; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KK8nmRmNQygjjViCiLRnGglt+F9y0kDV4bmr3SV9+Fk=;
-        b=MaDNQHtHJRMjVJpJQpsIhuTS0d88MUiGKWFiX2PIO8AeA1dbSX31kl7WZ1nOZA7G+8
-         umh3r7hgS+a2DgN7m4FUte0dV1SSL1fHeoY+/pRBupGGvE1c223avqPojCD93AAHz7w6
-         xXbR6xFWnvbIdZ9hjEHq9QTIqsztc9Zf4OzjYIBwq8rai1qwqioJ8fy2j6/KpnTQTScY
-         tTXQUs80e1YWRNbJKKfOJEMCuax3Tjwu+pekiYR9RfHeMfyg+rYdarAnztJ2URMfMHd+
-         Ugtmf4auTsiCJh0u/BCKM7rpswXwdR6W1blv8+qkFqXh48GQMnTJd71lPJYxVWtwanGK
-         2PVg==
+        bh=GFdv021Rizo0irSmbiVZ2+j5AStRjh0n86anmc7BRps=;
+        b=UOY7d75H4IeUaShr4EsxZl/T31LnzE/8yZ72ppH9CVjOpW8HSBfsV9NuG74TuoEBU+
+         Ga99jp97sLir5UZFKsNemOLuaGJkDO395jMn8yd5C4VYIOIbdUhHryfwqLrX5PijXXjp
+         WYxwExDNDcRVdNyK/lQCyIVWssWUHT/8qsIrJgZTt0zB8YtFQT6m0CLyJuMmHt/zzDh5
+         E3tuAZiF5vCLetTt7UYRNYdSjyyax/UVWJm1U7aQXSXRob4yRMamgBiu5pBBz5U6/GBs
+         uc7/JXnIcNnLL6/s0uGJn+wLTDD52lG/PsEKmQKaSFAvJk2amybbYpWkcFgrawpdwkph
+         7r/w==
 Return-Path: <neil.armstrong@linaro.org>
-Message-ID: <e8f12d8c-aa70-45e9-b7f1-29840110b356@linaro.org>
-Date: Tue, 3 Oct 2023 15:21:07 +0200
+Message-ID: <63ee9c84-dfcd-4752-b51d-9ca9d313734f@linaro.org>
+Date: Wed, 4 Oct 2023 11:25:29 +0200
 MIME-Version: 1.0
 From: "Neil Armstrong" <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 8/8] ad401: enable USB stack
-References: <20231003112838.41503-1-avromanov@salutedevices.com>
- <20231003112838.41503-9-avromanov@salutedevices.com>
-In-Reply-To: <20231003112838.41503-9-avromanov@salutedevices.com>
+Subject: Re: [PATCH v1 2/2] ARM: amlogic: ad401: enable SPIFC
+References: <20231003202908.16654-1-ivprusov@salutedevices.com>
+ <20231003202908.16654-3-ivprusov@salutedevices.com>
+In-Reply-To: <20231003202908.16654-3-ivprusov@salutedevices.com>
 Content-Language: en-US, fr
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-To: Alexey Romanov <avromanov@salutedevices.com>, narmstrong@baylibre.com, sjg@google.com, lukma@denx.de, seanga2@gmail.com, marex@denx.de
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru
+To: Igor Prusov <ivprusov@salutedevices.com>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: prusovigor@gmail.com, kernel@sberdevices.ru, Igor Prusov <ivprusov@sberdevices.ru>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
 List-ID: <u-boot-amlogic@groups.io>
 
-On 03/10/2023 13:28, Alexey Romanov wrote:
-> Currently we have all drivers for use USB stack on A1-series
-> SoC's. Let's enable USB options for the Amlogic AD401 reference A1
-> SoC board.
+On 03/10/2023 22:29, Igor Prusov wrote:
+> From: Igor Prusov <ivprusov@sberdevices.ru>
 > 
-> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> Enable Amlogic A1 SPI FLash Controller support.
+> 
+> Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
 > ---
->   configs/ad401_defconfig | 3 +++
->   1 file changed, 3 insertions(+)
+>   configs/ad401_defconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
 > diff --git a/configs/ad401_defconfig b/configs/ad401_defconfig
-> index 529e553bac..b02ff47b7a 100644
+> index 31752cc7f5..9a88e20a6a 100644
 > --- a/configs/ad401_defconfig
 > +++ b/configs/ad401_defconfig
-> @@ -51,4 +51,7 @@ CONFIG_DEBUG_UART_SKIP_INIT=y
+> @@ -51,4 +51,5 @@ CONFIG_DEBUG_UART_SKIP_INIT=y
 >   CONFIG_MESON_SERIAL=y
 >   CONFIG_SPI=y
 >   CONFIG_DM_SPI=y
-> +CONFIG_USB=y
-> +CONFIG_DM_USB_GADGET=y
-> +CONFIG_USB_GADGET=y
+> +CONFIG_MESON_SPIFC_A1=y
 >   CONFIG_WDT=y
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
