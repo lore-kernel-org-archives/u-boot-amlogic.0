@@ -1,90 +1,69 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web11.11087.1696496099051198233
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web10.13882.1696508874418319454
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Oct 2023 01:54:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6EB5212000D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1696496091;
-	bh=PAkrasm5+Fo1/+bC4ligWBrZq+1j4l1wgbERXnvEE7Y=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=sNPFHu+5U/a5lb8d6+L6gVz/7Go5zSWuNiqfpOGSBQ+Hxynb27pyr5JfhtwoeHZYV
-	 l+K2bCA4NMbxMUpLzRGp3TZGkkHOm5GJsbBw659mhiyfqjhw6NFmFDR0O1V3PBg4af
-	 hh7dru/YyN4FYzQyzyJO4ASCtXDex7CU6nX5Xf9KOHkDSYwi/TJHu7rPj6ybUDDFDA
-	 jzgr3UvGLX9NbXt6CTi6lR915x8YuBnjVZD77lkeUeyalNw0BZpJ7U416g+lhPApNp
-	 M0sURHIw/QAWvm2K/qekQVLH4fSvShayml770Z3JNcYh6OsU5cpNptqRHyZWNNJoZR
-	 ZM1Zqyy0ay9qA==
-From: Alexey Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v3 4/8] phy: move clk enable/disable in init/exit
-Date: Thu, 5 Oct 2023 11:54:25 +0300
-Message-ID: <20231005085434.74755-5-avromanov@salutedevices.com>
-In-Reply-To: <20231005085434.74755-1-avromanov@salutedevices.com>
-References: <20231005085434.74755-1-avromanov@salutedevices.com>
+ Thu, 05 Oct 2023 05:27:54 -0700
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-405524e6768so8364245e9.2
+        for <u-boot-amlogic@groups.io>; Thu, 05 Oct 2023 05:27:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696508873; x=1697113673; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XIDgibJIkeo2ZcyBvv+ediHwi4mDal+OhzVvyCat8ZM=;
+        b=ArrdU5DjtaM4ml7PCtRvxnV6GTfLWI/36W52eZZ+/GvbbXNImtsJ/b4QtEO8W0Y5EP
+         Kh1nm354M0PR1Xg1CIUbjSqnkk82jA09NO9Imr5uoqYRdkulrgyikPVgb4OKgelEblv2
+         Ue6Rrzz4FYNjS9Irf6v39iOAPjBUqsE2sxTj2vFxWUmPbtZBAIH8XI0z39Jk/oJ9uNGi
+         JGzSYdLlCYuF/kFNbcXG5o2SOOA6n1o1I5+c6DICby0JhakyerFR2NN9Oct+gzWGduwl
+         ZTiUIiKczEinjpR+8tZJvTcdO13E3rMGC+fHK+dAry1zk24PUCTIHE9eX5Bh1Se03Whe
+         3+cQ==
+Return-Path: <neil.armstrong@linaro.org>
+Message-ID: <3782b09f-8279-4c66-b7f6-7115ee8ce79b@linaro.org>
+Date: Thu, 5 Oct 2023 14:27:51 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-To: neil.armstrong@linaro.org, narmstrong@baylibre.com, sjg@google.com, lukma@denx.de, marex@denx.de
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Alexey Romanov <avromanov@salutedevices.com>
+From: "Neil Armstrong" <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v1] drivers: sm: fix build warning
+References: <20231005081936.72178-1-avromanov@salutedevices.com>
+In-Reply-To: <20231005081936.72178-1-avromanov@salutedevices.com>
+Content-Language: en-US, fr
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Alexey Romanov <avromanov@salutedevices.com>, narmstrong@baylibre.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru, Igor Prusov <ivprusov@salutedevices.com>
 List-ID: <u-boot-amlogic@groups.io>
 
-It is better to place clk_enable() in phy_meson_g12a_usb2_init()
-and clk_disable() in phy_meson_g12a_usb2_exit().
+On 05/10/2023 10:19, Alexey Romanov wrote:
+> This fixes following warning during u-boot build:
+> WARNING: unmet direct dependencies detected for MESON_SM
+>    Depends on [n]: SM [=n]
+>    Selected by [y]:
+>    - MESON64_COMMON [=y] && ARM [=y] && ARCH_MESON [=y]
+> 
+> Fixes: 9849712e7655 ("drivers: introduce Meson Secure Monitor driver")
+> 
+> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+> ---
+>   drivers/sm/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/sm/Kconfig b/drivers/sm/Kconfig
+> index b4cc3f768e..f0987275d2 100644
+> --- a/drivers/sm/Kconfig
+> +++ b/drivers/sm/Kconfig
+> @@ -3,7 +3,7 @@ config SM
+>   
+>   config MESON_SM
+>   	bool "Amlogic Secure Monitor driver"
+> -	depends on SM
+> +	select SM
+>   	default n
+>   	help
+>   	  Say y here to enable the Amlogic secure monitor driver.
 
-For more detailed information, please see comments in the review of
-a similar driver in the Linux Kernel:
+Thanks,
 
-https://lore.kernel.org/all/CAFBinCCEhobbyKHuKDWzTYCQWgNT1-e8=3D7hMhq1mvT6C=
-uEOjGw@mail.gmail.com/
+Squashed into 9849712e7655 ("drivers: introduce Meson Secure Monitor driver")
 
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- drivers/phy/meson-g12a-usb2.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/phy/meson-g12a-usb2.c b/drivers/phy/meson-g12a-usb2.c
-index a803b6796c..2ea0498f86 100644
---- a/drivers/phy/meson-g12a-usb2.c
-+++ b/drivers/phy/meson-g12a-usb2.c
-@@ -161,6 +161,14 @@ static int phy_meson_g12a_usb2_init(struct phy *phy)
- 	struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
- 	int ret;
-=20
-+#if CONFIG_IS_ENABLED(CLK)
-+	ret =3D clk_enable(&priv->clk);
-+	if (ret && ret !=3D -ENOSYS && ret !=3D -ENOTSUPP) {
-+		pr_err("failed to enable PHY clock\n");
-+		return ret;
-+	}
-+#endif
-+
- 	ret =3D reset_assert(&priv->reset);
- 	udelay(1);
- 	ret |=3D reset_deassert(&priv->reset);
-@@ -253,6 +261,10 @@ static int phy_meson_g12a_usb2_exit(struct phy *phy)
- 	struct phy_meson_g12a_usb2_priv *priv =3D dev_get_priv(dev);
- 	int ret;
-=20
-+#if CONFIG_IS_ENABLED(CLK)
-+	clk_disable(&priv->clk);
-+#endif
-+
- 	ret =3D reset_assert(&priv->reset);
- 	if (ret)
- 		return ret;
-@@ -290,13 +302,6 @@ int meson_g12a_usb2_phy_probe(struct udevice *dev)
- 	ret =3D clk_get_by_index(dev, 0, &priv->clk);
- 	if (ret < 0)
- 		return ret;
--
--	ret =3D clk_enable(&priv->clk);
--	if (ret && ret !=3D -ENOSYS && ret !=3D -ENOTSUPP) {
--		pr_err("failed to enable PHY clock\n");
--		clk_free(&priv->clk);
--		return ret;
--	}
- #endif
-=20
- 	return 0;
---=20
-2.25.1
-
+Neil
