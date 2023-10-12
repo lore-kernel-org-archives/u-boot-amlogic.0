@@ -1,73 +1,178 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web10.14088.1696509470925784935
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+ by mx.groups.io with SMTP id smtpd.web10.6006.1697095465259085707
  for <u-boot-amlogic@groups.io>;
- Thu, 05 Oct 2023 05:37:51 -0700
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4064867903cso8566135e9.2
-        for <u-boot-amlogic@groups.io>; Thu, 05 Oct 2023 05:37:50 -0700 (PDT)
+ Thu, 12 Oct 2023 00:24:25 -0700
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5042bfb4fe9so891868e87.1
+        for <u-boot-amlogic@groups.io>; Thu, 12 Oct 2023 00:24:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696509469; x=1697114269; darn=groups.io;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5vILP50vAWqz1sGV49ycYMK1044oT2WQWquY6fd4VE8=;
-        b=c5+opRxXLFe7B71HR/QAdbNYxfL+nbkAs7crap+3uwdcR417K2xpxvIT9iUurId4CO
-         mXW0rEISFJ+0YrIBJvw24JFPWgWH/ujIv8jB7WbdHJZYXjJkYYRXAUecTdhfg5LWGWNb
-         RNGk/hix2FksFAX39j0hnHszgKHUmIwwVCntRDae5iJcb6TlWUVIcMsFU6t6KXTJbWXF
-         7S/7Kf2SzJzcDuXWrRKMBL69ibFvz1SMlGmv22DYuoX4pfnuEY1ahWvcLDxh3oo2lc8f
-         P1dwOI5IznmiJGPWcKl/sUsVEZMMwNj4XUPTey9+FSLZXjaC8hGB0qQquD10YtFBAsv6
-         DfFg==
+        d=linaro.org; s=google; t=1697095463; x=1697700263; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9cPCDR1LNByf7pFqbKQgMF5hUul43mQVN8swXPpciFE=;
+        b=C7Pw/TKbvMCD1s/lwxPoN2tNqKwq5G99WCBP1M27MP8nG94mkLS3sZQAQxyFP7mwpi
+         fVJNE/uRNYFZ6SahUWwfZHZoE4yrKWamX4mof0L16uQ5V69jiifMhQnv897cRDAVo3FK
+         Xd6Sv6y9CvZMPkiIMZ24Q8AZa0BC9d8OXu1GW2M2Tg3OBtVxMaL37lp5DanoBzZU1vOd
+         FhEJl6Z143/g2j8K7ntcgMhVVqXB5gTKx8+2vjRcOXehNL7Xlkvx70vJsfnhVignsU/j
+         44YNKtZfmHDIqML0hYJcJfPz9wskeXBgWc8zpj109OtmUCFqI7x1FXAsOy8oBQFjuZeB
+         GKxg==
 Return-Path: <neil.armstrong@linaro.org>
-From: "Neil Armstrong" <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 0/8] Support USB for Meson A1
-Date: Thu,  5 Oct 2023 14:37:46 +0200
-Message-Id: <169650945649.3912260.17461050766538864431.b4-ty@linaro.org>
-In-Reply-To: <20231005085434.74755-1-avromanov@salutedevices.com>
-References: <20231005085434.74755-1-avromanov@salutedevices.com>
+Message-ID: <a4ee2c60-2176-43be-87d4-dcd32a1173a2@linaro.org>
+Date: Thu, 12 Oct 2023 09:24:20 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: sjg@google.com, lukma@denx.de, marex@denx.de, Neil Armstrong <neil.armstrong@linaro.org>, Alexey Romanov <avromanov@salutedevices.com>
+From: "Neil Armstrong" <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 1/1] drivers: rng: add support for Meson S4
+References: <20231010111344.77563-1-avromanov@salutedevices.com>
+ <20231010111344.77563-2-avromanov@salutedevices.com>
+In-Reply-To: <20231010111344.77563-2-avromanov@salutedevices.com>
+Content-Language: en-US, fr
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Alexey Romanov <avromanov@salutedevices.com>, narmstrong@baylibre.com, sughosh.ganu@linaro.org, xypron.glpk@gmx.de
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, kernel@sberdevices.ru
 List-ID: <u-boot-amlogic@groups.io>
 
-From: Neil Armstrong <neil.armstrong@linaro.org>
-
 Hi,
 
-On Thu, 5 Oct 2023 11:54:21 +0300, Alexey Romanov wrote:
-> This patchset adds USB stack support for Amlogic A1 SoC's
-> series. Made reset / phy / dwc3 drivers more flexible and
-> added support for A1 board.
+On 10/10/2023 13:13, Alexey Romanov wrote:
+> For some Amlogic SOC's, mechanism to obtain random number
+> has been changed. For example, S4 now uses status bit waiting algo.
 > 
-> V2:
+> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> ---
+>   drivers/rng/meson-rng.c | 72 ++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 71 insertions(+), 1 deletion(-)
 > 
-> - Made power domain for PHY optional.
-> - Add missing CLKID_USB_PHY gate.
-> - Drop patch with USB stack initialization in board-a1.c.
-> Instead of, enable CONFIG_DM_USB_GADGET for AD401 board.
-> - Support A1 in g12a_child_pre_probe/post_remove functions
-> in dwc3 driver.
-> 
-> [...]
+> diff --git a/drivers/rng/meson-rng.c b/drivers/rng/meson-rng.c
+> index e0a1e8c7e0..ba60325b94 100644
+> --- a/drivers/rng/meson-rng.c
+> +++ b/drivers/rng/meson-rng.c
+> @@ -10,10 +10,23 @@
+>   #include <dm.h>
+>   #include <rng.h>
+>   #include <asm/io.h>
+> +#include <linux/iopoll.h>
+> +
+> +#define RNG_DATA	0x00
+> +#define RNG_S4_DATA	0x08
+> +#define RNG_S4_CFG	0x00
+> +
+> +#define RUN_BIT		BIT(0)
+> +#define SEED_READY_STS_BIT	BIT(31)
+> +
+> +struct meson_rng_priv {
+> +	u32 (*read)(fdt_addr_t base);
+> +};
+>   
+>   struct meson_rng_plat {
+>   	fdt_addr_t base;
+>   	struct clk clk;
+> +	struct meson_rng_priv *priv;
+>   };
+>   
+>   /**
+> @@ -27,10 +40,11 @@ struct meson_rng_plat {
+>   static int meson_rng_read(struct udevice *dev, void *data, size_t len)
+>   {
+>   	struct meson_rng_plat *pdata = dev_get_plat(dev);
+> +	struct meson_rng_priv *priv = pdata->priv;
+>   	char *buffer = (char *)data;
+>   
+>   	while (len) {
+> -		u32 rand = readl(pdata->base);
+> +		u32 rand = priv->read(pdata->base);
+>   		size_t step;
+>   
+>   		if (len >= 4)
+> @@ -44,6 +58,47 @@ static int meson_rng_read(struct udevice *dev, void *data, size_t len)
+>   	return 0;
+>   }
+>   
+> +static int meson_rng_wait_status(void __iomem *cfg_addr, int bit)
+> +{
+> +	u32 status = 0;
+> +	int ret;
+> +
+> +	ret = readl_relaxed_poll_timeout(cfg_addr,
+> +					 status, !(status & bit),
+> +					 10000);
+> +	if (ret)
+> +		return -EBUSY;
+> +
+> +	return 0;
+> +}
+> +
+> +static u32 meson_common_rng_read(fdt_addr_t base)
+> +{
+> +	return readl(base);
+> +}
+> +
+> +static u32 meson_s4_rng_read(fdt_addr_t base)
+> +{
+> +	void __iomem *cfg_addr = (void *)base + RNG_S4_CFG;
+> +	int err;
+> +
+> +	writel_relaxed(readl_relaxed(cfg_addr) | SEED_READY_STS_BIT, cfg_addr);
+> +
+> +	err = meson_rng_wait_status(cfg_addr, SEED_READY_STS_BIT);
+> +	if (err) {
+> +		pr_err("Seed isn't ready, try again\n");
+> +		return err;
+> +	}
+> +
+> +	err = meson_rng_wait_status(cfg_addr, RUN_BIT);
+> +	if (err) {
+> +		pr_err("Can't get random number, try again\n");
+> +		return err;
+> +	}
+> +
+> +	return readl_relaxed(base + RNG_S4_DATA);
+> +}
+> +
+>   /**
+>    * meson_rng_probe() - probe rng device
+>    *
+> @@ -59,6 +114,8 @@ static int meson_rng_probe(struct udevice *dev)
+>   	if (err)
+>   		return err;
+>   
+> +	pdata->priv = dev_get_driver_data(dev);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -102,9 +159,22 @@ static const struct dm_rng_ops meson_rng_ops = {
+>   	.read = meson_rng_read,
+>   };
+>   
+> +static const struct meson_rng_priv meson_rng_priv = {
+> +	.read = meson_common_rng_read,
+> +};
+> +
+> +static const struct meson_rng_priv meson_rng_priv_s4 = {
+> +	.read = meson_s4_rng_read,
+> +};
+> +
+>   static const struct udevice_id meson_rng_match[] = {
+>   	{
+>   		.compatible = "amlogic,meson-rng",
+> +		.data = (ulong)&meson_rng_priv,
+> +	},
+> +	{
+> +		.compatible = "amlogic,meson-s4-rng",
+> +		.data = (ulong)&meson_rng_priv_s4,
+>   	},
+>   	{},
+>   };
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
+I get:
++drivers/rng/meson-rng.c: In function 'meson_rng_probe':
++drivers/rng/meson-rng.c:117:21: error: assignment to 'struct meson_rng_priv *' from 'ulong' {aka 'long unsigned int'} makes pointer from integer without a cast [-Werror=int-conversion]
++  117 |         pdata->priv = dev_get_driver_data(dev);
 
-[1/8] dt-bindings: reset: add Meson A1 reset bindings
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/fccbc810551a7e1c821ac23d5e8fd27c12ded1b2
-[2/8] reset: add support for Amlogic A1 family
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/29ad8b0401dc9a75a15077f2a38363659091580e
-[3/8] phy: get rid of raw hex values
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/11572764d44783870cc61ac2f0435bd555222ef6
-[4/8] phy: move clk enable/disable in init/exit
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/ac7f5b2f768d298fe84ab36d363853748ae23243
-[5/8] phy: support Amlogic A1 family
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/66defb628f658df97e426ab13dc620b9bf6277ab
-[6/8] a1: clk: Add missing USB_PHY_IN and USB_PHY gates
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/84b0d40f3adb03074a80a58e4e655b422bce40ce
-[7/8] dwc3: add support for Amlogic A1 family
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/8a4781ff2e51d5831b7d236a327c5fb13849b689
-[8/8] ad401: enable USB stack
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/686a98392fc1beaf544c8cf65f48b781a56a5148
+while building in CI.
 
--- 
+Thanks,
 Neil
