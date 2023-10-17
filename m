@@ -2,38 +2,38 @@ Return-Path: <ivprusov@salutedevices.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A33ECDB482
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB7DC46CA1
 	for <webhook@archiver.kernel.org>; Tue, 17 Oct 2023 16:57:20 +0000 (UTC)
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web10.224822.1697561832818584042
+ by mx.groups.io with SMTP id smtpd.web10.224824.1697561833224565415
  for <u-boot-amlogic@groups.io>;
  Tue, 17 Oct 2023 09:57:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=NXNOFVxw;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=dAnUczGA;
  spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: ivprusov@salutedevices.com)
 Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 168EE120008;
-	Tue, 17 Oct 2023 19:57:05 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 168EE120008
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 9ACBA12000D;
+	Tue, 17 Oct 2023 19:57:10 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 9ACBA12000D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-	s=mail; t=1697561825;
-	bh=IqKNktyVLhcA8Aw87Pu2NltAWnBVQN+KKg5tD/A4MOM=;
+	s=mail; t=1697561830;
+	bh=UEsqOSdcsD0bv0y4FBuc+jYFWzT2Lhtn1xrCSiSVoIU=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=NXNOFVxw4GCDb8OyB3GNB5+WLfBvY2Gaoj0m1dpOXB/7PNs1oNdT1SiQNPWxdbQuO
-	 AVmUYUu52dTGpVENmadKoRszLE7chtlWlsRqvnzIgEgf9G4B1qQ3Q83PFBOFlaQRrq
-	 zBTIitghfpy0cRrL+9PVYOdC7qrI58FEKibb3+Y+OIbLHgZ0J1bNWOIsmggD/usTTQ
-	 9/pVVOP7bVoIjkq/TeRxIkBLu2lAZdbNk4T8yNyxzwORngFAYTYlfIXcYmSpBwTBdR
-	 T0EbsyJhY7fElLUU6Q+AyVva4pA14EzF8vgRrcLSk7Y0E4o/Wt/lauH5NFIiFjy/MR
-	 EQSSsYIiy8GPQ==
+	b=dAnUczGAzJwrM25MvBAEhH+Q3HrL+WbeovKMPhFsoU0/yxycRonNWykfYJ5c42hlg
+	 ZPcuPbHDIUXgh7FQeo4gbV4sYpzyDn2ztk/D0bgYQvAe+IYaUmCdKkXr7JlnwID0Ll
+	 9MAY0xfvf4WY93/e9AzLUCDI6DG2p226JB3uQ67iY/055PQzOovEzl3XFR6iyBsLEG
+	 YAbEeyfJ0q9tO7456ooYEEbdvlSVf4vmgsaYXQR2aNfUZGwPu+/j8WPhINxr4u2jBw
+	 M4h3DdtVSW2Lnx52FW3VH0Rc/t70RKvToARsUnp8Fuq5YDfWa7GqtOGd2LOJxL5/4x
+	 svZIF7JytY/6A==
 Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 17 Oct 2023 19:57:04 +0300 (MSK)
+	Tue, 17 Oct 2023 19:57:10 +0300 (MSK)
 Received: from localhost.localdomain (100.64.160.123) by
  p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.37; Tue, 17 Oct 2023 19:57:04 +0300
+ 15.2.1118.37; Tue, 17 Oct 2023 19:57:10 +0300
 From: Igor Prusov <ivprusov@sberdevices.ru>
 To: Michal Simek <michal.simek@amd.com>, Daniel Schwierzeck
 	<daniel.schwierzeck@gmail.com>, Lukasz Majewski <lukma@denx.de>, Sean
@@ -45,9 +45,9 @@ CC: <prusovigor@gmail.com>, <kernel@sberdevices.ru>, Igor Prusov
 	<ivprusov@sberdevices.ru>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel
  Stanley <joel@jms.id.au>, <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
 	<uboot-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v4 1/8] clk: zynq: Move soc_clk_dump to Zynq clock driver
-Date: Tue, 17 Oct 2023 19:56:42 +0300
-Message-ID: <20231017165649.1492-2-ivprusov@sberdevices.ru>
+Subject: [PATCH v4 5/8] clk: Add dump operation to clk_ops
+Date: Tue, 17 Oct 2023 19:56:46 +0300
+Message-ID: <20231017165649.1492-6-ivprusov@sberdevices.ru>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231017165649.1492-1-ivprusov@sberdevices.ru>
 References: <20231017165649.1492-1-ivprusov@sberdevices.ru>
@@ -77,159 +77,33 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 17 Oct 2023 16:57:20 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1766
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1767
 
-Move clock dump function in preparation for switching to dump function
-in clk_ops.
+This adds dump function to struct clk_ops which should replace
+soc_clk_dump. It allows clock drivers to provide custom dump
+implementation without overriding generic CCF dump function.
 
 Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
-Acked-by: Michal Simek <michal.simek@amd.com>
+Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
+Tested-by: Patrice Chotard <patrice.chotard@foss.st.com>
 ---
- arch/arm/mach-zynq/clk.c | 57 ---------------------------------------
- drivers/clk/clk_zynq.c   | 58 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+), 57 deletions(-)
+ include/clk-uclass.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/mach-zynq/clk.c b/arch/arm/mach-zynq/clk.c
-index 1945f60e08..e6a67326dd 100644
---- a/arch/arm/mach-zynq/clk.c
-+++ b/arch/arm/mach-zynq/clk.c
-@@ -13,20 +13,6 @@
+diff --git a/include/clk-uclass.h b/include/clk-uclass.h
+index a22f1a5d84..30621e4823 100644
+--- a/include/clk-uclass.h
++++ b/include/clk-uclass.h
+@@ -39,6 +39,9 @@ struct clk_ops {
+ 	int (*set_parent)(struct clk *clk, struct clk *parent);
+ 	int (*enable)(struct clk *clk);
+ 	int (*disable)(struct clk *clk);
++#if IS_ENABLED(CONFIG_CMD_CLK)
++	int (*dump)(struct udevice *dev);
++#endif
+ };
 =20
- DECLARE_GLOBAL_DATA_PTR;
-=20
--static const char * const clk_names[clk_max] =3D {
--	"armpll", "ddrpll", "iopll",
--	"cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x",
--	"ddr2x", "ddr3x", "dci",
--	"lqspi", "smc", "pcap", "gem0", "gem1",
--	"fclk0", "fclk1", "fclk2", "fclk3", "can0", "can1",
--	"sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1", "dma",
--	"usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper",
--	"sdio0_aper", "sdio1_aper", "spi0_aper", "spi1_aper",
--	"can0_aper", "can1_aper", "i2c0_aper", "i2c1_aper",
--	"uart0_aper", "uart1_aper", "gpio_aper", "lqspi_aper",
--	"smc_aper", "swdt", "dbg_trc", "dbg_apb"
--};
--
- /**
-  * set_cpu_clk_info() - Setup clock information
-  *
-@@ -65,46 +51,3 @@ int set_cpu_clk_info(void)
-=20
- 	return 0;
- }
--
--/**
-- * soc_clk_dump() - Print clock frequencies
-- * Returns zero on success
-- *
-- * Implementation for the clk dump command.
-- */
--int soc_clk_dump(void)
--{
--	struct udevice *dev;
--	int i, ret;
--
--	ret =3D uclass_get_device_by_driver(UCLASS_CLK,
--		DM_DRIVER_GET(zynq_clk), &dev);
--	if (ret)
--		return ret;
--
--	printf("clk\t\tfrequency\n");
--	for (i =3D 0; i < clk_max; i++) {
--		const char *name =3D clk_names[i];
--		if (name) {
--			struct clk clk;
--			unsigned long rate;
--
--			clk.id =3D i;
--			ret =3D clk_request(dev, &clk);
--			if (ret < 0)
--				return ret;
--
--			rate =3D clk_get_rate(&clk);
--
--			clk_free(&clk);
--
--			if ((rate =3D=3D (unsigned long)-ENOSYS) ||
--			    (rate =3D=3D (unsigned long)-ENXIO))
--				printf("%10s%20s\n", name, "unknown");
--			else
--				printf("%10s%20lu\n", name, rate);
--		}
--	}
--
--	return 0;
--}
-diff --git a/drivers/clk/clk_zynq.c b/drivers/clk/clk_zynq.c
-index e80500e382..be5226175f 100644
---- a/drivers/clk/clk_zynq.c
-+++ b/drivers/clk/clk_zynq.c
-@@ -454,6 +454,64 @@ static int dummy_enable(struct clk *clk)
- 	return 0;
- }
-=20
-+static const char * const clk_names[clk_max] =3D {
-+	"armpll", "ddrpll", "iopll",
-+	"cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x",
-+	"ddr2x", "ddr3x", "dci",
-+	"lqspi", "smc", "pcap", "gem0", "gem1",
-+	"fclk0", "fclk1", "fclk2", "fclk3", "can0", "can1",
-+	"sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1", "dma",
-+	"usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper",
-+	"sdio0_aper", "sdio1_aper", "spi0_aper", "spi1_aper",
-+	"can0_aper", "can1_aper", "i2c0_aper", "i2c1_aper",
-+	"uart0_aper", "uart1_aper", "gpio_aper", "lqspi_aper",
-+	"smc_aper", "swdt", "dbg_trc", "dbg_apb"
-+};
-+
-+/**
-+ * soc_clk_dump() - Print clock frequencies
-+ * Returns zero on success
-+ *
-+ * Implementation for the clk dump command.
-+ */
-+int soc_clk_dump(void)
-+{
-+	struct udevice *dev;
-+	int i, ret;
-+
-+	ret =3D uclass_get_device_by_driver(UCLASS_CLK,
-+					  DM_DRIVER_GET(zynq_clk), &dev);
-+	if (ret)
-+		return ret;
-+
-+	printf("clk\t\tfrequency\n");
-+	for (i =3D 0; i < clk_max; i++) {
-+		const char *name =3D clk_names[i];
-+
-+		if (name) {
-+			struct clk clk;
-+			unsigned long rate;
-+
-+			clk.id =3D i;
-+			ret =3D clk_request(dev, &clk);
-+			if (ret < 0)
-+				return ret;
-+
-+			rate =3D clk_get_rate(&clk);
-+
-+			clk_free(&clk);
-+
-+			if ((rate =3D=3D (unsigned long)-ENOSYS) ||
-+			    (rate =3D=3D (unsigned long)-ENXIO))
-+				printf("%10s%20s\n", name, "unknown");
-+			else
-+				printf("%10s%20lu\n", name, rate);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static struct clk_ops zynq_clk_ops =3D {
- 	.get_rate =3D zynq_clk_get_rate,
- #ifndef CONFIG_SPL_BUILD
+ #if 0 /* For documentation only */
 --=20
 2.34.1
 
