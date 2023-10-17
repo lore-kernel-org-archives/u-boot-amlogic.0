@@ -1,122 +1,127 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <ivprusov@salutedevices.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2328CDB474
-	for <webhook@archiver.kernel.org>; Tue, 17 Oct 2023 07:17:56 +0000 (UTC)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
- by mx.groups.io with SMTP id smtpd.web10.181201.1697491891758427274
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36827C46CA1
+	for <webhook@archiver.kernel.org>; Tue, 17 Oct 2023 16:57:10 +0000 (UTC)
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+ by mx.groups.io with SMTP id smtpd.web10.224817.1697561828792156445
  for <u-boot-amlogic@groups.io>;
- Mon, 16 Oct 2023 14:31:31 -0700
+ Tue, 17 Oct 2023 09:57:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=sCx7WR82;
- spf=pass (domain: konsulko.com, ip: 209.85.128.176, mailfrom: trini@konsulko.com)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5a7af20c488so62072127b3.1
-        for <u-boot-amlogic@groups.io>; Mon, 16 Oct 2023 14:31:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1697491891; x=1698096691; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N/gAf/EABho+QTfFripeOBlDO7xxuYzMfx/GcCZgmJE=;
-        b=sCx7WR82z+qA3BLu89gZS/UVRIiSFuHmyB2OOOXWDODoXW6psZOB1OfCdpyFnW3cuw
-         8Yjlz6gIfw93np2sI1jMonaOkUsoILez/4o8bXiAh9ZeP/m4A5sGQboZ7p93uuIg0NJm
-         VPV/PG2WVYeUhRkNzKC8Fl8XFiX5qHdvfCJ7c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697491891; x=1698096691;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N/gAf/EABho+QTfFripeOBlDO7xxuYzMfx/GcCZgmJE=;
-        b=UFCD7dGVXfFE7yMGef84pMblNPaVVTOEWprdou7jH27esRq42tIDLcEoXM7LozKkcU
-         O42ZKRIMQRms+NDPt/r/NlJiTeZgedyrYt0wbXJEwQ8u/C4H4lxpr/vTjbT1bq3TpCJk
-         jiQXGrLhp4UomS975zQOkkJbktZaxWRrxBcnzs/OoGRDWBH8E2lO5YClmH2LUZW15fjG
-         NYpvOHCxsApUhcqONMl03TTewdD3JDNsoYlW/zVIeOuSJXy+OYRKko7dibVI8cn0hx4f
-         SvwTUib5reMOHAyNoWonYW21VTJc+qzydlH3nu+EoPb7Pzu20F24IWKwuY5ZZMrDyGRq
-         bPxQ==
-X-Gm-Message-State: AOJu0Yxb2qFr5Qaw9UEczQdZtXq1oKmDeR5A+x1QtgkcNStAZStu/7Ol
-	5cRzs+xOvfvFj/wenMVN+hnwGw==
-X-Google-Smtp-Source: AGHT+IHBWBz9G66m+zFcBe9wXEqYolCoHi34ES48TOsxVax3oxsyhb50xLxHCpOfL1G79OYqDht54g==
-X-Received: by 2002:a0d:df49:0:b0:58c:b8b4:2785 with SMTP id i70-20020a0ddf49000000b0058cb8b42785mr389942ywe.45.1697491890896;
-        Mon, 16 Oct 2023 14:31:30 -0700 (PDT)
-Received: from bill-the-cat (2603-6081-7b00-6400-0000-0000-0000-0f48.res6.spectrum.com. [2603:6081:7b00:6400::f48])
-        by smtp.gmail.com with ESMTPSA id o187-20020a8173c4000000b0057085b18cddsm33263ywc.54.2023.10.16.14.31.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 14:31:30 -0700 (PDT)
-Date: Mon, 16 Oct 2023 17:31:28 -0400
-From: Tom Rini <trini@konsulko.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Subject: Re: [GIT PULL] Please pull u-boot-amlogic-20231015
-Message-ID: <20231016213128.GG3119521@bill-the-cat>
-References: <555f51df-c50f-4118-bf74-3619965cd828@linaro.org>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=WUfc9JUG;
+ spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: ivprusov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id CBEB1100005;
+	Tue, 17 Oct 2023 19:57:04 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru CBEB1100005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+	s=mail; t=1697561824;
+	bh=H9vgNEIQKKRwgCv/vanqO91ndyd1olHRBgPQWnAJGRA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=WUfc9JUGbWMRQvdDejpUlnmTIOPv8KbpWacTRfl77PBGMMnbItb0deyjy63rIrRR1
+	 343fVrm5GBozgrAIIrLKAKp5dDm0QyGuoBej9NbDPvUlSn0erVYRi0PvX8D0Lo7/iW
+	 9o9RNi6vbpMqEHvq4n/49w2Z95lqY1buEwNG68B6nwIz4ieGRSzhI9ueRK4ti19vSr
+	 wqUMeUKwEIH4lDWHMWfvlGukhlQihMk4cYndhZwMzRFcIzsLHjPpT8aAnPTTje0wk7
+	 jDk4sHYM3fOzr4Iw/YDPKoyEOo1eO6eb2MvfZIpafocHZrX5UqgD10yl5jGqYYnVjH
+	 pSTe17UZnXd9Q==
+Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue, 17 Oct 2023 19:57:03 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.37; Tue, 17 Oct 2023 19:57:02 +0300
+From: Igor Prusov <ivprusov@sberdevices.ru>
+To: Michal Simek <michal.simek@amd.com>, Daniel Schwierzeck
+	<daniel.schwierzeck@gmail.com>, Lukasz Majewski <lukma@denx.de>, Sean
+ Anderson <seanga2@gmail.com>, Ryan Chen <ryan_chen@aspeedtech.com>, Chia-Wei
+ Wang <chiawei_wang@aspeedtech.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Stefan Roese <sr@denx.de>, Patrick Delaunay
+	<patrick.delaunay@foss.st.com>, Patrice Chotard <patrice.chotard@foss.st.com>
+CC: <prusovigor@gmail.com>, <kernel@sberdevices.ru>, Igor Prusov
+	<ivprusov@sberdevices.ru>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel
+ Stanley <joel@jms.id.au>, <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
+	<uboot-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v4 0/8] clk: Switch from soc_clk_dump to clk_ops function
+Date: Tue, 17 Oct 2023 19:56:41 +0300
+Message-ID: <20231017165649.1492-1-ivprusov@sberdevices.ru>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <555f51df-c50f-4118-bf74-3619965cd828@linaro.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=TW2rYB2wW2LGGQRr32so"
+Content-Type: text/plain
+X-Originating-IP: [100.64.160.123]
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 180684 [Oct 17 2023]
+X-KSMG-AntiSpam-Version: 6.0.0.2
+X-KSMG-AntiSpam-Envelope-From: ivprusov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 540 540 2509a3fe0f7fdc802e7154a32be7c2dd394ab987, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;p-i-exch-sc-m01.sberdevices.ru:7.1.1,5.0.1;sberdevices.ru:7.1.1,5.0.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2023/10/17 15:08:00 #22212325
+X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 17 Oct 2023 07:17:56 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1760
+ <u-boot-amlogic@groups.io>; Tue, 17 Oct 2023 16:57:10 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1761
 
---Groupsio=TW2rYB2wW2LGGQRr32so
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently clock providers may override default implementation of
+soc_clk_dump function to replace clk dump command output. This causes
+confusing behaviour when u-boot is built with one of such drivers
+enabled but still has clocks defined using CCF. For example, enabling
+CMD_CLK and using clk dump on sandbox target will not show CCF clocks
+because k210 driver overrides common soc_clk_dump.
 
-On Mon, Oct 16, 2023 at 08:48:06AM +0200, Neil Armstrong wrote:
+Changelog:
+ v1 -> v2:
+ - Add missing static to dump functions
 
-> Hi Tom,
->=20
-> A set of changes mostly concerning Amlogic A1 & S4 SoCs for USB, Secure M=
-onitor
-> and RNG bringup.
->=20
->=20
-> The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/18138
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit 997bef3c6d22d12c7fd092fb831bf94d114c9f=
-6f:
->=20
->   Merge branch '2023-10-11-port-gen_compile_commands_py' (2023-10-11 13:2=
-5:01 -0400)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20231015
->=20
-> for you to fetch changes up to 7cd53e0d5203f8e25bb69d2e675769888fcbc754:
->=20
->   arch: meson: use secure monitor driver (2023-10-15 12:23:48 +0200)
->=20
+ v2 -> v3:
+ - Make soc_clk_dump in cmd/clk.c static instead of removing __weak
 
-Applied to u-boot/master, thanks!
+ v3 -> v4:
+ - Rebase and refactor dump for new Amlogic A1 clock controller driver
+
+Igor Prusov (8):
+  clk: zynq: Move soc_clk_dump to Zynq clock driver
+  clk: ast2600: Move soc_clk_dump function
+  clk: k210: Move soc_clk_dump function
+  clk: amlogic: Move driver and ops structs
+  clk: Add dump operation to clk_ops
+  cmd: clk: Use dump function from clk_ops
+  clk: treewide: switch to clock dump from clk_ops
+  cmd: clk: Make soc_clk_dump static
+
+ arch/arm/mach-zynq/clk.c               |  57 --------------
+ arch/mips/mach-pic32/cpu.c             |  23 ------
+ cmd/clk.c                              |  13 +++-
+ drivers/clk/aspeed/clk_ast2600.c       |  83 ++++++++++----------
+ drivers/clk/clk_k210.c                 | 103 ++++++++++++-------------
+ drivers/clk/clk_pic32.c                |  39 ++++++++++
+ drivers/clk/clk_versal.c               |   7 +-
+ drivers/clk/clk_zynq.c                 |  51 ++++++++++++
+ drivers/clk/clk_zynqmp.c               |  13 ++--
+ drivers/clk/imx/clk-imx8.c             |  11 +--
+ drivers/clk/meson/a1.c                 |  54 +++++--------
+ drivers/clk/mvebu/armada-37xx-periph.c |   5 +-
+ drivers/clk/stm32/clk-stm32mp1.c       |  29 ++-----
+ include/clk-uclass.h                   |   3 +
+ include/clk.h                          |   2 -
+ 15 files changed, 244 insertions(+), 249 deletions(-)
 
 --=20
-Tom
+2.34.1
 
---Groupsio=TW2rYB2wW2LGGQRr32so
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmUtq60ACgkQFHw5/5Y0
-tyw9KQv/b/u9f+J3xK5NxblPBD5ZM8y4r8TWs5FMVgVMMTwkE3YiuKcH/IWsm9DZ
-WUUlMUxxPp2HpcMYzLZu6JA0Ga/rixasNBGrV3wv16Kx9ixriP5IZu1+RApzjCns
-2Yn5BUfmbnIgBCMadpNsEYGQQqT4ANgq04GlOvXcY3iTg6FiMvVZRsg+5u9Blzfx
-lVHVjzEtcA+FlJWmC/AcvcR+fG6KEgjJw85yG9qCySxFeL/rssODPf4X8oHdaZ7l
-eejLA7OFiMvvRp8x8ebvXuS/EpnU16baqZhJ7sQFqLVS9QaFg3DzH5rTxeUpAPjI
-vq+7ZN6ul7fHsE60M9SKThDRxIJ05eKIdrIp1HfV0ZPTrbl3lRDymT8BqXLyCqAu
-Yt/cfYzcn/C5UU6L/MaTI1GyHL20JfnD7cDPrUkVpP96kbL1z4x7zxMG3GNc2nkQ
-CwL6veRyer9W8+/7F3HGneFarYLcQUvE0osa+SuI+hT2uNe5okjPwl2gl2lsDW48
-PTQYoL6s
-=V8y4
------END PGP SIGNATURE-----
-
---Groupsio=TW2rYB2wW2LGGQRr32so--
 
