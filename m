@@ -2,65 +2,64 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EB9CDB483
-	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 07:43:55 +0000 (UTC)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web11.276286.1697615028959657463
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04081CDB47E
+	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 07:44:15 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web10.276853.1697615049123175197
  for <u-boot-amlogic@groups.io>;
- Wed, 18 Oct 2023 00:43:49 -0700
+ Wed, 18 Oct 2023 00:44:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=R7Yk2vWx;
- spf=pass (domain: linaro.org, ip: 209.85.221.48, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-323168869daso5869081f8f.2
-        for <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 00:43:48 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=V370DGid;
+ spf=pass (domain: linaro.org, ip: 209.85.128.48, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-407c3adef8eso11532315e9.2
+        for <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 00:44:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697615027; x=1698219827; darn=groups.io;
+        d=linaro.org; s=google; t=1697615047; x=1698219847; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7eXIxS6KrhrFL7VN31z7xlI6kDKbeps7I3pbGPHTitE=;
-        b=R7Yk2vWxsujPlKh8rpLoAwGVhs8WWfcUoSQOh4sKbiHjRNEXWtdUZD/ZEQhR4kKtP5
-         ywgD0kdJHqrKbgt4aVMcdhTx7m5/wZu3acu3gxvHFdt3Er0KMmx6PV8LrUqNqJbh94Jt
-         anKdLh1745N2a/k/tJ08RwU+N6f2gUY/9LvwCAdv37XYINc8eaZsSr+IpyXYvM64DMWP
-         N7/QRnm/JPA5FsNsLsyZhU3mORQUBaZct9rLY0ia7xBAVhmePSDLKpCnDGWS9v1vGVX7
-         7HKMukSUb9dXpWH0gDag2QjEK2TvdC4BSTGDU0Q6YGBGb/e036/Bj4X75AtONoVywXt/
-         qxUw==
+        bh=LNOvWPRV6pmbjAX1pkDJTzjN7uuSereKfEEJLGMZ94Y=;
+        b=V370DGidKiAq7fH6mq60L1mxr5rRN6z4D0fwTITeUGIEihb5vV7O34NIXkitCJSfBb
+         vfOLleW/XMiFN2l97Sn1um1GY0B0L1spI6TvxjE3bE7Hd0mX490s+GETftji8mazqT2l
+         7YLurTJgmJ6Sr6emgIguBIaKdxw95XeWCkhXqlzrlFDBozhLDrBaapQ+ZkxSwzYud6A2
+         olk3Z24+lZ350BNWiGSusteI+n3xo7p0psBWC1AiTWTFTiSceWAvSz5jU9Dkc0eBeIph
+         ccinCpocgJ6RHymYrC5TEBF/kUEp3dOEewMf/aSDw2nhQl3NI1/i0F66nFc+cMukVD/N
+         MydQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697615027; x=1698219827;
+        d=1e100.net; s=20230601; t=1697615047; x=1698219847;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=7eXIxS6KrhrFL7VN31z7xlI6kDKbeps7I3pbGPHTitE=;
-        b=ZRndX40LlwH/sNg0o/LdjtScjqQ1Vst5s4kRF3Ai5y9yhzQ0F5ekay00gF2ZycRbpe
-         1wSRx2JJuf4eXGSbdoYhdCq82TY2QlzT/0N/tknpBGRVH1fqgkDIey/LgRYEO8rTl0TF
-         AZM6gDvMD9vVsWtAGWnkAScKgsXaneiXVpyeG08EV8/wisZTYq5klcd2mK0HH4Z0kSwi
-         n0X9AfbgRAgWOjHf/ZrAmYhAIsundiFqYS6mk0oWtPWOSV3YjSdd5IGAqnJpWoTYSYjq
-         GvS1phEbCubbJtgNFttlanlj/PzoipMNSTBDehkf4F5NnOTJt5RLMJTy/ajbrU3oEdu+
-         h+kA==
-X-Gm-Message-State: AOJu0YyEwbj3SZpzVCnigsE0HZFNtVsu7cGnqC3/na3vIL45HqBu3tdM
-	gBJmIDL+BFohh3gjAcQrPOabrA==
-X-Google-Smtp-Source: AGHT+IFiLuU8UIHK2cebySqmCRKQPMCPATx6w9h7Q8va4v31d4TWKXMDKrrVFMkSS0tbzR5IdHPJJw==
-X-Received: by 2002:adf:e28d:0:b0:320:8d6:74f5 with SMTP id v13-20020adfe28d000000b0032008d674f5mr2982344wri.28.1697615027254;
-        Wed, 18 Oct 2023 00:43:47 -0700 (PDT)
+        bh=LNOvWPRV6pmbjAX1pkDJTzjN7uuSereKfEEJLGMZ94Y=;
+        b=N7rmZiawRJc24hec+9fej8+AWFA6Q9UaZTP4d02HKUm3ur8maEN/eJESuZtZcjdrD+
+         kn4AqKnt634VFzAooXUW2Nvba+NDcVHBvGY9rNYPJZJDjsu47C7Bg4vi8Ylfv/lGSuou
+         utKZ09SBsk9Rm9F7gwl4rTzc6VVHWOHGhYbHVGhbEohFTuDXoPbAT+hdH/K/WaBYme5a
+         gzSUrzoCqj86tSE+a+7JRKXWCPz2dyyY3gXZO6CynODMj3EeeJr9u9A6z6KC72UAdmAK
+         Ocb43UigDgfq7sGz0uGyrNTFrepolqRPpYCmmrKLPvf99/9ramapiuakBMloE6b5X120
+         6UeA==
+X-Gm-Message-State: AOJu0YzgnTlwdDW/zPLpiRBMR/O2OCMHybTvgHKE1vGIjhNVEkstX9mT
+	XvflYOOM7sPpEVQP7mmWi1CuKA==
+X-Google-Smtp-Source: AGHT+IHzR471B1spJojJ/fG/dkn2/Ni1qTZ1cBlcX4SSodBhd3k+tiblkLMFjGBXeI7M+ve30xt9/Q==
+X-Received: by 2002:adf:f447:0:b0:32d:a910:6c2a with SMTP id f7-20020adff447000000b0032da9106c2amr3261846wrp.30.1697615047559;
+        Wed, 18 Oct 2023 00:44:07 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:982:cbb0:5d8f:701:423:3d05? ([2a01:e0a:982:cbb0:5d8f:701:423:3d05])
-        by smtp.gmail.com with ESMTPSA id f4-20020a056000128400b0031c5e9c2ed7sm1457010wrx.92.2023.10.18.00.43.46
+        by smtp.gmail.com with ESMTPSA id f4-20020a056000128400b0031c5e9c2ed7sm1457010wrx.92.2023.10.18.00.44.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Oct 2023 00:43:46 -0700 (PDT)
-Message-ID: <0410f762-384f-48be-a562-4ab65381626e@linaro.org>
-Date: Wed, 18 Oct 2023 09:43:46 +0200
+        Wed, 18 Oct 2023 00:44:07 -0700 (PDT)
+Message-ID: <448dca4f-324e-492b-8fc9-c35059eb5042@linaro.org>
+Date: Wed, 18 Oct 2023 09:44:06 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
+From: neil.armstrong@linaro.org
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v1 2/2] arm: meson-a1: dts: Sync DT with Linux
+Subject: Re: [PATCH] phy: meson-g12a-usb2: fix ret check on power_domain_get
 Content-Language: en-US, fr
-To: Igor Prusov <ivprusov@salutedevices.com>
-Cc: prusovigor@gmail.com, kernel@sberdevices.ru, u-boot-amlogic@groups.io,
- u-boot@lists.denx.de
-References: <20231017213211.121550-1-ivprusov@salutedevices.com>
- <20231017213211.121550-3-ivprusov@salutedevices.com>
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de,
+ avromanov@salutedevices.com
+References: <20231017185725.809524-1-glaroque@baylibre.com>
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
  GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
@@ -86,449 +85,54 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro Developer Services
-In-Reply-To: <20231017213211.121550-3-ivprusov@salutedevices.com>
+In-Reply-To: <20231017185725.809524-1-glaroque@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 07:43:55 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1781
+ <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 07:44:15 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1782
 
-On 17/10/2023 23:32, Igor Prusov wrote:
-> Import device tree changes from Linux v6.6-rc6 for Amlogic A1 board.
+On 17/10/2023 20:57, Guillaume La Roque wrote:
+> Patch which add A1 SoC support create a regression on khadas vim3/vim3l
+> boards when we try to use fastboot command:
 > 
-> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+>    => fastboot usb 0
+>    failed to get power domain
+>    failed to get power domain
+>    No USB device found
+>    USB init failed: -19
+> 
+> Add ENOENT check on ret in probe function.
+> 
+> Fixes: 5533c883ce10 ("phy: support Amlogic A1 family")
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->   arch/arm/dts/meson-a1.dtsi | 356 ++++++++++++++++++++++++++++++++++++-
->   1 file changed, 351 insertions(+), 5 deletions(-)
+>   drivers/phy/meson-g12a-usb2.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/dts/meson-a1.dtsi b/arch/arm/dts/meson-a1.dtsi
-> index e3a42c5b24..648e7f4942 100644
-> --- a/arch/arm/dts/meson-a1.dtsi
-> +++ b/arch/arm/dts/meson-a1.dtsi
-> @@ -3,9 +3,13 @@
->    * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->    */
+> diff --git a/drivers/phy/meson-g12a-usb2.c b/drivers/phy/meson-g12a-usb2.c
+> index 4ba3992bda70..3958d2404b85 100644
+> --- a/drivers/phy/meson-g12a-usb2.c
+> +++ b/drivers/phy/meson-g12a-usb2.c
+> @@ -328,12 +328,12 @@ int meson_g12a_usb2_phy_probe(struct udevice *dev)
 >   
-> -#include <dt-bindings/interrupt-controller/irq.h>
-> -#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/amlogic,a1-pll-clkc.h>
-> +#include <dt-bindings/clock/amlogic,a1-peripherals-clkc.h>
->   #include <dt-bindings/gpio/meson-a1-gpio.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/power/meson-a1-power.h>
-> +#include <dt-bindings/reset/amlogic,meson-a1-reset.h>
+>   #if CONFIG_IS_ENABLED(POWER_DOMAIN)
+>   	ret = power_domain_get(dev, &priv->pwrdm);
+> -	if (ret < 0 && ret != -ENODEV) {
+> -		pr_err("failed to get power domain\n");
+> +	if (ret < 0 && ret != -ENODEV && ret != -ENOENT) {
+> +		pr_err("failed to get power domain : %d\n", ret);
+>   		return ret;
+>   	}
 >   
->   / {
->   	compatible = "amlogic,a1";
-> @@ -37,9 +41,19 @@
->   		l2: l2-cache0 {
->   			compatible = "cache";
->   			cache-level = <2>;
-> +			cache-unified;
->   		};
->   	};
->   
-> +	efuse: efuse {
-> +		compatible = "amlogic,meson-gxbb-efuse";
-> +		clocks = <&clkc_periphs CLKID_OTP>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		secure-monitor = <&sm>;
-> +		power-domains = <&pwrc PWRC_OTP_ID>;
-> +	};
-> +
->   	psci {
->   		compatible = "arm,psci-1.0";
->   		method = "smc";
-> @@ -65,7 +79,6 @@
->   		pwrc: power-controller {
->   			compatible = "amlogic,meson-a1-pwrc";
->   			#power-domain-cells = <1>;
-> -			status = "okay";
->   		};
->   	};
->   
-> @@ -75,6 +88,16 @@
->   		#size-cells = <2>;
->   		ranges;
->   
-> +		spifc: spi@fd000400 {
-> +			compatible = "amlogic,a1-spifc";
-> +			reg = <0x0 0xfd000400 0x0 0x290>;
-> +			clocks = <&clkc_periphs CLKID_SPIFC>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			power-domains = <&pwrc PWRC_SPIFC_ID>;
-> +			status = "disabled";
-> +		};
-> +
->   		apb: bus@fe000000 {
->   			compatible = "simple-bus";
->   			reg = <0x0 0xfe000000 0x0 0x1000000>;
-> @@ -103,10 +126,200 @@
->   					gpio-ranges = <&periphs_pinctrl 0 0 62>;
->   				};
->   
-> +				i2c0_f11_pins: i2c0-f11 {
-> +					mux {
-> +						groups = "i2c0_sck_f11",
-> +							 "i2c0_sda_f12";
-> +						function = "i2c0";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c0_f9_pins: i2c0-f9 {
-> +					mux {
-> +						groups = "i2c0_sck_f9",
-> +							 "i2c0_sda_f10";
-> +						function = "i2c0";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c1_x_pins: i2c1-x {
-> +					mux {
-> +						groups = "i2c1_sck_x",
-> +							 "i2c1_sda_x";
-> +						function = "i2c1";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c1_a_pins: i2c1-a {
-> +					mux {
-> +						groups = "i2c1_sck_a",
-> +							 "i2c1_sda_a";
-> +						function = "i2c1";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c2_x0_pins: i2c2-x0 {
-> +					mux {
-> +						groups = "i2c2_sck_x0",
-> +							 "i2c2_sda_x1";
-> +						function = "i2c2";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c2_x15_pins: i2c2-x15 {
-> +					mux {
-> +						groups = "i2c2_sck_x15",
-> +							 "i2c2_sda_x16";
-> +						function = "i2c2";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c2_a4_pins: i2c2-a4 {
-> +					mux {
-> +						groups = "i2c2_sck_a4",
-> +							 "i2c2_sda_a5";
-> +						function = "i2c2";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c2_a8_pins: i2c2-a8 {
-> +					mux {
-> +						groups = "i2c2_sck_a8",
-> +							 "i2c2_sda_a9";
-> +						function = "i2c2";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c3_x_pins: i2c3-x {
-> +					mux {
-> +						groups = "i2c3_sck_x",
-> +							 "i2c3_sda_x";
-> +						function = "i2c3";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				i2c3_f_pins: i2c3-f {
-> +					mux {
-> +						groups = "i2c3_sck_f",
-> +							 "i2c3_sda_f";
-> +						function = "i2c3";
-> +						bias-pull-up;
-> +						drive-strength-microamp = <3000>;
-> +					};
-> +				};
-> +
-> +				uart_a_pins: uart-a {
-> +					mux {
-> +						groups = "uart_a_tx",
-> +							 "uart_a_rx";
-> +						function = "uart_a";
-> +					};
-> +				};
-> +
-> +				uart_a_cts_rts_pins: uart-a-cts-rts {
-> +					mux {
-> +						groups = "uart_a_cts",
-> +							 "uart_a_rts";
-> +						function = "uart_a";
-> +						bias-pull-down;
-> +					};
-> +				};
-> +
-> +				sdio_pins: sdio {
-> +					mux0 {
-> +						groups = "sdcard_d0_x",
-> +							 "sdcard_d1_x",
-> +							 "sdcard_d2_x",
-> +							 "sdcard_d3_x",
-> +							 "sdcard_cmd_x";
-> +						function = "sdcard";
-> +						bias-pull-up;
-> +					};
-> +
-> +					mux1 {
-> +						groups = "sdcard_clk_x";
-> +						function = "sdcard";
-> +						bias-disable;
-> +					};
-> +				};
-> +
-> +				sdio_clk_gate_pins: sdio-clk-gate {
-> +					mux {
-> +						groups = "sdcard_clk_x";
-> +						function = "sdcard";
-> +						bias-pull-down;
-> +					};
-> +				};
-> +
-> +				spifc_pins: spifc {
-> +					mux {
-> +						groups = "spif_mo",
-> +							 "spif_mi",
-> +							 "spif_clk",
-> +							 "spif_cs",
-> +							 "spif_hold_n",
-> +							 "spif_wp_n";
-> +						function = "spif";
-> +					};
-> +				};
-> +			};
-> +
-> +			gpio_intc: interrupt-controller@440 {
-> +				compatible = "amlogic,meson-a1-gpio-intc",
-> +					     "amlogic,meson-gpio-intc";
-> +				reg = <0x0 0x0440 0x0 0x14>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				amlogic,channel-interrupts =
-> +					<49 50 51 52 53 54 55 56>;
-> +			};
-> +
-> +			clkc_periphs: clock-controller@800 {
-> +				compatible = "amlogic,a1-peripherals-clkc";
-> +				reg = <0 0x800 0 0x104>;
-> +				#clock-cells = <1>;
-> +				clocks = <&clkc_pll CLKID_FCLK_DIV2>,
-> +					 <&clkc_pll CLKID_FCLK_DIV3>,
-> +					 <&clkc_pll CLKID_FCLK_DIV5>,
-> +					 <&clkc_pll CLKID_FCLK_DIV7>,
-> +					 <&clkc_pll CLKID_HIFI_PLL>,
-> +					 <&xtal>;
-> +				clock-names = "fclk_div2", "fclk_div3",
-> +					      "fclk_div5", "fclk_div7",
-> +					      "hifi_pll", "xtal";
-> +			};
-> +
-> +			i2c0: i2c@1400 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				status = "disabled";
-> +				reg = <0x0 0x1400 0x0 0x20>;
-> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
-> +				power-domains = <&pwrc PWRC_I2C_ID>;
->   			};
->   
->   			uart_AO: serial@1c00 {
-> -				compatible = "amlogic,meson-gx-uart",
-> +				compatible = "amlogic,meson-a1-uart",
->   					     "amlogic,meson-ao-uart";
->   				reg = <0x0 0x1c00 0x0 0x18>;
->   				interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
-> @@ -116,7 +329,7 @@
->   			};
->   
->   			uart_AO_B: serial@2000 {
-> -				compatible = "amlogic,meson-gx-uart",
-> +				compatible = "amlogic,meson-a1-uart",
->   					     "amlogic,meson-ao-uart";
->   				reg = <0x0 0x2000 0x0 0x18>;
->   				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-> @@ -125,9 +338,70 @@
->   				status = "disabled";
->   			};
->   
-> +			saradc: adc@2c00 {
-> +				compatible = "amlogic,meson-g12a-saradc",
-> +					"amlogic,meson-saradc";
-> +				reg = <0x0 0x2c00 0x0 0x48>;
-> +				#io-channel-cells = <1>;
-> +				power-domains = <&pwrc PWRC_I2C_ID>;
-> +				interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>,
-> +					<&clkc_periphs CLKID_SARADC_EN>,
-> +					<&clkc_periphs CLKID_SARADC>,
-> +					<&clkc_periphs CLKID_SARADC_SEL>;
-> +				clock-names = "clkin", "core",
-> +					"adc_clk", "adc_sel";
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c1: i2c@5c00 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				status = "disabled";
-> +				reg = <0x0 0x5c00 0x0 0x20>;
-> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
-> +				power-domains = <&pwrc PWRC_I2C_ID>;
-> +			};
-> +
-> +			i2c2: i2c@6800 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				status = "disabled";
-> +				reg = <0x0 0x6800 0x0 0x20>;
-> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
-> +				power-domains = <&pwrc PWRC_I2C_ID>;
-> +			};
-> +
-> +			i2c3: i2c@6c00 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				status = "disabled";
-> +				reg = <0x0 0x6c00 0x0 0x20>;
-> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
-> +				power-domains = <&pwrc PWRC_I2C_ID>;
-> +			};
-> +
-> +			usb2_phy1: phy@4000 {
-> +				compatible = "amlogic,a1-usb2-phy";
-> +				clocks = <&clkc_periphs CLKID_USB_PHY_IN>;
-> +				clock-names = "xtal";
-> +				reg = <0x0 0x4000 0x0 0x60>;
-> +				resets = <&reset RESET_USBPHY>;
-> +				reset-names = "phy";
-> +				#phy-cells = <0>;
-> +				power-domains = <&pwrc PWRC_USB_ID>;
-> +			};
-> +
->   			hwrng: rng@5118 {
->   				compatible = "amlogic,meson-rng";
->   				reg = <0x0 0x5118 0x0 0x4>;
-> +				power-domains = <&pwrc PWRC_OTP_ID>;
->   			};
->   
->   			sec_AO: ao-secure@5a20 {
-> @@ -135,6 +409,78 @@
->   				reg = <0x0 0x5a20 0x0 0x140>;
->   				amlogic,has-chip-id;
->   			};
-> +
-> +			clkc_pll: pll-clock-controller@7c80 {
-> +				compatible = "amlogic,a1-pll-clkc";
-> +				reg = <0 0x7c80 0 0x18c>;
-> +				#clock-cells = <1>;
-> +				clocks = <&clkc_periphs CLKID_FIXPLL_IN>,
-> +					 <&clkc_periphs CLKID_HIFIPLL_IN>;
-> +				clock-names = "fixpll_in", "hifipll_in";
-> +			};
-> +
-> +			sd_emmc: sd@10000 {
-> +				compatible = "amlogic,meson-axg-mmc";
-> +				reg = <0x0 0x10000 0x0 0x800>;
-> +				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clkc_periphs CLKID_SD_EMMC_A>,
-> +					 <&clkc_periphs CLKID_SD_EMMC>,
-> +					 <&clkc_pll CLKID_FCLK_DIV2>;
-> +				clock-names = "core",
-> +					      "clkin0",
-> +					      "clkin1";
-> +				assigned-clocks = <&clkc_periphs CLKID_SD_EMMC_SEL2>;
-> +				assigned-clock-parents = <&xtal>;
-> +				resets = <&reset RESET_SD_EMMC_A>;
-> +				power-domains = <&pwrc PWRC_SD_EMMC_ID>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		usb: usb@fe004400 {
-> +			status = "disabled";
-> +			compatible = "amlogic,meson-a1-usb-ctrl";
-> +			reg = <0x0 0xfe004400 0x0 0xa0>;
-> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +
-> +			clocks = <&clkc_periphs CLKID_USB_CTRL>,
-> +				 <&clkc_periphs CLKID_USB_BUS>,
-> +				 <&clkc_periphs CLKID_USB_CTRL_IN>;
-> +			clock-names = "usb_ctrl", "usb_bus", "xtal_usb_ctrl";
-> +			resets = <&reset RESET_USBCTRL>;
-> +			reset-name = "usb_ctrl";
-> +
-> +			dr_mode = "otg";
-> +
-> +			phys = <&usb2_phy1>;
-> +			phy-names = "usb2-phy1";
-> +
-> +			dwc3: usb@ff400000 {
-> +				compatible = "snps,dwc3";
-> +				reg = <0x0 0xff400000 0x0 0x100000>;
-> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +				dr_mode = "host";
-> +				snps,dis_u2_susphy_quirk;
-> +				snps,quirk-frame-length-adjustment = <0x20>;
-> +				snps,parkmode-disable-ss-quirk;
-> +			};
-> +
-> +			dwc2: usb@ff500000 {
-> +				compatible = "amlogic,meson-a1-usb", "snps,dwc2";
-> +				reg = <0x0 0xff500000 0x0 0x40000>;
-> +				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +				phys = <&usb2_phy1>;
-> +				phy-names = "usb2-phy";
-> +				clocks = <&clkc_periphs CLKID_USB_PHY>;
-> +				clock-names = "otg";
-> +				dr_mode = "peripheral";
-> +				g-rx-fifo-size = <192>;
-> +				g-np-tx-fifo-size = <128>;
-> +				g-tx-fifo-size = <128 128 16 16 16>;
-> +			};
->   		};
->   
->   		gic: interrupt-controller@ff901000 {
+> -	if (ret != -ENODEV) {
+> +	if (ret != -ENODEV && ret != -ENOENT) {
+>   		ret = power_domain_on(&priv->pwrdm);
+>   		if (ret < 0) {
+>   			pr_err("failed to enable power domain\n");
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
