@@ -2,73 +2,65 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27328CDB47E
-	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 07:42:45 +0000 (UTC)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web11.276275.1697614961961529778
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2795CDB47E
+	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 07:43:34 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web11.276285.1697615013268633792
  for <u-boot-amlogic@groups.io>;
- Wed, 18 Oct 2023 00:42:42 -0700
+ Wed, 18 Oct 2023 00:43:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=FmuKoHl0;
- spf=pass (domain: linaro.org, ip: 209.85.221.50, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-32d9cb5e0fcso4275178f8f.0
-        for <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 00:42:41 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=RIGZi1b+;
+ spf=pass (domain: linaro.org, ip: 209.85.221.51, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-323ef9a8b59so5999499f8f.3
+        for <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 00:43:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697614960; x=1698219760; darn=groups.io;
+        d=linaro.org; s=google; t=1697615011; x=1698219811; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PRTgNSOsXG0F9aLy2A/XE7NkoPOUWrEtgTPGGPgARJc=;
-        b=FmuKoHl0dEifoctp6LlOB+o9ge9CEbCh/Lw5Au86CZ42xnB9Wt+i405uQSCWLSQeys
-         QtK1C+pXiw/TXeGdIsr4MzP4kgKohq2XdRPaEGzZJonIEK6kYY3WVOVW9L9X0bLHckAx
-         EePik3caE8HqgR3xfdTCcF9Bl4KDTsnucE/idPwCsbEhZia6VKZv6VmXMo4S8MQq2OlM
-         Nu0apTbJFaKHsSiJrWMIcmoq8+u+2/cPBjU/xDWezlm3WXkoUHhm5RyO20/zZ0JtADYd
-         OjsE/62ayUzQFaLdjslgonuB48H9c2eq2CBRLh4Z929xwmmaXVHsrN93OipkKC1PMqRL
-         DH1g==
+        bh=i0vCf29nLDwhqFZbNKESsa8maKdStWsuI7dK+fyv8HM=;
+        b=RIGZi1b+4RuipxP4Cl3R/YCWUmaMIcz52KQzszZOopbeq7xJifCZADQ/lYVu2XqXo+
+         wjmQ4gOPfduXI4VDwPcJKtGM6GboAkIzX0UBFnhy2t+u+mAbxn7SQWc4XoBytsTZk6WR
+         n6OJAZVtbwOECU1j6odLmQ8+eulvcnKzEJ0rb1fdjx3HLcq/yMysL6p5r3cf31yhk8l5
+         V5bvRuT8gMa/nGY/DMVnhoNT9LSuGst9dBbzlt2DrnyrCtGIZl50R6gUOhaHgKdQpHT1
+         +9KRwB/eO/ksg49nwc6qhaRii/BkJADJ5xkBxYFBgv8AkPrpzOd28Cl8T4WQvrTJUHoD
+         kP0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697614960; x=1698219760;
+        d=1e100.net; s=20230601; t=1697615011; x=1698219811;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=PRTgNSOsXG0F9aLy2A/XE7NkoPOUWrEtgTPGGPgARJc=;
-        b=r0NSI09PKQWziWbqQEx0PF5LtsHeymRZmy24CQmtEZNDTmL0Mvoxz0rTf49DDbXWNO
-         CykMB3FAxD+vW4T4uJatD4dPnTT2h2lfEBoRIBzqGp4VZI0gDipfN9XIXiLqSk+849kr
-         OOJ0D/cmYWZcAYbaWzCRidtzCfY1YXSf5vBEPVxgD01xW5O/GNO8StXYZDH0bBtcRWds
-         gsjHYR9n71oppJTFtpFhAynaIJURRharTNSxASkY1LDa5RhQRYWcd/mXPIVxj2TPtFzL
-         crqejIUmCW5HmQGevmppkO94Zm2EElpp5qApoZkiL/S6IZzcAqDSvpKOTFJxFHC/seXD
-         lIzA==
-X-Gm-Message-State: AOJu0YxxtFBl3C3AWuY4DtbF4v9cf/YR/Z/zCbZNx0eLroPrQ1Fihf0+
-	ECpz9nHALF344MEcJJhO2AeuOA==
-X-Google-Smtp-Source: AGHT+IFiMpUuxGLmnXBwvD/drZlOEpAchJMyhKaL9bfQNVx829Dm25kk6dI8KZmZfEjwb96fX66SSg==
-X-Received: by 2002:adf:ec0f:0:b0:317:67bf:3376 with SMTP id x15-20020adfec0f000000b0031767bf3376mr3658884wrn.57.1697614960106;
-        Wed, 18 Oct 2023 00:42:40 -0700 (PDT)
+        bh=i0vCf29nLDwhqFZbNKESsa8maKdStWsuI7dK+fyv8HM=;
+        b=nCHWDuAKUug6MURVj3uQ9bb8UNvfNw3zFLmFnCmOEknVvW9Q8b6lo931wyDTeXYe5D
+         BWp0XoUyjA/oULtJM4tmS/Q5tr92xG6rQ0WolpBHwYqgWUZfN/t8up9AoFhADf2Z3yCJ
+         d5dkPf/Pv5SuvHM2soG25nZvvENBtOeDB/PsKvV+HL20fpOm2JM2oEx3a9lk511iidkO
+         tKxtzIMg3F9TV1958Hi0tvYXq0Rebf84sg+ParsA+4g2prUyq+TdM6pmAMbtqRuK+KaF
+         tg9kF0Lm0Wb3CcrVUtETvCBj52d9NjeY9z8AkYIQv8e4CTBzTTn1ur6StlYPQa6Gx9ec
+         dpgA==
+X-Gm-Message-State: AOJu0YwF5JF2UZGiK7TTcikxIOrTb/i/Qm+PV4Rf/s0T5++Oknjn0V/Q
+	QGLG8UOcfxlNsTuERPP6tymAkA==
+X-Google-Smtp-Source: AGHT+IGUGZp1xd2h62gSe7PHhS+N9Sy5XgZABjdi0pGyFp31gW/ywAhxeyKHoHICJL0fbHnebjtQXQ==
+X-Received: by 2002:adf:e691:0:b0:31a:d9bc:47a2 with SMTP id r17-20020adfe691000000b0031ad9bc47a2mr3825023wrm.53.1697615011648;
+        Wed, 18 Oct 2023 00:43:31 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:982:cbb0:5d8f:701:423:3d05? ([2a01:e0a:982:cbb0:5d8f:701:423:3d05])
-        by smtp.gmail.com with ESMTPSA id f4-20020a056000128400b0031c5e9c2ed7sm1457010wrx.92.2023.10.18.00.42.39
+        by smtp.gmail.com with ESMTPSA id f4-20020a056000128400b0031c5e9c2ed7sm1457010wrx.92.2023.10.18.00.43.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Oct 2023 00:42:39 -0700 (PDT)
-Message-ID: <d4fa0c3a-a6a1-4c06-8f9e-f59086201069@linaro.org>
-Date: Wed, 18 Oct 2023 09:42:37 +0200
+        Wed, 18 Oct 2023 00:43:31 -0700 (PDT)
+Message-ID: <ca225ffe-c524-4312-8a65-30e0c36c4ae7@linaro.org>
+Date: Wed, 18 Oct 2023 09:43:30 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v4 4/8] clk: amlogic: Move driver and ops structs
+Subject: Re: [PATCH v1 1/2] serial: amlogic: Add UART compatible for A1 board
 Content-Language: en-US, fr
-To: Igor Prusov <ivprusov@sberdevices.ru>, Michal Simek
- <michal.simek@amd.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
- Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>,
- Ryan Chen <ryan_chen@aspeedtech.com>,
- Chia-Wei Wang <chiawei_wang@aspeedtech.com>, Stefan Roese <sr@denx.de>,
- Patrick Delaunay <patrick.delaunay@foss.st.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: prusovigor@gmail.com, kernel@sberdevices.ru,
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
- u-boot@lists.denx.de, u-boot-amlogic@groups.io,
- uboot-stm32@st-md-mailman.stormreply.com
-References: <20231017165649.1492-1-ivprusov@sberdevices.ru>
- <20231017165649.1492-5-ivprusov@sberdevices.ru>
+To: Igor Prusov <ivprusov@salutedevices.com>
+Cc: prusovigor@gmail.com, kernel@sberdevices.ru, u-boot-amlogic@groups.io,
+ u-boot@lists.denx.de
+References: <20231017213211.121550-1-ivprusov@salutedevices.com>
+ <20231017213211.121550-2-ivprusov@salutedevices.com>
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
  GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
@@ -94,80 +86,39 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro Developer Services
-In-Reply-To: <20231017165649.1492-5-ivprusov@sberdevices.ru>
+In-Reply-To: <20231017213211.121550-2-ivprusov@salutedevices.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 07:42:45 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1779
+ <u-boot-amlogic@groups.io>; Wed, 18 Oct 2023 07:43:34 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1780
 
-On 17/10/2023 18:56, Igor Prusov wrote:
-> Move driver and ops structs to avoid forward declaration after switching
-> to dump in clk_ops.
+On 17/10/2023 23:32, Igor Prusov wrote:
+> Add additional compatible to allow using serial driver with A1 board.
+> After compatible change in DTS [1], serial_meson driver should still be
+> able to work with console device.
 > 
-> Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
+> [1] https://lore.kernel.org/all/20230705181833.16137-8-ddrokosov@sberdevices.ru/
+> 
+> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
 > ---
->   drivers/clk/meson/a1.c | 34 +++++++++++++++++-----------------
->   1 file changed, 17 insertions(+), 17 deletions(-)
+>   drivers/serial/serial_meson.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
-> index 1075ba7333..e3fa9db7d0 100644
-> --- a/drivers/clk/meson/a1.c
-> +++ b/drivers/clk/meson/a1.c
-> @@ -601,14 +601,6 @@ static int meson_clk_set_parent(struct clk *clk, struct clk *parent_clk)
->   	return meson_mux_set_parent_by_id(clk, parent_clk->id);
->   }
->   
-> -static struct clk_ops meson_clk_ops = {
-> -	.disable	= meson_clk_disable,
-> -	.enable		= meson_clk_enable,
-> -	.get_rate	= meson_clk_get_rate,
-> -	.set_rate	= meson_clk_set_rate,
-> -	.set_parent	= meson_clk_set_parent,
-> -};
-> -
->   static int meson_clk_probe(struct udevice *dev)
->   {
->   	struct meson_clk *priv = dev_get_priv(dev);
-> @@ -638,15 +630,6 @@ static const struct udevice_id meson_clk_ids[] = {
+> diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson.c
+> index 934de2ab23..be5f380f85 100644
+> --- a/drivers/serial/serial_meson.c
+> +++ b/drivers/serial/serial_meson.c
+> @@ -232,6 +232,7 @@ static const struct dm_serial_ops meson_serial_ops = {
+>   static const struct udevice_id meson_serial_ids[] = {
+>   	{ .compatible = "amlogic,meson-uart" },
+>   	{ .compatible = "amlogic,meson-gx-uart" },
+> +	{ .compatible = "amlogic,meson-a1-uart" },
 >   	{ }
 >   };
 >   
-> -U_BOOT_DRIVER(meson_clk) = {
-> -	.name		= "meson-clk-a1",
-> -	.id		= UCLASS_CLK,
-> -	.of_match	= meson_clk_ids,
-> -	.priv_auto	= sizeof(struct meson_clk),
-> -	.ops		= &meson_clk_ops,
-> -	.probe		= meson_clk_probe,
-> -};
-> -
->   static const char *meson_clk_get_name(struct clk *clk, int id)
->   {
->   	const struct meson_clk_info *info;
-> @@ -727,3 +710,20 @@ int soc_clk_dump(void)
->   
->   	return 0;
->   }
-> +
-> +static struct clk_ops meson_clk_ops = {
-> +	.disable	= meson_clk_disable,
-> +	.enable		= meson_clk_enable,
-> +	.get_rate	= meson_clk_get_rate,
-> +	.set_rate	= meson_clk_set_rate,
-> +	.set_parent	= meson_clk_set_parent,
-> +};
-> +
-> +U_BOOT_DRIVER(meson_clk) = {
-> +	.name		= "meson-clk-a1",
-> +	.id		= UCLASS_CLK,
-> +	.of_match	= meson_clk_ids,
-> +	.priv_auto	= sizeof(struct meson_clk),
-> +	.ops		= &meson_clk_ops,
-> +	.probe		= meson_clk_probe,
-> +};
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
