@@ -2,59 +2,59 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F3BC004C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0DBC001E0
 	for <webhook@archiver.kernel.org>; Mon, 23 Oct 2023 12:41:51 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.119337.1698064906607853660
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+ by mx.groups.io with SMTP id smtpd.web11.119789.1698064909291158454
  for <u-boot-amlogic@groups.io>;
- Mon, 23 Oct 2023 05:41:46 -0700
+ Mon, 23 Oct 2023 05:41:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=o829axAR;
- spf=pass (domain: linaro.org, ip: 209.85.128.44, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40906fc54fdso3511615e9.0
-        for <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 05:41:46 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=uNvCdHtI;
+ spf=pass (domain: linaro.org, ip: 209.85.208.177, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2c50cf61f6dso48576671fa.2
+        for <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 05:41:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698064905; x=1698669705; darn=groups.io;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5cnPFABFPBFaCPTSr4ChUhUhj5DMXSyZtG+7/7ZXQNg=;
-        b=o829axARyW6730IC1g3XxR8kSWfixJuoQfnfQ5/yev6smc6kkZZ5eMcOjATT8B2s8X
-         Hv2SnsSdkn5ge0VTrhswPs1g5bN6f2X/wTMNMC5v3DHQnKIA0fMXMu1MVjFoUXUGeSTo
-         oC9wlL8j83IRWzE0uKjqMbWWAoZZ5ncVdFD8UbxR+9/LOVU4KoEl/gDOZIdmx9+mw50B
-         REjfj4BHYrrUKAsDz/2hWy5Iu9DTuOoGlk27LSPNoaexUbrHjWBACQKQvsWYJylY7emb
-         NM/dGELz1BxDdesDcgT5PR/OouXR7/88KBL5TcSOTjRbdkyGy+6apMuKW2A5u8TEl+MB
-         djBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698064905; x=1698669705;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1698064907; x=1698669707; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5cnPFABFPBFaCPTSr4ChUhUhj5DMXSyZtG+7/7ZXQNg=;
-        b=qbmiiOseVpev+o/X/hzP0xJ5FdNS4sGiG1F0gWwSDVTaSFzc5Qm9fipoBQSVeaRXVe
-         JVSErPMBvwSwjQVEwJfR8mVOC6WpaU7/cuDgPnVnODm/blawE0FWmt995nW9Myhp4i4J
-         ZXeIoyos30GK97+9UGrtchjUdl9OJCTrEkjlTbWEmp5xYVPjUf+PdIEpmD6wuVAaB3cG
-         ODrPU0NI0qMELtRo+gLxSXS0cZSo+PvaQmWrZT9RhdkkUIOm7NZ6aboR4WLV9OUyszVK
-         CqUCV5rYVnDX7jnZuvjKRYHgcZ4xs/LxWZOqVbVaAjvomd45T2cbfOHQtWKffEUPc14v
-         P2EQ==
-X-Gm-Message-State: AOJu0YyKup+3/tXxvwhO+t4l2r7dKSPCKD+b+jP308dMMy1Fu9DqmFO9
-	VNB9swVwXkdVaXIvwU3u4tRBzA==
-X-Google-Smtp-Source: AGHT+IGtj8vSl5FaJtybvMrLCUrtUklR9aCw158giQgef0PTTl96Z+ynYX8LOIDarZl5dBUZza/pVw==
-X-Received: by 2002:a05:600c:4588:b0:409:7d0:d20b with SMTP id r8-20020a05600c458800b0040907d0d20bmr657350wmo.24.1698064904970;
-        Mon, 23 Oct 2023 05:41:44 -0700 (PDT)
+        bh=lfS0T2H76Qdru7gYN5qzW3GDdD6skpw7X5W3gkKjwGg=;
+        b=uNvCdHtITlicpodtCTD+3DXZL+7CnTbegPWzanbnV27VHwRcltOSmBPFXjHzcA1zU1
+         TfPOPg9H6icWArfQvbxGfFbnxC4pNiG3h8+3/FUEzwCYS1SJ+AEwF/FFX3cuBwyVsOKq
+         etkIv/6ADksIxLZR5UE51hJEPCHPMf/p+NHNjIHBPCaovpbY7fyml6ZMs3XpilmTjhcV
+         ppZ6OOSiROtBkoDed69yCcVDa/7dUGuHh1J0n9Lp6RYZGyCdKi59wfddRqs1wAV4dyKS
+         sAQ/Hv9W1brtnhGdSqiBlt1Nn809OJSfXdlKcBYT/hK0UQpB6SkONkjdBFr+M4klxwAr
+         6ccQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698064907; x=1698669707;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lfS0T2H76Qdru7gYN5qzW3GDdD6skpw7X5W3gkKjwGg=;
+        b=pIu6JHpPiPxRhnSiNi9Ll2xvN9rMgcDwPWfkBu54zbgqNsItYj5IJTr1hcH901xKMS
+         Dh6n5vNfrR4deu3gRjl2Bbu5Cx4UCr75KNLckUvC+SFMSqrju7ZsGDMxxbFfi2UmfS6K
+         oOguK7qStOh+RKgok/Gw8Lun/5Szjlte3nr+YdMCM8s6OV/DygQjbzsDY4IxhXqKeI3P
+         pH7HhEQ8+XSj32Icn4wqTqOM4RxaZ5SNW+HaMGph8Ruf+OqdLy6KX+v3gs5eCC1AiGHx
+         ZRF+vM4dfmAwggaRicj3ydi2HKHkO8Ftl6b9iYdqUOmNDrGPfsZfaVFnFfrB3lGVZ8oz
+         01+w==
+X-Gm-Message-State: AOJu0YzwujqjN5cRoAci/NSrwyINPAVlRYk2Ww8DXzJK+jMTUqVzaV4b
+	LwBfOmdDopud/iok7cW2xJYrZg==
+X-Google-Smtp-Source: AGHT+IHttdxiQX2SBZoQtfaOmdlIscrmQw5n29ah8C3W2PsriABzQEne616Mxijjc7JB+i3d0+sBKg==
+X-Received: by 2002:a2e:a543:0:b0:2bd:d34:f892 with SMTP id e3-20020a2ea543000000b002bd0d34f892mr6590997ljn.3.1698064907388;
+        Mon, 23 Oct 2023 05:41:47 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:e0a:982:cbb0:a36e:a5d9:26ae:74b1])
-        by smtp.gmail.com with ESMTPSA id h14-20020a05600c314e00b003fbe4cecc3bsm14230609wmo.16.2023.10.23.05.41.44
+        by smtp.gmail.com with ESMTPSA id h14-20020a05600c314e00b003fbe4cecc3bsm14230609wmo.16.2023.10.23.05.41.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 05:41:44 -0700 (PDT)
+        Mon, 23 Oct 2023 05:41:46 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH 0/4] ARM: meson: Add boot over DFU RAM as an USB boot step
-Date: Mon, 23 Oct 2023 14:41:33 +0200
-Message-Id: <20231023-usb-dfu-boot-v1-0-df9d121c67c1@linaro.org>
+Date: Mon, 23 Oct 2023 14:41:36 +0200
+Subject: [PATCH 3/4] configs: meson64: add alternate USB DFU boot target
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAP1pNmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2NDINYtLU7STUkr1U3Kzy/RTTMxtzCxTLNMSzI2UQJqKShKTcusABsXHVt
- bCwCNnvptXgAAAA==
+Message-Id: <20231023-usb-dfu-boot-v1-3-df9d121c67c1@linaro.org>
+References: <20231023-usb-dfu-boot-v1-0-df9d121c67c1@linaro.org>
+In-Reply-To: <20231023-usb-dfu-boot-v1-0-df9d121c67c1@linaro.org>
 To: Christian Hewitt <christianshewitt@gmail.com>, 
  Vyacheslav Bocharov <adeep@lexina.in>, 
  Beniamino Galvani <b.galvani@gmail.com>
@@ -62,99 +62,97 @@ Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de,
  Neil Armstrong <neil.armstrong@linaro.org>, 
  Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3451;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2243;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=nbBq2P4CX/p5+oBzaDTLTAOa9TdVkm/K0vgzlOTLf+w=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlNmoDMTRDZk4gBKDWTTYX1+Vd26NiMZaC6HWJ6
- DiHrBOLaw+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZTZqAwAKCRB33NvayMhJ
- 0dR/EACYhACtvu2uVmL8H9ZMH9ZjzJiRt/b7qze3WCu5zaA90U9FdC99tv4BjHOw5d5phD9XiQB
- rsDb/tkLFOxISKGkcdLHLL7RVWId1tj4O+w+TuhcvrPZcbhBknwGPgt4Ja9vB+Eo2UdpmlNpIp8
- 9WaoMA0rBS6kcsi5g8NlYJpXXm7z2t92hcGyDAwUKb5czqTqrfKaVYaz0VhqNY1jgc60eYsm2ro
- k68iCAXxvva/1ayNKa5wqvLrfsmFaNisYUIHTnE8R1YiqZaBE7jU213cAR0zqTn+SxOZqCzWI1Q
- gT8yZH4+tChDNOLlJNh1eeHqmxgVKp56LvXsor8DIh36/RyNPj2/ro+WFs7jfhRUVq92fDnMEev
- UwjG5yQnL+A8YanDkxeXz+Oe12G+0Cn2STJfFZvzd72xU3qoG3LqwqsZP2UFLjKRNIesLuS2Ok7
- Oua4fHEq+5BlUD2ItnIOJYP/zDWOctCM1B1yl3hnNkEpO/8KToTnOt9kyFzr6iImhamprz3sqwM
- d3MCAuDk57KyRQXp1SCf5IakAXZSk171yjlCOtXZ+J65IDHZ1Qo+sB3XoACtIW76OmdLA+wEekX
- fHVy90JGSIljm/RoQjiHPQAal8ZFe4ESTOh7jyX4R0nifVEE9fx3sX34iyEl3Dm5wRPvwBYneqR
- FqekqwpEovs7ZUQ==
+ bh=tHu01qz5Fe2UUwEyrfr1+NhVK+wMngiROaN1YhSFWjE=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlNmoHRHPolEPcfGqUkS7UQlgWg7ESyiqEaSomR
+ +LLG24poyKJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZTZqBwAKCRB33NvayMhJ
+ 0ezWEADM9ojFF8mWBtni5CIBf40hfMAU+H/mSK77BGw0KjS5UjCxD7o3yTFXR82qdSODIF7jHbN
+ re8t2GDWe0Wm2eVyh3uO42SAhadX3kNl4lAuWN1engxwLt7BA5r15bekXQVs8q2MsAyLSkUL6Cy
+ mBFspz49B+HO3sYdHi2myiDq+tepj+SYr0o0jG6bEGBVOBB0XCLCh4nB3QqsZnoDkGr7eZOQxqd
+ Ywlk3aGnFii/jf8oTFL7+TiTD3qsheualArayGwItRBemypn1kfAPJTvYAPx9iRZuhxsTl6mCqM
+ EqogKSLH1qXW7mqj11kfUI2CYT4NT4BoPd43Vpifp1K56zTbEtSMR5PTKUYnyMlWldUnPiSKvQA
+ +Ld39eBzHmDYvhVetdbU4jRcF84epLq+IoVXSgxQSlLzgciTI+Abazo9kxDTs+9I4Ca/XvocCA1
+ OOd04XApYHtqL9fWZosK1ddLk0xczVgqoOGC7KUyNTQptWYjeE63+MOmY1I0376gBqmGD9HhrUZ
+ nchndapHVIMbAevycU6GkKOmFB7FE45Kp8jCBDwbGd2tirLlNPsvREHBg+3uqMCUiBWGooTgj5a
+ BA+0MGXl0TydVGSG28pr7rvvn1u1UiQe3STTZ4wtuLTTaK6uu9IBeXE74qW6/xzj5YwWZVzTZoH
+ ljpRvKMxOKgGVBA==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 12:41:51 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1789
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1792
 
 Add boot over DFU RAM as an alternate to running script at
 a fixed address like done today.
 
 The main culprit is that it's not possible to do that
-on G12A/SM1 platforms due to changes in the USB boot protocol.
+on G12A/Sm1 platforms due to changes in the USB boot protocol.
 
 With this, U-Boot will present a DFU device with a ram slot where
 the Host could write a fitImage or legacy U-Boot image, then with the
 detach command boot will continue trying to boot the uploaded image.
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
-Neil Armstrong (4):
-      ARM: meson: enable FIT with LEGACY_IMAGE_FORMAT on all configs
-      configs: meson64: declare addr out of EXTRA_ENV_SETTINGS
-      configs: meson64: add alternate USB DFU boot target
-      ARM: meson: enable USB DFU + RAM on Amlogic boards with USB Gadget
+ include/configs/meson64.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
- configs/ad401_defconfig                   |  2 ++
- configs/bananapi-cm4-cm4io_defconfig      |  6 ++++
- configs/bananapi-m2-pro_defconfig         |  6 ++++
- configs/bananapi-m2s_defconfig            |  6 ++++
- configs/bananapi-m5_defconfig             |  6 ++++
- configs/beelink-gsking-x_defconfig        |  6 ++++
- configs/beelink-gt1-ultimate_defconfig    |  6 ++++
- configs/beelink-gtking_defconfig          |  6 ++++
- configs/beelink-gtkingpro_defconfig       |  6 ++++
- configs/jethub_j100_defconfig             |  6 ++++
- configs/jethub_j80_defconfig              |  6 ++++
- configs/khadas-vim2_defconfig             |  6 ++++
- configs/khadas-vim3_android_ab_defconfig  |  4 +++
- configs/khadas-vim3_android_defconfig     |  4 +++
- configs/khadas-vim3_defconfig             |  6 ++++
- configs/khadas-vim3l_android_ab_defconfig |  4 +++
- configs/khadas-vim3l_android_defconfig    |  4 +++
- configs/khadas-vim3l_defconfig            |  6 ++++
- configs/khadas-vim_defconfig              |  6 ++++
- configs/libretech-ac_defconfig            |  6 ++++
- configs/libretech-cc_defconfig            |  6 ++++
- configs/libretech-cc_v2_defconfig         |  6 ++++
- configs/libretech-s905d-pc_defconfig      |  6 ++++
- configs/libretech-s912-pc_defconfig       |  6 ++++
- configs/nanopi-k2_defconfig               |  4 +++
- configs/odroid-c2_defconfig               |  4 +++
- configs/odroid-c4_defconfig               |  6 ++++
- configs/odroid-go-ultra_defconfig         |  6 ++++
- configs/odroid-hc4_defconfig              |  6 ++++
- configs/odroid-n2_defconfig               |  6 ++++
- configs/odroid-n2l_defconfig              |  6 ++++
- configs/p200_defconfig                    |  4 +++
- configs/p201_defconfig                    |  4 +++
- configs/p212_defconfig                    |  4 +++
- configs/radxa-zero2_defconfig             |  6 ++++
- configs/radxa-zero_defconfig              |  6 ++++
- configs/s400_defconfig                    |  6 ++++
- configs/sei510_defconfig                  |  6 ++++
- configs/sei610_defconfig                  |  6 ++++
- configs/u200_defconfig                    |  6 ++++
- configs/videostrong-kii-pro_defconfig     |  4 +++
- configs/wetek-core2_defconfig             |  6 ++++
- configs/wetek-hub_defconfig               |  4 +++
- configs/wetek-play2_defconfig             |  4 +++
- include/configs/meson64.h                 | 49 ++++++++++++++++++++++++++-----
- 45 files changed, 278 insertions(+), 7 deletions(-)
----
-base-commit: 9a0cf3993f71043ba08c315572c54622de42d447
-change-id: 20231023-usb-dfu-boot-f47849f9fb34
+diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+index a64817ec9b..efab9a624d 100644
+--- a/include/configs/meson64.h
++++ b/include/configs/meson64.h
+@@ -53,6 +53,30 @@
+ #define BOOTENV_DEV_NAME_ROMUSB(devtypeu, devtypel, instance)	\
+ 		"romusb "
+ 
++/*
++ * Fallback to "USB DFU" boot if script is not at scriptaddr
++ *
++ * DFU will expose the kernel_addr_r memory range as DFU entry,
++ * then with `dfu-util --detach`, booting the uploaded image
++ * will be attempted:
++ * $ dfu-util -a 0 -D fitImage
++ * $ dfu-util -a 0 -e
++ */
++#if CONFIG_IS_ENABLED(USB_GADGET) && CONFIG_IS_ENABLED(DFU_RAM)
++	#define BOOTENV_DEV_USB_DFU(devtypeu, devtypel, instance) \
++		"bootcmd_usbdfu=" \
++			"if test \"${boot_source}\" = \"usb\"; then " \
++				"dfu 0 ram 0 60;" \
++				"bootm ${kernel_addr_r};" \
++			"fi\0"
++
++	#define BOOTENV_DEV_NAME_USB_DFU(devtypeu, devtypel, instance) \
++		"usbdfu "
++#else
++	#define BOOTENV_DEV_USB_DFU(devtypeu, devtypel, instance)
++	#define BOOTENV_DEV_NAME_USB_DFU(devtypeu, devtypel, instance)
++#endif
++
+ #ifdef CONFIG_CMD_USB
+ #define BOOT_TARGET_DEVICES_USB(func) func(USB, usb, 0)
+ #else
+@@ -74,6 +98,7 @@
+ #ifndef BOOT_TARGET_DEVICES
+ #define BOOT_TARGET_DEVICES(func) \
+ 	func(ROMUSB, romusb, na)  \
++	func(USB_DFU, usbdfu, na)  \
+ 	func(MMC, mmc, 0) \
+ 	func(MMC, mmc, 1) \
+ 	func(MMC, mmc, 2) \
+@@ -109,6 +134,7 @@
+ 	"fdtoverlay_addr_r=" FDTOVERLAY_ADDR_R "\0" \
+ 	"ramdisk_addr_r=" RAMDISK_ADDR_R "\0" \
+ 	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
++	"dfu_alt_info=fitimage ram " KERNEL_ADDR_R " 0x4000000 \0" \
+ 	BOOTENV
+ #endif
+ 
 
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
 
 
