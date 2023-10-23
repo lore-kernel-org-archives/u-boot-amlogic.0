@@ -2,128 +2,159 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D1CDB474
-	for <webhook@archiver.kernel.org>; Mon, 23 Oct 2023 09:02:40 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.116659.1698051753184007365
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F3BC004C0
+	for <webhook@archiver.kernel.org>; Mon, 23 Oct 2023 12:41:51 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web10.119337.1698064906607853660
  for <u-boot-amlogic@groups.io>;
- Mon, 23 Oct 2023 02:02:33 -0700
+ Mon, 23 Oct 2023 05:41:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=buhZMpdq;
- spf=pass (domain: linaro.org, ip: 209.85.128.54, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4081ccf69dcso22780575e9.0
-        for <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 02:02:32 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=o829axAR;
+ spf=pass (domain: linaro.org, ip: 209.85.128.44, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40906fc54fdso3511615e9.0
+        for <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 05:41:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698051751; x=1698656551; darn=groups.io;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B1gLox9RqyXPSzPj6p25lDQAF72qjp15QUnwuXfYshI=;
-        b=buhZMpdqDT/wlxPRw0kyBiCe/6h5IXMWFgC1FqUQ43/e+gvwb+hYcNzuwIhglSrygH
-         By0Zfz+BDvMxWeeEwnz3IAdOqdzXWSLzYiWELiGYOlFDLLA9jzisvt4+e7Zp6KW/9vmr
-         TOc77/SSJUYshT80x+1NV/GOmffXiVzPuQRVp9RtyiAGX433NiS6pz7qGcdGsdQwOgps
-         4sR5NAUsmN6A8GEo8ehcPZxXgf5bQxFEdGqlP1NU8Yl/NcYyKD7RKzxX8/Cq5e+eCQCt
-         iVzGzpdlCRycbdUsQ0J0IRxs66zUkamPQk4AVF2d+EWJc37FMKs8Tbcypk6x0XF3uDG+
-         61ag==
+        d=linaro.org; s=google; t=1698064905; x=1698669705; darn=groups.io;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5cnPFABFPBFaCPTSr4ChUhUhj5DMXSyZtG+7/7ZXQNg=;
+        b=o829axARyW6730IC1g3XxR8kSWfixJuoQfnfQ5/yev6smc6kkZZ5eMcOjATT8B2s8X
+         Hv2SnsSdkn5ge0VTrhswPs1g5bN6f2X/wTMNMC5v3DHQnKIA0fMXMu1MVjFoUXUGeSTo
+         oC9wlL8j83IRWzE0uKjqMbWWAoZZ5ncVdFD8UbxR+9/LOVU4KoEl/gDOZIdmx9+mw50B
+         REjfj4BHYrrUKAsDz/2hWy5Iu9DTuOoGlk27LSPNoaexUbrHjWBACQKQvsWYJylY7emb
+         NM/dGELz1BxDdesDcgT5PR/OouXR7/88KBL5TcSOTjRbdkyGy+6apMuKW2A5u8TEl+MB
+         djBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698051751; x=1698656551;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B1gLox9RqyXPSzPj6p25lDQAF72qjp15QUnwuXfYshI=;
-        b=xMbr1QOFcB3otS9SUe4XXlJm9iza3RCHr9Nnwxa6hTe3xW2Hstog5r2CnKoo6yMLzA
-         m+RwM5xqiVgBowyyafUFposMCFFarOpQhusQi2hL3pMsnRirfwldOBp7OViruUBPXN7a
-         MzpknnE/36/tMhoQ41R32VU06Uy986xPMmnl/Wv0FMqEB8+5dgk6OlRVOGRxcvDOjtL5
-         ElLMvp20gpkt8kNw0TOxpN6dMvUY7GzwicC2r2oN6WxL664HptFBKF8atAaDDrbiZATR
-         x36+dncmboNvybC0AS3kSoAlAiJBxs7JxIBu27h9HkZuK/ebgwol4WnpT5cyuan71qdG
-         xuaQ==
-X-Gm-Message-State: AOJu0YzDDLUxe3WKsJAQFE+cAKzAVQp9S2FAQHJKpQxkrIrVyhTU9ImS
-	oz3QQBOEA77h25ELXKEX3Q59Sa3jwY65qqE+3xRrN2vj
-X-Google-Smtp-Source: AGHT+IGUwhggw3BSwF4EnKe4ojEgyJDpLymdWBwF7GZfh89uXxKyV1qs+6FBH8e89wYFUXLrgX8mFA==
-X-Received: by 2002:a05:600c:3c93:b0:407:4701:f9e with SMTP id bg19-20020a05600c3c9300b0040747010f9emr8275336wmb.17.1698051751597;
-        Mon, 23 Oct 2023 02:02:31 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:a36e:a5d9:26ae:74b1? ([2a01:e0a:982:cbb0:a36e:a5d9:26ae:74b1])
-        by smtp.gmail.com with ESMTPSA id h14-20020a05600c314e00b003fbe4cecc3bsm13740220wmo.16.2023.10.23.02.02.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Oct 2023 02:02:31 -0700 (PDT)
-Message-ID: <42fa4e61-93ea-4b99-a5a3-1ffc3ab36cd9@linaro.org>
-Date: Mon, 23 Oct 2023 11:02:30 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+        d=1e100.net; s=20230601; t=1698064905; x=1698669705;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5cnPFABFPBFaCPTSr4ChUhUhj5DMXSyZtG+7/7ZXQNg=;
+        b=qbmiiOseVpev+o/X/hzP0xJ5FdNS4sGiG1F0gWwSDVTaSFzc5Qm9fipoBQSVeaRXVe
+         JVSErPMBvwSwjQVEwJfR8mVOC6WpaU7/cuDgPnVnODm/blawE0FWmt995nW9Myhp4i4J
+         ZXeIoyos30GK97+9UGrtchjUdl9OJCTrEkjlTbWEmp5xYVPjUf+PdIEpmD6wuVAaB3cG
+         ODrPU0NI0qMELtRo+gLxSXS0cZSo+PvaQmWrZT9RhdkkUIOm7NZ6aboR4WLV9OUyszVK
+         CqUCV5rYVnDX7jnZuvjKRYHgcZ4xs/LxWZOqVbVaAjvomd45T2cbfOHQtWKffEUPc14v
+         P2EQ==
+X-Gm-Message-State: AOJu0YyKup+3/tXxvwhO+t4l2r7dKSPCKD+b+jP308dMMy1Fu9DqmFO9
+	VNB9swVwXkdVaXIvwU3u4tRBzA==
+X-Google-Smtp-Source: AGHT+IGtj8vSl5FaJtybvMrLCUrtUklR9aCw158giQgef0PTTl96Z+ynYX8LOIDarZl5dBUZza/pVw==
+X-Received: by 2002:a05:600c:4588:b0:409:7d0:d20b with SMTP id r8-20020a05600c458800b0040907d0d20bmr657350wmo.24.1698064904970;
+        Mon, 23 Oct 2023 05:41:44 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:e0a:982:cbb0:a36e:a5d9:26ae:74b1])
+        by smtp.gmail.com with ESMTPSA id h14-20020a05600c314e00b003fbe4cecc3bsm14230609wmo.16.2023.10.23.05.41.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Oct 2023 05:41:44 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [GIT PULL] Please pull u-boot-amlogic-20231023
-Reply-To: neil.armstrong@linaro.org
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: [PATCH 0/4] ARM: meson: Add boot over DFU RAM as an USB boot step
+Date: Mon, 23 Oct 2023 14:41:33 +0200
+Message-Id: <20231023-usb-dfu-boot-v1-0-df9d121c67c1@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP1pNmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDINYtLU7STUkr1U3Kzy/RTTMxtzCxTLNMSzI2UQJqKShKTcusABsXHVt
+ bCwCNnvptXgAAAA==
+To: Christian Hewitt <christianshewitt@gmail.com>, 
+ Vyacheslav Bocharov <adeep@lexina.in>, 
+ Beniamino Galvani <b.galvani@gmail.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3451;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=nbBq2P4CX/p5+oBzaDTLTAOa9TdVkm/K0vgzlOTLf+w=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlNmoDMTRDZk4gBKDWTTYX1+Vd26NiMZaC6HWJ6
+ DiHrBOLaw+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZTZqAwAKCRB33NvayMhJ
+ 0dR/EACYhACtvu2uVmL8H9ZMH9ZjzJiRt/b7qze3WCu5zaA90U9FdC99tv4BjHOw5d5phD9XiQB
+ rsDb/tkLFOxISKGkcdLHLL7RVWId1tj4O+w+TuhcvrPZcbhBknwGPgt4Ja9vB+Eo2UdpmlNpIp8
+ 9WaoMA0rBS6kcsi5g8NlYJpXXm7z2t92hcGyDAwUKb5czqTqrfKaVYaz0VhqNY1jgc60eYsm2ro
+ k68iCAXxvva/1ayNKa5wqvLrfsmFaNisYUIHTnE8R1YiqZaBE7jU213cAR0zqTn+SxOZqCzWI1Q
+ gT8yZH4+tChDNOLlJNh1eeHqmxgVKp56LvXsor8DIh36/RyNPj2/ro+WFs7jfhRUVq92fDnMEev
+ UwjG5yQnL+A8YanDkxeXz+Oe12G+0Cn2STJfFZvzd72xU3qoG3LqwqsZP2UFLjKRNIesLuS2Ok7
+ Oua4fHEq+5BlUD2ItnIOJYP/zDWOctCM1B1yl3hnNkEpO/8KToTnOt9kyFzr6iImhamprz3sqwM
+ d3MCAuDk57KyRQXp1SCf5IakAXZSk171yjlCOtXZ+J65IDHZ1Qo+sB3XoACtIW76OmdLA+wEekX
+ fHVy90JGSIljm/RoQjiHPQAal8ZFe4ESTOh7jyX4R0nifVEE9fx3sX34iyEl3Dm5wRPvwBYneqR
+ FqekqwpEovs7ZUQ==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 09:02:40 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1788
+ <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 12:41:51 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1789
 
-Hi Tom,
+Add boot over DFU RAM as an alternate to running script at
+a fixed address like done today.
 
-An important fix for USB Gadget on G12/SM1 boards and a welcome DT sync for the Amlogic A1 DT.
+The main culprit is that it's not possible to do that
+on G12A/SM1 platforms due to changes in the USB boot protocol.
 
-The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/18256
+With this, U-Boot will present a DFU device with a ram slot where
+the Host could write a fitImage or legacy U-Boot image, then with the
+detach command boot will continue trying to boot the uploaded image.
 
-Thanks,
-Neil
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Neil Armstrong (4):
+      ARM: meson: enable FIT with LEGACY_IMAGE_FORMAT on all configs
+      configs: meson64: declare addr out of EXTRA_ENV_SETTINGS
+      configs: meson64: add alternate USB DFU boot target
+      ARM: meson: enable USB DFU + RAM on Amlogic boards with USB Gadget
 
-The following changes since commit e65b5d35c9116485366bb08138043d51220551da:
+ configs/ad401_defconfig                   |  2 ++
+ configs/bananapi-cm4-cm4io_defconfig      |  6 ++++
+ configs/bananapi-m2-pro_defconfig         |  6 ++++
+ configs/bananapi-m2s_defconfig            |  6 ++++
+ configs/bananapi-m5_defconfig             |  6 ++++
+ configs/beelink-gsking-x_defconfig        |  6 ++++
+ configs/beelink-gt1-ultimate_defconfig    |  6 ++++
+ configs/beelink-gtking_defconfig          |  6 ++++
+ configs/beelink-gtkingpro_defconfig       |  6 ++++
+ configs/jethub_j100_defconfig             |  6 ++++
+ configs/jethub_j80_defconfig              |  6 ++++
+ configs/khadas-vim2_defconfig             |  6 ++++
+ configs/khadas-vim3_android_ab_defconfig  |  4 +++
+ configs/khadas-vim3_android_defconfig     |  4 +++
+ configs/khadas-vim3_defconfig             |  6 ++++
+ configs/khadas-vim3l_android_ab_defconfig |  4 +++
+ configs/khadas-vim3l_android_defconfig    |  4 +++
+ configs/khadas-vim3l_defconfig            |  6 ++++
+ configs/khadas-vim_defconfig              |  6 ++++
+ configs/libretech-ac_defconfig            |  6 ++++
+ configs/libretech-cc_defconfig            |  6 ++++
+ configs/libretech-cc_v2_defconfig         |  6 ++++
+ configs/libretech-s905d-pc_defconfig      |  6 ++++
+ configs/libretech-s912-pc_defconfig       |  6 ++++
+ configs/nanopi-k2_defconfig               |  4 +++
+ configs/odroid-c2_defconfig               |  4 +++
+ configs/odroid-c4_defconfig               |  6 ++++
+ configs/odroid-go-ultra_defconfig         |  6 ++++
+ configs/odroid-hc4_defconfig              |  6 ++++
+ configs/odroid-n2_defconfig               |  6 ++++
+ configs/odroid-n2l_defconfig              |  6 ++++
+ configs/p200_defconfig                    |  4 +++
+ configs/p201_defconfig                    |  4 +++
+ configs/p212_defconfig                    |  4 +++
+ configs/radxa-zero2_defconfig             |  6 ++++
+ configs/radxa-zero_defconfig              |  6 ++++
+ configs/s400_defconfig                    |  6 ++++
+ configs/sei510_defconfig                  |  6 ++++
+ configs/sei610_defconfig                  |  6 ++++
+ configs/u200_defconfig                    |  6 ++++
+ configs/videostrong-kii-pro_defconfig     |  4 +++
+ configs/wetek-core2_defconfig             |  6 ++++
+ configs/wetek-hub_defconfig               |  4 +++
+ configs/wetek-play2_defconfig             |  4 +++
+ include/configs/meson64.h                 | 49 ++++++++++++++++++++++++++-----
+ 45 files changed, 278 insertions(+), 7 deletions(-)
+---
+base-commit: 9a0cf3993f71043ba08c315572c54622de42d447
+change-id: 20231023-usb-dfu-boot-f47849f9fb34
 
-   Merge branch 'master' of https://source.denx.de/u-boot/custodians/u-boot-sh (2023-10-17 09:15:56 -0400)
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
-are available in the Git repository at:
-
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20231023
-
-for you to fetch changes up to 14a21f1a80afc58d52dc72e35f27d3a47d36c082:
-
-   arm: meson-a1: dts: Sync DT with Linux (2023-10-18 09:46:01 +0200)
-
-----------------------------------------------------------------
-- sync A1 with Linux and add missing UART compatible
-- fix USB2 gadget init on G12/SM1 based Boards
-
-----------------------------------------------------------------
-Guillaume La Roque (1):
-       phy: meson-g12a-usb2: fix ret check on power_domain_get
-
-Igor Prusov (2):
-       serial: amlogic: Add UART compatible for A1 board
-       arm: meson-a1: dts: Sync DT with Linux
-
-  arch/arm/dts/meson-a1.dtsi    | 356 +++++++++++++++++++++++++++++++++++++++++-
-  drivers/phy/meson-g12a-usb2.c |   6 +-
-  drivers/serial/serial_meson.c |   1 +
-  3 files changed, 355 insertions(+), 8 deletions(-)
 
