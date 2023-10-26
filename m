@@ -1,120 +1,188 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895D3C25B6B
-	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 09:09:05 +0000 (UTC)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
- by mx.groups.io with SMTP id smtpd.web10.126331.1698080327683459186
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D12C25B48
+	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 13:42:07 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web11.70834.1698327720678298279
  for <u-boot-amlogic@groups.io>;
- Mon, 23 Oct 2023 09:58:47 -0700
+ Thu, 26 Oct 2023 06:42:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=j4UiV2Pl;
- spf=pass (domain: konsulko.com, ip: 209.85.128.170, mailfrom: trini@konsulko.com)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5a7af52ee31so35157497b3.2
-        for <u-boot-amlogic@groups.io>; Mon, 23 Oct 2023 09:58:47 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=FsPYWOrj;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.53, mailfrom: mkorpershoek@baylibre.com)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-408382da7f0so7069295e9.0
+        for <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 06:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1698080327; x=1698685127; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ko9XlvHFPJxlI2L65YuIoQ3aajd/bROWlOYAR4wWKA=;
-        b=j4UiV2PlA6g3pZGGRWQlxskbw829Vcb5qzbFXPxOTGu86dwfJyikZToMxF/WJqdijN
-         6KR3TWo7/MMKN+kuRcV6p4Qh4w6KN4q9G3Qi34NMEhtXPmVjEy5vOJUAyVAZXAH2o5c2
-         HCX7fGORzSJ6Cg4nlfwrPvZsVeYiskFrhPNOw=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698327719; x=1698932519; darn=groups.io;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GXYwkjf/k/iPjcFqnMiDY68NJWoXknz2s5MJIBWpwyM=;
+        b=FsPYWOrj21k1ICshJ+UuWyqfPb4MgdomHlxRHIplaE0K7wKns6eTTPlbzDyAGpXt3E
+         NFRPMs1Y7apY1iJ7bKZyzusO6O97Hhg4z4+61VZiKRjhPE4LUamraVcxTVwik8fSJkJZ
+         O/52AiJoP+cnL64nnWDDyvMukOJxsimlETVGWskAu6JJFsDrFQWUa3+lYKmfwPXW/4bh
+         wYs7ZqjepRJg63IL7wHiDy8Y9e87rpjbp6rlRUqJMpxnjngXpyX5BvlZUExk3D5Zgz0y
+         ZDjdicK9EeW6jLodSITSuVivdeA26gA+A5d2jhrZCUgSF8siyzZsXh7ohrmCD5tKNDAq
+         G7RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698080327; x=1698685127;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ko9XlvHFPJxlI2L65YuIoQ3aajd/bROWlOYAR4wWKA=;
-        b=mivARZeZrPaJVripenhxFi72QbMQc08rTF+4Ew7Ga8P2j8G1Nkhn79b4x6V9ooFAmo
-         YK8l/4XB7OTtT5SrakwWkMOA62/m2BaEmyfpZ8EOBCzIxfGKed/BZWV+cJtQ1QdV5Usd
-         /gxFJMUJb3IPkGkgDzUk6HknE9WNo4KmxyQpeGkMQ5QFlQAQlWtozS6ysS35srehroFn
-         SwVU/ClZemv9z4aQ+ivC93jX7RFGy1W/BdzFIy8m+Bo+6/KwHQyKMX2sOO5eHQ/AEk/Y
-         eWbRs6vZHNUxQV2fO8AMVMd8SuzK1OAVvE6QlgxKZmN8OeggqVV1sQ2BGKwkbYNMefXs
-         OD4Q==
-X-Gm-Message-State: AOJu0YwRfUi49TVReHTDWapAUDVfcA/mNBOsYp13cw2zViq5Pf6WnhCt
-	nOfuY9273FHg00dmXFjm6hhaVQ==
-X-Google-Smtp-Source: AGHT+IGDk2joj8IXWQ7mckJidp1ddDNrjz3TcGUzt84nsLFsLdqzUEzg22llA2N4G2xrILzx3q9oOQ==
-X-Received: by 2002:a0d:d54d:0:b0:583:b186:d817 with SMTP id x74-20020a0dd54d000000b00583b186d817mr10719003ywd.27.1698080326786;
-        Mon, 23 Oct 2023 09:58:46 -0700 (PDT)
-Received: from bill-the-cat (2603-6081-7b00-6400-3cd1-c3ac-4562-deca.res6.spectrum.com. [2603:6081:7b00:6400:3cd1:c3ac:4562:deca])
-        by smtp.gmail.com with ESMTPSA id p2-20020a0dff02000000b005a7a4e3816esm3291194ywf.89.2023.10.23.09.58.46
+        d=1e100.net; s=20230601; t=1698327719; x=1698932519;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GXYwkjf/k/iPjcFqnMiDY68NJWoXknz2s5MJIBWpwyM=;
+        b=LEdQ/6pksrr2wBou9qXbqkA2uDhDAGdEQIPOm/YeU5fURv5wZlVgilGdnj5vCO+tqs
+         bHJsJLCTkWGX7eWrGP8iK06++K0Qe0/nt4CHPsKYCHJi2cvQlbEsoK79dupScT1pVI8e
+         qam+xyObTdpVSbZheF6RhwtBLa+xQrrjafLubRYO5m9/WbFC6bkQrjDCMC+QPRTEhdMd
+         pMHMW0Y4fGn9CljXcjdxwBPda7lnNdUNQsWdomEm58mOBMsn8ScN/fObvUk8BXUJtHNj
+         LHrxj40ktXfT6Tu25NqNFz+oaWIvXrJxMh7LyV0C26eFmizYX0bXe8J02nh7ZW1Zfifw
+         i1hQ==
+X-Gm-Message-State: AOJu0YySLiXPDjZ11wfEQ4DwO+hnYx8Qhu/kRUAXVpOqshWpuibPhh4B
+	OB8TUlqO1isQNB5FP3QC4fnkoQ==
+X-Google-Smtp-Source: AGHT+IH42prjvBPsRBRsFFnXZBRP2fAOVCt5HkwH10gTh+1rr806sQTMmiQzNTESIiRo+RnvbqHG3g==
+X-Received: by 2002:a05:600c:4445:b0:408:80bb:ae80 with SMTP id v5-20020a05600c444500b0040880bbae80mr11686024wmn.7.1698327719048;
+        Thu, 26 Oct 2023 06:41:59 -0700 (PDT)
+Received: from [192.168.2.42] ([82.66.159.240])
+        by smtp.gmail.com with ESMTPSA id n41-20020a05600c3ba900b004060f0a0fdbsm2646407wms.41.2023.10.26.06.41.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 09:58:46 -0700 (PDT)
-Date: Mon, 23 Oct 2023 12:58:44 -0400
-From: Tom Rini <trini@konsulko.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Subject: Re: [GIT PULL] Please pull u-boot-amlogic-20231023
-Message-ID: <20231023165844.GN496310@bill-the-cat>
-References: <42fa4e61-93ea-4b99-a5a3-1ffc3ab36cd9@linaro.org>
+        Thu, 26 Oct 2023 06:41:58 -0700 (PDT)
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Date: Thu, 26 Oct 2023 15:41:31 +0200
+Subject: [PATCH] configs: khadas-vim3*_android: fix environment saving
 MIME-Version: 1.0
-In-Reply-To: <42fa4e61-93ea-4b99-a5a3-1ffc3ab36cd9@linaro.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=WtcHCKNr3c6txVcmIDFc"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231026-fix-saveenv-v1-1-6aa59be65481@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAIpsOmUC/x2MQQqAIBAAvyJ7TtDNRPpKdLDaai8WLkgg/T3pO
+ AwzFYQyk8CoKmQqLHylBrZTsJ4xHaR5awxosLcGvd750RILUSqalsEF5xExILTiztT0f5vm9/0
+ A1KtjYV0AAAA=
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Guillaume La Roque <glaroque@baylibre.com>, u-boot-amlogic@groups.io, 
+ u-boot@lists.denx.de, Mattijs Korpershoek <mkorpershoek@baylibre.com>
+X-Mailer: b4 0.12.4-dev-6aa5d
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 09:09:05 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1799
+ <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 13:42:07 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1800
 
---Groupsio=WtcHCKNr3c6txVcmIDFc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The environment is used to configure some additional boot features such as:
+* extra boot arguments
+* enable AVB (Android Verified Boot) verification
 
-On Mon, Oct 23, 2023 at 11:02:30AM +0200, Neil Armstrong wrote:
+Right now, we cannot store it in eMMC:
 
-> Hi Tom,
->=20
-> An important fix for USB Gadget on G12/SM1 boards and a welcome DT sync f=
-or the Amlogic A1 DT.
->=20
-> The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/18256
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit e65b5d35c9116485366bb08138043d51220551=
-da:
->=20
->   Merge branch 'master' of https://source.denx.de/u-boot/custodians/u-boo=
-t-sh (2023-10-17 09:15:56 -0400)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20231023
->=20
-> for you to fetch changes up to 14a21f1a80afc58d52dc72e35f27d3a47d36c082:
->=20
->   arm: meson-a1: dts: Sync DT with Linux (2023-10-18 09:46:01 +0200)
->=20
+  Loading Environment from nowhere... OK
 
-Applied to u-boot/master, thanks!
+Fix it by enabling the appropriate options in the defconfig
 
---=20
-Tom
+Fixes: b749d5ecdc06 ("configs: meson64_android: define raw parts for bootloader")
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+---
+ configs/khadas-vim3_android_ab_defconfig  | 4 ++++
+ configs/khadas-vim3_android_defconfig     | 4 ++++
+ configs/khadas-vim3l_android_ab_defconfig | 4 ++++
+ configs/khadas-vim3l_android_defconfig    | 4 ++++
+ 4 files changed, 16 insertions(+)
 
---Groupsio=WtcHCKNr3c6txVcmIDFc
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
+index ccd6f6f8a075..0abccb64ee15 100644
+--- a/configs/khadas-vim3_android_ab_defconfig
++++ b/configs/khadas-vim3_android_ab_defconfig
+@@ -7,6 +7,7 @@ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x10000
++CONFIG_ENV_OFFSET=0x0
+ CONFIG_DM_GPIO=y
+ CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-a311d-khadas-vim3"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+@@ -45,7 +46,10 @@ CONFIG_CMD_AB_SELECT=y
+ CONFIG_CMD_REGULATOR=y
+ CONFIG_CMD_AVB=y
+ CONFIG_OF_CONTROL=y
++CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_SYS_MMC_ENV_DEV=2
++CONFIG_SYS_MMC_ENV_PART=2
+ CONFIG_ADC=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_BUTTON=y
+diff --git a/configs/khadas-vim3_android_defconfig b/configs/khadas-vim3_android_defconfig
+index 5c3d565971d6..33ede5262295 100644
+--- a/configs/khadas-vim3_android_defconfig
++++ b/configs/khadas-vim3_android_defconfig
+@@ -7,6 +7,7 @@ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x10000
++CONFIG_ENV_OFFSET=0x0
+ CONFIG_DM_GPIO=y
+ CONFIG_DEFAULT_DEVICE_TREE="meson-g12b-a311d-khadas-vim3"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+@@ -43,7 +44,10 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+ CONFIG_CMD_REGULATOR=y
+ CONFIG_CMD_AVB=y
+ CONFIG_OF_CONTROL=y
++CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_SYS_MMC_ENV_DEV=2
++CONFIG_SYS_MMC_ENV_PART=2
+ CONFIG_ADC=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_BUTTON=y
+diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
+index 0d6de8001382..8f32f8e8ad5b 100644
+--- a/configs/khadas-vim3l_android_ab_defconfig
++++ b/configs/khadas-vim3l_android_ab_defconfig
+@@ -7,6 +7,7 @@ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x10000
++CONFIG_ENV_OFFSET=0x0
+ CONFIG_DM_GPIO=y
+ CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-khadas-vim3l"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+@@ -45,7 +46,10 @@ CONFIG_CMD_AB_SELECT=y
+ CONFIG_CMD_REGULATOR=y
+ CONFIG_CMD_AVB=y
+ CONFIG_OF_CONTROL=y
++CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_SYS_MMC_ENV_DEV=2
++CONFIG_SYS_MMC_ENV_PART=2
+ CONFIG_ADC=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_BUTTON=y
+diff --git a/configs/khadas-vim3l_android_defconfig b/configs/khadas-vim3l_android_defconfig
+index 827752f24373..443c10aee3d0 100644
+--- a/configs/khadas-vim3l_android_defconfig
++++ b/configs/khadas-vim3l_android_defconfig
+@@ -7,6 +7,7 @@ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x10000
++CONFIG_ENV_OFFSET=0x0
+ CONFIG_DM_GPIO=y
+ CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-khadas-vim3l"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+@@ -43,7 +44,10 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+ CONFIG_CMD_REGULATOR=y
+ CONFIG_CMD_AVB=y
+ CONFIG_OF_CONTROL=y
++CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_SYS_MMC_ENV_DEV=2
++CONFIG_SYS_MMC_ENV_PART=2
+ CONFIG_ADC=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_BUTTON=y
 
------BEGIN PGP SIGNATURE-----
+---
+base-commit: 14a21f1a80afc58d52dc72e35f27d3a47d36c082
+change-id: 20231026-fix-saveenv-eb5484622282
 
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmU2pkQACgkQFHw5/5Y0
-tyz4igwAs5F4pJqW9pMLaoD39YaJZ13BMDMG4a9qSOy+D/n0+baWgaOaWHCxcInN
-KAF3fUvc2E8UGsJogRH/g3CSwt83tOhZGa0U1k8YG4UFWtJCn3Nxw13jz58vJeQ3
-mRsRG97lq3B/7smxP3FTkmZylxPfYf7gDHAtuTaeTqivFD76iBkt2VmTGqsA0uSC
-0JatAn7cWWBHRUtYOK6GeJVgzXzd6z7euM7RD74Wh5KuVjpQVPZ2m+VOhVf8I16M
-e8fj/En4qMYX9BfFLfOx5t6fmDMUMO3gWuww5gYRDq+mUlFSJVgS8xBRXtZyEFyL
-1rR+EpJcDZBOmRZ0+fR3Du08ME7SufyKtYqYs0WB+ERwZiOCoVVYNVwMECLtckvz
-cB/1sPmyeQ+pZt0EzLS6xz1WZ+7F5rPti5bc5lyGYqtC6Otzhap8KZWteWEkJiKs
-SmVIpNrwjKYJrEKWAPhWcDmmSGrsCVRgd/YYvlPqafzAowPo1DEiVwGqeuFeCZEY
-jmkSXBMa
-=TJeW
------END PGP SIGNATURE-----
+Best regards,
+-- 
+Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
---Groupsio=WtcHCKNr3c6txVcmIDFc--
 
