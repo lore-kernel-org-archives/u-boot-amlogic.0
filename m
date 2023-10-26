@@ -2,62 +2,60 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A03C25B48
-	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 15:39:47 +0000 (UTC)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
- by mx.groups.io with SMTP id smtpd.web11.74142.1698334779279718109
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD66C25B67
+	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 15:40:27 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web10.203708.1698334818080941616
  for <u-boot-amlogic@groups.io>;
- Thu, 26 Oct 2023 08:39:39 -0700
+ Thu, 26 Oct 2023 08:40:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Wa7vCqwl;
- spf=pass (domain: linaro.org, ip: 209.85.208.180, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2c5720a321aso14060271fa.1
-        for <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 08:39:38 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=VSOBSDp3;
+ spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4083f613275so7954035e9.2
+        for <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 08:40:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698334777; x=1698939577; darn=groups.io;
+        d=linaro.org; s=google; t=1698334816; x=1698939616; darn=groups.io;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=arqpWE2KMmUYEmrqoaHtRhCK6GJjAWtzZr8k9Gd3y+I=;
-        b=Wa7vCqwlUsP8RmAzzhG8YRCz2sq+ZgfxpHc6QkdADLxeWzJtj7fqentDYinK2daAEE
-         AhCmMWOSJeQoXOnkfdMa/swJ9Zd6CBAPYhu4yZIbbR1WsMdZsl8Ma6Bfg5oMVTpqdKPJ
-         E8BvWqr6xTl5dfCnD4NwgpOw4AuZ/5uJlFnjHaxYqqIuoJi62dQye/vtkctt1fWmq5m+
-         PtRne3Gvi23ZQr2sIfgBJaZfOrTTkcdrakx6yDJyTPashvrbMdO81isJNiCQVbtcebG0
-         l6s1T28XguJ0sO3/y1w+9TMWVP0OXu7/WZ4GV4UspWekjnLDaoLy/P0J943n4+uHgzKm
-         p9Gg==
+        bh=muSYw7lzaJcwm4ACVS22wbcZfBvffUQZYMjAC3WR6Js=;
+        b=VSOBSDp3hRAdW8k9QAFS73n7ksOSKS9s7NIqV9T8WiLgwPW0jjNT4osUMZLvtmvgGv
+         Oo/WP3QuuuEO38VEBqZiIvhOVooV8i4v/oW0d4awgFB7dZzZeqk16s6lVJE2HdWNWPkt
+         ieXS50/mRpamccwQNdEazupwAfE829nhHB3VGQxiCSV3rivtdtm/axIJzIyN5wsVwYIa
+         szXqEyIJvR8JHkofs6Vq1I4748ejW3dVuFg9q533QQReF5ginfMN4zNn1p7/w71hmmio
+         N9VVMw9CgxgIs5C09sXFCym9XkqTaZhiWF9dGWdxUl10axC4mAQP/+hwGOgDL3sFTBn2
+         UVHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698334777; x=1698939577;
+        d=1e100.net; s=20230601; t=1698334816; x=1698939616;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=arqpWE2KMmUYEmrqoaHtRhCK6GJjAWtzZr8k9Gd3y+I=;
-        b=f68il+PR74Du2g3qHGzK5hh7VZY+B4ccsMvCxZDIjmrByGgtF5EwN60ZsBHzlSuV3N
-         tExSnPpsHMSfAvkSlbiKSwIsb4WwFvZuMX4ee8dlBouoemAXpM23pdTonva3LshHF5WD
-         PLNRXjuQOhzYivefoyJy4jvpTJiPpM5oBqkO+nU23pQ+6Oqp22h22DXN4g1ucNVfeuho
-         DJTsokblaAMlfociuBS7T6LWMdNIkiAUXcjwXjGGJIRMTXOsnsJKQL0xH80j4kSu3lT4
-         2cyRHj9oE8dKaDxzVWCn/5TwYN72Ng9khooN9iDoBEtG9YqlW2GNOjmyGZoi1mQiRLis
-         LGyw==
-X-Gm-Message-State: AOJu0YwOtmikDArASdGw7T1oEdG+06HBPkb47dbtLGkBXCZFz07cwITV
-	mqmw4G/qpD96Qt6tIHY/0IoNyl5RFDwiIZHK2sp9iDFt
-X-Google-Smtp-Source: AGHT+IEiMeIBInXc3gxSQtVnO6ZewFuVC0zCbQmDiesN+1di/WGnDAIGYRbP9Lxlhm5GLD54O+G4KA==
-X-Received: by 2002:a2e:a4cd:0:b0:2ba:34d0:fa5f with SMTP id p13-20020a2ea4cd000000b002ba34d0fa5fmr12149557ljm.37.1698334777304;
-        Thu, 26 Oct 2023 08:39:37 -0700 (PDT)
+        bh=muSYw7lzaJcwm4ACVS22wbcZfBvffUQZYMjAC3WR6Js=;
+        b=ZiS3ATyER+oSFhna2bW/V8AvqUR4jEbkSTomZdGOHQ7hUXWeQ+HA1OaTBThWH6PI8e
+         buxcUV62CkwNIsAznLz7YZD59lIteejlMmyTOnGM7cyC3Z3xQLSmAI8gpFd5xvb0gDv1
+         CzgQzgEaPdePZ33655RjHong1CbgzARSutzzLnYvn/Avf+fL6/RBCPef2kP5gmyP6Wq0
+         TLXOV3snWQNBiYYzZQQMVei6dzkxTuFqUnB7+IXi/TGnjs2/5OvH380YuTEsBl2b2tjW
+         zspBVRq5i+Jg5jFu65iBFGMWrJQBUhoeplzMu40fcvP0Q564Ylf6JVtmCWpjgytVXEg2
+         Pv5A==
+X-Gm-Message-State: AOJu0Yx2mUo0UkS2WD0eKbfLTUdw4LJK1+wsv5lzo0yznJoqd3XjyrHx
+	nMPfc4dtEY2tlwdVEdPB5BtCzw==
+X-Google-Smtp-Source: AGHT+IEfI3n/CBj9bCOvuCAdR77ymvg7U443RwwulXhb452bHI4Zbp6Coscre07W5CPB1WLRwbyW1A==
+X-Received: by 2002:adf:ee82:0:b0:32d:a853:af6e with SMTP id b2-20020adfee82000000b0032da853af6emr6888wro.1.1698334816539;
+        Thu, 26 Oct 2023 08:40:16 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id w5-20020adfee45000000b00317a04131c5sm14495883wro.57.2023.10.26.08.39.36
+        by smtp.gmail.com with ESMTPSA id f5-20020a056000128500b0032179c4a46dsm14407967wrx.100.2023.10.26.08.40.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 08:39:36 -0700 (PDT)
+        Thu, 26 Oct 2023 08:40:16 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Christian Hewitt <christianshewitt@gmail.com>, 
- Vyacheslav Bocharov <adeep@lexina.in>, 
- Beniamino Galvani <b.galvani@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-In-Reply-To: <20231023-usb-dfu-boot-v1-0-df9d121c67c1@linaro.org>
-References: <20231023-usb-dfu-boot-v1-0-df9d121c67c1@linaro.org>
-Subject: Re: [PATCH 0/4] ARM: meson: Add boot over DFU RAM as an USB boot
- step
-Message-Id: <169833477660.2656704.15194374053051948359.b4-ty@linaro.org>
-Date: Thu, 26 Oct 2023 17:39:36 +0200
+To: Jagan Teki <jagan@amarulasolutions.com>, 
+ Igor Prusov <ivprusov@sberdevices.ru>
+Cc: prusovigor@gmail.com, kernel@sberdevices.ru, u-boot-amlogic@groups.io, 
+ u-boot@lists.denx.de, sjg@chromium.org
+In-Reply-To: <20231024225140.366571-1-ivprusov@sberdevices.ru>
+References: <20231024225140.366571-1-ivprusov@sberdevices.ru>
+Subject: Re: [PATCH v2 0/2] ARM: amlogic: Add A1 SPIFC support
+Message-Id: <169833481579.2657867.140379270621827287.b4-ty@linaro.org>
+Date: Thu, 26 Oct 2023 17:40:15 +0200
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -65,34 +63,29 @@ X-Mailer: b4 0.12.3
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 15:39:47 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1803
+ <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 15:40:27 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1804
 
 Hi,
 
-On Mon, 23 Oct 2023 14:41:33 +0200, Neil Armstrong wrote:
-> Add boot over DFU RAM as an alternate to running script at
-> a fixed address like done today.
+On Wed, 25 Oct 2023 01:51:38 +0300, Igor Prusov wrote:
+> A1 family boards have new version of SPIFC controller, that is
+> incompatible with meson_spifc driver. This series ports A1 SPIFC driver
+> from Linux and enables it for ad401 board.
 > 
-> The main culprit is that it's not possible to do that
-> on G12A/SM1 platforms due to changes in the USB boot protocol.
-> 
-> With this, U-Boot will present a DFU device with a ram slot where
-> the Host could write a fitImage or legacy U-Boot image, then with the
-> detach command boot will continue trying to boot the uploaded image.
+> Changes in V2:
+>  - more details in Kconfig help message
+>  - removed unused field of struct amlogic_spifc_a1
+>  - add missed check for NULL during probe
 > 
 > [...]
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
 
-[1/4] ARM: meson: enable FIT with LEGACY_IMAGE_FORMAT on all configs
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/50ad9d01b6124b9730de957e1901d177094748f6
-[2/4] configs: meson64: declare addr out of EXTRA_ENV_SETTINGS
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/72f63d85fefebed59921456bb29138fbd9f73bb7
-[3/4] configs: meson64: add alternate USB DFU boot target
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/4aa027b3f8c1b018ab50570ccf337587cc6178f8
-[4/4] ARM: meson: enable USB DFU + RAM on Amlogic boards with USB Gadget
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/07057ad9be7d400d9d9f02f3c1507fe2d8071c19
+[1/2] spi: add support for Amlogic A1 SPI Flash Controller
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/bb6c1ebf99da01f2cdd2aaf751cc35723ed202e6
+[2/2] ARM: amlogic: ad401: enable SPIFC
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/f22373511ca75bb098c3195e47f91d2b1ee8bc53
 
 -- 
 Neil
