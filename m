@@ -2,92 +2,184 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD66C25B67
-	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 15:40:27 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web10.203708.1698334818080941616
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0481EC25B67
+	for <webhook@archiver.kernel.org>; Fri, 27 Oct 2023 08:38:55 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.2650.1698395924604256625
  for <u-boot-amlogic@groups.io>;
- Thu, 26 Oct 2023 08:40:18 -0700
+ Fri, 27 Oct 2023 01:38:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=VSOBSDp3;
- spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4083f613275so7954035e9.2
-        for <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 08:40:17 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=vyuBKI/F;
+ spf=pass (domain: linaro.org, ip: 209.85.128.52, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-408382da7f0so13634595e9.0
+        for <u-boot-amlogic@groups.io>; Fri, 27 Oct 2023 01:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698334816; x=1698939616; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=muSYw7lzaJcwm4ACVS22wbcZfBvffUQZYMjAC3WR6Js=;
-        b=VSOBSDp3hRAdW8k9QAFS73n7ksOSKS9s7NIqV9T8WiLgwPW0jjNT4osUMZLvtmvgGv
-         Oo/WP3QuuuEO38VEBqZiIvhOVooV8i4v/oW0d4awgFB7dZzZeqk16s6lVJE2HdWNWPkt
-         ieXS50/mRpamccwQNdEazupwAfE829nhHB3VGQxiCSV3rivtdtm/axIJzIyN5wsVwYIa
-         szXqEyIJvR8JHkofs6Vq1I4748ejW3dVuFg9q533QQReF5ginfMN4zNn1p7/w71hmmio
-         N9VVMw9CgxgIs5C09sXFCym9XkqTaZhiWF9dGWdxUl10axC4mAQP/+hwGOgDL3sFTBn2
-         UVHw==
+        d=linaro.org; s=google; t=1698395923; x=1699000723; darn=groups.io;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IfGOZLfZwEtsIgcao11L0wN/Yh9wDY5bsZIxCjKawl4=;
+        b=vyuBKI/F9rnPoT+xD+rfR/PiXQBHY2x8piGD0abQLfrVW3gbqZsyNVXyphigbiwXZr
+         4+A9V114KSvY7vHMQ72rbKUAPh2BUlv4D+YCYvb5fGF7xjTnegvIkpH3Y04L0UMOcT1t
+         CsEqkUviEs5g4DPjuARfBO8VHg5T5+1FPNTd5v+nUAqBzflaSNiF3ehNgfR2eO/HhtDv
+         oyKLB1Zn4Kib/fpLVuJo1v4ojmS3T4f5uKXZk/TMwfMpXU9EHEilLkOFFSnIqClUCF3h
+         dDw0ujTaPupoLXlR2ObRDZZz+lIGPT3qzs9FObT2VAVfPHBkpS+0ANgUVND5LJT2GgU0
+         1g+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698334816; x=1698939616;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=muSYw7lzaJcwm4ACVS22wbcZfBvffUQZYMjAC3WR6Js=;
-        b=ZiS3ATyER+oSFhna2bW/V8AvqUR4jEbkSTomZdGOHQ7hUXWeQ+HA1OaTBThWH6PI8e
-         buxcUV62CkwNIsAznLz7YZD59lIteejlMmyTOnGM7cyC3Z3xQLSmAI8gpFd5xvb0gDv1
-         CzgQzgEaPdePZ33655RjHong1CbgzARSutzzLnYvn/Avf+fL6/RBCPef2kP5gmyP6Wq0
-         TLXOV3snWQNBiYYzZQQMVei6dzkxTuFqUnB7+IXi/TGnjs2/5OvH380YuTEsBl2b2tjW
-         zspBVRq5i+Jg5jFu65iBFGMWrJQBUhoeplzMu40fcvP0Q564Ylf6JVtmCWpjgytVXEg2
-         Pv5A==
-X-Gm-Message-State: AOJu0Yx2mUo0UkS2WD0eKbfLTUdw4LJK1+wsv5lzo0yznJoqd3XjyrHx
-	nMPfc4dtEY2tlwdVEdPB5BtCzw==
-X-Google-Smtp-Source: AGHT+IEfI3n/CBj9bCOvuCAdR77ymvg7U443RwwulXhb452bHI4Zbp6Coscre07W5CPB1WLRwbyW1A==
-X-Received: by 2002:adf:ee82:0:b0:32d:a853:af6e with SMTP id b2-20020adfee82000000b0032da853af6emr6888wro.1.1698334816539;
-        Thu, 26 Oct 2023 08:40:16 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id f5-20020a056000128500b0032179c4a46dsm14407967wrx.100.2023.10.26.08.40.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 08:40:16 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Jagan Teki <jagan@amarulasolutions.com>, 
- Igor Prusov <ivprusov@sberdevices.ru>
-Cc: prusovigor@gmail.com, kernel@sberdevices.ru, u-boot-amlogic@groups.io, 
- u-boot@lists.denx.de, sjg@chromium.org
-In-Reply-To: <20231024225140.366571-1-ivprusov@sberdevices.ru>
-References: <20231024225140.366571-1-ivprusov@sberdevices.ru>
-Subject: Re: [PATCH v2 0/2] ARM: amlogic: Add A1 SPIFC support
-Message-Id: <169833481579.2657867.140379270621827287.b4-ty@linaro.org>
-Date: Thu, 26 Oct 2023 17:40:15 +0200
+        d=1e100.net; s=20230601; t=1698395923; x=1699000723;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IfGOZLfZwEtsIgcao11L0wN/Yh9wDY5bsZIxCjKawl4=;
+        b=D/2MG3/OURQ9sraSWczDApwR1qqUnBETfiglZ04lZ9SscAAafiej9LtPwve3shWjZr
+         rs8eUUad6c9zrBO8PyEluqMpbULWZwkx8zFysEL2+ou9/+S4/UA1dlnb7OnnUgNTEN0m
+         WlDAxyppJbE6DEMOpLtVpECMRN/Y5MhvfqOp6+B0qNAY5TAbi7u7x8+MYZNtLoswuUd2
+         1e6jmuwvncjSjz497FHNhkbbQnV9udp3AiVX+brTLbdRC0mPaha7oJHKeualQWeoIMTL
+         6UJMQkvDN6WXMbWZuNwO34FzcxUWF0KX4UvU3C9yEcCgCzh9VBGXDfhXfszb5LdndQ2k
+         02Ow==
+X-Gm-Message-State: AOJu0YzIIzW5Inmd94JWPKM6ZWvi6vQh8u3/xUNDFqOqIm2ew0Ahr4vn
+	/T6gVkGDQ9plHwxZ6pe0SfEZitPQ850E5JQCHE1Q2hax
+X-Google-Smtp-Source: AGHT+IHp/83pUXHvxbt3bYziiHzIW4QQfhtSg1KIYBscK1TrTlpjH7Ea2+Fnd/vBGw9W8e5OdxwlYQ==
+X-Received: by 2002:a05:600c:444f:b0:406:535a:cfb4 with SMTP id v15-20020a05600c444f00b00406535acfb4mr1813221wmn.1.1698395922930;
+        Fri, 27 Oct 2023 01:38:42 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:ba29:8286:ad2b:d178? ([2a01:e0a:982:cbb0:ba29:8286:ad2b:d178])
+        by smtp.gmail.com with ESMTPSA id p8-20020a05600c358800b0040472ad9a3dsm1071567wmq.14.2023.10.27.01.38.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Oct 2023 01:38:42 -0700 (PDT)
+Message-ID: <4839b54f-1e61-4c46-b1ed-40a2ea0f9c08@linaro.org>
+Date: Fri, 27 Oct 2023 10:38:41 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-20231027
+Reply-To: neil.armstrong@linaro.org
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 26 Oct 2023 15:40:27 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1804
+ <u-boot-amlogic@groups.io>; Fri, 27 Oct 2023 08:38:55 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1805
 
-Hi,
+Hi Tom,
 
-On Wed, 25 Oct 2023 01:51:38 +0300, Igor Prusov wrote:
-> A1 family boards have new version of SPIFC controller, that is
-> incompatible with meson_spifc driver. This series ports A1 SPIFC driver
-> from Linux and enables it for ad401 board.
-> 
-> Changes in V2:
->  - more details in Kconfig help message
->  - removed unused field of struct amlogic_spifc_a1
->  - add missed check for NULL during probe
-> 
-> [...]
+A late PR to:
+- fix environment saving for new Android boot features on vim3*_android
+- Add SPIFC support for Amlogic A1
+- Add DFU RAM boot step when booting over USB, fixing full USB boot for G12/SM1 boards
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
+The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/pipelines/18322
 
-[1/2] spi: add support for Amlogic A1 SPI Flash Controller
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/bb6c1ebf99da01f2cdd2aaf751cc35723ed202e6
-[2/2] ARM: amlogic: ad401: enable SPIFC
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/f22373511ca75bb098c3195e47f91d2b1ee8bc53
-
--- 
+Thanks,
 Neil
 
+The following changes since commit fb428b61819444b9337075f49c72f326f5d12085:
+
+   Merge branch '2023-10-24-assorted-general-fixes-and-updates' (2023-10-24 19:12:21 -0400)
+
+are available in the Git repository at:
+
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20231027
+
+for you to fetch changes up to 892e04bc965400772e1b84e6450a7919deca0e0b:
+
+   ARM: amlogic: ad401: enable SPIFC (2023-10-26 17:56:58 +0200)
+
+----------------------------------------------------------------
+- Fix environment saving for new Android boot features on vim3*_android
+- Add SPIFC support for Amlogic A1
+- Add DFU RAM boot step when booting over USB
+
+----------------------------------------------------------------
+Igor Prusov (2):
+       spi: add support for Amlogic A1 SPI Flash Controller
+       ARM: amlogic: ad401: enable SPIFC
+
+Mattijs Korpershoek (1):
+       configs: khadas-vim3*_android: fix environment saving
+
+Neil Armstrong (4):
+       ARM: meson: enable FIT with LEGACY_IMAGE_FORMAT on all configs
+       configs: meson64: declare addr out of EXTRA_ENV_SETTINGS
+       configs: meson64: add alternate USB DFU boot target
+       ARM: meson: enable USB DFU + RAM on Amlogic boards with USB Gadget
+
+  configs/ad401_defconfig                   |   1 +
+  configs/bananapi-cm4-cm4io_defconfig      |   6 +
+  configs/bananapi-m2-pro_defconfig         |   6 +
+  configs/bananapi-m2s_defconfig            |   6 +
+  configs/bananapi-m5_defconfig             |   6 +
+  configs/beelink-gsking-x_defconfig        |   6 +
+  configs/beelink-gt1-ultimate_defconfig    |   6 +
+  configs/beelink-gtking_defconfig          |   6 +
+  configs/beelink-gtkingpro_defconfig       |   6 +
+  configs/jethub_j100_defconfig             |   6 +
+  configs/jethub_j80_defconfig              |   6 +
+  configs/khadas-vim2_defconfig             |   6 +
+  configs/khadas-vim3_android_ab_defconfig  |   8 +
+  configs/khadas-vim3_android_defconfig     |   8 +
+  configs/khadas-vim3_defconfig             |   6 +
+  configs/khadas-vim3l_android_ab_defconfig |   8 +
+  configs/khadas-vim3l_android_defconfig    |   8 +
+  configs/khadas-vim3l_defconfig            |   6 +
+  configs/khadas-vim_defconfig              |   6 +
+  configs/libretech-ac_defconfig            |   6 +
+  configs/libretech-cc_defconfig            |   6 +
+  configs/libretech-cc_v2_defconfig         |   6 +
+  configs/libretech-s905d-pc_defconfig      |   6 +
+  configs/libretech-s912-pc_defconfig       |   6 +
+  configs/nanopi-k2_defconfig               |   4 +
+  configs/odroid-c2_defconfig               |   4 +
+  configs/odroid-c4_defconfig               |   6 +
+  configs/odroid-go-ultra_defconfig         |   6 +
+  configs/odroid-hc4_defconfig              |   6 +
+  configs/odroid-n2_defconfig               |   6 +
+  configs/odroid-n2l_defconfig              |   6 +
+  configs/p200_defconfig                    |   4 +
+  configs/p201_defconfig                    |   4 +
+  configs/p212_defconfig                    |   4 +
+  configs/radxa-zero2_defconfig             |   6 +
+  configs/radxa-zero_defconfig              |   6 +
+  configs/s400_defconfig                    |   6 +
+  configs/sei510_defconfig                  |   6 +
+  configs/sei610_defconfig                  |   6 +
+  configs/u200_defconfig                    |   6 +
+  configs/videostrong-kii-pro_defconfig     |   4 +
+  configs/wetek-core2_defconfig             |   6 +
+  configs/wetek-hub_defconfig               |   4 +
+  configs/wetek-play2_defconfig             |   4 +
+  drivers/spi/Kconfig                       |   9 +
+  drivers/spi/Makefile                      |   1 +
+  drivers/spi/meson_spifc_a1.c              | 384 ++++++++++++++++++++++++++++++
+  include/configs/meson64.h                 |  49 +++-
+  48 files changed, 687 insertions(+), 7 deletions(-)
+  create mode 100644 drivers/spi/meson_spifc_a1.c
 
