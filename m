@@ -2,136 +2,103 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCB2C4332F
-	for <webhook@archiver.kernel.org>; Sat,  4 Nov 2023 15:46:05 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.web11.11454.1699111474522200011
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90775C4332F
+	for <webhook@archiver.kernel.org>; Sat,  4 Nov 2023 15:46:15 +0000 (UTC)
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
+ by mx.groups.io with SMTP id smtpd.web11.7996.1698847516739210233
  for <u-boot-amlogic@groups.io>;
- Sat, 04 Nov 2023 08:24:34 -0700
+ Wed, 01 Nov 2023 07:05:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=TuifqGcp;
- spf=pass (domain: gmail.com, ip: 209.85.219.54, mailfrom: seanga2@gmail.com)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-66d0ea3e5b8so18894846d6.0
-        for <u-boot-amlogic@groups.io>; Sat, 04 Nov 2023 08:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699111473; x=1699716273; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dL2RkhTpXekTF8Ai6P/vNUxWJG4LIEK0Z2pmSz4RQmw=;
-        b=TuifqGcp6UoMUa9otMIF/4njw5DLxUjhdxX/TQ6vVrHXBhLK6yJSgfAGiwQOWlzPDx
-         lb29s4ZP2HvkctDeqK0Mbp95Sp8PvDlVq+MmtXZ6luTyflBi06pht6jvD+/Rucn/1YpS
-         O6MNdSqDtAndSGJ7Cb07uxJtayb+E5AyWxNdhS+tCS2SCOfepuvPI2SA93YraniCPIl1
-         ucYrpCJ8zKUTBOPDxMVFnv2S74wMmfBxnOaPhZHKFFQF761kHwh9OuCYGvNphv84vSEm
-         XJyRmjaT6IOAyA7Z7kQOeSCh2n/5ASCwyp++6ZggudSaEGh5iza8RMKo4hCPzOTfC/X4
-         Z2wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699111473; x=1699716273;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dL2RkhTpXekTF8Ai6P/vNUxWJG4LIEK0Z2pmSz4RQmw=;
-        b=J1nR8Dy4pkth8kBA8pAOVjS+a9Haj/xGopEBumjuKnAqFL/cO9GLAtLiFM7zQ9tewb
-         Ai2AL5OY5iGaa8MZR40mCydBXJMicMYRoad3Dq9YwSbNSVIyOWjYvxiqUkminWgBpRor
-         8D0j3sTYw+Oz4C9bJ0b5YXxUzvhM681eRNnS+7zrY5NV+VBltLPecwtlg0sWk3cc6Hx3
-         HhGFq38AuC3okz32wVQPBOOmegg4KYS175yhqPufXv4ApNA9BdbODzbLDOVfy6TxiwAD
-         lO8OTGjHKDoEeksrPxuZa0yFmYuL3+C5X1o0SjghU2QWCoWXU24WbI2CmgSzndjBxxjm
-         I1IQ==
-X-Gm-Message-State: AOJu0YzBJLiGZpk2X33YLwUw7zpdAGwuZgmBPBTi2W4+DrFfuW8jABTB
-	dbvE70W75AxPIXwf7i9vwpM=
-X-Google-Smtp-Source: AGHT+IE04H40wfAcCOloCWAQXdg+ekQlqAHdCNu7UL7HnxPjA6DF48eJgvCUGRHaYCI5YXknuhYV4w==
-X-Received: by 2002:a05:6214:c88:b0:671:2c2f:4fe6 with SMTP id r8-20020a0562140c8800b006712c2f4fe6mr22660073qvr.46.1699111473641;
-        Sat, 04 Nov 2023 08:24:33 -0700 (PDT)
-Received: from [192.168.1.201] (pool-108-48-157-169.washdc.fios.verizon.net. [108.48.157.169])
-        by smtp.gmail.com with ESMTPSA id u14-20020a0cf88e000000b006585069e894sm1692509qvn.109.2023.11.04.08.24.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Nov 2023 08:24:33 -0700 (PDT)
-Message-ID: <712d1810-93ad-8fd5-8989-1274b5ce49ce@gmail.com>
-Date: Sat, 4 Nov 2023 11:24:32 -0400
+ dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=MuNZSJXe;
+ spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: avromanov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 34659120035;
+	Wed,  1 Nov 2023 17:05:14 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 34659120035
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1698847514;
+	bh=X8N+NLz4a+p7W8gWxruFdL14oYTRzWa6jt9J7lTlCZI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=MuNZSJXe1ryAE10wIDe+tbzYQhtM82BHkkGZalbezNm1RbpdVmSAUybjJtHxbs1lv
+	 Ah6R6B68ZRYXT7GI1VkTVqkn3zK28DZMn4GFUfZG6xe6U5HtXAqC9uNh5QjSmoab/9
+	 11Z4y+XOFueRnuSIGSZhCm6QD+giPSKIneMvTul7CX5f1Scy1ju0lQ4U4LNDoOIwZp
+	 txD02C72XkbaPFgBOOEPj3BOKlopCeKpQLdgUK//ElNPtxf1U/ZqToiqlluZCBC1Br
+	 iYNJZN3pua/f2HJ0xG3wdaFr9qwxN8GAAIlvbbZyvWGMMWTnxr0DOFiCXkLASerIrE
+	 iNF/9GVFmgPqg==
+Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Wed,  1 Nov 2023 17:05:14 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.37; Wed, 1 Nov 2023 17:05:13 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: <neil.armstrong@linaro.org>, <narmstrong@baylibre.com>
+CC: <u-boot-amlogic@groups.io>, <u-boot@lists.denx.de>,
+	<kernel@sberdevices.ru>, Alexey Romanov <avromanov@salutedevices.com>
+Subject: [PATCH v1 1/2] clk: a1: add new clocks for USB stack
+Date: Wed, 1 Nov 2023 17:04:56 +0300
+Message-ID: <20231101140500.9025-2-avromanov@salutedevices.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231101140500.9025-1-avromanov@salutedevices.com>
+References: <20231101140500.9025-1-avromanov@salutedevices.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v5 5/8] clk: Add dump operation to clk_ops
-To: Igor Prusov <ivprusov@sberdevices.ru>, Michal Simek
- <michal.simek@amd.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
- Lukasz Majewski <lukma@denx.de>, Ryan Chen <ryan_chen@aspeedtech.com>,
- Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Stefan Roese <sr@denx.de>,
- Patrick Delaunay <patrick.delaunay@foss.st.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: prusovigor@gmail.com, kernel@sberdevices.ru,
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
- u-boot@lists.denx.de, u-boot-amlogic@groups.io,
- uboot-stm32@st-md-mailman.stormreply.com
-References: <20231102122017.56995-1-ivprusov@sberdevices.ru>
- <20231102122017.56995-6-ivprusov@sberdevices.ru>
-From: Sean Anderson <seanga2@gmail.com>
-In-Reply-To: <20231102122017.56995-6-ivprusov@sberdevices.ru>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [100.64.160.123]
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 181052 [Nov 01 2023]
+X-KSMG-AntiSpam-Version: 6.0.0.2
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;p-i-exch-sc-m01.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2023/11/01 13:00:00 #22378131
+X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Sat, 04 Nov 2023 15:46:05 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1820
+ <u-boot-amlogic@groups.io>; Sat, 04 Nov 2023 15:46:15 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1823
 
-On 11/2/23 08:20, Igor Prusov wrote:
-> This adds dump function to struct clk_ops which should replace
-> soc_clk_dump. It allows clock drivers to provide custom dump
-> implementation without overriding generic CCF dump function.
-> 
-> Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
-> Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> Tested-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> ---
->   include/clk-uclass.h | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
-> 
-> diff --git a/include/clk-uclass.h b/include/clk-uclass.h
-> index a22f1a5d84..793bf14160 100644
-> --- a/include/clk-uclass.h
-> +++ b/include/clk-uclass.h
-> @@ -25,6 +25,7 @@ struct ofnode_phandle_args;
->    * @set_parent: Set current clock parent
->    * @enable: Enable a clock.
->    * @disable: Disable a clock.
-> + * @dump: Print clock information.
->    *
->    * The individual methods are described more fully below.
->    */
-> @@ -39,6 +40,9 @@ struct clk_ops {
->   	int (*set_parent)(struct clk *clk, struct clk *parent);
->   	int (*enable)(struct clk *clk);
->   	int (*disable)(struct clk *clk);
-> +#if IS_ENABLED(CONFIG_CMD_CLK)
-> +	int (*dump)(struct udevice *dev);
-> +#endif
->   };
->   
->   #if 0 /* For documentation only */
-> @@ -135,6 +139,17 @@ int enable(struct clk *clk);
->    * Return: zero on success, or -ve error code.
->    */
->   int disable(struct clk *clk);
-> +
-> +/**
-> + * dump() - Print clock information.
-> + * @clk:	The clock device to dump.
-> + *
-> + * If present, this function is called by "clk dump" command for each
-> + * bound device.
-> + *
-> + * Return: zero on success, or -ve error code.
-> + */
-> +int dump(struct udevice *dev);
+Since we sync device tree with Linux, we have to add this
+clock definition for USB stack.
 
-Actually, this should return void, since we don't do anything with the return code.
+Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+---
+ drivers/clk/meson/a1.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---Sean
-
->   #endif
->   
->   #endif
+diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+index 1075ba7333..d0f5bb3753 100644
+--- a/drivers/clk/meson/a1.c
++++ b/drivers/clk/meson/a1.c
+@@ -241,6 +241,12 @@ static const struct meson_clk_info *meson_clocks[] =3D=
+ {
+ 	[CLKID_USB_PHY_IN] =3D CLK_GATE("usb_phy_in", A1_SYS_OSCIN_CTRL, 2,
+ 		EXTERNAL_XTAL
+ 	),
++	[CLKID_USB_CTRL_IN] =3D CLK_GATE("usb_ctrl_in", A1_SYS_OSCIN_CTRL, 3,
++		EXTERNAL_XTAL
++	),
++	[CLKID_USB_CTRL] =3D CLK_GATE("usb_ctrl", A1_SYS_CLK_EN0, 28,
++		CLKID_SYS
++	),
+ 	[CLKID_USB_PHY] =3D CLK_GATE("usb_phy", A1_SYS_CLK_EN0, 27,
+ 		CLKID_SYS
+ 	),
+--=20
+2.25.1
 
 
