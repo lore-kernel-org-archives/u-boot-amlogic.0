@@ -2,102 +2,127 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9891CC41535
-	for <webhook@archiver.kernel.org>; Sat,  4 Nov 2023 15:46:15 +0000 (UTC)
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web11.7997.1698847516950427692
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967E2C4332F
+	for <webhook@archiver.kernel.org>; Sat,  4 Nov 2023 15:46:25 +0000 (UTC)
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.web10.13386.1698858816545699204
  for <u-boot-amlogic@groups.io>;
- Wed, 01 Nov 2023 07:05:18 -0700
+ Wed, 01 Nov 2023 10:13:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=iYerkKsU;
- spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: avromanov@salutedevices.com)
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 2837E100024;
-	Wed,  1 Nov 2023 17:05:15 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2837E100024
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1698847515;
-	bh=yFZ5X6oU0nBWWN0p3IFNYnE3fJI9f0SRKMvP6nyzEUE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=iYerkKsUGkiUfRlA5nAwTZ1G6oU4z08+aO/LxwuIPyVMX/rQtqRT9nokk2iOfFwI2
-	 yUg4NCwsauu28Oj2w25klfmCGm+dpG3yAf5CWCOBCzWVSn8JhzrEge+euevY2feaw5
-	 bTJFQyVoPHtrPa5cjFmAgdoFjohq83iThQUA2R33kQ5PM+5UL/garUS/nFNKS9fBph
-	 GniC8Yj+qxYbzLGjZj59tWUrO0zwwSd7q3EqWyu6h7lJUZeVAdwnW4HUGpXivWvxiP
-	 ThkEOcJlBjG36zekZBZToudOhLwf6gHx0K9QZUImR4ndraOSR2BzvU51oWlw7cmA1t
-	 veIXjMOeyyd0w==
-Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed,  1 Nov 2023 17:05:15 +0300 (MSK)
-Received: from localhost.localdomain (100.64.160.123) by
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.37; Wed, 1 Nov 2023 17:05:14 +0300
-From: Alexey Romanov <avromanov@salutedevices.com>
-To: <neil.armstrong@linaro.org>, <narmstrong@baylibre.com>
-CC: <u-boot-amlogic@groups.io>, <u-boot@lists.denx.de>,
-	<kernel@sberdevices.ru>, Dmitry Rokosov <ddrokosov@salutedevices.com>, Alexey
- Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v1 2/2] drivers: sm: bind child sm devices in the device tree
-Date: Wed, 1 Nov 2023 17:04:57 +0300
-Message-ID: <20231101140500.9025-3-avromanov@salutedevices.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231101140500.9025-1-avromanov@salutedevices.com>
-References: <20231101140500.9025-1-avromanov@salutedevices.com>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=W3ICIzqX;
+ spf=pass (domain: gmail.com, ip: 209.85.219.42, mailfrom: seanga2@gmail.com)
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-66d87554434so289806d6.2
+        for <u-boot-amlogic@groups.io>; Wed, 01 Nov 2023 10:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698858815; x=1699463615; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zqi4oQ+fI2HNFKzlptsGyxi9hbC2jIZhMA5wcmrHsoQ=;
+        b=W3ICIzqX41s2XX8ZUP5fIH6MyCqgo9NkYL6tAcoNd5HAwGamTSvAu61A9U6ECYB358
+         1OH8tWbRy/dmW8YrNTPCvMpgyaZDaAZB3LoojTe92o8/NLDB9Sw5N4Hh6S/BKkweGkXo
+         i0y9jDhoZ/sgxllQhiqTOLuP/EU2vYb0fEJsI6s3H6Fg/eSKRO0+K6mhvtpC1DD/r7UL
+         F6dVoO8NSquOEBgZ0IdjRx4o+0WVlOaLAj741KLq5qM77EP8b/ZgezQX87HIibx/DiB3
+         cQ/fci6sufUKncNTG5vGs1rkC1nn2Cted0iySRt7EKXY9alZHnc//vVVDI7gDxnOmPKV
+         M6TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698858815; x=1699463615;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zqi4oQ+fI2HNFKzlptsGyxi9hbC2jIZhMA5wcmrHsoQ=;
+        b=XOeW7SvWRmsBrc2HnZlx3l7iuJOGvLwaRA+vbTxGg61BJUHwR03cb4layAQfFQxtbh
+         zVVt7/48i4pXy6zt1m+qJsQ3gS2q4izxPlX6oUZNlljkHC8/7nchf6LqQkYAMuCGgFgH
+         g/oGww7NqrBfQTL+ouuG5/kcrNLqfZHJN8AKlsc9Bw5VpvuZzxSbIL5HZ2bdwzAmj2ad
+         tkUjUuxBi7SRBnjcQR/75U5EHik/K197nNvJeCURwJUdvditWMq8MJ8aTUI1T8NfiraK
+         rsp06HhQBOuA0q6BFqj5tkq01ccvblQON2X8AX4Hzli8ObTh4Blj4ymWv0cLACNX1no4
+         0GCA==
+X-Gm-Message-State: AOJu0Yy0xPBQu2FjoDW26/btq5E2O+lIHwNTYKrLVgmrBLBwkNDdTOzk
+	Hxbi4PptoSn6104by8FJ66gQhB5UGhYbJQ==
+X-Google-Smtp-Source: AGHT+IGHTaoPYy1sfNIp6lRmI0gwb4rtmaiCOcvnjY2OuzNdqXRENpd+VDbjAaPGKw6sRY+htU4aqg==
+X-Received: by 2002:a05:6214:194f:b0:66d:237d:8f75 with SMTP id q15-20020a056214194f00b0066d237d8f75mr20820368qvk.35.1698858815620;
+        Wed, 01 Nov 2023 10:13:35 -0700 (PDT)
+Received: from [192.168.1.201] (pool-108-48-157-169.washdc.fios.verizon.net. [108.48.157.169])
+        by smtp.gmail.com with ESMTPSA id t14-20020a0cea2e000000b00655e428604esm1631933qvp.137.2023.11.01.10.13.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Nov 2023 10:13:35 -0700 (PDT)
+Message-ID: <5d13035b-2f8d-a2cf-5150-99eed7e5bcf5@gmail.com>
+Date: Wed, 1 Nov 2023 13:13:33 -0400
 MIME-Version: 1.0
-X-Originating-IP: [100.64.160.123]
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 181050 [Nov 01 2023]
-X-KSMG-AntiSpam-Version: 6.0.0.2
-X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;p-i-exch-sc-m01.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2023/11/01 13:00:00 #22378131
-X-KSMG-AntiVirus-Status: Clean, skipped
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v4 8/8] cmd: clk: Make soc_clk_dump static
+To: Igor Prusov <ivprusov@sberdevices.ru>, Michal Simek
+ <michal.simek@amd.com>, Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
+ Lukasz Majewski <lukma@denx.de>, Ryan Chen <ryan_chen@aspeedtech.com>,
+ Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Stefan Roese <sr@denx.de>,
+ Patrick Delaunay <patrick.delaunay@foss.st.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>
+Cc: prusovigor@gmail.com, kernel@sberdevices.ru,
+ Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
+ u-boot@lists.denx.de, u-boot-amlogic@groups.io,
+ uboot-stm32@st-md-mailman.stormreply.com
+References: <20231017165649.1492-1-ivprusov@sberdevices.ru>
+ <20231017165649.1492-9-ivprusov@sberdevices.ru>
+From: Sean Anderson <seanga2@gmail.com>
+In-Reply-To: <20231017165649.1492-9-ivprusov@sberdevices.ru>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Sat, 04 Nov 2023 15:46:15 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1822
+ <u-boot-amlogic@groups.io>; Sat, 04 Nov 2023 15:46:25 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1824
 
-From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+On 10/17/23 12:56, Igor Prusov wrote:
+> After introducing dump to clk_ops there is no need to override or expose
+> this symbol anymore.
+> 
+> Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
+> Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> Tested-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> ---
+>   cmd/clk.c     | 4 ++--
+>   include/clk.h | 2 --
+>   2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/cmd/clk.c b/cmd/clk.c
+> index 90cc6fa906..f55911db7a 100644
+> --- a/cmd/clk.c
+> +++ b/cmd/clk.c
+> @@ -59,7 +59,7 @@ static void show_clks(struct udevice *dev, int depth, int last_flag)
+>   	}
+>   }
+>   
+> -int __weak soc_clk_dump(void)
+> +static int soc_clk_dump(void)
+>   {
+>   	struct udevice *dev;
+>   	const struct clk_ops *ops;
+> @@ -81,7 +81,7 @@ int __weak soc_clk_dump(void)
+>   	return 0;
+>   }
+>   #else
+> -int __weak soc_clk_dump(void)
+> +static int soc_clk_dump(void)
+>   {
+>   	puts("Not implemented\n");
+>   	return 1;
+> diff --git a/include/clk.h b/include/clk.h
+> index d91285235f..bf0d9c9d7f 100644
+> --- a/include/clk.h
+> +++ b/include/clk.h
+> @@ -674,8 +674,6 @@ static inline bool clk_valid(struct clk *clk)
+>   	return clk && !!clk->dev;
+>   }
+>   
+> -int soc_clk_dump(void);
+> -
+>   #endif
+>   
+>   #define clk_prepare_enable(clk) clk_enable(clk)
 
-One well-known sm child device that provides secure power control is the
-Secure Power Controller. This device utilizes SMC calls to communicate
-with power domains on the secure monitor side.
-
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
----
- drivers/sm/meson-sm.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/sm/meson-sm.c b/drivers/sm/meson-sm.c
-index faef369f35..1dd1584855 100644
---- a/drivers/sm/meson-sm.c
-+++ b/drivers/sm/meson-sm.c
-@@ -194,6 +194,7 @@ U_BOOT_DRIVER(meson_sm) =3D {
- 	.id =3D UCLASS_SM,
- 	.of_match =3D meson_sm_ids,
- 	.probe =3D meson_sm_probe,
-+	.bind =3D dm_scan_fdt_dev,
- 	.priv_auto =3D sizeof(struct meson_sm_priv),
- 	.ops =3D &sm_ops,
- };
---=20
-2.25.1
-
+Reviewed-by: Sean Anderson <seanga2@gmail.com>
 
