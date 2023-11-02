@@ -1,123 +1,131 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <ivprusov@salutedevices.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D63C4332F
-	for <webhook@archiver.kernel.org>; Sun, 29 Oct 2023 14:34:15 +0000 (UTC)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
- by mx.groups.io with SMTP id smtpd.web11.35873.1698454261816107332
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3E2C4332F
+	for <webhook@archiver.kernel.org>; Thu,  2 Nov 2023 12:20:37 +0000 (UTC)
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
+ by mx.groups.io with SMTP id smtpd.web11.29240.1698927635208583978
  for <u-boot-amlogic@groups.io>;
- Fri, 27 Oct 2023 17:51:02 -0700
+ Thu, 02 Nov 2023 05:20:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=IFzJVr9Q;
- spf=pass (domain: konsulko.com, ip: 209.85.222.177, mailfrom: trini@konsulko.com)
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7781b176131so179528385a.1
-        for <u-boot-amlogic@groups.io>; Fri, 27 Oct 2023 17:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1698454261; x=1699059061; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TaRG/avuTv5thM0LVFZL6X7q5POE8HT5+/B9sVSvo2g=;
-        b=IFzJVr9QJCr5tvadETyn8U0j3sidHAFLYYyZsmL5JkaiYWlquyIP/edRiQF99PVP9t
-         6mMf8JWbi0QBLm0xIDSoWrFdaA7kCNR1S57zkZrDwJSvtHQsBVm/b0XlX1mAPOFUB6C/
-         N6aoTamBwQ5xRlZFWQI1k6i+7091tpRgJFCnw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698454261; x=1699059061;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TaRG/avuTv5thM0LVFZL6X7q5POE8HT5+/B9sVSvo2g=;
-        b=f2BYmPeVamoKuhZ0d0Zw76aYtmFBm9a++L5pNcQ44UfeDcxECInLlGGHFB2FlvieqU
-         6lfu7hNBrZ24tZTPCqNILfnf97zMqB4a6bv4MDOsPHWWBMvIEM9MGyzbISHPupYBN1SP
-         jHEdRiZJI6RfBe5wqvkYr6r0ceMHIYIZmX4CYf+nOfisBXCQ7Lmn+vEFr1Y/i71cvjr/
-         MlvimdT/o4mwxoRCBGIborELNZR3YqbAzsD9Gu3db0UTZ/sHNCKC3PZOxMjuevEZBqkS
-         oGbHIPq4wA7jPjzdW7SgyXiASiqNBM6smt3WPgGkC0SdtJDQ9wvUgPVN7ES81kLp2Mxp
-         mSCQ==
-X-Gm-Message-State: AOJu0YxNokOi3EPd1OJno3Dsyr2/8zuj4q4FT0FYMFdQ/U+FnpDdjUYd
-	ZifeaEiLpjmpDZaF4r92jY/JVA==
-X-Google-Smtp-Source: AGHT+IGxRFm2+7pkCkNa7RUCH8vf23NrppI3nzBPu1s9QmVO8xkn4AArjKLCDIG7QVD2Eau4gT4Cdw==
-X-Received: by 2002:a05:620a:2a11:b0:774:3963:41a5 with SMTP id o17-20020a05620a2a1100b00774396341a5mr4523763qkp.13.1698454260926;
-        Fri, 27 Oct 2023 17:51:00 -0700 (PDT)
-Received: from bill-the-cat (2603-6081-7b00-6400-6f2b-3a78-9e8e-d344.res6.spectrum.com. [2603:6081:7b00:6400:6f2b:3a78:9e8e:d344])
-        by smtp.gmail.com with ESMTPSA id m12-20020ae9e70c000000b007770673e757sm1050695qka.94.2023.10.27.17.50.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 17:51:00 -0700 (PDT)
-Date: Fri, 27 Oct 2023 20:50:58 -0400
-From: Tom Rini <trini@konsulko.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Subject: Re: [GIT PULL] Please pull u-boot-amlogic-20231027
-Message-ID: <20231028005058.GE496310@bill-the-cat>
-References: <4839b54f-1e61-4c46-b1ed-40a2ea0f9c08@linaro.org>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=ohGnonhP;
+ spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: ivprusov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 6390C120033;
+	Thu,  2 Nov 2023 15:20:31 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6390C120033
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+	s=mail; t=1698927631;
+	bh=8dIka+qHrd1CSkysAkEa7DHk13+QlazzKEnhrY6bODU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=ohGnonhPCg+7rHPJQBN3gKFLo+8mS6gzYvx9QjHCwtZeQ9yy+Vm8VkFFZlX/g56XR
+	 RelQN+l+hOtOwSNZdPaPJmzagfcxiurr6h9r6aVWixWEgDjyWtowbACnPFFs+xTm7P
+	 X/7or6L05xOVtSBs7TbY05irXAF6Mma2rSOoLAkKZsEMOC4cE0Jucn86jQMNdMSCXz
+	 nAlG4ydkbA4txT5NFNvjS4gnGFV+Sh2wDhs3PBVbno5bB8Y3XlEPv1UQ5QMlboymDh
+	 D9uc+tiQylTi6vGveuxqOwhjCjrOLpOOM9JQe/Zhd4HIba9yz+tmGF265XMZFoPVqy
+	 qKg4LCaeNkI0A==
+Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu,  2 Nov 2023 15:20:31 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.37; Thu, 2 Nov 2023 15:20:30 +0300
+From: Igor Prusov <ivprusov@sberdevices.ru>
+To: Michal Simek <michal.simek@amd.com>, Daniel Schwierzeck
+	<daniel.schwierzeck@gmail.com>, Lukasz Majewski <lukma@denx.de>, Sean
+ Anderson <seanga2@gmail.com>, Ryan Chen <ryan_chen@aspeedtech.com>, Chia-Wei
+ Wang <chiawei_wang@aspeedtech.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Stefan Roese <sr@denx.de>, Patrick Delaunay
+	<patrick.delaunay@foss.st.com>, Patrice Chotard <patrice.chotard@foss.st.com>
+CC: <prusovigor@gmail.com>, <kernel@sberdevices.ru>, Igor Prusov
+	<ivprusov@sberdevices.ru>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel
+ Stanley <joel@jms.id.au>, <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
+	<uboot-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v5 0/8] clk: Switch from soc_clk_dump to clk_ops function
+Date: Thu, 2 Nov 2023 15:20:09 +0300
+Message-ID: <20231102122017.56995-1-ivprusov@sberdevices.ru>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <4839b54f-1e61-4c46-b1ed-40a2ea0f9c08@linaro.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=EEiFDRnYcl3kdDDnQ6fI"
+Content-Type: text/plain
+X-Originating-IP: [100.64.160.123]
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 181076 [Nov 02 2023]
+X-KSMG-AntiSpam-Version: 6.0.0.2
+X-KSMG-AntiSpam-Envelope-From: ivprusov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1;p-i-exch-sc-m01.sberdevices.ru:7.1.1,5.0.1;100.64.160.123:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2023/11/02 06:57:00 #22385341
+X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Sun, 29 Oct 2023 14:34:15 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1807
+ <u-boot-amlogic@groups.io>; Thu, 02 Nov 2023 12:20:37 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1809
 
---Groupsio=EEiFDRnYcl3kdDDnQ6fI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently clock providers may override default implementation of
+soc_clk_dump function to replace clk dump command output. This causes
+confusing behaviour when u-boot is built with one of such drivers
+enabled but still has clocks defined using CCF. For example, enabling
+CMD_CLK and using clk dump on sandbox target will not show CCF clocks
+because k210 driver overrides common soc_clk_dump.
 
-On Fri, Oct 27, 2023 at 10:38:41AM +0200, Neil Armstrong wrote:
+Changelog:
+ v1 -> v2:
+ - Add missing static to dump functions
 
-> Hi Tom,
->=20
-> A late PR to:
-> - fix environment saving for new Android boot features on vim3*_android
-> - Add SPIFC support for Amlogic A1
-> - Add DFU RAM boot step when booting over USB, fixing full USB boot for G=
-12/SM1 boards
->=20
-> The CI job is at https://source.denx.de/u-boot/custodians/u-boot-amlogic/=
-pipelines/18322
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit fb428b61819444b9337075f49c72f326f5d120=
-85:
->=20
->   Merge branch '2023-10-24-assorted-general-fixes-and-updates' (2023-10-2=
-4 19:12:21 -0400)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-20231027
->=20
-> for you to fetch changes up to 892e04bc965400772e1b84e6450a7919deca0e0b:
->=20
->   ARM: amlogic: ad401: enable SPIFC (2023-10-26 17:56:58 +0200)
->=20
+ v2 -> v3:
+ - Make soc_clk_dump in cmd/clk.c static instead of removing __weak
 
-Applied to u-boot/master, thanks!
+ v3 -> v4:
+ - Rebase and refactor dump for new Amlogic A1 clock controller driver
+
+ v4 -> v5:
+ - Add docs for dump() function in clk_ops
+ - Print driver and device names before calling corresponding dump()
+
+Igor Prusov (8):
+  clk: zynq: Move soc_clk_dump to Zynq clock driver
+  clk: ast2600: Move soc_clk_dump function
+  clk: k210: Move soc_clk_dump function
+  clk: amlogic: Move driver and ops structs
+  clk: Add dump operation to clk_ops
+  cmd: clk: Use dump function from clk_ops
+  clk: treewide: switch to clock dump from clk_ops
+  cmd: clk: Make soc_clk_dump static
+
+ arch/arm/mach-zynq/clk.c               |  57 --------------
+ arch/mips/mach-pic32/cpu.c             |  23 ------
+ cmd/clk.c                              |  13 +++-
+ drivers/clk/aspeed/clk_ast2600.c       |  83 ++++++++++----------
+ drivers/clk/clk_k210.c                 | 103 ++++++++++++-------------
+ drivers/clk/clk_pic32.c                |  39 ++++++++++
+ drivers/clk/clk_versal.c               |   7 +-
+ drivers/clk/clk_zynq.c                 |  51 ++++++++++++
+ drivers/clk/clk_zynqmp.c               |  13 ++--
+ drivers/clk/imx/clk-imx8.c             |  11 +--
+ drivers/clk/meson/a1.c                 |  54 +++++--------
+ drivers/clk/mvebu/armada-37xx-periph.c |   5 +-
+ drivers/clk/stm32/clk-stm32mp1.c       |  29 ++-----
+ include/clk-uclass.h                   |  15 ++++
+ include/clk.h                          |   2 -
+ 15 files changed, 256 insertions(+), 249 deletions(-)
 
 --=20
-Tom
+2.34.1
 
---Groupsio=EEiFDRnYcl3kdDDnQ6fI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmU8WvIACgkQFHw5/5Y0
-tywdNwwAlaoPyHh3HTSbXyohw2fq1XQCg38haLkcJkx3Db1zWm/FlZ+QOcJGknOD
-3bcSAyX8HOzYFTb5IANVQIkZpo+8MgQhLE+GRysNTq0xKuwxnAl6l+EtAtbuyENy
-NPdY0aCLtnHU6jmDr5+OF4vayMsauUwxMBpz2mIt9jgb7gs2hJDJ/HRSI6mbw/HS
-GiHcszULP/1mxfKaNMKCuhpcPw+6uj6tcyb3CXEPjw/5Ayp/FcjtcpGINEIoP9/z
-oaZioBR8UJ7W131hwRDQxUIbLx/UdVICuiRFdLaGcmAC6Ja8ljFcniHNEZpbmgBv
-+EooI5ikjRFArkH7KwpNZp/J1H2kiCq3aMmtIAS8RiGO2kAep2MEWnArqoWTQc+f
-MeBOWl9WFuzZnW17f3TzGiLSly9aLIyoWCKKVL4CGfMSel3XFSs9KERpy2/xq16G
-GpIb2t+oW7T02lNlE0mXSAxvQgM2ur03a0erq9L72GY5Xw8zdK8J0vF3184kwzxf
-Y1rnYxPs
-=5MBd
------END PGP SIGNATURE-----
-
---Groupsio=EEiFDRnYcl3kdDDnQ6fI--
 
