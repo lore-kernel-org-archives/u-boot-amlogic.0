@@ -2,38 +2,38 @@ Return-Path: <ivprusov@salutedevices.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B5FC41535
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49E7C0018C
 	for <webhook@archiver.kernel.org>; Thu,  9 Nov 2023 10:55:44 +0000 (UTC)
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web10.118842.1699527337881133485
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
+ by mx.groups.io with SMTP id smtpd.web11.119025.1699527338869524010
  for <u-boot-amlogic@groups.io>;
- Thu, 09 Nov 2023 02:55:38 -0800
+ Thu, 09 Nov 2023 02:55:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=WZPiX9vJ;
- spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: ivprusov@salutedevices.com)
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 6090710004C;
-	Thu,  9 Nov 2023 13:55:36 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6090710004C
+ dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=VuPOgJpC;
+ spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: ivprusov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 5BFE5120041;
+	Thu,  9 Nov 2023 13:55:37 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 5BFE5120041
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-	s=mail; t=1699527336;
-	bh=lIig9u04yz0CnT8e2iu5TlOgOW6+rWLXHzg7JECemP8=;
+	s=mail; t=1699527337;
+	bh=+KzMk6UDaUeqPEx2Njw40E1PXgC6eESva0VQNNEiq34=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=WZPiX9vJULR3UE/u0qy/Cy9hvnSv8joEdMi7ywqI8Pd0NboJpvR5UJAwfWXKGi4N2
-	 +8cAsSKhcObeg8FB6Jpe3tp+h/ZMU13x8ILupQNR1LL7AXJOiRIcbTDgt5/w4mYqCI
-	 C8H/yl2kmkVwk00puZE8YfNXx5zrthQ+jF9iQiJBYIysX8LKe3lx4PWIQ2HEYS8IGY
-	 v7fhxAna40uwANQMI4exEmr0JdAVYQJ8quGhGSSHTu4vnchHNav9WQqsTnGPHi2f1x
-	 7Er3Aq5Q/e316kuV88DoaX8psMGD4Kfr14fxUnb+rMibJdzh9631P8wfLZ3Pf/rJRI
-	 2aH62qV4Zc6AA==
+	b=VuPOgJpCkaYrO2FDeiJQSi6xkvgxhiwS7Fm++rEXUaOCQTnz2gOdpxP/xDUl7vrQ4
+	 +0mVoc2NRPkmNVhU1UdU8AEQObH87Jkq3ji3eeMSob/pPc+Do/cL2Hc9Zsdkno+A3o
+	 R3Ja2U1wAt+lqQ/7qeL1toFStcRMoCOHvrQcbgAupsDNq6+6LdGiNexfP/UAkT2aLd
+	 paupJiqV36D35xz8vs8d55gbNiH6cUYOMMigZffVmobHnFuzWGumqWu8qVJFeJGifZ
+	 v3KVMhxQcZGqqyEQU8UqNC6JR1smIopYMyw4JXoF8aElfSdEtGXPftdhteWMaTbpWj
+	 GULGUNDjrIOmQ==
 Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu,  9 Nov 2023 13:55:36 +0300 (MSK)
+	Thu,  9 Nov 2023 13:55:37 +0300 (MSK)
 Received: from localhost.localdomain (100.64.160.123) by
  p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.37; Thu, 9 Nov 2023 13:55:35 +0300
+ 15.2.1118.37; Thu, 9 Nov 2023 13:55:36 +0300
 From: Igor Prusov <ivprusov@sberdevices.ru>
 To: <u-boot@lists.denx.de>, Michal Simek <michal.simek@amd.com>, Daniel
  Schwierzeck <daniel.schwierzeck@gmail.com>, Lukasz Majewski <lukma@denx.de>,
@@ -45,9 +45,9 @@ CC: <prusovigor@gmail.com>, <kernel@sberdevices.ru>, Igor Prusov
 	<ivprusov@sberdevices.ru>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel
  Stanley <joel@jms.id.au>, <u-boot-amlogic@groups.io>,
 	<uboot-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v7 5/8] clk: Add dump operation to clk_ops
-Date: Thu, 9 Nov 2023 13:55:13 +0300
-Message-ID: <20231109105516.24892-6-ivprusov@sberdevices.ru>
+Subject: [PATCH v7 6/8] cmd: clk: Use dump function from clk_ops
+Date: Thu, 9 Nov 2023 13:55:14 +0300
+Message-ID: <20231109105516.24892-7-ivprusov@sberdevices.ru>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231109105516.24892-1-ivprusov@sberdevices.ru>
 References: <20231109105516.24892-1-ivprusov@sberdevices.ru>
@@ -58,14 +58,14 @@ X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
  p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
 X-KSMG-Rule-ID: 10
 X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 181239 [Nov 09 2023]
+X-KSMG-AntiSpam-Lua-Profiles: 181238 [Nov 09 2023]
 X-KSMG-AntiSpam-Version: 6.0.0.2
 X-KSMG-AntiSpam-Envelope-From: ivprusov@salutedevices.com
 X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;p-i-exch-sc-m01.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
+X-KSMG-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1;127.0.0.199:7.1.2;p-i-exch-sc-m01.sberdevices.ru:5.0.1,7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
 X-KSMG-AntiPhishing: Clean
@@ -77,58 +77,47 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 09 Nov 2023 10:55:44 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1851
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1852
 
-This adds dump function to struct clk_ops which should replace
-soc_clk_dump. It allows clock drivers to provide custom dump
-implementation without overriding generic CCF dump function.
+Add another loop to dump additional info from clock providers that
+implement dump operation.
 
 Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
 Tested-by: Patrice Chotard <patrice.chotard@foss.st.com>
 Reviewed-by: Sean Anderson <seanga2@gmail.com>
 Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
 ---
- include/clk-uclass.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ cmd/clk.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/clk-uclass.h b/include/clk-uclass.h
-index a22f1a5d84..f10dd213ff 100644
---- a/include/clk-uclass.h
-+++ b/include/clk-uclass.h
-@@ -25,6 +25,7 @@ struct ofnode_phandle_args;
-  * @set_parent: Set current clock parent
-  * @enable: Enable a clock.
-  * @disable: Disable a clock.
-+ * @dump: Print clock information.
-  *
-  * The individual methods are described more fully below.
-  */
-@@ -39,6 +40,9 @@ struct clk_ops {
- 	int (*set_parent)(struct clk *clk, struct clk *parent);
- 	int (*enable)(struct clk *clk);
- 	int (*disable)(struct clk *clk);
-+#if IS_ENABLED(CONFIG_CMD_CLK)
-+	void (*dump)(struct udevice *dev);
-+#endif
- };
+diff --git a/cmd/clk.c b/cmd/clk.c
+index c7c379d7a6..4b9709d3ff 100644
+--- a/cmd/clk.c
++++ b/cmd/clk.c
+@@ -62,6 +62,7 @@ static void show_clks(struct udevice *dev, int depth, i=
+nt last_flag)
+ int __weak soc_clk_dump(void)
+ {
+ 	struct udevice *dev;
++	const struct clk_ops *ops;
 =20
- #if 0 /* For documentation only */
-@@ -135,6 +139,15 @@ int enable(struct clk *clk);
-  * Return: zero on success, or -ve error code.
-  */
- int disable(struct clk *clk);
+ 	printf(" Rate               Usecnt      Name\n");
+ 	printf("------------------------------------------\n");
+@@ -69,6 +70,14 @@ int __weak soc_clk_dump(void)
+ 	uclass_foreach_dev_probe(UCLASS_CLK, dev)
+ 		show_clks(dev, -1, 0);
+=20
++	uclass_foreach_dev_probe(UCLASS_CLK, dev) {
++		ops =3D dev_get_driver_ops(dev);
++		if (ops && ops->dump) {
++			printf("\n%s %s:\n", dev->driver->name, dev->name);
++			ops->dump(dev);
++		}
++	}
 +
-+/**
-+ * dump() - Print clock information.
-+ * @clk:	The clock device to dump.
-+ *
-+ * If present, this function is called by "clk dump" command for each
-+ * bound device.
-+ */
-+void dump(struct udevice *dev);
- #endif
-=20
- #endif
+ 	return 0;
+ }
+ #else
 --=20
 2.34.1
 
