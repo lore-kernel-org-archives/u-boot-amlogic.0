@@ -2,38 +2,38 @@ Return-Path: <ivprusov@salutedevices.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928D9C4167D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913F3C4332F
 	for <webhook@archiver.kernel.org>; Thu,  9 Nov 2023 10:55:44 +0000 (UTC)
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web10.118841.1699527336385204362
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
+ by mx.groups.io with SMTP id smtpd.web11.119024.1699527337516897399
  for <u-boot-amlogic@groups.io>;
- Thu, 09 Nov 2023 02:55:37 -0800
+ Thu, 09 Nov 2023 02:55:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=hVaIvRpA;
- spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: ivprusov@salutedevices.com)
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id E733810004A;
-	Thu,  9 Nov 2023 13:55:32 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E733810004A
+ dkim=fail reason="dkim: body hash did not verify" header.i=@sberdevices.ru header.s=mail header.b=ow3JGN3Y;
+ spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: ivprusov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 7AB90120040;
+	Thu,  9 Nov 2023 13:55:35 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 7AB90120040
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-	s=mail; t=1699527332;
-	bh=gK+amiQ07UDbxeyBKZbEJCBjoBZqLunp2E2CaqGaqNc=;
+	s=mail; t=1699527335;
+	bh=J7SZxu/xyp9ytMfVs9epm1TQ96SN7qBo1wcwdrpgXRc=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=hVaIvRpA6zPaTk+fhVKfs2LCNUbdGuICGs3nyWrYM9pul7W00JCPf0orqH5Ci89LP
-	 vr9I/gm8QgR5bGOiIrS4BN4P7olJ7aeMy4lKcl4mpLuU8mB1k9Ay8Kaujxm/fPJkSU
-	 Yiq8elonzOg9iECXIpR1TLdWHCX6JaTOgH1sKFqu8xYUlcvOCumZjEZI9cQyE/PPzL
-	 cMlFQnRUH44S/D7IjXhCPUlgi805fncR3OKE2lSVxoIX4zL+DglKLdQWhRKnhdjR2U
-	 jDiGmfUmbPI95z4Nj5Kk7wQZDiNqfj+p7XzFFRwXq+3hxVnEgflIlVcfZ4xXDUWEC+
-	 RIQFzzddtWitw==
+	b=ow3JGN3YnXu8Dl0a5k3UX5ZqYRpq0GnmyGBRHhLR9aK8crGcE430WLZvasVh46rKy
+	 vh+puCGf52n+recZAye/B96DIM0BgJne7HOUCYYKSLDwpunTDV4rcuWVlKusgPZHAa
+	 qzSFdtE9sTLws8fox759HxDzaOW6DdCuTRcBGxwIbTXT1io471GksfEFNheVoouadG
+	 0aq9Eov8/XI/vBEwAXE+cx0bczytWK9a6rcINg3ckBpJxW1dfn5CjQGYoztZhU8Q7x
+	 lAOw1ji7s1HrjZvvbQoZBvXWvwVFw4TiaOs7pVVNt0WUMp3AzrX7dYksnMmKh1d7NO
+	 IViChJVj2ICnQ==
 Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu,  9 Nov 2023 13:55:32 +0300 (MSK)
+	Thu,  9 Nov 2023 13:55:35 +0300 (MSK)
 Received: from localhost.localdomain (100.64.160.123) by
  p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.37; Thu, 9 Nov 2023 13:55:32 +0300
+ 15.2.1118.37; Thu, 9 Nov 2023 13:55:35 +0300
 From: Igor Prusov <ivprusov@sberdevices.ru>
 To: <u-boot@lists.denx.de>, Michal Simek <michal.simek@amd.com>, Daniel
  Schwierzeck <daniel.schwierzeck@gmail.com>, Lukasz Majewski <lukma@denx.de>,
@@ -45,9 +45,9 @@ CC: <prusovigor@gmail.com>, <kernel@sberdevices.ru>, Igor Prusov
 	<ivprusov@sberdevices.ru>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel
  Stanley <joel@jms.id.au>, <u-boot-amlogic@groups.io>,
 	<uboot-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v7 1/8] clk: zynq: Move soc_clk_dump to Zynq clock driver
-Date: Thu, 9 Nov 2023 13:55:09 +0300
-Message-ID: <20231109105516.24892-2-ivprusov@sberdevices.ru>
+Subject: [PATCH v7 4/8] clk: amlogic: Move driver and ops structs
+Date: Thu, 9 Nov 2023 13:55:12 +0300
+Message-ID: <20231109105516.24892-5-ivprusov@sberdevices.ru>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231109105516.24892-1-ivprusov@sberdevices.ru>
 References: <20231109105516.24892-1-ivprusov@sberdevices.ru>
@@ -58,14 +58,14 @@ X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
  p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
 X-KSMG-Rule-ID: 10
 X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 181239 [Nov 09 2023]
+X-KSMG-AntiSpam-Lua-Profiles: 181238 [Nov 09 2023]
 X-KSMG-AntiSpam-Version: 6.0.0.2
 X-KSMG-AntiSpam-Envelope-From: ivprusov@salutedevices.com
 X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;p-i-exch-sc-m01.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
+X-KSMG-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1;127.0.0.199:7.1.2;p-i-exch-sc-m01.sberdevices.ru:5.0.1,7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
 X-KSMG-AntiPhishing: Clean
@@ -77,159 +77,74 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 09 Nov 2023 10:55:44 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1849
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1850
 
-Move clock dump function in preparation for switching to dump function
-in clk_ops.
+Move driver and ops structs to avoid forward declaration after switching
+to dump in clk_ops.
 
-Acked-by: Michal Simek <michal.simek@amd.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
 ---
- arch/arm/mach-zynq/clk.c | 57 ---------------------------------------
- drivers/clk/clk_zynq.c   | 58 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+), 57 deletions(-)
+ drivers/clk/meson/a1.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/mach-zynq/clk.c b/arch/arm/mach-zynq/clk.c
-index 1945f60e08..e6a67326dd 100644
---- a/arch/arm/mach-zynq/clk.c
-+++ b/arch/arm/mach-zynq/clk.c
-@@ -13,20 +13,6 @@
+diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+index d0f5bb3753..c91357ec27 100644
+--- a/drivers/clk/meson/a1.c
++++ b/drivers/clk/meson/a1.c
+@@ -607,14 +607,6 @@ static int meson_clk_set_parent(struct clk *clk, str=
+uct clk *parent_clk)
+ 	return meson_mux_set_parent_by_id(clk, parent_clk->id);
+ }
 =20
- DECLARE_GLOBAL_DATA_PTR;
-=20
--static const char * const clk_names[clk_max] =3D {
--	"armpll", "ddrpll", "iopll",
--	"cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x",
--	"ddr2x", "ddr3x", "dci",
--	"lqspi", "smc", "pcap", "gem0", "gem1",
--	"fclk0", "fclk1", "fclk2", "fclk3", "can0", "can1",
--	"sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1", "dma",
--	"usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper",
--	"sdio0_aper", "sdio1_aper", "spi0_aper", "spi1_aper",
--	"can0_aper", "can1_aper", "i2c0_aper", "i2c1_aper",
--	"uart0_aper", "uart1_aper", "gpio_aper", "lqspi_aper",
--	"smc_aper", "swdt", "dbg_trc", "dbg_apb"
+-static struct clk_ops meson_clk_ops =3D {
+-	.disable	=3D meson_clk_disable,
+-	.enable		=3D meson_clk_enable,
+-	.get_rate	=3D meson_clk_get_rate,
+-	.set_rate	=3D meson_clk_set_rate,
+-	.set_parent	=3D meson_clk_set_parent,
 -};
 -
- /**
-  * set_cpu_clk_info() - Setup clock information
-  *
-@@ -65,46 +51,3 @@ int set_cpu_clk_info(void)
+ static int meson_clk_probe(struct udevice *dev)
+ {
+ 	struct meson_clk *priv =3D dev_get_priv(dev);
+@@ -644,15 +636,6 @@ static const struct udevice_id meson_clk_ids[] =3D {
+ 	{ }
+ };
+=20
+-U_BOOT_DRIVER(meson_clk) =3D {
+-	.name		=3D "meson-clk-a1",
+-	.id		=3D UCLASS_CLK,
+-	.of_match	=3D meson_clk_ids,
+-	.priv_auto	=3D sizeof(struct meson_clk),
+-	.ops		=3D &meson_clk_ops,
+-	.probe		=3D meson_clk_probe,
+-};
+-
+ static const char *meson_clk_get_name(struct clk *clk, int id)
+ {
+ 	const struct meson_clk_info *info;
+@@ -733,3 +716,20 @@ int soc_clk_dump(void)
 =20
  	return 0;
  }
--
--/**
-- * soc_clk_dump() - Print clock frequencies
-- * Returns zero on success
-- *
-- * Implementation for the clk dump command.
-- */
--int soc_clk_dump(void)
--{
--	struct udevice *dev;
--	int i, ret;
--
--	ret =3D uclass_get_device_by_driver(UCLASS_CLK,
--		DM_DRIVER_GET(zynq_clk), &dev);
--	if (ret)
--		return ret;
--
--	printf("clk\t\tfrequency\n");
--	for (i =3D 0; i < clk_max; i++) {
--		const char *name =3D clk_names[i];
--		if (name) {
--			struct clk clk;
--			unsigned long rate;
--
--			clk.id =3D i;
--			ret =3D clk_request(dev, &clk);
--			if (ret < 0)
--				return ret;
--
--			rate =3D clk_get_rate(&clk);
--
--			clk_free(&clk);
--
--			if ((rate =3D=3D (unsigned long)-ENOSYS) ||
--			    (rate =3D=3D (unsigned long)-ENXIO))
--				printf("%10s%20s\n", name, "unknown");
--			else
--				printf("%10s%20lu\n", name, rate);
--		}
--	}
--
--	return 0;
--}
-diff --git a/drivers/clk/clk_zynq.c b/drivers/clk/clk_zynq.c
-index e80500e382..be5226175f 100644
---- a/drivers/clk/clk_zynq.c
-+++ b/drivers/clk/clk_zynq.c
-@@ -454,6 +454,64 @@ static int dummy_enable(struct clk *clk)
- 	return 0;
- }
-=20
-+static const char * const clk_names[clk_max] =3D {
-+	"armpll", "ddrpll", "iopll",
-+	"cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x",
-+	"ddr2x", "ddr3x", "dci",
-+	"lqspi", "smc", "pcap", "gem0", "gem1",
-+	"fclk0", "fclk1", "fclk2", "fclk3", "can0", "can1",
-+	"sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1", "dma",
-+	"usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper",
-+	"sdio0_aper", "sdio1_aper", "spi0_aper", "spi1_aper",
-+	"can0_aper", "can1_aper", "i2c0_aper", "i2c1_aper",
-+	"uart0_aper", "uart1_aper", "gpio_aper", "lqspi_aper",
-+	"smc_aper", "swdt", "dbg_trc", "dbg_apb"
++
++static struct clk_ops meson_clk_ops =3D {
++	.disable	=3D meson_clk_disable,
++	.enable		=3D meson_clk_enable,
++	.get_rate	=3D meson_clk_get_rate,
++	.set_rate	=3D meson_clk_set_rate,
++	.set_parent	=3D meson_clk_set_parent,
 +};
 +
-+/**
-+ * soc_clk_dump() - Print clock frequencies
-+ * Returns zero on success
-+ *
-+ * Implementation for the clk dump command.
-+ */
-+int soc_clk_dump(void)
-+{
-+	struct udevice *dev;
-+	int i, ret;
-+
-+	ret =3D uclass_get_device_by_driver(UCLASS_CLK,
-+					  DM_DRIVER_GET(zynq_clk), &dev);
-+	if (ret)
-+		return ret;
-+
-+	printf("clk\t\tfrequency\n");
-+	for (i =3D 0; i < clk_max; i++) {
-+		const char *name =3D clk_names[i];
-+
-+		if (name) {
-+			struct clk clk;
-+			unsigned long rate;
-+
-+			clk.id =3D i;
-+			ret =3D clk_request(dev, &clk);
-+			if (ret < 0)
-+				return ret;
-+
-+			rate =3D clk_get_rate(&clk);
-+
-+			clk_free(&clk);
-+
-+			if ((rate =3D=3D (unsigned long)-ENOSYS) ||
-+			    (rate =3D=3D (unsigned long)-ENXIO))
-+				printf("%10s%20s\n", name, "unknown");
-+			else
-+				printf("%10s%20lu\n", name, rate);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static struct clk_ops zynq_clk_ops =3D {
- 	.get_rate =3D zynq_clk_get_rate,
- #ifndef CONFIG_SPL_BUILD
++U_BOOT_DRIVER(meson_clk) =3D {
++	.name		=3D "meson-clk-a1",
++	.id		=3D UCLASS_CLK,
++	.of_match	=3D meson_clk_ids,
++	.priv_auto	=3D sizeof(struct meson_clk),
++	.ops		=3D &meson_clk_ops,
++	.probe		=3D meson_clk_probe,
++};
 --=20
 2.34.1
 
