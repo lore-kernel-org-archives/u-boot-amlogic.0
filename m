@@ -2,71 +2,67 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BE4C4167D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239E3C04A95
 	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 12:48:15 +0000 (UTC)
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
- by mx.groups.io with SMTP id smtpd.web10.19942.1699462754265246118
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+ by mx.groups.io with SMTP id smtpd.web11.25153.1699614283807643498
  for <u-boot-amlogic@groups.io>;
- Wed, 08 Nov 2023 08:59:14 -0800
+ Fri, 10 Nov 2023 03:04:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=mocY0Oau;
- spf=pass (domain: gmail.com, ip: 209.85.210.53, mailfrom: seanga2@gmail.com)
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6d33298f8fdso3391395a34.1
-        for <u-boot-amlogic@groups.io>; Wed, 08 Nov 2023 08:59:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699462753; x=1700067553; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZnOdKUWWE4zFAKJWidQzEqP0t/m6lENpHeoIBjpMExk=;
-        b=mocY0OautmqSaQYkQpjrRA2vSPGIr1/NB1oSEEYUWyJ6hPrCAmk3ZwBjyGWEsgM94p
-         mpbY6ARQGllRyLfJfK2n9+TjN3bwxpGSyaznmYln8XY4jnP0CEI6Q2qMEIjZqsSRWD+C
-         7wbK3yxW4tr4r6UzOQcXTKnhokaa6WHg0zcqSvz4XFwUOiKCDLrWXgjMxaXme8477AhU
-         M6dcSScvFv0Wh3qlyB0DZhdolEUWky1gKi/j2PrdDVghfo2HPeUCl8frEpBqQiFHa0Rb
-         upTgKeJ7SuXhVmTJERUjhN3pXE2/2oIumEEVL4/qogJTMJ0/vcVsK5XwNC4puwWDGgtz
-         tLhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699462753; x=1700067553;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZnOdKUWWE4zFAKJWidQzEqP0t/m6lENpHeoIBjpMExk=;
-        b=WUWRWMcaDG3SYop5Pbsa1Z+r0P7HewDEVmNLeOws1aIdkdS78DjPPumDELksgH3fq5
-         uPLuFgMaYAuXE2BcqZsjsIdCq0HRWJ5m6OD9x2+/aGYtLgiLzAOt8PrUq32VhhKCySl/
-         uUMGpKnX6B4g8dwVwf8RTmPEJLcwERw9HwRvJXiO0BBcn7sjtNQ8h7S+096+1SJ/C2nv
-         f94ml9g7kp5Yi3Fikn9d78vGahrXFRsmoMJ8E8QzEgTs/eVUyMcKwE4esJ4+tF4g4AIs
-         B8T8BLuqo04hqe9KfZjDj3GStZPOl4zYY21h8D6put3gw9yW/aOuWMT9cvimEBqGa0w2
-         +kCw==
-X-Gm-Message-State: AOJu0YwVmwJ+ejrmplRIZGzljro1mnudK2tS1H7zRssXYddQZi8kmapl
-	JYxbDH6x95X+73naGR8hB4g=
-X-Google-Smtp-Source: AGHT+IETEvYweDNabSPYit/y8g1EtPfbXj0e+2RBrbqRDfj8gbZFR7JQQFtUnjhk4bU0jRWqQU4fSw==
-X-Received: by 2002:a05:6830:2b21:b0:6be:c1b:ded4 with SMTP id l33-20020a0568302b2100b006be0c1bded4mr2768421otv.3.1699462753555;
-        Wed, 08 Nov 2023 08:59:13 -0800 (PST)
-Received: from [192.168.1.201] (pool-108-48-157-169.washdc.fios.verizon.net. [108.48.157.169])
-        by smtp.gmail.com with ESMTPSA id kg16-20020a05622a761000b0040331a24f16sm1073339qtb.3.2023.11.08.08.59.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Nov 2023 08:59:13 -0800 (PST)
-Message-ID: <976548be-3bdd-0655-8bbb-31c7acdbe4be@gmail.com>
-Date: Wed, 8 Nov 2023 11:59:11 -0500
+ dkim=pass header.i=@collabora.com header.s=mail header.b=ZLw6QtsW;
+ spf=pass (domain: collabora.com, ip: 46.235.227.172, mailfrom: eugen.hristev@collabora.com)
+Received: from [100.94.55.57] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ehristev)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 6FD8C66073EB;
+	Fri, 10 Nov 2023 11:04:39 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1699614282;
+	bh=k3MNr4vsonB/nZFlZpUiVqk9fKfmgS0mKlyrROccdWU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZLw6QtsWEROP9eNVaPMRNqhvUxvzKuxQe5B/v67bRCxqVfUYkIDVzpSAycjKvRQY1
+	 hSp4OuJLnW9fKqJ9W2AmlDtz1cLV9b/Xe+2ZGVsmPB1nx/UwzfozZUcJ7yZE0bO5UZ
+	 rKV4UwGI1SoRQBFwScIxI8YA00ncPxaFgQMybD/Jpr9zKeCXeLO9gvyNgHNNcHR82w
+	 eKA7usYz8QDyzMjD/2qx9i7zA4GUkL5UCAtdxljl0fzA03C27Arb9aIZNkEPO6a+31
+	 i5elJOBw/BIc7LAJIYYYr5F95CzRmCwWmTllZZWxXa1Uk7q/l2ULRu5ossifykbwYW
+	 9ixhGU4+V4HPQ==
+Message-ID: <9b9a1c05-19f3-4247-95e2-0fb94cda1db4@collabora.com>
+Date: Fri, 10 Nov 2023 13:04:36 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v6 5/8] clk: Add dump operation to clk_ops
-To: Igor Prusov <ivprusov@sberdevices.ru>, u-boot@lists.denx.de,
- Michal Simek <michal.simek@amd.com>,
- Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
- Lukasz Majewski <lukma@denx.de>, Ryan Chen <ryan_chen@aspeedtech.com>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] treewide: use linux/time.h for time conversion defines
+To: Igor Prusov <ivprusov@salutedevices.com>, u-boot@lists.denx.de
+Cc: kernel@sberdevices.ru, prusovigor@gmail.com,
+ Alexander Dahl <ada@thorsis.com>, Anatolij Gustschin <agust@denx.de>,
+ Aspeed BMC SW team <BMC-SW@aspeedtech.com>,
+ Balaji Prakash J <bjagadee@codeaurora.org>,
+ Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>,
+ Baruch Siach <baruch@tkos.co.il>, Bhupesh Sharma <bhupesh.linux@gmail.com>,
+ Caleb Connolly <caleb.connolly@linaro.org>,
  Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Stefan Roese <sr@denx.de>,
- Patrick Delaunay <patrick.delaunay@foss.st.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: prusovigor@gmail.com, kernel@sberdevices.ru,
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
+ Chris Morgan <macromorgan@hotmail.com>,
+ Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ Heiko Schocher <hs@denx.de>, Jaehoon Chung <jh80.chung@samsung.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Joel Stanley <joel@jms.id.au>,
+ Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>,
+ Marek Vasut <marex@denx.de>, Michael Trimarchi
+ <michael@amarulasolutions.com>, Michal Simek <michal.simek@amd.com>,
+ Neha Malcom Francis <n-francis@ti.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Patrick Delaunay <patrick.delaunay@foss.st.com>, Peng Fan
+ <peng.fan@nxp.com>, Philipp Tomsich <philipp.tomsich@vrull.eu>,
+ Ryan Chen <ryan_chen@aspeedtech.com>, Sean Anderson <seanga2@gmail.com>,
+ Simon Glass <sjg@chromium.org>, Stefan Bosch <stefan_b@posteo.net>,
+ Stefan Roese <sr@denx.de>, Sumit Garg <sumit.garg@linaro.org>,
+ Svyatoslav Ryhel <clamor95@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>,
  u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com
-References: <20231105083809.3293-1-ivprusov@sberdevices.ru>
- <20231105083809.3293-6-ivprusov@sberdevices.ru>
-From: Sean Anderson <seanga2@gmail.com>
-In-Reply-To: <20231105083809.3293-6-ivprusov@sberdevices.ru>
+References: <20231109171004.193521-1-ivprusov@salutedevices.com>
+ <20231109171004.193521-2-ivprusov@salutedevices.com>
+From: Eugen Hristev <eugen.hristev@collabora.com>
+In-Reply-To: <20231109171004.193521-2-ivprusov@salutedevices.com>
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -74,63 +70,46 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 10 Nov 2023 12:48:15 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1860
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1864
 
-On 11/5/23 03:38, Igor Prusov wrote:
-> This adds dump function to struct clk_ops which should replace
-> soc_clk_dump. It allows clock drivers to provide custom dump
-> implementation without overriding generic CCF dump function.
+On 11/9/23 19:10, Igor Prusov wrote:
+> Now that we have time conversion defines from in time.h there is no need
+> for each driver to define their own version.
 > 
-> Signed-off-by: Igor Prusov <ivprusov@sberdevices.ru>
-> Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> Tested-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
 > ---
->   include/clk-uclass.h | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
 > 
-> diff --git a/include/clk-uclass.h b/include/clk-uclass.h
-> index a22f1a5d84..3419daab34 100644
-> --- a/include/clk-uclass.h
-> +++ b/include/clk-uclass.h
-> @@ -25,6 +25,7 @@ struct ofnode_phandle_args;
->    * @set_parent: Set current clock parent
->    * @enable: Enable a clock.
->    * @disable: Disable a clock.
-> + * @dump: Print clock information.
->    *
->    * The individual methods are described more fully below.
->    */
-> @@ -39,6 +40,9 @@ struct clk_ops {
->   	int (*set_parent)(struct clk *clk, struct clk *parent);
->   	int (*enable)(struct clk *clk);
->   	int (*disable)(struct clk *clk);
-> +#if IS_ENABLED(CONFIG_CMD_CLK)
-> +	void (*dump)(struct udevice *dev);
-> +#endif
->   };
->   
->   #if 0 /* For documentation only */
-> @@ -135,6 +139,17 @@ int enable(struct clk *clk);
->    * Return: zero on success, or -ve error code.
->    */
->   int disable(struct clk *clk);
-> +
-> +/**
-> + * dump() - Print clock information.
-> + * @clk:	The clock device to dump.
-> + *
-> + * If present, this function is called by "clk dump" command for each
-> + * bound device.
-> + *
-> + * Return: zero on success, or -ve error code.
+>   board/friendlyarm/nanopi2/onewire.c              |  5 +----
+>   drivers/clk/at91/clk-main.c                      |  2 +-
+>   drivers/i2c/stm32f7_i2c.c                        | 11 +++++------
+>   drivers/memory/stm32-fmc2-ebi.c                  |  5 ++---
+>   drivers/mmc/octeontx_hsmmc.h                     |  2 --
+>   drivers/mtd/nand/raw/atmel/nand-controller.c     |  3 +--
+>   drivers/mtd/nand/raw/mxs_nand.c                  |  3 +--
+>   drivers/mtd/nand/raw/octeontx_nand.c             |  2 +-
+>   drivers/mtd/nand/raw/stm32_fmc2_nand.c           |  5 ++---
+>   drivers/phy/meson-axg-mipi-dphy.c                |  3 +--
+>   drivers/phy/phy-core-mipi-dphy.c                 |  3 +--
+>   drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c |  3 +--
+>   drivers/pwm/pwm-aspeed.c                         |  3 +--
+>   drivers/pwm/pwm-at91.c                           |  2 +-
+>   drivers/pwm/pwm-cadence-ttc.c                    |  3 +--
+>   drivers/pwm/pwm-meson.c                          |  3 +--
+>   drivers/pwm/pwm-mtk.c                            |  3 +--
+>   drivers/pwm/pwm-ti-ehrpwm.c                      |  3 +--
+>   drivers/serial/serial_msm_geni.c                 |  3 +--
+>   drivers/spi/cadence_qspi.c                       |  3 +--
+>   drivers/spi/fsl_dspi.c                           |  4 +---
+>   drivers/ufs/cdns-platform.c                      |  3 +--
+>   drivers/usb/dwc3/core.c                          |  3 +--
+>   drivers/video/dw_mipi_dsi.c                      |  3 +--
+>   drivers/video/rockchip/dw_mipi_dsi_rockchip.c    |  3 +--
+>   drivers/video/tegra20/tegra-dsi.c                |  4 +---
+>   drivers/watchdog/sunxi_wdt.c                     |  3 +--
+>   fs/ubifs/ubifs.h                                 |  1 -
+>   28 files changed, 32 insertions(+), 62 deletions(-)
+> 
 
-This is no longer correct, but I can remove it when applying.
+Reviewed-by: Eugen Hristev <eugen.hristev@collabora.com> #at91
 
-> + */
-> +void dump(struct udevice *dev);
->   #endif
->   
->   #endif
-
-Reviewed-by: Sean Anderson <seanga2@gmail.com>
 
