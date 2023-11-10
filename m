@@ -2,718 +2,125 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B27C05022
-	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 12:48:15 +0000 (UTC)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web10.23601.1699606503966311215
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAD7C4167D
+	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 18:18:17 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.34934.1699640177555061770
  for <u-boot-amlogic@groups.io>;
- Fri, 10 Nov 2023 00:55:04 -0800
+ Fri, 10 Nov 2023 10:16:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=YVz3bFQW;
- spf=pass (domain: gmail.com, ip: 209.85.221.43, mailfrom: clamor95@gmail.com)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-32fdd0774d9so1027258f8f.2
-        for <u-boot-amlogic@groups.io>; Fri, 10 Nov 2023 00:55:03 -0800 (PST)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=QvybsABb;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.54, mailfrom: jbrunet@baylibre.com)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40838915cecso17497125e9.2
+        for <u-boot-amlogic@groups.io>; Fri, 10 Nov 2023 10:16:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699606502; x=1700211302; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/v8ERheqyRTvqzdfC3wZvZGfn4vvsNeNRRcCaIm26MU=;
-        b=YVz3bFQWQtMpFRuq+Rk86EPHBOVumJx4Y/T4d+MXPnV+UllKfXvkGefqJodz4XpC62
-         NF/ZlJ49WJ8bk9Wa8t1EbzkvCDlWwfqyb+W7REp05OaqPSQUjHuiKGCVXJz0/Neyfs6t
-         HlurlOsvICkbmCqLaymAWCu6oIaT+PGuKzIroahSt/HCzRCcx7l57JmCKhE4D8MpCGz+
-         LHYZZWA87AEn7mcCpIxE0DKhAPOr6mdkQWsmDkVRgCF1HpKBRA2hn/SYR6g+auhBcprO
-         rvoURY/u0eFFqKSO2FCUtJwOVdP1jfUCBvfkqwQfKTbheo12205jKdYPTTj/r6bAByqI
-         nbyw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699640176; x=1700244976; darn=groups.io;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=BvjXQlUY6/PP7bOwN11QvjkURrxXgeIa9hol/Db3KYM=;
+        b=QvybsABb7qTAkvFKW5BFMtTb4Mz8AarbrP3plpaTM9hFb7e3eMcyJIUqKAX7KvzmtY
+         x1/ahJHpxpI4TbrKerSsCScXHO8sef/gALjzHY/8cz85rc2b4zgnXSuqiDH1S5DTQYP+
+         NCMh4DTPkwfqSDKF/6LhrF3LI7FObS6gTynMzHuL8u85uAlXs5gcg4SUmDMkui3WCpDE
+         d54sXeCEBkez+Ecdcvztde24BYjsq6eWc6hpqUfqYyCfGqKeQjUsDA5xotkE5d2BBR4V
+         Ee/lvN96wm5J1kgZrzbsLqZ1moobTQQlorimJ20MbVyIeRhAjR3DBvKFX+BKLXYjAsnl
+         RtFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699606502; x=1700211302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/v8ERheqyRTvqzdfC3wZvZGfn4vvsNeNRRcCaIm26MU=;
-        b=m75DTRWp8blvfuejw8O7KbrR3zVr456GA9vbLTEOWw1E1EtNf+eR6PRM1oa/PSnKXN
-         9df1d9YU88eb17RIS30M+QHElcvXHz0mfA8RLD6h1v10KfvId0TFFjd0BBwUIl+qYpSg
-         pX12UOXEnAj54rd5LcPpnASId8+1a0eN32wAAUtee6NNzL8LBbCInRW3qigVhTZhxA3Z
-         JD2ujHh9x9lONhJnkm6NPaBv0QHTodSAlCA4/a7J2R87CZcZTgDZp9NFeIbFaog/ebfR
-         fer0fJQdHt86BH4Ys4n56aGhktUOK5xnstLxhTf70QqVdXwk/tUzBK//oJMK/KLwW10X
-         sF9g==
-X-Gm-Message-State: AOJu0YxcQX6XA1Zd91yoluJQ0FHN4R/d4Sj6RSloAYpV9qvc6y8VHQp6
-	1/f+UZjzL7OJffGoZC3l0uj8Ko9Kn60S9xYdHdA=
-X-Google-Smtp-Source: AGHT+IFCAoQfPOEC24AOmgNIVjIkV440v1d9M8EiXWRxteYv1Ieux/5vZTvje5LCmjkLR8WLhcJjohhyYscAPltpxss=
-X-Received: by 2002:a5d:654e:0:b0:32f:7a65:da64 with SMTP id
- z14-20020a5d654e000000b0032f7a65da64mr5310976wrv.65.1699606501839; Fri, 10
- Nov 2023 00:55:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699640176; x=1700244976;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BvjXQlUY6/PP7bOwN11QvjkURrxXgeIa9hol/Db3KYM=;
+        b=U7vAz30yo+XfSbzKLRinF8GgTJEVppMNgcEu3OyC2S77hbpW5GSwHdj5PQcA03Apqo
+         T+zKLvLEjVR6OlB7v+8NxbRQF/OVDK6reihz53QQgAXag3kiKYfuX9DGvR7T4z7SzGRf
+         2TFAOYSXhoSxXi+XIr9mmqsouwj/aIvcAToIQRr60xqCXsF2lBjwbOF1LrL844sN2euc
+         n72andlkPP1GmCHtOE63B3K5z9VQNRaMAdbNSsa4L4TtbSuMBNrk3ZGvAbTdgt3373KZ
+         nuiX1kOCq5maldYHCIEJZBQ8M3wcIkVvDJMtBY/HrTb0Lffx0Fs9txkugEWCvreVa7UK
+         Iq4A==
+X-Gm-Message-State: AOJu0Yzey1iISAnsQSdrl/uRc8UqG/R/F3TfLppdklWTNrOsBCCqijAm
+	UZA9fcTtMWhzwmxhG1w6eQE7RQ==
+X-Google-Smtp-Source: AGHT+IHpAM92a5dRWGtidgqRmsC55wVaaK0ocnwNfY87HD3xHLyjMxZNbgKlgxrhSiSwll1ne2s/ww==
+X-Received: by 2002:a05:600c:4fd2:b0:3fe:d71a:d84e with SMTP id o18-20020a05600c4fd200b003fed71ad84emr127537wmq.1.1699640175973;
+        Fri, 10 Nov 2023 10:16:15 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:2169:e902:f0d0:1845])
+        by smtp.gmail.com with ESMTPSA id g16-20020a05600c311000b0040a4751efaasm76526wmo.17.2023.11.10.10.16.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 10:16:15 -0800 (PST)
+References: <20230915160130.352099-1-jbrunet@baylibre.com>
+ <20230915160130.352099-3-jbrunet@baylibre.com>
+ <c89408dd98f78aace3f04c3fdba5702b3045a743.camel@lexina.in>
+User-agent: mu4e 1.8.13; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Viacheslav <adeep@lexina.in>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Peng Fan <peng.fan@nxp.com>, Jaehoon Chung
+ <jh80.chung@samsung.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Subject: Re: [RFT PATCH 2/2] mmc: meson-gx: set 270 core phase during the identification
+Date: Fri, 10 Nov 2023 19:10:46 +0100
+In-reply-to: <c89408dd98f78aace3f04c3fdba5702b3045a743.camel@lexina.in>
+Message-ID: <1jy1f5bhjl.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20231109171004.193521-1-ivprusov@salutedevices.com> <20231109171004.193521-2-ivprusov@salutedevices.com>
-In-Reply-To: <20231109171004.193521-2-ivprusov@salutedevices.com>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Fri, 10 Nov 2023 10:54:50 +0200
-Message-ID: <CAPVz0n0X6vqJPeHJePc6hCNUV67JVYANnMF2qHGywyAG-eigyw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] treewide: use linux/time.h for time conversion defines
-To: Igor Prusov <ivprusov@salutedevices.com>
-Cc: u-boot@lists.denx.de, kernel@sberdevices.ru, prusovigor@gmail.com, 
-	Alexander Dahl <ada@thorsis.com>, Anatolij Gustschin <agust@denx.de>, 
-	Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Balaji Prakash J <bjagadee@codeaurora.org>, 
-	Balamanikandan Gunasundar <balamanikandan.gunasundar@microchip.com>, Baruch Siach <baruch@tkos.co.il>, 
-	Bhupesh Sharma <bhupesh.linux@gmail.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
-	Chia-Wei Wang <chiawei_wang@aspeedtech.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>, 
-	Eugen Hristev <eugen.hristev@collabora.com>, Heiko Schocher <hs@denx.de>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
-	Joel Stanley <joel@jms.id.au>, Kever Yang <kever.yang@rock-chips.com>, 
-	Lukasz Majewski <lukma@denx.de>, Marek Vasut <marex@denx.de>, 
-	Michael Trimarchi <michael@amarulasolutions.com>, Michal Simek <michal.simek@amd.com>, 
-	Neha Malcom Francis <n-francis@ti.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Patrick Delaunay <patrick.delaunay@foss.st.com>, Peng Fan <peng.fan@nxp.com>, 
-	Philipp Tomsich <philipp.tomsich@vrull.eu>, Ryan Chen <ryan_chen@aspeedtech.com>, 
-	Sean Anderson <seanga2@gmail.com>, Simon Glass <sjg@chromium.org>, Stefan Bosch <stefan_b@posteo.net>, 
-	Stefan Roese <sr@denx.de>, Sumit Garg <sumit.garg@linaro.org>, Weijie Gao <weijie.gao@mediatek.com>, 
-	u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 10 Nov 2023 12:48:15 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1863
+ <u-boot-amlogic@groups.io>; Fri, 10 Nov 2023 18:18:17 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1866
 
-=D1=87=D1=82, 9 =D0=BB=D0=B8=D1=81=D1=82. 2023=E2=80=AF=D1=80. =D0=BE 19:10=
- Igor Prusov <ivprusov@salutedevices.com> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> Now that we have time conversion defines from in time.h there is no need
-> for each driver to define their own version.
->
-> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
-> ---
->
->  board/friendlyarm/nanopi2/onewire.c              |  5 +----
->  drivers/clk/at91/clk-main.c                      |  2 +-
->  drivers/i2c/stm32f7_i2c.c                        | 11 +++++------
->  drivers/memory/stm32-fmc2-ebi.c                  |  5 ++---
->  drivers/mmc/octeontx_hsmmc.h                     |  2 --
->  drivers/mtd/nand/raw/atmel/nand-controller.c     |  3 +--
->  drivers/mtd/nand/raw/mxs_nand.c                  |  3 +--
->  drivers/mtd/nand/raw/octeontx_nand.c             |  2 +-
->  drivers/mtd/nand/raw/stm32_fmc2_nand.c           |  5 ++---
->  drivers/phy/meson-axg-mipi-dphy.c                |  3 +--
->  drivers/phy/phy-core-mipi-dphy.c                 |  3 +--
->  drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c |  3 +--
->  drivers/pwm/pwm-aspeed.c                         |  3 +--
->  drivers/pwm/pwm-at91.c                           |  2 +-
->  drivers/pwm/pwm-cadence-ttc.c                    |  3 +--
->  drivers/pwm/pwm-meson.c                          |  3 +--
->  drivers/pwm/pwm-mtk.c                            |  3 +--
->  drivers/pwm/pwm-ti-ehrpwm.c                      |  3 +--
->  drivers/serial/serial_msm_geni.c                 |  3 +--
->  drivers/spi/cadence_qspi.c                       |  3 +--
->  drivers/spi/fsl_dspi.c                           |  4 +---
->  drivers/ufs/cdns-platform.c                      |  3 +--
->  drivers/usb/dwc3/core.c                          |  3 +--
->  drivers/video/dw_mipi_dsi.c                      |  3 +--
->  drivers/video/rockchip/dw_mipi_dsi_rockchip.c    |  3 +--
->  drivers/video/tegra20/tegra-dsi.c                |  4 +---
->  drivers/watchdog/sunxi_wdt.c                     |  3 +--
->  fs/ubifs/ubifs.h                                 |  1 -
->  28 files changed, 32 insertions(+), 62 deletions(-)
->
 
-Reviewed-by: Svyatoslav Ryhel <clamor95@gmail.com> # tegra
+On Thu 09 Nov 2023 at 16:49, Viacheslav <adeep@lexina.in> wrote:
 
-> diff --git a/board/friendlyarm/nanopi2/onewire.c b/board/friendlyarm/nano=
-pi2/onewire.c
-> index 56f0f2dfce..4f0b1e33c2 100644
-> --- a/board/friendlyarm/nanopi2/onewire.c
-> +++ b/board/friendlyarm/nanopi2/onewire.c
-> @@ -11,16 +11,13 @@
->  #include <asm/arch/clk.h>
->  #include <asm/arch/pwm.h>
->  #include <i2c.h>
-> +#include <linux/time.h>
->
->  #include <irq_func.h>
->
->  #include <asm/arch/nexell.h>
->  #include <asm/arch/nx_gpio.h>
->
-> -#ifndef NSEC_PER_SEC
-> -#define NSEC_PER_SEC   1000000000L
-> -#endif
-> -
->  #define SAMPLE_BPS             9600
->  #define SAMPLE_IN_US   101             /* (1000000 / BPS) */
->
-> diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-> index b52d926f33..025c7a7aa2 100644
-> --- a/drivers/clk/at91/clk-main.c
-> +++ b/drivers/clk/at91/clk-main.c
-> @@ -17,6 +17,7 @@
->  #include <linux/clk/at91_pmc.h>
->  #include <linux/delay.h>
->  #include <linux/io.h>
-> +#include <linux/time.h>
->  #include "pmc.h"
->
->  #define UBOOT_DM_CLK_AT91_MAIN_RC              "at91-main-rc-clk"
-> @@ -25,7 +26,6 @@
->  #define UBOOT_DM_CLK_AT91_SAM9X5_MAIN          "at91-sam9x5-main-clk"
->
->  #define MOR_KEY_MASK           GENMASK(23, 16)
-> -#define USEC_PER_SEC           1000000UL
->  #define SLOW_CLOCK_FREQ                32768
->
->  #define clk_main_parent_select(s)      (((s) & \
-> diff --git a/drivers/i2c/stm32f7_i2c.c b/drivers/i2c/stm32f7_i2c.c
-> index b6c71789ee..eaa1d69289 100644
-> --- a/drivers/i2c/stm32f7_i2c.c
-> +++ b/drivers/i2c/stm32f7_i2c.c
-> @@ -20,6 +20,7 @@
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/printk.h>
-> +#include <linux/time.h>
->
->  /* STM32 I2C registers */
->  struct stm32_i2c_regs {
-> @@ -121,8 +122,6 @@ struct stm32_i2c_regs {
->  #define STM32_SCLH_MAX                         BIT(8)
->  #define STM32_SCLL_MAX                         BIT(8)
->
-> -#define STM32_NSEC_PER_SEC                     1000000000L
-> -
->  /**
->   * struct stm32_i2c_spec - private i2c specification timing
->   * @rate: I2C bus speed (Hz)
-> @@ -591,7 +590,7 @@ static int stm32_i2c_choose_solution(u32 i2cclk,
->                                      struct stm32_i2c_timings *s)
->  {
->         struct stm32_i2c_timings *v;
-> -       u32 i2cbus =3D DIV_ROUND_CLOSEST(STM32_NSEC_PER_SEC,
-> +       u32 i2cbus =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC,
->                                        setup->speed_freq);
->         u32 clk_error_prev =3D i2cbus;
->         u32 clk_min, clk_max;
-> @@ -607,8 +606,8 @@ static int stm32_i2c_choose_solution(u32 i2cclk,
->         dnf_delay =3D setup->dnf * i2cclk;
->
->         tsync =3D af_delay_min + dnf_delay + (2 * i2cclk);
-> -       clk_max =3D STM32_NSEC_PER_SEC / specs->rate_min;
-> -       clk_min =3D STM32_NSEC_PER_SEC / specs->rate_max;
-> +       clk_max =3D NSEC_PER_SEC / specs->rate_min;
-> +       clk_min =3D NSEC_PER_SEC / specs->rate_max;
->
->         /*
->          * Among Prescaler possibilities discovered above figures out SCL=
- Low
-> @@ -686,7 +685,7 @@ static int stm32_i2c_compute_timing(struct stm32_i2c_=
-priv *i2c_priv,
->         const struct stm32_i2c_spec *specs;
->         struct stm32_i2c_timings *v, *_v;
->         struct list_head solutions;
-> -       u32 i2cclk =3D DIV_ROUND_CLOSEST(STM32_NSEC_PER_SEC, setup->clock=
-_src);
-> +       u32 i2cclk =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, setup->clock_src);
->         int ret;
->
->         specs =3D get_specs(setup->speed_freq);
-> diff --git a/drivers/memory/stm32-fmc2-ebi.c b/drivers/memory/stm32-fmc2-=
-ebi.c
-> index 212bb4f5dc..a722a3836f 100644
-> --- a/drivers/memory/stm32-fmc2-ebi.c
-> +++ b/drivers/memory/stm32-fmc2-ebi.c
-> @@ -14,6 +14,7 @@
->  #include <linux/err.h>
->  #include <linux/iopoll.h>
->  #include <linux/ioport.h>
-> +#include <linux/time.h>
->
->  /* FMC2 Controller Registers */
->  #define FMC2_BCR1                      0x0
-> @@ -90,8 +91,6 @@
->  #define FMC2_BTR_DATLAT_MAX            0xf
->  #define FMC2_PCSCNTR_CSCOUNT_MAX       0xff
->
-> -#define FMC2_NSEC_PER_SEC              1000000000L
-> -
->  enum stm32_fmc2_ebi_bank {
->         FMC2_EBI1 =3D 0,
->         FMC2_EBI2,
-> @@ -279,7 +278,7 @@ static u32 stm32_fmc2_ebi_ns_to_clock_cycles(struct s=
-tm32_fmc2_ebi *ebi,
->                                              int cs, u32 setup)
->  {
->         unsigned long hclk =3D clk_get_rate(&ebi->clk);
-> -       unsigned long hclkp =3D FMC2_NSEC_PER_SEC / (hclk / 1000);
-> +       unsigned long hclkp =3D NSEC_PER_SEC / (hclk / 1000);
->
->         return DIV_ROUND_UP(setup * 1000, hclkp);
->  }
-> diff --git a/drivers/mmc/octeontx_hsmmc.h b/drivers/mmc/octeontx_hsmmc.h
-> index 70844b1cba..9849121f17 100644
-> --- a/drivers/mmc/octeontx_hsmmc.h
-> +++ b/drivers/mmc/octeontx_hsmmc.h
-> @@ -32,8 +32,6 @@
->   */
->  #define MMC_TIMEOUT_SHORT              20
->
-> -#define NSEC_PER_SEC                   1000000000L
-> -
->  #define MAX_NO_OF_TAPS                 64
->
->  #define EXT_CSD_POWER_CLASS            187     /* R/W */
-> diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/n=
-and/raw/atmel/nand-controller.c
-> index fa962ba591..5c0265ccf5 100644
-> --- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-> +++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-> @@ -64,6 +64,7 @@
->  #include <linux/mfd/syscon/atmel-smc.h>
->  #include <linux/mtd/rawnand.h>
->  #include <linux/mtd/mtd.h>
-> +#include <linux/time.h>
->  #include <mach/at91_sfr.h>
->  #include <nand.h>
->  #include <regmap.h>
-> @@ -71,8 +72,6 @@
->
->  #include "pmecc.h"
->
-> -#define NSEC_PER_SEC    1000000000L
-> -
->  #define ATMEL_HSMC_NFC_CFG                     0x0
->  #define ATMEL_HSMC_NFC_CFG_SPARESIZE(x)                (((x) / 4) << 24)
->  #define ATMEL_HSMC_NFC_CFG_SPARESIZE_MASK      GENMASK(30, 24)
-> diff --git a/drivers/mtd/nand/raw/mxs_nand.c b/drivers/mtd/nand/raw/mxs_n=
-and.c
-> index 65eab4c808..fd65772af8 100644
-> --- a/drivers/mtd/nand/raw/mxs_nand.c
-> +++ b/drivers/mtd/nand/raw/mxs_nand.c
-> @@ -31,6 +31,7 @@
->  #include <linux/errno.h>
->  #include <linux/mtd/rawnand.h>
->  #include <linux/sizes.h>
-> +#include <linux/time.h>
->  #include <linux/types.h>
->  #include <linux/math64.h>
->
-> @@ -52,8 +53,6 @@
->  #endif
->
->  #define        MXS_NAND_BCH_TIMEOUT                    10000
-> -#define        USEC_PER_SEC                            1000000
-> -#define        NSEC_PER_SEC                            1000000000L
->
->  #define TO_CYCLES(duration, period) DIV_ROUND_UP_ULL(duration, period)
->
-> diff --git a/drivers/mtd/nand/raw/octeontx_nand.c b/drivers/mtd/nand/raw/=
-octeontx_nand.c
-> index 65a03d22c1..3b20685fac 100644
-> --- a/drivers/mtd/nand/raw/octeontx_nand.c
-> +++ b/drivers/mtd/nand/raw/octeontx_nand.c
-> @@ -24,6 +24,7 @@
->  #include <linux/mtd/nand_bch.h>
->  #include <linux/mtd/nand_ecc.h>
->  #include <linux/mtd/rawnand.h>
-> +#include <linux/time.h>
->  #include <asm/global_data.h>
->  #include <asm/io.h>
->  #include <asm/types.h>
-> @@ -291,7 +292,6 @@ union ndf_cmd {
->  #define OCTEONTX_NAND_DRIVER_NAME      "octeontx_nand"
->
->  #define NDF_TIMEOUT            1000    /** Timeout in ms */
-> -#define USEC_PER_SEC           1000000 /** Linux compatibility */
->  #ifndef NAND_MAX_CHIPS
->  # define NAND_MAX_CHIPS                8       /** Linux compatibility *=
-/
->  #endif
-> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/ra=
-w/stm32_fmc2_nand.c
-> index 64be6486b4..3528824575 100644
-> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-> @@ -22,6 +22,7 @@
->  #include <linux/ioport.h>
->  #include <linux/mtd/rawnand.h>
->  #include <linux/printk.h>
-> +#include <linux/time.h>
->
->  /* Bad block marker length */
->  #define FMC2_BBM_LEN                   2
-> @@ -127,8 +128,6 @@
->  #define FMC2_BCHDSR4_EBP7              GENMASK(12, 0)
->  #define FMC2_BCHDSR4_EBP8              GENMASK(28, 16)
->
-> -#define FMC2_NSEC_PER_SEC              1000000000L
-> -
->  #define FMC2_TIMEOUT_5S                        5000000
->
->  enum stm32_fmc2_ecc {
-> @@ -603,7 +602,7 @@ static void stm32_fmc2_nfc_calc_timings(struct nand_c=
-hip *chip,
->         struct stm32_fmc2_nand *nand =3D to_fmc2_nand(chip);
->         struct stm32_fmc2_timings *tims =3D &nand->timings;
->         unsigned long hclk =3D clk_get_rate(&nfc->clk);
-> -       unsigned long hclkp =3D FMC2_NSEC_PER_SEC / (hclk / 1000);
-> +       unsigned long hclkp =3D NSEC_PER_SEC / (hclk / 1000);
->         unsigned long timing, tar, tclr, thiz, twait;
->         unsigned long tset_mem, tset_att, thold_mem, thold_att;
->
-> diff --git a/drivers/phy/meson-axg-mipi-dphy.c b/drivers/phy/meson-axg-mi=
-pi-dphy.c
-> index cf2a1cd14c..a69b6c9759 100644
-> --- a/drivers/phy/meson-axg-mipi-dphy.c
-> +++ b/drivers/phy/meson-axg-mipi-dphy.c
-> @@ -25,6 +25,7 @@
->  #include <linux/bitops.h>
->  #include <linux/compat.h>
->  #include <linux/bitfield.h>
-> +#include <linux/time.h>
->
->  /* [31] soft reset for the phy.
->   *             1: reset. 0: dessert the reset.
-> @@ -170,8 +171,6 @@
->  #define MIPI_DSI_TEST_CTRL0                            0x3c
->  #define MIPI_DSI_TEST_CTRL1                            0x40
->
-> -#define NSEC_PER_MSEC  1000000L
-> -
->  struct phy_meson_axg_mipi_dphy_priv {
->         struct regmap *regmap;
->  #if CONFIG_IS_ENABLED(CLK)
-> diff --git a/drivers/phy/phy-core-mipi-dphy.c b/drivers/phy/phy-core-mipi=
--dphy.c
-> index ba5f648612..bb61816add 100644
-> --- a/drivers/phy/phy-core-mipi-dphy.c
-> +++ b/drivers/phy/phy-core-mipi-dphy.c
-> @@ -6,11 +6,10 @@
->
->  #include <common.h>
->  #include <div64.h>
-> +#include <linux/time.h>
->
->  #include <phy-mipi-dphy.h>
->
-> -#define PSEC_PER_SEC   1000000000000LL
-> -
->  /*
->   * Minimum D-PHY timings based on MIPI D-PHY specification. Derived
->   * from the valid ranges specified in Section 6.9, Table 14, Page 41
-> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c b/drivers/p=
-hy/rockchip/phy-rockchip-inno-dsidphy.c
-> index 9ed7af0d6e..5be76e0533 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c
-> @@ -15,6 +15,7 @@
->  #include <linux/clk-provider.h>
->  #include <linux/delay.h>
->  #include <linux/math64.h>
-> +#include <linux/time.h>
->  #include <phy-mipi-dphy.h>
->  #include <reset.h>
->
-> @@ -186,8 +187,6 @@
->  #define DSI_PHY_STATUS                         0xb0
->  #define PHY_LOCK                               BIT(0)
->
-> -#define PSEC_PER_SEC                           1000000000000LL
-> -
->  #define msleep(a)                              udelay(a * 1000)
->
->  enum phy_max_rate {
-> diff --git a/drivers/pwm/pwm-aspeed.c b/drivers/pwm/pwm-aspeed.c
-> index ba98641c86..b03472d234 100644
-> --- a/drivers/pwm/pwm-aspeed.c
-> +++ b/drivers/pwm/pwm-aspeed.c
-> @@ -49,6 +49,7 @@
->  #include <dm/device_compat.h>
->  #include <linux/math64.h>
->  #include <linux/bitfield.h>
-> +#include <linux/time.h>
->  #include <asm/io.h>
->
->  /* The channel number of Aspeed pwm controller */
-> @@ -77,8 +78,6 @@
->  /* PWM fixed value */
->  #define PWM_ASPEED_FIXED_PERIOD 0xff
->
-> -#define NSEC_PER_SEC                   1000000000L
-> -
->  struct aspeed_pwm_priv {
->         struct clk clk;
->         struct regmap *regmap;
-> diff --git a/drivers/pwm/pwm-at91.c b/drivers/pwm/pwm-at91.c
-> index 95597aee55..3ff1fb6d5c 100644
-> --- a/drivers/pwm/pwm-at91.c
-> +++ b/drivers/pwm/pwm-at91.c
-> @@ -14,11 +14,11 @@
->  #include <dm.h>
->  #include <linux/bitops.h>
->  #include <linux/io.h>
-> +#include <linux/time.h>
->  #include <pwm.h>
->
->  #define PERIOD_BITS 16
->  #define PWM_MAX_PRES 10
-> -#define NSEC_PER_SEC 1000000000L
->
->  #define PWM_ENA 0x04
->  #define PWM_CHANNEL_OFFSET 0x20
-> diff --git a/drivers/pwm/pwm-cadence-ttc.c b/drivers/pwm/pwm-cadence-ttc.=
-c
-> index dc3b314b0c..d9f6736a7a 100644
-> --- a/drivers/pwm/pwm-cadence-ttc.c
-> +++ b/drivers/pwm/pwm-cadence-ttc.c
-> @@ -17,6 +17,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/math64.h>
->  #include <linux/log2.h>
-> +#include <linux/time.h>
->  #include <dm/device_compat.h>
->
->  #define CLOCK_CONTROL          0
-> @@ -37,8 +38,6 @@
->  #define COUNTER_INTERVAL_ENABLE                BIT(1)
->  #define COUNTER_COUNTING_DISABLE       BIT(0)
->
-> -#define NSEC_PER_SEC   1000000000L
-> -
->  #define TTC_REG(reg, channel) ((reg) + (channel) * sizeof(u32))
->  #define TTC_CLOCK_CONTROL(reg, channel) \
->         TTC_REG((reg) + CLOCK_CONTROL, (channel))
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 2311910a63..60959720da 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -26,8 +26,7 @@
->  #include <linux/math64.h>
->  #include <linux/bitfield.h>
->  #include <linux/clk-provider.h>
-> -
-> -#define NSEC_PER_SEC 1000000000L
-> +#include <linux/time.h>
->
->  #define REG_PWM_A              0x0
->  #define REG_PWM_B              0x4
-> diff --git a/drivers/pwm/pwm-mtk.c b/drivers/pwm/pwm-mtk.c
-> index 11e7444019..ad845ed966 100644
-> --- a/drivers/pwm/pwm-mtk.c
-> +++ b/drivers/pwm/pwm-mtk.c
-> @@ -12,6 +12,7 @@
->  #include <div64.h>
->  #include <linux/bitops.h>
->  #include <linux/io.h>
-> +#include <linux/time.h>
->
->  /* PWM registers and bits definitions */
->  #define PWMCON                 0x00
-> @@ -27,8 +28,6 @@
->  #define PWM_CLK_DIV_MAX                7
->  #define MAX_PWM_NUM            8
->
-> -#define NSEC_PER_SEC 1000000000L
-> -
->  enum mtk_pwm_reg_ver {
->         PWM_REG_V1,
->         PWM_REG_V2,
-> diff --git a/drivers/pwm/pwm-ti-ehrpwm.c b/drivers/pwm/pwm-ti-ehrpwm.c
-> index f09914519b..fefa3c65ec 100644
-> --- a/drivers/pwm/pwm-ti-ehrpwm.c
-> +++ b/drivers/pwm/pwm-ti-ehrpwm.c
-> @@ -14,8 +14,7 @@
->  #include <dm/device_compat.h>
->  #include <pwm.h>
->  #include <asm/io.h>
-> -
-> -#define NSEC_PER_SEC                           1000000000L
-> +#include <linux/time.h>
->
->  /* Time base module registers */
->  #define TI_EHRPWM_TBCTL                                0x00
-> diff --git a/drivers/serial/serial_msm_geni.c b/drivers/serial/serial_msm=
-_geni.c
-> index 78fd9389c0..b8bc61451a 100644
-> --- a/drivers/serial/serial_msm_geni.c
-> +++ b/drivers/serial/serial_msm_geni.c
-> @@ -13,14 +13,13 @@
->  #include <dm.h>
->  #include <errno.h>
->  #include <linux/delay.h>
-> +#include <linux/time.h>
->  #include <misc.h>
->  #include <serial.h>
->
->  #define UART_OVERSAMPLING      32
->  #define STALE_TIMEOUT  160
->
-> -#define USEC_PER_SEC   1000000L
-> -
->  /* Registers*/
->  #define GENI_FORCE_DEFAULT_REG 0x20
->  #define GENI_SER_M_CLK_CFG     0x48
-> diff --git a/drivers/spi/cadence_qspi.c b/drivers/spi/cadence_qspi.c
-> index cc3a54f295..b0c656dbb4 100644
-> --- a/drivers/spi/cadence_qspi.c
-> +++ b/drivers/spi/cadence_qspi.c
-> @@ -18,12 +18,11 @@
->  #include <linux/err.h>
->  #include <linux/errno.h>
->  #include <linux/sizes.h>
-> +#include <linux/time.h>
->  #include <zynqmp_firmware.h>
->  #include "cadence_qspi.h"
->  #include <dt-bindings/power/xlnx-versal-power.h>
->
-> -#define NSEC_PER_SEC                   1000000000L
-> -
->  #define CQSPI_STIG_READ                        0
->  #define CQSPI_STIG_WRITE               1
->  #define CQSPI_READ                     2
-> diff --git a/drivers/spi/fsl_dspi.c b/drivers/spi/fsl_dspi.c
-> index f8ec268812..89907cbbb0 100644
-> --- a/drivers/spi/fsl_dspi.c
-> +++ b/drivers/spi/fsl_dspi.c
-> @@ -27,9 +27,7 @@
->  #include <linux/bitops.h>
->  #include <linux/delay.h>
->  #include <linux/printk.h>
-> -
-> -/* linux/include/time.h */
-> -#define NSEC_PER_SEC   1000000000L
-> +#include <linux/time.h>
->
->  DECLARE_GLOBAL_DATA_PTR;
->
-> diff --git a/drivers/ufs/cdns-platform.c b/drivers/ufs/cdns-platform.c
-> index 1e62e252e7..8ebcb51634 100644
-> --- a/drivers/ufs/cdns-platform.c
-> +++ b/drivers/ufs/cdns-platform.c
-> @@ -13,11 +13,10 @@
->  #include <dm/device_compat.h>
->  #include <linux/bitops.h>
->  #include <linux/err.h>
-> +#include <linux/time.h>
->
->  #include "ufs.h"
->
-> -#define USEC_PER_SEC   1000000L
-> -
->  #define CDNS_UFS_REG_HCLKDIV   0xFC
->  #define CDNS_UFS_REG_PHY_XCFGD1        0x113C
->
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 7ca9d09824..f0c4aab6b9 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,6 +31,7 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/bitfield.h>
->  #include <linux/math64.h>
-> +#include <linux/time.h>
->
->  #include "core.h"
->  #include "gadget.h"
-> @@ -38,8 +39,6 @@
->
->  #include "linux-compat.h"
->
-> -#define NSEC_PER_SEC   1000000000L
-> -
->  static LIST_HEAD(dwc3_list);
->  /* ---------------------------------------------------------------------=
------ */
->
-> diff --git a/drivers/video/dw_mipi_dsi.c b/drivers/video/dw_mipi_dsi.c
-> index 22fef7e882..a7e0784596 100644
-> --- a/drivers/video/dw_mipi_dsi.c
-> +++ b/drivers/video/dw_mipi_dsi.c
-> @@ -22,6 +22,7 @@
->  #include <linux/bitops.h>
->  #include <linux/delay.h>
->  #include <linux/iopoll.h>
-> +#include <linux/time.h>
->  #include <video_bridge.h>
->
->  #define HWVER_131                      0x31333100      /* IP version 1.3=
-1 */
-> @@ -214,8 +215,6 @@
->  #define PHY_STATUS_TIMEOUT_US          10000
->  #define CMD_PKT_STATUS_TIMEOUT_US      20000
->
-> -#define MSEC_PER_SEC                   1000
-> -
->  struct dw_mipi_dsi {
->         struct mipi_dsi_host dsi_host;
->         struct mipi_dsi_device *device;
-> diff --git a/drivers/video/rockchip/dw_mipi_dsi_rockchip.c b/drivers/vide=
-o/rockchip/dw_mipi_dsi_rockchip.c
-> index 1a5ab781e3..5e75b6ec68 100644
-> --- a/drivers/video/rockchip/dw_mipi_dsi_rockchip.c
-> +++ b/drivers/video/rockchip/dw_mipi_dsi_rockchip.c
-> @@ -30,12 +30,11 @@
->  #include <asm/io.h>
->  #include <dm/device-internal.h>
->  #include <linux/bitops.h>
-> +#include <linux/time.h>
->
->  #include <asm/arch-rockchip/clock.h>
->  #include <asm/arch-rockchip/hardware.h>
->
-> -#define USEC_PER_SEC   1000000L
-> -
->  /*
->   * DSI wrapper registers & bit definitions
->   * Note: registers are named as in the Reference Manual
-> diff --git a/drivers/video/tegra20/tegra-dsi.c b/drivers/video/tegra20/te=
-gra-dsi.c
-> index b4cf4fad5e..a48f9c85d0 100644
-> --- a/drivers/video/tegra20/tegra-dsi.c
-> +++ b/drivers/video/tegra20/tegra-dsi.c
-> @@ -14,6 +14,7 @@
->  #include <panel.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
-> +#include <linux/time.h>
->  #include <power/regulator.h>
->
->  #include <asm/gpio.h>
-> @@ -24,9 +25,6 @@
->
->  #include "mipi-phy.h"
->
-> -#define USEC_PER_SEC   1000000L
-> -#define NSEC_PER_SEC   1000000000L
-> -
->  struct tegra_dsi_priv {
->         struct mipi_dsi_host host;
->         struct mipi_dsi_device device;
-> diff --git a/drivers/watchdog/sunxi_wdt.c b/drivers/watchdog/sunxi_wdt.c
-> index b40a1d29ca..8eeac93576 100644
-> --- a/drivers/watchdog/sunxi_wdt.c
-> +++ b/drivers/watchdog/sunxi_wdt.c
-> @@ -9,8 +9,7 @@
->  #include <wdt.h>
->  #include <asm/io.h>
->  #include <linux/delay.h>
-> -
-> -#define MSEC_PER_SEC           1000
-> +#include <linux/time.h>
->
->  #define WDT_MAX_TIMEOUT                16
->  #define WDT_TIMEOUT_MASK       0xf
-> diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
-> index 67b13c83b5..b4e761c366 100644
-> --- a/fs/ubifs/ubifs.h
-> +++ b/fs/ubifs/ubifs.h
-> @@ -68,7 +68,6 @@ struct page {
->  void iput(struct inode *inode);
->
->  /* linux/include/time.h */
-> -#define NSEC_PER_SEC   1000000000L
->  #define get_seconds()  0
->  #define CURRENT_TIME_SEC       ((struct timespec) { get_seconds(), 0 })
->
-> --
-> 2.34.1
->
+> After running some tests, I've noticed inconsistent behavior with the eMMC:
+>  On a cold boot (following a shutdown), the eMMC operates as expected within U-Boot.
+>  On a hot reboot (via the kernel's reboot command), the eMMC sometimes (not always, but if
+> fit in error, next need to do poweroff) does not work:
+
+No sure I understand.
+MMC appears to work (passes the ID phases - which was the problem
+before) but fitImage (or dtb) you get is not correct out of eMMC read,
+is not correct ?
+
+Have you checked the content ? some checksum maybe ?
+
+What does 'mmc info' reports on boot and reboot (when it fails or not) ?
+
+>     U-Boot is able to read the dtb file but won't boot kernel completely, or
+>     U-Boot might fail to read from the eMMC altogether.
+>
+> This behavior had not occurred before (when the phase was set to 270 on axg).
+>
+> On Fri, 2023-09-15 at 18:01 +0200, Jerome Brunet wrote:
+>> It has been reported that some devices have problems with a 180 degree
+>> core phase. Setting 270 helped some of these devices. Other continue to
+>> struggle (while it works fine with 180 in Linux ... :sigh:)
+>> 
+>> Poking around the HW, it seems that setting a 270 core phase during the
+>> identification, then using 180 for the rest of the operations, helps the
+>> device operate correctly.
+>> 
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/mmc/meson_gx_mmc.c | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+>> index c6168792cbae..284be2b9dca4 100644
+>> --- a/drivers/mmc/meson_gx_mmc.c
+>> +++ b/drivers/mmc/meson_gx_mmc.c
+>> @@ -54,9 +54,14 @@ static void meson_mmc_config_clock(struct mmc *mmc)
+>>  
+>>  	/* Clk always on */
+>>  	meson_mmc_clk |= pdata->version->clk_always_on;
+>> -	meson_mmc_clk |= CLK_CO_PHASE_180;
+>>  	meson_mmc_clk |= CLK_TX_PHASE_000;
+>>  
+>> +	/* Core phase according to mode */
+>> +	if (mmc->selected_mode == MMC_LEGACY)
+>> +		meson_mmc_clk |= CLK_CO_PHASE_270;
+>> +	else
+>> +		meson_mmc_clk |= CLK_CO_PHASE_180;
+>> +
+>>  	/* 1GHz / CLK_MAX_DIV = 15,9 MHz */
+>>  	if (mmc->clock > 16000000) {
+>>  		clk = SD_EMMC_CLKSRC_DIV2;
+
 
