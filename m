@@ -2,158 +2,100 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76481C636CB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6405AC61DF7
 	for <webhook@archiver.kernel.org>; Thu, 23 Nov 2023 13:12:47 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web11.34189.1700683356070728260
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+ by mx.groups.io with SMTP id smtpd.web11.11700.1700228532845009459
  for <u-boot-amlogic@groups.io>;
- Wed, 22 Nov 2023 12:02:36 -0800
+ Fri, 17 Nov 2023 05:42:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=UpB8wvaO;
- spf=pass (domain: gmail.com, ip: 209.85.167.48, mailfrom: pbrobinson@gmail.com)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50abbb23122so105667e87.3
-        for <u-boot-amlogic@groups.io>; Wed, 22 Nov 2023 12:02:35 -0800 (PST)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=tYFn+LW6;
+ spf=pass (domain: konsulko.com, ip: 209.85.222.170, mailfrom: trini@konsulko.com)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-77891c236fcso121368185a.3
+        for <u-boot-amlogic@groups.io>; Fri, 17 Nov 2023 05:42:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700683354; x=1701288154; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zOexmxQKxiAf9chOv+PhgG9cWkgZX/PAwbTyJnDhTrU=;
-        b=UpB8wvaOYekdRe54wYR3U//WswlDkMCG5ckLQjhtqc9Thz5i7YIeyc5moCR1LBbs9P
-         2Dve13uE9/2RgEf2W0dftnGhNfyhTP6MlsRGJ/4gOVtETro9Hk8W+2MarzjVy6bDtEnl
-         HiUmlQ6YiUteycikBKEaXmyCIZ/hYxJT9r3TmvW0eMoyi1d1I49uvGxJk1s3yunG1VT5
-         WzlJ/LMV1NxNGcS1o3vrU+qgXn8aavoLLdcf7+iQOHixhNYy4BBE/TRQqxr79jcYxgXa
-         2q+nrxtlQb7CcLcMJIgVq1MyRoBfBZPwTfheAllhULU7d59jqWzgP821ITMpuLTg6qGq
-         HjiQ==
+        d=konsulko.com; s=google; t=1700228532; x=1700833332; darn=groups.io;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XfyDHB+N3owUK8W8VFcS2jYrYFuPnpyV0JdX32dFYyo=;
+        b=tYFn+LW6C7/SuZbwlmAaeipWL1ZuJ5Q1VuP82BH94joSPbYuxD+9bbT1kjSvwvO0NR
+         9iRwJmUrMP+CY9Y0CtZkMC0I29haHMVynt6YNXMs6t71UX1eCDP8bACSXje2T4KE8NSL
+         b6Xfxv7bTqXE38C8T4lebHSbrBIg+VMlagN/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700683354; x=1701288154;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zOexmxQKxiAf9chOv+PhgG9cWkgZX/PAwbTyJnDhTrU=;
-        b=k7nlpyj8OF8ytq9tcLDwh+YN5EIUg1ig36+skquXUjyjngjVXvrFvqDYBwX5gjkBx7
-         xU+nUYlUohPKEDMf0tz5a5+4UfgI1qdrtRe3MUSCMo9+TY2NNYMWy3jJR8LFYnk34dQC
-         Cro1Wt65T5AVchWdrqeHrsabMmEu9KAdoZ1wmaJyj2c+yik5y3aQZKSOI/Dd8l85xcgS
-         uD4nWG40W1pSndWxzycG/m7/OZpip8YihXP52uSgi5vsjilZPLDEXEmRA2qGFdSzjrqy
-         j8pJOICE9eMm5eD2nc6b9vca8uOVe6qusuHqLS89yF+NuZUyefvX3TruyETbOs1AJ8hP
-         yTmg==
-X-Gm-Message-State: AOJu0YwpsPRNXvnH6K0nZ128dfxBFWZGtLvlqx0Plq8b0X3ozLeZ3e2s
-	nKOJ1jK8/mH2PRLPwaG6ace4R6MuafCcKML8/YE=
-X-Google-Smtp-Source: AGHT+IHAz4nm6KgyLsc02wlODAY4tUpGfNXkPZXYEKAY0/jbWuEQTx9IsLbA5W9Qe8O6FCyWBYouKJx329iphLSVxcI=
-X-Received: by 2002:a19:f818:0:b0:509:8e22:ae5 with SMTP id
- a24-20020a19f818000000b005098e220ae5mr2313454lff.60.1700683353875; Wed, 22
- Nov 2023 12:02:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700228532; x=1700833332;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XfyDHB+N3owUK8W8VFcS2jYrYFuPnpyV0JdX32dFYyo=;
+        b=ummLH0E707Qmq6QApfrlbFHHl0o3G7HIHDDkCcLY+KK2dIAlg3cx2CZ5Kirn3Q9azp
+         zDukHvxz5vZIpB4KgnOX7vOkCQG1sPbLpcBysoUh3XQICuCjM5nza/OvBzo7lSG2KbNE
+         E56BJiGRBAKKFZRUugC5ZyDRWXli8c+LhyHvpIHY/E3WvpIjbqA0XKLtCG1uc+Tc1+UQ
+         rb3Ng36elYDkfd9nsSbXXbT4fJM4vOjOs+mbFhOND2YPcqSrHSlgCG18M3jgGJ96LQYG
+         xzyMVYlIGAql+C61Q9XuTFacw6u6F9cR98vmmukBsPW16qri1j5sRBPqOkguxNCoqSxQ
+         OkMQ==
+X-Gm-Message-State: AOJu0YwccdxBorGZPZHe7fuJXhZm08CCrrQsTE7L+GI7uZNhQgK6O16R
+	1GU6bJbjIV/nF5oL5w/eJySJgg==
+X-Google-Smtp-Source: AGHT+IH3we5nSR15aJk11C4O0myLBh51z8mPGsa1uHDGjh7m7AAuYM6gdc+opITGTPIEHbQZ1FjU8Q==
+X-Received: by 2002:a05:620a:1790:b0:765:aac3:7667 with SMTP id ay16-20020a05620a179000b00765aac37667mr15256405qkb.0.1700228531895;
+        Fri, 17 Nov 2023 05:42:11 -0800 (PST)
+Received: from bill-the-cat (2603-6081-7b00-6400-a78f-80e1-dc58-f720.res6.spectrum.com. [2603:6081:7b00:6400:a78f:80e1:dc58:f720])
+        by smtp.gmail.com with ESMTPSA id rg3-20020a05620a8ec300b0077a02b8b504sm604954qkn.52.2023.11.17.05.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Nov 2023 05:42:11 -0800 (PST)
+Date: Fri, 17 Nov 2023 08:42:09 -0500
+From: Tom Rini <trini@konsulko.com>
+To: Igor Prusov <ivprusov@salutedevices.com>
+Cc: u-boot@lists.denx.de, kernel@sberdevices.ru, prusovigor@gmail.com,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	u-boot-amlogic@groups.io
+Subject: Re: [PATCH 2/3] spi: meson_spifc_a1: Use define for time interval
+Message-ID: <20231117134209.GV170968@bill-the-cat>
+References: <20231109171004.193521-1-ivprusov@salutedevices.com>
+ <20231109200943.2.I02c5c81c1a5a06b51600672691f448909af473ea@changeid>
 MIME-Version: 1.0
-References: <20231120201609.619598-1-trini@konsulko.com> <a653e096-cf28-4573-856f-d52dae233b46@linaro.org>
- <20231121131551.GP2513409@bill-the-cat> <d59de63c-4d4c-4141-9b4f-9a279da596d4@linaro.org>
- <20231121140929.GV2513409@bill-the-cat> <ec846ff6-a60b-4eb8-906c-0de6e11b5d9d@linaro.org>
-In-Reply-To: <ec846ff6-a60b-4eb8-906c-0de6e11b5d9d@linaro.org>
-From: Peter Robinson <pbrobinson@gmail.com>
-Date: Wed, 22 Nov 2023 20:02:22 +0000
-Message-ID: <CALeDE9PGErp+wDRR3VDvHNZc6_3ph=vDuvR-dk3TAWBrppayoA@mail.gmail.com>
-Subject: Re: [PATCH] libretech-cc: Populate SMBIOS information
-To: neil.armstrong@linaro.org
-Cc: Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Simon Glass <sjg@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231109200943.2.I02c5c81c1a5a06b51600672691f448909af473ea@changeid>
+X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: multipart/mixed; boundary="Groupsio=3YH9mFqGGfprlZnZvqIM"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 23 Nov 2023 13:12:47 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1888
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1881
 
-On Tue, Nov 21, 2023 at 2:50=E2=80=AFPM Neil Armstrong
-<neil.armstrong@linaro.org> wrote:
->
-> On 21/11/2023 15:09, Tom Rini wrote:
-> > On Tue, Nov 21, 2023 at 02:46:29PM +0100, Neil Armstrong wrote:
-> >> On 21/11/2023 14:15, Tom Rini wrote:
-> >>> On Tue, Nov 21, 2023 at 10:18:04AM +0100, Neil Armstrong wrote:
-> >>>> Hi Tom,
-> >>>>
-> >>>> On 20/11/2023 21:16, Tom Rini wrote:
-> >>>>> Enable CONFIG_SYSINFO_SMBIOS and populate the nodes so that Linux c=
-an
-> >>>>> eventually display this information
-> >>>>>
-> >>>>> Signed-off-by: Tom Rini <trini@konsulko.com>
-> >>>>> ---
-> >>>>> Posting this as this was the easiest platform for me to test some S=
-MBIOS
-> >>>>> related patches on and I needed to populate the nodes so I could ch=
-eck
-> >>>>> things in dmidecode once Linux was up.
-> >>>>
-> >>>> Sorry to be late a the party, but can't this be dynamically found fr=
-om DT's compatible & model ?
-> >>>> Since I'll probably need to add this to all boards, it seems like a =
-duplicate of what's already in the DT.
-> >>>
-> >>> Part of the "fun" as to why we have the binding here is that while we
-> >>> could use the top-level model property, there's not a corresponding o=
-ne
-> >>> for manufacturer. I'm fine ignoring the patch I posted here and havin=
-g a
-> >>> longer discussion about populating SMBIOS more usefully, globally, as=
- I
-> >>> think has been suggested a time or two.
-> >>>
-> >>
-> >> I'm ok landing it with the same data as from the vendor.
-> >> but couldn't we use the first top-level compatible as default smbios d=
-ata ?
-> >>
-> >> compatible =3D "vendor1,board-name", "vendor1,soc-name";
-> >>
-> >> and translate to:
-> >>
-> >>
-> >> smbios {
-> >>      system {
-> >>              manufacturer =3D "vendor1";
-> >>              product =3D "board-name";
-> >>      };
-> >>
-> >>      baseboard {
-> >>              manufacturer =3D "vendor1";
-> >>              product =3D "board-name";
-> >>      };
-> >>
-> >>      chassis {
-> >>              manufacturer =3D "vendor1";
-> >>              product =3D "board-name";
-> >>      };
-> >> };
-> >>
-> >> since the vendor name should be already documented in the linux
-> >> bindings, same for the board name.
-> >> And we would be free to add some custom data in the DT if needed.
-> >>
-> >> Anyway, not sure it's the right place to discuss about that !
-> >
-> > That's essentially
-> > https://patchwork.ozlabs.org/project/uboot/patch/20220906134426.53748-2=
--ilias.apalodimas@linaro.org/
-> > which had a bunch of comments on 1/2:
-> > https://patchwork.ozlabs.org/project/uboot/patch/20220906134426.53748-1=
--ilias.apalodimas@linaro.org/
-> >
-> > But I think that since then some thoughts on the subject have changed
-> > and that approach might be more welcome now than it was then.
-> >
->
-> Thanks for the pointer, seems I had the exact same idea.
-> Hope this will be re-spinned, I don't want to add this to the 45 amlogic
-> boards when we have the necessary info already available and documented..=
-.
+--Groupsio=3YH9mFqGGfprlZnZvqIM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fedora has carried this patch for some time for the same reason, a lot
-of the tools in distros around support use dmidecode for HW
-information and reporting "Unknown" meant there was lots of reports
-against tools all over the place. I'd been asking Ilias to upstream it
-for a while so I'm in full agreement here and he did mention he would
-resend it soon :)
+On Thu, Nov 09, 2023 at 08:10:03PM +0300, Igor Prusov wrote:
 
-Peter
+> Use USEC_PER_MSEC define for timeout to sync code with Linux version.
+>=20
+> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+
+Applied to u-boot/next, thanks!
+
+--=20
+Tom
+
+--Groupsio=3YH9mFqGGfprlZnZvqIM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmVXbbEACgkQFHw5/5Y0
+tyyfSgwAr1PEdp40UgE0vOg+plgq1LIGvOAJh09pJCVy+hlRSjc5imzI1ORcBcoY
+apB44dexXv1Y+iB9FhOiV0ya6+aGigjG34+35rRXSR4ZtqTCycEinVXiFsl2Bnst
+FgyYVB3mntfcOS1Nwq0pg64g/R7SpVihfbVo5UskF2on4+zaKZOW6ifud1Gh8rJ9
+qEk3c3YAB/ckhSRXY1QpcH6S5yOiS91lMrTfK6JazInnLP1j9JyyNHPjkdiSgO4V
+ednHzwQz+rtJqPzFC8YEr36gv7EnUvjvuCjwow6L7nJIu6FTRMEcDJkBlETBdkHf
+6934Oa/mRvpD5RNj8OP2OlcmBic4rJV++oclDFZDY8Gy6NiC8rbHJVFDfJCNDFgw
+DvnZPXCsaO7kVNWynATTCbN+Pl50ewdrKclud1SNKIXtgSlrx74X9N5FO8xYQBTk
+3hfz/LWHrR+6MhBd3hy/1Z5qymmbN9aBEgqj6Ey1SyM3prqZ6XRV2tIVP7/m+65s
++mV++4YS
+=rmHF
+-----END PGP SIGNATURE-----
+
+--Groupsio=3YH9mFqGGfprlZnZvqIM--
 
