@@ -2,1412 +2,170 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D29C07E97
-	for <webhook@archiver.kernel.org>; Tue,  5 Dec 2023 08:46:39 +0000 (UTC)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
- by mx.groups.io with SMTP id smtpd.web11.79553.1701719650089593511
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8852BC4167B
+	for <webhook@archiver.kernel.org>; Wed,  6 Dec 2023 09:04:36 +0000 (UTC)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web10.27521.1701853467089570589
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Dec 2023 11:54:10 -0800
+ Wed, 06 Dec 2023 01:04:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@amarulasolutions.com header.s=google header.b=Ijp3SmXg;
- spf=pass (domain: amarulasolutions.com, ip: 209.85.208.44, mailfrom: michael@amarulasolutions.com)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-54bf9a54fe3so6239034a12.3
-        for <u-boot-amlogic@groups.io>; Mon, 04 Dec 2023 11:54:09 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=AZZqx6fz;
+ spf=pass (domain: linaro.org, ip: 209.85.221.42, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3316d3d11e1so266936f8f.0
+        for <u-boot-amlogic@groups.io>; Wed, 06 Dec 2023 01:04:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1701719648; x=1702324448; darn=groups.io;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F/kiuUtPhpQDAv33DvImwONShGSk7y3si1tBoDKxrJ8=;
-        b=Ijp3SmXgXRDuXU8CLynhV74j2P4T0DkToC0e+ENriaNyzhx1UAf8n0Qq2v9lPVOvJO
-         Zy6GE7Ynk2do5T8VWtkb2QP1NKMEw9UQY7xyJYlR1ioix3+4obIghIu87DhI5XhsUVfx
-         9/DrhmS9yQIckWXOx65vyuGaBBZuaWBF/JSvo=
+        d=linaro.org; s=google; t=1701853465; x=1702458265; darn=groups.io;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P+1/0oUjz5rluJhR9RmqMC8xOdhAin3fsn5Iyog2y8c=;
+        b=AZZqx6fz25BL2XvqDF/p4T+ywBznu8tiFUp5frArORTCZjJql62YFn6l+wn3DCqGQV
+         WM4uRIfLMSswIcYB5NDK8tjW3BEKjhZjI5sFURjq2NBvJV6nD6nDmXN4+Y5U8A5e6Hti
+         e9N8Pp8Lxv6L1xHVQJP4esC2EkkK+C+NGu7JZFOriFoAUQwJj2yKRC3zVqVxRFCIAOOn
+         ed2yF7vy47u+pIexT08x7nAcZk3ZQrszTIBcnCVUOAAeztwRpzWHZv+lRC9Bi4c5vSWx
+         FS5mUoMHXZSKlqswKjqsIxmLOLq32GDRAAskkMrOVAabuYPaQlQQABZNWfHek+rccayq
+         0X8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701719648; x=1702324448;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1701853465; x=1702458265;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=F/kiuUtPhpQDAv33DvImwONShGSk7y3si1tBoDKxrJ8=;
-        b=cpLlcIujUlQYTtbaLmAcWkdNaBE923w5lFfW+3LAPFUGELLjwDBha8YH45XSGlZFUn
-         eSMFxhKB5sVmVJCSVCA+QzgfJLnMXxL994PGzLkGYzkq0Gf2OCt9wirZ9Qw+gsP8p0oc
-         K5oGBLCM6lgvBf8vO0mBC1mQS97OClsFI5lZg3dcgoVzWIn/w/FQmSK8D/tEHwH5gYz9
-         SHi3GjrirZAzjiuE4cav5KistRKwRLv+z1olTD8nM1q9qwGKVg/b88HuhpswmB6zc21G
-         Qxxo5cxzlXKz4vBc7aJwTy/+cu/gIVv/22D451Zt4CKtu4fA1sqxzSTuTcWPtiYAp+fG
-         Ndmg==
-X-Gm-Message-State: AOJu0YzZoKM5HkF+Ju5ym4GtfmoleBGCSo4Nej3mIJDriWzUd/2NtE22
-	H2koVqkT2BwYKdu5SbldsvkckBaAV+1RE5vY9FfRrQ==
-X-Google-Smtp-Source: AGHT+IG1YSSan66ZemcuTHcdIgZ/uaYq6WnM/w3MIzwfF9owfoOzUtScXzI80/mvAPsLv/+N+kRAvxXzRKJzQ+/u988=
-X-Received: by 2002:a17:906:841a:b0:a19:a1ba:8cc1 with SMTP id
- n26-20020a170906841a00b00a19a1ba8cc1mr3034542ejx.95.1701719648136; Mon, 04
- Dec 2023 11:54:08 -0800 (PST)
+        bh=P+1/0oUjz5rluJhR9RmqMC8xOdhAin3fsn5Iyog2y8c=;
+        b=Q4+iEtf/XjjFTsqOgU9qAuXaSkyli/INL3ynF1nG148dUG+iSo99zVPjg0S9R7mH7+
+         h3xqe1SbKU4SV8Tt9zYD6P/o6/erklc03nfIKcQGmp2XFG33C82qip3HsJ1s4vkzyv38
+         PTp+50yw3tHGVmdcyWpPvNLaGvGJK/JKlkr6HYwSukmyddLa5gdlBZcR7H27mSW6HoHV
+         df9Z9D83XOIskAmMzpiUUMEdH9MFnwwLI40aNAsZ821Yq4KZz8gxomvrzXcCB/YHiJfu
+         o69ReLVtxOce5osaDw7tJ0h0TEkbm8PTGpsC6sO8scLYbQ0JzHOJErLiwBvmJHlEsGZS
+         q3mA==
+X-Gm-Message-State: AOJu0YwIDOKt+105Rxny3+DiubY3cFX59OXFvwQzn11NFNkXJOQ/7fGI
+	z6RwKnUH/enn5w+/hggQcom1KsOKrK3jwv8Yj4R6bzWV
+X-Google-Smtp-Source: AGHT+IH6UZ6fmBx3WT/fEHQpSNnffMtr8r3z85mCMC6cjF8XVc2xQiy24DScww8nDJycO89IPZ4CFQ==
+X-Received: by 2002:adf:f250:0:b0:333:2fd7:9602 with SMTP id b16-20020adff250000000b003332fd79602mr279648wrp.61.1701853465615;
+        Wed, 06 Dec 2023 01:04:25 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:e0a:982:cbb0:f855:6075:9365:8b70])
+        by smtp.gmail.com with ESMTPSA id f9-20020adff8c9000000b003333d2c6420sm10682031wrq.74.2023.12.06.01.04.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Dec 2023 01:04:25 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Wed, 06 Dec 2023 10:04:21 +0100
+Subject: [PATCH] configs: meson: enable missing DM_USB_GADGET
 MIME-Version: 1.0
-References: <20231130112122.87934-1-avkrasnov@salutedevices.com> <cee112f1-4b9d-3c79-9e86-ae91f6d66aa8@salutedevices.com>
-In-Reply-To: <cee112f1-4b9d-3c79-9e86-ae91f6d66aa8@salutedevices.com>
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date: Mon, 4 Dec 2023 20:53:55 +0100
-Message-ID: <CAOf5uwnZ5Amk-1JRt6K2_r=xXb-ZC55J18qHKh9Eh=eXAkNi+g@mail.gmail.com>
-Subject: Re: [PATCH v1] mtd: rawnand: Meson NAND controller support
-To: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Cc: Dario Binacchi <dario.binacchi@amarulasolutions.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, U-Boot-Denx <u-boot@lists.denx.de>, 
-	u-boot-amlogic@groups.io, kernel@sberdevices.ru, oxffffaa@gmail.com, 
-	Miquel Raynal <miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231206-u-boot-m2s-fix-usb-gadget-v1-1-1c4c66cd10f3@linaro.org>
+X-B4-Tracking: v=1; b=H4sIABQ5cGUC/x2MQQqAMAzAviI9W9g6EPEr4mFqnT3oZFURhn93e
+ AwkyaCchBW6KkPiW1TiXsDWFUyr3wOjzIWBDDlLpsELxxhP3EhxkQcvHTH4OfCJk3emZWsdUQu
+ lPxIX43/3w/t+SBi3VGsAAAA=
+To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2987;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=ORIDsnMm4F8KEoPrXWijjF8CkW7NnOxxAsMmhYyoUOg=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlcDkWvt2bDJou8o/2uAP9JbfYjo5d3c0S+5XkO
+ LvNxOG9RV6JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZXA5FgAKCRB33NvayMhJ
+ 0XTxD/0WoDTtAoX4kn7qcPmi7W9kx7jG6rAeC95VtfZASss1si1XEIUegPmzFbteHl5RznWbbiD
+ 62pRHYJnf+rIcNVPP0F9M5KiVWENJgUazjkjhVuqs4soAIa254IKf+In5htnrscHywkGGB/bLLj
+ q3PCCLI97N6HYfqvJBhG16kmJVE21/zg/FOFB4AWAA4lqxs65aCKN/JygCZn1o0Eph0O8yH3mqd
+ yei2/NVxGkmDWvkq9QQ/O7CBzWmFd6/2CLU154LxMIOJqfqM1OnR6MaCdhFAtExZsOv+1hYN2HF
+ ahAuZClCuQ9znLX7++wohTaNiv19pfH/rWdFGhGjs8yEOyd8Fzy5LrrQavIfhFxJgVpmvp5Hbn8
+ eveoHcNI5VD5oIyg+OsKs73ockza/XiKY+q3gGR0OHZi4ZFNzUUq8iw80NKeFYtGQ1dcdoEdsbq
+ bXZvdtINFZJTDu6hdcUv5FZznX1CK9ChYUGGE285WtsxbmMYeaYoMhFVwqENLtizLURrfr5mRLh
+ Rzr3oHl6wZEepQIwIwqLSyIlt3ROtySIAPIbaMWzDTPF33aMfuYQgLLrgRDFwvLTriyeXVRsFDT
+ WzuDtGRSUCzkoZlEzslCxwyoajbO30u+tcGqMviDPLute7MdLZ6FsGix0eruh24DYYYdEOvKPSs
+ iFFZiTEpdF3W1VA==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 05 Dec 2023 08:46:39 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1896
+ <u-boot-amlogic@groups.io>; Wed, 06 Dec 2023 09:04:36 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1898
 
-Hi Arseniy
+Since commit b96640cbfb ("ARM: meson: g12a: switch dwc2 otg to DM")
+and commit e327e2affd ("ARM: meson: switch AXG & GX dwc2 otg to DM")
+Amlogic boards now requires DM_USB_GADGET to have USB Gadget to work.
 
-Il lun 4 dic 2023, 20:31 Arseniy Krasnov <avkrasnov@salutedevices.com> ha
-scritto:
+Add it to the boards configs as returned by:
+$ grep -L DM_USB_GADGET $(grep -l CONFIG_USB_GADGET $(grep -l MESON configs/*))
 
-> cc: Miquel Raynal
->
-> On 30.11.2023 14:21, Arseniy Krasnov wrote:
-> > Basic support for Amlogic Meson NAND controller on AXG.
-> >
-> > Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> > ---
->
+Fixes: b96640cbfb ("ARM: meson: g12a: switch dwc2 otg to DM")
+Fixes: e327e2affd ("ARM: meson: switch AXG & GX dwc2 otg to DM")
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ configs/bananapi-m2-pro_defconfig | 1 +
+ configs/bananapi-m2s_defconfig    | 1 +
+ configs/libretech-cc_v2_defconfig | 1 +
+ configs/odroid-go-ultra_defconfig | 1 +
+ configs/radxa-zero2_defconfig     | 1 +
+ 5 files changed, 5 insertions(+)
 
+diff --git a/configs/bananapi-m2-pro_defconfig b/configs/bananapi-m2-pro_defconfig
+index 2a3958b0fd..755bccb4a7 100644
+--- a/configs/bananapi-m2-pro_defconfig
++++ b/configs/bananapi-m2-pro_defconfig
+@@ -56,6 +56,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
+ CONFIG_DEBUG_UART_SKIP_INIT=y
+ CONFIG_MESON_SERIAL=y
+ CONFIG_USB=y
++CONFIG_DM_USB_GADGET=y
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_DWC3=y
+ CONFIG_USB_DWC3=y
+diff --git a/configs/bananapi-m2s_defconfig b/configs/bananapi-m2s_defconfig
+index 405ce3a93a..af8daced62 100644
+--- a/configs/bananapi-m2s_defconfig
++++ b/configs/bananapi-m2s_defconfig
+@@ -61,6 +61,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
+ CONFIG_DEBUG_UART_SKIP_INIT=y
+ CONFIG_MESON_SERIAL=y
+ CONFIG_USB=y
++CONFIG_DM_USB_GADGET=y
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_DWC3=y
+ CONFIG_USB_DWC3=y
+diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+index ba74b241ab..b1c267a791 100644
+--- a/configs/libretech-cc_v2_defconfig
++++ b/configs/libretech-cc_v2_defconfig
+@@ -66,6 +66,7 @@ CONFIG_SPI=y
+ CONFIG_DM_SPI=y
+ CONFIG_MESON_SPIFC=y
+ CONFIG_USB=y
++CONFIG_DM_USB_GADGET=y
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_DWC3=y
+ CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
+diff --git a/configs/odroid-go-ultra_defconfig b/configs/odroid-go-ultra_defconfig
+index bc0bf9b896..49d628b76a 100644
+--- a/configs/odroid-go-ultra_defconfig
++++ b/configs/odroid-go-ultra_defconfig
+@@ -63,6 +63,7 @@ CONFIG_MESON_SERIAL=y
+ CONFIG_SYSINFO=y
+ CONFIG_SYSINFO_SMBIOS=y
+ CONFIG_USB=y
++CONFIG_DM_USB_GADGET=y
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_DWC3=y
+ CONFIG_USB_DWC3=y
+diff --git a/configs/radxa-zero2_defconfig b/configs/radxa-zero2_defconfig
+index e9415762ff..b795681b3f 100644
+--- a/configs/radxa-zero2_defconfig
++++ b/configs/radxa-zero2_defconfig
+@@ -52,6 +52,7 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
+ CONFIG_DEBUG_UART_SKIP_INIT=y
+ CONFIG_MESON_SERIAL=y
+ CONFIG_USB=y
++CONFIG_DM_USB_GADGET=y
+ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_DWC3=y
+ CONFIG_USB_DWC3=y
 
-We are going to review your patches. It will be done this week
+---
+base-commit: 2f0282922b2c458eea7f85c500a948a587437b63
+change-id: 20231206-u-boot-m2s-fix-usb-gadget-ca308e113228
 
-Michael
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
->  drivers/mtd/nand/raw/Kconfig      |    9 +
-> >  drivers/mtd/nand/raw/Makefile     |    1 +
-> >  drivers/mtd/nand/raw/meson_nand.c | 1231 +++++++++++++++++++++++++++++
-> >  3 files changed, 1241 insertions(+)
-> >  create mode 100644 drivers/mtd/nand/raw/meson_nand.c
-> >
-> > diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-> > index d624589a89..7b7b0226ab 100644
-> > --- a/drivers/mtd/nand/raw/Kconfig
-> > +++ b/drivers/mtd/nand/raw/Kconfig
-> > @@ -488,6 +488,15 @@ config NAND_ARASAN
-> >         controller. This uses the hardware ECC for read and
-> >         write operations.
-> >
-> > +config NAND_MESON
-> > +     bool "Meson NAND support"
-> > +     select SYS_NAND_SELF_INIT
-> > +     depends on DM_MTD && ARCH_MESON
-> > +     imply CMD_NAND
-> > +     help
-> > +       This enables Nand driver support for Meson raw NAND flash
-> > +       controller.
-> > +
-> >  config NAND_MXC
-> >       bool "MXC NAND support"
-> >       depends on CPU_ARM926EJS || CPU_ARM1136 || MX5
-> > diff --git a/drivers/mtd/nand/raw/Makefile
-> b/drivers/mtd/nand/raw/Makefile
-> > index add2b4cf65..5b4efd52c9 100644
-> > --- a/drivers/mtd/nand/raw/Makefile
-> > +++ b/drivers/mtd/nand/raw/Makefile
-> > @@ -61,6 +61,7 @@ obj-$(CONFIG_NAND_KMETER1) += kmeter1_nand.o
-> >  obj-$(CONFIG_NAND_LPC32XX_MLC) += lpc32xx_nand_mlc.o
-> >  obj-$(CONFIG_NAND_LPC32XX_SLC) += lpc32xx_nand_slc.o
-> >  obj-$(CONFIG_NAND_VF610_NFC) += vf610_nfc.o
-> > +obj-$(CONFIG_NAND_MESON) += meson_nand.o
-> >  obj-$(CONFIG_NAND_MXC) += mxc_nand.o
-> >  obj-$(CONFIG_NAND_MXS) += mxs_nand.o
-> >  obj-$(CONFIG_NAND_MXS_DT) += mxs_nand_dt.o
-> > diff --git a/drivers/mtd/nand/raw/meson_nand.c
-> b/drivers/mtd/nand/raw/meson_nand.c
-> > new file mode 100644
-> > index 0000000000..f1d49887ee
-> > --- /dev/null
-> > +++ b/drivers/mtd/nand/raw/meson_nand.c
-> > @@ -0,0 +1,1231 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Amlogic Meson Nand Flash Controller Driver
-> > + *
-> > + * Copyright (c) 2023 SaluteDevices, Inc.
-> > + * Author: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> > + */
-> > +
-> > +#include <common.h>
-> > +#include <nand.h>
-> > +#include <asm/io.h>
-> > +#include <dm.h>
-> > +#include <dm/device_compat.h>
-> > +#include <dm/ofnode.h>
-> > +#include <dm/uclass.h>
-> > +#include <linux/bug.h>
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/dma-mapping.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/mtd/mtd.h>
-> > +#include <linux/mtd/rawnand.h>
-> > +#include <linux/sizes.h>
-> > +
-> > +#define NFC_CMD_IDLE                 (0xc << 14)
-> > +#define NFC_CMD_CLE                  (0x5 << 14)
-> > +#define NFC_CMD_ALE                  (0x6 << 14)
-> > +#define NFC_CMD_DWR                  (0x4 << 14)
-> > +#define NFC_CMD_DRD                  (0x8 << 14)
-> > +#define NFC_CMD_ADL                  ((0 << 16) | (3 << 20))
-> > +#define NFC_CMD_ADH                  ((1 << 16) | (3 << 20))
-> > +#define NFC_CMD_AIL                  ((2 << 16) | (3 << 20))
-> > +#define NFC_CMD_AIH                  ((3 << 16) | (3 << 20))
-> > +#define NFC_CMD_SEED                 ((8 << 16) | (3 << 20))
-> > +#define NFC_CMD_M2N                  ((0 << 17) | (2 << 20))
-> > +#define NFC_CMD_N2M                  ((1 << 17) | (2 << 20))
-> > +#define NFC_CMD_RB                   BIT(20)
-> > +#define NFC_CMD_SCRAMBLER_ENABLE     BIT(19)
-> > +#define NFC_CMD_SCRAMBLER_DISABLE    0
-> > +#define NFC_CMD_SHORTMODE_DISABLE    0
-> > +#define NFC_CMD_RB_INT                       BIT(14)
-> > +#define NFC_CMD_RB_INT_NO_PIN                ((0xb << 10) | BIT(18) |
-> BIT(16))
-> > +
-> > +#define NFC_CMD_GET_SIZE(x)  (((x) >> 22) & GENMASK(4, 0))
-> > +
-> > +#define NFC_REG_CMD          0x00
-> > +#define NFC_REG_CFG          0x04
-> > +#define NFC_REG_DADR         0x08
-> > +#define NFC_REG_IADR         0x0c
-> > +#define NFC_REG_BUF          0x10
-> > +#define NFC_REG_INFO         0x14
-> > +#define NFC_REG_DC           0x18
-> > +#define NFC_REG_ADR          0x1c
-> > +#define NFC_REG_DL           0x20
-> > +#define NFC_REG_DH           0x24
-> > +#define NFC_REG_CADR         0x28
-> > +#define NFC_REG_SADR         0x2c
-> > +#define NFC_REG_PINS         0x30
-> > +#define NFC_REG_VER          0x38
-> > +
-> > +#define CMDRWGEN(cmd_dir, ran, bch, short_mode, page_size, pages)    \
-> > +     (                                                               \
-> > +             (cmd_dir)                       |                       \
-> > +             ((ran) << 19)                   |                       \
-> > +             ((bch) << 14)                   |                       \
-> > +             ((short_mode) << 13)            |                       \
-> > +             (((page_size) & 0x7f) << 6)     |                       \
-> > +             ((pages) & 0x3f)                                        \
-> > +     )
-> > +
-> > +#define GENCMDDADDRL(adl, addr)              ((adl) | ((addr) & 0xffff))
-> > +#define GENCMDDADDRH(adh, addr)              ((adh) | (((addr) >> 16) &
-> 0xffff))
-> > +#define GENCMDIADDRL(ail, addr)              ((ail) | ((addr) & 0xffff))
-> > +#define GENCMDIADDRH(aih, addr)              ((aih) | (((addr) >> 16) &
-> 0xffff))
-> > +
-> > +#define DMA_DIR(dir)         ((dir) ? NFC_CMD_N2M : NFC_CMD_M2N)
-> > +
-> > +#define ECC_CHECK_RETURN_FF  -1
-> > +
-> > +#define NAND_CE0             (0xe << 10)
-> > +#define NAND_CE1             (0xd << 10)
-> > +
-> > +#define DMA_BUSY_TIMEOUT_US  1000000
-> > +#define CMD_DRAIN_TIMEOUT_US 1000
-> > +#define ECC_POLL_TIMEOUT_US  15
-> > +
-> > +#define MAX_CE_NUM           2
-> > +
-> > +/* eMMC clock register, misc control */
-> > +#define CLK_SELECT_NAND              BIT(31)
-> > +#define CLK_ALWAYS_ON_NAND   BIT(24)
-> > +#define CLK_ENABLE_VALUE     0x245
-> > +
-> > +#define DIRREAD                      1
-> > +#define DIRWRITE             0
-> > +
-> > +#define ECC_PARITY_BCH8_512B 14
-> > +#define ECC_COMPLETE            BIT(31)
-> > +#define ECC_ERR_CNT(x)               (((x) >> 24) & GENMASK(5, 0))
-> > +#define ECC_ZERO_CNT(x)              (((x) >> 16) & GENMASK(5, 0))
-> > +#define ECC_UNCORRECTABLE    0x3f
-> > +
-> > +#define PER_INFO_BYTE                8
-> > +
-> > +#define NFC_SEND_CMD(host, cmd) \
-> > +     (writel((cmd), (host)->reg_base + NFC_REG_CMD))
-> > +
-> > +#define NFC_GET_CMD(host) \
-> > +     (readl((host)->reg_base + NFC_REG_CMD))
-> > +
-> > +#define NFC_CMDFIFO_SIZE(host)       ((NFC_GET_CMD((host)) >> 22) &
-> GENMASK(4, 0))
-> > +
-> > +#define NFC_CMD_MAKE_IDLE(ce, delay) ((ce) | NFC_CMD_IDLE | ((delay) &
-> 0x3ff))
-> > +#define NFC_CMD_MAKE_DRD(ce, size)   ((ce) | NFC_CMD_DRD | (size))
-> > +#define NFC_CMD_MAKE_DWR(ce, data)   ((ce) | NFC_CMD_DWR | ((data) &
-> 0xff))
-> > +#define NFC_CMD_MAKE_CLE(ce, cmd_val)        ((ce) | NFC_CMD_CLE |
-> ((cmd_val) & 0xff))
-> > +#define NFC_CMD_MAKE_ALE(ce, addr)   ((ce) | NFC_CMD_ALE | ((addr) &
-> 0xff))
-> > +
-> > +#define NAND_TWB_TIME_CYCLE  10
-> > +
-> > +#define NFC_DEV_READY_TICK_MAX       5000
-> > +
-> > +#define NFC_DEFAULT_BUS_CYCLE        6
-> > +#define NFC_DEFAULT_BUS_TIMING       7
-> > +
-> > +#define NFC_SEED_OFFSET              0xc2
-> > +#define NFC_SEED_MASK                0x7fff
-> > +
-> > +#define DMA_ADDR_ALIGN               8
-> > +
-> > +struct meson_nfc_nand_chip {
-> > +     struct list_head node;
-> > +     struct nand_chip nand;
-> > +
-> > +     u32 bch_mode;
-> > +     u8 *data_buf;
-> > +     __le64 *info_buf;
-> > +     u32 nsels;
-> > +     u8 sels[];
-> > +};
-> > +
-> > +struct meson_nfc_param {
-> > +     u32 chip_select;
-> > +     u32 rb_select;
-> > +};
-> > +
-> > +struct meson_nfc {
-> > +     void __iomem *reg_base;
-> > +     void __iomem *reg_clk;
-> > +     struct list_head chips;
-> > +     struct meson_nfc_param param;
-> > +     struct udevice *dev;
-> > +     dma_addr_t daddr;
-> > +     dma_addr_t iaddr;
-> > +     u32 data_bytes;
-> > +     u32 info_bytes;
-> > +     u64 assigned_cs;
-> > +};
-> > +
-> > +struct meson_nand_ecc {
-> > +     u32 bch;
-> > +     u32 strength;
-> > +     u32 size;
-> > +};
-> > +
-> > +enum {
-> > +     NFC_ECC_BCH8_512 = 1,
-> > +     NFC_ECC_BCH8_1K,
-> > +     NFC_ECC_BCH24_1K,
-> > +     NFC_ECC_BCH30_1K,
-> > +     NFC_ECC_BCH40_1K,
-> > +     NFC_ECC_BCH50_1K,
-> > +     NFC_ECC_BCH60_1K,
-> > +};
-> > +
-> > +#define MESON_ECC_DATA(b, s, sz) { .bch = (b), .strength = (s), .size =
-> (sz) }
-> > +
-> > +static struct meson_nand_ecc meson_ecc[] = {
-> > +     MESON_ECC_DATA(NFC_ECC_BCH8_512, 8,  512),
-> > +     MESON_ECC_DATA(NFC_ECC_BCH8_1K,  8,  1024),
-> > +};
-> > +
-> > +static int meson_nand_calc_ecc_bytes(int step_size, int strength)
-> > +{
-> > +     int ecc_bytes;
-> > +
-> > +     if (step_size == 512 && strength == 8)
-> > +             return ECC_PARITY_BCH8_512B;
-> > +
-> > +     ecc_bytes = DIV_ROUND_UP(strength * fls(step_size * 8), 8);
-> > +     ecc_bytes = ALIGN(ecc_bytes, 2);
-> > +
-> > +     return ecc_bytes;
-> > +}
-> > +
-> > +static struct meson_nfc_nand_chip *to_meson_nand(struct nand_chip *nand)
-> > +{
-> > +     return container_of(nand, struct meson_nfc_nand_chip, nand);
-> > +}
-> > +
-> > +static void meson_nfc_nand_select_chip(struct mtd_info *mtd, int chip)
-> > +{
-> > +     struct nand_chip *nand = mtd_to_nand(mtd);
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +
-> > +     nfc->param.chip_select = meson_chip->sels[chip] ? NAND_CE1 :
-> NAND_CE0;
-> > +}
-> > +
-> > +static void meson_nfc_cmd_idle(struct meson_nfc *nfc, u32 time)
-> > +{
-> > +     writel(NFC_CMD_MAKE_IDLE(nfc->param.chip_select, time),
-> > +            nfc->reg_base + NFC_REG_CMD);
-> > +}
-> > +
-> > +static void meson_nfc_cmd_seed(const struct meson_nfc *nfc, u32 seed)
-> > +{
-> > +     writel(NFC_CMD_SEED | (NFC_SEED_OFFSET + (seed & NFC_SEED_MASK)),
-> > +            nfc->reg_base + NFC_REG_CMD);
-> > +}
-> > +
-> > +static void meson_nfc_cmd_access(struct nand_chip *nand, bool raw, bool
-> dir,
-> > +                              int scrambler)
-> > +{
-> > +     struct mtd_info *mtd = nand_to_mtd(nand);
-> > +     const struct meson_nfc *nfc =
-> nand_get_controller_data(mtd_to_nand(mtd));
-> > +     const struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     u32 bch = meson_chip->bch_mode, cmd;
-> > +     int len = mtd->writesize, pagesize, pages;
-> > +
-> > +     pagesize = nand->ecc.size;
-> > +
-> > +     if (raw) {
-> > +             len = mtd->writesize + mtd->oobsize;
-> > +             cmd = len | scrambler | DMA_DIR(dir);
-> > +             writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +             return;
-> > +     }
-> > +
-> > +     pages = len / nand->ecc.size;
-> > +
-> > +     cmd = CMDRWGEN(DMA_DIR(dir), scrambler, bch,
-> > +                    NFC_CMD_SHORTMODE_DISABLE, pagesize, pages);
-> > +
-> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +}
-> > +
-> > +static void meson_nfc_drain_cmd(struct meson_nfc *nfc)
-> > +{
-> > +     /*
-> > +      * Insert two commands to make sure all valid commands are
-> finished.
-> > +      *
-> > +      * The Nand flash controller is designed as two stages pipleline -
-> > +      *  a) fetch and b) execute.
-> > +      * There might be cases when the driver see command queue is empty,
-> > +      * but the Nand flash controller still has two commands buffered,
-> > +      * one is fetched into NFC request queue (ready to run), and
-> another
-> > +      * is actively executing. So pushing 2 "IDLE" commands guarantees
-> that
-> > +      * the pipeline is emptied.
-> > +      */
-> > +     meson_nfc_cmd_idle(nfc, 0);
-> > +     meson_nfc_cmd_idle(nfc, 0);
-> > +}
-> > +
-> > +static int meson_nfc_wait_cmd_finish(const struct meson_nfc *nfc,
-> > +                                  unsigned int timeout_us)
-> > +{
-> > +     u32 cmd_size = 0;
-> > +
-> > +     /* wait cmd fifo is empty */
-> > +     return readl_relaxed_poll_timeout(nfc->reg_base + NFC_REG_CMD,
-> cmd_size,
-> > +                                       !NFC_CMD_GET_SIZE(cmd_size),
-> > +                                       timeout_us);
-> > +}
-> > +
-> > +static int meson_nfc_wait_dma_finish(struct meson_nfc *nfc)
-> > +{
-> > +     meson_nfc_drain_cmd(nfc);
-> > +
-> > +     return meson_nfc_wait_cmd_finish(nfc, DMA_BUSY_TIMEOUT_US);
-> > +}
-> > +
-> > +static u8 *meson_nfc_oob_ptr(struct nand_chip *nand, int i)
-> > +{
-> > +     const struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     int len;
-> > +
-> > +     len = nand->ecc.size * (i + 1) + (nand->ecc.bytes + 2) * i;
-> > +
-> > +     return meson_chip->data_buf + len;
-> > +}
-> > +
-> > +static u8 *meson_nfc_data_ptr(struct nand_chip *nand, int i)
-> > +{
-> > +     const struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     int len, temp;
-> > +
-> > +     temp = nand->ecc.size + nand->ecc.bytes;
-> > +     len = (temp + 2) * i;
-> > +
-> > +     return meson_chip->data_buf + len;
-> > +}
-> > +
-> > +static void meson_nfc_get_data_oob(struct nand_chip *nand,
-> > +                                u8 *buf, u8 *oobbuf)
-> > +{
-> > +     u8 *dsrc, *osrc;
-> > +     int i, oob_len;
-> > +
-> > +     oob_len = nand->ecc.bytes + 2;
-> > +     for (i = 0; i < nand->ecc.steps; i++) {
-> > +             if (buf) {
-> > +                     dsrc = meson_nfc_data_ptr(nand, i);
-> > +                     memcpy(buf, dsrc, nand->ecc.size);
-> > +                     buf += nand->ecc.size;
-> > +             }
-> > +
-> > +             if (oobbuf) {
-> > +                     osrc = meson_nfc_oob_ptr(nand, i);
-> > +                     memcpy(oobbuf, osrc, oob_len);
-> > +                     oobbuf += oob_len;
-> > +             }
-> > +     }
-> > +}
-> > +
-> > +static void meson_nfc_set_data_oob(struct nand_chip *nand,
-> > +                                const u8 *buf, u8 *oobbuf)
-> > +{
-> > +     int i, oob_len;
-> > +
-> > +     oob_len = nand->ecc.bytes + 2;
-> > +     for (i = 0; i < nand->ecc.steps; i++) {
-> > +             u8 *osrc;
-> > +
-> > +             if (buf) {
-> > +                     u8 *dsrc;
-> > +
-> > +                     dsrc = meson_nfc_data_ptr(nand, i);
-> > +                     memcpy(dsrc, buf, nand->ecc.size);
-> > +                     buf += nand->ecc.size;
-> > +             }
-> > +
-> > +             osrc = meson_nfc_oob_ptr(nand, i);
-> > +             memcpy(osrc, oobbuf, oob_len);
-> > +             oobbuf += oob_len;
-> > +     }
-> > +}
-> > +
-> > +static void meson_nfc_set_user_byte(struct nand_chip *nand, const u8
-> *oob_buf)
-> > +{
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     int i, count;
-> > +
-> > +     for (i = 0, count = 0; i < nand->ecc.steps; i++, count += (2 +
-> nand->ecc.bytes)) {
-> > +             __le64 *info = &meson_chip->info_buf[i];
-> > +
-> > +             *info |= oob_buf[count];
-> > +             *info |= oob_buf[count + 1] << 8;
-> > +     }
-> > +}
-> > +
-> > +static void meson_nfc_get_user_byte(struct nand_chip *nand, u8 *oob_buf)
-> > +{
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     int i, count;
-> > +
-> > +     for (i = 0, count = 0; i < nand->ecc.steps; i++, count += (2 +
-> nand->ecc.bytes)) {
-> > +             const __le64 *info = &meson_chip->info_buf[i];
-> > +
-> > +             oob_buf[count] = *info;
-> > +             oob_buf[count + 1] = *info >> 8;
-> > +     }
-> > +}
-> > +
-> > +static int meson_nfc_ecc_correct(struct nand_chip *nand, u32 *bitflips,
-> > +                              u64 *correct_bitmap)
-> > +{
-> > +     struct mtd_info *mtd = nand_to_mtd(nand);
-> > +     int ret = 0, i;
-> > +
-> > +     for (i = 0; i < nand->ecc.steps; i++) {
-> > +             struct meson_nfc_nand_chip *meson_chip =
-> to_meson_nand(nand);
-> > +             const __le64 *info = &meson_chip->info_buf[i];
-> > +
-> > +             if (ECC_ERR_CNT(*info) != ECC_UNCORRECTABLE) {
-> > +                     mtd->ecc_stats.corrected += ECC_ERR_CNT(*info);
-> > +                     *bitflips = max_t(u32, *bitflips,
-> ECC_ERR_CNT(*info));
-> > +                     *correct_bitmap |= BIT_ULL(i);
-> > +                     continue;
-> > +             }
-> > +
-> > +             if ((nand->options & NAND_NEED_SCRAMBLING) &&
-> > +                 ECC_ZERO_CNT(*info) < nand->ecc.strength) {
-> > +                     mtd->ecc_stats.corrected += ECC_ZERO_CNT(*info);
-> > +                     *bitflips = max_t(u32, *bitflips,
-> > +                                       ECC_ZERO_CNT(*info));
-> > +                     ret = ECC_CHECK_RETURN_FF;
-> > +             } else {
-> > +                     ret = -EBADMSG;
-> > +             }
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int meson_nfc_dma_buffer_setup(struct nand_chip *nand, void
-> *databuf,
-> > +                                   int datalen, void *infobuf, int
-> infolen,
-> > +                                   enum dma_data_direction dir)
-> > +{
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +     int ret;
-> > +     u32 cmd;
-> > +
-> > +     nfc->daddr = dma_map_single(databuf, datalen, DMA_BIDIRECTIONAL);
-> > +     ret = dma_mapping_error(nfc->dev, nfc->daddr);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     cmd = GENCMDDADDRL(NFC_CMD_ADL, nfc->daddr);
-> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +
-> > +     cmd = GENCMDDADDRH(NFC_CMD_ADH, nfc->daddr);
-> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +
-> > +     if (infobuf) {
-> > +             nfc->iaddr = dma_map_single(infobuf, infolen,
-> > +                                         DMA_BIDIRECTIONAL);
-> > +             ret = dma_mapping_error(nfc->dev, nfc->iaddr);
-> > +             if (ret) {
-> > +                     dma_unmap_single(nfc->daddr, datalen, dir);
-> > +                     return ret;
-> > +             }
-> > +
-> > +             nfc->info_bytes = infolen;
-> > +             cmd = GENCMDIADDRL(NFC_CMD_AIL, nfc->iaddr);
-> > +             writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +
-> > +             cmd = GENCMDIADDRH(NFC_CMD_AIH, nfc->iaddr);
-> > +             writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void meson_nfc_dma_buffer_release(struct nand_chip *nand,
-> > +                                      int datalen, int infolen,
-> > +                                      enum dma_data_direction dir)
-> > +{
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +
-> > +     dma_unmap_single(nfc->daddr, datalen, dir);
-> > +
-> > +     if (infolen) {
-> > +             dma_unmap_single(nfc->iaddr, infolen, dir);
-> > +             nfc->info_bytes = 0;
-> > +     }
-> > +}
-> > +
-> > +static void meson_nfc_read_buf(struct mtd_info *mtd, u8 *buf, int size)
-> > +{
-> > +     struct nand_chip *nand = mtd_to_nand(mtd);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     u8 *dma_buf;
-> > +     int ret;
-> > +     u32 cmd;
-> > +
-> > +     if ((uintptr_t)buf % DMA_ADDR_ALIGN) {
-> > +             unsigned long tmp_addr;
-> > +
-> > +             dma_buf = dma_alloc_coherent(size, &tmp_addr);
-> > +             if (!dma_buf)
-> > +                     return;
-> > +     } else {
-> > +             dma_buf = buf;
-> > +     }
-> > +
-> > +     ret = meson_nfc_dma_buffer_setup(nand, dma_buf, size,
-> meson_chip->info_buf,
-> > +                                      PER_INFO_BYTE, DMA_FROM_DEVICE);
-> > +     if (ret) {
-> > +             pr_err("Failed to setup DMA buffer %p/%p\n", dma_buf,
-> > +                    meson_chip->info_buf);
-> > +             return;
-> > +     }
-> > +
-> > +     cmd = NFC_CMD_N2M | size;
-> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +
-> > +     meson_nfc_drain_cmd(nfc);
-> > +     meson_nfc_wait_cmd_finish(nfc, CMD_DRAIN_TIMEOUT_US);
-> > +     meson_nfc_dma_buffer_release(nand, size, PER_INFO_BYTE,
-> DMA_FROM_DEVICE);
-> > +
-> > +     if (buf != dma_buf) {
-> > +             memcpy(buf, dma_buf, size);
-> > +             dma_free_coherent(dma_buf);
-> > +     }
-> > +}
-> > +
-> > +static void meson_nfc_write_buf(struct mtd_info *mtd, const u8 *buf,
-> int size)
-> > +{
-> > +     struct nand_chip *nand = mtd_to_nand(mtd);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +     u8 *dma_buf;
-> > +     int ret;
-> > +     u32 cmd;
-> > +
-> > +     if ((uintptr_t)buf % DMA_ADDR_ALIGN) {
-> > +             unsigned long tmp_addr;
-> > +
-> > +             dma_buf = dma_alloc_coherent(size, &tmp_addr);
-> > +             if (!dma_buf)
-> > +                     return;
-> > +
-> > +             memcpy(dma_buf, buf, size);
-> > +     } else {
-> > +             dma_buf = (u8 *)buf;
-> > +     }
-> > +
-> > +     ret = meson_nfc_dma_buffer_setup(nand, (void *)dma_buf, size, NULL,
-> > +                                      0, DMA_TO_DEVICE);
-> > +     if (ret) {
-> > +             pr_err("Failed to setup DMA buffer %p\n", dma_buf);
-> > +             return;
-> > +     }
-> > +
-> > +     cmd = NFC_CMD_M2N | size;
-> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +
-> > +     meson_nfc_drain_cmd(nfc);
-> > +     meson_nfc_wait_cmd_finish(nfc, CMD_DRAIN_TIMEOUT_US);
-> > +     meson_nfc_dma_buffer_release(nand, size, 0, DMA_TO_DEVICE);
-> > +
-> > +     if (buf != dma_buf)
-> > +             dma_free_coherent(dma_buf);
-> > +}
-> > +
-> > +static int meson_nfc_write_page_sub(struct nand_chip *nand,
-> > +                                 int page, bool raw)
-> > +{
-> > +     const struct mtd_info *mtd = nand_to_mtd(nand);
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +     int data_len, info_len;
-> > +     int ret;
-> > +     u32 cmd;
-> > +
-> > +     data_len =  mtd->writesize + mtd->oobsize;
-> > +     info_len = nand->ecc.steps * PER_INFO_BYTE;
-> > +
-> > +     ret = meson_nfc_dma_buffer_setup(nand, meson_chip->data_buf,
-> > +                                      data_len, meson_chip->info_buf,
-> > +                                      info_len, DMA_TO_DEVICE);
-> > +     if (ret) {
-> > +             pr_err("Failed to setup DMA buffer %p/%p\n",
-> > +                    meson_chip->data_buf, meson_chip->info_buf);
-> > +             return ret;
-> > +     }
-> > +
-> > +     if (nand->options & NAND_NEED_SCRAMBLING) {
-> > +             meson_nfc_cmd_seed(nfc, page);
-> > +             meson_nfc_cmd_access(nand, raw, DIRWRITE,
-> > +                                  NFC_CMD_SCRAMBLER_ENABLE);
-> > +     } else {
-> > +             meson_nfc_cmd_access(nand, raw, DIRWRITE,
-> > +                                  NFC_CMD_SCRAMBLER_DISABLE);
-> > +     }
-> > +
-> > +     cmd = nfc->param.chip_select | NFC_CMD_CLE | NAND_CMD_PAGEPROG;
-> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +
-> > +     meson_nfc_dma_buffer_release(nand, data_len, info_len,
-> DMA_TO_DEVICE);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int meson_nfc_write_page_raw(struct mtd_info *mtd, struct
-> nand_chip *chip,
-> > +                                 const u8 *buf, int oob_required, int
-> page)
-> > +{
-> > +     meson_nfc_set_data_oob(chip, buf, oob_required ? chip->oob_poi :
-> NULL);
-> > +
-> > +     return meson_nfc_write_page_sub(chip, page, true);
-> > +}
-> > +
-> > +static int meson_nfc_write_page_hwecc(struct mtd_info *mtd, struct
-> nand_chip *chip,
-> > +                                   const u8 *buf, int oob_required, int
-> page)
-> > +{
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(chip);
-> > +
-> > +     if (buf)
-> > +             memcpy(meson_chip->data_buf, buf, mtd->writesize);
-> > +
-> > +     memset(meson_chip->info_buf, 0, chip->ecc.steps * PER_INFO_BYTE);
-> > +
-> > +     if (oob_required)
-> > +             meson_nfc_set_user_byte(chip, chip->oob_poi);
-> > +
-> > +     return meson_nfc_write_page_sub(chip, page, false);
-> > +}
-> > +
-> > +static void meson_nfc_check_ecc_pages_valid(struct meson_nfc *nfc,
-> > +                                         struct nand_chip *nand, bool
-> raw)
-> > +{
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     __le64 *info;
-> > +     u32 neccpages;
-> > +     int ret;
-> > +
-> > +     neccpages = raw ? 1 : nand->ecc.steps;
-> > +     info = &meson_chip->info_buf[neccpages - 1];
-> > +     do {
-> > +             udelay(ECC_POLL_TIMEOUT_US);
-> > +             /* info is updated by nfc dma engine*/
-> > +             rmb();
-> > +             invalidate_dcache_range(nfc->iaddr, nfc->iaddr +
-> nfc->info_bytes);
-> > +             ret = *info & ECC_COMPLETE;
-> > +     } while (!ret);
-> > +}
-> > +
-> > +static int meson_nfc_read_page_sub(struct nand_chip *nand,
-> > +                                int page, bool raw)
-> > +{
-> > +     struct mtd_info *mtd = nand_to_mtd(nand);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     u32 data_len, info_len;
-> > +     int ret;
-> > +
-> > +     data_len = mtd->writesize + mtd->oobsize;
-> > +     info_len = nand->ecc.steps * PER_INFO_BYTE;
-> > +
-> > +     ret = meson_nfc_dma_buffer_setup(nand, meson_chip->data_buf,
-> data_len,
-> > +                                      meson_chip->info_buf, info_len,
-> > +                                      DMA_FROM_DEVICE);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     meson_nfc_cmd_access(nand, raw, DIRREAD, 0);
-> > +
-> > +     meson_nfc_wait_dma_finish(nfc);
-> > +     meson_nfc_check_ecc_pages_valid(nfc, nand, raw);
-> > +
-> > +     meson_nfc_dma_buffer_release(nand, data_len, info_len,
-> > +                                  DMA_FROM_DEVICE);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int meson_nfc_read_page_raw(struct mtd_info *mtd, struct
-> nand_chip *chip,
-> > +                                u8 *buf, int oob_required, int page)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret = meson_nfc_read_page_sub(chip, page, true);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     meson_nfc_get_data_oob(chip, buf, oob_required ? chip->oob_poi :
-> NULL);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int meson_nfc_read_page_hwecc(struct mtd_info *mtd, struct
-> nand_chip *chip,
-> > +                                  u8 *buf, int oob_required, int page)
-> > +{
-> > +     const struct meson_nfc_nand_chip *meson_chip = to_meson_nand(chip);
-> > +     u64 correct_bitmap = 0;
-> > +     u32 bitflips = 0;
-> > +     int ret;
-> > +
-> > +     ret = meson_nfc_read_page_sub(chip, page, false);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (oob_required)
-> > +             meson_nfc_get_user_byte(chip, chip->oob_poi);
-> > +
-> > +     ret = meson_nfc_ecc_correct(chip, &bitflips, &correct_bitmap);
-> > +
-> > +     if (ret == ECC_CHECK_RETURN_FF) {
-> > +             if (buf)
-> > +                     memset(buf, 0xff, mtd->writesize);
-> > +
-> > +             if (oob_required)
-> > +                     memset(chip->oob_poi, 0xff, mtd->oobsize);
-> > +     } else if (ret < 0) {
-> > +             struct nand_ecc_ctrl *ecc;
-> > +             int i;
-> > +
-> > +             if ((chip->options & NAND_NEED_SCRAMBLING) || !buf) {
-> > +                     mtd->ecc_stats.failed++;
-> > +                     return bitflips;
-> > +             }
-> > +
-> > +             chip->cmdfunc(mtd, NAND_CMD_READ0, 0, page);
-> > +
-> > +             ret = meson_nfc_read_page_raw(mtd, chip, buf, 1, page);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             ecc = &chip->ecc;
-> > +
-> > +             for (i = 0; i < chip->ecc.steps ; i++) {
-> > +                     u8 *data = buf + i * ecc->size;
-> > +                     u8 *oob = chip->oob_poi + i * (ecc->bytes + 2);
-> > +
-> > +                     if (correct_bitmap & BIT_ULL(i))
-> > +                             continue;
-> > +
-> > +                     ret = nand_check_erased_ecc_chunk(data, ecc->size,
-> > +                                                       oob, ecc->bytes
-> + 2,
-> > +                                                       NULL, 0,
-> > +                                                       ecc->strength);
-> > +                     if (ret < 0) {
-> > +                             mtd->ecc_stats.failed++;
-> > +                     } else {
-> > +                             mtd->ecc_stats.corrected += ret;
-> > +                             bitflips =  max_t(u32, bitflips, ret);
-> > +                     }
-> > +             }
-> > +     } else if (buf && buf != meson_chip->data_buf) {
-> > +             memcpy(buf, meson_chip->data_buf, mtd->writesize);
-> > +     }
-> > +
-> > +     return bitflips;
-> > +}
-> > +
-> > +static int meson_nfc_read_oob_raw(struct mtd_info *mtd, struct
-> nand_chip *chip,
-> > +                               int page)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret = nand_read_page_op(chip, page, 0, NULL, 0);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return meson_nfc_read_page_raw(mtd, chip, NULL, 1, page);
-> > +}
-> > +
-> > +static int meson_nfc_read_oob(struct mtd_info *mtd, struct nand_chip
-> *chip,
-> > +                           int page)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret = nand_read_page_op(chip, page, 0, NULL, 0);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return meson_nfc_read_page_hwecc(mtd, chip, NULL, 1, page);
-> > +}
-> > +
-> > +static int meson_nfc_write_oob_raw(struct mtd_info *mtd, struct
-> nand_chip *chip,
-> > +                                int page)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret = nand_prog_page_begin_op(chip, page, 0, NULL, 0);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = meson_nfc_write_page_raw(mtd, chip, NULL, 1, page);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return nand_prog_page_end_op(chip);
-> > +}
-> > +
-> > +static int meson_nfc_write_oob(struct mtd_info *mtd, struct nand_chip
-> *chip,
-> > +                            int page)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret = nand_prog_page_begin_op(chip, page, 0, NULL, 0);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = meson_nfc_write_page_hwecc(mtd, chip, NULL, 1, page);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return nand_prog_page_end_op(chip);
-> > +}
-> > +
-> > +static void meson_nfc_nand_cmd_function(struct mtd_info *mtd, unsigned
-> int command,
-> > +                                     int column, int page_addr)
-> > +{
-> > +     struct nand_chip *chip = mtd_to_nand(mtd);
-> > +
-> > +     chip->cmd_ctrl(mtd, command, NAND_NCE | NAND_CLE |
-> NAND_CTRL_CHANGE);
-> > +
-> > +     if (column != -1 || page_addr != -1) {
-> > +             int ctrl = NAND_CTRL_CHANGE | NAND_NCE | NAND_ALE;
-> > +
-> > +             /* Serially input address */
-> > +             if (column != -1) {
-> > +                     /* Adjust columns for 16 bit buswidth */
-> > +                     if (chip->options & NAND_BUSWIDTH_16 &&
-> > +                         !nand_opcode_8bits(command))
-> > +                             column >>= 1;
-> > +
-> > +                     chip->cmd_ctrl(mtd, column, ctrl);
-> > +                     ctrl &= ~NAND_CTRL_CHANGE;
-> > +                     /* Only output a single addr cycle for 8bits
-> > +                      * opcodes.
-> > +                      */
-> > +                     if (!nand_opcode_8bits(command))
-> > +                             chip->cmd_ctrl(mtd, column >> 8, ctrl);
-> > +             }
-> > +
-> > +             if (page_addr != -1) {
-> > +                     chip->cmd_ctrl(mtd, page_addr, ctrl);
-> > +                     chip->cmd_ctrl(mtd, page_addr >> 8, NAND_NCE |
-> > +                                                         NAND_ALE);
-> > +                     /* One more address cycle for devices > 128MiB */
-> > +                     if (chip->chipsize > SZ_128M)
-> > +                             chip->cmd_ctrl(mtd, page_addr >> 16,
-> > +                                            NAND_NCE | NAND_ALE);
-> > +             }
-> > +
-> > +             switch (command) {
-> > +             case NAND_CMD_READ0:
-> > +                     chip->cmd_ctrl(mtd, NAND_CMD_READSTART,
-> > +                                    NAND_NCE | NAND_CLE |
-> NAND_CTRL_CHANGE);
-> > +                     fallthrough;
-> > +             case NAND_CMD_PARAM:
-> > +                     nand_wait_ready(mtd);
-> > +                     nand_exit_status_op(chip);
-> > +             }
-> > +     }
-> > +}
-> > +
-> > +static void meson_nfc_cmd_ctrl(struct mtd_info *mtd, int cmd, unsigned
-> int ctrl)
-> > +{
-> > +     struct nand_chip *nand = mtd_to_nand(mtd);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +
-> > +     if (cmd == NAND_CMD_NONE)
-> > +             return;
-> > +
-> > +     if (ctrl & NAND_CLE)
-> > +             cmd = NFC_CMD_MAKE_CLE(nfc->param.chip_select, cmd);
-> > +     else
-> > +             cmd = NFC_CMD_MAKE_ALE(nfc->param.chip_select, cmd);
-> > +
-> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
-> > +}
-> > +
-> > +static void meson_nfc_wait_cmd_fifo(struct meson_nfc *nfc)
-> > +{
-> > +     while ((NFC_GET_CMD(nfc) >> 22) & GENMASK(4, 0))
-> > +             ;
-> > +}
-> > +
-> > +static u8 meson_nfc_nand_read_byte(struct mtd_info *mtd)
-> > +{
-> > +     struct nand_chip *nand = mtd_to_nand(mtd);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +
-> > +     writel(NFC_CMD_MAKE_DRD(nfc->param.chip_select, 0), nfc->reg_base
-> + NFC_REG_CMD);
-> > +
-> > +     meson_nfc_cmd_idle(nfc, NAND_TWB_TIME_CYCLE);
-> > +     meson_nfc_cmd_idle(nfc, 0);
-> > +     meson_nfc_cmd_idle(nfc, 0);
-> > +
-> > +     meson_nfc_wait_cmd_fifo(nfc);
-> > +
-> > +     return readl(nfc->reg_base + NFC_REG_BUF);
-> > +}
-> > +
-> > +static void meson_nfc_nand_write_byte(struct mtd_info *mtd, u8 val)
-> > +{
-> > +     struct nand_chip *nand = mtd_to_nand(mtd);
-> > +     struct meson_nfc *nfc = nand_get_controller_data(nand);
-> > +
-> > +     meson_nfc_cmd_idle(nfc, NAND_TWB_TIME_CYCLE);
-> > +
-> > +     writel(NFC_CMD_MAKE_DWR(nfc->param.chip_select, val),
-> nfc->reg_base + NFC_REG_CMD);
-> > +
-> > +     meson_nfc_cmd_idle(nfc, NAND_TWB_TIME_CYCLE);
-> > +     meson_nfc_cmd_idle(nfc, 0);
-> > +     meson_nfc_cmd_idle(nfc, 0);
-> > +
-> > +     meson_nfc_wait_cmd_fifo(nfc);
-> > +}
-> > +
-> > +static int meson_nfc_dev_ready(struct mtd_info *mtd)
-> > +{
-> > +     struct nand_chip *chip = mtd_to_nand(mtd);
-> > +     unsigned int time_out_cnt = 0;
-> > +
-> > +     chip->select_chip(mtd, 0);
-> > +
-> > +     chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
-> > +
-> > +     do {
-> > +             int status;
-> > +
-> > +             status = (int)chip->read_byte(mtd);
-> > +             if (status & NAND_STATUS_READY)
-> > +                     break;
-> > +     } while (time_out_cnt++ < NFC_DEV_READY_TICK_MAX);
-> > +
-> > +     return time_out_cnt != NFC_DEV_READY_TICK_MAX;
-> > +}
-> > +
-> > +static int meson_chip_buffer_init(struct nand_chip *nand)
-> > +{
-> > +     const struct mtd_info *mtd = nand_to_mtd(nand);
-> > +     struct meson_nfc_nand_chip *meson_chip = to_meson_nand(nand);
-> > +     u32 page_bytes, info_bytes, nsectors;
-> > +     unsigned long tmp_addr;
-> > +
-> > +     nsectors = mtd->writesize / nand->ecc.size;
-> > +
-> > +     page_bytes =  mtd->writesize + mtd->oobsize;
-> > +     info_bytes = nsectors * PER_INFO_BYTE;
-> > +
-> > +     meson_chip->data_buf = dma_alloc_coherent(page_bytes, &tmp_addr);
-> > +     if (!meson_chip->data_buf)
-> > +             return -ENOMEM;
-> > +
-> > +     meson_chip->info_buf = dma_alloc_coherent(info_bytes, &tmp_addr);
-> > +     if (!meson_chip->info_buf) {
-> > +             dma_free_coherent(meson_chip->data_buf);
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const int axg_stepinfo_strengths[] = { 8 };
-> > +static const struct nand_ecc_step_info axg_stepinfo_1024 = {
-> > +     .stepsize = 1024,
-> > +     .strengths = axg_stepinfo_strengths,
-> > +     .nstrengths = ARRAY_SIZE(axg_stepinfo_strengths)
-> > +};
-> > +
-> > +static const struct nand_ecc_step_info axg_stepinfo_512 = {
-> > +     .stepsize = 512,
-> > +     .strengths = axg_stepinfo_strengths,
-> > +     .nstrengths = ARRAY_SIZE(axg_stepinfo_strengths)
-> > +};
-> > +
-> > +static const struct nand_ecc_step_info axg_stepinfo[] = {
-> axg_stepinfo_1024, axg_stepinfo_512 };
-> > +
-> > +static const struct nand_ecc_caps meson_axg_ecc_caps = {
-> > +     .stepinfos = axg_stepinfo,
-> > +     .nstepinfos = ARRAY_SIZE(axg_stepinfo),
-> > +     .calc_ecc_bytes = meson_nand_calc_ecc_bytes,
-> > +};
-> > +
-> > +/*
-> > + * OOB layout:
-> > + *
-> > + * For ECC with 512 bytes step size:
-> > + * 0x00: AA AA BB BB BB BB BB BB BB BB BB BB BB BB BB BB
-> > + * 0x10: AA AA CC CC CC CC CC CC CC CC CC CC CC CC CC CC
-> > + * 0x20:
-> > + * 0x30:
-> > + *
-> > + * For ECC with 1024 bytes step size:
-> > + * 0x00: AA AA BB BB BB BB BB BB BB BB BB BB BB BB BB BB
-> > + * 0x10: AA AA CC CC CC CC CC CC CC CC CC CC CC CC CC CC
-> > + * 0x20: AA AA DD DD DD DD DD DD DD DD DD DD DD DD DD DD
-> > + * 0x30: AA AA EE EE EE EE EE EE EE EE EE EE EE EE EE EE
-> > + *
-> > + * AA - user bytes.
-> > + * BB, CC, DD, EE - ECC code bytes for each step.
-> > + */
-> > +static struct nand_ecclayout nand_oob;
-> > +
-> > +static void meson_nfc_init_nand_oob(struct nand_chip *nand)
-> > +{
-> > +     int section_size = 2 + nand->ecc.bytes;
-> > +     int i;
-> > +     int k;
-> > +
-> > +     nand_oob.eccbytes = nand->ecc.steps * nand->ecc.bytes;
-> > +     k = 0;
-> > +
-> > +     for (i = 0; i < nand->ecc.steps; i++) {
-> > +             int j;
-> > +
-> > +             for (j = 0; j < nand->ecc.bytes; j++)
-> > +                     nand_oob.eccpos[k++] = (i * section_size) + 2 + j;
-> > +
-> > +             nand_oob.oobfree[i].offset = (i * section_size);
-> > +             nand_oob.oobfree[i].length = 2;
-> > +     }
-> > +
-> > +     nand_oob.oobavail = 2 * nand->ecc.steps;
-> > +     nand->ecc.layout = &nand_oob;
-> > +}
-> > +
-> > +static int meson_nfc_init_ecc(struct nand_chip *nand, ofnode node)
-> > +{
-> > +     const struct mtd_info *mtd = nand_to_mtd(nand);
-> > +     int ret;
-> > +     int i;
-> > +
-> > +     ret = nand_check_ecc_caps(nand, &meson_axg_ecc_caps, mtd->oobsize
-> - 2);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(meson_ecc); i++) {
-> > +             if (meson_ecc[i].strength == nand->ecc.strength &&
-> > +                 meson_ecc[i].size == nand->ecc.size) {
-> > +                     struct meson_nfc_nand_chip *meson_chip =
-> to_meson_nand(nand);
-> > +
-> > +                     nand->ecc.steps = mtd->writesize / nand->ecc.size;
-> > +                     meson_chip->bch_mode = meson_ecc[i].bch;
-> > +
-> > +                     meson_nfc_init_nand_oob(nand);
-> > +
-> > +                     return 0;
-> > +             }
-> > +     }
-> > +
-> > +     return -EINVAL;
-> > +}
-> > +
-> > +static int meson_nfc_nand_chip_init(struct udevice *dev, struct
-> meson_nfc *nfc,
-> > +                                 ofnode node)
-> > +{
-> > +     struct meson_nfc_nand_chip *meson_chip;
-> > +     struct nand_chip *nand;
-> > +     struct mtd_info *mtd;
-> > +     u32 cs[MAX_CE_NUM];
-> > +     u32 nsels;
-> > +     int ret;
-> > +     int i;
-> > +
-> > +     if (!ofnode_get_property(node, "reg", &nsels)) {
-> > +             dev_err(dev, "\"reg\" property is not found\n");
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     nsels /= sizeof(u32);
-> > +     if (nsels >= MAX_CE_NUM) {
-> > +             dev_err(dev, "invalid size of CS array, max is %d\n",
-> > +                     MAX_CE_NUM);
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = ofnode_read_u32_array(node, "reg", cs, nsels);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "failed to read \"reg\" property\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     for (i = 0; i < nsels; i++) {
-> > +             if (test_and_set_bit(cs[i], &nfc->assigned_cs)) {
-> > +                     dev_err(dev, "CS %d already assigned\n", cs[i]);
-> > +                     return -EINVAL;
-> > +             }
-> > +     }
-> > +
-> > +     meson_chip = malloc(sizeof(*meson_chip) + nsels *
-> sizeof(meson_chip->sels[0]));
-> > +     if (!meson_chip) {
-> > +             dev_err(dev, "failed to allocate memory for chip\n");
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     meson_chip->nsels = nsels;
-> > +     nand = &meson_chip->nand;
-> > +
-> > +     nand->flash_node = node;
-> > +     nand_set_controller_data(nand, nfc);
-> > +     /* Set the driver entry points for MTD */
-> > +     nand->cmdfunc = meson_nfc_nand_cmd_function;
-> > +     nand->cmd_ctrl = meson_nfc_cmd_ctrl;
-> > +     nand->select_chip = meson_nfc_nand_select_chip;
-> > +     nand->read_byte = meson_nfc_nand_read_byte;
-> > +     nand->write_byte = meson_nfc_nand_write_byte;
-> > +     nand->dev_ready = meson_nfc_dev_ready;
-> > +
-> > +     /* Buffer read/write routines */
-> > +     nand->read_buf = meson_nfc_read_buf;
-> > +     nand->write_buf = meson_nfc_write_buf;
-> > +     nand->options |= NAND_NO_SUBPAGE_WRITE;
-> > +
-> > +     nand->ecc.mode = NAND_ECC_HW;
-> > +     nand->ecc.hwctl = NULL;
-> > +     nand->ecc.read_page = meson_nfc_read_page_hwecc;
-> > +     nand->ecc.write_page = meson_nfc_write_page_hwecc;
-> > +     nand->ecc.read_page_raw = meson_nfc_read_page_raw;
-> > +     nand->ecc.write_page_raw = meson_nfc_write_page_raw;
-> > +
-> > +     nand->ecc.read_oob = meson_nfc_read_oob;
-> > +     nand->ecc.write_oob = meson_nfc_write_oob;
-> > +     nand->ecc.read_oob_raw = meson_nfc_read_oob_raw;
-> > +     nand->ecc.write_oob_raw = meson_nfc_write_oob_raw;
-> > +
-> > +     nand->ecc.algo = NAND_ECC_BCH;
-> > +
-> > +     mtd = nand_to_mtd(nand);
-> > +
-> > +     ret = nand_scan_ident(mtd, 1, NULL);
-> > +     if (ret) {
-> > +             dev_err(dev, "'nand_scan_ident()' failed: %d\n", ret);
-> > +             goto err_chip_free;
-> > +     }
-> > +
-> > +     ret = meson_nfc_init_ecc(nand, node);
-> > +     if (ret) {
-> > +             dev_err(dev, "failed to init ECC settings: %d\n", ret);
-> > +             goto err_chip_free;
-> > +     }
-> > +
-> > +     ret = meson_chip_buffer_init(nand);
-> > +     if (ret) {
-> > +             dev_err(dev, "failed to init DMA buffers: %d\n", ret);
-> > +             goto err_chip_free;
-> > +     }
-> > +
-> > +     /* 'nand_scan_tail()' needs ECC parameters to be already
-> > +      * set and correct.
-> > +      */
-> > +     ret = nand_scan_tail(mtd);
-> > +     if (ret) {
-> > +             dev_err(dev, "'nand_scan_tail()' failed: %d\n", ret);
-> > +             goto err_chip_buf_free;
-> > +     }
-> > +
-> > +     ret = nand_register(0, mtd);
-> > +     if (ret) {
-> > +             dev_err(dev, "'nand_register()' failed: %d\n", ret);
-> > +             goto err_chip_buf_free;
-> > +     }
-> > +
-> > +     list_add_tail(&meson_chip->node, &nfc->chips);
-> > +
-> > +     return 0;
-> > +
-> > +err_chip_buf_free:
-> > +     dma_free_coherent(meson_chip->info_buf);
-> > +     dma_free_coherent(meson_chip->data_buf);
-> > +
-> > +err_chip_free:
-> > +     free(meson_chip);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int meson_nfc_nand_chips_init(struct udevice *dev,
-> > +                                  struct meson_nfc *nfc)
-> > +{
-> > +     ofnode parent = dev_ofnode(dev);
-> > +     ofnode node;
-> > +
-> > +     ofnode_for_each_subnode(node, parent) {
-> > +             int ret = meson_nfc_nand_chip_init(dev, nfc, node);
-> > +
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void meson_nfc_clk_init(struct meson_nfc *nfc)
-> > +{
-> > +     u32 bus_cycle = NFC_DEFAULT_BUS_CYCLE;
-> > +     u32 bus_timing = NFC_DEFAULT_BUS_TIMING;
-> > +     u32 bus_cfg_val;
-> > +
-> > +     writel(CLK_ALWAYS_ON_NAND | CLK_SELECT_NAND | CLK_ENABLE_VALUE,
-> nfc->reg_clk);
-> > +     writel(0, nfc->reg_base + NFC_REG_CFG);
-> > +
-> > +     bus_cfg_val = (((bus_cycle - 1) & 31) | ((bus_timing & 31) << 5));
-> > +     writel(bus_cfg_val, nfc->reg_base + NFC_REG_CFG);
-> > +     writel(BIT(31), nfc->reg_base + NFC_REG_CMD);
-> > +}
-> > +
-> > +static int meson_probe(struct udevice *dev)
-> > +{
-> > +     struct meson_nfc *nfc = dev_get_priv(dev);
-> > +     fdt_addr_t addr;
-> > +     int ret;
-> > +
-> > +     addr = dev_read_addr(dev);
-> > +     if (addr == FDT_ADDR_T_NONE) {
-> > +             dev_err(dev, "base register address not found\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     nfc->reg_base = (void *)addr;
-> > +
-> > +     addr = dev_read_addr_index(dev, 1);
-> > +     if (addr == FDT_ADDR_T_NONE) {
-> > +             dev_err(dev, "clk register address not found\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     nfc->reg_clk = (void *)addr;
-> > +     nfc->dev = dev;
-> > +
-> > +     meson_nfc_clk_init(nfc);
-> > +
-> > +     ret = meson_nfc_nand_chips_init(dev, nfc);
-> > +     if (ret) {
-> > +             dev_err(nfc->dev, "failed to init chips\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct udevice_id meson_nand_dt_ids[] = {
-> > +     {.compatible = "amlogic,meson-axg-nfc",},
-> > +     { /* sentinel */ }
-> > +};
-> > +
-> > +U_BOOT_DRIVER(meson_nand) = {
-> > +     .name = "meson_nand",
-> > +     .id = UCLASS_MTD,
-> > +     .of_match = meson_nand_dt_ids,
-> > +     .probe = meson_probe,
-> > +     .priv_auto = sizeof(struct meson_nfc),
-> > +};
-> > +
-> > +void board_nand_init(void)
-> > +{
-> > +     struct udevice *dev;
-> > +     int ret;
-> > +
-> > +     ret = uclass_get_device_by_driver(UCLASS_MTD,
-> > +                                       DM_DRIVER_GET(meson_nand), &dev);
-> > +
-> > +     if (ret && ret != -ENODEV)
-> > +             pr_err("Failed to initialize: %d\n", ret);
-> > +}
->
 
