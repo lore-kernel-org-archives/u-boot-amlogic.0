@@ -2,72 +2,64 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECE4C4332F
-	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 14:03:21 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web11.2187.1702389800051924965
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F59CC4332F
+	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 14:03:31 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web10.2305.1702389804128065376
  for <u-boot-amlogic@groups.io>;
- Tue, 12 Dec 2023 06:03:20 -0800
+ Tue, 12 Dec 2023 06:03:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=nJjMR5lU;
- spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40c339d2b88so43285505e9.3
-        for <u-boot-amlogic@groups.io>; Tue, 12 Dec 2023 06:03:19 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ZTMJqvXE;
+ spf=pass (domain: linaro.org, ip: 209.85.221.41, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-336121f93e3so1858377f8f.0
+        for <u-boot-amlogic@groups.io>; Tue, 12 Dec 2023 06:03:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702389798; x=1702994598; darn=groups.io;
+        d=linaro.org; s=google; t=1702389802; x=1702994602; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=i5XvVGdA0q6db+uTpkKx1sq8IbJLw/bQh8rsthK+eMU=;
-        b=nJjMR5lUWx4Bht4nmCZoE72FdmWxzSRVIMhPJi+wxUcPIymY8M9IOHzN2V5/d+VuLG
-         0DSeEAxZB/g31z8+uKGpOjZE9jXF1wMt/Ntdj7QEzsVfHZVNCfJE28bQelr73kczbdXJ
-         fiVWj4JBw2uwmyom3CEYiKBsBuw6XvxYehU8clFw5aE746R0QTZIYUK14cwotxWlhK2+
-         AhhsQte6OQLoE9B1kd4p8tIdh6U683zfdXNn5bKlaJqf88AI74aplbYc1ey8BIB+tRBN
-         ZSnx2ZalMilmNegdeqwwCVHeq5+luTR2UdsyzlnXpLMtD71tSP+XR1xvRIOXq5y9iCGJ
-         sEDA==
+        bh=w5wrypY0Fao/rFN36xFxRLeHIuKKTfCkF0Dt4zGRz8I=;
+        b=ZTMJqvXEOVC0baGEcfTreO1Rhg7tVSII+X1eNU3D1UYKDkxMdmbB4luRgXA2oTa8Cp
+         7tIDUST+/WGR5HAKHnrll5oXdrKEV0hu3Wq3jH1JphMRrDuKSzLBocnxXYaK58EebJXh
+         6UwatiP8XNn+tXBZ8Y+awOA4EkATrxOv28b58cWh+mr7dpVtsJCw84n6GYvjm98KEI2e
+         AI5DSDP/HRlxhIq/oZpOn1PLW4Yz6F8NLgPTRFKPo8pQL9O2VB9gkjpq19XxFM2Lv7oZ
+         SCuaWmuavZp6lbqQmxffisG+wycS00zFbMPVXnvMTN68aeW3y4XGXruGPpD8IqBwjgfa
+         4T7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702389798; x=1702994598;
+        d=1e100.net; s=20230601; t=1702389802; x=1702994602;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:cc:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=i5XvVGdA0q6db+uTpkKx1sq8IbJLw/bQh8rsthK+eMU=;
-        b=SoYjIwzjS++vFI/Q4NwGA0yaTuguCdN3zX+3E2cfG40SP04NPkG9rsCnPy5E2Kl4/4
-         JVnJ0RC9QKfPPR72vIg98gEdSru3jZxvJ+CpVeAxiTFerFCI3UVAYi/L6QTIgTTSgKvU
-         Tdna4dBXknkdqQX+29wJRCA9TB60ednyngyFN+LGhDxEwMAal/20G0ZBWj68ZQWDZhvE
-         HwwtBJtz9vH6D8qae9LivWEY8qYXuyaLt0NFXybwB3zeNefw+gxkWKjZvtYaAx9KHHYh
-         x+8xDwzKUNugtlpkLVjhWdkB78qPoExBKHVOIcTwIC1lED9AL0iJ7T4rHG3xDqjoTyeJ
-         7zTw==
-X-Gm-Message-State: AOJu0Yye7Ex//KIa5UiJEGBMFDPxWA6jPrafNMgU5D6nPwzykExS/eCE
-	4Q1F9hWhnBav6Ql9o1hFjbTiLQ==
-X-Google-Smtp-Source: AGHT+IHzUgR6f94Smv0KuL8FdQ43huuJ10eLUCcdRTZMQTNffs24LEPyFVQT1ZndLotECok39JHa9Q==
-X-Received: by 2002:a05:600c:4509:b0:40c:2518:687c with SMTP id t9-20020a05600c450900b0040c2518687cmr3178063wmo.61.1702389798335;
-        Tue, 12 Dec 2023 06:03:18 -0800 (PST)
+        bh=w5wrypY0Fao/rFN36xFxRLeHIuKKTfCkF0Dt4zGRz8I=;
+        b=wWo1KXVpAxInjnxh6uWffGc7z8XxnmUGsue2JAUIWpZETYS8Z788er3/IouI6Ecl9A
+         P0GKlQOA0UfIHT4yi5r/HqcqeXLfLlqjSCibfl6tBidy7+C/eJg3V7jjmcRA3+yywBX2
+         sWZnaZRhnD4E2BEcbozCHC+FuHQiS+rn0Q8kD64qY7wECuQQx1Z4qYB1tS/N9mXfwHCP
+         sFh1X8cVmhaFNkm6xNvzWJYwaPYpdKGG5BIEOmdtAWwW3wvU5u4IISAMAo7QAAP9AQYs
+         bf7xD5BAaghXMHZR2EkFzy3zJObPGkJdNcoPsHmm+Bnhuc7wDdkQImd1PWS9BIAwIOnm
+         cy4w==
+X-Gm-Message-State: AOJu0Yy08W1Q8bUGBd4xyOw9S3aLMG+27g3d4auUDIeLNnwI/wM2poP4
+	ctdtnyilcFmrU4ELwm/4zJTQejYdlVyfkd/XzXY5vgHR
+X-Google-Smtp-Source: AGHT+IGKhVNlpXYbjjaenxbHT3i4NBylkVLW356xM+DqvbFlnSBtG1Kz/NxHXTpEIPQGooS+AwXVDQ==
+X-Received: by 2002:adf:fb49:0:b0:333:2fd7:95f4 with SMTP id c9-20020adffb49000000b003332fd795f4mr3778018wrs.47.1702389802506;
+        Tue, 12 Dec 2023 06:03:22 -0800 (PST)
 Received: from ?IPV6:2a01:e0a:982:cbb0:5894:fa62:26b4:bf82? ([2a01:e0a:982:cbb0:5894:fa62:26b4:bf82])
-        by smtp.gmail.com with ESMTPSA id q12-20020a5d574c000000b003363654301esm193942wrw.98.2023.12.12.06.03.16
+        by smtp.gmail.com with ESMTPSA id q12-20020a5d574c000000b003363654301esm193942wrw.98.2023.12.12.06.03.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 06:03:17 -0800 (PST)
-Message-ID: <88960dfc-441f-49fb-bd36-ee32e754b003@linaro.org>
-Date: Tue, 12 Dec 2023 15:03:16 +0100
+        Tue, 12 Dec 2023 06:03:21 -0800 (PST)
+Message-ID: <a5cbd4fe-dd24-40ae-a61c-c2af27d5e0ee@linaro.org>
+Date: Tue, 12 Dec 2023 15:03:21 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v7 0/8] clk: Switch from soc_clk_dump to clk_ops function
+Subject: Re: [PATCH v1] arm: dts: meson: add NAND controller node for AXG
 Content-Language: en-US, fr
-To: Igor Prusov <ivprusov@sberdevices.ru>, u-boot@lists.denx.de,
- Michal Simek <michal.simek@amd.com>,
- Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
- Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>,
- Ryan Chen <ryan_chen@aspeedtech.com>,
- Chia-Wei Wang <chiawei_wang@aspeedtech.com>, Stefan Roese <sr@denx.de>,
- Patrick Delaunay <patrick.delaunay@foss.st.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: prusovigor@gmail.com, kernel@sberdevices.ru,
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
- u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com
-References: <20231109105516.24892-1-ivprusov@sberdevices.ru>
+To: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, kernel@sberdevices.ru,
+ oxffffaa@gmail.com
+References: <20231130122712.189700-1-avkrasnov@salutedevices.com>
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
  GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
@@ -93,80 +85,82 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro Developer Services
-In-Reply-To: <20231109105516.24892-1-ivprusov@sberdevices.ru>
+In-Reply-To: <20231130122712.189700-1-avkrasnov@salutedevices.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 12 Dec 2023 14:03:21 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1908
+ <u-boot-amlogic@groups.io>; Tue, 12 Dec 2023 14:03:31 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1909
 
-Hi Igor, Sean,
+Hi,
 
-On 09/11/2023 11:55, Igor Prusov wrote:
-> Currently clock providers may override default implementation of
-> soc_clk_dump function to replace clk dump command output. This causes
-> confusing behaviour when u-boot is built with one of such drivers
-> enabled but still has clocks defined using CCF. For example, enabling
-> CMD_CLK and using clk dump on sandbox target will not show CCF clocks
-> because k210 driver overrides common soc_clk_dump.
+On 30/11/2023 13:27, Arseniy Krasnov wrote:
 
-What's the state of this serie ?
+Can you add a reference to the Linux patches that you submitted so
+we know it will be safe to sync the DT from Linux when they are merged ?
 
 Thanks,
 Neil
 
+> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> ---
+>   arch/arm/dts/meson-axg.dtsi | 35 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 35 insertions(+)
 > 
-> Changelog:
->   v1 -> v2:
->   - Add missing static to dump functions
-> 
->   v2 -> v3:
->   - Make soc_clk_dump in cmd/clk.c static instead of removing __weak
-> 
->   v3 -> v4:
->   - Rebase and refactor dump for new Amlogic A1 clock controller driver
-> 
->   v4 -> v5:
->   - Add docs for dump() function in clk_ops
->   - Print driver and device names before calling corresponding dump()
-> 
->   v5 -> v6:
->   - dump() return type changed to void
->   - meson_clk_dump() and helper functions moved under CONFIG_CMD_CLK to
->     fix unused-function diagnostic
-> 
-> v6 -> v7:
->   - fix return type of k210_clk_dump()
->   - fix clk_ops dump() docs since it returns void now
-> 
-> Igor Prusov (8):
->    clk: zynq: Move soc_clk_dump to Zynq clock driver
->    clk: ast2600: Move soc_clk_dump function
->    clk: k210: Move soc_clk_dump function
->    clk: amlogic: Move driver and ops structs
->    clk: Add dump operation to clk_ops
->    cmd: clk: Use dump function from clk_ops
->    clk: treewide: switch to clock dump from clk_ops
->    cmd: clk: Make soc_clk_dump static
-> 
->   arch/arm/mach-zynq/clk.c               |  57 --------------
->   arch/mips/mach-pic32/cpu.c             |  23 ------
->   cmd/clk.c                              |  13 +++-
->   drivers/clk/aspeed/clk_ast2600.c       |  83 ++++++++++----------
->   drivers/clk/clk_k210.c                 | 104 ++++++++++++-------------
->   drivers/clk/clk_pic32.c                |  37 +++++++++
->   drivers/clk/clk_versal.c               |   9 ++-
->   drivers/clk/clk_zynq.c                 |  52 +++++++++++++
->   drivers/clk/clk_zynqmp.c               |  22 +++---
->   drivers/clk/imx/clk-imx8.c             |  13 +---
->   drivers/clk/meson/a1.c                 |  58 ++++++--------
->   drivers/clk/mvebu/armada-37xx-periph.c |  20 +++--
->   drivers/clk/stm32/clk-stm32mp1.c       |  31 ++------
->   include/clk-uclass.h                   |  13 ++++
->   include/clk.h                          |   2 -
->   15 files changed, 269 insertions(+), 268 deletions(-)
-> 
+> diff --git a/arch/arm/dts/meson-axg.dtsi b/arch/arm/dts/meson-axg.dtsi
+> index 3f5254eeb4..c01ace3ff1 100644
+> --- a/arch/arm/dts/meson-axg.dtsi
+> +++ b/arch/arm/dts/meson-axg.dtsi
+> @@ -430,6 +430,27 @@
+>   					};
+>   				};
+>   
+> +				nand_all_pins: nand_all_pins {
+> +					mux {
+> +						groups = "emmc_nand_d0",
+> +							 "emmc_nand_d1",
+> +							 "emmc_nand_d2",
+> +							 "emmc_nand_d3",
+> +							 "emmc_nand_d4",
+> +							 "emmc_nand_d5",
+> +							 "emmc_nand_d6",
+> +							 "emmc_nand_d7",
+> +							 "nand_ce0",
+> +							 "nand_ale",
+> +							 "nand_cle",
+> +							 "nand_wen_clk",
+> +							 "nand_ren_wr";
+> +						function = "nand";
+> +						input-enable;
+> +						bias-pull-up;
+> +					};
+> +				};
+> +
+>   				emmc_ds_pins: emmc_ds {
+>   					mux {
+>   						groups = "emmc_ds";
+> @@ -1906,6 +1927,20 @@
+>   				resets = <&reset RESET_SD_EMMC_C>;
+>   			};
+>   
+> +			nfc: nand-controller@7800 {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				pinctrl-0 = <&nand_all_pins>;
+> +				pinctrl-names = "default";
+> +				compatible = "amlogic,meson-axg-nfc";
+> +				status = "okay";
+> +				reg = <0x0 0x7800 0x0 0x100>,
+> +				      <0x0 0x7000 0x0 0x800>;
+> +				clocks = <&clkc CLKID_SD_EMMC_C>,
+> +					 <&clkc CLKID_FCLK_DIV2>;
+> +				clock-names = "core", "device";
+> +			};
+> +
+>   			usb2_phy1: phy@9020 {
+>   				compatible = "amlogic,meson-gxl-usb2-phy";
+>   				#phy-cells = <0>;
 
 
