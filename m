@@ -2,219 +2,865 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41E4C4332F
-	for <webhook@archiver.kernel.org>; Tue, 12 Dec 2023 15:10:22 +0000 (UTC)
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web10.2608.1702390533675091389
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F0DC4167B
+	for <webhook@archiver.kernel.org>; Wed, 13 Dec 2023 09:30:31 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.32207.1702459823096237221
  for <u-boot-amlogic@groups.io>;
- Tue, 12 Dec 2023 06:15:35 -0800
+ Wed, 13 Dec 2023 01:30:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=Ia4OZW42;
- spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: avkrasnov@salutedevices.com)
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 3672612002B;
-	Tue, 12 Dec 2023 17:15:30 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 3672612002B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1702390530;
-	bh=UDwwoHXgv6thGRGZl5LXSoFBi5VVlP3CRqXHXYagGLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=Ia4OZW42/ButttE+d+esNEj+UC1gFsRfNywEHNxjF/0zvem58V5ANGXzVNoutWC0Q
-	 bSpRs56osLPUod4Cz7n9L2Es3Q+n86xRFMD9ed1y1XgF/qPE4ZciLas/IvsdY/eG5L
-	 YEFiKrx5qp3S2Uh2M6+ijvaIYSbd3xrhDes1Tzj/W92bl+ocb4VAA+ZhkeusrXSE5i
-	 yiqG3ra3xzrIeouZsYZI4khJ+9jV2aWvUbTLKWgo+e5YbDS3am7lv6E8mz/X8TgTsq
-	 yp6ED9GLgbY2yMHtA6q3SYE7dB8qr1kL98kHjQSevqeJHxDtfj7RcKkgXIEZ+epobC
-	 SQ2PkytslrUIA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 12 Dec 2023 17:15:29 +0300 (MSK)
-Received: from [192.168.0.106] (100.64.160.123) by
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 12 Dec 2023 17:15:28 +0300
-Message-ID: <ebec07c3-cec3-bf14-c84d-91f69ca8c671@salutedevices.com>
-Date: Tue, 12 Dec 2023 17:07:09 +0300
+ dkim=pass header.i=@linaro.org header.s=google header.b=R5GCI6Bx;
+ spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3331752d2b9so4415988f8f.3
+        for <u-boot-amlogic@groups.io>; Wed, 13 Dec 2023 01:30:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702459821; x=1703064621; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X7ZyhELYFjRAkyE0+so9g3JAxwjw/1vuAnF8gU25rk8=;
+        b=R5GCI6Bxg0HPqjj72rkJinQUOM3IXHx0R4wSm+xSJwWwHDpvCoLURGX/GukABTE/P3
+         0N64pQ6i90FgwCaQLk6bYJ2YO+qElKzacOXoGQjm2GHVEo+lETv9r6wKiwacZu7o/Of3
+         QxCfvD+sM9vEn20g66SGR22co9ZVGqA/0pykZ7akDnDVwlJToQWXsARxg2u5c3jMmcJS
+         d2cgDDP0aQVtsq87JcWRDIM5sM061JqCO3t/V3xLpH8DxGov6kVpruZgEsjrcK0MupxW
+         pPjvWOTcNOjN6RkuZI3+KAUCOxXphVFhnlmNuzO99sXNGzYYfy/QX8FHiQo0TjJtN9aL
+         UEsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702459821; x=1703064621;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X7ZyhELYFjRAkyE0+so9g3JAxwjw/1vuAnF8gU25rk8=;
+        b=KV7pHlP+gSlTDWaa88toDi5Tsd7CDnDGcoy5JMgPVGNY3eM6CUfn7/9ts/3cm9H5Ef
+         +o70r3kFsT9q/rXS/1ObcgGlS8DCPc3EGcy6IULeTqbbwplAgbF1uM9lHLQO0XkgpGaC
+         jkJYJejSN6SZpGXofHPEMZTrUoY9ZMxfYRmCQ4rAxHSMXUso5Db1OUZPCzZBw/YxVj6l
+         877mnb6isSlkb0UYnqUI8f16dZLxAyKdCXboAoQAfg5V8n1LTFMv6VVkoOm/CS95As+0
+         ZGjWrAtKDDGAgKQqv47m7KVTyTDCqOqERKwpRXWAMtcrQ9dfai7dnDj4GF836ynsmUne
+         NKjA==
+X-Gm-Message-State: AOJu0YwbE1Xd7d6VRPZX2NDE1NqNVBIHIAgCGkKfm0sDoYBN/+u4TRlY
+	1xFzCglQ6sPHA+/1vT8CC2m8HA==
+X-Google-Smtp-Source: AGHT+IFGa0EXNAjXFsDJYpOVMzB7nrS2707+Y7HvC1QY/jSrtXquiScGWAW84WhOq5Ean97fVKgrwg==
+X-Received: by 2002:adf:fc52:0:b0:333:47eb:a278 with SMTP id e18-20020adffc52000000b0033347eba278mr3855102wrs.80.1702459821434;
+        Wed, 13 Dec 2023 01:30:21 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:e0a:982:cbb0:596e:6d4f:fc0a:ec65])
+        by smtp.gmail.com with ESMTPSA id h12-20020a5d504c000000b003333521a1cesm678817wrt.57.2023.12.13.01.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Dec 2023 01:30:21 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Wed, 13 Dec 2023 10:30:13 +0100
+Subject: [PATCH v2 2/2] ARM: dts: sync Amlogic GX DT to Linux v6.4
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v1] arm: dts: meson: add NAND controller node for AXG
-To: <neil.armstrong@linaro.org>
-CC: <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
-	<kernel@sberdevices.ru>, <oxffffaa@gmail.com>
-References: <20231130122712.189700-1-avkrasnov@salutedevices.com>
- <a5cbd4fe-dd24-40ae-a61c-c2af27d5e0ee@linaro.org>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-In-Reply-To: <a5cbd4fe-dd24-40ae-a61c-c2af27d5e0ee@linaro.org>
-X-Originating-IP: [100.64.160.123]
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 182057 [Dec 12 2023]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;lore.kernel.org:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2023/12/12 08:32:00
-X-KSMG-LinksScanning: Clean, bases: 2023/12/12 08:10:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2023/12/12 06:12:00 #22665285
-X-KSMG-AntiVirus-Status: Clean, skipped
-Content-Language: en-US
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231213-u-boot-gxl-mdio-mux-v2-2-c56bb02a75ea@linaro.org>
+References: <20231213-u-boot-gxl-mdio-mux-v2-0-c56bb02a75ea@linaro.org>
+In-Reply-To: <20231213-u-boot-gxl-mdio-mux-v2-0-c56bb02a75ea@linaro.org>
+To: Joe Hershberger <joe.hershberger@ni.com>, 
+ Ramon Fried <rfried.dev@gmail.com>, Vyacheslav Bocharov <adeep@lexina.in>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=21657;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=itGySbPgwi7uhcvkFyoerS/k+1Zb3t8bGI+EVHFjMFk=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBleXmp3XFrSLMPYsgUaGDG8rwQ4cxIXJ/nqrz9Q
+ 22c3PpOkAuJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZXl5qQAKCRB33NvayMhJ
+ 0R8JEACX7jmIzgBVlMQCNfSqhR7i/nB5IhRAhhss6lo8O3RZBLu5wRg/VcDAb4qvB3gY42Um4lh
+ WSLuFpup8d+rsc8+cbWZo3E/a3EY/cybmwoTf64bcn5Ut4D+EktiZjJx8uCl4AE54gHNXkz/JC+
+ 7P471CCdC4aevrB3JLLCasq9MmExAKhG6SyfN+DSUj8XnZBVHwrG9/FdR5dvgY4YJTqeflNu3Co
+ U2x/uAX2/cwD1XuiUG5iSjtZXgxcp7X9gxidZ+LP+VS3BPrlbmAR0QXixRcp+wCMFAs6RzQ3oRN
+ 6+4I5tkmFzvtld4T8p5viJSZEwmuIKG8jQ7Doh9jiSwEZF25y72EReZRvgv/bPZYK9ePu+id6DM
+ S++nCpzFC6Hp1QpnMaFDavBUKO08D2TR/+7QLNRX+Iu5ip/0/XZMyyKSnZNpOThNrUsltrkaRr0
+ TgPMcZgd39PKQLu+OEq4hf5o4EimYRrwU82Gm5k7kZEYGltf8NHkVU3K1hOr7qxEADjwjbu3sp6
+ mX9PhwuNZbqkz8YfZR2sSMFbdoZ8T1JJYP4uoau4o/aE7SxHJgnP1OZZQuuJ1CoUg7gmPmmFQSk
+ NAW9LFLEEnW3ucLphdFjVGEUdIa2ARjKXA5hUa7H7+cZG3a8QFaAbjeFgbkexIhwMOqKMWPHMOv
+ ORrupyhjSFe1R+g==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 12 Dec 2023 15:10:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1912
+ <u-boot-amlogic@groups.io>; Wed, 13 Dec 2023 09:30:31 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1915
 
-Hi,
+Sync Amlogic GXBB, GXL & GXM DTs from Linux v6.4, and also
+switch to GXL MDIO MUX driver to adapt to DT change,
 
-On 12.12.2023 17:03, Neil Armstrong wrote:
-> Hi,
->=20
-> On 30/11/2023 13:27, Arseniy Krasnov wrote:
->=20
-> Can you add a reference to the Linux patches that you submitted so
-> we know it will be safe to sync the DT from Linux when they are merged ?
+Most of the changes are only cosmetic or doesn't concern U-Boot,
+the most important change for U-Boot is the GXL mdio mux compatible
+switch to amlogic,gxl-mdio-mux.
 
-Sure:
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ arch/arm/dts/meson-gx-libretech-pc.dtsi            |  4 +-
+ arch/arm/dts/meson-gx.dtsi                         | 21 ++++---
+ arch/arm/dts/meson-gxbb-nanopi-k2.dts              | 13 ++++-
+ arch/arm/dts/meson-gxbb-odroidc2.dts               | 26 ++++-----
+ arch/arm/dts/meson-gxbb.dtsi                       | 18 +++++-
+ arch/arm/dts/meson-gxl-s805x-libretech-ac.dts      |  2 +-
+ .../arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts | 12 +++-
+ arch/arm/dts/meson-gxl-s905x-khadas-vim.dts        | 16 +----
+ arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts   |  3 +-
+ arch/arm/dts/meson-gxl-s905x-p212.dts              | 68 ++++++++++++++++++++++
+ arch/arm/dts/meson-gxl-s905x-p212.dtsi             | 21 ++++---
+ arch/arm/dts/meson-gxl.dtsi                        | 43 +++++++++-----
+ arch/arm/dts/meson-gxm-khadas-vim2.dts             | 15 ++---
+ arch/arm/dts/meson-gxm-wetek-core2.dts             |  2 -
+ configs/beelink-gt1-ultimate_defconfig             |  2 +-
+ configs/jethub_j80_defconfig                       |  2 +-
+ configs/khadas-vim2_defconfig                      |  2 +-
+ configs/khadas-vim_defconfig                       |  2 +-
+ configs/libretech-ac_defconfig                     |  2 +-
+ configs/libretech-cc_defconfig                     |  2 +-
+ configs/libretech-cc_v2_defconfig                  |  2 +-
+ configs/libretech-s905d-pc_defconfig               |  2 +-
+ configs/libretech-s912-pc_defconfig                |  2 +-
+ configs/p212_defconfig                             |  2 +-
+ configs/wetek-core2_defconfig                      |  2 +-
+ 25 files changed, 196 insertions(+), 90 deletions(-)
 
-https://lore.kernel.org/linux-amlogic/20230828133647.3712644-1-avkrasnov@sa=
-lutedevices.com/
-https://lore.kernel.org/linux-amlogic/170107314359.1083800.4264228970569502=
-392.b4-ty@linaro.org/T/#m30d2fd46fca4f78098be19d7ec71097f98b60d29
+diff --git a/arch/arm/dts/meson-gx-libretech-pc.dtsi b/arch/arm/dts/meson-gx-libretech-pc.dtsi
+index 2d7032f41e..4e84ab87cc 100644
+--- a/arch/arm/dts/meson-gx-libretech-pc.dtsi
++++ b/arch/arm/dts/meson-gx-libretech-pc.dtsi
+@@ -17,7 +17,7 @@
+ 		io-channel-names = "buttons";
+ 		keyup-threshold-microvolt = <1800000>;
+ 
+-		update-button {
++		button-update {
+ 			label = "update";
+ 			linux,code = <KEY_VENDOR>;
+ 			press-threshold-microvolt = <1300000>;
+@@ -416,7 +416,7 @@
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ 
+-	gd25lq128: spi-flash@0 {
++	gd25lq128: flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/arch/arm/dts/meson-gx.dtsi b/arch/arm/dts/meson-gx.dtsi
+index 6b457b2c30..11f89bfecb 100644
+--- a/arch/arm/dts/meson-gx.dtsi
++++ b/arch/arm/dts/meson-gx.dtsi
+@@ -49,6 +49,12 @@
+ 			no-map;
+ 		};
+ 
++		/* 32 MiB reserved for ARM Trusted Firmware (BL32) */
++		secmon_reserved_bl32: secmon@5300000 {
++			reg = <0x0 0x05300000 0x0 0x2000000>;
++			no-map;
++		};
++
+ 		linux,cma {
+ 			compatible = "shared-dma-pool";
+ 			reusable;
+@@ -126,6 +132,7 @@
+ 
+ 		l2: l2-cache0 {
+ 			compatible = "cache";
++			cache-level = <2>;
+ 		};
+ 	};
+ 
+@@ -226,7 +233,7 @@
+ 			reg = <0x14 0x10>;
+ 		};
+ 
+-		eth_mac: eth_mac@34 {
++		eth_mac: eth-mac@34 {
+ 			reg = <0x34 0x10>;
+ 		};
+ 
+@@ -243,7 +250,7 @@
+ 		scpi_clocks: clocks {
+ 			compatible = "arm,scpi-clocks";
+ 
+-			scpi_dvfs: scpi_clocks@0 {
++			scpi_dvfs: clocks-0 {
+ 				compatible = "arm,scpi-dvfs-clocks";
+ 				#clock-cells = <1>;
+ 				clock-indices = <0>;
+@@ -444,7 +451,7 @@
+ 
+ 			sysctrl_AO: sys-ctrl@0 {
+ 				compatible = "amlogic,meson-gx-ao-sysctrl", "simple-mfd", "syscon";
+-				reg =  <0x0 0x0 0x0 0x100>;
++				reg = <0x0 0x0 0x0 0x100>;
+ 
+ 				clkc_AO: clock-controller {
+ 					compatible = "amlogic,meson-gx-aoclkc";
+@@ -525,7 +532,7 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xc8834000 0x0 0x2000>;
+ 
+-			hwrng: rng {
++			hwrng: rng@0 {
+ 				compatible = "amlogic,meson-rng";
+ 				reg = <0x0 0x0 0x0 0x4>;
+ 			};
+@@ -596,21 +603,21 @@
+ 			sd_emmc_a: mmc@70000 {
+ 				compatible = "amlogic,meson-gx-mmc", "amlogic,meson-gxbb-mmc";
+ 				reg = <0x0 0x70000 0x0 0x800>;
+-				interrupts = <GIC_SPI 216 IRQ_TYPE_EDGE_RISING>;
++				interrupts = <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+ 
+ 			sd_emmc_b: mmc@72000 {
+ 				compatible = "amlogic,meson-gx-mmc", "amlogic,meson-gxbb-mmc";
+ 				reg = <0x0 0x72000 0x0 0x800>;
+-				interrupts = <GIC_SPI 217 IRQ_TYPE_EDGE_RISING>;
++				interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+ 
+ 			sd_emmc_c: mmc@74000 {
+ 				compatible = "amlogic,meson-gx-mmc", "amlogic,meson-gxbb-mmc";
+ 				reg = <0x0 0x74000 0x0 0x800>;
+-				interrupts = <GIC_SPI 218 IRQ_TYPE_EDGE_RISING>;
++				interrupts = <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+ 		};
+diff --git a/arch/arm/dts/meson-gxbb-nanopi-k2.dts b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+index 7273eed529..7d94160f58 100644
+--- a/arch/arm/dts/meson-gxbb-nanopi-k2.dts
++++ b/arch/arm/dts/meson-gxbb-nanopi-k2.dts
+@@ -385,9 +385,20 @@
+ 
+ /* Bluetooth on AP6212 */
+ &uart_A {
+-	status = "disabled";
++	status = "okay";
+ 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+ 	pinctrl-names = "default";
++	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&wifi_32k>;
++		clock-names = "lpo";
++		vbat-supply = <&vddio_ao3v3>;
++		vddio-supply = <&vddio_ao18>;
++		host-wakeup-gpios = <&gpio GPIOX_21 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ /* 40-pin CON1 */
+diff --git a/arch/arm/dts/meson-gxbb-odroidc2.dts b/arch/arm/dts/meson-gxbb-odroidc2.dts
+index 201596247f..01356437a0 100644
+--- a/arch/arm/dts/meson-gxbb-odroidc2.dts
++++ b/arch/arm/dts/meson-gxbb-odroidc2.dts
+@@ -250,21 +250,6 @@
+ 	};
+ };
+ 
+-&gpio_ao {
+-	/*
+-	 * WARNING: The USB Hub on the Odroid-C2 needs a reset signal
+-	 * to be turned high in order to be detected by the USB Controller
+-	 * This signal should be handled by a USB specific power sequence
+-	 * in order to reset the Hub when USB bus is powered down.
+-	 */
+-	hog-0 {
+-		gpio-hog;
+-		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
+-		output-high;
+-		line-name = "usb-hub-reset";
+-	};
+-};
+-
+ &hdmi_tx {
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+@@ -414,5 +399,16 @@
+ };
+ 
+ &usb1 {
++	dr_mode = "host";
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	status = "okay";
++
++	hub@1 {
++		/* Genesys Logic GL852G USB 2.0 hub */
++		compatible = "usb5e3,610";
++		reg = <1>;
++		vdd-supply = <&p5v0>;
++		reset-gpio = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_LOW>;
++	};
+ };
+diff --git a/arch/arm/dts/meson-gxbb.dtsi b/arch/arm/dts/meson-gxbb.dtsi
+index 7c029f552a..12ef6e81c8 100644
+--- a/arch/arm/dts/meson-gxbb.dtsi
++++ b/arch/arm/dts/meson-gxbb.dtsi
+@@ -300,8 +300,8 @@
+ };
+ 
+ &gpio_intc {
+-	compatible = "amlogic,meson-gpio-intc",
+-		     "amlogic,meson-gxbb-gpio-intc";
++	compatible = "amlogic,meson-gxbb-gpio-intc",
++		     "amlogic,meson-gpio-intc";
+ 	status = "okay";
+ };
+ 
+@@ -427,6 +427,20 @@
+ 			};
+ 		};
+ 
++		spi_idle_high_pins: spi-idle-high-pins {
++			mux {
++				groups = "spi_sclk";
++				bias-pull-up;
++			};
++		};
++
++		spi_idle_low_pins: spi-idle-low-pins {
++			mux {
++				groups = "spi_sclk";
++				bias-pull-down;
++			};
++		};
++
+ 		spi_ss0_pins: spi-ss0 {
+ 			mux {
+ 				groups = "spi_ss0";
+diff --git a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+index 2d769203f6..213a0705eb 100644
+--- a/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
++++ b/arch/arm/dts/meson-gxl-s805x-libretech-ac.dts
+@@ -298,7 +298,7 @@
+ 	pinctrl-0 = <&nor_pins>;
+ 	pinctrl-names = "default";
+ 
+-	w25q32: spi-flash@0 {
++	w25q32: flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "jedec,spi-nor";
+diff --git a/arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts b/arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts
+index 6eafb90869..a18d6d241a 100644
+--- a/arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts
++++ b/arch/arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts
+@@ -86,11 +86,11 @@
+ };
+ 
+ &efuse {
+-	bt_mac: bt_mac@6 {
++	bt_mac: bt-mac@6 {
+ 		reg = <0x6 0x6>;
+ 	};
+ 
+-	wifi_mac: wifi_mac@C {
++	wifi_mac: wifi-mac@c {
+ 		reg = <0xc 0x6>;
+ 	};
+ };
+@@ -213,6 +213,12 @@
+ 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+ 	pinctrl-names = "default";
+ 	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "realtek,rtl8822cs-bt";
++		enable-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		host-wake-gpios = <&gpio GPIOX_18 GPIO_ACTIVE_HIGH>;
++       };
+ };
+ 
+ &uart_C {
+@@ -233,7 +239,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c_b_pins>;
+ 
+-	pcf8563: pcf8563@51 {
++	pcf8563: rtc@51 {
+ 		compatible = "nxp,pcf8563";
+ 		reg = <0x51>;
+ 		status = "okay";
+diff --git a/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts b/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
+index 60feac0179..02f81839d4 100644
+--- a/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
++++ b/arch/arm/dts/meson-gxl-s905x-khadas-vim.dts
+@@ -140,7 +140,6 @@
+ 		compatible = "haoyu,hym8563";
+ 		reg = <0x51>;
+ 		#clock-cells = <0>;
+-		clock-frequency = <32768>;
+ 		clock-output-names = "xin32k";
+ 	};
+ };
+@@ -218,20 +217,7 @@
+ };
+ 
+ &sd_emmc_a {
+-	brcmf: wifi@1 {
+-		reg = <1>;
+-		compatible = "brcm,bcm4329-fmac";
+-	};
+-};
+-
+-&uart_A {
+-	bluetooth {
+-		compatible = "brcm,bcm43438-bt";
+-		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+-		max-speed = <2000000>;
+-		clocks = <&wifi32k>;
+-		clock-names = "lpo";
+-	};
++	max-frequency = <100000000>;
+ };
+ 
+ /* This is brought out on the Linux_RX (18) and Linux_TX (19) pins: */
+diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
+index 93d8f8aff7..6c4e68e0e6 100644
+--- a/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
++++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts
+@@ -284,7 +284,7 @@
+ 	pinctrl-0 = <&nor_pins>;
+ 	pinctrl-names = "default";
+ 
+-	nor_4u1: spi-flash@0 {
++	nor_4u1: flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "jedec,spi-nor";
+@@ -305,7 +305,6 @@
+ };
+ 
+ &usb2_phy0 {
+-	pinctrl-names = "default";
+ 	phy-supply = <&vcc5v>;
+ };
+ 
+diff --git a/arch/arm/dts/meson-gxl-s905x-p212.dts b/arch/arm/dts/meson-gxl-s905x-p212.dts
+index 2602940c20..9b4ea6a493 100644
+--- a/arch/arm/dts/meson-gxl-s905x-p212.dts
++++ b/arch/arm/dts/meson-gxl-s905x-p212.dts
+@@ -7,11 +7,19 @@
+ /dts-v1/;
+ 
+ #include "meson-gxl-s905x-p212.dtsi"
++#include <dt-bindings/sound/meson-aiu.h>
+ 
+ / {
+ 	compatible = "amlogic,p212", "amlogic,s905x", "amlogic,meson-gxl";
+ 	model = "Amlogic Meson GXL (S905X) P212 Development Board";
+ 
++	dio2133: analog-amplifier {
++		compatible = "simple-audio-amplifier";
++		sound-name-prefix = "AU2";
++		VCC-supply = <&hdmi_5v>;
++		enable-gpios = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	cvbs-connector {
+ 		compatible = "composite-video-connector";
+ 
+@@ -32,6 +40,66 @@
+ 			};
+ 		};
+ 	};
++
++	sound {
++		compatible = "amlogic,gx-sound-card";
++		model = "S905X-P212";
++		audio-aux-devs = <&dio2133>;
++		audio-widgets = "Line", "Lineout";
++		audio-routing = "AU2 INL", "ACODEC LOLN",
++				"AU2 INR", "ACODEC LORN",
++				"Lineout", "AU2 OUTL",
++				"Lineout", "AU2 OUTR";
++		assigned-clocks = <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>,
++				  <&clkc CLKID_MPLL2>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		dai-link-0 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
++		};
++
++		dai-link-1 {
++			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
++			dai-format = "i2s";
++			mclk-fs = <256>;
++
++			codec-0 {
++				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
++			};
++
++			codec-1 {
++				sound-dai = <&aiu AIU_ACODEC CTRL_I2S>;
++			};
++		};
++
++		dai-link-2 {
++			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
++
++			codec-0 {
++				sound-dai = <&hdmi_tx>;
++			};
++		};
++
++		dai-link-3 {
++			sound-dai = <&aiu AIU_ACODEC CTRL_OUT>;
++
++			codec-0 {
++				sound-dai = <&acodec>;
++			};
++		};
++	};
++};
++
++&acodec {
++	AVDD-supply = <&vddio_ao18>;
++	status = "okay";
++};
++
++&aiu {
++	status = "okay";
+ };
+ 
+ &cec_AO {
+diff --git a/arch/arm/dts/meson-gxl-s905x-p212.dtsi b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+index 05cb2f5e5c..a150cc0e18 100644
+--- a/arch/arm/dts/meson-gxl-s905x-p212.dtsi
++++ b/arch/arm/dts/meson-gxl-s905x-p212.dtsi
+@@ -97,6 +97,14 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
+ &saradc {
+ 	status = "okay";
+ 	vref-supply = <&vddio_ao18>;
+@@ -125,6 +133,11 @@
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_boot>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
+ };
+ 
+ /* SD card */
+@@ -165,14 +178,6 @@
+ 	vqmmc-supply = <&vddio_boot>;
+ };
+ 
+-&pwm_ef {
+-	status = "okay";
+-	pinctrl-0 = <&pwm_e_pins>;
+-	pinctrl-names = "default";
+-	clocks = <&clkc CLKID_FCLK_DIV4>;
+-	clock-names = "clkin0";
+-};
+-
+ /* This is connected to the Bluetooth module: */
+ &uart_A {
+ 	status = "okay";
+diff --git a/arch/arm/dts/meson-gxl.dtsi b/arch/arm/dts/meson-gxl.dtsi
+index c3ac531c4f..17bcfa4702 100644
+--- a/arch/arm/dts/meson-gxl.dtsi
++++ b/arch/arm/dts/meson-gxl.dtsi
+@@ -312,8 +312,8 @@
+ };
+ 
+ &gpio_intc {
+-	compatible = "amlogic,meson-gpio-intc",
+-		     "amlogic,meson-gxl-gpio-intc";
++	compatible = "amlogic,meson-gxl-gpio-intc",
++		     "amlogic,meson-gpio-intc";
+ 	status = "okay";
+ };
+ 
+@@ -429,6 +429,20 @@
+ 			};
+ 		};
+ 
++		spi_idle_high_pins: spi-idle-high-pins {
++			mux {
++				groups = "spi_sclk";
++				bias-pull-up;
++			};
++		};
++
++		spi_idle_low_pins: spi-idle-low-pins {
++			mux {
++				groups = "spi_sclk";
++				bias-pull-down;
++			};
++		};
++
+ 		spi_ss0_pins: spi-ss0 {
+ 			mux {
+ 				groups = "spi_ss0";
+@@ -759,16 +773,23 @@
+ 		};
+ 	};
+ 
+-	eth-phy-mux {
+-		compatible = "mdio-mux-mmioreg", "mdio-mux";
++	eth_phy_mux: mdio@558 {
++		reg = <0x0 0x558 0x0 0xc>;
++		compatible = "amlogic,gxl-mdio-mux";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		reg = <0x0 0x55c 0x0 0x4>;
+-		mux-mask = <0xffffffff>;
++		clocks = <&clkc CLKID_FCLK_DIV4>;
++		clock-names = "ref";
+ 		mdio-parent-bus = <&mdio0>;
+ 
+-		internal_mdio: mdio@e40908ff {
+-			reg = <0xe40908ff>;
++		external_mdio: mdio@0 {
++			reg = <0x0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		internal_mdio: mdio@1 {
++			reg = <0x1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+@@ -779,12 +800,6 @@
+ 				max-speed = <100>;
+ 			};
+ 		};
+-
+-		external_mdio: mdio@2009087f {
+-			reg = <0x2009087f>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/dts/meson-gxm-khadas-vim2.dts b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+index 18a4b7a6c5..74897a1548 100644
+--- a/arch/arm/dts/meson-gxm-khadas-vim2.dts
++++ b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+@@ -52,10 +52,11 @@
+ 		gpios = <&gpio GPIODV_14 GPIO_ACTIVE_HIGH
+ 			 &gpio GPIODV_15 GPIO_ACTIVE_HIGH>;
+ 		/* Dummy RPM values since fan is optional */
+-		gpio-fan,speed-map = <0 0
+-				      1 1
+-				      2 2
+-				      3 3>;
++		gpio-fan,speed-map =
++				<0 0>,
++				<1 1>,
++				<2 2>,
++				<3 3>;
+ 		#cooling-cells = <2>;
+ 	};
+ 
+@@ -270,7 +271,6 @@
+ 		compatible = "haoyu,hym8563";
+ 		reg = <0x51>;
+ 		#clock-cells = <0>;
+-		clock-frequency = <32768>;
+ 		clock-output-names = "xin32k";
+ 	};
+ };
+@@ -307,7 +307,8 @@
+ 	#size-cells = <0>;
+ 
+ 	bus-width = <4>;
+-	max-frequency = <60000000>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
+ 
+ 	non-removable;
+ 	disable-wp;
+@@ -373,7 +374,7 @@
+ 	pinctrl-0 = <&nor_pins>;
+ 	pinctrl-names = "default";
+ 
+-	w25q32: spi-flash@0 {
++	w25q32: flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "winbond,w25q16", "jedec,spi-nor";
+diff --git a/arch/arm/dts/meson-gxm-wetek-core2.dts b/arch/arm/dts/meson-gxm-wetek-core2.dts
+index 1e7f77f9b5..f8c40340b9 100644
+--- a/arch/arm/dts/meson-gxm-wetek-core2.dts
++++ b/arch/arm/dts/meson-gxm-wetek-core2.dts
+@@ -45,8 +45,6 @@
+ 
+ 	gpio-keys-polled {
+ 		compatible = "gpio-keys-polled";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		poll-interval = <100>;
+ 
+ 		button-power {
+diff --git a/configs/beelink-gt1-ultimate_defconfig b/configs/beelink-gt1-ultimate_defconfig
+index 1313dde92f..00fdad8544 100644
+--- a/configs/beelink-gt1-ultimate_defconfig
++++ b/configs/beelink-gt1-ultimate_defconfig
+@@ -46,7 +46,7 @@ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/jethub_j80_defconfig b/configs/jethub_j80_defconfig
+index b370e5d1d4..15e410de82 100644
+--- a/configs/jethub_j80_defconfig
++++ b/configs/jethub_j80_defconfig
+@@ -54,7 +54,7 @@ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
+index 28e9052245..59ef33723e 100644
+--- a/configs/khadas-vim2_defconfig
++++ b/configs/khadas-vim2_defconfig
+@@ -51,7 +51,7 @@ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/khadas-vim_defconfig b/configs/khadas-vim_defconfig
+index d27ab6f590..5ed7c1a408 100644
+--- a/configs/khadas-vim_defconfig
++++ b/configs/khadas-vim_defconfig
+@@ -45,7 +45,7 @@ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
+index bc17b423a2..f0ab19580c 100644
+--- a/configs/libretech-ac_defconfig
++++ b/configs/libretech-ac_defconfig
+@@ -57,7 +57,7 @@ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+index baa9b1b3db..bb1a37a0cd 100644
+--- a/configs/libretech-cc_defconfig
++++ b/configs/libretech-cc_defconfig
+@@ -44,7 +44,7 @@ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-cc_v2_defconfig b/configs/libretech-cc_v2_defconfig
+index b1c267a791..8949e240c9 100644
+--- a/configs/libretech-cc_v2_defconfig
++++ b/configs/libretech-cc_v2_defconfig
+@@ -52,7 +52,7 @@ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_PHY=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+diff --git a/configs/libretech-s905d-pc_defconfig b/configs/libretech-s905d-pc_defconfig
+index cd138d696e..a5dc3115fc 100644
+--- a/configs/libretech-s905d-pc_defconfig
++++ b/configs/libretech-s905d-pc_defconfig
+@@ -53,7 +53,7 @@ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
+index dabb4ca4ec..68f462eeff 100644
+--- a/configs/libretech-s912-pc_defconfig
++++ b/configs/libretech-s912-pc_defconfig
+@@ -52,7 +52,7 @@ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/p212_defconfig b/configs/p212_defconfig
+index b90391d9b5..6b73607d64 100644
+--- a/configs/p212_defconfig
++++ b/configs/p212_defconfig
+@@ -40,7 +40,7 @@ CONFIG_PHY_MESON_GXL=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+diff --git a/configs/wetek-core2_defconfig b/configs/wetek-core2_defconfig
+index 9bf3de9e7a..01ffb8bbd7 100644
+--- a/configs/wetek-core2_defconfig
++++ b/configs/wetek-core2_defconfig
+@@ -46,7 +46,7 @@ CONFIG_PHY_REALTEK=y
+ CONFIG_DM_MDIO=y
+ CONFIG_DM_MDIO_MUX=y
+ CONFIG_ETH_DESIGNWARE_MESON8B=y
+-CONFIG_MDIO_MUX_MMIOREG=y
++CONFIG_MDIO_MUX_MESON_GXL=y
+ CONFIG_MESON_GXL_USB_PHY=y
+ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
 
-Thanks, Arseniy
+-- 
+2.34.1
 
->=20
-> Thanks,
-> Neil
->=20
->> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
->> ---
->> =C2=A0 arch/arm/dts/meson-axg.dtsi | 35 ++++++++++++++++++++++++++++++++=
-+++
->> =C2=A0 1 file changed, 35 insertions(+)
->>
->> diff --git a/arch/arm/dts/meson-axg.dtsi b/arch/arm/dts/meson-axg.dtsi
->> index 3f5254eeb4..c01ace3ff1 100644
->> --- a/arch/arm/dts/meson-axg.dtsi
->> +++ b/arch/arm/dts/meson-axg.dtsi
->> @@ -430,6 +430,27 @@
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 nand_all_pins: nand_all_pins {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 group=
-s =3D "emmc_nand_d0",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d1",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d2",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d3",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d4",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d5",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d6",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d7",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_ce0",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_ale",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_cle",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_wen_clk",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_ren_wr";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 funct=
-ion =3D "nand";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input=
--enable;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bias-=
-pull-up;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 };
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 emmc_ds_pins: emmc_ds {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 groups =3D "emmc_ds";
->> @@ -1906,6 +1927,20 @@
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resets =3D <&reset RESET_SD_EMMC_C>;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 };
->> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 nfc: nand-controller@7800 {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <2>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <2>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&nand_all_pins>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 compatible =3D "amlogic,meson-axg-nfc";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 status =3D "okay";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x0 0x7800 0x0 0x100>,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <0x0 0x7000 0x0 0=
-x800>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&clkc CLKID_SD_EMMC_C>,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <&clkc CLKID_FCLK_DIV2>=
-;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "core", "device";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 usb2_phy1: phy@9020 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "amlogic,meson-gxl-usb2-phy";
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #phy-cells =3D <0>;
->=20
 
