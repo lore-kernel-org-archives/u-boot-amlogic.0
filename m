@@ -2,60 +2,72 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6994C46CD3
-	for <webhook@archiver.kernel.org>; Wed, 20 Dec 2023 10:43:56 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web10.19112.1703069034690417858
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE205C3DA6E
+	for <webhook@archiver.kernel.org>; Wed, 20 Dec 2023 10:53:36 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web10.19216.1703069613979320594
  for <u-boot-amlogic@groups.io>;
- Wed, 20 Dec 2023 02:43:55 -0800
+ Wed, 20 Dec 2023 02:53:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=zUIP3m5L;
- spf=pass (domain: linaro.org, ip: 209.85.128.52, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40d3a2703c9so20645e9.0
-        for <u-boot-amlogic@groups.io>; Wed, 20 Dec 2023 02:43:54 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=JPXyr4ep;
+ spf=pass (domain: linaro.org, ip: 209.85.221.48, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33666fb9318so3444186f8f.2
+        for <u-boot-amlogic@groups.io>; Wed, 20 Dec 2023 02:53:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703069033; x=1703673833; darn=groups.io;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GRgUN4Cgb6/CN21v+aOuyOjxrnWKjuw+yAeeRTJm/ug=;
-        b=zUIP3m5LO4WSELshOpWtj4e+/jhWrTx7gEvtqGoNJEIM/kSg8DPzZ2mEZHWS46KtHZ
-         S0E8llrfrrvPEsStTC1WQmUWfm67nBYYpHFuCsLJJ6SI0yFvcFYA5zBlOnfeaTh3R/t9
-         +Eweqay8HhezMdjQ/9acU8ba/H6HmxyvRelTCDuLSsvgs1ZnIvw1/vjS/4KMzKs9TTeh
-         fiRnT/TCpLc6wip/F3AyH1MXpuQ6LPmsY3Wl9piVIMnmAzXsFRgg+zJt9sbP0DJ1L5Ie
-         96BGNtMvySmshejN9tsoMgaDoIWYYS4mpm/JQjFY6AVwh+PFmC/WhunUyOXZS+Mh89/g
-         V3Hg==
+        d=linaro.org; s=google; t=1703069612; x=1703674412; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BjL8Y5GB4vvAzzD+haYNrqpHCgQQ0fbZhXFQBsAvBdY=;
+        b=JPXyr4epPC0t/R8fayBYyjp25LDtz7mVg8/xbi5o7CE9rTckEwMsAQhafWxD4liw1f
+         NEKECWkcdwUdez5AFwtxh2PRIq9cDGl4bNZKMeIRAoYk6jIBb3CmhwQ9tqJCcT9R5MMU
+         1qoqtMBlB+ypBnGq9/T0HX1gLafEVOXzswXyCMs/9VkttDpOHk1K5kNyckC8zRnNun8h
+         YH8JknwEC2Uidan3Q3jcP3ON//Mn7Ur8gO5lwLqEswi7vQ+8qB/R3ISxifMelAg7Z7Ub
+         D2M3X+Be+kJglM7TwyY3FDff06OAyv6S6M720jfL0drM252lbmJINdfqT/6Vf9jNS21v
+         S6BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703069033; x=1703673833;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GRgUN4Cgb6/CN21v+aOuyOjxrnWKjuw+yAeeRTJm/ug=;
-        b=CPDhgWSukZClv45UUNRV6GepwtgxJ8jslfTzYragDEwS/QRwUPp6vHDGH445gZd4yC
-         hFe1CqieUkyjQULaq9QiT7+HttbP/HymCRwq7Dq1X4E46w1jL7u6SA7ati622DG+PFz9
-         cAr0uRADkiHZLrMeCfCj3g1TdKIhsIPYciVrik6q5Mmv3Vvl++ntDUwl1sOCYVfrpnpx
-         zldU/8DqN8Bc6X3pFTHKPzOuLx4cp2wUcqj/dkzCxDxD8f8P0MCPgG8Q9qZkOxKDY6Et
-         eCttX0uuaAWfE/6vJ3tBmGgKkkJCnM3hjJgh5YdLdR0yCQ0jDrQZgAmu+XUyVKNBp5Wi
-         6JOQ==
-X-Gm-Message-State: AOJu0Yy2FISYIDPrfLQ+Td4lhTMcBttE9/k0CA7gJlmgX8XDrxaTvDeH
-	ApApioK3RqpygchgvWCGBjd0mRQ2PuhsaH/YPH+gjU7c
-X-Google-Smtp-Source: AGHT+IGbHLOYOkN4hp5cIsS3b+Q2Hizmv+3QQmLM6rz+RonUB8kjny3jlBM6W5kjmzN95N0qveWJSg==
-X-Received: by 2002:a05:600c:5409:b0:40d:3786:dad1 with SMTP id he9-20020a05600c540900b0040d3786dad1mr293867wmb.19.1703069032967;
-        Wed, 20 Dec 2023 02:43:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703069612; x=1703674412;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BjL8Y5GB4vvAzzD+haYNrqpHCgQQ0fbZhXFQBsAvBdY=;
+        b=oQIZA5l0Jg9NNsn5OtaAhf7m6sWDbYujEYB9NVRqBNCnU6eAGtZGQhP4R488guEbOn
+         4CPIrOqIJW5+SW+w29y2wrNhGNBVVVYyIqKMhXqFqr5zG8Qe1L+89m2iqi0kHoJNYxrR
+         IDDo6O/r/jPc9ZHxOovS88xujJrrNv0ApP5kkqCI9KbYWnY4WIUC9qIGTS1FMHfQ3RLz
+         vyff4HdfgzNxSNe9XKIJ8Ub1u/f3Wre3GOrnwsZFqZPV5jPMw+cKQ3yAez3lNUW5pGUW
+         3eTXMO02XKwSXCT+Pl7I1iCx6tbz3oFqN+P4tqv/Ey+tjZ+App1dZVfX/tNdhE60j/Tq
+         zL2A==
+X-Gm-Message-State: AOJu0YzvQAUAwiG8gHclB3i9sgQb0xuV7QZiRwPFpLIY9og5XY7G7awR
+	PNBM5y7hDz9d5Qz4yc7PXG7NhA==
+X-Google-Smtp-Source: AGHT+IGqoWxWBmwb/eAXy+2H4/bDRmeVA5VNPnwR6GtBhCYiIvR4rMHbhoXUKPFeG4+Tpm8YIDxf3g==
+X-Received: by 2002:a05:600c:a06:b0:40d:22b9:ea89 with SMTP id z6-20020a05600c0a0600b0040d22b9ea89mr1464230wmp.163.1703069612307;
+        Wed, 20 Dec 2023 02:53:32 -0800 (PST)
 Received: from ?IPV6:2a01:e0a:982:cbb0:459:bfad:2ed9:2cb3? ([2a01:e0a:982:cbb0:459:bfad:2ed9:2cb3])
-        by smtp.gmail.com with ESMTPSA id x12-20020a5d650c000000b003366c058509sm1894342wru.23.2023.12.20.02.43.52
+        by smtp.gmail.com with ESMTPSA id r19-20020a05600c459300b0040d128e9c62sm6924436wmo.18.2023.12.20.02.53.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Dec 2023 02:43:52 -0800 (PST)
-Message-ID: <8c32e92f-810f-434b-ba77-3074490458bd@linaro.org>
-Date: Wed, 20 Dec 2023 11:43:51 +0100
+        Wed, 20 Dec 2023 02:53:31 -0800 (PST)
+Message-ID: <a269fb79-8374-443a-a077-6477a97d6aba@linaro.org>
+Date: Wed, 20 Dec 2023 11:53:30 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [GIT PULL] Please pull u-boot-amlogic-next-20231220
+From: neil.armstrong@linaro.org
 Reply-To: neil.armstrong@linaro.org
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Subject: Re: [PATCH 7/8] dts: meson-gxbb: Switch to using upstream DT
 Content-Language: en-US, fr
+To: Sumit Garg <sumit.garg@linaro.org>, u-boot@lists.denx.de,
+ u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de
+Cc: trini@konsulko.com, sjg@chromium.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
+ caleb.connolly@linaro.org, ff@shokubai.tech, daniel.thompson@linaro.org,
+ dgilmore@fedoraproject.org, pbrobinson@gmail.com,
+ ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com,
+ xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com,
+ rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com,
+ rfried.dev@gmail.com, marex@denx.de
+References: <20231214135103.1606605-1-sumit.garg@linaro.org>
+ <20231214135103.1606605-8-sumit.garg@linaro.org>
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
  GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
@@ -81,71 +93,169 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro Developer Services
+In-Reply-To: <20231214135103.1606605-8-sumit.garg@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 20 Dec 2023 10:43:56 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1946
+ <u-boot-amlogic@groups.io>; Wed, 20 Dec 2023 10:53:36 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1947
 
-Hi Tom,
+On 14/12/2023 14:51, Sumit Garg wrote:
+> Although there were still some variations in board DTS files based on
+> meson-gxbb SoC but I think those were minor differences from upstream
+> and shouldn't impact boot on these devices.
+> 
+> So switch to upstream DT via mirroring amlogic/ directory from
+> devicetree-rebasing/src/arm64/amlogic/ directory. And thereby directly
+> building DTB from there including *-u-boot.dtsi files from
+> arch/$(ARCH)/dts/ directory.
+> 
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>   configs/nanopi-k2_defconfig           | 3 ++-
+>   configs/odroid-c2_defconfig           | 3 ++-
+>   configs/p200_defconfig                | 3 ++-
+>   configs/p201_defconfig                | 3 ++-
+>   configs/videostrong-kii-pro_defconfig | 3 ++-
+>   configs/wetek-hub_defconfig           | 3 ++-
+>   configs/wetek-play2_defconfig         | 3 ++-
+>   dts/arch/arm64/Makefile               | 9 +++++++++
+>   dts/arch/arm64/amlogic                | 1 +
+>   9 files changed, 24 insertions(+), 7 deletions(-)
+>   create mode 120000 dts/arch/arm64/amlogic
+> 
+> diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
+> index 41dbf7981f8..3db296916e9 100644
+> --- a/configs/nanopi-k2_defconfig
+> +++ b/configs/nanopi-k2_defconfig
+> @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+>   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+>   CONFIG_ENV_SIZE=0x2000
+>   CONFIG_DM_GPIO=y
+> -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-nanopi-k2"
+> +CONFIG_OF_UPSTREAM=y
+> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-nanopi-k2"
+>   CONFIG_OF_LIBFDT_OVERLAY=y
+>   CONFIG_DM_RESET=y
+>   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
+> index 5f9f323e06e..65857ff478c 100644
+> --- a/configs/odroid-c2_defconfig
+> +++ b/configs/odroid-c2_defconfig
+> @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+>   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+>   CONFIG_ENV_SIZE=0x2000
+>   CONFIG_DM_GPIO=y
+> -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-odroidc2"
+> +CONFIG_OF_UPSTREAM=y
+> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-odroidc2"
+>   CONFIG_OF_LIBFDT_OVERLAY=y
+>   CONFIG_DM_RESET=y
+>   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> diff --git a/configs/p200_defconfig b/configs/p200_defconfig
+> index cd579ef5f14..c1792db51fd 100644
+> --- a/configs/p200_defconfig
+> +++ b/configs/p200_defconfig
+> @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+>   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+>   CONFIG_ENV_SIZE=0x2000
+>   CONFIG_DM_GPIO=y
+> -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p200"
+> +CONFIG_OF_UPSTREAM=y
+> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p200"
+>   CONFIG_OF_LIBFDT_OVERLAY=y
+>   CONFIG_DM_RESET=y
+>   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> diff --git a/configs/p201_defconfig b/configs/p201_defconfig
+> index b2f0a0ccdb4..202e1da5bcc 100644
+> --- a/configs/p201_defconfig
+> +++ b/configs/p201_defconfig
+> @@ -7,7 +7,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+>   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+>   CONFIG_ENV_SIZE=0x2000
+>   CONFIG_DM_GPIO=y
+> -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p201"
+> +CONFIG_OF_UPSTREAM=y
+> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p201"
+>   CONFIG_OF_LIBFDT_OVERLAY=y
+>   CONFIG_DM_RESET=y
+>   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> diff --git a/configs/videostrong-kii-pro_defconfig b/configs/videostrong-kii-pro_defconfig
+> index 3eda8f14a21..d09333d3b96 100644
+> --- a/configs/videostrong-kii-pro_defconfig
+> +++ b/configs/videostrong-kii-pro_defconfig
+> @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+>   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+>   CONFIG_ENV_SIZE=0x2000
+>   CONFIG_DM_GPIO=y
+> -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-kii-pro"
+> +CONFIG_OF_UPSTREAM=y
+> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-kii-pro"
+>   CONFIG_OF_LIBFDT_OVERLAY=y
+>   CONFIG_DM_RESET=y
+>   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> diff --git a/configs/wetek-hub_defconfig b/configs/wetek-hub_defconfig
+> index fd92b041e73..73f3d4aad5d 100644
+> --- a/configs/wetek-hub_defconfig
+> +++ b/configs/wetek-hub_defconfig
+> @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+>   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+>   CONFIG_ENV_SIZE=0x2000
+>   CONFIG_DM_GPIO=y
+> -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-hub"
+> +CONFIG_OF_UPSTREAM=y
+> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-hub"
+>   CONFIG_OF_LIBFDT_OVERLAY=y
+>   CONFIG_DM_RESET=y
+>   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> diff --git a/configs/wetek-play2_defconfig b/configs/wetek-play2_defconfig
+> index b887419a6ba..26f57b4214a 100644
+> --- a/configs/wetek-play2_defconfig
+> +++ b/configs/wetek-play2_defconfig
+> @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+>   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+>   CONFIG_ENV_SIZE=0x2000
+>   CONFIG_DM_GPIO=y
+> -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-play2"
+> +CONFIG_OF_UPSTREAM=y
+> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-play2"
+>   CONFIG_OF_LIBFDT_OVERLAY=y
+>   CONFIG_DM_RESET=y
+>   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> diff --git a/dts/arch/arm64/Makefile b/dts/arch/arm64/Makefile
+> index 16e9fea622d..d548584cf5c 100644
+> --- a/dts/arch/arm64/Makefile
+> +++ b/dts/arch/arm64/Makefile
+> @@ -1,5 +1,14 @@
+>   # SPDX-License-Identifier: GPL-2.0+
+>   
+> +dtb-$(CONFIG_ARCH_MESON) += \
+> +	amlogic/meson-gxbb-kii-pro.dtb \
+> +	amlogic/meson-gxbb-nanopi-k2.dtb \
+> +	amlogic/meson-gxbb-odroidc2.dtb \
+> +	amlogic/meson-gxbb-p200.dtb \
+> +	amlogic/meson-gxbb-p201.dtb \
+> +	amlogic/meson-gxbb-wetek-hub.dtb \
+> +	amlogic/meson-gxbb-wetek-play2.dtb
+> +
+>   include $(srctree)/scripts/Makefile.dts
+>   
+>   targets += $(dtb-y)
+> diff --git a/dts/arch/arm64/amlogic b/dts/arch/arm64/amlogic
+> new file mode 120000
+> index 00000000000..73f7c3e7bd0
+> --- /dev/null
+> +++ b/dts/arch/arm64/amlogic
+> @@ -0,0 +1 @@
+> +../../../devicetree-rebasing/src/arm64/amlogic/
+> \ No newline at end of file
 
-Please pull into next branch support for the new GXL MDIO mux along
-with a Linux v6.4 DT sync, this will permit using upstream Linux DT
-as-is on GXL & GXM based boards.
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+
+Note: with https://lore.kernel.org/all/8c32e92f-810f-434b-ba77-3074490458bd@linaro.org/ merged it could be be extended to GXL/GXM aswell
 
 Thanks,
 Neil
-
-The following changes since commit a6f86132e30a407c7f96461df53c62fbe52e2b54:
-
-   Merge branch 'next' of https://source.denx.de/u-boot/custodians/u-boot-riscv into next (2023-12-18 09:56:58 -0500)
-
-are available in the Git repository at:
-
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-next-20231220
-
-for you to fetch changes up to 4d4fbf04158a5b2d4fff5a35ea0a2d6c18d250cb:
-
-   ARM: dts: sync Amlogic GX DT to Linux v6.4 (2023-12-19 11:24:38 +0100)
-
-----------------------------------------------------------------
-- Add support for new GXL MDIO mux, with driver and Linux DT sync from v6.4
-
-----------------------------------------------------------------
-Neil Armstrong (2):
-       net: Add Amlogic GXL MDIO Mux driver
-       ARM: dts: sync Amlogic GX DT to Linux v6.4
-
-  arch/arm/dts/meson-gx-libretech-pc.dtsi            |   4 +-
-  arch/arm/dts/meson-gx.dtsi                         |  21 ++--
-  arch/arm/dts/meson-gxbb-nanopi-k2.dts              |  13 +-
-  arch/arm/dts/meson-gxbb-odroidc2.dts               |  26 ++--
-  arch/arm/dts/meson-gxbb.dtsi                       |  18 ++-
-  arch/arm/dts/meson-gxl-s805x-libretech-ac.dts      |   2 +-
-  .../arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts |  12 +-
-  arch/arm/dts/meson-gxl-s905x-khadas-vim.dts        |  16 +--
-  arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts   |   3 +-
-  arch/arm/dts/meson-gxl-s905x-p212.dts              |  68 ++++++++++
-  arch/arm/dts/meson-gxl-s905x-p212.dtsi             |  21 ++--
-  arch/arm/dts/meson-gxl.dtsi                        |  43 ++++---
-  arch/arm/dts/meson-gxm-khadas-vim2.dts             |  15 +--
-  arch/arm/dts/meson-gxm-wetek-core2.dts             |   2 -
-  configs/beelink-gt1-ultimate_defconfig             |   2 +-
-  configs/jethub_j80_defconfig                       |   2 +-
-  configs/khadas-vim2_defconfig                      |   2 +-
-  configs/khadas-vim_defconfig                       |   2 +-
-  configs/libretech-ac_defconfig                     |   2 +-
-  configs/libretech-cc_defconfig                     |   2 +-
-  configs/libretech-cc_v2_defconfig                  |   2 +-
-  configs/libretech-s905d-pc_defconfig               |   2 +-
-  configs/libretech-s912-pc_defconfig                |   2 +-
-  configs/p212_defconfig                             |   2 +-
-  configs/wetek-core2_defconfig                      |   2 +-
-  drivers/net/Kconfig                                |   7 ++
-  drivers/net/Makefile                               |   1 +
-  drivers/net/mdio_mux_meson_gxl.c                   | 138 +++++++++++++++++++++
-  28 files changed, 342 insertions(+), 90 deletions(-)
-  create mode 100644 drivers/net/mdio_mux_meson_gxl.c
 
