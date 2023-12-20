@@ -2,182 +2,234 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88260C47077
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909BDC4706C
 	for <webhook@archiver.kernel.org>; Wed, 20 Dec 2023 13:23:57 +0000 (UTC)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
- by mx.groups.io with SMTP id smtpd.web10.15313.1703047647334776872
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+ by mx.groups.io with SMTP id smtpd.web11.20365.1703076047124313705
  for <u-boot-amlogic@groups.io>;
- Tue, 19 Dec 2023 20:47:27 -0800
+ Wed, 20 Dec 2023 04:40:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=Klu7WTIa;
- spf=pass (domain: google.com, ip: 209.85.218.44, mailfrom: sjg@google.com)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a236d77dceeso276877766b.2
-        for <u-boot-amlogic@groups.io>; Tue, 19 Dec 2023 20:47:27 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=fUSXgTjc;
+ spf=pass (domain: linaro.org, ip: 209.85.167.182, mailfrom: sumit.garg@linaro.org)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3b9db318839so3814549b6e.3
+        for <u-boot-amlogic@groups.io>; Wed, 20 Dec 2023 04:40:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703047646; x=1703652446; darn=groups.io;
+        d=linaro.org; s=google; t=1703076046; x=1703680846; darn=groups.io;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gCoGNdlub+A0eS2q8EVMjVMtjoiGAQiN7d3JWRT38bQ=;
-        b=Klu7WTIa4niv68hSnOXDKzSpZLxy3gWxq9RmTQjYOSBRL0qcy8DodJJxFfGmeIo8/u
-         QojOR4ZFXDsT+IM0/qFb74i9NIuxJCitX6a6QcuFKsUxlUbUv5xxRcAYETJhQRk/pODf
-         7qq8RfQcmFN4ucOee7xKrmLF5UdCmvf6l4sZE=
+        bh=UBrrCWePQAAD7Q3oqlwg8m/71Pl/MlCGxudnEaZw85E=;
+        b=fUSXgTjcNaTya1hl3jntAImRYb7bPk/R+a1UZMTNomVnsYMJj3qg5JA94K8+QxELfY
+         5BI52FHS3sCKo2z/1QtD0Bdh4jFNBjU3xgJy/OWzs0qK1PgaocHUYdrHW987CBYsXkvU
+         Vtb6nSKwmTl2WQ0rc3TXYHwgLrm/06hK8USij1Usfq6CWUZjRH15yySJOT0mF5UTKeoC
+         nuJ7Do/cun5yeO7FROM0Jr//4JU6c24z+duoNhYEqjsVth9gZF/rLKhl2p2DP9WKc8iU
+         fUogChIctZ4r8XtOZy4k7+Vjt4eU13xfMWQHF7L0NOWL+LazM/dQQUwUDB/4FRhBYAek
+         4cJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703047646; x=1703652446;
+        d=1e100.net; s=20230601; t=1703076046; x=1703680846;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gCoGNdlub+A0eS2q8EVMjVMtjoiGAQiN7d3JWRT38bQ=;
-        b=Car43ESCFNdWJi3G5if7PakfiHGHX65FB5epbwqZRhatIIFvCH89BGbhAtpXRzNRZI
-         UWrOz4nRNKFyUdSk1dp3ZTTRIJvNI/IuU4qJbymSl3NGmzmx7C7Pge0QBPUyb/a/VbBT
-         NDYJTp5lUxHnYAvxFr/ToYCKu8QmwIjZrwGJOntToDN06zVpW7x9FQwyWW/CH+ibC6w1
-         np8aCm9kFycHBfRSCT9eXwLPSd7z+B/68MYFxFiejVquxD2xlPseu1MbuEXI5udSMyEr
-         VhYxJvVrNccLfKEOSSIn0/7At6FzfFXkKlbQ7Af9TbzYZUb4FKoYlbkXWjs8pfMb2vog
-         25vg==
-X-Gm-Message-State: AOJu0Yx8v0NfRtRioZfRo0IUaiDJT+TqyP6SI1GNdiDj4X4NsREKSDxE
-	A63SLgOulKli01D1QSE7IfzDHNyy82E1Km6KcDAd5A==
-X-Google-Smtp-Source: AGHT+IEuC0GlPLX3lx6Rsa9poEQ2A/5iRNUFyEIMQDzW1d+RJ/AOC9X2I3pxxmeyB/k3n/wjYgVTMiGze2AD+4ztYio=
-X-Received: by 2002:a17:906:ccce:b0:a23:4ca5:5e3 with SMTP id
- ot14-20020a170906ccce00b00a234ca505e3mr1646634ejb.80.1703047645571; Tue, 19
- Dec 2023 20:47:25 -0800 (PST)
+        bh=UBrrCWePQAAD7Q3oqlwg8m/71Pl/MlCGxudnEaZw85E=;
+        b=OraSDTzcXxWKM9gK44wxn235CdvuObuxrK7w2WSFvWkxiEDMIvP1RuPu+5GSVK9XsP
+         AgndphBK8rQthP1KeqKAXS5p981U/wFtSJwkfxAe5f/IWmvy+OicztaMHbZRq32Em4Zm
+         H2XVuM7dRg/iGFUhkMjETRcP5i0T71c1Sm54p68pgJY9KfbZjVM6qk5s57p8aFnRT6Zv
+         LmXJdnzEwfRK7tchNCt06o4ezqWb/R7Ph8mkZAGm33xh177uyXFYj9uqxjGDCfLV8kg7
+         RK+ghlhRJbXxq38OWCMwTi2mgLZKOWtZW0xB1ip/3C+dkXzznPBFCX0xCpm3041+y23C
+         cpGg==
+X-Gm-Message-State: AOJu0Yzj56S1gbcTiQNLvWNWiBAn/m9+bdo98aqe6B/NjLJym6dB10IG
+	mpEGl2IbCzraVS1euZznsX5/5fTCxKnl6Y+lWcytTg==
+X-Google-Smtp-Source: AGHT+IELQcbcpPduvUikYLZhzVlcKq9WqdHdIdKdI531hzEqJe3xEH/YJEoBREwRg5EwEHFU1hKEXwzPJG6FfVBeQkg=
+X-Received: by 2002:a05:6808:399b:b0:3b9:ede4:524d with SMTP id
+ gq27-20020a056808399b00b003b9ede4524dmr23233672oib.116.1703076046355; Wed, 20
+ Dec 2023 04:40:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20231214135103.1606605-1-sumit.garg@linaro.org> <20231214135103.1606605-3-sumit.garg@linaro.org>
-In-Reply-To: <20231214135103.1606605-3-sumit.garg@linaro.org>
-From: Simon Glass <sjg@chromium.org>
-Date: Tue, 19 Dec 2023 21:47:13 -0700
-Message-ID: <CAPnjgZ2v5WZ4aEOTqrGB7mxdmVAMYsHc8A7+YgUKubL51dp9WQ@mail.gmail.com>
-Subject: Re: [PATCH 2/8] Makefile: Add support for DT bindings schema checks
-To: Sumit Garg <sumit.garg@linaro.org>
+References: <20231214135103.1606605-1-sumit.garg@linaro.org>
+ <20231214135103.1606605-8-sumit.garg@linaro.org> <a269fb79-8374-443a-a077-6477a97d6aba@linaro.org>
+In-Reply-To: <a269fb79-8374-443a-a077-6477a97d6aba@linaro.org>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Wed, 20 Dec 2023 18:10:35 +0530
+Message-ID: <CAFA6WYNykzMeYzZqa+UJ_ouewRB_juQ71BDPd=THcBdaHJJtZA@mail.gmail.com>
+Subject: Re: [PATCH 7/8] dts: meson-gxbb: Switch to using upstream DT
+To: neil.armstrong@linaro.org
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	u-boot-custodians@lists.denx.de, trini@konsulko.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
-	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
-	ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com, 
-	xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com, 
-	rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com, 
-	rfried.dev@gmail.com, marex@denx.de
+	u-boot-custodians@lists.denx.de, trini@konsulko.com, sjg@chromium.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
+	caleb.connolly@linaro.org, ff@shokubai.tech, daniel.thompson@linaro.org, 
+	dgilmore@fedoraproject.org, pbrobinson@gmail.com, ilias.apalodimas@linaro.org, 
+	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de, 
+	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk, 
+	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com, marex@denx.de
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 20 Dec 2023 13:23:57 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1949
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1960
 
-Hi Sumit,
+On Wed, 20 Dec 2023 at 16:23, <neil.armstrong@linaro.org> wrote:
+>
+> On 14/12/2023 14:51, Sumit Garg wrote:
+> > Although there were still some variations in board DTS files based on
+> > meson-gxbb SoC but I think those were minor differences from upstream
+> > and shouldn't impact boot on these devices.
+> >
+> > So switch to upstream DT via mirroring amlogic/ directory from
+> > devicetree-rebasing/src/arm64/amlogic/ directory. And thereby directly
+> > building DTB from there including *-u-boot.dtsi files from
+> > arch/$(ARCH)/dts/ directory.
+> >
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > ---
+> >   configs/nanopi-k2_defconfig           | 3 ++-
+> >   configs/odroid-c2_defconfig           | 3 ++-
+> >   configs/p200_defconfig                | 3 ++-
+> >   configs/p201_defconfig                | 3 ++-
+> >   configs/videostrong-kii-pro_defconfig | 3 ++-
+> >   configs/wetek-hub_defconfig           | 3 ++-
+> >   configs/wetek-play2_defconfig         | 3 ++-
+> >   dts/arch/arm64/Makefile               | 9 +++++++++
+> >   dts/arch/arm64/amlogic                | 1 +
+> >   9 files changed, 24 insertions(+), 7 deletions(-)
+> >   create mode 120000 dts/arch/arm64/amlogic
+> >
+> > diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
+> > index 41dbf7981f8..3db296916e9 100644
+> > --- a/configs/nanopi-k2_defconfig
+> > +++ b/configs/nanopi-k2_defconfig
+> > @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> >   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> >   CONFIG_ENV_SIZE=0x2000
+> >   CONFIG_DM_GPIO=y
+> > -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-nanopi-k2"
+> > +CONFIG_OF_UPSTREAM=y
+> > +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-nanopi-k2"
+> >   CONFIG_OF_LIBFDT_OVERLAY=y
+> >   CONFIG_DM_RESET=y
+> >   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> > diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
+> > index 5f9f323e06e..65857ff478c 100644
+> > --- a/configs/odroid-c2_defconfig
+> > +++ b/configs/odroid-c2_defconfig
+> > @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> >   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> >   CONFIG_ENV_SIZE=0x2000
+> >   CONFIG_DM_GPIO=y
+> > -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-odroidc2"
+> > +CONFIG_OF_UPSTREAM=y
+> > +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-odroidc2"
+> >   CONFIG_OF_LIBFDT_OVERLAY=y
+> >   CONFIG_DM_RESET=y
+> >   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> > diff --git a/configs/p200_defconfig b/configs/p200_defconfig
+> > index cd579ef5f14..c1792db51fd 100644
+> > --- a/configs/p200_defconfig
+> > +++ b/configs/p200_defconfig
+> > @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> >   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> >   CONFIG_ENV_SIZE=0x2000
+> >   CONFIG_DM_GPIO=y
+> > -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p200"
+> > +CONFIG_OF_UPSTREAM=y
+> > +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p200"
+> >   CONFIG_OF_LIBFDT_OVERLAY=y
+> >   CONFIG_DM_RESET=y
+> >   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> > diff --git a/configs/p201_defconfig b/configs/p201_defconfig
+> > index b2f0a0ccdb4..202e1da5bcc 100644
+> > --- a/configs/p201_defconfig
+> > +++ b/configs/p201_defconfig
+> > @@ -7,7 +7,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> >   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> >   CONFIG_ENV_SIZE=0x2000
+> >   CONFIG_DM_GPIO=y
+> > -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p201"
+> > +CONFIG_OF_UPSTREAM=y
+> > +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p201"
+> >   CONFIG_OF_LIBFDT_OVERLAY=y
+> >   CONFIG_DM_RESET=y
+> >   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> > diff --git a/configs/videostrong-kii-pro_defconfig b/configs/videostrong-kii-pro_defconfig
+> > index 3eda8f14a21..d09333d3b96 100644
+> > --- a/configs/videostrong-kii-pro_defconfig
+> > +++ b/configs/videostrong-kii-pro_defconfig
+> > @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> >   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> >   CONFIG_ENV_SIZE=0x2000
+> >   CONFIG_DM_GPIO=y
+> > -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-kii-pro"
+> > +CONFIG_OF_UPSTREAM=y
+> > +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-kii-pro"
+> >   CONFIG_OF_LIBFDT_OVERLAY=y
+> >   CONFIG_DM_RESET=y
+> >   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> > diff --git a/configs/wetek-hub_defconfig b/configs/wetek-hub_defconfig
+> > index fd92b041e73..73f3d4aad5d 100644
+> > --- a/configs/wetek-hub_defconfig
+> > +++ b/configs/wetek-hub_defconfig
+> > @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> >   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> >   CONFIG_ENV_SIZE=0x2000
+> >   CONFIG_DM_GPIO=y
+> > -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-hub"
+> > +CONFIG_OF_UPSTREAM=y
+> > +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-hub"
+> >   CONFIG_OF_LIBFDT_OVERLAY=y
+> >   CONFIG_DM_RESET=y
+> >   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> > diff --git a/configs/wetek-play2_defconfig b/configs/wetek-play2_defconfig
+> > index b887419a6ba..26f57b4214a 100644
+> > --- a/configs/wetek-play2_defconfig
+> > +++ b/configs/wetek-play2_defconfig
+> > @@ -6,7 +6,8 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+> >   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+> >   CONFIG_ENV_SIZE=0x2000
+> >   CONFIG_DM_GPIO=y
+> > -CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-play2"
+> > +CONFIG_OF_UPSTREAM=y
+> > +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-play2"
+> >   CONFIG_OF_LIBFDT_OVERLAY=y
+> >   CONFIG_DM_RESET=y
+> >   CONFIG_DEBUG_UART_BASE=0xc81004c0
+> > diff --git a/dts/arch/arm64/Makefile b/dts/arch/arm64/Makefile
+> > index 16e9fea622d..d548584cf5c 100644
+> > --- a/dts/arch/arm64/Makefile
+> > +++ b/dts/arch/arm64/Makefile
+> > @@ -1,5 +1,14 @@
+> >   # SPDX-License-Identifier: GPL-2.0+
+> >
+> > +dtb-$(CONFIG_ARCH_MESON) += \
+> > +     amlogic/meson-gxbb-kii-pro.dtb \
+> > +     amlogic/meson-gxbb-nanopi-k2.dtb \
+> > +     amlogic/meson-gxbb-odroidc2.dtb \
+> > +     amlogic/meson-gxbb-p200.dtb \
+> > +     amlogic/meson-gxbb-p201.dtb \
+> > +     amlogic/meson-gxbb-wetek-hub.dtb \
+> > +     amlogic/meson-gxbb-wetek-play2.dtb
+> > +
+> >   include $(srctree)/scripts/Makefile.dts
+> >
+> >   targets += $(dtb-y)
+> > diff --git a/dts/arch/arm64/amlogic b/dts/arch/arm64/amlogic
+> > new file mode 120000
+> > index 00000000000..73f7c3e7bd0
+> > --- /dev/null
+> > +++ b/dts/arch/arm64/amlogic
+> > @@ -0,0 +1 @@
+> > +../../../devicetree-rebasing/src/arm64/amlogic/
+> > \ No newline at end of file
+>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+>
 
-On Thu, 14 Dec 2023 at 06:51, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> This adds the build infrastructure for checking DT binding schema
-> documents and validating dtb files using the binding schema. Here we use
-> devicetree-rebasing directory to provide the DT bindings.
->
-> Dependency:
-> -----------
->
-> The DT schema project must be installed in order to validate the DT schema
-> binding documents and validate DTS files using the DT schema. The DT schema
-> project can be installed with pip::
->
->     pip3 install dtschema
->
-> Note that 'dtschema' installation requires 'swig' and Python development
-> files installed first. On Debian/Ubuntu systems::
->
->     apt install swig python3-dev
->
-> Testing:
-> --------
->
-> Build dts files and check using DT binding schema:
-> $ make dtbs_check
->
-> Optionally, DT_SCHEMA_FILES can be passed in with a schema file(s) to
-> use for validation. This makes it easier to find and fix errors
-> generated by a specific schema.
->
-> Note, at this point dtbs_check is an optional build target as there are
-> many warnings generated due to custom DT properties used by many
-> platforms in u-boot. It is expected with these checks that compliance
-> with DT bindings to take place. Once that's done it can be added to CI
-> builds to remain compliant with DT bindings.
->
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  Makefile             | 20 ++++++++++++++++++--
->  scripts/Makefile.lib | 17 +++++++++++++++--
->  2 files changed, 33 insertions(+), 4 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 750bbdb1b71..d8d168cd4c3 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1158,12 +1158,28 @@ endif
->         @# disabling OF_BOARD.
->         $(call cmd,ofcheck,$(KCONFIG_CONFIG))
->
-> -PHONY += dtbs
-> +PHONY += dtbs dtbs_check
->  dtbs: dts/dt.dtb
->         @:
-> -dts/dt.dtb: u-boot
-> +dts/dt.dtb: dtbs_prepare u-boot
->         $(Q)$(MAKE) $(build)=dts dtbs
->
-> +dtbs_prepare: prepare3
-> +
-> +ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
-> +export CHECK_DTBS=y
-> +endif
-> +
-> +ifneq ($(CHECK_DTBS),)
-> +dtbs_prepare: dt_binding_check
-> +endif
-> +
-> +dtbs_check: dt_binding_check dtbs
-> +
-> +DT_BINDING_DIR := devicetree-rebasing/Bindings
-> +dt_binding_check: scripts_dtc
-> +       $(Q)$(MAKE) $(build)=$(DT_BINDING_DIR) $(DT_BINDING_DIR)/processed-schema.json
-> +
->  quiet_cmd_copy = COPY    $@
->        cmd_copy = cp $< $@
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 16bbc277a9f..27b9437027c 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -356,8 +356,21 @@ endif
->
->  dtsi_include_list_deps = $(addprefix $(obj)/,$(subst $(quote),,$(dtsi_include_list)))
->
-> -$(obj)/%.dtb: $(src)/%.dts $(DTC) $(dtsi_include_list_deps) FORCE
-> -       $(call if_changed_dep,dtc)
-> +ifneq ($(CHECK_DTBS),)
-> +DT_CHECKER ?= dt-validate
-> +DT_CHECKER_FLAGS ?= $(if $(DT_SCHEMA_FILES),-l $(DT_SCHEMA_FILES),-m)
-> +DT_BINDING_DIR := devicetree-rebasing/Bindings
-> +DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.json
-> +
-> +quiet_cmd_dtb = DTC_CHK $@
-> +      cmd_dtb = $(cmd_dtc) ; $(DT_CHECKER) $(DT_CHECKER_FLAGS) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ || true
-> +else
-> +quiet_cmd_dtb = $(quiet_cmd_dtc)
-> +      cmd_dtb = $(cmd_dtc)
-> +endif
-> +
-> +$(obj)/%.dtb: $(src)/%.dts $(DTC) $(dtsi_include_list_deps) $(DT_TMP_SCHEMA) FORCE
-> +       $(call if_changed_dep,dtb)
->
->  pre-tmp = $(subst $(comma),_,$(dot-target).pre.tmp)
->  dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
-> --
-> 2.34.1
->
+Thanks.
 
-This is great.
+> Note: with https://lore.kernel.org/all/8c32e92f-810f-434b-ba77-3074490458bd@linaro.org/ merged it could be be extended to GXL/GXM aswell
 
-Can you put the commit message in doc/ somewhere?
+Sure, I will convert GXL/GXM too once your PR is merged and this series lands.
 
-Regards,
-Simon
+-Sumit
+
+>
+> Thanks,
+> Neil
 
