@@ -2,168 +2,143 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787B0C3DA6E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B71FC47073
 	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:11 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.web10.124569.1703776193427672410
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+ by mx.groups.io with SMTP id smtpd.web10.76916.1703577218363901283
  for <u-boot-amlogic@groups.io>;
- Thu, 28 Dec 2023 07:09:53 -0800
+ Mon, 25 Dec 2023 23:53:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=b3bTibD5;
- spf=pass (domain: chromium.org, ip: 209.85.219.54, mailfrom: sjg@chromium.org)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-67f95d69115so46961136d6.1
-        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 07:09:53 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=V+Z/rs0z;
+ spf=pass (domain: linaro.org, ip: 209.85.222.41, mailfrom: sumit.garg@linaro.org)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7cbe98278f8so1073966241.1
+        for <u-boot-amlogic@groups.io>; Mon, 25 Dec 2023 23:53:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703776192; x=1704380992; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JXDah+Baey+RzKWosb0cwvIW97t/+dQttjj6rkLr0bE=;
-        b=b3bTibD5ggPz+wFJ6XWGzGGT+a+eP/VYD2GugYLwwXVs9hWCnqLbShGU2I4VHX1ggF
-         wUMFUEGY4GKCrk8MjKJJLyi/N4aLAp38lIlzOltYQjKnt0UWOZfHivFHI8eftkHZoS1X
-         F6BQFY/KAZyjwiag435xjZi7FR0+x6sSl4PzE=
+        d=linaro.org; s=google; t=1703577217; x=1704182017; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HAxbftN0aN036HsMgXe5QrB4b6ULu6pXVWLHsE9HVNw=;
+        b=V+Z/rs0zE11kyc7LN/DXu3b2oxmM6UyTfbv8GLgvBqs/pbR7noqD/e+xWjz8BCFWCv
+         b8x69gyOTVZg6JXkFZ7hNkhTQJAWh1AnrhUbr7ROlA5hyI2zuX7sQnZSecTFElAHKM2S
+         cqOSD7fAgu0Ye0DgnK+LFsMiPO8das6uNvO5aufQ73vUtXPkfAnpqY560aXoqM18NkEn
+         cd156ghxmWcpzwSg1L8/jDUAGpvGfrwG5e2WqCIYlnhhJiMJ0fkpp7EtCwsFClUeNZQi
+         4er5PYPM+ikXdYOcZmHWhIjz8L3T51jwSd+jCB4sZy2G7Gf+jjRA9MSuQxL360HEpzi7
+         IhHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703776192; x=1704380992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JXDah+Baey+RzKWosb0cwvIW97t/+dQttjj6rkLr0bE=;
-        b=OiW0IQZ6cDBDp8Jx7QcBA5tFHpgBnFNKFutvhqGrkJN/0pqnyDtI5ViS9fxjiDQRvH
-         lKr4K3N/LsiBVPm2y+dgcRmdjsx0zCGRCtEHcxx/vTer5+p9eZIzAKPRqo3Z4j9egW5L
-         oLHJunnCejkQjdpImH8LS/u4xRA5v1xQgWXrPYx8OKPUim9k2+DzpJxG1xtQ9Vy5tMr5
-         UmG0cwewHUkZHPkqx15pWw34M+RKqrS5Dg9pQJexBSJ1vC/PMWcyrPtayQD77EbUFUA/
-         IQGGFyek8PXI98Eryid6KXLvcYLo+CgfT7P6q8L+bLtTv8vvOrh/DD2akejgh+cHN8m8
-         hjXg==
-X-Gm-Message-State: AOJu0YwdsNxNJgY7x+oqmfT2BRpzdHQ/rvQ7EeeP6dXPsTkJFin0J4c8
-	Fo0QVC2ppVtcvwF7k9827E0sjv7wflv8KEr+xHBwW4CA7212
-X-Google-Smtp-Source: AGHT+IHsxFeVosMLiGVAAEImtUldTw1mENA2v0yLlx6YCQoyexQ6sR8AfZU8e1avzcx4cRvOjiFY698AtxyYR0bUP5c=
-X-Received: by 2002:a05:6214:21e4:b0:67f:78e4:ed55 with SMTP id
- p4-20020a05621421e400b0067f78e4ed55mr14821944qvj.106.1703776192589; Thu, 28
- Dec 2023 07:09:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703577217; x=1704182017;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HAxbftN0aN036HsMgXe5QrB4b6ULu6pXVWLHsE9HVNw=;
+        b=q5lr6mavUQvi1V+i6yFMJwWFNYQtnjGp+Ri1iednbp4KcauDdjnnXRBbWFp2kRLFGc
+         J1IdizjUkVvT84laEnFiz8pODmmzcrWlF1zfDCzQYnrGH+ePpWDpOL26hPLP6q5NQWuv
+         txymW53RnDKfijZgT9E95Mh6v9icG6EsrUG3ZZdg0oe/pLVhzy8DHT/SPjF43KzE8UW3
+         MSEr0pX/AuNeF2k4x4gUCu3Kv2Or3Y5akGRtcxf/WUrIwjMnByTAIttV8/ANSUhY0Xnj
+         KiOpcohzr1gIget8Z5serlkOFkoOevAcrH4Fv+W8zA7JEUSzgFX+Bp1ZupUmcW0omyPL
+         GyPA==
+X-Gm-Message-State: AOJu0YwprC7hRj5DnonBmNCRc775sXfabFzPoOys0FIcBj4LUPchtjKg
+	QL9HgYaWHQe73RQaE8RHpWG4zBB2wAsqxq1O3T1RSZhkmM0T8w==
+X-Google-Smtp-Source: AGHT+IHAnJ3V6OtZXnmSKou/aW0fWVJXyihV/0ciysZ5EpmVI6INg0ZohlvD/54R+QqfFiRFOH/Mr685sZ7fewY/Skc=
+X-Received: by 2002:a05:6122:2317:b0:4b6:e6b6:7f4f with SMTP id
+ bq23-20020a056122231700b004b6e6b67f4fmr1625514vkb.15.1703577217348; Mon, 25
+ Dec 2023 23:53:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20231228115804.3626579-1-sumit.garg@linaro.org>
- <20231228115804.3626579-8-sumit.garg@linaro.org> <CAFLszTg=CDfyTGG9c-t=98eFYvYy61L1kzmrssNKPSS6dZL3cg@mail.gmail.com>
- <20231228135642.GA2652760@bill-the-cat>
-In-Reply-To: <20231228135642.GA2652760@bill-the-cat>
-From: Simon Glass <sjg@chromium.org>
-Date: Thu, 28 Dec 2023 15:09:41 +0000
-Message-ID: <CAFLszThP+GJcPP_LJBva1M5mi9Wj-Nh-z7A6-fkSpPgOTtLmRQ@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] dts: meson-gxbb: Switch to using upstream DT
-To: Tom Rini <trini@konsulko.com>
-Cc: Sumit Garg <sumit.garg@linaro.org>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	u-boot-custodians@lists.denx.de, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
-	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
-	ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com, 
-	xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com, 
-	rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com, 
-	rfried.dev@gmail.com, marex@denx.de, mibodhi@gmail.com
+References: <20231222061208.3009970-1-sumit.garg@linaro.org>
+ <02fdfc4b-113b-409f-8aaf-8f4a04822706@linaro.org> <CAFA6WYM8EVY-D_Kptggsvxq0ZrFdP0gQ3y4UEbM+vLu0F8tLjw@mail.gmail.com>
+ <c6d65491-c407-4518-aee9-f53f6d4a84ed@linaro.org> <20231222-whole-canola-81240881c2e7@spud>
+ <4a809aa2-0cc5-4ffa-a19f-06d69ae9e460@linaro.org>
+In-Reply-To: <4a809aa2-0cc5-4ffa-a19f-06d69ae9e460@linaro.org>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Tue, 26 Dec 2023 13:23:25 +0530
+Message-ID: <CAFA6WYPY7DmY3+Wf-=xbCpm11ub5BWTVc_C=SeSPVK0dVLTQ9w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] An effort to bring DT bindings compliance within U-Boot
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Conor Dooley <conor@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+	u-boot-custodians@lists.denx.de, trini@konsulko.com, sjg@chromium.org, 
+	krzysztof.kozlowski+dt@linaro.org, neil.armstrong@linaro.org, 
+	caleb.connolly@linaro.org, ff@shokubai.tech, daniel.thompson@linaro.org, 
+	dgilmore@fedoraproject.org, pbrobinson@gmail.com, ilias.apalodimas@linaro.org, 
+	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de, 
+	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk, 
+	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com, marex@denx.de
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2003
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1965
 
-Hi Tom,
-
-On Thu, Dec 28, 2023 at 1:56=E2=80=AFPM Tom Rini <trini@konsulko.com> wrote=
-:
+On Fri, 22 Dec 2023 at 21:23, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> On Thu, Dec 28, 2023 at 01:37:11PM +0000, Simon Glass wrote:
-> > Hi Sumit,
+> On 22/12/2023 16:45, Conor Dooley wrote:
+> >>>
+> >>> I suppose we have to relay information to kernel sub-arch maintainers
+> >>> who aren't the same as maintaining U-Boot counterparts. How about
+> >>> adding U-Boot ML to CC for whichever DT change gets submitted in the
+> >>
+> >> And every other project? Just setup lei filters.
+> >>
+> >>> kernel? Otherwise adding U-Boot sub-arch maintainers as reviewers for
+> >>> corresponding kernel DT changes works too if that's acceptable.
+> >>
+> >> You just entirely ignored my proposal without addressing it... ok let it
+> >> be. No, CC-ing U-boot maintainers changes nothing because as I said, I
+> >> want kernel maintainers and contributors to be aware.
 > >
-> > On Thu, Dec 28, 2023 at 11:59=E2=80=AFAM Sumit Garg <sumit.garg@linaro.=
-org> wrote:
-> > >
-> > > Although there were still some variations in board DTS files based on
-> > > meson-gxbb SoC but I think those were minor differences from upstream
-> > > and shouldn't impact boot on these devices.
-> > >
-> > > So switch to upstream DT via mirroring amlogic/ directory from
-> > > devicetree-rebasing/src/arm64/amlogic/ directory. And thereby directl=
-y
-> > > building DTB from there including *-u-boot.dtsi files from
-> > > arch/$(ARCH)/dts/ directory.
-> > >
-> > > Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > ---
-> > >
-> > > Changes in v3:
-> > > --------------
-> > > - Dropped Makefile portion and enabled OF_UPSTREAM for SoC instead.
-> > >
-> > > Changes in v2:
-> > > --------------
-> > > - Picked up review tag
-> > >
-> > >  arch/arm/mach-meson/Kconfig           | 1 +
-> > >  configs/nanopi-k2_defconfig           | 2 +-
-> > >  configs/odroid-c2_defconfig           | 2 +-
-> > >  configs/p200_defconfig                | 2 +-
-> > >  configs/p201_defconfig                | 2 +-
-> > >  configs/videostrong-kii-pro_defconfig | 2 +-
-> > >  configs/wetek-hub_defconfig           | 2 +-
-> > >  configs/wetek-play2_defconfig         | 2 +-
-> > >  dts/arch/arm64/amlogic                | 1 +
-> > >  9 files changed, 9 insertions(+), 7 deletions(-)
-> > >  create mode 120000 dts/arch/arm64/amlogic
-> > >
-> >
-> > Reviewed-by: Simon Glass <sjg@chromium.org>
-> >
-> > > diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfi=
-g
-> > > index d6c89058061..8ddb59161a0 100644
-> > > --- a/arch/arm/mach-meson/Kconfig
-> > > +++ b/arch/arm/mach-meson/Kconfig
-> > > @@ -25,6 +25,7 @@ choice
-> > >  config MESON_GXBB
-> > >         bool "GXBB"
-> > >         select MESON_GX
-> > > +       imply OF_UPSTREAM
-> > >         help
-> > >           Select this if your SoC is an S905
-> > >
-> > > diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfi=
-g
-> > > index 41dbf7981f8..2e1c756bf7a 100644
-> > > --- a/configs/nanopi-k2_defconfig
-> > > +++ b/configs/nanopi-k2_defconfig
-> > > @@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
-> > >  CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x20000000
-> > >  CONFIG_ENV_SIZE=3D0x2000
-> > >  CONFIG_DM_GPIO=3Dy
-> > > -CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxbb-nanopi-k2"
-> > > +CONFIG_DEFAULT_DEVICE_TREE=3D"amlogic/meson-gxbb-nanopi-k2"
-> > >  CONFIG_OF_LIBFDT_OVERLAY=3Dy
-> > >  CONFIG_DM_RESET=3Dy
-> > >  CONFIG_DEBUG_UART_BASE=3D0xc81004c0
-> >
-> > So now I am wondering if we can (later) have the SoC be implied when
-> > using OF_UPSTREAM so we can do:
-> >
-> > CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxbb-nanopi-k2"
-> >
-> > and it will add the 'amlogic/' automatically?
-> >
-> > Perhaps that might be a way to bridge the gap in terms of file layout?
+> > I don't think that adding U-Boot platform maintainers as reviewers for
+> > the platforms in the kernel is a terrible idea. Certainly kernel
+> > platform maintainers for which U-Boot platform maintainers are added to
+> > the MAINTAINERS entry will be aware. That said, something like your
 >
-> That's going to start to look real ugly real quick I suspect and I'm not
-> sure what it really gets us? It seems to me that the convention of
-> "vendor/board" has already been well enough adapted outside of the
-> kernel, with the odd sticking point being getting everyone used to
-> whatever will be happening for 32bit boards long term. So I think hiding
-> the vendor part of the string here will be more, not less, confusing
-> long term.
+> The point is it does not solve my concern here. I did not express
+> problem that U-Boot maintainers are not aware. They can easily be aware
+> by setting simple lei filters.
 
-Now that I dig in a bit, I see that the devicetree-rebasing tree does
-not have any Makefiles in it. How does Linux build with it? Does
-anyone have instructions?
+I thought your major concern was how we can enforce DTS backward and
+forward compatibility although the DT ABI stability is already
+documented here [1]. My suggestion was really based on recognising
+people who really care about DT ABI for particular platforms. I think
+adding people from other projects would certainly help with DT ABI
+stability since the kernel is the single point of contribution. There
+will be DT contributors from other projects too like you may have
+already seen people contributing bootloader (U-Boot) specific
+bindings/DTS changes.
 
-Regards,
-Simon
+[1] https://docs.kernel.org/process/maintainer-soc.html#devicetree-abi-stability
+
+>
+> The problem I want to solve is the kernel maintainers to be aware.
+>
+
+Although Tom has already expressed in the other thread that U-Boot has
+been a long time user of upstream DT but if we want to make it more
+formal from an enforcement point of view then I liked Conor's idea. If
+you agree then I can create maintainer profile entry as per following
+example for Amlogic platforms to start with:
+
+ARM/Amlogic Meson SoC support
+M:      Neil Armstrong <neil.armstrong@linaro.org>
+M:      Kevin Hilman <khilman@baylibre.com>
+R:      Jerome Brunet <jbrunet@baylibre.com>
+R:      Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+L:      linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+L:      linux-amlogic@lists.infradead.org
+S:      Maintained
+P:      Documentation/process/maintainer-soc-u-boot-dt-abi.rst
+W:      http://linux-meson.com/
+F:      Documentation/devicetree/bindings/phy/amlogic*
+F:      arch/arm/boot/dts/amlogic/
+F:      arch/arm/mach-meson/
+F:      arch/arm64/boot/dts/amlogic/
+F:      drivers/pmdomain/amlogic/
+F:      drivers/mmc/host/meson*
+F:      drivers/phy/amlogic/
+F:      drivers/pinctrl/meson/
+F:      drivers/rtc/rtc-meson*
+F:      drivers/soc/amlogic/
+N:      meson
+
+-Sumit
 
