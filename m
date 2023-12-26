@@ -2,58 +2,61 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3BCC47DA7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC2AC47DA9
 	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:11 +0000 (UTC)
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
- by mx.groups.io with SMTP id smtpd.web11.122630.1703770670576565080
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+ by mx.groups.io with SMTP id smtpd.web10.77734.1703583417536783882
  for <u-boot-amlogic@groups.io>;
- Thu, 28 Dec 2023 05:37:50 -0800
+ Tue, 26 Dec 2023 01:36:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=cifnhLvN;
- spf=pass (domain: chromium.org, ip: 209.85.216.51, mailfrom: sjg@chromium.org)
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28c934be96fso770399a91.0
-        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 05:37:50 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=gkZIFBAe;
+ spf=pass (domain: linaro.org, ip: 209.85.222.175, mailfrom: sumit.garg@linaro.org)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-77f70206016so388850585a.0
+        for <u-boot-amlogic@groups.io>; Tue, 26 Dec 2023 01:36:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703770670; x=1704375470; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rQFGXpLrk6kSnjFKU1ozfQPXzl29UyLg+epm/ZpWMUs=;
-        b=cifnhLvNjHOiHXitsAy3pT89GnTmwtYbKoJlb8SZ3JAyrrOguovDsfdJybd5l6X9vE
-         lYerIR9WEIqQxNzXd3a7UpGeBqEhbmuGMr1dOOyXoMb3sC7QddaUp2pDQ0dwtYvS1F6P
-         kgfhSla2Vj3vB7z5vQsYYKKCtNV7nQ7XQho7k=
+        d=linaro.org; s=google; t=1703583416; x=1704188216; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Ocy0jk44TeJKODgJIZSPWBXIqR4Y28AwTSEyhInmIg=;
+        b=gkZIFBAe9/BGCmQf1OvZhxixQGnSFM92Bq/NCr7dfE5Rhb85hEFCqUrJcuTU6YBBdt
+         ukPyXTUyGOi1ndEwBzzF+sf0DBun4UYCK907kPYLNaEMVko6UNG4XsQVNsmSlfPcOLsB
+         Ai7BG4kwTLyuDI3hebsHijDagIfTdKz7zKL67aEuM55u8Ul72LJjy9Jxm9Evpnha1v6u
+         hrRalgqVp0KBd+tL0ghDEMdCrWsstgYchBDCVjKMnvhDj77FLEUv6PlXWDRJNKWBbRHF
+         gURoRdMBvYeViCvbx8hzJsJU6q/2o/oaShhZMMi/Cm0Cu8J47qzGmgP6H12ztLbLhIDN
+         CoaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703770670; x=1704375470;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rQFGXpLrk6kSnjFKU1ozfQPXzl29UyLg+epm/ZpWMUs=;
-        b=JN+INxGAZBOHvxGjh2xZGCr5xTzqOTBsNA+LMhxy7z+yaG7ZhqsA71bWbnHXnxzYBv
-         UxATqUfGjcS8w68qsx5A+9LNkl5utapmyioea7vRQMi563kGO2Whcd7QHUg/63lk/w+s
-         rlvx6tvYs+JgbWLE0qKlHjv6y2My1ibQylExCnakg5ZQXEV2aDKoa1LQl+wgVDwTKx04
-         mHId7wYTPNYe6ed8JAqF4e9q+MextDogGdhT7NjORStin4CbBAc8b1iippguNtHeBrh9
-         2/7hRRfxQM+FgCBxJTJuu1pPHqJTNJ6iNSwMw/390i/zvjTyh6gv9MSUfm3wgjt6mAY2
-         LF+g==
-X-Gm-Message-State: AOJu0Yy7TpOjIvpEoB8pM6wHlusJ2zGcgvGqRckaIBBKT5BM85wXmFRj
-	hGi//XysH80RrEMsbEkUCH3p4OfdGRIkFpkJK7iI5W/p5Cbw9IV7hfBxCyU=
-X-Google-Smtp-Source: AGHT+IFsZJrO/VHQntphMGWANN0xKKbMOIfKxR/oUyuYHulsQcR0pMpVjVgmGFqTHxzmy8950SPO+/RLE4luoQ7eSok=
-X-Received: by 2002:a17:90a:8b88:b0:28c:a634:e4b9 with SMTP id
- z8-20020a17090a8b8800b0028ca634e4b9mr324745pjn.34.1703770670068; Thu, 28 Dec
- 2023 05:37:50 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703583416; x=1704188216;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+Ocy0jk44TeJKODgJIZSPWBXIqR4Y28AwTSEyhInmIg=;
+        b=dvjMMhT894W1nF8Fz62PzhvDtAPSG1/ct5aBbdgIOvzTLZQlYMG110DcG955pNVv4+
+         Hs11eLpKivj6cMoPkhwm6PT4+cEf6mIZ2Ar0NiLeR6YNLN6gGWGZpDLf0Sx5WGriL7FZ
+         U2J7tOoMSN4kKuV7Ltz9XlKpli5zGFCnFcPln9wBLE51X58ap9U6PIHsLVurn3b5gLs2
+         fK0MkbfEbG0tlFy6LwodRg7e79Yoi0tFOVTsJxdhDl6udFZLazYIz+nReatW1gYAEEM/
+         12sq7KZqi0rxi70sJeXZ9sj3DeMhEo4Z5xC/SWxwzykGjdavjp4UCxktlwwlc8WarD0a
+         NF1A==
+X-Gm-Message-State: AOJu0Yy8DsL+rBd1FUCS/2nijIHfL9W+BUmfwm2vUyk6LmNsfW8fAg72
+	vfXHeHb3KYLzRYzfRHu+KZW9jtF2N8VR1/xGG+6NSE5tTcYCbw==
+X-Google-Smtp-Source: AGHT+IHSECvLu4RlyEjGkHO499Q28pOP6MvBb0iN/g8sTJNphMLJ1qXsCvSyb05H9viZBW6D32Xm86ZaHVnwwElNkcU=
+X-Received: by 2002:a05:620a:15aa:b0:781:11e1:5705 with SMTP id
+ f10-20020a05620a15aa00b0078111e15705mr8832112qkk.136.1703583416502; Tue, 26
+ Dec 2023 01:36:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20231214135103.1606605-1-sumit.garg@linaro.org>
- <20231214135103.1606605-5-sumit.garg@linaro.org> <CAPnjgZ37QMzyVNxd8608dMBXVPed-PAU39CAhOrMRHVedEnSkQ@mail.gmail.com>
- <CAFA6WYMeLoD_z1W+iK3C6yj44dO_pdM71bhd6gK14gB==75gxw@mail.gmail.com>
- <CAFLszTgnOHQJGin-=32syDVPAkLXAni7QFd3WV_xtW0a2D84Bg@mail.gmail.com> <CAFA6WYO6Q9s0x+-N0XV+Hyw-07nuwR8ib9-p4=P15JHccb5avw@mail.gmail.com>
-In-Reply-To: <CAFA6WYO6Q9s0x+-N0XV+Hyw-07nuwR8ib9-p4=P15JHccb5avw@mail.gmail.com>
-From: Simon Glass <sjg@chromium.org>
-Date: Thu, 28 Dec 2023 13:37:18 +0000
-Message-ID: <CAFLszTi0DsJQx++de=bLreUtKhnchzH63e=wgF+9WQe+vD6VAQ@mail.gmail.com>
-Subject: Re: [PATCH 4/8] dts: Add alternative location for upstream DTB builds
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	u-boot-custodians@lists.denx.de, trini@konsulko.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
+References: <20231222061208.3009970-1-sumit.garg@linaro.org>
+ <02fdfc4b-113b-409f-8aaf-8f4a04822706@linaro.org> <CAFA6WYM8EVY-D_Kptggsvxq0ZrFdP0gQ3y4UEbM+vLu0F8tLjw@mail.gmail.com>
+ <c6d65491-c407-4518-aee9-f53f6d4a84ed@linaro.org> <20231222-whole-canola-81240881c2e7@spud>
+ <4a809aa2-0cc5-4ffa-a19f-06d69ae9e460@linaro.org> <CAFA6WYPY7DmY3+Wf-=xbCpm11ub5BWTVc_C=SeSPVK0dVLTQ9w@mail.gmail.com>
+ <23752cd4-d443-4a35-ab9d-bc637e1dbb56@linaro.org>
+In-Reply-To: <23752cd4-d443-4a35-ab9d-bc637e1dbb56@linaro.org>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Tue, 26 Dec 2023 15:06:44 +0530
+Message-ID: <CAFA6WYMstaPyar-ZzSZUMorhHALyhNhEunYOOoY8AG9feSVCLw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] An effort to bring DT bindings compliance within U-Boot
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>, u-boot@lists.denx.de, 
+	u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de, trini@konsulko.com, 
+	sjg@chromium.org, krzysztof.kozlowski+dt@linaro.org, 
 	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
 	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
 	ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com, 
@@ -61,185 +64,32 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
 	rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com, 
 	rfried.dev@gmail.com, marex@denx.de
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1997
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1967
 
-Hi Sumit,
+On Tue, 26 Dec 2023 at 14:46, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 26/12/2023 08:53, Sumit Garg wrote:
+> >>
+> >> The problem I want to solve is the kernel maintainers to be aware.
+> >>
+> >
+> > Although Tom has already expressed in the other thread that U-Boot has
+> > been a long time user of upstream DT but if we want to make it more
+> > formal from an enforcement point of view then I liked Conor's idea. If
+>
+> What did I write in my first email?
+>
+> "Maybe create a subsystem profile and include it to
+> maintainer entries of such affected platforms?"
 
-On Tue, Dec 26, 2023 at 10:20=E2=80=AFAM Sumit Garg <sumit.garg@linaro.org>=
- wrote:
->
-> On Tue, 26 Dec 2023 at 15:17, Simon Glass <sjg@chromium.org> wrote:
-> >
-> > Hi Sumit,
-> >
-> > On Wed, Dec 20, 2023 at 12:01=E2=80=AFPM Sumit Garg <sumit.garg@linaro.=
-org> wrote:
-> > >
-> > > Hi Simon,
-> > >
-> > > On Wed, 20 Dec 2023 at 10:17, Simon Glass <sjg@chromium.org> wrote:
-> > > >
-> > > > Hi Sumit,
-> > > >
-> > > > On Thu, 14 Dec 2023 at 06:52, Sumit Garg <sumit.garg@linaro.org> wr=
-ote:
-> > > > >
-> > > > > Allow platform owners to mirror devicetree files from devitree-re=
-basing
-> > > > > directory into dts/arch/$(ARCH) (special case for dts/arch/arm64)=
-. Then
-> > > > > build then along with any *-u-boot.dtsi file present in arch/$(AR=
-CH)/dts
-> > > > > directory.
-> > > >
-> > > > Also add a new Makefile for arm64.
-> > >
-> > > I suppose you are referring to dts/arch/arm64/Makefile which has been
-> > > added by this patch.
-> >
-> > Yes, I just mean that you should mention this in the commit message
-> >
->
-> Okay, I will append the commit message.
->
-> > >
-> > > >
-> > > > >
-> > > > > This will help easy migration for platforms which currently are c=
-ompliant
-> > > > > with upstream Linux kernel devicetree files.
-> > > > >
-> > > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > > > ---
-> > > > >  dts/Kconfig             | 11 +++++++++++
-> > > > >  dts/Makefile            | 17 ++++++++++++++---
-> > > > >  dts/arch/arm64/Makefile | 14 ++++++++++++++
-> > > > >  3 files changed, 39 insertions(+), 3 deletions(-)
-> > > > >  create mode 100644 dts/arch/arm64/Makefile
-> > > > >
-> > > > > diff --git a/dts/Kconfig b/dts/Kconfig
-> > > > > index 00c0aeff893..96396f12b67 100644
-> > > > > --- a/dts/Kconfig
-> > > > > +++ b/dts/Kconfig
-> > > > > @@ -85,6 +85,17 @@ config OF_LIVE
-> > > > >           enables a live tree which is available after relocation=
-,
-> > > > >           and can be adjusted as needed.
-> > > > >
-> > > > > +config OF_UPSTREAM
-> > > > > +       bool "Enable use of devicetree imported from Linux kernel=
- release"
-> > > > > +       help
-> > > > > +         Traditionally, U-boot platforms used to have their cust=
-om devicetree
-> > > >
-> > > > U-Boot
-> > > >
-> > > > (I think I mentioned this, but you thought I said U-boot...but it
-> > > > really is U-Boot). Perhaps grep your patches next time.
-> > >
-> > > Ah, I see. It looks like I missed that bit, and will take care of it
-> > > in the next revision.
-> > >
-> > > >
-> > > > > +         files or copy devicetree files from Linux kernel which =
-are hard to
-> > > > > +         maintain and can usually get out-of-sync from Linux ker=
-nel. This
-> > > > > +         option enables platforms to migrate to devicetree-rebas=
-ing repo where
-> > > > > +         a regular sync will be maintained every major Linux ker=
-nel release
-> > > > > +         cycle. However, platforms can still have some custom u-=
-boot specific
-> > > > > +         bits maintained as part of *-u-boot.dtsi files.
-> > > >
-> > > > I'm a bit nervous about this. It means that boards chose between th=
-is
-> > > > dir of the local files. It means there is some effort to switch.
-> > > >
-> > > > I wonder if we could default to using the rebasing thing, with boar=
-ds
-> > > > having to 'opt out'? So this should be 'default y' ?
-> > >
-> > > Ideally that should be our migration path going forward once we get
-> > > enough boards migrated to use rebasing repo. But at this initial stag=
-e
-> > > we have to put some effort on migrating boards to use rebasing
-> > > subtree, although effort should be just adding (given DT bindings
-> > > compliance) following to defconfig (see patch #7):
-> > >
-> > > CONFIG_OF_UPSTREAM=3Dy
-> > > CONFIG_DEFAULT_DEVICE_TREE=3D"amlogic/meson-gxbb-nanopi-k2"
-> > >
-> > > and create a mirrored copy of:
-> > > ../../../devicetree-rebasing/src/arm64/amlogic/ into
-> > > dts/arch/arm64/amlogic/ with modifications to add targets to
-> > > dts/arch/arm64/Makefile.
-> > >
-> > > I am happy to put in that effort but certainly for new board support
-> > > that would like to import DT from Linux it should be the default. Tha=
-t
-> > > stands true for the Qcom platform series for which Caleb is currently
-> > > working on.
-> >
-> > The problem I see is that this is board-by-board, so will never
-> > happen. Changing one board (e.g. rockpro64-rk3399) typically involves
-> > changing the .dtsi files it includes (e.g. rk3399.dtsi) so it is
-> > hard/impossible to do one board without doing all.
-> >
-> > So this is why I believe the setting should be on an SoC basis, not on
-> > a board basis.
->
-> Sure, I will enable OF_UPSTREAM on a per SoC basis.
->
-> >
-> > >
-> > > >
-> > > >
-> > > > > +
-> > > > >  choice
-> > > > >         prompt "Provider of DTB for DT control"
-> > > > >         depends on OF_CONTROL
-> > > > > diff --git a/dts/Makefile b/dts/Makefile
-> > > > > index 3437e54033d..8098bf8191a 100644
-> > > > > --- a/dts/Makefile
-> > > > > +++ b/dts/Makefile
-> > > > > @@ -10,10 +10,20 @@ ifeq ($(DEVICE_TREE),)
-> > > > >  DEVICE_TREE :=3D unset
-> > > > >  endif
-> > > > >
-> > > > > +ifeq ($(CONFIG_OF_UPSTREAM),y)
-> > > > > +ifeq ($(CONFIG_ARM64),y)
-> > > > > +DEVICE_TREE_LOC :=3D dts/arch/arm64
-> > > >
-> > > > dt_dir ?
-> > >
-> > > Okay I will rename it.
-> > >
-> > > >
-> > > > Should we move the arm64 DTs to arch/arm64 ?
-> > >
-> > > IMO, the migration path should be to use rebasing subtree via
-> > > dts/arch/arm64/ and dropping DTs except *-u-boot.dtsi from
-> > > arch/$(ARCH)/dts. So moving DTs from arch/arm/ to arch/arm64/ seems
-> > > like a redundant change to me.
-> >
-> > I can see that argument, but having two different directory structures
-> > would be confusing.
->
-> I can see your point but U-Boot arch arm64 code is also contained in
-> arch/arm/. However, I would suggest first migrating to DT rebasing and
-> then we can do a move for the leftovers (*-u-boot.dtsi and such). A
-> double move won't add much value.
+Apologies, it was a miss on my part. I really thought it was about
+U-Boot maintainer awareness. I will propose this once this series
+lands in U-Boot.
 
-OK, so long as you are planning to do that next?
-
-Regards,
-Simon
+-Sumit
 
