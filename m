@@ -2,246 +2,144 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D81C47077
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F46CC47422
 	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:11 +0000 (UTC)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.web11.124339.1703776164314574896
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+ by mx.groups.io with SMTP id smtpd.web11.123201.1703772632440752478
  for <u-boot-amlogic@groups.io>;
- Thu, 28 Dec 2023 07:09:24 -0800
+ Thu, 28 Dec 2023 06:10:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=Gynu3Wc2;
- spf=pass (domain: chromium.org, ip: 209.85.219.41, mailfrom: sjg@chromium.org)
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-67f8a5ed1a0so40395716d6.2
-        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 07:09:24 -0800 (PST)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=c9eRo97Q;
+ spf=pass (domain: konsulko.com, ip: 209.85.166.54, mailfrom: trini@konsulko.com)
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7b7d55d7717so279053439f.2
+        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 06:10:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703776163; x=1704380963; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=no58KO7DxbMxIZ5ojulTOZwDRMrp2Sexn2Z6gScpYu8=;
-        b=Gynu3Wc2WjsL3Burby+BnNbo9g02I8kg0shs225YfBE+/Zbazudd9XeNBpK7WTwi4+
-         IQhuGUJZHA8dWHCI5yeBoG9ArY25BZ9q7qCMgeaQSIUYVi7/UITA30UPvUzrR0954VJB
-         f5HIcSviYI5J78iYWu0NEbImX7WqQronLobCo=
+        d=konsulko.com; s=google; t=1703772631; x=1704377431; darn=groups.io;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=njh+aNp27+6eT5lNaMpgrVp0TK1l2Qz7DEouTHmZZNc=;
+        b=c9eRo97QvjOxBqEeAzBdSJq8NKhGispGQ2O7RZlPycamaiX4F/TAGJm69GP1uhJ+x2
+         L2hBoK7o1RGiJxDW+JWQq+IgfgRshtkQflfuna7b0s6oRbpcovLtfw9YWMd5w6fu0LTY
+         ZZ4z+2qlRmTP1LMA/R3dnfT/OagQXhd8xF8Bo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703776163; x=1704380963;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=no58KO7DxbMxIZ5ojulTOZwDRMrp2Sexn2Z6gScpYu8=;
-        b=oFBc+P4zDSvs3Fzo1Fi2kmz+ocrJGoCPkM4phpKW2CB91SzAIwEjz6WBFQvdo6m/FL
-         eUm+Wh+nZPW7Gkfuym6piEjljA2uzM7H8W8DMlaGSBD/ugnuF08VbTNCMG7wY0cXB2BR
-         PCVoF3v048YDsrr3D/eLJdhzhPIuLzL/rcPmOUKeGBxog0ZyIZh/xLuQUM4B9NJEa3HI
-         ija/lSSUSvq11SV1uIbNQSK8Oe3dd28K3HTCV04kbrV4kcustTgixigE19Vv9Vxkvzlg
-         KaroYalbZxEdcXMnRwqnBFIKd/OZcWsVcmvwGQNxREPup1hMpAMBQvmFfYHZ1Hz5oQI1
-         iDIg==
-X-Gm-Message-State: AOJu0YyEeXb6t67UAv+j+1HP02Zl+E7Fq6IFB6mOPcX29WpTeAiK7b9p
-	LFfNGppGat93OqLoJXKN07gxYjcF3fF5vW4b9uolcrYrTfmz
-X-Google-Smtp-Source: AGHT+IGXobipWD9AF+Dr6vuXuZ8xSzaJ16THTAe2IDx5kjzf4GRn6OHi0yl+naUUwM1p7INNs75ruJWacCShFzs2Deo=
-X-Received: by 2002:ad4:530d:0:b0:67f:ac30:6256 with SMTP id
- y13-20020ad4530d000000b0067fac306256mr8275485qvr.104.1703776163433; Thu, 28
- Dec 2023 07:09:23 -0800 (PST)
-MIME-Version: 1.0
+        d=1e100.net; s=20230601; t=1703772631; x=1704377431;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=njh+aNp27+6eT5lNaMpgrVp0TK1l2Qz7DEouTHmZZNc=;
+        b=hcHI93FLwiapv+ExYDX3qJfDWwXYTsHVwACyYWFiuSVuSKy5a8mEoW6MS47TtjI6lo
+         hdzjbDHbT0r/I33WQowT8SZqga/xdAfdv6efWhw2OLZS9wgBr1Dup/kSxSDvqiFWxkHR
+         KoTewMOev8iXUplUoybtU7TNji+076SEqCEqwCLuEbUBd5VyeiZT5rhDohVuQ9VOgYee
+         cSdh92miHF3CZlCIKjgqxwnQa1RbuEaowKoagoupgE01bUmpAJz69bya9TgLxcekIvrq
+         VIzgxvqXuis0ld7WEWvfK2KL/Q1oRDh/waoiohhRnEIbuY94CnrNV0bt7GhkFmeTsDbn
+         Jr5g==
+X-Gm-Message-State: AOJu0Yy2ySLtyqaztJJ/XRl0BXAmMmqzFxQYKqjet5x72d7EZjoIFxmZ
+	fhzM98NDo7Ahp27QsKnclZmS50hqtmsQ1A==
+X-Google-Smtp-Source: AGHT+IHul2zGf/joRFQUaDfZ1+mB82NQf8CRPY2VtuzgZ9n1EjOdempm/7XS5UAUtbJRRtQ1ze7lNg==
+X-Received: by 2002:a05:6e02:1445:b0:35f:f59d:f132 with SMTP id p5-20020a056e02144500b0035ff59df132mr8854393ilo.34.1703772631562;
+        Thu, 28 Dec 2023 06:10:31 -0800 (PST)
+Received: from bill-the-cat (2603-6081-7b00-3119-0000-0000-0000-1001.res6.spectrum.com. [2603:6081:7b00:3119::1001])
+        by smtp.gmail.com with ESMTPSA id x125-20020a818783000000b005e868b1b395sm7436888ywf.100.2023.12.28.06.10.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 06:10:30 -0800 (PST)
+Date: Thu, 28 Dec 2023 09:10:28 -0500
+From: Tom Rini <trini@konsulko.com>
+To: Simon Glass <sjg@chromium.org>
+Cc: Sumit Garg <sumit.garg@linaro.org>, u-boot@lists.denx.de,
+	u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor@kernel.org, neil.armstrong@linaro.org,
+	caleb.connolly@linaro.org, ff@shokubai.tech,
+	daniel.thompson@linaro.org, dgilmore@fedoraproject.org,
+	pbrobinson@gmail.com, ilias.apalodimas@linaro.org,
+	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de,
+	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk,
+	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com,
+	marex@denx.de, mibodhi@gmail.com
+Subject: Re: [PATCH v3 5/8] doc: devicetree: Updates for devicetree-rebasing subtree
+Message-ID: <20231228141028.GC2652760@bill-the-cat>
 References: <20231228115804.3626579-1-sumit.garg@linaro.org>
- <20231228115804.3626579-5-sumit.garg@linaro.org> <CAFLszThfxe_n02auF+vZ1u7FynKkrWEYFU3SdkRTLgBVuiv+Hw@mail.gmail.com>
- <20231228140313.GB2652760@bill-the-cat>
-In-Reply-To: <20231228140313.GB2652760@bill-the-cat>
-From: Simon Glass <sjg@chromium.org>
-Date: Thu, 28 Dec 2023 15:09:12 +0000
-Message-ID: <CAFLszTiPFyRQZtrKhETjMzn6JukFJaBYMugdL-RPO3LJB9XUMA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] dts: Add alternative location for upstream DTB builds
-To: Tom Rini <trini@konsulko.com>
-Cc: Sumit Garg <sumit.garg@linaro.org>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	u-boot-custodians@lists.denx.de, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
-	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
-	ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com, 
-	xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com, 
-	rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com, 
-	rfried.dev@gmail.com, marex@denx.de, mibodhi@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <20231228115804.3626579-6-sumit.garg@linaro.org>
+ <CAFLszTjW8FBYtcb-kiZ-8rUdgMd96KgZWufh1ig+mQ6wq-sGgg@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAFLszTjW8FBYtcb-kiZ-8rUdgMd96KgZWufh1ig+mQ6wq-sGgg@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: multipart/mixed; boundary="Groupsio=UziaNtDSzFuRxNnu4IaC"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2002
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2001
 
-Hi Tom, Sumit,
+--Groupsio=UziaNtDSzFuRxNnu4IaC
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 28, 2023 at 2:03=E2=80=AFPM Tom Rini <trini@konsulko.com> wrote=
-:
->
-> On Thu, Dec 28, 2023 at 01:37:26PM +0000, Simon Glass wrote:
-> > Hi Sumit,
+On Thu, Dec 28, 2023 at 01:37:09PM +0000, Simon Glass wrote:
+> Hi Sumit,
+>=20
+> On Thu, Dec 28, 2023 at 11:59=E2=80=AFAM Sumit Garg <sumit.garg@linaro.or=
+g> wrote:
+[snip]
+> > @@ -68,8 +68,21 @@ a binary file. U-Boot adds its own `fdtgrep` for cre=
+ating subsets of the file.
+> >  Where do I get a devicetree file for my board?
+> >  ----------------------------------------------
 > >
-> > On Thu, Dec 28, 2023 at 11:58=E2=80=AFAM Sumit Garg <sumit.garg@linaro.=
-org> wrote:
-> > >
-> > > Allow platform owners to mirror devicetree files from devitree-rebasi=
-ng
-> > > directory into dts/arch/$(ARCH) (special case for dts/arch/arm64). Th=
-en
-> > > build then along with any *-u-boot.dtsi file present in arch/$(ARCH)/=
-dts
-> > > directory. Also add a new Makefile for arm64.
-> > >
-> > > This will help easy migration for platforms which currently are compl=
-iant
-> > > with upstream Linux kernel devicetree files.
-> > >
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > ---
-> > >
-> > > Changes in v3:
-> > > --------------
-> > > - Minor commit message update
-> > >
-> > > Changes in v2:
-> > > --------------
-> > > - s/DEVICE_TREE_LOC/dt_dir/ and s/U-boot/U-Boot/
-> > >
-> > >  dts/Kconfig             | 11 +++++++++++
-> > >  dts/Makefile            | 17 ++++++++++++++---
-> > >  dts/arch/arm64/Makefile | 14 ++++++++++++++
-> > >  3 files changed, 39 insertions(+), 3 deletions(-)
-> > >  create mode 100644 dts/arch/arm64/Makefile
-> > >
-> > > diff --git a/dts/Kconfig b/dts/Kconfig
-> > > index 00c0aeff893..e58c1c6f2ab 100644
-> > > --- a/dts/Kconfig
-> > > +++ b/dts/Kconfig
-> > > @@ -85,6 +85,17 @@ config OF_LIVE
-> > >           enables a live tree which is available after relocation,
-> > >           and can be adjusted as needed.
-> > >
-> > > +config OF_UPSTREAM
-> > > +       bool "Enable use of devicetree imported from Linux kernel rel=
-ease"
-> > > +       help
-> > > +         Traditionally, U-Boot platforms used to have their custom d=
-evicetree
-> > > +         files or copy devicetree files from Linux kernel which are =
-hard to
-> > > +         maintain and can usually get out-of-sync from Linux kernel.=
- This
-> > > +         option enables platforms to migrate to devicetree-rebasing =
-repo where
-> > > +         a regular sync will be maintained every major Linux kernel =
-release
-> > > +         cycle. However, platforms can still have some custom u-boot=
- specific
-> > > +         bits maintained as part of *-u-boot.dtsi files.
-> >
-> > My only other suggestion here is to mention that this should be set in
-> > Kconfig, for the SoC as a whole. So I believe that means that it
-> > should be hidden, with no string for the 'bool':
-> >
-> >       bool  # Enable use of devicetree imported from Linux kernel relea=
-se
->
-> I think we can just keep prompting for it now, to make the transition
-> easier, before this option just goes away in time, hopefully.
->
-> > Also, this doesn't seem to work for me. Before this series I get these
-> > files when building firefly-rk3399:
-> >
-> > rk3399-eaidk-610.dtb            rk3399-khadas-edge-v.dtb
-> > rk3399-orangepi.dtb        rk3399-rock-pi-4a.dtb
-> > rk3399-evb.dtb                  rk3399-leez-p710.dtb
-> > rk3399-pinebook-pro.dtb    rk3399-rock-pi-4c.dtb
-> > rk3399-ficus.dtb                rk3399-nanopc-t4.dtb
-> > rk3399-pinephone-pro.dtb   rk3399-rockpro64.dtb
-> > rk3399-firefly.dtb              rk3399-nanopi-m4-2gb.dtb
-> > rk3399pro-rock-pi-n10.dtb  rk3399-roc-pc.dtb
-> > rk3399-gru-bob.dtb              rk3399-nanopi-m4b.dtb
-> > rk3399-puma-haikou.dtb     rk3399-roc-pc-mezzanine.dtb
-> > rk3399-gru-kevin.dtb            rk3399-nanopi-m4.dtb
-> > rk3399-rock-4c-plus.dtb
-> > rk3399-khadas-edge-captain.dtb  rk3399-nanopi-neo4.dtb    rk3399-rock-4=
-se.dtb
-> > rk3399-khadas-edge.dtb          rk3399-nanopi-r4s.dtb     rk3399-rock96=
-0.dtb
-> >
-> > Afterwards I get this:
-> >
-> > make[3]: *** No rule to make target
-> > 'dts/arch/arm64/rk3399-firefly.dtb', needed by 'dtbs'.  Stop.
-> >
-> > So I set this manually for that one board:
-> >
-> > CONFIG_DEFAULT_DEVICE_TREE=3D"rockchip/rk3399-firefly"
-> >
-> > and get:
-> >
-> > make[3]: *** No rule to make target
-> > 'dts/arch/arm64/rockchip/rk3399-firefly.dtb', needed by 'dtbs'.  Stop.
-> >
-> > I am not sure how to fix this, nor how this can be made to build all
-> > the DTs for rk3399, as it does today.
->
-> Looking at the patch for amlogic boards, you need to make the link to
-> devicetree-rebasing inside dts/...
+> > -You may find that the Linux kernel has a suitable file. Look in the
+> > -kernel source in arch/<arch>/boot/dts.
+> > +Linux kernel Git repository has been the place where devicetree files =
+along
+> > +with devicetree bindings are stored and maintained. There is devicetee=
+-rebasing
+> > +(dtrepo_) which maintains a forked copy of devicetree files along with=
+ bindings
+> > +at every Linux kernel major release or intermideate release candidates=
+.
+> > +
+> > +In order to maintain devicetree files sync, U-Boot maintains a Git sub=
+tree for
+> > +devicetee-rebasing repo as `devicetee-rebasing/` sub-directory. It is =
+regularly
+> > +kept updated with every new kernel major release via subtree pull as f=
+ollows::
+> > +
+> > +    git subtree pull --prefix devicetree-rebasing \
+> > +        git://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devic=
+etree-rebasing.git \
+> > +        <release-tag> --squash
+> > +
+>=20
+> This is an internal detail and I believe it will confuse people. Can
+> you put this in a section like 'Resyncing with devicetree-rebasing'
+> and explain when this might be needed?...almost enver, right?
+=20
+I think this means the wording and sections need to be clearer, in the
+document. It's unlikely most users would need this (but I can see
+downstream cases), but I need to do this at least once a U-Boot release
+cycle, and I want to make sure it's documented on how to do it.
 
-OK, let me give up on rk3399 for now...that doesn't seem to work even
-with the link.
+--=20
+Tom
 
-Using odroid-c2 with -next I see:
+--Groupsio=UziaNtDSzFuRxNnu4IaC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-$ ls /tmp/b/odroid-c2/arch/arm/dts/
-meson-a1-ad401.dtb                 meson-g12b-odroid-n2l.dtb
-    meson-gxl-s905x-libretech-cc.dtb
-meson-axg-jethome-jethub-j100.dtb  meson-g12b-odroid-n2-plus.dtb
-    meson-gxl-s905x-libretech-cc-v2.dtb
-meson-axg-s400.dtb                 meson-g12b-radxa-zero2.dtb
-    meson-gxl-s905x-p212.dtb
-meson-g12a-radxa-zero.dtb          meson-gxbb-kii-pro.dtb
-    meson-gxm-gt1-ultimate.dtb
-meson-g12a-sei510.dtb              meson-gxbb-nanopi-k2.dtb
-    meson-gxm-khadas-vim2.dtb
-meson-g12a-u200.dtb                meson-gxbb-odroidc2.dtb
-    meson-gxm-s912-libretech-pc.dtb
-meson-g12b-a311d-bananapi-m2s.dtb  meson-gxbb-p200.dtb
-    meson-gxm-wetek-core2.dtb
-meson-g12b-a311d-khadas-vim3.dtb   meson-gxbb-p201.dtb
-    meson-sm1-bananapi-m2-pro.dtb
-meson-g12b-bananapi-cm4-cm4io.dtb  meson-gxbb-wetek-hub.dtb
-    meson-sm1-bananapi-m5.dtb
-meson-g12b-gsking-x.dtb            meson-gxbb-wetek-play2.dtb
-    meson-sm1-khadas-vim3l.dtb
-meson-g12b-gtking.dtb              meson-gxl-s805x-libretech-ac.dtb
-    meson-sm1-odroid-c4.dtb
-meson-g12b-gtking-pro.dtb          meson-gxl-s905d-libretech-pc.dtb
-    meson-sm1-odroid-hc4.dtb
-meson-g12b-odroid-go-ultra.dtb
-meson-gxl-s905w-jethome-jethub-j80.dtb  meson-sm1-sei610.dtb
-meson-g12b-odroid-n2.dtb           meson-gxl-s905x-khadas-vim.dtb
-$
-With this series (sort of, since I am really not sure how to
-cherry-pick the commits from the PR) I see nothing:
+-----BEGIN PGP SIGNATURE-----
 
-$ ls /tmp/b/odroid-c2/arch/arm/dts/
-$
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmWNgdQACgkQFHw5/5Y0
+tyypzAv/WiiZe8q4rknbg593JPwyIO8Gwf1lbP6VJ0G+WuJYXTRskajVOzcRRHRs
+m5613Vd6FpzCpMdWUuUUGYnWNWniS+y6+RevdJCg9NeB1lrrrytu78c+CUfc4TyW
+gO3lrq05b2ZddNY4HmQUjt/HKTAzbmAexxcyI8fxaFlLrfijLJ9aqlqLYrJgRBEp
++XpEvCRwxZXtPJx3mjmz9mzzh+izVJ5cjMHMRhVwFOlnFdImucfDpCW3kzISkqWb
+2LcG23lGJzxSvRd7I0vl7TIu2tyeZEdPJW6vuEmuY66+0gb/IwpWESN8KAva1H+3
+BYglO3zLy8V7wh9MQcKU94IAPFT2Pv3R8Tu9xcpnx+Tgm0X2HLN+vS9W41oDaypg
+yECUp5z7O2JXZIxGkXxubZ/oI122c2JF2m6ChSOhFzVDhYk4NYZ95hb3kS4aNxSh
+BjaYu3vrBoUN5TIUgl2cxv0NLne8e/qAupITmXdVT/gg1ES2ICOJ5lsXYNM7CCxJ
+p3BPDQ7W
+=l3Pi
+-----END PGP SIGNATURE-----
 
-This shows some of the files:
-
-$ find /tmp/b/odroid-c2/ -name "*.dtb"
-/tmp/b/odroid-c2/dts/dt.dtb
-/tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-odroidc2.dtb
-/tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-nanopi-k2.dtb
-/tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-wetek-play2.dtb
-/tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-kii-pro.dtb
-/tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-p200.dtb
-/tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-p201.dtb
-/tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-wetek-hub.dtb
-/tmp/b/odroid-c2/u-boot.dtb
-
-but where are the rest? Also, is it possible to put the output .dtb
-files into the same directory? Otherwise we may have some pain with
-binman.
-
-[..]
-
-Regards,
-Simon
+--Groupsio=UziaNtDSzFuRxNnu4IaC--
 
