@@ -2,224 +2,122 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9FDC47DB3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE82C47DB4
 	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:11 +0000 (UTC)
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
- by mx.groups.io with SMTP id smtpd.web11.122624.1703770656097980932
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+ by mx.groups.io with SMTP id smtpd.web10.121736.1703765010595005469
  for <u-boot-amlogic@groups.io>;
- Thu, 28 Dec 2023 05:37:36 -0800
+ Thu, 28 Dec 2023 04:03:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=PMicOQzC;
- spf=pass (domain: chromium.org, ip: 209.85.215.170, mailfrom: sjg@chromium.org)
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5cda24a77e0so2159400a12.2
-        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 05:37:35 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=gW0uYVNt;
+ spf=pass (domain: linaro.org, ip: 209.85.167.52, mailfrom: ilias.apalodimas@linaro.org)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50e80d14404so1977802e87.1
+        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 04:03:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703770655; x=1704375455; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ENGVDTflU/DKfO5ZTkIokNGqLKpQaRZg3/48qkXgKM=;
-        b=PMicOQzCVF3MVl3OzxOQUFv64qlPODqJSj5qnV8CXnf4sbqz9EG9WsOg+kJvrwT+jI
-         4bi7V8im0rxpBKM2JqbO2t76QVnqP28ShgoRigfZ54hO+7L2jXIY/7tywMz07hyRLllr
-         MUZ0SslUfNshMUfwjpInapyHQA27wsttscM94=
+        d=linaro.org; s=google; t=1703765008; x=1704369808; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hedqUp2ogf8l6RLIdXQ6yk8zmoNyrw8t2xabdfAVsM4=;
+        b=gW0uYVNtI4v1XVdYk/z19CPa1xjBN1ZUhRXJPm6RCO2uNgksQkVVrWtEVIF6nrb/Sc
+         Rh4cBiCDm832ukkKsLwZVfl72vT7EwRBSkDKFszv6cgfM2FmEbpBJaI7tX+Ylx3NcXVd
+         KbOu7+80uWxbnUSk1EbzPSqY1C76KbFionmbLXv8pLaZ4KOqjgQluvwdfnarbObC59t3
+         uAVEVQyrpBJPgo4c21OxxUf0Po4E0KYKTGQ4txTIPQxcuQdSZ6Zd+LhgvD0GxiZcsKBB
+         u5BLtTwrv7hQiBaRz4ynLh3zo7xIL87cQoeQfn9OURnTp3d55AERH6EgaymXexxr23Ud
+         OI+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703770655; x=1704375455;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8ENGVDTflU/DKfO5ZTkIokNGqLKpQaRZg3/48qkXgKM=;
-        b=l3KY4Vk5oXTrxLxoI2GQ0h7vgeErsi8ZRLPEz6M7rEqaFdAlAGcRRf3co8v6wJ6TBO
-         mzuc0e1eOkmmN8TOMWDtBEI3djiCnxNqrzXAlKRgyzwEHX8huptIkcqmCA7CZfMGwLaQ
-         m9qyuRcpp8Je+zDwyCLh5L5UXs8Ya8LndYwtuoCaC5jTm20JxePZVCtJUMb3LMJyMTqc
-         T2yupJ2oCok5KvfXykiyrMr9fOCbNjW55VMj5lTX0j6fXvw3WCIwvrm8umRuYYh3X4kq
-         TKDRq4l6sV18szZOUSYueXF5oPofKQ3o/ZmRQvnJGWNZZElatAp8yuw5WdBVU/75YdnA
-         HvNQ==
-X-Gm-Message-State: AOJu0YyP7SZb7rywplkXbwpmRLZ5YP06/cfDJZrtmBRyqL2d2eD3GC/2
-	/8vM80exW8RLgJo2rJx+wEpXGa+K4rL90kAsKn0oJgo2uzDn
-X-Google-Smtp-Source: AGHT+IGS6LeeOd1bBV2eH7SmlBnlx0188IwriKBgUWYRFwDWOY9yw6W/2p2m9HFrgqNdC9VQw3gKzR0M4TGrk8/hZ18=
-X-Received: by 2002:a17:90b:4c4c:b0:28c:aac9:3c7f with SMTP id
- np12-20020a17090b4c4c00b0028caac93c7fmr89897pjb.71.1703770655517; Thu, 28 Dec
- 2023 05:37:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703765008; x=1704369808;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hedqUp2ogf8l6RLIdXQ6yk8zmoNyrw8t2xabdfAVsM4=;
+        b=lZqdexR4cZ//HTH87IGgVk5FaZS2fPTrRdvJkUoKcmvuxgeZhl64AWSrtfQvtOl06K
+         KuKsdpk4BJ7DNdQiCQupNGT8Ey0pTkqOkvJ53UY0pjvEB1HO+cARCIsqwxrlvLQJiSxM
+         1/aiJNPY8VamC1WsbimsUNnLHUANyL66SlfXnFPC3/y/HG2x8fPkCNWeYwSHfcC/lQY5
+         x9r8plaopkHNMb+eVSE8PPslpxoep8AlcJ425tyVbp25H5IeY6PjZzGEk1/prIMKF5e8
+         mkLdJ5RouwxTmWNkyB/qddy/ppDdLiUEXUJyPxicZ2992cGD0UH13EOvgbCLBZjxxEsV
+         KHZw==
+X-Gm-Message-State: AOJu0Yy4RFzXF7eobmQrqucC7gUMnM1nIiE5Ro0AwDRZIKURfihCQHES
+	K7CJ9ilW5GhmYTpEz4ixDbujV59qmqfUxIrj0ypunr0KVzS8ZA==
+X-Google-Smtp-Source: AGHT+IErF2d+J8Xs176+dkns5eNkMPe2m7zXasK5RNInmjMdOs9GmKvcdwZtN1xfGagA7bEte/D0n7MhOze0qomUAR4=
+X-Received: by 2002:ac2:4c8f:0:b0:50e:70b9:8600 with SMTP id
+ d15-20020ac24c8f000000b0050e70b98600mr4197585lfl.0.1703765008599; Thu, 28 Dec
+ 2023 04:03:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20231214135103.1606605-1-sumit.garg@linaro.org>
- <20231221150303.GI2513409@bill-the-cat> <CAFLszThCytoBrNEp8BqaNqe9FnzhAznC9dMHHP4g=FcZQH3zng@mail.gmail.com>
- <CAFA6WYOd858K3oMxYn3XqS=UhwjMggj3ugfHgk1Ux19DCxRjVg@mail.gmail.com>
- <CAFLszTh2hahzuKpwxs+cPBCVfA7TaXbNNjhEmz6-CC9rqHnf5Q@mail.gmail.com>
- <CAFA6WYMGMADJc3RSbm+XFGGLLHhEhKRjzgovy5wFBQfjV9=Nkw@mail.gmail.com>
- <CAFLszTja0nvhZz3b--TWXS4ABNPpJDPxUvY=9YsvbCN-DFgjbQ@mail.gmail.com> <20231227133754.GS2652760@bill-the-cat>
-In-Reply-To: <20231227133754.GS2652760@bill-the-cat>
-From: Simon Glass <sjg@chromium.org>
-Date: Thu, 28 Dec 2023 13:37:19 +0000
-Message-ID: <CAFLszTjkHDPyOmt44qxsgjAap4ie=K9DeuyzAbd3zifS1pJCLg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] An effort to bring DT bindings compliance within U-boot
-To: Tom Rini <trini@konsulko.com>
-Cc: Sumit Garg <sumit.garg@linaro.org>, Maxim Uvarov <maxim.uvarov@linaro.org>, u-boot@lists.denx.de, 
-	u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
+References: <20231228115804.3626579-1-sumit.garg@linaro.org> <20231228115804.3626579-2-sumit.garg@linaro.org>
+In-Reply-To: <20231228115804.3626579-2-sumit.garg@linaro.org>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Thu, 28 Dec 2023 14:02:52 +0200
+Message-ID: <CAC_iWjJJX+Vuicy__sxqc__9nqLHf8A7v6Lr56=wSLEpieai4g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] CI: Exclude devicetree-rebasing subtree for CONFIG checks
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+	u-boot-custodians@lists.denx.de, trini@konsulko.com, sjg@chromium.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
 	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
 	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
-	ilias.apalodimas@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de, 
+	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de, 
 	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk, 
-	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com, marex@denx.de
+	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com, marex@denx.de, 
+	mibodhi@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1992
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/1989
 
-Hi Tom,
-
-On Wed, Dec 27, 2023 at 1:37=E2=80=AFPM Tom Rini <trini@konsulko.com> wrote=
-:
+On Thu, 28 Dec 2023 at 13:58, Sumit Garg <sumit.garg@linaro.org> wrote:
 >
-> On Wed, Dec 27, 2023 at 07:56:26AM +0000, Simon Glass wrote:
-> > Hi Sumit,
-> >
-> > On Tue, Dec 26, 2023 at 10:06=E2=80=AFAM Sumit Garg <sumit.garg@linaro.=
-org> wrote:
-> > >
-> > > Hi Simon,
-> > >
-> > > On Tue, 26 Dec 2023 at 15:17, Simon Glass <sjg@chromium.org> wrote:
-> > > >
-> > > > Hi Sumit,
-> > > >
-> > > > On Fri, Dec 22, 2023 at 5:34=E2=80=AFAM Sumit Garg <sumit.garg@lina=
-ro.org> wrote:
-> > > > >
-> > > > > On Thu, 21 Dec 2023 at 20:48, Simon Glass <sjg@chromium.org> wrot=
-e:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Thu, Dec 21, 2023 at 3:03=E2=80=AFPM Tom Rini <trini@konsulk=
-o.com> wrote:
-> > > > > > >
-> > > > > > > On Thu, Dec 14, 2023 at 07:20:55PM +0530, Sumit Garg wrote:
-> > > > > > >
-> > > > > > > > Prerquisite
-> > > > > > > > -----------
-> > > > > > > >
-> > > > > > > > This patch series requires devicetree-rebasing git repo to =
-be added as a
-> > > > > > > > subtree to the main U-boot repo via:
-> > > > > > > >
-> > > > > > > > $ git subtree add --prefix devicetree-rebasing \
-> > > > > > > >       git://git.kernel.org/pub/scm/linux/kernel/git/devicet=
-ree/devicetree-rebasing.git \
-> > > > > > > >       v6.6-dts --squash
-> > > > > > >
-> > > > > > > So, I've played with subtree a little and I think this is the=
- right way
-> > > > > > > forward in these cases. If anyone wants to take a look at how=
- this works
-> > > > > > > in practice, take a look at:
-> > > > > > > https://source.denx.de/u-boot/u-boot/-/commits/WIP/u-boot-wit=
-h-devicetree-rebasing-since-v6.1/?ref_type=3Dheads
-> > > > > > > In that tree I started with the v6.1-dts tag, sync'd all the =
-configs (to
-> > > > > > > have an example of a normal commit) and then did a merge of e=
-ach tag
-> > > > > > > until v6.6-dts, so provide some history. And git log looks li=
-ke what I
-> > > > > > > want to see, the squash commit has clear references to what w=
-e are
-> > > > > > > getting and I make a merge commit that says what I did. If yo=
-u pull the
-> > > > > > > tree and checkout the branch, all the code is right there alr=
-eady,
-> > > > > > > nothing further to do. Same with tarball releases. The only t=
-hing I
-> > > > > > > don't like is the size growth there, but we'll reclaim some o=
-f it when
-> > > > > > > we delete our obsolete bindings, and then obsolete dts files.
-> > > > > >
-> > > > > > I spent a bit of time with subtree as well, as part of reviewin=
-g this
-> > > > > > series, using the instructions Sumit provided. It seems OK to m=
-e. We
-> > > > > > have to accept that it adds code and there will be changes/chur=
-n, but
-> > > > > > it is not too different to accepting patches on those files wit=
-hin
-> > > > > > U-Boot. We will bring in files which U-Boot doesn't use, but U-=
-Boot
-> > > > > > does support a good proportion of the boards supported by Linux=
-, so I
-> > > > > > don't see that as a big cost.
-> > > > > >
-> > > > > > From my experimentation, subtrees seem to have no impact on bui=
-ldman,
-> > > > > > which is great. Am I missing anything?
-> > > > >
-> > > > > No it shouldn't cause any regression on existing tools/CI/build
-> > > > > systems. It is just a version controlled way of importing third p=
-arty
-> > > > > source code as a tarball.
-> > > > >
-> > > > > >
-> > > > > > I still worry about the board-level 'switch' between U-Boot DT =
-and
-> > > > > > upstream ones. I believe that should be at the SoC level instea=
-d.
-> > > > > >
-> > > > >
-> > > > > Probably I wasn't clear enough in my earlier replies but this ser=
-ies
-> > > > > motivates for a SoC level switch only. Patch #7 is essentially a
-> > > > > switch for Amlogic meson-gxbb SoC and its derived boards.
-> > > >
-> > > > OK good...but that's not quite what I mean. You have a fragment lik=
-e
-> > > > this in multiple defconfig files:
-> > > >
-> > > > +CONFIG_OF_UPSTREAM=3Dy
-> > > > +CONFIG_DEFAULT_DEVICE_TREE=3D"amlogic/meson-gxbb-odroidc2"
-> > > >
-> > > > instead, OF_UPSTREAM should be enabled via 'imply' for the SoC, in =
-the
-> > > > Kconfig.
-> > >
-> > > Okay I got your point. It makes sense to me. I will do that for v3.
-> > >
-> > > > We should not have to specify the filename like this. It is
-> > > > laborious and error-prone.
-> > >
-> > > The only differentiation in naming here is just silicon vendor prefix
-> > > addition (amlogic/ in this case). The reason for this being that I
-> > > just want to mirror the whole silicon vendor directory from DT
-> > > rebasing rather than mirroring individual DT files. Given this do you
-> > > have any better alternatives?
-> >
-> > My current opinion is that a better approach would be to move the
-> > files first (in the U-Boot tree). That would be easier if we could
-> > just copy the Linux arch/xxx/boot/dts Makefiles but for now that is
-> > not possible. The Kconfig options for each SoC are similar but there
-> > are various differences.
-> >
-> > Having a different layout is just a pain and it will get worse, as
-> > people add new boards, since they need to know to add the correct
-> > directory.
-> >
-> > I will see if I can devise a small series to point this in what I
-> > consider to be the right direction, in line with Linux, and the U-Boot
-> > commit 3284c8b8 ("dts: generate multiple device tree blobs").
+> Since devicetree-rebasing is an external repo with its own coding style,
+> exclude it from Azure and gitlab CI CONFIG checks.
 >
-> I think we should just go with the approach Sumit has already taken, and
-> encourage SoC maintainers to migrate sooner rather than later. There's
-> also nothing stopping people from adding vendor directories under arch/
-> at that point, and will likely have to happen anyhow for the case of
-> platforms that aren't yet in the devicetree-rebasing tree. I am hopeful
-> it won't be as much of an issue as my general feedback will change from
-> "what kernel release is this dts in?" to "why didn't you set
-> OF_UPSTREAM and use the existing tree?"
+> Reviewed-by: Tom Rini <trini@konsulko.com>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>
+> Changes in v3:
+> --------------
+> - Picked up review tag
+>
+> Changes in v2:
+> --------------
+> - Excluded gitab CI config check and added commit description.
+>
+>  .azure-pipelines.yml | 3 ++-
+>  .gitlab-ci.yml       | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/.azure-pipelines.yml b/.azure-pipelines.yml
+> index d6f3fa423c6..f100c4493e6 100644
+> --- a/.azure-pipelines.yml
+> +++ b/.azure-pipelines.yml
+> @@ -65,7 +65,8 @@ stages:
+>        # have no matches.
+>        - script: git grep -E '^#[[:blank:]]*(define|undef)[[:blank:]]*CONFIG_'
+>                    :^doc/ :^arch/arm/dts/ :^scripts/kconfig/lkc.h
+> -                  :^include/linux/kconfig.h :^tools/ && exit 1 || exit 0
+> +                  :^include/linux/kconfig.h :^tools/ :^devicetree-rebasing/ &&
+> +                  exit 1 || exit 0
+>
+>    - job: docs
+>      displayName: 'Build documentation'
+> diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+> index fee165198ae..96ca9f72bbc 100644
+> --- a/.gitlab-ci.yml
+> +++ b/.gitlab-ci.yml
+> @@ -161,7 +161,8 @@ check for new CONFIG symbols outside Kconfig:
+>      # have no matches.
+>      - git grep -E '^#[[:blank:]]*(define|undef)[[:blank:]]*CONFIG_'
+>          :^doc/ :^arch/arm/dts/ :^scripts/kconfig/lkc.h
+> -        :^include/linux/kconfig.h :^tools/ && exit 1 || exit 0
+> +        :^include/linux/kconfig.h :^tools/ :^devicetree-rebasing/ &&
+> +        exit 1 || exit 0
+>
+>  # build documentation
+>  docs:
+> --
+> 2.34.1
+>
 
-OK.
-
-But I do want to see a move to using the same dir structure as Linux.
-
-Regards,
-Simon
+Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
