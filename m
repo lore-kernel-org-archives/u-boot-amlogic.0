@@ -2,225 +2,323 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F14C4828A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9775BC47DB3
 	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:22 +0000 (UTC)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
- by mx.groups.io with SMTP id smtpd.web11.131350.1703795533338274564
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+ by mx.groups.io with SMTP id smtpd.web10.151098.1703863845022697760
  for <u-boot-amlogic@groups.io>;
- Thu, 28 Dec 2023 12:32:13 -0800
+ Fri, 29 Dec 2023 07:30:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=ksFUz6RJ;
- spf=pass (domain: konsulko.com, ip: 209.85.128.173, mailfrom: trini@konsulko.com)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5efb0e180f0so4165827b3.1
-        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 12:32:13 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Csr0xSlh;
+ spf=pass (domain: linaro.org, ip: 209.85.222.53, mailfrom: sumit.garg@linaro.org)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7ccfbdd77f6so1075632241.3
+        for <u-boot-amlogic@groups.io>; Fri, 29 Dec 2023 07:30:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1703795532; x=1704400332; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua/+LSP8qEmi8u8U7bui2a7+7/ZLwmw7r0Rdiu5I8po=;
-        b=ksFUz6RJgDtj35Wjjsf2z3IHHxcZsj1gzSmehyp+X12CUKxF4YiNC84INqOyTOYc8f
-         qevXDYjvozA1kClfxQSlSFGtFxd5A6PtfKJ1arVJBc4uAOyAsJgSvb60iP0/01O4kpnb
-         5hv4O/Xji7MXXxQ6WYMXezG27jTQMwB2bJNk4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703795532; x=1704400332;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1703863844; x=1704468644; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ua/+LSP8qEmi8u8U7bui2a7+7/ZLwmw7r0Rdiu5I8po=;
-        b=S6Ghwf/cgsJknl1F1GevnyM70C7uqc5a0oSGVv5I7SOFL7CdSr+TFYrxAZM14oA4i5
-         EbhVz3qgPbS/TTQ93QG39NS/htV4VQdd2EWgmhc8sX/BXD4a+GoSGyZdq6qSNc5DZwvv
-         qGSIcM9wnMjk8y1jo5bj+4d59OH6Iq9temc17TH7KrbPWbghTD+1Cvf/MhAtlHohqcV7
-         QIFG5Y+mIZOI9QSG3FvymcCahcAMK3ZBqsMuF0ZeP5vSpG02i6vHrF5VuH+j7uPwwyhj
-         14o6uF+7GPsU3KOxwAL2qXoTphuqAtKKJ4XkWcwwfssU6Ge7hpw/Hv4kWFg7nsMhxbd6
-         Yfrw==
-X-Gm-Message-State: AOJu0YwGBug9FD0t/UpdTXc4id72YEaU7pLd8aKPLKoijmaDGFxy9h1z
-	ao7M7hNpFbdHTO5YnoT9hTuikZFtOAO9pQ==
-X-Google-Smtp-Source: AGHT+IHPeVjLgZTrEOkYORx4qXd+LcJftuRMb8Y1Kko3UshK1j15ZlxbE3hq9D7qOeB7YpyIQOKJVw==
-X-Received: by 2002:a81:4c95:0:b0:5ec:2eb3:e80e with SMTP id z143-20020a814c95000000b005ec2eb3e80emr3640247ywa.1.1703795532524;
-        Thu, 28 Dec 2023 12:32:12 -0800 (PST)
-Received: from bill-the-cat (2603-6081-7b00-3119-0000-0000-0000-1001.res6.spectrum.com. [2603:6081:7b00:3119::1001])
-        by smtp.gmail.com with ESMTPSA id a128-20020a0df186000000b005c5a08c5c15sm7789805ywf.136.2023.12.28.12.32.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 12:32:11 -0800 (PST)
-Date: Thu, 28 Dec 2023 15:32:09 -0500
-From: Tom Rini <trini@konsulko.com>
-To: Simon Glass <sjg@chromium.org>
-Cc: Sumit Garg <sumit.garg@linaro.org>, u-boot@lists.denx.de,
-	u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor@kernel.org, neil.armstrong@linaro.org,
-	caleb.connolly@linaro.org, ff@shokubai.tech,
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org,
-	pbrobinson@gmail.com, ilias.apalodimas@linaro.org,
-	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de,
-	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk,
-	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com,
-	marex@denx.de, mibodhi@gmail.com
-Subject: Re: [PATCH v3 7/8] dts: meson-gxbb: Switch to using upstream DT
-Message-ID: <20231228203209.GP2652760@bill-the-cat>
-References: <20231228115804.3626579-1-sumit.garg@linaro.org>
- <20231228115804.3626579-8-sumit.garg@linaro.org>
- <CAFLszTg=CDfyTGG9c-t=98eFYvYy61L1kzmrssNKPSS6dZL3cg@mail.gmail.com>
- <20231228135642.GA2652760@bill-the-cat>
- <CAFLszThP+GJcPP_LJBva1M5mi9Wj-Nh-z7A6-fkSpPgOTtLmRQ@mail.gmail.com>
- <20231228152504.GF2652760@bill-the-cat>
- <CAFLszTh24c1L4xfab7EmgSYJt6HhwfK+0h6quEMNt9QxW01DqA@mail.gmail.com>
+        bh=VBgD3orp86If1o7MCJIVrPcw8CS9enSQNQwjkVuJfcg=;
+        b=Csr0xSlhsbqG2yTTtampsaHdpL9tY8/+Y8CF6xDG9P03669dXqa3Ddm4j8roVfAbdh
+         5rycUgbh90loJxtvS7rxXBOQq9PWxNXvnm9nxyy/eZtBJsOxxac92Ak1zzjLr/wA/6Po
+         CakAP6EOZJxmqmq+OqhIRvujMkcFRJJlvEI9W/QcB1nH7UNj0q7g+KzUiVedJHDt0gfz
+         zly0721UDlzfuPVPzg4PTT6W9BuvMhyNUaDPmEL/jIte/gD7ElT3K9SsyiypR7p0PCo7
+         Q9mkEzBFtyNclEL8N6KiDxLUBPiGYesA5BCplkzWv0JWrZeo1jLZtGht0xERwlJGqcnY
+         qZzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703863844; x=1704468644;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VBgD3orp86If1o7MCJIVrPcw8CS9enSQNQwjkVuJfcg=;
+        b=OdpengXwgDHf1EBvqgnvV1s7a2o/ndtTKDTQq7yKGbQR+01ZIfNqlvHKh3M21OQ4oj
+         BGHnl1EiXfDinMa2DU62npfXY1A0xFhFn3zKvPfn0H2K22R/Gzhiq/Hh1jP6dYe2QgqF
+         8BxDV+VXFXPFFiWM4ASoYyzZRnexS6MLB7gYBIdIMMYKVwx5Iwe8yNQQ8EudI01i2OYa
+         H8aDeM7GiF40d9yxUo/QwPbwkriYeXtqaMZyrMc5elVt4iWi/ldtFHE3bEC4ZC/OOOgM
+         gpbEJ0Aj8Ww0D1hoUP05NVZHBMfJBlRU/fhzsB2ay7zoBH388dFsEecRZSA5llPDj/oB
+         a19Q==
+X-Gm-Message-State: AOJu0YwFTQCHbttNwoWAfJXJxfgPt6vXrPAwyEMLy8B+Gwwrs2VkNzyM
+	UfhScveQ/xDo5bERwXhmncoqQ6DObHMCU0gNA9mgD6dKQ4Khbw==
+X-Google-Smtp-Source: AGHT+IFyPJWi9k3ZOM7X7tLU3POtslko9T7YoXzvGBO6/lHK7orZZ/TWIVPu5aWBo7g9guLFMkTScu10I4fLruMWB9I=
+X-Received: by 2002:a05:6102:ccd:b0:467:5e74:fa25 with SMTP id
+ g13-20020a0561020ccd00b004675e74fa25mr593721vst.26.1703863843881; Fri, 29 Dec
+ 2023 07:30:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAFLszTh24c1L4xfab7EmgSYJt6HhwfK+0h6quEMNt9QxW01DqA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=VEn2Zj6BxAXSyQBPQ2se"
+References: <20231228115804.3626579-1-sumit.garg@linaro.org>
+ <20231228115804.3626579-5-sumit.garg@linaro.org> <CAFLszThfxe_n02auF+vZ1u7FynKkrWEYFU3SdkRTLgBVuiv+Hw@mail.gmail.com>
+ <20231228140313.GB2652760@bill-the-cat> <CAFLszTiPFyRQZtrKhETjMzn6JukFJaBYMugdL-RPO3LJB9XUMA@mail.gmail.com>
+ <20231228155428.GI2652760@bill-the-cat> <CAFLszTjqcJouv7Dyasjfx4FiNy378fFA+A-DP292yvPk8xOzjw@mail.gmail.com>
+In-Reply-To: <CAFLszTjqcJouv7Dyasjfx4FiNy378fFA+A-DP292yvPk8xOzjw@mail.gmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Fri, 29 Dec 2023 21:00:32 +0530
+Message-ID: <CAFA6WYME_0-s4aBbaKOS3Q+q9+5553qSWcL9pDMvC9VaAfAz0w@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] dts: Add alternative location for upstream DTB builds
+To: Simon Glass <sjg@chromium.org>
+Cc: Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+	u-boot-custodians@lists.denx.de, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
+	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
+	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
+	ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com, 
+	xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com, 
+	rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com, 
+	rfried.dev@gmail.com, marex@denx.de, mibodhi@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2010
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2011
 
---Groupsio=VEn2Zj6BxAXSyQBPQ2se
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Dec 28, 2023 at 07:48:13PM +0000, Simon Glass wrote:
+On Fri, 29 Dec 2023 at 01:18, Simon Glass <sjg@chromium.org> wrote:
+>
 > Hi Tom,
->=20
-> On Thu, Dec 28, 2023 at 3:25=E2=80=AFPM Tom Rini <trini@konsulko.com> wro=
+>
+> On Thu, Dec 28, 2023 at 3:54=E2=80=AFPM Tom Rini <trini@konsulko.com> wro=
 te:
 > >
-> > On Thu, Dec 28, 2023 at 03:09:41PM +0000, Simon Glass wrote:
-> > > Hi Tom,
+> > On Thu, Dec 28, 2023 at 03:09:12PM +0000, Simon Glass wrote:
+> > > Hi Tom, Sumit,
 > > >
-> > > On Thu, Dec 28, 2023 at 1:56=E2=80=AFPM Tom Rini <trini@konsulko.com>=
+> > > On Thu, Dec 28, 2023 at 2:03=E2=80=AFPM Tom Rini <trini@konsulko.com>=
  wrote:
 > > > >
-> > > > On Thu, Dec 28, 2023 at 01:37:11PM +0000, Simon Glass wrote:
+> > > > On Thu, Dec 28, 2023 at 01:37:26PM +0000, Simon Glass wrote:
 > > > > > Hi Sumit,
 > > > > >
-> > > > > On Thu, Dec 28, 2023 at 11:59=E2=80=AFAM Sumit Garg <sumit.garg@l=
+> > > > > On Thu, Dec 28, 2023 at 11:58=E2=80=AFAM Sumit Garg <sumit.garg@l=
 inaro.org> wrote:
 > > > > > >
-> > > > > > Although there were still some variations in board DTS files ba=
-sed on
-> > > > > > meson-gxbb SoC but I think those were minor differences from up=
-stream
-> > > > > > and shouldn't impact boot on these devices.
+> > > > > > Allow platform owners to mirror devicetree files from devitree-=
+rebasing
+> > > > > > directory into dts/arch/$(ARCH) (special case for dts/arch/arm6=
+4). Then
+> > > > > > build then along with any *-u-boot.dtsi file present in arch/$(=
+ARCH)/dts
+> > > > > > directory. Also add a new Makefile for arm64.
 > > > > > >
-> > > > > > So switch to upstream DT via mirroring amlogic/ directory from
-> > > > > > devicetree-rebasing/src/arm64/amlogic/ directory. And thereby d=
-irectly
-> > > > > > building DTB from there including *-u-boot.dtsi files from
-> > > > > > arch/$(ARCH)/dts/ directory.
+> > > > > > This will help easy migration for platforms which currently are=
+ compliant
+> > > > > > with upstream Linux kernel devicetree files.
 > > > > > >
-> > > > > > Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 > > > > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 > > > > > > ---
 > > > > > >
 > > > > > > Changes in v3:
 > > > > > > --------------
-> > > > > > - Dropped Makefile portion and enabled OF_UPSTREAM for SoC inst=
-ead.
+> > > > > > - Minor commit message update
 > > > > > >
 > > > > > > Changes in v2:
 > > > > > > --------------
-> > > > > > - Picked up review tag
+> > > > > > - s/DEVICE_TREE_LOC/dt_dir/ and s/U-boot/U-Boot/
 > > > > > >
-> > > > > >  arch/arm/mach-meson/Kconfig           | 1 +
-> > > > > >  configs/nanopi-k2_defconfig           | 2 +-
-> > > > > >  configs/odroid-c2_defconfig           | 2 +-
-> > > > > >  configs/p200_defconfig                | 2 +-
-> > > > > >  configs/p201_defconfig                | 2 +-
-> > > > > >  configs/videostrong-kii-pro_defconfig | 2 +-
-> > > > > >  configs/wetek-hub_defconfig           | 2 +-
-> > > > > >  configs/wetek-play2_defconfig         | 2 +-
-> > > > > >  dts/arch/arm64/amlogic                | 1 +
-> > > > > >  9 files changed, 9 insertions(+), 7 deletions(-)
-> > > > > >  create mode 120000 dts/arch/arm64/amlogic
+> > > > > >  dts/Kconfig             | 11 +++++++++++
+> > > > > >  dts/Makefile            | 17 ++++++++++++++---
+> > > > > >  dts/arch/arm64/Makefile | 14 ++++++++++++++
+> > > > > >  3 files changed, 39 insertions(+), 3 deletions(-)
+> > > > > >  create mode 100644 dts/arch/arm64/Makefile
 > > > > > >
-> > > > >
-> > > > > Reviewed-by: Simon Glass <sjg@chromium.org>
-> > > > >
-> > > > > > diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/=
-Kconfig
-> > > > > > index d6c89058061..8ddb59161a0 100644
-> > > > > > --- a/arch/arm/mach-meson/Kconfig
-> > > > > > +++ b/arch/arm/mach-meson/Kconfig
-> > > > > > @@ -25,6 +25,7 @@ choice
-> > > > > >  config MESON_GXBB
-> > > > > >         bool "GXBB"
-> > > > > >         select MESON_GX
-> > > > > > +       imply OF_UPSTREAM
-> > > > > >         help
-> > > > > >           Select this if your SoC is an S905
+> > > > > > diff --git a/dts/Kconfig b/dts/Kconfig
+> > > > > > index 00c0aeff893..e58c1c6f2ab 100644
+> > > > > > --- a/dts/Kconfig
+> > > > > > +++ b/dts/Kconfig
+> > > > > > @@ -85,6 +85,17 @@ config OF_LIVE
+> > > > > >           enables a live tree which is available after relocati=
+on,
+> > > > > >           and can be adjusted as needed.
 > > > > > >
-> > > > > > diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_de=
-fconfig
-> > > > > > index 41dbf7981f8..2e1c756bf7a 100644
-> > > > > > --- a/configs/nanopi-k2_defconfig
-> > > > > > +++ b/configs/nanopi-k2_defconfig
-> > > > > > @@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
-> > > > > >  CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x20000000
-> > > > > >  CONFIG_ENV_SIZE=3D0x2000
-> > > > > >  CONFIG_DM_GPIO=3Dy
-> > > > > > -CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxbb-nanopi-k2"
-> > > > > > +CONFIG_DEFAULT_DEVICE_TREE=3D"amlogic/meson-gxbb-nanopi-k2"
-> > > > > >  CONFIG_OF_LIBFDT_OVERLAY=3Dy
-> > > > > >  CONFIG_DM_RESET=3Dy
-> > > > > >  CONFIG_DEBUG_UART_BASE=3D0xc81004c0
+> > > > > > +config OF_UPSTREAM
+> > > > > > +       bool "Enable use of devicetree imported from Linux kern=
+el release"
+> > > > > > +       help
+> > > > > > +         Traditionally, U-Boot platforms used to have their cu=
+stom devicetree
+> > > > > > +         files or copy devicetree files from Linux kernel whic=
+h are hard to
+> > > > > > +         maintain and can usually get out-of-sync from Linux k=
+ernel. This
+> > > > > > +         option enables platforms to migrate to devicetree-reb=
+asing repo where
+> > > > > > +         a regular sync will be maintained every major Linux k=
+ernel release
+> > > > > > +         cycle. However, platforms can still have some custom =
+u-boot specific
+> > > > > > +         bits maintained as part of *-u-boot.dtsi files.
 > > > > >
-> > > > > So now I am wondering if we can (later) have the SoC be implied w=
-hen
-> > > > > using OF_UPSTREAM so we can do:
+> > > > > My only other suggestion here is to mention that this should be s=
+et in
+> > > > > Kconfig, for the SoC as a whole. So I believe that means that it
+> > > > > should be hidden, with no string for the 'bool':
 > > > > >
-> > > > > CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxbb-nanopi-k2"
-> > > > >
-> > > > > and it will add the 'amlogic/' automatically?
-> > > > >
-> > > > > Perhaps that might be a way to bridge the gap in terms of file la=
-yout?
+> > > > >       bool  # Enable use of devicetree imported from Linux kernel=
+ release
 > > > >
-> > > > That's going to start to look real ugly real quick I suspect and I'=
-m not
-> > > > sure what it really gets us? It seems to me that the convention of
-> > > > "vendor/board" has already been well enough adapted outside of the
-> > > > kernel, with the odd sticking point being getting everyone used to
-> > > > whatever will be happening for 32bit boards long term. So I think h=
-iding
-> > > > the vendor part of the string here will be more, not less, confusin=
-g
-> > > > long term.
+> > > > I think we can just keep prompting for it now, to make the transiti=
+on
+> > > > easier, before this option just goes away in time, hopefully.
+> > > >
+> > > > > Also, this doesn't seem to work for me. Before this series I get =
+these
+> > > > > files when building firefly-rk3399:
+> > > > >
+> > > > > rk3399-eaidk-610.dtb            rk3399-khadas-edge-v.dtb
+> > > > > rk3399-orangepi.dtb        rk3399-rock-pi-4a.dtb
+> > > > > rk3399-evb.dtb                  rk3399-leez-p710.dtb
+> > > > > rk3399-pinebook-pro.dtb    rk3399-rock-pi-4c.dtb
+> > > > > rk3399-ficus.dtb                rk3399-nanopc-t4.dtb
+> > > > > rk3399-pinephone-pro.dtb   rk3399-rockpro64.dtb
+> > > > > rk3399-firefly.dtb              rk3399-nanopi-m4-2gb.dtb
+> > > > > rk3399pro-rock-pi-n10.dtb  rk3399-roc-pc.dtb
+> > > > > rk3399-gru-bob.dtb              rk3399-nanopi-m4b.dtb
+> > > > > rk3399-puma-haikou.dtb     rk3399-roc-pc-mezzanine.dtb
+> > > > > rk3399-gru-kevin.dtb            rk3399-nanopi-m4.dtb
+> > > > > rk3399-rock-4c-plus.dtb
+> > > > > rk3399-khadas-edge-captain.dtb  rk3399-nanopi-neo4.dtb    rk3399-=
+rock-4se.dtb
+> > > > > rk3399-khadas-edge.dtb          rk3399-nanopi-r4s.dtb     rk3399-=
+rock960.dtb
+> > > > >
+> > > > > Afterwards I get this:
+> > > > >
+> > > > > make[3]: *** No rule to make target
+> > > > > 'dts/arch/arm64/rk3399-firefly.dtb', needed by 'dtbs'.  Stop.
+> > > > >
+> > > > > So I set this manually for that one board:
+> > > > >
+> > > > > CONFIG_DEFAULT_DEVICE_TREE=3D"rockchip/rk3399-firefly"
+> > > > >
+> > > > > and get:
+> > > > >
+> > > > > make[3]: *** No rule to make target
+> > > > > 'dts/arch/arm64/rockchip/rk3399-firefly.dtb', needed by 'dtbs'.  =
+Stop.
+> > > > >
+> > > > > I am not sure how to fix this, nor how this can be made to build =
+all
+> > > > > the DTs for rk3399, as it does today.
+> > > >
+> > > > Looking at the patch for amlogic boards, you need to make the link =
+to
+> > > > devicetree-rebasing inside dts/...
 > > >
-> > > Now that I dig in a bit, I see that the devicetree-rebasing tree does
-> > > not have any Makefiles in it. How does Linux build with it? Does
-> > > anyone have instructions?
+> > > OK, let me give up on rk3399 for now...that doesn't seem to work even
+> > > with the link.
+> > >
+> > > Using odroid-c2 with -next I see:
+> > >
+> > > $ ls /tmp/b/odroid-c2/arch/arm/dts/
+> > > meson-a1-ad401.dtb                 meson-g12b-odroid-n2l.dtb
+> > >     meson-gxl-s905x-libretech-cc.dtb
+> > > meson-axg-jethome-jethub-j100.dtb  meson-g12b-odroid-n2-plus.dtb
+> > >     meson-gxl-s905x-libretech-cc-v2.dtb
+> > > meson-axg-s400.dtb                 meson-g12b-radxa-zero2.dtb
+> > >     meson-gxl-s905x-p212.dtb
+> > > meson-g12a-radxa-zero.dtb          meson-gxbb-kii-pro.dtb
+> > >     meson-gxm-gt1-ultimate.dtb
+> > > meson-g12a-sei510.dtb              meson-gxbb-nanopi-k2.dtb
+> > >     meson-gxm-khadas-vim2.dtb
+> > > meson-g12a-u200.dtb                meson-gxbb-odroidc2.dtb
+> > >     meson-gxm-s912-libretech-pc.dtb
+> > > meson-g12b-a311d-bananapi-m2s.dtb  meson-gxbb-p200.dtb
+> > >     meson-gxm-wetek-core2.dtb
+> > > meson-g12b-a311d-khadas-vim3.dtb   meson-gxbb-p201.dtb
+> > >     meson-sm1-bananapi-m2-pro.dtb
+> > > meson-g12b-bananapi-cm4-cm4io.dtb  meson-gxbb-wetek-hub.dtb
+> > >     meson-sm1-bananapi-m5.dtb
+> > > meson-g12b-gsking-x.dtb            meson-gxbb-wetek-play2.dtb
+> > >     meson-sm1-khadas-vim3l.dtb
+> > > meson-g12b-gtking.dtb              meson-gxl-s805x-libretech-ac.dtb
+> > >     meson-sm1-odroid-c4.dtb
+> > > meson-g12b-gtking-pro.dtb          meson-gxl-s905d-libretech-pc.dtb
+> > >     meson-sm1-odroid-hc4.dtb
+> > > meson-g12b-odroid-go-ultra.dtb
+> > > meson-gxl-s905w-jethome-jethub-j80.dtb  meson-sm1-sei610.dtb
+> > > meson-g12b-odroid-n2.dtb           meson-gxl-s905x-khadas-vim.dtb
+> > > $
+> > > With this series (sort of, since I am really not sure how to
+> > > cherry-pick the commits from the PR) I see nothing:
+> > >
+> > > $ ls /tmp/b/odroid-c2/arch/arm/dts/
+> > > $
+> > >
+> > > This shows some of the files:
+> > >
+> > > $ find /tmp/b/odroid-c2/ -name "*.dtb"
+> > > /tmp/b/odroid-c2/dts/dt.dtb
+> > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-odroidc2.dtb
+> > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-nanopi-k2.dtb
+> > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-wetek-play2.dtb
+> > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-kii-pro.dtb
+> > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-p200.dtb
+> > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-p201.dtb
+> > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-wetek-hub.dtb
+> > > /tmp/b/odroid-c2/u-boot.dtb
+> > >
+> > > but where are the rest? Also, is it possible to put the output .dtb
+> > > files into the same directory? Otherwise we may have some pain with
+> > > binman.
 > >
-> > Linux doesn't build with it, it's the relevant parts of the kernel tree
-> > extracted for other projects to more easily use (more or less).
->=20
-> Hmmm, in that case can we add Makefiles into the U-Boot version of the
-> tree, for U-Boot use?
+> > What do you mean by same directory? But maybe also, what's an example o=
+f
+> > a board you think might end up having problems? Converting that in a
+> > follow-up series is likely a good idea, to highlight and address these
+> > issues sooner rather than later.#
+>
+> Today the .dtb files go into arch/arm/dts - so it would be easier if
+> this series could do the same.
 
-No? Why would we do that? I think you're missing how the amlogic
-conversion works.
+The kbuild infrastructure keeps the dtb alongside dts files which is
+the preferred way too as otherwise it would be complicated to locate
+DT files for the users. Also, we have to move towards Linux DT
+directory structure and thereby the tools like binman have to be
+adjusted. I will do that when I get to migrating SoCs supporting
+binman.
 
---=20
-Tom
+>
+> The problem I have described above applied to meson, so I believe it
+> is clear enough with that. I wasn't able to get rk3399 going, but I am
+> sure it would have the same problem.
+>
+> The fundamental question is (I believe) whether to:
+>
+> 1. Build only a single DT for a board
+> 2. Build all DTs for the SoC the board uses
+>
+> This series seems to head towards (1),
 
---Groupsio=VEn2Zj6BxAXSyQBPQ2se
-Content-Type: application/pgp-signature; name="signature.asc"
+v2 of this series had the Makefile rules [1] for meson gxbb SoC but..
 
------BEGIN PGP SIGNATURE-----
+[1] https://patchwork.ozlabs.org/project/uboot/patch/20231222061208.3009970=
+-8-sumit.garg@linaro.org/
 
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmWN20kACgkQFHw5/5Y0
-tyxMJQv7Bc09zQHFh6GMjIEM5tOgzRQv4OYN+BE/wpHovFZ7N3oA01K4KpGzGXFo
-qwTrJaaj0VOE6N9BruRrlMwMdxBycJonbDh/74tt2DHXUra9fEdim2BxAFwpJ3ki
-jGbdAKTqtaZ6xSbBA3o6qea3owsOAey6yjp55Bxq4jOJ9+YCl6ltSo3B16TpvP+x
-qe+sKdmYLqfeVdxiWSidCgA7hRDekEb9cIIyhjvECtE+TzKdUxA3L4tTfAXVfNQI
-pHcl2vxsFpqAtOXP3MXGiHis4DDBspdz7cN8eGyAANWhoKue4xELak4+PPYELr2P
-iAKmgb9wtgP+ZiMewsiP6XcFwlFTRqVTMqgL7X0wFHwku/CRbf8+Pk7y2F3kcfaJ
-60fCNWte+Q/YiH+FOs0P/Jf8p0U0HDuYuzdGiHJackeXMHziBIhZIwUz5TSoZR0i
-NcdNArshrJiGtmjKhACe3XocAoFFg8cYWEduIuACTbJbjDHcAuH3BZpvVlNHJhIU
-+nq5JM7k
-=Za0o
------END PGP SIGNATURE-----
+> which worries me. We are
+> currently mostly at (2).
 
---Groupsio=VEn2Zj6BxAXSyQBPQ2se--
+..after discussion with Tom, the Makefile rules are already coming via
+Kconfig options like DEFAULT_DEVICE_TREE, OF_LIST etc. So having
+redundant rules in Makefile doesn't add any value, so I took them off
+in v3.
+
+However, I am very much in favour of having a generalized U-Boot
+image. This might become true in some cases like U-Boot acts as a
+second stage bootloader for a particular SoC which is a unified image
+where the prior stage passes the DT to it. The Qcom effort in this
+direction can be an example here. I am not sure at this point how we
+can enable different U-Boot features since there are many board
+specific bits needed currently not covered by DT.
+
+The other common method is to embed board DT in U-Boot image
+especially where U-Boot acts as a first stage bootloader. Once that's
+done I don't see how we can call that a generic U-Boot image.
+
+BTW, as Tom said we can very well add those Makefile rules later on a
+use case basis if a particular SoC requires a truly generic U-Boot
+image and the rules don't come via Kconfig options.
+
+-Sumit
+
+>
+> Regards,
+> Simon
 
