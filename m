@@ -2,208 +2,199 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BBCC47258
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E41C47DA6
 	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:22 +0000 (UTC)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
- by mx.groups.io with SMTP id smtpd.web10.124872.1703777109015006511
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web11.28043.1704199863203181836
  for <u-boot-amlogic@groups.io>;
- Thu, 28 Dec 2023 07:25:09 -0800
+ Tue, 02 Jan 2024 04:51:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=inlRPvKj;
- spf=pass (domain: konsulko.com, ip: 209.85.128.169, mailfrom: trini@konsulko.com)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5e730eb1770so48456337b3.1
-        for <u-boot-amlogic@groups.io>; Thu, 28 Dec 2023 07:25:08 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=N7pPZ9lu;
+ spf=pass (domain: linaro.org, ip: 209.85.221.54, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3368ae75082so4938141f8f.1
+        for <u-boot-amlogic@groups.io>; Tue, 02 Jan 2024 04:51:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1703777108; x=1704381908; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P5pPQAOFZvjdwYbvIJmTtI3GibSN+hHRfK0LXP8QNxE=;
-        b=inlRPvKjILMalAUBzldzRFY05pmloEO0qf8WpeMdXDfK8awebNXlKAum/uAp6L2+jk
-         aeKnjaK4uJIVMkJa++T97CpM4LC8RvLBp/onf7Vmt/3jxNlNX+zraXBpejdNqYc4GMec
-         7jjEtkVJHiXhegVAlhYrb75Ubiu2m2I6aoCm8=
+        d=linaro.org; s=google; t=1704199861; x=1704804661; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fhWCkr7KYy/BtOXz9Pfz7Vb43dnCbhDWjZp9qtUHu0w=;
+        b=N7pPZ9lux3aHOlHIFJs7iq26tTyychDhtWtceeuXg/R+R5I+yy8bAoOfxCjYkYn0Rc
+         SO+pZslp0GmvT0dK23e+b5BDWAc+zWtDyfqLVjXGb5l3swc8OfhtmXxeNUcfSBF92z2D
+         dXdlxtFRpcQx0RpeR5v0NjBwi98U7U52MoUyhJtY29gDS9lUc9ybfxGXFI3rI3FnmvnU
+         mtKRG1Hd2esqffq7BvG78Y29qJ96Iq71NlC6iz6BX/4lbvY6HHUNp7VfyRC0QxoEq0/8
+         COptfhz7VHV/G3Fugb77vyn4d/98eDXGYVUbX2SxcijDatH2oX9vm+gNkGngbCeJ3fHN
+         6gPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703777108; x=1704381908;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P5pPQAOFZvjdwYbvIJmTtI3GibSN+hHRfK0LXP8QNxE=;
-        b=gGq48ZH/RiPJDpIxp2JPieizvHsq1bh9v7fHL+zh1MCuWzDjut+/X2EBe/n/fPBbOg
-         5P6o9cb/muqLws7heL8AAtyNhgVzaMvtYh8pj9TkUTM6WNs8PA2y2xPwX+yZuMVJzvIL
-         L0DKIVdGrRv0f4dKa8UZnUi3sLSUlXWl5t5KgUtt582AExwEksjKO0m8oNe3FbA9lDQZ
-         6UrSlIQgvFjaovfl1qo4PDpdylJ4LvuX8u0p7FMzLm1FYVrgjOPfnr6RrvBJXlBeXo0N
-         GjXQFzG0EFOYSX8vLWUl1uk8iEO91UcQV3XVu16Xbw7Ok1u2SePIrQyhkbZob8U9nE+N
-         QC9w==
-X-Gm-Message-State: AOJu0YwdKjrv1Vibw8Ap5v/9Ra43cb8eps+By9df4LAUcoeuw0VjzHa4
-	6wBpkNU1Yw+qsQH7QshBUz6dgeYDT3qclA==
-X-Google-Smtp-Source: AGHT+IF6qVORWiEfQSthAdjihIjx2lnsV46lpKAuIwz8bK+VtVq0r7ic5RCm4QJ8Cxev4ivs41TJQg==
-X-Received: by 2002:a81:48d4:0:b0:5e9:f02a:5a23 with SMTP id v203-20020a8148d4000000b005e9f02a5a23mr5579752ywa.68.1703777108172;
-        Thu, 28 Dec 2023 07:25:08 -0800 (PST)
-Received: from bill-the-cat (2603-6081-7b00-3119-0000-0000-0000-1001.res6.spectrum.com. [2603:6081:7b00:3119::1001])
-        by smtp.gmail.com with ESMTPSA id c5-20020a81c945000000b005ea9425db98sm5788251ywl.8.2023.12.28.07.25.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 07:25:07 -0800 (PST)
-Date: Thu, 28 Dec 2023 10:25:04 -0500
-From: Tom Rini <trini@konsulko.com>
-To: Simon Glass <sjg@chromium.org>
-Cc: Sumit Garg <sumit.garg@linaro.org>, u-boot@lists.denx.de,
-	u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor@kernel.org, neil.armstrong@linaro.org,
-	caleb.connolly@linaro.org, ff@shokubai.tech,
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org,
-	pbrobinson@gmail.com, ilias.apalodimas@linaro.org,
-	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de,
-	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk,
-	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com,
-	marex@denx.de, mibodhi@gmail.com
-Subject: Re: [PATCH v3 7/8] dts: meson-gxbb: Switch to using upstream DT
-Message-ID: <20231228152504.GF2652760@bill-the-cat>
-References: <20231228115804.3626579-1-sumit.garg@linaro.org>
- <20231228115804.3626579-8-sumit.garg@linaro.org>
- <CAFLszTg=CDfyTGG9c-t=98eFYvYy61L1kzmrssNKPSS6dZL3cg@mail.gmail.com>
- <20231228135642.GA2652760@bill-the-cat>
- <CAFLszThP+GJcPP_LJBva1M5mi9Wj-Nh-z7A6-fkSpPgOTtLmRQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1704199861; x=1704804661;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fhWCkr7KYy/BtOXz9Pfz7Vb43dnCbhDWjZp9qtUHu0w=;
+        b=FigZSeHCQPXVRkU/5uEQCha+6Pn1plxbB9NAaM7gxxZ/KX+5/dW6upe93a8JyhZZZF
+         QCWMxlA6vorNMqO2iYdwOB6UUgY6KKw/z3MDaUxW1FCH0NZ2177VNBsADNr4xrdxjkPn
+         XYCY2IEhS/DPX4SvzFQ6PDL58Y5pdX+AeXKmVhcZVXkXUFzZogVamELD4ZliLqdCiCVy
+         KSH6vzXpQ89iS2En0vJsOJ+2iH0QEbaQd4GC6OTnl6NPigwTIjHbkui5eYtQzYBcVQgb
+         MJZ1PvrsNoV2wIjM076PAdLoChWIy8hnm823kXolQVQUUnCqHJj24VDZwqp+9xUCtnhT
+         UJ5Q==
+X-Gm-Message-State: AOJu0YyOdJfTvma5p995cwPmr9ZqwpripfPrcdr1rLVOpqaAvjtEb1Vo
+	N25DjUEiBrcycmuTJ0fTry2/GH/HHXgDwQ==
+X-Google-Smtp-Source: AGHT+IGxXNdX7GI0iRHERB0fiEQkwsAgzM6e5ETceMxKfQby68vcFIYP6EYpI4TQNL1XfsVERmBaxQ==
+X-Received: by 2002:a05:600c:198f:b0:40d:5f64:748b with SMTP id t15-20020a05600c198f00b0040d5f64748bmr4342264wmq.61.1704199861648;
+        Tue, 02 Jan 2024 04:51:01 -0800 (PST)
+Received: from [172.30.140.140] (gateway.braid.business. [82.66.147.134])
+        by smtp.gmail.com with ESMTPSA id b16-20020a056000055000b003372dcd739csm9176259wrf.86.2024.01.02.04.51.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jan 2024 04:51:01 -0800 (PST)
+Message-ID: <a2393800-ea34-48f4-9300-5a2821cec7e7@linaro.org>
+Date: Tue, 2 Jan 2024 13:50:59 +0100
 MIME-Version: 1.0
-In-Reply-To: <CAFLszThP+GJcPP_LJBva1M5mi9Wj-Nh-z7A6-fkSpPgOTtLmRQ@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=ZUpvyIM2GKnDPENYw4R9"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/8] dts: Add alternative location for upstream DTB builds
+To: Simon Glass <sjg@chromium.org>, Mark Kettenis <mark.kettenis@xs4all.nl>
+Cc: Tom Rini <trini@konsulko.com>, sumit.garg@linaro.org,
+ u-boot@lists.denx.de, u-boot-amlogic@groups.io,
+ u-boot-custodians@lists.denx.de, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
+ neil.armstrong@linaro.org, ff@shokubai.tech, daniel.thompson@linaro.org,
+ dgilmore@fedoraproject.org, pbrobinson@gmail.com,
+ ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com,
+ xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com,
+ rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com,
+ rfried.dev@gmail.com, marex@denx.de, mibodhi@gmail.com
+References: <20231228115804.3626579-1-sumit.garg@linaro.org>
+ <20231228115804.3626579-5-sumit.garg@linaro.org>
+ <CAFLszThfxe_n02auF+vZ1u7FynKkrWEYFU3SdkRTLgBVuiv+Hw@mail.gmail.com>
+ <20231228140313.GB2652760@bill-the-cat>
+ <CAFLszTiPFyRQZtrKhETjMzn6JukFJaBYMugdL-RPO3LJB9XUMA@mail.gmail.com>
+ <20231228155428.GI2652760@bill-the-cat>
+ <CAFLszTjqcJouv7Dyasjfx4FiNy378fFA+A-DP292yvPk8xOzjw@mail.gmail.com>
+ <CAFA6WYME_0-s4aBbaKOS3Q+q9+5553qSWcL9pDMvC9VaAfAz0w@mail.gmail.com>
+ <CAFLszTj0ptH7K2Y4Fc1FR1_OmK5OzAaAReR1KT5R8OZvbgrP-Q@mail.gmail.com>
+ <20231231203953.GG2652760@bill-the-cat>
+ <87ttnxlwon.fsf@bloch.sibelius.xs4all.nl>
+ <CAFLszThKEW7rvkfiV=Y_bYtBCC2=Ue1vKOnb4a+EN4=EEYNfng@mail.gmail.com>
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <CAFLszThKEW7rvkfiV=Y_bYtBCC2=Ue1vKOnb4a+EN4=EEYNfng@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2005
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2018
 
---Groupsio=ZUpvyIM2GKnDPENYw4R9
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[snip]
+>>>
+>>>>> However, I am very much in favour of having a generalized U-Boot
+>>>>> image. This might become true in some cases like U-Boot acts as a
+>>>>> second stage bootloader for a particular SoC which is a unified image
+>>>>> where the prior stage passes the DT to it. The Qcom effort in this
+>>>>> direction can be an example here.
+>>>>
+>>>> Not relevant to the topic at hand, perhaps, but Qualcomm uses a
+>>>> closed-source blob to jump to U-Boot and is certainly not an example
+>>>> we should emulate. But yes, passing a DT to U-Boot proper can be
+>>>> useful.
 
-On Thu, Dec 28, 2023 at 03:09:41PM +0000, Simon Glass wrote:
-> Hi Tom,
->=20
-> On Thu, Dec 28, 2023 at 1:56=E2=80=AFPM Tom Rini <trini@konsulko.com> wro=
-te:
-> >
-> > On Thu, Dec 28, 2023 at 01:37:11PM +0000, Simon Glass wrote:
-> > > Hi Sumit,
-> > >
-> > > On Thu, Dec 28, 2023 at 11:59=E2=80=AFAM Sumit Garg <sumit.garg@linar=
-o.org> wrote:
-> > > >
-> > > > Although there were still some variations in board DTS files based =
-on
-> > > > meson-gxbb SoC but I think those were minor differences from upstre=
-am
-> > > > and shouldn't impact boot on these devices.
-> > > >
-> > > > So switch to upstream DT via mirroring amlogic/ directory from
-> > > > devicetree-rebasing/src/arm64/amlogic/ directory. And thereby direc=
-tly
-> > > > building DTB from there including *-u-boot.dtsi files from
-> > > > arch/$(ARCH)/dts/ directory.
-> > > >
-> > > > Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > > ---
-> > > >
-> > > > Changes in v3:
-> > > > --------------
-> > > > - Dropped Makefile portion and enabled OF_UPSTREAM for SoC instead.
-> > > >
-> > > > Changes in v2:
-> > > > --------------
-> > > > - Picked up review tag
-> > > >
-> > > >  arch/arm/mach-meson/Kconfig           | 1 +
-> > > >  configs/nanopi-k2_defconfig           | 2 +-
-> > > >  configs/odroid-c2_defconfig           | 2 +-
-> > > >  configs/p200_defconfig                | 2 +-
-> > > >  configs/p201_defconfig                | 2 +-
-> > > >  configs/videostrong-kii-pro_defconfig | 2 +-
-> > > >  configs/wetek-hub_defconfig           | 2 +-
-> > > >  configs/wetek-play2_defconfig         | 2 +-
-> > > >  dts/arch/arm64/amlogic                | 1 +
-> > > >  9 files changed, 9 insertions(+), 7 deletions(-)
-> > > >  create mode 120000 dts/arch/arm64/amlogic
-> > > >
-> > >
-> > > Reviewed-by: Simon Glass <sjg@chromium.org>
-> > >
-> > > > diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kcon=
-fig
-> > > > index d6c89058061..8ddb59161a0 100644
-> > > > --- a/arch/arm/mach-meson/Kconfig
-> > > > +++ b/arch/arm/mach-meson/Kconfig
-> > > > @@ -25,6 +25,7 @@ choice
-> > > >  config MESON_GXBB
-> > > >         bool "GXBB"
-> > > >         select MESON_GX
-> > > > +       imply OF_UPSTREAM
-> > > >         help
-> > > >           Select this if your SoC is an S905
-> > > >
-> > > > diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defcon=
-fig
-> > > > index 41dbf7981f8..2e1c756bf7a 100644
-> > > > --- a/configs/nanopi-k2_defconfig
-> > > > +++ b/configs/nanopi-k2_defconfig
-> > > > @@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
-> > > >  CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x20000000
-> > > >  CONFIG_ENV_SIZE=3D0x2000
-> > > >  CONFIG_DM_GPIO=3Dy
-> > > > -CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxbb-nanopi-k2"
-> > > > +CONFIG_DEFAULT_DEVICE_TREE=3D"amlogic/meson-gxbb-nanopi-k2"
-> > > >  CONFIG_OF_LIBFDT_OVERLAY=3Dy
-> > > >  CONFIG_DM_RESET=3Dy
-> > > >  CONFIG_DEBUG_UART_BASE=3D0xc81004c0
-> > >
-> > > So now I am wondering if we can (later) have the SoC be implied when
-> > > using OF_UPSTREAM so we can do:
-> > >
-> > > CONFIG_DEFAULT_DEVICE_TREE=3D"meson-gxbb-nanopi-k2"
-> > >
-> > > and it will add the 'amlogic/' automatically?
-> > >
-> > > Perhaps that might be a way to bridge the gap in terms of file layout=
-?
-> >
-> > That's going to start to look real ugly real quick I suspect and I'm no=
-t
-> > sure what it really gets us? It seems to me that the convention of
-> > "vendor/board" has already been well enough adapted outside of the
-> > kernel, with the odd sticking point being getting everyone used to
-> > whatever will be happening for 32bit boards long term. So I think hidin=
-g
-> > the vendor part of the string here will be more, not less, confusing
-> > long term.
->=20
-> Now that I dig in a bit, I see that the devicetree-rebasing tree does
-> not have any Makefiles in it. How does Linux build with it? Does
-> anyone have instructions?
+Just to chime in here, this limitation is true for production Qualcomm 
+devices where all of the bootloader blobs are signed by the OEM (true 
+for most phones). But for development platforms we can do better. I 
+expect this is a topic we will keep on coming back to, so I'd like to 
+just take the time to explain some of the technical details on Qualcomm 
+platforms, as there is a lot more nuance than you might be aware of.
 
-Linux doesn't build with it, it's the relevant parts of the kernel tree
-extracted for other projects to more easily use (more or less).
+The modern Qualcomm boot chain is (roughly) PBL (bootrom) -> TZ/el3 -> 
+sbl1 (secondary bootloader) -> hypervisor -> XBL_Core (UEFI impl) -> ABL 
+(LinuxLoader.efi app) -> Linux
 
---=20
-Tom
+On production devices the best we can do is replace "Linux" with U-Boot, 
+and if we're lucky then we can leverage features of ABL to simplify 
+things like DTB selection (it supports picking from a bunch of 
+concatenated DTBs, but we can just as easily implement some similar 
+feature in U-Boot ourselves).
 
---Groupsio=ZUpvyIM2GKnDPENYw4R9
-Content-Type: application/pgp-signature; name="signature.asc"
+On a development board I have been successful in replacing the 
+hypervisor with a stub and replacing XBL_Core with U-Boot - giving us 
+EL2 and removing the entire proprietary UEFI stack. There is no reason 
+that we can't go further than this.
 
------BEGIN PGP SIGNATURE-----
+The Qualcomm Chromebooks all run Coreboot, for sure on those it would be 
+possible to use U-Boot much earlier (although there is still the 
+proprietary XBL_Sec TZ blob).
 
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmWNk0oACgkQFHw5/5Y0
-tywn5Qv/aQMBqT8pVUc8tFmt6cT4+DscisoSl+Ncrm9MYzWD3yGcfq4me3VJQbbE
-3QK6fmj95e3CgTYCz4slvtSqdqIP/7i+t1/5s2c4IVs82m/u4NTLymBOwOzDkUoE
-kQXTtZ9Ayqhe3lT2B6nD1QpyKbHuq86qOo2AyWk2beFh0rQI4GwT+jCp9RBNC6IH
-+4Q8RO9wvs3O8SzYKnVhYXzfAMhdoCr46Og14vZq1HdX7z7/0VU4jI/M+275wyHO
-T8UR/U1cHypSGz0R3X9Rm5M/YYdXelvathWlEqFCiMzZJcEyTrpU/0KvYFk0s+Gr
-WTlLQd6dXIKIV+dbeWtj0bI0Ah02qGJiu2VgJ2fPND+riStZVXYJ4KEVWqX6PrHN
-qrbVS9FhDmtjZBgSPDv/MJ491qaMiVWuOQGHadQm5EswBpmF8VoE8yteZ0fbCP/o
-JpVQwDYjR6EAw5mytdDjl0LXT7UegmgVUr3Uohp8pvWuf12UIrb/hHvxEzLzoCSy
-GLN9eVwo
-=Xzm8
------END PGP SIGNATURE-----
+The Dragonboard410c (and MSM8916 SoC overall) has been pretty much 
+entirely ripped open thanks to Stephan Gerhold and the msm8916-mainline 
+project. On these devices it is easily possible to run U-Boot as a 
+first-stage bootloader (at least to the same extent one can on the more 
+open ARM platforms, or even more open if you wish). Although the 
+bootloader of choice for most of these devices is a home-grown fork of lk.
 
---Groupsio=ZUpvyIM2GKnDPENYw4R9--
+For new SoCs, with the number of Qualcomm devices out there, and 
+communities like postmarketOS enabling support on so many of them... My 
+hope is that we will quickly see phones being the most common Qualcomm 
+devices supported by U-Boot. While it is indeed extremely unfortunate 
+that we can't replace the bootloader entirely, using U-Boot as a fresh 
+slate is still extremely liberating (EFI! Firmware updates! No need for 
+distro hacks to update the kernel! Multi-boot! etc...). I wish we could 
+focus more on how U-Boot will make supporting Linux on these devices SO 
+SO much easier, and less on how broken the (usually impossible to 
+modify) bootloader they shipped with is.
+
+While almost all of the boot chain I explained above is proprietary, the 
+ABL source code is publicly available (although most device vendors 
+don't publish their modified production version, I suppose for fear of 
+embarrassment). The statement "Qualcomm uses a closed-source blob to 
+jump to U-Boot" is at the very least an oversimplification.
+
+To be contrarian, here is an example of a phone vendor who do publish 
+their ABL source code, here is the code that runs Linux (or U-Boot in 
+our case).
+
+https://github.com/SHIFTPHONES/android_bootable_bootloader_edk2/blob/sos-3.x/QcomModulePkg/Library/BootLib/BootLinux.c#L1039
+
+My point is, there is a lot of nuance and complexity here, and we need 
+to be careful about what exactly we're referring to.
+
+Kind regards,
+Caleb
+
+>>>
+>>> It's a very valid use case we need to continue to support. And to save
+>>> Mark from having to repeat himself, again, it's intentionally and not
+>>> changing, how the Apple M1/M2/etc platforms boot. I'm pretty sure the
+>>> fact that one can use U-Boot this way is part of how engineers get proof
+>>> of concept work done to show that if they had U-Boot available then they
+>>> could also support X/Y/Z easier. And maybe they'll be able to longer
+>>> term push internally to use bloblist to pass things along.
+>>>
+>>> Heck, trying to not go too far off on a tangent, maybe the m1n1 loader
+>>> can implement both conventions, as both Linux Kernel[0] and Bloblist[1]
+>>> use x0 for device tree, but bloblist has x1 non-zero and Linux does not,
+>>> so both could be present here? Or is there some incompatibility I don't
+>>> see on quick skimming?
+>>
+>> Right.  Some time ago I suggested Simon to lobby the Linux kernel
+>> folks to change the arm64 Linux kernel entry convention to state that
+>> x1 can be non-zero in which case it points at a bloblist.  If that
+>> happened I'd probably do the work to make m1n1 pass a bloblist.  And
+>> it would probably make the folks who want to directly boot a Linux
+>> kernel from TF-A (without going through U-Boot) happy as well.
+> 
+> I got a lot of push-back on that. Perhaps there might be some
+> willingness if it is explained that Linux doesn't need to understand
+> the bloblist, just tolerate it being there. There are probably other
+> people who will be more successful at pushing for kernel changes.
+> 
+> As you know, the handoff protocol is designed such that you don't need
+> to decode the bloblist to find the devicetree. BTW I would like to put
+> the ACPI/SMBIOS tables in the bloblist as well (with EFI we would
+> provide pointers into the bloblist for Linux to use)
+> 
+> Regards,
+> Simon
+
+-- 
+// Caleb (they/them)
 
