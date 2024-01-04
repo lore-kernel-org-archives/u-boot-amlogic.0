@@ -2,49 +2,48 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F20BC47DDD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE89C47DDB
 	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:33 +0000 (UTC)
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (NAM11-DM6-obe.outbound.protection.outlook.com [40.107.223.47])
- by mx.groups.io with SMTP id smtpd.web11.50806.1704362956313188414
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (NAM11-CO1-obe.outbound.protection.outlook.com [40.107.220.65])
+ by mx.groups.io with SMTP id smtpd.web11.51758.1704367534050415053
  for <u-boot-amlogic@groups.io>;
- Thu, 04 Jan 2024 02:09:16 -0800
+ Thu, 04 Jan 2024 03:25:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@amd.com header.s=selector1 header.b=ofLIUHpC;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: amd.com, ip: 40.107.223.47, mailfrom: michal.simek@amd.com)
+ dkim=pass header.i=@amd.com header.s=selector1 header.b=c/dMDNVU;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: amd.com, ip: 40.107.220.65, mailfrom: michal.simek@amd.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G71xzHQk0XPM/PpuEssvE63hRsiv9rsx0QOwYegyx/PhN7CWsCsQSLGDkT+LiC3ENQF+a2fRQ7I4rIA8p1H8hfIeLu+kN3Ksu+zlnWQJSnowIG6PyIYMg/gLlbS3mbz1J9PRdC0DU+uosct3FM1uqwOaROXI2c/vSOKZvxYii7zkEWgv5phtsnluK1tlXKSKCdIkV59YW8Ta++Yj3V57MtsZ2RTqngLtJYuDhaZt34/VqvkKy/lUO9vlrxh5npDrwdhinoAf4GuqJOoXgwQ6uoWjgfjWYCzhJKU/e8oHwNyCDX+tU4CEIyod2BxF+oAnmopgyVvCVSnUeFU/Qm2Jow==
+ b=O4H/u6wS81YlWYf8LcxI++snIlFpEFfjiSLtF/7EWQDGsFAcf90uToZc1XVUaC+Qfe3Ij6x4mPhZslzWvohqz04lMW64EjRxyl81c+5H7f+/fYJuzDRMZLHUmtE79f4lRu+0RXfQPtPY9srystX/gnOSugrobsOTI19aZ4mI3vodofE5n/opo7YOUNPEXCwNBlHt7S94fo4u5vvzCw56Ffltl38/pnV7s8M1N/dpwK/9gA9w/kVfdPrUr2zhFHfcd5fOVI3taW/cRjfE0XjFFs8uoa5YFcayEcQ2dbWgQPBs0N/9Uzeh/6cQNC8ewH5THcCQRTSXHFKRsp+9qIWNag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MPWyvuCA8nFIBL8p3HVkp10ph4V5W912JGL0VoGkpQw=;
- b=OHwOFOh583BUFHRqfludTEKiDUeqEk+rQKgyoEgrAq2CU8jAdbYsxMSa91KQej6n7yIQMvCagra2yeyKX0S2axR8beoUpIQxRb55bLPI5aO4tTUy9gJai5406U2MjxMYkw0FMiP/WTzmMba5Ymn7S4Q4OKQ15NiA9lkczRSZmfz2locs+h8oTD5+YcoN/jJiLeY1dctc34/827VqOsOFKyp78rH2JZEXjw8wbgUca7xsXm/Xd8mWGRhz6N2406CB9dObUXFTZc5/qsfHWrd4g6lLqU9N0g03+Cwsr8F5HcUcyUiAEqBlQoj/OAP/I6N45lASMV/jsE3I4AORVPWdyw==
+ bh=V8nJpysV7fXSOFd2scesD1ZIZgWrO5G34y2Y79GWabI=;
+ b=ck04PtKFCJQTx5Bownvf9j3lmOWoygLW8jhE/mc3eehaes82blmSIbYB2k8B2fKmG7MKJ+16LQGSIF7WeHBz+fejWjMYImRFEv61ydMBRi0hY4PoJKDjgk57TtJmRfwaupt5TsXi/cAYOB4hpbDktqcMD4FLGEvQJ3XAI4A0/ZGNEjuR4O6gknkxXVSEhVQt5bsSyG7yuh+uNFI4gI7BbN6TNyMSiyufAIm78O0SRi2R/+q2g31zGN8n16doe2ooIsvcP9zjtRjS+K2kkrYZiTOpp+4EIJGVgqESALENjbwHNYl8A6CXIyIig09wHV79XkD39IcOcefuTXfgKdMrqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MPWyvuCA8nFIBL8p3HVkp10ph4V5W912JGL0VoGkpQw=;
- b=ofLIUHpCVqkuSap0+lfc5zuyNM26e71w1iG+g360X+NkQocQ9887F2DRNonEvzQZPkHsw4MfL3g6+iPTrJGJp9bK5gv+RW8RusT2Lj1cxW8dLFnpg67+3s+Lb8D000SuLEeQ4wSlqTU9KFT6o6SJpElXJbfgxt48CvKledWBkwU=
+ bh=V8nJpysV7fXSOFd2scesD1ZIZgWrO5G34y2Y79GWabI=;
+ b=c/dMDNVU0iLmIKBPSak+4gHu31djR47Ygh7yYXXCmiYNe99/xEepjUnPwhSscpXj7hhEbbxDxgeR0qio+WRHK+zLc7HauDq/kGNpYpzxPP9xhL14nGgGXfNSrH+Mmjyb5ISAeeGtBTW3EvdEkMOmwuC2tCoDfDaXrcH3cLKyOE4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from CYXPR12MB9337.namprd12.prod.outlook.com (2603:10b6:930:d8::20)
- by SA3PR12MB8022.namprd12.prod.outlook.com (2603:10b6:806:307::7) with
+ by MW6PR12MB8897.namprd12.prod.outlook.com (2603:10b6:303:24a::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13; Thu, 4 Jan
- 2024 10:09:13 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.15; Thu, 4 Jan
+ 2024 11:25:31 +0000
 Received: from CYXPR12MB9337.namprd12.prod.outlook.com
  ([fe80::2b19:2045:59c7:cde2]) by CYXPR12MB9337.namprd12.prod.outlook.com
  ([fe80::2b19:2045:59c7:cde2%7]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
- 10:09:13 +0000
-Message-ID: <51aacb5a-0c43-4bca-8036-028ae9fe6267@amd.com>
-Date: Thu, 4 Jan 2024 11:08:50 +0100
+ 11:25:31 +0000
+Message-ID: <6989436a-aaa1-4c07-9f49-856be9a8b011@amd.com>
+Date: Thu, 4 Jan 2024 12:25:10 +0100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/8] doc: devicetree: Updates for devicetree-rebasing subtree
-To: Tom Rini <trini@konsulko.com>, Rob Herring <robh+dt@kernel.org>,
- Sumit Garg <sumit.garg@linaro.org>
-CC: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
- u-boot-custodians@lists.denx.de, sjg@chromium.org,
- krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
+Subject: Re: [PATCH v3 0/8] An effort to bring DT bindings compliance within U-Boot
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
+ u-boot-custodians@lists.denx.de, trini@konsulko.com, sjg@chromium.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
  neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech,
  daniel.thompson@linaro.org, dgilmore@fedoraproject.org,
  pbrobinson@gmail.com, ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org,
@@ -52,9 +51,8 @@ CC: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com,
  rfried.dev@gmail.com, marex@denx.de, mibodhi@gmail.com
 References: <20231228115804.3626579-1-sumit.garg@linaro.org>
- <20231228115804.3626579-6-sumit.garg@linaro.org>
- <CAL_JsqJ9Y1XCefsiCz11v2Lyk27g5ACMXO4qiFCEHSb3ZqyKhw@mail.gmail.com>
- <20240103163201.GL1610741@bill-the-cat>
+ <5602ebb2-25c9-4f0e-88b7-64662874d0f4@amd.com>
+ <CAFA6WYNeVq9pM9Uau6bQdUMNw40-1sMHOGuYs4mfa3bX6Ob2TA@mail.gmail.com>
 From: Michal Simek <michal.simek@amd.com>
 Autocrypt: addr=michal.simek@amd.com; keydata=
  xsFNBFFuvDEBEAC9Amu3nk79+J+4xBOuM5XmDmljuukOc6mKB5bBYOa4SrWJZTjeGRf52VMc
@@ -100,124 +98,267 @@ Autocrypt: addr=michal.simek@amd.com; keydata=
  y7RkYPOpmElF2pwWI/SXKOgMUgigedGCl1QRUio7iifBmXHkRrTgNT0PWQmeGsWTmfRit2+i
  l2dpB2lxha72cQ6MTEmL65HaoeANhtfO1se2R9dej57g+urO9V2v/UglZG1wsyaP/vOrgs+3
  3i3l5DA=
-In-Reply-To: <20240103163201.GL1610741@bill-the-cat>
-X-ClientProxiedBy: VI1PR0902CA0059.eurprd09.prod.outlook.com
- (2603:10a6:802:1::48) To CYXPR12MB9337.namprd12.prod.outlook.com
+In-Reply-To: <CAFA6WYNeVq9pM9Uau6bQdUMNw40-1sMHOGuYs4mfa3bX6Ob2TA@mail.gmail.com>
+X-ClientProxiedBy: VI1PR07CA0226.eurprd07.prod.outlook.com
+ (2603:10a6:802:58::29) To CYXPR12MB9337.namprd12.prod.outlook.com
  (2603:10b6:930:d8::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYXPR12MB9337:EE_|SA3PR12MB8022:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a1931ad-e663-4334-c6ae-08dc0d0d338a
+X-MS-TrafficTypeDiagnostic: CYXPR12MB9337:EE_|MW6PR12MB8897:EE_
+X-MS-Office365-Filtering-Correlation-Id: 656eb45e-d529-4de6-74f2-08dc0d17dc84
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	+hoLCv9kNwTig+3f7AjoJuwEKbeLoyzT4kHRqlL1UtZdvKRu5gTgzVgMaJnK1MbE2P9ur4ARt1LGsRxNgxWYswLw/MrE2ZTMlYc7VEf1tEB0Fvg65yrzDIXRgmq9Jr0JL5Qgfmwe4kDXYbgCV07nmY5Jq4QJ6hugj2ycf4ajFQv/N9zlkL+n/S9dzyRjzvg9Y8lH7R0z0qtXcBuLV1LpLb+NfMFwVQHh+4B+zN3qQN3vTi73WOtKdClEJdqUCem/y0GFFuTeCiHx5WaM/mZaGY/apPiVU4aGN3O2ScHAQGnm40oOD0ndEnO8lnrMPCYn1BiI7vX1JKUI8persPlnnVqEu5kuuLcI82BqnRQM9XC5C8NZ3vfs7nWFEs7UXRxLk8TKjsmdWSQWB4r1gnjOZ7/hcaGlT+GoHJqUUqNDZZ67yUPlAlzgeWY2Z5srRTMFvjABXzB3m4ntGKza+tXJXwRkT0TBn7C4t92zXWLITtvzeeOwtjnI10EeOochcBNn7LRYTjEgExCrXErfwlbOdgWzcam2Rnoc6wDxEegdfHavsb768/oXNEQQ1Fll2hMDS38V9Og7v2B8cMFdItYgKtZG3qwD98notolHA65JOP3l3XBqsr07FbTAF4sxMjae4EjpNIeiRrjRtBrWRuaiww==
+	Z1zUwhlEfKnsw0HLtwpfHCftgg7KMSzeQ6qJ0cOQn2W0XunpmJ6MulVppvj0hz8XTuv+u7EIzZta1in5fE3MS5grP6I8Y490vMekNH7eWllyUz5kVJHXL701Xx6OHVMlsPsJv3J9FQ0g/NVUnnAyLvcYYE12WMrztKjm30St7l2WsYfSiqiUplNbellKrDwaHz3kPYWVBP9TA0hlB2MJW8S1HBEQwLAXYvljPDEyx0BdoqTm45EILtgIGTSQQxDVsB3566m+izwbNzLbJTA1KlilYb/J2odOME2RJJNqAqhc2v2KVoNWbP65aszNIfrMhxcmb95Z9ig2+LYhMMhYZisRZ2/5xePR1pBcZDf4/ox0VKiilUnCa3ExjhJ1MXyAC5GJA/UNGH3DrWvcaO5tG5tinI8NLfb4WwxoZKU4pzg0/icAmY7EJ1FeSj+sotsFMfrIclS+hMGkYNaH9odrd7dBrPq3h6Htzn/Qw+SAkb+Tf5iM9JohQ0zvULkdeMLmkDonOxwhb8mxOhKbEoSvMRttoZTtDwAeTUkNZ/7eZcRiiXhqsyKk8gM7RHphzDR2FbDe/EZvDOPnd7vEDkU4+BRFVqfasotMq0p/BtOeRpA9xycnyfvCUl0crlk3lAL1zbCLBt/bN5ZHqZxkYhO5RWM0JQRElDOPINn4TA6F0/+IgDcGxCmGbpCeC5H8AF8c
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYXPR12MB9337.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(346002)(39860400002)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(4326008)(66556008)(66946007)(8936002)(66476007)(478600001)(8676002)(110136005)(83380400001)(6486002)(6666004)(53546011)(6506007)(6512007)(2616005)(316002)(26005)(15650500001)(44832011)(2906002)(7416002)(5660300002)(41300700001)(36756003)(38100700002)(86362001)(31696002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYXPR12MB9337.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(136003)(396003)(376002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(31686004)(26005)(53546011)(2616005)(6506007)(6666004)(478600001)(6512007)(6486002)(38100700002)(86362001)(31696002)(36756003)(5660300002)(2906002)(7416002)(41300700001)(83380400001)(966005)(66946007)(66556008)(66476007)(6916009)(316002)(8936002)(4326008)(8676002)(44832011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?hIbx9HYpRuNdDTU1bSPg23xqN0AoaeuasVltlY5jrNK+1Qyn/Np+ScGULba9?=
- =?us-ascii?Q?6YJegd/wCjJy1dZL1oCppiHIo8/T+RKpde7pZfpzKD2D0P/9GIxmNj2op17j?=
- =?us-ascii?Q?PkrNs7TIUm+dQrz03lShD0Qe1Dcm9NMWlEBT+vt/VW8b4T1AoqAuYY1jPCyT?=
- =?us-ascii?Q?Un3PyBufqgVBVycHP4gNoe+FJNWPVzci9fzoi0rdZLPEYRId5AcPZgX8sjKK?=
- =?us-ascii?Q?0UVHxcVhi3bRCaIHMO5ONzAD5j3TLLlPoFIcLdUYOQwgF3Hx2d//ZMw4aD1o?=
- =?us-ascii?Q?S6PWU47etqg6SIua+I+1rqvgxY5P4Zti3pqdlbBpCeMoahEI7XSppSXTUS0V?=
- =?us-ascii?Q?dJUAayo1JahtMcPa2yqytvJYXzfCYRFIKQ8xFDCZuFW0Ijdxcqz7a2NmHcaA?=
- =?us-ascii?Q?++DAPhvjYOzNHY7H9hbE8ByKIPoeWBFUezPWGguRcgAP1u4SCbcuns67DVtw?=
- =?us-ascii?Q?JhDrF+IWCialEoPUWoHOKwvCAYiArbpZUqGHVhA3deKtolM5iTUbqupmG1KX?=
- =?us-ascii?Q?niaTZ9qMMGWj8agfS/4HMAJgwve2U1xgGKjQiPiJb3x3qs9xmG7L52i01yvs?=
- =?us-ascii?Q?ehiy9Fx886HcVw+/ht1ivmN113Nk1G2A0jX7YXVcwa1SYJJYGOCtEpYlaoPz?=
- =?us-ascii?Q?aA2lrRTc7V5pflnNdXm2qMyVFXMt20FYEdDtfGX+ROzESw80KBLizoSk8eOT?=
- =?us-ascii?Q?kt9NKs1fqmpKYUnn6YmomiEHaMZpLF7GrmfeX+ODtJC7wt2UhXB1ukgSAd07?=
- =?us-ascii?Q?ZPeTFIZPbriWpRtiu9lyHC7GSfEffm3b4+cHYtydehuOpvmO7MCHD0CgRImZ?=
- =?us-ascii?Q?T1X3q41NTEN0hk7qYjnzHQ/1E6f7KruHV92dzuyHdrkFET3k9We2OCXeqTgH?=
- =?us-ascii?Q?jgEPgCPbEHLHANz4Ym0dTuecyQk2lH+4q8V71Pe/I3CaRpDOvuFEGDnoYg1L?=
- =?us-ascii?Q?wqVCsv3fuiBUCBs2GEw0C3TXCamKUjoxNLM/2SFr6gHwFcwNcII1izSrHoOl?=
- =?us-ascii?Q?aMcvSqm+0bQIj06A7ePenwjxC0N0nO3IcsbTm2Xp9+QfNTUQ+09j6b9/S5Y5?=
- =?us-ascii?Q?mYW6wOmDNSFM2ezLt06CZqgW9JoBJKGoE7HqI2duicLjSmtk61w4jX9XmCP5?=
- =?us-ascii?Q?rmlSj3tMZmSRq7ipAyJCm0ZuXr/3O6vgWfs2qR+lQeSXQ/9YSnWyPMkLHx3A?=
- =?us-ascii?Q?WzFVzZ3fGruhUbldhCA416ylgvabNTD3BBP11MA5MhUBRDFlMk8fn8vCluVs?=
- =?us-ascii?Q?bvgZ6kySguXKySW71kykGpCMNqEIs8JnGgEZXpJ5HCtGV2xyTVZGI+p526Uq?=
- =?us-ascii?Q?8VePMECZeam+HpKKA3VRjDHE5Npkh1kkOGwHZJ77eBC1K0oYM1wOKV1uvvFO?=
- =?us-ascii?Q?A0CbuT3v/LSkd5fm0P/M/PQuocUJ61NWOuaRjh7lTSSUArQTxXcyMAbMAVA2?=
- =?us-ascii?Q?Fq1QFslO9fPSM7kB2r+en/b0atOILkIdCpIyIldc4vG9D3GxU+h8z2Ob8yhE?=
- =?us-ascii?Q?HjzcZT2tNsKeM0v2K7oLoqiwmmePSToH6q/x+x+sm7x+a3H4R4SeVolT93vL?=
- =?us-ascii?Q?Ymqh9eauG+vknuUWZmRNX2W9dnTsXCSQgqrme5HV?=
+	=?utf-8?B?Z0U1cmNFaXV1OHZ0WGJDNXVHQWI4NFg0dFUxLzBBbUt5NEtZaFV2WmF5K01R?=
+ =?utf-8?B?dTJqdUhRTFB3VVV4VEdtRFRDbzhpUkJNMExLM0RZKzZCYVB1NmRZVndjTWhS?=
+ =?utf-8?B?Yjc0YVozT3psOSs3ODk5U2tBYm05NFRIK0lFdmxKOU1IN0UyWUsyZ3FYcE1I?=
+ =?utf-8?B?MzJhMzAzSVV0QlByeUlkVm13L1U5NmRqRyt5QVBDN2NLZnJPWmthcHRRQ0J4?=
+ =?utf-8?B?RnFXc1UwY2ZnNnlNRlNnVXFxUXZDQXZRckhDUUtweDZZNVZFS2IrTkhVSEtG?=
+ =?utf-8?B?TjlqOWw4Q0dRb1Y2VHlKZXNPcW13QzEzckw5Vi9ZZ2lmTDRDNHZndlpXc2lE?=
+ =?utf-8?B?Y09CNmtwWW1YbUtiZWlUN3dTVHF4VFEvWDNva3hiNktOYkRNdk1hQjJQNWhq?=
+ =?utf-8?B?VXNwZVZ3VG5CR0tSblE5SmNOZEhHSmd6U3RXVyt2OW9NSmhZL3ZpU3NYVHhr?=
+ =?utf-8?B?RjA5cnU4Mm5nNDRWTVExVEZmVjlLUVVNZW5ubWUzajNITklZeUlEcVhwaUpO?=
+ =?utf-8?B?NEdDODBqZCsrQXdLcWI2NDFpU2JESW5UMEc4QW40SkpwRW1PUzhQbUJZYnJQ?=
+ =?utf-8?B?dHdqaTI1bGZsTStRTjNKWXk0R1dXRVQ3ekg3SzE4T1lBcTQ0RWphbmNlTFA5?=
+ =?utf-8?B?NW1hVzVRRlJ5MDVNSFZYQkJPYnNUbWNQaEhNbGFxV0JMc3NnbE5zNjl5aFRP?=
+ =?utf-8?B?UGJwWUovQnRLNG9HU0pBSmlEM3BGVVIrOUwzUHNsZU92TlJsY0lLZkh5WFMz?=
+ =?utf-8?B?WmZ2VE1zdEtlNk45ZzEzUWhLRzFob0ZnSW1qWlRUQ3Q1S3ZBLzBER3ZZdS9m?=
+ =?utf-8?B?SmpOL3VTTS83dVpnZDhMS3Zmc2Z3dkdFQWh6cjBNZ0ozcDFCSEQwenF4WGlQ?=
+ =?utf-8?B?MGlTbGtJT0JzeG16aHpRS0NqVkRQdmVtUk5hR0o2OXNEejdhZTE5ZWQwaDl6?=
+ =?utf-8?B?Qis3L3pvVlYxWXZmWHdkdGVHU0tjMDY4SW5NV2ltSUNOdVBneHJ2c1BvNXRt?=
+ =?utf-8?B?bnRneHZrdFNqbHl0SlZmMUpnby9jVnc1MmZHdHZTbFgwUWlhSmhxZnk5WTZR?=
+ =?utf-8?B?ejByQWxlTEhtZEZqQ3pnalYyTUVqY0hNWnd2dU1PSnpUTWgwQ2JIZ0x6aE84?=
+ =?utf-8?B?cnB4SmJpckM3SzJmMWhQOVk2RHhveDBTWktFUi85SG1iRlljaDFtUkhadTFS?=
+ =?utf-8?B?aTBCSFhnZ0dZYzk2VzJRQVFvQUFvdmFjNkF2QUk1YkFZaFM4K2taZmpWVytQ?=
+ =?utf-8?B?dTRGWjhUVjJ3d3JqSnpqb3VXZ3I4cTcwbFI4WG1CYnQxajkwQU5qVi9Md3Nt?=
+ =?utf-8?B?cWgrc1FZMDQ0K053UktNQ2o4SlpRakJaUi9Hd0UvR1crWXlYSUxNTVJSYlRT?=
+ =?utf-8?B?UlU1ck5pZjlBZDdScFVtNUNvVmI3d0VzbVd5Qmd0RndpS2tNN014Q3VMdkJk?=
+ =?utf-8?B?VG9zaisxRDc0RXBRWFNQeElkZlM2enRmTTBZK3dTVENLbHhjTlUwVjl3aHIz?=
+ =?utf-8?B?ZDdSREl1THpJb3RnTjd3MUJjQ1g5c3VCSFgveHpQenFZckZWaFhrWStPcG5l?=
+ =?utf-8?B?a0N5QnlkMWZFT09JWXZDQWtwUkM1VzFRRWZyUEhHUFZhTHhUbUZkNmo5M05K?=
+ =?utf-8?B?L05Xa2NXbzBvM0tDelVBL21mVDUyZndhbEZ2Szd6OU1SVkxsSWorWVZMc24r?=
+ =?utf-8?B?VVdFUEVkakVFR1RwWHlDWVI4blF5czdlV1UwenlGZWdwS0hBM3dOVk1vWVBT?=
+ =?utf-8?B?dWpWY0hpQmJGMHppS251NEZaeXdDb2dOWjNtSDdockxEWHQxTUxqMWtCdTRn?=
+ =?utf-8?B?T2dqZnRUMTBhRnZGc3czSjh6bFptelpINy9xQnZEdXVIZjlObTUxQWhKVHhK?=
+ =?utf-8?B?ZzdOY1ZlRi9OUE9WYnI3T21TMi9ubFdUdlAzY05Hem5oOGxjUnEzanRkR24z?=
+ =?utf-8?B?b1hybXVKeXo0S1J3SVZvbzRGaVRFY0x4N2pvalFxREdLQ1lWbUhiRGVwdDZE?=
+ =?utf-8?B?VWNDUVRYY0NrRnNaa3V4QXQzNHJ2RnBadGhBOE1IYmpYS0E1bHZIcnpiejIy?=
+ =?utf-8?B?UDA1T1B1bFQyMGhLWjdxREtoWS83YkhPOXE3SldnMG13RlhCbk1tM3g3YldO?=
+ =?utf-8?Q?J1yDJoRyOw7KMBMQqw0LNjQNJ?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a1931ad-e663-4334-c6ae-08dc0d0d338a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 656eb45e-d529-4de6-74f2-08dc0d17dc84
 X-MS-Exchange-CrossTenant-AuthSource: CYXPR12MB9337.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 10:09:13.2506
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 11:25:31.6341
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bOAswLLGru072B80ZKXqHSPPeWGW1NvfiLy9EDA0wuvtUvrvWmW47KSXbyRR4eGd
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8022
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0ZLsngqksbvRHgD6C8CuRsxMFN+ZcIvyKyWGpMaFv0+mQT/KpZI3eQB8K+9f2h31
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8897
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:33 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2035
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2036
 
+Hi,
 
+On 1/4/24 09:18, Sumit Garg wrote:
+> Hi Michal,
+> 
+> On Wed, 3 Jan 2024 at 18:24, Michal Simek <michal.simek@amd.com> wrote:
+>>
+>>
+>>
+>> On 12/28/23 12:57, Sumit Garg wrote:
+>>> Changes in v3:
+>>> --------------
+>>> - Patch #4: Minor commit message update
+>>> - Patch #5: Replace CONFIG_* with Kconfig options
+>>> - Patch #7: Dropped Makefile portion and enabled OF_UPSTREAM for SoC
+>>>     instead.
+>>> - Patch #1, #3, #6 and #8: Picked up review tags
+>>>
+>>> Changes in v2:
+>>> --------------
+>>> - Patch #1: excluded gitab CI config check and added commit description.
+>>> - Patch #3: s/UBOOT_DTSI_LOC/u_boot_dtsi_loc/
+>>> - Patch #4: s/DEVICE_TREE_LOC/dt_dir/ and s/U-boot/U-Boot/
+>>> - Patch #5: s/U-boot/U-Boot/
+>>> - Patch #6 and #7: Picked up review tags
+>>>
+>>> Prerequisite
+>>> ------------
+>>>
+>>> This patch series requires devicetree-rebasing git repo to be added as a
+>>> subtree to the main U-Boot repo via:
+>>>
+>>> $ git subtree add --prefix devicetree-rebasing \
+>>>         git://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git \
+>>>         v6.6-dts --squash
+>>>
+>>> Background
+>>> ----------
+>>>
+>>> This effort started while I was reviewing patch series corresponding to
+>>> Qcom platforms [1] which was about to import modified devicetree source
+>>> files from Linux kernel. I suppose keeping devicetree files sync with
+>>> Linux kernel without any DT bindings schema validation has been a pain
+>>> for U-Boot SoC/platform maintainers. There has been past discussions
+>>> about a single DT repo but that hasn't come up and Linux kernel remained
+>>> the place where DT source files as well as bindings are placed and
+>>> maintained.
+>>>
+>>> However, Linux kernel DT maintainers proposed [2] for U-Boot to rather
+>>> use devicetree-rebasing repo [3] which is a forked copy from Linux
+>>> kernel for DT source files as well as bindings. It is tagged at every
+>>> Linux kernel major release or intermideate release candidates. So here I
+>>> have tried to reuse that to bring DT bingings compliance as well as a
+>>> standard way to maintain a regular sync of DT source files with Linux
+>>> kernel.
+>>>
+>>> In order to maintain devicetree files sync, U-Boot will maintains a Git
+>>> subtree for devicetee-rebasing repo as `devicetee-rebasing/` sub-directory.
+>>> It will be regularly updated with every new kernel major release via
+>>> subtree pull as follows:
+>>>
+>>> $ git subtree pull --prefix devicetree-rebasing \
+>>>         git://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git \
+>>>         <release-tag> --squash
+>>>
+>>> The RFC/prototype for this series has been discussed with Linux DT
+>>> maintainers as well as U-Boot maintainers here [4]. Now we would like to
+>>> reach out to wider U-Boot community to seek feedback.
+>>>
+>>> [1] https://lore.kernel.org/all/CAFA6WYMLUD9cnkr=R0Uur+1UeTMkKjM2zDdMJtXb3nmrLk+pDg@mail.gmail.com/
+>>> [2] https://lore.kernel.org/all/CAL_JsqKEjv2tSGmT+0ZiO7_qbBfhTycbGnhJhYpKDFzfO9jzDg@mail.gmail.com/
+>>> [3] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+>>> [4] https://github.com/u-boot/u-boot/pull/451
+>>>
+>>> Changes
+>>> -------
+>>>
+>>> Traditionally, U-Boot placed copies of devicetree source files from Linux
+>>> kernel into `arch/<arch>/dts/<name>.dts`, which can be selected via:
+>>>
+>>> CONFIG_DEFAULT_DEVICE_TREE "<name>"
+>>>
+>>> SoC/board maintainers are encouraged to migrate to using mirrored copies
+>>> from `devicetree-rebasing/` into `dts/arch/<arch>/<vendor>` via:
+>>>
+>>> CONFIG_OF_UPSTREAM=y
+>>> CONFIG_DEFAULT_DEVICE_TREE "<vendor>/<name>"
+>>>
+>>> An example have been shown for Amlogic meson-gxbb SoC and corresponding
+>>> derived boards via patch #7 and #8.
+>>>
+>>> Devicetree bindings schema checks
+>>> ---------------------------------
+>>>
+>>> With devicetee-rebasing Git subtree, the devicetree bindings are also
+>>> regularly synced with Linux kernel as `devicetree-rebasing/Bindings/`
+>>> sub-directory. This allows U-Boot to run devicetree bindings schema checks
+>>> which will bring compliance to U-Boot core/drivers regarding usage of
+>>> devicetree.
+>>>
+>>> Dependencies
+>>> ------------
+>>>
+>>> The DT schema project must be installed in order to validate the DT schema
+>>> binding documents and validate DTS files using the DT schema. The DT schema
+>>> project can be installed with pip:
+>>>
+>>> $ pip3 install dtschema
+>>>
+>>> Note that 'dtschema' installation requires 'swig' and Python development
+>>> files installed first. On Debian/Ubuntu systems:
+>>>
+>>> $ apt install swig python3-dev
+>>>
+>>> Several executables (dt-doc-validate, dt-mk-schema, dt-validate) will be
+>>> installed. Ensure they are in your PATH (~/.local/bin by default).
+>>>
+>>> Recommended is also to install yamllint (used by dtschema when present).
+>>>
+>>> Running checks
+>>> --------------
+>>>
+>>> In order to perform validation of DTB files, use the ``dtbs_check`` target:
+>>>
+>>> $ make dtbs_check
+>>
+>> I have been following your guidance here and I have also seen it to work but not
+>> sure why. Anyway I have strong suspicious that any Makefile rule is not right.
+>>
+> 
+> Thanks for taking time to test DT schema checks. It looks like your
+> suspicion is correct.
+> 
+>> I am getting this issue.
+>>
+>> /bin/sh: line 1: @: command not found
+>> make[1]: *** [devicetree-rebasing/Bindings/Makefile:68:
+>> devicetree-rebasing/Bindings/processed-schema.json] Error 127
+>> make: *** [Makefile:1181: dt_binding_check] Error 2
+>>
+> 
+> I was able to reproduce this issue once I installed yamllint on my
+> Ubuntu machine.
+> 
+>>
+>> devicetree-rebasing/Bindings/processed-schema.json is not generated properly
+>>
+>> I am using the latest dt schema
+>> $ dt-validate -V
+>> 2023.12.dev6+gfb80ec43c204
+>>
+>> and no issue to run it from Linux source code that's why I expect it is not
+>> issue with my PC in general.
+>> Do you know what can be wrong?
+> 
+> The issue here is basically due to old U-Boot Kbuild infrastructure
+> which isn't in sync with Linux kernel. This Kbuild commit [1] changes
+> aren't present in U-Boot leading to this issue.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3a2429e1faf40b2aaa481aa4b001a74d222c7e8b
+> 
+> Following change to adapt bindings Makefile to old U-Boot Kbuild
+> expectation should resolve this issue:
+> 
+> diff --git a/devicetree-rebasing/Bindings/Makefile
+> b/devicetree-rebasing/Bindings/Makefile
+> index 8b395893bd8..7d08372691c 100644
+> --- a/devicetree-rebasing/Bindings/Makefile
+> +++ b/devicetree-rebasing/Bindings/Makefile
+> @@ -47,9 +47,9 @@ quiet_cmd_mk_schema = SCHEMA  $@
+>                        rm -f $$f
+> 
+>   define rule_chkdt
+> -       $(if $(DT_SCHEMA_LINT),$(call cmd,yamllint),)
+> -       $(call cmd,chk_bindings)
+> -       $(call cmd,mk_schema)
+> +       $(if $(DT_SCHEMA_LINT),$(call echo-cmd,yamllint) $(cmd_yamllint),); \
+> +       $(call echo-cmd,chk_bindings) $(cmd_chk_bindings); \
+> +       $(call echo-cmd,mk_schema) $(cmd_mk_schema)
+>   endef
+> 
+>   DT_DOCS = $(patsubst $(srctree)/%,%,$(shell $(find_all_cmd)))
+> 
+> If this works for you then I will include it as a separate patch for v4.
 
-On 1/3/24 17:32, Tom Rini wrote:
-> On Wed, Jan 03, 2024 at 09:19:40AM -0700, Rob Herring wrote:
->> On Thu, Dec 28, 2023 at 4:59=E2=80=AFAM Sumit Garg <sumit.garg@linaro.or=
-g> wrote:
-> [snip]
->>> +In order to maintain devicetree files sync, U-Boot maintains a Git sub=
-tree for
->>> +devicetee-rebasing repo as `devicetee-rebasing/` sub-directory. It is =
-regularly
->>> +kept updated with every new kernel major release via subtree pull as f=
-ollows::
->>
->> I would suggest dropping "-rebasing" in the u-boot tree. (I wish we
->> had in the original repo). I don't think it's relevant.
->>
->> We're not likely to regenerate the tree, but any clue what 'git
->> subtree pull' would do in this case? It could happen if we switched to
->> git-filter-repo.
->>
->>> +
->>> +    git subtree pull --prefix devicetree-rebasing \
->>> +        git://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devic=
-etree-rebasing.git \
->>> +        <release-tag> --squash
->>
->> I'd put this in a script to run. Documentation tends to be not quite
->> correct. A script could also be smarter and figure out <release-tag>.
->=20
-> Since you had mentioned elsewhere moving the kernel scripts/dtc/ to
-> something using subtree, I do hope to learn some lessons from what you
-> do there. The first thing is that given the size/nature of the commits,
-> I had figured I'd be the one doing this as a subtree pull+squash then
-> push, rather than posting to the ML since it'll be huge and
-> un-reviewable, but with a note sent off to the ML that people should be
-> aware the next sync has been done and retest as needed. But Sumit, were
-> you planning to do some of this instead?  The second thing is that if we
-> move the subtree part in to dts/ instead (where we will still have the
-> Makefile/Kconfig we have today and then our Makefiles within the
-> directories, this might get more complex and so really require a script
-> to keep it from getting error prone?
-
-I played with this series and didn't really have time to dig into subtree=
-=20
-mechanics but one thing I see is that when squash and merge happens you can=
-'t do=20
-simple rebase anymore which is time to time very useful.
-I see some different rebase strategies and --rebase-merges option but if th=
-is is=20
-adopted it should be properly described how to rebase u-boot tree which con=
-tains=20
-some subtrees.
+yes that works.
 
 Thanks,
 Michal
+
 
