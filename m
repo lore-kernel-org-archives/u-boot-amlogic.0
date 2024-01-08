@@ -2,757 +2,1471 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FDEC48292
-	for <webhook@archiver.kernel.org>; Mon,  8 Jan 2024 08:14:33 +0000 (UTC)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web10.3110.1704242503513812824
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067E2C3DA6E
+	for <webhook@archiver.kernel.org>; Wed, 10 Jan 2024 08:47:47 +0000 (UTC)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+ by mx.groups.io with SMTP id smtpd.web11.5605.1704739704579467677
  for <u-boot-amlogic@groups.io>;
- Tue, 02 Jan 2024 16:41:43 -0800
+ Mon, 08 Jan 2024 10:48:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=N6qLxlYO;
- spf=pass (domain: konsulko.com, ip: 209.85.222.169, mailfrom: trini@konsulko.com)
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78106c385a1so951221185a.0
-        for <u-boot-amlogic@groups.io>; Tue, 02 Jan 2024 16:41:43 -0800 (PST)
+ dkim=pass header.i=@amarulasolutions.com header.s=google header.b=ZK042OK8;
+ spf=pass (domain: amarulasolutions.com, ip: 209.85.208.44, mailfrom: michael@amarulasolutions.com)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55642663ac4so2399808a12.1
+        for <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 10:48:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1704242502; x=1704847302; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gfMwGXsjKVUya9dVG2aZGopUii1G5scBFkrgSE5SaS8=;
-        b=N6qLxlYOh97CcVgriKynTx7RBcheRjztmu/pAXqf4TL4TmHZmF9lEDl5YSFnm0Xg/j
-         CZJ4sjFjYTaPgjiqtx/wdcV7HCzkuy3masSFppkxUNzhkM2GZpVhiYQr7zou5DUrgFCZ
-         UB8d7BYW7AyIY6Ch/IWYvGSp6Fp0U1q23La4Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704242502; x=1704847302;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=amarulasolutions.com; s=google; t=1704739703; x=1705344503; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gfMwGXsjKVUya9dVG2aZGopUii1G5scBFkrgSE5SaS8=;
-        b=vZdk0ltxXqNuFhPwMCipy1JUW2ZzQ+HoiJ1hIISsYrfjuDi2p6h3BQX893UQPmoA4+
-         atwvNnPBUMkhmQ3L7nyrHqRyPYPjDpefGjvq6DY95npz9RU2g+HxPep5jbv5ujJBKOk3
-         VPnq6NYI9VaSnr6NQf7nyHyIR8ixb/U2WVHOK0cGsunlkvTs4exSW71VSEB5E9H8k6XC
-         /6SFyYtVdBzdm+7hbXiiMjdv+0ZvC7kUhhb+kDEH2dNtu/LJuoY1VeNn/0Q2hGpjkJ2J
-         /ApVjry7R1se4ELQ4/Vnt4ThGsgCFqz2m15YmTPvBkOsAQ9nfKNtihpCgVDzYORSDwr3
-         vhMQ==
-X-Gm-Message-State: AOJu0Yx7Pq5+1/DXlefTAjdCW8ELgIWXx+fynAg49BQePj3qh++2X9ry
-	n29P8GQDEZLcyKTD+DtBy0htwfcuw9XfbA==
-X-Google-Smtp-Source: AGHT+IHUqX5lToK7JgW17UnaBVCBusCWkrHoAWLC/m0Fo59MUhpvIrxDvks67fwYZMFs7ehOy17Q2A==
-X-Received: by 2002:a05:620a:a14:b0:781:5c8c:ba8d with SMTP id i20-20020a05620a0a1400b007815c8cba8dmr14401357qka.57.1704242502317;
-        Tue, 02 Jan 2024 16:41:42 -0800 (PST)
-Received: from bill-the-cat (2603-6081-7b00-3119-0000-0000-0000-1005.res6.spectrum.com. [2603:6081:7b00:3119::1005])
-        by smtp.gmail.com with ESMTPSA id i11-20020a05620a144b00b007815c55cdf9sm5461995qkl.105.2024.01.02.16.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 16:41:41 -0800 (PST)
-Date: Tue, 2 Jan 2024 19:41:38 -0500
-From: Tom Rini <trini@konsulko.com>
-To: Simon Glass <sjg@chromium.org>
-Cc: Mark Kettenis <mark.kettenis@xs4all.nl>, sumit.garg@linaro.org,
-	u-boot@lists.denx.de, u-boot-amlogic@groups.io,
-	u-boot-custodians@lists.denx.de, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
-	neil.armstrong@linaro.org, caleb.connolly@linaro.org,
-	ff@shokubai.tech, daniel.thompson@linaro.org,
-	dgilmore@fedoraproject.org, pbrobinson@gmail.com,
-	ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org,
-	b.galvani@gmail.com, xypron.glpk@gmx.de, michal.simek@amd.com,
-	seanga2@gmail.com, rasmus.villemoes@prevas.dk, peng.fan@nxp.com,
-	jh80.chung@samsung.com, rfried.dev@gmail.com, marex@denx.de,
-	mibodhi@gmail.com
-Subject: Re: [PATCH v3 4/8] dts: Add alternative location for upstream DTB builds
-Message-ID: <20240103004138.GC1610741@bill-the-cat>
-References: <CAFLszTjqcJouv7Dyasjfx4FiNy378fFA+A-DP292yvPk8xOzjw@mail.gmail.com>
- <CAFA6WYME_0-s4aBbaKOS3Q+q9+5553qSWcL9pDMvC9VaAfAz0w@mail.gmail.com>
- <CAFLszTj0ptH7K2Y4Fc1FR1_OmK5OzAaAReR1KT5R8OZvbgrP-Q@mail.gmail.com>
- <20231231203953.GG2652760@bill-the-cat>
- <87ttnxlwon.fsf@bloch.sibelius.xs4all.nl>
- <CAFLszThKEW7rvkfiV=Y_bYtBCC2=Ue1vKOnb4a+EN4=EEYNfng@mail.gmail.com>
- <20240101233545.GI2652760@bill-the-cat>
- <CAFLszTg1F6O2MZh3Ui_ux_aQZkzvx_eY3HprFDqm0ZETwYMGfw@mail.gmail.com>
- <20240102151046.GL2652760@bill-the-cat>
- <CAFLszThysDjASn4U7CpBmmp4axjE-CrFk1x6TLhLpmVicpwGbQ@mail.gmail.com>
+        bh=4hOJbZLpS5+Uyk1CEmR/dtn8b0/TUqSQ/p0FimD5rvQ=;
+        b=ZK042OK86bVKC2bxaKXALfY+JXbrvtH+uBDFUmwaiyNNezSCUIvttEedjNy8Cf/me+
+         8WbKakFAO1rrXSuZELpBlc8ZP3SbH2407q8DtxEdKbbROxaFgvRjz7KjfNWuDyf/9uwQ
+         +XZZiIcXjVO5vFWa8iVww6RBMjGGUEKnwXUDQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704739703; x=1705344503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4hOJbZLpS5+Uyk1CEmR/dtn8b0/TUqSQ/p0FimD5rvQ=;
+        b=hoJd+84ndD4lo0VMv5x/qHd9hnhXlZu6FMINUJCtubHwj88js/GxMd/G2UN7CP/WL+
+         V1LuQNYU/yIF/WTvrVZEQlvU2CDmxgCMBZihf0JttQBHpr4qx+on6Po8ppLl9/KMOSRe
+         D1V1wtKL3Nild/UUuk6c6749ili2EtaZjb9j7+AS4fviilR9Ayx+IoYZQsR3rGaP0sLO
+         f4ql81eeg2Ig0rLsTeozkGbJ7K95XHRRYsDHfhjusFjDAXLFtV7e9kMBuGhjwGTqkPFj
+         N08/TFoZnkyQXXlQRjrWRDwybk+sXvKRcZdFcFDtQWP1g+PiRur2oG1GRNArUA5xicoN
+         g6qg==
+X-Gm-Message-State: AOJu0YxyJfAdAmU0IAvAngmwQ21YJR+8sfreo77LRD+W8mdHzf45AGmd
+	Cfd7oQIDfvSpdaXMZ8ZYurvsLCW9xLYRZWi/PTSOzw9qw4QgCw==
+X-Google-Smtp-Source: AGHT+IF0AKoHulMAV7gN/X/PQhnFuPMA1C8DZSaFa6fFw1Zz9gSpfzuArBAvJ+6O6QnKvIp/kz2GZSmSV4ghLgEhpBM=
+X-Received: by 2002:a50:f68f:0:b0:557:8b62:e62c with SMTP id
+ d15-20020a50f68f000000b005578b62e62cmr1432858edn.3.1704739702792; Mon, 08 Jan
+ 2024 10:48:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAFLszThysDjASn4U7CpBmmp4axjE-CrFk1x6TLhLpmVicpwGbQ@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=nDFB7Q3FtCAMuejGDx0Q"
+References: <20231215122329.3268464-1-avkrasnov@salutedevices.com> <d1881685-1ecb-5edb-826c-3eb6a44e8a1d@salutedevices.com>
+In-Reply-To: <d1881685-1ecb-5edb-826c-3eb6a44e8a1d@salutedevices.com>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date: Mon, 8 Jan 2024 19:48:11 +0100
+Message-ID: <CAOf5uwkPm4fAWaRrzE64fyO8shrUY+4g5C9eBVhrFOccUq3ryA@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: rawnand: Meson NAND controller support
+To: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Cc: Dario Binacchi <dario.binacchi@amarulasolutions.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	u-boot@lists.denx.de, u-boot-amlogic@groups.io, kernel@sberdevices.ru, 
+	oxffffaa@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 08 Jan 2024 08:14:33 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2025
+ <u-boot-amlogic@groups.io>; Wed, 10 Jan 2024 08:47:47 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2049
 
---Groupsio=nDFB7Q3FtCAMuejGDx0Q
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi
 
-On Tue, Jan 02, 2024 at 04:54:15PM -0700, Simon Glass wrote:
-> Hi Tom,
->=20
-> On Tue, Jan 2, 2024 at 8:10=E2=80=AFAM Tom Rini <trini@konsulko.com> wrot=
-e:
+On Mon, Jan 8, 2024 at 7:41=E2=80=AFPM Arseniy Krasnov
+<avkrasnov@salutedevices.com> wrote:
+>
+> Sorry, pls ping
+>
+
+Sorry to be late, ;) I will give a review tomorrow
+
+Michael
+
+> Thanks, Arseniy
+>
+> On 15.12.2023 15:23, Arseniy Krasnov wrote:
+> > Basic support for Amlogic Meson NAND controller on AXG.
 > >
-> > On Tue, Jan 02, 2024 at 07:06:40AM -0700, Simon Glass wrote:
-> > > Hi Tom,
-> > >
-> > > On Mon, Jan 1, 2024 at 4:35=E2=80=AFPM Tom Rini <trini@konsulko.com> =
-wrote:
-> > > >
-> > > > On Mon, Jan 01, 2024 at 03:32:41PM -0700, Simon Glass wrote:
-> > > > > Hi Mark, Tom,
-> > > > >
-> > > > > On Sun, Dec 31, 2023 at 5:33=E2=80=AFPM Mark Kettenis <mark.kette=
-nis@xs4all.nl> wrote:
-> > > > > >
-> > > > > > > Date: Sun, 31 Dec 2023 15:39:53 -0500
-> > > > > > > From: Tom Rini <trini@konsulko.com>
-> > > > > > >
-> > > > > > > On Sun, Dec 31, 2023 at 07:28:52AM -0700, Simon Glass wrote:
-> > > > > > > > Hi Sumit,
-> > > > > > > >
-> > > > > > > > On Fri, Dec 29, 2023 at 8:30=E2=80=AFAM Sumit Garg <sumit.g=
-arg@linaro.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Fri, 29 Dec 2023 at 01:18, Simon Glass <sjg@chromium.o=
-rg> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Hi Tom,
-> > > > > > > > > >
-> > > > > > > > > > On Thu, Dec 28, 2023 at 3:54=E2=80=AFPM Tom Rini <trini=
-@konsulko.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Thu, Dec 28, 2023 at 03:09:12PM +0000, Simon Glass=
- wrote:
-> > > > > > > > > > > > Hi Tom, Sumit,
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Thu, Dec 28, 2023 at 2:03=E2=80=AFPM Tom Rini <t=
-rini@konsulko.com> wrote:
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > On Thu, Dec 28, 2023 at 01:37:26PM +0000, Simon G=
-lass wrote:
-> > > > > > > > > > > > > > Hi Sumit,
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > On Thu, Dec 28, 2023 at 11:58=E2=80=AFAM Sumit =
-Garg <sumit.garg@linaro.org> wrote:
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Allow platform owners to mirror devicetree fi=
-les from devitree-rebasing
-> > > > > > > > > > > > > > > directory into dts/arch/$(ARCH) (special case=
- for dts/arch/arm64). Then
-> > > > > > > > > > > > > > > build then along with any *-u-boot.dtsi file =
-present in arch/$(ARCH)/dts
-> > > > > > > > > > > > > > > directory. Also add a new Makefile for arm64.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > This will help easy migration for platforms w=
-hich currently are compliant
-> > > > > > > > > > > > > > > with upstream Linux kernel devicetree files.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.=
-org>
-> > > > > > > > > > > > > > > ---
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Changes in v3:
-> > > > > > > > > > > > > > > --------------
-> > > > > > > > > > > > > > > - Minor commit message update
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Changes in v2:
-> > > > > > > > > > > > > > > --------------
-> > > > > > > > > > > > > > > - s/DEVICE_TREE_LOC/dt_dir/ and s/U-boot/U-Bo=
-ot/
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > >  dts/Kconfig             | 11 +++++++++++
-> > > > > > > > > > > > > > >  dts/Makefile            | 17 ++++++++++++++-=
---
-> > > > > > > > > > > > > > >  dts/arch/arm64/Makefile | 14 ++++++++++++++
-> > > > > > > > > > > > > > >  3 files changed, 39 insertions(+), 3 deletio=
-ns(-)
-> > > > > > > > > > > > > > >  create mode 100644 dts/arch/arm64/Makefile
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > diff --git a/dts/Kconfig b/dts/Kconfig
-> > > > > > > > > > > > > > > index 00c0aeff893..e58c1c6f2ab 100644
-> > > > > > > > > > > > > > > --- a/dts/Kconfig
-> > > > > > > > > > > > > > > +++ b/dts/Kconfig
-> > > > > > > > > > > > > > > @@ -85,6 +85,17 @@ config OF_LIVE
-> > > > > > > > > > > > > > >           enables a live tree which is availa=
-ble after relocation,
-> > > > > > > > > > > > > > >           and can be adjusted as needed.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > +config OF_UPSTREAM
-> > > > > > > > > > > > > > > +       bool "Enable use of devicetree import=
-ed from Linux kernel release"
-> > > > > > > > > > > > > > > +       help
-> > > > > > > > > > > > > > > +         Traditionally, U-Boot platforms use=
-d to have their custom devicetree
-> > > > > > > > > > > > > > > +         files or copy devicetree files from=
- Linux kernel which are hard to
-> > > > > > > > > > > > > > > +         maintain and can usually get out-of=
--sync from Linux kernel. This
-> > > > > > > > > > > > > > > +         option enables platforms to migrate=
- to devicetree-rebasing repo where
-> > > > > > > > > > > > > > > +         a regular sync will be maintained e=
-very major Linux kernel release
-> > > > > > > > > > > > > > > +         cycle. However, platforms can still=
- have some custom u-boot specific
-> > > > > > > > > > > > > > > +         bits maintained as part of *-u-boot=
-.dtsi files.
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > My only other suggestion here is to mention tha=
-t this should be set in
-> > > > > > > > > > > > > > Kconfig, for the SoC as a whole. So I believe t=
-hat means that it
-> > > > > > > > > > > > > > should be hidden, with no string for the 'bool'=
-:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > >       bool  # Enable use of devicetree imported=
- from Linux kernel release
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > I think we can just keep prompting for it now, to=
- make the transition
-> > > > > > > > > > > > > easier, before this option just goes away in time=
-, hopefully.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > > Also, this doesn't seem to work for me. Before =
-this series I get these
-> > > > > > > > > > > > > > files when building firefly-rk3399:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > rk3399-eaidk-610.dtb            rk3399-khadas-e=
-dge-v.dtb
-> > > > > > > > > > > > > > rk3399-orangepi.dtb        rk3399-rock-pi-4a.dt=
-b
-> > > > > > > > > > > > > > rk3399-evb.dtb                  rk3399-leez-p71=
-0.dtb
-> > > > > > > > > > > > > > rk3399-pinebook-pro.dtb    rk3399-rock-pi-4c.dt=
-b
-> > > > > > > > > > > > > > rk3399-ficus.dtb                rk3399-nanopc-t=
-4.dtb
-> > > > > > > > > > > > > > rk3399-pinephone-pro.dtb   rk3399-rockpro64.dtb
-> > > > > > > > > > > > > > rk3399-firefly.dtb              rk3399-nanopi-m=
-4-2gb.dtb
-> > > > > > > > > > > > > > rk3399pro-rock-pi-n10.dtb  rk3399-roc-pc.dtb
-> > > > > > > > > > > > > > rk3399-gru-bob.dtb              rk3399-nanopi-m=
-4b.dtb
-> > > > > > > > > > > > > > rk3399-puma-haikou.dtb     rk3399-roc-pc-mezzan=
-ine.dtb
-> > > > > > > > > > > > > > rk3399-gru-kevin.dtb            rk3399-nanopi-m=
-4.dtb
-> > > > > > > > > > > > > > rk3399-rock-4c-plus.dtb
-> > > > > > > > > > > > > > rk3399-khadas-edge-captain.dtb  rk3399-nanopi-n=
-eo4.dtb    rk3399-rock-4se.dtb
-> > > > > > > > > > > > > > rk3399-khadas-edge.dtb          rk3399-nanopi-r=
-4s.dtb     rk3399-rock960.dtb
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Afterwards I get this:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > make[3]: *** No rule to make target
-> > > > > > > > > > > > > > 'dts/arch/arm64/rk3399-firefly.dtb', needed by =
-'dtbs'.  Stop.
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > So I set this manually for that one board:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > CONFIG_DEFAULT_DEVICE_TREE=3D"rockchip/rk3399-f=
-irefly"
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > and get:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > make[3]: *** No rule to make target
-> > > > > > > > > > > > > > 'dts/arch/arm64/rockchip/rk3399-firefly.dtb', n=
-eeded by 'dtbs'.  Stop.
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > I am not sure how to fix this, nor how this can=
- be made to build all
-> > > > > > > > > > > > > > the DTs for rk3399, as it does today.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Looking at the patch for amlogic boards, you need=
- to make the link to
-> > > > > > > > > > > > > devicetree-rebasing inside dts/...
-> > > > > > > > > > > >
-> > > > > > > > > > > > OK, let me give up on rk3399 for now...that doesn't=
- seem to work even
-> > > > > > > > > > > > with the link.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Using odroid-c2 with -next I see:
-> > > > > > > > > > > >
-> > > > > > > > > > > > $ ls /tmp/b/odroid-c2/arch/arm/dts/
-> > > > > > > > > > > > meson-a1-ad401.dtb                 meson-g12b-odroi=
-d-n2l.dtb
-> > > > > > > > > > > >     meson-gxl-s905x-libretech-cc.dtb
-> > > > > > > > > > > > meson-axg-jethome-jethub-j100.dtb  meson-g12b-odroi=
-d-n2-plus.dtb
-> > > > > > > > > > > >     meson-gxl-s905x-libretech-cc-v2.dtb
-> > > > > > > > > > > > meson-axg-s400.dtb                 meson-g12b-radxa=
--zero2.dtb
-> > > > > > > > > > > >     meson-gxl-s905x-p212.dtb
-> > > > > > > > > > > > meson-g12a-radxa-zero.dtb          meson-gxbb-kii-p=
-ro.dtb
-> > > > > > > > > > > >     meson-gxm-gt1-ultimate.dtb
-> > > > > > > > > > > > meson-g12a-sei510.dtb              meson-gxbb-nanop=
-i-k2.dtb
-> > > > > > > > > > > >     meson-gxm-khadas-vim2.dtb
-> > > > > > > > > > > > meson-g12a-u200.dtb                meson-gxbb-odroi=
-dc2.dtb
-> > > > > > > > > > > >     meson-gxm-s912-libretech-pc.dtb
-> > > > > > > > > > > > meson-g12b-a311d-bananapi-m2s.dtb  meson-gxbb-p200.=
-dtb
-> > > > > > > > > > > >     meson-gxm-wetek-core2.dtb
-> > > > > > > > > > > > meson-g12b-a311d-khadas-vim3.dtb   meson-gxbb-p201.=
-dtb
-> > > > > > > > > > > >     meson-sm1-bananapi-m2-pro.dtb
-> > > > > > > > > > > > meson-g12b-bananapi-cm4-cm4io.dtb  meson-gxbb-wetek=
--hub.dtb
-> > > > > > > > > > > >     meson-sm1-bananapi-m5.dtb
-> > > > > > > > > > > > meson-g12b-gsking-x.dtb            meson-gxbb-wetek=
--play2.dtb
-> > > > > > > > > > > >     meson-sm1-khadas-vim3l.dtb
-> > > > > > > > > > > > meson-g12b-gtking.dtb              meson-gxl-s805x-=
-libretech-ac.dtb
-> > > > > > > > > > > >     meson-sm1-odroid-c4.dtb
-> > > > > > > > > > > > meson-g12b-gtking-pro.dtb          meson-gxl-s905d-=
-libretech-pc.dtb
-> > > > > > > > > > > >     meson-sm1-odroid-hc4.dtb
-> > > > > > > > > > > > meson-g12b-odroid-go-ultra.dtb
-> > > > > > > > > > > > meson-gxl-s905w-jethome-jethub-j80.dtb  meson-sm1-s=
-ei610.dtb
-> > > > > > > > > > > > meson-g12b-odroid-n2.dtb           meson-gxl-s905x-=
-khadas-vim.dtb
-> > > > > > > > > > > > $
-> > > > > > > > > > > > With this series (sort of, since I am really not su=
-re how to
-> > > > > > > > > > > > cherry-pick the commits from the PR) I see nothing:
-> > > > > > > > > > > >
-> > > > > > > > > > > > $ ls /tmp/b/odroid-c2/arch/arm/dts/
-> > > > > > > > > > > > $
-> > > > > > > > > > > >
-> > > > > > > > > > > > This shows some of the files:
-> > > > > > > > > > > >
-> > > > > > > > > > > > $ find /tmp/b/odroid-c2/ -name "*.dtb"
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/dt.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-=
-odroidc2.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-=
-nanopi-k2.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-=
-wetek-play2.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-=
-kii-pro.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-=
-p200.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-=
-p201.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/dts/arch/arm64/amlogic/meson-gxbb-=
-wetek-hub.dtb
-> > > > > > > > > > > > /tmp/b/odroid-c2/u-boot.dtb
-> > > > > > > > > > > >
-> > > > > > > > > > > > but where are the rest? Also, is it possible to put=
- the output .dtb
-> > > > > > > > > > > > files into the same directory? Otherwise we may hav=
-e some pain with
-> > > > > > > > > > > > binman.
-> > > > > > > > > > >
-> > > > > > > > > > > What do you mean by same directory? But maybe also, w=
-hat's an example of
-> > > > > > > > > > > a board you think might end up having problems? Conve=
-rting that in a
-> > > > > > > > > > > follow-up series is likely a good idea, to highlight =
-and address these
-> > > > > > > > > > > issues sooner rather than later.#
-> > > > > > > > > >
-> > > > > > > > > > Today the .dtb files go into arch/arm/dts - so it would=
- be easier if
-> > > > > > > > > > this series could do the same.
-> > > > > > > > >
-> > > > > > > > > The kbuild infrastructure keeps the dtb alongside dts fil=
-es which is
-> > > > > > > > > the preferred way too as otherwise it would be complicate=
-d to locate
-> > > > > > > > > DT files for the users. Also, we have to move towards Lin=
-ux DT
-> > > > > > > > > directory structure and thereby the tools like binman hav=
-e to be
-> > > > > > > > > adjusted. I will do that when I get to migrating SoCs sup=
-porting
-> > > > > > > > > binman.
-> > > > > > > >
-> > > > > > > > OK, I want to stop here and rethink this. This is the path =
-taken so
-> > > > > > > > far, I believe:
-> > > > > > > >
-> > > > > > > > 1. We want to use devicetree files taken from Linux and
-> > > > > > > > devicetree-rebasing provides these
-> > > > > > >
-> > > > > > > Yes.
-> > > > > > >
-> > > > > > > > 2. We want to use 'git subtree' to avoid needing a script t=
-o do the
-> > > > > > > > sync / create a commit
-> > > > > > >
-> > > > > > > No. We want to use 'git subtree' to avoid having to use git s=
-ubmodules.
-> > > > >
-> > > > > Well that is what I understood from Sumit, when I asked about a
-> > > > > script. I imagine a 100-line Python script could do the same as:
-> > > > >
-> > > > >    git subtree pull --prefix devicetree-rebasing
-> > > > > git://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetr=
-ee-rebasing.git
-> > > > > <release-tag> --squash
-> > > > >
-> > > > > and it could also put the files in the right place for U-Boot.
-> > > >
-> > > > I've been saying in various places for years that I want to move aw=
-ay
-> > > > from arch/*/dts being where we have the "just a copy" dts files and=
- have
-> > > > them somewhere else so they are easier to manage and differentiate =
-our
-> > > > changes / additions. So arch/*/dts cannot be some hard-coded "right=
-"
-> > > > path.
-> > >
-> > > OK
-> > >
-> > > >
-> > > > > > > > 3. But this leaves us with a directory structure which does=
-n't match
-> > > > > > > > U-Boot (no script to fix it up)
-> > > > > > >
-> > > > > > > No. We intentionally abandon arch/*/dts because it's so full =
-of
-> > > > > > > out of date files and never fully re-synced, only re-synced a=
-d-hoc.
-> > > > >
-> > > > > I mean that the dir structure doesn't match. I am not worried abo=
-ut
-> > > > > keeping arch/*/dts but I want the same structure somewhere else, =
-e.g.
-> > > > > dtr/arch/*/dts
-> > > >
-> > > > And what I want here is to match the same structure everyone that's=
- not
-> > > > U-Boot uses. For better or worse no one else seems to have gone wit=
-h
-> > > > "treat aarch64 as just another ARM", and then the vendor directory
-> > > > structure only makes that more obviously a mismatch. We need to fol=
-low
-> > > > what everyone else uses, and developers familiar with other project=
-s
-> > > > will expect to see.
-> > >
-> > > So you are saying that U-Boot should move to what Linux uses. I agree
-> > > that seems like the best approach, so let's do it.
-> > >
-> > > >
-> > > > > > > > 4. So we deal with that by skipping the build rules and usi=
-ng CONFIG
-> > > > > > > > options to select what is built
-> > > > > > > > 5. So now we cannot build all the files for an SoC, just th=
-e ones that
-> > > > > > > > are in the CONFIG options
-> > > > > > > > 6. Linux doesn't actually use devicetree-rebasing itself, s=
-o doesn't
-> > > > > > > > have this problem
-> > > > > > >
-> > > > > > > No. devicetree-rebasing skips the Makefiles because they're p=
-art of the
-> > > > > > > kernel. We couldn't re-use them ourselves because we don't ha=
-ve the same
-> > > > > > > CONFIG names the kernel does. And Sumit has not replicated th=
-e logic we
-> > > > > > > have under arch/*/dts/Makefile today because I've asked him n=
-ot to, and
-> > > > > > > we'll figure out what subsets of that logic make sense to add=
- back in as
-> > > > > > > a second step not a first step.
-> > > > >
-> > > > > Again, you are missing my point. I am not suggesting using Linux'=
-s
-> > > > > build rules, just explaining why Linux doesn't have the problem w=
-e
-> > > > > would be creating here.
-> > > > >
-> > > > > > > > So this is heading in the wrong direction. Nor is it clear =
-that this
-> > > > > > > > would just be a temporary problem.
-> > > > > > >
-> > > > > > > A previous iteration of this series built all of the dtb file=
-s for the
-> > > > > > > SoC that Sumit has migrated with this series, but then droppe=
-d it.
-> > > > >
-> > > > > Oh.
-> > > > >
-> > > > > > >
-> > > > > > > [snip]
-> > > > > > > > I would like to do this series properly, maintaining the So=
-C-specific
-> > > > > > > > build rules, not removing what I see as an important featur=
-e. It
-> > > > > > > > should not be that difficult to figure out and I am happy t=
-o help with
-> > > > > > > > it.
-> > > > > > >
-> > > > > > > The problem is that the rest of us do not understand the use =
-case you're
-> > > > > > > describing where a dtb file that would be useful in a build i=
-s not
-> > > > > > > already in the list to build. The only one of those use cases=
- I
-> > > > > > > understand thus far is the exynos4 (iirc) case you mentioned =
-previously
-> > > > > > > where yes, really, one defconfig + appending board.dtb is fin=
-e, or fine
-> > > > > > > enough. It's not that far off of the SPL_LOAD_FIT case, but t=
-here we
-> > > > > > > know what to build already.
-> > > > >
-> > > > > Perhaps the problem is that the rest of you think of the build as=
- all
-> > > > > happening in U-Boot, similar to the proposed 'make image.fit' tha=
-t I
-> > > > > am trying to add to Linux.
-> > > > >
-> > > > > But packaging can be (and often is) a separate step from building=
-.
-> > > > > Linux has no packaging mechanism today...it just builds everythin=
+> > Based on Linux version 6.7.0-rc4.
+> >
+> > Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> > ---
+> >  Changelog:
+> >  v1 -> v2:
+> >   * Update commit message with 'Based on Linux ...'.
+> >   * Add Linux driver author to .c file header.
+> >   * Add comment for defines 'NFC_DEFAULT_BUS_CYCLE' and
+> >     'NFC_DEFAULT_BUS_TIMING'.
+> >   * Use 'dev_read_addr_index_ptr()' instead of 'dev_read_addr()'.
+> >
+> >  drivers/mtd/nand/raw/Kconfig      |    9 +
+> >  drivers/mtd/nand/raw/Makefile     |    1 +
+> >  drivers/mtd/nand/raw/meson_nand.c | 1241 +++++++++++++++++++++++++++++
+> >  3 files changed, 1251 insertions(+)
+> >  create mode 100644 drivers/mtd/nand/raw/meson_nand.c
+> >
+> > diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfi=
 g
-> > > > > (including all DTs) and stops.
-> > > > >
-> > > > > We should be able to pick up whatever .dtb files we want and use =
-them
-> > > > > in an image.
-> > > > >
-> > > > > > > And I guess trying to tie things up, that's my puzzle. SPL_LO=
-AD_FIT is
-> > > > > > > how I see the use case you talk about being solved, if a full=
- U-Boot is
-> > > > > > > generic enough for N boards, SPL_LOAD_FIT does the right thin=
-g (in this
-> > > > > > > non-bloblist DTB, non-reusing-OS-inntended DTB world). I real=
-ly don't
-> > > > > > > knnow how many modern SoCs can take a literal concatenated DT=
-B and even
-> > > > > > > in those cases I don't get why that's the win we want now? 1 =
-build to N
-> > > > > > > binaries?
-> > > > >
-> > > > > Yes SPL_LOAD_FIT is fine although in practice we will likely need=
- SPL
-> > > > > to use the correct DT as well, so the DT will need to be determin=
-ed in
-> > > > > TPL, perhaps.
-> > > >
-> > > > I mean, SPL_LOAD_FIT still can handle this case, with a call to the
-> > > > function to re-parse the tree, when needed. I thought we did this t=
-oday
-> > > > even, but perhaps I'm confusing my options here.
-> > > >
-> > > > > But anyway, this works OK with rk3399, for example. We need to su=
-pport
-> > > > > this use case.
-> > > > >
-> > > > > Also, it is pretty easy. We just need to stick with the dir struc=
-ture
-> > > > > we have today and copy our existing Makefiles into that dir. Or c=
-hange
-> > > > > to the kernel dir structure and use that. Or do one, then the oth=
-er.
-> > > >
-> > > > I'm sorry, I don't understand what directory structure has to do wi=
-th
-> > > > "build more dtbs". For the cases where it makes sense to, yes, we c=
-an
-> > > > build more dtbs, based on the SoC. I'm setting aside entirely the
-> > > > discussion on what SoCs that works for, for another thread.
-> > >
-> > > Well you said above that we should switch to the kernel dir structure=
+> > index d624589a89..7b7b0226ab 100644
+> > --- a/drivers/mtd/nand/raw/Kconfig
+> > +++ b/drivers/mtd/nand/raw/Kconfig
+> > @@ -488,6 +488,15 @@ config NAND_ARASAN
+> >         controller. This uses the hardware ECC for read and
+> >         write operations.
+> >
+> > +config NAND_MESON
+> > +     bool "Meson NAND support"
+> > +     select SYS_NAND_SELF_INIT
+> > +     depends on DM_MTD && ARCH_MESON
+> > +     imply CMD_NAND
+> > +     help
+> > +       This enables Nand driver support for Meson raw NAND flash
+> > +       controller.
+> > +
+> >  config NAND_MXC
+> >       bool "MXC NAND support"
+> >       depends on CPU_ARM926EJS || CPU_ARM1136 || MX5
+> > diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makef=
+ile
+> > index add2b4cf65..5b4efd52c9 100644
+> > --- a/drivers/mtd/nand/raw/Makefile
+> > +++ b/drivers/mtd/nand/raw/Makefile
+> > @@ -61,6 +61,7 @@ obj-$(CONFIG_NAND_KMETER1) +=3D kmeter1_nand.o
+> >  obj-$(CONFIG_NAND_LPC32XX_MLC) +=3D lpc32xx_nand_mlc.o
+> >  obj-$(CONFIG_NAND_LPC32XX_SLC) +=3D lpc32xx_nand_slc.o
+> >  obj-$(CONFIG_NAND_VF610_NFC) +=3D vf610_nfc.o
+> > +obj-$(CONFIG_NAND_MESON) +=3D meson_nand.o
+> >  obj-$(CONFIG_NAND_MXC) +=3D mxc_nand.o
+> >  obj-$(CONFIG_NAND_MXS) +=3D mxs_nand.o
+> >  obj-$(CONFIG_NAND_MXS_DT) +=3D mxs_nand_dt.o
+> > diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/m=
+eson_nand.c
+> > new file mode 100644
+> > index 0000000000..a6dbe99d84
+> > --- /dev/null
+> > +++ b/drivers/mtd/nand/raw/meson_nand.c
+> > @@ -0,0 +1,1241 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Amlogic Meson Nand Flash Controller Driver
+> > + *
+> > + * Copyright (c) 2018 Amlogic, inc.
+> > + * Author: Liang Yang <liang.yang@amlogic.com>
+> > + *
+> > + * Copyright (c) 2023 SaluteDevices, Inc.
+> > + * Author: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> > + */
+> > +
+> > +#include <common.h>
+> > +#include <nand.h>
+> > +#include <asm/io.h>
+> > +#include <dm.h>
+> > +#include <dm/device_compat.h>
+> > +#include <dm/ofnode.h>
+> > +#include <dm/uclass.h>
+> > +#include <linux/bug.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/mtd/mtd.h>
+> > +#include <linux/mtd/rawnand.h>
+> > +#include <linux/sizes.h>
+> > +
+> > +#define NFC_CMD_IDLE                 (0xc << 14)
+> > +#define NFC_CMD_CLE                  (0x5 << 14)
+> > +#define NFC_CMD_ALE                  (0x6 << 14)
+> > +#define NFC_CMD_DWR                  (0x4 << 14)
+> > +#define NFC_CMD_DRD                  (0x8 << 14)
+> > +#define NFC_CMD_ADL                  ((0 << 16) | (3 << 20))
+> > +#define NFC_CMD_ADH                  ((1 << 16) | (3 << 20))
+> > +#define NFC_CMD_AIL                  ((2 << 16) | (3 << 20))
+> > +#define NFC_CMD_AIH                  ((3 << 16) | (3 << 20))
+> > +#define NFC_CMD_SEED                 ((8 << 16) | (3 << 20))
+> > +#define NFC_CMD_M2N                  ((0 << 17) | (2 << 20))
+> > +#define NFC_CMD_N2M                  ((1 << 17) | (2 << 20))
+> > +#define NFC_CMD_RB                   BIT(20)
+> > +#define NFC_CMD_SCRAMBLER_ENABLE     BIT(19)
+> > +#define NFC_CMD_SCRAMBLER_DISABLE    0
+> > +#define NFC_CMD_SHORTMODE_DISABLE    0
+> > +#define NFC_CMD_RB_INT                       BIT(14)
+> > +#define NFC_CMD_RB_INT_NO_PIN                ((0xb << 10) | BIT(18) | =
+BIT(16))
+> > +
+> > +#define NFC_CMD_GET_SIZE(x)  (((x) >> 22) & GENMASK(4, 0))
+> > +
+> > +#define NFC_REG_CMD          0x00
+> > +#define NFC_REG_CFG          0x04
+> > +#define NFC_REG_DADR         0x08
+> > +#define NFC_REG_IADR         0x0c
+> > +#define NFC_REG_BUF          0x10
+> > +#define NFC_REG_INFO         0x14
+> > +#define NFC_REG_DC           0x18
+> > +#define NFC_REG_ADR          0x1c
+> > +#define NFC_REG_DL           0x20
+> > +#define NFC_REG_DH           0x24
+> > +#define NFC_REG_CADR         0x28
+> > +#define NFC_REG_SADR         0x2c
+> > +#define NFC_REG_PINS         0x30
+> > +#define NFC_REG_VER          0x38
+> > +
+> > +#define CMDRWGEN(cmd_dir, ran, bch, short_mode, page_size, pages)    \
+> > +     (                                                               \
+> > +             (cmd_dir)                       |                       \
+> > +             ((ran) << 19)                   |                       \
+> > +             ((bch) << 14)                   |                       \
+> > +             ((short_mode) << 13)            |                       \
+> > +             (((page_size) & 0x7f) << 6)     |                       \
+> > +             ((pages) & 0x3f)                                        \
+> > +     )
+> > +
+> > +#define GENCMDDADDRL(adl, addr)              ((adl) | ((addr) & 0xffff=
+))
+> > +#define GENCMDDADDRH(adh, addr)              ((adh) | (((addr) >> 16) =
+& 0xffff))
+> > +#define GENCMDIADDRL(ail, addr)              ((ail) | ((addr) & 0xffff=
+))
+> > +#define GENCMDIADDRH(aih, addr)              ((aih) | (((addr) >> 16) =
+& 0xffff))
+> > +
+> > +#define DMA_DIR(dir)         ((dir) ? NFC_CMD_N2M : NFC_CMD_M2N)
+> > +
+> > +#define ECC_CHECK_RETURN_FF  -1
+> > +
+> > +#define NAND_CE0             (0xe << 10)
+> > +#define NAND_CE1             (0xd << 10)
+> > +
+> > +#define DMA_BUSY_TIMEOUT_US  1000000
+> > +#define CMD_DRAIN_TIMEOUT_US 1000
+> > +#define ECC_POLL_TIMEOUT_US  15
+> > +
+> > +#define MAX_CE_NUM           2
+> > +
+> > +/* eMMC clock register, misc control */
+> > +#define CLK_SELECT_NAND              BIT(31)
+> > +#define CLK_ALWAYS_ON_NAND   BIT(24)
+> > +#define CLK_ENABLE_VALUE     0x245
+> > +
+> > +#define DIRREAD                      1
+> > +#define DIRWRITE             0
+> > +
+> > +#define ECC_PARITY_BCH8_512B 14
+> > +#define ECC_COMPLETE            BIT(31)
+> > +#define ECC_ERR_CNT(x)               (((x) >> 24) & GENMASK(5, 0))
+> > +#define ECC_ZERO_CNT(x)              (((x) >> 16) & GENMASK(5, 0))
+> > +#define ECC_UNCORRECTABLE    0x3f
+> > +
+> > +#define PER_INFO_BYTE                8
+> > +
+> > +#define NFC_SEND_CMD(host, cmd) \
+> > +     (writel((cmd), (host)->reg_base + NFC_REG_CMD))
+> > +
+> > +#define NFC_GET_CMD(host) \
+> > +     (readl((host)->reg_base + NFC_REG_CMD))
+> > +
+> > +#define NFC_CMDFIFO_SIZE(host)       ((NFC_GET_CMD((host)) >> 22) & GE=
+NMASK(4, 0))
+> > +
+> > +#define NFC_CMD_MAKE_IDLE(ce, delay) ((ce) | NFC_CMD_IDLE | ((delay) &=
+ 0x3ff))
+> > +#define NFC_CMD_MAKE_DRD(ce, size)   ((ce) | NFC_CMD_DRD | (size))
+> > +#define NFC_CMD_MAKE_DWR(ce, data)   ((ce) | NFC_CMD_DWR | ((data) & 0=
+xff))
+> > +#define NFC_CMD_MAKE_CLE(ce, cmd_val)        ((ce) | NFC_CMD_CLE | ((c=
+md_val) & 0xff))
+> > +#define NFC_CMD_MAKE_ALE(ce, addr)   ((ce) | NFC_CMD_ALE | ((addr) & 0=
+xff))
+> > +
+> > +#define NAND_TWB_TIME_CYCLE  10
+> > +
+> > +#define NFC_DEV_READY_TICK_MAX       5000
+> > +
+> > +/* Both values are recommended by vendor, as the most
+> > + * tested with almost all SLC NAND flash. Second value
+> > + * could be calculated dynamically from timing parameters,
+> > + * but we need both values for initial start of the NAND
+> > + * controller (e.g. before NAND subsystem processes timings),
+> > + * so use hardcoded constants.
+> > + */
+> > +#define NFC_DEFAULT_BUS_CYCLE        6
+> > +#define NFC_DEFAULT_BUS_TIMING       7
+> > +
+> > +#define NFC_SEED_OFFSET              0xc2
+> > +#define NFC_SEED_MASK                0x7fff
+> > +
+> > +#define DMA_ADDR_ALIGN               8
+> > +
+> > +struct meson_nfc_nand_chip {
+> > +     struct list_head node;
+> > +     struct nand_chip nand;
+> > +
+> > +     u32 bch_mode;
+> > +     u8 *data_buf;
+> > +     __le64 *info_buf;
+> > +     u32 nsels;
+> > +     u8 sels[];
+> > +};
+> > +
+> > +struct meson_nfc_param {
+> > +     u32 chip_select;
+> > +     u32 rb_select;
+> > +};
+> > +
+> > +struct meson_nfc {
+> > +     void __iomem *reg_base;
+> > +     void __iomem *reg_clk;
+> > +     struct list_head chips;
+> > +     struct meson_nfc_param param;
+> > +     struct udevice *dev;
+> > +     dma_addr_t daddr;
+> > +     dma_addr_t iaddr;
+> > +     u32 data_bytes;
+> > +     u32 info_bytes;
+> > +     u64 assigned_cs;
+> > +};
+> > +
+> > +struct meson_nand_ecc {
+> > +     u32 bch;
+> > +     u32 strength;
+> > +     u32 size;
+> > +};
+> > +
+> > +enum {
+> > +     NFC_ECC_BCH8_512 =3D 1,
+> > +     NFC_ECC_BCH8_1K,
+> > +     NFC_ECC_BCH24_1K,
+> > +     NFC_ECC_BCH30_1K,
+> > +     NFC_ECC_BCH40_1K,
+> > +     NFC_ECC_BCH50_1K,
+> > +     NFC_ECC_BCH60_1K,
+> > +};
+> > +
+> > +#define MESON_ECC_DATA(b, s, sz) { .bch =3D (b), .strength =3D (s), .s=
+ize =3D (sz) }
+> > +
+> > +static struct meson_nand_ecc meson_ecc[] =3D {
+> > +     MESON_ECC_DATA(NFC_ECC_BCH8_512, 8,  512),
+> > +     MESON_ECC_DATA(NFC_ECC_BCH8_1K,  8,  1024),
+> > +};
+> > +
+> > +static int meson_nand_calc_ecc_bytes(int step_size, int strength)
+> > +{
+> > +     int ecc_bytes;
+> > +
+> > +     if (step_size =3D=3D 512 && strength =3D=3D 8)
+> > +             return ECC_PARITY_BCH8_512B;
+> > +
+> > +     ecc_bytes =3D DIV_ROUND_UP(strength * fls(step_size * 8), 8);
+> > +     ecc_bytes =3D ALIGN(ecc_bytes, 2);
+> > +
+> > +     return ecc_bytes;
+> > +}
+> > +
+> > +static struct meson_nfc_nand_chip *to_meson_nand(struct nand_chip *nan=
+d)
+> > +{
+> > +     return container_of(nand, struct meson_nfc_nand_chip, nand);
+> > +}
+> > +
+> > +static void meson_nfc_nand_select_chip(struct mtd_info *mtd, int chip)
+> > +{
+> > +     struct nand_chip *nand =3D mtd_to_nand(mtd);
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +
+> > +     nfc->param.chip_select =3D meson_chip->sels[chip] ? NAND_CE1 : NA=
+ND_CE0;
+> > +}
+> > +
+> > +static void meson_nfc_cmd_idle(struct meson_nfc *nfc, u32 time)
+> > +{
+> > +     writel(NFC_CMD_MAKE_IDLE(nfc->param.chip_select, time),
+> > +            nfc->reg_base + NFC_REG_CMD);
+> > +}
+> > +
+> > +static void meson_nfc_cmd_seed(const struct meson_nfc *nfc, u32 seed)
+> > +{
+> > +     writel(NFC_CMD_SEED | (NFC_SEED_OFFSET + (seed & NFC_SEED_MASK)),
+> > +            nfc->reg_base + NFC_REG_CMD);
+> > +}
+> > +
+> > +static void meson_nfc_cmd_access(struct nand_chip *nand, bool raw, boo=
+l dir,
+> > +                              int scrambler)
+> > +{
+> > +     struct mtd_info *mtd =3D nand_to_mtd(nand);
+> > +     const struct meson_nfc *nfc =3D nand_get_controller_data(mtd_to_n=
+and(mtd));
+> > +     const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(na=
+nd);
+> > +     u32 bch =3D meson_chip->bch_mode, cmd;
+> > +     int len =3D mtd->writesize, pagesize, pages;
+> > +
+> > +     pagesize =3D nand->ecc.size;
+> > +
+> > +     if (raw) {
+> > +             len =3D mtd->writesize + mtd->oobsize;
+> > +             cmd =3D len | scrambler | DMA_DIR(dir);
+> > +             writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +             return;
+> > +     }
+> > +
+> > +     pages =3D len / nand->ecc.size;
+> > +
+> > +     cmd =3D CMDRWGEN(DMA_DIR(dir), scrambler, bch,
+> > +                    NFC_CMD_SHORTMODE_DISABLE, pagesize, pages);
+> > +
+> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +}
+> > +
+> > +static void meson_nfc_drain_cmd(struct meson_nfc *nfc)
+> > +{
+> > +     /*
+> > +      * Insert two commands to make sure all valid commands are finish=
+ed.
+> > +      *
+> > +      * The Nand flash controller is designed as two stages pipleline =
+-
+> > +      *  a) fetch and b) execute.
+> > +      * There might be cases when the driver see command queue is empt=
+y,
+> > +      * but the Nand flash controller still has two commands buffered,
+> > +      * one is fetched into NFC request queue (ready to run), and anot=
+her
+> > +      * is actively executing. So pushing 2 "IDLE" commands guarantees=
+ that
+> > +      * the pipeline is emptied.
+> > +      */
+> > +     meson_nfc_cmd_idle(nfc, 0);
+> > +     meson_nfc_cmd_idle(nfc, 0);
+> > +}
+> > +
+> > +static int meson_nfc_wait_cmd_finish(const struct meson_nfc *nfc,
+> > +                                  unsigned int timeout_us)
+> > +{
+> > +     u32 cmd_size =3D 0;
+> > +
+> > +     /* wait cmd fifo is empty */
+> > +     return readl_relaxed_poll_timeout(nfc->reg_base + NFC_REG_CMD, cm=
+d_size,
+> > +                                       !NFC_CMD_GET_SIZE(cmd_size),
+> > +                                       timeout_us);
+> > +}
+> > +
+> > +static int meson_nfc_wait_dma_finish(struct meson_nfc *nfc)
+> > +{
+> > +     meson_nfc_drain_cmd(nfc);
+> > +
+> > +     return meson_nfc_wait_cmd_finish(nfc, DMA_BUSY_TIMEOUT_US);
+> > +}
+> > +
+> > +static u8 *meson_nfc_oob_ptr(struct nand_chip *nand, int i)
+> > +{
+> > +     const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(na=
+nd);
+> > +     int len;
+> > +
+> > +     len =3D nand->ecc.size * (i + 1) + (nand->ecc.bytes + 2) * i;
+> > +
+> > +     return meson_chip->data_buf + len;
+> > +}
+> > +
+> > +static u8 *meson_nfc_data_ptr(struct nand_chip *nand, int i)
+> > +{
+> > +     const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(na=
+nd);
+> > +     int len, temp;
+> > +
+> > +     temp =3D nand->ecc.size + nand->ecc.bytes;
+> > +     len =3D (temp + 2) * i;
+> > +
+> > +     return meson_chip->data_buf + len;
+> > +}
+> > +
+> > +static void meson_nfc_get_data_oob(struct nand_chip *nand,
+> > +                                u8 *buf, u8 *oobbuf)
+> > +{
+> > +     u8 *dsrc, *osrc;
+> > +     int i, oob_len;
+> > +
+> > +     oob_len =3D nand->ecc.bytes + 2;
+> > +     for (i =3D 0; i < nand->ecc.steps; i++) {
+> > +             if (buf) {
+> > +                     dsrc =3D meson_nfc_data_ptr(nand, i);
+> > +                     memcpy(buf, dsrc, nand->ecc.size);
+> > +                     buf +=3D nand->ecc.size;
+> > +             }
+> > +
+> > +             if (oobbuf) {
+> > +                     osrc =3D meson_nfc_oob_ptr(nand, i);
+> > +                     memcpy(oobbuf, osrc, oob_len);
+> > +                     oobbuf +=3D oob_len;
+> > +             }
+> > +     }
+> > +}
+> > +
+> > +static void meson_nfc_set_data_oob(struct nand_chip *nand,
+> > +                                const u8 *buf, u8 *oobbuf)
+> > +{
+> > +     int i, oob_len;
+> > +
+> > +     oob_len =3D nand->ecc.bytes + 2;
+> > +     for (i =3D 0; i < nand->ecc.steps; i++) {
+> > +             u8 *osrc;
+> > +
+> > +             if (buf) {
+> > +                     u8 *dsrc;
+> > +
+> > +                     dsrc =3D meson_nfc_data_ptr(nand, i);
+> > +                     memcpy(dsrc, buf, nand->ecc.size);
+> > +                     buf +=3D nand->ecc.size;
+> > +             }
+> > +
+> > +             osrc =3D meson_nfc_oob_ptr(nand, i);
+> > +             memcpy(osrc, oobbuf, oob_len);
+> > +             oobbuf +=3D oob_len;
+> > +     }
+> > +}
+> > +
+> > +static void meson_nfc_set_user_byte(struct nand_chip *nand, const u8 *=
+oob_buf)
+> > +{
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     int i, count;
+> > +
+> > +     for (i =3D 0, count =3D 0; i < nand->ecc.steps; i++, count +=3D (=
+2 + nand->ecc.bytes)) {
+> > +             __le64 *info =3D &meson_chip->info_buf[i];
+> > +
+> > +             *info |=3D oob_buf[count];
+> > +             *info |=3D oob_buf[count + 1] << 8;
+> > +     }
+> > +}
+> > +
+> > +static void meson_nfc_get_user_byte(struct nand_chip *nand, u8 *oob_bu=
+f)
+> > +{
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     int i, count;
+> > +
+> > +     for (i =3D 0, count =3D 0; i < nand->ecc.steps; i++, count +=3D (=
+2 + nand->ecc.bytes)) {
+> > +             const __le64 *info =3D &meson_chip->info_buf[i];
+> > +
+> > +             oob_buf[count] =3D *info;
+> > +             oob_buf[count + 1] =3D *info >> 8;
+> > +     }
+> > +}
+> > +
+> > +static int meson_nfc_ecc_correct(struct nand_chip *nand, u32 *bitflips=
 ,
-> > > so I believe that issue is resolved.
-> > >
-> > > 'build more dtbs' means build all the DTBs for an SoC, not just a
-> > > selection that a particular board vendor decided on.
-> >
-> > Yes, what other dtbs to build is the sticking point, in a number of
-> > threads now.
->=20
-> All of the ones for the SoC.
+> > +                              u64 *correct_bitmap)
+> > +{
+> > +     struct mtd_info *mtd =3D nand_to_mtd(nand);
+> > +     int ret =3D 0, i;
+> > +
+> > +     for (i =3D 0; i < nand->ecc.steps; i++) {
+> > +             struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(=
+nand);
+> > +             const __le64 *info =3D &meson_chip->info_buf[i];
+> > +
+> > +             if (ECC_ERR_CNT(*info) !=3D ECC_UNCORRECTABLE) {
+> > +                     mtd->ecc_stats.corrected +=3D ECC_ERR_CNT(*info);
+> > +                     *bitflips =3D max_t(u32, *bitflips, ECC_ERR_CNT(*=
+info));
+> > +                     *correct_bitmap |=3D BIT_ULL(i);
+> > +                     continue;
+> > +             }
+> > +
+> > +             if ((nand->options & NAND_NEED_SCRAMBLING) &&
+> > +                 ECC_ZERO_CNT(*info) < nand->ecc.strength) {
+> > +                     mtd->ecc_stats.corrected +=3D ECC_ZERO_CNT(*info)=
+;
+> > +                     *bitflips =3D max_t(u32, *bitflips,
+> > +                                       ECC_ZERO_CNT(*info));
+> > +                     ret =3D ECC_CHECK_RETURN_FF;
+> > +             } else {
+> > +                     ret =3D -EBADMSG;
+> > +             }
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int meson_nfc_dma_buffer_setup(struct nand_chip *nand, void *da=
+tabuf,
+> > +                                   int datalen, void *infobuf, int inf=
+olen,
+> > +                                   enum dma_data_direction dir)
+> > +{
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +     int ret;
+> > +     u32 cmd;
+> > +
+> > +     nfc->daddr =3D dma_map_single(databuf, datalen, DMA_BIDIRECTIONAL=
+);
+> > +     ret =3D dma_mapping_error(nfc->dev, nfc->daddr);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     cmd =3D GENCMDDADDRL(NFC_CMD_ADL, nfc->daddr);
+> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +
+> > +     cmd =3D GENCMDDADDRH(NFC_CMD_ADH, nfc->daddr);
+> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +
+> > +     if (infobuf) {
+> > +             nfc->iaddr =3D dma_map_single(infobuf, infolen,
+> > +                                         DMA_BIDIRECTIONAL);
+> > +             ret =3D dma_mapping_error(nfc->dev, nfc->iaddr);
+> > +             if (ret) {
+> > +                     dma_unmap_single(nfc->daddr, datalen, dir);
+> > +                     return ret;
+> > +             }
+> > +
+> > +             nfc->info_bytes =3D infolen;
+> > +             cmd =3D GENCMDIADDRL(NFC_CMD_AIL, nfc->iaddr);
+> > +             writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +
+> > +             cmd =3D GENCMDIADDRH(NFC_CMD_AIH, nfc->iaddr);
+> > +             writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void meson_nfc_dma_buffer_release(struct nand_chip *nand,
+> > +                                      int datalen, int infolen,
+> > +                                      enum dma_data_direction dir)
+> > +{
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +
+> > +     dma_unmap_single(nfc->daddr, datalen, dir);
+> > +
+> > +     if (infolen) {
+> > +             dma_unmap_single(nfc->iaddr, infolen, dir);
+> > +             nfc->info_bytes =3D 0;
+> > +     }
+> > +}
+> > +
+> > +static void meson_nfc_read_buf(struct mtd_info *mtd, u8 *buf, int size=
+)
+> > +{
+> > +     struct nand_chip *nand =3D mtd_to_nand(mtd);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     u8 *dma_buf;
+> > +     int ret;
+> > +     u32 cmd;
+> > +
+> > +     if ((uintptr_t)buf % DMA_ADDR_ALIGN) {
+> > +             unsigned long tmp_addr;
+> > +
+> > +             dma_buf =3D dma_alloc_coherent(size, &tmp_addr);
+> > +             if (!dma_buf)
+> > +                     return;
+> > +     } else {
+> > +             dma_buf =3D buf;
+> > +     }
+> > +
+> > +     ret =3D meson_nfc_dma_buffer_setup(nand, dma_buf, size, meson_chi=
+p->info_buf,
+> > +                                      PER_INFO_BYTE, DMA_FROM_DEVICE);
+> > +     if (ret) {
+> > +             pr_err("Failed to setup DMA buffer %p/%p\n", dma_buf,
+> > +                    meson_chip->info_buf);
+> > +             return;
+> > +     }
+> > +
+> > +     cmd =3D NFC_CMD_N2M | size;
+> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +
+> > +     meson_nfc_drain_cmd(nfc);
+> > +     meson_nfc_wait_cmd_finish(nfc, CMD_DRAIN_TIMEOUT_US);
+> > +     meson_nfc_dma_buffer_release(nand, size, PER_INFO_BYTE, DMA_FROM_=
+DEVICE);
+> > +
+> > +     if (buf !=3D dma_buf) {
+> > +             memcpy(buf, dma_buf, size);
+> > +             dma_free_coherent(dma_buf);
+> > +     }
+> > +}
+> > +
+> > +static void meson_nfc_write_buf(struct mtd_info *mtd, const u8 *buf, i=
+nt size)
+> > +{
+> > +     struct nand_chip *nand =3D mtd_to_nand(mtd);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +     u8 *dma_buf;
+> > +     int ret;
+> > +     u32 cmd;
+> > +
+> > +     if ((uintptr_t)buf % DMA_ADDR_ALIGN) {
+> > +             unsigned long tmp_addr;
+> > +
+> > +             dma_buf =3D dma_alloc_coherent(size, &tmp_addr);
+> > +             if (!dma_buf)
+> > +                     return;
+> > +
+> > +             memcpy(dma_buf, buf, size);
+> > +     } else {
+> > +             dma_buf =3D (u8 *)buf;
+> > +     }
+> > +
+> > +     ret =3D meson_nfc_dma_buffer_setup(nand, (void *)dma_buf, size, N=
+ULL,
+> > +                                      0, DMA_TO_DEVICE);
+> > +     if (ret) {
+> > +             pr_err("Failed to setup DMA buffer %p\n", dma_buf);
+> > +             return;
+> > +     }
+> > +
+> > +     cmd =3D NFC_CMD_M2N | size;
+> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +
+> > +     meson_nfc_drain_cmd(nfc);
+> > +     meson_nfc_wait_cmd_finish(nfc, CMD_DRAIN_TIMEOUT_US);
+> > +     meson_nfc_dma_buffer_release(nand, size, 0, DMA_TO_DEVICE);
+> > +
+> > +     if (buf !=3D dma_buf)
+> > +             dma_free_coherent(dma_buf);
+> > +}
+> > +
+> > +static int meson_nfc_write_page_sub(struct nand_chip *nand,
+> > +                                 int page, bool raw)
+> > +{
+> > +     const struct mtd_info *mtd =3D nand_to_mtd(nand);
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +     int data_len, info_len;
+> > +     int ret;
+> > +     u32 cmd;
+> > +
+> > +     data_len =3D  mtd->writesize + mtd->oobsize;
+> > +     info_len =3D nand->ecc.steps * PER_INFO_BYTE;
+> > +
+> > +     ret =3D meson_nfc_dma_buffer_setup(nand, meson_chip->data_buf,
+> > +                                      data_len, meson_chip->info_buf,
+> > +                                      info_len, DMA_TO_DEVICE);
+> > +     if (ret) {
+> > +             pr_err("Failed to setup DMA buffer %p/%p\n",
+> > +                    meson_chip->data_buf, meson_chip->info_buf);
+> > +             return ret;
+> > +     }
+> > +
+> > +     if (nand->options & NAND_NEED_SCRAMBLING) {
+> > +             meson_nfc_cmd_seed(nfc, page);
+> > +             meson_nfc_cmd_access(nand, raw, DIRWRITE,
+> > +                                  NFC_CMD_SCRAMBLER_ENABLE);
+> > +     } else {
+> > +             meson_nfc_cmd_access(nand, raw, DIRWRITE,
+> > +                                  NFC_CMD_SCRAMBLER_DISABLE);
+> > +     }
+> > +
+> > +     cmd =3D nfc->param.chip_select | NFC_CMD_CLE | NAND_CMD_PAGEPROG;
+> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +
+> > +     meson_nfc_dma_buffer_release(nand, data_len, info_len, DMA_TO_DEV=
+ICE);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int meson_nfc_write_page_raw(struct mtd_info *mtd, struct nand_=
+chip *chip,
+> > +                                 const u8 *buf, int oob_required, int =
+page)
+> > +{
+> > +     meson_nfc_set_data_oob(chip, buf, oob_required ? chip->oob_poi : =
+NULL);
+> > +
+> > +     return meson_nfc_write_page_sub(chip, page, true);
+> > +}
+> > +
+> > +static int meson_nfc_write_page_hwecc(struct mtd_info *mtd, struct nan=
+d_chip *chip,
+> > +                                   const u8 *buf, int oob_required, in=
+t page)
+> > +{
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(chip);
+> > +
+> > +     if (buf)
+> > +             memcpy(meson_chip->data_buf, buf, mtd->writesize);
+> > +
+> > +     memset(meson_chip->info_buf, 0, chip->ecc.steps * PER_INFO_BYTE);
+> > +
+> > +     if (oob_required)
+> > +             meson_nfc_set_user_byte(chip, chip->oob_poi);
+> > +
+> > +     return meson_nfc_write_page_sub(chip, page, false);
+> > +}
+> > +
+> > +static void meson_nfc_check_ecc_pages_valid(struct meson_nfc *nfc,
+> > +                                         struct nand_chip *nand, bool =
+raw)
+> > +{
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     __le64 *info;
+> > +     u32 neccpages;
+> > +     int ret;
+> > +
+> > +     neccpages =3D raw ? 1 : nand->ecc.steps;
+> > +     info =3D &meson_chip->info_buf[neccpages - 1];
+> > +     do {
+> > +             udelay(ECC_POLL_TIMEOUT_US);
+> > +             /* info is updated by nfc dma engine*/
+> > +             rmb();
+> > +             invalidate_dcache_range(nfc->iaddr, nfc->iaddr + nfc->inf=
+o_bytes);
+> > +             ret =3D *info & ECC_COMPLETE;
+> > +     } while (!ret);
+> > +}
+> > +
+> > +static int meson_nfc_read_page_sub(struct nand_chip *nand,
+> > +                                int page, bool raw)
+> > +{
+> > +     struct mtd_info *mtd =3D nand_to_mtd(nand);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     u32 data_len, info_len;
+> > +     int ret;
+> > +
+> > +     data_len =3D mtd->writesize + mtd->oobsize;
+> > +     info_len =3D nand->ecc.steps * PER_INFO_BYTE;
+> > +
+> > +     ret =3D meson_nfc_dma_buffer_setup(nand, meson_chip->data_buf, da=
+ta_len,
+> > +                                      meson_chip->info_buf, info_len,
+> > +                                      DMA_FROM_DEVICE);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     meson_nfc_cmd_access(nand, raw, DIRREAD, 0);
+> > +
+> > +     meson_nfc_wait_dma_finish(nfc);
+> > +     meson_nfc_check_ecc_pages_valid(nfc, nand, raw);
+> > +
+> > +     meson_nfc_dma_buffer_release(nand, data_len, info_len,
+> > +                                  DMA_FROM_DEVICE);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int meson_nfc_read_page_raw(struct mtd_info *mtd, struct nand_c=
+hip *chip,
+> > +                                u8 *buf, int oob_required, int page)
+> > +{
+> > +     int ret;
+> > +
+> > +     ret =3D meson_nfc_read_page_sub(chip, page, true);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     meson_nfc_get_data_oob(chip, buf, oob_required ? chip->oob_poi : =
+NULL);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int meson_nfc_read_page_hwecc(struct mtd_info *mtd, struct nand=
+_chip *chip,
+> > +                                  u8 *buf, int oob_required, int page)
+> > +{
+> > +     const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(ch=
+ip);
+> > +     u64 correct_bitmap =3D 0;
+> > +     u32 bitflips =3D 0;
+> > +     int ret;
+> > +
+> > +     ret =3D meson_nfc_read_page_sub(chip, page, false);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (oob_required)
+> > +             meson_nfc_get_user_byte(chip, chip->oob_poi);
+> > +
+> > +     ret =3D meson_nfc_ecc_correct(chip, &bitflips, &correct_bitmap);
+> > +
+> > +     if (ret =3D=3D ECC_CHECK_RETURN_FF) {
+> > +             if (buf)
+> > +                     memset(buf, 0xff, mtd->writesize);
+> > +
+> > +             if (oob_required)
+> > +                     memset(chip->oob_poi, 0xff, mtd->oobsize);
+> > +     } else if (ret < 0) {
+> > +             struct nand_ecc_ctrl *ecc;
+> > +             int i;
+> > +
+> > +             if ((chip->options & NAND_NEED_SCRAMBLING) || !buf) {
+> > +                     mtd->ecc_stats.failed++;
+> > +                     return bitflips;
+> > +             }
+> > +
+> > +             chip->cmdfunc(mtd, NAND_CMD_READ0, 0, page);
+> > +
+> > +             ret =3D meson_nfc_read_page_raw(mtd, chip, buf, 1, page);
+> > +             if (ret)
+> > +                     return ret;
+> > +
+> > +             ecc =3D &chip->ecc;
+> > +
+> > +             for (i =3D 0; i < chip->ecc.steps ; i++) {
+> > +                     u8 *data =3D buf + i * ecc->size;
+> > +                     u8 *oob =3D chip->oob_poi + i * (ecc->bytes + 2);
+> > +
+> > +                     if (correct_bitmap & BIT_ULL(i))
+> > +                             continue;
+> > +
+> > +                     ret =3D nand_check_erased_ecc_chunk(data, ecc->si=
+ze,
+> > +                                                       oob, ecc->bytes=
+ + 2,
+> > +                                                       NULL, 0,
+> > +                                                       ecc->strength);
+> > +                     if (ret < 0) {
+> > +                             mtd->ecc_stats.failed++;
+> > +                     } else {
+> > +                             mtd->ecc_stats.corrected +=3D ret;
+> > +                             bitflips =3D  max_t(u32, bitflips, ret);
+> > +                     }
+> > +             }
+> > +     } else if (buf && buf !=3D meson_chip->data_buf) {
+> > +             memcpy(buf, meson_chip->data_buf, mtd->writesize);
+> > +     }
+> > +
+> > +     return bitflips;
+> > +}
+> > +
+> > +static int meson_nfc_read_oob_raw(struct mtd_info *mtd, struct nand_ch=
+ip *chip,
+> > +                               int page)
+> > +{
+> > +     int ret;
+> > +
+> > +     ret =3D nand_read_page_op(chip, page, 0, NULL, 0);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return meson_nfc_read_page_raw(mtd, chip, NULL, 1, page);
+> > +}
+> > +
+> > +static int meson_nfc_read_oob(struct mtd_info *mtd, struct nand_chip *=
+chip,
+> > +                           int page)
+> > +{
+> > +     int ret;
+> > +
+> > +     ret =3D nand_read_page_op(chip, page, 0, NULL, 0);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return meson_nfc_read_page_hwecc(mtd, chip, NULL, 1, page);
+> > +}
+> > +
+> > +static int meson_nfc_write_oob_raw(struct mtd_info *mtd, struct nand_c=
+hip *chip,
+> > +                                int page)
+> > +{
+> > +     int ret;
+> > +
+> > +     ret =3D nand_prog_page_begin_op(chip, page, 0, NULL, 0);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D meson_nfc_write_page_raw(mtd, chip, NULL, 1, page);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return nand_prog_page_end_op(chip);
+> > +}
+> > +
+> > +static int meson_nfc_write_oob(struct mtd_info *mtd, struct nand_chip =
+*chip,
+> > +                            int page)
+> > +{
+> > +     int ret;
+> > +
+> > +     ret =3D nand_prog_page_begin_op(chip, page, 0, NULL, 0);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D meson_nfc_write_page_hwecc(mtd, chip, NULL, 1, page);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return nand_prog_page_end_op(chip);
+> > +}
+> > +
+> > +static void meson_nfc_nand_cmd_function(struct mtd_info *mtd, unsigned=
+ int command,
+> > +                                     int column, int page_addr)
+> > +{
+> > +     struct nand_chip *chip =3D mtd_to_nand(mtd);
+> > +
+> > +     chip->cmd_ctrl(mtd, command, NAND_NCE | NAND_CLE | NAND_CTRL_CHAN=
+GE);
+> > +
+> > +     if (column !=3D -1 || page_addr !=3D -1) {
+> > +             int ctrl =3D NAND_CTRL_CHANGE | NAND_NCE | NAND_ALE;
+> > +
+> > +             /* Serially input address */
+> > +             if (column !=3D -1) {
+> > +                     /* Adjust columns for 16 bit buswidth */
+> > +                     if (chip->options & NAND_BUSWIDTH_16 &&
+> > +                         !nand_opcode_8bits(command))
+> > +                             column >>=3D 1;
+> > +
+> > +                     chip->cmd_ctrl(mtd, column, ctrl);
+> > +                     ctrl &=3D ~NAND_CTRL_CHANGE;
+> > +                     /* Only output a single addr cycle for 8bits
+> > +                      * opcodes.
+> > +                      */
+> > +                     if (!nand_opcode_8bits(command))
+> > +                             chip->cmd_ctrl(mtd, column >> 8, ctrl);
+> > +             }
+> > +
+> > +             if (page_addr !=3D -1) {
+> > +                     chip->cmd_ctrl(mtd, page_addr, ctrl);
+> > +                     chip->cmd_ctrl(mtd, page_addr >> 8, NAND_NCE |
+> > +                                                         NAND_ALE);
+> > +                     /* One more address cycle for devices > 128MiB */
+> > +                     if (chip->chipsize > SZ_128M)
+> > +                             chip->cmd_ctrl(mtd, page_addr >> 16,
+> > +                                            NAND_NCE | NAND_ALE);
+> > +             }
+> > +
+> > +             switch (command) {
+> > +             case NAND_CMD_READ0:
+> > +                     chip->cmd_ctrl(mtd, NAND_CMD_READSTART,
+> > +                                    NAND_NCE | NAND_CLE | NAND_CTRL_CH=
+ANGE);
+> > +                     fallthrough;
+> > +             case NAND_CMD_PARAM:
+> > +                     nand_wait_ready(mtd);
+> > +                     nand_exit_status_op(chip);
+> > +             }
+> > +     }
+> > +}
+> > +
+> > +static void meson_nfc_cmd_ctrl(struct mtd_info *mtd, int cmd, unsigned=
+ int ctrl)
+> > +{
+> > +     struct nand_chip *nand =3D mtd_to_nand(mtd);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +
+> > +     if (cmd =3D=3D NAND_CMD_NONE)
+> > +             return;
+> > +
+> > +     if (ctrl & NAND_CLE)
+> > +             cmd =3D NFC_CMD_MAKE_CLE(nfc->param.chip_select, cmd);
+> > +     else
+> > +             cmd =3D NFC_CMD_MAKE_ALE(nfc->param.chip_select, cmd);
+> > +
+> > +     writel(cmd, nfc->reg_base + NFC_REG_CMD);
+> > +}
+> > +
+> > +static void meson_nfc_wait_cmd_fifo(struct meson_nfc *nfc)
+> > +{
+> > +     while ((NFC_GET_CMD(nfc) >> 22) & GENMASK(4, 0))
+> > +             ;
+> > +}
+> > +
+> > +static u8 meson_nfc_nand_read_byte(struct mtd_info *mtd)
+> > +{
+> > +     struct nand_chip *nand =3D mtd_to_nand(mtd);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +
+> > +     writel(NFC_CMD_MAKE_DRD(nfc->param.chip_select, 0), nfc->reg_base=
+ + NFC_REG_CMD);
+> > +
+> > +     meson_nfc_cmd_idle(nfc, NAND_TWB_TIME_CYCLE);
+> > +     meson_nfc_cmd_idle(nfc, 0);
+> > +     meson_nfc_cmd_idle(nfc, 0);
+> > +
+> > +     meson_nfc_wait_cmd_fifo(nfc);
+> > +
+> > +     return readl(nfc->reg_base + NFC_REG_BUF);
+> > +}
+> > +
+> > +static void meson_nfc_nand_write_byte(struct mtd_info *mtd, u8 val)
+> > +{
+> > +     struct nand_chip *nand =3D mtd_to_nand(mtd);
+> > +     struct meson_nfc *nfc =3D nand_get_controller_data(nand);
+> > +
+> > +     meson_nfc_cmd_idle(nfc, NAND_TWB_TIME_CYCLE);
+> > +
+> > +     writel(NFC_CMD_MAKE_DWR(nfc->param.chip_select, val), nfc->reg_ba=
+se + NFC_REG_CMD);
+> > +
+> > +     meson_nfc_cmd_idle(nfc, NAND_TWB_TIME_CYCLE);
+> > +     meson_nfc_cmd_idle(nfc, 0);
+> > +     meson_nfc_cmd_idle(nfc, 0);
+> > +
+> > +     meson_nfc_wait_cmd_fifo(nfc);
+> > +}
+> > +
+> > +static int meson_nfc_dev_ready(struct mtd_info *mtd)
+> > +{
+> > +     struct nand_chip *chip =3D mtd_to_nand(mtd);
+> > +     unsigned int time_out_cnt =3D 0;
+> > +
+> > +     chip->select_chip(mtd, 0);
+> > +
+> > +     chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
+> > +
+> > +     do {
+> > +             int status;
+> > +
+> > +             status =3D (int)chip->read_byte(mtd);
+> > +             if (status & NAND_STATUS_READY)
+> > +                     break;
+> > +     } while (time_out_cnt++ < NFC_DEV_READY_TICK_MAX);
+> > +
+> > +     return time_out_cnt !=3D NFC_DEV_READY_TICK_MAX;
+> > +}
+> > +
+> > +static int meson_chip_buffer_init(struct nand_chip *nand)
+> > +{
+> > +     const struct mtd_info *mtd =3D nand_to_mtd(nand);
+> > +     struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+> > +     u32 page_bytes, info_bytes, nsectors;
+> > +     unsigned long tmp_addr;
+> > +
+> > +     nsectors =3D mtd->writesize / nand->ecc.size;
+> > +
+> > +     page_bytes =3D  mtd->writesize + mtd->oobsize;
+> > +     info_bytes =3D nsectors * PER_INFO_BYTE;
+> > +
+> > +     meson_chip->data_buf =3D dma_alloc_coherent(page_bytes, &tmp_addr=
+);
+> > +     if (!meson_chip->data_buf)
+> > +             return -ENOMEM;
+> > +
+> > +     meson_chip->info_buf =3D dma_alloc_coherent(info_bytes, &tmp_addr=
+);
+> > +     if (!meson_chip->info_buf) {
+> > +             dma_free_coherent(meson_chip->data_buf);
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const int axg_stepinfo_strengths[] =3D { 8 };
+> > +static const struct nand_ecc_step_info axg_stepinfo_1024 =3D {
+> > +     .stepsize =3D 1024,
+> > +     .strengths =3D axg_stepinfo_strengths,
+> > +     .nstrengths =3D ARRAY_SIZE(axg_stepinfo_strengths)
+> > +};
+> > +
+> > +static const struct nand_ecc_step_info axg_stepinfo_512 =3D {
+> > +     .stepsize =3D 512,
+> > +     .strengths =3D axg_stepinfo_strengths,
+> > +     .nstrengths =3D ARRAY_SIZE(axg_stepinfo_strengths)
+> > +};
+> > +
+> > +static const struct nand_ecc_step_info axg_stepinfo[] =3D { axg_stepin=
+fo_1024, axg_stepinfo_512 };
+> > +
+> > +static const struct nand_ecc_caps meson_axg_ecc_caps =3D {
+> > +     .stepinfos =3D axg_stepinfo,
+> > +     .nstepinfos =3D ARRAY_SIZE(axg_stepinfo),
+> > +     .calc_ecc_bytes =3D meson_nand_calc_ecc_bytes,
+> > +};
+> > +
+> > +/*
+> > + * OOB layout:
+> > + *
+> > + * For ECC with 512 bytes step size:
+> > + * 0x00: AA AA BB BB BB BB BB BB BB BB BB BB BB BB BB BB
+> > + * 0x10: AA AA CC CC CC CC CC CC CC CC CC CC CC CC CC CC
+> > + * 0x20:
+> > + * 0x30:
+> > + *
+> > + * For ECC with 1024 bytes step size:
+> > + * 0x00: AA AA BB BB BB BB BB BB BB BB BB BB BB BB BB BB
+> > + * 0x10: AA AA CC CC CC CC CC CC CC CC CC CC CC CC CC CC
+> > + * 0x20: AA AA DD DD DD DD DD DD DD DD DD DD DD DD DD DD
+> > + * 0x30: AA AA EE EE EE EE EE EE EE EE EE EE EE EE EE EE
+> > + *
+> > + * AA - user bytes.
+> > + * BB, CC, DD, EE - ECC code bytes for each step.
+> > + */
+> > +static struct nand_ecclayout nand_oob;
+> > +
+> > +static void meson_nfc_init_nand_oob(struct nand_chip *nand)
+> > +{
+> > +     int section_size =3D 2 + nand->ecc.bytes;
+> > +     int i;
+> > +     int k;
+> > +
+> > +     nand_oob.eccbytes =3D nand->ecc.steps * nand->ecc.bytes;
+> > +     k =3D 0;
+> > +
+> > +     for (i =3D 0; i < nand->ecc.steps; i++) {
+> > +             int j;
+> > +
+> > +             for (j =3D 0; j < nand->ecc.bytes; j++)
+> > +                     nand_oob.eccpos[k++] =3D (i * section_size) + 2 +=
+ j;
+> > +
+> > +             nand_oob.oobfree[i].offset =3D (i * section_size);
+> > +             nand_oob.oobfree[i].length =3D 2;
+> > +     }
+> > +
+> > +     nand_oob.oobavail =3D 2 * nand->ecc.steps;
+> > +     nand->ecc.layout =3D &nand_oob;
+> > +}
+> > +
+> > +static int meson_nfc_init_ecc(struct nand_chip *nand, ofnode node)
+> > +{
+> > +     const struct mtd_info *mtd =3D nand_to_mtd(nand);
+> > +     int ret;
+> > +     int i;
+> > +
+> > +     ret =3D nand_check_ecc_caps(nand, &meson_axg_ecc_caps, mtd->oobsi=
+ze - 2);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     for (i =3D 0; i < ARRAY_SIZE(meson_ecc); i++) {
+> > +             if (meson_ecc[i].strength =3D=3D nand->ecc.strength &&
+> > +                 meson_ecc[i].size =3D=3D nand->ecc.size) {
+> > +                     struct meson_nfc_nand_chip *meson_chip =3D to_mes=
+on_nand(nand);
+> > +
+> > +                     nand->ecc.steps =3D mtd->writesize / nand->ecc.si=
+ze;
+> > +                     meson_chip->bch_mode =3D meson_ecc[i].bch;
+> > +
+> > +                     meson_nfc_init_nand_oob(nand);
+> > +
+> > +                     return 0;
+> > +             }
+> > +     }
+> > +
+> > +     return -EINVAL;
+> > +}
+> > +
+> > +static int meson_nfc_nand_chip_init(struct udevice *dev, struct meson_=
+nfc *nfc,
+> > +                                 ofnode node)
+> > +{
+> > +     struct meson_nfc_nand_chip *meson_chip;
+> > +     struct nand_chip *nand;
+> > +     struct mtd_info *mtd;
+> > +     u32 cs[MAX_CE_NUM];
+> > +     u32 nsels;
+> > +     int ret;
+> > +     int i;
+> > +
+> > +     if (!ofnode_get_property(node, "reg", &nsels)) {
+> > +             dev_err(dev, "\"reg\" property is not found\n");
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     nsels /=3D sizeof(u32);
+> > +     if (nsels >=3D MAX_CE_NUM) {
+> > +             dev_err(dev, "invalid size of CS array, max is %d\n",
+> > +                     MAX_CE_NUM);
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     ret =3D ofnode_read_u32_array(node, "reg", cs, nsels);
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "failed to read \"reg\" property\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     for (i =3D 0; i < nsels; i++) {
+> > +             if (test_and_set_bit(cs[i], &nfc->assigned_cs)) {
+> > +                     dev_err(dev, "CS %d already assigned\n", cs[i]);
+> > +                     return -EINVAL;
+> > +             }
+> > +     }
+> > +
+> > +     meson_chip =3D malloc(sizeof(*meson_chip) + nsels * sizeof(meson_=
+chip->sels[0]));
+> > +     if (!meson_chip) {
+> > +             dev_err(dev, "failed to allocate memory for chip\n");
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     meson_chip->nsels =3D nsels;
+> > +     nand =3D &meson_chip->nand;
+> > +
+> > +     nand->flash_node =3D node;
+> > +     nand_set_controller_data(nand, nfc);
+> > +     /* Set the driver entry points for MTD */
+> > +     nand->cmdfunc =3D meson_nfc_nand_cmd_function;
+> > +     nand->cmd_ctrl =3D meson_nfc_cmd_ctrl;
+> > +     nand->select_chip =3D meson_nfc_nand_select_chip;
+> > +     nand->read_byte =3D meson_nfc_nand_read_byte;
+> > +     nand->write_byte =3D meson_nfc_nand_write_byte;
+> > +     nand->dev_ready =3D meson_nfc_dev_ready;
+> > +
+> > +     /* Buffer read/write routines */
+> > +     nand->read_buf =3D meson_nfc_read_buf;
+> > +     nand->write_buf =3D meson_nfc_write_buf;
+> > +     nand->options |=3D NAND_NO_SUBPAGE_WRITE;
+> > +
+> > +     nand->ecc.mode =3D NAND_ECC_HW;
+> > +     nand->ecc.hwctl =3D NULL;
+> > +     nand->ecc.read_page =3D meson_nfc_read_page_hwecc;
+> > +     nand->ecc.write_page =3D meson_nfc_write_page_hwecc;
+> > +     nand->ecc.read_page_raw =3D meson_nfc_read_page_raw;
+> > +     nand->ecc.write_page_raw =3D meson_nfc_write_page_raw;
+> > +
+> > +     nand->ecc.read_oob =3D meson_nfc_read_oob;
+> > +     nand->ecc.write_oob =3D meson_nfc_write_oob;
+> > +     nand->ecc.read_oob_raw =3D meson_nfc_read_oob_raw;
+> > +     nand->ecc.write_oob_raw =3D meson_nfc_write_oob_raw;
+> > +
+> > +     nand->ecc.algo =3D NAND_ECC_BCH;
+> > +
+> > +     mtd =3D nand_to_mtd(nand);
+> > +
+> > +     ret =3D nand_scan_ident(mtd, 1, NULL);
+> > +     if (ret) {
+> > +             dev_err(dev, "'nand_scan_ident()' failed: %d\n", ret);
+> > +             goto err_chip_free;
+> > +     }
+> > +
+> > +     ret =3D meson_nfc_init_ecc(nand, node);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to init ECC settings: %d\n", ret);
+> > +             goto err_chip_free;
+> > +     }
+> > +
+> > +     ret =3D meson_chip_buffer_init(nand);
+> > +     if (ret) {
+> > +             dev_err(dev, "failed to init DMA buffers: %d\n", ret);
+> > +             goto err_chip_free;
+> > +     }
+> > +
+> > +     /* 'nand_scan_tail()' needs ECC parameters to be already
+> > +      * set and correct.
+> > +      */
+> > +     ret =3D nand_scan_tail(mtd);
+> > +     if (ret) {
+> > +             dev_err(dev, "'nand_scan_tail()' failed: %d\n", ret);
+> > +             goto err_chip_buf_free;
+> > +     }
+> > +
+> > +     ret =3D nand_register(0, mtd);
+> > +     if (ret) {
+> > +             dev_err(dev, "'nand_register()' failed: %d\n", ret);
+> > +             goto err_chip_buf_free;
+> > +     }
+> > +
+> > +     list_add_tail(&meson_chip->node, &nfc->chips);
+> > +
+> > +     return 0;
+> > +
+> > +err_chip_buf_free:
+> > +     dma_free_coherent(meson_chip->info_buf);
+> > +     dma_free_coherent(meson_chip->data_buf);
+> > +
+> > +err_chip_free:
+> > +     free(meson_chip);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int meson_nfc_nand_chips_init(struct udevice *dev,
+> > +                                  struct meson_nfc *nfc)
+> > +{
+> > +     ofnode parent =3D dev_ofnode(dev);
+> > +     ofnode node;
+> > +
+> > +     ofnode_for_each_subnode(node, parent) {
+> > +             int ret =3D meson_nfc_nand_chip_init(dev, nfc, node);
+> > +
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void meson_nfc_clk_init(struct meson_nfc *nfc)
+> > +{
+> > +     u32 bus_cycle =3D NFC_DEFAULT_BUS_CYCLE;
+> > +     u32 bus_timing =3D NFC_DEFAULT_BUS_TIMING;
+> > +     u32 bus_cfg_val;
+> > +
+> > +     writel(CLK_ALWAYS_ON_NAND | CLK_SELECT_NAND | CLK_ENABLE_VALUE, n=
+fc->reg_clk);
+> > +     writel(0, nfc->reg_base + NFC_REG_CFG);
+> > +
+> > +     bus_cfg_val =3D (((bus_cycle - 1) & 31) | ((bus_timing & 31) << 5=
+));
+> > +     writel(bus_cfg_val, nfc->reg_base + NFC_REG_CFG);
+> > +     writel(BIT(31), nfc->reg_base + NFC_REG_CMD);
+> > +}
+> > +
+> > +static int meson_probe(struct udevice *dev)
+> > +{
+> > +     struct meson_nfc *nfc =3D dev_get_priv(dev);
+> > +     void *addr;
+> > +     int ret;
+> > +
+> > +     addr =3D dev_read_addr_ptr(dev);
+> > +     if (!addr) {
+> > +             dev_err(dev, "base register address not found\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     nfc->reg_base =3D addr;
+> > +
+> > +     addr =3D dev_read_addr_index_ptr(dev, 1);
+> > +     if (!addr) {
+> > +             dev_err(dev, "clk register address not found\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     nfc->reg_clk =3D addr;
+> > +     nfc->dev =3D dev;
+> > +
+> > +     meson_nfc_clk_init(nfc);
+> > +
+> > +     ret =3D meson_nfc_nand_chips_init(dev, nfc);
+> > +     if (ret) {
+> > +             dev_err(nfc->dev, "failed to init chips\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct udevice_id meson_nand_dt_ids[] =3D {
+> > +     {.compatible =3D "amlogic,meson-axg-nfc",},
+> > +     { /* sentinel */ }
+> > +};
+> > +
+> > +U_BOOT_DRIVER(meson_nand) =3D {
+> > +     .name =3D "meson_nand",
+> > +     .id =3D UCLASS_MTD,
+> > +     .of_match =3D meson_nand_dt_ids,
+> > +     .probe =3D meson_probe,
+> > +     .priv_auto =3D sizeof(struct meson_nfc),
+> > +};
+> > +
+> > +void board_nand_init(void)
+> > +{
+> > +     struct udevice *dev;
+> > +     int ret;
+> > +
+> > +     ret =3D uclass_get_device_by_driver(UCLASS_MTD,
+> > +                                       DM_DRIVER_GET(meson_nand), &dev=
+);
+> > +
+> > +     if (ret && ret !=3D -ENODEV)
+> > +             pr_err("Failed to initialize: %d\n", ret);
+> > +}
 
-Yes, that's your position, and it's not anyone elses position.
 
-> > > > Perhaps an issue here is that much like the kernel "install" target=
-, we
-> > > > need an "install" target too, so that whatever dtbs we build can be
-> > > > more easily found for external packaging, but whatever tooling it i=
-s
-> > > > that wants it? And perhaps this is part of the problem, tooling tha=
-t
-> > > > expects to pull things out of the object directory rather than an
-> > > > "installed" directory?
-> > >
-> > > This is where binman comes in. It can run as part of U-Boot build, to
-> > > build a few default firmware images. Then it can be run *later*,
-> > > outside the U-Boot build, with an augmented or more targeted image
-> > > definition, with mostly the same input files, to pull together images
-> > > for specific uses. As you say, the input files need to be in a define=
-d
-> > > location, which they are today, for the most part.
-> > >
-> > > So even if a particular board only uses one DT, all the DTs for that
-> > > SoC are built and so can be used in that final-packaging step. Withou=
-t
-> > > that build, there is no way to get the required .dtb files, other tha=
-n
-> > > building every board one by one and then pulling out the .dtb files o=
-r
-> > > something weird like that.
-> > >
-> > > Note that this works independently of whether OF_LIST is used, etc.
-> >
-> > How about this. When you introduce generic-rk3399_defconfig is when we
-> > can also have dts-$(CONFIG_ROCKCHIP_RK3399) list everything, and insist
-> > it be kept up to date. That to me feels like the right order to go in.
-> > And we can have all of the implementation details be hashed out
-> > elsewhere, not in the thread about fixing our nightmare about dts file
-> > resync.
->=20
-> So long as Sumit can put it back so we can use build rules, that's
-> fine. But removing the build rules is the sticking point for me.
-
-But it's not a sticking point for anyone else for the series. Because
-no one else gets the point you're trying to make.
-
-> > > > > > > But even then, I don't object to adding those rules to the Ma=
-kefiles. If
-> > > > > > > it works it works. I object to adding them when they don't wo=
-rk.
-> > > > >
-> > > > > What do you mean by 'work'? With this series as is, it simply isn=
-'t
-> > > > > possible to add Makefile rules, as they are ignored. Am I missing
-> > > > > something?
-> > > >
-> > > > Yes, I think you're missing something. Perhaps you need to publish =
-a WIP
-> > > > tree somewhere so someone can see what you're doing as it sounds li=
-ke
-> > > > you're not able to add another SoC of any type on top of Sumit's tr=
-ee
-> > > > and have it work.
-> > >
-> > > The current -next source builds dtb files based on the SoC, for the
-> > > most part. I sent a series to clean that up a bit[1], but it is mostl=
-y
-> > > there.
-> >
-> > Yes, and that relied on Rasmus' series having been merged ages ago whic=
-h
-> > fixed up a number of "people just copypasta'd something here,
-> > incorrectly".  Keep that in mind as part of why I have objections here.
->=20
-> OK.
-
-And since I think you're missing the point I was raising, because no one
-else has the "any dtb from the SoC with this binary", we'll just be
-getting back to re-introducing those kind of problems with what you're
-demanding.
-
-> > > From the above it seems like the plan could be:
-> > > 1. Move arm64 .dts files to arch/arm64/dts/<vendor>/... and adjust
-> > > Makefiles accordingly
-> >
-> > Since we're going to move everyone to being from the upstream kernel,
-> > that seems like unneeded churn.
->=20
-> What is the timeline for that move?
-
-It could probably, largely, be done in 2024, for the platforms that
-actively sync. For the ones that aren't behaving well right now? I don't
-know, it'll depend on when someone shows up being active about them
-again.
-
-> We are talking about 1700 lines of Makefies and I already made a good
-> start on part of it. So if we are going to be a few months with two
-> different paths, fine, but this is going to drag on for a year, I
-> would rather clean it up now and have a unified path for both sets of
-> DTs.
-
-The sticking point for migration is going to be the testing of the
-platforms that are not well in sync at all.
-
-> > > 2. Choose a directory target for devicetree-rebasing. I see that
-> > > 'barebox' uses 'dts' which seems better to me than
-> > > 'devicetree-rebasing/src/'. Actually barebox even seems to have
-> > > scripts for handling all of this [2]??
-> >
-> > They've been doing this since longer than git subtree has existed I
-> > believe. I suspect that much like how Rob would like to move the
-> > in-kernel devicetree compiler sync from a script to git subtree, barebo=
-x
-> > will too.
->=20
-> Maybe, although the first barebox dts/ commit was 2014 and subtree is
-> claimed to come out in 2012...but then devicetree-rebasing might be
-> newer, which would explain why they have 'git filter-branch' stuff in
-> the script.
-
-Well, it was just a guess on my part. It took a while for subtree to
-catch on, and yes, it's taken a while for everything to reach the state
-it's in today, for dts sources outside of the linux kernel itself.
-
-> I thought devicetree-rebasing came from Linux. Is it its own repo? So
-> what is the DT upstream these days??
-
-I'll let Rob chime in again here if he likes. In short,
-devicetree-rebasing is the kernel dts files/bindings copied out and
-tagged, matching upstream kernel tags, and with assorted useful bits of
-git history available.
-
-> If subtree does what we want without making U-Boot look like
-> Franekstein's monster, that's fine. But I don't mind having a script.
-
-Yes, everyone else thus far seems fine with what we get via this series.
-
-> > > 3. Adjust the build system to use the dts/ directory for .dts files
-> > > when OF_UPSTREAM is enabled
-> > >
-> > > Then it will be easy. People can enable OF_UPSTREAM for an SoC
-> > > (without changing DEFAULT_DEVICE_TREE) and will get the same behaviou=
-r
-> > > as now, just with upstream .dts files. All the .dts files for an SoC
-> > > are built, as now, just as Linux does. We can continue cleaning up th=
-e
-> > > DT build rules as time permits.
-> >
-> > Maybe the unasked / unanswered question here is, why don't we put the
-> > subtree in to dts/ ? Just because it would make us more likely to make
-> > changes rather than treat it as read only?
->=20
-> It is an easy checkpatch check, if that is your only concern.
-
-Yeah, checkpatch isn't great for catching and stopping things. I don't
-know how many other custodians check their PRs before I get to them. So
-if it's not a fatal CI thing, it's not going to always be caught before
-I see it, and I don't always catch "ERROR" things in checkpatch in a PR
-either. But it might still be more annoying than not to have subtree be
-shoved in to "dts". I'm hoping for some feedback from Sumit on this
-point since I think he's played around.
 
 --=20
-Tom
+Michael Nazzareno Trimarchi
+Co-Founder & Chief Executive Officer
+M. +39 347 913 2170
+michael@amarulasolutions.com
+__________________________________
 
---Groupsio=nDFB7Q3FtCAMuejGDx0Q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmWUrT8ACgkQFHw5/5Y0
-tyzSrwwAsgKjRqRl+7ds/eM3YNfu6t+3wZkBdrIDRaxtygry1JBadkeG3UYzSfaK
-82VXwiMhSiSIavvphtG9t+yFTVzepbsHBDbVZBpPZbnrNmyFHBpfIYe/MnIASVYc
-l3ParyJlpnY+NIOJkRVOk3MF7Usmx5ftwUf3cSZHkPhYJ/D8Yjqh3JaAqycNVuvt
-fnTWQE+JodUAtG3ftMM2LoEjmNfmGgrRZlmTLi+XZn0WNYLQwPQLtm9iuq47vAZL
-oALW0e3cW6FVJ9Ki32BZXXGh94wtZ8OigmlDrbI2X1er+8KlrI2HkPxrXTiW7izW
-WF4v0OaOUo95mA3/j8PFXn7lb5N153PJ4PByNYQ29h67CnCkKUspb8Y/JDJAweEu
-JlvmGQohJSEObJkOX+CA1i6gVSs4pCZ8F3yNSPWiJATX2MWM+mj3dtgp7OlDDCtF
-aSvdCh6uMKc1HmmuvLiVqOuDU32kAJMRp8Hj0UUMG18i6pbjSx2iYAEU6HvsysCa
-Hhu7VnWa
-=HESv
------END PGP SIGNATURE-----
-
---Groupsio=nDFB7Q3FtCAMuejGDx0Q--
+Amarula Solutions BV
+Joop Geesinkweg 125, 1114 AB, Amsterdam, NL
+T. +31 (0)85 111 9172
+info@amarulasolutions.com
+www.amarulasolutions.com
 
