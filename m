@@ -2,50 +2,50 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1277C47DB7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA42AC47DBA
 	for <webhook@archiver.kernel.org>; Mon, 15 Jan 2024 08:11:04 +0000 (UTC)
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
- by mx.groups.io with SMTP id smtpd.web10.8928.1704883017119775822
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+ by mx.groups.io with SMTP id smtpd.web11.8914.1704883009326392550
  for <u-boot-amlogic@groups.io>;
- Wed, 10 Jan 2024 02:36:57 -0800
+ Wed, 10 Jan 2024 02:36:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=UzWShN0i;
- spf=pass (domain: linaro.org, ip: 209.85.214.180, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d3f8af8297so18900935ad.2
-        for <u-boot-amlogic@groups.io>; Wed, 10 Jan 2024 02:36:57 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=kQ93SCXa;
+ spf=pass (domain: linaro.org, ip: 209.85.214.177, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d4ab4e65aeso32132255ad.0
+        for <u-boot-amlogic@groups.io>; Wed, 10 Jan 2024 02:36:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704883016; x=1705487816; darn=groups.io;
+        d=linaro.org; s=google; t=1704883009; x=1705487809; darn=groups.io;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SzTBFBuuEV3jHwA8W0Ga4EzsnN4VTGx3NOQxj35ln4A=;
-        b=UzWShN0i565lTu/sxFPd6MCPy+GNZIWYt613YMKAfrM9FeC84yqlbet6XVPvH6UlUU
-         3Ell3aAK+5VyduyTFD3j3em4+MA1RDByOSXdKTZtSPJqiU7UoMFKJeytBScmDLEsz+oX
-         Fnmr3uKW6I9wVArnF+QHkp+Fg+uCByPW0RHufbQc/7XUNYIazKjTbTEf5z9YUDP8Mz5b
-         jFWKzLv9FuulDOvkjffvzmwF1lqCWMBgICBQZMbo08w4VflrtQuRYNGRKtocPJo+QtWY
-         vncQEd5vt7UHGVXc9kWU/5yrCE2hQT1FhA8VJikN37bYpzY43wHr49MQLbArKzJSOBpn
-         8RvA==
+        bh=FsiA+O12iJkpNew60z2Ss9cRy01PCvnIz5NjHTdND8w=;
+        b=kQ93SCXawSSnUJA2O6YKwGeIP/F3Jq9m4V7ZSaQG8ZIV0+eEb/Lf0+jR1UiOWjFJwA
+         YkJmzfo7zwxosa3hTskdnrs7rhx2vC4sE9UNuQ2OfCv9ejPt9etShvTK/pjN2n64lgwf
+         dLHrqAC1GvKiGfEt2PAJatpWi3gcUTWMeporI8D36VrYndr1+gvNfgTixetZTt3mplqb
+         MIBUzXnAAavamuMY8Dd+5Li9ofekEWONxESi9+lzGDkF/eB9tJ1XL1ePR1+GRRYMjmVw
+         AN18DVWuN5Il3gFsP0ykQ/IEYZBWYS4MbgKANqv6IXvKH/b8rTwFLR9EzU06QJhyETsH
+         2XPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704883016; x=1705487816;
+        d=1e100.net; s=20230601; t=1704883009; x=1705487809;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SzTBFBuuEV3jHwA8W0Ga4EzsnN4VTGx3NOQxj35ln4A=;
-        b=qNlUsOjBenmk8zj4Bkp18/1kkFNDWxhJDMPmJ+ivSNiZecI+LeEMFLW0H7OsIsU1fR
-         BjLODPGl2umB4D/Iq6skT3ztaiBnJ5wtDd2AeWeXpXoCL0gwyILLDO23PmgQMnSic4g1
-         TSdtprKOwTXYafM35E1PAb1vTJzAELjj3hFzhqIoIBFv4XdoVIGefiHMabMsXKjWHubO
-         FgXDZQEGrvX9+hVqhzKtFGxm4r6Lmkb0izYUgIGEid9+XHN5dXzg6CiOf5+uUkz8Ywq4
-         dP2uNBI9RZ6pc3Y12ZRhw0s8asFCdA8KrYdmgxO90hK0Yi3bdEFkQukjd7uq2EGMAmHe
-         kAeg==
-X-Gm-Message-State: AOJu0YwWXqeR0IhTXLqZGrwXy07meO9i8Yuz4NrSYndGXHobEv+1nSbd
-	h5x0MhqZEqpi7n2HNQXjkbWCMn5BW+RaLnPq4JCheeyG9ZU=
-X-Google-Smtp-Source: AGHT+IF25r576iJdYtL63mGj6GoItMqOOmVtntCBjbG9jPFPF95xZWc9PRQne1NyaaQ7B9a78qAZUw==
-X-Received: by 2002:a17:903:22d2:b0:1d5:4b75:f2da with SMTP id y18-20020a17090322d200b001d54b75f2damr642425plg.108.1704883016638;
-        Wed, 10 Jan 2024 02:36:56 -0800 (PST)
+        bh=FsiA+O12iJkpNew60z2Ss9cRy01PCvnIz5NjHTdND8w=;
+        b=sLjEG4co0jnAWqWQ8s+2IpG96G6/Q6DQmLOe5WKKb08Y2C/kkUseVvNUlngqzyyMAA
+         h0XA+HVLZjWU33LLOGiKZNiOXmvbfRnoKZOFrkE/Sf8TaOUm5JR4iaVt9TMPy/wN8Pbe
+         1hT92sRyuFh6ayeW47Vif/+LqiR65DPCQbbtYlMAvm80iDPGjB0MqKdfRXtZhKk67nCy
+         ZBHDfNQtc1MfLoO2ERQ2OuJ00ovVSbaCOzjOK787EJlYVVw+p3nMQv8lhBJKX+h5xSoh
+         31ZGZ6j1tX7hlMoAf623r7S5vFQM6Ivv0W85RKph70bUdx0rA3pQgdtLFW6siX7iRh21
+         De7Q==
+X-Gm-Message-State: AOJu0YytCLiLUbqVc1qR6/7TEP0l1M5x3qz2oNGL7lr7ylqRlhjw5wFE
+	uOOG129lky7O2LwyeoKdJLVyKhwley+OTQ==
+X-Google-Smtp-Source: AGHT+IFb+flFOMi8jhEI84jn3b6jKNoBFO+35tkGAWNhdslOrWzI48A5tpPQY3KKPv+JkviI4c1cLg==
+X-Received: by 2002:a17:902:ca11:b0:1d5:6b6c:1ace with SMTP id w17-20020a170902ca1100b001d56b6c1acemr1096120pld.18.1704883008643;
+        Wed, 10 Jan 2024 02:36:48 -0800 (PST)
 Received: from sumit-X1.. ([223.178.208.66])
-        by smtp.gmail.com with ESMTPSA id i7-20020a17090332c700b001d38a7e6a30sm3332604plr.70.2024.01.10.02.36.49
+        by smtp.gmail.com with ESMTPSA id i7-20020a17090332c700b001d38a7e6a30sm3332604plr.70.2024.01.10.02.36.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 02:36:56 -0800 (PST)
+        Wed, 10 Jan 2024 02:36:48 -0800 (PST)
 From: Sumit Garg <sumit.garg@linaro.org>
 To: u-boot@lists.denx.de,
 	u-boot-amlogic@groups.io,
@@ -76,9 +76,9 @@ Cc: trini@konsulko.com,
 	bb@ti.com,
 	mark.kettenis@xs4all.nl,
 	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v4 06/11] dts: Add script to uprev dts/upstream subtree
-Date: Wed, 10 Jan 2024 16:05:42 +0530
-Message-Id: <20240110103547.719757-7-sumit.garg@linaro.org>
+Subject: [PATCH v4 05/11] dts: Add alternative location for upstream DTB builds
+Date: Wed, 10 Jan 2024 16:05:41 +0530
+Message-Id: <20240110103547.719757-6-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240110103547.719757-1-sumit.garg@linaro.org>
 References: <20240110103547.719757-1-sumit.garg@linaro.org>
@@ -88,53 +88,126 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 15 Jan 2024 08:11:04 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2063
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2062
 
-dts/update-dts-subtree.sh is just a wrapper around git subtree pull
-command. Usage from the top level U-Boot source tree, run:
+Allow platform owners to mirror devicetree files from devitree-rebasing
+directory into dts/upstream/src/$(ARCH) (special case for arm64). Then
+build then along with any *-u-boot.dtsi file present in arch/$(ARCH)/dts
+directory. Also add a new Makefile for arm64.
 
-$ ./dts/update-dts-subtree.sh <release-tag>
+This will help easy migration for platforms which currently are compliant
+with upstream Linux kernel devicetree files.
 
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
 
 Changes in v4:
-- New patch to add script dts/update-dts-subtree.sh as per Rob's comments.
+- Switched subtree to be imported as dts/upstream sub-directory rather
+  than devicetree-rebasing sub-directory to better suite U-Boot
+  directory structure.
+- Added a note to OF_UPSTREAM Kconfig option.
 
- dts/update-dts-subtree.sh | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100755 dts/update-dts-subtree.sh
+Changes in v3:
+- Minor commit message update
 
-diff --git a/dts/update-dts-subtree.sh b/dts/update-dts-subtree.sh
-new file mode 100755
-index 00000000000..2077094d0d2
+Changes in v2:
+- s/DEVICE_TREE_LOC/dt_dir/ and s/U-boot/U-Boot/
+
+ dts/Kconfig                     | 16 ++++++++++++++++
+ dts/Makefile                    | 17 ++++++++++++++---
+ dts/upstream/src/arm64/Makefile | 14 ++++++++++++++
+ 3 files changed, 44 insertions(+), 3 deletions(-)
+ create mode 100644 dts/upstream/src/arm64/Makefile
+
+diff --git a/dts/Kconfig b/dts/Kconfig
+index 00c0aeff893..09789d3e18b 100644
+--- a/dts/Kconfig
++++ b/dts/Kconfig
+@@ -85,6 +85,22 @@ config OF_LIVE
+ 	  enables a live tree which is available after relocation,
+ 	  and can be adjusted as needed.
+ 
++config OF_UPSTREAM
++	bool "Enable use of devicetree imported from Linux kernel release"
++	help
++	  Traditionally, U-Boot platforms used to have their custom devicetree
++	  files or copy devicetree files from Linux kernel which are hard to
++	  maintain and can usually get out-of-sync from Linux kernel. This
++	  option enables platforms to migrate to devicetree-rebasing repo where
++	  a regular sync will be maintained every major Linux kernel release
++	  cycle. However, platforms can still have some custom u-boot specific
++	  bits maintained as part of *-u-boot.dtsi files.
++
++	  Note: This option should be set in Kconfig, for the SoC as a whole.
++	  However, newer boards whose devicetree source files haven't landed in
++	  the dts/upstream subtree, they can override this option to have the
++	  DT build from existing U-Boot tree location instead.
++
+ choice
+ 	prompt "Provider of DTB for DT control"
+ 	depends on OF_CONTROL
+diff --git a/dts/Makefile b/dts/Makefile
+index 3437e54033d..d6c2c9daf31 100644
+--- a/dts/Makefile
++++ b/dts/Makefile
+@@ -10,10 +10,20 @@ ifeq ($(DEVICE_TREE),)
+ DEVICE_TREE := unset
+ endif
+ 
++ifeq ($(CONFIG_OF_UPSTREAM),y)
++ifeq ($(CONFIG_ARM64),y)
++dt_dir := dts/upstream/src/arm64
++else
++dt_dir := dts/upstream/src/$(ARCH)
++endif
++else
++dt_dir := arch/$(ARCH)/dts
++endif
++
+ ifneq ($(EXT_DTB),)
+ DTB := $(EXT_DTB)
+ else
+-DTB := arch/$(ARCH)/dts/$(DEVICE_TREE).dtb
++DTB := $(dt_dir)/$(DEVICE_TREE).dtb
+ endif
+ 
+ $(obj)/dt-$(SPL_NAME).dtb: dts/dt.dtb $(objtree)/tools/fdtgrep FORCE
+@@ -41,7 +51,7 @@ $(DTB): arch-dtbs
+ 
+ PHONY += arch-dtbs
+ arch-dtbs:
+-	$(Q)$(MAKE) $(build)=arch/$(ARCH)/dts dtbs
++	$(Q)$(MAKE) $(build)=$(dt_dir) dtbs
+ 
+ ifeq ($(CONFIG_SPL_BUILD),y)
+ obj-$(CONFIG_OF_EMBED) := dt-spl.dtb.o
+@@ -65,4 +75,5 @@ clean-files := dt.dtb.S
+ # Let clean descend into dts directories
+ subdir- += ../arch/arc/dts ../arch/arm/dts ../arch/m68k/dts ../arch/microblaze/dts	\
+ 	   ../arch/mips/dts ../arch/nios2/dts ../arch/powerpc/dts ../arch/riscv/dts	\
+-	   ../arch/sandbox/dts ../arch/sh/dts ../arch/x86/dts ../arch/xtensa/dts
++	   ../arch/sandbox/dts ../arch/sh/dts ../arch/x86/dts ../arch/xtensa/dts	\
++	   ./upstream/src/arm64 ./upstream/src/$(ARCH)
+diff --git a/dts/upstream/src/arm64/Makefile b/dts/upstream/src/arm64/Makefile
+new file mode 100644
+index 00000000000..9a8f6aa3584
 --- /dev/null
-+++ b/dts/update-dts-subtree.sh
-@@ -0,0 +1,24 @@
-+#!/bin/sh
++++ b/dts/upstream/src/arm64/Makefile
+@@ -0,0 +1,14 @@
 +# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Copyright 2024 Linaro Ltd.
-+#
-+# Usage: from the top level U-Boot source tree, run:
-+# $ ./dts/update-dts-subtree.sh <release-tag>
-+#
-+# The script will pull changes from devicetree-rebasing repo into U-Boot
-+# as a subtree located as <U-Boot>/dts/upstream sub-directory. It will
-+# automatically create a squash/merge commit listing the commits imported.
 +
-+set -e
++include $(srctree)/scripts/Makefile.dts
 +
-+merge_commit_msg=$(cat << EOF
-+Subtree merge tag '$1' of devicetree-rebasing repo [1] into dts/upstream
++targets += $(dtb-y)
 +
-+[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
-+EOF
-+)
++# Add any required device tree compiler flags here
++DTC_FLAGS += -a 0x8
 +
-+git subtree pull --prefix dts/upstream \
-+    git://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git \
-+    $1 --squash -m "${merge_commit_msg}"
++PHONY += dtbs
++dtbs: $(addprefix $(obj)/, $(dtb-y))
++	@:
++
++clean-files := */*.dtb */*.dtbo
 -- 
 2.34.1
 
