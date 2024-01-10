@@ -2,93 +2,140 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2988C47DB1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1277C47DB7
 	for <webhook@archiver.kernel.org>; Mon, 15 Jan 2024 08:11:04 +0000 (UTC)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
- by mx.groups.io with SMTP id smtpd.web10.10583.1704890447931630301
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+ by mx.groups.io with SMTP id smtpd.web10.8928.1704883017119775822
  for <u-boot-amlogic@groups.io>;
- Wed, 10 Jan 2024 04:40:48 -0800
+ Wed, 10 Jan 2024 02:36:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=eP4txW2D;
- spf=pass (domain: linaro.org, ip: 209.85.222.48, mailfrom: sumit.garg@linaro.org)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7ce3e5bc2afso794127241.3
-        for <u-boot-amlogic@groups.io>; Wed, 10 Jan 2024 04:40:47 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=UzWShN0i;
+ spf=pass (domain: linaro.org, ip: 209.85.214.180, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d3f8af8297so18900935ad.2
+        for <u-boot-amlogic@groups.io>; Wed, 10 Jan 2024 02:36:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704890447; x=1705495247; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1704883016; x=1705487816; darn=groups.io;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MiNP/CdCDMxbnqAs22umrAsFNDnrljBF/5SYQI5VfME=;
-        b=eP4txW2DfStnRIVjOeG7Hj2MJa+/C4bdaAvrOQhDUDmx2L2juxpTkznumUyZ0f/klG
-         yKZ4NE7Sn4oMqOE/KaZIQMhnVlfNTYs+BYQsuF8LOlz8HGx5zOWfJGYvrU8fj+a5f9Ol
-         bWK2+cpoABGb22KTUBxYl+ZKjgyfkclA5Umj/za3x/phz7YJwjEDmVsIDe+v3gth+9Aj
-         6rqWV78mcIwpZeV8VtOWfkRFTpKUK4wOIucyTgVSoV7qWxATnxX67RmmGnGENnEc0MJp
-         RdOjMxBML+k2XheGVe4ULzfTIHcOE0m4lSQKSzfKc7UpCw3UacNrF+RRXc7vHUPkFIDZ
-         XDEw==
+        bh=SzTBFBuuEV3jHwA8W0Ga4EzsnN4VTGx3NOQxj35ln4A=;
+        b=UzWShN0i565lTu/sxFPd6MCPy+GNZIWYt613YMKAfrM9FeC84yqlbet6XVPvH6UlUU
+         3Ell3aAK+5VyduyTFD3j3em4+MA1RDByOSXdKTZtSPJqiU7UoMFKJeytBScmDLEsz+oX
+         Fnmr3uKW6I9wVArnF+QHkp+Fg+uCByPW0RHufbQc/7XUNYIazKjTbTEf5z9YUDP8Mz5b
+         jFWKzLv9FuulDOvkjffvzmwF1lqCWMBgICBQZMbo08w4VflrtQuRYNGRKtocPJo+QtWY
+         vncQEd5vt7UHGVXc9kWU/5yrCE2hQT1FhA8VJikN37bYpzY43wHr49MQLbArKzJSOBpn
+         8RvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704890447; x=1705495247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1704883016; x=1705487816;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MiNP/CdCDMxbnqAs22umrAsFNDnrljBF/5SYQI5VfME=;
-        b=sRo0mMLwsnwgRf9uFbFCVGUfKdwWCgIDBcdyOoJpW31hYBnKD/gA4axGXkuHD5vZ2i
-         dhy+pIEpXsEXv64XjBaRRLf74NRM1K/zQewbD9mpGY/H8XYuC55jlkxHJnbjoBHk9Guy
-         c8Jogiwo6EtSCczqCkd0l1HW1EBAzTmQv77KOJ6k1K+2SzGZHrf7knCqW4/IcGSPGNo3
-         TjkJHAKAEW2KVGJIb+OqdgZ+Y5xV686S75OuflSpWuBG0NfgIBd2AEkRxCZGEPHoCQ+c
-         3kHJqmFnk65mE70i/fnPX7ZXQgXa8RO3NUQ7kVzJkEw8y59NK5XGPFUwoub8LGEa4qGK
-         e7AA==
-X-Gm-Message-State: AOJu0Yydqily+rpr0HaCP9cZOlraZwSqszKA8oZVjK9g36pMPdosTKfF
-	9bFOFYdi4mIvdCqV4hufYwcNUH6dhSXc3LB25BIJ1FpVmd4MpQ==
-X-Google-Smtp-Source: AGHT+IFl6KFsHuwHd/CdScW0T1KYhrmLggZw7TF7qpbc6F/4WvFZ4/bwntVfXP02bpo+mwCgb/pP4XJBkI8iJPikO64=
-X-Received: by 2002:a05:6102:41ac:b0:467:b84:62a9 with SMTP id
- cd44-20020a05610241ac00b004670b8462a9mr910845vsb.32.1704890446895; Wed, 10
- Jan 2024 04:40:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20240110103547.719757-1-sumit.garg@linaro.org>
- <20240110103547.719757-8-sumit.garg@linaro.org> <CAOMZO5BLev2quLZcOABQ9zow2hRHO61e5NY2WKBpH-YJNvBV7Q@mail.gmail.com>
-In-Reply-To: <CAOMZO5BLev2quLZcOABQ9zow2hRHO61e5NY2WKBpH-YJNvBV7Q@mail.gmail.com>
+        bh=SzTBFBuuEV3jHwA8W0Ga4EzsnN4VTGx3NOQxj35ln4A=;
+        b=qNlUsOjBenmk8zj4Bkp18/1kkFNDWxhJDMPmJ+ivSNiZecI+LeEMFLW0H7OsIsU1fR
+         BjLODPGl2umB4D/Iq6skT3ztaiBnJ5wtDd2AeWeXpXoCL0gwyILLDO23PmgQMnSic4g1
+         TSdtprKOwTXYafM35E1PAb1vTJzAELjj3hFzhqIoIBFv4XdoVIGefiHMabMsXKjWHubO
+         FgXDZQEGrvX9+hVqhzKtFGxm4r6Lmkb0izYUgIGEid9+XHN5dXzg6CiOf5+uUkz8Ywq4
+         dP2uNBI9RZ6pc3Y12ZRhw0s8asFCdA8KrYdmgxO90hK0Yi3bdEFkQukjd7uq2EGMAmHe
+         kAeg==
+X-Gm-Message-State: AOJu0YwWXqeR0IhTXLqZGrwXy07meO9i8Yuz4NrSYndGXHobEv+1nSbd
+	h5x0MhqZEqpi7n2HNQXjkbWCMn5BW+RaLnPq4JCheeyG9ZU=
+X-Google-Smtp-Source: AGHT+IF25r576iJdYtL63mGj6GoItMqOOmVtntCBjbG9jPFPF95xZWc9PRQne1NyaaQ7B9a78qAZUw==
+X-Received: by 2002:a17:903:22d2:b0:1d5:4b75:f2da with SMTP id y18-20020a17090322d200b001d54b75f2damr642425plg.108.1704883016638;
+        Wed, 10 Jan 2024 02:36:56 -0800 (PST)
+Received: from sumit-X1.. ([223.178.208.66])
+        by smtp.gmail.com with ESMTPSA id i7-20020a17090332c700b001d38a7e6a30sm3332604plr.70.2024.01.10.02.36.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 02:36:56 -0800 (PST)
 From: Sumit Garg <sumit.garg@linaro.org>
-Date: Wed, 10 Jan 2024 18:10:35 +0530
-Message-ID: <CAFA6WYMr8TPbNv8mxCoo+uZ2NngJ+3dm8dpT0qoZWRbe1qB2RA@mail.gmail.com>
-Subject: Re: [PATCH v4 07/11] doc: devicetree: Align documentation to use Kconfig options
-To: Fabio Estevam <festevam@gmail.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	u-boot-custodians@lists.denx.de, trini@konsulko.com, sjg@chromium.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
-	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
-	ilias.apalodimas@linaro.org, maxim.uvarov@linaro.org, b.galvani@gmail.com, 
-	xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com, 
-	rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com, 
-	rfried.dev@gmail.com, marex@denx.de, mibodhi@gmail.com, bb@ti.com, 
-	mark.kettenis@xs4all.nl
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: u-boot@lists.denx.de,
+	u-boot-amlogic@groups.io,
+	u-boot-custodians@lists.denx.de
+Cc: trini@konsulko.com,
+	sjg@chromium.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor@kernel.org,
+	neil.armstrong@linaro.org,
+	caleb.connolly@linaro.org,
+	ff@shokubai.tech,
+	daniel.thompson@linaro.org,
+	dgilmore@fedoraproject.org,
+	pbrobinson@gmail.com,
+	ilias.apalodimas@linaro.org,
+	maxim.uvarov@linaro.org,
+	b.galvani@gmail.com,
+	xypron.glpk@gmx.de,
+	michal.simek@amd.com,
+	seanga2@gmail.com,
+	rasmus.villemoes@prevas.dk,
+	peng.fan@nxp.com,
+	jh80.chung@samsung.com,
+	rfried.dev@gmail.com,
+	marex@denx.de,
+	mibodhi@gmail.com,
+	bb@ti.com,
+	mark.kettenis@xs4all.nl,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH v4 06/11] dts: Add script to uprev dts/upstream subtree
+Date: Wed, 10 Jan 2024 16:05:42 +0530
+Message-Id: <20240110103547.719757-7-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240110103547.719757-1-sumit.garg@linaro.org>
+References: <20240110103547.719757-1-sumit.garg@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 15 Jan 2024 08:11:04 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2070
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2063
 
-On Wed, 10 Jan 2024 at 18:01, Fabio Estevam <festevam@gmail.com> wrote:
->
-> On Wed, Jan 10, 2024 at 7:37=E2=80=AFAM Sumit Garg <sumit.garg@linaro.org=
-> wrote:
->
-> >  History
-> >  -------
-> >
-> > -U-Boot configuration was previous done using CONFIG options in the boa=
-rd
-> > +U-Boot configuration was previous done using Kconfig options in the bo=
-ard
-> >  config file. This eventually got out of hand with nearly 10,000 option=
-s.
->
-> It seems that the original text should be preserved here.
+dts/update-dts-subtree.sh is just a wrapper around git subtree pull
+command. Usage from the top level U-Boot source tree, run:
 
-Ah, you are right. I can preserve that in the next spin if I receive
-further feedback otherwise I hope Tom can fix it up while applying.
+$ ./dts/update-dts-subtree.sh <release-tag>
 
--Sumit
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+
+Changes in v4:
+- New patch to add script dts/update-dts-subtree.sh as per Rob's comments.
+
+ dts/update-dts-subtree.sh | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100755 dts/update-dts-subtree.sh
+
+diff --git a/dts/update-dts-subtree.sh b/dts/update-dts-subtree.sh
+new file mode 100755
+index 00000000000..2077094d0d2
+--- /dev/null
++++ b/dts/update-dts-subtree.sh
+@@ -0,0 +1,24 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Copyright 2024 Linaro Ltd.
++#
++# Usage: from the top level U-Boot source tree, run:
++# $ ./dts/update-dts-subtree.sh <release-tag>
++#
++# The script will pull changes from devicetree-rebasing repo into U-Boot
++# as a subtree located as <U-Boot>/dts/upstream sub-directory. It will
++# automatically create a squash/merge commit listing the commits imported.
++
++set -e
++
++merge_commit_msg=$(cat << EOF
++Subtree merge tag '$1' of devicetree-rebasing repo [1] into dts/upstream
++
++[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
++EOF
++)
++
++git subtree pull --prefix dts/upstream \
++    git://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git \
++    $1 --squash -m "${merge_commit_msg}"
+-- 
+2.34.1
+
 
