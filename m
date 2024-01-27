@@ -2,173 +2,173 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CDAC48286
-	for <webhook@archiver.kernel.org>; Fri, 26 Jan 2024 08:59:10 +0000 (UTC)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
- by mx.groups.io with SMTP id smtpd.web11.1182.1706224777321143982
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB1CC47422
+	for <webhook@archiver.kernel.org>; Mon, 29 Jan 2024 10:28:05 +0000 (UTC)
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+ by mx.groups.io with SMTP id smtpd.web11.20086.1706375569303441661
  for <u-boot-amlogic@groups.io>;
- Thu, 25 Jan 2024 15:19:37 -0800
+ Sat, 27 Jan 2024 09:12:52 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=gqQEtvIV;
- spf=pass (domain: konsulko.com, ip: 209.85.219.174, mailfrom: trini@konsulko.com)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-db3a09e96daso6499568276.3
-        for <u-boot-amlogic@groups.io>; Thu, 25 Jan 2024 15:19:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1706224776; x=1706829576; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HyB3+MFRc+CXevMRbIV5T1heUI7kjAxFRQH0VJ2CWW0=;
-        b=gqQEtvIVvBS+8Sh3YmuoL3yRHeaf+bGV6Y0uEiEjIzCt+KaH1ZlRZaaWTLmdXs99Gy
-         ct3DLnDfd033qwz1r41dYMlYVH9CRBseMPfWn39xeUHShXce8nfXPXdL5jvvAqI0fP0d
-         /iXa2eQvehdnHxnlMBpI0ZnZ+LxEY898gX05g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706224776; x=1706829576;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HyB3+MFRc+CXevMRbIV5T1heUI7kjAxFRQH0VJ2CWW0=;
-        b=GmdZ1sicLUqJ7FpKNtWa/f2XktD8Y+6rzo/FObVGCmHWUbBNSRnf4TahisLg+AUki3
-         6Kzjen3SkLnths2l67xii97bRiNFw1UGzsV6H2ZMvooxMfs8i++VeShNrJaose4ULTOO
-         InSm4tuD3400u3y7Gt6lUaSAUAGqs1MM1DDaSKB8vSluLdPAOvtZvNu6DVRFS383vQnh
-         5zjX4t0Jj4D+rQqX1b0LuJj++q8jVGebijQ9cpF3L3Xtez2CmG6pQdgnUy7EZlCFCPnD
-         3rFzv2l9eMOFyTBouRi6IKwghkpmPC/ru+ottiji87lkjtevHSqVPTLz1t5WGCUbcI+2
-         NLKg==
-X-Gm-Message-State: AOJu0YzzysTMsNGIL1GI07piVJACaBk7O1WRYgdYU5SbZMpp9rdF4VtF
-	XZ5LTF3uJphCzfXlTFbwaZY8fjgUApdC+Y15NACWkF02aV4/8jWZlzrOgWayIEQ=
-X-Google-Smtp-Source: AGHT+IFnV1Re2aoyI8LY5T3+HgIuxcnWMCo08BR7J6XzzRrMXTwjjT16cbm4q79QNSBSU1xWhFJu9Q==
-X-Received: by 2002:a25:a108:0:b0:dc2:2666:efc6 with SMTP id z8-20020a25a108000000b00dc22666efc6mr498806ybh.11.1706224776488;
-        Thu, 25 Jan 2024 15:19:36 -0800 (PST)
-Received: from bill-the-cat (2603-6081-7b00-3119-0000-0000-0000-1001.res6.spectrum.com. [2603:6081:7b00:3119::1001])
-        by smtp.gmail.com with ESMTPSA id s2-20020a25aa02000000b00dbf3dbedd69sm3785941ybi.53.2024.01.25.15.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 15:19:36 -0800 (PST)
-Date: Thu, 25 Jan 2024 18:19:33 -0500
-From: Tom Rini <trini@konsulko.com>
-To: Marek Vasut <marex@denx.de>
-Cc: Sumit Garg <sumit.garg@linaro.org>,
-	Caleb Connolly <caleb.connolly@linaro.org>, u-boot@lists.denx.de,
-	u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de,
-	sjg@chromium.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
-	neil.armstrong@linaro.org, ff@shokubai.tech,
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org,
-	pbrobinson@gmail.com, ilias.apalodimas@linaro.org,
-	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de,
-	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk,
-	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com,
-	mibodhi@gmail.com, bb@ti.com, mark.kettenis@xs4all.nl
-Subject: Re: [PATCH v4 00/11] An effort to bring DT bindings compliance within U-Boot
-Message-ID: <20240125231933.GY3652023@bill-the-cat>
-References: <20240110103547.719757-1-sumit.garg@linaro.org>
- <82d509de-3d47-4cc2-8217-c38dc78fad28@denx.de>
- <7b4ff8e8-2f21-4d07-9848-fb0d5652819e@linaro.org>
- <4d8aede8-5ea8-45a4-87fe-d555a025ef8e@denx.de>
- <CAFA6WYN1tFs1id7UxTwLEyp69zx2BPUP7bffVZn80FKPLx2yJw@mail.gmail.com>
- <48125705-e78e-438f-90ac-2816432cd747@denx.de>
- <CAFA6WYMuerS5YTsquGvc+OHr+0a3JXrM4AQ_ReV4tPhvxv9H0w@mail.gmail.com>
- <20240125150400.GM3652023@bill-the-cat>
- <79439bfb-5ae0-4492-a298-788fb46eafa3@denx.de>
+ dkim=pass header.i=@kwiboo.se header.s=fe-e1b5cab7be header.b=q4jl9pAv;
+ spf=pass (domain: fe-bounces.kwiboo.se, ip: 149.28.215.223, mailfrom: srs0=4854=jg=kwiboo.se=jonas@fe-bounces.kwiboo.se)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
+ To: From; q=dns/txt; s=fe-e1b5cab7be; t=1706375564;
+ bh=aWI3ELDnFqiN3oDD7Sp+B5YmKM140JyMjmGzf/Q0MXI=;
+ b=q4jl9pAvKrbNfilNE7+jjczS52o/mC7MvNdQafQN2hLPVJebRKR25GuJ0OZ61Zh8YmIQdAQQc
+ yT5JBigbKVgTRzGYc5dU8il4Bh5HXM+k/b7ahuMGBm6NKc1htafcU+bggOKaAtc4J58NOoMZeCd
+ Xwum4VQyg//23buRg/BdnzfSZFAwNYHik9klZ0lv/6p+ieRpSCS9uHdDBy4XHh7epVCvx5l24ML
+ zJeL4fWePjbDOI7So1Bq+ySEYh5+xGSagD2vddGBSWOqAB6mI4NVn4ELHiwtmcWGbwvvBfiqBEZ
+ 4JeIu9zJ2HF/kjRRGo5rRTfirjYGJwVlB82WzBIn45lQ==
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Peng Fan <peng.fan@nxp.com>, Jaehoon Chung <jh80.chung@samsung.com>,
+ Tom Rini <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Simon Glass <sjg@chromium.org>, Philipp Tomsich
+ <philipp.tomsich@vrull.eu>, Kever Yang <kever.yang@rock-chips.com>
+Cc: Jonas Karlman <jonas@kwiboo.se>, Ferass El Hafidi
+ <vitali64pmemail@protonmail.com>, u-boot@lists.denx.de,
+ u-boot-amlogic@groups.io
+Subject: [PATCH v2] mmc: Add SPL_MMC_PWRSEQ to fix link issue when building SPL
+Date: Sat, 27 Jan 2024 17:12:35 +0000
+Message-ID: <20240127171237.320834-1-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-In-Reply-To: <79439bfb-5ae0-4492-a298-788fb46eafa3@denx.de>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=BEGrlaph7CEFylS1qhoM"
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 65b5398b6797215511302810
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 26 Jan 2024 08:59:10 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2089
+ <u-boot-amlogic@groups.io>; Mon, 29 Jan 2024 10:28:05 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2092
 
---Groupsio=BEGrlaph7CEFylS1qhoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With MMC_PWRSEQ enabled the following link issue may happen when
+building SPL and SPL_PWRSEQ is not enabled.
 
-On Thu, Jan 25, 2024 at 05:38:23PM +0100, Marek Vasut wrote:
-> On 1/25/24 16:04, Tom Rini wrote:
-> > On Thu, Jan 25, 2024 at 12:54:22PM +0530, Sumit Garg wrote:
-> >=20
-> > [snip]
-> > > But at this point we have to move away from apprehensions about DT AB=
-I
-> > > breakages and provide real examples of the DT ABI breakages in the
-> > > past. Are you aware of any DT ABI breaking change backported to Linux
-> > > stable releases? This is the sort of information we would like to mak=
-e
-> > > DT bindings maintainers aware about.
-> >=20
-> > Well, how far back are we going? There was a serial related one, but it
-> > was probably closer than not to 10 years ago and lessons have been
-> > learned from it already.
-> >=20
-> > The real breakage comes in the form of (from the Linux kernel):
-> > commit 37685f6a63eeca2135d1f704e7638409a071b1f6
-> > Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > Date:   Tue Feb 19 08:46:33 2019 -0800
-> >=20
-> >      ARM: dts: am335x-evm: Fix PHY mode for ethernet
-> >=20
-> >      The PHY must add both tx and rx delay and not only on the tx clock=
-.
-> >      The board uses AR8031_AL1A PHY where the rx delay is enabled by de=
-fault,
-> >      the tx dealy is disabled.
-> >=20
-> >      The reason why rgmii-txid worked because the rx delay was not disa=
-bled by
-> >      the driver so essentially we ended up with rgmii-id PHY mode.
-> >=20
-> >      Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >      Signed-off-by: Tony Lindgren <tony@atomide.com>
-> >=20
-> > And this is of the style "the DTS was wrong before so we can break it".
-> > This is the specific example (as the board is in my lab) that comes mos=
-t
-> > clearly to mind but there have been similar examples in 2022/2023.
-> >=20
-> > The other just as painful examples I think may be where Marek is
-> > concerned and it's around nodes being renamed for correctness. We've ha=
-d
-> > a number of cases where a - turned to _ (or vice versa?) and whoops,
-> > platform stops booting. Down the line, tooling would catch that, and
-> > it's a problem of not being able to use better tooling until we have th=
-e
-> > updates that might break the boards that need the better tooling.
-> >=20
-> > And really this gets to the crux of the problem, how much testing do we
-> > insist happens prior to a re-sync being merged? Do we want to go with
-> > the whole of the dts files are re-synced, or do we leave it per vendor?
->=20
-> I'd much prefer to leave it per vendor, with the recommendation to use
-> synced DTs. Eventually things will stabilize and vendors will start
-> switching over.
+  aarch64-linux-gnu-ld.bfd: drivers/mmc/meson_gx_mmc.o: in function `meson_mmc_probe':
+  drivers/mmc/meson_gx_mmc.c:295: undefined reference to `pwrseq_set_power'
 
-To be clear, every SoC (or really, board) has to opt-in to OF_UPSTREAM
-to start with. With that, I see switching to OF_UPSTREAM meaning that
-there's a commitment to keeping up with dts change in upstream dts that
-might lead to issues within U-Boot. Do you still feel it would be better
-to have the re-sync _also_ be per custodian tree? That might be a bit
-harder to handle.
+Fix this by adding a SPL_MMC_PWRSEQ Kconfig option used to enable mmc
+pwrseq support in SPL.
 
---=20
-Tom
+Also add depends on DM_GPIO to fix following link issue:
 
---Groupsio=BEGrlaph7CEFylS1qhoM
-Content-Type: application/pgp-signature; name="signature.asc"
+  aarch64-linux-gnu-ld.bfd: drivers/mmc/mmc-pwrseq.o: in function `mmc_pwrseq_set_power':
+  drivers/mmc/mmc-pwrseq.c:26: undefined reference to `gpio_request_by_name'
+  aarch64-linux-gnu-ld.bfd: drivers/mmc/mmc-pwrseq.c:29: undefined reference to `dm_gpio_set_value'
+  aarch64-linux-gnu-ld.bfd: drivers/mmc/mmc-pwrseq.c:31: undefined reference to `dm_gpio_set_value'
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Acked-by: Ferass El Hafidi <vitali64pmemail@protonmail.com>
+---
+Changes in v2:
+- Fix Ths typo
+- Collect r-b and a-b tags
 
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmWy7H4ACgkQFHw5/5Y0
-tyx4rwv+PJflPEzRznmjHsZwbLApxsJmQl4z10hMGt+h2V8F9aZZyD4fCnLavImt
-cqccskA/sner+ZnQKVnPaKIL/p4GgWCWF4bkLyajEzYob9FjDaVA7LN+fMvuiLI9
-ZtjkPoLcFFVXTKCSBRApQBZF0yz2l59jS8ncviad3qHGWDo6fKdz5nH+D+eSwtFS
-v+QX0CwPoOacan3SdNERDcyRthuwETegrv9lvlpV26zDVSwsaWEyNP/qputwO/Gu
-yqO3iwBkT1WFj2f/rSOWB1h/oT0Opt4WpxnYwxp7pc+M1YbgFvoI2TlWVYN7KMTt
-FULLXAyNoJlsT6291HgqtNchxq234v/e6XrG+AswA2GOr1zwnfD4YwjJtMiojcYx
-oqNc0hVj1Mu7vjcOagWHlxGfYWxUFmeU51ZazOqq/DJ0Um0U+NOqNZUjT3QocHU4
-cak/+1x2PK6umgCnQ6Fzc7xG0lTycVYmmE6/Tn/lTT2Vjz9EwRjdKi30kTirHR8+
-y2SkFfFc
-=w+z7
------END PGP SIGNATURE-----
+Link to v1: https://patchwork.ozlabs.org/patch/1839392/
+---
+ drivers/mmc/Kconfig           | 12 ++++++++++--
+ drivers/mmc/Makefile          |  2 +-
+ drivers/mmc/meson_gx_mmc.c    |  2 +-
+ drivers/mmc/rockchip_dw_mmc.c |  2 +-
+ include/mmc.h                 |  4 ++--
+ 5 files changed, 15 insertions(+), 7 deletions(-)
 
---Groupsio=BEGrlaph7CEFylS1qhoM--
+diff --git a/drivers/mmc/Kconfig b/drivers/mmc/Kconfig
+index 17618c3bdcc1..a141007a576f 100644
+--- a/drivers/mmc/Kconfig
++++ b/drivers/mmc/Kconfig
+@@ -20,11 +20,19 @@ config MMC_WRITE
+ 
+ config MMC_PWRSEQ
+ 	bool "HW reset support for eMMC"
+-	depends on PWRSEQ
++	depends on PWRSEQ && DM_GPIO
+ 	help
+-	  Ths select Hardware reset support aka pwrseq-emmc for eMMC
++	  This select Hardware reset support aka pwrseq-emmc for eMMC
+ 	  devices.
+ 
++config SPL_MMC_PWRSEQ
++	bool "HW reset support for eMMC in SPL"
++	depends on SPL_PWRSEQ && SPL_DM_GPIO
++	default y if MMC_PWRSEQ
++	help
++	  This select Hardware reset support aka pwrseq-emmc for eMMC
++	  devices in SPL.
++
+ config MMC_BROKEN_CD
+ 	bool "Poll for broken card detection case"
+ 	help
+diff --git a/drivers/mmc/Makefile b/drivers/mmc/Makefile
+index e9cf1fcc6400..2b94cc2f1c34 100644
+--- a/drivers/mmc/Makefile
++++ b/drivers/mmc/Makefile
+@@ -11,7 +11,7 @@ obj-$(CONFIG_$(SPL_TPL_)BOOTSTD) += mmc_bootdev.o
+ endif
+ 
+ obj-$(CONFIG_$(SPL_TPL_)MMC_WRITE) += mmc_write.o
+-obj-$(CONFIG_MMC_PWRSEQ) += mmc-pwrseq.o
++obj-$(CONFIG_$(SPL_)MMC_PWRSEQ) += mmc-pwrseq.o
+ obj-$(CONFIG_MMC_SDHCI_ADMA_HELPERS) += sdhci-adma.o
+ 
+ ifndef CONFIG_$(SPL_)BLK
+diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+index fcf4f03d1e24..0825c0a2a838 100644
+--- a/drivers/mmc/meson_gx_mmc.c
++++ b/drivers/mmc/meson_gx_mmc.c
+@@ -288,7 +288,7 @@ static int meson_mmc_probe(struct udevice *dev)
+ 
+ 	mmc_set_clock(mmc, cfg->f_min, MMC_CLK_ENABLE);
+ 
+-#ifdef CONFIG_MMC_PWRSEQ
++#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+ 	/* Enable power if needed */
+ 	ret = mmc_pwrseq_get_power(dev, cfg);
+ 	if (!ret) {
+diff --git a/drivers/mmc/rockchip_dw_mmc.c b/drivers/mmc/rockchip_dw_mmc.c
+index 72c820ee6330..ad4529d6afa8 100644
+--- a/drivers/mmc/rockchip_dw_mmc.c
++++ b/drivers/mmc/rockchip_dw_mmc.c
+@@ -145,7 +145,7 @@ static int rockchip_dwmmc_probe(struct udevice *dev)
+ 
+ 	host->fifo_mode = priv->fifo_mode;
+ 
+-#ifdef CONFIG_MMC_PWRSEQ
++#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+ 	/* Enable power if needed */
+ 	ret = mmc_pwrseq_get_power(dev, &plat->cfg);
+ 	if (!ret) {
+diff --git a/include/mmc.h b/include/mmc.h
+index 1022db3ffa7c..9aef31ea5deb 100644
+--- a/include/mmc.h
++++ b/include/mmc.h
+@@ -590,7 +590,7 @@ struct mmc_config {
+ 	uint f_max;
+ 	uint b_max;
+ 	unsigned char part_type;
+-#ifdef CONFIG_MMC_PWRSEQ
++#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+ 	struct udevice *pwr_dev;
+ #endif
+ };
+@@ -808,7 +808,7 @@ int mmc_deinit(struct mmc *mmc);
+  */
+ int mmc_of_parse(struct udevice *dev, struct mmc_config *cfg);
+ 
+-#ifdef CONFIG_MMC_PWRSEQ
++#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+ /**
+  * mmc_pwrseq_get_power() - get a power device from device tree
+  *
+-- 
+2.43.0
+
 
