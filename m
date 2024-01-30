@@ -2,84 +2,88 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309A6C47DA9
-	for <webhook@archiver.kernel.org>; Tue, 30 Jan 2024 08:36:25 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web11.13834.1706603780750944599
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452FAC47DDF
+	for <webhook@archiver.kernel.org>; Wed, 31 Jan 2024 08:58:26 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web10.11688.1706589459038593169
  for <u-boot-amlogic@groups.io>;
- Tue, 30 Jan 2024 00:36:21 -0800
+ Mon, 29 Jan 2024 20:37:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=GEYVZs0A;
- spf=pass (domain: linaro.org, ip: 209.85.128.52, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40eac352733so43491765e9.0
-        for <u-boot-amlogic@groups.io>; Tue, 30 Jan 2024 00:36:20 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=AcyqI8op;
+ spf=pass (domain: gmail.com, ip: 209.85.222.182, mailfrom: seanga2@gmail.com)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-783ced0216aso257563085a.1
+        for <u-boot-amlogic@groups.io>; Mon, 29 Jan 2024 20:37:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706603779; x=1707208579; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1706589458; x=1707194258; darn=groups.io;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2G/9gPb36hARfgLfZlAOvqoJL4XCWUO1fPWYyKzP6T4=;
-        b=GEYVZs0AtZo1xPWG97/USVtMVM4KTVeQRHPhUu4Vd6tlF+btoJpFkGE08UGZC76T+b
-         QMwZ2YdR+a6vimQ0t1k/pyf8mEhDJvYeSgl4bzSVNV5DAh2YLGToSw3aC+5rICCq3dvF
-         Y6hpShmpbZ2CpYBDejDnP+JPLyZTLh0yzKcsguNFagwQOStN30rAf5L4+yBM3GG+jm+/
-         YRXXjkoP+qqazUlEAQlXQI2iC+TLQQOnJMVAJ+3SgSnVph96GAecps3Dgoous5ei5Us1
-         lsdxHtPnn7mLhQU/w5SB2qJwMHqH6N6V6iMa4Y4feZkATO8J34VRJEUApbFDwxcF0VUi
-         H73w==
+        bh=8XIzZ1gT1xffukuXnwslTYmCWc3Ss0ZcYGFNfGhlew4=;
+        b=AcyqI8opJlcKflH3uJy71I0SVeDEHWKx/GVOLy4W2Y207eHQbeL1NBinw6fEU2aQVp
+         6J39i3nA8ScGFchOiSps5XiFkz1lEgF+p5/LJfC9F21oh/6+tKUujtGYiWdjwz77ch6+
+         cgv6yGjnbponFxrCBx6ZNpY3AV/FBQx3fXeeZ6g8QbG+iKWHh6qycfxUTCHTAXA+UuVp
+         XBoT0l/xH9hUsGDyOo8BvRImR8ySy9zL6/uIAX/E5yO85wd933DOzOUHb90dabQsEbPT
+         weRXB8/NeYz2zeE/FGdk6yvGEj5BqnbYx3XvUAmn14fHWHpfbsv0wd+oGKH4pJwodjT/
+         v1yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706603779; x=1707208579;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1706589458; x=1707194258;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2G/9gPb36hARfgLfZlAOvqoJL4XCWUO1fPWYyKzP6T4=;
-        b=PDJZN/FIzgl3hraTD2JgGGbgF+3MjowvLpl5Fze/z2SZyv5HlfrA/0UcpSAMTR440j
-         n87Gmjuc1jCnOx6nL031OnfDNb07FPIE5t+ERQJ5DkXD0hLCXjEZUuV/IAUrvjf1t9C8
-         uwTBw1sibSDTf4kEeWTkJMxaFPRv9Mr5bKN9jFPDaimxJu5verlXruZgEAIQLUXQphoj
-         xBcZiynHgZn+ZcKwHDRWQF+6l327bN5x64+mdko7n0qp8FUb9WeQL4n9WkqpvidD57Aa
-         wNdA5plIbPjiAs9MVpB3f1pNSsuLjAlhzGFFJrNb+x9yQ3sApRpMQQNfMAMpGFJYHFID
-         wauw==
-X-Gm-Message-State: AOJu0Yz1CIe6VxXuUqRagLQpJHIza9n2tRzRvHBcInSV5Kit7SXj1ilr
-	r5G+qpPa/yydF3lRJvX7MhFjQ+IGDz+DYgD7l99ssrt575jSLId3G5omYOAntqI=
-X-Google-Smtp-Source: AGHT+IGQPLEkUgtTIP7g1JTl6y4HMUQvAZiT3N1VkbXGjaTX9FWk/JeI8GqdbTmD6LOJ+GW8Q053tA==
-X-Received: by 2002:a05:600c:35d1:b0:40e:6238:e9e8 with SMTP id r17-20020a05600c35d100b0040e6238e9e8mr7307095wmq.1.1706603778910;
-        Tue, 30 Jan 2024 00:36:18 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id o34-20020a05600c512200b0040ef6aa8870sm5564733wms.24.2024.01.30.00.36.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 00:36:18 -0800 (PST)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Tom Rini <trini@konsulko.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-In-Reply-To: <20240124-u-boot-model-print-fix-v1-1-484960069623@linaro.org>
-References: <20240124-u-boot-model-print-fix-v1-1-484960069623@linaro.org>
-Subject: Re: [PATCH] ARM: meson: stop printing board model after sysinfo
- update
-Message-Id: <170660377823.1669123.4283726180918846122.b4-ty@linaro.org>
-Date: Tue, 30 Jan 2024 09:36:18 +0100
+        bh=8XIzZ1gT1xffukuXnwslTYmCWc3Ss0ZcYGFNfGhlew4=;
+        b=LRK5Y0SNVcd57uqvwlmIErs//ICiV5d+XWaYzsND8O4AfadqCsiNLsyLIt+OhaMJzV
+         ugcnjCtH8A8IZKFqXvj5s/WmJzZhW0NoDKPry9Ee+tHCSeRD0ZnCE4sC09Nk6wj6lKP8
+         B/aEFybSHYewFk7kdVhyu9bf/z/siQsuMPYcbmLEc6Lgud6UO7nancA+titu6jS+J06X
+         o33UZco/Ebd918VqF6g40xVGxDHechOyjky9Rrxoax802jjpEJjtQYLUp0kGfak5gAbG
+         EvgPHWTUx/+OU9I6mvIV5ApfGF0veq9irRc06QkoYC/uE0FjKkmdPAl/pk1lhUDOTsaf
+         jMWA==
+X-Gm-Message-State: AOJu0YxsB3vuG1jdatrLvlXXmvjp5uOPVxtuS8SjbHdF7ljbdVXrgGR9
+	253l1Phb7RQAoWjAQoEpncVoExr59F1w1Ce1ymYPuxOQwRAsWvGs
+X-Google-Smtp-Source: AGHT+IGazJXx/uU89mvLrEIUbKw65IbqFggaabT5eaFT6mA1gZX0oLuR7MN3h0yH5Eh0Qtct9FJ67g==
+X-Received: by 2002:a05:6214:4008:b0:686:abd6:b3f4 with SMTP id kd8-20020a056214400800b00686abd6b3f4mr7285032qvb.50.1706589457975;
+        Mon, 29 Jan 2024 20:37:37 -0800 (PST)
+Received: from localhost (pool-108-48-157-169.washdc.fios.verizon.net. [108.48.157.169])
+        by smtp.gmail.com with UTF8SMTPSA id pj2-20020a0562144b0200b0068c445b747bsm2650683qvb.59.2024.01.29.20.37.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 20:37:37 -0800 (PST)
+From: Sean Anderson <seanga2@gmail.com>
+To: neil.armstrong@linaro.org,
+	Lukasz Majewski <lukma@denx.de>
+Cc: Sean Anderson <seanga2@gmail.com>,
+	u-boot-amlogic@groups.io,
+	u-boot@lists.denx.de
+Subject: Re: [PATCH v3] clk: meson: add Hardware Clock measure driver
+Date: Mon, 29 Jan 2024 23:37:32 -0500
+Message-Id: <170658777076.694990.4714326241904351501.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20231218-uboot-meson-clk-msr-v3-1-acf4d90ccfee@linaro.org>
+References: <20231218-uboot-meson-clk-msr-v3-1-acf4d90ccfee@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 30 Jan 2024 08:36:25 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2093
+ <u-boot-amlogic@groups.io>; Wed, 31 Jan 2024 08:58:26 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2094
 
-Hi,
-
-On Wed, 24 Jan 2024 13:47:25 +0100, Neil Armstrong wrote:
-> After the sysinfo update, Model is printed twice, remove
-> the now duplicate Model print from mach-meson/board-info.
+On Mon, 18 Dec 2023 10:47:55 +0100, Neil Armstrong wrote:
+> Amlogic SoCs embeds an hardware clock measure block, port it
+> from Linux and implement it as a UCLK_CLK with only the dump
+> op and fail-only xlate.
 > 
+> Based on the Linux driver introduced in [1].
 > 
+> [1] commit 2b45ebef39a2 ("soc: amlogic: Add Meson Clock Measure driver").
+> 
+> [...]
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
+Applied, thanks!
 
-[1/1] ARM: meson: stop printing board model after sysinfo update
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/076529725f16f07a5cb2d5feba25d62b5f5a5872
+[1/1] clk: meson: add Hardware Clock measure driver
+      https://source.denx.de/u-boot/custodians/u-boot-clk/-/commit/2da1331d20b3
 
+Best regards,
 -- 
-Neil
-
+Sean Anderson <seanga2@gmail.com>
 
