@@ -2,211 +2,120 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1717FC4828C
-	for <webhook@archiver.kernel.org>; Thu,  1 Feb 2024 14:03:12 +0000 (UTC)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
- by mx.groups.io with SMTP id smtpd.web10.13165.1706705829608526769
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158F9C4828F
+	for <webhook@archiver.kernel.org>; Thu,  1 Feb 2024 14:26:32 +0000 (UTC)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+ by mx.groups.io with SMTP id smtpd.web10.16713.1706797588633245392
  for <u-boot-amlogic@groups.io>;
- Wed, 31 Jan 2024 04:57:09 -0800
+ Thu, 01 Feb 2024 06:26:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=bf5Ch9ja;
- spf=pass (domain: linaro.org, ip: 209.85.217.51, mailfrom: sumit.garg@linaro.org)
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-46b35fad293so1360379137.1
-        for <u-boot-amlogic@groups.io>; Wed, 31 Jan 2024 04:57:09 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=y9u5kLW9;
+ spf=pass (domain: linaro.org, ip: 209.85.167.41, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51124d86022so1589636e87.0
+        for <u-boot-amlogic@groups.io>; Thu, 01 Feb 2024 06:26:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706705828; x=1707310628; darn=groups.io;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NtyR/Z9ER6WygVAnspoDYe1XzLDH3swBOB0ZyErE5+c=;
-        b=bf5Ch9jawY4Ni22FeF4pTSeZky1SF10nmgbFAqK2hi1XqW4Scj/jI2aO71RZL5IRgS
-         GCSDfrNUWnKjb8Mwo40gqsRNdwUS8PxZ+QX8Dc816vKFbqeFGFsT0gqbHqAePHJx5HtY
-         fQIa4rrB3HeLFE9v1h+qyP6Dcs3AskGtuECphOHtJG2gop8L9KXOe6waCAq62Tm26Vlw
-         3IFPUminh9I2UzJ49YAKMWm+IEBUf1UcJFwQjtg4Fgz9czLklLE5i3Xjpu1BvgxP35cA
-         qOzbkZJZrhKCml9LXmhJ1jdEm9Us339Ap9DsZ1E6ytWs3l9cWdq46K/7wCyuL3cU7ONd
-         dJ/A==
+        d=linaro.org; s=google; t=1706797587; x=1707402387; darn=groups.io;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gRB9sVSLz6iCTXiN3mGqgGNYZQXjbyFNpsdCIsIGHxQ=;
+        b=y9u5kLW9nr2CYA0HmBZ2AGEYQbqhuce2JiSFyeKDqxKAuCoXhFuhEt0ZRvQSJqo22r
+         hIpjC+yBEGDB5GWxbkcwvZ/CY2jXDOeYkHufa7NV51Ei11nPenGwPAWbpMXrCMVoYSOV
+         Z+Pg+ObbYWLbQJM0PH4ijswrMKbwdNRLIi/ElpgRnsK2Eq81kPtiRkEQbTYw11tMCNZV
+         Vx4wwk5kQLNOvkwE9j3ycjSqO/m+VtgIHQthbcqdhYJ0nSgBiR/FwaZucGEIz90feozk
+         rtoMy/w+KhttMYGyNfQ8AC8e+GvmZFHOWcGYfu2tjZbN4nyxGTUiKiky+B2SoeIG71KO
+         YUfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706705828; x=1707310628;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NtyR/Z9ER6WygVAnspoDYe1XzLDH3swBOB0ZyErE5+c=;
-        b=Y/X7GTQn69dwuevCWDd0j5DVpQMX9cVy2jw0VVipoqA85AARvmvpeixNOgqHBAdRHW
-         uK9PxgzdPsavJGjSnKG3200A8GzUGD2GdD7iUKcKCh7aNPiu9gBwzPnS19BaNw/2IwUt
-         Msj8Chxnwaim8yyKa8aNuEzhgYqerLycZ66uMIxsQaGVmAE1fWIIwLUC+Y9E+GPzAivl
-         qEMW2VD4CJTllai8b067zFtFvjAb/+Z4zc3vJ8bMxgoHKAWkHH9Epp4nKxBtHOghU5oP
-         xDEUmVKFbVAydwoiuYOXyOgzD+aKoq5xwttQywW5/4NGqsPN/WhkH3fzLEAmBdObzwJS
-         kwYg==
-X-Gm-Message-State: AOJu0YztDokr7BKXo1KzUFPCugWD5oHR9D3GiMwhVX0Hpk2a3VFHPrbR
-	7cQ/ZY/u1gvTuH6hkRAyIGTvvBQe/QqhuON1UEKe6ECi7xXNwCuTpJUeJVHtnzBe/ZUShBURvHX
-	jCqz4oY/tzUJjgKeFJJno08QCbYxchG5/hljAPw==
-X-Google-Smtp-Source: AGHT+IHrIedNctD/NmPCmZtdJY1jahuFo9DqjsF1NdsZQ+dTJd6mPqQyeXyGYFvi4pl2KVNqiiC8+xdidPUY3tWghbI=
-X-Received: by 2002:a67:eb82:0:b0:469:877d:fc1a with SMTP id
- e2-20020a67eb82000000b00469877dfc1amr1281070vso.8.1706705828527; Wed, 31 Jan
- 2024 04:57:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706797587; x=1707402387;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gRB9sVSLz6iCTXiN3mGqgGNYZQXjbyFNpsdCIsIGHxQ=;
+        b=PB384baLw8NDNcUyqNNo1vyFXfUYbdbeyQMDyXwGcEi5fy/45HPA3Izc/0GOHC9j5H
+         3djrkkDW6mRn5osIe1ubGRc2PVsw8b0O36dFWFOFgMbSyyeOMcudNK2TIMoPilOxuIMg
+         J2/f1RxK8tM+ZCzDJmwOguTaRGAUUU3wNrN/BKqyqS/GDdnoymluUeph4xFzSRuAOLrV
+         We6TsArz8yiNr/+wCF4OiDSg0UosISDIcsjfCCmngn608qURlFj6xGLG9K1ZfG3HO7u6
+         KkaCJIcIWXoAsOASxTErM+NdnxM1i7Zxe3AtcNhqUSCxAjtFy5Vm9EF5adKH7HMEVvA1
+         TCKw==
+X-Gm-Message-State: AOJu0YxRZdIt/fVnLNs+hYoIA0bvR2gxFAZfKU4JuNSTaRUprt2Xgskp
+	SKqOBqE8WzM2uDh/ZSkfM8sYfrwfcnEKvFPCXJ7WQPcQNS918deP3Z8xMjLG1hc=
+X-Google-Smtp-Source: AGHT+IH/sJnmd+X2ciUoTF1BFFznLYxJL/X3fEvWowESVzXKopWqV3Ove59f7JXb9xMoFOJFrovmvg==
+X-Received: by 2002:a05:6512:971:b0:511:2219:78bf with SMTP id v17-20020a056512097100b00511221978bfmr1902342lft.31.1706797586800;
+        Thu, 01 Feb 2024 06:26:26 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV7oOVyhe2jpmJsvyVy9CPhsgTo9sR6Kac1O+FKgIl3LWAL5fJukFXDxeVL4HR8EZs7H14CnH6xWf+wNeuw8TiO+SDpBA==
+Received: from ?IPV6:2a01:e0a:982:cbb0:cfdd:eab5:fd8:5436? ([2a01:e0a:982:cbb0:cfdd:eab5:fd8:5436])
+        by smtp.gmail.com with ESMTPSA id v21-20020a05600c445500b0040faf3df118sm4688030wmn.32.2024.02.01.06.26.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 06:26:26 -0800 (PST)
+Message-ID: <bb777d08-1723-44b3-ac69-e55af1218cf2@linaro.org>
+Date: Thu, 1 Feb 2024 15:26:25 +0100
 MIME-Version: 1.0
-References: <20240110103547.719757-1-sumit.garg@linaro.org>
- <82d509de-3d47-4cc2-8217-c38dc78fad28@denx.de> <7b4ff8e8-2f21-4d07-9848-fb0d5652819e@linaro.org>
- <4d8aede8-5ea8-45a4-87fe-d555a025ef8e@denx.de> <CAFA6WYN1tFs1id7UxTwLEyp69zx2BPUP7bffVZn80FKPLx2yJw@mail.gmail.com>
- <48125705-e78e-438f-90ac-2816432cd747@denx.de> <CAFA6WYMuerS5YTsquGvc+OHr+0a3JXrM4AQ_ReV4tPhvxv9H0w@mail.gmail.com>
- <20240125150400.GM3652023@bill-the-cat> <79439bfb-5ae0-4492-a298-788fb46eafa3@denx.de>
- <20240125231933.GY3652023@bill-the-cat> <0d4ed462-a5ec-4114-84ab-d2e2a6d79b69@denx.de>
- <115d5376-8cf9-474a-9344-223df4ee1d6a@amd.com>
-In-Reply-To: <115d5376-8cf9-474a-9344-223df4ee1d6a@amd.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Wed, 31 Jan 2024 18:26:54 +0530
-Message-ID: <CAFA6WYMP0=LOJhHYvXSB9CA-EaSD0+dfxZcb6U0BTgfRiGk4hQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/11] An effort to bring DT bindings compliance within U-Boot
-To: Tom Rini <trini@konsulko.com>, Marek Vasut <marex@denx.de>, 
-	Michal Simek <michal.simek@amd.com>
-Cc: Caleb Connolly <caleb.connolly@linaro.org>, u-boot@lists.denx.de, 
-	u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de, sjg@chromium.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
-	neil.armstrong@linaro.org, ff@shokubai.tech, daniel.thompson@linaro.org, 
-	dgilmore@fedoraproject.org, pbrobinson@gmail.com, ilias.apalodimas@linaro.org, 
-	maxim.uvarov@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de, 
-	seanga2@gmail.com, rasmus.villemoes@prevas.dk, peng.fan@nxp.com, 
-	jh80.chung@samsung.com, rfried.dev@gmail.com, mibodhi@gmail.com, bb@ti.com, 
-	mark.kettenis@xs4all.nl
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-fixes-20240201
+Reply-To: neil.armstrong@linaro.org
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 01 Feb 2024 14:03:12 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2095
+ <u-boot-amlogic@groups.io>; Thu, 01 Feb 2024 14:26:32 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2097
 
-On Fri, 26 Jan 2024 at 12:35, Michal Simek <michal.simek@amd.com> wrote:
->
->
-> On 1/26/24 03:10, Marek Vasut wrote:
-> > On 1/26/24 00:19, Tom Rini wrote:
-> >> On Thu, Jan 25, 2024 at 05:38:23PM +0100, Marek Vasut wrote:
-> >>> On 1/25/24 16:04, Tom Rini wrote:
-> >>>> On Thu, Jan 25, 2024 at 12:54:22PM +0530, Sumit Garg wrote:
-> >>>>
-> >>>> [snip]
-> >>>>> But at this point we have to move away from apprehensions about DT ABI
-> >>>>> breakages and provide real examples of the DT ABI breakages in the
-> >>>>> past. Are you aware of any DT ABI breaking change backported to Linux
-> >>>>> stable releases? This is the sort of information we would like to make
-> >>>>> DT bindings maintainers aware about.
-> >>>>
-> >>>> Well, how far back are we going? There was a serial related one, but it
-> >>>> was probably closer than not to 10 years ago and lessons have been
-> >>>> learned from it already.
-> >>>>
-> >>>> The real breakage comes in the form of (from the Linux kernel):
-> >>>> commit 37685f6a63eeca2135d1f704e7638409a071b1f6
-> >>>> Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >>>> Date:   Tue Feb 19 08:46:33 2019 -0800
-> >>>>
-> >>>>       ARM: dts: am335x-evm: Fix PHY mode for ethernet
-> >>>>
-> >>>>       The PHY must add both tx and rx delay and not only on the tx clock.
-> >>>>       The board uses AR8031_AL1A PHY where the rx delay is enabled by default,
-> >>>>       the tx dealy is disabled.
-> >>>>
-> >>>>       The reason why rgmii-txid worked because the rx delay was not disabled by
-> >>>>       the driver so essentially we ended up with rgmii-id PHY mode.
-> >>>>
-> >>>>       Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >>>>       Signed-off-by: Tony Lindgren <tony@atomide.com>
-> >>>>
-> >>>> And this is of the style "the DTS was wrong before so we can break it".
-> >>>> This is the specific example (as the board is in my lab) that comes most
-> >>>> clearly to mind but there have been similar examples in 2022/2023.
+Hi Tom,
 
-I agree that these sorts of changes should be done in a DT ABI
-compatible manner to U-Boot or atleast proactively adapt U-Boot to
-those changes. But I am not sure how we can improve here without a
-regular DT sync cadence with upstream and a Linux kernel maintainer
-profile to say that DT ABI towards U-Boot has to be kept in mind.
+Please pull this simple fix avoiding printing the board model twice.
 
-The existing ad hoc syncs won't be motivating Linux DT maintainers to
-care about U-Boot regressions.
+Thanks,
+Neil
 
-> >>>>
-> >>>> The other just as painful examples I think may be where Marek is
-> >>>> concerned and it's around nodes being renamed for correctness. We've had
-> >>>> a number of cases where a - turned to _ (or vice versa?) and whoops,
-> >>>> platform stops booting. Down the line, tooling would catch that, and
-> >>>> it's a problem of not being able to use better tooling until we have the
-> >>>> updates that might break the boards that need the better tooling.
+The following changes since commit 6faba41927bdc8973b59678649ef83c564cc421e:
 
-AFAIU from this [1], the DT node names aren't part of the ABI. Given
-that we should start motivating people to move away from relying on
-node names, for eg. using uclass_get_device_by_seq() instead of
-uclass_get_device_by_name().
+   Prepare v2024.04-rc1 (2024-01-29 20:53:19 -0500)
 
-[1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-ofw
+are available in the Git repository at:
 
-> >>>>
-> >>>> And really this gets to the crux of the problem, how much testing do we
-> >>>> insist happens prior to a re-sync being merged?
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-fixes-20240201
 
-I am not sure why custodians/maintainers depend on the global re-sync
-to be merged for testing purposes. They can very well have their local
-vendor directories synced-up and proactively look for any regressions.
+for you to fetch changes up to 076529725f16f07a5cb2d5feba25d62b5f5a5872:
 
-> >>>> Do we want to go with
-> >>>> the whole of the dts files are re-synced, or do we leave it per vendor?
+   ARM: meson: stop printing board model after sysinfo update (2024-01-30 09:35:51 +0100)
 
-Leaving it per vendor would be somewhat similar to existing ad hoc
-syncs. BTW, what about bindings directory? We won't be able to enforce
-binding checks given the different state of per vendor DTS directory.
+----------------------------------------------------------------
+- stop printing board model twice after sysinfo update
 
-> >>>
-> >>> I'd much prefer to leave it per vendor, with the recommendation to use
-> >>> synced DTs. Eventually things will stabilize and vendors will start
-> >>> switching over.
-> >>
-> >> To be clear, every SoC (or really, board) has to opt-in to OF_UPSTREAM
-> >> to start with. With that, I see switching to OF_UPSTREAM meaning that
-> >> there's a commitment to keeping up with dts change in upstream dts that
-> >> might lead to issues within U-Boot. Do you still feel it would be better
-> >> to have the re-sync _also_ be per custodian tree? That might be a bit
-> >> harder to handle.
-> >
-> > Maybe the best thing we can do is just give it a try and see how it works out,
-> > esp. since it is opt-in per board .
+----------------------------------------------------------------
+Neil Armstrong (1):
+       ARM: meson: stop printing board model after sysinfo update
 
-Yeah given that we are conservative about re-syncs with a full U-Boot
-release cycle to detect and fix regressions.
-
-> >
-> > It would still be good to solve the part about pulling in fixes from
-> > linux-stable though .
-
-So I did a demo experiment for this here [1] where cherry picking DT
-fixes into subtree just worked fine with the next uprev. Steps
-followed:
-
-$ cd <U-Boot tree>/
-$ git remote add dt-rebasing
-https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git
-$ git fetch dt-rebasing master
-$ git cherry-pick -x --strategy=subtree -Xsubtree=dts/upstream/
-9de355a75fdeffc26486508107bf644ca2749fdb
-$ ./dts/update-dts-subtree.sh v6.8-rc2-dts
-
-If you would like it to be documented then I can do that for the next rev.
-
-[1] https://github.com/b49020/u-boot/commits/v4_dt_demo_fixes/
-
->
-> I would let board owners/custodians to deal with their boards.
-> There is very high chance that if you do it globally that it is question of time
-> when something will break.
-> It make sense to talk about how to do that transition and describe that steps
-> and having tools/script to help with.
-
-Given my comments above, I think we should at least give U-Boot
-owners/custodians a chance to opt for this and see how it pans out. It
-will give a better opportunity for the U-Boot community to engage and
-be a part of the current DT contribution model.
-
--Sumit
-
->
-> Thanks,
-> Michal
+  arch/arm/mach-meson/board-info.c | 10 ----------
+  1 file changed, 10 deletions(-)
 
