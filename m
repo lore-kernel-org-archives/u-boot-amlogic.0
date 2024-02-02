@@ -2,50 +2,52 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F3AC4828D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8536FC4829B
 	for <webhook@archiver.kernel.org>; Mon,  5 Feb 2024 08:45:54 +0000 (UTC)
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
- by mx.groups.io with SMTP id smtpd.web11.22128.1706879158550495319
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+ by mx.groups.io with SMTP id smtpd.web10.22182.1706879247230611935
  for <u-boot-amlogic@groups.io>;
- Fri, 02 Feb 2024 05:05:58 -0800
+ Fri, 02 Feb 2024 05:07:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=FP6s4AsW;
- spf=pass (domain: linaro.org, ip: 209.85.214.172, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d780a392fdso17301575ad.3
-        for <u-boot-amlogic@groups.io>; Fri, 02 Feb 2024 05:05:58 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=SP/pUSQ6;
+ spf=pass (domain: linaro.org, ip: 209.85.214.171, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d944e8f367so17772415ad.0
+        for <u-boot-amlogic@groups.io>; Fri, 02 Feb 2024 05:07:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706879158; x=1707483958; darn=groups.io;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XjyWqoSy/p+CQEN7+LMGYLXxq5Zw38O9mz3NzzsVpa4=;
-        b=FP6s4AsWKO9LZzwsOSC1H+mdfrziH7nqFJJu8HcqHj77wO2jgOg0QfHeywCnUIad5s
-         04zzPvI8doaN3Aol/thNrb7EqmuuU4vlNfynLe7Qm83e1EefQy1yQvv/U7hZNtWNKz5/
-         VK9DoEOrOSodmQ/HyxjRag/lyNRVyr9VAjKKb6NABfwH242uPtdEF6D4H2AtO4ZQHqKl
-         yk4WlIO/1y2kLtX6WNz/hYUit8ofRbR2nQWH/pGLwk4GJxmAibxqP1/YywZmJx9iAxqS
-         8NC2MrPV/yMFRaifGtSkqZpxHrpprVviezNNvzfhRHcxRB3HCtbs0xmQSqxGYpjgXPru
-         eWSQ==
+        d=linaro.org; s=google; t=1706879247; x=1707484047; darn=groups.io;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=86cKOKOIikWvdQz1MxkWVNRFRquhuv/5USEoeTEMH30=;
+        b=SP/pUSQ6o2rA69uKP/t5asqA6a8aZKpz0ql/KI0w3YwXIthQ71bvb3r4541gC4aqc9
+         3O/tLMYpPNKE5ZkGXbQFAiFRYKiz1PDdd9T7rb1WYt5veQ13xVkaP1MXMDMaFURej5BF
+         qVPIGqUZbFfNQc2nTR5WrKf7wu4CPTyDRD+OllLiG5S5DpFob17jEsqR9FA08UoNNw68
+         WUT0d7XSmG0cClKx00RC8JQoV8In8/KNM+S8FdJmOPO8qcfW5i+torSfr+hM/KXovfa7
+         K6PEiCu4Ybx5LICX/YBoIXvLwZ++SJCBITBKDUoZib1UELRFsu16h5VyJd/ydNjxAxP6
+         Tmnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706879158; x=1707483958;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XjyWqoSy/p+CQEN7+LMGYLXxq5Zw38O9mz3NzzsVpa4=;
-        b=J2R2kO4xHR+gN0kKCDbKodi+41F8uN/rQ3T9VPC5Y7MXoeGV/+uAnzTR6DgRi78oqi
-         xi5ZWf7YP0X4eHUnabce9O7JJHR1mfV6KXH53yywjxAu4iHDH3SVtNZUSSLjnHrm2Fm2
-         0zZcaP9Wx5xEoxQLp+7+C3NJ6KtBxc6Gg9mBokIJZaIj8bH9XxCmqjSbvFly+m7TzzZS
-         nrKu9M0ofv0cTK99dwilib3R9FQZ2viDSMXxpbrOe2Ra3hKEXc5U6qKQvz1IjVizS/Lw
-         ZuRqbuH823XGB/5VGYoy6hjM9NacTOAu/OzZY2BFZ2jnN4JVPYdOy7SZqIP/mhg+SCk5
-         W0zg==
-X-Gm-Message-State: AOJu0YwUsery9hliEbz7h4pFziTJu8KaFWbUoLfJVvUv5ZrXPDTQLgXo
-	ZS5Ol9GFY78YDeq8gke/KYcQsq7AA0R+rU6wkYEVgxQS3bfQBwljCnI0x2NNGQ8=
-X-Google-Smtp-Source: AGHT+IFNyk5W27zskgy9X7P2LM1GiTcTVjzItA1UWQ4rBfZvkz+fjUUcqzGxqVkDkoBYI8GAtPqmOA==
-X-Received: by 2002:a17:902:fc8f:b0:1d9:742b:fedd with SMTP id mf15-20020a170902fc8f00b001d9742bfeddmr1693909plb.34.1706879157848;
-        Fri, 02 Feb 2024 05:05:57 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVNK2YPlXlLDkgxCyqFjlRr/Qty6onwkMCs4y3D3h4955nU7Pgsg5DmoObBLMlHxHXeSTCtFuolQFS5JVLKk7cyciEZPGPr2fwLuje02eFfjhb7Dd6zBr2vKsy0g5Ix/GwiurLAwG/tudVGb8ys7ve0aURj6MI1jBgsmgMBdS/0LNukiy1mAqPTyhOJ7R942BwMboI4n7ojNIEGP/hMXcS83gbUSTU3lemDvNtNo0AHuvP15HPCKfctskDorDiy7jl3uW7Hi7XJbypqv4wGqbguj8wyGAqZHumXTysNo5x81S3YnB3xnYbyGDMNMoekJK4AYefB34yvhC9D5uygKB5J0mNgyozZGUtnnSzIgQkKqdBQin2s+aSEl5pF5fUbQRqg3S4FITP6f/eLGszg4ptbC8JzSCQIWHeFP8X4uLyGiJb9+5jd6jo/Cy9voqfZV4ozdCv/Lpc6gdhmcyqCeq65sAuAI0iTZUcKShAo4vjGK6DZd6GQk1FZ1U5wnXQl3RWW0S2HFZJ5fDx4Yb0t4GsVRSan8noF9BhFvM2g1c4I8+hpN82fq//YqYFSQybxoSm3R8/9ggRLM9OWneWmfR2JnMjEZTFyrqKlM6QB1901/KD8Mc1l7r1rNOJYZy/F2SuYwTLlB876Zgg0zFMDvdzWL0AVlzIYVDM8BjY3WDu3K9bmiXI9aQpVnGwvk5/lHcb+XjVjlvxjd5w3udSUsZkvoHSveUwVQdbDPRYviloFVQLyirhSSSrdMeUBd36hjfhxZ/8GpunNTmlIr9wRbUbn9vkylpK30yexosns8xC28uB1RQolBvnMBe40LiTOCPmL8sD4AP8/SqSlhJV50+0JiHtJk245lcW3fE/T1mjTpUJmBiMk9Fvhx3NE/kxOtQZnKdMdP8r2iXiWjNJXZwkWpbNvLv2m0g5+
+        d=1e100.net; s=20230601; t=1706879247; x=1707484047;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=86cKOKOIikWvdQz1MxkWVNRFRquhuv/5USEoeTEMH30=;
+        b=tksH3HDucoN16lvbH5PGlrSL708EWCIEeuec13k/eDYqFSVVdct6qm9S61bJXs0MHu
+         ioM2ZcWilYxjdvX82bLuMczj30YXE8EGQdupkWAhXmXBEgbf805N2iAVY80+hGgDDU/Q
+         3q5pVfok21fIfzIhJeMjFOra66SuuqPgzYFDJcHZG1v7d7gONdDcj1Df5TIVVxuX0iyy
+         4zj0RSM+vPMa0RUGJj19xZ0UQki0UlrWOMk0pjU2ueD8aHybjHGNmErEACwHVQJ4QtmQ
+         9NW8LqlW1C10zmMcfBV6Kl7nXjOLZneQFR0wCHV6y3wDz5d90dfZC5O47UzvgVQtdg7s
+         VxJw==
+X-Gm-Message-State: AOJu0YzRFQ9LBnJQEyH5uXN8Qhqbb+k0djEFzjbYUeWSxFqvInRoh4eH
+	B5XSKOnXQjCRLP/5wXKjE43LIkc3pnN1HDejjuFP/gQhWrIYlT/ROp3UWc/Pj35vXolgLWN4AIP
+	xazY=
+X-Google-Smtp-Source: AGHT+IHoFwtYPG/jAclBrU0SB9v6mZHKgvCKNlMSyNsoiD9dcB576LRO0MrB4k5TqJhYfecHmA3/jg==
+X-Received: by 2002:a17:902:f545:b0:1d9:5d65:c1b with SMTP id h5-20020a170902f54500b001d95d650c1bmr3745991plf.41.1706879246687;
+        Fri, 02 Feb 2024 05:07:26 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWgEEmRJ4IBTSafseozLfZ2qsD1NrKFTUPaygSAWUhF+kp7j0VYFQJ8Oj3PeDOuWZif6/St8ETNe6aTpalr5P/hb26kXAuI30tetAcC5Q0SSk8LmXbIk70AmVN2DaEEHvjSCkNHGTBgWe3wzp0uIHWzlE85OJbsXOM9AYyLq+rDHbWVcAp6Vn6e47og+8oR/BmT2BnXw7X/jKPeXOq8Ml9tyyH44vHHDxkJ4fEnCy7KMug96iekmK8LQHSQEqH07ahYdagZlJzJ+I6L1yo/k2+Ink9QsAbAYTghCrpCsBPy2G4cxRVTzfVua+flLKSE1Ke9qGq0SNeIwOQzsPwtKFWiO0IE7IWiwSMZiR5MxdDzNnmE/hgRXLwzwcMur1KyqYYtUPumTlzvwlJYimJoNU14WrlYvknzwD17sTvCaVNvhbFAThJnpZhEa/TNfa2Ffao1JjJP24j6sroeaW9zkh7GSTU8pi5lealnLPT+2sfEH+k+bnX/U2rFs1mwiOV1eg5Jf+DNV2oCivICYUs89pSPTGzvfYSDSjI4bQySoWeouaEWtrqVjI3XchvUoedPqH4OIJaOKGbU/l+pF0H1S+ykFg1EliX2dV4W249xZR7BuSAj1lKwZUr8P6LNslyKttRc2eIfVwB0GAMfKj6KeV9IOkuGVBq+okx+D35jiw4aIACo2UhZjpHGiepYttTG7sqpjHExZK6WxNQnr+HCgFKfYx6Rf+386HVOCCrtxy0KFDDawWhAo6DM8M00n5jpQMytOHW8gOhgoUDsdFil6h6ywlrmP7nVVFmHLpID1R9l3IUsxn+5hFKtwFDILzgpGW6Z6Quk3CaPg56ji1UI4FsQScsu1fVOm0mT6M+hYKbosjR3N3oILJyFYI/479isnqi9dz9qW++muGjy+zQeRR3jDaT8nEBmzGLv
 Received: from sumit-X1.. ([223.178.213.44])
-        by smtp.gmail.com with ESMTPSA id q23-20020a170902edd700b001d923684323sm1542407plk.195.2024.02.02.05.05.49
+        by smtp.gmail.com with ESMTPSA id q23-20020a170902edd700b001d923684323sm1542407plk.195.2024.02.02.05.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 05:05:57 -0800 (PST)
+        Fri, 02 Feb 2024 05:07:26 -0800 (PST)
 From: Sumit Garg <sumit.garg@linaro.org>
 To: u-boot@lists.denx.de,
 	u-boot-amlogic@groups.io,
@@ -78,238 +80,158 @@ Cc: trini@konsulko.com,
 	nm@ti.com,
 	andre.przywara@arm.com,
 	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v5 00/11] An effort to bring DT bindings compliance within U-Boot
-Date: Fri,  2 Feb 2024 18:35:23 +0530
-Message-Id: <20240202130534.1051438-1-sumit.garg@linaro.org>
+Subject: [PATCH v5 10/11] dts: meson-gxbb: Switch to using upstream DT
+Date: Fri,  2 Feb 2024 18:35:33 +0530
+Message-Id: <20240202130534.1051438-11-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240202130534.1051438-1-sumit.garg@linaro.org>
+References: <20240202130534.1051438-1-sumit.garg@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 05 Feb 2024 08:45:54 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2099
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2109
+
+Although there were still some variations in board DTS files based on
+meson-gxbb SoC but I think those were minor differences from upstream
+and shouldn't impact boot on these devices.
+
+So enable OF_UPSTREAM to use upstream DT and add amlogic/ prefix to the
+DEFAULT_DEVICE_TREE. And thereby directly build DTB from dts/upstream/src/
+including *-u-boot.dtsi files from arch/$(ARCH)/dts/ directory.
+
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Reviewed-by: Simon Glass <sjg@chromium.org>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
 
 Changes in v5:
---------------
-- Rebased on tip of master (050a9b981d6a835133521b599be3ae189ce70f41)
-- Created v5_dt branch for testing purposes:
-  https://github.com/b49020/u-boot/tree/v5_dt
-- Patch #6: Added support to cherry-pick fixes in subtree update script.
-  Also, used https:// instead of git://.
-- Patch #7: Fixed inappropriate documentation update.
-- Patch #8: Document how to cherry-pick fixes from devicetree-rebasing
-  tree.
+- None
 
 Changes in v4:
---------------
-- Switched subtree to be imported as dts/upstream sub-directory rather
-  than devicetree-rebasing sub-directory to better suite U-Boot
-  directory structure.
-- Since we now have v6.7-dts tag available now, so switch subtree to
-  that from its beginning.
-- Patch #2: Incorporate build fix to adjust Bindings Makefile rules to
-  old U-Boot Kbuild infrastructure.
-- Patch #3: Incorporate fix to resolve rk3399 migration issue reported
-  by Simon.
-- Patch #4: New patch to reuse upstream DT includes by U-Boot as per
-  Brian's use-case for TI K3 SoCs.
-- Patch #5: Added a note to OF_UPSTREAM Kconfig option.
-- Patch #6: New patch to add script dts/update-dts-subtree.sh as per
-  Rob's comments.
-- Patch #7: Separate patch to align documentation to use Kconfig symbols
-  instead.
-- Patch #8: Clarify subtree uprev schedule as a separate documentation
-  section. Also, fixed documentation typos.
-- Patch #9: Added commit description.
+- Picked up review tag
 
 Changes in v3:
---------------
-- Patch #4: Minor commit message update
-- Patch #5: Replace CONFIG_* with Kconfig options
-- Patch #7: Dropped Makefile portion and enabled OF_UPSTREAM for SoC
-  instead.
-- Patch #1, #3, #6 and #8: Picked up review tags
+- Dropped Makefile portion and enabled OF_UPSTREAM for SoC instead.
 
 Changes in v2:
---------------
-- Patch #1: excluded gitab CI config check and added commit description.
-- Patch #3: s/UBOOT_DTSI_LOC/u_boot_dtsi_loc/
-- Patch #4: s/DEVICE_TREE_LOC/dt_dir/ and s/U-boot/U-Boot/
-- Patch #5: s/U-boot/U-Boot/
-- Patch #6 and #7: Picked up review tags
+- Picked up review tag
 
-Prerequisite
-------------
+ arch/arm/mach-meson/Kconfig           | 1 +
+ configs/nanopi-k2_defconfig           | 2 +-
+ configs/odroid-c2_defconfig           | 2 +-
+ configs/p200_defconfig                | 2 +-
+ configs/p201_defconfig                | 2 +-
+ configs/videostrong-kii-pro_defconfig | 2 +-
+ configs/wetek-hub_defconfig           | 2 +-
+ configs/wetek-play2_defconfig         | 2 +-
+ 8 files changed, 8 insertions(+), 7 deletions(-)
 
-This patch series requires devicetree-rebasing git repo to be added as a
-subtree to the main U-Boot repo via:
-
-$ git subtree add --prefix dts/upstream \
-      https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git \
-      v6.7-dts --squash
-
-Background
-----------
-
-This effort started while I was reviewing patch series corresponding to
-Qcom platforms [1] which was about to import modified devicetree source
-files from Linux kernel. I suppose keeping devicetree files sync with
-Linux kernel without any DT bindings schema validation has been a pain
-for U-Boot SoC/platform maintainers. There has been past discussions
-about a single DT repo but that hasn't come up and Linux kernel remained
-the place where DT source files as well as bindings are placed and
-maintained.
-
-However, Linux kernel DT maintainers proposed [2] for U-Boot to rather
-use devicetree-rebasing repo [3] which is a forked copy from Linux
-kernel for DT source files as well as bindings. It is tagged at every
-Linux kernel major release or intermideate release candidates. So here I
-have tried to reuse that to bring DT bingings compliance as well as a
-standard way to maintain a regular sync of DT source files with Linux
-kernel.
-
-In order to maintain devicetree files sync, U-Boot will maintains a Git
-subtree for devicetee-rebasing repo as `dts/upstream` sub-directory.
-U-Boot will regularly sync `dts/upstream/` subtree whenever the next window
-opens with the next available kernel major release.
-`dts/update-dts-subtree.sh` script provides a wrapper around git subtree
-pull command, usage from the top level U-Boot source tree, run:
-
-$ ./dts/update-dts-subtree.sh pull <devicetree-rebasing-release-tag>
-
-If required it is also possible to cherry-pick fixes from
-devicetree-rebasing tree prior to next sync, usage:
-
-$ ./dts/update-dts-subtree.sh pick <devicetree-rebasing-commit-id>
-
-The RFC/prototype for this series has been discussed with Linux DT
-maintainers as well as U-Boot maintainers here [4]. Now we would like to
-reach out to wider U-Boot community to seek feedback.
-
-[1] https://lore.kernel.org/all/CAFA6WYMLUD9cnkr=R0Uur+1UeTMkKjM2zDdMJtXb3nmrLk+pDg@mail.gmail.com/
-[2] https://lore.kernel.org/all/CAL_JsqKEjv2tSGmT+0ZiO7_qbBfhTycbGnhJhYpKDFzfO9jzDg@mail.gmail.com/
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
-[4] https://github.com/u-boot/u-boot/pull/451
-
-Changes
--------
-
-Traditionally, U-Boot placed copies of devicetree source files from Linux
-kernel into `arch/<arch>/dts/<name>.dts` which can be selected via setting
-"<name>" when prompted for `DEFAULT_DEVICE_TREE` by Kconfig.
-
-SoC/board maintainers are encouraged to migrate to use synced copies from
-`dts/upstream/src/<arch>/<vendor>`. To do that enable `OF_UPSTREAM` for the
-SoC being used via Kconfig and set up "<vendor>/<name>" when prompted for
-`DEFAULT_DEVICE_TREE` by Kconfig.
-
-An example have been shown for Amlogic meson-gxbb SoC and corresponding
-derived boards via patch #10 and #11.
-
-Devicetree bindings schema checks
----------------------------------
-
-With devicetee-rebasing Git subtree, the devicetree bindings are also
-regularly synced with Linux kernel as `dts/upstream/Bindings/`
-sub-directory. This allows U-Boot to run devicetree bindings schema checks
-which will bring compliance to U-Boot core/drivers regarding usage of
-devicetree.
-
-Dependencies
-------------
-
-The DT schema project must be installed in order to validate the DT schema
-binding documents and validate DTS files using the DT schema. The DT schema
-project can be installed with pip:
-
-$ pip3 install dtschema
-
-Note that 'dtschema' installation requires 'swig' and Python development
-files installed first. On Debian/Ubuntu systems:
-
-$ apt install swig python3-dev
-
-Several executables (dt-doc-validate, dt-mk-schema, dt-validate) will be
-installed. Ensure they are in your PATH (~/.local/bin by default).
-
-Recommended is also to install yamllint (used by dtschema when present).
-
-$ apt install yamllint
-
-Running checks
---------------
-
-In order to perform validation of DTB files, use the ``dtbs_check`` target:
-
-$ make dtbs_check
-
-It is also possible to run checks with a subset of matching schema files by
-setting the ``DT_SCHEMA_FILES`` variable to 1 or more specific schema files
-or patterns (partial match of a fixed string). Each file or pattern should
-be separated by ':'.
-
-$ make dtbs_check DT_SCHEMA_FILES=trivial-devices.yaml:rtc.yaml
-$ make dtbs_check DT_SCHEMA_FILES=/gpio/
-$ make dtbs_check DT_SCHEMA_FILES=trivial-devices.yaml
-
-Sumit Garg (11):
-  CI: Exclude devicetree-rebasing subtree for CONFIG checks
-  Makefile: Add support for DT bindings schema checks
-  scripts/Makefile.lib: Statically define *-u-boot.dtsi files location
-  Makefile: Allow upstream DT subtree to provide DT includes
-  dts: Add alternative location for upstream DTB builds
-  dts: Add script to uprev dts/upstream subtree
-  doc: devicetree: Align documentation to use Kconfig options
-  doc: devicetree: Updates for devicetree-rebasing subtree
-  MAINTAINERS: Add myself as devicetree-rebasing maintainer
-  dts: meson-gxbb: Switch to using upstream DT
-  dts: meson-gxbb: Drop redundant devicetree files
-
- .azure-pipelines.yml                    |   3 +-
- .gitlab-ci.yml                          |   3 +-
- MAINTAINERS                             |   5 +
- Makefile                                |  23 +-
- arch/arm/dts/Makefile                   |   8 -
- arch/arm/dts/meson-gxbb-kii-pro.dts     | 140 ----
- arch/arm/dts/meson-gxbb-nanopi-k2.dts   | 426 ------------
- arch/arm/dts/meson-gxbb-odroidc2.dts    | 414 -----------
- arch/arm/dts/meson-gxbb-p200.dts        | 100 ---
- arch/arm/dts/meson-gxbb-p201.dts        |  26 -
- arch/arm/dts/meson-gxbb-p20x.dtsi       | 250 -------
- arch/arm/dts/meson-gxbb-wetek-hub.dts   |  58 --
- arch/arm/dts/meson-gxbb-wetek-play2.dts | 119 ----
- arch/arm/dts/meson-gxbb-wetek.dtsi      | 292 --------
- arch/arm/dts/meson-gxbb.dtsi            | 870 ------------------------
- arch/arm/mach-meson/Kconfig             |   1 +
- configs/nanopi-k2_defconfig             |   2 +-
- configs/odroid-c2_defconfig             |   2 +-
- configs/p200_defconfig                  |   2 +-
- configs/p201_defconfig                  |   2 +-
- configs/videostrong-kii-pro_defconfig   |   2 +-
- configs/wetek-hub_defconfig             |   2 +-
- configs/wetek-play2_defconfig           |   2 +-
- doc/develop/devicetree/control.rst      | 161 +++--
- dts/Kconfig                             |  16 +
- dts/Makefile                            |  17 +-
- dts/update-dts-subtree.sh               |  45 ++
- dts/upstream/Bindings/Makefile          |   6 +-
- dts/upstream/src/arm64/Makefile         |  14 +
- scripts/Makefile.lib                    |  49 +-
- 30 files changed, 281 insertions(+), 2779 deletions(-)
- delete mode 100644 arch/arm/dts/meson-gxbb-kii-pro.dts
- delete mode 100644 arch/arm/dts/meson-gxbb-nanopi-k2.dts
- delete mode 100644 arch/arm/dts/meson-gxbb-odroidc2.dts
- delete mode 100644 arch/arm/dts/meson-gxbb-p200.dts
- delete mode 100644 arch/arm/dts/meson-gxbb-p201.dts
- delete mode 100644 arch/arm/dts/meson-gxbb-p20x.dtsi
- delete mode 100644 arch/arm/dts/meson-gxbb-wetek-hub.dts
- delete mode 100644 arch/arm/dts/meson-gxbb-wetek-play2.dts
- delete mode 100644 arch/arm/dts/meson-gxbb-wetek.dtsi
- delete mode 100644 arch/arm/dts/meson-gxbb.dtsi
- create mode 100755 dts/update-dts-subtree.sh
- create mode 100644 dts/upstream/src/arm64/Makefile
-
+diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+index d6c890580617..8ddb59161a0d 100644
+--- a/arch/arm/mach-meson/Kconfig
++++ b/arch/arm/mach-meson/Kconfig
+@@ -25,6 +25,7 @@ choice
+ config MESON_GXBB
+ 	bool "GXBB"
+ 	select MESON_GX
++	imply OF_UPSTREAM
+ 	help
+ 	  Select this if your SoC is an S905
+ 
+diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
+index 41dbf7981f8b..2e1c756bf7a8 100644
+--- a/configs/nanopi-k2_defconfig
++++ b/configs/nanopi-k2_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-nanopi-k2"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-nanopi-k2"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
+index 5f9f323e06ea..ce5eaec3cd2a 100644
+--- a/configs/odroid-c2_defconfig
++++ b/configs/odroid-c2_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-odroidc2"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-odroidc2"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/p200_defconfig b/configs/p200_defconfig
+index cd579ef5f142..b69460347954 100644
+--- a/configs/p200_defconfig
++++ b/configs/p200_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p200"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p200"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/p201_defconfig b/configs/p201_defconfig
+index b2f0a0ccdb4a..dcc1454be16c 100644
+--- a/configs/p201_defconfig
++++ b/configs/p201_defconfig
+@@ -7,7 +7,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p201"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p201"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/videostrong-kii-pro_defconfig b/configs/videostrong-kii-pro_defconfig
+index 3eda8f14a21b..7a5af234471f 100644
+--- a/configs/videostrong-kii-pro_defconfig
++++ b/configs/videostrong-kii-pro_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-kii-pro"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-kii-pro"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/wetek-hub_defconfig b/configs/wetek-hub_defconfig
+index fd92b041e739..85cff73f50f7 100644
+--- a/configs/wetek-hub_defconfig
++++ b/configs/wetek-hub_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-hub"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-hub"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/wetek-play2_defconfig b/configs/wetek-play2_defconfig
+index b887419a6bab..efdf820165b5 100644
+--- a/configs/wetek-play2_defconfig
++++ b/configs/wetek-play2_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-play2"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-play2"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
 -- 
 2.34.1
 
