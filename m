@@ -2,183 +2,162 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39E3C48297
-	for <webhook@archiver.kernel.org>; Mon, 12 Feb 2024 08:46:57 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.2643.1707727617196602579
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167A8C4829B
+	for <webhook@archiver.kernel.org>; Mon, 12 Feb 2024 09:40:38 +0000 (UTC)
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+ by mx.groups.io with SMTP id smtpd.web11.10664.1707178905778509284
  for <u-boot-amlogic@groups.io>;
- Mon, 12 Feb 2024 00:46:57 -0800
+ Mon, 05 Feb 2024 16:21:46 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=CPt5hSi/;
- spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-410e676c677so1538215e9.1
-        for <u-boot-amlogic@groups.io>; Mon, 12 Feb 2024 00:46:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707727615; x=1708332415; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FsyfvOGKjV4oLHBSUmJZVuMWe1FDn1/3xhvUTM0kBfQ=;
-        b=CPt5hSi/Ek5OoKTWKwyp//Pn+sz4aA+4CYm7Kt5vM4AxuFP1X3D0LW+8Ftxuv0dVEK
-         P6Czl3w2W4AI/c/EUQW+Pb7PKPvHzuMA04wGeLaD13M+q7lyI8w4AV7hwDm4/9Lkqt1I
-         DDOp7moVKDGkQdZRA0phBWKKUVT/yi3pxd8uPfAwSlDIdbeHu+6pbnXPgixTPT2J7oVh
-         4t7XgTV2X19/tuJt52jM1Eb/xSk4aH8rEhzfHXZonHMDOKxDnrVTvPdnBEtQWh+3ArJJ
-         Fs/dbatkX4KzYgQJUQ9NwHeNaLhbnw4V4GOJTDjyGIVWNghzE/hIk0+QIqivySRViuGu
-         E2ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707727615; x=1708332415;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FsyfvOGKjV4oLHBSUmJZVuMWe1FDn1/3xhvUTM0kBfQ=;
-        b=V//5+pHL4ES6b+F77egJ0MkQxZ1y4StD8GPebBavq6GpO1IGj9um9wtEk8/YZO7fnr
-         ZtB9tPJTTU4PkfMwB1J6cdNW0ZhxRs/Ieow/i9LLyvCtLzj7bVV7/sej5CmcUPn6Wnsn
-         uWI7ZObNiGKB6wNkpFRCGQm7KqIoo/6H9dg46TledWVB3PjkdHa7m3mQeQAk2hP4tbZP
-         6HKtj52988mOBJ7HymdAAYunwd0bDUZa5G+wnb3AfnK+dVMbU2ASpsYysLh4XZ805eU8
-         pjbRS+5vu7btY1q72FOGCW/IzYi9uqmvH64aenUR3qKX/kjcfy5DSxKp4kTHT8hhib0v
-         98pg==
-X-Gm-Message-State: AOJu0YwGUG6nbfyi6iRp6RcGlUN6eTeDTdnemKuy5zS+IZbNOBMzH1qV
-	22vxNpDowqDNr6bsJwELdI8UC7snw+3OfBTXREdDFVhLQyX50fMMHh/R2KQJiVg=
-X-Google-Smtp-Source: AGHT+IETvwUR3iD6rRYOSRrznHvQGfa6Gnb8c34M0LLNxpwNc9wTi+FX+JKO42/NoMFwc+j8jWo06w==
-X-Received: by 2002:a05:600c:4f42:b0:410:709e:f223 with SMTP id m2-20020a05600c4f4200b00410709ef223mr5030670wmq.9.1707727615513;
-        Mon, 12 Feb 2024 00:46:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWc9CVFU9s1iK5bjVgn202CiRILRD1oPR2dLqIbQV1rLk3Xf5olG3VidJV3u0leqhrkCjeTqq2X3eiMBeYsrgAcZ9JgissrPbOQ7oEXS+mLIE8jnwHYuwDt+KMspPAL
-Received: from [192.168.7.190] (212-114-21-58.box.freepro.com. [212.114.21.58])
-        by smtp.gmail.com with ESMTPSA id jx6-20020a05600c578600b0040ffd94cd27sm7816237wmb.45.2024.02.12.00.46.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 00:46:55 -0800 (PST)
-Message-ID: <0aed6601-145e-4645-9fcd-efaae6eaacb4@linaro.org>
-Date: Mon, 12 Feb 2024 09:46:54 +0100
+ dkim=pass header.i=@denx.de header.s=phobos-20191101 header.b=Rf2zFwYj;
+ spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 9849D86F8E;
+	Tue,  6 Feb 2024 01:21:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1707178902;
+	bh=Y6OQOwFa7AZjHIdrN6oTk5e77B6dWZQ1AMUDtDocvIw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Rf2zFwYjuIPq9oLNVYBM89gnlbastzL723huKRh8BH9Kvlmb1/1NQHdz2xAN9Uor9
+	 3Xyr58s6T8hSjQnp6jCjZOI22qzvrFIdqBr+fTfC93AkzjKOwKxRSgBLn1NmdziPtc
+	 eKpC1aRLZ42CyAoBKR+ldMlkkMoeSd8jWuqN+d/99aNGQgjVXpyZ6NOHympHogFwDV
+	 5Z37zCOQg14hrRiA2srjn6MbmGyZxK8Iw7QIcYJLwuE5lmEDjBTKLTfhfozGK8nG/6
+	 pFKMT4IqWy4jyPuj4rb31tg28oHoqcoa6UAIl+isNxxKVhVwy0aEPMGFCdF7WsuwHH
+	 3KbQd29JtvWCQ==
+Message-ID: <ae946009-64a6-44bd-9034-b035684341a6@denx.de>
+Date: Tue, 6 Feb 2024 01:21:40 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] configs: khadas-vim3*_android: fix AVB oom error
-Content-Language: en-US, fr
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: Guillaume La Roque <glaroque@baylibre.com>, u-boot-amlogic@groups.io,
- u-boot@lists.denx.de
-References: <20240209-vim3-avb-malloc-v1-1-91427d8c19ab@baylibre.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <20240209-vim3-avb-malloc-v1-1-91427d8c19ab@baylibre.com>
+Subject: Re: [PATCH v5 06/11] dts: Add script to uprev dts/upstream subtree
+To: Sumit Garg <sumit.garg@linaro.org>, u-boot@lists.denx.de,
+ u-boot-amlogic@groups.io, u-boot-custodians@lists.denx.de
+Cc: trini@konsulko.com, sjg@chromium.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor@kernel.org,
+ neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech,
+ daniel.thompson@linaro.org, dgilmore@fedoraproject.org,
+ pbrobinson@gmail.com, ilias.apalodimas@linaro.org, b.galvani@gmail.com,
+ xypron.glpk@gmx.de, michal.simek@amd.com, seanga2@gmail.com,
+ rasmus.villemoes@prevas.dk, peng.fan@nxp.com, jh80.chung@samsung.com,
+ rfried.dev@gmail.com, mibodhi@gmail.com, bb@ti.com, festevam@gmail.com,
+ nm@ti.com, andre.przywara@arm.com
+References: <20240202130534.1051438-1-sumit.garg@linaro.org>
+ <20240202130534.1051438-7-sumit.garg@linaro.org>
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20240202130534.1051438-7-sumit.garg@linaro.org>
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 12 Feb 2024 08:46:57 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2116
+ <u-boot-amlogic@groups.io>; Mon, 12 Feb 2024 09:40:38 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2117
 
-On 09/02/2024 09:58, Mattijs Korpershoek wrote:
-> When booting Android with AVB enabled, an OOM is observed:
+On 2/2/24 14:05, Sumit Garg wrote:
+> dts/update-dts-subtree.sh is just a wrapper around git subtree commands.
+> Usage from the top level U-Boot source tree, run:
 > 
->    => avb init ${mmcdev}
->    => avb verify _a
->    ## Android Verified Boot 2.0 version 1.1.0
->    read_is_device_unlocked not supported yet
->    read_rollback_index not supported yet
->    avb_util.c:182: ERROR: Failed to allocate memory.
->    OOM error occurred during verification
+> $ ./dts/update-dts-subtree.sh pull <release-tag>
+> $ ./dts/update-dts-subtree.sh pick <commit-id>
 > 
-> A custom malloc length of 128MB is required as documented in
-> commit 285a83b12bdf ("configs: meson64_android: increase SYS_MALLOC_LEN to 128M for AVB")
-> 
-> However, this 128M custom malloc length was not ported to Kconfig in
-> commit 7cfbba36e9f8 ("Convert CONFIG_SYS_MALLOC_LEN to Kconfig")
-> 
-> Add it back to fix AVB verification on VIM3/VIM3L.
-> 
-> Fixes: 7cfbba36e9f8 ("Convert CONFIG_SYS_MALLOC_LEN to Kconfig")
-> Co-developed-by: Guillaume La Roque <glaroque@baylibre.com>
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-> ---
->   configs/khadas-vim3_android_ab_defconfig  | 1 +
->   configs/khadas-vim3_android_defconfig     | 1 +
->   configs/khadas-vim3l_android_ab_defconfig | 1 +
->   configs/khadas-vim3l_android_defconfig    | 1 +
->   4 files changed, 4 insertions(+)
-> 
-> diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
-> index b41c2660fff0..ee62fe36d414 100644
-> --- a/configs/khadas-vim3_android_ab_defconfig
-> +++ b/configs/khadas-vim3_android_ab_defconfig
-> @@ -3,6 +3,7 @@ CONFIG_SYS_BOARD="vim3"
->   CONFIG_SYS_CONFIG_NAME="khadas-vim3_android"
->   CONFIG_ARCH_MESON=y
->   CONFIG_TEXT_BASE=0x01000000
-> +CONFIG_SYS_MALLOC_LEN=0x08000000
->   CONFIG_NR_DRAM_BANKS=1
->   CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
->   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
-> diff --git a/configs/khadas-vim3_android_defconfig b/configs/khadas-vim3_android_defconfig
-> index 88197f5f5e99..cecbe5061793 100644
-> --- a/configs/khadas-vim3_android_defconfig
-> +++ b/configs/khadas-vim3_android_defconfig
-> @@ -3,6 +3,7 @@ CONFIG_SYS_BOARD="vim3"
->   CONFIG_SYS_CONFIG_NAME="khadas-vim3_android"
->   CONFIG_ARCH_MESON=y
->   CONFIG_TEXT_BASE=0x01000000
-> +CONFIG_SYS_MALLOC_LEN=0x08000000
->   CONFIG_NR_DRAM_BANKS=1
->   CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
->   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
-> diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
-> index 3381d2e92701..ec4e0dc72e22 100644
-> --- a/configs/khadas-vim3l_android_ab_defconfig
-> +++ b/configs/khadas-vim3l_android_ab_defconfig
-> @@ -3,6 +3,7 @@ CONFIG_SYS_BOARD="vim3"
->   CONFIG_SYS_CONFIG_NAME="khadas-vim3l_android"
->   CONFIG_ARCH_MESON=y
->   CONFIG_TEXT_BASE=0x01000000
-> +CONFIG_SYS_MALLOC_LEN=0x08000000
->   CONFIG_NR_DRAM_BANKS=1
->   CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
->   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
-> diff --git a/configs/khadas-vim3l_android_defconfig b/configs/khadas-vim3l_android_defconfig
-> index 3fa587ef1db5..206f8defca6b 100644
-> --- a/configs/khadas-vim3l_android_defconfig
-> +++ b/configs/khadas-vim3l_android_defconfig
-> @@ -3,6 +3,7 @@ CONFIG_SYS_BOARD="vim3"
->   CONFIG_SYS_CONFIG_NAME="khadas-vim3l_android"
->   CONFIG_ARCH_MESON=y
->   CONFIG_TEXT_BASE=0x01000000
-> +CONFIG_SYS_MALLOC_LEN=0x08000000
->   CONFIG_NR_DRAM_BANKS=1
->   CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
->   CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
-> 
-> ---
-> base-commit: 076529725f16f07a5cb2d5feba25d62b5f5a5872
-> change-id: 20240209-vim3-avb-malloc-aa3de534d6a0
-> 
-> Best regards,
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+How are the fixes which land in linux-stable handled now ?
+
+Do I have to duplicate the work which is already being done by the 
+linux-stable maintainers ?
+
+> ---
+> 
+> Changes in v5:
+> - Added support to cherry-pick fixes in subtree update script. Also, used
+>    https:// instead of git://.
+> 
+> Changes in v4:
+> - New patch to add script dts/update-dts-subtree.sh as per Rob's comments.
+> 
+>   dts/update-dts-subtree.sh | 45 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 45 insertions(+)
+>   create mode 100755 dts/update-dts-subtree.sh
+> 
+> diff --git a/dts/update-dts-subtree.sh b/dts/update-dts-subtree.sh
+> new file mode 100755
+> index 000000000000..b781bf710025
+> --- /dev/null
+> +++ b/dts/update-dts-subtree.sh
+> @@ -0,0 +1,45 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0+
+> +#
+> +# Copyright 2024 Linaro Ltd.
+> +#
+> +# Usage: from the top level U-Boot source tree, run:
+> +# $ ./dts/update-dts-subtree.sh pull <release-tag>
+> +# $ ./dts/update-dts-subtree.sh pick <commit-id>
+> +#
+> +# The script will pull changes from devicetree-rebasing repo into U-Boot
+> +# as a subtree located as <U-Boot>/dts/upstream sub-directory. It will
+> +# automatically create a squash/merge commit listing the commits imported.
+> +
+> +set -e
+> +
+> +merge_commit_msg=$(cat << EOF
+> +Subtree merge tag '$2' of devicetree-rebasing repo [1] into dts/upstream
+> +
+> +[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+> +EOF
+> +)
+> +
+> +remote_add() {
+> +    if ! git remote | grep -w devicetree-rebasing
+
+I think you are looking for git-remote get-url here.
+
+> +    then
+> +        git remote add devicetree-rebasing \
+> +            https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git
+
+Rather than reconfigure user git remotes like this without user 
+knowledge, either ask them, or print a warning and let the user 
+configure their git remotes knowingly as they need to. Include the 
+command in the warning to make it easier on the user.
+
+> +    fi
+> +    git fetch devicetree-rebasing master
+> +}
+> +
+> +if [ ! -z $1 ] && [ $1 = "pull" ]
+> +then
+> +    remote_add
+
+remote_add_and_fetch , since this does more then remote_add .
+
+> +    git subtree pull --prefix dts/upstream devicetree-rebasing \
+> +        $2 --squash -m "${merge_commit_msg}"
+> +elif [ ! -z $1 ] && [ $1 = "pick" ]
+
+The non-zero test is not useful, just add missing quotes around "$1" and 
+compare:
+
+elif [ "$1" = "pick" ]
+
+> +then
+> +    remote_add
+> +    git cherry-pick -x --strategy=subtree -Xsubtree=dts/upstream/ $2
+> +else
+> +    echo "usage: $0 param1 param2"
+
+The param names could really use improvement, instead of 'param1' that 
+could be some '<op>' and 'param2' could be some '<url>' or something.
+
+> +    echo "  param1    pull or pick"
+> +    echo "  param2    release tag [pull] or commit id [pick]"
+> +fi
+
+Please run shellcheck on this .
 
