@@ -2,277 +2,116 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303B8C48260
-	for <webhook@archiver.kernel.org>; Tue, 13 Feb 2024 08:32:13 +0000 (UTC)
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
- by mx.groups.io with SMTP id smtpd.web10.2268.1707781485060362701
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6435C48BC3
+	for <webhook@archiver.kernel.org>; Wed, 14 Feb 2024 12:04:31 +0000 (UTC)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+ by mx.groups.io with SMTP id smtpd.web10.10652.1707828940599171143
  for <u-boot-amlogic@groups.io>;
- Mon, 12 Feb 2024 15:44:45 -0800
+ Tue, 13 Feb 2024 04:55:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@canonical.com header.s=20210705 header.b=wVSmZqiN;
- spf=pass (domain: canonical.com, ip: 185.125.188.121, mailfrom: heinrich.schuchardt@canonical.com)
-Received: from LT2ubnt.fritz.box (ip-178-202-040-247.um47.pools.vodafone-ip.de [178.202.40.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 03EDB3FE92;
-	Mon, 12 Feb 2024 23:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1707781482;
-	bh=mB8P2p4xehFPfs5Qn71qtVXYBxmTSZuPg5NOcgWPnBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=wVSmZqiNg0+I+eN1557wo21E/mPivj1K8nidb3yJ2jcCWNP0WiR6NQAXkdp32TZm6
-	 Np/GaQUeGJICGH9XMYIDQ4q8L5J5FQfh0nmebHKG4RaNWP4aVfiN3bo2JLyp8QIm8H
-	 NbnAHdv+xynNs6WPn813vULzCbH/M7K11MbbGjb4hx6Hfi3hmUj1Tpam3yVeRYzn3v
-	 f7VrIM7wLNptc513oz/qBLsLayJJTPe5EIOk6WJSMPPvQCNLeyzpWT3uSjzSKBDciR
-	 SZxQ0ye17CcWpDfLVFFgZ/Pu+J6cUgtmsgFc8HafCDNiq+b9I2gHDoYhiwiBiEowSI
-	 mq92MiQpziJ8g==
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-To: Sughosh Ganu <sughosh.ganu@linaro.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Marko <robert.marko@sartura.hr>,
-	Luka Kovacic <luka.kovacic@sartura.hr>,
-	Luka Perkov <luka.perkov@sartura.hr>,
-	Patrick Delaunay <patrick.delaunay@foss.st.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Simon Glass <sjg@chromium.org>,
-	Philipp Tomsich <philipp.tomsich@vrull.eu>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Etienne Carriere <etienne.carriere@linaro.org>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Alexey Romanov <avromanov@salutedevices.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Lin Jinhan <troy.lin@rock-chips.com>,
-	Gatien Chevallier <gatien.chevallier@foss.st.com>,
-	Grzegorz Szymaszek <gszymaszek@short.pl>,
-	u-boot@lists.denx.de,
-	u-boot-amlogic@groups.io,
-	uboot-stm32@st-md-mailman.stormreply.com,
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-Subject: [PATCH 1/1] rng: eliminate common.h include from RNG drivers
-Date: Tue, 13 Feb 2024 00:44:47 +0100
-Message-ID: <20240212234448.39552-1-heinrich.schuchardt@canonical.com>
-X-Mailer: git-send-email 2.43.0
+ dkim=pass header.i=@linaro.org header.s=google header.b=JkYGQ34b;
+ spf=pass (domain: linaro.org, ip: 209.85.222.48, mailfrom: sumit.garg@linaro.org)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7d5c25267deso1506542241.3
+        for <u-boot-amlogic@groups.io>; Tue, 13 Feb 2024 04:55:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707828939; x=1708433739; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SKAqb5BB4ThicEtIXQ2hB7H/qkuXbuPPr1DUJLEmmM0=;
+        b=JkYGQ34b4/f4FENauTpJbmAeK6i15Di1J3kG9LeJF2DakOitaSD5oC5OfaS9JrauoZ
+         Bv38eXzb340hheXdPpNVe0MZiq8YQPe5Zwu8gT7R+lKxsr/xCUt7takcjIt/Z5NYAAE/
+         1LCmusmq+oD8fV2u0IQsi0gksvnGvm6mdxqLqaXBKNT0exHpMWexSQOiOnK0xoPYp7j2
+         qJB6eIHiSA5Ip662ojun1jiCEeqNND8OETE4roJwJjRDZFTOhkO/XdJ/UJn64sqhIsit
+         5rvPK2CGIv4WDdJIQpoxNmwQWZSeglG46c3Ms0+WWoFgLkC10TWnoFfGb6T5kg5pFSs1
+         aUpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707828939; x=1708433739;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SKAqb5BB4ThicEtIXQ2hB7H/qkuXbuPPr1DUJLEmmM0=;
+        b=uXUeecz/ywVw4m6mukFqEVIVZezwrQUjR62FDCU8cHtft6Q1MoWZ7TBSHOMXRos2qD
+         a9vCXUComG1eGhwklpGoui1tRB+J4bOWbxB71RMYwYZPuIR/Q+GJWzKp4H9YLNnDparK
+         Zk1fhucnhNMx8kF63TT1VPjmG57zG8nH+s0iQxyh0qFXoX6a9I8DfQYiDrgQ2BVB3lfI
+         ctjyVmMbqsqvbzL/mIaCCRO4Uny7Vap7/0u8SeWR3VHNwUvVsKr3db6fA6DmNG8xPFid
+         Md/pQZyibusDP3ZyG1pxNgYEGDxk/V9qU8jTgiotdnAuyaPSz7mbNpM9sChTckQmO6TB
+         hkww==
+X-Forwarded-Encrypted: i=1; AJvYcCVj6WuIP/PmdTLiFKP8nmgVIvWQM47OSMG30HtzPsfDyhAJ1G6aoDIRqLyOVzT1rAcepCc5C7RtJUPZnEenNpca1q5BI6+KAi0=
+X-Gm-Message-State: AOJu0YxaI0p8duTldNI4+FzhvIcfYViWoHjA2/qL6DphENorXwDkdVj8
+	1bzGSqGPRo5/SZ8sB2LQeTfutxM6uPRk6w4gKYEt9dtCTGxdxRjvWbHjO42iWa6RhkfxrYLUJC1
+	fq9t/VM76SEKETjMDd1Qp153KWM9i7+k3Lm6bSg==
+X-Google-Smtp-Source: AGHT+IHWKOhjF275RalgVa0+g7kD4n88jlZyyM5pb99xK+mNXT5Hri5z7e9jyvf2Rt24Wk6jz0JCkL/zhcVxRsVwaYA=
+X-Received: by 2002:a67:fe86:0:b0:46d:2f8b:d7 with SMTP id b6-20020a67fe86000000b0046d2f8b00d7mr6848813vsr.22.1707828939594;
+ Tue, 13 Feb 2024 04:55:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20240202130534.1051438-1-sumit.garg@linaro.org>
+ <20240202180226.GF1152441@bill-the-cat> <CAFA6WYMSvu0rL+et1Q7xVuOnyWMDbJYQj9TeC6c2ALNNFGhRCA@mail.gmail.com>
+ <20240206130040.GO1152441@bill-the-cat>
+In-Reply-To: <20240206130040.GO1152441@bill-the-cat>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Tue, 13 Feb 2024 18:25:28 +0530
+Message-ID: <CAFA6WYNFrazifArec7+NS_exU77TFfCWcJk7Oy26tkeX6Q2a+w@mail.gmail.com>
+Subject: Re: [PATCH v5 00/11] An effort to bring DT bindings compliance within U-Boot
+To: Tom Rini <trini@konsulko.com>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+	u-boot-custodians@lists.denx.de, sjg@chromium.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
+	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
+	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
+	ilias.apalodimas@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de, 
+	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk, 
+	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com, marex@denx.de, 
+	mibodhi@gmail.com, bb@ti.com, mark.kettenis@xs4all.nl, festevam@gmail.com, 
+	nm@ti.com, andre.przywara@arm.com
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 13 Feb 2024 08:32:13 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2124
+ <u-boot-amlogic@groups.io>; Wed, 14 Feb 2024 12:04:31 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2125
 
-Usage of common.h is deprecated.
+On Tue, 6 Feb 2024 at 18:30, Tom Rini <trini@konsulko.com> wrote:
+>
+> On Tue, Feb 06, 2024 at 10:57:12AM +0530, Sumit Garg wrote:
+> > Hi Tom,
+> >
+> > On Fri, 2 Feb 2024 at 23:32, Tom Rini <trini@konsulko.com> wrote:
+> > >
+> > > On Fri, Feb 02, 2024 at 06:35:23PM +0530, Sumit Garg wrote:
+> > >
+> > > > Changes in v5:
+> > > > --------------
+> > > > - Rebased on tip of master (050a9b981d6a835133521b599be3ae189ce70f41)
+> > > > - Created v5_dt branch for testing purposes:
+> > > >   https://github.com/b49020/u-boot/tree/v5_dt
+> > > > - Patch #6: Added support to cherry-pick fixes in subtree update script.
+> > > >   Also, used https:// instead of git://.
+> > > > - Patch #7: Fixed inappropriate documentation update.
+> > > > - Patch #8: Document how to cherry-pick fixes from devicetree-rebasing
+> > > >   tree.
+> > >
+> > > OK, for v6 please push this through CI. I've started a run now to check
+> > > other things, but just sandbox currently fails to build right now.
+> >
+> > Yeah it looks like patch#3 rework in v4 has broken EFI capsule .dtsi
+> > file generation logic which should be fixed by add-on fix [1] for
+> > patch#3. The github CI passes [2] with that included. I suppose the
+> > gitlab CI should be fine too. If its fine for your testing as well
+> > then I will incorporate it in v6.
+> >
+> > [1] https://github.com/u-boot/u-boot/pull/484/commits/d796c34307cd363674e0d0d2e31618643ac8e76c
+> > [2] https://github.com/u-boot/u-boot/pull/484
+>
+> Yup, if Azure passes GitLab should pass too. I think you should wait to
+> repost v6 until you and Marek agree about how we are (and perhaps
+> aren't) handling fixes to dts files.
+>
 
-* Remove common.h from RNG drivers.
-* Sort includes.
-* Add time.h to sandbox driver.
-* Add linux/types.h to rng.h to provide size_t.
+Although I haven't received any further feedback/comments but will
+wait for a few more days before posting v6.
 
-Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
----
- drivers/rng/arm_rndr.c     | 3 +--
- drivers/rng/iproc_rng200.c | 3 +--
- drivers/rng/meson-rng.c    | 1 -
- drivers/rng/msm_rng.c      | 5 ++---
- drivers/rng/npcm_rng.c     | 1 -
- drivers/rng/optee_rng.c    | 2 --
- drivers/rng/rng-uclass.c   | 1 -
- drivers/rng/rockchip_rng.c | 6 +++---
- drivers/rng/sandbox_rng.c  | 3 +--
- drivers/rng/smccc_trng.c   | 1 -
- drivers/rng/stm32_rng.c    | 4 +---
- include/rng.h              | 2 ++
- 12 files changed, 11 insertions(+), 21 deletions(-)
+-Sumit
 
-diff --git a/drivers/rng/arm_rndr.c b/drivers/rng/arm_rndr.c
-index 4512330e68..bf54aec4f1 100644
---- a/drivers/rng/arm_rndr.c
-+++ b/drivers/rng/arm_rndr.c
-@@ -9,11 +9,10 @@
-=20
- #define LOG_CATEGORY UCLASS_RNG
-=20
--#include <common.h>
- #include <dm.h>
--#include <linux/kernel.h>
- #include <rng.h>
- #include <asm/system.h>
-+#include <linux/kernel.h>
-=20
- #define DRIVER_NAME	"arm-rndr"
-=20
-diff --git a/drivers/rng/iproc_rng200.c b/drivers/rng/iproc_rng200.c
-index 85ac15bf9c..4c49aa9e44 100644
---- a/drivers/rng/iproc_rng200.c
-+++ b/drivers/rng/iproc_rng200.c
-@@ -5,11 +5,10 @@
-  * Driver for Raspberry Pi hardware random number generator
-  */
-=20
--#include <common.h>
- #include <dm.h>
--#include <linux/delay.h>
- #include <rng.h>
- #include <asm/io.h>
-+#include <linux/delay.h>
-=20
- #define usleep_range(a, b) udelay((b))
-=20
-diff --git a/drivers/rng/meson-rng.c b/drivers/rng/meson-rng.c
-index fd2988e91b..49037d1165 100644
---- a/drivers/rng/meson-rng.c
-+++ b/drivers/rng/meson-rng.c
-@@ -5,7 +5,6 @@
-  * Driver for Amlogic hardware random number generator
-  */
-=20
--#include <common.h>
- #include <clk.h>
- #include <dm.h>
- #include <rng.h>
-diff --git a/drivers/rng/msm_rng.c b/drivers/rng/msm_rng.c
-index 29e7354ece..658c153d3e 100644
---- a/drivers/rng/msm_rng.c
-+++ b/drivers/rng/msm_rng.c
-@@ -9,12 +9,11 @@
-  * Based on Linux driver
-  */
-=20
--#include <asm/io.h>
- #include <clk.h>
--#include <common.h>
- #include <dm.h>
--#include <linux/bitops.h>
- #include <rng.h>
-+#include <asm/io.h>
-+#include <linux/bitops.h>
-=20
- /* Device specific register offsets */
- #define PRNG_DATA_OUT		0x0000
-diff --git a/drivers/rng/npcm_rng.c b/drivers/rng/npcm_rng.c
-index 70c1c032b6..3922acad5b 100644
---- a/drivers/rng/npcm_rng.c
-+++ b/drivers/rng/npcm_rng.c
-@@ -3,7 +3,6 @@
-  * Copyright (c) 2022 Nuvoton Technology Corp.
-  */
-=20
--#include <common.h>
- #include <dm.h>
- #include <malloc.h>
- #include <rng.h>
-diff --git a/drivers/rng/optee_rng.c b/drivers/rng/optee_rng.c
-index 410dfc053f..f692681022 100644
---- a/drivers/rng/optee_rng.c
-+++ b/drivers/rng/optee_rng.c
-@@ -4,8 +4,6 @@
-  */
- #define LOG_CATEGORY UCLASS_RNG
-=20
--#include <common.h>
--
- #include <rng.h>
- #include <tee.h>
- #include <dm/device.h>
-diff --git a/drivers/rng/rng-uclass.c b/drivers/rng/rng-uclass.c
-index 53108e1b31..06ddfa14ac 100644
---- a/drivers/rng/rng-uclass.c
-+++ b/drivers/rng/rng-uclass.c
-@@ -5,7 +5,6 @@
-=20
- #define LOG_CATEGORY UCLASS_RNG
-=20
--#include <common.h>
- #include <dm.h>
- #include <rng.h>
-=20
-diff --git a/drivers/rng/rockchip_rng.c b/drivers/rng/rockchip_rng.c
-index 705b424cf3..ce5cbee30a 100644
---- a/drivers/rng/rockchip_rng.c
-+++ b/drivers/rng/rockchip_rng.c
-@@ -2,14 +2,14 @@
- /*
-  * Copyright (c) 2020 Fuzhou Rockchip Electronics Co., Ltd
-  */
-+
-+#include <dm.h>
-+#include <rng.h>
- #include <asm/arch-rockchip/hardware.h>
- #include <asm/io.h>
--#include <common.h>
--#include <dm.h>
- #include <linux/bitops.h>
- #include <linux/iopoll.h>
- #include <linux/string.h>
--#include <rng.h>
-=20
- #define RK_HW_RNG_MAX 32
-=20
-diff --git a/drivers/rng/sandbox_rng.c b/drivers/rng/sandbox_rng.c
-index cc5e1f6e25..071a3228e8 100644
---- a/drivers/rng/sandbox_rng.c
-+++ b/drivers/rng/sandbox_rng.c
-@@ -3,11 +3,10 @@
-  * Copyright (c) 2019, Linaro Limited
-  */
-=20
--#include <common.h>
- #include <dm.h>
- #include <rand.h>
- #include <rng.h>
--
-+#include <time.h>
- #include <linux/string.h>
-=20
- static int sandbox_rng_read(struct udevice *dev, void *data, size_t len)
-diff --git a/drivers/rng/smccc_trng.c b/drivers/rng/smccc_trng.c
-index 3a4bb33941..5bb7ebe8a4 100644
---- a/drivers/rng/smccc_trng.c
-+++ b/drivers/rng/smccc_trng.c
-@@ -5,7 +5,6 @@
-=20
- #define LOG_CATEGORY UCLASS_RNG
-=20
--#include <common.h>
- #include <dm.h>
- #include <linker_lists.h>
- #include <log.h>
-diff --git a/drivers/rng/stm32_rng.c b/drivers/rng/stm32_rng.c
-index c397b4d95c..61d5ed6158 100644
---- a/drivers/rng/stm32_rng.c
-+++ b/drivers/rng/stm32_rng.c
-@@ -5,16 +5,14 @@
-=20
- #define LOG_CATEGORY UCLASS_RNG
-=20
--#include <common.h>
- #include <clk.h>
- #include <dm.h>
- #include <log.h>
- #include <reset.h>
- #include <rng.h>
-+#include <asm/io.h>
- #include <linux/bitops.h>
- #include <linux/delay.h>
--
--#include <asm/io.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
-=20
-diff --git a/include/rng.h b/include/rng.h
-index 37af554363..87e26f5647 100644
---- a/include/rng.h
-+++ b/include/rng.h
-@@ -6,6 +6,8 @@
- #if !defined _RNG_H_
- #define _RNG_H_
-=20
-+#include <linux/types.h>
-+
- struct udevice;
-=20
- /**
---=20
-2.43.0
-
+> --
+> Tom
 
