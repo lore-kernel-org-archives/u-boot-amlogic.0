@@ -2,51 +2,51 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01876C54E49
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FA4C54E56
 	for <webhook@archiver.kernel.org>; Mon, 26 Feb 2024 08:49:58 +0000 (UTC)
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
- by mx.groups.io with SMTP id smtpd.web10.9328.1708594669837944090
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+ by mx.groups.io with SMTP id smtpd.web11.9354.1708594679099579543
  for <u-boot-amlogic@groups.io>;
- Thu, 22 Feb 2024 01:37:49 -0800
+ Thu, 22 Feb 2024 01:37:59 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=rsj4ZjCc;
- spf=pass (domain: linaro.org, ip: 209.85.161.44, mailfrom: sumit.garg@linaro.org)
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5a00b5e78adso922283eaf.0
-        for <u-boot-amlogic@groups.io>; Thu, 22 Feb 2024 01:37:49 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ye26wBzV;
+ spf=pass (domain: linaro.org, ip: 209.85.167.171, mailfrom: sumit.garg@linaro.org)
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3c031c24fbeso1093207b6e.3
+        for <u-boot-amlogic@groups.io>; Thu, 22 Feb 2024 01:37:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708594669; x=1709199469; darn=groups.io;
+        d=linaro.org; s=google; t=1708594678; x=1709199478; darn=groups.io;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+XyCybnabdst+3CZ0/r+NmrIx0w00q4z9pT7wJRsqhU=;
-        b=rsj4ZjCcFSvKf9dHCmQjF1xgxiNuPvaw0PjRNyetEeno5Tz9fZPp941SKwW90sKP58
-         nQRHexNQFIuqjb8/7xNbpdPAb+QRCujU6AYfWuK4gASpF1B4Z9SO86DPzSfHWxTXUf5j
-         ZmMwFLP73j7K/zuRJw1Wb+LbwUuOYBChOuM97cmRTMDYSx00k+jyMQ0DL4a0R3iCGCYF
-         UYNl69IAg5yu8a4cahwL8vM/9MKO09hUW6xIZ4dQM+snb1ZtCTn5YzD/RRdQMEFbzJgA
-         71Wktk5nZtbKpZ2PfEu5jgll7zz3CJTgWEb9cA5O3/DYSEXQVe5vZT9UclqM7hmKN8RF
-         9w6Q==
+        bh=GpI+QWYX3hWaVGsYN5+nU+Q+Aptv0+e/nDtrRo/nhwY=;
+        b=ye26wBzV+GtQeSRZOxlHfiVRzi1vtU2mkFRatP56TEV+8NA9DjDGqd+Co3kntUaryZ
+         Gp4fp34ax9h/qM8RjuX0/xSABHx1PxHCOunQtCWBwzTmdDYmMQ311jTi3w1GkenxR59X
+         QX7jZnf6laG8mSIMX7GNRttU5ITdKlpe576pU2Meqw0iikJf5H6FrydiDyQ19V+9sJOg
+         943rTb+0mqgC2mUyIH5g0yI54fIUK2dA+RYi45NipTU1+YVnjyzNkbPikoQyb+NhZnfO
+         pEckAQQ2q78J2ChClZqccUivZFutw3RXj/2L8gUdremQBgNEDB8Xj2wDVvia/NWK3YF+
+         6sPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708594669; x=1709199469;
+        d=1e100.net; s=20230601; t=1708594678; x=1709199478;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+XyCybnabdst+3CZ0/r+NmrIx0w00q4z9pT7wJRsqhU=;
-        b=dwrJEFX3poD/lDZWpfTaoT7M2kGSPUttME39vWCRIxHIdSocV4FAAQ6gau57aYwTyz
-         DgPkTZBj3DSSK5nGtpqNoN2i97sDNimyKIHu5jM6/5yJ1V1RrCCRo2CEUvZTPe+DvsbU
-         2hpnBW6M0TA5Rzm2Xpk0KJ5V5fjx+Ggn3AoDmja4AzM0YdnC3ZFI4NwEPk8J9z1Ur401
-         lo4vlrZP/Lz5DRh6XJkgW8keNNIg5ek5J3Sx5c+ID7GBSQBiNHKNowktvlQxRKMiMVSS
-         4bJmGI0i/+lEYRXgpoDXfjqN+/jsO0TzCka3QPOpuMxSEc85uY9GHuZRPJUkQdzeCox1
-         IRrw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3I6RsurekTkOrrb3noswUJOpGjsP0bXiI0xUZZxLTaDsMW3JnWj9TZme1s0It/ERO0lCA5KzqK/dOzUQZjqsrWmG5agL6HRQ=
-X-Gm-Message-State: AOJu0YydeO7KoDFiWaviCxJv89QbOEpOCN4zQie8wgeLUfeepe0LjM5a
-	MXwkHrQ3V0qlaKpYLRPrGAMKF/+26KI8xHQx2/llpVvxvycpRO78hjPCk2TH5PY=
-X-Google-Smtp-Source: AGHT+IGO8zlm5N3Bw7a8KiFZdFhLz50IigprirfgWKaYEloNBRR8FAIDBPuzCOBFbKcgWODgNe7y3g==
-X-Received: by 2002:a05:6358:6f8f:b0:17b:521d:9fcc with SMTP id s15-20020a0563586f8f00b0017b521d9fccmr6734041rwn.9.1708594669094;
-        Thu, 22 Feb 2024 01:37:49 -0800 (PST)
+        bh=GpI+QWYX3hWaVGsYN5+nU+Q+Aptv0+e/nDtrRo/nhwY=;
+        b=GaopCzqQ1RQVJau3S8HDSlNaMVaFdbxNkU23ZSRd1rzChs6tWMYANBXc0zaw9Lme/M
+         OW62oF/cPaJVmtNkKB+EuF/pQQsZI4HrS7CD72lAVrhyjmN32xZKSiO5/GYG1zu+VG03
+         y04b92g539qdLA/QKjSBdYQz6o1mZnYE8Crrv/ph8atOIWKvOQVhRaoGecwZ0OySPmTT
+         utVonihHaRIzWhpBet62qSZy16r5w4wyrGwafPofWNBhgh7pvk8eDHQ1LogRrXkcpPNF
+         NvYdN/5bQY8HsrY/ipPTEX4VGolk5XjKi5v19VTMBNPFZjGbCfEGgKCxiqzjAnWd4Lbe
+         yAKw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9KLfMuiNoiBnG3TEkT56CRLf9q4QeQ+ytVQ0utGzRiJ1ls6K+ZaDqTczeQ/jnUKWNtM0wfGM3AZL2YPPgX3SCcbSUzTf26Sw=
+X-Gm-Message-State: AOJu0YxxS1wCp7YubtSji1SjB8m2StGvGMnAQXQuTlOFJvhvg5/gXqs/
+	PgvkBv2TCvZpUbgGLRMs4q7zTLj0O3CbJYhkeO0XExTmLemZmmvLX/0crd78lRk=
+X-Google-Smtp-Source: AGHT+IHP+r3oGD66/mO+wlMbTHKVpnW5sVpvT05yZ1KDb6VKyqPryURiHTUw2AbcFHck1Ut+VYeLsw==
+X-Received: by 2002:aca:1e0c:0:b0:3c0:38d7:e06f with SMTP id m12-20020aca1e0c000000b003c038d7e06fmr16517695oic.59.1708594678392;
+        Thu, 22 Feb 2024 01:37:58 -0800 (PST)
 Received: from sumit-X1.. ([223.178.212.115])
-        by smtp.gmail.com with ESMTPSA id u20-20020a056a00099400b006e47300e4edsm6208404pfg.183.2024.02.22.01.37.40
+        by smtp.gmail.com with ESMTPSA id u20-20020a056a00099400b006e47300e4edsm6208404pfg.183.2024.02.22.01.37.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 01:37:48 -0800 (PST)
+        Thu, 22 Feb 2024 01:37:58 -0800 (PST)
 From: Sumit Garg <sumit.garg@linaro.org>
 To: u-boot@lists.denx.de,
 	u-boot-amlogic@groups.io,
@@ -81,9 +81,9 @@ Cc: trini@konsulko.com,
 	ijc@hellion.org.uk,
 	paul.barker.ct@bp.renesas.com,
 	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v6 09/11] MAINTAINERS: Add myself as devicetree-rebasing maintainer
-Date: Thu, 22 Feb 2024 15:06:05 +0530
-Message-Id: <20240222093607.3085545-10-sumit.garg@linaro.org>
+Subject: [PATCH v6 10/11] dts: meson-gxbb: Switch to using upstream DT
+Date: Thu, 22 Feb 2024 15:06:06 +0530
+Message-Id: <20240222093607.3085545-11-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240222093607.3085545-1-sumit.garg@linaro.org>
 References: <20240222093607.3085545-1-sumit.garg@linaro.org>
@@ -93,12 +93,18 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 26 Feb 2024 08:49:57 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2140
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2141
 
-Add myself as devicetree-rebasing maintainer.
+Although there were still some variations in board DTS files based on
+meson-gxbb SoC but I think those were minor differences from upstream
+and shouldn't impact boot on these devices.
 
+So enable OF_UPSTREAM to use upstream DT and add amlogic/ prefix to the
+DEFAULT_DEVICE_TREE. And thereby directly build DTB from dts/upstream/src/
+including *-u-boot.dtsi files from arch/$(ARCH)/dts/ directory.
+
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 Reviewed-by: Simon Glass <sjg@chromium.org>
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
 
@@ -109,36 +115,127 @@ Changes in v5:
 - None
 
 Changes in v4:
-- Switched subtree to be imported as dts/upstream sub-directory rather
-  than devicetree-rebasing sub-directory to better suite U-Boot
-  directory structure.
-- Added commit description.
+- Picked up review tag
 
 Changes in v3:
-- Picked up review tags
+- Dropped Makefile portion and enabled OF_UPSTREAM for SoC instead.
 
 Changes in v2:
-- Picked up review tags
+- Picked up review tag
 
- MAINTAINERS | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-meson/Kconfig           | 1 +
+ configs/nanopi-k2_defconfig           | 2 +-
+ configs/odroid-c2_defconfig           | 2 +-
+ configs/p200_defconfig                | 2 +-
+ configs/p201_defconfig                | 2 +-
+ configs/videostrong-kii-pro_defconfig | 2 +-
+ configs/wetek-hub_defconfig           | 2 +-
+ configs/wetek-play2_defconfig         | 2 +-
+ 8 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0b08ca192397..6541ab2b3a87 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -989,6 +989,11 @@ F:	cmd/cyclic.c
- F:	common/cyclic.c
- F:	include/cyclic.h
+diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+index d6c890580617..8ddb59161a0d 100644
+--- a/arch/arm/mach-meson/Kconfig
++++ b/arch/arm/mach-meson/Kconfig
+@@ -25,6 +25,7 @@ choice
+ config MESON_GXBB
+ 	bool "GXBB"
+ 	select MESON_GX
++	imply OF_UPSTREAM
+ 	help
+ 	  Select this if your SoC is an S905
  
-+DEVICETREE REBASING SUBTREE
-+M:	Sumit Garg <sumit.garg@linaro.org>
-+S:	Maintained
-+F:	dts/upstream/
-+
- DFU
- M:	Lukasz Majewski <lukma@denx.de>
- M:	Mattijs Korpershoek <mkorpershoek@baylibre.com>
+diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
+index 41dbf7981f8b..2e1c756bf7a8 100644
+--- a/configs/nanopi-k2_defconfig
++++ b/configs/nanopi-k2_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-nanopi-k2"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-nanopi-k2"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
+index 5f9f323e06ea..ce5eaec3cd2a 100644
+--- a/configs/odroid-c2_defconfig
++++ b/configs/odroid-c2_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-odroidc2"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-odroidc2"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/p200_defconfig b/configs/p200_defconfig
+index cd579ef5f142..b69460347954 100644
+--- a/configs/p200_defconfig
++++ b/configs/p200_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p200"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p200"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/p201_defconfig b/configs/p201_defconfig
+index b2f0a0ccdb4a..dcc1454be16c 100644
+--- a/configs/p201_defconfig
++++ b/configs/p201_defconfig
+@@ -7,7 +7,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-p201"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-p201"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/videostrong-kii-pro_defconfig b/configs/videostrong-kii-pro_defconfig
+index 3eda8f14a21b..7a5af234471f 100644
+--- a/configs/videostrong-kii-pro_defconfig
++++ b/configs/videostrong-kii-pro_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-kii-pro"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-kii-pro"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/wetek-hub_defconfig b/configs/wetek-hub_defconfig
+index fd92b041e739..85cff73f50f7 100644
+--- a/configs/wetek-hub_defconfig
++++ b/configs/wetek-hub_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-hub"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-hub"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+diff --git a/configs/wetek-play2_defconfig b/configs/wetek-play2_defconfig
+index b887419a6bab..efdf820165b5 100644
+--- a/configs/wetek-play2_defconfig
++++ b/configs/wetek-play2_defconfig
+@@ -6,7 +6,7 @@ CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
+ CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
+ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+-CONFIG_DEFAULT_DEVICE_TREE="meson-gxbb-wetek-play2"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-gxbb-wetek-play2"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
 -- 
 2.34.1
 
