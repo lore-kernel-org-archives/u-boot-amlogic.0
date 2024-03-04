@@ -2,56 +2,56 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CCDC54E71
-	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:48 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.104456.1709571125429344427
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091F1C54E78
+	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:49 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.104449.1709571119188475350
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Mar 2024 08:52:05 -0800
+ Mon, 04 Mar 2024 08:51:59 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=RA1MsP0Q;
- spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-412e84e87e6so4237635e9.2
-        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:52:05 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=tfdWoxbS;
+ spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33e162b1b71so3682516f8f.1
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709571124; x=1710175924; darn=groups.io;
+        d=linaro.org; s=google; t=1709571117; x=1710175917; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5pCWnqR2w3MK2Z9hkofhscjBJ0Hj19Lc+xpshC15mCg=;
-        b=RA1MsP0QClxdqoO3o+CG7y5TXrvGIKsy5dYW912Y8GfMSUPje4ZFC6nEJaZDWSBLTL
-         82sBTaZGKO9zzecwcByji3x5r2cM1hcLyhZrgdN/l7ypsTMpFTQwPxitLOUFJsLHea5x
-         R+MWeeiTiJkBDTqQ8ltZQBU49kD1jmshNPCq+NHUcv6LIIlv8ZqvMNqcu2cnRY2Pm/XO
-         HTXw05vVfJnzFQjWD8EaUPDtGuWtUwhXdmGtpxIe8FKA17QTU9uQwGopIYsKilrUU+X+
-         t8TypJdlIBbkuoAFhckCqMZSmvr6rdcjRBeIFxsRy8oKJo5A4lOoNWP09FXmou4qihpv
-         YcEg==
+        bh=H9z47gxslMXab03nJVN9Zel/hSMnSwz2OuvyhmVXZIg=;
+        b=tfdWoxbS3dIx+g3YvET4wQJR5OA3AKdn7G6D8y9acX0V+UT0TIig8vrtoNubC7IwQF
+         K5ItVQyMOd4cnyBzmreZxp5qMBUE84ey5CdbNHhfazhhjMo0NUizqK/6AJTatF018NUT
+         p64qqXwkNVH+hH9QeQojuFGuoqxCIp2DiBKsWsp5Lol9zf4J5U9q+TuFLQz0nbAfX7Nz
+         JCaBzrNVmIHU8HLtA2Z+ZCpB9TdWGCVAa9kn9tZahHEaT54IBl+sac+K6+sI9yruSqfZ
+         AI4WVP3wixcTnunUGlzciawWig7RyhnfEu2LFIFrsoua1bY+7lFLTxmvT2Be5humEdAj
+         8Y0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571124; x=1710175924;
+        d=1e100.net; s=20230601; t=1709571117; x=1710175917;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5pCWnqR2w3MK2Z9hkofhscjBJ0Hj19Lc+xpshC15mCg=;
-        b=ox6TNm+UqRvOxug+4qZa3YMY+VBFS6Onbly6wapS1sL7Y1Tzvt7V0eoj9A6NUJBNMj
-         GEkOzltwoZJv7/Ka99vcvAs2Slsdr27SXnlV0XvhQ0YbsWYCCXfDJj6iTlx6q7gBObcz
-         U3Da6f5yJm4vHfKuLsOOivYTAoaqvy4/+J2oT56F4/1xM3VDs/KqUWs2JuT59ZnGPfI6
-         AoW4ry6Z9+EhOnw/yQW4QgeTnk/nAv2L9EGbhbsDr3bsGTGpjo0d93oEdSM0/HpIrEsm
-         NSvNHeuYUjTTW7+W4ErHU8ApOI71uvuogCJzFZXhe4SBzLMavxG+kFwki+y8BN3uJsPy
-         38xA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWoGxDtjkFtuAhnpz0JBZzi7VxEpInt7T4WWp21jDQ9T5b/DeMDFtIWumC2yc2Culzjz/JzS5TwENSeSfxIDKPRE16tlRZ+nE=
-X-Gm-Message-State: AOJu0YyUGCJo5MnEx2SoRjWxa6z7YdHM3/g6lgbdHgCkdbvdGP7QOx41
-	s3EmE8k2NhPR1alrsM9xTECxTyMhRCEd22bFY8m1HggjkyLE+B5SAJYvyhpBgaU=
-X-Google-Smtp-Source: AGHT+IEjhPNnOmvxE//lUchMMMtq5k9u+YYlSzW/hTU5ohirwvcPfzQHUgu607vQs5iIsLuuIPMRVQ==
-X-Received: by 2002:a05:600c:1c9c:b0:412:e580:2dbc with SMTP id k28-20020a05600c1c9c00b00412e5802dbcmr1575430wms.19.1709571123950;
-        Mon, 04 Mar 2024 08:52:03 -0800 (PST)
+        bh=H9z47gxslMXab03nJVN9Zel/hSMnSwz2OuvyhmVXZIg=;
+        b=gkoXn2pYss6kCrr8wHc5z+RKQFVNTXMT4rqRJiOQFq70vIIFgRhb+LKl1iTo78cm7h
+         KKEqlrWVi35b6PjHoFMOr2GzO+U/62fcBBhJL4CP7mxn/hxNSZ2axWHSq2/yU8HPCUT8
+         JjCDiH0Niiz3qg+zXcFqBRqFF1tlClYgOETCSinoaGCx1G36xH0Fa3KAcczQ0HFvzn0Y
+         ZcYIfBFULBQTQzIaa3/Bk2IVIdkiK23Z4mZQNxx13lWkNw3dEvRT4MRSPzKIJWfIM42e
+         IFQ5CovgWqUgNimTWsIfofB/Uv2HthtwmqJdXHyS64ytQizmbAJdPVYir1ur7lCv077e
+         Fv5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXY+uc16CNwXVgt8+c4fBua7643YiRagSzlAIGGduiWK2omP1nO1mFpKZ5CEZ8iV7c1t/2ItQbL4HJPFH0iGS4kOElBw3j62cc=
+X-Gm-Message-State: AOJu0Ywt5E937FuTvMP+YtG1Tstt5H7LxhAGLGer7246m7Kut0KhV8d1
+	Vz+jBljaJ6vVusARMoaISbMEQObi3lyrEJFN1KCu4jdoy/wPemnXzLvnQ6peAmQ=
+X-Google-Smtp-Source: AGHT+IEgV0eXx1rWdGobjqTs8cv9MXDeBJ418kkGq4ZOdDFaewZBLYEyuSk433g0ESo8dYY65UgzuQ==
+X-Received: by 2002:adf:f407:0:b0:33b:784c:276e with SMTP id g7-20020adff407000000b0033b784c276emr7710276wro.25.1709571117681;
+        Mon, 04 Mar 2024 08:51:57 -0800 (PST)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.52.02
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:52:03 -0800 (PST)
+        Mon, 04 Mar 2024 08:51:57 -0800 (PST)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Mon, 04 Mar 2024 16:51:34 +0000
-Subject: [PATCH RFC 26/26] dts: support building all dtb files for a specific vendor
+Date: Mon, 04 Mar 2024 16:51:30 +0000
+Subject: [PATCH RFC 22/26] sifive: drop clock headers
 MIME-Version: 1.0
-Message-Id: <20240304-b4-upstream-dt-headers-v1-26-b7ff41925f92@linaro.org>
+Message-Id: <20240304-b4-upstream-dt-headers-v1-22-b7ff41925f92@linaro.org>
 References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 In-Reply-To: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -84,13 +84,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2654;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6003;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=EI2CDzUz7yZMpQs2UznMDgZqFxlWcF+fQMMDPec6VAA=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnfzjZbFzqomcFzWZeWP/p0l6fZTdzdJim2HT2/J9QI
- 97Z+Syvo5SFQZCDQVZMkUX8xDLLprWX7TW2L7gAM4eVCWQIAxenAEzk0TJGhoXmeT1fj8vPurep
- 9Q7bLMMl2cdYfhQcNPokvMWK8dNF0X5GhmluS6/N3bfIY5Kaq0mF0cmI6Iyp/PNehy++Fn40UJb
- P6CAA
+ bh=5lyJpN4afSur7zKXA+gv+xmN5RUoVNSeg8I0uwN7L3A=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf4Ai27acv2/IJfKdx9lh5g0dyXV5aznswi5aS69iX
+ +K2OKGjlIVBkINBVkyRRfzEMsumtZftNbYvuAAzh5UJZAgDF6cATORhGCPDxCr+yfeZ3jYYS/bJ
+ rJsxXzDbJPZvWqwF4znFHwdKnhx2ZfincdpGwVt69qeA3uDEa+YeO1qFuN4UXz5ak9vLFHfEYuV
+ 5AA==
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -98,81 +98,204 @@ Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:48 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2182
+ <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:49 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2178
 
-This adjusts OF_UPSTREAM to behave more like the kernel by allowing for
-all the devicetree files for a given vendor to be compiled. This is
-useful for Qualcomm in particular as most boards are supported by a
-single U-Boot build just provided with a different DT.
+Drop in favour of dts/upstream.
+
+Small driver/dts change to fix compatibility.
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- dts/Kconfig          | 24 ++++++++++++++++++++++++
- scripts/Makefile.dts | 17 ++++++++++++++++-
- 2 files changed, 40 insertions(+), 1 deletion(-)
+ arch/riscv/dts/fu540-c000-u-boot.dtsi         | 26 +++++++++++++-------------
+ drivers/clk/sifive/fu540-prci.c               |  8 ++++----
+ include/dt-bindings/clock/sifive-fu540-prci.h | 18 ------------------
+ include/dt-bindings/clock/sifive-fu740-prci.h | 24 ------------------------
+ 4 files changed, 17 insertions(+), 59 deletions(-)
 
-diff --git a/dts/Kconfig b/dts/Kconfig
-index b9b6367154ef..67d9dc489856 100644
---- a/dts/Kconfig
-+++ b/dts/Kconfig
-@@ -100,8 +100,32 @@ config OF_UPSTREAM
- 	  However, newer boards whose devicetree source files haven't landed in
- 	  the dts/upstream subtree, they can override this option to have the
- 	  DT build from existing U-Boot tree location instead.
+diff --git a/arch/riscv/dts/fu540-c000-u-boot.dtsi b/arch/riscv/dts/fu540-c000-u-boot.dtsi
+index 360679a1781a..0f8181436410 100644
+--- a/arch/riscv/dts/fu540-c000-u-boot.dtsi
++++ b/arch/riscv/dts/fu540-c000-u-boot.dtsi
+@@ -6,42 +6,42 @@
+ #include <dt-bindings/reset/sifive-fu540-prci.h>
  
-+config OF_UPSTREAM_BUILD_VENDOR
-+	bool "Build all devicetree files for a particular vendor"
-+	depends on OF_UPSTREAM
-+	help
-+	  Enable building all devicetree files for a particular vendor. This
-+	  is useful for generic U-Boot configurations where many boards can
-+	  be supported with a single binary.
-+
-+	  This is only available for platforms using upstream devicetree.
-+
-+config OF_UPSTREAM_VENDOR
-+	string "Vendor to build all upstream devicetree files for"
-+	depends on OF_UPSTREAM_BUILD_VENDOR
-+	default "qcom" if ARCH_SNAPDRAGON
-+	default "rockchip" if ARCH_ROCKCHIP
-+	default "amlogic" if ARCH_MESON
-+	default "allwinner" if ARCH_SUNXI
-+	default "mediatek" if ARCH_MEDIATEK
-+	default "marvell" if ARCH_MVEBU
-+	default "xilinx" if ARCH_VERSAL || ARCH_ZYNQ
-+	default "nvidia" if ARCH_TEGRA
-+	help
-+	  Select the vendor to build all devicetree files for.
-+
- choice
- 	prompt "Provider of DTB for DT control"
- 	depends on OF_CONTROL
+ / {
+ 	cpus {
+-		assigned-clocks = <&prci PRCI_CLK_COREPLL>;
++		assigned-clocks = <&prci FU540_PRCI_CLK_COREPLL>;
+ 		assigned-clock-rates = <1000000000>;
+ 		bootph-pre-ram;
+ 		cpu0: cpu@0 {
+-			clocks = <&prci PRCI_CLK_COREPLL>;
++			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
+ 			bootph-pre-ram;
+ 			status = "okay";
+ 			cpu0_intc: interrupt-controller {
+ 				bootph-pre-ram;
+ 			};
+ 		};
+ 		cpu1: cpu@1 {
+-			clocks = <&prci PRCI_CLK_COREPLL>;
++			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
+ 			bootph-pre-ram;
+ 			cpu1_intc: interrupt-controller {
+ 				bootph-pre-ram;
+ 			};
+ 		};
+ 		cpu2: cpu@2 {
+-			clocks = <&prci PRCI_CLK_COREPLL>;
++			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
+ 			bootph-pre-ram;
+ 			cpu2_intc: interrupt-controller {
+ 				bootph-pre-ram;
+ 			};
+ 		};
+ 		cpu3: cpu@3 {
+-			clocks = <&prci PRCI_CLK_COREPLL>;
++			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
+ 			bootph-pre-ram;
+ 			cpu3_intc: interrupt-controller {
+ 				bootph-pre-ram;
+ 			};
+ 		};
+ 		cpu4: cpu@4 {
+-			clocks = <&prci PRCI_CLK_COREPLL>;
++			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
+ 			bootph-pre-ram;
+ 			cpu4_intc: interrupt-controller {
+ 				bootph-pre-ram;
+ 			};
+@@ -66,22 +66,22 @@
+ 			bootph-pre-ram;
+ 		};
+ 		prci: clock-controller@10000000 {
+ 			#reset-cells = <1>;
+-			resets = <&prci PRCI_RST_DDR_CTRL_N>,
+-				 <&prci PRCI_RST_DDR_AXI_N>,
+-				 <&prci PRCI_RST_DDR_AHB_N>,
+-				 <&prci PRCI_RST_DDR_PHY_N>,
+-				 <&prci PRCI_RST_GEMGXL_N>;
++			resets = <&prci FU540_PRCI_RST_DDR_CTRL_N>,
++				 <&prci FU540_PRCI_RST_DDR_AXI_N>,
++				 <&prci FU540_PRCI_RST_DDR_AHB_N>,
++				 <&prci FU540_PRCI_RST_DDR_PHY_N>,
++				 <&prci FU540_PRCI_RST_GEMGXL_N>;
+ 			reset-names = "ddr_ctrl", "ddr_axi", "ddr_ahb",
+ 					"ddr_phy", "gemgxl_reset";
+ 		};
+ 		dmc: dmc@100b0000 {
+ 			compatible = "sifive,fu540-c000-ddr";
+ 			reg = <0x0 0x100b0000 0x0 0x0800
+ 			       0x0 0x100b2000 0x0 0x2000
+ 			       0x0 0x100b8000 0x0 0x1000>;
+-			clocks = <&prci PRCI_CLK_DDRPLL>;
++			clocks = <&prci FU540_PRCI_CLK_DDRPLL>;
+ 			clock-frequency = <933333324>;
+ 			bootph-pre-ram;
+ 		};
+ 	};
+@@ -99,9 +99,9 @@
+ 	bootph-pre-ram;
+ };
  
-diff --git a/scripts/Makefile.dts b/scripts/Makefile.dts
-index 5e2429c6170c..8005527f3df7 100644
---- a/scripts/Makefile.dts
-+++ b/scripts/Makefile.dts
-@@ -1,3 +1,18 @@
- # SPDX-License-Identifier: GPL-2.0+
+ &eth0 {
+-	assigned-clocks = <&prci PRCI_CLK_GEMGXLPLL>;
++	assigned-clocks = <&prci FU540_PRCI_CLK_GEMGXLPLL>;
+ 	assigned-clock-rates = <125000000>;
+ };
  
--dtb-y += $(patsubst %,%.dtb,$(subst ",,$(CONFIG_DEFAULT_DEVICE_TREE) $(CONFIG_OF_LIST) $(CONFIG_SPL_OF_LIST)))
-+dtb-y += $(patsubst %,%.dtb,\
-+	$(subst ",,$(CONFIG_DEFAULT_DEVICE_TREE) $(CONFIG_OF_LIST) $(CONFIG_SPL_OF_LIST)))
-+
-+ifeq ($(CONFIG_OF_UPSTREAM_BUILD_VENDOR),y)
-+ifeq ($(CONFIG_ARM64),y)
-+dt_dir := $(srctree)/dts/upstream/src/arm64
-+else
-+dt_dir := $(srctree)/dts/upstream/src/$(ARCH)
-+endif
-+
-+dtb-vendor_dts := $(patsubst %.dts,%.dtb, \
-+	$(wildcard $(dt_dir)/$(subst ",,$(CONFIG_OF_UPSTREAM_VENDOR))/*.dts))
-+
-+dtb-y += $(subst $(dt_dir)/,,$(dtb-vendor_dts))
-+
-+endif
+ &l2cache {
+diff --git a/drivers/clk/sifive/fu540-prci.c b/drivers/clk/sifive/fu540-prci.c
+index ceb2c6fab0da..b019f682ac49 100644
+--- a/drivers/clk/sifive/fu540-prci.c
++++ b/drivers/clk/sifive/fu540-prci.c
+@@ -58,27 +58,27 @@ static const struct __prci_clock_ops sifive_fu540_prci_tlclksel_clk_ops = {
+ };
+ 
+ /* List of clock controls provided by the PRCI */
+ struct __prci_clock __prci_init_clocks_fu540[] = {
+-	[PRCI_CLK_COREPLL] = {
++	[FU540_PRCI_CLK_COREPLL] = {
+ 		.name = "corepll",
+ 		.parent_name = "hfclk",
+ 		.ops = &sifive_fu540_prci_wrpll_clk_ops,
+ 		.pwd = &__prci_corepll_data,
+ 	},
+-	[PRCI_CLK_DDRPLL] = {
++	[FU540_PRCI_CLK_DDRPLL] = {
+ 		.name = "ddrpll",
+ 		.parent_name = "hfclk",
+ 		.ops = &sifive_fu540_prci_wrpll_clk_ops,
+ 		.pwd = &__prci_ddrpll_data,
+ 	},
+-	[PRCI_CLK_GEMGXLPLL] = {
++	[FU540_PRCI_CLK_GEMGXLPLL] = {
+ 		.name = "gemgxlpll",
+ 		.parent_name = "hfclk",
+ 		.ops = &sifive_fu540_prci_wrpll_clk_ops,
+ 		.pwd = &__prci_gemgxlpll_data,
+ 	},
+-	[PRCI_CLK_TLCLK] = {
++	[FU540_PRCI_CLK_TLCLK] = {
+ 		.name = "tlclk",
+ 		.parent_name = "corepll",
+ 		.ops = &sifive_fu540_prci_tlclksel_clk_ops,
+ 	},
+diff --git a/include/dt-bindings/clock/sifive-fu540-prci.h b/include/dt-bindings/clock/sifive-fu540-prci.h
+deleted file mode 100644
+index 6a0b70a37d78..000000000000
+--- a/include/dt-bindings/clock/sifive-fu540-prci.h
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (C) 2018-2019 SiFive, Inc.
+- * Wesley Terpstra
+- * Paul Walmsley
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_SIFIVE_FU540_PRCI_H
+-#define __DT_BINDINGS_CLOCK_SIFIVE_FU540_PRCI_H
+-
+-/* Clock indexes for use by Device Tree data and the PRCI driver */
+-
+-#define PRCI_CLK_COREPLL	       0
+-#define PRCI_CLK_DDRPLL		       1
+-#define PRCI_CLK_GEMGXLPLL	       2
+-#define PRCI_CLK_TLCLK		       3
+-
+-#endif
+diff --git a/include/dt-bindings/clock/sifive-fu740-prci.h b/include/dt-bindings/clock/sifive-fu740-prci.h
+deleted file mode 100644
+index 672bdadbf6c0..000000000000
+--- a/include/dt-bindings/clock/sifive-fu740-prci.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+-/*
+- * Copyright (C) 2019 SiFive, Inc.
+- * Wesley Terpstra
+- * Paul Walmsley
+- * Zong Li
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_SIFIVE_FU740_PRCI_H
+-#define __DT_BINDINGS_CLOCK_SIFIVE_FU740_PRCI_H
+-
+-/* Clock indexes for use by Device Tree data and the PRCI driver */
+-
+-#define FU740_PRCI_CLK_COREPLL		0
+-#define FU740_PRCI_CLK_DDRPLL		1
+-#define FU740_PRCI_CLK_GEMGXLPLL	2
+-#define FU740_PRCI_CLK_DVFSCOREPLL	3
+-#define FU740_PRCI_CLK_HFPCLKPLL	4
+-#define FU740_PRCI_CLK_CLTXPLL		5
+-#define FU740_PRCI_CLK_TLCLK		6
+-#define FU740_PRCI_CLK_PCLK		7
+-#define FU740_PRCI_CLK_PCIE_AUX		8
+-
+-#endif	/* __DT_BINDINGS_CLOCK_SIFIVE_FU740_PRCI_H */
 
 -- 
 2.44.0
