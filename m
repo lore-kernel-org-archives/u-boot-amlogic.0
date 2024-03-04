@@ -2,56 +2,56 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B7EC54EBC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88414C54EBA
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:49 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.104585.1709571094385135581
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web11.104441.1709571113427429322
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Mar 2024 08:51:34 -0800
+ Mon, 04 Mar 2024 08:51:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=PMxLgFWF;
- spf=pass (domain: linaro.org, ip: 209.85.221.46, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33d7b8f563eso3176966f8f.0
-        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:34 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=HRas+coG;
+ spf=pass (domain: linaro.org, ip: 209.85.128.51, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412e783c94fso5576125e9.1
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709571093; x=1710175893; darn=groups.io;
+        d=linaro.org; s=google; t=1709571112; x=1710175912; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hXCbUX1u+7XZRxeI4HTdb75qmHQZPv1hb24EF9Ptd1c=;
-        b=PMxLgFWF4w1YJON7ChZbn7UbyqC5RyF1HzjWEko+WqzHnwLb/loCRWSFCOI/k2qxWr
-         l/tvRIOkmlJm6hBcBagX4FaT5MVSY9fhMeuBOHe6cvVPHDEwVeo/E4j+fgqiPxY4WBFs
-         UKyl3Ermev7NXNztuCkei9tTpjH9b8bjel23I+QA65TT90yiidzEPK/RieCY1tmy5j2q
-         TPp+QGWQrv1qka8+9rmnJdjxQiIdeau1+JLzKnFQOgm+ssTTfb7X0PqO+kKwi7BLED+U
-         dqpb6EbLsiZ32XKtHpEhs1uWF2kq2j7ahpWqwvRhlCumPZmrFaQI30BrpnA9A2OzXNhu
-         RvoQ==
+        bh=aVDKzg9V2lBGcaJRFhmFUi2V8PIKffjRsqXPDSEFEk0=;
+        b=HRas+coGhzjoUiRFD6P+jmsHlT7sUnZJyXsMHkDSbFVzW+L1i3tt0Qqh7/+ekq0byg
+         /K6SUUUtoxRDB8pRI/uq52pMcgWd5KK76QHrDLsENqD1b8/8DsOys6WGYldVG/UcOo75
+         rkKzKQjSDdYSuQvG/Qu6cC9cidLH/QipOi9DOoAYR+E2yBbwKN+IwNXC0dmgILnXncR9
+         ZwqxqtZCa+MfsOGrvtMcRDfGXoFPAYU/iCBQ9ixf1VZ2GcCYLtRvG5RmKxo1EDvkrdMr
+         M9fElQMU6fQplN9RAgReSh7HdDPNG0V8SdAsGR41x33sscq7Wpcjake844Pg8b4Wd9WG
+         Sdzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571093; x=1710175893;
+        d=1e100.net; s=20230601; t=1709571112; x=1710175912;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hXCbUX1u+7XZRxeI4HTdb75qmHQZPv1hb24EF9Ptd1c=;
-        b=FDFNH6UgclTqbBAydlUSLsleJQt0/RVg+M4laHwcOFwYtOishQHz+XjKDNoBMFhBKJ
-         aKquC7boBzwZ7ob57ljL5iUWMgT3HfWVOJeuxiS+nq3sOwi3byJI+2vjcViGuUZG9XPp
-         4JzxeXfC33Uml0AsgeIN+mIJJw9rRlwQQfPjLxsG3u6V4EiCZbEveVIixzCWVZ1o54MR
-         stfswkCuir0Bc5Pio2qbzVdAPgS3LCV1IOIT7kPBtjEn62iDkYH9BsCxnk6m9bhcMIhf
-         GAVli9ONeIoSY1TNPKVFH4ICPQtj2co46TFuPAyVRaW2cQtufE/M8cy3sVVY/93SetWU
-         17VA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhN2SHag7daEIt2f65lC8LJTr2AVR/rSv3h2wzxdR2OSLlcZ3y6M9ARJe0vUwASxgT4Yqo08FdypXq1cvxXHa5mQFspbindD8=
-X-Gm-Message-State: AOJu0Ywm770vNfQQNiF/PWP5IaaBhFTmI0Q2EApPwxZbRst/f9hckJnu
-	8OrUGLRxKryDq+mtR6R34GTQOcTRlheFaqktqBzFalCqxRyc7hpfZ8gRFKShgDE=
-X-Google-Smtp-Source: AGHT+IFanaKs3POOg2bvnHRI5PJ9QUO9arbqYce37CrG8m3LmbHF7IgIxf2Bu+lvjnIMqkCNKU4vXw==
-X-Received: by 2002:adf:9ccf:0:b0:33e:21b4:5a3a with SMTP id h15-20020adf9ccf000000b0033e21b45a3amr6266665wre.15.1709571092823;
-        Mon, 04 Mar 2024 08:51:32 -0800 (PST)
+        bh=aVDKzg9V2lBGcaJRFhmFUi2V8PIKffjRsqXPDSEFEk0=;
+        b=rzaldg/6TdU9apMb8C+c0vDU+28JF+kwgtxRxThGqCZrKmOIdfID4PRtQFjodZhw9y
+         sonGbiL1WoRC2mOL3tnjMjxXZejpUFFerFnHMvLQRFjrD+P5iMM1oce39ZhB+jXDYgmq
+         rmgGGqAzwV2UfBeD4aut1NPrX33XfxbTsLLIACWDt7tOtSz22z7mXrTpvSb20eDRomrJ
+         GnZawFaArKOH72sdlCBpcpgbs48RlApT5rmxtdDB5/yXf/8WkYjuscTQ1YQQr8OtYpFM
+         OSKddS/WDDFDS/T+Sog91/beP3CK0Wez1YnyDSjUmgCIgjuvD+A16fWTo6Vo3T2bKtUD
+         0ZMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuy+V7dplU8FqwII3PkToZBcT8yWSiIS2mpXci3RlbDKazxBAyEft5RBKfvvodO24DufFD0Uh7BEhWq0BnYSt7+eiwfkBXj8M=
+X-Gm-Message-State: AOJu0YywBzHSp1xh5+Vh8zdD5KJKW2Rvz1ik7FjQMJi/nM5yEpDwujnQ
+	xIOkKihWQPiitn2DF3C9KtJSFNYd15iE6wtSG6QB5wHnARaC+WcBKmXDjdo8OxQ=
+X-Google-Smtp-Source: AGHT+IHhrXpAWv10W9btOlhsp/GjzqarEn1kBvO2ep93Oy996qK36Bi2t0ojWsrJM4up8iKz+pWFlQ==
+X-Received: by 2002:a05:600c:5252:b0:412:de1f:cdfb with SMTP id fc18-20020a05600c525200b00412de1fcdfbmr3167355wmb.20.1709571111857;
+        Mon, 04 Mar 2024 08:51:51 -0800 (PST)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.31
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:51:32 -0800 (PST)
+        Mon, 04 Mar 2024 08:51:51 -0800 (PST)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Mon, 04 Mar 2024 16:51:14 +0000
-Subject: [PATCH RFC 06/26] imx: drop dt-binding headers
+Date: Mon, 04 Mar 2024 16:51:26 +0000
+Subject: [PATCH RFC 18/26] renesas: drop remaining dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240304-b4-upstream-dt-headers-v1-6-b7ff41925f92@linaro.org>
+Message-Id: <20240304-b4-upstream-dt-headers-v1-18-b7ff41925f92@linaro.org>
 References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 In-Reply-To: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -84,13 +84,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=27445;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=34887;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=nEpu0mlJHc4DgWPRaCxTBp5k44dcZHf0q7/u3eUFhKg=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9juz76kfCjLeNqzXo+788MPTIqyfLgr++yHDbVKc
- bfCHK0TO0pZGAQ5GGTFFFnETyyzbFp72V5j+4ILMHNYmUCGMHBxCsBEArIZ/kcta/L+fTOTY+nj
- gJUlDwUfRgj4vY5M556U1/bQwV5ZVJDhr9yN3n8rNl3cmvbrfM2/Bd58cbpvNrpGGNxifqTvazj
- PdhkA
+ bh=Rmw7YFywNX9UzQxfjmwd48GA4gJ5B5udEStMy4frYYs=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnfzg4PjVGOE1pXOtdcGYy79t1U/4omu+5sebo3jd8T
+ xYKsZRO7ShlYRDkYJAVU2QRP7HMsmntZXuN7QsuwMxhZQIZwsDFKQAT+ZTG8D/G9ntJuEG7WHJl
+ 2Mzv/4LWc+/2NRUzfVkQNeHV5hTH5scM/x3iuvueeH8su3w1VTLq9QeJFX7rHE0tyrr5GjPOTD0
+ xTxUA
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -99,825 +99,984 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2162
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2174
 
 Drop in favour of dts/upstream.
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- include/dt-bindings/interconnect/fsl,imx8mp.h | 59 -----------------------
- include/dt-bindings/interconnect/imx8mm.h     | 50 --------------------
- include/dt-bindings/interconnect/imx8mn.h     | 41 ----------------
- include/dt-bindings/interconnect/imx8mq.h     | 48 -------------------
- include/dt-bindings/phy/phy-imx8-pcie.h       | 14 ------
- include/dt-bindings/power/fsl,imx93-power.h   | 15 ------
- include/dt-bindings/power/imx7-power.h        | 13 ------
- include/dt-bindings/power/imx8mm-power.h      | 31 -------------
- include/dt-bindings/power/imx8mn-power.h      | 20 --------
- include/dt-bindings/power/imx8mp-power.h      | 59 -----------------------
- include/dt-bindings/power/imx8mq-power.h      | 24 ----------
- include/dt-bindings/power/imx8ulp-power.h     | 26 -----------
- include/dt-bindings/reset/imx7-reset.h        | 52 ---------------------
- include/dt-bindings/reset/imx8mp-reset.h      | 50 --------------------
- include/dt-bindings/reset/imx8mq-reset.h      | 67 ---------------------------
- include/dt-bindings/reset/imx8ulp-pcc-reset.h | 59 -----------------------
- include/dt-bindings/sound/fsl-imx-audmux.h    | 64 -------------------------
- 17 files changed, 692 deletions(-)
+ include/dt-bindings/pinctrl/r7s72100-pinctrl.h |  18 ----
+ include/dt-bindings/pinctrl/rzg2l-pinctrl.h    |  23 ----
+ include/dt-bindings/pinctrl/rzn1-pinctrl.h     | 141 -------------------------
+ include/dt-bindings/power/r8a774a1-sysc.h      |  31 ------
+ include/dt-bindings/power/r8a774b1-sysc.h      |  26 -----
+ include/dt-bindings/power/r8a774c0-sysc.h      |  25 -----
+ include/dt-bindings/power/r8a774e1-sysc.h      |  36 -------
+ include/dt-bindings/power/r8a7790-sysc.h       |  31 ------
+ include/dt-bindings/power/r8a7791-sysc.h       |  23 ----
+ include/dt-bindings/power/r8a7792-sysc.h       |  23 ----
+ include/dt-bindings/power/r8a7793-sysc.h       |  25 -----
+ include/dt-bindings/power/r8a7794-sysc.h       |  23 ----
+ include/dt-bindings/power/r8a7795-sysc.h       |  38 -------
+ include/dt-bindings/power/r8a7796-sysc.h       |  33 ------
+ include/dt-bindings/power/r8a77961-sysc.h      |  32 ------
+ include/dt-bindings/power/r8a77965-sysc.h      |  29 -----
+ include/dt-bindings/power/r8a77970-sysc.h      |  28 -----
+ include/dt-bindings/power/r8a77980-sysc.h      |  43 --------
+ include/dt-bindings/power/r8a77990-sysc.h      |  26 -----
+ include/dt-bindings/power/r8a77995-sysc.h      |  20 ----
+ include/dt-bindings/power/r8a779a0-sysc.h      |  59 -----------
+ include/dt-bindings/power/r8a779f0-sysc.h      |  30 ------
+ include/dt-bindings/power/r8a779g0-sysc.h      |  46 --------
+ 23 files changed, 809 deletions(-)
 
-diff --git a/include/dt-bindings/interconnect/fsl,imx8mp.h b/include/dt-bindings/interconnect/fsl,imx8mp.h
+diff --git a/include/dt-bindings/pinctrl/r7s72100-pinctrl.h b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
 deleted file mode 100644
-index 7357d417529a..000000000000
---- a/include/dt-bindings/interconnect/fsl,imx8mp.h
+index 31ee37610eb2..000000000000
+--- a/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
 +++ /dev/null
-@@ -1,59 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 OR MIT */
--/*
-- * Interconnect framework driver for i.MX SoC
-- *
-- * Copyright 2022 NXP
-- * Peng Fan <peng.fan@nxp.com>
-- */
--
--#ifndef __DT_BINDINGS_INTERCONNECT_IMX8MP_H
--#define __DT_BINDINGS_INTERCONNECT_IMX8MP_H
--
--#define IMX8MP_ICN_NOC		0
--#define IMX8MP_ICN_MAIN		1
--#define IMX8MP_ICS_DRAM		2
--#define IMX8MP_ICS_OCRAM	3
--#define IMX8MP_ICM_A53		4
--#define IMX8MP_ICM_SUPERMIX	5
--#define IMX8MP_ICM_GIC		6
--#define IMX8MP_ICM_MLMIX	7
--
--#define IMX8MP_ICN_AUDIO	8
--#define IMX8MP_ICM_DSP		9
--#define IMX8MP_ICM_SDMA2PER	10
--#define IMX8MP_ICM_SDMA2BURST	11
--#define IMX8MP_ICM_SDMA3PER	12
--#define IMX8MP_ICM_SDMA3BURST	13
--#define IMX8MP_ICM_EDMA		14
--
--#define IMX8MP_ICN_GPU		15
--#define IMX8MP_ICM_GPU2D	16
--#define IMX8MP_ICM_GPU3D	17
--
--#define IMX8MP_ICN_HDMI		18
--#define IMX8MP_ICM_HRV		19
--#define IMX8MP_ICM_LCDIF_HDMI	20
--#define IMX8MP_ICM_HDCP		21
--
--#define IMX8MP_ICN_HSIO		22
--#define IMX8MP_ICM_NOC_PCIE	23
--#define IMX8MP_ICM_USB1		24
--#define IMX8MP_ICM_USB2		25
--#define IMX8MP_ICM_PCIE		26
--
--#define IMX8MP_ICN_MEDIA	27
--#define IMX8MP_ICM_LCDIF_RD	28
--#define IMX8MP_ICM_LCDIF_WR	29
--#define IMX8MP_ICM_ISI0		30
--#define IMX8MP_ICM_ISI1		31
--#define IMX8MP_ICM_ISI2		32
--#define IMX8MP_ICM_ISP0		33
--#define IMX8MP_ICM_ISP1		34
--#define IMX8MP_ICM_DWE		35
--
--#define IMX8MP_ICN_VIDEO	36
--#define IMX8MP_ICM_VPU_G1	37
--#define IMX8MP_ICM_VPU_G2	38
--#define IMX8MP_ICM_VPU_H1	39
--
--#endif /* __DT_BINDINGS_INTERCONNECT_IMX8MP_H */
-diff --git a/include/dt-bindings/interconnect/imx8mm.h b/include/dt-bindings/interconnect/imx8mm.h
-deleted file mode 100644
-index 8f10bb06cb59..000000000000
---- a/include/dt-bindings/interconnect/imx8mm.h
-+++ /dev/null
-@@ -1,50 +0,0 @@
+@@ -1,18 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * Interconnect framework driver for i.MX SoC
+- * Defines macros and constants for Renesas RZ/A1 pin controller pin
+- * muxing functions.
+- */
+-#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
+-#define __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
+-
+-#define RZA1_PINS_PER_PORT	16
+-
+-/*
+- * Create the pin index from its bank and position numbers and store in
+- * the upper 16 bits the alternate function identifier
+- */
+-#define RZA1_PINMUX(b, p, f)	\
+-	((b) * RZA1_PINS_PER_PORT + (p) | ((f) << 16))
+-
+-#endif /* __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H */
+diff --git a/include/dt-bindings/pinctrl/rzg2l-pinctrl.h b/include/dt-bindings/pinctrl/rzg2l-pinctrl.h
+deleted file mode 100644
+index c78ed5e5efb7..000000000000
+--- a/include/dt-bindings/pinctrl/rzg2l-pinctrl.h
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+-/*
+- * This header provides constants for Renesas RZ/G2L family pinctrl bindings.
 - *
-- * Copyright (c) 2019, BayLibre
-- * Copyright (c) 2019-2020, NXP
-- * Author: Alexandre Bailon <abailon@baylibre.com>
+- * Copyright (C) 2021 Renesas Electronics Corp.
+- *
 - */
 -
--#ifndef __DT_BINDINGS_INTERCONNECT_IMX8MM_H
--#define __DT_BINDINGS_INTERCONNECT_IMX8MM_H
+-#ifndef __DT_BINDINGS_RZG2L_PINCTRL_H
+-#define __DT_BINDINGS_RZG2L_PINCTRL_H
 -
--#define IMX8MM_ICN_NOC		1
--#define IMX8MM_ICS_DRAM		2
--#define IMX8MM_ICS_OCRAM	3
--#define IMX8MM_ICM_A53		4
+-#define RZG2L_PINS_PER_PORT	8
 -
--#define IMX8MM_ICM_VPU_H1	5
--#define IMX8MM_ICM_VPU_G1	6
--#define IMX8MM_ICM_VPU_G2	7
--#define IMX8MM_ICN_VIDEO	8
+-/*
+- * Create the pin index from its bank and position numbers and store in
+- * the upper 16 bits the alternate function identifier
+- */
+-#define RZG2L_PORT_PINMUX(b, p, f)	((b) * RZG2L_PINS_PER_PORT + (p) | ((f) << 16))
 -
--#define IMX8MM_ICM_GPU2D	9
--#define IMX8MM_ICM_GPU3D	10
--#define IMX8MM_ICN_GPU		11
+-/* Convert a port and pin label to its global pin index */
+-#define RZG2L_GPIO(port, pin)	((port) * RZG2L_PINS_PER_PORT + (pin))
 -
--#define IMX8MM_ICM_CSI		12
--#define IMX8MM_ICM_LCDIF	13
--#define IMX8MM_ICN_MIPI		14
--
--#define IMX8MM_ICM_USB1		15
--#define IMX8MM_ICM_USB2		16
--#define IMX8MM_ICM_PCIE		17
--#define IMX8MM_ICN_HSIO		18
--
--#define IMX8MM_ICM_SDMA2	19
--#define IMX8MM_ICM_SDMA3	20
--#define IMX8MM_ICN_AUDIO	21
--
--#define IMX8MM_ICN_ENET		22
--#define IMX8MM_ICM_ENET		23
--
--#define IMX8MM_ICN_MAIN		24
--#define IMX8MM_ICM_NAND		25
--#define IMX8MM_ICM_SDMA1	26
--#define IMX8MM_ICM_USDHC1	27
--#define IMX8MM_ICM_USDHC2	28
--#define IMX8MM_ICM_USDHC3	29
--
--#endif /* __DT_BINDINGS_INTERCONNECT_IMX8MM_H */
-diff --git a/include/dt-bindings/interconnect/imx8mn.h b/include/dt-bindings/interconnect/imx8mn.h
+-#endif /* __DT_BINDINGS_RZG2L_PINCTRL_H */
+diff --git a/include/dt-bindings/pinctrl/rzn1-pinctrl.h b/include/dt-bindings/pinctrl/rzn1-pinctrl.h
 deleted file mode 100644
-index 307b977100b6..000000000000
---- a/include/dt-bindings/interconnect/imx8mn.h
+index 21d6cc4d59f5..000000000000
+--- a/include/dt-bindings/pinctrl/rzn1-pinctrl.h
 +++ /dev/null
-@@ -1,41 +0,0 @@
+@@ -1,141 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * Interconnect framework driver for i.MX SoC
+- * Defines macros and constants for Renesas RZ/N1 pin controller pin
+- * muxing functions.
+- */
+-#ifndef __DT_BINDINGS_RZN1_PINCTRL_H
+-#define __DT_BINDINGS_RZN1_PINCTRL_H
+-
+-#define RZN1_PINMUX(_gpio, _func) \
+-	(((_func) << 8) | (_gpio))
+-
+-/*
+- * Given the different levels of muxing on the SoC, it was decided to
+- * 'linearize' them into one numerical space. So mux level 1, 2 and the MDIO
+- * muxes are all represented by one single value.
 - *
-- * Copyright (c) 2019-2020, NXP
+- * You can derive the hardware value pretty easily too, as
+- * 0...9   are Level 1
+- * 10...71 are Level 2. The Level 2 mux will be set to this
+- *         value - RZN1_FUNC_L2_OFFSET, and the Level 1 mux will be
+- *         set accordingly.
+- * 72...103 are for the 2 MDIO muxes.
 - */
+-#define RZN1_FUNC_HIGHZ				0
+-#define RZN1_FUNC_0L				1
+-#define RZN1_FUNC_CLK_ETH_MII_RGMII_RMII	2
+-#define RZN1_FUNC_CLK_ETH_NAND			3
+-#define RZN1_FUNC_QSPI				4
+-#define RZN1_FUNC_SDIO				5
+-#define RZN1_FUNC_LCD				6
+-#define RZN1_FUNC_LCD_E				7
+-#define RZN1_FUNC_MSEBIM			8
+-#define RZN1_FUNC_MSEBIS			9
+-#define RZN1_FUNC_L2_OFFSET			10	/* I'm Special */
 -
--#ifndef __DT_BINDINGS_INTERCONNECT_IMX8MN_H
--#define __DT_BINDINGS_INTERCONNECT_IMX8MN_H
+-#define RZN1_FUNC_HIGHZ1			(RZN1_FUNC_L2_OFFSET + 0)
+-#define RZN1_FUNC_ETHERCAT			(RZN1_FUNC_L2_OFFSET + 1)
+-#define RZN1_FUNC_SERCOS3			(RZN1_FUNC_L2_OFFSET + 2)
+-#define RZN1_FUNC_SDIO_E			(RZN1_FUNC_L2_OFFSET + 3)
+-#define RZN1_FUNC_ETH_MDIO			(RZN1_FUNC_L2_OFFSET + 4)
+-#define RZN1_FUNC_ETH_MDIO_E1			(RZN1_FUNC_L2_OFFSET + 5)
+-#define RZN1_FUNC_USB				(RZN1_FUNC_L2_OFFSET + 6)
+-#define RZN1_FUNC_MSEBIM_E			(RZN1_FUNC_L2_OFFSET + 7)
+-#define RZN1_FUNC_MSEBIS_E			(RZN1_FUNC_L2_OFFSET + 8)
+-#define RZN1_FUNC_RSV				(RZN1_FUNC_L2_OFFSET + 9)
+-#define RZN1_FUNC_RSV_E				(RZN1_FUNC_L2_OFFSET + 10)
+-#define RZN1_FUNC_RSV_E1			(RZN1_FUNC_L2_OFFSET + 11)
+-#define RZN1_FUNC_UART0_I			(RZN1_FUNC_L2_OFFSET + 12)
+-#define RZN1_FUNC_UART0_I_E			(RZN1_FUNC_L2_OFFSET + 13)
+-#define RZN1_FUNC_UART1_I			(RZN1_FUNC_L2_OFFSET + 14)
+-#define RZN1_FUNC_UART1_I_E			(RZN1_FUNC_L2_OFFSET + 15)
+-#define RZN1_FUNC_UART2_I			(RZN1_FUNC_L2_OFFSET + 16)
+-#define RZN1_FUNC_UART2_I_E			(RZN1_FUNC_L2_OFFSET + 17)
+-#define RZN1_FUNC_UART0				(RZN1_FUNC_L2_OFFSET + 18)
+-#define RZN1_FUNC_UART0_E			(RZN1_FUNC_L2_OFFSET + 19)
+-#define RZN1_FUNC_UART1				(RZN1_FUNC_L2_OFFSET + 20)
+-#define RZN1_FUNC_UART1_E			(RZN1_FUNC_L2_OFFSET + 21)
+-#define RZN1_FUNC_UART2				(RZN1_FUNC_L2_OFFSET + 22)
+-#define RZN1_FUNC_UART2_E			(RZN1_FUNC_L2_OFFSET + 23)
+-#define RZN1_FUNC_UART3				(RZN1_FUNC_L2_OFFSET + 24)
+-#define RZN1_FUNC_UART3_E			(RZN1_FUNC_L2_OFFSET + 25)
+-#define RZN1_FUNC_UART4				(RZN1_FUNC_L2_OFFSET + 26)
+-#define RZN1_FUNC_UART4_E			(RZN1_FUNC_L2_OFFSET + 27)
+-#define RZN1_FUNC_UART5				(RZN1_FUNC_L2_OFFSET + 28)
+-#define RZN1_FUNC_UART5_E			(RZN1_FUNC_L2_OFFSET + 29)
+-#define RZN1_FUNC_UART6				(RZN1_FUNC_L2_OFFSET + 30)
+-#define RZN1_FUNC_UART6_E			(RZN1_FUNC_L2_OFFSET + 31)
+-#define RZN1_FUNC_UART7				(RZN1_FUNC_L2_OFFSET + 32)
+-#define RZN1_FUNC_UART7_E			(RZN1_FUNC_L2_OFFSET + 33)
+-#define RZN1_FUNC_SPI0_M			(RZN1_FUNC_L2_OFFSET + 34)
+-#define RZN1_FUNC_SPI0_M_E			(RZN1_FUNC_L2_OFFSET + 35)
+-#define RZN1_FUNC_SPI1_M			(RZN1_FUNC_L2_OFFSET + 36)
+-#define RZN1_FUNC_SPI1_M_E			(RZN1_FUNC_L2_OFFSET + 37)
+-#define RZN1_FUNC_SPI2_M			(RZN1_FUNC_L2_OFFSET + 38)
+-#define RZN1_FUNC_SPI2_M_E			(RZN1_FUNC_L2_OFFSET + 39)
+-#define RZN1_FUNC_SPI3_M			(RZN1_FUNC_L2_OFFSET + 40)
+-#define RZN1_FUNC_SPI3_M_E			(RZN1_FUNC_L2_OFFSET + 41)
+-#define RZN1_FUNC_SPI4_S			(RZN1_FUNC_L2_OFFSET + 42)
+-#define RZN1_FUNC_SPI4_S_E			(RZN1_FUNC_L2_OFFSET + 43)
+-#define RZN1_FUNC_SPI5_S			(RZN1_FUNC_L2_OFFSET + 44)
+-#define RZN1_FUNC_SPI5_S_E			(RZN1_FUNC_L2_OFFSET + 45)
+-#define RZN1_FUNC_SGPIO0_M			(RZN1_FUNC_L2_OFFSET + 46)
+-#define RZN1_FUNC_SGPIO1_M			(RZN1_FUNC_L2_OFFSET + 47)
+-#define RZN1_FUNC_GPIO				(RZN1_FUNC_L2_OFFSET + 48)
+-#define RZN1_FUNC_CAN				(RZN1_FUNC_L2_OFFSET + 49)
+-#define RZN1_FUNC_I2C				(RZN1_FUNC_L2_OFFSET + 50)
+-#define RZN1_FUNC_SAFE				(RZN1_FUNC_L2_OFFSET + 51)
+-#define RZN1_FUNC_PTO_PWM			(RZN1_FUNC_L2_OFFSET + 52)
+-#define RZN1_FUNC_PTO_PWM1			(RZN1_FUNC_L2_OFFSET + 53)
+-#define RZN1_FUNC_PTO_PWM2			(RZN1_FUNC_L2_OFFSET + 54)
+-#define RZN1_FUNC_PTO_PWM3			(RZN1_FUNC_L2_OFFSET + 55)
+-#define RZN1_FUNC_PTO_PWM4			(RZN1_FUNC_L2_OFFSET + 56)
+-#define RZN1_FUNC_DELTA_SIGMA			(RZN1_FUNC_L2_OFFSET + 57)
+-#define RZN1_FUNC_SGPIO2_M			(RZN1_FUNC_L2_OFFSET + 58)
+-#define RZN1_FUNC_SGPIO3_M			(RZN1_FUNC_L2_OFFSET + 59)
+-#define RZN1_FUNC_SGPIO4_S			(RZN1_FUNC_L2_OFFSET + 60)
+-#define RZN1_FUNC_MAC_MTIP_SWITCH		(RZN1_FUNC_L2_OFFSET + 61)
 -
--#define IMX8MN_ICN_NOC		1
--#define IMX8MN_ICS_DRAM		2
--#define IMX8MN_ICS_OCRAM	3
--#define IMX8MN_ICM_A53		4
+-#define RZN1_FUNC_MDIO_OFFSET			(RZN1_FUNC_L2_OFFSET + 62)
 -
--#define IMX8MN_ICM_GPU		5
--#define IMX8MN_ICN_GPU		6
+-/* These are MDIO0 peripherals for the RZN1_FUNC_ETH_MDIO function */
+-#define RZN1_FUNC_MDIO0_HIGHZ			(RZN1_FUNC_MDIO_OFFSET + 0)
+-#define RZN1_FUNC_MDIO0_GMAC0			(RZN1_FUNC_MDIO_OFFSET + 1)
+-#define RZN1_FUNC_MDIO0_GMAC1			(RZN1_FUNC_MDIO_OFFSET + 2)
+-#define RZN1_FUNC_MDIO0_ECAT			(RZN1_FUNC_MDIO_OFFSET + 3)
+-#define RZN1_FUNC_MDIO0_S3_MDIO0		(RZN1_FUNC_MDIO_OFFSET + 4)
+-#define RZN1_FUNC_MDIO0_S3_MDIO1		(RZN1_FUNC_MDIO_OFFSET + 5)
+-#define RZN1_FUNC_MDIO0_HWRTOS			(RZN1_FUNC_MDIO_OFFSET + 6)
+-#define RZN1_FUNC_MDIO0_SWITCH			(RZN1_FUNC_MDIO_OFFSET + 7)
+-/* These are MDIO0 peripherals for the RZN1_FUNC_ETH_MDIO_E1 function */
+-#define RZN1_FUNC_MDIO0_E1_HIGHZ		(RZN1_FUNC_MDIO_OFFSET + 8)
+-#define RZN1_FUNC_MDIO0_E1_GMAC0		(RZN1_FUNC_MDIO_OFFSET + 9)
+-#define RZN1_FUNC_MDIO0_E1_GMAC1		(RZN1_FUNC_MDIO_OFFSET + 10)
+-#define RZN1_FUNC_MDIO0_E1_ECAT			(RZN1_FUNC_MDIO_OFFSET + 11)
+-#define RZN1_FUNC_MDIO0_E1_S3_MDIO0		(RZN1_FUNC_MDIO_OFFSET + 12)
+-#define RZN1_FUNC_MDIO0_E1_S3_MDIO1		(RZN1_FUNC_MDIO_OFFSET + 13)
+-#define RZN1_FUNC_MDIO0_E1_HWRTOS		(RZN1_FUNC_MDIO_OFFSET + 14)
+-#define RZN1_FUNC_MDIO0_E1_SWITCH		(RZN1_FUNC_MDIO_OFFSET + 15)
 -
--#define IMX8MN_ICM_CSI1		7
--#define IMX8MN_ICM_CSI2		8
--#define IMX8MN_ICM_ISI		9
--#define IMX8MN_ICM_LCDIF	10
--#define IMX8MN_ICN_MIPI		11
+-/* These are MDIO1 peripherals for the RZN1_FUNC_ETH_MDIO function */
+-#define RZN1_FUNC_MDIO1_HIGHZ			(RZN1_FUNC_MDIO_OFFSET + 16)
+-#define RZN1_FUNC_MDIO1_GMAC0			(RZN1_FUNC_MDIO_OFFSET + 17)
+-#define RZN1_FUNC_MDIO1_GMAC1			(RZN1_FUNC_MDIO_OFFSET + 18)
+-#define RZN1_FUNC_MDIO1_ECAT			(RZN1_FUNC_MDIO_OFFSET + 19)
+-#define RZN1_FUNC_MDIO1_S3_MDIO0		(RZN1_FUNC_MDIO_OFFSET + 20)
+-#define RZN1_FUNC_MDIO1_S3_MDIO1		(RZN1_FUNC_MDIO_OFFSET + 21)
+-#define RZN1_FUNC_MDIO1_HWRTOS			(RZN1_FUNC_MDIO_OFFSET + 22)
+-#define RZN1_FUNC_MDIO1_SWITCH			(RZN1_FUNC_MDIO_OFFSET + 23)
+-/* These are MDIO1 peripherals for the RZN1_FUNC_ETH_MDIO_E1 function */
+-#define RZN1_FUNC_MDIO1_E1_HIGHZ		(RZN1_FUNC_MDIO_OFFSET + 24)
+-#define RZN1_FUNC_MDIO1_E1_GMAC0		(RZN1_FUNC_MDIO_OFFSET + 25)
+-#define RZN1_FUNC_MDIO1_E1_GMAC1		(RZN1_FUNC_MDIO_OFFSET + 26)
+-#define RZN1_FUNC_MDIO1_E1_ECAT			(RZN1_FUNC_MDIO_OFFSET + 27)
+-#define RZN1_FUNC_MDIO1_E1_S3_MDIO0		(RZN1_FUNC_MDIO_OFFSET + 28)
+-#define RZN1_FUNC_MDIO1_E1_S3_MDIO1		(RZN1_FUNC_MDIO_OFFSET + 29)
+-#define RZN1_FUNC_MDIO1_E1_HWRTOS		(RZN1_FUNC_MDIO_OFFSET + 30)
+-#define RZN1_FUNC_MDIO1_E1_SWITCH		(RZN1_FUNC_MDIO_OFFSET + 31)
 -
--#define IMX8MN_ICM_USB		12
+-#define RZN1_FUNC_MAX				(RZN1_FUNC_MDIO_OFFSET + 32)
 -
--#define IMX8MN_ICM_SDMA2	13
--#define IMX8MN_ICM_SDMA3	14
--#define IMX8MN_ICN_AUDIO	15
--
--#define IMX8MN_ICN_ENET		16
--#define IMX8MN_ICM_ENET		17
--
--#define IMX8MN_ICM_NAND		18
--#define IMX8MN_ICM_SDMA1	19
--#define IMX8MN_ICM_USDHC1	20
--#define IMX8MN_ICM_USDHC2	21
--#define IMX8MN_ICM_USDHC3	22
--#define IMX8MN_ICN_MAIN		23
--
--#endif /* __DT_BINDINGS_INTERCONNECT_IMX8MN_H */
-diff --git a/include/dt-bindings/interconnect/imx8mq.h b/include/dt-bindings/interconnect/imx8mq.h
+-#endif /* __DT_BINDINGS_RZN1_PINCTRL_H */
+diff --git a/include/dt-bindings/power/r8a774a1-sysc.h b/include/dt-bindings/power/r8a774a1-sysc.h
 deleted file mode 100644
-index 1a4cae7f8be2..000000000000
---- a/include/dt-bindings/interconnect/imx8mq.h
-+++ /dev/null
-@@ -1,48 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Interconnect framework driver for i.MX SoC
-- *
-- * Copyright (c) 2019-2020, NXP
-- */
--
--#ifndef __DT_BINDINGS_INTERCONNECT_IMX8MQ_H
--#define __DT_BINDINGS_INTERCONNECT_IMX8MQ_H
--
--#define IMX8MQ_ICN_NOC		1
--#define IMX8MQ_ICS_DRAM		2
--#define IMX8MQ_ICS_OCRAM	3
--#define IMX8MQ_ICM_A53		4
--
--#define IMX8MQ_ICM_VPU		5
--#define IMX8MQ_ICN_VIDEO	6
--
--#define IMX8MQ_ICM_GPU		7
--#define IMX8MQ_ICN_GPU		8
--
--#define IMX8MQ_ICM_DCSS		9
--#define IMX8MQ_ICN_DCSS		10
--
--#define IMX8MQ_ICM_USB1		11
--#define IMX8MQ_ICM_USB2		12
--#define IMX8MQ_ICN_USB		13
--
--#define IMX8MQ_ICM_CSI1		14
--#define IMX8MQ_ICM_CSI2		15
--#define IMX8MQ_ICM_LCDIF	16
--#define IMX8MQ_ICN_DISPLAY	17
--
--#define IMX8MQ_ICM_SDMA2	18
--#define IMX8MQ_ICN_AUDIO	19
--
--#define IMX8MQ_ICN_ENET		20
--#define IMX8MQ_ICM_ENET		21
--
--#define IMX8MQ_ICM_SDMA1	22
--#define IMX8MQ_ICM_NAND		23
--#define IMX8MQ_ICM_USDHC1	24
--#define IMX8MQ_ICM_USDHC2	25
--#define IMX8MQ_ICM_PCIE1	26
--#define IMX8MQ_ICM_PCIE2	27
--#define IMX8MQ_ICN_MAIN		28
--
--#endif /* __DT_BINDINGS_INTERCONNECT_IMX8MQ_H */
-diff --git a/include/dt-bindings/phy/phy-imx8-pcie.h b/include/dt-bindings/phy/phy-imx8-pcie.h
-deleted file mode 100644
-index 8bbe2d6538d8..000000000000
---- a/include/dt-bindings/phy/phy-imx8-pcie.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * This header provides constants for i.MX8 PCIe.
-- */
--
--#ifndef _DT_BINDINGS_IMX8_PCIE_H
--#define _DT_BINDINGS_IMX8_PCIE_H
--
--/* Reference clock PAD mode */
--#define IMX8_PCIE_REFCLK_PAD_UNUSED	0
--#define IMX8_PCIE_REFCLK_PAD_INPUT	1
--#define IMX8_PCIE_REFCLK_PAD_OUTPUT	2
--
--#endif /* _DT_BINDINGS_IMX8_PCIE_H */
-diff --git a/include/dt-bindings/power/fsl,imx93-power.h b/include/dt-bindings/power/fsl,imx93-power.h
-deleted file mode 100644
-index 17f9f015bf7d..000000000000
---- a/include/dt-bindings/power/fsl,imx93-power.h
-+++ /dev/null
-@@ -1,15 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- *  Copyright 2022 NXP
-- */
--
--#ifndef __DT_BINDINGS_IMX93_POWER_H__
--#define __DT_BINDINGS_IMX93_POWER_H__
--
--#define IMX93_MEDIABLK_PD_MIPI_DSI		0
--#define IMX93_MEDIABLK_PD_MIPI_CSI		1
--#define IMX93_MEDIABLK_PD_PXP			2
--#define IMX93_MEDIABLK_PD_LCDIF			3
--#define IMX93_MEDIABLK_PD_ISI			4
--
--#endif
-diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
-deleted file mode 100644
-index 597c1aa06ae5..000000000000
---- a/include/dt-bindings/power/imx7-power.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- *  Copyright (C) 2017 Impinj
-- */
--
--#ifndef __DT_BINDINGS_IMX7_POWER_H__
--#define __DT_BINDINGS_IMX7_POWER_H__
--
--#define IMX7_POWER_DOMAIN_MIPI_PHY		0
--#define IMX7_POWER_DOMAIN_PCIE_PHY		1
--#define IMX7_POWER_DOMAIN_USB_HSIC_PHY		2
--
--#endif
-diff --git a/include/dt-bindings/power/imx8mm-power.h b/include/dt-bindings/power/imx8mm-power.h
-deleted file mode 100644
-index 648938f24c8e..000000000000
---- a/include/dt-bindings/power/imx8mm-power.h
+index 580f431cd32e..000000000000
+--- a/include/dt-bindings/power/r8a774a1-sysc.h
 +++ /dev/null
 @@ -1,31 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+-/* SPDX-License-Identifier: GPL-2.0
+- *
+- * Copyright (C) 2018 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
+-
 -/*
-- *  Copyright (C) 2020 Pengutronix, Lucas Stach <kernel@pengutronix.de>
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
 - */
 -
--#ifndef __DT_BINDINGS_IMX8MM_POWER_H__
--#define __DT_BINDINGS_IMX8MM_POWER_H__
+-#define R8A774A1_PD_CA57_CPU0		 0
+-#define R8A774A1_PD_CA57_CPU1		 1
+-#define R8A774A1_PD_CA53_CPU0		 5
+-#define R8A774A1_PD_CA53_CPU1		 6
+-#define R8A774A1_PD_CA53_CPU2		 7
+-#define R8A774A1_PD_CA53_CPU3		 8
+-#define R8A774A1_PD_CA57_SCU		12
+-#define R8A774A1_PD_A3VC		14
+-#define R8A774A1_PD_3DG_A		17
+-#define R8A774A1_PD_3DG_B		18
+-#define R8A774A1_PD_CA53_SCU		21
+-#define R8A774A1_PD_A2VC0		25
+-#define R8A774A1_PD_A2VC1		26
 -
--#define IMX8MM_POWER_DOMAIN_HSIOMIX	0
--#define IMX8MM_POWER_DOMAIN_PCIE	1
--#define IMX8MM_POWER_DOMAIN_OTG1	2
--#define IMX8MM_POWER_DOMAIN_OTG2	3
--#define IMX8MM_POWER_DOMAIN_GPUMIX	4
--#define IMX8MM_POWER_DOMAIN_GPU		5
--#define IMX8MM_POWER_DOMAIN_VPUMIX	6
--#define IMX8MM_POWER_DOMAIN_VPUG1	7
--#define IMX8MM_POWER_DOMAIN_VPUG2	8
--#define IMX8MM_POWER_DOMAIN_VPUH1	9
--#define IMX8MM_POWER_DOMAIN_DISPMIX	10
--#define IMX8MM_POWER_DOMAIN_MIPI	11
+-/* Always-on power area */
+-#define R8A774A1_PD_ALWAYS_ON		32
 -
--#define IMX8MM_VPUBLK_PD_G1		0
--#define IMX8MM_VPUBLK_PD_G2		1
--#define IMX8MM_VPUBLK_PD_H1		2
--
--#define IMX8MM_DISPBLK_PD_CSI_BRIDGE	0
--#define IMX8MM_DISPBLK_PD_LCDIF		1
--#define IMX8MM_DISPBLK_PD_MIPI_DSI	2
--#define IMX8MM_DISPBLK_PD_MIPI_CSI	3
--
--#endif
-diff --git a/include/dt-bindings/power/imx8mn-power.h b/include/dt-bindings/power/imx8mn-power.h
+-#endif /* __DT_BINDINGS_POWER_R8A774A1_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a774b1-sysc.h b/include/dt-bindings/power/r8a774b1-sysc.h
 deleted file mode 100644
-index eedd0e581939..000000000000
---- a/include/dt-bindings/power/imx8mn-power.h
-+++ /dev/null
-@@ -1,20 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- *  Copyright (C) 2020 Compass Electronics Group, LLC
-- */
--
--#ifndef __DT_BINDINGS_IMX8MN_POWER_H__
--#define __DT_BINDINGS_IMX8MN_POWER_H__
--
--#define IMX8MN_POWER_DOMAIN_HSIOMIX	0
--#define IMX8MN_POWER_DOMAIN_OTG1	1
--#define IMX8MN_POWER_DOMAIN_GPUMIX	2
--#define IMX8MN_POWER_DOMAIN_DISPMIX	3
--#define IMX8MN_POWER_DOMAIN_MIPI	4
--
--#define IMX8MN_DISPBLK_PD_MIPI_DSI	0
--#define IMX8MN_DISPBLK_PD_MIPI_CSI	1
--#define IMX8MN_DISPBLK_PD_LCDIF	2
--#define IMX8MN_DISPBLK_PD_ISI	3
--
--#endif
-diff --git a/include/dt-bindings/power/imx8mp-power.h b/include/dt-bindings/power/imx8mp-power.h
-deleted file mode 100644
-index 2fe3c2abad13..000000000000
---- a/include/dt-bindings/power/imx8mp-power.h
-+++ /dev/null
-@@ -1,59 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- *  Copyright (C) 2020 Pengutronix, Sascha Hauer <kernel@pengutronix.de>
-- */
--
--#ifndef __DT_BINDINGS_IMX8MP_POWER_DOMAIN_POWER_H__
--#define __DT_BINDINGS_IMX8MP_POWER_DOMAIN_POWER_H__
--
--#define IMX8MP_POWER_DOMAIN_MIPI_PHY1			0
--#define IMX8MP_POWER_DOMAIN_PCIE_PHY			1
--#define IMX8MP_POWER_DOMAIN_USB1_PHY			2
--#define IMX8MP_POWER_DOMAIN_USB2_PHY			3
--#define IMX8MP_POWER_DOMAIN_MLMIX			4
--#define IMX8MP_POWER_DOMAIN_AUDIOMIX			5
--#define IMX8MP_POWER_DOMAIN_GPU2D			6
--#define IMX8MP_POWER_DOMAIN_GPUMIX			7
--#define IMX8MP_POWER_DOMAIN_VPUMIX			8
--#define IMX8MP_POWER_DOMAIN_GPU3D			9
--#define IMX8MP_POWER_DOMAIN_MEDIAMIX			10
--#define IMX8MP_POWER_DOMAIN_VPU_G1			11
--#define IMX8MP_POWER_DOMAIN_VPU_G2			12
--#define IMX8MP_POWER_DOMAIN_VPU_VC8000E			13
--#define IMX8MP_POWER_DOMAIN_HDMIMIX			14
--#define IMX8MP_POWER_DOMAIN_HDMI_PHY			15
--#define IMX8MP_POWER_DOMAIN_MIPI_PHY2			16
--#define IMX8MP_POWER_DOMAIN_HSIOMIX			17
--#define IMX8MP_POWER_DOMAIN_MEDIAMIX_ISPDWP		18
--
--#define IMX8MP_HSIOBLK_PD_USB				0
--#define IMX8MP_HSIOBLK_PD_USB_PHY1			1
--#define IMX8MP_HSIOBLK_PD_USB_PHY2			2
--#define IMX8MP_HSIOBLK_PD_PCIE				3
--#define IMX8MP_HSIOBLK_PD_PCIE_PHY			4
--
--#define IMX8MP_MEDIABLK_PD_MIPI_DSI_1			0
--#define IMX8MP_MEDIABLK_PD_MIPI_CSI2_1			1
--#define IMX8MP_MEDIABLK_PD_LCDIF_1			2
--#define IMX8MP_MEDIABLK_PD_ISI				3
--#define IMX8MP_MEDIABLK_PD_MIPI_CSI2_2			4
--#define IMX8MP_MEDIABLK_PD_LCDIF_2			5
--#define IMX8MP_MEDIABLK_PD_ISP				6
--#define IMX8MP_MEDIABLK_PD_DWE				7
--#define IMX8MP_MEDIABLK_PD_MIPI_DSI_2			8
--
--#define IMX8MP_HDMIBLK_PD_IRQSTEER			0
--#define IMX8MP_HDMIBLK_PD_LCDIF				1
--#define IMX8MP_HDMIBLK_PD_PAI				2
--#define IMX8MP_HDMIBLK_PD_PVI				3
--#define IMX8MP_HDMIBLK_PD_TRNG				4
--#define IMX8MP_HDMIBLK_PD_HDMI_TX			5
--#define IMX8MP_HDMIBLK_PD_HDMI_TX_PHY			6
--#define IMX8MP_HDMIBLK_PD_HDCP				7
--#define IMX8MP_HDMIBLK_PD_HRV				8
--
--#define IMX8MP_VPUBLK_PD_G1				0
--#define IMX8MP_VPUBLK_PD_G2				1
--#define IMX8MP_VPUBLK_PD_VC8000E			2
--
--#endif
-diff --git a/include/dt-bindings/power/imx8mq-power.h b/include/dt-bindings/power/imx8mq-power.h
-deleted file mode 100755
-index 9f7d0f1e7c32..000000000000
---- a/include/dt-bindings/power/imx8mq-power.h
-+++ /dev/null
-@@ -1,24 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- *  Copyright (C) 2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
-- */
--
--#ifndef __DT_BINDINGS_IMX8MQ_POWER_H__
--#define __DT_BINDINGS_IMX8MQ_POWER_H__
--
--#define IMX8M_POWER_DOMAIN_MIPI		0
--#define IMX8M_POWER_DOMAIN_PCIE1	1
--#define IMX8M_POWER_DOMAIN_USB_OTG1	2
--#define IMX8M_POWER_DOMAIN_USB_OTG2	3
--#define IMX8M_POWER_DOMAIN_DDR1		4
--#define IMX8M_POWER_DOMAIN_GPU		5
--#define IMX8M_POWER_DOMAIN_VPU		6
--#define IMX8M_POWER_DOMAIN_DISP		7
--#define IMX8M_POWER_DOMAIN_MIPI_CSI1	8
--#define IMX8M_POWER_DOMAIN_MIPI_CSI2	9
--#define IMX8M_POWER_DOMAIN_PCIE2	10
--
--#define IMX8MQ_VPUBLK_PD_G1		0
--#define IMX8MQ_VPUBLK_PD_G2		1
--
--#endif
-diff --git a/include/dt-bindings/power/imx8ulp-power.h b/include/dt-bindings/power/imx8ulp-power.h
-deleted file mode 100644
-index a556b2e96df1..000000000000
---- a/include/dt-bindings/power/imx8ulp-power.h
+index 373736402f04..000000000000
+--- a/include/dt-bindings/power/r8a774b1-sysc.h
 +++ /dev/null
 @@ -1,26 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- *  Copyright 2021 NXP
-- */
--
--#ifndef __DT_BINDINGS_IMX8ULP_POWER_H__
--#define __DT_BINDINGS_IMX8ULP_POWER_H__
--
--#define IMX8ULP_PD_DMA1		0
--#define IMX8ULP_PD_FLEXSPI2	1
--#define IMX8ULP_PD_USB0		2
--#define IMX8ULP_PD_USDHC0	3
--#define IMX8ULP_PD_USDHC1	4
--#define IMX8ULP_PD_USDHC2_USB1	5
--#define IMX8ULP_PD_DCNANO	6
--#define IMX8ULP_PD_EPDC		7
--#define IMX8ULP_PD_DMA2		8
--#define IMX8ULP_PD_GPU2D	9
--#define IMX8ULP_PD_GPU3D	10
--#define IMX8ULP_PD_HIFI4	11
--#define IMX8ULP_PD_ISI		12
--#define IMX8ULP_PD_MIPI_CSI	13
--#define IMX8ULP_PD_MIPI_DSI	14
--#define IMX8ULP_PD_PXP		15
--
--#endif
-diff --git a/include/dt-bindings/reset/imx7-reset.h b/include/dt-bindings/reset/imx7-reset.h
-deleted file mode 100644
-index bb92452ffb8b..000000000000
---- a/include/dt-bindings/reset/imx7-reset.h
-+++ /dev/null
-@@ -1,52 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright (C) 2017 Impinj, Inc.
+-/* SPDX-License-Identifier: GPL-2.0
 - *
-- * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
+- * Copyright (C) 2019 Renesas Electronics Corp.
 - */
--
--#ifndef DT_BINDING_RESET_IMX7_H
--#define DT_BINDING_RESET_IMX7_H
--
--#define IMX7_RESET_A7_CORE_POR_RESET0	0
--#define IMX7_RESET_A7_CORE_POR_RESET1	1
--#define IMX7_RESET_A7_CORE_RESET0	2
--#define IMX7_RESET_A7_CORE_RESET1	3
--#define IMX7_RESET_A7_DBG_RESET0	4
--#define IMX7_RESET_A7_DBG_RESET1	5
--#define IMX7_RESET_A7_ETM_RESET0	6
--#define IMX7_RESET_A7_ETM_RESET1	7
--#define IMX7_RESET_A7_SOC_DBG_RESET	8
--#define IMX7_RESET_A7_L2RESET		9
--#define IMX7_RESET_SW_M4C_RST		10
--#define IMX7_RESET_SW_M4P_RST		11
--#define IMX7_RESET_EIM_RST		12
--#define IMX7_RESET_HSICPHY_PORT_RST	13
--#define IMX7_RESET_USBPHY1_POR		14
--#define IMX7_RESET_USBPHY1_PORT_RST	15
--#define IMX7_RESET_USBPHY2_POR		16
--#define IMX7_RESET_USBPHY2_PORT_RST	17
--#define IMX7_RESET_MIPI_PHY_MRST	18
--#define IMX7_RESET_MIPI_PHY_SRST	19
+-#ifndef __DT_BINDINGS_POWER_R8A774B1_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A774B1_SYSC_H__
 -
 -/*
-- * IMX7_RESET_PCIEPHY is a logical reset line combining PCIEPHY_BTN
-- * and PCIEPHY_G_RST
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
 - */
--#define IMX7_RESET_PCIEPHY		20
--#define IMX7_RESET_PCIEPHY_PERST	21
 -
--/*
-- * IMX7_RESET_PCIE_CTRL_APPS_EN is not strictly a reset line, but it
-- * can be used to inhibit PCIe LTTSM, so, in a way, it can be thoguht
-- * of as one
-- */
--#define IMX7_RESET_PCIE_CTRL_APPS_EN	22
--#define IMX7_RESET_DDRC_PRST		23
--#define IMX7_RESET_DDRC_CORE_RST	24
+-#define R8A774B1_PD_CA57_CPU0		 0
+-#define R8A774B1_PD_CA57_CPU1		 1
+-#define R8A774B1_PD_A3VP		 9
+-#define R8A774B1_PD_CA57_SCU		12
+-#define R8A774B1_PD_A3VC		14
+-#define R8A774B1_PD_3DG_A		17
+-#define R8A774B1_PD_3DG_B		18
+-#define R8A774B1_PD_A2VC1		26
 -
--#define IMX7_RESET_PCIE_CTRL_APPS_TURNOFF 25
+-/* Always-on power area */
+-#define R8A774B1_PD_ALWAYS_ON		32
 -
--#define IMX7_RESET_NUM			26
--
--#endif
-diff --git a/include/dt-bindings/reset/imx8mp-reset.h b/include/dt-bindings/reset/imx8mp-reset.h
+-#endif /* __DT_BINDINGS_POWER_R8A774B1_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a774c0-sysc.h b/include/dt-bindings/power/r8a774c0-sysc.h
 deleted file mode 100644
-index 2e8c9104b666..000000000000
---- a/include/dt-bindings/reset/imx8mp-reset.h
+index 9922d4c6f87d..000000000000
+--- a/include/dt-bindings/power/r8a774c0-sysc.h
 +++ /dev/null
-@@ -1,50 +0,0 @@
+@@ -1,25 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- *
+- * Copyright (C) 2018 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A774C0_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A774C0_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A774C0_PD_CA53_CPU0		5
+-#define R8A774C0_PD_CA53_CPU1		6
+-#define R8A774C0_PD_A3VC		14
+-#define R8A774C0_PD_3DG_A		17
+-#define R8A774C0_PD_3DG_B		18
+-#define R8A774C0_PD_CA53_SCU		21
+-#define R8A774C0_PD_A2VC1		26
+-
+-/* Always-on power area */
+-#define R8A774C0_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A774C0_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a774e1-sysc.h b/include/dt-bindings/power/r8a774e1-sysc.h
+deleted file mode 100644
+index 7edb8161db36..000000000000
+--- a/include/dt-bindings/power/r8a774e1-sysc.h
++++ /dev/null
+@@ -1,36 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- *
+- * Copyright (C) 2020 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A774E1_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A774E1_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A774E1_PD_CA57_CPU0		 0
+-#define R8A774E1_PD_CA57_CPU1		 1
+-#define R8A774E1_PD_CA57_CPU2		 2
+-#define R8A774E1_PD_CA57_CPU3		 3
+-#define R8A774E1_PD_CA53_CPU0		 5
+-#define R8A774E1_PD_CA53_CPU1		 6
+-#define R8A774E1_PD_CA53_CPU2		 7
+-#define R8A774E1_PD_CA53_CPU3		 8
+-#define R8A774E1_PD_A3VP		 9
+-#define R8A774E1_PD_CA57_SCU		12
+-#define R8A774E1_PD_A3VC		14
+-#define R8A774E1_PD_3DG_A		17
+-#define R8A774E1_PD_3DG_B		18
+-#define R8A774E1_PD_3DG_C		19
+-#define R8A774E1_PD_3DG_D		20
+-#define R8A774E1_PD_CA53_SCU		21
+-#define R8A774E1_PD_3DG_E		22
+-#define R8A774E1_PD_A2VC1		26
+-
+-/* Always-on power area */
+-#define R8A774E1_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A774E1_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a7790-sysc.h b/include/dt-bindings/power/r8a7790-sysc.h
+deleted file mode 100644
+index bcb490570606..000000000000
+--- a/include/dt-bindings/power/r8a7790-sysc.h
++++ /dev/null
+@@ -1,31 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0-only */
 -/*
-- * Copyright 2020 NXP
+- * Copyright (C) 2016 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A7790_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A7790_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
 - */
 -
--#ifndef DT_BINDING_RESET_IMX8MP_H
--#define DT_BINDING_RESET_IMX8MP_H
+-#define R8A7790_PD_CA15_CPU0		 0
+-#define R8A7790_PD_CA15_CPU1		 1
+-#define R8A7790_PD_CA15_CPU2		 2
+-#define R8A7790_PD_CA15_CPU3		 3
+-#define R8A7790_PD_CA7_CPU0		 5
+-#define R8A7790_PD_CA7_CPU1		 6
+-#define R8A7790_PD_CA7_CPU2		 7
+-#define R8A7790_PD_CA7_CPU3		 8
+-#define R8A7790_PD_CA15_SCU		12
+-#define R8A7790_PD_SH_4A		16
+-#define R8A7790_PD_RGX			20
+-#define R8A7790_PD_CA7_SCU		21
+-#define R8A7790_PD_IMP			24
 -
--#define IMX8MP_RESET_A53_CORE_POR_RESET0	0
--#define IMX8MP_RESET_A53_CORE_POR_RESET1	1
--#define IMX8MP_RESET_A53_CORE_POR_RESET2	2
--#define IMX8MP_RESET_A53_CORE_POR_RESET3	3
--#define IMX8MP_RESET_A53_CORE_RESET0		4
--#define IMX8MP_RESET_A53_CORE_RESET1		5
--#define IMX8MP_RESET_A53_CORE_RESET2		6
--#define IMX8MP_RESET_A53_CORE_RESET3		7
--#define IMX8MP_RESET_A53_DBG_RESET0		8
--#define IMX8MP_RESET_A53_DBG_RESET1		9
--#define IMX8MP_RESET_A53_DBG_RESET2		10
--#define IMX8MP_RESET_A53_DBG_RESET3		11
--#define IMX8MP_RESET_A53_ETM_RESET0		12
--#define IMX8MP_RESET_A53_ETM_RESET1		13
--#define IMX8MP_RESET_A53_ETM_RESET2		14
--#define IMX8MP_RESET_A53_ETM_RESET3		15
--#define IMX8MP_RESET_A53_SOC_DBG_RESET		16
--#define IMX8MP_RESET_A53_L2RESET		17
--#define IMX8MP_RESET_SW_NON_SCLR_M7C_RST	18
--#define IMX8MP_RESET_OTG1_PHY_RESET		19
--#define IMX8MP_RESET_OTG2_PHY_RESET		20
--#define IMX8MP_RESET_SUPERMIX_RESET		21
--#define IMX8MP_RESET_AUDIOMIX_RESET		22
--#define IMX8MP_RESET_MLMIX_RESET		23
--#define IMX8MP_RESET_PCIEPHY			24
--#define IMX8MP_RESET_PCIEPHY_PERST		25
--#define IMX8MP_RESET_PCIE_CTRL_APPS_EN		26
--#define IMX8MP_RESET_PCIE_CTRL_APPS_TURNOFF	27
--#define IMX8MP_RESET_HDMI_PHY_APB_RESET		28
--#define IMX8MP_RESET_MEDIA_RESET		29
--#define IMX8MP_RESET_GPU2D_RESET		30
--#define IMX8MP_RESET_GPU3D_RESET		31
--#define IMX8MP_RESET_GPU_RESET			32
--#define IMX8MP_RESET_VPU_RESET			33
--#define IMX8MP_RESET_VPU_G1_RESET		34
--#define IMX8MP_RESET_VPU_G2_RESET		35
--#define IMX8MP_RESET_VPUVC8KE_RESET		36
--#define IMX8MP_RESET_NOC_RESET			37
+-/* Always-on power area */
+-#define R8A7790_PD_ALWAYS_ON		32
 -
--#define IMX8MP_RESET_NUM			38
--
--#endif
-diff --git a/include/dt-bindings/reset/imx8mq-reset.h b/include/dt-bindings/reset/imx8mq-reset.h
-deleted file mode 100755
-index 705870693ec2..000000000000
---- a/include/dt-bindings/reset/imx8mq-reset.h
+-#endif /* __DT_BINDINGS_POWER_R8A7790_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a7791-sysc.h b/include/dt-bindings/power/r8a7791-sysc.h
+deleted file mode 100644
+index 1d20fae42420..000000000000
+--- a/include/dt-bindings/power/r8a7791-sysc.h
 +++ /dev/null
-@@ -1,67 +0,0 @@
+@@ -1,23 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2016 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A7791_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A7791_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A7791_PD_CA15_CPU0		 0
+-#define R8A7791_PD_CA15_CPU1		 1
+-#define R8A7791_PD_CA15_SCU		12
+-#define R8A7791_PD_SH_4A		16
+-#define R8A7791_PD_SGX			20
+-
+-/* Always-on power area */
+-#define R8A7791_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A7791_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a7792-sysc.h b/include/dt-bindings/power/r8a7792-sysc.h
+deleted file mode 100644
+index dd3a4667ca19..000000000000
+--- a/include/dt-bindings/power/r8a7792-sysc.h
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2016 Cogent Embedded Inc.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A7792_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A7792_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A7792_PD_CA15_CPU0		0
+-#define R8A7792_PD_CA15_CPU1		1
+-#define R8A7792_PD_CA15_SCU		12
+-#define R8A7792_PD_SGX			20
+-#define R8A7792_PD_IMP			24
+-
+-/* Always-on power area */
+-#define R8A7792_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A7792_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a7793-sysc.h b/include/dt-bindings/power/r8a7793-sysc.h
+deleted file mode 100644
+index 056998c635a9..000000000000
+--- a/include/dt-bindings/power/r8a7793-sysc.h
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2016 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A7793_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A7793_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- *
+- * Note that R-Car M2-N is identical to R-Car M2-W w.r.t. power domains.
+- */
+-
+-#define R8A7793_PD_CA15_CPU0		 0
+-#define R8A7793_PD_CA15_CPU1		 1
+-#define R8A7793_PD_CA15_SCU		12
+-#define R8A7793_PD_SH_4A		16
+-#define R8A7793_PD_SGX			20
+-
+-/* Always-on power area */
+-#define R8A7793_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A7793_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a7794-sysc.h b/include/dt-bindings/power/r8a7794-sysc.h
+deleted file mode 100644
+index 4d6c708e6f32..000000000000
+--- a/include/dt-bindings/power/r8a7794-sysc.h
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2016 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A7794_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A7794_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A7794_PD_CA7_CPU0		 5
+-#define R8A7794_PD_CA7_CPU1		 6
+-#define R8A7794_PD_SH_4A		16
+-#define R8A7794_PD_SGX			20
+-#define R8A7794_PD_CA7_SCU		21
+-
+-/* Always-on power area */
+-#define R8A7794_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A7794_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a7795-sysc.h b/include/dt-bindings/power/r8a7795-sysc.h
+deleted file mode 100644
+index ff5323858572..000000000000
+--- a/include/dt-bindings/power/r8a7795-sysc.h
++++ /dev/null
+@@ -1,38 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2016 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A7795_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A7795_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A7795_PD_CA57_CPU0		 0
+-#define R8A7795_PD_CA57_CPU1		 1
+-#define R8A7795_PD_CA57_CPU2		 2
+-#define R8A7795_PD_CA57_CPU3		 3
+-#define R8A7795_PD_CA53_CPU0		 5
+-#define R8A7795_PD_CA53_CPU1		 6
+-#define R8A7795_PD_CA53_CPU2		 7
+-#define R8A7795_PD_CA53_CPU3		 8
+-#define R8A7795_PD_A3VP			 9
+-#define R8A7795_PD_CA57_SCU		12
+-#define R8A7795_PD_CR7			13
+-#define R8A7795_PD_A3VC			14
+-#define R8A7795_PD_3DG_A		17
+-#define R8A7795_PD_3DG_B		18
+-#define R8A7795_PD_3DG_C		19
+-#define R8A7795_PD_3DG_D		20
+-#define R8A7795_PD_CA53_SCU		21
+-#define R8A7795_PD_3DG_E		22
+-#define R8A7795_PD_A3IR			24
+-#define R8A7795_PD_A2VC1		26
+-
+-/* Always-on power area */
+-#define R8A7795_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A7795_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a7796-sysc.h b/include/dt-bindings/power/r8a7796-sysc.h
+deleted file mode 100644
+index 7e6fc06ebff2..000000000000
+--- a/include/dt-bindings/power/r8a7796-sysc.h
++++ /dev/null
+@@ -1,33 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2016 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A7796_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A7796_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A7796_PD_CA57_CPU0		 0
+-#define R8A7796_PD_CA57_CPU1		 1
+-#define R8A7796_PD_CA53_CPU0		 5
+-#define R8A7796_PD_CA53_CPU1		 6
+-#define R8A7796_PD_CA53_CPU2		 7
+-#define R8A7796_PD_CA53_CPU3		 8
+-#define R8A7796_PD_CA57_SCU		12
+-#define R8A7796_PD_CR7			13
+-#define R8A7796_PD_A3VC			14
+-#define R8A7796_PD_3DG_A		17
+-#define R8A7796_PD_3DG_B		18
+-#define R8A7796_PD_CA53_SCU		21
+-#define R8A7796_PD_A3IR			24
+-#define R8A7796_PD_A2VC0		25
+-#define R8A7796_PD_A2VC1		26
+-
+-/* Always-on power area */
+-#define R8A7796_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A7796_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a77961-sysc.h b/include/dt-bindings/power/r8a77961-sysc.h
+deleted file mode 100644
+index 7a3800996f7c..000000000000
+--- a/include/dt-bindings/power/r8a77961-sysc.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2019 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A77961_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A77961_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A77961_PD_CA57_CPU0		 0
+-#define R8A77961_PD_CA57_CPU1		 1
+-#define R8A77961_PD_CA53_CPU0		 5
+-#define R8A77961_PD_CA53_CPU1		 6
+-#define R8A77961_PD_CA53_CPU2		 7
+-#define R8A77961_PD_CA53_CPU3		 8
+-#define R8A77961_PD_CA57_SCU		12
+-#define R8A77961_PD_CR7			13
+-#define R8A77961_PD_A3VC		14
+-#define R8A77961_PD_3DG_A		17
+-#define R8A77961_PD_3DG_B		18
+-#define R8A77961_PD_CA53_SCU		21
+-#define R8A77961_PD_A3IR		24
+-#define R8A77961_PD_A2VC1		26
+-
+-/* Always-on power area */
+-#define R8A77961_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A77961_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a77965-sysc.h b/include/dt-bindings/power/r8a77965-sysc.h
+deleted file mode 100644
+index de82d8a15ea1..000000000000
+--- a/include/dt-bindings/power/r8a77965-sysc.h
++++ /dev/null
+@@ -1,29 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * Copyright (C) 2018 Zodiac Inflight Innovations
-- *
-- * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
+- * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
+- * Copyright (C) 2016 Glider bvba
 - */
 -
--#ifndef DT_BINDING_RESET_IMX8MQ_H
--#define DT_BINDING_RESET_IMX8MQ_H
+-#ifndef __DT_BINDINGS_POWER_R8A77965_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A77965_SYSC_H__
 -
--#define IMX8MQ_RESET_A53_CORE_POR_RESET0	0
--#define IMX8MQ_RESET_A53_CORE_POR_RESET1	1
--#define IMX8MQ_RESET_A53_CORE_POR_RESET2	2
--#define IMX8MQ_RESET_A53_CORE_POR_RESET3	3
--#define IMX8MQ_RESET_A53_CORE_RESET0		4
--#define IMX8MQ_RESET_A53_CORE_RESET1		5
--#define IMX8MQ_RESET_A53_CORE_RESET2		6
--#define IMX8MQ_RESET_A53_CORE_RESET3		7
--#define IMX8MQ_RESET_A53_DBG_RESET0		8
--#define IMX8MQ_RESET_A53_DBG_RESET1		9
--#define IMX8MQ_RESET_A53_DBG_RESET2		10
--#define IMX8MQ_RESET_A53_DBG_RESET3		11
--#define IMX8MQ_RESET_A53_ETM_RESET0		12
--#define IMX8MQ_RESET_A53_ETM_RESET1		13
--#define IMX8MQ_RESET_A53_ETM_RESET2		14
--#define IMX8MQ_RESET_A53_ETM_RESET3		15
--#define IMX8MQ_RESET_A53_SOC_DBG_RESET		16
--#define IMX8MQ_RESET_A53_L2RESET		17
--#define IMX8MQ_RESET_SW_NON_SCLR_M4C_RST	18
--#define IMX8MQ_RESET_OTG1_PHY_RESET		19
--#define IMX8MQ_RESET_OTG2_PHY_RESET		20	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N	21	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_DSI_RESET_N		22	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N	23	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N	24	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N	25	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIEPHY			26	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIEPHY_PERST		27	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIE_CTRL_APPS_EN		28	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF	29	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_DISP_RESET			31
--#define IMX8MQ_RESET_GPU_RESET			32
--#define IMX8MQ_RESET_VPU_RESET			33	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIEPHY2			34	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIEPHY2_PERST		35	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_DDRC1_PRST			44	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_DDRC1_CORE_RESET		45	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_DDRC1_PHY_RESET		46	/* i.MX8MN does NOT support */
--#define IMX8MQ_RESET_DDRC2_PRST			47	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_DDRC2_CORE_RESET		48	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_DDRC2_PHY_RESET		49	/* i.MX8MM/i.MX8MN does NOT support */
--#define IMX8MQ_RESET_SW_M4C_RST			50
--#define IMX8MQ_RESET_SW_M4P_RST			51
--#define IMX8MQ_RESET_M4_ENABLE			52
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
 -
--#define IMX8MQ_RESET_NUM			53
+-#define R8A77965_PD_CA57_CPU0		 0
+-#define R8A77965_PD_CA57_CPU1		 1
+-#define R8A77965_PD_A3VP		 9
+-#define R8A77965_PD_CA57_SCU		12
+-#define R8A77965_PD_CR7			13
+-#define R8A77965_PD_A3VC		14
+-#define R8A77965_PD_3DG_A		17
+-#define R8A77965_PD_3DG_B		18
+-#define R8A77965_PD_A2VC1		26
 -
--#endif
-diff --git a/include/dt-bindings/reset/imx8ulp-pcc-reset.h b/include/dt-bindings/reset/imx8ulp-pcc-reset.h
+-/* Always-on power area */
+-#define R8A77965_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A77965_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a77970-sysc.h b/include/dt-bindings/power/r8a77970-sysc.h
 deleted file mode 100644
-index e99a4735c3c4..000000000000
---- a/include/dt-bindings/reset/imx8ulp-pcc-reset.h
+index 9dcdbd5a9304..000000000000
+--- a/include/dt-bindings/power/r8a77970-sysc.h
++++ /dev/null
+@@ -1,28 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2017 Cogent Embedded Inc.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A77970_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A77970_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A77970_PD_CA53_CPU0		 5
+-#define R8A77970_PD_CA53_CPU1		 6
+-#define R8A77970_PD_CA53_SCU		21
+-#define R8A77970_PD_A2IR0		23
+-#define R8A77970_PD_A3IR		24
+-#define R8A77970_PD_A2IR1		27
+-#define R8A77970_PD_A2DP		28
+-#define R8A77970_PD_A2CN		29
+-#define R8A77970_PD_A2SC0		30
+-#define R8A77970_PD_A2SC1		31
+-
+-/* Always-on power area */
+-#define R8A77970_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A77970_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a77980-sysc.h b/include/dt-bindings/power/r8a77980-sysc.h
+deleted file mode 100644
+index e12c8587b87e..000000000000
+--- a/include/dt-bindings/power/r8a77980-sysc.h
++++ /dev/null
+@@ -1,43 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- *
+- * Copyright (C) 2018 Renesas Electronics Corp.
+- * Copyright (C) 2018 Cogent Embedded, Inc.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A77980_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A77980_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A77980_PD_A2SC2		0
+-#define R8A77980_PD_A2SC3		1
+-#define R8A77980_PD_A2SC4		2
+-#define R8A77980_PD_A2DP0		3
+-#define R8A77980_PD_A2DP1		4
+-#define R8A77980_PD_CA53_CPU0		5
+-#define R8A77980_PD_CA53_CPU1		6
+-#define R8A77980_PD_CA53_CPU2		7
+-#define R8A77980_PD_CA53_CPU3		8
+-#define R8A77980_PD_A2CN		10
+-#define R8A77980_PD_A3VIP0		11
+-#define R8A77980_PD_A2IR5		12
+-#define R8A77980_PD_CR7			13
+-#define R8A77980_PD_A2IR4		15
+-#define R8A77980_PD_CA53_SCU		21
+-#define R8A77980_PD_A2IR0		23
+-#define R8A77980_PD_A3IR		24
+-#define R8A77980_PD_A3VIP1		25
+-#define R8A77980_PD_A3VIP2		26
+-#define R8A77980_PD_A2IR1		27
+-#define R8A77980_PD_A2IR2		28
+-#define R8A77980_PD_A2IR3		29
+-#define R8A77980_PD_A2SC0		30
+-#define R8A77980_PD_A2SC1		31
+-
+-/* Always-on power area */
+-#define R8A77980_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A77980_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a77990-sysc.h b/include/dt-bindings/power/r8a77990-sysc.h
+deleted file mode 100644
+index 944d85beec15..000000000000
+--- a/include/dt-bindings/power/r8a77990-sysc.h
++++ /dev/null
+@@ -1,26 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (C) 2018 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A77990_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A77990_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A77990_PD_CA53_CPU0		5
+-#define R8A77990_PD_CA53_CPU1		6
+-#define R8A77990_PD_CR7			13
+-#define R8A77990_PD_A3VC		14
+-#define R8A77990_PD_3DG_A		17
+-#define R8A77990_PD_3DG_B		18
+-#define R8A77990_PD_CA53_SCU		21
+-#define R8A77990_PD_A2VC1		26
+-
+-/* Always-on power area */
+-#define R8A77990_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A77990_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a77995-sysc.h b/include/dt-bindings/power/r8a77995-sysc.h
+deleted file mode 100644
+index f2b35502f2be..000000000000
+--- a/include/dt-bindings/power/r8a77995-sysc.h
++++ /dev/null
+@@ -1,20 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2017 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A77995_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A77995_SYSC_H__
+-
+-/*
+- * These power domain indices match the numbers of the interrupt bits
+- * representing the power areas in the various Interrupt Registers
+- * (e.g. SYSCISR, Interrupt Status Register)
+- */
+-
+-#define R8A77995_PD_CA53_CPU0		 5
+-#define R8A77995_PD_CA53_SCU		21
+-
+-/* Always-on power area */
+-#define R8A77995_PD_ALWAYS_ON		32
+-
+-#endif /* __DT_BINDINGS_POWER_R8A77995_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a779a0-sysc.h b/include/dt-bindings/power/r8a779a0-sysc.h
+deleted file mode 100644
+index 57929e459a67..000000000000
+--- a/include/dt-bindings/power/r8a779a0-sysc.h
 +++ /dev/null
 @@ -1,59 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0-only */
 -/*
-- * Copyright 2021 NXP
+- * Copyright (C) 2020 Renesas Electronics Corp.
 - */
--
--#ifndef DT_BINDING_PCC_RESET_IMX8ULP_H
--#define DT_BINDING_PCC_RESET_IMX8ULP_H
--
--/* PCC3 */
--#define PCC3_WDOG3_SWRST	0
--#define PCC3_WDOG4_SWRST	1
--#define PCC3_LPIT1_SWRST	2
--#define PCC3_TPM4_SWRST		3
--#define PCC3_TPM5_SWRST		4
--#define PCC3_FLEXIO1_SWRST	5
--#define PCC3_I3C2_SWRST		6
--#define PCC3_LPI2C4_SWRST	7
--#define PCC3_LPI2C5_SWRST	8
--#define PCC3_LPUART4_SWRST	9
--#define PCC3_LPUART5_SWRST	10
--#define PCC3_LPSPI4_SWRST	11
--#define PCC3_LPSPI5_SWRST	12
--
--/* PCC4 */
--#define PCC4_FLEXSPI2_SWRST	0
--#define PCC4_TPM6_SWRST		1
--#define PCC4_TPM7_SWRST		2
--#define PCC4_LPI2C6_SWRST	3
--#define PCC4_LPI2C7_SWRST	4
--#define PCC4_LPUART6_SWRST	5
--#define PCC4_LPUART7_SWRST	6
--#define PCC4_SAI4_SWRST		7
--#define PCC4_SAI5_SWRST		8
--#define PCC4_USDHC0_SWRST	9
--#define PCC4_USDHC1_SWRST	10
--#define PCC4_USDHC2_SWRST	11
--#define PCC4_USB0_SWRST		12
--#define PCC4_USB0_PHY_SWRST	13
--#define PCC4_USB1_SWRST		14
--#define PCC4_USB1_PHY_SWRST	15
--#define PCC4_ENET_SWRST		16
--
--/* PCC5 */
--#define PCC5_TPM8_SWRST		0
--#define PCC5_SAI6_SWRST		1
--#define PCC5_SAI7_SWRST		2
--#define PCC5_SPDIF_SWRST	3
--#define PCC5_ISI_SWRST		4
--#define PCC5_CSI_REGS_SWRST	5
--#define PCC5_CSI_SWRST		6
--#define PCC5_DSI_SWRST		7
--#define PCC5_WDOG5_SWRST	8
--#define PCC5_EPDC_SWRST		9
--#define PCC5_PXP_SWRST		10
--#define PCC5_GPU2D_SWRST	11
--#define PCC5_GPU3D_SWRST	12
--#define PCC5_DC_NANO_SWRST	13
--
--#endif /*DT_BINDING_RESET_IMX8ULP_H */
-diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bindings/sound/fsl-imx-audmux.h
-deleted file mode 100644
-index 15f138bebe16..000000000000
---- a/include/dt-bindings/sound/fsl-imx-audmux.h
-+++ /dev/null
-@@ -1,64 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __DT_FSL_IMX_AUDMUX_H
--#define __DT_FSL_IMX_AUDMUX_H
--
--#define MX27_AUDMUX_HPCR1_SSI0		0
--#define MX27_AUDMUX_HPCR2_SSI1		1
--#define MX27_AUDMUX_HPCR3_SSI_PINS_4	2
--#define MX27_AUDMUX_PPCR1_SSI_PINS_1	3
--#define MX27_AUDMUX_PPCR2_SSI_PINS_2	4
--#define MX27_AUDMUX_PPCR3_SSI_PINS_3	5
--
--#define MX31_AUDMUX_PORT1_SSI0		0
--#define MX31_AUDMUX_PORT2_SSI1		1
--#define MX31_AUDMUX_PORT3_SSI_PINS_3	2
--#define MX31_AUDMUX_PORT4_SSI_PINS_4	3
--#define MX31_AUDMUX_PORT5_SSI_PINS_5	4
--#define MX31_AUDMUX_PORT6_SSI_PINS_6	5
--#define MX31_AUDMUX_PORT7_SSI_PINS_7	6
--
--#define MX51_AUDMUX_PORT1_SSI0		0
--#define MX51_AUDMUX_PORT2_SSI1		1
--#define MX51_AUDMUX_PORT3		2
--#define MX51_AUDMUX_PORT4		3
--#define MX51_AUDMUX_PORT5		4
--#define MX51_AUDMUX_PORT6		5
--#define MX51_AUDMUX_PORT7		6
+-#ifndef __DT_BINDINGS_POWER_R8A779A0_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A779A0_SYSC_H__
 -
 -/*
-- * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
-- * can be sourced from Rx/Tx.
+- * These power domain indices match the Power Domain Register Numbers (PDR)
 - */
--#define IMX_AUDMUX_RXFS			0x8
--#define IMX_AUDMUX_RXCLK		0x8
 -
--/* Register definitions for the i.MX21/27 Digital Audio Multiplexer */
--#define IMX_AUDMUX_V1_PCR_INMMASK(x)	((x) & 0xff)
--#define IMX_AUDMUX_V1_PCR_INMEN		(1 << 8)
--#define IMX_AUDMUX_V1_PCR_TXRXEN	(1 << 10)
--#define IMX_AUDMUX_V1_PCR_SYN		(1 << 12)
--#define IMX_AUDMUX_V1_PCR_RXDSEL(x)	(((x) & 0x7) << 13)
--#define IMX_AUDMUX_V1_PCR_RFCSEL(x)	(((x) & 0xf) << 20)
--#define IMX_AUDMUX_V1_PCR_RCLKDIR	(1 << 24)
--#define IMX_AUDMUX_V1_PCR_RFSDIR	(1 << 25)
--#define IMX_AUDMUX_V1_PCR_TFCSEL(x)	(((x) & 0xf) << 26)
--#define IMX_AUDMUX_V1_PCR_TCLKDIR	(1 << 30)
--#define IMX_AUDMUX_V1_PCR_TFSDIR	(1 << 31)
+-#define R8A779A0_PD_A1E0D0C0		0
+-#define R8A779A0_PD_A1E0D0C1		1
+-#define R8A779A0_PD_A1E0D1C0		2
+-#define R8A779A0_PD_A1E0D1C1		3
+-#define R8A779A0_PD_A1E1D0C0		4
+-#define R8A779A0_PD_A1E1D0C1		5
+-#define R8A779A0_PD_A1E1D1C0		6
+-#define R8A779A0_PD_A1E1D1C1		7
+-#define R8A779A0_PD_A2E0D0		16
+-#define R8A779A0_PD_A2E0D1		17
+-#define R8A779A0_PD_A2E1D0		18
+-#define R8A779A0_PD_A2E1D1		19
+-#define R8A779A0_PD_A3E0		20
+-#define R8A779A0_PD_A3E1		21
+-#define R8A779A0_PD_3DG_A		24
+-#define R8A779A0_PD_3DG_B		25
+-#define R8A779A0_PD_A1CNN2		32
+-#define R8A779A0_PD_A1DSP0		33
+-#define R8A779A0_PD_A2IMP01		34
+-#define R8A779A0_PD_A2DP0		35
+-#define R8A779A0_PD_A2CV0		36
+-#define R8A779A0_PD_A2CV1		37
+-#define R8A779A0_PD_A2CV4		38
+-#define R8A779A0_PD_A2CV6		39
+-#define R8A779A0_PD_A2CN2		40
+-#define R8A779A0_PD_A1CNN0		41
+-#define R8A779A0_PD_A2CN0		42
+-#define R8A779A0_PD_A3IR		43
+-#define R8A779A0_PD_A1CNN1		44
+-#define R8A779A0_PD_A1DSP1		45
+-#define R8A779A0_PD_A2IMP23		46
+-#define R8A779A0_PD_A2DP1		47
+-#define R8A779A0_PD_A2CV2		48
+-#define R8A779A0_PD_A2CV3		49
+-#define R8A779A0_PD_A2CV5		50
+-#define R8A779A0_PD_A2CV7		51
+-#define R8A779A0_PD_A2CN1		52
+-#define R8A779A0_PD_A3VIP0		56
+-#define R8A779A0_PD_A3VIP1		57
+-#define R8A779A0_PD_A3VIP2		58
+-#define R8A779A0_PD_A3VIP3		59
+-#define R8A779A0_PD_A3ISP01		60
+-#define R8A779A0_PD_A3ISP23		61
 -
--/* Register definitions for the i.MX25/31/35/51 Digital Audio Multiplexer */
--#define IMX_AUDMUX_V2_PTCR_TFSDIR	(1 << 31)
--#define IMX_AUDMUX_V2_PTCR_TFSEL(x)	(((x) & 0xf) << 27)
--#define IMX_AUDMUX_V2_PTCR_TCLKDIR	(1 << 26)
--#define IMX_AUDMUX_V2_PTCR_TCSEL(x)	(((x) & 0xf) << 22)
--#define IMX_AUDMUX_V2_PTCR_RFSDIR	(1 << 21)
--#define IMX_AUDMUX_V2_PTCR_RFSEL(x)	(((x) & 0xf) << 17)
--#define IMX_AUDMUX_V2_PTCR_RCLKDIR	(1 << 16)
--#define IMX_AUDMUX_V2_PTCR_RCSEL(x)	(((x) & 0xf) << 12)
--#define IMX_AUDMUX_V2_PTCR_SYN		(1 << 11)
+-/* Always-on power area */
+-#define R8A779A0_PD_ALWAYS_ON		64
 -
--#define IMX_AUDMUX_V2_PDCR_RXDSEL(x)	(((x) & 0x7) << 13)
--#define IMX_AUDMUX_V2_PDCR_TXRXEN	(1 << 12)
--#define IMX_AUDMUX_V2_PDCR_MODE(x)	(((x) & 0x3) << 8)
--#define IMX_AUDMUX_V2_PDCR_INMMASK(x)	((x) & 0xff)
+-#endif /* __DT_BINDINGS_POWER_R8A779A0_SYSC_H__ */
+diff --git a/include/dt-bindings/power/r8a779f0-sysc.h b/include/dt-bindings/power/r8a779f0-sysc.h
+deleted file mode 100644
+index cde1536e9ed0..000000000000
+--- a/include/dt-bindings/power/r8a779f0-sysc.h
++++ /dev/null
+@@ -1,30 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+-/*
+- * Copyright (C) 2021 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A779F0_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A779F0_SYSC_H__
 -
--#endif /* __DT_FSL_IMX_AUDMUX_H */
+-/*
+- * These power domain indices match the Power Domain Register Numbers (PDR)
+- */
+-
+-#define R8A779F0_PD_A1E0D0C0		0
+-#define R8A779F0_PD_A1E0D0C1		1
+-#define R8A779F0_PD_A1E0D1C0		2
+-#define R8A779F0_PD_A1E0D1C1		3
+-#define R8A779F0_PD_A1E1D0C0		4
+-#define R8A779F0_PD_A1E1D0C1		5
+-#define R8A779F0_PD_A1E1D1C0		6
+-#define R8A779F0_PD_A1E1D1C1		7
+-#define R8A779F0_PD_A2E0D0		16
+-#define R8A779F0_PD_A2E0D1		17
+-#define R8A779F0_PD_A2E1D0		18
+-#define R8A779F0_PD_A2E1D1		19
+-#define R8A779F0_PD_A3E0		20
+-#define R8A779F0_PD_A3E1		21
+-
+-/* Always-on power area */
+-#define R8A779F0_PD_ALWAYS_ON		64
+-
+-#endif /* __DT_BINDINGS_POWER_R8A779A0_SYSC_H__*/
+diff --git a/include/dt-bindings/power/r8a779g0-sysc.h b/include/dt-bindings/power/r8a779g0-sysc.h
+deleted file mode 100644
+index c7b139fb075f..000000000000
+--- a/include/dt-bindings/power/r8a779g0-sysc.h
++++ /dev/null
+@@ -1,46 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+-/*
+- * Copyright (C) 2022 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_POWER_R8A779G0_SYSC_H__
+-#define __DT_BINDINGS_POWER_R8A779G0_SYSC_H__
+-
+-/*
+- * These power domain indices match the Power Domain Register Numbers (PDR)
+- */
+-
+-#define R8A779G0_PD_A1E0D0C0		0
+-#define R8A779G0_PD_A1E0D0C1		1
+-#define R8A779G0_PD_A1E0D1C0		2
+-#define R8A779G0_PD_A1E0D1C1		3
+-#define R8A779G0_PD_A2E0D0		16
+-#define R8A779G0_PD_A2E0D1		17
+-#define R8A779G0_PD_A3E0		20
+-#define R8A779G0_PD_A33DGA		24
+-#define R8A779G0_PD_A23DGB		25
+-#define R8A779G0_PD_A1DSP0		33
+-#define R8A779G0_PD_A2IMP01		34
+-#define R8A779G0_PD_A2PSC		35
+-#define R8A779G0_PD_A2CV0		36
+-#define R8A779G0_PD_A2CV1		37
+-#define R8A779G0_PD_A1CNN0		41
+-#define R8A779G0_PD_A2CN0		42
+-#define R8A779G0_PD_A3IR		43
+-#define R8A779G0_PD_A1DSP1		45
+-#define R8A779G0_PD_A2IMP23		46
+-#define R8A779G0_PD_A2DMA		47
+-#define R8A779G0_PD_A2CV2		48
+-#define R8A779G0_PD_A2CV3		49
+-#define R8A779G0_PD_A1DSP2		53
+-#define R8A779G0_PD_A1DSP3		54
+-#define R8A779G0_PD_A3VIP0		56
+-#define R8A779G0_PD_A3VIP1		57
+-#define R8A779G0_PD_A3VIP2		58
+-#define R8A779G0_PD_A3ISP0		60
+-#define R8A779G0_PD_A3ISP1		61
+-#define R8A779G0_PD_A3DUL		62
+-
+-/* Always-on power area */
+-#define R8A779G0_PD_ALWAYS_ON		64
+-
+-#endif /* __DT_BINDINGS_POWER_R8A779G0_SYSC_H__*/
 
 -- 
 2.44.0
