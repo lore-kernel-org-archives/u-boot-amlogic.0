@@ -2,56 +2,56 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556D0C54E89
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C484C54E9E
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:49 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web11.104439.1709571108790500395
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.104593.1709571103713397546
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Mar 2024 08:51:49 -0800
+ Mon, 04 Mar 2024 08:51:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Py4Q7lxV;
- spf=pass (domain: linaro.org, ip: 209.85.128.52, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412e84e87e6so4235185e9.2
-        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:48 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Tot9Intq;
+ spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-412dda84216so12915095e9.3
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709571107; x=1710175907; darn=groups.io;
+        d=linaro.org; s=google; t=1709571102; x=1710175902; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ak/ZQ98S2ABEr4WIk6RvxQYt7MJPloGnSTsOs5d5fXA=;
-        b=Py4Q7lxVpqMyBRZ0reErO834mRChtMb1i6yGX6WEIKYlLM1bZPyW8elFF/gJtSAiep
-         In64aM/KflFSnP6SJgEi4TbiRQivLe0gK8XIVk5QmEQh617a65q7+bVhPBUn69lpiYRQ
-         Gmw0PpZiKn+pta+fjOw+ChmuozUcSx9nIlyuSNbVY3aCQ30JEfJafsxGJ0TchHBGQjMH
-         wpaN4DViMwK11ybbkV9OfVD5KH8drkGacAj3l/KCxFv0AnJj4qIYGM2wmZuntBE1NQkr
-         vX4ESvHTpjHsfCVGLwYpiPv/9dVLGZ9HGTj2CjD/kAf+OWyElOoeH43nO9VT2Q5h0hms
-         8F/Q==
+        bh=WsRMLs65TKxpC2qcXE655l5Lo9eoFyJPw7afENT3y30=;
+        b=Tot9Intq+uAG3L8Sk81M3nysztXrMbN0shsZ3s0XySRk8vFWkJLJfA4H98BdCbQ5qY
+         ZWlijwCPRmTvNHyo8EiGSylPRKoVXxdETvsj7Dk/MZPU3N9b82kOTugIn5MNC03dCT5f
+         WuQn1k9y4nHfYx6ThWlf1WlztM8EpSRkH19vYGzDIGkK8/1ZofSLU8S9lRQztNLu/yEb
+         yte255hghtcnOVginbtq1XYyIn5OsJQT8OpLfHV5GTsWQ+8T97lgag0BTDfHrbme7RyA
+         ly3wxzvvrnvuUBN3YgGeHaGJ0nfcq4IRx+1yeseQvQug5hEcisWLjHyaTFMpo5EsvQm3
+         M1HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571107; x=1710175907;
+        d=1e100.net; s=20230601; t=1709571102; x=1710175902;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ak/ZQ98S2ABEr4WIk6RvxQYt7MJPloGnSTsOs5d5fXA=;
-        b=MmQJeqsj22oMpoH0VRcGispxSi5AiX9U5ckXqjsgjO7f5pdIpTMKpo8XJD9p0Kmm58
-         ZB0VHLpwf+NTF04+gcQ/rwFaGY8TlPHURPbDmWRpazLQCV5fv9/qIiRbkLJoX6eu5Nga
-         Kwau9bf1gvM4lGNEv5iFobOvZxcrZmJkJ7V4oKVJyt6MvzrkHhSTnmmqI/G2+tQUP8dY
-         zAdQpS2aEF4sMVKmPmtL75QrkIS+BKOhyw6fUuF8KwwtnoqjPBUbRbLCZuJrv35qKAIM
-         uFcLF9cz711ysgXr/RPjVuXcSAzwDs6TwKJsuzpKv3iKxIhMGJ/FenbHBmEIH7fT3x2V
-         mlPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULWFLUYAVgQTZ5D/r5eaie+sxKHQ+GNvEr8kM82++Nlm22ZJ5og6zRxsd4oNQcyrYW4EIhi1UdHpiKgMgwFtYdAYaqeyMLou4=
-X-Gm-Message-State: AOJu0YztoRFSJiPeRVMJQi6eTlue574yAEpJiO5gO1e7BfbK7JeN0GJ6
-	P1+5kHOEin9tkKQSw76LfLm7xHd3CMeYIkse7WQ75pWeTz7jEXh60RoficNyuj8=
-X-Google-Smtp-Source: AGHT+IHTQl1P7L2TuETtLWhOUs5G3cUj9TY1RP8i2YptPb10qDCNG809MKLHE4TzjXBGosAbNBQXnQ==
-X-Received: by 2002:a05:600c:1d87:b0:412:e7d6:4464 with SMTP id p7-20020a05600c1d8700b00412e7d64464mr1119380wms.32.1709571107241;
-        Mon, 04 Mar 2024 08:51:47 -0800 (PST)
+        bh=WsRMLs65TKxpC2qcXE655l5Lo9eoFyJPw7afENT3y30=;
+        b=roe4BM/vAbVFt+5aFmAYKGq/teEGsM9YUzJqa5lnA+jNC3HBKbyvr96IwdRMc4pFc7
+         Se9ZDj9jW2EHyz+Jx3xZC3eUu4qOwRXo/WDajCSCzXqo/TSuHa+Ney3sSPwWdme2imuP
+         Jbgw8GZKEeGBPpaINtyIRyijIdj/9X0Qwe0VHhhV0bSSN5NG1XdzyG9u/xpDQUu/zLpx
+         yWz/HgmX9FXUQQtfVhPW1kfzlczHeVy42o6IC2biSmYoFRasNMrg+4lCJDWf1TCtiGGo
+         zBm8AiQyl90MaopGDQG7BlAux6tf2cXPFrg7FAwguHl8zBQCer3JwgLGCQIyBYXPecUe
+         2VVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYbop2znUUZvpt8vPT+k1teWiK7h7GY1obdjnnzLBglSU+lMFzNeF232xEvjZ4+OTyPX0K70nmR7+hFNAxWiF5KdNhZfYmsO4=
+X-Gm-Message-State: AOJu0Yw3J+qYWMa2RNmSVBM2+e/4eS6bBYR4t+/ROSHHJh9af6ZO+BZV
+	+1C+fL1GlflmQalHDbsYliyTXwfQ62SJPJZcaa7if6tHB5WixYPhgwz8UajEK4Y=
+X-Google-Smtp-Source: AGHT+IFFNV1BY1Lx3qvdtZ8XlaTdziygcGvUZ0esUoZLc0/vQJflPU47gUvmCujEDRh0xNUYNtO1tw==
+X-Received: by 2002:a05:600c:3b8c:b0:412:c3f7:2a22 with SMTP id n12-20020a05600c3b8c00b00412c3f72a22mr7281824wms.38.1709571102114;
+        Mon, 04 Mar 2024 08:51:42 -0800 (PST)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.45
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:51:46 -0800 (PST)
+        Mon, 04 Mar 2024 08:51:41 -0800 (PST)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Mon, 04 Mar 2024 16:51:23 +0000
-Subject: [PATCH RFC 15/26] tegra: drop dt-binding headers
+Date: Mon, 04 Mar 2024 16:51:20 +0000
+Subject: [PATCH RFC 12/26] bcm: drop dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240304-b4-upstream-dt-headers-v1-15-b7ff41925f92@linaro.org>
+Message-Id: <20240304-b4-upstream-dt-headers-v1-12-b7ff41925f92@linaro.org>
 References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 In-Reply-To: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -84,636 +84,678 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=21499;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=21777;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=mQ2O2EyLgWmNk7HU9Pv1IDhVFZQ7gkRM9CVO2LHEmgU=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9iX7166yTNzxwvLyuSVjT90+1X+HH+9903B/JPCE
- cfMP0Xd6ihhYRDkYJAVU2QRP7HMsmntZXuN7QsuwMxhZQIZwsDFKQAT2T+D4Z9VX13UMcsd9l+i
- XH4bbLe6Ou1XokfXjn/HBLINFTZpsXYy/Hg0q0vpUtEm7aLqBVKdGhket6Ov7ZRdedV52YSD8t/
- tvwEA
+ bh=Bywnt5b4Rru3R/K7dElI2adCh1ZZ3xcRuqhkKFtIkBY=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9hPn1ZbM+vEJIkrdu47hG889K6LmM4at4rP8HvFq
+ afObsLPO0pZGAQ5GGTFFFnETyyzbFp72V5j+4ILMHNYmUCGMHBxCsBEWPoY/vAF7Z2mIaF06rhT
+ VQv7svlTnFa9rH1/dNm/Q6/UJwmk7TJgZJgo8tQr0veyeT6jlFXC/Up3HsYAqY8uady8n/WWTph
+ yYTEA
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2171
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2168
 
-Drop in favour of dts/upstream.
-
-Small driver adjustment to fix compatibility.
+Drop in favour of dts/upstream
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- arch/arm/dts/tegra186.dtsi                       |   2 +-
- drivers/mailbox/tegra-hsp.c                      |   2 +-
- include/dt-bindings/gpio/tegra-gpio.h            |  51 ------
- include/dt-bindings/mailbox/tegra186-hsp.h       |  19 ---
- include/dt-bindings/memory/tegra114-mc.h         |  25 ---
- include/dt-bindings/memory/tegra124-mc.h         |  31 ----
- include/dt-bindings/memory/tegra210-mc.h         |  36 ----
- include/dt-bindings/memory/tegra30-mc.h          |  24 ---
- include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h |   7 -
- include/dt-bindings/pinctrl/pinctrl-tegra.h      |  37 ----
- include/dt-bindings/power/tegra186-powergate.h   |  28 ----
- include/dt-bindings/reset/tegra124-car.h         |  12 --
- include/dt-bindings/reset/tegra186-reset.h       | 205 -----------------------
- include/dt-bindings/thermal/tegra124-soctherm.h  |  14 --
- 14 files changed, 2 insertions(+), 491 deletions(-)
+ include/dt-bindings/clock/bcm-nsp.h        | 51 ------------------------
+ include/dt-bindings/clock/bcm2835-aux.h    |  9 -----
+ include/dt-bindings/clock/bcm2835.h        | 62 ------------------------------
+ include/dt-bindings/clock/bcm6318-clock.h  | 47 ----------------------
+ include/dt-bindings/clock/bcm63268-clock.h | 51 ------------------------
+ include/dt-bindings/clock/bcm6328-clock.h  | 24 ------------
+ include/dt-bindings/clock/bcm6358-clock.h  | 23 -----------
+ include/dt-bindings/clock/bcm6362-clock.h  | 32 ---------------
+ include/dt-bindings/clock/bcm6368-clock.h  | 30 ---------------
+ include/dt-bindings/pinctrl/bcm2835.h      | 26 -------------
+ include/dt-bindings/reset/bcm6318-reset.h  | 25 ------------
+ include/dt-bindings/reset/bcm63268-reset.h | 31 ---------------
+ include/dt-bindings/reset/bcm6328-reset.h  | 23 -----------
+ include/dt-bindings/reset/bcm6358-reset.h  | 20 ----------
+ include/dt-bindings/reset/bcm6362-reset.h  | 27 -------------
+ include/dt-bindings/reset/bcm6368-reset.h  | 21 ----------
+ include/dt-bindings/soc/bcm2835-pm.h       | 28 --------------
+ 17 files changed, 530 deletions(-)
 
-diff --git a/arch/arm/dts/tegra186.dtsi b/arch/arm/dts/tegra186.dtsi
-index edcb7aacb8ee..58dadc944888 100644
---- a/arch/arm/dts/tegra186.dtsi
-+++ b/arch/arm/dts/tegra186.dtsi
-@@ -313,9 +313,9 @@
- 	};
- 
- 	bpmp: bpmp {
- 		compatible = "nvidia,tegra186-bpmp";
--		mboxes = <&hsp HSP_MBOX_TYPE_DB HSP_DB_MASTER_BPMP>;
-+		mboxes = <&hsp TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
- 		/*
- 		 * In theory, these references, and the configuration in the
- 		 * node these reference point at, are board-specific, since
- 		 * they depend on the BCT's memory carve-out setup, the
-diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-index 08c51c40f141..e5a3d8243780 100644
---- a/drivers/mailbox/tegra-hsp.c
-+++ b/drivers/mailbox/tegra-hsp.c
-@@ -62,9 +62,9 @@ static void tegra_hsp_writel(struct tegra_hsp *thsp, uint32_t val,
- 
- static int tegra_hsp_db_id(ulong chan_id)
- {
- 	switch (chan_id) {
--	case (HSP_MBOX_TYPE_DB << 16) | HSP_DB_MASTER_BPMP:
-+	case (TEGRA_HSP_MBOX_TYPE_DB << 16) | TEGRA_HSP_DB_MASTER_BPMP:
- 		return TEGRA_HSP_DB_ID_BPMP;
- 	default:
- 		debug("Invalid channel ID\n");
- 		return -EINVAL;
-diff --git a/include/dt-bindings/gpio/tegra-gpio.h b/include/dt-bindings/gpio/tegra-gpio.h
+diff --git a/include/dt-bindings/clock/bcm-nsp.h b/include/dt-bindings/clock/bcm-nsp.h
 deleted file mode 100644
-index a1c09e88e80b..000000000000
---- a/include/dt-bindings/gpio/tegra-gpio.h
+index ad5827cde782..000000000000
+--- a/include/dt-bindings/clock/bcm-nsp.h
 +++ /dev/null
 @@ -1,51 +0,0 @@
 -/*
-- * This header provides constants for binding nvidia,tegra*-gpio.
+- *  BSD LICENSE
 - *
-- * The first cell in Tegra's GPIO specifier is the GPIO ID. The macros below
-- * provide names for this.
+- *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
 - *
-- * The second cell contains standard flag values specified in gpio.h.
+- *  Redistribution and use in source and binary forms, with or without
+- *  modification, are permitted provided that the following conditions
+- *  are met:
+- *
+- *	* Redistributions of source code must retain the above copyright
+- *	  notice, this list of conditions and the following disclaimer.
+- *	* Redistributions in binary form must reproduce the above copyright
+- *	  notice, this list of conditions and the following disclaimer in
+- *	  the documentation and/or other materials provided with the
+- *	  distribution.
+- *	* Neither the name of Broadcom Corporation nor the names of its
+- *	  contributors may be used to endorse or promote products derived
+- *	  from this software without specific prior written permission.
+- *
+- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 - */
 -
--#ifndef _DT_BINDINGS_GPIO_TEGRA_GPIO_H
--#define _DT_BINDINGS_GPIO_TEGRA_GPIO_H
+-#ifndef _CLOCK_BCM_NSP_H
+-#define _CLOCK_BCM_NSP_H
 -
--#include <dt-bindings/gpio/gpio.h>
+-/* GENPLL clock channel ID */
+-#define BCM_NSP_GENPLL			0
+-#define BCM_NSP_GENPLL_PHY_CLK		1
+-#define BCM_NSP_GENPLL_ENET_SW_CLK	2
+-#define BCM_NSP_GENPLL_USB_PHY_REF_CLK	3
+-#define BCM_NSP_GENPLL_IPROCFAST_CLK	4
+-#define BCM_NSP_GENPLL_SATA1_CLK	5
+-#define BCM_NSP_GENPLL_SATA2_CLK	6
 -
--#define TEGRA_GPIO_PORT_A 0
--#define TEGRA_GPIO_PORT_B 1
--#define TEGRA_GPIO_PORT_C 2
--#define TEGRA_GPIO_PORT_D 3
--#define TEGRA_GPIO_PORT_E 4
--#define TEGRA_GPIO_PORT_F 5
--#define TEGRA_GPIO_PORT_G 6
--#define TEGRA_GPIO_PORT_H 7
--#define TEGRA_GPIO_PORT_I 8
--#define TEGRA_GPIO_PORT_J 9
--#define TEGRA_GPIO_PORT_K 10
--#define TEGRA_GPIO_PORT_L 11
--#define TEGRA_GPIO_PORT_M 12
--#define TEGRA_GPIO_PORT_N 13
--#define TEGRA_GPIO_PORT_O 14
--#define TEGRA_GPIO_PORT_P 15
--#define TEGRA_GPIO_PORT_Q 16
--#define TEGRA_GPIO_PORT_R 17
--#define TEGRA_GPIO_PORT_S 18
--#define TEGRA_GPIO_PORT_T 19
--#define TEGRA_GPIO_PORT_U 20
--#define TEGRA_GPIO_PORT_V 21
--#define TEGRA_GPIO_PORT_W 22
--#define TEGRA_GPIO_PORT_X 23
--#define TEGRA_GPIO_PORT_Y 24
--#define TEGRA_GPIO_PORT_Z 25
--#define TEGRA_GPIO_PORT_AA 26
--#define TEGRA_GPIO_PORT_BB 27
--#define TEGRA_GPIO_PORT_CC 28
--#define TEGRA_GPIO_PORT_DD 29
--#define TEGRA_GPIO_PORT_EE 30
--#define TEGRA_GPIO_PORT_FF 31
+-/* LCPLL0 clock channel ID */
+-#define BCM_NSP_LCPLL0			0
+-#define BCM_NSP_LCPLL0_PCIE_PHY_REF_CLK	1
+-#define BCM_NSP_LCPLL0_SDIO_CLK		2
+-#define BCM_NSP_LCPLL0_DDR_PHY_CLK	3
 -
--#define TEGRA_GPIO(port, offset) \
--	((TEGRA_GPIO_PORT_##port * 8) + offset)
--
--#endif
-diff --git a/include/dt-bindings/mailbox/tegra186-hsp.h b/include/dt-bindings/mailbox/tegra186-hsp.h
+-#endif /* _CLOCK_BCM_NSP_H */
+diff --git a/include/dt-bindings/clock/bcm2835-aux.h b/include/dt-bindings/clock/bcm2835-aux.h
 deleted file mode 100644
-index b4864325d74b..000000000000
---- a/include/dt-bindings/mailbox/tegra186-hsp.h
+index bb79de383a3b..000000000000
+--- a/include/dt-bindings/clock/bcm2835-aux.h
 +++ /dev/null
-@@ -1,19 +0,0 @@
+@@ -1,9 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * This header provides constants for binding nvidia,tegra186-hsp.
-- *
-- * The number with HSP_DB_MASTER prefix indicates the bit that is
-- * associated with a master ID in the doorbell registers.
+- * Copyright (C) 2015 Broadcom Corporation
 - */
 -
--#ifndef _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
--#define _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
--
--#define HSP_MBOX_TYPE_DB 0x0
--#define HSP_MBOX_TYPE_SM 0x1
--#define HSP_MBOX_TYPE_SS 0x2
--#define HSP_MBOX_TYPE_AS 0x3
--
--#define HSP_DB_MASTER_CCPLEX 17
--#define HSP_DB_MASTER_BPMP 19
--
--#endif
-diff --git a/include/dt-bindings/memory/tegra114-mc.h b/include/dt-bindings/memory/tegra114-mc.h
+-#define BCM2835_AUX_CLOCK_UART		0
+-#define BCM2835_AUX_CLOCK_SPI1		1
+-#define BCM2835_AUX_CLOCK_SPI2		2
+-#define BCM2835_AUX_CLOCK_COUNT		3
+diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
 deleted file mode 100644
-index 8f48985a3139..000000000000
---- a/include/dt-bindings/memory/tegra114-mc.h
+index b60c03430cf1..000000000000
+--- a/include/dt-bindings/clock/bcm2835.h
 +++ /dev/null
-@@ -1,25 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA114_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA114_MC_H
+@@ -1,62 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (C) 2015 Broadcom Corporation
+- */
 -
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_EPP	3
--#define TEGRA_SWGROUP_G2	4
--#define TEGRA_SWGROUP_AVPC	5
--#define TEGRA_SWGROUP_NV	6
--#define TEGRA_SWGROUP_HDA	7
--#define TEGRA_SWGROUP_HC	8
--#define TEGRA_SWGROUP_MSENC	9
--#define TEGRA_SWGROUP_PPCS	10
--#define TEGRA_SWGROUP_VDE	11
--#define TEGRA_SWGROUP_MPCORELP	12
--#define TEGRA_SWGROUP_MPCORE	13
--#define TEGRA_SWGROUP_VI	14
--#define TEGRA_SWGROUP_ISP	15
--#define TEGRA_SWGROUP_XUSB_HOST	16
--#define TEGRA_SWGROUP_XUSB_DEV	17
--#define TEGRA_SWGROUP_EMUCIF	18
--#define TEGRA_SWGROUP_TSEC	19
+-#define BCM2835_PLLA			0
+-#define BCM2835_PLLB			1
+-#define BCM2835_PLLC			2
+-#define BCM2835_PLLD			3
+-#define BCM2835_PLLH			4
 -
--#endif
-diff --git a/include/dt-bindings/memory/tegra124-mc.h b/include/dt-bindings/memory/tegra124-mc.h
+-#define BCM2835_PLLA_CORE		5
+-#define BCM2835_PLLA_PER		6
+-#define BCM2835_PLLB_ARM		7
+-#define BCM2835_PLLC_CORE0		8
+-#define BCM2835_PLLC_CORE1		9
+-#define BCM2835_PLLC_CORE2		10
+-#define BCM2835_PLLC_PER		11
+-#define BCM2835_PLLD_CORE		12
+-#define BCM2835_PLLD_PER		13
+-#define BCM2835_PLLH_RCAL		14
+-#define BCM2835_PLLH_AUX		15
+-#define BCM2835_PLLH_PIX		16
+-
+-#define BCM2835_CLOCK_TIMER		17
+-#define BCM2835_CLOCK_OTP		18
+-#define BCM2835_CLOCK_UART		19
+-#define BCM2835_CLOCK_VPU		20
+-#define BCM2835_CLOCK_V3D		21
+-#define BCM2835_CLOCK_ISP		22
+-#define BCM2835_CLOCK_H264		23
+-#define BCM2835_CLOCK_VEC		24
+-#define BCM2835_CLOCK_HSM		25
+-#define BCM2835_CLOCK_SDRAM		26
+-#define BCM2835_CLOCK_TSENS		27
+-#define BCM2835_CLOCK_EMMC		28
+-#define BCM2835_CLOCK_PERI_IMAGE	29
+-#define BCM2835_CLOCK_PWM		30
+-#define BCM2835_CLOCK_PCM		31
+-
+-#define BCM2835_PLLA_DSI0		32
+-#define BCM2835_PLLA_CCP2		33
+-#define BCM2835_PLLD_DSI0		34
+-#define BCM2835_PLLD_DSI1		35
+-
+-#define BCM2835_CLOCK_AVEO		36
+-#define BCM2835_CLOCK_DFT		37
+-#define BCM2835_CLOCK_GP0		38
+-#define BCM2835_CLOCK_GP1		39
+-#define BCM2835_CLOCK_GP2		40
+-#define BCM2835_CLOCK_SLIM		41
+-#define BCM2835_CLOCK_SMI		42
+-#define BCM2835_CLOCK_TEC		43
+-#define BCM2835_CLOCK_DPI		44
+-#define BCM2835_CLOCK_CAM0		45
+-#define BCM2835_CLOCK_CAM1		46
+-#define BCM2835_CLOCK_DSI0E		47
+-#define BCM2835_CLOCK_DSI1E		48
+-#define BCM2835_CLOCK_DSI0P		49
+-#define BCM2835_CLOCK_DSI1P		50
+-
+-#define BCM2711_CLOCK_EMMC2		51
+diff --git a/include/dt-bindings/clock/bcm6318-clock.h b/include/dt-bindings/clock/bcm6318-clock.h
 deleted file mode 100644
-index 7d8ee798f34e..000000000000
---- a/include/dt-bindings/memory/tegra124-mc.h
+index 3f10448cef11..000000000000
+--- a/include/dt-bindings/clock/bcm6318-clock.h
 +++ /dev/null
-@@ -1,31 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA124_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA124_MC_H
+@@ -1,47 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2018 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
 -
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_AFI	3
--#define TEGRA_SWGROUP_AVPC	4
--#define TEGRA_SWGROUP_HDA	5
--#define TEGRA_SWGROUP_HC	6
--#define TEGRA_SWGROUP_MSENC	7
--#define TEGRA_SWGROUP_PPCS	8
--#define TEGRA_SWGROUP_SATA	9
--#define TEGRA_SWGROUP_VDE	10
--#define TEGRA_SWGROUP_MPCORELP	11
--#define TEGRA_SWGROUP_MPCORE	12
--#define TEGRA_SWGROUP_ISP2	13
--#define TEGRA_SWGROUP_XUSB_HOST	14
--#define TEGRA_SWGROUP_XUSB_DEV	15
--#define TEGRA_SWGROUP_ISP2B	16
--#define TEGRA_SWGROUP_TSEC	17
--#define TEGRA_SWGROUP_A9AVP	18
--#define TEGRA_SWGROUP_GPU	19
--#define TEGRA_SWGROUP_SDMMC1A	20
--#define TEGRA_SWGROUP_SDMMC2A	21
--#define TEGRA_SWGROUP_SDMMC3A	22
--#define TEGRA_SWGROUP_SDMMC4A	23
--#define TEGRA_SWGROUP_VIC	24
--#define TEGRA_SWGROUP_VI	25
+-#ifndef __DT_BINDINGS_CLOCK_BCM6318_H
+-#define __DT_BINDINGS_CLOCK_BCM6318_H
 -
--#endif
-diff --git a/include/dt-bindings/memory/tegra210-mc.h b/include/dt-bindings/memory/tegra210-mc.h
+-#define BCM6318_CLK_ADSL_ASB	0
+-#define BCM6318_CLK_USB_ASB	1
+-#define BCM6318_CLK_MIPS_ASB	2
+-#define BCM6318_CLK_PCIE_ASB	3
+-#define BCM6318_CLK_PHYMIPS_ASB	4
+-#define BCM6318_CLK_ROBOSW_ASB	5
+-#define BCM6318_CLK_SAR_ASB	6
+-#define BCM6318_CLK_SDR_ASB	7
+-#define BCM6318_CLK_SWREG_ASB	8
+-#define BCM6318_CLK_PERIPH_ASB	9
+-#define BCM6318_CLK_CPUBUS160	10
+-#define BCM6318_CLK_ADSL	11
+-#define BCM6318_CLK_SAR125	12
+-#define BCM6318_CLK_MIPS	13
+-#define BCM6318_CLK_PCIE	14
+-#define BCM6318_CLK_ROBOSW250	16
+-#define BCM6318_CLK_ROBOSW025	17
+-#define BCM6318_CLK_SDR		19
+-#define BCM6318_CLK_USB		20
+-#define BCM6318_CLK_HSSPI	25
+-#define BCM6318_CLK_PCIE25	27
+-#define BCM6318_CLK_PHYMIPS	28
+-#define BCM6318_CLK_AFE		29
+-#define BCM6318_CLK_QPROC	30
+-
+-#define BCM6318_UCLK_ADSL	0
+-#define BCM6318_UCLK_ARB	1
+-#define BCM6318_UCLK_MIPS	2
+-#define BCM6318_UCLK_PCIE	3
+-#define BCM6318_UCLK_PERIPH	4
+-#define BCM6318_UCLK_PHYMIPS	5
+-#define BCM6318_UCLK_ROBOSW	6
+-#define BCM6318_UCLK_SAR	7
+-#define BCM6318_UCLK_SDR	8
+-#define BCM6318_UCLK_USB	9
+-
+-#endif /* __DT_BINDINGS_CLOCK_BCM6318_H */
+diff --git a/include/dt-bindings/clock/bcm63268-clock.h b/include/dt-bindings/clock/bcm63268-clock.h
 deleted file mode 100644
-index d1731bc14dbc..000000000000
---- a/include/dt-bindings/memory/tegra210-mc.h
+index 2725dcd06bcc..000000000000
+--- a/include/dt-bindings/clock/bcm63268-clock.h
 +++ /dev/null
-@@ -1,36 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA210_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA210_MC_H
+@@ -1,51 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
 -
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_AFI	3
--#define TEGRA_SWGROUP_AVPC	4
--#define TEGRA_SWGROUP_HDA	5
--#define TEGRA_SWGROUP_HC	6
--#define TEGRA_SWGROUP_NVENC	7
--#define TEGRA_SWGROUP_PPCS	8
--#define TEGRA_SWGROUP_SATA	9
--#define TEGRA_SWGROUP_MPCORE	10
--#define TEGRA_SWGROUP_ISP2	11
--#define TEGRA_SWGROUP_XUSB_HOST	12
--#define TEGRA_SWGROUP_XUSB_DEV	13
--#define TEGRA_SWGROUP_ISP2B	14
--#define TEGRA_SWGROUP_TSEC	15
--#define TEGRA_SWGROUP_A9AVP	16
--#define TEGRA_SWGROUP_GPU	17
--#define TEGRA_SWGROUP_SDMMC1A	18
--#define TEGRA_SWGROUP_SDMMC2A	19
--#define TEGRA_SWGROUP_SDMMC3A	20
--#define TEGRA_SWGROUP_SDMMC4A	21
--#define TEGRA_SWGROUP_VIC	22
--#define TEGRA_SWGROUP_VI	23
--#define TEGRA_SWGROUP_NVDEC	24
--#define TEGRA_SWGROUP_APE	25
--#define TEGRA_SWGROUP_NVJPG	26
--#define TEGRA_SWGROUP_SE	27
--#define TEGRA_SWGROUP_AXIAP	28
--#define TEGRA_SWGROUP_ETR	29
--#define TEGRA_SWGROUP_TSECB	30
+-#ifndef __DT_BINDINGS_CLOCK_BCM63268_H
+-#define __DT_BINDINGS_CLOCK_BCM63268_H
 -
--#endif
-diff --git a/include/dt-bindings/memory/tegra30-mc.h b/include/dt-bindings/memory/tegra30-mc.h
+-#define BCM63268_CLK_GLESS	0
+-#define BCM63268_CLK_VDSL_QPROC	1
+-#define BCM63268_CLK_VDSL_AFE	2
+-#define BCM63268_CLK_VDSL	3
+-#define BCM63268_CLK_MIPS	4
+-#define BCM63268_CLK_WLAN_OCP	5
+-#define BCM63268_CLK_DECT	6
+-#define BCM63268_CLK_FAP0	7
+-#define BCM63268_CLK_FAP1	8
+-#define BCM63268_CLK_SAR	9
+-#define BCM63268_CLK_ROBOSW	10
+-#define BCM63268_CLK_PCM	11
+-#define BCM63268_CLK_USBD	12
+-#define BCM63268_CLK_USBH	13
+-#define BCM63268_CLK_IPSEC	14
+-#define BCM63268_CLK_SPI	15
+-#define BCM63268_CLK_HSSPI	16
+-#define BCM63268_CLK_PCIE	17
+-#define BCM63268_CLK_PHYMIPS	18
+-#define BCM63268_CLK_GMAC	19
+-#define BCM63268_CLK_NAND	20
+-#define BCM63268_CLK_TBUS	27
+-#define BCM63268_CLK_ROBOSW250	31
+-
+-#define BCM63268_TCLK_EPHY1	0
+-#define BCM63268_TCLK_EPHY2	1
+-#define BCM63268_TCLK_EPHY3	2
+-#define BCM63268_TCLK_GPHY	3
+-#define BCM63268_TCLK_DSL	4
+-#define BCM63268_TCLK_WO_EPHY	5
+-#define BCM63268_TCLK_WO_DSL	6
+-#define BCM63268_TCLK_FAP1	11
+-#define BCM63268_TCLK_FAP2	15
+-#define BCM63268_TCLK_UTO_50	16
+-#define BCM63268_TCLK_UTO_EXT	17
+-#define BCM63268_TCLK_USB_REF	18
+-#define BCM63268_TCLK_SW_RST	29
+-#define BCM63268_TCLK_HW_RST	30
+-#define BCM63268_TCLK_POR_RST	31
+-
+-#endif /* __DT_BINDINGS_CLOCK_BCM63268_H */
+diff --git a/include/dt-bindings/clock/bcm6328-clock.h b/include/dt-bindings/clock/bcm6328-clock.h
 deleted file mode 100644
-index 502beb03d777..000000000000
---- a/include/dt-bindings/memory/tegra30-mc.h
+index 6f1e018a74bb..000000000000
+--- a/include/dt-bindings/clock/bcm6328-clock.h
 +++ /dev/null
 @@ -1,24 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA30_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA30_MC_H
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
 -
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_EPP	3
--#define TEGRA_SWGROUP_G2	4
--#define TEGRA_SWGROUP_MPE	5
--#define TEGRA_SWGROUP_VI	6
--#define TEGRA_SWGROUP_AFI	7
--#define TEGRA_SWGROUP_AVPC	8
--#define TEGRA_SWGROUP_NV	9
--#define TEGRA_SWGROUP_NV2	10
--#define TEGRA_SWGROUP_HDA	11
--#define TEGRA_SWGROUP_HC	12
--#define TEGRA_SWGROUP_PPCS	13
--#define TEGRA_SWGROUP_SATA	14
--#define TEGRA_SWGROUP_VDE	15
--#define TEGRA_SWGROUP_MPCORELP	16
--#define TEGRA_SWGROUP_MPCORE	17
--#define TEGRA_SWGROUP_ISP	18
+-#ifndef __DT_BINDINGS_CLOCK_BCM6328_H
+-#define __DT_BINDINGS_CLOCK_BCM6328_H
 -
--#endif
-diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h b/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
+-#define BCM6328_CLK_PHYMIPS	0
+-#define BCM6328_CLK_ADSL_QPROC	1
+-#define BCM6328_CLK_ADSL_AFE	2
+-#define BCM6328_CLK_ADSL	3
+-#define BCM6328_CLK_MIPS	4
+-#define BCM6328_CLK_SAR		5
+-#define BCM6328_CLK_PCM		6
+-#define BCM6328_CLK_USBD	7
+-#define BCM6328_CLK_USBH	8
+-#define BCM6328_CLK_HSSPI	9
+-#define BCM6328_CLK_PCIE	10
+-#define BCM6328_CLK_ROBOSW	11
+-
+-#endif /* __DT_BINDINGS_CLOCK_BCM6328_H */
+diff --git a/include/dt-bindings/clock/bcm6358-clock.h b/include/dt-bindings/clock/bcm6358-clock.h
 deleted file mode 100644
-index 914d56da9324..000000000000
---- a/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
+index a7529bcc0303..000000000000
+--- a/include/dt-bindings/clock/bcm6358-clock.h
 +++ /dev/null
-@@ -1,7 +0,0 @@
--#ifndef _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H
--#define _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H 1
+@@ -1,23 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
 -
--#define TEGRA_XUSB_PADCTL_PCIE 0
--#define TEGRA_XUSB_PADCTL_SATA 1
+-#ifndef __DT_BINDINGS_CLOCK_BCM6358_H
+-#define __DT_BINDINGS_CLOCK_BCM6358_H
 -
--#endif /* _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H */
-diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra.h b/include/dt-bindings/pinctrl/pinctrl-tegra.h
+-#define BCM6358_CLK_ENET	4
+-#define BCM6358_CLK_ADSL	5
+-#define BCM6358_CLK_PCM		8
+-#define BCM6358_CLK_SPI		9
+-#define BCM6358_CLK_USBS	10
+-#define BCM6358_CLK_SAR		11
+-#define BCM6358_CLK_EMUSB	17
+-#define BCM6358_CLK_ENET0	18
+-#define BCM6358_CLK_ENET1	19
+-#define BCM6358_CLK_USBSU	20
+-#define BCM6358_CLK_EPHY	21
+-
+-#endif /* __DT_BINDINGS_CLOCK_BCM6358_H */
+diff --git a/include/dt-bindings/clock/bcm6362-clock.h b/include/dt-bindings/clock/bcm6362-clock.h
 deleted file mode 100644
-index c9b57408de68..000000000000
---- a/include/dt-bindings/pinctrl/pinctrl-tegra.h
+index d3770c504909..000000000000
+--- a/include/dt-bindings/clock/bcm6362-clock.h
 +++ /dev/null
-@@ -1,37 +0,0 @@
+@@ -1,32 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2018 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_BCM6362_H
+-#define __DT_BINDINGS_CLOCK_BCM6362_H
+-
+-#define BCM6362_CLK_GLESS	0
+-#define BCM6362_CLK_ADSL_QPROC	1
+-#define BCM6362_CLK_ADSL_AFE	2
+-#define BCM6362_CLK_ADSL	3
+-#define BCM6362_CLK_MIPS	4
+-#define BCM6362_CLK_WLAN_OCP	5
+-#define BCM6362_CLK_SWPKT_USB	7
+-#define BCM6362_CLK_SWPKT_SAR	8
+-#define BCM6362_CLK_SAR		9
+-#define BCM6362_CLK_ROBOSW	10
+-#define BCM6362_CLK_PCM		11
+-#define BCM6362_CLK_USBD	12
+-#define BCM6362_CLK_USBH	13
+-#define BCM6362_CLK_IPSEC	14
+-#define BCM6362_CLK_SPI		15
+-#define BCM6362_CLK_HSSPI	16
+-#define BCM6362_CLK_PCIE	17
+-#define BCM6362_CLK_FAP		18
+-#define BCM6362_CLK_PHYMIPS	19
+-#define BCM6362_CLK_NAND	20
+-
+-#endif /* __DT_BINDINGS_CLOCK_BCM6362_H */
+diff --git a/include/dt-bindings/clock/bcm6368-clock.h b/include/dt-bindings/clock/bcm6368-clock.h
+deleted file mode 100644
+index 0c857826329a..000000000000
+--- a/include/dt-bindings/clock/bcm6368-clock.h
++++ /dev/null
+@@ -1,30 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_BCM6368_H
+-#define __DT_BINDINGS_CLOCK_BCM6368_H
+-
+-#define BCM6368_CLK_VDSL_QPROC		2
+-#define BCM6368_CLK_VDSL_AFE		3
+-#define BCM6368_CLK_VDSL_BONDING	4
+-#define BCM6368_CLK_VDSL		5
+-#define BCM6368_CLK_PHYMIPS		6
+-#define BCM6368_CLK_SWPKT_USB		7
+-#define BCM6368_CLK_SWPKT_SAR		8
+-#define BCM6368_CLK_SPI			9
+-#define BCM6368_CLK_USBD		10
+-#define BCM6368_CLK_SAR			11
+-#define BCM6368_CLK_ROBOSW		12
+-#define BCM6368_CLK_UTOPIA		13
+-#define BCM6368_CLK_PCM			14
+-#define BCM6368_CLK_USBH		15
+-#define BCM6368_CLK_GLESS		16
+-#define BCM6368_CLK_NAND		17
+-#define BCM6368_CLK_IPSEC		18
+-#define BCM6368_CLK_USBH_IDDQ		19
+-
+-#endif /* __DT_BINDINGS_CLOCK_BCM6368_H */
+diff --git a/include/dt-bindings/pinctrl/bcm2835.h b/include/dt-bindings/pinctrl/bcm2835.h
+deleted file mode 100644
+index b5b2654a0e4d..000000000000
+--- a/include/dt-bindings/pinctrl/bcm2835.h
++++ /dev/null
+@@ -1,26 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * This header provides constants for Tegra pinctrl bindings.
+- * Header providing constants for bcm2835 pinctrl bindings.
 - *
-- * Copyright (c) 2013, NVIDIA CORPORATION.  All rights reserved.
-- *
-- * Author: Laxman Dewangan <ldewangan@nvidia.com>
+- * Copyright (C) 2015 Stefan Wahren <stefan.wahren@i2se.com>
 - */
 -
--#ifndef _DT_BINDINGS_PINCTRL_TEGRA_H
--#define _DT_BINDINGS_PINCTRL_TEGRA_H
+-#ifndef __DT_BINDINGS_PINCTRL_BCM2835_H__
+-#define __DT_BINDINGS_PINCTRL_BCM2835_H__
 -
--/*
-- * Enable/disable for diffeent dt properties. This is applicable for
-- * properties nvidia,enable-input, nvidia,tristate, nvidia,open-drain,
-- * nvidia,lock, nvidia,rcv-sel, nvidia,high-speed-mode, nvidia,schmitt.
-- */
--#define TEGRA_PIN_DISABLE				0
--#define TEGRA_PIN_ENABLE				1
+-/* brcm,function property */
+-#define BCM2835_FSEL_GPIO_IN	0
+-#define BCM2835_FSEL_GPIO_OUT	1
+-#define BCM2835_FSEL_ALT5	2
+-#define BCM2835_FSEL_ALT4	3
+-#define BCM2835_FSEL_ALT0	4
+-#define BCM2835_FSEL_ALT1	5
+-#define BCM2835_FSEL_ALT2	6
+-#define BCM2835_FSEL_ALT3	7
 -
--#define TEGRA_PIN_PULL_NONE				0
--#define TEGRA_PIN_PULL_DOWN				1
--#define TEGRA_PIN_PULL_UP				2
+-/* brcm,pull property */
+-#define BCM2835_PUD_OFF		0
+-#define BCM2835_PUD_DOWN	1
+-#define BCM2835_PUD_UP		2
 -
--/* Low power mode driver */
--#define TEGRA_PIN_LP_DRIVE_DIV_8			0
--#define TEGRA_PIN_LP_DRIVE_DIV_4			1
--#define TEGRA_PIN_LP_DRIVE_DIV_2			2
--#define TEGRA_PIN_LP_DRIVE_DIV_1			3
--
--/* Rising/Falling slew rate */
--#define TEGRA_PIN_SLEW_RATE_FASTEST			0
--#define TEGRA_PIN_SLEW_RATE_FAST			1
--#define TEGRA_PIN_SLEW_RATE_SLOW			2
--#define TEGRA_PIN_SLEW_RATE_SLOWEST			3
--
--#endif
-diff --git a/include/dt-bindings/power/tegra186-powergate.h b/include/dt-bindings/power/tegra186-powergate.h
+-#endif /* __DT_BINDINGS_PINCTRL_BCM2835_H__ */
+diff --git a/include/dt-bindings/reset/bcm6318-reset.h b/include/dt-bindings/reset/bcm6318-reset.h
 deleted file mode 100644
-index 17e75498563c..000000000000
---- a/include/dt-bindings/power/tegra186-powergate.h
+index 1422500f8f52..000000000000
+--- a/include/dt-bindings/reset/bcm6318-reset.h
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2018 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_RESET_BCM6318_H
+-#define __DT_BINDINGS_RESET_BCM6318_H
+-
+-#define BCM6318_RST_SPI		0
+-#define BCM6318_RST_EPHY	1
+-#define BCM6318_RST_SAR		2
+-#define BCM6318_RST_ENETSW	3
+-#define BCM6318_RST_USBD	4
+-#define BCM6318_RST_USBH	5
+-#define BCM6318_RST_PCIE_CORE	6
+-#define BCM6318_RST_PCIE	7
+-#define BCM6318_RST_PCIE_EXT	8
+-#define BCM6318_RST_PCIE_HARD	9
+-#define BCM6318_RST_ADSL	10
+-#define BCM6318_RST_PHYMIPS	11
+-#define BCM6318_RST_HOSTMIPS	11
+-
+-#endif /* __DT_BINDINGS_RESET_BCM6318_H */
+diff --git a/include/dt-bindings/reset/bcm63268-reset.h b/include/dt-bindings/reset/bcm63268-reset.h
+deleted file mode 100644
+index a45abed1ceb7..000000000000
+--- a/include/dt-bindings/reset/bcm63268-reset.h
++++ /dev/null
+@@ -1,31 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_RESET_BCM63268_H
+-#define __DT_BINDINGS_RESET_BCM63268_H
+-
+-#define BCM63268_RST_SPI	0
+-#define BCM63268_RST_IPSEC	1
+-#define BCM63268_RST_EPHY	2
+-#define BCM63268_RST_SAR	3
+-#define BCM63268_RST_ENETSW	4
+-#define BCM63268_RST_USBS	5
+-#define BCM63268_RST_USBH	6
+-#define BCM63268_RST_PCM	7
+-#define BCM63268_RST_PCIE_CORE	8
+-#define BCM63268_RST_PCIE	9
+-#define BCM63268_RST_PCIE_EXT	10
+-#define BCM63268_RST_WLAN_SHIM	11
+-#define BCM63268_RST_DDR_PHY	12
+-#define BCM63268_RST_FAP0	13
+-#define BCM63268_RST_WLAN_UBUS	14
+-#define BCM63268_RST_DECT	15
+-#define BCM63268_RST_FAP1	16
+-#define BCM63268_RST_PCIE_HARD	17
+-#define BCM63268_RST_GPHY	18
+-
+-#endif /* __DT_BINDINGS_RESET_BCM63268_H */
+diff --git a/include/dt-bindings/reset/bcm6328-reset.h b/include/dt-bindings/reset/bcm6328-reset.h
+deleted file mode 100644
+index f2dd4f79cc61..000000000000
+--- a/include/dt-bindings/reset/bcm6328-reset.h
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_RESET_BCM6328_H
+-#define __DT_BINDINGS_RESET_BCM6328_H
+-
+-#define BCM6328_RST_SPI		0
+-#define BCM6328_RST_EPHY	1
+-#define BCM6328_RST_SAR		2
+-#define BCM6328_RST_ENETSW	3
+-#define BCM6328_RST_USBS	4
+-#define BCM6328_RST_USBH	5
+-#define BCM6328_RST_PCM		6
+-#define BCM6328_RST_PCIE_CORE	7
+-#define BCM6328_RST_PCIE	8
+-#define BCM6328_RST_PCIE_EXT	9
+-#define BCM6328_RST_PCIE_HARD	10
+-
+-#endif /* __DT_BINDINGS_RESET_BCM6328_H */
+diff --git a/include/dt-bindings/reset/bcm6358-reset.h b/include/dt-bindings/reset/bcm6358-reset.h
+deleted file mode 100644
+index 075706eff7ad..000000000000
+--- a/include/dt-bindings/reset/bcm6358-reset.h
++++ /dev/null
+@@ -1,20 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_RESET_BCM6358_H
+-#define __DT_BINDINGS_RESET_BCM6358_H
+-
+-#define BCM6358_RST_SPI		0
+-#define BCM6358_RST_ENET	2
+-#define BCM6358_RST_MPI		3
+-#define BCM6358_RST_EPHY	6
+-#define BCM6358_RST_SAR		7
+-#define BCM6358_RST_USBH	12
+-#define BCM6358_RST_PCM		13
+-#define BCM6358_RST_ADSL	14
+-
+-#endif /* __DT_BINDINGS_RESET_BCM6358_H */
+diff --git a/include/dt-bindings/reset/bcm6362-reset.h b/include/dt-bindings/reset/bcm6362-reset.h
+deleted file mode 100644
+index 8202e4991905..000000000000
+--- a/include/dt-bindings/reset/bcm6362-reset.h
++++ /dev/null
+@@ -1,27 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2018 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_RESET_BCM6362_H
+-#define __DT_BINDINGS_RESET_BCM6362_H
+-
+-#define BCM6362_RST_SPI		0
+-#define BCM6362_RST_IPSEC	1
+-#define BCM6362_RST_EPHY	2
+-#define BCM6362_RST_SAR		3
+-#define BCM6362_RST_ENETSW	4
+-#define BCM6362_RST_USBD	5
+-#define BCM6362_RST_USBH	6
+-#define BCM6362_RST_PCM		7
+-#define BCM6362_RST_PCIE_CORE	8
+-#define BCM6362_RST_PCIE	9
+-#define BCM6362_RST_PCIE_EXT	10
+-#define BCM6362_RST_WLAN_SHIM	11
+-#define BCM6362_RST_DDR_PHY	12
+-#define BCM6362_RST_FAP		13
+-#define BCM6362_RST_WLAN_UBUS	14
+-
+-#endif /* __DT_BINDINGS_RESET_BCM6362_H */
+diff --git a/include/dt-bindings/reset/bcm6368-reset.h b/include/dt-bindings/reset/bcm6368-reset.h
+deleted file mode 100644
+index 0038a7ccf5c6..000000000000
+--- a/include/dt-bindings/reset/bcm6368-reset.h
++++ /dev/null
+@@ -1,21 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2017 Álvaro Fernández Rojas <noltari@gmail.com>
+- *
+- * Derived from linux/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+- */
+-
+-#ifndef __DT_BINDINGS_RESET_BCM6368_H
+-#define __DT_BINDINGS_RESET_BCM6368_H
+-
+-#define BCM6368_RST_SPI		0
+-#define BCM6368_RST_MPI		3
+-#define BCM6368_RST_IPSEC	4
+-#define BCM6368_RST_EPHY	6
+-#define BCM6368_RST_SAR		7
+-#define BCM6368_RST_SWITCH	10
+-#define BCM6368_RST_USBD	11
+-#define BCM6368_RST_USBH	12
+-#define BCM6368_RST_PCM		13
+-
+-#endif /* __DT_BINDINGS_RESET_BCM6368_H */
+diff --git a/include/dt-bindings/soc/bcm2835-pm.h b/include/dt-bindings/soc/bcm2835-pm.h
+deleted file mode 100644
+index 153d75b8d99f..000000000000
+--- a/include/dt-bindings/soc/bcm2835-pm.h
 +++ /dev/null
 @@ -1,28 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (c) 2015-2016, NVIDIA CORPORATION.
-- */
+-/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
 -
--#ifndef _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
--#define _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
+-#ifndef _DT_BINDINGS_ARM_BCM2835_PM_H
+-#define _DT_BINDINGS_ARM_BCM2835_PM_H
 -
--#define TEGRA186_POWER_DOMAIN_AUD	0
--#define TEGRA186_POWER_DOMAIN_DFD	1
--#define TEGRA186_POWER_DOMAIN_DISP	2
--#define TEGRA186_POWER_DOMAIN_DISPB	3
--#define TEGRA186_POWER_DOMAIN_DISPC	4
--#define TEGRA186_POWER_DOMAIN_ISPA	5
--#define TEGRA186_POWER_DOMAIN_NVDEC	6
--#define TEGRA186_POWER_DOMAIN_NVJPG	7
--#define TEGRA186_POWER_DOMAIN_MPE	8
--#define TEGRA186_POWER_DOMAIN_PCX	9
--#define TEGRA186_POWER_DOMAIN_SAX	10
--#define TEGRA186_POWER_DOMAIN_VE	11
--#define TEGRA186_POWER_DOMAIN_VIC	12
--#define TEGRA186_POWER_DOMAIN_XUSBA	13
--#define TEGRA186_POWER_DOMAIN_XUSBB	14
--#define TEGRA186_POWER_DOMAIN_XUSBC	15
--#define TEGRA186_POWER_DOMAIN_GPU	43
--#define TEGRA186_POWER_DOMAIN_MAX	44
+-#define BCM2835_POWER_DOMAIN_GRAFX		0
+-#define BCM2835_POWER_DOMAIN_GRAFX_V3D		1
+-#define BCM2835_POWER_DOMAIN_IMAGE		2
+-#define BCM2835_POWER_DOMAIN_IMAGE_PERI		3
+-#define BCM2835_POWER_DOMAIN_IMAGE_ISP		4
+-#define BCM2835_POWER_DOMAIN_IMAGE_H264		5
+-#define BCM2835_POWER_DOMAIN_USB		6
+-#define BCM2835_POWER_DOMAIN_DSI0		7
+-#define BCM2835_POWER_DOMAIN_DSI1		8
+-#define BCM2835_POWER_DOMAIN_CAM0		9
+-#define BCM2835_POWER_DOMAIN_CAM1		10
+-#define BCM2835_POWER_DOMAIN_CCP2TX		11
+-#define BCM2835_POWER_DOMAIN_HDMI		12
 -
--#endif
-diff --git a/include/dt-bindings/reset/tegra124-car.h b/include/dt-bindings/reset/tegra124-car.h
-deleted file mode 100644
-index 070e4f6e7486..000000000000
---- a/include/dt-bindings/reset/tegra124-car.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/*
-- * This header provides Tegra124-specific constants for binding
-- * nvidia,tegra124-car.
-- */
+-#define BCM2835_POWER_DOMAIN_COUNT		13
 -
--#ifndef _DT_BINDINGS_RESET_TEGRA124_CAR_H
--#define _DT_BINDINGS_RESET_TEGRA124_CAR_H
+-#define BCM2835_RESET_V3D			0
+-#define BCM2835_RESET_ISP			1
+-#define BCM2835_RESET_H264			2
 -
--#define TEGRA124_RESET(x)		(6 * 32 + (x))
--#define TEGRA124_RST_DFLL_DVCO		TEGRA124_RESET(0)
+-#define BCM2835_RESET_COUNT			3
 -
--#endif	/* _DT_BINDINGS_RESET_TEGRA124_CAR_H */
-diff --git a/include/dt-bindings/reset/tegra186-reset.h b/include/dt-bindings/reset/tegra186-reset.h
-deleted file mode 100644
-index 7efec9200532..000000000000
---- a/include/dt-bindings/reset/tegra186-reset.h
-+++ /dev/null
-@@ -1,205 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (c) 2015, NVIDIA CORPORATION.
-- */
--
--#ifndef _ABI_MACH_T186_RESET_T186_H_
--#define _ABI_MACH_T186_RESET_T186_H_
--
--#define TEGRA186_RESET_ACTMON			0
--#define TEGRA186_RESET_AFI			1
--#define TEGRA186_RESET_CEC			2
--#define TEGRA186_RESET_CSITE			3
--#define TEGRA186_RESET_DP2			4
--#define TEGRA186_RESET_DPAUX			5
--#define TEGRA186_RESET_DSI			6
--#define TEGRA186_RESET_DSIB			7
--#define TEGRA186_RESET_DTV			8
--#define TEGRA186_RESET_DVFS			9
--#define TEGRA186_RESET_ENTROPY			10
--#define TEGRA186_RESET_EXTPERIPH1		11
--#define TEGRA186_RESET_EXTPERIPH2		12
--#define TEGRA186_RESET_EXTPERIPH3		13
--#define TEGRA186_RESET_GPU			14
--#define TEGRA186_RESET_HDA			15
--#define TEGRA186_RESET_HDA2CODEC_2X		16
--#define TEGRA186_RESET_HDA2HDMICODEC		17
--#define TEGRA186_RESET_HOST1X			18
--#define TEGRA186_RESET_I2C1			19
--#define TEGRA186_RESET_I2C2			20
--#define TEGRA186_RESET_I2C3			21
--#define TEGRA186_RESET_I2C4			22
--#define TEGRA186_RESET_I2C5			23
--#define TEGRA186_RESET_I2C6			24
--#define TEGRA186_RESET_ISP			25
--#define TEGRA186_RESET_KFUSE			26
--#define TEGRA186_RESET_LA			27
--#define TEGRA186_RESET_MIPI_CAL			28
--#define TEGRA186_RESET_PCIE			29
--#define TEGRA186_RESET_PCIEXCLK			30
--#define TEGRA186_RESET_SATA			31
--#define TEGRA186_RESET_SATACOLD			32
--#define TEGRA186_RESET_SDMMC1			33
--#define TEGRA186_RESET_SDMMC2			34
--#define TEGRA186_RESET_SDMMC3			35
--#define TEGRA186_RESET_SDMMC4			36
--#define TEGRA186_RESET_SE			37
--#define TEGRA186_RESET_SOC_THERM		38
--#define TEGRA186_RESET_SOR0			39
--#define TEGRA186_RESET_SPI1			40
--#define TEGRA186_RESET_SPI2			41
--#define TEGRA186_RESET_SPI3			42
--#define TEGRA186_RESET_SPI4			43
--#define TEGRA186_RESET_TMR			44
--#define TEGRA186_RESET_TRIG_SYS			45
--#define TEGRA186_RESET_TSEC			46
--#define TEGRA186_RESET_UARTA			47
--#define TEGRA186_RESET_UARTB			48
--#define TEGRA186_RESET_UARTC			49
--#define TEGRA186_RESET_UARTD			50
--#define TEGRA186_RESET_VI			51
--#define TEGRA186_RESET_VIC			52
--#define TEGRA186_RESET_XUSB_DEV			53
--#define TEGRA186_RESET_XUSB_HOST		54
--#define TEGRA186_RESET_XUSB_PADCTL		55
--#define TEGRA186_RESET_XUSB_SS			56
--#define TEGRA186_RESET_AON_APB			57
--#define TEGRA186_RESET_AXI_CBB			58
--#define TEGRA186_RESET_BPMP_APB			59
--#define TEGRA186_RESET_CAN1			60
--#define TEGRA186_RESET_CAN2			61
--#define TEGRA186_RESET_DMIC5			62
--#define TEGRA186_RESET_DSIC			63
--#define TEGRA186_RESET_DSID			64
--#define TEGRA186_RESET_EMC_EMC			65
--#define TEGRA186_RESET_EMC_MEM			66
--#define TEGRA186_RESET_EMCSB_EMC		67
--#define TEGRA186_RESET_EMCSB_MEM		68
--#define TEGRA186_RESET_EQOS			69
--#define TEGRA186_RESET_GPCDMA			70
--#define TEGRA186_RESET_GPIO_CTL0		71
--#define TEGRA186_RESET_GPIO_CTL1		72
--#define TEGRA186_RESET_GPIO_CTL2		73
--#define TEGRA186_RESET_GPIO_CTL3		74
--#define TEGRA186_RESET_GPIO_CTL4		75
--#define TEGRA186_RESET_GPIO_CTL5		76
--#define TEGRA186_RESET_I2C10			77
--#define TEGRA186_RESET_I2C12			78
--#define TEGRA186_RESET_I2C13			79
--#define TEGRA186_RESET_I2C14			80
--#define TEGRA186_RESET_I2C7			81
--#define TEGRA186_RESET_I2C8			82
--#define TEGRA186_RESET_I2C9			83
--#define TEGRA186_RESET_JTAG2AXI			84
--#define TEGRA186_RESET_MPHY_IOBIST		85
--#define TEGRA186_RESET_MPHY_L0_RX		86
--#define TEGRA186_RESET_MPHY_L0_TX		87
--#define TEGRA186_RESET_NVCSI			88
--#define TEGRA186_RESET_NVDISPLAY0_HEAD0		89
--#define TEGRA186_RESET_NVDISPLAY0_HEAD1		90
--#define TEGRA186_RESET_NVDISPLAY0_HEAD2		91
--#define TEGRA186_RESET_NVDISPLAY0_MISC		92
--#define TEGRA186_RESET_NVDISPLAY0_WGRP0		93
--#define TEGRA186_RESET_NVDISPLAY0_WGRP1		94
--#define TEGRA186_RESET_NVDISPLAY0_WGRP2		95
--#define TEGRA186_RESET_NVDISPLAY0_WGRP3		96
--#define TEGRA186_RESET_NVDISPLAY0_WGRP4		97
--#define TEGRA186_RESET_NVDISPLAY0_WGRP5		98
--#define TEGRA186_RESET_PWM1			99
--#define TEGRA186_RESET_PWM2			100
--#define TEGRA186_RESET_PWM3			101
--#define TEGRA186_RESET_PWM4			102
--#define TEGRA186_RESET_PWM5			103
--#define TEGRA186_RESET_PWM6			104
--#define TEGRA186_RESET_PWM7			105
--#define TEGRA186_RESET_PWM8			106
--#define TEGRA186_RESET_SCE_APB			107
--#define TEGRA186_RESET_SOR1			108
--#define TEGRA186_RESET_TACH			109
--#define TEGRA186_RESET_TSC			110
--#define TEGRA186_RESET_UARTF			111
--#define TEGRA186_RESET_UARTG			112
--#define TEGRA186_RESET_UFSHC			113
--#define TEGRA186_RESET_UFSHC_AXI_M		114
--#define TEGRA186_RESET_UPHY			115
--#define TEGRA186_RESET_ADSP			116
--#define TEGRA186_RESET_ADSPDBG			117
--#define TEGRA186_RESET_ADSPINTF			118
--#define TEGRA186_RESET_ADSPNEON			119
--#define TEGRA186_RESET_ADSPPERIPH		120
--#define TEGRA186_RESET_ADSPSCU			121
--#define TEGRA186_RESET_ADSPWDT			122
--#define TEGRA186_RESET_APE			123
--#define TEGRA186_RESET_DPAUX1			124
--#define TEGRA186_RESET_NVDEC			125
--#define TEGRA186_RESET_NVENC			126
--#define TEGRA186_RESET_NVJPG			127
--#define TEGRA186_RESET_PEX_USB_UPHY		128
--#define TEGRA186_RESET_QSPI			129
--#define TEGRA186_RESET_TSECB			130
--#define TEGRA186_RESET_VI_I2C			131
--#define TEGRA186_RESET_UARTE			132
--#define TEGRA186_RESET_TOP_GTE			133
--#define TEGRA186_RESET_SHSP			134
--#define TEGRA186_RESET_PEX_USB_UPHY_L5		135
--#define TEGRA186_RESET_PEX_USB_UPHY_L4		136
--#define TEGRA186_RESET_PEX_USB_UPHY_L3		137
--#define TEGRA186_RESET_PEX_USB_UPHY_L2		138
--#define TEGRA186_RESET_PEX_USB_UPHY_L1		139
--#define TEGRA186_RESET_PEX_USB_UPHY_L0		140
--#define TEGRA186_RESET_PEX_USB_UPHY_PLL1	141
--#define TEGRA186_RESET_PEX_USB_UPHY_PLL0	142
--#define TEGRA186_RESET_TSCTNVI			143
--#define TEGRA186_RESET_EXTPERIPH4		144
--#define TEGRA186_RESET_DSIPADCTL		145
--#define TEGRA186_RESET_AUD_MCLK			146
--#define TEGRA186_RESET_MPHY_CLK_CTL		147
--#define TEGRA186_RESET_MPHY_L1_RX		148
--#define TEGRA186_RESET_MPHY_L1_TX		149
--#define TEGRA186_RESET_UFSHC_LP			150
--#define TEGRA186_RESET_BPMP_NIC			151
--#define TEGRA186_RESET_BPMP_NSYSPORESET		152
--#define TEGRA186_RESET_BPMP_NRESET		153
--#define TEGRA186_RESET_BPMP_DBGRESETN		154
--#define TEGRA186_RESET_BPMP_PRESETDBGN		155
--#define TEGRA186_RESET_BPMP_PM			156
--#define TEGRA186_RESET_BPMP_CVC			157
--#define TEGRA186_RESET_BPMP_DMA			158
--#define TEGRA186_RESET_BPMP_HSP			159
--#define TEGRA186_RESET_TSCTNBPMP		160
--#define TEGRA186_RESET_BPMP_TKE			161
--#define TEGRA186_RESET_BPMP_GTE			162
--#define TEGRA186_RESET_BPMP_PM_ACTMON		163
--#define TEGRA186_RESET_AON_NIC			164
--#define TEGRA186_RESET_AON_NSYSPORESET		165
--#define TEGRA186_RESET_AON_NRESET		166
--#define TEGRA186_RESET_AON_DBGRESETN		167
--#define TEGRA186_RESET_AON_PRESETDBGN		168
--#define TEGRA186_RESET_AON_ACTMON		169
--#define TEGRA186_RESET_AOPM			170
--#define TEGRA186_RESET_AOVC			171
--#define TEGRA186_RESET_AON_DMA			172
--#define TEGRA186_RESET_AON_GPIO			173
--#define TEGRA186_RESET_AON_HSP			174
--#define TEGRA186_RESET_TSCTNAON			175
--#define TEGRA186_RESET_AON_TKE			176
--#define TEGRA186_RESET_AON_GTE			177
--#define TEGRA186_RESET_SCE_NIC			178
--#define TEGRA186_RESET_SCE_NSYSPORESET		179
--#define TEGRA186_RESET_SCE_NRESET		180
--#define TEGRA186_RESET_SCE_DBGRESETN		181
--#define TEGRA186_RESET_SCE_PRESETDBGN		182
--#define TEGRA186_RESET_SCE_ACTMON		183
--#define TEGRA186_RESET_SCE_PM			184
--#define TEGRA186_RESET_SCE_DMA			185
--#define TEGRA186_RESET_SCE_HSP			186
--#define TEGRA186_RESET_TSCTNSCE			187
--#define TEGRA186_RESET_SCE_TKE			188
--#define TEGRA186_RESET_SCE_GTE			189
--#define TEGRA186_RESET_SCE_CFG			190
--#define TEGRA186_RESET_ADSP_ALL			191
--/** @brief controls the power up/down sequence of UFSHC PSW partition. Controls LP_PWR_READY, LP_ISOL_EN, and LP_RESET_N signals */
--#define TEGRA186_RESET_UFSHC_LP_SEQ		192
--#define TEGRA186_RESET_SIZE			193
--
--#endif
-diff --git a/include/dt-bindings/thermal/tegra124-soctherm.h b/include/dt-bindings/thermal/tegra124-soctherm.h
-deleted file mode 100644
-index 729ab9fc325e..000000000000
---- a/include/dt-bindings/thermal/tegra124-soctherm.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/*
-- * This header provides constants for binding nvidia,tegra124-soctherm.
-- */
--
--#ifndef _DT_BINDINGS_THERMAL_TEGRA124_SOCTHERM_H
--#define _DT_BINDINGS_THERMAL_TEGRA124_SOCTHERM_H
--
--#define TEGRA124_SOCTHERM_SENSOR_CPU 0
--#define TEGRA124_SOCTHERM_SENSOR_MEM 1
--#define TEGRA124_SOCTHERM_SENSOR_GPU 2
--#define TEGRA124_SOCTHERM_SENSOR_PLLX 3
--#define TEGRA124_SOCTHERM_SENSOR_NUM 4
--
--#endif
+-#endif /* _DT_BINDINGS_ARM_BCM2835_PM_H */
 
 -- 
 2.44.0
