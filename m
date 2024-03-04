@@ -2,56 +2,56 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39240C54E7B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39792C54E7E
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:49 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web10.104586.1709571096096320011
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.104604.1709571112260208586
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Mar 2024 08:51:36 -0800
+ Mon, 04 Mar 2024 08:51:52 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=hiiO/hT5;
- spf=pass (domain: linaro.org, ip: 209.85.128.50, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-412e6ddf452so6013945e9.2
-        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:35 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=TWlyXVmK;
+ spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-412e92deb18so2929895e9.1
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709571094; x=1710175894; darn=groups.io;
+        d=linaro.org; s=google; t=1709571111; x=1710175911; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xw9r3DNrm61sjdfdUDsH4y7RijQf7u/dic0V6ZEHJY0=;
-        b=hiiO/hT5tlMKnhA951fq2i4IjtmFW5qkCsgtqgFeIafTfWcvlXBcdfrOgaHLtuTpG3
-         SYuvpL/4rugYLShd0qMWCSpAyyFblhx0Dsn+K7zl6ywBPIMUUuK2q/P7we91cwE01POT
-         clhspeVtZA50YtcXgNWP+cF/kN+0/ABLn9vlaUFqO2W8U7tWkxo9PQT9TCMcLGYEJA21
-         U6tui/Pbwbrgqx0mnIIWV/MHerYbklVPLjQmi2+o21ewwEp7xZTxAh+/413BmYtOWYZW
-         yd1ZUnfQK34V1PZffmEiHhA4jbJ9xWQUVklsy7i9UquB2m5tM8/Cq3Gz1Ws9OQDE6v+S
-         VhTw==
+        bh=4+SBLdwGnKNSd9O3Ivc5UgBnVQJdSDgsDHEaYNyIaok=;
+        b=TWlyXVmKbaQ5tjC7QYeJkjk7CQgFYCBx63RKQVmv6A4LS9bwL0A5pGpVM7GpEDT9DV
+         hy7QERS/us4WR3Of9xzwy5NLKILzCi5p76Pwup+uciySBTgRf+zy9kM0EbGDMj1mVbxS
+         tMxF+14KVzGSMbwi3vfbvse983xGRydMX0tVwHZUibBRXwSWwCYSfxvq8HmuFA6CmTPb
+         FdDEfOGHDaABBxnHDzrdKTI+4ZO9msYEfTgJRrbkbUlnR0UtAVcbdsGC2Sv05ufjd+hd
+         GP+flmZpnAdu9JmapSBtwXp692VDTktzxwr2UmXpwGKs9ELE1oVlnZyRhPYz4uKo6INq
+         +zYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571094; x=1710175894;
+        d=1e100.net; s=20230601; t=1709571111; x=1710175911;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xw9r3DNrm61sjdfdUDsH4y7RijQf7u/dic0V6ZEHJY0=;
-        b=TAtBzuyGbWQyoJB8DfJJqoMKfYIYujgT9IBWmMRs+OzErQuCUHYegVvnfeJvkR9ktf
-         8fDvLCoAigiRPnVJttlPsiU6Sl4DxjuPbkmpwHG0DEKBg5ovOspj6T7oZRSrLKZqSdC9
-         koywJl7fQzatBmFu0KYc6JY51dKQvGnzXKOdfz321cNwd7oD6usGnW/JNniLGNQIRzJS
-         y4KDTAn3qYh7nZGpo6Cw/y4LLmfQc/bnxA6l/BdheAtxow99Vmr2JHUsLSgs3Q6tNNAI
-         JiAtsR14/YKOf1MyLwvWnLGcLzVqceD4OXt5vHOrO5NLYuhcSyiyKJDrB7afhM6iGx4D
-         EN0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUIHD1mvhE7i5FelJmAa0/ORhzlBzwC6QPeeZFxjWZJ0FTCxsKG8H1KoqC/wwFG6RcqEe1GPv1CiD1m/sxq0wTdNQAbmU7HAac=
-X-Gm-Message-State: AOJu0YwMZQrKpFkWEIBWFFNHVUP8FNjmVCNoYqPMH2qqegeMVhpLzzJ9
-	HIewxewKNVaC/UTDTRcehNZwTC4konYXGnb5WRl9lnEhA6zB/CX4ZQKGJ/Fl2h8=
-X-Google-Smtp-Source: AGHT+IHH9NjH5201SMI7j211//A5nixpgSE4jjnxDgaBXWF32fbyj767eH12Xv0IeQ9M1TYli/Q+OA==
-X-Received: by 2002:a05:600c:1d8d:b0:412:e7e2:b134 with SMTP id p13-20020a05600c1d8d00b00412e7e2b134mr1238098wms.36.1709571094339;
-        Mon, 04 Mar 2024 08:51:34 -0800 (PST)
+        bh=4+SBLdwGnKNSd9O3Ivc5UgBnVQJdSDgsDHEaYNyIaok=;
+        b=r9meaRopeyp68xRR/QV452Cay+lrSBRLpnxe5LZFWYyGNUFnlnCZcv/2CmXYhtG4/o
+         YDUnVEoYLJ63RUpJXZXov7SkNe7f86dOc+W9YtaRp5K/EBcJHfTKzhoZfO3TC+1zR0T1
+         Uk8VOCIaYtF0+iS2tpyiqJZ084mtOwAvRDRamPFFaz9tTAUTQSt62cfe+wFg5XDGFu40
+         f0l4xIkgwoh4nBqMGYGBN7zH2Q2xTxK2OSQSQ0JAvix0pnTPg1+Nt1MOSGWOwXRYQ0nt
+         9hpoI3sdVL4ey06qzlMKAmRHbquOblAugy9FK1wv7pLY6iipdSb2TZ0Obcp+iNXPm/0U
+         NhCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWw1hAXcJndds2rz/9ihC+wvjzGCBxKMsfox3DmlEZVGJIQleAQkscI7XquC7Ys5rtIKavW6dOH26WaDB9H5A+MpRPndN0AC0k=
+X-Gm-Message-State: AOJu0YwleyCbQVT6n+ZUlO6dZ5bi9toSbwOd8j1NGPZCtRgQ7ZWV6ABU
+	kVYn6KhaavJDYGY9oRxmYugZuBX9vEJhUemfrHEYgj52kaNFzq+y66zWSIYnCAI=
+X-Google-Smtp-Source: AGHT+IHJqsVlYznnpo1G8RlDB7T4nkOJ/Gtky4oFhrJ3+/ZYu5nUz2LQA6iF7lgDdohd3WLw2qWR9g==
+X-Received: by 2002:a05:600c:19cb:b0:412:c78f:a8df with SMTP id u11-20020a05600c19cb00b00412c78fa8dfmr6811556wmq.22.1709571110342;
+        Mon, 04 Mar 2024 08:51:50 -0800 (PST)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.32
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:51:33 -0800 (PST)
+        Mon, 04 Mar 2024 08:51:49 -0800 (PST)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Mon, 04 Mar 2024 16:51:15 +0000
-Subject: [PATCH RFC 07/26] amlogic: drop dt-binding headers
+Date: Mon, 04 Mar 2024 16:51:25 +0000
+Subject: [PATCH RFC 17/26] renesas: drop clock dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240304-b4-upstream-dt-headers-v1-7-b7ff41925f92@linaro.org>
+Message-Id: <20240304-b4-upstream-dt-headers-v1-17-b7ff41925f92@linaro.org>
 References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 In-Reply-To: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -84,13 +84,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=71038;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=80750;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=xaAHQgRs7txFzopCeMNzgKvepsTJGtLndgqcax2vvOo=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9h6GQyUZDdJbS3affEd9xTdkFllTCIqEo0bzoddE
- izJ+32ho5SFQZCDQVZMkUX8xDLLprWX7TW2L7gAM4eVCWQIAxenAEzEmInhD8eMEzUhD3omHlqa
- qdi+6GT4H4nPt1szUm9srHGSb3Ou5GJkmHPCbZGg+7aiu54r+Pb7hT6O0psnfHPT17LXKRP2LZz
- 9LBMA
+ bh=XMsYOzREDhuLslBqGaDkgTmXZhcByJ2OYm66wAu2ECo=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnfzi44yoLY8OeWC7O72k/bbttx5Y3nDuZk70OvL2vE
+ t+S/469o5SFQZCDQVZMkUX8xDLLprWX7TW2L7gAM4eVCWQIAxenAEykToThr7g4u1dfS1ttTMi6
+ FqfTm2/kWuxqS3j1I6TU9dTkve5/XzL8z3PWyipNvOF5pavd6/6U4ttybXGt85IfPVXYtf7drdd
+ /HQE=
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -99,2443 +99,2558 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2163
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2173
 
-Dropped in favour of dts/upstream
+Drop in favour of dts/upstream.
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- .../clock/amlogic,a1-peripherals-clkc.h            | 168 ---------------------
- include/dt-bindings/clock/amlogic,a1-pll-clkc.h    |  25 ---
- include/dt-bindings/clock/axg-aoclkc.h             |  31 ----
- include/dt-bindings/clock/axg-audio-clkc.h         |  94 ------------
- include/dt-bindings/clock/axg-clkc.h               | 100 ------------
- include/dt-bindings/clock/g12a-aoclkc.h            |  36 -----
- include/dt-bindings/clock/g12a-clkc.h              | 153 -------------------
- include/dt-bindings/clock/gxbb-aoclkc.h            |  74 ---------
- include/dt-bindings/clock/gxbb-clkc.h              | 151 ------------------
- include/dt-bindings/gpio/meson-a1-gpio.h           |  73 ---------
- include/dt-bindings/gpio/meson-axg-gpio.h          | 116 --------------
- include/dt-bindings/gpio/meson-g12a-gpio.h         | 114 --------------
- include/dt-bindings/gpio/meson-gxbb-gpio.h         | 148 ------------------
- include/dt-bindings/gpio/meson-gxl-gpio.h          | 125 ---------------
- include/dt-bindings/power/meson-a1-power.h         |  32 ----
- include/dt-bindings/power/meson-axg-power.h        |  14 --
- include/dt-bindings/power/meson-g12a-power.h       |  13 --
- include/dt-bindings/power/meson-gxbb-power.h       |  13 --
- include/dt-bindings/power/meson-sm1-power.h        |  18 ---
- include/dt-bindings/reset/amlogic,meson-a1-reset.h |  76 ----------
- .../reset/amlogic,meson-axg-audio-arb.h            |  19 ---
- .../dt-bindings/reset/amlogic,meson-axg-reset.h    | 123 ---------------
- .../reset/amlogic,meson-g12a-audio-reset.h         |  53 -------
- .../dt-bindings/reset/amlogic,meson-g12a-reset.h   | 137 -----------------
- .../dt-bindings/reset/amlogic,meson-gxbb-reset.h   | 161 --------------------
- include/dt-bindings/reset/axg-aoclkc.h             |  20 ---
- include/dt-bindings/reset/g12a-aoclkc.h            |  18 ---
- include/dt-bindings/reset/gxbb-aoclkc.h            |  66 --------
- include/dt-bindings/sound/meson-aiu.h              |  18 ---
- include/dt-bindings/sound/meson-g12a-toacodec.h    |  10 --
- include/dt-bindings/sound/meson-g12a-tohdmitx.h    |  13 --
- 31 files changed, 2212 deletions(-)
+ include/dt-bindings/clock/r7s72100-clock.h    | 112 -------------
+ include/dt-bindings/clock/r8a774a1-cpg-mssr.h |  59 -------
+ include/dt-bindings/clock/r8a774b1-cpg-mssr.h |  57 -------
+ include/dt-bindings/clock/r8a774c0-cpg-mssr.h |  61 -------
+ include/dt-bindings/clock/r8a774e1-cpg-mssr.h |  59 -------
+ include/dt-bindings/clock/r8a7790-clock.h     | 158 ------------------
+ include/dt-bindings/clock/r8a7790-cpg-mssr.h  |  48 ------
+ include/dt-bindings/clock/r8a7791-clock.h     | 161 -------------------
+ include/dt-bindings/clock/r8a7791-cpg-mssr.h  |  44 ------
+ include/dt-bindings/clock/r8a7792-clock.h     |  98 ------------
+ include/dt-bindings/clock/r8a7792-cpg-mssr.h  |  39 -----
+ include/dt-bindings/clock/r8a7793-clock.h     | 159 -------------------
+ include/dt-bindings/clock/r8a7793-cpg-mssr.h  |  44 ------
+ include/dt-bindings/clock/r8a7794-clock.h     | 137 ----------------
+ include/dt-bindings/clock/r8a7794-cpg-mssr.h  |  43 -----
+ include/dt-bindings/clock/r8a7795-cpg-mssr.h  |  66 --------
+ include/dt-bindings/clock/r8a7796-cpg-mssr.h  |  65 --------
+ include/dt-bindings/clock/r8a77961-cpg-mssr.h |  65 --------
+ include/dt-bindings/clock/r8a77965-cpg-mssr.h |  62 --------
+ include/dt-bindings/clock/r8a77970-cpg-mssr.h |  44 ------
+ include/dt-bindings/clock/r8a77980-cpg-mssr.h |  51 ------
+ include/dt-bindings/clock/r8a77990-cpg-mssr.h |  62 --------
+ include/dt-bindings/clock/r8a77995-cpg-mssr.h |  54 -------
+ include/dt-bindings/clock/r8a779a0-cpg-mssr.h |  55 -------
+ include/dt-bindings/clock/r8a779f0-cpg-mssr.h |  64 --------
+ include/dt-bindings/clock/r8a779g0-cpg-mssr.h |  90 -----------
+ include/dt-bindings/clock/r9a06g032-sysctrl.h | 149 -----------------
+ include/dt-bindings/clock/r9a07g044-cpg.h     | 220 --------------------------
+ include/dt-bindings/clock/renesas-cpg-mssr.h  |  15 --
+ 29 files changed, 2341 deletions(-)
 
-diff --git a/include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h b/include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
 deleted file mode 100644
-index 06f198ee7623..000000000000
---- a/include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h
+index a267ac250143..000000000000
+--- a/include/dt-bindings/clock/r7s72100-clock.h
 +++ /dev/null
-@@ -1,168 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
--/*
-- * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-- * Author: Jian Hu <jian.hu@amlogic.com>
+@@ -1,112 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
 - *
-- * Copyright (c) 2023, SberDevices. All Rights Reserved.
-- * Author: Dmitry Rokosov <ddrokosov@sberdevices.ru>
+- * Copyright (C) 2014 Renesas Solutions Corp.
+- * Copyright (C) 2014 Wolfram Sang, Sang Engineering <wsa@sang-engineering.com>
 - */
 -
--#ifndef __A1_PERIPHERALS_CLKC_H
--#define __A1_PERIPHERALS_CLKC_H
+-#ifndef __DT_BINDINGS_CLOCK_R7S72100_H__
+-#define __DT_BINDINGS_CLOCK_R7S72100_H__
 -
--#define CLKID_XTAL_IN		0
--#define CLKID_FIXPLL_IN		1
--#define CLKID_USB_PHY_IN	2
--#define CLKID_USB_CTRL_IN	3
--#define CLKID_HIFIPLL_IN	4
--#define CLKID_SYSPLL_IN		5
--#define CLKID_DDS_IN		6
--#define CLKID_SYS		7
--#define CLKID_CLKTREE		8
--#define CLKID_RESET_CTRL	9
--#define CLKID_ANALOG_CTRL	10
--#define CLKID_PWR_CTRL		11
--#define CLKID_PAD_CTRL		12
--#define CLKID_SYS_CTRL		13
--#define CLKID_TEMP_SENSOR	14
--#define CLKID_AM2AXI_DIV	15
--#define CLKID_SPICC_B		16
--#define CLKID_SPICC_A		17
--#define CLKID_MSR		18
--#define CLKID_AUDIO		19
--#define CLKID_JTAG_CTRL		20
--#define CLKID_SARADC_EN		21
--#define CLKID_PWM_EF		22
--#define CLKID_PWM_CD		23
--#define CLKID_PWM_AB		24
--#define CLKID_CEC		25
--#define CLKID_I2C_S		26
--#define CLKID_IR_CTRL		27
--#define CLKID_I2C_M_D		28
--#define CLKID_I2C_M_C		29
--#define CLKID_I2C_M_B		30
--#define CLKID_I2C_M_A		31
--#define CLKID_ACODEC		32
--#define CLKID_OTP		33
--#define CLKID_SD_EMMC_A		34
--#define CLKID_USB_PHY		35
--#define CLKID_USB_CTRL		36
--#define CLKID_SYS_DSPB		37
--#define CLKID_SYS_DSPA		38
--#define CLKID_DMA		39
--#define CLKID_IRQ_CTRL		40
--#define CLKID_NIC		41
--#define CLKID_GIC		42
--#define CLKID_UART_C		43
--#define CLKID_UART_B		44
--#define CLKID_UART_A		45
--#define CLKID_SYS_PSRAM		46
--#define CLKID_RSA		47
--#define CLKID_CORESIGHT		48
--#define CLKID_AM2AXI_VAD	49
--#define CLKID_AUDIO_VAD		50
--#define CLKID_AXI_DMC		51
--#define CLKID_AXI_PSRAM		52
--#define CLKID_RAMB		53
--#define CLKID_RAMA		54
--#define CLKID_AXI_SPIFC		55
--#define CLKID_AXI_NIC		56
--#define CLKID_AXI_DMA		57
--#define CLKID_CPU_CTRL		58
--#define CLKID_ROM		59
--#define CLKID_PROC_I2C		60
--#define CLKID_DSPA_SEL		61
--#define CLKID_DSPB_SEL		62
--#define CLKID_DSPA_EN		63
--#define CLKID_DSPA_EN_NIC	64
--#define CLKID_DSPB_EN		65
--#define CLKID_DSPB_EN_NIC	66
--#define CLKID_RTC		67
--#define CLKID_CECA_32K		68
--#define CLKID_CECB_32K		69
--#define CLKID_24M		70
--#define CLKID_12M		71
--#define CLKID_FCLK_DIV2_DIVN	72
--#define CLKID_GEN		73
--#define CLKID_SARADC_SEL	74
--#define CLKID_SARADC		75
--#define CLKID_PWM_A		76
--#define CLKID_PWM_B		77
--#define CLKID_PWM_C		78
--#define CLKID_PWM_D		79
--#define CLKID_PWM_E		80
--#define CLKID_PWM_F		81
--#define CLKID_SPICC		82
--#define CLKID_TS		83
--#define CLKID_SPIFC		84
--#define CLKID_USB_BUS		85
--#define CLKID_SD_EMMC		86
--#define CLKID_PSRAM		87
--#define CLKID_DMC		88
--#define CLKID_SYS_A_SEL		89
--#define CLKID_SYS_A_DIV		90
--#define CLKID_SYS_A		91
--#define CLKID_SYS_B_SEL		92
--#define CLKID_SYS_B_DIV		93
--#define CLKID_SYS_B		94
--#define CLKID_DSPA_A_SEL	95
--#define CLKID_DSPA_A_DIV	96
--#define CLKID_DSPA_A		97
--#define CLKID_DSPA_B_SEL	98
--#define CLKID_DSPA_B_DIV	99
--#define CLKID_DSPA_B		100
--#define CLKID_DSPB_A_SEL	101
--#define CLKID_DSPB_A_DIV	102
--#define CLKID_DSPB_A		103
--#define CLKID_DSPB_B_SEL	104
--#define CLKID_DSPB_B_DIV	105
--#define CLKID_DSPB_B		106
--#define CLKID_RTC_32K_IN	107
--#define CLKID_RTC_32K_DIV	108
--#define CLKID_RTC_32K_XTAL	109
--#define CLKID_RTC_32K_SEL	110
--#define CLKID_CECB_32K_IN	111
--#define CLKID_CECB_32K_DIV	112
--#define CLKID_CECB_32K_SEL_PRE	113
--#define CLKID_CECB_32K_SEL	114
--#define CLKID_CECA_32K_IN	115
--#define CLKID_CECA_32K_DIV	116
--#define CLKID_CECA_32K_SEL_PRE	117
--#define CLKID_CECA_32K_SEL	118
--#define CLKID_DIV2_PRE		119
--#define CLKID_24M_DIV2		120
--#define CLKID_GEN_SEL		121
--#define CLKID_GEN_DIV		122
--#define CLKID_SARADC_DIV	123
--#define CLKID_PWM_A_SEL		124
--#define CLKID_PWM_A_DIV		125
--#define CLKID_PWM_B_SEL		126
--#define CLKID_PWM_B_DIV		127
--#define CLKID_PWM_C_SEL		128
--#define CLKID_PWM_C_DIV		129
--#define CLKID_PWM_D_SEL		130
--#define CLKID_PWM_D_DIV		131
--#define CLKID_PWM_E_SEL		132
--#define CLKID_PWM_E_DIV		133
--#define CLKID_PWM_F_SEL		134
--#define CLKID_PWM_F_DIV		135
--#define CLKID_SPICC_SEL		136
--#define CLKID_SPICC_DIV		137
--#define CLKID_SPICC_SEL2	138
--#define CLKID_TS_DIV		139
--#define CLKID_SPIFC_SEL		140
--#define CLKID_SPIFC_DIV		141
--#define CLKID_SPIFC_SEL2	142
--#define CLKID_USB_BUS_SEL	143
--#define CLKID_USB_BUS_DIV	144
--#define CLKID_SD_EMMC_SEL	145
--#define CLKID_SD_EMMC_DIV	146
--#define CLKID_SD_EMMC_SEL2	147
--#define CLKID_PSRAM_SEL		148
--#define CLKID_PSRAM_DIV		149
--#define CLKID_PSRAM_SEL2	150
--#define CLKID_DMC_SEL		151
--#define CLKID_DMC_DIV		152
--#define CLKID_DMC_SEL2		153
+-#define R7S72100_CLK_PLL	0
+-#define R7S72100_CLK_I		1
+-#define R7S72100_CLK_G		2
 -
--#endif /* __A1_PERIPHERALS_CLKC_H */
-diff --git a/include/dt-bindings/clock/amlogic,a1-pll-clkc.h b/include/dt-bindings/clock/amlogic,a1-pll-clkc.h
+-/* MSTP2 */
+-#define R7S72100_CLK_CORESIGHT	0
+-
+-/* MSTP3 */
+-#define R7S72100_CLK_IEBUS	7
+-#define R7S72100_CLK_IRDA	6
+-#define R7S72100_CLK_LIN0	5
+-#define R7S72100_CLK_LIN1	4
+-#define R7S72100_CLK_MTU2	3
+-#define R7S72100_CLK_CAN	2
+-#define R7S72100_CLK_ADCPWR	1
+-#define R7S72100_CLK_PWM	0
+-
+-/* MSTP4 */
+-#define R7S72100_CLK_SCIF0	7
+-#define R7S72100_CLK_SCIF1	6
+-#define R7S72100_CLK_SCIF2	5
+-#define R7S72100_CLK_SCIF3	4
+-#define R7S72100_CLK_SCIF4	3
+-#define R7S72100_CLK_SCIF5	2
+-#define R7S72100_CLK_SCIF6	1
+-#define R7S72100_CLK_SCIF7	0
+-
+-/* MSTP5 */
+-#define R7S72100_CLK_SCI0	7
+-#define R7S72100_CLK_SCI1	6
+-#define R7S72100_CLK_SG0	5
+-#define R7S72100_CLK_SG1	4
+-#define R7S72100_CLK_SG2	3
+-#define R7S72100_CLK_SG3	2
+-#define R7S72100_CLK_OSTM0	1
+-#define R7S72100_CLK_OSTM1	0
+-
+-/* MSTP6 */
+-#define R7S72100_CLK_ADC	7
+-#define R7S72100_CLK_CEU	6
+-#define R7S72100_CLK_DOC0	5
+-#define R7S72100_CLK_DOC1	4
+-#define R7S72100_CLK_DRC0	3
+-#define R7S72100_CLK_DRC1	2
+-#define R7S72100_CLK_JCU	1
+-#define R7S72100_CLK_RTC	0
+-
+-/* MSTP7 */
+-#define R7S72100_CLK_VDEC0	7
+-#define R7S72100_CLK_VDEC1	6
+-#define R7S72100_CLK_ETHER	4
+-#define R7S72100_CLK_NAND	3
+-#define R7S72100_CLK_USB0	1
+-#define R7S72100_CLK_USB1	0
+-
+-/* MSTP8 */
+-#define R7S72100_CLK_IMR0	7
+-#define R7S72100_CLK_IMR1	6
+-#define R7S72100_CLK_IMRDISP	5
+-#define R7S72100_CLK_MMCIF	4
+-#define R7S72100_CLK_MLB	3
+-#define R7S72100_CLK_ETHAVB	2
+-#define R7S72100_CLK_SCUX	1
+-
+-/* MSTP9 */
+-#define R7S72100_CLK_I2C0	7
+-#define R7S72100_CLK_I2C1	6
+-#define R7S72100_CLK_I2C2	5
+-#define R7S72100_CLK_I2C3	4
+-#define R7S72100_CLK_SPIBSC0	3
+-#define R7S72100_CLK_SPIBSC1	2
+-#define R7S72100_CLK_VDC50	1	/* and LVDS */
+-#define R7S72100_CLK_VDC51	0
+-
+-/* MSTP10 */
+-#define R7S72100_CLK_SPI0	7
+-#define R7S72100_CLK_SPI1	6
+-#define R7S72100_CLK_SPI2	5
+-#define R7S72100_CLK_SPI3	4
+-#define R7S72100_CLK_SPI4	3
+-#define R7S72100_CLK_CDROM	2
+-#define R7S72100_CLK_SPDIF	1
+-#define R7S72100_CLK_RGPVG2	0
+-
+-/* MSTP11 */
+-#define R7S72100_CLK_SSI0	5
+-#define R7S72100_CLK_SSI1	4
+-#define R7S72100_CLK_SSI2	3
+-#define R7S72100_CLK_SSI3	2
+-#define R7S72100_CLK_SSI4	1
+-#define R7S72100_CLK_SSI5	0
+-
+-/* MSTP12 */
+-#define R7S72100_CLK_SDHI00	3
+-#define R7S72100_CLK_SDHI01	2
+-#define R7S72100_CLK_SDHI10	1
+-#define R7S72100_CLK_SDHI11	0
+-
+-/* MSTP13 */
+-#define R7S72100_CLK_PIX1	2
+-#define R7S72100_CLK_PIX0	1
+-
+-#endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
+diff --git a/include/dt-bindings/clock/r8a774a1-cpg-mssr.h b/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
 deleted file mode 100644
-index 2b660c0f2c9f..000000000000
---- a/include/dt-bindings/clock/amlogic,a1-pll-clkc.h
+index e355363f40c2..000000000000
+--- a/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
 +++ /dev/null
-@@ -1,25 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
--/*
-- * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-- * Author: Jian Hu <jian.hu@amlogic.com>
+@@ -1,59 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
 - *
-- * Copyright (c) 2023, SberDevices. All Rights Reserved.
-- * Author: Dmitry Rokosov <ddrokosov@sberdevices.ru>
+- * Copyright (C) 2018 Renesas Electronics Corp.
 - */
+-#ifndef __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
 -
--#ifndef __A1_PLL_CLKC_H
--#define __A1_PLL_CLKC_H
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
 -
--#define CLKID_FIXED_PLL_DCO	0
--#define CLKID_FIXED_PLL		1
--#define CLKID_FCLK_DIV2_DIV	2
--#define CLKID_FCLK_DIV3_DIV	3
--#define CLKID_FCLK_DIV5_DIV	4
--#define CLKID_FCLK_DIV7_DIV	5
--#define CLKID_FCLK_DIV2		6
--#define CLKID_FCLK_DIV3		7
--#define CLKID_FCLK_DIV5		8
--#define CLKID_FCLK_DIV7		9
--#define CLKID_HIFI_PLL		10
+-/* r8a774a1 CPG Core Clocks */
+-#define R8A774A1_CLK_Z			0
+-#define R8A774A1_CLK_Z2			1
+-#define R8A774A1_CLK_ZG			2
+-#define R8A774A1_CLK_ZTR		3
+-#define R8A774A1_CLK_ZTRD2		4
+-#define R8A774A1_CLK_ZT			5
+-#define R8A774A1_CLK_ZX			6
+-#define R8A774A1_CLK_S0D1		7
+-#define R8A774A1_CLK_S0D2		8
+-#define R8A774A1_CLK_S0D3		9
+-#define R8A774A1_CLK_S0D4		10
+-#define R8A774A1_CLK_S0D6		11
+-#define R8A774A1_CLK_S0D8		12
+-#define R8A774A1_CLK_S0D12		13
+-#define R8A774A1_CLK_S1D2		14
+-#define R8A774A1_CLK_S1D4		15
+-#define R8A774A1_CLK_S2D1		16
+-#define R8A774A1_CLK_S2D2		17
+-#define R8A774A1_CLK_S2D4		18
+-#define R8A774A1_CLK_S3D1		19
+-#define R8A774A1_CLK_S3D2		20
+-#define R8A774A1_CLK_S3D4		21
+-#define R8A774A1_CLK_LB			22
+-#define R8A774A1_CLK_CL			23
+-#define R8A774A1_CLK_ZB3		24
+-#define R8A774A1_CLK_ZB3D2		25
+-#define R8A774A1_CLK_ZB3D4		26
+-#define R8A774A1_CLK_CR			27
+-#define R8A774A1_CLK_CRD2		28
+-#define R8A774A1_CLK_SD0H		29
+-#define R8A774A1_CLK_SD0		30
+-#define R8A774A1_CLK_SD1H		31
+-#define R8A774A1_CLK_SD1		32
+-#define R8A774A1_CLK_SD2H		33
+-#define R8A774A1_CLK_SD2		34
+-#define R8A774A1_CLK_SD3H		35
+-#define R8A774A1_CLK_SD3		36
+-#define R8A774A1_CLK_RPC		37
+-#define R8A774A1_CLK_RPCD2		38
+-#define R8A774A1_CLK_MSO		39
+-#define R8A774A1_CLK_HDMI		40
+-#define R8A774A1_CLK_CSI0		41
+-#define R8A774A1_CLK_CP			42
+-#define R8A774A1_CLK_CPEX		43
+-#define R8A774A1_CLK_R			44
+-#define R8A774A1_CLK_OSC		45
+-#define R8A774A1_CLK_CANFD		46
 -
--#endif /* __A1_PLL_CLKC_H */
-diff --git a/include/dt-bindings/clock/axg-aoclkc.h b/include/dt-bindings/clock/axg-aoclkc.h
+-#endif /* __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a774b1-cpg-mssr.h b/include/dt-bindings/clock/r8a774b1-cpg-mssr.h
 deleted file mode 100644
-index 8ec4a269c7a6..000000000000
---- a/include/dt-bindings/clock/axg-aoclkc.h
+index 1355451b74b0..000000000000
+--- a/include/dt-bindings/clock/r8a774b1-cpg-mssr.h
 +++ /dev/null
-@@ -1,31 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
--/*
-- * Copyright (c) 2016 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
+@@ -1,57 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
 - *
-- * Copyright (c) 2018 Amlogic, inc.
-- * Author: Qiufang Dai <qiufang.dai@amlogic.com>
+- * Copyright (C) 2019 Renesas Electronics Corp.
 - */
+-#ifndef __DT_BINDINGS_CLOCK_R8A774B1_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A774B1_CPG_MSSR_H__
 -
--#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
--#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
 -
--#define CLKID_AO_REMOTE		0
--#define CLKID_AO_I2C_MASTER	1
--#define CLKID_AO_I2C_SLAVE	2
--#define CLKID_AO_UART1		3
--#define CLKID_AO_UART2		4
--#define CLKID_AO_IR_BLASTER	5
--#define CLKID_AO_SAR_ADC	6
--#define CLKID_AO_CLK81		7
--#define CLKID_AO_SAR_ADC_SEL	8
--#define CLKID_AO_SAR_ADC_DIV	9
--#define CLKID_AO_SAR_ADC_CLK	10
--#define CLKID_AO_CTS_OSCIN	11
--#define CLKID_AO_32K_PRE	12
--#define CLKID_AO_32K_DIV	13
--#define CLKID_AO_32K_SEL	14
--#define CLKID_AO_32K		15
--#define CLKID_AO_CTS_RTC_OSCIN	16
+-/* r8a774b1 CPG Core Clocks */
+-#define R8A774B1_CLK_Z			0
+-#define R8A774B1_CLK_ZG			1
+-#define R8A774B1_CLK_ZTR		2
+-#define R8A774B1_CLK_ZTRD2		3
+-#define R8A774B1_CLK_ZT			4
+-#define R8A774B1_CLK_ZX			5
+-#define R8A774B1_CLK_S0D1		6
+-#define R8A774B1_CLK_S0D2		7
+-#define R8A774B1_CLK_S0D3		8
+-#define R8A774B1_CLK_S0D4		9
+-#define R8A774B1_CLK_S0D6		10
+-#define R8A774B1_CLK_S0D8		11
+-#define R8A774B1_CLK_S0D12		12
+-#define R8A774B1_CLK_S1D2		13
+-#define R8A774B1_CLK_S1D4		14
+-#define R8A774B1_CLK_S2D1		15
+-#define R8A774B1_CLK_S2D2		16
+-#define R8A774B1_CLK_S2D4		17
+-#define R8A774B1_CLK_S3D1		18
+-#define R8A774B1_CLK_S3D2		19
+-#define R8A774B1_CLK_S3D4		20
+-#define R8A774B1_CLK_LB			21
+-#define R8A774B1_CLK_CL			22
+-#define R8A774B1_CLK_ZB3		23
+-#define R8A774B1_CLK_ZB3D2		24
+-#define R8A774B1_CLK_CR			25
+-#define R8A774B1_CLK_DDR		26
+-#define R8A774B1_CLK_SD0H		27
+-#define R8A774B1_CLK_SD0		28
+-#define R8A774B1_CLK_SD1H		29
+-#define R8A774B1_CLK_SD1		30
+-#define R8A774B1_CLK_SD2H		31
+-#define R8A774B1_CLK_SD2		32
+-#define R8A774B1_CLK_SD3H		33
+-#define R8A774B1_CLK_SD3		34
+-#define R8A774B1_CLK_RPC		35
+-#define R8A774B1_CLK_RPCD2		36
+-#define R8A774B1_CLK_MSO		37
+-#define R8A774B1_CLK_HDMI		38
+-#define R8A774B1_CLK_CSI0		39
+-#define R8A774B1_CLK_CP			40
+-#define R8A774B1_CLK_CPEX		41
+-#define R8A774B1_CLK_R			42
+-#define R8A774B1_CLK_OSC		43
+-#define R8A774B1_CLK_CANFD		44
 -
--#endif
-diff --git a/include/dt-bindings/clock/axg-audio-clkc.h b/include/dt-bindings/clock/axg-audio-clkc.h
+-#endif /* __DT_BINDINGS_CLOCK_R8A774B1_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a774c0-cpg-mssr.h b/include/dt-bindings/clock/r8a774c0-cpg-mssr.h
 deleted file mode 100644
-index f561f5c5ef8f..000000000000
---- a/include/dt-bindings/clock/axg-audio-clkc.h
+index 8ad9cd6be8e9..000000000000
+--- a/include/dt-bindings/clock/r8a774c0-cpg-mssr.h
 +++ /dev/null
-@@ -1,94 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- * Copyright (c) 2018 Baylibre SAS.
-- * Author: Jerome Brunet <jbrunet@baylibre.com>
-- */
--
--#ifndef __AXG_AUDIO_CLKC_BINDINGS_H
--#define __AXG_AUDIO_CLKC_BINDINGS_H
--
--#define AUD_CLKID_DDR_ARB		29
--#define AUD_CLKID_PDM			30
--#define AUD_CLKID_TDMIN_A		31
--#define AUD_CLKID_TDMIN_B		32
--#define AUD_CLKID_TDMIN_C		33
--#define AUD_CLKID_TDMIN_LB		34
--#define AUD_CLKID_TDMOUT_A		35
--#define AUD_CLKID_TDMOUT_B		36
--#define AUD_CLKID_TDMOUT_C		37
--#define AUD_CLKID_FRDDR_A		38
--#define AUD_CLKID_FRDDR_B		39
--#define AUD_CLKID_FRDDR_C		40
--#define AUD_CLKID_TODDR_A		41
--#define AUD_CLKID_TODDR_B		42
--#define AUD_CLKID_TODDR_C		43
--#define AUD_CLKID_LOOPBACK		44
--#define AUD_CLKID_SPDIFIN		45
--#define AUD_CLKID_SPDIFOUT		46
--#define AUD_CLKID_RESAMPLE		47
--#define AUD_CLKID_POWER_DETECT		48
--#define AUD_CLKID_MST_A_MCLK		49
--#define AUD_CLKID_MST_B_MCLK		50
--#define AUD_CLKID_MST_C_MCLK		51
--#define AUD_CLKID_MST_D_MCLK		52
--#define AUD_CLKID_MST_E_MCLK		53
--#define AUD_CLKID_MST_F_MCLK		54
--#define AUD_CLKID_SPDIFOUT_CLK		55
--#define AUD_CLKID_SPDIFIN_CLK		56
--#define AUD_CLKID_PDM_DCLK		57
--#define AUD_CLKID_PDM_SYSCLK		58
--#define AUD_CLKID_MST_A_SCLK		79
--#define AUD_CLKID_MST_B_SCLK		80
--#define AUD_CLKID_MST_C_SCLK		81
--#define AUD_CLKID_MST_D_SCLK		82
--#define AUD_CLKID_MST_E_SCLK		83
--#define AUD_CLKID_MST_F_SCLK		84
--#define AUD_CLKID_MST_A_LRCLK		86
--#define AUD_CLKID_MST_B_LRCLK		87
--#define AUD_CLKID_MST_C_LRCLK		88
--#define AUD_CLKID_MST_D_LRCLK		89
--#define AUD_CLKID_MST_E_LRCLK		90
--#define AUD_CLKID_MST_F_LRCLK		91
--#define AUD_CLKID_TDMIN_A_SCLK_SEL	116
--#define AUD_CLKID_TDMIN_B_SCLK_SEL	117
--#define AUD_CLKID_TDMIN_C_SCLK_SEL	118
--#define AUD_CLKID_TDMIN_LB_SCLK_SEL	119
--#define AUD_CLKID_TDMOUT_A_SCLK_SEL	120
--#define AUD_CLKID_TDMOUT_B_SCLK_SEL	121
--#define AUD_CLKID_TDMOUT_C_SCLK_SEL	122
--#define AUD_CLKID_TDMIN_A_SCLK		123
--#define AUD_CLKID_TDMIN_B_SCLK		124
--#define AUD_CLKID_TDMIN_C_SCLK		125
--#define AUD_CLKID_TDMIN_LB_SCLK		126
--#define AUD_CLKID_TDMOUT_A_SCLK		127
--#define AUD_CLKID_TDMOUT_B_SCLK		128
--#define AUD_CLKID_TDMOUT_C_SCLK		129
--#define AUD_CLKID_TDMIN_A_LRCLK		130
--#define AUD_CLKID_TDMIN_B_LRCLK		131
--#define AUD_CLKID_TDMIN_C_LRCLK		132
--#define AUD_CLKID_TDMIN_LB_LRCLK	133
--#define AUD_CLKID_TDMOUT_A_LRCLK	134
--#define AUD_CLKID_TDMOUT_B_LRCLK	135
--#define AUD_CLKID_TDMOUT_C_LRCLK	136
--#define AUD_CLKID_SPDIFOUT_B		151
--#define AUD_CLKID_SPDIFOUT_B_CLK	152
--#define AUD_CLKID_TDM_MCLK_PAD0		155
--#define AUD_CLKID_TDM_MCLK_PAD1		156
--#define AUD_CLKID_TDM_LRCLK_PAD0	157
--#define AUD_CLKID_TDM_LRCLK_PAD1	158
--#define AUD_CLKID_TDM_LRCLK_PAD2	159
--#define AUD_CLKID_TDM_SCLK_PAD0		160
--#define AUD_CLKID_TDM_SCLK_PAD1		161
--#define AUD_CLKID_TDM_SCLK_PAD2		162
--#define AUD_CLKID_TOP			163
--#define AUD_CLKID_TORAM			164
--#define AUD_CLKID_EQDRC			165
--#define AUD_CLKID_RESAMPLE_B		166
--#define AUD_CLKID_TOVAD			167
--#define AUD_CLKID_LOCKER		168
--#define AUD_CLKID_SPDIFIN_LB		169
--#define AUD_CLKID_FRDDR_D		170
--#define AUD_CLKID_TODDR_D		171
--#define AUD_CLKID_LOOPBACK_B		172
--
--#endif /* __AXG_AUDIO_CLKC_BINDINGS_H */
-diff --git a/include/dt-bindings/clock/axg-clkc.h b/include/dt-bindings/clock/axg-clkc.h
-deleted file mode 100644
-index 93752ea107e3..000000000000
---- a/include/dt-bindings/clock/axg-clkc.h
-+++ /dev/null
-@@ -1,100 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Meson-AXG clock tree IDs
-- *
-- * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
-- */
--
--#ifndef __AXG_CLKC_H
--#define __AXG_CLKC_H
--
--#define CLKID_SYS_PLL				0
--#define CLKID_FIXED_PLL				1
--#define CLKID_FCLK_DIV2				2
--#define CLKID_FCLK_DIV3				3
--#define CLKID_FCLK_DIV4				4
--#define CLKID_FCLK_DIV5				5
--#define CLKID_FCLK_DIV7				6
--#define CLKID_GP0_PLL				7
--#define CLKID_CLK81				10
--#define CLKID_MPLL0				11
--#define CLKID_MPLL1				12
--#define CLKID_MPLL2				13
--#define CLKID_MPLL3				14
--#define CLKID_DDR				15
--#define CLKID_AUDIO_LOCKER			16
--#define CLKID_MIPI_DSI_HOST			17
--#define CLKID_ISA				18
--#define CLKID_PL301				19
--#define CLKID_PERIPHS				20
--#define CLKID_SPICC0				21
--#define CLKID_I2C				22
--#define CLKID_RNG0				23
--#define CLKID_UART0				24
--#define CLKID_MIPI_DSI_PHY			25
--#define CLKID_SPICC1				26
--#define CLKID_PCIE_A				27
--#define CLKID_PCIE_B				28
--#define CLKID_HIU_IFACE				29
--#define CLKID_ASSIST_MISC			30
--#define CLKID_SD_EMMC_B				31
--#define CLKID_SD_EMMC_C				32
--#define CLKID_DMA				33
--#define CLKID_SPI				34
--#define CLKID_AUDIO				35
--#define CLKID_ETH				36
--#define CLKID_UART1				37
--#define CLKID_G2D				38
--#define CLKID_USB0				39
--#define CLKID_USB1				40
--#define CLKID_RESET				41
--#define CLKID_USB				42
--#define CLKID_AHB_ARB0				43
--#define CLKID_EFUSE				44
--#define CLKID_BOOT_ROM				45
--#define CLKID_AHB_DATA_BUS			46
--#define CLKID_AHB_CTRL_BUS			47
--#define CLKID_USB1_DDR_BRIDGE			48
--#define CLKID_USB0_DDR_BRIDGE			49
--#define CLKID_MMC_PCLK				50
--#define CLKID_VPU_INTR				51
--#define CLKID_SEC_AHB_AHB3_BRIDGE		52
--#define CLKID_GIC				53
--#define CLKID_AO_MEDIA_CPU			54
--#define CLKID_AO_AHB_SRAM			55
--#define CLKID_AO_AHB_BUS			56
--#define CLKID_AO_IFACE				57
--#define CLKID_AO_I2C				58
--#define CLKID_SD_EMMC_B_CLK0			59
--#define CLKID_SD_EMMC_C_CLK0			60
--#define CLKID_HIFI_PLL				69
--#define CLKID_PCIE_CML_EN0			79
--#define CLKID_PCIE_CML_EN1			80
--#define CLKID_GEN_CLK				84
--#define CLKID_VPU_0_SEL				92
--#define CLKID_VPU_0				93
--#define CLKID_VPU_1_SEL				95
--#define CLKID_VPU_1				96
--#define CLKID_VPU				97
--#define CLKID_VAPB_0_SEL			99
--#define CLKID_VAPB_0				100
--#define CLKID_VAPB_1_SEL			102
--#define CLKID_VAPB_1				103
--#define CLKID_VAPB_SEL				104
--#define CLKID_VAPB				105
--#define CLKID_VCLK				106
--#define CLKID_VCLK2				107
--#define CLKID_VCLK_DIV1				122
--#define CLKID_VCLK_DIV2				123
--#define CLKID_VCLK_DIV4				124
--#define CLKID_VCLK_DIV6				125
--#define CLKID_VCLK_DIV12			126
--#define CLKID_VCLK2_DIV1			127
--#define CLKID_VCLK2_DIV2			128
--#define CLKID_VCLK2_DIV4			129
--#define CLKID_VCLK2_DIV6			130
--#define CLKID_VCLK2_DIV12			131
--#define CLKID_CTS_ENCL				133
--#define CLKID_VDIN_MEAS				136
--
--#endif /* __AXG_CLKC_H */
-diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
-deleted file mode 100644
-index e916e49ff288..000000000000
---- a/include/dt-bindings/clock/g12a-aoclkc.h
-+++ /dev/null
-@@ -1,36 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
--/*
-- * Copyright (c) 2016 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- *
-- * Copyright (c) 2018 Amlogic, inc.
-- * Author: Qiufang Dai <qiufang.dai@amlogic.com>
-- */
--
--#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
--#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
--
--#define CLKID_AO_AHB		0
--#define CLKID_AO_IR_IN		1
--#define CLKID_AO_I2C_M0		2
--#define CLKID_AO_I2C_S0		3
--#define CLKID_AO_UART		4
--#define CLKID_AO_PROD_I2C	5
--#define CLKID_AO_UART2		6
--#define CLKID_AO_IR_OUT		7
--#define CLKID_AO_SAR_ADC	8
--#define CLKID_AO_MAILBOX	9
--#define CLKID_AO_M3		10
--#define CLKID_AO_AHB_SRAM	11
--#define CLKID_AO_RTI		12
--#define CLKID_AO_M4_FCLK	13
--#define CLKID_AO_M4_HCLK	14
--#define CLKID_AO_CLK81		15
--#define CLKID_AO_SAR_ADC_SEL	16
--#define CLKID_AO_SAR_ADC_CLK	18
--#define CLKID_AO_CTS_OSCIN	19
--#define CLKID_AO_32K		23
--#define CLKID_AO_CEC		27
--#define CLKID_AO_CTS_RTC_OSCIN	28
--
--#endif
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-deleted file mode 100644
-index a93b58c5e18e..000000000000
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ /dev/null
-@@ -1,153 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
--/*
-- * Meson-G12A clock tree IDs
-- *
-- * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-- */
--
--#ifndef __G12A_CLKC_H
--#define __G12A_CLKC_H
--
--#define CLKID_SYS_PLL				0
--#define CLKID_FIXED_PLL				1
--#define CLKID_FCLK_DIV2				2
--#define CLKID_FCLK_DIV3				3
--#define CLKID_FCLK_DIV4				4
--#define CLKID_FCLK_DIV5				5
--#define CLKID_FCLK_DIV7				6
--#define CLKID_GP0_PLL				7
--#define CLKID_CLK81				10
--#define CLKID_MPLL0				11
--#define CLKID_MPLL1				12
--#define CLKID_MPLL2				13
--#define CLKID_MPLL3				14
--#define CLKID_DDR				15
--#define CLKID_DOS				16
--#define CLKID_AUDIO_LOCKER			17
--#define CLKID_MIPI_DSI_HOST			18
--#define CLKID_ETH_PHY				19
--#define CLKID_ISA				20
--#define CLKID_PL301				21
--#define CLKID_PERIPHS				22
--#define CLKID_SPICC0				23
--#define CLKID_I2C				24
--#define CLKID_SANA				25
--#define CLKID_SD				26
--#define CLKID_RNG0				27
--#define CLKID_UART0				28
--#define CLKID_SPICC1				29
--#define CLKID_HIU_IFACE				30
--#define CLKID_MIPI_DSI_PHY			31
--#define CLKID_ASSIST_MISC			32
--#define CLKID_SD_EMMC_A				33
--#define CLKID_SD_EMMC_B				34
--#define CLKID_SD_EMMC_C				35
--#define CLKID_AUDIO_CODEC			36
--#define CLKID_AUDIO				37
--#define CLKID_ETH				38
--#define CLKID_DEMUX				39
--#define CLKID_AUDIO_IFIFO			40
--#define CLKID_ADC				41
--#define CLKID_UART1				42
--#define CLKID_G2D				43
--#define CLKID_RESET				44
--#define CLKID_PCIE_COMB				45
--#define CLKID_PARSER				46
--#define CLKID_USB				47
--#define CLKID_PCIE_PHY				48
--#define CLKID_AHB_ARB0				49
--#define CLKID_AHB_DATA_BUS			50
--#define CLKID_AHB_CTRL_BUS			51
--#define CLKID_HTX_HDCP22			52
--#define CLKID_HTX_PCLK				53
--#define CLKID_BT656				54
--#define CLKID_USB1_DDR_BRIDGE			55
--#define CLKID_MMC_PCLK				56
--#define CLKID_UART2				57
--#define CLKID_VPU_INTR				58
--#define CLKID_GIC				59
--#define CLKID_SD_EMMC_A_CLK0			60
--#define CLKID_SD_EMMC_B_CLK0			61
--#define CLKID_SD_EMMC_C_CLK0			62
--#define CLKID_HIFI_PLL				74
--#define CLKID_VCLK2_VENCI0			80
--#define CLKID_VCLK2_VENCI1			81
--#define CLKID_VCLK2_VENCP0			82
--#define CLKID_VCLK2_VENCP1			83
--#define CLKID_VCLK2_VENCT0			84
--#define CLKID_VCLK2_VENCT1			85
--#define CLKID_VCLK2_OTHER			86
--#define CLKID_VCLK2_ENCI			87
--#define CLKID_VCLK2_ENCP			88
--#define CLKID_DAC_CLK				89
--#define CLKID_AOCLK				90
--#define CLKID_IEC958				91
--#define CLKID_ENC480P				92
--#define CLKID_RNG1				93
--#define CLKID_VCLK2_ENCT			94
--#define CLKID_VCLK2_ENCL			95
--#define CLKID_VCLK2_VENCLMMC			96
--#define CLKID_VCLK2_VENCL			97
--#define CLKID_VCLK2_OTHER1			98
--#define CLKID_FCLK_DIV2P5			99
--#define CLKID_DMA				105
--#define CLKID_EFUSE				106
--#define CLKID_ROM_BOOT				107
--#define CLKID_RESET_SEC				108
--#define CLKID_SEC_AHB_APB3			109
--#define CLKID_VPU_0_SEL				110
--#define CLKID_VPU_0				112
--#define CLKID_VPU_1_SEL				113
--#define CLKID_VPU_1				115
--#define CLKID_VPU				116
--#define CLKID_VAPB_0_SEL			117
--#define CLKID_VAPB_0				119
--#define CLKID_VAPB_1_SEL			120
--#define CLKID_VAPB_1				122
--#define CLKID_VAPB_SEL				123
--#define CLKID_VAPB				124
--#define CLKID_HDMI_PLL				128
--#define CLKID_VID_PLL				129
--#define CLKID_VCLK				138
--#define CLKID_VCLK2				139
--#define CLKID_VCLK_DIV1				148
--#define CLKID_VCLK_DIV2				149
--#define CLKID_VCLK_DIV4				150
--#define CLKID_VCLK_DIV6				151
--#define CLKID_VCLK_DIV12			152
--#define CLKID_VCLK2_DIV1			153
--#define CLKID_VCLK2_DIV2			154
--#define CLKID_VCLK2_DIV4			155
--#define CLKID_VCLK2_DIV6			156
--#define CLKID_VCLK2_DIV12			157
--#define CLKID_CTS_ENCI				162
--#define CLKID_CTS_ENCP				163
--#define CLKID_CTS_VDAC				164
--#define CLKID_HDMI_TX				165
--#define CLKID_HDMI				168
--#define CLKID_MALI_0_SEL			169
--#define CLKID_MALI_0				171
--#define CLKID_MALI_1_SEL			172
--#define CLKID_MALI_1				174
--#define CLKID_MALI				175
--#define CLKID_MPLL_50M				177
--#define CLKID_CPU_CLK				187
--#define CLKID_PCIE_PLL				201
--#define CLKID_VDEC_1				204
--#define CLKID_VDEC_HEVC				207
--#define CLKID_VDEC_HEVCF			210
--#define CLKID_TS				212
--#define CLKID_CPUB_CLK				224
--#define CLKID_GP1_PLL				243
--#define CLKID_DSU_CLK				252
--#define CLKID_CPU1_CLK				253
--#define CLKID_CPU2_CLK				254
--#define CLKID_CPU3_CLK				255
--#define CLKID_SPICC0_SCLK			258
--#define CLKID_SPICC1_SCLK			261
--#define CLKID_NNA_AXI_CLK			264
--#define CLKID_NNA_CORE_CLK			267
--#define CLKID_MIPI_DSI_PXCLK_SEL		269
--#define CLKID_MIPI_DSI_PXCLK			270
--
--#endif /* __G12A_CLKC_H */
-diff --git a/include/dt-bindings/clock/gxbb-aoclkc.h b/include/dt-bindings/clock/gxbb-aoclkc.h
-deleted file mode 100644
-index ec3b26319fc4..000000000000
---- a/include/dt-bindings/clock/gxbb-aoclkc.h
-+++ /dev/null
-@@ -1,74 +0,0 @@
--/*
-- * This file is provided under a dual BSD/GPLv2 license.  When using or
-- * redistributing this file, you may do so under either license.
-- *
-- * GPL LICENSE SUMMARY
-- *
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, see <http://www.gnu.org/licenses/>.
-- * The full GNU General Public License is included in this distribution
-- * in the file called COPYING.
-- *
-- * BSD LICENSE
-- *
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- *   * Redistributions of source code must retain the above copyright
-- *     notice, this list of conditions and the following disclaimer.
-- *   * Redistributions in binary form must reproduce the above copyright
-- *     notice, this list of conditions and the following disclaimer in
-- *     the documentation and/or other materials provided with the
-- *     distribution.
-- *   * Neither the name of Intel Corporation nor the names of its
-- *     contributors may be used to endorse or promote products derived
-- *     from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--
--#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_GXBB_AOCLK
--#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_GXBB_AOCLK
--
--#define CLKID_AO_REMOTE		0
--#define CLKID_AO_I2C_MASTER	1
--#define CLKID_AO_I2C_SLAVE	2
--#define CLKID_AO_UART1		3
--#define CLKID_AO_UART2		4
--#define CLKID_AO_IR_BLASTER	5
--#define CLKID_AO_CEC_32K	6
--#define CLKID_AO_CTS_OSCIN	7
--#define CLKID_AO_32K_PRE	8
--#define CLKID_AO_32K_DIV	9
--#define CLKID_AO_32K_SEL	10
--#define CLKID_AO_32K		11
--#define CLKID_AO_CTS_RTC_OSCIN	12
--#define CLKID_AO_CLK81		13
--
--#endif
-diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
-deleted file mode 100644
-index 4073eb7a9da1..000000000000
---- a/include/dt-bindings/clock/gxbb-clkc.h
-+++ /dev/null
-@@ -1,151 +0,0 @@
+@@ -1,61 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * GXBB clock tree IDs
+- * Copyright (C) 2018 Renesas Electronics Corp.
 - */
+-#ifndef __DT_BINDINGS_CLOCK_R8A774C0_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A774C0_CPG_MSSR_H__
 -
--#ifndef __GXBB_CLKC_H
--#define __GXBB_CLKC_H
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
 -
--#define CLKID_SYS_PLL		0
--#define CLKID_HDMI_PLL		2
--#define CLKID_FIXED_PLL		3
--#define CLKID_FCLK_DIV2		4
--#define CLKID_FCLK_DIV3		5
--#define CLKID_FCLK_DIV4		6
--#define CLKID_FCLK_DIV5		7
--#define CLKID_FCLK_DIV7		8
--#define CLKID_GP0_PLL		9
--#define CLKID_CLK81		12
--#define CLKID_MPLL0		13
--#define CLKID_MPLL1		14
--#define CLKID_MPLL2		15
--#define CLKID_DDR		16
--#define CLKID_DOS		17
--#define CLKID_ISA		18
--#define CLKID_PL301		19
--#define CLKID_PERIPHS		20
--#define CLKID_SPICC		21
--#define CLKID_I2C		22
--#define CLKID_SAR_ADC		23
--#define CLKID_SMART_CARD	24
--#define CLKID_RNG0		25
--#define CLKID_UART0		26
--#define CLKID_SDHC		27
--#define CLKID_STREAM		28
--#define CLKID_ASYNC_FIFO	29
--#define CLKID_SDIO		30
--#define CLKID_ABUF		31
--#define CLKID_HIU_IFACE		32
--#define CLKID_ASSIST_MISC	33
--#define CLKID_SPI		34
--#define CLKID_ETH		36
--#define CLKID_I2S_SPDIF		35
--#define CLKID_DEMUX		37
--#define CLKID_AIU_GLUE		38
--#define CLKID_IEC958		39
--#define CLKID_I2S_OUT		40
--#define CLKID_AMCLK		41
--#define CLKID_AIFIFO2		42
--#define CLKID_MIXER		43
--#define CLKID_MIXER_IFACE	44
--#define CLKID_ADC		45
--#define CLKID_BLKMV		46
--#define CLKID_AIU		47
--#define CLKID_UART1		48
--#define CLKID_G2D		49
--#define CLKID_USB0		50
--#define CLKID_USB1		51
--#define CLKID_RESET		52
--#define CLKID_NAND		53
--#define CLKID_DOS_PARSER	54
--#define CLKID_USB		55
--#define CLKID_VDIN1		56
--#define CLKID_AHB_ARB0		57
--#define CLKID_EFUSE		58
--#define CLKID_BOOT_ROM		59
--#define CLKID_AHB_DATA_BUS	60
--#define CLKID_AHB_CTRL_BUS	61
--#define CLKID_HDMI_INTR_SYNC	62
--#define CLKID_HDMI_PCLK		63
--#define CLKID_USB1_DDR_BRIDGE	64
--#define CLKID_USB0_DDR_BRIDGE	65
--#define CLKID_MMC_PCLK		66
--#define CLKID_DVIN		67
--#define CLKID_UART2		68
--#define CLKID_SANA		69
--#define CLKID_VPU_INTR		70
--#define CLKID_SEC_AHB_AHB3_BRIDGE 71
--#define CLKID_CLK81_A53		72
--#define CLKID_VCLK2_VENCI0	73
--#define CLKID_VCLK2_VENCI1	74
--#define CLKID_VCLK2_VENCP0	75
--#define CLKID_VCLK2_VENCP1	76
--#define CLKID_GCLK_VENCI_INT0	77
--#define CLKID_GCLK_VENCI_INT	78
--#define CLKID_DAC_CLK		79
--#define CLKID_AOCLK_GATE	80
--#define CLKID_IEC958_GATE	81
--#define CLKID_ENC480P		82
--#define CLKID_RNG1		83
--#define CLKID_GCLK_VENCI_INT1	84
--#define CLKID_VCLK2_VENCLMCC	85
--#define CLKID_VCLK2_VENCL	86
--#define CLKID_VCLK_OTHER	87
--#define CLKID_EDP		88
--#define CLKID_AO_MEDIA_CPU	89
--#define CLKID_AO_AHB_SRAM	90
--#define CLKID_AO_AHB_BUS	91
--#define CLKID_AO_IFACE		92
--#define CLKID_AO_I2C		93
--#define CLKID_SD_EMMC_A		94
--#define CLKID_SD_EMMC_B		95
--#define CLKID_SD_EMMC_C		96
--#define CLKID_SAR_ADC_CLK	97
--#define CLKID_SAR_ADC_SEL	98
--#define CLKID_MALI_0_SEL	100
--#define CLKID_MALI_0		102
--#define CLKID_MALI_1_SEL	103
--#define CLKID_MALI_1		105
--#define CLKID_MALI		106
--#define CLKID_CTS_AMCLK		107
--#define CLKID_CTS_MCLK_I958	110
--#define CLKID_CTS_I958		113
--#define CLKID_32K_CLK		114
--#define CLKID_SD_EMMC_A_CLK0	119
--#define CLKID_SD_EMMC_B_CLK0	122
--#define CLKID_SD_EMMC_C_CLK0	125
--#define CLKID_VPU_0_SEL		126
--#define CLKID_VPU_0		128
--#define CLKID_VPU_1_SEL		129
--#define CLKID_VPU_1		131
--#define CLKID_VPU		132
--#define CLKID_VAPB_0_SEL	133
--#define CLKID_VAPB_0		135
--#define CLKID_VAPB_1_SEL	136
--#define CLKID_VAPB_1		138
--#define CLKID_VAPB_SEL		139
--#define CLKID_VAPB		140
--#define CLKID_VDEC_1		153
--#define CLKID_VDEC_HEVC		156
--#define CLKID_GEN_CLK		159
--#define CLKID_VID_PLL		166
--#define CLKID_VCLK		175
--#define CLKID_VCLK2		176
--#define CLKID_VCLK_DIV1		185
--#define CLKID_VCLK_DIV2		186
--#define CLKID_VCLK_DIV4		187
--#define CLKID_VCLK_DIV6		188
--#define CLKID_VCLK_DIV12	189
--#define CLKID_VCLK2_DIV1	190
--#define CLKID_VCLK2_DIV2	191
--#define CLKID_VCLK2_DIV4	192
--#define CLKID_VCLK2_DIV6	193
--#define CLKID_VCLK2_DIV12	194
--#define CLKID_CTS_ENCI		199
--#define CLKID_CTS_ENCP		200
--#define CLKID_CTS_VDAC		201
--#define CLKID_HDMI_TX		202
--#define CLKID_HDMI		205
--#define CLKID_ACODEC		206
+-/* r8a774c0 CPG Core Clocks */
+-#define R8A774C0_CLK_Z2			0
+-#define R8A774C0_CLK_ZG			1
+-#define R8A774C0_CLK_ZTR		2
+-#define R8A774C0_CLK_ZT			3
+-#define R8A774C0_CLK_ZX			4
+-#define R8A774C0_CLK_S0D1		5
+-#define R8A774C0_CLK_S0D3		6
+-#define R8A774C0_CLK_S0D6		7
+-#define R8A774C0_CLK_S0D12		8
+-#define R8A774C0_CLK_S0D24		9
+-#define R8A774C0_CLK_S1D1		10
+-#define R8A774C0_CLK_S1D2		11
+-#define R8A774C0_CLK_S1D4		12
+-#define R8A774C0_CLK_S2D1		13
+-#define R8A774C0_CLK_S2D2		14
+-#define R8A774C0_CLK_S2D4		15
+-#define R8A774C0_CLK_S3D1		16
+-#define R8A774C0_CLK_S3D2		17
+-#define R8A774C0_CLK_S3D4		18
+-#define R8A774C0_CLK_S0D6C		19
+-#define R8A774C0_CLK_S3D1C		20
+-#define R8A774C0_CLK_S3D2C		21
+-#define R8A774C0_CLK_S3D4C		22
+-#define R8A774C0_CLK_LB			23
+-#define R8A774C0_CLK_CL			24
+-#define R8A774C0_CLK_ZB3		25
+-#define R8A774C0_CLK_ZB3D2		26
+-#define R8A774C0_CLK_CR			27
+-#define R8A774C0_CLK_CRD2		28
+-#define R8A774C0_CLK_SD0H		29
+-#define R8A774C0_CLK_SD0		30
+-#define R8A774C0_CLK_SD1H		31
+-#define R8A774C0_CLK_SD1		32
+-#define R8A774C0_CLK_SD3H		33
+-#define R8A774C0_CLK_SD3		34
+-#define R8A774C0_CLK_RPC		35
+-#define R8A774C0_CLK_RPCD2		36
+-#define R8A774C0_CLK_ZA2		37
+-#define R8A774C0_CLK_ZA8		38
+-#define R8A774C0_CLK_Z2D		39
+-#define R8A774C0_CLK_MSO		40
+-#define R8A774C0_CLK_R			41
+-#define R8A774C0_CLK_OSC		42
+-#define R8A774C0_CLK_LV0		43
+-#define R8A774C0_CLK_LV1		44
+-#define R8A774C0_CLK_CSI0		45
+-#define R8A774C0_CLK_CP			46
+-#define R8A774C0_CLK_CPEX		47
+-#define R8A774C0_CLK_CANFD		48
 -
--#endif /* __GXBB_CLKC_H */
-diff --git a/include/dt-bindings/gpio/meson-a1-gpio.h b/include/dt-bindings/gpio/meson-a1-gpio.h
+-#endif /* __DT_BINDINGS_CLOCK_R8A774C0_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a774e1-cpg-mssr.h b/include/dt-bindings/clock/r8a774e1-cpg-mssr.h
 deleted file mode 100644
-index 40e57a5ff1db..000000000000
---- a/include/dt-bindings/gpio/meson-a1-gpio.h
+index b2fc1d1c3c47..000000000000
+--- a/include/dt-bindings/clock/r8a774e1-cpg-mssr.h
 +++ /dev/null
-@@ -1,73 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-- * Author: Qianggui Song <qianggui.song@amlogic.com>
-- */
--
--#ifndef _DT_BINDINGS_MESON_A1_GPIO_H
--#define _DT_BINDINGS_MESON_A1_GPIO_H
--
--#define GPIOP_0		0
--#define GPIOP_1		1
--#define GPIOP_2		2
--#define GPIOP_3		3
--#define GPIOP_4		4
--#define GPIOP_5		5
--#define GPIOP_6		6
--#define GPIOP_7		7
--#define GPIOP_8		8
--#define GPIOP_9		9
--#define GPIOP_10	10
--#define GPIOP_11	11
--#define GPIOP_12	12
--#define GPIOB_0		13
--#define GPIOB_1		14
--#define GPIOB_2		15
--#define GPIOB_3		16
--#define GPIOB_4		17
--#define GPIOB_5		18
--#define GPIOB_6		19
--#define GPIOX_0		20
--#define GPIOX_1		21
--#define GPIOX_2		22
--#define GPIOX_3		23
--#define GPIOX_4		24
--#define GPIOX_5		25
--#define GPIOX_6		26
--#define GPIOX_7		27
--#define GPIOX_8		28
--#define GPIOX_9		29
--#define GPIOX_10	30
--#define GPIOX_11	31
--#define GPIOX_12	32
--#define GPIOX_13	33
--#define GPIOX_14	34
--#define GPIOX_15	35
--#define GPIOX_16	36
--#define GPIOF_0		37
--#define GPIOF_1		38
--#define GPIOF_2		39
--#define GPIOF_3		40
--#define GPIOF_4		41
--#define GPIOF_5		42
--#define GPIOF_6		43
--#define GPIOF_7		44
--#define GPIOF_8		45
--#define GPIOF_9		46
--#define GPIOF_10	47
--#define GPIOF_11	48
--#define GPIOF_12	49
--#define GPIOA_0		50
--#define GPIOA_1		51
--#define GPIOA_2		52
--#define GPIOA_3		53
--#define GPIOA_4		54
--#define GPIOA_5		55
--#define GPIOA_6		56
--#define GPIOA_7		57
--#define GPIOA_8		58
--#define GPIOA_9		59
--#define GPIOA_10	60
--#define GPIOA_11	61
--
--#endif /* _DT_BINDINGS_MESON_A1_GPIO_H */
-diff --git a/include/dt-bindings/gpio/meson-axg-gpio.h b/include/dt-bindings/gpio/meson-axg-gpio.h
-deleted file mode 100644
-index 25bb1fffa97a..000000000000
---- a/include/dt-bindings/gpio/meson-axg-gpio.h
-+++ /dev/null
-@@ -1,116 +0,0 @@
--/*
-- * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
-- * Author: Xingyu Chen <xingyu.chen@amlogic.com>
+@@ -1,59 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
 - *
-- * SPDX-License-Identifier: GPL-2.0+
+- * Copyright (C) 2020 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A774E1_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A774E1_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* R8A774E1 CPG Core Clocks */
+-#define R8A774E1_CLK_Z			0
+-#define R8A774E1_CLK_Z2			1
+-#define R8A774E1_CLK_ZG			2
+-#define R8A774E1_CLK_ZTR		3
+-#define R8A774E1_CLK_ZTRD2		4
+-#define R8A774E1_CLK_ZT			5
+-#define R8A774E1_CLK_ZX			6
+-#define R8A774E1_CLK_S0D1		7
+-#define R8A774E1_CLK_S0D2		8
+-#define R8A774E1_CLK_S0D3		9
+-#define R8A774E1_CLK_S0D4		10
+-#define R8A774E1_CLK_S0D6		11
+-#define R8A774E1_CLK_S0D8		12
+-#define R8A774E1_CLK_S0D12		13
+-#define R8A774E1_CLK_S1D2		14
+-#define R8A774E1_CLK_S1D4		15
+-#define R8A774E1_CLK_S2D1		16
+-#define R8A774E1_CLK_S2D2		17
+-#define R8A774E1_CLK_S2D4		18
+-#define R8A774E1_CLK_S3D1		19
+-#define R8A774E1_CLK_S3D2		20
+-#define R8A774E1_CLK_S3D4		21
+-#define R8A774E1_CLK_LB			22
+-#define R8A774E1_CLK_CL			23
+-#define R8A774E1_CLK_ZB3		24
+-#define R8A774E1_CLK_ZB3D2		25
+-#define R8A774E1_CLK_ZB3D4		26
+-#define R8A774E1_CLK_CR			27
+-#define R8A774E1_CLK_CRD2		28
+-#define R8A774E1_CLK_SD0H		29
+-#define R8A774E1_CLK_SD0		30
+-#define R8A774E1_CLK_SD1H		31
+-#define R8A774E1_CLK_SD1		32
+-#define R8A774E1_CLK_SD2H		33
+-#define R8A774E1_CLK_SD2		34
+-#define R8A774E1_CLK_SD3H		35
+-#define R8A774E1_CLK_SD3		36
+-#define R8A774E1_CLK_RPC		37
+-#define R8A774E1_CLK_RPCD2		38
+-#define R8A774E1_CLK_MSO		39
+-#define R8A774E1_CLK_HDMI		40
+-#define R8A774E1_CLK_CSI0		41
+-#define R8A774E1_CLK_CP			42
+-#define R8A774E1_CLK_CPEX		43
+-#define R8A774E1_CLK_R			44
+-#define R8A774E1_CLK_OSC		45
+-#define R8A774E1_CLK_CANFD		46
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A774E1_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a7790-clock.h b/include/dt-bindings/clock/r8a7790-clock.h
+deleted file mode 100644
+index c92ff1e60223..000000000000
+--- a/include/dt-bindings/clock/r8a7790-clock.h
++++ /dev/null
+@@ -1,158 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
+-/*
+- * Copyright 2013 Ideas On Board SPRL
 - */
 -
--#ifndef _DT_BINDINGS_MESON_AXG_GPIO_H
--#define _DT_BINDINGS_MESON_AXG_GPIO_H
+-#ifndef __DT_BINDINGS_CLOCK_R8A7790_H__
+-#define __DT_BINDINGS_CLOCK_R8A7790_H__
 -
--/* First GPIO chip */
--#define GPIOAO_0	0
--#define GPIOAO_1	1
--#define GPIOAO_2	2
--#define GPIOAO_3	3
--#define GPIOAO_4	4
--#define GPIOAO_5	5
--#define GPIOAO_6	6
--#define GPIOAO_7	7
--#define GPIOAO_8	8
--#define GPIOAO_9	9
--#define GPIOAO_10	10
--#define GPIOAO_11	11
--#define GPIOAO_12	12
--#define GPIOAO_13	13
--#define GPIO_TEST_N 14
+-/* CPG */
+-#define R8A7790_CLK_MAIN		0
+-#define R8A7790_CLK_PLL0		1
+-#define R8A7790_CLK_PLL1		2
+-#define R8A7790_CLK_PLL3		3
+-#define R8A7790_CLK_LB			4
+-#define R8A7790_CLK_QSPI		5
+-#define R8A7790_CLK_SDH			6
+-#define R8A7790_CLK_SD0			7
+-#define R8A7790_CLK_SD1			8
+-#define R8A7790_CLK_Z			9
+-#define R8A7790_CLK_RCAN		10
+-#define R8A7790_CLK_ADSP		11
 -
--/* Second GPIO chip */
--#define GPIOZ_0		0
--#define GPIOZ_1		1
--#define GPIOZ_2		2
--#define GPIOZ_3		3
--#define GPIOZ_4		4
--#define GPIOZ_5		5
--#define GPIOZ_6		6
--#define GPIOZ_7		7
--#define GPIOZ_8		8
--#define GPIOZ_9		9
--#define GPIOZ_10	10
--#define BOOT_0		11
--#define BOOT_1		12
--#define BOOT_2		13
--#define BOOT_3		14
--#define BOOT_4		15
--#define BOOT_5		16
--#define BOOT_6		17
--#define BOOT_7		18
--#define BOOT_8		19
--#define BOOT_9		20
--#define BOOT_10		21
--#define BOOT_11		22
--#define BOOT_12		23
--#define BOOT_13		24
--#define BOOT_14		25
--#define GPIOA_0	    26
--#define GPIOA_1		27
--#define GPIOA_2		28
--#define GPIOA_3		29
--#define GPIOA_4		30
--#define GPIOA_5		31
--#define GPIOA_6		32
--#define GPIOA_7		33
--#define GPIOA_8		34
--#define GPIOA_9		35
--#define GPIOA_10	36
--#define GPIOA_11	37
--#define GPIOA_12	38
--#define GPIOA_13	39
--#define GPIOA_14	40
--#define GPIOA_15	41
--#define GPIOA_16	42
--#define GPIOA_17	43
--#define GPIOA_18	44
--#define GPIOA_19	45
--#define GPIOA_20	46
--#define GPIOX_0		47
--#define GPIOX_1		48
--#define GPIOX_2		49
--#define GPIOX_3		50
--#define GPIOX_4		51
--#define GPIOX_5		52
--#define GPIOX_6		53
--#define GPIOX_7		54
--#define GPIOX_8		55
--#define GPIOX_9		56
--#define GPIOX_10	57
--#define GPIOX_11	58
--#define GPIOX_12	59
--#define GPIOX_13	60
--#define GPIOX_14	61
--#define GPIOX_15	62
--#define GPIOX_16	63
--#define GPIOX_17	64
--#define GPIOX_18	65
--#define GPIOX_19	66
--#define GPIOX_20	67
--#define GPIOX_21	68
--#define GPIOX_22	69
--#define GPIOY_0		70
--#define GPIOY_1		71
--#define GPIOY_2		72
--#define GPIOY_3		73
--#define GPIOY_4		74
--#define GPIOY_5		75
--#define GPIOY_6		76
--#define GPIOY_7		77
--#define GPIOY_8		78
--#define GPIOY_9		79
--#define GPIOY_10	80
--#define GPIOY_11	81
--#define GPIOY_12	82
--#define GPIOY_13	83
--#define GPIOY_14	84
--#define GPIOY_15	85
+-/* MSTP0 */
+-#define R8A7790_CLK_MSIOF0		0
 -
--#endif /* _DT_BINDINGS_MESON_AXG_GPIO_H */
-diff --git a/include/dt-bindings/gpio/meson-g12a-gpio.h b/include/dt-bindings/gpio/meson-g12a-gpio.h
+-/* MSTP1 */
+-#define R8A7790_CLK_VCP1		0
+-#define R8A7790_CLK_VCP0		1
+-#define R8A7790_CLK_VPC1		2
+-#define R8A7790_CLK_VPC0		3
+-#define R8A7790_CLK_JPU			6
+-#define R8A7790_CLK_SSP1		9
+-#define R8A7790_CLK_TMU1		11
+-#define R8A7790_CLK_3DG			12
+-#define R8A7790_CLK_2DDMAC		15
+-#define R8A7790_CLK_FDP1_2		17
+-#define R8A7790_CLK_FDP1_1		18
+-#define R8A7790_CLK_FDP1_0		19
+-#define R8A7790_CLK_TMU3		21
+-#define R8A7790_CLK_TMU2		22
+-#define R8A7790_CLK_CMT0		24
+-#define R8A7790_CLK_TMU0		25
+-#define R8A7790_CLK_VSP1_DU1		27
+-#define R8A7790_CLK_VSP1_DU0		28
+-#define R8A7790_CLK_VSP1_R		30
+-#define R8A7790_CLK_VSP1_S		31
+-
+-/* MSTP2 */
+-#define R8A7790_CLK_SCIFA2		2
+-#define R8A7790_CLK_SCIFA1		3
+-#define R8A7790_CLK_SCIFA0		4
+-#define R8A7790_CLK_MSIOF2		5
+-#define R8A7790_CLK_SCIFB0		6
+-#define R8A7790_CLK_SCIFB1		7
+-#define R8A7790_CLK_MSIOF1		8
+-#define R8A7790_CLK_MSIOF3		15
+-#define R8A7790_CLK_SCIFB2		16
+-#define R8A7790_CLK_SYS_DMAC1		18
+-#define R8A7790_CLK_SYS_DMAC0		19
+-
+-/* MSTP3 */
+-#define R8A7790_CLK_IIC2		0
+-#define R8A7790_CLK_TPU0		4
+-#define R8A7790_CLK_MMCIF1		5
+-#define R8A7790_CLK_SCIF2		10
+-#define R8A7790_CLK_SDHI3		11
+-#define R8A7790_CLK_SDHI2		12
+-#define R8A7790_CLK_SDHI1		13
+-#define R8A7790_CLK_SDHI0		14
+-#define R8A7790_CLK_MMCIF0		15
+-#define R8A7790_CLK_IIC0		18
+-#define R8A7790_CLK_PCIEC		19
+-#define R8A7790_CLK_IIC1		23
+-#define R8A7790_CLK_SSUSB		28
+-#define R8A7790_CLK_CMT1		29
+-#define R8A7790_CLK_USBDMAC0		30
+-#define R8A7790_CLK_USBDMAC1		31
+-
+-/* MSTP4 */
+-#define R8A7790_CLK_IRQC		7
+-#define R8A7790_CLK_INTC_SYS		8
+-
+-/* MSTP5 */
+-#define R8A7790_CLK_AUDIO_DMAC1		1
+-#define R8A7790_CLK_AUDIO_DMAC0		2
+-#define R8A7790_CLK_ADSP_MOD		6
+-#define R8A7790_CLK_THERMAL		22
+-#define R8A7790_CLK_PWM			23
+-
+-/* MSTP7 */
+-#define R8A7790_CLK_EHCI		3
+-#define R8A7790_CLK_HSUSB		4
+-#define R8A7790_CLK_HSCIF1		16
+-#define R8A7790_CLK_HSCIF0		17
+-#define R8A7790_CLK_SCIF1		20
+-#define R8A7790_CLK_SCIF0		21
+-#define R8A7790_CLK_DU2			22
+-#define R8A7790_CLK_DU1			23
+-#define R8A7790_CLK_DU0			24
+-#define R8A7790_CLK_LVDS1		25
+-#define R8A7790_CLK_LVDS0		26
+-
+-/* MSTP8 */
+-#define R8A7790_CLK_MLB			2
+-#define R8A7790_CLK_VIN3		8
+-#define R8A7790_CLK_VIN2		9
+-#define R8A7790_CLK_VIN1		10
+-#define R8A7790_CLK_VIN0		11
+-#define R8A7790_CLK_ETHERAVB		12
+-#define R8A7790_CLK_ETHER		13
+-#define R8A7790_CLK_SATA1		14
+-#define R8A7790_CLK_SATA0		15
+-
+-/* MSTP9 */
+-#define R8A7790_CLK_GPIO5		7
+-#define R8A7790_CLK_GPIO4		8
+-#define R8A7790_CLK_GPIO3		9
+-#define R8A7790_CLK_GPIO2		10
+-#define R8A7790_CLK_GPIO1		11
+-#define R8A7790_CLK_GPIO0		12
+-#define R8A7790_CLK_RCAN1		15
+-#define R8A7790_CLK_RCAN0		16
+-#define R8A7790_CLK_QSPI_MOD		17
+-#define R8A7790_CLK_IICDVFS		26
+-#define R8A7790_CLK_I2C3		28
+-#define R8A7790_CLK_I2C2		29
+-#define R8A7790_CLK_I2C1		30
+-#define R8A7790_CLK_I2C0		31
+-
+-/* MSTP10 */
+-#define R8A7790_CLK_SSI_ALL		5
+-#define R8A7790_CLK_SSI9		6
+-#define R8A7790_CLK_SSI8		7
+-#define R8A7790_CLK_SSI7		8
+-#define R8A7790_CLK_SSI6		9
+-#define R8A7790_CLK_SSI5		10
+-#define R8A7790_CLK_SSI4		11
+-#define R8A7790_CLK_SSI3		12
+-#define R8A7790_CLK_SSI2		13
+-#define R8A7790_CLK_SSI1		14
+-#define R8A7790_CLK_SSI0		15
+-#define R8A7790_CLK_SCU_ALL		17
+-#define R8A7790_CLK_SCU_DVC1		18
+-#define R8A7790_CLK_SCU_DVC0		19
+-#define R8A7790_CLK_SCU_CTU1_MIX1	20
+-#define R8A7790_CLK_SCU_CTU0_MIX0	21
+-#define R8A7790_CLK_SCU_SRC9		22
+-#define R8A7790_CLK_SCU_SRC8		23
+-#define R8A7790_CLK_SCU_SRC7		24
+-#define R8A7790_CLK_SCU_SRC6		25
+-#define R8A7790_CLK_SCU_SRC5		26
+-#define R8A7790_CLK_SCU_SRC4		27
+-#define R8A7790_CLK_SCU_SRC3		28
+-#define R8A7790_CLK_SCU_SRC2		29
+-#define R8A7790_CLK_SCU_SRC1		30
+-#define R8A7790_CLK_SCU_SRC0		31
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7790_H__ */
+diff --git a/include/dt-bindings/clock/r8a7790-cpg-mssr.h b/include/dt-bindings/clock/r8a7790-cpg-mssr.h
 deleted file mode 100644
-index f7bd69350d18..000000000000
---- a/include/dt-bindings/gpio/meson-g12a-gpio.h
+index c5955b56b36d..000000000000
+--- a/include/dt-bindings/clock/r8a7790-cpg-mssr.h
 +++ /dev/null
-@@ -1,114 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
--/*
-- * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-- * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-- */
--
--#ifndef _DT_BINDINGS_MESON_G12A_GPIO_H
--#define _DT_BINDINGS_MESON_G12A_GPIO_H
--
--/* First GPIO chip */
--#define GPIOAO_0	0
--#define GPIOAO_1	1
--#define GPIOAO_2	2
--#define GPIOAO_3	3
--#define GPIOAO_4	4
--#define GPIOAO_5	5
--#define GPIOAO_6	6
--#define GPIOAO_7	7
--#define GPIOAO_8	8
--#define GPIOAO_9	9
--#define GPIOAO_10	10
--#define GPIOAO_11	11
--#define GPIOE_0		12
--#define GPIOE_1		13
--#define GPIOE_2		14
--
--/* Second GPIO chip */
--#define GPIOZ_0		0
--#define GPIOZ_1		1
--#define GPIOZ_2		2
--#define GPIOZ_3		3
--#define GPIOZ_4		4
--#define GPIOZ_5		5
--#define GPIOZ_6		6
--#define GPIOZ_7		7
--#define GPIOZ_8		8
--#define GPIOZ_9		9
--#define GPIOZ_10	10
--#define GPIOZ_11	11
--#define GPIOZ_12	12
--#define GPIOZ_13	13
--#define GPIOZ_14	14
--#define GPIOZ_15	15
--#define GPIOH_0		16
--#define GPIOH_1		17
--#define GPIOH_2		18
--#define GPIOH_3		19
--#define GPIOH_4		20
--#define GPIOH_5		21
--#define GPIOH_6		22
--#define GPIOH_7		23
--#define GPIOH_8		24
--#define BOOT_0		25
--#define BOOT_1		26
--#define BOOT_2		27
--#define BOOT_3		28
--#define BOOT_4		29
--#define BOOT_5		30
--#define BOOT_6		31
--#define BOOT_7		32
--#define BOOT_8		33
--#define BOOT_9		34
--#define BOOT_10		35
--#define BOOT_11		36
--#define BOOT_12		37
--#define BOOT_13		38
--#define BOOT_14		39
--#define BOOT_15		40
--#define GPIOC_0		41
--#define GPIOC_1		42
--#define GPIOC_2		43
--#define GPIOC_3		44
--#define GPIOC_4		45
--#define GPIOC_5		46
--#define GPIOC_6		47
--#define GPIOC_7		48
--#define GPIOA_0		49
--#define GPIOA_1		50
--#define GPIOA_2		51
--#define GPIOA_3		52
--#define GPIOA_4		53
--#define GPIOA_5		54
--#define GPIOA_6		55
--#define GPIOA_7		56
--#define GPIOA_8		57
--#define GPIOA_9		58
--#define GPIOA_10	59
--#define GPIOA_11	60
--#define GPIOA_12	61
--#define GPIOA_13	62
--#define GPIOA_14	63
--#define GPIOA_15	64
--#define GPIOX_0		65
--#define GPIOX_1		66
--#define GPIOX_2		67
--#define GPIOX_3		68
--#define GPIOX_4		69
--#define GPIOX_5		70
--#define GPIOX_6		71
--#define GPIOX_7		72
--#define GPIOX_8		73
--#define GPIOX_9		74
--#define GPIOX_10	75
--#define GPIOX_11	76
--#define GPIOX_12	77
--#define GPIOX_13	78
--#define GPIOX_14	79
--#define GPIOX_15	80
--#define GPIOX_16	81
--#define GPIOX_17	82
--#define GPIOX_18	83
--#define GPIOX_19	84
--
--#endif /* _DT_BINDINGS_MESON_G12A_GPIO_H */
-diff --git a/include/dt-bindings/gpio/meson-gxbb-gpio.h b/include/dt-bindings/gpio/meson-gxbb-gpio.h
-deleted file mode 100644
-index 489c75b27645..000000000000
---- a/include/dt-bindings/gpio/meson-gxbb-gpio.h
-+++ /dev/null
-@@ -1,148 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * GPIO definitions for Amlogic Meson GXBB SoCs
+@@ -1,48 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
 - *
-- * Copyright (C) 2016 Endless Mobile, Inc.
-- * Author: Carlo Caione <carlo@endlessm.com>
+- * Copyright (C) 2015 Renesas Electronics Corp.
 - */
 -
--#ifndef _DT_BINDINGS_MESON_GXBB_GPIO_H
--#define _DT_BINDINGS_MESON_GXBB_GPIO_H
+-#ifndef __DT_BINDINGS_CLOCK_R8A7790_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A7790_CPG_MSSR_H__
 -
--#define	GPIOAO_0	0
--#define	GPIOAO_1	1
--#define	GPIOAO_2	2
--#define	GPIOAO_3	3
--#define	GPIOAO_4	4
--#define	GPIOAO_5	5
--#define	GPIOAO_6	6
--#define	GPIOAO_7	7
--#define	GPIOAO_8	8
--#define	GPIOAO_9	9
--#define	GPIOAO_10	10
--#define	GPIOAO_11	11
--#define	GPIOAO_12	12
--#define	GPIOAO_13	13
--#define	GPIO_TEST_N	14
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
 -
--#define	GPIOZ_0		0
--#define	GPIOZ_1		1
--#define	GPIOZ_2		2
--#define	GPIOZ_3		3
--#define	GPIOZ_4		4
--#define	GPIOZ_5		5
--#define	GPIOZ_6		6
--#define	GPIOZ_7		7
--#define	GPIOZ_8		8
--#define	GPIOZ_9		9
--#define	GPIOZ_10	10
--#define	GPIOZ_11	11
--#define	GPIOZ_12	12
--#define	GPIOZ_13	13
--#define	GPIOZ_14	14
--#define	GPIOZ_15	15
--#define	GPIOH_0		16
--#define	GPIOH_1		17
--#define	GPIOH_2		18
--#define	GPIOH_3		19
--#define	BOOT_0		20
--#define	BOOT_1		21
--#define	BOOT_2		22
--#define	BOOT_3		23
--#define	BOOT_4		24
--#define	BOOT_5		25
--#define	BOOT_6		26
--#define	BOOT_7		27
--#define	BOOT_8		28
--#define	BOOT_9		29
--#define	BOOT_10		30
--#define	BOOT_11		31
--#define	BOOT_12		32
--#define	BOOT_13		33
--#define	BOOT_14		34
--#define	BOOT_15		35
--#define	BOOT_16		36
--#define	BOOT_17		37
--#define	CARD_0		38
--#define	CARD_1		39
--#define	CARD_2		40
--#define	CARD_3		41
--#define	CARD_4		42
--#define	CARD_5		43
--#define	CARD_6		44
--#define	GPIODV_0	45
--#define	GPIODV_1	46
--#define	GPIODV_2	47
--#define	GPIODV_3	48
--#define	GPIODV_4	49
--#define	GPIODV_5	50
--#define	GPIODV_6	51
--#define	GPIODV_7	52
--#define	GPIODV_8	53
--#define	GPIODV_9	54
--#define	GPIODV_10	55
--#define	GPIODV_11	56
--#define	GPIODV_12	57
--#define	GPIODV_13	58
--#define	GPIODV_14	59
--#define	GPIODV_15	60
--#define	GPIODV_16	61
--#define	GPIODV_17	62
--#define	GPIODV_18	63
--#define	GPIODV_19	64
--#define	GPIODV_20	65
--#define	GPIODV_21	66
--#define	GPIODV_22	67
--#define	GPIODV_23	68
--#define	GPIODV_24	69
--#define	GPIODV_25	70
--#define	GPIODV_26	71
--#define	GPIODV_27	72
--#define	GPIODV_28	73
--#define	GPIODV_29	74
--#define	GPIOY_0		75
--#define	GPIOY_1		76
--#define	GPIOY_2		77
--#define	GPIOY_3		78
--#define	GPIOY_4		79
--#define	GPIOY_5		80
--#define	GPIOY_6		81
--#define	GPIOY_7		82
--#define	GPIOY_8		83
--#define	GPIOY_9		84
--#define	GPIOY_10	85
--#define	GPIOY_11	86
--#define	GPIOY_12	87
--#define	GPIOY_13	88
--#define	GPIOY_14	89
--#define	GPIOY_15	90
--#define	GPIOY_16	91
--#define	GPIOX_0		92
--#define	GPIOX_1		93
--#define	GPIOX_2		94
--#define	GPIOX_3		95
--#define	GPIOX_4		96
--#define	GPIOX_5		97
--#define	GPIOX_6		98
--#define	GPIOX_7		99
--#define	GPIOX_8		100
--#define	GPIOX_9		101
--#define	GPIOX_10	102
--#define	GPIOX_11	103
--#define	GPIOX_12	104
--#define	GPIOX_13	105
--#define	GPIOX_14	106
--#define	GPIOX_15	107
--#define	GPIOX_16	108
--#define	GPIOX_17	109
--#define	GPIOX_18	110
--#define	GPIOX_19	111
--#define	GPIOX_20	112
--#define	GPIOX_21	113
--#define	GPIOX_22	114
--#define	GPIOCLK_0	115
--#define	GPIOCLK_1	116
--#define	GPIOCLK_2	117
--#define	GPIOCLK_3	118
+-/* r8a7790 CPG Core Clocks */
+-#define R8A7790_CLK_Z			0
+-#define R8A7790_CLK_Z2			1
+-#define R8A7790_CLK_ZG			2
+-#define R8A7790_CLK_ZTR			3
+-#define R8A7790_CLK_ZTRD2		4
+-#define R8A7790_CLK_ZT			5
+-#define R8A7790_CLK_ZX			6
+-#define R8A7790_CLK_ZS			7
+-#define R8A7790_CLK_HP			8
+-#define R8A7790_CLK_I			9
+-#define R8A7790_CLK_B			10
+-#define R8A7790_CLK_LB			11
+-#define R8A7790_CLK_P			12
+-#define R8A7790_CLK_CL			13
+-#define R8A7790_CLK_M2			14
+-#define R8A7790_CLK_ADSP		15
+-#define R8A7790_CLK_IMP			16
+-#define R8A7790_CLK_ZB3			17
+-#define R8A7790_CLK_ZB3D2		18
+-#define R8A7790_CLK_DDR			19
+-#define R8A7790_CLK_SDH			20
+-#define R8A7790_CLK_SD0			21
+-#define R8A7790_CLK_SD1			22
+-#define R8A7790_CLK_SD2			23
+-#define R8A7790_CLK_SD3			24
+-#define R8A7790_CLK_MMC0		25
+-#define R8A7790_CLK_MMC1		26
+-#define R8A7790_CLK_MP			27
+-#define R8A7790_CLK_SSP			28
+-#define R8A7790_CLK_SSPRS		29
+-#define R8A7790_CLK_QSPI		30
+-#define R8A7790_CLK_CP			31
+-#define R8A7790_CLK_RCAN		32
+-#define R8A7790_CLK_R			33
+-#define R8A7790_CLK_OSC			34
 -
--#endif
-diff --git a/include/dt-bindings/gpio/meson-gxl-gpio.h b/include/dt-bindings/gpio/meson-gxl-gpio.h
+-#endif /* __DT_BINDINGS_CLOCK_R8A7790_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a7791-clock.h b/include/dt-bindings/clock/r8a7791-clock.h
 deleted file mode 100644
-index 0a001ae48272..000000000000
---- a/include/dt-bindings/gpio/meson-gxl-gpio.h
-+++ /dev/null
-@@ -1,125 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * GPIO definitions for Amlogic Meson GXL SoCs
-- *
-- * Copyright (C) 2016 Endless Mobile, Inc.
-- * Author: Carlo Caione <carlo@endlessm.com>
-- */
--
--#ifndef _DT_BINDINGS_MESON_GXL_GPIO_H
--#define _DT_BINDINGS_MESON_GXL_GPIO_H
--
--#define	GPIOAO_0	0
--#define	GPIOAO_1	1
--#define	GPIOAO_2	2
--#define	GPIOAO_3	3
--#define	GPIOAO_4	4
--#define	GPIOAO_5	5
--#define	GPIOAO_6	6
--#define	GPIOAO_7	7
--#define	GPIOAO_8	8
--#define	GPIOAO_9	9
--#define	GPIO_TEST_N	10
--
--#define	GPIOZ_0		0
--#define	GPIOZ_1		1
--#define	GPIOZ_2		2
--#define	GPIOZ_3		3
--#define	GPIOZ_4		4
--#define	GPIOZ_5		5
--#define	GPIOZ_6		6
--#define	GPIOZ_7		7
--#define	GPIOZ_8		8
--#define	GPIOZ_9		9
--#define	GPIOZ_10	10
--#define	GPIOZ_11	11
--#define	GPIOZ_12	12
--#define	GPIOZ_13	13
--#define	GPIOZ_14	14
--#define	GPIOZ_15	15
--#define	GPIOH_0		16
--#define	GPIOH_1		17
--#define	GPIOH_2		18
--#define	GPIOH_3		19
--#define	GPIOH_4		20
--#define	GPIOH_5		21
--#define	GPIOH_6		22
--#define	GPIOH_7		23
--#define	GPIOH_8		24
--#define	GPIOH_9		25
--#define	BOOT_0		26
--#define	BOOT_1		27
--#define	BOOT_2		28
--#define	BOOT_3		29
--#define	BOOT_4		30
--#define	BOOT_5		31
--#define	BOOT_6		32
--#define	BOOT_7		33
--#define	BOOT_8		34
--#define	BOOT_9		35
--#define	BOOT_10		36
--#define	BOOT_11		37
--#define	BOOT_12		38
--#define	BOOT_13		39
--#define	BOOT_14		40
--#define	BOOT_15		41
--#define	CARD_0		42
--#define	CARD_1		43
--#define	CARD_2		44
--#define	CARD_3		45
--#define	CARD_4		46
--#define	CARD_5		47
--#define	CARD_6		48
--#define	GPIODV_0	49
--#define	GPIODV_1	50
--#define	GPIODV_2	51
--#define	GPIODV_3	52
--#define	GPIODV_4	53
--#define	GPIODV_5	54
--#define	GPIODV_6	55
--#define	GPIODV_7	56
--#define	GPIODV_8	57
--#define	GPIODV_9	58
--#define	GPIODV_10	59
--#define	GPIODV_11	60
--#define	GPIODV_12	61
--#define	GPIODV_13	62
--#define	GPIODV_14	63
--#define	GPIODV_15	64
--#define	GPIODV_16	65
--#define	GPIODV_17	66
--#define	GPIODV_18	67
--#define	GPIODV_19	68
--#define	GPIODV_20	69
--#define	GPIODV_21	70
--#define	GPIODV_22	71
--#define	GPIODV_23	72
--#define	GPIODV_24	73
--#define	GPIODV_25	74
--#define	GPIODV_26	75
--#define	GPIODV_27	76
--#define	GPIODV_28	77
--#define	GPIODV_29	78
--#define	GPIOX_0		79
--#define	GPIOX_1		80
--#define	GPIOX_2		81
--#define	GPIOX_3		82
--#define	GPIOX_4		83
--#define	GPIOX_5		84
--#define	GPIOX_6		85
--#define	GPIOX_7		86
--#define	GPIOX_8		87
--#define	GPIOX_9		88
--#define	GPIOX_10	89
--#define	GPIOX_11	90
--#define	GPIOX_12	91
--#define	GPIOX_13	92
--#define	GPIOX_14	93
--#define	GPIOX_15	94
--#define	GPIOX_16	95
--#define	GPIOX_17	96
--#define	GPIOX_18	97
--#define	GPIOCLK_0	98
--#define	GPIOCLK_1	99
--
--#endif
-diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
-deleted file mode 100644
-index 8e39dfc0b62a..000000000000
---- a/include/dt-bindings/power/meson-a1-power.h
-+++ /dev/null
-@@ -1,32 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
--/*
-- * Copyright (c) 2023 SberDevices, Inc.
-- * Author: Alexey Romanov <avromanov@sberdevices.ru>
-- */
--
--#ifndef _DT_BINDINGS_MESON_A1_POWER_H
--#define _DT_BINDINGS_MESON_A1_POWER_H
--
--#define PWRC_DSPA_ID	8
--#define PWRC_DSPB_ID	9
--#define PWRC_UART_ID	10
--#define PWRC_DMC_ID	11
--#define PWRC_I2C_ID	12
--#define PWRC_PSRAM_ID	13
--#define PWRC_ACODEC_ID	14
--#define PWRC_AUDIO_ID	15
--#define PWRC_OTP_ID	16
--#define PWRC_DMA_ID	17
--#define PWRC_SD_EMMC_ID	18
--#define PWRC_RAMA_ID	19
--#define PWRC_RAMB_ID	20
--#define PWRC_IR_ID	21
--#define PWRC_SPICC_ID	22
--#define PWRC_SPIFC_ID	23
--#define PWRC_USB_ID	24
--#define PWRC_NIC_ID	25
--#define PWRC_PDMIN_ID	26
--#define PWRC_RSA_ID	27
--#define PWRC_MAX_ID	28
--
--#endif
-diff --git a/include/dt-bindings/power/meson-axg-power.h b/include/dt-bindings/power/meson-axg-power.h
-deleted file mode 100644
-index e5243884b249..000000000000
---- a/include/dt-bindings/power/meson-axg-power.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
--/*
-- * Copyright (c) 2020 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- */
--
--#ifndef _DT_BINDINGS_MESON_AXG_POWER_H
--#define _DT_BINDINGS_MESON_AXG_POWER_H
--
--#define PWRC_AXG_VPU_ID			0
--#define PWRC_AXG_ETHERNET_MEM_ID	1
--#define PWRC_AXG_AUDIO_ID		2
--
--#endif
-diff --git a/include/dt-bindings/power/meson-g12a-power.h b/include/dt-bindings/power/meson-g12a-power.h
-deleted file mode 100644
-index bb5e67a842de..000000000000
---- a/include/dt-bindings/power/meson-g12a-power.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
--/*
-- * Copyright (c) 2019 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- */
--
--#ifndef _DT_BINDINGS_MESON_G12A_POWER_H
--#define _DT_BINDINGS_MESON_G12A_POWER_H
--
--#define PWRC_G12A_VPU_ID		0
--#define PWRC_G12A_ETH_ID		1
--
--#endif
-diff --git a/include/dt-bindings/power/meson-gxbb-power.h b/include/dt-bindings/power/meson-gxbb-power.h
-deleted file mode 100644
-index 1262dac696c0..000000000000
---- a/include/dt-bindings/power/meson-gxbb-power.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
--/*
-- * Copyright (c) 2019 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- */
--
--#ifndef _DT_BINDINGS_MESON_GXBB_POWER_H
--#define _DT_BINDINGS_MESON_GXBB_POWER_H
--
--#define PWRC_GXBB_VPU_ID		0
--#define PWRC_GXBB_ETHERNET_MEM_ID	1
--
--#endif
-diff --git a/include/dt-bindings/power/meson-sm1-power.h b/include/dt-bindings/power/meson-sm1-power.h
-deleted file mode 100644
-index a020ab00c134..000000000000
---- a/include/dt-bindings/power/meson-sm1-power.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
--/*
-- * Copyright (c) 2019 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- */
--
--#ifndef _DT_BINDINGS_MESON_SM1_POWER_H
--#define _DT_BINDINGS_MESON_SM1_POWER_H
--
--#define PWRC_SM1_VPU_ID		0
--#define PWRC_SM1_NNA_ID		1
--#define PWRC_SM1_USB_ID		2
--#define PWRC_SM1_PCIE_ID	3
--#define PWRC_SM1_GE2D_ID	4
--#define PWRC_SM1_AUDIO_ID	5
--#define PWRC_SM1_ETH_ID		6
--
--#endif
-diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-deleted file mode 100644
-index 2c749c655e1e..000000000000
---- a/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-+++ /dev/null
-@@ -1,76 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
--/*
-- * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-- * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-- *
-- * Copyright (c) 2023, SberDevices, Inc.
-- * Author: Alexey Romanov <avromanov@salutedevices.com>
-- */
--
--#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
--#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
--
--/*	RESET0					*/
--/*					0	*/
--#define RESET_AM2AXI_VAD		1
--/*					2-3	*/
--#define RESET_PSRAM			4
--#define RESET_PAD_CTRL			5
--/*					6	*/
--#define RESET_TEMP_SENSOR		7
--#define RESET_AM2AXI_DEV		8
--/*					9	*/
--#define RESET_SPICC_A			10
--#define RESET_MSR_CLK			11
--#define RESET_AUDIO			12
--#define RESET_ANALOG_CTRL		13
--#define RESET_SAR_ADC			14
--#define RESET_AUDIO_VAD			15
--#define RESET_CEC			16
--#define RESET_PWM_EF			17
--#define RESET_PWM_CD			18
--#define RESET_PWM_AB			19
--/*					20	*/
--#define RESET_IR_CTRL			21
--#define RESET_I2C_S_A			22
--/*					23	*/
--#define RESET_I2C_M_D			24
--#define RESET_I2C_M_C			25
--#define RESET_I2C_M_B			26
--#define RESET_I2C_M_A			27
--#define RESET_I2C_PROD_AHB		28
--#define RESET_I2C_PROD			29
--/*					30-31	*/
--
--/*	RESET1					*/
--#define RESET_ACODEC			32
--#define RESET_DMA			33
--#define RESET_SD_EMMC_A			34
--/*					35	*/
--#define RESET_USBCTRL			36
--/*					37	*/
--#define RESET_USBPHY			38
--/*					39-41	*/
--#define RESET_RSA			42
--#define RESET_DMC			43
--/*					44	*/
--#define RESET_IRQ_CTRL			45
--/*					46	*/
--#define RESET_NIC_VAD			47
--#define RESET_NIC_AXI			48
--#define RESET_RAMA			49
--#define RESET_RAMB			50
--/*					51-52	*/
--#define RESET_ROM			53
--#define RESET_SPIFC			54
--#define RESET_GIC			55
--#define RESET_UART_C			56
--#define RESET_UART_B			57
--#define RESET_UART_A			58
--#define RESET_OSC_RING			59
--/*					60-63	*/
--
--/*	RESET2					*/
--/*					64-95	*/
--
--#endif
-diff --git a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-deleted file mode 100644
-index 1ef807856cb8..000000000000
---- a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-+++ /dev/null
-@@ -1,19 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT)
-- *
-- * Copyright (c) 2018 Baylibre SAS.
-- * Author: Jerome Brunet <jbrunet@baylibre.com>
-- */
--
--#ifndef _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H
--#define _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H
--
--#define AXG_ARB_TODDR_A	0
--#define AXG_ARB_TODDR_B	1
--#define AXG_ARB_TODDR_C	2
--#define AXG_ARB_FRDDR_A	3
--#define AXG_ARB_FRDDR_B	4
--#define AXG_ARB_FRDDR_C	5
--#define AXG_ARB_TODDR_D	6
--#define AXG_ARB_FRDDR_D	7
--
--#endif /* _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H */
-diff --git a/include/dt-bindings/reset/amlogic,meson-axg-reset.h b/include/dt-bindings/reset/amlogic,meson-axg-reset.h
-deleted file mode 100644
-index 0f2e0fe45ca4..000000000000
---- a/include/dt-bindings/reset/amlogic,meson-axg-reset.h
-+++ /dev/null
-@@ -1,123 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause */
--/*
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- *
-- * Copyright (c) 2017 Amlogic, inc.
-- * Author: Yixun Lan <yixun.lan@amlogic.com>
-- *
-- */
--
--#ifndef _DT_BINDINGS_AMLOGIC_MESON_AXG_RESET_H
--#define _DT_BINDINGS_AMLOGIC_MESON_AXG_RESET_H
--
--/*	RESET0					*/
--#define RESET_HIU			0
--#define RESET_PCIE_A			1
--#define RESET_PCIE_B			2
--#define RESET_DDR_TOP			3
--/*					4	*/
--#define RESET_VIU			5
--#define RESET_PCIE_PHY			6
--#define RESET_PCIE_APB			7
--/*					8	*/
--/*					9	*/
--#define RESET_VENC			10
--#define RESET_ASSIST			11
--/*					12	*/
--#define RESET_VCBUS			13
--/*					14	*/
--/*					15	*/
--#define RESET_GIC			16
--#define RESET_CAPB3_DECODE		17
--/*					18-21	*/
--#define RESET_SYS_CPU_CAPB3		22
--#define RESET_CBUS_CAPB3		23
--#define RESET_AHB_CNTL			24
--#define RESET_AHB_DATA			25
--#define RESET_VCBUS_CLK81		26
--#define RESET_MMC			27
--/*					28-31	*/
--/*	RESET1					*/
--/*					32	*/
--/*					33	*/
--#define RESET_USB_OTG			34
--#define RESET_DDR			35
--#define RESET_AO_RESET			36
--/*					37	*/
--#define RESET_AHB_SRAM			38
--/*					39	*/
--/*					40	*/
--#define RESET_DMA			41
--#define RESET_ISA			42
--#define RESET_ETHERNET			43
--/*					44	*/
--#define RESET_SD_EMMC_B			45
--#define RESET_SD_EMMC_C			46
--#define RESET_ROM_BOOT			47
--#define RESET_SYS_CPU_0			48
--#define RESET_SYS_CPU_1			49
--#define RESET_SYS_CPU_2			50
--#define RESET_SYS_CPU_3			51
--#define RESET_SYS_CPU_CORE_0		52
--#define RESET_SYS_CPU_CORE_1		53
--#define RESET_SYS_CPU_CORE_2		54
--#define RESET_SYS_CPU_CORE_3		55
--#define RESET_SYS_PLL_DIV		56
--#define RESET_SYS_CPU_AXI		57
--#define RESET_SYS_CPU_L2		58
--#define RESET_SYS_CPU_P			59
--#define RESET_SYS_CPU_MBIST		60
--/*					61-63	*/
--/*	RESET2					*/
--/*					64	*/
--/*					65	*/
--#define RESET_AUDIO			66
--/*					67	*/
--#define RESET_MIPI_HOST			68
--#define RESET_AUDIO_LOCKER		69
--#define RESET_GE2D			70
--/*					71-76	*/
--#define RESET_AO_CPU_RESET		77
--/*					78-95	*/
--/*	RESET3					*/
--#define RESET_RING_OSCILLATOR		96
--/*					97-127	*/
--/*	RESET4					*/
--/*					128	*/
--/*					129	*/
--#define RESET_MIPI_PHY			130
--/*					131-140	*/
--#define RESET_VENCL			141
--#define RESET_I2C_MASTER_2		142
--#define RESET_I2C_MASTER_1		143
--/*					144-159	*/
--/*	RESET5					*/
--/*					160-191	*/
--/*	RESET6					*/
--#define RESET_PERIPHS_GENERAL		192
--#define RESET_PERIPHS_SPICC		193
--/*					194	*/
--/*					195	*/
--#define RESET_PERIPHS_I2C_MASTER_0	196
--/*					197-200	*/
--#define RESET_PERIPHS_UART_0		201
--#define RESET_PERIPHS_UART_1		202
--/*					203-204	*/
--#define RESET_PERIPHS_SPI_0		205
--#define RESET_PERIPHS_I2C_MASTER_3	206
--/*					207-223	*/
--/*	RESET7					*/
--#define RESET_USB_DDR_0			224
--#define RESET_USB_DDR_1			225
--#define RESET_USB_DDR_2			226
--#define RESET_USB_DDR_3			227
--/*					228	*/
--#define RESET_DEVICE_MMC_ARB		229
--/*					230	*/
--#define RESET_VID_LOCK			231
--#define RESET_A9_DMC_PIPEL		232
--#define RESET_DMC_VPU_PIPEL		233
--/*					234-255	*/
--
--#endif
-diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-deleted file mode 100644
-index f805129ca7af..000000000000
---- a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-+++ /dev/null
-@@ -1,53 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (c) 2019 BayLibre, SAS.
-- * Author: Jerome Brunet <jbrunet@baylibre.com>
-- *
-- */
--
--#ifndef _DT_BINDINGS_AMLOGIC_MESON_G12A_AUDIO_RESET_H
--#define _DT_BINDINGS_AMLOGIC_MESON_G12A_AUDIO_RESET_H
--
--#define AUD_RESET_PDM		0
--#define AUD_RESET_TDMIN_A	1
--#define AUD_RESET_TDMIN_B	2
--#define AUD_RESET_TDMIN_C	3
--#define AUD_RESET_TDMIN_LB	4
--#define AUD_RESET_LOOPBACK	5
--#define AUD_RESET_TODDR_A	6
--#define AUD_RESET_TODDR_B	7
--#define AUD_RESET_TODDR_C	8
--#define AUD_RESET_FRDDR_A	9
--#define AUD_RESET_FRDDR_B	10
--#define AUD_RESET_FRDDR_C	11
--#define AUD_RESET_TDMOUT_A	12
--#define AUD_RESET_TDMOUT_B	13
--#define AUD_RESET_TDMOUT_C	14
--#define AUD_RESET_SPDIFOUT	15
--#define AUD_RESET_SPDIFOUT_B	16
--#define AUD_RESET_SPDIFIN	17
--#define AUD_RESET_EQDRC		18
--#define AUD_RESET_RESAMPLE	19
--#define AUD_RESET_DDRARB	20
--#define AUD_RESET_POWDET	21
--#define AUD_RESET_TORAM		22
--#define AUD_RESET_TOACODEC	23
--#define AUD_RESET_TOHDMITX	24
--#define AUD_RESET_CLKTREE	25
--
--/* SM1 added resets */
--#define AUD_RESET_RESAMPLE_B	26
--#define AUD_RESET_TOVAD		27
--#define AUD_RESET_LOCKER	28
--#define AUD_RESET_SPDIFIN_LB	29
--#define AUD_RESET_FRATV		30
--#define AUD_RESET_FRHDMIRX	31
--#define AUD_RESET_FRDDR_D	32
--#define AUD_RESET_TODDR_D	33
--#define AUD_RESET_LOOPBACK_B	34
--#define AUD_RESET_EARCTX	35
--#define AUD_RESET_EARCRX	36
--#define AUD_RESET_FRDDR_E	37
--#define AUD_RESET_TODDR_E	38
--
--#endif
-diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-deleted file mode 100644
-index 6d487c5eba2c..000000000000
---- a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
-+++ /dev/null
-@@ -1,137 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause */
--/*
-- * Copyright (c) 2019 BayLibre, SAS.
-- * Author: Jerome Brunet <jbrunet@baylibre.com>
-- *
-- */
--
--#ifndef _DT_BINDINGS_AMLOGIC_MESON_G12A_RESET_H
--#define _DT_BINDINGS_AMLOGIC_MESON_G12A_RESET_H
--
--/*	RESET0					*/
--#define RESET_HIU			0
--/*					1	*/
--#define RESET_DOS			2
--/*					3-4	*/
--#define RESET_VIU			5
--#define RESET_AFIFO			6
--#define RESET_VID_PLL_DIV		7
--/*					8-9	*/
--#define RESET_VENC			10
--#define RESET_ASSIST			11
--#define RESET_PCIE_CTRL_A		12
--#define RESET_VCBUS			13
--#define RESET_PCIE_PHY			14
--#define RESET_PCIE_APB			15
--#define RESET_GIC			16
--#define RESET_CAPB3_DECODE		17
--/*					18	*/
--#define RESET_HDMITX_CAPB3		19
--#define RESET_DVALIN_CAPB3		20
--#define RESET_DOS_CAPB3			21
--/*					22	*/
--#define RESET_CBUS_CAPB3		23
--#define RESET_AHB_CNTL			24
--#define RESET_AHB_DATA			25
--#define RESET_VCBUS_CLK81		26
--/*					27-31	*/
--/*	RESET1					*/
--/*					32	*/
--#define RESET_DEMUX			33
--#define RESET_USB			34
--#define RESET_DDR			35
--/*					36	*/
--#define RESET_BT656			37
--#define RESET_AHB_SRAM			38
--/*					39	*/
--#define RESET_PARSER			40
--/*					41	*/
--#define RESET_ISA			42
--#define RESET_ETHERNET			43
--#define RESET_SD_EMMC_A			44
--#define RESET_SD_EMMC_B			45
--#define RESET_SD_EMMC_C			46
--/*					47	*/
--#define RESET_USB_PHY20			48
--#define RESET_USB_PHY21			49
--/*					50-60	*/
--#define RESET_AUDIO_CODEC		61
--/*					62-63	*/
--/*	RESET2					*/
--/*					64	*/
--#define RESET_AUDIO			65
--#define RESET_HDMITX_PHY		66
--/*					67	*/
--#define RESET_MIPI_DSI_HOST		68
--#define RESET_ALOCKER			69
--#define RESET_GE2D			70
--#define RESET_PARSER_REG		71
--#define RESET_PARSER_FETCH		72
--#define RESET_CTL			73
--#define RESET_PARSER_TOP		74
--/*					75-77	*/
--#define RESET_DVALIN			78
--#define RESET_HDMITX			79
--/*					80-95	*/
--/*	RESET3					*/
--/*					96-95	*/
--#define RESET_DEMUX_TOP			105
--#define RESET_DEMUX_DES_PL		106
--#define RESET_DEMUX_S2P_0		107
--#define RESET_DEMUX_S2P_1		108
--#define RESET_DEMUX_0			109
--#define RESET_DEMUX_1			110
--#define RESET_DEMUX_2			111
--/*					112-127	*/
--/*	RESET4					*/
--/*					128-129	*/
--#define RESET_MIPI_DSI_PHY		130
--/*					131-132	*/
--#define RESET_RDMA			133
--#define RESET_VENCI			134
--#define RESET_VENCP			135
--/*					136	*/
--#define RESET_VDAC			137
--/*					138-139 */
--#define RESET_VDI6			140
--#define RESET_VENCL			141
--#define RESET_I2C_M1			142
--#define RESET_I2C_M2			143
--/*					144-159	*/
--/*	RESET5					*/
--/*					160-191	*/
--/*	RESET6					*/
--#define RESET_GEN			192
--#define RESET_SPICC0			193
--#define RESET_SC			194
--#define RESET_SANA_3			195
--#define RESET_I2C_M0			196
--#define RESET_TS_PLL			197
--#define RESET_SPICC1			198
--#define RESET_STREAM			199
--#define RESET_TS_CPU			200
--#define RESET_UART0			201
--#define RESET_UART1_2			202
--#define RESET_ASYNC0			203
--#define RESET_ASYNC1			204
--#define RESET_SPIFC0			205
--#define RESET_I2C_M3			206
--/*					207-223	*/
--/*	RESET7					*/
--#define RESET_USB_DDR_0			224
--#define RESET_USB_DDR_1			225
--#define RESET_USB_DDR_2			226
--#define RESET_USB_DDR_3			227
--#define RESET_TS_GPU			228
--#define RESET_DEVICE_MMC_ARB		229
--#define RESET_DVALIN_DMC_PIPL		230
--#define RESET_VID_LOCK			231
--#define RESET_NIC_DMC_PIPL		232
--#define RESET_DMC_VPU_PIPL		233
--#define RESET_GE2D_DMC_PIPL		234
--#define RESET_HCODEC_DMC_PIPL		235
--#define RESET_WAVE420_DMC_PIPL		236
--#define RESET_HEVCF_DMC_PIPL		237
--/*					238-255	*/
--
--#endif
-diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-deleted file mode 100644
-index 883bfd3bcbad..000000000000
---- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+index bb4f18b1b3d5..000000000000
+--- a/include/dt-bindings/clock/r8a7791-clock.h
 +++ /dev/null
 @@ -1,161 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
 -/*
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
+- * Copyright 2013 Ideas On Board SPRL
 - */
--#ifndef _DT_BINDINGS_AMLOGIC_MESON_GXBB_RESET_H
--#define _DT_BINDINGS_AMLOGIC_MESON_GXBB_RESET_H
 -
--/*	RESET0					*/
--#define RESET_HIU			0
--/*					1	*/
--#define RESET_DOS_RESET			2
--#define RESET_DDR_TOP			3
--#define RESET_DCU_RESET			4
--#define RESET_VIU			5
--#define RESET_AIU			6
--#define RESET_VID_PLL_DIV		7
--/*					8	*/
--#define RESET_PMUX			9
--#define RESET_VENC			10
--#define RESET_ASSIST			11
--#define RESET_AFIFO2			12
--#define RESET_VCBUS			13
--/*					14	*/
--/*					15	*/
--#define RESET_GIC			16
--#define RESET_CAPB3_DECODE		17
--#define RESET_NAND_CAPB3		18
--#define RESET_HDMITX_CAPB3		19
--#define RESET_MALI_CAPB3		20
--#define RESET_DOS_CAPB3			21
--#define RESET_SYS_CPU_CAPB3		22
--#define RESET_CBUS_CAPB3		23
--#define RESET_AHB_CNTL			24
--#define RESET_AHB_DATA			25
--#define RESET_VCBUS_CLK81		26
--#define RESET_MMC			27
--#define RESET_MIPI_0			28
--#define RESET_MIPI_1			29
--#define RESET_MIPI_2			30
--#define RESET_MIPI_3			31
--/*	RESET1					*/
--#define RESET_CPPM			32
--#define RESET_DEMUX			33
--#define RESET_USB_OTG			34
--#define RESET_DDR			35
--#define RESET_AO_RESET			36
--#define RESET_BT656			37
--#define RESET_AHB_SRAM			38
--/*					39	*/
--#define RESET_PARSER			40
--#define RESET_BLKMV			41
--#define RESET_ISA			42
--#define RESET_ETHERNET			43
--#define RESET_SD_EMMC_A			44
--#define RESET_SD_EMMC_B			45
--#define RESET_SD_EMMC_C			46
--#define RESET_ROM_BOOT			47
--#define RESET_SYS_CPU_0			48
--#define RESET_SYS_CPU_1			49
--#define RESET_SYS_CPU_2			50
--#define RESET_SYS_CPU_3			51
--#define RESET_SYS_CPU_CORE_0		52
--#define RESET_SYS_CPU_CORE_1		53
--#define RESET_SYS_CPU_CORE_2		54
--#define RESET_SYS_CPU_CORE_3		55
--#define RESET_SYS_PLL_DIV		56
--#define RESET_SYS_CPU_AXI		57
--#define RESET_SYS_CPU_L2		58
--#define RESET_SYS_CPU_P			59
--#define RESET_SYS_CPU_MBIST		60
--#define RESET_ACODEC			61
--/*					62	*/
--/*					63	*/
--/*	RESET2					*/
--#define RESET_VD_RMEM			64
--#define RESET_AUDIN			65
--#define RESET_HDMI_TX			66
--/*					67	*/
--/*					68	*/
--/*					69	*/
--#define RESET_GE2D			70
--#define RESET_PARSER_REG		71
--#define RESET_PARSER_FETCH		72
--#define RESET_PARSER_CTL		73
--#define RESET_PARSER_TOP		74
--/*					75	*/
--/*					76	*/
--#define RESET_AO_CPU_RESET		77
--#define RESET_MALI			78
--#define RESET_HDMI_SYSTEM_RESET		79
--/*					80-95	*/
--/*	RESET3					*/
--#define RESET_RING_OSCILLATOR		96
--#define RESET_SYS_CPU			97
--#define RESET_EFUSE			98
--#define RESET_SYS_CPU_BVCI		99
--#define RESET_AIFIFO			100
--#define RESET_TVFE			101
--#define RESET_AHB_BRIDGE_CNTL		102
--/*					103	*/
--#define RESET_AUDIO_DAC			104
--#define RESET_DEMUX_TOP			105
--#define RESET_DEMUX_DES			106
--#define RESET_DEMUX_S2P_0		107
--#define RESET_DEMUX_S2P_1		108
--#define RESET_DEMUX_RESET_0		109
--#define RESET_DEMUX_RESET_1		110
--#define RESET_DEMUX_RESET_2		111
--/*					112-127	*/
--/*	RESET4					*/
--/*					128	*/
--/*					129	*/
--/*					130	*/
--/*					131	*/
--#define RESET_DVIN_RESET		132
--#define RESET_RDMA			133
--#define RESET_VENCI			134
--#define RESET_VENCP			135
--/*					136	*/
--#define RESET_VDAC			137
--#define RESET_RTC			138
--/*					139	*/
--#define RESET_VDI6			140
--#define RESET_VENCL			141
--#define RESET_I2C_MASTER_2		142
--#define RESET_I2C_MASTER_1		143
--/*					144-159	*/
--/*	RESET5					*/
--/*					160-191	*/
--/*	RESET6					*/
--#define RESET_PERIPHS_GENERAL		192
--#define RESET_PERIPHS_SPICC		193
--#define RESET_PERIPHS_SMART_CARD	194
--#define RESET_PERIPHS_SAR_ADC		195
--#define RESET_PERIPHS_I2C_MASTER_0	196
--#define RESET_SANA			197
--/*					198	*/
--#define RESET_PERIPHS_STREAM_INTERFACE	199
--#define RESET_PERIPHS_SDIO		200
--#define RESET_PERIPHS_UART_0		201
--#define RESET_PERIPHS_UART_1_2		202
--#define RESET_PERIPHS_ASYNC_0		203
--#define RESET_PERIPHS_ASYNC_1		204
--#define RESET_PERIPHS_SPI_0		205
--#define RESET_PERIPHS_SDHC		206
--#define RESET_UART_SLIP			207
--/*					208-223	*/
--/*	RESET7					*/
--#define RESET_USB_DDR_0			224
--#define RESET_USB_DDR_1			225
--#define RESET_USB_DDR_2			226
--#define RESET_USB_DDR_3			227
--/*					228	*/
--#define RESET_DEVICE_MMC_ARB		229
--/*					230	*/
--#define RESET_VID_LOCK			231
--#define RESET_A9_DMC_PIPEL		232
--/*					233-255	*/
+-#ifndef __DT_BINDINGS_CLOCK_R8A7791_H__
+-#define __DT_BINDINGS_CLOCK_R8A7791_H__
 -
--#endif
-diff --git a/include/dt-bindings/reset/axg-aoclkc.h b/include/dt-bindings/reset/axg-aoclkc.h
+-/* CPG */
+-#define R8A7791_CLK_MAIN		0
+-#define R8A7791_CLK_PLL0		1
+-#define R8A7791_CLK_PLL1		2
+-#define R8A7791_CLK_PLL3		3
+-#define R8A7791_CLK_LB			4
+-#define R8A7791_CLK_QSPI		5
+-#define R8A7791_CLK_SDH			6
+-#define R8A7791_CLK_SD0			7
+-#define R8A7791_CLK_Z			8
+-#define R8A7791_CLK_RCAN		9
+-#define R8A7791_CLK_ADSP		10
+-
+-/* MSTP0 */
+-#define R8A7791_CLK_MSIOF0		0
+-
+-/* MSTP1 */
+-#define R8A7791_CLK_VCP0		1
+-#define R8A7791_CLK_VPC0		3
+-#define R8A7791_CLK_JPU			6
+-#define R8A7791_CLK_SSP1		9
+-#define R8A7791_CLK_TMU1		11
+-#define R8A7791_CLK_3DG			12
+-#define R8A7791_CLK_2DDMAC		15
+-#define R8A7791_CLK_FDP1_1		18
+-#define R8A7791_CLK_FDP1_0		19
+-#define R8A7791_CLK_TMU3		21
+-#define R8A7791_CLK_TMU2		22
+-#define R8A7791_CLK_CMT0		24
+-#define R8A7791_CLK_TMU0		25
+-#define R8A7791_CLK_VSP1_DU1		27
+-#define R8A7791_CLK_VSP1_DU0		28
+-#define R8A7791_CLK_VSP1_S		31
+-
+-/* MSTP2 */
+-#define R8A7791_CLK_SCIFA2		2
+-#define R8A7791_CLK_SCIFA1		3
+-#define R8A7791_CLK_SCIFA0		4
+-#define R8A7791_CLK_MSIOF2		5
+-#define R8A7791_CLK_SCIFB0		6
+-#define R8A7791_CLK_SCIFB1		7
+-#define R8A7791_CLK_MSIOF1		8
+-#define R8A7791_CLK_SCIFB2		16
+-#define R8A7791_CLK_SYS_DMAC1		18
+-#define R8A7791_CLK_SYS_DMAC0		19
+-
+-/* MSTP3 */
+-#define R8A7791_CLK_TPU0		4
+-#define R8A7791_CLK_SDHI2		11
+-#define R8A7791_CLK_SDHI1		12
+-#define R8A7791_CLK_SDHI0		14
+-#define R8A7791_CLK_MMCIF0		15
+-#define R8A7791_CLK_IIC0		18
+-#define R8A7791_CLK_PCIEC		19
+-#define R8A7791_CLK_IIC1		23
+-#define R8A7791_CLK_SSUSB		28
+-#define R8A7791_CLK_CMT1		29
+-#define R8A7791_CLK_USBDMAC0		30
+-#define R8A7791_CLK_USBDMAC1		31
+-
+-/* MSTP4 */
+-#define R8A7791_CLK_IRQC		7
+-#define R8A7791_CLK_INTC_SYS		8
+-
+-/* MSTP5 */
+-#define R8A7791_CLK_AUDIO_DMAC1		1
+-#define R8A7791_CLK_AUDIO_DMAC0		2
+-#define R8A7791_CLK_ADSP_MOD		6
+-#define R8A7791_CLK_THERMAL		22
+-#define R8A7791_CLK_PWM			23
+-
+-/* MSTP7 */
+-#define R8A7791_CLK_EHCI		3
+-#define R8A7791_CLK_HSUSB		4
+-#define R8A7791_CLK_HSCIF2		13
+-#define R8A7791_CLK_SCIF5		14
+-#define R8A7791_CLK_SCIF4		15
+-#define R8A7791_CLK_HSCIF1		16
+-#define R8A7791_CLK_HSCIF0		17
+-#define R8A7791_CLK_SCIF3		18
+-#define R8A7791_CLK_SCIF2		19
+-#define R8A7791_CLK_SCIF1		20
+-#define R8A7791_CLK_SCIF0		21
+-#define R8A7791_CLK_DU1			23
+-#define R8A7791_CLK_DU0			24
+-#define R8A7791_CLK_LVDS0		26
+-
+-/* MSTP8 */
+-#define R8A7791_CLK_IPMMU_SGX		0
+-#define R8A7791_CLK_MLB			2
+-#define R8A7791_CLK_VIN2		9
+-#define R8A7791_CLK_VIN1		10
+-#define R8A7791_CLK_VIN0		11
+-#define R8A7791_CLK_ETHERAVB		12
+-#define R8A7791_CLK_ETHER		13
+-#define R8A7791_CLK_SATA1		14
+-#define R8A7791_CLK_SATA0		15
+-
+-/* MSTP9 */
+-#define R8A7791_CLK_GYROADC		1
+-#define R8A7791_CLK_GPIO7		4
+-#define R8A7791_CLK_GPIO6		5
+-#define R8A7791_CLK_GPIO5		7
+-#define R8A7791_CLK_GPIO4		8
+-#define R8A7791_CLK_GPIO3		9
+-#define R8A7791_CLK_GPIO2		10
+-#define R8A7791_CLK_GPIO1		11
+-#define R8A7791_CLK_GPIO0		12
+-#define R8A7791_CLK_RCAN1		15
+-#define R8A7791_CLK_RCAN0		16
+-#define R8A7791_CLK_QSPI_MOD		17
+-#define R8A7791_CLK_I2C5		25
+-#define R8A7791_CLK_IICDVFS		26
+-#define R8A7791_CLK_I2C4		27
+-#define R8A7791_CLK_I2C3		28
+-#define R8A7791_CLK_I2C2		29
+-#define R8A7791_CLK_I2C1		30
+-#define R8A7791_CLK_I2C0		31
+-
+-/* MSTP10 */
+-#define R8A7791_CLK_SSI_ALL		5
+-#define R8A7791_CLK_SSI9		6
+-#define R8A7791_CLK_SSI8		7
+-#define R8A7791_CLK_SSI7		8
+-#define R8A7791_CLK_SSI6		9
+-#define R8A7791_CLK_SSI5		10
+-#define R8A7791_CLK_SSI4		11
+-#define R8A7791_CLK_SSI3		12
+-#define R8A7791_CLK_SSI2		13
+-#define R8A7791_CLK_SSI1		14
+-#define R8A7791_CLK_SSI0		15
+-#define R8A7791_CLK_SCU_ALL		17
+-#define R8A7791_CLK_SCU_DVC1		18
+-#define R8A7791_CLK_SCU_DVC0		19
+-#define R8A7791_CLK_SCU_CTU1_MIX1	20
+-#define R8A7791_CLK_SCU_CTU0_MIX0	21
+-#define R8A7791_CLK_SCU_SRC9		22
+-#define R8A7791_CLK_SCU_SRC8		23
+-#define R8A7791_CLK_SCU_SRC7		24
+-#define R8A7791_CLK_SCU_SRC6		25
+-#define R8A7791_CLK_SCU_SRC5		26
+-#define R8A7791_CLK_SCU_SRC4		27
+-#define R8A7791_CLK_SCU_SRC3		28
+-#define R8A7791_CLK_SCU_SRC2		29
+-#define R8A7791_CLK_SCU_SRC1		30
+-#define R8A7791_CLK_SCU_SRC0		31
+-
+-/* MSTP11 */
+-#define R8A7791_CLK_SCIFA3		6
+-#define R8A7791_CLK_SCIFA4		7
+-#define R8A7791_CLK_SCIFA5		8
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7791_H__ */
+diff --git a/include/dt-bindings/clock/r8a7791-cpg-mssr.h b/include/dt-bindings/clock/r8a7791-cpg-mssr.h
 deleted file mode 100644
-index d342c0b6b2a7..000000000000
---- a/include/dt-bindings/reset/axg-aoclkc.h
+index aadd06c566c0..000000000000
+--- a/include/dt-bindings/clock/r8a7791-cpg-mssr.h
 +++ /dev/null
-@@ -1,20 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
--/*
-- * Copyright (c) 2016 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
+@@ -1,44 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
 - *
-- * Copyright (c) 2018 Amlogic, inc.
-- * Author: Qiufang Dai <qiufang.dai@amlogic.com>
+- * Copyright (C) 2015 Renesas Electronics Corp.
 - */
 -
--#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
--#define DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
+-#ifndef __DT_BINDINGS_CLOCK_R8A7791_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A7791_CPG_MSSR_H__
 -
--#define RESET_AO_REMOTE		0
--#define RESET_AO_I2C_MASTER	1
--#define RESET_AO_I2C_SLAVE	2
--#define RESET_AO_UART1		3
--#define RESET_AO_UART2		4
--#define RESET_AO_IR_BLASTER	5
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
 -
--#endif
-diff --git a/include/dt-bindings/reset/g12a-aoclkc.h b/include/dt-bindings/reset/g12a-aoclkc.h
+-/* r8a7791 CPG Core Clocks */
+-#define R8A7791_CLK_Z			0
+-#define R8A7791_CLK_ZG			1
+-#define R8A7791_CLK_ZTR			2
+-#define R8A7791_CLK_ZTRD2		3
+-#define R8A7791_CLK_ZT			4
+-#define R8A7791_CLK_ZX			5
+-#define R8A7791_CLK_ZS			6
+-#define R8A7791_CLK_HP			7
+-#define R8A7791_CLK_I			8
+-#define R8A7791_CLK_B			9
+-#define R8A7791_CLK_LB			10
+-#define R8A7791_CLK_P			11
+-#define R8A7791_CLK_CL			12
+-#define R8A7791_CLK_M2			13
+-#define R8A7791_CLK_ADSP		14
+-#define R8A7791_CLK_ZB3			15
+-#define R8A7791_CLK_ZB3D2		16
+-#define R8A7791_CLK_DDR			17
+-#define R8A7791_CLK_SDH			18
+-#define R8A7791_CLK_SD0			19
+-#define R8A7791_CLK_SD2			20
+-#define R8A7791_CLK_SD3			21
+-#define R8A7791_CLK_MMC0		22
+-#define R8A7791_CLK_MP			23
+-#define R8A7791_CLK_SSP			24
+-#define R8A7791_CLK_SSPRS		25
+-#define R8A7791_CLK_QSPI		26
+-#define R8A7791_CLK_CP			27
+-#define R8A7791_CLK_RCAN		28
+-#define R8A7791_CLK_R			29
+-#define R8A7791_CLK_OSC			30
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7791_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a7792-clock.h b/include/dt-bindings/clock/r8a7792-clock.h
 deleted file mode 100644
-index bd2e2337135c..000000000000
---- a/include/dt-bindings/reset/g12a-aoclkc.h
+index 2948d9ce3a14..000000000000
+--- a/include/dt-bindings/clock/r8a7792-clock.h
 +++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
+@@ -1,98 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
 -/*
-- * Copyright (c) 2016 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
+- * Copyright (C) 2016 Cogent Embedded, Inc.
 - */
 -
--#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
--#define DT_BINDINGS_RESET_AMLOGIC_MESON_G12A_AOCLK
+-#ifndef __DT_BINDINGS_CLOCK_R8A7792_H__
+-#define __DT_BINDINGS_CLOCK_R8A7792_H__
 -
--#define RESET_AO_IR_IN		0
--#define RESET_AO_UART		1
--#define RESET_AO_I2C_M		2
--#define RESET_AO_I2C_S		3
--#define RESET_AO_SAR_ADC	4
--#define RESET_AO_UART2		5
--#define RESET_AO_IR_OUT		6
+-/* CPG */
+-#define R8A7792_CLK_MAIN		0
+-#define R8A7792_CLK_PLL0		1
+-#define R8A7792_CLK_PLL1		2
+-#define R8A7792_CLK_PLL3		3
+-#define R8A7792_CLK_LB			4
+-#define R8A7792_CLK_QSPI		5
 -
--#endif
-diff --git a/include/dt-bindings/reset/gxbb-aoclkc.h b/include/dt-bindings/reset/gxbb-aoclkc.h
+-/* MSTP0 */
+-#define R8A7792_CLK_MSIOF0		0
+-
+-/* MSTP1 */
+-#define R8A7792_CLK_JPU			6
+-#define R8A7792_CLK_TMU1		11
+-#define R8A7792_CLK_TMU3		21
+-#define R8A7792_CLK_TMU2		22
+-#define R8A7792_CLK_CMT0		24
+-#define R8A7792_CLK_TMU0		25
+-#define R8A7792_CLK_VSP1DU1		27
+-#define R8A7792_CLK_VSP1DU0		28
+-#define R8A7792_CLK_VSP1_SY		31
+-
+-/* MSTP2 */
+-#define R8A7792_CLK_MSIOF1		8
+-#define R8A7792_CLK_SYS_DMAC1		18
+-#define R8A7792_CLK_SYS_DMAC0		19
+-
+-/* MSTP3 */
+-#define R8A7792_CLK_TPU0		4
+-#define R8A7792_CLK_SDHI0		14
+-#define R8A7792_CLK_CMT1		29
+-
+-/* MSTP4 */
+-#define R8A7792_CLK_IRQC		7
+-#define R8A7792_CLK_INTC_SYS		8
+-
+-/* MSTP5 */
+-#define R8A7792_CLK_AUDIO_DMAC0		2
+-#define R8A7792_CLK_THERMAL		22
+-#define R8A7792_CLK_PWM			23
+-
+-/* MSTP7 */
+-#define R8A7792_CLK_HSCIF1		16
+-#define R8A7792_CLK_HSCIF0		17
+-#define R8A7792_CLK_SCIF3		18
+-#define R8A7792_CLK_SCIF2		19
+-#define R8A7792_CLK_SCIF1		20
+-#define R8A7792_CLK_SCIF0		21
+-#define R8A7792_CLK_DU1			23
+-#define R8A7792_CLK_DU0			24
+-
+-/* MSTP8 */
+-#define R8A7792_CLK_VIN5		4
+-#define R8A7792_CLK_VIN4		5
+-#define R8A7792_CLK_VIN3		8
+-#define R8A7792_CLK_VIN2		9
+-#define R8A7792_CLK_VIN1		10
+-#define R8A7792_CLK_VIN0		11
+-#define R8A7792_CLK_ETHERAVB		12
+-
+-/* MSTP9 */
+-#define R8A7792_CLK_GPIO7		4
+-#define R8A7792_CLK_GPIO6		5
+-#define R8A7792_CLK_GPIO5		7
+-#define R8A7792_CLK_GPIO4		8
+-#define R8A7792_CLK_GPIO3		9
+-#define R8A7792_CLK_GPIO2		10
+-#define R8A7792_CLK_GPIO1		11
+-#define R8A7792_CLK_GPIO0		12
+-#define R8A7792_CLK_GPIO11		13
+-#define R8A7792_CLK_GPIO10		14
+-#define R8A7792_CLK_CAN1		15
+-#define R8A7792_CLK_CAN0		16
+-#define R8A7792_CLK_QSPI_MOD		17
+-#define R8A7792_CLK_GPIO9		19
+-#define R8A7792_CLK_GPIO8		21
+-#define R8A7792_CLK_I2C5		25
+-#define R8A7792_CLK_IICDVFS		26
+-#define R8A7792_CLK_I2C4		27
+-#define R8A7792_CLK_I2C3		28
+-#define R8A7792_CLK_I2C2		29
+-#define R8A7792_CLK_I2C1		30
+-#define R8A7792_CLK_I2C0		31
+-
+-/* MSTP10 */
+-#define R8A7792_CLK_SSI_ALL		5
+-#define R8A7792_CLK_SSI4		11
+-#define R8A7792_CLK_SSI3		12
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7792_H__ */
+diff --git a/include/dt-bindings/clock/r8a7792-cpg-mssr.h b/include/dt-bindings/clock/r8a7792-cpg-mssr.h
 deleted file mode 100644
-index 9e3fd60c309c..000000000000
---- a/include/dt-bindings/reset/gxbb-aoclkc.h
+index 829c44db0271..000000000000
+--- a/include/dt-bindings/clock/r8a7792-cpg-mssr.h
++++ /dev/null
+@@ -1,39 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
+- *
+- * Copyright (C) 2015 Renesas Electronics Corp.
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_R8A7792_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A7792_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a7792 CPG Core Clocks */
+-#define R8A7792_CLK_Z			0
+-#define R8A7792_CLK_ZG			1
+-#define R8A7792_CLK_ZTR			2
+-#define R8A7792_CLK_ZTRD2		3
+-#define R8A7792_CLK_ZT			4
+-#define R8A7792_CLK_ZX			5
+-#define R8A7792_CLK_ZS			6
+-#define R8A7792_CLK_HP			7
+-#define R8A7792_CLK_I			8
+-#define R8A7792_CLK_B			9
+-#define R8A7792_CLK_LB			10
+-#define R8A7792_CLK_P			11
+-#define R8A7792_CLK_CL			12
+-#define R8A7792_CLK_M2			13
+-#define R8A7792_CLK_IMP			14
+-#define R8A7792_CLK_ZB3			15
+-#define R8A7792_CLK_ZB3D2		16
+-#define R8A7792_CLK_DDR			17
+-#define R8A7792_CLK_SD			18
+-#define R8A7792_CLK_MP			19
+-#define R8A7792_CLK_QSPI		20
+-#define R8A7792_CLK_CP			21
+-#define R8A7792_CLK_CPEX		22
+-#define R8A7792_CLK_RCAN		23
+-#define R8A7792_CLK_R			24
+-#define R8A7792_CLK_OSC			25
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7792_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a7793-clock.h b/include/dt-bindings/clock/r8a7793-clock.h
+deleted file mode 100644
+index 49c66d8ed178..000000000000
+--- a/include/dt-bindings/clock/r8a7793-clock.h
++++ /dev/null
+@@ -1,159 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- *
+- * r8a7793 clock definition
+- *
+- * Copyright (C) 2014  Renesas Electronics Corporation
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_R8A7793_H__
+-#define __DT_BINDINGS_CLOCK_R8A7793_H__
+-
+-/* CPG */
+-#define R8A7793_CLK_MAIN		0
+-#define R8A7793_CLK_PLL0		1
+-#define R8A7793_CLK_PLL1		2
+-#define R8A7793_CLK_PLL3		3
+-#define R8A7793_CLK_LB			4
+-#define R8A7793_CLK_QSPI		5
+-#define R8A7793_CLK_SDH			6
+-#define R8A7793_CLK_SD0			7
+-#define R8A7793_CLK_Z			8
+-#define R8A7793_CLK_RCAN		9
+-#define R8A7793_CLK_ADSP		10
+-
+-/* MSTP0 */
+-#define R8A7793_CLK_MSIOF0		0
+-
+-/* MSTP1 */
+-#define R8A7793_CLK_VCP0		1
+-#define R8A7793_CLK_VPC0		3
+-#define R8A7793_CLK_SSP1		9
+-#define R8A7793_CLK_TMU1		11
+-#define R8A7793_CLK_3DG			12
+-#define R8A7793_CLK_2DDMAC		15
+-#define R8A7793_CLK_FDP1_1		18
+-#define R8A7793_CLK_FDP1_0		19
+-#define R8A7793_CLK_TMU3		21
+-#define R8A7793_CLK_TMU2		22
+-#define R8A7793_CLK_CMT0		24
+-#define R8A7793_CLK_TMU0		25
+-#define R8A7793_CLK_VSP1_DU1		27
+-#define R8A7793_CLK_VSP1_DU0		28
+-#define R8A7793_CLK_VSP1_S		31
+-
+-/* MSTP2 */
+-#define R8A7793_CLK_SCIFA2		2
+-#define R8A7793_CLK_SCIFA1		3
+-#define R8A7793_CLK_SCIFA0		4
+-#define R8A7793_CLK_MSIOF2		5
+-#define R8A7793_CLK_SCIFB0		6
+-#define R8A7793_CLK_SCIFB1		7
+-#define R8A7793_CLK_MSIOF1		8
+-#define R8A7793_CLK_SCIFB2		16
+-#define R8A7793_CLK_SYS_DMAC1		18
+-#define R8A7793_CLK_SYS_DMAC0		19
+-
+-/* MSTP3 */
+-#define R8A7793_CLK_TPU0		4
+-#define R8A7793_CLK_SDHI2		11
+-#define R8A7793_CLK_SDHI1		12
+-#define R8A7793_CLK_SDHI0		14
+-#define R8A7793_CLK_MMCIF0		15
+-#define R8A7793_CLK_IIC0		18
+-#define R8A7793_CLK_PCIEC		19
+-#define R8A7793_CLK_IIC1		23
+-#define R8A7793_CLK_SSUSB		28
+-#define R8A7793_CLK_CMT1		29
+-#define R8A7793_CLK_USBDMAC0		30
+-#define R8A7793_CLK_USBDMAC1		31
+-
+-/* MSTP4 */
+-#define R8A7793_CLK_IRQC		7
+-#define R8A7793_CLK_INTC_SYS		8
+-
+-/* MSTP5 */
+-#define R8A7793_CLK_AUDIO_DMAC1		1
+-#define R8A7793_CLK_AUDIO_DMAC0		2
+-#define R8A7793_CLK_ADSP_MOD		6
+-#define R8A7793_CLK_THERMAL		22
+-#define R8A7793_CLK_PWM			23
+-
+-/* MSTP7 */
+-#define R8A7793_CLK_EHCI		3
+-#define R8A7793_CLK_HSUSB		4
+-#define R8A7793_CLK_HSCIF2		13
+-#define R8A7793_CLK_SCIF5		14
+-#define R8A7793_CLK_SCIF4		15
+-#define R8A7793_CLK_HSCIF1		16
+-#define R8A7793_CLK_HSCIF0		17
+-#define R8A7793_CLK_SCIF3		18
+-#define R8A7793_CLK_SCIF2		19
+-#define R8A7793_CLK_SCIF1		20
+-#define R8A7793_CLK_SCIF0		21
+-#define R8A7793_CLK_DU1			23
+-#define R8A7793_CLK_DU0			24
+-#define R8A7793_CLK_LVDS0		26
+-
+-/* MSTP8 */
+-#define R8A7793_CLK_IPMMU_SGX		0
+-#define R8A7793_CLK_VIN2		9
+-#define R8A7793_CLK_VIN1		10
+-#define R8A7793_CLK_VIN0		11
+-#define R8A7793_CLK_ETHER		13
+-#define R8A7793_CLK_SATA1		14
+-#define R8A7793_CLK_SATA0		15
+-
+-/* MSTP9 */
+-#define R8A7793_CLK_GPIO7		4
+-#define R8A7793_CLK_GPIO6		5
+-#define R8A7793_CLK_GPIO5		7
+-#define R8A7793_CLK_GPIO4		8
+-#define R8A7793_CLK_GPIO3		9
+-#define R8A7793_CLK_GPIO2		10
+-#define R8A7793_CLK_GPIO1		11
+-#define R8A7793_CLK_GPIO0		12
+-#define R8A7793_CLK_RCAN1		15
+-#define R8A7793_CLK_RCAN0		16
+-#define R8A7793_CLK_QSPI_MOD		17
+-#define R8A7793_CLK_I2C5		25
+-#define R8A7793_CLK_IICDVFS		26
+-#define R8A7793_CLK_I2C4		27
+-#define R8A7793_CLK_I2C3		28
+-#define R8A7793_CLK_I2C2		29
+-#define R8A7793_CLK_I2C1		30
+-#define R8A7793_CLK_I2C0		31
+-
+-/* MSTP10 */
+-#define R8A7793_CLK_SSI_ALL		5
+-#define R8A7793_CLK_SSI9		6
+-#define R8A7793_CLK_SSI8		7
+-#define R8A7793_CLK_SSI7		8
+-#define R8A7793_CLK_SSI6		9
+-#define R8A7793_CLK_SSI5		10
+-#define R8A7793_CLK_SSI4		11
+-#define R8A7793_CLK_SSI3		12
+-#define R8A7793_CLK_SSI2		13
+-#define R8A7793_CLK_SSI1		14
+-#define R8A7793_CLK_SSI0		15
+-#define R8A7793_CLK_SCU_ALL		17
+-#define R8A7793_CLK_SCU_DVC1		18
+-#define R8A7793_CLK_SCU_DVC0		19
+-#define R8A7793_CLK_SCU_CTU1_MIX1	20
+-#define R8A7793_CLK_SCU_CTU0_MIX0	21
+-#define R8A7793_CLK_SCU_SRC9		22
+-#define R8A7793_CLK_SCU_SRC8		23
+-#define R8A7793_CLK_SCU_SRC7		24
+-#define R8A7793_CLK_SCU_SRC6		25
+-#define R8A7793_CLK_SCU_SRC5		26
+-#define R8A7793_CLK_SCU_SRC4		27
+-#define R8A7793_CLK_SCU_SRC3		28
+-#define R8A7793_CLK_SCU_SRC2		29
+-#define R8A7793_CLK_SCU_SRC1		30
+-#define R8A7793_CLK_SCU_SRC0		31
+-
+-/* MSTP11 */
+-#define R8A7793_CLK_SCIFA3		6
+-#define R8A7793_CLK_SCIFA4		7
+-#define R8A7793_CLK_SCIFA5		8
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7793_H__ */
+diff --git a/include/dt-bindings/clock/r8a7793-cpg-mssr.h b/include/dt-bindings/clock/r8a7793-cpg-mssr.h
+deleted file mode 100644
+index d1ff646c31f2..000000000000
+--- a/include/dt-bindings/clock/r8a7793-cpg-mssr.h
++++ /dev/null
+@@ -1,44 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
+- *
+- * Copyright (C) 2015 Renesas Electronics Corp.
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_R8A7793_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A7793_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a7793 CPG Core Clocks */
+-#define R8A7793_CLK_Z			0
+-#define R8A7793_CLK_ZG			1
+-#define R8A7793_CLK_ZTR			2
+-#define R8A7793_CLK_ZTRD2		3
+-#define R8A7793_CLK_ZT			4
+-#define R8A7793_CLK_ZX			5
+-#define R8A7793_CLK_ZS			6
+-#define R8A7793_CLK_HP			7
+-#define R8A7793_CLK_I			8
+-#define R8A7793_CLK_B			9
+-#define R8A7793_CLK_LB			10
+-#define R8A7793_CLK_P			11
+-#define R8A7793_CLK_CL			12
+-#define R8A7793_CLK_M2			13
+-#define R8A7793_CLK_ADSP		14
+-#define R8A7793_CLK_ZB3			15
+-#define R8A7793_CLK_ZB3D2		16
+-#define R8A7793_CLK_DDR			17
+-#define R8A7793_CLK_SDH			18
+-#define R8A7793_CLK_SD0			19
+-#define R8A7793_CLK_SD2			20
+-#define R8A7793_CLK_SD3			21
+-#define R8A7793_CLK_MMC0		22
+-#define R8A7793_CLK_MP			23
+-#define R8A7793_CLK_SSP			24
+-#define R8A7793_CLK_SSPRS		25
+-#define R8A7793_CLK_QSPI		26
+-#define R8A7793_CLK_CP			27
+-#define R8A7793_CLK_RCAN		28
+-#define R8A7793_CLK_R			29
+-#define R8A7793_CLK_OSC			30
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7793_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a7794-clock.h b/include/dt-bindings/clock/r8a7794-clock.h
+deleted file mode 100644
+index 649f005782d0..000000000000
+--- a/include/dt-bindings/clock/r8a7794-clock.h
++++ /dev/null
+@@ -1,137 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
+- *
+- * Copyright (C) 2014 Renesas Electronics Corporation
+- * Copyright 2013 Ideas On Board SPRL
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_R8A7794_H__
+-#define __DT_BINDINGS_CLOCK_R8A7794_H__
+-
+-/* CPG */
+-#define R8A7794_CLK_MAIN		0
+-#define R8A7794_CLK_PLL0		1
+-#define R8A7794_CLK_PLL1		2
+-#define R8A7794_CLK_PLL3		3
+-#define R8A7794_CLK_LB			4
+-#define R8A7794_CLK_QSPI		5
+-#define R8A7794_CLK_SDH			6
+-#define R8A7794_CLK_SD0			7
+-#define R8A7794_CLK_RCAN		8
+-
+-/* MSTP0 */
+-#define R8A7794_CLK_MSIOF0		0
+-
+-/* MSTP1 */
+-#define R8A7794_CLK_VCP0		1
+-#define R8A7794_CLK_VPC0		3
+-#define R8A7794_CLK_TMU1		11
+-#define R8A7794_CLK_3DG			12
+-#define R8A7794_CLK_2DDMAC		15
+-#define R8A7794_CLK_FDP1_0		19
+-#define R8A7794_CLK_TMU3		21
+-#define R8A7794_CLK_TMU2		22
+-#define R8A7794_CLK_CMT0		24
+-#define R8A7794_CLK_TMU0		25
+-#define R8A7794_CLK_VSP1_DU0		28
+-#define R8A7794_CLK_VSP1_S		31
+-
+-/* MSTP2 */
+-#define R8A7794_CLK_SCIFA2		2
+-#define R8A7794_CLK_SCIFA1		3
+-#define R8A7794_CLK_SCIFA0		4
+-#define R8A7794_CLK_MSIOF2		5
+-#define R8A7794_CLK_SCIFB0		6
+-#define R8A7794_CLK_SCIFB1		7
+-#define R8A7794_CLK_MSIOF1		8
+-#define R8A7794_CLK_SCIFB2		16
+-#define R8A7794_CLK_SYS_DMAC1		18
+-#define R8A7794_CLK_SYS_DMAC0		19
+-
+-/* MSTP3 */
+-#define R8A7794_CLK_SDHI2		11
+-#define R8A7794_CLK_SDHI1		12
+-#define R8A7794_CLK_SDHI0		14
+-#define R8A7794_CLK_MMCIF0		15
+-#define R8A7794_CLK_IIC0		18
+-#define R8A7794_CLK_IIC1		23
+-#define R8A7794_CLK_CMT1		29
+-#define R8A7794_CLK_USBDMAC0		30
+-#define R8A7794_CLK_USBDMAC1		31
+-
+-/* MSTP4 */
+-#define R8A7794_CLK_IRQC		7
+-#define R8A7794_CLK_INTC_SYS		8
+-
+-/* MSTP5 */
+-#define R8A7794_CLK_AUDIO_DMAC0		2
+-#define R8A7794_CLK_PWM			23
+-
+-/* MSTP7 */
+-#define R8A7794_CLK_EHCI		3
+-#define R8A7794_CLK_HSUSB		4
+-#define R8A7794_CLK_HSCIF2		13
+-#define R8A7794_CLK_SCIF5		14
+-#define R8A7794_CLK_SCIF4		15
+-#define R8A7794_CLK_HSCIF1		16
+-#define R8A7794_CLK_HSCIF0		17
+-#define R8A7794_CLK_SCIF3		18
+-#define R8A7794_CLK_SCIF2		19
+-#define R8A7794_CLK_SCIF1		20
+-#define R8A7794_CLK_SCIF0		21
+-#define R8A7794_CLK_DU1			23
+-#define R8A7794_CLK_DU0			24
+-
+-/* MSTP8 */
+-#define R8A7794_CLK_VIN1		10
+-#define R8A7794_CLK_VIN0		11
+-#define R8A7794_CLK_ETHERAVB		12
+-#define R8A7794_CLK_ETHER		13
+-
+-/* MSTP9 */
+-#define R8A7794_CLK_GPIO6		5
+-#define R8A7794_CLK_GPIO5		7
+-#define R8A7794_CLK_GPIO4		8
+-#define R8A7794_CLK_GPIO3		9
+-#define R8A7794_CLK_GPIO2		10
+-#define R8A7794_CLK_GPIO1		11
+-#define R8A7794_CLK_GPIO0		12
+-#define R8A7794_CLK_RCAN1		15
+-#define R8A7794_CLK_RCAN0		16
+-#define R8A7794_CLK_QSPI_MOD		17
+-#define R8A7794_CLK_I2C5		25
+-#define R8A7794_CLK_I2C4		27
+-#define R8A7794_CLK_I2C3		28
+-#define R8A7794_CLK_I2C2		29
+-#define R8A7794_CLK_I2C1		30
+-#define R8A7794_CLK_I2C0		31
+-
+-/* MSTP10 */
+-#define R8A7794_CLK_SSI_ALL		5
+-#define R8A7794_CLK_SSI9		6
+-#define R8A7794_CLK_SSI8		7
+-#define R8A7794_CLK_SSI7		8
+-#define R8A7794_CLK_SSI6		9
+-#define R8A7794_CLK_SSI5		10
+-#define R8A7794_CLK_SSI4		11
+-#define R8A7794_CLK_SSI3		12
+-#define R8A7794_CLK_SSI2		13
+-#define R8A7794_CLK_SSI1		14
+-#define R8A7794_CLK_SSI0		15
+-#define R8A7794_CLK_SCU_ALL		17
+-#define R8A7794_CLK_SCU_DVC1		18
+-#define R8A7794_CLK_SCU_DVC0		19
+-#define R8A7794_CLK_SCU_CTU1_MIX1	20
+-#define R8A7794_CLK_SCU_CTU0_MIX0	21
+-#define R8A7794_CLK_SCU_SRC6		25
+-#define R8A7794_CLK_SCU_SRC5		26
+-#define R8A7794_CLK_SCU_SRC4		27
+-#define R8A7794_CLK_SCU_SRC3		28
+-#define R8A7794_CLK_SCU_SRC2		29
+-#define R8A7794_CLK_SCU_SRC1		30
+-
+-/* MSTP11 */
+-#define R8A7794_CLK_SCIFA3		6
+-#define R8A7794_CLK_SCIFA4		7
+-#define R8A7794_CLK_SCIFA5		8
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7794_H__ */
+diff --git a/include/dt-bindings/clock/r8a7794-cpg-mssr.h b/include/dt-bindings/clock/r8a7794-cpg-mssr.h
+deleted file mode 100644
+index 6314e23b51af..000000000000
+--- a/include/dt-bindings/clock/r8a7794-cpg-mssr.h
++++ /dev/null
+@@ -1,43 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
+- *
+- * Copyright (C) 2015 Renesas Electronics Corp.
+- */
+-
+-#ifndef __DT_BINDINGS_CLOCK_R8A7794_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A7794_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a7794 CPG Core Clocks */
+-#define R8A7794_CLK_Z2			0
+-#define R8A7794_CLK_ZG			1
+-#define R8A7794_CLK_ZTR			2
+-#define R8A7794_CLK_ZTRD2		3
+-#define R8A7794_CLK_ZT			4
+-#define R8A7794_CLK_ZX			5
+-#define R8A7794_CLK_ZS			6
+-#define R8A7794_CLK_HP			7
+-#define R8A7794_CLK_I			8
+-#define R8A7794_CLK_B			9
+-#define R8A7794_CLK_LB			10
+-#define R8A7794_CLK_P			11
+-#define R8A7794_CLK_CL			12
+-#define R8A7794_CLK_CP			13
+-#define R8A7794_CLK_M2			14
+-#define R8A7794_CLK_ADSP		15
+-#define R8A7794_CLK_ZB3			16
+-#define R8A7794_CLK_ZB3D2		17
+-#define R8A7794_CLK_DDR			18
+-#define R8A7794_CLK_SDH			19
+-#define R8A7794_CLK_SD0			20
+-#define R8A7794_CLK_SD2			21
+-#define R8A7794_CLK_SD3			22
+-#define R8A7794_CLK_MMC0		23
+-#define R8A7794_CLK_MP			24
+-#define R8A7794_CLK_QSPI		25
+-#define R8A7794_CLK_CPEX		26
+-#define R8A7794_CLK_RCAN		27
+-#define R8A7794_CLK_R			28
+-#define R8A7794_CLK_OSC			29
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7794_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a7795-cpg-mssr.h b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+deleted file mode 100644
+index 92b3e2a95179..000000000000
+--- a/include/dt-bindings/clock/r8a7795-cpg-mssr.h
 +++ /dev/null
 @@ -1,66 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
+- *
+- * Copyright (C) 2015 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a7795 CPG Core Clocks */
+-#define R8A7795_CLK_Z			0
+-#define R8A7795_CLK_Z2			1
+-#define R8A7795_CLK_ZR			2
+-#define R8A7795_CLK_ZG			3
+-#define R8A7795_CLK_ZTR			4
+-#define R8A7795_CLK_ZTRD2		5
+-#define R8A7795_CLK_ZT			6
+-#define R8A7795_CLK_ZX			7
+-#define R8A7795_CLK_S0D1		8
+-#define R8A7795_CLK_S0D4		9
+-#define R8A7795_CLK_S1D1		10
+-#define R8A7795_CLK_S1D2		11
+-#define R8A7795_CLK_S1D4		12
+-#define R8A7795_CLK_S2D1		13
+-#define R8A7795_CLK_S2D2		14
+-#define R8A7795_CLK_S2D4		15
+-#define R8A7795_CLK_S3D1		16
+-#define R8A7795_CLK_S3D2		17
+-#define R8A7795_CLK_S3D4		18
+-#define R8A7795_CLK_LB			19
+-#define R8A7795_CLK_CL			20
+-#define R8A7795_CLK_ZB3			21
+-#define R8A7795_CLK_ZB3D2		22
+-#define R8A7795_CLK_CR			23
+-#define R8A7795_CLK_CRD2		24
+-#define R8A7795_CLK_SD0H		25
+-#define R8A7795_CLK_SD0			26
+-#define R8A7795_CLK_SD1H		27
+-#define R8A7795_CLK_SD1			28
+-#define R8A7795_CLK_SD2H		29
+-#define R8A7795_CLK_SD2			30
+-#define R8A7795_CLK_SD3H		31
+-#define R8A7795_CLK_SD3			32
+-#define R8A7795_CLK_SSP2		33
+-#define R8A7795_CLK_SSP1		34
+-#define R8A7795_CLK_SSPRS		35
+-#define R8A7795_CLK_RPC			36
+-#define R8A7795_CLK_RPCD2		37
+-#define R8A7795_CLK_MSO			38
+-#define R8A7795_CLK_CANFD		39
+-#define R8A7795_CLK_HDMI		40
+-#define R8A7795_CLK_CSI0		41
+-/* CLK_CSIREF was removed */
+-#define R8A7795_CLK_CP			43
+-#define R8A7795_CLK_CPEX		44
+-#define R8A7795_CLK_R			45
+-#define R8A7795_CLK_OSC			46
+-
+-/* r8a7795 ES2.0 CPG Core Clocks */
+-#define R8A7795_CLK_S0D2		47
+-#define R8A7795_CLK_S0D3		48
+-#define R8A7795_CLK_S0D6		49
+-#define R8A7795_CLK_S0D8		50
+-#define R8A7795_CLK_S0D12		51
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a7796-cpg-mssr.h b/include/dt-bindings/clock/r8a7796-cpg-mssr.h
+deleted file mode 100644
+index c0957cf45840..000000000000
+--- a/include/dt-bindings/clock/r8a7796-cpg-mssr.h
++++ /dev/null
+@@ -1,65 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
+- *
+- * Copyright (C) 2016 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a7796 CPG Core Clocks */
+-#define R8A7796_CLK_Z			0
+-#define R8A7796_CLK_Z2			1
+-#define R8A7796_CLK_ZR			2
+-#define R8A7796_CLK_ZG			3
+-#define R8A7796_CLK_ZTR			4
+-#define R8A7796_CLK_ZTRD2		5
+-#define R8A7796_CLK_ZT			6
+-#define R8A7796_CLK_ZX			7
+-#define R8A7796_CLK_S0D1		8
+-#define R8A7796_CLK_S0D2		9
+-#define R8A7796_CLK_S0D3		10
+-#define R8A7796_CLK_S0D4		11
+-#define R8A7796_CLK_S0D6		12
+-#define R8A7796_CLK_S0D8		13
+-#define R8A7796_CLK_S0D12		14
+-#define R8A7796_CLK_S1D1		15
+-#define R8A7796_CLK_S1D2		16
+-#define R8A7796_CLK_S1D4		17
+-#define R8A7796_CLK_S2D1		18
+-#define R8A7796_CLK_S2D2		19
+-#define R8A7796_CLK_S2D4		20
+-#define R8A7796_CLK_S3D1		21
+-#define R8A7796_CLK_S3D2		22
+-#define R8A7796_CLK_S3D4		23
+-#define R8A7796_CLK_LB			24
+-#define R8A7796_CLK_CL			25
+-#define R8A7796_CLK_ZB3			26
+-#define R8A7796_CLK_ZB3D2		27
+-#define R8A7796_CLK_ZB3D4		28
+-#define R8A7796_CLK_CR			29
+-#define R8A7796_CLK_CRD2		30
+-#define R8A7796_CLK_SD0H		31
+-#define R8A7796_CLK_SD0			32
+-#define R8A7796_CLK_SD1H		33
+-#define R8A7796_CLK_SD1			34
+-#define R8A7796_CLK_SD2H		35
+-#define R8A7796_CLK_SD2			36
+-#define R8A7796_CLK_SD3H		37
+-#define R8A7796_CLK_SD3			38
+-#define R8A7796_CLK_SSP2		39
+-#define R8A7796_CLK_SSP1		40
+-#define R8A7796_CLK_SSPRS		41
+-#define R8A7796_CLK_RPC			42
+-#define R8A7796_CLK_RPCD2		43
+-#define R8A7796_CLK_MSO			44
+-#define R8A7796_CLK_CANFD		45
+-#define R8A7796_CLK_HDMI		46
+-#define R8A7796_CLK_CSI0		47
+-/* CLK_CSIREF was removed */
+-#define R8A7796_CLK_CP			49
+-#define R8A7796_CLK_CPEX		50
+-#define R8A7796_CLK_R			51
+-#define R8A7796_CLK_OSC			52
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a77961-cpg-mssr.h b/include/dt-bindings/clock/r8a77961-cpg-mssr.h
+deleted file mode 100644
+index 7921d785546d..000000000000
+--- a/include/dt-bindings/clock/r8a77961-cpg-mssr.h
++++ /dev/null
+@@ -1,65 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
+- *
+- * Copyright (C) 2019 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A77961_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A77961_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a77961 CPG Core Clocks */
+-#define R8A77961_CLK_Z			0
+-#define R8A77961_CLK_Z2			1
+-#define R8A77961_CLK_ZR			2
+-#define R8A77961_CLK_ZG			3
+-#define R8A77961_CLK_ZTR			4
+-#define R8A77961_CLK_ZTRD2		5
+-#define R8A77961_CLK_ZT			6
+-#define R8A77961_CLK_ZX			7
+-#define R8A77961_CLK_S0D1		8
+-#define R8A77961_CLK_S0D2		9
+-#define R8A77961_CLK_S0D3		10
+-#define R8A77961_CLK_S0D4		11
+-#define R8A77961_CLK_S0D6		12
+-#define R8A77961_CLK_S0D8		13
+-#define R8A77961_CLK_S0D12		14
+-#define R8A77961_CLK_S1D1		15
+-#define R8A77961_CLK_S1D2		16
+-#define R8A77961_CLK_S1D4		17
+-#define R8A77961_CLK_S2D1		18
+-#define R8A77961_CLK_S2D2		19
+-#define R8A77961_CLK_S2D4		20
+-#define R8A77961_CLK_S3D1		21
+-#define R8A77961_CLK_S3D2		22
+-#define R8A77961_CLK_S3D4		23
+-#define R8A77961_CLK_LB			24
+-#define R8A77961_CLK_CL			25
+-#define R8A77961_CLK_ZB3			26
+-#define R8A77961_CLK_ZB3D2		27
+-#define R8A77961_CLK_ZB3D4		28
+-#define R8A77961_CLK_CR			29
+-#define R8A77961_CLK_CRD2		30
+-#define R8A77961_CLK_SD0H		31
+-#define R8A77961_CLK_SD0			32
+-#define R8A77961_CLK_SD1H		33
+-#define R8A77961_CLK_SD1			34
+-#define R8A77961_CLK_SD2H		35
+-#define R8A77961_CLK_SD2			36
+-#define R8A77961_CLK_SD3H		37
+-#define R8A77961_CLK_SD3			38
+-#define R8A77961_CLK_SSP2		39
+-#define R8A77961_CLK_SSP1		40
+-#define R8A77961_CLK_SSPRS		41
+-#define R8A77961_CLK_RPC			42
+-#define R8A77961_CLK_RPCD2		43
+-#define R8A77961_CLK_MSO			44
+-#define R8A77961_CLK_CANFD		45
+-#define R8A77961_CLK_HDMI		46
+-#define R8A77961_CLK_CSI0		47
+-/* CLK_CSIREF was removed */
+-#define R8A77961_CLK_CP			49
+-#define R8A77961_CLK_CPEX		50
+-#define R8A77961_CLK_R			51
+-#define R8A77961_CLK_OSC			52
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A77961_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a77965-cpg-mssr.h b/include/dt-bindings/clock/r8a77965-cpg-mssr.h
+deleted file mode 100644
+index 6d3b5a9a6084..000000000000
+--- a/include/dt-bindings/clock/r8a77965-cpg-mssr.h
++++ /dev/null
+@@ -1,62 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * This file is provided under a dual BSD/GPLv2 license.  When using or
-- * redistributing this file, you may do so under either license.
+- * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A77965_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A77965_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a77965 CPG Core Clocks */
+-#define R8A77965_CLK_Z			0
+-#define R8A77965_CLK_ZR			1
+-#define R8A77965_CLK_ZG			2
+-#define R8A77965_CLK_ZTR		3
+-#define R8A77965_CLK_ZTRD2		4
+-#define R8A77965_CLK_ZT			5
+-#define R8A77965_CLK_ZX			6
+-#define R8A77965_CLK_S0D1		7
+-#define R8A77965_CLK_S0D2		8
+-#define R8A77965_CLK_S0D3		9
+-#define R8A77965_CLK_S0D4		10
+-#define R8A77965_CLK_S0D6		11
+-#define R8A77965_CLK_S0D8		12
+-#define R8A77965_CLK_S0D12		13
+-#define R8A77965_CLK_S1D1		14
+-#define R8A77965_CLK_S1D2		15
+-#define R8A77965_CLK_S1D4		16
+-#define R8A77965_CLK_S2D1		17
+-#define R8A77965_CLK_S2D2		18
+-#define R8A77965_CLK_S2D4		19
+-#define R8A77965_CLK_S3D1		20
+-#define R8A77965_CLK_S3D2		21
+-#define R8A77965_CLK_S3D4		22
+-#define R8A77965_CLK_LB			23
+-#define R8A77965_CLK_CL			24
+-#define R8A77965_CLK_ZB3		25
+-#define R8A77965_CLK_ZB3D2		26
+-#define R8A77965_CLK_CR			27
+-#define R8A77965_CLK_CRD2		28
+-#define R8A77965_CLK_SD0H		29
+-#define R8A77965_CLK_SD0		30
+-#define R8A77965_CLK_SD1H		31
+-#define R8A77965_CLK_SD1		32
+-#define R8A77965_CLK_SD2H		33
+-#define R8A77965_CLK_SD2		34
+-#define R8A77965_CLK_SD3H		35
+-#define R8A77965_CLK_SD3		36
+-#define R8A77965_CLK_SSP2		37
+-#define R8A77965_CLK_SSP1		38
+-#define R8A77965_CLK_SSPRS		39
+-#define R8A77965_CLK_RPC		40
+-#define R8A77965_CLK_RPCD2		41
+-#define R8A77965_CLK_MSO		42
+-#define R8A77965_CLK_CANFD		43
+-#define R8A77965_CLK_HDMI		44
+-#define R8A77965_CLK_CSI0		45
+-#define R8A77965_CLK_CP			46
+-#define R8A77965_CLK_CPEX		47
+-#define R8A77965_CLK_R			48
+-#define R8A77965_CLK_OSC		49
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A77965_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a77970-cpg-mssr.h b/include/dt-bindings/clock/r8a77970-cpg-mssr.h
+deleted file mode 100644
+index 6145ebe66361..000000000000
+--- a/include/dt-bindings/clock/r8a77970-cpg-mssr.h
++++ /dev/null
+@@ -1,44 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
 - *
-- * GPL LICENSE SUMMARY
+- * Copyright (C) 2016 Renesas Electronics Corp.
+- * Copyright (C) 2017 Cogent Embedded, Inc.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A77970_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A77970_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a77970 CPG Core Clocks */
+-#define R8A77970_CLK_Z2			0
+-#define R8A77970_CLK_ZR			1
+-#define R8A77970_CLK_ZTR		2
+-#define R8A77970_CLK_ZTRD2		3
+-#define R8A77970_CLK_ZT			4
+-#define R8A77970_CLK_ZX			5
+-#define R8A77970_CLK_S1D1		6
+-#define R8A77970_CLK_S1D2		7
+-#define R8A77970_CLK_S1D4		8
+-#define R8A77970_CLK_S2D1		9
+-#define R8A77970_CLK_S2D2		10
+-#define R8A77970_CLK_S2D4		11
+-#define R8A77970_CLK_LB			12
+-#define R8A77970_CLK_CL			13
+-#define R8A77970_CLK_ZB3		14
+-#define R8A77970_CLK_ZB3D2		15
+-#define R8A77970_CLK_DDR		16
+-#define R8A77970_CLK_CR			17
+-#define R8A77970_CLK_CRD2		18
+-#define R8A77970_CLK_SD0H		19
+-#define R8A77970_CLK_SD0		20
+-#define R8A77970_CLK_RPC		21
+-#define R8A77970_CLK_RPCD2		22
+-#define R8A77970_CLK_MSO		23
+-#define R8A77970_CLK_CANFD		24
+-#define R8A77970_CLK_CSI0		25
+-#define R8A77970_CLK_FRAY		26
+-#define R8A77970_CLK_CP			27
+-#define R8A77970_CLK_CPEX		28
+-#define R8A77970_CLK_R			29
+-#define R8A77970_CLK_OSC		30
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A77970_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a77980-cpg-mssr.h b/include/dt-bindings/clock/r8a77980-cpg-mssr.h
+deleted file mode 100644
+index a4c0d76c392e..000000000000
+--- a/include/dt-bindings/clock/r8a77980-cpg-mssr.h
++++ /dev/null
+@@ -1,51 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2018 Renesas Electronics Corp.
+- * Copyright (C) 2018 Cogent Embedded, Inc.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A77980_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A77980_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a77980 CPG Core Clocks */
+-#define R8A77980_CLK_Z2			0
+-#define R8A77980_CLK_ZR			1
+-#define R8A77980_CLK_ZTR		2
+-#define R8A77980_CLK_ZTRD2		3
+-#define R8A77980_CLK_ZT			4
+-#define R8A77980_CLK_ZX			5
+-#define R8A77980_CLK_S0D1		6
+-#define R8A77980_CLK_S0D2		7
+-#define R8A77980_CLK_S0D3		8
+-#define R8A77980_CLK_S0D4		9
+-#define R8A77980_CLK_S0D6		10
+-#define R8A77980_CLK_S0D12		11
+-#define R8A77980_CLK_S0D24		12
+-#define R8A77980_CLK_S1D1		13
+-#define R8A77980_CLK_S1D2		14
+-#define R8A77980_CLK_S1D4		15
+-#define R8A77980_CLK_S2D1		16
+-#define R8A77980_CLK_S2D2		17
+-#define R8A77980_CLK_S2D4		18
+-#define R8A77980_CLK_S3D1		19
+-#define R8A77980_CLK_S3D2		20
+-#define R8A77980_CLK_S3D4		21
+-#define R8A77980_CLK_LB			22
+-#define R8A77980_CLK_CL			23
+-#define R8A77980_CLK_ZB3		24
+-#define R8A77980_CLK_ZB3D2		25
+-#define R8A77980_CLK_ZB3D4		26
+-#define R8A77980_CLK_SD0H		27
+-#define R8A77980_CLK_SD0		28
+-#define R8A77980_CLK_RPC		29
+-#define R8A77980_CLK_RPCD2		30
+-#define R8A77980_CLK_MSO		31
+-#define R8A77980_CLK_CANFD		32
+-#define R8A77980_CLK_CSI0		33
+-#define R8A77980_CLK_CP			34
+-#define R8A77980_CLK_CPEX		35
+-#define R8A77980_CLK_R			36
+-#define R8A77980_CLK_OSC		37
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A77980_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a77990-cpg-mssr.h b/include/dt-bindings/clock/r8a77990-cpg-mssr.h
+deleted file mode 100644
+index a596a482f3a9..000000000000
+--- a/include/dt-bindings/clock/r8a77990-cpg-mssr.h
++++ /dev/null
+@@ -1,62 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (C) 2018 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a77990 CPG Core Clocks */
+-#define R8A77990_CLK_Z2			0
+-#define R8A77990_CLK_ZR			1
+-#define R8A77990_CLK_ZG			2
+-#define R8A77990_CLK_ZTR		3
+-#define R8A77990_CLK_ZT			4
+-#define R8A77990_CLK_ZX			5
+-#define R8A77990_CLK_S0D1		6
+-#define R8A77990_CLK_S0D3		7
+-#define R8A77990_CLK_S0D6		8
+-#define R8A77990_CLK_S0D12		9
+-#define R8A77990_CLK_S0D24		10
+-#define R8A77990_CLK_S1D1		11
+-#define R8A77990_CLK_S1D2		12
+-#define R8A77990_CLK_S1D4		13
+-#define R8A77990_CLK_S2D1		14
+-#define R8A77990_CLK_S2D2		15
+-#define R8A77990_CLK_S2D4		16
+-#define R8A77990_CLK_S3D1		17
+-#define R8A77990_CLK_S3D2		18
+-#define R8A77990_CLK_S3D4		19
+-#define R8A77990_CLK_S0D6C		20
+-#define R8A77990_CLK_S3D1C		21
+-#define R8A77990_CLK_S3D2C		22
+-#define R8A77990_CLK_S3D4C		23
+-#define R8A77990_CLK_LB			24
+-#define R8A77990_CLK_CL			25
+-#define R8A77990_CLK_ZB3		26
+-#define R8A77990_CLK_ZB3D2		27
+-#define R8A77990_CLK_CR			28
+-#define R8A77990_CLK_CRD2		29
+-#define R8A77990_CLK_SD0H		30
+-#define R8A77990_CLK_SD0		31
+-#define R8A77990_CLK_SD1H		32
+-#define R8A77990_CLK_SD1		33
+-#define R8A77990_CLK_SD3H		34
+-#define R8A77990_CLK_SD3		35
+-#define R8A77990_CLK_RPC		36
+-#define R8A77990_CLK_RPCD2		37
+-#define R8A77990_CLK_ZA2		38
+-#define R8A77990_CLK_ZA8		39
+-#define R8A77990_CLK_Z2D		40
+-#define R8A77990_CLK_CANFD		41
+-#define R8A77990_CLK_MSO		42
+-#define R8A77990_CLK_R			43
+-#define R8A77990_CLK_OSC		44
+-#define R8A77990_CLK_LV0		45
+-#define R8A77990_CLK_LV1		46
+-#define R8A77990_CLK_CSI0		47
+-#define R8A77990_CLK_CP			48
+-#define R8A77990_CLK_CPEX		49
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A77990_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a77995-cpg-mssr.h b/include/dt-bindings/clock/r8a77995-cpg-mssr.h
+deleted file mode 100644
+index fd701c4e87cf..000000000000
+--- a/include/dt-bindings/clock/r8a77995-cpg-mssr.h
++++ /dev/null
+@@ -1,54 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+
 - *
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
+- * Copyright (C) 2017 Glider bvba
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A77995_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A77995_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a77995 CPG Core Clocks */
+-#define R8A77995_CLK_Z2			0
+-#define R8A77995_CLK_ZG			1
+-#define R8A77995_CLK_ZTR		2
+-#define R8A77995_CLK_ZT			3
+-#define R8A77995_CLK_ZX			4
+-#define R8A77995_CLK_S0D1		5
+-#define R8A77995_CLK_S1D1		6
+-#define R8A77995_CLK_S1D2		7
+-#define R8A77995_CLK_S1D4		8
+-#define R8A77995_CLK_S2D1		9
+-#define R8A77995_CLK_S2D2		10
+-#define R8A77995_CLK_S2D4		11
+-#define R8A77995_CLK_S3D1		12
+-#define R8A77995_CLK_S3D2		13
+-#define R8A77995_CLK_S3D4		14
+-#define R8A77995_CLK_S1D4C		15
+-#define R8A77995_CLK_S3D1C		16
+-#define R8A77995_CLK_S3D2C		17
+-#define R8A77995_CLK_S3D4C		18
+-#define R8A77995_CLK_LB			19
+-#define R8A77995_CLK_CL			20
+-#define R8A77995_CLK_ZB3		21
+-#define R8A77995_CLK_ZB3D2		22
+-#define R8A77995_CLK_CR			23
+-#define R8A77995_CLK_CRD2		24
+-#define R8A77995_CLK_SD0H		25
+-#define R8A77995_CLK_SD0		26
+-/* CLK_SSP2 was removed */
+-/* CLK_SSP1 was removed */
+-#define R8A77995_CLK_RPC		29
+-#define R8A77995_CLK_RPCD2		30
+-#define R8A77995_CLK_ZA2		31
+-#define R8A77995_CLK_ZA8		32
+-#define R8A77995_CLK_Z2D		33
+-#define R8A77995_CLK_CANFD		34
+-#define R8A77995_CLK_MSO		35
+-#define R8A77995_CLK_R			36
+-#define R8A77995_CLK_OSC		37
+-#define R8A77995_CLK_LV0		38
+-#define R8A77995_CLK_LV1		39
+-#define R8A77995_CLK_CP			40
+-#define R8A77995_CLK_CPEX		41
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A77995_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a779a0-cpg-mssr.h b/include/dt-bindings/clock/r8a779a0-cpg-mssr.h
+deleted file mode 100644
+index f1d737ca7ca1..000000000000
+--- a/include/dt-bindings/clock/r8a779a0-cpg-mssr.h
++++ /dev/null
+@@ -1,55 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2020 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A779A0_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A779A0_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a779A0 CPG Core Clocks */
+-#define R8A779A0_CLK_Z0			0
+-#define R8A779A0_CLK_ZX			1
+-#define R8A779A0_CLK_Z1			2
+-#define R8A779A0_CLK_ZR			3
+-#define R8A779A0_CLK_ZS			4
+-#define R8A779A0_CLK_ZT			5
+-#define R8A779A0_CLK_ZTR		6
+-#define R8A779A0_CLK_S1D1		7
+-#define R8A779A0_CLK_S1D2		8
+-#define R8A779A0_CLK_S1D4		9
+-#define R8A779A0_CLK_S1D8		10
+-#define R8A779A0_CLK_S1D12		11
+-#define R8A779A0_CLK_S3D1		12
+-#define R8A779A0_CLK_S3D2		13
+-#define R8A779A0_CLK_S3D4		14
+-#define R8A779A0_CLK_LB			15
+-#define R8A779A0_CLK_CP			16
+-#define R8A779A0_CLK_CL			17
+-#define R8A779A0_CLK_CL16MCK		18
+-#define R8A779A0_CLK_ZB30		19
+-#define R8A779A0_CLK_ZB30D2		20
+-#define R8A779A0_CLK_ZB30D4		21
+-#define R8A779A0_CLK_ZB31		22
+-#define R8A779A0_CLK_ZB31D2		23
+-#define R8A779A0_CLK_ZB31D4		24
+-#define R8A779A0_CLK_SD0H		25
+-#define R8A779A0_CLK_SD0		26
+-#define R8A779A0_CLK_RPC		27
+-#define R8A779A0_CLK_RPCD2		28
+-#define R8A779A0_CLK_MSO		29
+-#define R8A779A0_CLK_CANFD		30
+-#define R8A779A0_CLK_CSI0		31
+-#define R8A779A0_CLK_FRAY		32
+-#define R8A779A0_CLK_DSI		33
+-#define R8A779A0_CLK_VIP		34
+-#define R8A779A0_CLK_ADGH		35
+-#define R8A779A0_CLK_CNNDSP		36
+-#define R8A779A0_CLK_ICU		37
+-#define R8A779A0_CLK_ICUD2		38
+-#define R8A779A0_CLK_VCBUS		39
+-#define R8A779A0_CLK_CBFUSA		40
+-#define R8A779A0_CLK_R			41
+-#define R8A779A0_CLK_OSC		42
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A779A0_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a779f0-cpg-mssr.h b/include/dt-bindings/clock/r8a779f0-cpg-mssr.h
+deleted file mode 100644
+index c34be5624954..000000000000
+--- a/include/dt-bindings/clock/r8a779f0-cpg-mssr.h
++++ /dev/null
+@@ -1,64 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+-/*
+- * Copyright (C) 2021 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A779F0_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A779F0_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a779f0 CPG Core Clocks */
+-
+-#define R8A779F0_CLK_ZX			0
+-#define R8A779F0_CLK_ZS			1
+-#define R8A779F0_CLK_ZT			2
+-#define R8A779F0_CLK_ZTR		3
+-#define R8A779F0_CLK_S0D2		4
+-#define R8A779F0_CLK_S0D3		5
+-#define R8A779F0_CLK_S0D4		6
+-#define R8A779F0_CLK_S0D2_MM		7
+-#define R8A779F0_CLK_S0D3_MM		8
+-#define R8A779F0_CLK_S0D4_MM		9
+-#define R8A779F0_CLK_S0D2_RT		10
+-#define R8A779F0_CLK_S0D3_RT		11
+-#define R8A779F0_CLK_S0D4_RT		12
+-#define R8A779F0_CLK_S0D6_RT		13
+-#define R8A779F0_CLK_S0D3_PER		14
+-#define R8A779F0_CLK_S0D6_PER		15
+-#define R8A779F0_CLK_S0D12_PER		16
+-#define R8A779F0_CLK_S0D24_PER		17
+-#define R8A779F0_CLK_S0D2_HSC		18
+-#define R8A779F0_CLK_S0D3_HSC		19
+-#define R8A779F0_CLK_S0D4_HSC		20
+-#define R8A779F0_CLK_S0D6_HSC		21
+-#define R8A779F0_CLK_S0D12_HSC		22
+-#define R8A779F0_CLK_S0D2_CC		23
+-#define R8A779F0_CLK_CL			24
+-#define R8A779F0_CLK_CL16M		25
+-#define R8A779F0_CLK_CL16M_MM		26
+-#define R8A779F0_CLK_CL16M_RT		27
+-#define R8A779F0_CLK_CL16M_PER		28
+-#define R8A779F0_CLK_CL16M_HSC		29
+-#define R8A779F0_CLK_Z0			30
+-#define R8A779F0_CLK_Z1			31
+-#define R8A779F0_CLK_ZB3		32
+-#define R8A779F0_CLK_ZB3D2		33
+-#define R8A779F0_CLK_ZB3D4		34
+-#define R8A779F0_CLK_SD0H		35
+-#define R8A779F0_CLK_SD0		36
+-#define R8A779F0_CLK_RPC		37
+-#define R8A779F0_CLK_RPCD2		38
+-#define R8A779F0_CLK_MSO		39
+-#define R8A779F0_CLK_SASYNCRT		40
+-#define R8A779F0_CLK_SASYNCPERD1	41
+-#define R8A779F0_CLK_SASYNCPERD2	42
+-#define R8A779F0_CLK_SASYNCPERD4	43
+-#define R8A779F0_CLK_DBGSOC_HSC		44
+-#define R8A779F0_CLK_RSW2		45
+-#define R8A779F0_CLK_OSC		46
+-#define R8A779F0_CLK_ZR			47
+-#define R8A779F0_CLK_CPEX		48
+-#define R8A779F0_CLK_CBFUSA		49
+-#define R8A779F0_CLK_R			50
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A779F0_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h b/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
+deleted file mode 100644
+index 754c54a6eb06..000000000000
+--- a/include/dt-bindings/clock/r8a779g0-cpg-mssr.h
++++ /dev/null
+@@ -1,90 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+-/*
+- * Copyright (C) 2022 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R8A779G0_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_R8A779G0_CPG_MSSR_H__
+-
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-/* r8a779g0 CPG Core Clocks */
+-
+-#define R8A779G0_CLK_ZX			0
+-#define R8A779G0_CLK_ZS			1
+-#define R8A779G0_CLK_ZT			2
+-#define R8A779G0_CLK_ZTR		3
+-#define R8A779G0_CLK_S0D2		4
+-#define R8A779G0_CLK_S0D3		5
+-#define R8A779G0_CLK_S0D4		6
+-#define R8A779G0_CLK_S0D1_VIO		7
+-#define R8A779G0_CLK_S0D2_VIO		8
+-#define R8A779G0_CLK_S0D4_VIO		9
+-#define R8A779G0_CLK_S0D8_VIO		10
+-#define R8A779G0_CLK_S0D1_VC		11
+-#define R8A779G0_CLK_S0D2_VC		12
+-#define R8A779G0_CLK_S0D4_VC		13
+-#define R8A779G0_CLK_S0D2_MM		14
+-#define R8A779G0_CLK_S0D4_MM		15
+-#define R8A779G0_CLK_S0D2_U3DG		16
+-#define R8A779G0_CLK_S0D4_U3DG		17
+-#define R8A779G0_CLK_S0D2_RT		18
+-#define R8A779G0_CLK_S0D3_RT		19
+-#define R8A779G0_CLK_S0D4_RT		20
+-#define R8A779G0_CLK_S0D6_RT		21
+-#define R8A779G0_CLK_S0D24_RT		22
+-#define R8A779G0_CLK_S0D2_PER		23
+-#define R8A779G0_CLK_S0D3_PER		24
+-#define R8A779G0_CLK_S0D4_PER		25
+-#define R8A779G0_CLK_S0D6_PER		26
+-#define R8A779G0_CLK_S0D12_PER		27
+-#define R8A779G0_CLK_S0D24_PER		28
+-#define R8A779G0_CLK_S0D1_HSC		29
+-#define R8A779G0_CLK_S0D2_HSC		30
+-#define R8A779G0_CLK_S0D4_HSC		31
+-#define R8A779G0_CLK_S0D2_CC		32
+-#define R8A779G0_CLK_SVD1_IR		33
+-#define R8A779G0_CLK_SVD2_IR		34
+-#define R8A779G0_CLK_SVD1_VIP		35
+-#define R8A779G0_CLK_SVD2_VIP		36
+-#define R8A779G0_CLK_CL			37
+-#define R8A779G0_CLK_CL16M		38
+-#define R8A779G0_CLK_CL16M_MM		39
+-#define R8A779G0_CLK_CL16M_RT		40
+-#define R8A779G0_CLK_CL16M_PER		41
+-#define R8A779G0_CLK_CL16M_HSC		42
+-#define R8A779G0_CLK_Z0			43
+-#define R8A779G0_CLK_ZB3		44
+-#define R8A779G0_CLK_ZB3D2		45
+-#define R8A779G0_CLK_ZB3D4		46
+-#define R8A779G0_CLK_ZG			47
+-#define R8A779G0_CLK_SD0H		48
+-#define R8A779G0_CLK_SD0		49
+-#define R8A779G0_CLK_RPC		50
+-#define R8A779G0_CLK_RPCD2		51
+-#define R8A779G0_CLK_MSO		52
+-#define R8A779G0_CLK_CANFD		53
+-#define R8A779G0_CLK_CSI		54
+-#define R8A779G0_CLK_FRAY		55
+-#define R8A779G0_CLK_IPC		56
+-#define R8A779G0_CLK_SASYNCRT		57
+-#define R8A779G0_CLK_SASYNCPERD1	58
+-#define R8A779G0_CLK_SASYNCPERD2	59
+-#define R8A779G0_CLK_SASYNCPERD4	60
+-#define R8A779G0_CLK_VIOBUS		61
+-#define R8A779G0_CLK_VIOBUSD2		62
+-#define R8A779G0_CLK_VCBUS		63
+-#define R8A779G0_CLK_VCBUSD2		64
+-#define R8A779G0_CLK_DSIEXT		65
+-#define R8A779G0_CLK_DSIREF		66
+-#define R8A779G0_CLK_ADGH		67
+-#define R8A779G0_CLK_OSC		68
+-#define R8A779G0_CLK_ZR0		69
+-#define R8A779G0_CLK_ZR1		70
+-#define R8A779G0_CLK_ZR2		71
+-#define R8A779G0_CLK_IMPA		72
+-#define R8A779G0_CLK_IMPAD4		73
+-#define R8A779G0_CLK_CPEX		74
+-#define R8A779G0_CLK_CBFUSA		75
+-#define R8A779G0_CLK_R			76
+-
+-#endif /* __DT_BINDINGS_CLOCK_R8A779G0_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/clock/r9a06g032-sysctrl.h b/include/dt-bindings/clock/r9a06g032-sysctrl.h
+deleted file mode 100644
+index d9d7b8b4f426..000000000000
+--- a/include/dt-bindings/clock/r9a06g032-sysctrl.h
++++ /dev/null
+@@ -1,149 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * R9A06G032 sysctrl IDs
 - *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
+- * Copyright (C) 2018 Renesas Electronics Europe Limited
 - *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, see <http://www.gnu.org/licenses/>.
-- * The full GNU General Public License is included in this distribution
-- * in the file called COPYING.
-- *
-- * BSD LICENSE
-- *
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- *   * Redistributions of source code must retain the above copyright
-- *     notice, this list of conditions and the following disclaimer.
-- *   * Redistributions in binary form must reproduce the above copyright
-- *     notice, this list of conditions and the following disclaimer in
-- *     the documentation and/or other materials provided with the
-- *     distribution.
-- *   * Neither the name of Intel Corporation nor the names of its
-- *     contributors may be used to endorse or promote products derived
-- *     from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
 - */
 -
--#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_GXBB_AOCLK
--#define DT_BINDINGS_RESET_AMLOGIC_MESON_GXBB_AOCLK
+-#ifndef __DT_BINDINGS_R9A06G032_SYSCTRL_H__
+-#define __DT_BINDINGS_R9A06G032_SYSCTRL_H__
 -
--#define RESET_AO_REMOTE		0
--#define RESET_AO_I2C_MASTER	1
--#define RESET_AO_I2C_SLAVE	2
--#define RESET_AO_UART1		3
--#define RESET_AO_UART2		4
--#define RESET_AO_IR_BLASTER	5
+-#define R9A06G032_CLK_PLL_USB		1
+-#define R9A06G032_CLK_48		1	/* AKA CLK_PLL_USB */
+-#define R9A06G032_MSEBIS_CLK		3	/* AKA CLKOUT_D16 */
+-#define R9A06G032_MSEBIM_CLK		3	/* AKA CLKOUT_D16 */
+-#define R9A06G032_CLK_DDRPHY_PLLCLK	5	/* AKA CLKOUT_D1OR2 */
+-#define R9A06G032_CLK50			6	/* AKA CLKOUT_D20 */
+-#define R9A06G032_CLK25			7	/* AKA CLKOUT_D40 */
+-#define R9A06G032_CLK125		9	/* AKA CLKOUT_D8 */
+-#define R9A06G032_CLK_P5_PG1		17	/* AKA DIV_P5_PG */
+-#define R9A06G032_CLK_REF_SYNC		21	/* AKA DIV_REF_SYNC */
+-#define R9A06G032_CLK_25_PG4		26
+-#define R9A06G032_CLK_25_PG5		27
+-#define R9A06G032_CLK_25_PG6		28
+-#define R9A06G032_CLK_25_PG7		29
+-#define R9A06G032_CLK_25_PG8		30
+-#define R9A06G032_CLK_ADC		31
+-#define R9A06G032_CLK_ECAT100		32
+-#define R9A06G032_CLK_HSR100		33
+-#define R9A06G032_CLK_I2C0		34
+-#define R9A06G032_CLK_I2C1		35
+-#define R9A06G032_CLK_MII_REF		36
+-#define R9A06G032_CLK_NAND		37
+-#define R9A06G032_CLK_NOUSBP2_PG6	38
+-#define R9A06G032_CLK_P1_PG2		39
+-#define R9A06G032_CLK_P1_PG3		40
+-#define R9A06G032_CLK_P1_PG4		41
+-#define R9A06G032_CLK_P4_PG3		42
+-#define R9A06G032_CLK_P4_PG4		43
+-#define R9A06G032_CLK_P6_PG1		44
+-#define R9A06G032_CLK_P6_PG2		45
+-#define R9A06G032_CLK_P6_PG3		46
+-#define R9A06G032_CLK_P6_PG4		47
+-#define R9A06G032_CLK_PCI_USB		48
+-#define R9A06G032_CLK_QSPI0		49
+-#define R9A06G032_CLK_QSPI1		50
+-#define R9A06G032_CLK_RGMII_REF		51
+-#define R9A06G032_CLK_RMII_REF		52
+-#define R9A06G032_CLK_SDIO0		53
+-#define R9A06G032_CLK_SDIO1		54
+-#define R9A06G032_CLK_SERCOS100		55
+-#define R9A06G032_CLK_SLCD		56
+-#define R9A06G032_CLK_SPI0		57
+-#define R9A06G032_CLK_SPI1		58
+-#define R9A06G032_CLK_SPI2		59
+-#define R9A06G032_CLK_SPI3		60
+-#define R9A06G032_CLK_SPI4		61
+-#define R9A06G032_CLK_SPI5		62
+-#define R9A06G032_CLK_SWITCH		63
+-#define R9A06G032_HCLK_ECAT125		65
+-#define R9A06G032_HCLK_PINCONFIG	66
+-#define R9A06G032_HCLK_SERCOS		67
+-#define R9A06G032_HCLK_SGPIO2		68
+-#define R9A06G032_HCLK_SGPIO3		69
+-#define R9A06G032_HCLK_SGPIO4		70
+-#define R9A06G032_HCLK_TIMER0		71
+-#define R9A06G032_HCLK_TIMER1		72
+-#define R9A06G032_HCLK_USBF		73
+-#define R9A06G032_HCLK_USBH		74
+-#define R9A06G032_HCLK_USBPM		75
+-#define R9A06G032_CLK_48_PG_F		76
+-#define R9A06G032_CLK_48_PG4		77
+-#define R9A06G032_CLK_DDRPHY_PCLK	81	/* AKA CLK_REF_SYNC_D4 */
+-#define R9A06G032_CLK_FW		81	/* AKA CLK_REF_SYNC_D4 */
+-#define R9A06G032_CLK_CRYPTO		81	/* AKA CLK_REF_SYNC_D4 */
+-#define R9A06G032_CLK_WATCHDOG		82	/* AKA CLK_REF_SYNC_D8 */
+-#define R9A06G032_CLK_A7MP		84	/* AKA DIV_CA7 */
+-#define R9A06G032_HCLK_CAN0		85
+-#define R9A06G032_HCLK_CAN1		86
+-#define R9A06G032_HCLK_DELTASIGMA	87
+-#define R9A06G032_HCLK_PWMPTO		88
+-#define R9A06G032_HCLK_RSV		89
+-#define R9A06G032_HCLK_SGPIO0		90
+-#define R9A06G032_HCLK_SGPIO1		91
+-#define R9A06G032_RTOS_MDC		92
+-#define R9A06G032_CLK_CM3		93
+-#define R9A06G032_CLK_DDRC		94
+-#define R9A06G032_CLK_ECAT25		95
+-#define R9A06G032_CLK_HSR50		96
+-#define R9A06G032_CLK_HW_RTOS		97
+-#define R9A06G032_CLK_SERCOS50		98
+-#define R9A06G032_HCLK_ADC		99
+-#define R9A06G032_HCLK_CM3		100
+-#define R9A06G032_HCLK_CRYPTO_EIP150	101
+-#define R9A06G032_HCLK_CRYPTO_EIP93	102
+-#define R9A06G032_HCLK_DDRC		103
+-#define R9A06G032_HCLK_DMA0		104
+-#define R9A06G032_HCLK_DMA1		105
+-#define R9A06G032_HCLK_GMAC0		106
+-#define R9A06G032_HCLK_GMAC1		107
+-#define R9A06G032_HCLK_GPIO0		108
+-#define R9A06G032_HCLK_GPIO1		109
+-#define R9A06G032_HCLK_GPIO2		110
+-#define R9A06G032_HCLK_HSR		111
+-#define R9A06G032_HCLK_I2C0		112
+-#define R9A06G032_HCLK_I2C1		113
+-#define R9A06G032_HCLK_LCD		114
+-#define R9A06G032_HCLK_MSEBI_M		115
+-#define R9A06G032_HCLK_MSEBI_S		116
+-#define R9A06G032_HCLK_NAND		117
+-#define R9A06G032_HCLK_PG_I		118
+-#define R9A06G032_HCLK_PG19		119
+-#define R9A06G032_HCLK_PG20		120
+-#define R9A06G032_HCLK_PG3		121
+-#define R9A06G032_HCLK_PG4		122
+-#define R9A06G032_HCLK_QSPI0		123
+-#define R9A06G032_HCLK_QSPI1		124
+-#define R9A06G032_HCLK_ROM		125
+-#define R9A06G032_HCLK_RTC		126
+-#define R9A06G032_HCLK_SDIO0		127
+-#define R9A06G032_HCLK_SDIO1		128
+-#define R9A06G032_HCLK_SEMAP		129
+-#define R9A06G032_HCLK_SPI0		130
+-#define R9A06G032_HCLK_SPI1		131
+-#define R9A06G032_HCLK_SPI2		132
+-#define R9A06G032_HCLK_SPI3		133
+-#define R9A06G032_HCLK_SPI4		134
+-#define R9A06G032_HCLK_SPI5		135
+-#define R9A06G032_HCLK_SWITCH		136
+-#define R9A06G032_HCLK_SWITCH_RG	137
+-#define R9A06G032_HCLK_UART0		138
+-#define R9A06G032_HCLK_UART1		139
+-#define R9A06G032_HCLK_UART2		140
+-#define R9A06G032_HCLK_UART3		141
+-#define R9A06G032_HCLK_UART4		142
+-#define R9A06G032_HCLK_UART5		143
+-#define R9A06G032_HCLK_UART6		144
+-#define R9A06G032_HCLK_UART7		145
+-#define R9A06G032_CLK_UART0		146
+-#define R9A06G032_CLK_UART1		147
+-#define R9A06G032_CLK_UART2		148
+-#define R9A06G032_CLK_UART3		149
+-#define R9A06G032_CLK_UART4		150
+-#define R9A06G032_CLK_UART5		151
+-#define R9A06G032_CLK_UART6		152
+-#define R9A06G032_CLK_UART7		153
 -
--#endif
-diff --git a/include/dt-bindings/sound/meson-aiu.h b/include/dt-bindings/sound/meson-aiu.h
+-#endif /* __DT_BINDINGS_R9A06G032_SYSCTRL_H__ */
+diff --git a/include/dt-bindings/clock/r9a07g044-cpg.h b/include/dt-bindings/clock/r9a07g044-cpg.h
 deleted file mode 100644
-index 1051b8af298b..000000000000
---- a/include/dt-bindings/sound/meson-aiu.h
+index 0bb17ff1a01a..000000000000
+--- a/include/dt-bindings/clock/r9a07g044-cpg.h
 +++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __DT_MESON_AIU_H
--#define __DT_MESON_AIU_H
+@@ -1,220 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+- *
+- * Copyright (C) 2021 Renesas Electronics Corp.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_R9A07G044_CPG_H__
+-#define __DT_BINDINGS_CLOCK_R9A07G044_CPG_H__
 -
--#define AIU_CPU			0
--#define AIU_HDMI		1
--#define AIU_ACODEC		2
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
 -
--#define CPU_I2S_FIFO		0
--#define CPU_SPDIF_FIFO		1
--#define CPU_I2S_ENCODER		2
--#define CPU_SPDIF_ENCODER	3
+-/* R9A07G044 CPG Core Clocks */
+-#define R9A07G044_CLK_I			0
+-#define R9A07G044_CLK_I2		1
+-#define R9A07G044_CLK_G			2
+-#define R9A07G044_CLK_S0		3
+-#define R9A07G044_CLK_S1		4
+-#define R9A07G044_CLK_SPI0		5
+-#define R9A07G044_CLK_SPI1		6
+-#define R9A07G044_CLK_SD0		7
+-#define R9A07G044_CLK_SD1		8
+-#define R9A07G044_CLK_M0		9
+-#define R9A07G044_CLK_M1		10
+-#define R9A07G044_CLK_M2		11
+-#define R9A07G044_CLK_M3		12
+-#define R9A07G044_CLK_M4		13
+-#define R9A07G044_CLK_HP		14
+-#define R9A07G044_CLK_TSU		15
+-#define R9A07G044_CLK_ZT		16
+-#define R9A07G044_CLK_P0		17
+-#define R9A07G044_CLK_P1		18
+-#define R9A07G044_CLK_P2		19
+-#define R9A07G044_CLK_AT		20
+-#define R9A07G044_OSCCLK		21
+-#define R9A07G044_CLK_P0_DIV2		22
 -
--#define CTRL_I2S		0
--#define CTRL_PCM		1
--#define CTRL_OUT		2
+-/* R9A07G044 Module Clocks */
+-#define R9A07G044_CA55_SCLK		0
+-#define R9A07G044_CA55_PCLK		1
+-#define R9A07G044_CA55_ATCLK		2
+-#define R9A07G044_CA55_GICCLK		3
+-#define R9A07G044_CA55_PERICLK		4
+-#define R9A07G044_CA55_ACLK		5
+-#define R9A07G044_CA55_TSCLK		6
+-#define R9A07G044_GIC600_GICCLK		7
+-#define R9A07G044_IA55_CLK		8
+-#define R9A07G044_IA55_PCLK		9
+-#define R9A07G044_MHU_PCLK		10
+-#define R9A07G044_SYC_CNT_CLK		11
+-#define R9A07G044_DMAC_ACLK		12
+-#define R9A07G044_DMAC_PCLK		13
+-#define R9A07G044_OSTM0_PCLK		14
+-#define R9A07G044_OSTM1_PCLK		15
+-#define R9A07G044_OSTM2_PCLK		16
+-#define R9A07G044_MTU_X_MCK_MTU3	17
+-#define R9A07G044_POE3_CLKM_POE		18
+-#define R9A07G044_GPT_PCLK		19
+-#define R9A07G044_POEG_A_CLKP		20
+-#define R9A07G044_POEG_B_CLKP		21
+-#define R9A07G044_POEG_C_CLKP		22
+-#define R9A07G044_POEG_D_CLKP		23
+-#define R9A07G044_WDT0_PCLK		24
+-#define R9A07G044_WDT0_CLK		25
+-#define R9A07G044_WDT1_PCLK		26
+-#define R9A07G044_WDT1_CLK		27
+-#define R9A07G044_WDT2_PCLK		28
+-#define R9A07G044_WDT2_CLK		29
+-#define R9A07G044_SPI_CLK2		30
+-#define R9A07G044_SPI_CLK		31
+-#define R9A07G044_SDHI0_IMCLK		32
+-#define R9A07G044_SDHI0_IMCLK2		33
+-#define R9A07G044_SDHI0_CLK_HS		34
+-#define R9A07G044_SDHI0_ACLK		35
+-#define R9A07G044_SDHI1_IMCLK		36
+-#define R9A07G044_SDHI1_IMCLK2		37
+-#define R9A07G044_SDHI1_CLK_HS		38
+-#define R9A07G044_SDHI1_ACLK		39
+-#define R9A07G044_GPU_CLK		40
+-#define R9A07G044_GPU_AXI_CLK		41
+-#define R9A07G044_GPU_ACE_CLK		42
+-#define R9A07G044_ISU_ACLK		43
+-#define R9A07G044_ISU_PCLK		44
+-#define R9A07G044_H264_CLK_A		45
+-#define R9A07G044_H264_CLK_P		46
+-#define R9A07G044_CRU_SYSCLK		47
+-#define R9A07G044_CRU_VCLK		48
+-#define R9A07G044_CRU_PCLK		49
+-#define R9A07G044_CRU_ACLK		50
+-#define R9A07G044_MIPI_DSI_PLLCLK	51
+-#define R9A07G044_MIPI_DSI_SYSCLK	52
+-#define R9A07G044_MIPI_DSI_ACLK		53
+-#define R9A07G044_MIPI_DSI_PCLK		54
+-#define R9A07G044_MIPI_DSI_VCLK		55
+-#define R9A07G044_MIPI_DSI_LPCLK	56
+-#define R9A07G044_LCDC_CLK_A		57
+-#define R9A07G044_LCDC_CLK_P		58
+-#define R9A07G044_LCDC_CLK_D		59
+-#define R9A07G044_SSI0_PCLK2		60
+-#define R9A07G044_SSI0_PCLK_SFR		61
+-#define R9A07G044_SSI1_PCLK2		62
+-#define R9A07G044_SSI1_PCLK_SFR		63
+-#define R9A07G044_SSI2_PCLK2		64
+-#define R9A07G044_SSI2_PCLK_SFR		65
+-#define R9A07G044_SSI3_PCLK2		66
+-#define R9A07G044_SSI3_PCLK_SFR		67
+-#define R9A07G044_SRC_CLKP		68
+-#define R9A07G044_USB_U2H0_HCLK		69
+-#define R9A07G044_USB_U2H1_HCLK		70
+-#define R9A07G044_USB_U2P_EXR_CPUCLK	71
+-#define R9A07G044_USB_PCLK		72
+-#define R9A07G044_ETH0_CLK_AXI		73
+-#define R9A07G044_ETH0_CLK_CHI		74
+-#define R9A07G044_ETH1_CLK_AXI		75
+-#define R9A07G044_ETH1_CLK_CHI		76
+-#define R9A07G044_I2C0_PCLK		77
+-#define R9A07G044_I2C1_PCLK		78
+-#define R9A07G044_I2C2_PCLK		79
+-#define R9A07G044_I2C3_PCLK		80
+-#define R9A07G044_SCIF0_CLK_PCK		81
+-#define R9A07G044_SCIF1_CLK_PCK		82
+-#define R9A07G044_SCIF2_CLK_PCK		83
+-#define R9A07G044_SCIF3_CLK_PCK		84
+-#define R9A07G044_SCIF4_CLK_PCK		85
+-#define R9A07G044_SCI0_CLKP		86
+-#define R9A07G044_SCI1_CLKP		87
+-#define R9A07G044_IRDA_CLKP		88
+-#define R9A07G044_RSPI0_CLKB		89
+-#define R9A07G044_RSPI1_CLKB		90
+-#define R9A07G044_RSPI2_CLKB		91
+-#define R9A07G044_CANFD_PCLK		92
+-#define R9A07G044_GPIO_HCLK		93
+-#define R9A07G044_ADC_ADCLK		94
+-#define R9A07G044_ADC_PCLK		95
+-#define R9A07G044_TSU_PCLK		96
 -
--#endif /* __DT_MESON_AIU_H */
-diff --git a/include/dt-bindings/sound/meson-g12a-toacodec.h b/include/dt-bindings/sound/meson-g12a-toacodec.h
+-/* R9A07G044 Resets */
+-#define R9A07G044_CA55_RST_1_0		0
+-#define R9A07G044_CA55_RST_1_1		1
+-#define R9A07G044_CA55_RST_3_0		2
+-#define R9A07G044_CA55_RST_3_1		3
+-#define R9A07G044_CA55_RST_4		4
+-#define R9A07G044_CA55_RST_5		5
+-#define R9A07G044_CA55_RST_6		6
+-#define R9A07G044_CA55_RST_7		7
+-#define R9A07G044_CA55_RST_8		8
+-#define R9A07G044_CA55_RST_9		9
+-#define R9A07G044_CA55_RST_10		10
+-#define R9A07G044_CA55_RST_11		11
+-#define R9A07G044_CA55_RST_12		12
+-#define R9A07G044_GIC600_GICRESET_N	13
+-#define R9A07G044_GIC600_DBG_GICRESET_N	14
+-#define R9A07G044_IA55_RESETN		15
+-#define R9A07G044_MHU_RESETN		16
+-#define R9A07G044_DMAC_ARESETN		17
+-#define R9A07G044_DMAC_RST_ASYNC	18
+-#define R9A07G044_SYC_RESETN		19
+-#define R9A07G044_OSTM0_PRESETZ		20
+-#define R9A07G044_OSTM1_PRESETZ		21
+-#define R9A07G044_OSTM2_PRESETZ		22
+-#define R9A07G044_MTU_X_PRESET_MTU3	23
+-#define R9A07G044_POE3_RST_M_REG	24
+-#define R9A07G044_GPT_RST_C		25
+-#define R9A07G044_POEG_A_RST		26
+-#define R9A07G044_POEG_B_RST		27
+-#define R9A07G044_POEG_C_RST		28
+-#define R9A07G044_POEG_D_RST		29
+-#define R9A07G044_WDT0_PRESETN		30
+-#define R9A07G044_WDT1_PRESETN		31
+-#define R9A07G044_WDT2_PRESETN		32
+-#define R9A07G044_SPI_RST		33
+-#define R9A07G044_SDHI0_IXRST		34
+-#define R9A07G044_SDHI1_IXRST		35
+-#define R9A07G044_GPU_RESETN		36
+-#define R9A07G044_GPU_AXI_RESETN	37
+-#define R9A07G044_GPU_ACE_RESETN	38
+-#define R9A07G044_ISU_ARESETN		39
+-#define R9A07G044_ISU_PRESETN		40
+-#define R9A07G044_H264_X_RESET_VCP	41
+-#define R9A07G044_H264_CP_PRESET_P	42
+-#define R9A07G044_CRU_CMN_RSTB		43
+-#define R9A07G044_CRU_PRESETN		44
+-#define R9A07G044_CRU_ARESETN		45
+-#define R9A07G044_MIPI_DSI_CMN_RSTB	46
+-#define R9A07G044_MIPI_DSI_ARESET_N	47
+-#define R9A07G044_MIPI_DSI_PRESET_N	48
+-#define R9A07G044_LCDC_RESET_N		49
+-#define R9A07G044_SSI0_RST_M2_REG	50
+-#define R9A07G044_SSI1_RST_M2_REG	51
+-#define R9A07G044_SSI2_RST_M2_REG	52
+-#define R9A07G044_SSI3_RST_M2_REG	53
+-#define R9A07G044_SRC_RST		54
+-#define R9A07G044_USB_U2H0_HRESETN	55
+-#define R9A07G044_USB_U2H1_HRESETN	56
+-#define R9A07G044_USB_U2P_EXL_SYSRST	57
+-#define R9A07G044_USB_PRESETN		58
+-#define R9A07G044_ETH0_RST_HW_N		59
+-#define R9A07G044_ETH1_RST_HW_N		60
+-#define R9A07G044_I2C0_MRST		61
+-#define R9A07G044_I2C1_MRST		62
+-#define R9A07G044_I2C2_MRST		63
+-#define R9A07G044_I2C3_MRST		64
+-#define R9A07G044_SCIF0_RST_SYSTEM_N	65
+-#define R9A07G044_SCIF1_RST_SYSTEM_N	66
+-#define R9A07G044_SCIF2_RST_SYSTEM_N	67
+-#define R9A07G044_SCIF3_RST_SYSTEM_N	68
+-#define R9A07G044_SCIF4_RST_SYSTEM_N	69
+-#define R9A07G044_SCI0_RST		70
+-#define R9A07G044_SCI1_RST		71
+-#define R9A07G044_IRDA_RST		72
+-#define R9A07G044_RSPI0_RST		73
+-#define R9A07G044_RSPI1_RST		74
+-#define R9A07G044_RSPI2_RST		75
+-#define R9A07G044_CANFD_RSTP_N		76
+-#define R9A07G044_CANFD_RSTC_N		77
+-#define R9A07G044_GPIO_RSTN		78
+-#define R9A07G044_GPIO_PORT_RESETN	79
+-#define R9A07G044_GPIO_SPARE_RESETN	80
+-#define R9A07G044_ADC_PRESETN		81
+-#define R9A07G044_ADC_ADRST_N		82
+-#define R9A07G044_TSU_PRESETN		83
+-
+-#endif /* __DT_BINDINGS_CLOCK_R9A07G044_CPG_H__ */
+diff --git a/include/dt-bindings/clock/renesas-cpg-mssr.h b/include/dt-bindings/clock/renesas-cpg-mssr.h
 deleted file mode 100644
-index 69d7a75592a2..000000000000
---- a/include/dt-bindings/sound/meson-g12a-toacodec.h
+index 569a3cc33ffb..000000000000
+--- a/include/dt-bindings/clock/renesas-cpg-mssr.h
 +++ /dev/null
-@@ -1,10 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __DT_MESON_G12A_TOACODEC_H
--#define __DT_MESON_G12A_TOACODEC_H
+@@ -1,15 +0,0 @@
+-/*
+- * Copyright (C) 2015 Renesas Electronics Corp.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- */
+-#ifndef __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__
+-#define __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__
 -
--#define TOACODEC_IN_A	0
--#define TOACODEC_IN_B	1
--#define TOACODEC_IN_C	2
--#define TOACODEC_OUT	3
+-#define CPG_CORE			0	/* Core Clock */
+-#define CPG_MOD				1	/* Module Clock */
 -
--#endif /* __DT_MESON_G12A_TOACODEC_H */
-diff --git a/include/dt-bindings/sound/meson-g12a-tohdmitx.h b/include/dt-bindings/sound/meson-g12a-tohdmitx.h
-deleted file mode 100644
-index c5e1f48d30d0..000000000000
---- a/include/dt-bindings/sound/meson-g12a-tohdmitx.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __DT_MESON_G12A_TOHDMITX_H
--#define __DT_MESON_G12A_TOHDMITX_H
--
--#define TOHDMITX_I2S_IN_A	0
--#define TOHDMITX_I2S_IN_B	1
--#define TOHDMITX_I2S_IN_C	2
--#define TOHDMITX_I2S_OUT	3
--#define TOHDMITX_SPDIF_IN_A	4
--#define TOHDMITX_SPDIF_IN_B	5
--#define TOHDMITX_SPDIF_OUT	6
--
--#endif /* __DT_MESON_G12A_TOHDMITX_H */
+-#endif /* __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__ */
 
 -- 
 2.44.0
