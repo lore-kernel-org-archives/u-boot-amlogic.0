@@ -2,56 +2,56 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2038EC54E7A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F8FC54E9D
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:49 +0000 (UTC)
 Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.104448.1709571117922565426
+ by mx.groups.io with SMTP id smtpd.web10.104591.1709571102195170231
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Mar 2024 08:51:58 -0800
+ Mon, 04 Mar 2024 08:51:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=um4iPnM5;
+ dkim=pass header.i=@linaro.org header.s=google header.b=N5wWOYdg;
  spf=pass (domain: linaro.org, ip: 209.85.128.54, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412cf3c5cdeso19613365e9.2
-        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:57 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412e6bdd454so5620525e9.1
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709571116; x=1710175916; darn=groups.io;
+        d=linaro.org; s=google; t=1709571100; x=1710175900; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=q1ASbhJ8pDNxOQKza4SvWtSWDi9xDgSqdUryll9us+Q=;
-        b=um4iPnM5LiGhop5Bz9mEGifbGuoY1vDFdSKWu9CkXOBB5tqD8aceHpAJd1rDUZsjsF
-         cFFVeJ2kvzBuK2VmA1dlUCSrZJngpSM4RUNvvl60lt4Jj01trMBXyi1VE/J0k11gDaW4
-         AwaXx8cLSGvQeSjEAXiKdq5PfVwp9HKkZJLwGpDIAvEXlwHvkbXx5szYPMb5DPBsPyrc
-         0H0iGoYVTnv14vcNnEd0eG/ZubcP68mQrs6IkTByxEjUWl5KskkHNlG3BgaFRtGDJBD9
-         f9S0RgAzLRaj0ghF3Irg/kxG7pOdDYQ10e3j5NuEJq7tFeU8iAyyKR7oRCI7wwdyB6lO
-         iHNg==
+        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
+        b=N5wWOYdgoU71kKvUsfqaoDuacJCO2lXt+BxY+4MsUygiCIfbRaEotHso9EskRMyNcm
+         DMBKror6ixSBUsRTh3NFv4Vz5sKk3XMLfAs7P7/BVVKHpop1lF31unVIOD42PW2Z9H+3
+         hlAI2jW/udNS0gHeRJgpr4Fjs3QVQqSUtQES8PjQMyxnBzeXvnwOKkA6TAfkBrirQDmj
+         nID9GjYqWwG6cD+ovo3baLjd2HZsFO+rD6GJpAnzVAv+c9myfybgkznXzkWlGq3k2oit
+         ckb8TYuFvdPnQfSWs7DjMzxhvSzIthyVwovh1ZWb9vlirJVtJ9NbVPNcrkLSeD1u9qIx
+         eV+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571116; x=1710175916;
+        d=1e100.net; s=20230601; t=1709571100; x=1710175900;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q1ASbhJ8pDNxOQKza4SvWtSWDi9xDgSqdUryll9us+Q=;
-        b=uG1XOhztwhjvLSvJZm2zFKf7m/mzBGKqbYEEt9BqL+Wt6sxA0o3dKAK3j0J7NVi/lR
-         NWu5bmcM3WORQhT1OOXj3mlBOfbEnb4XtjCy087Apyh5ynMCoNnLAtctaRT5Mo5y1C6w
-         uQdoceaU+qXdDnhs4E55Gr6D15ZlJLVRFdjBD1hXP0TxSH3JQT6VaSNF6XGYsnHWeVjE
-         4PAN9P5wTkcVMCcfoj/Z1ZzrrlAf/lqsGwy2qIGmJH2fzcUBkcGHg+T5r/zcNIBfLCPe
-         /ZS+1DRVdkOGZ6cP4+CTRAjVI6jBvvyr2vLl1hZ1qSR2VgaCZJmVTcPWCdMMsGLm04cH
-         h6bw==
-X-Forwarded-Encrypted: i=1; AJvYcCXBAsb+VNlvt1jmIUiVRxra9XMhsJrJsE+j2BNvPYmRhg7YD9JdLebk+05cIBkJ2cUQBAN0HfypmGj14y2GSpFhBmD1/8IxIjM=
-X-Gm-Message-State: AOJu0YyfuqxOlbAWsaNyKyECEql2gsKvy9isf0MiDWEuRwdny3SW+pUC
-	2of0L1XAxx0qXPBN/GKGBbIC2tZa+kUjqFHw5rc9eFHSCwf/o/xUL88Dx98U+D0=
-X-Google-Smtp-Source: AGHT+IGhXo5D37Lahhj6QS+zokKmdwUnMLdqyNG94Sq2NOvYI9hNetLKv0Ef9DMBUPJvIDVwrnLdyg==
-X-Received: by 2002:a05:600c:a12:b0:412:e221:2bd5 with SMTP id z18-20020a05600c0a1200b00412e2212bd5mr3022635wmp.3.1709571116384;
-        Mon, 04 Mar 2024 08:51:56 -0800 (PST)
+        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
+        b=exQNDHo/1kiZ/Y5RCfn8ibwVjm4E+LV3K4avFwNJ38QxP8kKzu9SJGWx0BeXjiyo22
+         byzdZYNPKvzWxMxgpM7GGSy9Qr6U3d7aocfHb/oAQGncPyELIc+ZlM57mckFmVHzjLmb
+         qgzNm1ZrpF0hvlts9hBXU5Xgmd8bz7eEncAzv35q7cmsvRKMWn2hQZQf0k5CbRIlx6O3
+         h+4737Jt956ws6x6RcGuJ8LkYPIbURwyUaJotjrVXrVro8rPHKl+0P3hZViR5JhjhTWh
+         BwceQj+1eML5Ji0BtE7N9QlxyTYv54KT2daB/L3Zw/HmWy3tnx8CBbqCuNFfObAzTsXV
+         2hHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVd1trHCygScImLJLKukuNW0FAaEZkHH0wqxQjcO+tBQrJf3wMK8/WlBopbPxQPCi/h5r58kcvqWDVec5s+9mFAdqQ+6GQASmI=
+X-Gm-Message-State: AOJu0YxBGzIjujLmU+wK+1P9ed8UxMga/thFOxJGM2xzD5dv22fS8O7Q
+	DSR6cy1Kteb7JFZUSwZHlxkRHOdlnpsSGj5XghotJ5Zreb4tJRayO4ssS08CpG0=
+X-Google-Smtp-Source: AGHT+IEFg7rTD8wjEHWItK4Kmmpn0ys3Ht0aIEs74vHGp1asb3blEMRWch/N7TgUdzLFsQVWmxJacQ==
+X-Received: by 2002:a05:600c:3b9b:b0:412:a470:7dba with SMTP id n27-20020a05600c3b9b00b00412a4707dbamr6012378wms.27.1709571100651;
+        Mon, 04 Mar 2024 08:51:40 -0800 (PST)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.55
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:51:55 -0800 (PST)
+        Mon, 04 Mar 2024 08:51:40 -0800 (PST)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Mon, 04 Mar 2024 16:51:29 +0000
-Subject: [PATCH RFC 21/26] hisi: drop dt-binding headers
+Date: Mon, 04 Mar 2024 16:51:19 +0000
+Subject: [PATCH RFC 11/26] exynos: drop dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240304-b4-upstream-dt-headers-v1-21-b7ff41925f92@linaro.org>
+Message-Id: <20240304-b4-upstream-dt-headers-v1-11-b7ff41925f92@linaro.org>
 References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 In-Reply-To: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -84,13 +84,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=15260;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=19475;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=S6l2X68dLtPLBye6TdWUWbFGD8YCUQmcKehHGXIg088=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnfzg+Mc5U4VHKd984S7AwN6tV+uqV7GDz2cZmledWe
- fWs193eUcrCIMjBICumyCJ+Ypll09rL9hrbF1yAmcPKBDKEgYtTACZyrJuRYeUbH4ZrPqlPvp/I
- /CzxI6v8xzyFf4HX77NUds4PzTzC8IORoYe9YOuj6FlM30WiP+1KlL1qURDJ3Nxra7Ki88a8v2I
- lUwE=
+ bh=kZLqLmWc/ez1mBweoulX7ov9ivbShWuGmqjIVl+U5Tg=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9iXvzgSa2F+eZuZ19PcDKHay2eUtv3xKMsViLpjd
+ tbia8GyjlIWBkEOBlkxRRbxE8ssm9ZettfYvuACzBxWJpAhDFycAjCRYAuG/2m2rtebxHa9yFO6
+ vfVuzolrWwLXLoyV0j/89Qp7VlXp/3aGv5K1MrIvHgZveRPfraov4dAUUdjJdL8zvd9x7csZh5R
+ 9TgAA
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -99,496 +99,630 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2177
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2167
 
-Drop in favour of dts/upstream
+Drop in favour of dts/upstream.
+
+Small driver and DTS adjustments to use upstream headers.
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- include/dt-bindings/clock/hi3660-clock.h | 214 -------------------------------
- include/dt-bindings/clock/hi6220-clock.h | 173 -------------------------
- include/dt-bindings/pinctrl/hisi.h       |  74 -----------
- 3 files changed, 461 deletions(-)
+ arch/arm/dts/exynos7420.dtsi                 |   2 +-
+ drivers/clk/exynos/clk-exynos7420.c          |   2 +-
+ include/dt-bindings/clock/exynos7420-clk.h   | 207 ----------------
+ include/dt-bindings/clock/exynos850.h        | 337 ---------------------------
+ include/dt-bindings/soc/samsung,exynos-usi.h |  17 --
+ 5 files changed, 2 insertions(+), 563 deletions(-)
 
-diff --git a/include/dt-bindings/clock/hi3660-clock.h b/include/dt-bindings/clock/hi3660-clock.h
+diff --git a/arch/arm/dts/exynos7420.dtsi b/arch/arm/dts/exynos7420.dtsi
+index 373f48cf2eca..ba9666f3de01 100644
+--- a/arch/arm/dts/exynos7420.dtsi
++++ b/arch/arm/dts/exynos7420.dtsi
+@@ -7,9 +7,9 @@
+  */
+ 
+ /dts-v1/;
+ #include "skeleton.dtsi"
+-#include <dt-bindings/clock/exynos7420-clk.h>
++#include <dt-bindings/clock/exynos7-clk.h>
+ / {
+ 	compatible = "samsung,exynos7420";
+ 
+ 	fin_pll: xxti {
+diff --git a/drivers/clk/exynos/clk-exynos7420.c b/drivers/clk/exynos/clk-exynos7420.c
+index 9caa932e12fb..cd6d67a0752b 100644
+--- a/drivers/clk/exynos/clk-exynos7420.c
++++ b/drivers/clk/exynos/clk-exynos7420.c
+@@ -10,9 +10,9 @@
+ #include <errno.h>
+ #include <clk-uclass.h>
+ #include <asm/io.h>
+ #include <div64.h>
+-#include <dt-bindings/clock/exynos7420-clk.h>
++#include <dt-bindings/clock/exynos7-clk.h>
+ 
+ #define PLL145X_MDIV_SHIFT	16
+ #define PLL145X_MDIV_MASK	0x3ff
+ #define PLL145X_PDIV_SHIFT	8
+diff --git a/include/dt-bindings/clock/exynos7420-clk.h b/include/dt-bindings/clock/exynos7420-clk.h
 deleted file mode 100644
-index e1374e180943..000000000000
---- a/include/dt-bindings/clock/hi3660-clock.h
+index 10c558611085..000000000000
+--- a/include/dt-bindings/clock/exynos7420-clk.h
 +++ /dev/null
-@@ -1,214 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
+@@ -1,207 +0,0 @@
 -/*
-- * Copyright (c) 2016-2017 Linaro Ltd.
-- * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
-- */
--
--#ifndef __DTS_HI3660_CLOCK_H
--#define __DTS_HI3660_CLOCK_H
--
--/* fixed rate clocks */
--#define HI3660_CLKIN_SYS		0
--#define HI3660_CLKIN_REF		1
--#define HI3660_CLK_FLL_SRC		2
--#define HI3660_CLK_PPLL0		3
--#define HI3660_CLK_PPLL1		4
--#define HI3660_CLK_PPLL2		5
--#define HI3660_CLK_PPLL3		6
--#define HI3660_CLK_SCPLL		7
--#define HI3660_PCLK			8
--#define HI3660_CLK_UART0_DBG		9
--#define HI3660_CLK_UART6		10
--#define HI3660_OSC32K			11
--#define HI3660_OSC19M			12
--#define HI3660_CLK_480M			13
--#define HI3660_CLK_INV			14
--
--/* clk in crgctrl */
--#define HI3660_FACTOR_UART3		15
--#define HI3660_CLK_FACTOR_MMC		16
--#define HI3660_CLK_GATE_I2C0		17
--#define HI3660_CLK_GATE_I2C1		18
--#define HI3660_CLK_GATE_I2C2		19
--#define HI3660_CLK_GATE_I2C6		20
--#define HI3660_CLK_DIV_SYSBUS		21
--#define HI3660_CLK_DIV_320M		22
--#define HI3660_CLK_DIV_A53		23
--#define HI3660_CLK_GATE_SPI0		24
--#define HI3660_CLK_GATE_SPI2		25
--#define HI3660_PCIEPHY_REF		26
--#define HI3660_CLK_ABB_USB		27
--#define HI3660_HCLK_GATE_SDIO0		28
--#define HI3660_HCLK_GATE_SD		29
--#define HI3660_CLK_GATE_AOMM		30
--#define HI3660_PCLK_GPIO0		31
--#define HI3660_PCLK_GPIO1		32
--#define HI3660_PCLK_GPIO2		33
--#define HI3660_PCLK_GPIO3		34
--#define HI3660_PCLK_GPIO4		35
--#define HI3660_PCLK_GPIO5		36
--#define HI3660_PCLK_GPIO6		37
--#define HI3660_PCLK_GPIO7		38
--#define HI3660_PCLK_GPIO8		39
--#define HI3660_PCLK_GPIO9		40
--#define HI3660_PCLK_GPIO10		41
--#define HI3660_PCLK_GPIO11		42
--#define HI3660_PCLK_GPIO12		43
--#define HI3660_PCLK_GPIO13		44
--#define HI3660_PCLK_GPIO14		45
--#define HI3660_PCLK_GPIO15		46
--#define HI3660_PCLK_GPIO16		47
--#define HI3660_PCLK_GPIO17		48
--#define HI3660_PCLK_GPIO18		49
--#define HI3660_PCLK_GPIO19		50
--#define HI3660_PCLK_GPIO20		51
--#define HI3660_PCLK_GPIO21		52
--#define HI3660_CLK_GATE_SPI3		53
--#define HI3660_CLK_GATE_I2C7		54
--#define HI3660_CLK_GATE_I2C3		55
--#define HI3660_CLK_GATE_SPI1		56
--#define HI3660_CLK_GATE_UART1		57
--#define HI3660_CLK_GATE_UART2		58
--#define HI3660_CLK_GATE_UART4		59
--#define HI3660_CLK_GATE_UART5		60
--#define HI3660_CLK_GATE_I2C4		61
--#define HI3660_CLK_GATE_DMAC		62
--#define HI3660_PCLK_GATE_DSS		63
--#define HI3660_ACLK_GATE_DSS		64
--#define HI3660_CLK_GATE_LDI1		65
--#define HI3660_CLK_GATE_LDI0		66
--#define HI3660_CLK_GATE_VIVOBUS		67
--#define HI3660_CLK_GATE_EDC0		68
--#define HI3660_CLK_GATE_TXDPHY0_CFG	69
--#define HI3660_CLK_GATE_TXDPHY0_REF	70
--#define HI3660_CLK_GATE_TXDPHY1_CFG	71
--#define HI3660_CLK_GATE_TXDPHY1_REF	72
--#define HI3660_ACLK_GATE_USB3OTG	73
--#define HI3660_CLK_GATE_SPI4		74
--#define HI3660_CLK_GATE_SD		75
--#define HI3660_CLK_GATE_SDIO0		76
--#define HI3660_CLK_GATE_UFS_SUBSYS	77
--#define HI3660_PCLK_GATE_DSI0		78
--#define HI3660_PCLK_GATE_DSI1		79
--#define HI3660_ACLK_GATE_PCIE		80
--#define HI3660_PCLK_GATE_PCIE_SYS       81
--#define HI3660_CLK_GATE_PCIEAUX		82
--#define HI3660_PCLK_GATE_PCIE_PHY	83
--#define HI3660_CLK_ANDGT_LDI0		84
--#define HI3660_CLK_ANDGT_LDI1		85
--#define HI3660_CLK_ANDGT_EDC0		86
--#define HI3660_CLK_GATE_UFSPHY_GT	87
--#define HI3660_CLK_ANDGT_MMC		88
--#define HI3660_CLK_ANDGT_SD		89
--#define HI3660_CLK_A53HPM_ANDGT		90
--#define HI3660_CLK_ANDGT_SDIO		91
--#define HI3660_CLK_ANDGT_UART0		92
--#define HI3660_CLK_ANDGT_UART1		93
--#define HI3660_CLK_ANDGT_UARTH		94
--#define HI3660_CLK_ANDGT_SPI		95
--#define HI3660_CLK_VIVOBUS_ANDGT	96
--#define HI3660_CLK_AOMM_ANDGT		97
--#define HI3660_CLK_320M_PLL_GT		98
--#define HI3660_AUTODIV_EMMC0BUS		99
--#define HI3660_AUTODIV_SYSBUS		100
--#define HI3660_CLK_GATE_UFSPHY_CFG	101
--#define HI3660_CLK_GATE_UFSIO_REF	102
--#define HI3660_CLK_MUX_SYSBUS		103
--#define HI3660_CLK_MUX_UART0		104
--#define HI3660_CLK_MUX_UART1		105
--#define HI3660_CLK_MUX_UARTH		106
--#define HI3660_CLK_MUX_SPI		107
--#define HI3660_CLK_MUX_I2C		108
--#define HI3660_CLK_MUX_MMC_PLL		109
--#define HI3660_CLK_MUX_LDI1		110
--#define HI3660_CLK_MUX_LDI0		111
--#define HI3660_CLK_MUX_SD_PLL		112
--#define HI3660_CLK_MUX_SD_SYS		113
--#define HI3660_CLK_MUX_EDC0		114
--#define HI3660_CLK_MUX_SDIO_SYS		115
--#define HI3660_CLK_MUX_SDIO_PLL		116
--#define HI3660_CLK_MUX_VIVOBUS		117
--#define HI3660_CLK_MUX_A53HPM		118
--#define HI3660_CLK_MUX_320M		119
--#define HI3660_CLK_MUX_IOPERI		120
--#define HI3660_CLK_DIV_UART0		121
--#define HI3660_CLK_DIV_UART1		122
--#define HI3660_CLK_DIV_UARTH		123
--#define HI3660_CLK_DIV_MMC		124
--#define HI3660_CLK_DIV_SD		125
--#define HI3660_CLK_DIV_EDC0		126
--#define HI3660_CLK_DIV_LDI0		127
--#define HI3660_CLK_DIV_SDIO		128
--#define HI3660_CLK_DIV_LDI1		129
--#define HI3660_CLK_DIV_SPI		130
--#define HI3660_CLK_DIV_VIVOBUS		131
--#define HI3660_CLK_DIV_I2C		132
--#define HI3660_CLK_DIV_UFSPHY		133
--#define HI3660_CLK_DIV_CFGBUS		134
--#define HI3660_CLK_DIV_MMC0BUS		135
--#define HI3660_CLK_DIV_MMC1BUS		136
--#define HI3660_CLK_DIV_UFSPERI		137
--#define HI3660_CLK_DIV_AOMM		138
--#define HI3660_CLK_DIV_IOPERI		139
--#define HI3660_VENC_VOLT_HOLD		140
--#define HI3660_PERI_VOLT_HOLD		141
--#define HI3660_CLK_GATE_VENC		142
--#define HI3660_CLK_GATE_VDEC		143
--#define HI3660_CLK_ANDGT_VENC		144
--#define HI3660_CLK_ANDGT_VDEC		145
--#define HI3660_CLK_MUX_VENC		146
--#define HI3660_CLK_MUX_VDEC		147
--#define HI3660_CLK_DIV_VENC		148
--#define HI3660_CLK_DIV_VDEC		149
--#define HI3660_CLK_FAC_ISP_SNCLK	150
--#define HI3660_CLK_GATE_ISP_SNCLK0	151
--#define HI3660_CLK_GATE_ISP_SNCLK1	152
--#define HI3660_CLK_GATE_ISP_SNCLK2	153
--#define HI3660_CLK_ANGT_ISP_SNCLK	154
--#define HI3660_CLK_MUX_ISP_SNCLK	155
--#define HI3660_CLK_DIV_ISP_SNCLK	156
--
--/* clk in pmuctrl */
--#define HI3660_GATE_ABB_192		0
--
--/* clk in pctrl */
--#define HI3660_GATE_UFS_TCXO_EN		0
--#define HI3660_GATE_USB_TCXO_EN		1
--
--/* clk in sctrl */
--#define HI3660_PCLK_AO_GPIO0		0
--#define HI3660_PCLK_AO_GPIO1		1
--#define HI3660_PCLK_AO_GPIO2		2
--#define HI3660_PCLK_AO_GPIO3		3
--#define HI3660_PCLK_AO_GPIO4		4
--#define HI3660_PCLK_AO_GPIO5		5
--#define HI3660_PCLK_AO_GPIO6		6
--#define HI3660_PCLK_GATE_MMBUF		7
--#define HI3660_CLK_GATE_DSS_AXI_MM	8
--#define HI3660_PCLK_MMBUF_ANDGT		9
--#define HI3660_CLK_MMBUF_PLL_ANDGT	10
--#define HI3660_CLK_FLL_MMBUF_ANDGT	11
--#define HI3660_CLK_SYS_MMBUF_ANDGT	12
--#define HI3660_CLK_GATE_PCIEPHY_GT	13
--#define HI3660_ACLK_MUX_MMBUF		14
--#define HI3660_CLK_SW_MMBUF		15
--#define HI3660_CLK_DIV_AOBUS		16
--#define HI3660_PCLK_DIV_MMBUF		17
--#define HI3660_ACLK_DIV_MMBUF		18
--#define HI3660_CLK_DIV_PCIEPHY		19
--
--/* clk in iomcu */
--#define HI3660_CLK_I2C0_IOMCU		0
--#define HI3660_CLK_I2C1_IOMCU		1
--#define HI3660_CLK_I2C2_IOMCU		2
--#define HI3660_CLK_I2C6_IOMCU		3
--#define HI3660_CLK_IOMCU_PERI0		4
--
--/* clk in stub clock */
--#define HI3660_CLK_STUB_CLUSTER0	0
--#define HI3660_CLK_STUB_CLUSTER1	1
--#define HI3660_CLK_STUB_GPU		2
--#define HI3660_CLK_STUB_DDR		3
--#define HI3660_CLK_STUB_NUM		4
--
--#endif	/* __DTS_HI3660_CLOCK_H */
-diff --git a/include/dt-bindings/clock/hi6220-clock.h b/include/dt-bindings/clock/hi6220-clock.h
-deleted file mode 100644
-index 70ee3833a7a0..000000000000
---- a/include/dt-bindings/clock/hi6220-clock.h
-+++ /dev/null
-@@ -1,173 +0,0 @@
--/*
-- * Copyright (c) 2015 Hisilicon Limited.
-- *
-- * Author: Bintian Wang <bintian.wang@huawei.com>
+- * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+- * Author: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
 - *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * published by the Free Software Foundation.
-- */
+-*/
 -
--#ifndef __DT_BINDINGS_CLOCK_HI6220_H
--#define __DT_BINDINGS_CLOCK_HI6220_H
+-#ifndef _DT_BINDINGS_CLOCK_EXYNOS7_H
+-#define _DT_BINDINGS_CLOCK_EXYNOS7_H
 -
--/* clk in Hi6220 AO (always on) controller */
--#define HI6220_NONE_CLOCK	0
+-/* TOPC */
+-#define DOUT_ACLK_PERIS			1
+-#define DOUT_SCLK_BUS0_PLL		2
+-#define DOUT_SCLK_BUS1_PLL		3
+-#define DOUT_SCLK_CC_PLL		4
+-#define DOUT_SCLK_MFC_PLL		5
+-#define DOUT_ACLK_CCORE_133		6
+-#define DOUT_ACLK_MSCL_532		7
+-#define ACLK_MSCL_532			8
+-#define DOUT_SCLK_AUD_PLL		9
+-#define FOUT_AUD_PLL			10
+-#define SCLK_AUD_PLL			11
+-#define SCLK_MFC_PLL_B			12
+-#define SCLK_MFC_PLL_A			13
+-#define SCLK_BUS1_PLL_B			14
+-#define SCLK_BUS1_PLL_A			15
+-#define SCLK_BUS0_PLL_B			16
+-#define SCLK_BUS0_PLL_A			17
+-#define SCLK_CC_PLL_B			18
+-#define SCLK_CC_PLL_A			19
+-#define ACLK_CCORE_133			20
+-#define ACLK_PERIS_66			21
+-#define TOPC_NR_CLK			22
 -
--/* fixed rate clocks */
--#define HI6220_REF32K		1
--#define HI6220_CLK_TCXO		2
--#define HI6220_MMC1_PAD		3
--#define HI6220_MMC2_PAD		4
--#define HI6220_MMC0_PAD		5
--#define HI6220_PLL_BBP		6
--#define HI6220_PLL_GPU		7
--#define HI6220_PLL1_DDR		8
--#define HI6220_PLL_SYS		9
--#define HI6220_PLL_SYS_MEDIA	10
--#define HI6220_DDR_SRC		11
--#define HI6220_PLL_MEDIA	12
--#define HI6220_PLL_DDR		13
+-/* TOP0 */
+-#define DOUT_ACLK_PERIC1		1
+-#define DOUT_ACLK_PERIC0		2
+-#define CLK_SCLK_UART0			3
+-#define CLK_SCLK_UART1			4
+-#define CLK_SCLK_UART2			5
+-#define CLK_SCLK_UART3			6
+-#define CLK_SCLK_SPI0			7
+-#define CLK_SCLK_SPI1			8
+-#define CLK_SCLK_SPI2			9
+-#define CLK_SCLK_SPI3			10
+-#define CLK_SCLK_SPI4			11
+-#define CLK_SCLK_SPDIF			12
+-#define CLK_SCLK_PCM1			13
+-#define CLK_SCLK_I2S1			14
+-#define CLK_ACLK_PERIC0_66		15
+-#define CLK_ACLK_PERIC1_66		16
+-#define TOP0_NR_CLK			17
 -
--/* fixed factor clocks */
--#define HI6220_300M		14
--#define HI6220_150M		15
--#define HI6220_PICOPHY_SRC	16
--#define HI6220_MMC0_SRC_SEL	17
--#define HI6220_MMC1_SRC_SEL	18
--#define HI6220_MMC2_SRC_SEL	19
--#define HI6220_VPU_CODEC	20
--#define HI6220_MMC0_SMP		21
--#define HI6220_MMC1_SMP		22
--#define HI6220_MMC2_SMP		23
+-/* TOP1 */
+-#define DOUT_ACLK_FSYS1_200		1
+-#define DOUT_ACLK_FSYS0_200		2
+-#define DOUT_SCLK_MMC2			3
+-#define DOUT_SCLK_MMC1			4
+-#define DOUT_SCLK_MMC0			5
+-#define CLK_SCLK_MMC2			6
+-#define CLK_SCLK_MMC1			7
+-#define CLK_SCLK_MMC0			8
+-#define CLK_ACLK_FSYS0_200		9
+-#define CLK_ACLK_FSYS1_200		10
+-#define CLK_SCLK_PHY_FSYS1		11
+-#define CLK_SCLK_PHY_FSYS1_26M		12
+-#define MOUT_SCLK_UFSUNIPRO20		13
+-#define DOUT_SCLK_UFSUNIPRO20		14
+-#define CLK_SCLK_UFSUNIPRO20		15
+-#define DOUT_SCLK_PHY_FSYS1		16
+-#define DOUT_SCLK_PHY_FSYS1_26M		17
+-#define TOP1_NR_CLK			18
 -
--/* gate clocks */
--#define HI6220_WDT0_PCLK	24
--#define HI6220_WDT1_PCLK	25
--#define HI6220_WDT2_PCLK	26
--#define HI6220_TIMER0_PCLK	27
--#define HI6220_TIMER1_PCLK	28
--#define HI6220_TIMER2_PCLK	29
--#define HI6220_TIMER3_PCLK	30
--#define HI6220_TIMER4_PCLK	31
--#define HI6220_TIMER5_PCLK	32
--#define HI6220_TIMER6_PCLK	33
--#define HI6220_TIMER7_PCLK	34
--#define HI6220_TIMER8_PCLK	35
--#define HI6220_UART0_PCLK	36
+-/* CCORE */
+-#define PCLK_RTC			1
+-#define CCORE_NR_CLK			2
 -
--#define HI6220_AO_NR_CLKS	37
+-/* PERIC0 */
+-#define PCLK_UART0			1
+-#define SCLK_UART0			2
+-#define PCLK_HSI2C0			3
+-#define PCLK_HSI2C1			4
+-#define PCLK_HSI2C4			5
+-#define PCLK_HSI2C5			6
+-#define PCLK_HSI2C9			7
+-#define PCLK_HSI2C10			8
+-#define PCLK_HSI2C11			9
+-#define PCLK_PWM			10
+-#define SCLK_PWM			11
+-#define PCLK_ADCIF			12
+-#define PERIC0_NR_CLK			13
 -
--/* clk in Hi6220 systrl */
--/* gate clock */
--#define HI6220_MMC0_CLK		1
--#define HI6220_MMC0_CIUCLK	2
--#define HI6220_MMC1_CLK		3
--#define HI6220_MMC1_CIUCLK	4
--#define HI6220_MMC2_CLK		5
--#define HI6220_MMC2_CIUCLK	6
--#define HI6220_USBOTG_HCLK	7
--#define HI6220_CLK_PICOPHY	8
--#define HI6220_HIFI		9
--#define HI6220_DACODEC_PCLK	10
--#define HI6220_EDMAC_ACLK	11
--#define HI6220_CS_ATB		12
--#define HI6220_I2C0_CLK		13
--#define HI6220_I2C1_CLK		14
--#define HI6220_I2C2_CLK		15
--#define HI6220_I2C3_CLK		16
--#define HI6220_UART1_PCLK	17
--#define HI6220_UART2_PCLK	18
--#define HI6220_UART3_PCLK	19
--#define HI6220_UART4_PCLK	20
--#define HI6220_SPI_CLK		21
--#define HI6220_TSENSOR_CLK	22
--#define HI6220_MMU_CLK		23
--#define HI6220_HIFI_SEL		24
--#define HI6220_MMC0_SYSPLL	25
--#define HI6220_MMC1_SYSPLL	26
--#define HI6220_MMC2_SYSPLL	27
--#define HI6220_MMC0_SEL		28
--#define HI6220_MMC1_SEL		29
--#define HI6220_BBPPLL_SEL	30
--#define HI6220_MEDIA_PLL_SRC	31
--#define HI6220_MMC2_SEL		32
--#define HI6220_CS_ATB_SYSPLL	33
+-/* PERIC1 */
+-#define PCLK_UART1			1
+-#define PCLK_UART2			2
+-#define PCLK_UART3			3
+-#define SCLK_UART1			4
+-#define SCLK_UART2			5
+-#define SCLK_UART3			6
+-#define PCLK_HSI2C2			7
+-#define PCLK_HSI2C3			8
+-#define PCLK_HSI2C6			9
+-#define PCLK_HSI2C7			10
+-#define PCLK_HSI2C8			11
+-#define PCLK_SPI0			12
+-#define PCLK_SPI1			13
+-#define PCLK_SPI2			14
+-#define PCLK_SPI3			15
+-#define PCLK_SPI4			16
+-#define SCLK_SPI0			17
+-#define SCLK_SPI1			18
+-#define SCLK_SPI2			19
+-#define SCLK_SPI3			20
+-#define SCLK_SPI4			21
+-#define PCLK_I2S1			22
+-#define PCLK_PCM1			23
+-#define PCLK_SPDIF			24
+-#define SCLK_I2S1			25
+-#define SCLK_PCM1			26
+-#define SCLK_SPDIF			27
+-#define PERIC1_NR_CLK			28
 -
--/* mux clocks */
--#define HI6220_MMC0_SRC		34
--#define HI6220_MMC0_SMP_IN	35
--#define HI6220_MMC1_SRC		36
--#define HI6220_MMC1_SMP_IN	37
--#define HI6220_MMC2_SRC		38
--#define HI6220_MMC2_SMP_IN	39
--#define HI6220_HIFI_SRC		40
--#define HI6220_UART1_SRC	41
--#define HI6220_UART2_SRC	42
--#define HI6220_UART3_SRC	43
--#define HI6220_UART4_SRC	44
--#define HI6220_MMC0_MUX0	45
--#define HI6220_MMC1_MUX0	46
--#define HI6220_MMC2_MUX0	47
--#define HI6220_MMC0_MUX1	48
--#define HI6220_MMC1_MUX1	49
--#define HI6220_MMC2_MUX1	50
+-/* PERIS */
+-#define PCLK_CHIPID			1
+-#define SCLK_CHIPID			2
+-#define PCLK_WDT			3
+-#define PCLK_TMU			4
+-#define SCLK_TMU			5
+-#define PERIS_NR_CLK			6
 -
--/* divider clocks */
--#define HI6220_CLK_BUS		51
--#define HI6220_MMC0_DIV		52
--#define HI6220_MMC1_DIV		53
--#define HI6220_MMC2_DIV		54
--#define HI6220_HIFI_DIV		55
--#define HI6220_BBPPLL0_DIV	56
--#define HI6220_CS_DAPB		57
--#define HI6220_CS_ATB_DIV	58
+-/* FSYS0 */
+-#define ACLK_MMC2			1
+-#define ACLK_AXIUS_USBDRD30X_FSYS0X	2
+-#define ACLK_USBDRD300			3
+-#define SCLK_USBDRD300_SUSPENDCLK	4
+-#define SCLK_USBDRD300_REFCLK		5
+-#define PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER		6
+-#define PHYCLK_USBDRD300_UDRD30_PHYCLK_USER		7
+-#define OSCCLK_PHY_CLKOUT_USB30_PHY		8
+-#define ACLK_PDMA0			9
+-#define ACLK_PDMA1			10
+-#define FSYS0_NR_CLK			11
 -
--#define HI6220_SYS_NR_CLKS	59
+-/* FSYS1 */
+-#define ACLK_MMC1			1
+-#define ACLK_MMC0			2
+-#define PHYCLK_UFS20_TX0_SYMBOL		3
+-#define PHYCLK_UFS20_RX0_SYMBOL		4
+-#define PHYCLK_UFS20_RX1_SYMBOL		5
+-#define ACLK_UFS20_LINK			6
+-#define SCLK_UFSUNIPRO20_USER		7
+-#define PHYCLK_UFS20_RX1_SYMBOL_USER	8
+-#define PHYCLK_UFS20_RX0_SYMBOL_USER	9
+-#define PHYCLK_UFS20_TX0_SYMBOL_USER	10
+-#define OSCCLK_PHY_CLKOUT_EMBEDDED_COMBO_PHY	11
+-#define SCLK_COMBO_PHY_EMBEDDED_26M	12
+-#define DOUT_PCLK_FSYS1			13
+-#define PCLK_GPIO_FSYS1			14
+-#define MOUT_FSYS1_PHYCLK_SEL1		15
+-#define FSYS1_NR_CLK			16
 -
--/* clk in Hi6220 media controller */
--/* gate clocks */
--#define HI6220_DSI_PCLK		1
--#define HI6220_G3D_PCLK		2
--#define HI6220_ACLK_CODEC_VPU	3
--#define HI6220_ISP_SCLK		4
--#define HI6220_ADE_CORE		5
--#define HI6220_MED_MMU		6
--#define HI6220_CFG_CSI4PHY	7
--#define HI6220_CFG_CSI2PHY	8
--#define HI6220_ISP_SCLK_GATE	9
--#define HI6220_ISP_SCLK_GATE1	10
--#define HI6220_ADE_CORE_GATE	11
--#define HI6220_CODEC_VPU_GATE	12
--#define HI6220_MED_SYSPLL	13
+-/* MSCL */
+-#define USERMUX_ACLK_MSCL_532		1
+-#define DOUT_PCLK_MSCL			2
+-#define ACLK_MSCL_0			3
+-#define ACLK_MSCL_1			4
+-#define ACLK_JPEG			5
+-#define ACLK_G2D			6
+-#define ACLK_LH_ASYNC_SI_MSCL_0		7
+-#define ACLK_LH_ASYNC_SI_MSCL_1		8
+-#define ACLK_AXI2ACEL_BRIDGE		9
+-#define ACLK_XIU_MSCLX_0		10
+-#define ACLK_XIU_MSCLX_1		11
+-#define ACLK_QE_MSCL_0			12
+-#define ACLK_QE_MSCL_1			13
+-#define ACLK_QE_JPEG			14
+-#define ACLK_QE_G2D			15
+-#define ACLK_PPMU_MSCL_0		16
+-#define ACLK_PPMU_MSCL_1		17
+-#define ACLK_MSCLNP_133			18
+-#define ACLK_AHB2APB_MSCL0P		19
+-#define ACLK_AHB2APB_MSCL1P		20
 -
--/* mux clocks */
--#define HI6220_1440_1200	14
--#define HI6220_1000_1200	15
--#define HI6220_1000_1440	16
+-#define PCLK_MSCL_0			21
+-#define PCLK_MSCL_1			22
+-#define PCLK_JPEG			23
+-#define PCLK_G2D			24
+-#define PCLK_QE_MSCL_0			25
+-#define PCLK_QE_MSCL_1			26
+-#define PCLK_QE_JPEG			27
+-#define PCLK_QE_G2D			28
+-#define PCLK_PPMU_MSCL_0		29
+-#define PCLK_PPMU_MSCL_1		30
+-#define PCLK_AXI2ACEL_BRIDGE		31
+-#define PCLK_PMU_MSCL			32
+-#define MSCL_NR_CLK			33
 -
--/* divider clocks */
--#define HI6220_CODEC_JPEG	17
--#define HI6220_ISP_SCLK_SRC	18
--#define HI6220_ISP_SCLK1	19
--#define HI6220_ADE_CORE_SRC	20
--#define HI6220_ADE_PIX_SRC	21
--#define HI6220_G3D_CLK		22
--#define HI6220_CODEC_VPU_SRC	23
--
--#define HI6220_MEDIA_NR_CLKS	24
--
--/* clk in Hi6220 power controller */
--/* gate clocks */
--#define HI6220_PLL_GPU_GATE	1
--#define HI6220_PLL1_DDR_GATE	2
--#define HI6220_PLL_DDR_GATE	3
--#define HI6220_PLL_MEDIA_GATE	4
--#define HI6220_PLL0_BBP_GATE	5
--
--/* divider clocks */
--#define HI6220_DDRC_SRC		6
--#define HI6220_DDRC_AXI1	7
--
--#define HI6220_POWER_NR_CLKS	8
--#endif
-diff --git a/include/dt-bindings/pinctrl/hisi.h b/include/dt-bindings/pinctrl/hisi.h
+-/* AUD */
+-#define SCLK_I2S			1
+-#define SCLK_PCM			2
+-#define PCLK_I2S			3
+-#define PCLK_PCM			4
+-#define ACLK_ADMA			5
+-#define AUD_NR_CLK			6
+-#endif /* _DT_BINDINGS_CLOCK_EXYNOS7_H */
+diff --git a/include/dt-bindings/clock/exynos850.h b/include/dt-bindings/clock/exynos850.h
 deleted file mode 100644
-index 0359bfdc9119..000000000000
---- a/include/dt-bindings/pinctrl/hisi.h
+index 3090e09c9a55..000000000000
+--- a/include/dt-bindings/clock/exynos850.h
 +++ /dev/null
-@@ -1,74 +0,0 @@
+@@ -1,337 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
 -/*
-- * This header provides constants for hisilicon pinctrl bindings.
+- * Copyright (C) 2021 Linaro Ltd.
+- * Author: Sam Protsenko <semen.protsenko@linaro.org>
 - *
-- * Copyright (c) 2015 Hisilicon Limited.
-- * Copyright (c) 2015 Linaro Limited.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-- * GNU General Public License for more details.
+- * Device Tree binding constants for Exynos850 clock controller.
 - */
 -
--#ifndef _DT_BINDINGS_PINCTRL_HISI_H
--#define _DT_BINDINGS_PINCTRL_HISI_H
+-#ifndef _DT_BINDINGS_CLOCK_EXYNOS_850_H
+-#define _DT_BINDINGS_CLOCK_EXYNOS_850_H
 -
--/* iomg bit definition */
--#define MUX_M0		0
--#define MUX_M1		1
--#define MUX_M2		2
--#define MUX_M3		3
--#define MUX_M4		4
--#define MUX_M5		5
--#define MUX_M6		6
--#define MUX_M7		7
+-/* CMU_TOP */
+-#define CLK_FOUT_SHARED0_PLL		1
+-#define CLK_FOUT_SHARED1_PLL		2
+-#define CLK_FOUT_MMC_PLL		3
+-#define CLK_MOUT_SHARED0_PLL		4
+-#define CLK_MOUT_SHARED1_PLL		5
+-#define CLK_MOUT_MMC_PLL		6
+-#define CLK_MOUT_CORE_BUS		7
+-#define CLK_MOUT_CORE_CCI		8
+-#define CLK_MOUT_CORE_MMC_EMBD		9
+-#define CLK_MOUT_CORE_SSS		10
+-#define CLK_MOUT_DPU			11
+-#define CLK_MOUT_HSI_BUS		12
+-#define CLK_MOUT_HSI_MMC_CARD		13
+-#define CLK_MOUT_HSI_USB20DRD		14
+-#define CLK_MOUT_PERI_BUS		15
+-#define CLK_MOUT_PERI_UART		16
+-#define CLK_MOUT_PERI_IP		17
+-#define CLK_DOUT_SHARED0_DIV3		18
+-#define CLK_DOUT_SHARED0_DIV2		19
+-#define CLK_DOUT_SHARED1_DIV3		20
+-#define CLK_DOUT_SHARED1_DIV2		21
+-#define CLK_DOUT_SHARED0_DIV4		22
+-#define CLK_DOUT_SHARED1_DIV4		23
+-#define CLK_DOUT_CORE_BUS		24
+-#define CLK_DOUT_CORE_CCI		25
+-#define CLK_DOUT_CORE_MMC_EMBD		26
+-#define CLK_DOUT_CORE_SSS		27
+-#define CLK_DOUT_DPU			28
+-#define CLK_DOUT_HSI_BUS		29
+-#define CLK_DOUT_HSI_MMC_CARD		30
+-#define CLK_DOUT_HSI_USB20DRD		31
+-#define CLK_DOUT_PERI_BUS		32
+-#define CLK_DOUT_PERI_UART		33
+-#define CLK_DOUT_PERI_IP		34
+-#define CLK_GOUT_CORE_BUS		35
+-#define CLK_GOUT_CORE_CCI		36
+-#define CLK_GOUT_CORE_MMC_EMBD		37
+-#define CLK_GOUT_CORE_SSS		38
+-#define CLK_GOUT_DPU			39
+-#define CLK_GOUT_HSI_BUS		40
+-#define CLK_GOUT_HSI_MMC_CARD		41
+-#define CLK_GOUT_HSI_USB20DRD		42
+-#define CLK_GOUT_PERI_BUS		43
+-#define CLK_GOUT_PERI_UART		44
+-#define CLK_GOUT_PERI_IP		45
+-#define CLK_MOUT_CLKCMU_APM_BUS		46
+-#define CLK_DOUT_CLKCMU_APM_BUS		47
+-#define CLK_GOUT_CLKCMU_APM_BUS		48
+-#define CLK_MOUT_AUD			49
+-#define CLK_GOUT_AUD			50
+-#define CLK_DOUT_AUD			51
+-#define CLK_MOUT_IS_BUS			52
+-#define CLK_MOUT_IS_ITP			53
+-#define CLK_MOUT_IS_VRA			54
+-#define CLK_MOUT_IS_GDC			55
+-#define CLK_GOUT_IS_BUS			56
+-#define CLK_GOUT_IS_ITP			57
+-#define CLK_GOUT_IS_VRA			58
+-#define CLK_GOUT_IS_GDC			59
+-#define CLK_DOUT_IS_BUS			60
+-#define CLK_DOUT_IS_ITP			61
+-#define CLK_DOUT_IS_VRA			62
+-#define CLK_DOUT_IS_GDC			63
+-#define CLK_MOUT_MFCMSCL_MFC		64
+-#define CLK_MOUT_MFCMSCL_M2M		65
+-#define CLK_MOUT_MFCMSCL_MCSC		66
+-#define CLK_MOUT_MFCMSCL_JPEG		67
+-#define CLK_GOUT_MFCMSCL_MFC		68
+-#define CLK_GOUT_MFCMSCL_M2M		69
+-#define CLK_GOUT_MFCMSCL_MCSC		70
+-#define CLK_GOUT_MFCMSCL_JPEG		71
+-#define CLK_DOUT_MFCMSCL_MFC		72
+-#define CLK_DOUT_MFCMSCL_M2M		73
+-#define CLK_DOUT_MFCMSCL_MCSC		74
+-#define CLK_DOUT_MFCMSCL_JPEG		75
+-#define CLK_MOUT_G3D_SWITCH		76
+-#define CLK_GOUT_G3D_SWITCH		77
+-#define CLK_DOUT_G3D_SWITCH		78
 -
--/* iocg bit definition */
--#define PULL_MASK	(3)
--#define PULL_DIS	(0)
--#define PULL_UP		(1 << 0)
--#define PULL_DOWN	(1 << 1)
+-/* CMU_APM */
+-#define CLK_RCO_I3C_PMIC		1
+-#define OSCCLK_RCO_APM			2
+-#define CLK_RCO_APM__ALV		3
+-#define CLK_DLL_DCO			4
+-#define CLK_MOUT_APM_BUS_USER		5
+-#define CLK_MOUT_RCO_APM_I3C_USER	6
+-#define CLK_MOUT_RCO_APM_USER		7
+-#define CLK_MOUT_DLL_USER		8
+-#define CLK_MOUT_CLKCMU_CHUB_BUS	9
+-#define CLK_MOUT_APM_BUS		10
+-#define CLK_MOUT_APM_I3C		11
+-#define CLK_DOUT_CLKCMU_CHUB_BUS	12
+-#define CLK_DOUT_APM_BUS		13
+-#define CLK_DOUT_APM_I3C		14
+-#define CLK_GOUT_CLKCMU_CMGP_BUS	15
+-#define CLK_GOUT_CLKCMU_CHUB_BUS	16
+-#define CLK_GOUT_RTC_PCLK		17
+-#define CLK_GOUT_TOP_RTC_PCLK		18
+-#define CLK_GOUT_I3C_PCLK		19
+-#define CLK_GOUT_I3C_SCLK		20
+-#define CLK_GOUT_SPEEDY_PCLK		21
+-#define CLK_GOUT_GPIO_ALIVE_PCLK	22
+-#define CLK_GOUT_PMU_ALIVE_PCLK		23
+-#define CLK_GOUT_SYSREG_APM_PCLK	24
 -
--/* drive strength definition */
--#define DRIVE_MASK	(7 << 4)
--#define DRIVE1_02MA	(0 << 4)
--#define DRIVE1_04MA	(1 << 4)
--#define DRIVE1_08MA	(2 << 4)
--#define DRIVE1_10MA	(3 << 4)
--#define DRIVE2_02MA	(0 << 4)
--#define DRIVE2_04MA	(1 << 4)
--#define DRIVE2_08MA	(2 << 4)
--#define DRIVE2_10MA	(3 << 4)
--#define DRIVE3_04MA	(0 << 4)
--#define DRIVE3_08MA	(1 << 4)
--#define DRIVE3_12MA	(2 << 4)
--#define DRIVE3_16MA	(3 << 4)
--#define DRIVE3_20MA	(4 << 4)
--#define DRIVE3_24MA	(5 << 4)
--#define DRIVE3_32MA	(6 << 4)
--#define DRIVE3_40MA	(7 << 4)
--#define DRIVE4_02MA	(0 << 4)
--#define DRIVE4_04MA	(2 << 4)
--#define DRIVE4_08MA	(4 << 4)
--#define DRIVE4_10MA	(6 << 4)
+-/* CMU_AUD */
+-#define CLK_DOUT_AUD_AUDIF		1
+-#define CLK_DOUT_AUD_BUSD		2
+-#define CLK_DOUT_AUD_BUSP		3
+-#define CLK_DOUT_AUD_CNT		4
+-#define CLK_DOUT_AUD_CPU		5
+-#define CLK_DOUT_AUD_CPU_ACLK		6
+-#define CLK_DOUT_AUD_CPU_PCLKDBG	7
+-#define CLK_DOUT_AUD_FM			8
+-#define CLK_DOUT_AUD_FM_SPDY		9
+-#define CLK_DOUT_AUD_MCLK		10
+-#define CLK_DOUT_AUD_UAIF0		11
+-#define CLK_DOUT_AUD_UAIF1		12
+-#define CLK_DOUT_AUD_UAIF2		13
+-#define CLK_DOUT_AUD_UAIF3		14
+-#define CLK_DOUT_AUD_UAIF4		15
+-#define CLK_DOUT_AUD_UAIF5		16
+-#define CLK_DOUT_AUD_UAIF6		17
+-#define CLK_FOUT_AUD_PLL		18
+-#define CLK_GOUT_AUD_ABOX_ACLK		19
+-#define CLK_GOUT_AUD_ASB_CCLK		20
+-#define CLK_GOUT_AUD_CA32_CCLK		21
+-#define CLK_GOUT_AUD_CNT_BCLK		22
+-#define CLK_GOUT_AUD_CODEC_MCLK		23
+-#define CLK_GOUT_AUD_DAP_CCLK		24
+-#define CLK_GOUT_AUD_GPIO_PCLK		25
+-#define CLK_GOUT_AUD_PPMU_ACLK		26
+-#define CLK_GOUT_AUD_PPMU_PCLK		27
+-#define CLK_GOUT_AUD_SPDY_BCLK		28
+-#define CLK_GOUT_AUD_SYSMMU_CLK		29
+-#define CLK_GOUT_AUD_SYSREG_PCLK	30
+-#define CLK_GOUT_AUD_TZPC_PCLK		31
+-#define CLK_GOUT_AUD_UAIF0_BCLK		32
+-#define CLK_GOUT_AUD_UAIF1_BCLK		33
+-#define CLK_GOUT_AUD_UAIF2_BCLK		34
+-#define CLK_GOUT_AUD_UAIF3_BCLK		35
+-#define CLK_GOUT_AUD_UAIF4_BCLK		36
+-#define CLK_GOUT_AUD_UAIF5_BCLK		37
+-#define CLK_GOUT_AUD_UAIF6_BCLK		38
+-#define CLK_GOUT_AUD_WDT_PCLK		39
+-#define CLK_MOUT_AUD_CPU		40
+-#define CLK_MOUT_AUD_CPU_HCH		41
+-#define CLK_MOUT_AUD_CPU_USER		42
+-#define CLK_MOUT_AUD_FM			43
+-#define CLK_MOUT_AUD_PLL		44
+-#define CLK_MOUT_AUD_TICK_USB_USER	45
+-#define CLK_MOUT_AUD_UAIF0		46
+-#define CLK_MOUT_AUD_UAIF1		47
+-#define CLK_MOUT_AUD_UAIF2		48
+-#define CLK_MOUT_AUD_UAIF3		49
+-#define CLK_MOUT_AUD_UAIF4		50
+-#define CLK_MOUT_AUD_UAIF5		51
+-#define CLK_MOUT_AUD_UAIF6		52
+-#define IOCLK_AUDIOCDCLK0		53
+-#define IOCLK_AUDIOCDCLK1		54
+-#define IOCLK_AUDIOCDCLK2		55
+-#define IOCLK_AUDIOCDCLK3		56
+-#define IOCLK_AUDIOCDCLK4		57
+-#define IOCLK_AUDIOCDCLK5		58
+-#define IOCLK_AUDIOCDCLK6		59
+-#define TICK_USB			60
+-#define CLK_GOUT_AUD_CMU_AUD_PCLK	61
 -
--/* drive strength definition for hi3660 */
--#define DRIVE6_MASK	(15 << 4)
--#define DRIVE6_04MA	(0 << 4)
--#define DRIVE6_12MA	(4 << 4)
--#define DRIVE6_19MA	(8 << 4)
--#define DRIVE6_27MA	(10 << 4)
--#define DRIVE6_32MA	(15 << 4)
--#define DRIVE7_02MA	(0 << 4)
--#define DRIVE7_04MA	(1 << 4)
--#define DRIVE7_06MA	(2 << 4)
--#define DRIVE7_08MA	(3 << 4)
--#define DRIVE7_10MA	(4 << 4)
--#define DRIVE7_12MA	(5 << 4)
--#define DRIVE7_14MA	(6 << 4)
--#define DRIVE7_16MA	(7 << 4)
--#endif
+-/* CMU_CMGP */
+-#define CLK_RCO_CMGP			1
+-#define CLK_MOUT_CMGP_ADC		2
+-#define CLK_MOUT_CMGP_USI0		3
+-#define CLK_MOUT_CMGP_USI1		4
+-#define CLK_DOUT_CMGP_ADC		5
+-#define CLK_DOUT_CMGP_USI0		6
+-#define CLK_DOUT_CMGP_USI1		7
+-#define CLK_GOUT_CMGP_ADC_S0_PCLK	8
+-#define CLK_GOUT_CMGP_ADC_S1_PCLK	9
+-#define CLK_GOUT_CMGP_GPIO_PCLK		10
+-#define CLK_GOUT_CMGP_USI0_IPCLK	11
+-#define CLK_GOUT_CMGP_USI0_PCLK		12
+-#define CLK_GOUT_CMGP_USI1_IPCLK	13
+-#define CLK_GOUT_CMGP_USI1_PCLK		14
+-#define CLK_GOUT_SYSREG_CMGP_PCLK	15
+-
+-/* CMU_G3D */
+-#define CLK_FOUT_G3D_PLL		1
+-#define CLK_MOUT_G3D_PLL		2
+-#define CLK_MOUT_G3D_SWITCH_USER	3
+-#define CLK_MOUT_G3D_BUSD		4
+-#define CLK_DOUT_G3D_BUSP		5
+-#define CLK_GOUT_G3D_CMU_G3D_PCLK	6
+-#define CLK_GOUT_G3D_GPU_CLK		7
+-#define CLK_GOUT_G3D_TZPC_PCLK		8
+-#define CLK_GOUT_G3D_GRAY2BIN_CLK	9
+-#define CLK_GOUT_G3D_BUSD_CLK		10
+-#define CLK_GOUT_G3D_BUSP_CLK		11
+-#define CLK_GOUT_G3D_SYSREG_PCLK	12
+-
+-/* CMU_HSI */
+-#define CLK_MOUT_HSI_BUS_USER		1
+-#define CLK_MOUT_HSI_MMC_CARD_USER	2
+-#define CLK_MOUT_HSI_USB20DRD_USER	3
+-#define CLK_MOUT_HSI_RTC		4
+-#define CLK_GOUT_USB_RTC_CLK		5
+-#define CLK_GOUT_USB_REF_CLK		6
+-#define CLK_GOUT_USB_PHY_REF_CLK	7
+-#define CLK_GOUT_USB_PHY_ACLK		8
+-#define CLK_GOUT_USB_BUS_EARLY_CLK	9
+-#define CLK_GOUT_GPIO_HSI_PCLK		10
+-#define CLK_GOUT_MMC_CARD_ACLK		11
+-#define CLK_GOUT_MMC_CARD_SDCLKIN	12
+-#define CLK_GOUT_SYSREG_HSI_PCLK	13
+-#define CLK_GOUT_HSI_PPMU_ACLK		14
+-#define CLK_GOUT_HSI_PPMU_PCLK		15
+-#define CLK_GOUT_HSI_CMU_HSI_PCLK	16
+-
+-/* CMU_IS */
+-#define CLK_MOUT_IS_BUS_USER		1
+-#define CLK_MOUT_IS_ITP_USER		2
+-#define CLK_MOUT_IS_VRA_USER		3
+-#define CLK_MOUT_IS_GDC_USER		4
+-#define CLK_DOUT_IS_BUSP		5
+-#define CLK_GOUT_IS_CMU_IS_PCLK		6
+-#define CLK_GOUT_IS_CSIS0_ACLK		7
+-#define CLK_GOUT_IS_CSIS1_ACLK		8
+-#define CLK_GOUT_IS_CSIS2_ACLK		9
+-#define CLK_GOUT_IS_TZPC_PCLK		10
+-#define CLK_GOUT_IS_CSIS_DMA_CLK	11
+-#define CLK_GOUT_IS_GDC_CLK		12
+-#define CLK_GOUT_IS_IPP_CLK		13
+-#define CLK_GOUT_IS_ITP_CLK		14
+-#define CLK_GOUT_IS_MCSC_CLK		15
+-#define CLK_GOUT_IS_VRA_CLK		16
+-#define CLK_GOUT_IS_PPMU_IS0_ACLK	17
+-#define CLK_GOUT_IS_PPMU_IS0_PCLK	18
+-#define CLK_GOUT_IS_PPMU_IS1_ACLK	19
+-#define CLK_GOUT_IS_PPMU_IS1_PCLK	20
+-#define CLK_GOUT_IS_SYSMMU_IS0_CLK	21
+-#define CLK_GOUT_IS_SYSMMU_IS1_CLK	22
+-#define CLK_GOUT_IS_SYSREG_PCLK		23
+-
+-/* CMU_MFCMSCL */
+-#define CLK_MOUT_MFCMSCL_MFC_USER		1
+-#define CLK_MOUT_MFCMSCL_M2M_USER		2
+-#define CLK_MOUT_MFCMSCL_MCSC_USER		3
+-#define CLK_MOUT_MFCMSCL_JPEG_USER		4
+-#define CLK_DOUT_MFCMSCL_BUSP			5
+-#define CLK_GOUT_MFCMSCL_CMU_MFCMSCL_PCLK	6
+-#define CLK_GOUT_MFCMSCL_TZPC_PCLK		7
+-#define CLK_GOUT_MFCMSCL_JPEG_ACLK		8
+-#define CLK_GOUT_MFCMSCL_M2M_ACLK		9
+-#define CLK_GOUT_MFCMSCL_MCSC_CLK		10
+-#define CLK_GOUT_MFCMSCL_MFC_ACLK		11
+-#define CLK_GOUT_MFCMSCL_PPMU_ACLK		12
+-#define CLK_GOUT_MFCMSCL_PPMU_PCLK		13
+-#define CLK_GOUT_MFCMSCL_SYSMMU_CLK		14
+-#define CLK_GOUT_MFCMSCL_SYSREG_PCLK		15
+-
+-/* CMU_PERI */
+-#define CLK_MOUT_PERI_BUS_USER		1
+-#define CLK_MOUT_PERI_UART_USER		2
+-#define CLK_MOUT_PERI_HSI2C_USER	3
+-#define CLK_MOUT_PERI_SPI_USER		4
+-#define CLK_DOUT_PERI_HSI2C0		5
+-#define CLK_DOUT_PERI_HSI2C1		6
+-#define CLK_DOUT_PERI_HSI2C2		7
+-#define CLK_DOUT_PERI_SPI0		8
+-#define CLK_GOUT_PERI_HSI2C0		9
+-#define CLK_GOUT_PERI_HSI2C1		10
+-#define CLK_GOUT_PERI_HSI2C2		11
+-#define CLK_GOUT_GPIO_PERI_PCLK		12
+-#define CLK_GOUT_HSI2C0_IPCLK		13
+-#define CLK_GOUT_HSI2C0_PCLK		14
+-#define CLK_GOUT_HSI2C1_IPCLK		15
+-#define CLK_GOUT_HSI2C1_PCLK		16
+-#define CLK_GOUT_HSI2C2_IPCLK		17
+-#define CLK_GOUT_HSI2C2_PCLK		18
+-#define CLK_GOUT_I2C0_PCLK		19
+-#define CLK_GOUT_I2C1_PCLK		20
+-#define CLK_GOUT_I2C2_PCLK		21
+-#define CLK_GOUT_I2C3_PCLK		22
+-#define CLK_GOUT_I2C4_PCLK		23
+-#define CLK_GOUT_I2C5_PCLK		24
+-#define CLK_GOUT_I2C6_PCLK		25
+-#define CLK_GOUT_MCT_PCLK		26
+-#define CLK_GOUT_PWM_MOTOR_PCLK		27
+-#define CLK_GOUT_SPI0_IPCLK		28
+-#define CLK_GOUT_SPI0_PCLK		29
+-#define CLK_GOUT_SYSREG_PERI_PCLK	30
+-#define CLK_GOUT_UART_IPCLK		31
+-#define CLK_GOUT_UART_PCLK		32
+-#define CLK_GOUT_WDT0_PCLK		33
+-#define CLK_GOUT_WDT1_PCLK		34
+-
+-/* CMU_CORE */
+-#define CLK_MOUT_CORE_BUS_USER		1
+-#define CLK_MOUT_CORE_CCI_USER		2
+-#define CLK_MOUT_CORE_MMC_EMBD_USER	3
+-#define CLK_MOUT_CORE_SSS_USER		4
+-#define CLK_MOUT_CORE_GIC		5
+-#define CLK_DOUT_CORE_BUSP		6
+-#define CLK_GOUT_CCI_ACLK		7
+-#define CLK_GOUT_GIC_CLK		8
+-#define CLK_GOUT_MMC_EMBD_ACLK		9
+-#define CLK_GOUT_MMC_EMBD_SDCLKIN	10
+-#define CLK_GOUT_SSS_ACLK		11
+-#define CLK_GOUT_SSS_PCLK		12
+-#define CLK_GOUT_GPIO_CORE_PCLK		13
+-#define CLK_GOUT_SYSREG_CORE_PCLK	14
+-
+-/* CMU_DPU */
+-#define CLK_MOUT_DPU_USER		1
+-#define CLK_DOUT_DPU_BUSP		2
+-#define CLK_GOUT_DPU_CMU_DPU_PCLK	3
+-#define CLK_GOUT_DPU_DECON0_ACLK	4
+-#define CLK_GOUT_DPU_DMA_ACLK		5
+-#define CLK_GOUT_DPU_DPP_ACLK		6
+-#define CLK_GOUT_DPU_PPMU_ACLK		7
+-#define CLK_GOUT_DPU_PPMU_PCLK		8
+-#define CLK_GOUT_DPU_SMMU_CLK		9
+-#define CLK_GOUT_DPU_SYSREG_PCLK	10
+-#define DPU_NR_CLK			11
+-
+-#endif /* _DT_BINDINGS_CLOCK_EXYNOS_850_H */
+diff --git a/include/dt-bindings/soc/samsung,exynos-usi.h b/include/dt-bindings/soc/samsung,exynos-usi.h
+deleted file mode 100644
+index a01af169d249..000000000000
+--- a/include/dt-bindings/soc/samsung,exynos-usi.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+-/*
+- * Copyright (c) 2021 Linaro Ltd.
+- * Author: Sam Protsenko <semen.protsenko@linaro.org>
+- *
+- * Device Tree bindings for Samsung Exynos USI (Universal Serial Interface).
+- */
+-
+-#ifndef __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
+-#define __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
+-
+-#define USI_V2_NONE		0
+-#define USI_V2_UART		1
+-#define USI_V2_SPI		2
+-#define USI_V2_I2C		3
+-
+-#endif /* __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H */
 
 -- 
 2.44.0
