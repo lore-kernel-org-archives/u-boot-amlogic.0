@@ -2,167 +2,179 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A62C54E68
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CCDC54E71
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:48 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.web11.21942.1709642576734455700
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web11.104456.1709571125429344427
  for <u-boot-amlogic@groups.io>;
- Tue, 05 Mar 2024 04:42:56 -0800
+ Mon, 04 Mar 2024 08:52:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=mz/rlJRT;
- spf=pass (domain: konsulko.com, ip: 209.85.219.54, mailfrom: trini@konsulko.com)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-68f5cdca7a3so48802456d6.1
-        for <u-boot-amlogic@groups.io>; Tue, 05 Mar 2024 04:42:56 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=RA1MsP0Q;
+ spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-412e84e87e6so4237635e9.2
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:52:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1709642576; x=1710247376; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wk69115rxQ7gj5iSGgTkNwUAZw6Ry8B22GrBL+mokpY=;
-        b=mz/rlJRTtwUbqVKhP37BEpuTWU1FRVIPi7jBAFJttddlfZfbLf9wwVmqwGaMVA0UfT
-         Afvxk3+fcUhI3cvZuJc8SRl2MqnJDij03HgR7dcKZ/8iveVTTV7/nDQcrTMHDcsYg2Cd
-         h5mFTAZpwrRbp6nxzVPowm32mfgsCKGFOIzr0=
+        d=linaro.org; s=google; t=1709571124; x=1710175924; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5pCWnqR2w3MK2Z9hkofhscjBJ0Hj19Lc+xpshC15mCg=;
+        b=RA1MsP0QClxdqoO3o+CG7y5TXrvGIKsy5dYW912Y8GfMSUPje4ZFC6nEJaZDWSBLTL
+         82sBTaZGKO9zzecwcByji3x5r2cM1hcLyhZrgdN/l7ypsTMpFTQwPxitLOUFJsLHea5x
+         R+MWeeiTiJkBDTqQ8ltZQBU49kD1jmshNPCq+NHUcv6LIIlv8ZqvMNqcu2cnRY2Pm/XO
+         HTXw05vVfJnzFQjWD8EaUPDtGuWtUwhXdmGtpxIe8FKA17QTU9uQwGopIYsKilrUU+X+
+         t8TypJdlIBbkuoAFhckCqMZSmvr6rdcjRBeIFxsRy8oKJo5A4lOoNWP09FXmou4qihpv
+         YcEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709642576; x=1710247376;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wk69115rxQ7gj5iSGgTkNwUAZw6Ry8B22GrBL+mokpY=;
-        b=hFrPEvhfiVUn5TJW4Eve40VXmUlkB8Ax7XBhVa1NnBa2Vx28CL0IdbFruBKReRSooB
-         rbS2oCOxAddbW51FGJ3PY44fSnHDsm/pmuTDutJk9s69d3WZwdcR3xj8sHZ8ssbVUoen
-         otm09Pz8lUFTXV5ImmpkxiA0TSEQvizKsot0otv1+xfJYeDMAIEsPd0uTEJ68QRN0zBz
-         gqciaNfQmqSTq1hxkhnSZunxOQ4mLs6hPqE5nCD2fCmKi2iuzVQAVR2r6EDGLGHdF1So
-         e1P+lNIBvhWRUtFoOL4YeCKu0nKaJ3f7NsbpknNAWFKnxBxOt9w7ipQh8y+DRzHvtynG
-         F1Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMH4CHBDYPT0vl6jt8YnCCwZe5KVLnAJb4iAwuAIolO26xPenOIJKtBuhVl65320VM91PZIfPP6VGgvoH1AIano8AfKQNMXQ0=
-X-Gm-Message-State: AOJu0YwnQF3M7nj+NbEMDD+bsv0rKxzIxqs9dNNjGm2XAMPnZGWfr8Dn
-	RWDoAO2IlBnhQawq53ruNNoX1guj1KmfniEzzNCW3+HcyFGWogOcVSpgnjDhAvk=
-X-Google-Smtp-Source: AGHT+IFLNemNWxb6qjPWkXHj6fl0HhKSexUpwLRPqamXkhTxAKI2ZSemBXE9u8kgXTgwrXjDU6fpLg==
-X-Received: by 2002:a05:6214:1255:b0:68f:5d7f:6a8d with SMTP id r21-20020a056214125500b0068f5d7f6a8dmr3197673qvv.3.1709642575818;
-        Tue, 05 Mar 2024 04:42:55 -0800 (PST)
-Received: from bill-the-cat (2603-6081-7b00-007f-0000-0000-0000-1000.res6.spectrum.com. [2603:6081:7b00:7f::1000])
-        by smtp.gmail.com with ESMTPSA id ol14-20020a0562143d0e00b0068ffdb8fb59sm6208452qvb.112.2024.03.05.04.42.52
+        d=1e100.net; s=20230601; t=1709571124; x=1710175924;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5pCWnqR2w3MK2Z9hkofhscjBJ0Hj19Lc+xpshC15mCg=;
+        b=ox6TNm+UqRvOxug+4qZa3YMY+VBFS6Onbly6wapS1sL7Y1Tzvt7V0eoj9A6NUJBNMj
+         GEkOzltwoZJv7/Ka99vcvAs2Slsdr27SXnlV0XvhQ0YbsWYCCXfDJj6iTlx6q7gBObcz
+         U3Da6f5yJm4vHfKuLsOOivYTAoaqvy4/+J2oT56F4/1xM3VDs/KqUWs2JuT59ZnGPfI6
+         AoW4ry6Z9+EhOnw/yQW4QgeTnk/nAv2L9EGbhbsDr3bsGTGpjo0d93oEdSM0/HpIrEsm
+         NSvNHeuYUjTTW7+W4ErHU8ApOI71uvuogCJzFZXhe4SBzLMavxG+kFwki+y8BN3uJsPy
+         38xA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWoGxDtjkFtuAhnpz0JBZzi7VxEpInt7T4WWp21jDQ9T5b/DeMDFtIWumC2yc2Culzjz/JzS5TwENSeSfxIDKPRE16tlRZ+nE=
+X-Gm-Message-State: AOJu0YyUGCJo5MnEx2SoRjWxa6z7YdHM3/g6lgbdHgCkdbvdGP7QOx41
+	s3EmE8k2NhPR1alrsM9xTECxTyMhRCEd22bFY8m1HggjkyLE+B5SAJYvyhpBgaU=
+X-Google-Smtp-Source: AGHT+IEjhPNnOmvxE//lUchMMMtq5k9u+YYlSzW/hTU5ohirwvcPfzQHUgu607vQs5iIsLuuIPMRVQ==
+X-Received: by 2002:a05:600c:1c9c:b0:412:e580:2dbc with SMTP id k28-20020a05600c1c9c00b00412e5802dbcmr1575430wms.19.1709571123950;
+        Mon, 04 Mar 2024 08:52:03 -0800 (PST)
+Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.52.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 04:42:53 -0800 (PST)
-Date: Tue, 5 Mar 2024 07:42:50 -0500
-From: Tom Rini <trini@konsulko.com>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: Caleb Connolly <caleb.connolly@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Patrick Delaunay <patrick.delaunay@foss.st.com>,
-	Jagan Teki <jagan@amarulasolutions.com>,
-	Simon Glass <sjg@chromium.org>,
-	Philipp Tomsich <philipp.tomsich@vrull.eu>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	Joe Hershberger <joe.hershberger@ni.com>,
-	Ramon Fried <rfried.dev@gmail.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Paul Barker <paul.barker.ct@bp.renesas.com>,
-	Weijie Gao <weijie.gao@mediatek.com>,
-	GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Eugen Hristev <eugen.hristev@collabora.com>,
-	Rick Chen <rick@andestech.com>, Leo <ycliang@andestech.com>,
-	Ryan Chen <ryan_chen@aspeedtech.com>,
-	Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
-	Aspeed BMC SW team <BMC-SW@aspeedtech.com>,
-	Joel Stanley <joel@jms.id.au>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Dai Okamura <okamura.dai@socionext.com>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	u-boot@lists.denx.de, u-boot-amlogic@groups.io,
-	uboot-stm32@st-md-mailman.stormreply.com,
-	uboot-snps-arc@synopsys.com
-Subject: Re: [PATCH RFC 26/26] dts: support building all dtb files for a specific vendor
-Message-ID: <20240305124250.GZ1523872@bill-the-cat>
-References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
- <20240304-b4-upstream-dt-headers-v1-26-b7ff41925f92@linaro.org>
- <CAFA6WYM6sTEdw+VphKidUqjQW61eW8ZVq+oO35CJVM=5wPoniA@mail.gmail.com>
+        Mon, 04 Mar 2024 08:52:03 -0800 (PST)
+From: Caleb Connolly <caleb.connolly@linaro.org>
+Date: Mon, 04 Mar 2024 16:51:34 +0000
+Subject: [PATCH RFC 26/26] dts: support building all dtb files for a specific vendor
 MIME-Version: 1.0
-In-Reply-To: <CAFA6WYM6sTEdw+VphKidUqjQW61eW8ZVq+oO35CJVM=5wPoniA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=SIIgpSrKQEjMne8Ooj0C"
+Message-Id: <20240304-b4-upstream-dt-headers-v1-26-b7ff41925f92@linaro.org>
+References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
+In-Reply-To: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
+To: Tom Rini <trini@konsulko.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Sumit Garg <sumit.garg@linaro.org>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Patrick Delaunay <patrick.delaunay@foss.st.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Simon Glass <sjg@chromium.org>, 
+ Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+ Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>, 
+ Sean Anderson <seanga2@gmail.com>, 
+ Sam Protsenko <semen.protsenko@linaro.org>, 
+ Matthias Brugger <mbrugger@suse.com>, Peter Robinson <pbrobinson@gmail.com>, 
+ Joe Hershberger <joe.hershberger@ni.com>, 
+ Ramon Fried <rfried.dev@gmail.com>, Thierry Reding <treding@nvidia.com>, 
+ Svyatoslav Ryhel <clamor95@gmail.com>, Michal Simek <michal.simek@amd.com>, 
+ Paul Barker <paul.barker.ct@bp.renesas.com>, 
+ Weijie Gao <weijie.gao@mediatek.com>, 
+ GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, 
+ Ryder Lee <ryder.lee@mediatek.com>, 
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+ Eugen Hristev <eugen.hristev@collabora.com>, Rick Chen <rick@andestech.com>, 
+ Leo <ycliang@andestech.com>, Ryan Chen <ryan_chen@aspeedtech.com>, 
+ Chia-Wei Wang <chiawei_wang@aspeedtech.com>, 
+ Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Dai Okamura <okamura.dai@socionext.com>, 
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+ uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
+ Caleb Connolly <caleb.connolly@linaro.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2654;
+ i=caleb.connolly@linaro.org; h=from:subject:message-id;
+ bh=EI2CDzUz7yZMpQs2UznMDgZqFxlWcF+fQMMDPec6VAA=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnfzjZbFzqomcFzWZeWP/p0l6fZTdzdJim2HT2/J9QI
+ 97Z+Syvo5SFQZCDQVZMkUX8xDLLprWX7TW2L7gAM4eVCWQIAxenAEzk0TJGhoXmeT1fj8vPurep
+ 9Q7bLMMl2cdYfhQcNPokvMWK8dNF0X5GhmluS6/N3bfIY5Kaq0mF0cmI6Iyp/PNehy++Fn40UJb
+ P6CAA
+X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
+ fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:48 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2187
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2182
 
---Groupsio=SIIgpSrKQEjMne8Ooj0C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This adjusts OF_UPSTREAM to behave more like the kernel by allowing for
+all the devicetree files for a given vendor to be compiled. This is
+useful for Qualcomm in particular as most boards are supported by a
+single U-Boot build just provided with a different DT.
 
-On Tue, Mar 05, 2024 at 06:05:52PM +0530, Sumit Garg wrote:
-> Hi Caleb,
->=20
-> On Mon, 4 Mar 2024 at 22:22, Caleb Connolly <caleb.connolly@linaro.org> w=
-rote:
-> >
-> > This adjusts OF_UPSTREAM to behave more like the kernel by allowing for
-> > all the devicetree files for a given vendor to be compiled. This is
-> > useful for Qualcomm in particular as most boards are supported by a
-> > single U-Boot build just provided with a different DT.
-> >
-> > Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
-> > ---
-> >  dts/Kconfig          | 24 ++++++++++++++++++++++++
-> >  scripts/Makefile.dts | 17 ++++++++++++++++-
-> >  2 files changed, 40 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/dts/Kconfig b/dts/Kconfig
-> > index b9b6367154ef..67d9dc489856 100644
-> > --- a/dts/Kconfig
-> > +++ b/dts/Kconfig
-> > @@ -100,8 +100,32 @@ config OF_UPSTREAM
-> >           However, newer boards whose devicetree source files haven't l=
-anded in
-> >           the dts/upstream subtree, they can override this option to ha=
-ve the
-> >           DT build from existing U-Boot tree location instead.
-> >
-> > +config OF_UPSTREAM_BUILD_VENDOR
-> > +       bool "Build all devicetree files for a particular vendor"
-> > +       depends on OF_UPSTREAM
-> > +       help
-> > +         Enable building all devicetree files for a particular vendor.=
- This
->=20
-> Do we really want to build all the DTBs even if many of those aren't
-> supported by U-Boot at all? I would have rather added Makefile targets
-> for boards which really supports a single defconfig eg.
-> qcom_defconfig.
+Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+---
+ dts/Kconfig          | 24 ++++++++++++++++++++++++
+ scripts/Makefile.dts | 17 ++++++++++++++++-
+ 2 files changed, 40 insertions(+), 1 deletion(-)
 
-Yes, I think this target is useful as it addresses some of Simon's
-earlier concerns with the feature.
+diff --git a/dts/Kconfig b/dts/Kconfig
+index b9b6367154ef..67d9dc489856 100644
+--- a/dts/Kconfig
++++ b/dts/Kconfig
+@@ -100,8 +100,32 @@ config OF_UPSTREAM
+ 	  However, newer boards whose devicetree source files haven't landed in
+ 	  the dts/upstream subtree, they can override this option to have the
+ 	  DT build from existing U-Boot tree location instead.
+ 
++config OF_UPSTREAM_BUILD_VENDOR
++	bool "Build all devicetree files for a particular vendor"
++	depends on OF_UPSTREAM
++	help
++	  Enable building all devicetree files for a particular vendor. This
++	  is useful for generic U-Boot configurations where many boards can
++	  be supported with a single binary.
++
++	  This is only available for platforms using upstream devicetree.
++
++config OF_UPSTREAM_VENDOR
++	string "Vendor to build all upstream devicetree files for"
++	depends on OF_UPSTREAM_BUILD_VENDOR
++	default "qcom" if ARCH_SNAPDRAGON
++	default "rockchip" if ARCH_ROCKCHIP
++	default "amlogic" if ARCH_MESON
++	default "allwinner" if ARCH_SUNXI
++	default "mediatek" if ARCH_MEDIATEK
++	default "marvell" if ARCH_MVEBU
++	default "xilinx" if ARCH_VERSAL || ARCH_ZYNQ
++	default "nvidia" if ARCH_TEGRA
++	help
++	  Select the vendor to build all devicetree files for.
++
+ choice
+ 	prompt "Provider of DTB for DT control"
+ 	depends on OF_CONTROL
+ 
+diff --git a/scripts/Makefile.dts b/scripts/Makefile.dts
+index 5e2429c6170c..8005527f3df7 100644
+--- a/scripts/Makefile.dts
++++ b/scripts/Makefile.dts
+@@ -1,3 +1,18 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ 
+-dtb-y += $(patsubst %,%.dtb,$(subst ",,$(CONFIG_DEFAULT_DEVICE_TREE) $(CONFIG_OF_LIST) $(CONFIG_SPL_OF_LIST)))
++dtb-y += $(patsubst %,%.dtb,\
++	$(subst ",,$(CONFIG_DEFAULT_DEVICE_TREE) $(CONFIG_OF_LIST) $(CONFIG_SPL_OF_LIST)))
++
++ifeq ($(CONFIG_OF_UPSTREAM_BUILD_VENDOR),y)
++ifeq ($(CONFIG_ARM64),y)
++dt_dir := $(srctree)/dts/upstream/src/arm64
++else
++dt_dir := $(srctree)/dts/upstream/src/$(ARCH)
++endif
++
++dtb-vendor_dts := $(patsubst %.dts,%.dtb, \
++	$(wildcard $(dt_dir)/$(subst ",,$(CONFIG_OF_UPSTREAM_VENDOR))/*.dts))
++
++dtb-y += $(subst $(dt_dir)/,,$(dtb-vendor_dts))
++
++endif
 
---=20
-Tom
+-- 
+2.44.0
 
---Groupsio=SIIgpSrKQEjMne8Ooj0C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmXnE0cACgkQFHw5/5Y0
-tyxtGQv/Wod2EBmX5FhenEgBCfdTBzSxdGJ5+X+907CEYEwKHQ2EKUD/rLyaYBWh
-YoLu0e5mas2+3PSBBWdmvapYqusnc6vXxr53UYOSXkMzWuL1FeMvirhrelb1jdfC
-S3bB3gnPMXZukz8q6DpsjfOpeAJiWPtYmSYJPZBq7aXgWusAFIb1aGEww+Zp2R+4
-AZqwEuT0g4IBCJvjVg/B+QcaH8LivpTGBATr0kTMvRHRKuuu6qD0VqOKgiUVqQnW
-Ls4aIfSm9ul0rUBEgkeatEVprJVO5wXxye6l1DXLCtsURyBmKpP9trV/ZLnzTDZN
-sakhwNI+y1A36CFSM8EVFUcXqulgFD/OV0prY4nYZswhezgT/MOg4lWisSa1xJ/d
-c2h1BWzsYIgNULElLCiStIZwpHI4hD09XL4T5whAEYYmX3NK4pK9gSq4M/JXhRCH
-aJrCz952CoPnp/t3S8LJyW34GwdbOo1XfxlUPnoLv2EGMIAZKzEl5tX3wAyu3xNn
-6Hcdp7my
-=UZMy
------END PGP SIGNATURE-----
-
---Groupsio=SIIgpSrKQEjMne8Ooj0C--
 
