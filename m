@@ -2,178 +2,135 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27DEC54E6E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5188C54E67
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:48 +0000 (UTC)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
- by mx.groups.io with SMTP id smtpd.web10.7676.1709593353051603085
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+ by mx.groups.io with SMTP id smtpd.web11.2206.1709583853035012779
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Mar 2024 15:02:33 -0800
+ Mon, 04 Mar 2024 12:24:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=hTmJdSEV;
- spf=pass (domain: gmail.com, ip: 209.85.208.50, mailfrom: mibodhi@gmail.com)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5658082d2c4so6918504a12.1
-        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 15:02:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709593351; x=1710198151; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EfKVvCc8ZYEfB1COmorOeK1mNHbPkMIzSdBUHLdvQJI=;
-        b=hTmJdSEVvwHDzgePoOkZUlsQxXPv10GkxfmueivmAby2zZky/qH++FGpwwxdbJCSyF
-         l4Aemy74C50xHraZDNeoXTwB2SXIAlgopbqKtRbRLORYN3sXphVsiKPfD6eeiq5eCE7b
-         biozP7dc/zwjBZCpdSsUPRbdNVG8bvbWLsy/RA4Pxu51JXBe0A/xOt4dcPyFCNkJ1/6v
-         Ifx10S/QUuNv16qNyqAVWuNtsfD8frZCRqwwXJV5ys3w4k4eQZFmrfOXbDS+rSUzcdnh
-         HXzthgsGefYV+sMhzZxcA6KFQ7t3mUknJ7435uJQEYAjY26JbmJCyglrxUNJqdwszBrx
-         ck/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709593351; x=1710198151;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EfKVvCc8ZYEfB1COmorOeK1mNHbPkMIzSdBUHLdvQJI=;
-        b=TibC6T+xzl1DKuf46nrz7duUWS4xDvgetKrFYHSnJOML9bJkdnlvgQTCQF6Wdrrrta
-         VN1FuBGzBANwzEXkjO2DIzqC4QHG1ON3M4zbz7qKWAjnHqFDoOU0DMS6ASC/PL5TQ7Lv
-         /cHSLAOFAxC313FZzywExQhhlQ8SjmDnLRCTgaHijevfgwhGrdaet+yucwlnePVLuFau
-         QrcOH2v5RhHwBAolRq3dK3xYMpXm6xRPaakP8hmjFYc+wMt7kjlmwuOl+zBHvzXnKoo4
-         d7e1QnV6rwEF4bNgYyGkjaHMa2eBTGYTRYtV6D9W44oH6KNSoVIV3zgNCVTr/HHrcSVI
-         pjEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEOjOOll4YUk29giPrMLMdseoeEMQ9gDYZGCaFq9/2nUxu4Tz8yN2qW/M01qeK3LlnXbB4QE1F1Sk/PJ6N45TC1wY/b3tZ2rw=
-X-Gm-Message-State: AOJu0YxxqPB2mBijgGjr6hSDGl1wubLRcjxBJziEx6v2KJ73sa2yzkQf
-	BKn4BnM9ioa0YcngqDNny5j5AgHsLRQmW7HIEYTKT/R8WjMkldtsQeRvK9c/UzrSJMYO8BehbGj
-	wwKgcVKDNgTK4PA+HD6b2ERmmR+U=
-X-Google-Smtp-Source: AGHT+IHrbX0TI1QzY4ITSD9vI9OrADmTTHJvB5pQMV71Lb/GX8KJKjae0afRbrPN2TprSlhSuU8msCqZoppsjaE4sys=
-X-Received: by 2002:a50:cdd0:0:b0:566:3f3e:3a23 with SMTP id
- h16-20020a50cdd0000000b005663f3e3a23mr6881548edj.1.1709593351307; Mon, 04 Mar
- 2024 15:02:31 -0800 (PST)
+ dkim=pass header.i=@kwiboo.se header.s=fe-e1b5cab7be header.b=U2mCquMG;
+ spf=pass (domain: fe-bounces.kwiboo.se, ip: 149.28.215.223, mailfrom: srs0=8d7b=kl=kwiboo.se=jonas@fe-bounces.kwiboo.se)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1709583847;
+ bh=yue8JLPupABBdqygA0EMatoBvWzc9y+LdbG73Zrk0is=;
+ b=U2mCquMGgMICAoDELBbO/2meILkSsw0LVYUYW7+l+JJejU6XFU6P+bvFYMjTaonfbcFL4+5nq
+ 6Te2eumEEr5payxBx9wHyPj0ZEyrthPopo+z/6OtPZN7XCcaZGx0BbuuQ77L2GNjKH7Qn6rEmOZ
+ IjhnZnRWFiHYEsUe4PhAZtfnnWGwkI2WVhWiIj4tEl6mL41t+YY4Hmwicf3XjhpRzvHVUmRQZ2b
+ GEJX5rjJeCvxJYgq/d+O4zBXjG81erSvaxhUUOG09hS6F8s6Qh7OciY9tRu0Y6Qq5mFcpyWYdzc
+ gJQUp/5ncYNooztBzMIbf/UOwpnjP6wx8nTonX2epcpg==
+Message-ID: <e6285379-d4c9-45b7-8913-bcf27c52bbda@kwiboo.se>
+Date: Mon, 4 Mar 2024 21:23:59 +0100
 MIME-Version: 1.0
-References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org> <20240304-b4-upstream-dt-headers-v1-26-b7ff41925f92@linaro.org>
-In-Reply-To: <20240304-b4-upstream-dt-headers-v1-26-b7ff41925f92@linaro.org>
-From: Tony Dinh <mibodhi@gmail.com>
-Date: Mon, 4 Mar 2024 15:02:12 -0800
-Message-ID: <CAJaLiFyXC2-wkwbyvK+bKWhwzV9=rWY445Lz5dFQSWdB0Zb5Bg@mail.gmail.com>
-Subject: Re: [PATCH RFC 26/26] dts: support building all dtb files for a specific vendor
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 10/26] rockchip: drop remaining dt-binding headers
 To: Caleb Connolly <caleb.connolly@linaro.org>
-Cc: Tom Rini <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Sumit Garg <sumit.garg@linaro.org>, Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Patrick Delaunay <patrick.delaunay@foss.st.com>, Jagan Teki <jagan@amarulasolutions.com>, 
-	Simon Glass <sjg@chromium.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, 
-	Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>, 
-	Sean Anderson <seanga2@gmail.com>, Sam Protsenko <semen.protsenko@linaro.org>, 
-	Matthias Brugger <mbrugger@suse.com>, Peter Robinson <pbrobinson@gmail.com>, 
-	Joe Hershberger <joe.hershberger@ni.com>, Ramon Fried <rfried.dev@gmail.com>, 
-	Thierry Reding <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>, 
-	Michal Simek <michal.simek@amd.com>, Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	Weijie Gao <weijie.gao@mediatek.com>, 
-	GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Chunfeng Yun <chunfeng.yun@mediatek.com>, Eugen Hristev <eugen.hristev@collabora.com>, 
-	Rick Chen <rick@andestech.com>, Leo <ycliang@andestech.com>, 
-	Ryan Chen <ryan_chen@aspeedtech.com>, Chia-Wei Wang <chiawei_wang@aspeedtech.com>, 
-	Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Dai Okamura <okamura.dai@socionext.com>, 
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, u-boot@lists.denx.de, 
-	u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com, 
-	uboot-snps-arc@synopsys.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
+ uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, Tom
+ Rini <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Sumit Garg <sumit.garg@linaro.org>, Patrice Chotard
+ <patrice.chotard@foss.st.com>, Patrick Delaunay
+ <patrick.delaunay@foss.st.com>, Jagan Teki <jagan@amarulasolutions.com>,
+ Simon Glass <sjg@chromium.org>, Philipp Tomsich
+ <philipp.tomsich@vrull.eu>, Kever Yang <kever.yang@rock-chips.com>, Lukasz
+ Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, Sam Protsenko
+ <semen.protsenko@linaro.org>, Matthias Brugger <mbrugger@suse.com>, Peter
+ Robinson <pbrobinson@gmail.com>, Joe Hershberger <joe.hershberger@ni.com>,
+ Ramon Fried <rfried.dev@gmail.com>, Thierry Reding <treding@nvidia.com>,
+ Svyatoslav Ryhel <clamor95@gmail.com>, Michal Simek
+ <michal.simek@amd.com>, Paul Barker <paul.barker.ct@bp.renesas.com>,
+ Weijie Gao <weijie.gao@mediatek.com>, GSS_MTK_Uboot_upstream
+ <GSS_MTK_Uboot_upstream@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, Eugen Hristev
+ <eugen.hristev@collabora.com>, Rick Chen <rick@andestech.com>, Leo
+ <ycliang@andestech.com>, Ryan Chen <ryan_chen@aspeedtech.com>, "Chia-Wei
+ Wang" <chiawei_wang@aspeedtech.com>, Aspeed BMC SW team
+ <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>, Kunihiko Hayashi
+ <hayashi.kunihiko@socionext.com>, Dai Okamura <okamura.dai@socionext.com>,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
+ <20240304-b4-upstream-dt-headers-v1-10-b7ff41925f92@linaro.org>
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20240304-b4-upstream-dt-headers-v1-10-b7ff41925f92@linaro.org>
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 65e62de5a5d3328d0fcb4c53
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:48 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2184
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2183
 
 Hi Caleb,
 
-On Mon, Mar 4, 2024 at 9:24=E2=80=AFAM Caleb Connolly <caleb.connolly@linar=
-o.org> wrote:
->
-> This adjusts OF_UPSTREAM to behave more like the kernel by allowing for
-> all the devicetree files for a given vendor to be compiled. This is
-> useful for Qualcomm in particular as most boards are supported by a
-> single U-Boot build just provided with a different DT.
->
+On 2024-03-04 17:51, Caleb Connolly wrote:
+> Drop in favour of dts/upstream.
+> 
+> Small driver adjustment to fix compatibility.
+> 
 > Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 > ---
->  dts/Kconfig          | 24 ++++++++++++++++++++++++
->  scripts/Makefile.dts | 17 ++++++++++++++++-
->  2 files changed, 40 insertions(+), 1 deletion(-)
->
-> diff --git a/dts/Kconfig b/dts/Kconfig
-> index b9b6367154ef..67d9dc489856 100644
-> --- a/dts/Kconfig
-> +++ b/dts/Kconfig
-> @@ -100,8 +100,32 @@ config OF_UPSTREAM
->           However, newer boards whose devicetree source files haven't lan=
-ded in
->           the dts/upstream subtree, they can override this option to have=
- the
->           DT build from existing U-Boot tree location instead.
->
-> +config OF_UPSTREAM_BUILD_VENDOR
-> +       bool "Build all devicetree files for a particular vendor"
-> +       depends on OF_UPSTREAM
-> +       help
-> +         Enable building all devicetree files for a particular vendor. T=
-his
-> +         is useful for generic U-Boot configurations where many boards c=
-an
-> +         be supported with a single binary.
+>  drivers/pinctrl/rockchip/pinctrl-rk3568.c         |  15 +
+>  include/dt-bindings/pinctrl/rockchip.h            |  60 --
+>  include/dt-bindings/power/px30-power.h            |  27 -
+>  include/dt-bindings/power/rk3066-power.h          |  22 -
+>  include/dt-bindings/power/rk3188-power.h          |  24 -
+>  include/dt-bindings/power/rk3228-power.h          |  21 -
+>  include/dt-bindings/power/rk3288-power.h          |  32 -
+>  include/dt-bindings/power/rk3328-power.h          |  19 -
+>  include/dt-bindings/power/rk3399-power.h          |  53 --
+>  include/dt-bindings/power/rk3568-power.h          |  32 -
+>  include/dt-bindings/power/rk3588-power.h          |  69 --
+>  include/dt-bindings/power/rockchip,rv1126-power.h |  35 -
+>  include/dt-bindings/reset/rockchip,rk3588-cru.h   | 754 ----------------------
+>  include/dt-bindings/soc/rockchip,boot-mode.h      |  16 -
+>  include/dt-bindings/soc/rockchip,vop2.h           |  18 -
+>  15 files changed, 15 insertions(+), 1182 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/rockchip/pinctrl-rk3568.c b/drivers/pinctrl/rockchip/pinctrl-rk3568.c
+> index 1d4391982605..35a69c2a1a28 100644
+> --- a/drivers/pinctrl/rockchip/pinctrl-rk3568.c
+> +++ b/drivers/pinctrl/rockchip/pinctrl-rk3568.c
+> @@ -11,8 +11,23 @@
+>  #include <dt-bindings/pinctrl/rockchip.h>
+>  
+>  #include "pinctrl-rockchip.h"
+>  
+> +#define RK_GPIO0	0
+> +#define RK_GPIO1	1
+> +#define RK_GPIO2	2
+> +#define RK_GPIO3	3
+> +#define RK_GPIO4	4
+> +#define RK_GPIO6	6
 > +
-> +         This is only available for platforms using upstream devicetree.
-> +
-> +config OF_UPSTREAM_VENDOR
-> +       string "Vendor to build all upstream devicetree files for"
-> +       depends on OF_UPSTREAM_BUILD_VENDOR
-> +       default "qcom" if ARCH_SNAPDRAGON
-> +       default "rockchip" if ARCH_ROCKCHIP
-> +       default "amlogic" if ARCH_MESON
-> +       default "allwinner" if ARCH_SUNXI
-> +       default "mediatek" if ARCH_MEDIATEK
-> +       default "marvell" if ARCH_MVEBU
+> +#define RK_FUNC_GPIO	0
+> +#define RK_FUNC_1	1
+> +#define RK_FUNC_2	2
+> +#define RK_FUNC_3	3
+> +#define RK_FUNC_4	4
+> +#define RK_FUNC_5	5
+> +#define RK_FUNC_6	6
 
-Perhaps here it should be:
-default "marvell" if ARCH_MVEBU || ARCH_KIRKWOOD
+I would suggest to just drop the RK_GPIO and RK_FUNC_ prefix in the
+table below instead of having to define these here.
 
-All the best,
-Tony
+Regards,
+Jonas
 
-> +       default "xilinx" if ARCH_VERSAL || ARCH_ZYNQ
-> +       default "nvidia" if ARCH_TEGRA
-> +       help
-> +         Select the vendor to build all devicetree files for.
 > +
->  choice
->         prompt "Provider of DTB for DT control"
->         depends on OF_CONTROL
->
-> diff --git a/scripts/Makefile.dts b/scripts/Makefile.dts
-> index 5e2429c6170c..8005527f3df7 100644
-> --- a/scripts/Makefile.dts
-> +++ b/scripts/Makefile.dts
-> @@ -1,3 +1,18 @@
->  # SPDX-License-Identifier: GPL-2.0+
->
-> -dtb-y +=3D $(patsubst %,%.dtb,$(subst ",,$(CONFIG_DEFAULT_DEVICE_TREE) $=
-(CONFIG_OF_LIST) $(CONFIG_SPL_OF_LIST)))
-> +dtb-y +=3D $(patsubst %,%.dtb,\
-> +       $(subst ",,$(CONFIG_DEFAULT_DEVICE_TREE) $(CONFIG_OF_LIST) $(CONF=
-IG_SPL_OF_LIST)))
-> +
-> +ifeq ($(CONFIG_OF_UPSTREAM_BUILD_VENDOR),y)
-> +ifeq ($(CONFIG_ARM64),y)
-> +dt_dir :=3D $(srctree)/dts/upstream/src/arm64
-> +else
-> +dt_dir :=3D $(srctree)/dts/upstream/src/$(ARCH)
-> +endif
-> +
-> +dtb-vendor_dts :=3D $(patsubst %.dts,%.dtb, \
-> +       $(wildcard $(dt_dir)/$(subst ",,$(CONFIG_OF_UPSTREAM_VENDOR))/*.d=
-ts))
-> +
-> +dtb-y +=3D $(subst $(dt_dir)/,,$(dtb-vendor_dts))
-> +
-> +endif
->
-> --
-> 2.44.0
->
+>  static struct rockchip_mux_route_data rk3568_mux_route_data[] = {
+>  	MR_PMUGRF(RK_GPIO0, RK_PB7, RK_FUNC_1, 0x0110, RK_GENMASK_VAL(1, 0, 0)), /* PWM0 IO mux selection M0 */
+>  	MR_PMUGRF(RK_GPIO0, RK_PC7, RK_FUNC_2, 0x0110, RK_GENMASK_VAL(1, 0, 1)), /* PWM0 IO mux selection M1 */
+>  	MR_PMUGRF(RK_GPIO0, RK_PC0, RK_FUNC_1, 0x0110, RK_GENMASK_VAL(3, 2, 0)), /* PWM1 IO mux selection M0 */
+
+[snip]
 
