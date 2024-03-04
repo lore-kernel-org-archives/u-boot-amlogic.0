@@ -2,56 +2,56 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F8FC54E9D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43316C54E7C
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:49 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.104591.1709571102195170231
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.104602.1709571110263671296
  for <u-boot-amlogic@groups.io>;
- Mon, 04 Mar 2024 08:51:42 -0800
+ Mon, 04 Mar 2024 08:51:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=N5wWOYdg;
- spf=pass (domain: linaro.org, ip: 209.85.128.54, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412e6bdd454so5620525e9.1
-        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:41 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=rpUaHnIW;
+ spf=pass (domain: linaro.org, ip: 209.85.128.52, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412e7fe4497so4791885e9.1
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709571100; x=1710175900; darn=groups.io;
+        d=linaro.org; s=google; t=1709571109; x=1710175909; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
-        b=N5wWOYdgoU71kKvUsfqaoDuacJCO2lXt+BxY+4MsUygiCIfbRaEotHso9EskRMyNcm
-         DMBKror6ixSBUsRTh3NFv4Vz5sKk3XMLfAs7P7/BVVKHpop1lF31unVIOD42PW2Z9H+3
-         hlAI2jW/udNS0gHeRJgpr4Fjs3QVQqSUtQES8PjQMyxnBzeXvnwOKkA6TAfkBrirQDmj
-         nID9GjYqWwG6cD+ovo3baLjd2HZsFO+rD6GJpAnzVAv+c9myfybgkznXzkWlGq3k2oit
-         ckb8TYuFvdPnQfSWs7DjMzxhvSzIthyVwovh1ZWb9vlirJVtJ9NbVPNcrkLSeD1u9qIx
-         eV+g==
+        bh=7ClZ/U2dCNnx0hFWsWke0QLt+QMuIoc1IIP33XWHwdg=;
+        b=rpUaHnIWQi/qbZBkMCfjlLXCFJ+xtjPoP82/tdpZOAolz3CPPUbTt7i7OlV2GojRLp
+         ZYRJ/Y4L7dBfX4E7pmL5DWWjkfKHdX9pCKtlncOPsAKR9euxJ2Ad8SpzLTmKlPFJVlRJ
+         IwHCZVM0/idxjbQAHDLqGgIT9hLsOg/xQ1yi8m0hpjj0nRbuCjqWPwofGE9pkOPPbMaF
+         Aoo+Hq1VRvhBH6U8ZbOwC/OuH+iW2Zl7/SbtJ84wx7xx2M3iABKqPRM0wsZDJopH72/u
+         QGzucCqHm+cOx404SDU4tqUm92QvCVVcDbjNl1oGbCbvV/ix21HoHDQA8FTvUUP1KvG+
+         cZjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571100; x=1710175900;
+        d=1e100.net; s=20230601; t=1709571109; x=1710175909;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
-        b=exQNDHo/1kiZ/Y5RCfn8ibwVjm4E+LV3K4avFwNJ38QxP8kKzu9SJGWx0BeXjiyo22
-         byzdZYNPKvzWxMxgpM7GGSy9Qr6U3d7aocfHb/oAQGncPyELIc+ZlM57mckFmVHzjLmb
-         qgzNm1ZrpF0hvlts9hBXU5Xgmd8bz7eEncAzv35q7cmsvRKMWn2hQZQf0k5CbRIlx6O3
-         h+4737Jt956ws6x6RcGuJ8LkYPIbURwyUaJotjrVXrVro8rPHKl+0P3hZViR5JhjhTWh
-         BwceQj+1eML5Ji0BtE7N9QlxyTYv54KT2daB/L3Zw/HmWy3tnx8CBbqCuNFfObAzTsXV
-         2hHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVd1trHCygScImLJLKukuNW0FAaEZkHH0wqxQjcO+tBQrJf3wMK8/WlBopbPxQPCi/h5r58kcvqWDVec5s+9mFAdqQ+6GQASmI=
-X-Gm-Message-State: AOJu0YxBGzIjujLmU+wK+1P9ed8UxMga/thFOxJGM2xzD5dv22fS8O7Q
-	DSR6cy1Kteb7JFZUSwZHlxkRHOdlnpsSGj5XghotJ5Zreb4tJRayO4ssS08CpG0=
-X-Google-Smtp-Source: AGHT+IEFg7rTD8wjEHWItK4Kmmpn0ys3Ht0aIEs74vHGp1asb3blEMRWch/N7TgUdzLFsQVWmxJacQ==
-X-Received: by 2002:a05:600c:3b9b:b0:412:a470:7dba with SMTP id n27-20020a05600c3b9b00b00412a4707dbamr6012378wms.27.1709571100651;
-        Mon, 04 Mar 2024 08:51:40 -0800 (PST)
+        bh=7ClZ/U2dCNnx0hFWsWke0QLt+QMuIoc1IIP33XWHwdg=;
+        b=jxmViu7XmJxNebH7LyJVkyMtLBxJW9M4eVv3sqAhK8irJUu6VYyg29wuahjc7i9nmz
+         hMmLqsVxIZK9M5WUok8LCFySyv3wWCBKLdyEyE7TL4g+x+Hv3+o0g4uuLbNKAnzx66iB
+         8NfwdZNbUIPxI6Cr4guUkNMClTDi8+ypHIiJDGUt6qyLJ91ynhv+FHMBmG/vrRwiFZlU
+         eO2obJgx7qTon5Gahh+bctqyvR3GZfzgmrsQQ3+nd1Cvx8zlgu7L8duwd36IQj1bKqim
+         0Y9wBkjLPczAhLSd/Z24Bh++NG9m8fnPm3q2GkFKmH2xOMEUiLG4lyDDcZPXmcIwiA3b
+         b7DA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQl2H4hvdOHwfgdk0mZo71YsSnC+eiPUB96fg9xatJEiSfmjiaE/7gm7Wlvzjzvli5YTZ19+1vRppuTcc1PXuKMVLGzTMBoAg=
+X-Gm-Message-State: AOJu0YwmctYaKuPKO0iH/AXlTH6F1B8qhflnLSKICi5BYeorGUZtTZS/
+	PU2Iuye0UFOdstQcrUJ/5kdtogMRgEkOGYXOBxu3anzQcjTja468g+ml2Ip0gT0=
+X-Google-Smtp-Source: AGHT+IHKx9Ct3P3LDaoNtjPqpJ4hxQ7O5CyZU/eHy4gkDPgyELz1SmvcdH3cH9z0WYx+ksm028PsSg==
+X-Received: by 2002:a05:600c:4748:b0:412:e84e:cc39 with SMTP id w8-20020a05600c474800b00412e84ecc39mr996980wmo.24.1709571108695;
+        Mon, 04 Mar 2024 08:51:48 -0800 (PST)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.39
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:51:40 -0800 (PST)
+        Mon, 04 Mar 2024 08:51:48 -0800 (PST)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Mon, 04 Mar 2024 16:51:19 +0000
-Subject: [PATCH RFC 11/26] exynos: drop dt-binding headers
+Date: Mon, 04 Mar 2024 16:51:24 +0000
+Subject: [PATCH RFC 16/26] xlnx: drop dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240304-b4-upstream-dt-headers-v1-11-b7ff41925f92@linaro.org>
+Message-Id: <20240304-b4-upstream-dt-headers-v1-16-b7ff41925f92@linaro.org>
 References: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 In-Reply-To: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -84,13 +84,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=19475;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=19533;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=kZLqLmWc/ez1mBweoulX7ov9ivbShWuGmqjIVl+U5Tg=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9iXvzgSa2F+eZuZ19PcDKHay2eUtv3xKMsViLpjd
- tbia8GyjlIWBkEOBlkxRRbxE8ssm9ZettfYvuACzBxWJpAhDFycAjCRYAuG/2m2rtebxHa9yFO6
- vfVuzolrWwLXLoyV0j/89Qp7VlXp/3aGv5K1MrIvHgZveRPfraov4dAUUdjJdL8zvd9x7csZh5R
- 9TgAA
+ bh=TAkzYvr9nwbaAz1rFsd4FKI0tB6ez1V6FDMiqYuN7VI=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9jLlv3T+XUrrVYuf/3ifzlPHkRfyUi5NdGow0boi
+ Wwi6y3ljlIWBkEOBlkxRRbxE8ssm9ZettfYvuACzBxWJpAhDFycAjCRVf6MDFOOXfCMusPzxuhq
+ vvn8yfIZR670nf3/SN56qsyRspsrIvgY/mmw/ujhO7ne/uymO7Il6pUtb5qKrJdeXveKe/EEn9X
+ Ry04CAA==
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -99,630 +99,632 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2167
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2172
 
-Drop in favour of dts/upstream.
-
-Small driver and DTS adjustments to use upstream headers.
+Drop in favour of dts/upstream
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- arch/arm/dts/exynos7420.dtsi                 |   2 +-
- drivers/clk/exynos/clk-exynos7420.c          |   2 +-
- include/dt-bindings/clock/exynos7420-clk.h   | 207 ----------------
- include/dt-bindings/clock/exynos850.h        | 337 ---------------------------
- include/dt-bindings/soc/samsung,exynos-usi.h |  17 --
- 5 files changed, 2 insertions(+), 563 deletions(-)
+ include/dt-bindings/clock/xlnx-versal-clk.h    | 123 -----------------------
+ include/dt-bindings/clock/xlnx-zynqmp-clk.h    | 126 ------------------------
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h    |  16 ---
+ include/dt-bindings/pinctrl/pinctrl-zynqmp.h   |  19 ----
+ include/dt-bindings/power/xlnx-zynqmp-power.h  |  50 ----------
+ include/dt-bindings/reset/xlnx-versal-resets.h | 105 --------------------
+ include/dt-bindings/reset/xlnx-zynqmp-resets.h | 130 -------------------------
+ 7 files changed, 569 deletions(-)
 
-diff --git a/arch/arm/dts/exynos7420.dtsi b/arch/arm/dts/exynos7420.dtsi
-index 373f48cf2eca..ba9666f3de01 100644
---- a/arch/arm/dts/exynos7420.dtsi
-+++ b/arch/arm/dts/exynos7420.dtsi
-@@ -7,9 +7,9 @@
-  */
- 
- /dts-v1/;
- #include "skeleton.dtsi"
--#include <dt-bindings/clock/exynos7420-clk.h>
-+#include <dt-bindings/clock/exynos7-clk.h>
- / {
- 	compatible = "samsung,exynos7420";
- 
- 	fin_pll: xxti {
-diff --git a/drivers/clk/exynos/clk-exynos7420.c b/drivers/clk/exynos/clk-exynos7420.c
-index 9caa932e12fb..cd6d67a0752b 100644
---- a/drivers/clk/exynos/clk-exynos7420.c
-+++ b/drivers/clk/exynos/clk-exynos7420.c
-@@ -10,9 +10,9 @@
- #include <errno.h>
- #include <clk-uclass.h>
- #include <asm/io.h>
- #include <div64.h>
--#include <dt-bindings/clock/exynos7420-clk.h>
-+#include <dt-bindings/clock/exynos7-clk.h>
- 
- #define PLL145X_MDIV_SHIFT	16
- #define PLL145X_MDIV_MASK	0x3ff
- #define PLL145X_PDIV_SHIFT	8
-diff --git a/include/dt-bindings/clock/exynos7420-clk.h b/include/dt-bindings/clock/exynos7420-clk.h
+diff --git a/include/dt-bindings/clock/xlnx-versal-clk.h b/include/dt-bindings/clock/xlnx-versal-clk.h
 deleted file mode 100644
-index 10c558611085..000000000000
---- a/include/dt-bindings/clock/exynos7420-clk.h
+index 264d634d226e..000000000000
+--- a/include/dt-bindings/clock/xlnx-versal-clk.h
 +++ /dev/null
-@@ -1,207 +0,0 @@
+@@ -1,123 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-- * Author: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+- *  Copyright (C) 2019 Xilinx Inc.
 - *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
--*/
--
--#ifndef _DT_BINDINGS_CLOCK_EXYNOS7_H
--#define _DT_BINDINGS_CLOCK_EXYNOS7_H
--
--/* TOPC */
--#define DOUT_ACLK_PERIS			1
--#define DOUT_SCLK_BUS0_PLL		2
--#define DOUT_SCLK_BUS1_PLL		3
--#define DOUT_SCLK_CC_PLL		4
--#define DOUT_SCLK_MFC_PLL		5
--#define DOUT_ACLK_CCORE_133		6
--#define DOUT_ACLK_MSCL_532		7
--#define ACLK_MSCL_532			8
--#define DOUT_SCLK_AUD_PLL		9
--#define FOUT_AUD_PLL			10
--#define SCLK_AUD_PLL			11
--#define SCLK_MFC_PLL_B			12
--#define SCLK_MFC_PLL_A			13
--#define SCLK_BUS1_PLL_B			14
--#define SCLK_BUS1_PLL_A			15
--#define SCLK_BUS0_PLL_B			16
--#define SCLK_BUS0_PLL_A			17
--#define SCLK_CC_PLL_B			18
--#define SCLK_CC_PLL_A			19
--#define ACLK_CCORE_133			20
--#define ACLK_PERIS_66			21
--#define TOPC_NR_CLK			22
--
--/* TOP0 */
--#define DOUT_ACLK_PERIC1		1
--#define DOUT_ACLK_PERIC0		2
--#define CLK_SCLK_UART0			3
--#define CLK_SCLK_UART1			4
--#define CLK_SCLK_UART2			5
--#define CLK_SCLK_UART3			6
--#define CLK_SCLK_SPI0			7
--#define CLK_SCLK_SPI1			8
--#define CLK_SCLK_SPI2			9
--#define CLK_SCLK_SPI3			10
--#define CLK_SCLK_SPI4			11
--#define CLK_SCLK_SPDIF			12
--#define CLK_SCLK_PCM1			13
--#define CLK_SCLK_I2S1			14
--#define CLK_ACLK_PERIC0_66		15
--#define CLK_ACLK_PERIC1_66		16
--#define TOP0_NR_CLK			17
--
--/* TOP1 */
--#define DOUT_ACLK_FSYS1_200		1
--#define DOUT_ACLK_FSYS0_200		2
--#define DOUT_SCLK_MMC2			3
--#define DOUT_SCLK_MMC1			4
--#define DOUT_SCLK_MMC0			5
--#define CLK_SCLK_MMC2			6
--#define CLK_SCLK_MMC1			7
--#define CLK_SCLK_MMC0			8
--#define CLK_ACLK_FSYS0_200		9
--#define CLK_ACLK_FSYS1_200		10
--#define CLK_SCLK_PHY_FSYS1		11
--#define CLK_SCLK_PHY_FSYS1_26M		12
--#define MOUT_SCLK_UFSUNIPRO20		13
--#define DOUT_SCLK_UFSUNIPRO20		14
--#define CLK_SCLK_UFSUNIPRO20		15
--#define DOUT_SCLK_PHY_FSYS1		16
--#define DOUT_SCLK_PHY_FSYS1_26M		17
--#define TOP1_NR_CLK			18
--
--/* CCORE */
--#define PCLK_RTC			1
--#define CCORE_NR_CLK			2
--
--/* PERIC0 */
--#define PCLK_UART0			1
--#define SCLK_UART0			2
--#define PCLK_HSI2C0			3
--#define PCLK_HSI2C1			4
--#define PCLK_HSI2C4			5
--#define PCLK_HSI2C5			6
--#define PCLK_HSI2C9			7
--#define PCLK_HSI2C10			8
--#define PCLK_HSI2C11			9
--#define PCLK_PWM			10
--#define SCLK_PWM			11
--#define PCLK_ADCIF			12
--#define PERIC0_NR_CLK			13
--
--/* PERIC1 */
--#define PCLK_UART1			1
--#define PCLK_UART2			2
--#define PCLK_UART3			3
--#define SCLK_UART1			4
--#define SCLK_UART2			5
--#define SCLK_UART3			6
--#define PCLK_HSI2C2			7
--#define PCLK_HSI2C3			8
--#define PCLK_HSI2C6			9
--#define PCLK_HSI2C7			10
--#define PCLK_HSI2C8			11
--#define PCLK_SPI0			12
--#define PCLK_SPI1			13
--#define PCLK_SPI2			14
--#define PCLK_SPI3			15
--#define PCLK_SPI4			16
--#define SCLK_SPI0			17
--#define SCLK_SPI1			18
--#define SCLK_SPI2			19
--#define SCLK_SPI3			20
--#define SCLK_SPI4			21
--#define PCLK_I2S1			22
--#define PCLK_PCM1			23
--#define PCLK_SPDIF			24
--#define SCLK_I2S1			25
--#define SCLK_PCM1			26
--#define SCLK_SPDIF			27
--#define PERIC1_NR_CLK			28
--
--/* PERIS */
--#define PCLK_CHIPID			1
--#define SCLK_CHIPID			2
--#define PCLK_WDT			3
--#define PCLK_TMU			4
--#define SCLK_TMU			5
--#define PERIS_NR_CLK			6
--
--/* FSYS0 */
--#define ACLK_MMC2			1
--#define ACLK_AXIUS_USBDRD30X_FSYS0X	2
--#define ACLK_USBDRD300			3
--#define SCLK_USBDRD300_SUSPENDCLK	4
--#define SCLK_USBDRD300_REFCLK		5
--#define PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER		6
--#define PHYCLK_USBDRD300_UDRD30_PHYCLK_USER		7
--#define OSCCLK_PHY_CLKOUT_USB30_PHY		8
--#define ACLK_PDMA0			9
--#define ACLK_PDMA1			10
--#define FSYS0_NR_CLK			11
--
--/* FSYS1 */
--#define ACLK_MMC1			1
--#define ACLK_MMC0			2
--#define PHYCLK_UFS20_TX0_SYMBOL		3
--#define PHYCLK_UFS20_RX0_SYMBOL		4
--#define PHYCLK_UFS20_RX1_SYMBOL		5
--#define ACLK_UFS20_LINK			6
--#define SCLK_UFSUNIPRO20_USER		7
--#define PHYCLK_UFS20_RX1_SYMBOL_USER	8
--#define PHYCLK_UFS20_RX0_SYMBOL_USER	9
--#define PHYCLK_UFS20_TX0_SYMBOL_USER	10
--#define OSCCLK_PHY_CLKOUT_EMBEDDED_COMBO_PHY	11
--#define SCLK_COMBO_PHY_EMBEDDED_26M	12
--#define DOUT_PCLK_FSYS1			13
--#define PCLK_GPIO_FSYS1			14
--#define MOUT_FSYS1_PHYCLK_SEL1		15
--#define FSYS1_NR_CLK			16
--
--/* MSCL */
--#define USERMUX_ACLK_MSCL_532		1
--#define DOUT_PCLK_MSCL			2
--#define ACLK_MSCL_0			3
--#define ACLK_MSCL_1			4
--#define ACLK_JPEG			5
--#define ACLK_G2D			6
--#define ACLK_LH_ASYNC_SI_MSCL_0		7
--#define ACLK_LH_ASYNC_SI_MSCL_1		8
--#define ACLK_AXI2ACEL_BRIDGE		9
--#define ACLK_XIU_MSCLX_0		10
--#define ACLK_XIU_MSCLX_1		11
--#define ACLK_QE_MSCL_0			12
--#define ACLK_QE_MSCL_1			13
--#define ACLK_QE_JPEG			14
--#define ACLK_QE_G2D			15
--#define ACLK_PPMU_MSCL_0		16
--#define ACLK_PPMU_MSCL_1		17
--#define ACLK_MSCLNP_133			18
--#define ACLK_AHB2APB_MSCL0P		19
--#define ACLK_AHB2APB_MSCL1P		20
--
--#define PCLK_MSCL_0			21
--#define PCLK_MSCL_1			22
--#define PCLK_JPEG			23
--#define PCLK_G2D			24
--#define PCLK_QE_MSCL_0			25
--#define PCLK_QE_MSCL_1			26
--#define PCLK_QE_JPEG			27
--#define PCLK_QE_G2D			28
--#define PCLK_PPMU_MSCL_0		29
--#define PCLK_PPMU_MSCL_1		30
--#define PCLK_AXI2ACEL_BRIDGE		31
--#define PCLK_PMU_MSCL			32
--#define MSCL_NR_CLK			33
--
--/* AUD */
--#define SCLK_I2S			1
--#define SCLK_PCM			2
--#define PCLK_I2S			3
--#define PCLK_PCM			4
--#define ACLK_ADMA			5
--#define AUD_NR_CLK			6
--#endif /* _DT_BINDINGS_CLOCK_EXYNOS7_H */
-diff --git a/include/dt-bindings/clock/exynos850.h b/include/dt-bindings/clock/exynos850.h
-deleted file mode 100644
-index 3090e09c9a55..000000000000
---- a/include/dt-bindings/clock/exynos850.h
-+++ /dev/null
-@@ -1,337 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
--/*
-- * Copyright (C) 2021 Linaro Ltd.
-- * Author: Sam Protsenko <semen.protsenko@linaro.org>
-- *
-- * Device Tree binding constants for Exynos850 clock controller.
 - */
 -
--#ifndef _DT_BINDINGS_CLOCK_EXYNOS_850_H
--#define _DT_BINDINGS_CLOCK_EXYNOS_850_H
+-#ifndef _DT_BINDINGS_CLK_VERSAL_H
+-#define _DT_BINDINGS_CLK_VERSAL_H
 -
--/* CMU_TOP */
--#define CLK_FOUT_SHARED0_PLL		1
--#define CLK_FOUT_SHARED1_PLL		2
--#define CLK_FOUT_MMC_PLL		3
--#define CLK_MOUT_SHARED0_PLL		4
--#define CLK_MOUT_SHARED1_PLL		5
--#define CLK_MOUT_MMC_PLL		6
--#define CLK_MOUT_CORE_BUS		7
--#define CLK_MOUT_CORE_CCI		8
--#define CLK_MOUT_CORE_MMC_EMBD		9
--#define CLK_MOUT_CORE_SSS		10
--#define CLK_MOUT_DPU			11
--#define CLK_MOUT_HSI_BUS		12
--#define CLK_MOUT_HSI_MMC_CARD		13
--#define CLK_MOUT_HSI_USB20DRD		14
--#define CLK_MOUT_PERI_BUS		15
--#define CLK_MOUT_PERI_UART		16
--#define CLK_MOUT_PERI_IP		17
--#define CLK_DOUT_SHARED0_DIV3		18
--#define CLK_DOUT_SHARED0_DIV2		19
--#define CLK_DOUT_SHARED1_DIV3		20
--#define CLK_DOUT_SHARED1_DIV2		21
--#define CLK_DOUT_SHARED0_DIV4		22
--#define CLK_DOUT_SHARED1_DIV4		23
--#define CLK_DOUT_CORE_BUS		24
--#define CLK_DOUT_CORE_CCI		25
--#define CLK_DOUT_CORE_MMC_EMBD		26
--#define CLK_DOUT_CORE_SSS		27
--#define CLK_DOUT_DPU			28
--#define CLK_DOUT_HSI_BUS		29
--#define CLK_DOUT_HSI_MMC_CARD		30
--#define CLK_DOUT_HSI_USB20DRD		31
--#define CLK_DOUT_PERI_BUS		32
--#define CLK_DOUT_PERI_UART		33
--#define CLK_DOUT_PERI_IP		34
--#define CLK_GOUT_CORE_BUS		35
--#define CLK_GOUT_CORE_CCI		36
--#define CLK_GOUT_CORE_MMC_EMBD		37
--#define CLK_GOUT_CORE_SSS		38
--#define CLK_GOUT_DPU			39
--#define CLK_GOUT_HSI_BUS		40
--#define CLK_GOUT_HSI_MMC_CARD		41
--#define CLK_GOUT_HSI_USB20DRD		42
--#define CLK_GOUT_PERI_BUS		43
--#define CLK_GOUT_PERI_UART		44
--#define CLK_GOUT_PERI_IP		45
--#define CLK_MOUT_CLKCMU_APM_BUS		46
--#define CLK_DOUT_CLKCMU_APM_BUS		47
--#define CLK_GOUT_CLKCMU_APM_BUS		48
--#define CLK_MOUT_AUD			49
--#define CLK_GOUT_AUD			50
--#define CLK_DOUT_AUD			51
--#define CLK_MOUT_IS_BUS			52
--#define CLK_MOUT_IS_ITP			53
--#define CLK_MOUT_IS_VRA			54
--#define CLK_MOUT_IS_GDC			55
--#define CLK_GOUT_IS_BUS			56
--#define CLK_GOUT_IS_ITP			57
--#define CLK_GOUT_IS_VRA			58
--#define CLK_GOUT_IS_GDC			59
--#define CLK_DOUT_IS_BUS			60
--#define CLK_DOUT_IS_ITP			61
--#define CLK_DOUT_IS_VRA			62
--#define CLK_DOUT_IS_GDC			63
--#define CLK_MOUT_MFCMSCL_MFC		64
--#define CLK_MOUT_MFCMSCL_M2M		65
--#define CLK_MOUT_MFCMSCL_MCSC		66
--#define CLK_MOUT_MFCMSCL_JPEG		67
--#define CLK_GOUT_MFCMSCL_MFC		68
--#define CLK_GOUT_MFCMSCL_M2M		69
--#define CLK_GOUT_MFCMSCL_MCSC		70
--#define CLK_GOUT_MFCMSCL_JPEG		71
--#define CLK_DOUT_MFCMSCL_MFC		72
--#define CLK_DOUT_MFCMSCL_M2M		73
--#define CLK_DOUT_MFCMSCL_MCSC		74
--#define CLK_DOUT_MFCMSCL_JPEG		75
--#define CLK_MOUT_G3D_SWITCH		76
--#define CLK_GOUT_G3D_SWITCH		77
--#define CLK_DOUT_G3D_SWITCH		78
+-#define PMC_PLL					1
+-#define APU_PLL					2
+-#define RPU_PLL					3
+-#define CPM_PLL					4
+-#define NOC_PLL					5
+-#define PLL_MAX					6
+-#define PMC_PRESRC				7
+-#define PMC_POSTCLK				8
+-#define PMC_PLL_OUT				9
+-#define PPLL					10
+-#define NOC_PRESRC				11
+-#define NOC_POSTCLK				12
+-#define NOC_PLL_OUT				13
+-#define NPLL					14
+-#define APU_PRESRC				15
+-#define APU_POSTCLK				16
+-#define APU_PLL_OUT				17
+-#define APLL					18
+-#define RPU_PRESRC				19
+-#define RPU_POSTCLK				20
+-#define RPU_PLL_OUT				21
+-#define RPLL					22
+-#define CPM_PRESRC				23
+-#define CPM_POSTCLK				24
+-#define CPM_PLL_OUT				25
+-#define CPLL					26
+-#define PPLL_TO_XPD				27
+-#define NPLL_TO_XPD				28
+-#define APLL_TO_XPD				29
+-#define RPLL_TO_XPD				30
+-#define EFUSE_REF				31
+-#define SYSMON_REF				32
+-#define IRO_SUSPEND_REF				33
+-#define USB_SUSPEND				34
+-#define SWITCH_TIMEOUT				35
+-#define RCLK_PMC				36
+-#define RCLK_LPD				37
+-#define WDT					38
+-#define TTC0					39
+-#define TTC1					40
+-#define TTC2					41
+-#define TTC3					42
+-#define GEM_TSU					43
+-#define GEM_TSU_LB				44
+-#define MUXED_IRO_DIV2				45
+-#define MUXED_IRO_DIV4				46
+-#define PSM_REF					47
+-#define GEM0_RX					48
+-#define GEM0_TX					49
+-#define GEM1_RX					50
+-#define GEM1_TX					51
+-#define CPM_CORE_REF				52
+-#define CPM_LSBUS_REF				53
+-#define CPM_DBG_REF				54
+-#define CPM_AUX0_REF				55
+-#define CPM_AUX1_REF				56
+-#define QSPI_REF				57
+-#define OSPI_REF				58
+-#define SDIO0_REF				59
+-#define SDIO1_REF				60
+-#define PMC_LSBUS_REF				61
+-#define I2C_REF					62
+-#define TEST_PATTERN_REF			63
+-#define DFT_OSC_REF				64
+-#define PMC_PL0_REF				65
+-#define PMC_PL1_REF				66
+-#define PMC_PL2_REF				67
+-#define PMC_PL3_REF				68
+-#define CFU_REF					69
+-#define SPARE_REF				70
+-#define NPI_REF					71
+-#define HSM0_REF				72
+-#define HSM1_REF				73
+-#define SD_DLL_REF				74
+-#define FPD_TOP_SWITCH				75
+-#define FPD_LSBUS				76
+-#define ACPU					77
+-#define DBG_TRACE				78
+-#define DBG_FPD					79
+-#define LPD_TOP_SWITCH				80
+-#define ADMA					81
+-#define LPD_LSBUS				82
+-#define CPU_R5					83
+-#define CPU_R5_CORE				84
+-#define CPU_R5_OCM				85
+-#define CPU_R5_OCM2				86
+-#define IOU_SWITCH				87
+-#define GEM0_REF				88
+-#define GEM1_REF				89
+-#define GEM_TSU_REF				90
+-#define USB0_BUS_REF				91
+-#define UART0_REF				92
+-#define UART1_REF				93
+-#define SPI0_REF				94
+-#define SPI1_REF				95
+-#define CAN0_REF				96
+-#define CAN1_REF				97
+-#define I2C0_REF				98
+-#define I2C1_REF				99
+-#define DBG_LPD					100
+-#define TIMESTAMP_REF				101
+-#define DBG_TSTMP				102
+-#define CPM_TOPSW_REF				103
+-#define USB3_DUAL_REF				104
+-#define OUTCLK_MAX				105
+-#define REF_CLK					106
+-#define PL_ALT_REF_CLK				107
+-#define MUXED_IRO				108
+-#define PL_EXT					109
+-#define PL_LB					110
+-#define MIO_50_OR_51				111
+-#define MIO_24_OR_25				112
 -
--/* CMU_APM */
--#define CLK_RCO_I3C_PMIC		1
--#define OSCCLK_RCO_APM			2
--#define CLK_RCO_APM__ALV		3
--#define CLK_DLL_DCO			4
--#define CLK_MOUT_APM_BUS_USER		5
--#define CLK_MOUT_RCO_APM_I3C_USER	6
--#define CLK_MOUT_RCO_APM_USER		7
--#define CLK_MOUT_DLL_USER		8
--#define CLK_MOUT_CLKCMU_CHUB_BUS	9
--#define CLK_MOUT_APM_BUS		10
--#define CLK_MOUT_APM_I3C		11
--#define CLK_DOUT_CLKCMU_CHUB_BUS	12
--#define CLK_DOUT_APM_BUS		13
--#define CLK_DOUT_APM_I3C		14
--#define CLK_GOUT_CLKCMU_CMGP_BUS	15
--#define CLK_GOUT_CLKCMU_CHUB_BUS	16
--#define CLK_GOUT_RTC_PCLK		17
--#define CLK_GOUT_TOP_RTC_PCLK		18
--#define CLK_GOUT_I3C_PCLK		19
--#define CLK_GOUT_I3C_SCLK		20
--#define CLK_GOUT_SPEEDY_PCLK		21
--#define CLK_GOUT_GPIO_ALIVE_PCLK	22
--#define CLK_GOUT_PMU_ALIVE_PCLK		23
--#define CLK_GOUT_SYSREG_APM_PCLK	24
--
--/* CMU_AUD */
--#define CLK_DOUT_AUD_AUDIF		1
--#define CLK_DOUT_AUD_BUSD		2
--#define CLK_DOUT_AUD_BUSP		3
--#define CLK_DOUT_AUD_CNT		4
--#define CLK_DOUT_AUD_CPU		5
--#define CLK_DOUT_AUD_CPU_ACLK		6
--#define CLK_DOUT_AUD_CPU_PCLKDBG	7
--#define CLK_DOUT_AUD_FM			8
--#define CLK_DOUT_AUD_FM_SPDY		9
--#define CLK_DOUT_AUD_MCLK		10
--#define CLK_DOUT_AUD_UAIF0		11
--#define CLK_DOUT_AUD_UAIF1		12
--#define CLK_DOUT_AUD_UAIF2		13
--#define CLK_DOUT_AUD_UAIF3		14
--#define CLK_DOUT_AUD_UAIF4		15
--#define CLK_DOUT_AUD_UAIF5		16
--#define CLK_DOUT_AUD_UAIF6		17
--#define CLK_FOUT_AUD_PLL		18
--#define CLK_GOUT_AUD_ABOX_ACLK		19
--#define CLK_GOUT_AUD_ASB_CCLK		20
--#define CLK_GOUT_AUD_CA32_CCLK		21
--#define CLK_GOUT_AUD_CNT_BCLK		22
--#define CLK_GOUT_AUD_CODEC_MCLK		23
--#define CLK_GOUT_AUD_DAP_CCLK		24
--#define CLK_GOUT_AUD_GPIO_PCLK		25
--#define CLK_GOUT_AUD_PPMU_ACLK		26
--#define CLK_GOUT_AUD_PPMU_PCLK		27
--#define CLK_GOUT_AUD_SPDY_BCLK		28
--#define CLK_GOUT_AUD_SYSMMU_CLK		29
--#define CLK_GOUT_AUD_SYSREG_PCLK	30
--#define CLK_GOUT_AUD_TZPC_PCLK		31
--#define CLK_GOUT_AUD_UAIF0_BCLK		32
--#define CLK_GOUT_AUD_UAIF1_BCLK		33
--#define CLK_GOUT_AUD_UAIF2_BCLK		34
--#define CLK_GOUT_AUD_UAIF3_BCLK		35
--#define CLK_GOUT_AUD_UAIF4_BCLK		36
--#define CLK_GOUT_AUD_UAIF5_BCLK		37
--#define CLK_GOUT_AUD_UAIF6_BCLK		38
--#define CLK_GOUT_AUD_WDT_PCLK		39
--#define CLK_MOUT_AUD_CPU		40
--#define CLK_MOUT_AUD_CPU_HCH		41
--#define CLK_MOUT_AUD_CPU_USER		42
--#define CLK_MOUT_AUD_FM			43
--#define CLK_MOUT_AUD_PLL		44
--#define CLK_MOUT_AUD_TICK_USB_USER	45
--#define CLK_MOUT_AUD_UAIF0		46
--#define CLK_MOUT_AUD_UAIF1		47
--#define CLK_MOUT_AUD_UAIF2		48
--#define CLK_MOUT_AUD_UAIF3		49
--#define CLK_MOUT_AUD_UAIF4		50
--#define CLK_MOUT_AUD_UAIF5		51
--#define CLK_MOUT_AUD_UAIF6		52
--#define IOCLK_AUDIOCDCLK0		53
--#define IOCLK_AUDIOCDCLK1		54
--#define IOCLK_AUDIOCDCLK2		55
--#define IOCLK_AUDIOCDCLK3		56
--#define IOCLK_AUDIOCDCLK4		57
--#define IOCLK_AUDIOCDCLK5		58
--#define IOCLK_AUDIOCDCLK6		59
--#define TICK_USB			60
--#define CLK_GOUT_AUD_CMU_AUD_PCLK	61
--
--/* CMU_CMGP */
--#define CLK_RCO_CMGP			1
--#define CLK_MOUT_CMGP_ADC		2
--#define CLK_MOUT_CMGP_USI0		3
--#define CLK_MOUT_CMGP_USI1		4
--#define CLK_DOUT_CMGP_ADC		5
--#define CLK_DOUT_CMGP_USI0		6
--#define CLK_DOUT_CMGP_USI1		7
--#define CLK_GOUT_CMGP_ADC_S0_PCLK	8
--#define CLK_GOUT_CMGP_ADC_S1_PCLK	9
--#define CLK_GOUT_CMGP_GPIO_PCLK		10
--#define CLK_GOUT_CMGP_USI0_IPCLK	11
--#define CLK_GOUT_CMGP_USI0_PCLK		12
--#define CLK_GOUT_CMGP_USI1_IPCLK	13
--#define CLK_GOUT_CMGP_USI1_PCLK		14
--#define CLK_GOUT_SYSREG_CMGP_PCLK	15
--
--/* CMU_G3D */
--#define CLK_FOUT_G3D_PLL		1
--#define CLK_MOUT_G3D_PLL		2
--#define CLK_MOUT_G3D_SWITCH_USER	3
--#define CLK_MOUT_G3D_BUSD		4
--#define CLK_DOUT_G3D_BUSP		5
--#define CLK_GOUT_G3D_CMU_G3D_PCLK	6
--#define CLK_GOUT_G3D_GPU_CLK		7
--#define CLK_GOUT_G3D_TZPC_PCLK		8
--#define CLK_GOUT_G3D_GRAY2BIN_CLK	9
--#define CLK_GOUT_G3D_BUSD_CLK		10
--#define CLK_GOUT_G3D_BUSP_CLK		11
--#define CLK_GOUT_G3D_SYSREG_PCLK	12
--
--/* CMU_HSI */
--#define CLK_MOUT_HSI_BUS_USER		1
--#define CLK_MOUT_HSI_MMC_CARD_USER	2
--#define CLK_MOUT_HSI_USB20DRD_USER	3
--#define CLK_MOUT_HSI_RTC		4
--#define CLK_GOUT_USB_RTC_CLK		5
--#define CLK_GOUT_USB_REF_CLK		6
--#define CLK_GOUT_USB_PHY_REF_CLK	7
--#define CLK_GOUT_USB_PHY_ACLK		8
--#define CLK_GOUT_USB_BUS_EARLY_CLK	9
--#define CLK_GOUT_GPIO_HSI_PCLK		10
--#define CLK_GOUT_MMC_CARD_ACLK		11
--#define CLK_GOUT_MMC_CARD_SDCLKIN	12
--#define CLK_GOUT_SYSREG_HSI_PCLK	13
--#define CLK_GOUT_HSI_PPMU_ACLK		14
--#define CLK_GOUT_HSI_PPMU_PCLK		15
--#define CLK_GOUT_HSI_CMU_HSI_PCLK	16
--
--/* CMU_IS */
--#define CLK_MOUT_IS_BUS_USER		1
--#define CLK_MOUT_IS_ITP_USER		2
--#define CLK_MOUT_IS_VRA_USER		3
--#define CLK_MOUT_IS_GDC_USER		4
--#define CLK_DOUT_IS_BUSP		5
--#define CLK_GOUT_IS_CMU_IS_PCLK		6
--#define CLK_GOUT_IS_CSIS0_ACLK		7
--#define CLK_GOUT_IS_CSIS1_ACLK		8
--#define CLK_GOUT_IS_CSIS2_ACLK		9
--#define CLK_GOUT_IS_TZPC_PCLK		10
--#define CLK_GOUT_IS_CSIS_DMA_CLK	11
--#define CLK_GOUT_IS_GDC_CLK		12
--#define CLK_GOUT_IS_IPP_CLK		13
--#define CLK_GOUT_IS_ITP_CLK		14
--#define CLK_GOUT_IS_MCSC_CLK		15
--#define CLK_GOUT_IS_VRA_CLK		16
--#define CLK_GOUT_IS_PPMU_IS0_ACLK	17
--#define CLK_GOUT_IS_PPMU_IS0_PCLK	18
--#define CLK_GOUT_IS_PPMU_IS1_ACLK	19
--#define CLK_GOUT_IS_PPMU_IS1_PCLK	20
--#define CLK_GOUT_IS_SYSMMU_IS0_CLK	21
--#define CLK_GOUT_IS_SYSMMU_IS1_CLK	22
--#define CLK_GOUT_IS_SYSREG_PCLK		23
--
--/* CMU_MFCMSCL */
--#define CLK_MOUT_MFCMSCL_MFC_USER		1
--#define CLK_MOUT_MFCMSCL_M2M_USER		2
--#define CLK_MOUT_MFCMSCL_MCSC_USER		3
--#define CLK_MOUT_MFCMSCL_JPEG_USER		4
--#define CLK_DOUT_MFCMSCL_BUSP			5
--#define CLK_GOUT_MFCMSCL_CMU_MFCMSCL_PCLK	6
--#define CLK_GOUT_MFCMSCL_TZPC_PCLK		7
--#define CLK_GOUT_MFCMSCL_JPEG_ACLK		8
--#define CLK_GOUT_MFCMSCL_M2M_ACLK		9
--#define CLK_GOUT_MFCMSCL_MCSC_CLK		10
--#define CLK_GOUT_MFCMSCL_MFC_ACLK		11
--#define CLK_GOUT_MFCMSCL_PPMU_ACLK		12
--#define CLK_GOUT_MFCMSCL_PPMU_PCLK		13
--#define CLK_GOUT_MFCMSCL_SYSMMU_CLK		14
--#define CLK_GOUT_MFCMSCL_SYSREG_PCLK		15
--
--/* CMU_PERI */
--#define CLK_MOUT_PERI_BUS_USER		1
--#define CLK_MOUT_PERI_UART_USER		2
--#define CLK_MOUT_PERI_HSI2C_USER	3
--#define CLK_MOUT_PERI_SPI_USER		4
--#define CLK_DOUT_PERI_HSI2C0		5
--#define CLK_DOUT_PERI_HSI2C1		6
--#define CLK_DOUT_PERI_HSI2C2		7
--#define CLK_DOUT_PERI_SPI0		8
--#define CLK_GOUT_PERI_HSI2C0		9
--#define CLK_GOUT_PERI_HSI2C1		10
--#define CLK_GOUT_PERI_HSI2C2		11
--#define CLK_GOUT_GPIO_PERI_PCLK		12
--#define CLK_GOUT_HSI2C0_IPCLK		13
--#define CLK_GOUT_HSI2C0_PCLK		14
--#define CLK_GOUT_HSI2C1_IPCLK		15
--#define CLK_GOUT_HSI2C1_PCLK		16
--#define CLK_GOUT_HSI2C2_IPCLK		17
--#define CLK_GOUT_HSI2C2_PCLK		18
--#define CLK_GOUT_I2C0_PCLK		19
--#define CLK_GOUT_I2C1_PCLK		20
--#define CLK_GOUT_I2C2_PCLK		21
--#define CLK_GOUT_I2C3_PCLK		22
--#define CLK_GOUT_I2C4_PCLK		23
--#define CLK_GOUT_I2C5_PCLK		24
--#define CLK_GOUT_I2C6_PCLK		25
--#define CLK_GOUT_MCT_PCLK		26
--#define CLK_GOUT_PWM_MOTOR_PCLK		27
--#define CLK_GOUT_SPI0_IPCLK		28
--#define CLK_GOUT_SPI0_PCLK		29
--#define CLK_GOUT_SYSREG_PERI_PCLK	30
--#define CLK_GOUT_UART_IPCLK		31
--#define CLK_GOUT_UART_PCLK		32
--#define CLK_GOUT_WDT0_PCLK		33
--#define CLK_GOUT_WDT1_PCLK		34
--
--/* CMU_CORE */
--#define CLK_MOUT_CORE_BUS_USER		1
--#define CLK_MOUT_CORE_CCI_USER		2
--#define CLK_MOUT_CORE_MMC_EMBD_USER	3
--#define CLK_MOUT_CORE_SSS_USER		4
--#define CLK_MOUT_CORE_GIC		5
--#define CLK_DOUT_CORE_BUSP		6
--#define CLK_GOUT_CCI_ACLK		7
--#define CLK_GOUT_GIC_CLK		8
--#define CLK_GOUT_MMC_EMBD_ACLK		9
--#define CLK_GOUT_MMC_EMBD_SDCLKIN	10
--#define CLK_GOUT_SSS_ACLK		11
--#define CLK_GOUT_SSS_PCLK		12
--#define CLK_GOUT_GPIO_CORE_PCLK		13
--#define CLK_GOUT_SYSREG_CORE_PCLK	14
--
--/* CMU_DPU */
--#define CLK_MOUT_DPU_USER		1
--#define CLK_DOUT_DPU_BUSP		2
--#define CLK_GOUT_DPU_CMU_DPU_PCLK	3
--#define CLK_GOUT_DPU_DECON0_ACLK	4
--#define CLK_GOUT_DPU_DMA_ACLK		5
--#define CLK_GOUT_DPU_DPP_ACLK		6
--#define CLK_GOUT_DPU_PPMU_ACLK		7
--#define CLK_GOUT_DPU_PPMU_PCLK		8
--#define CLK_GOUT_DPU_SMMU_CLK		9
--#define CLK_GOUT_DPU_SYSREG_PCLK	10
--#define DPU_NR_CLK			11
--
--#endif /* _DT_BINDINGS_CLOCK_EXYNOS_850_H */
-diff --git a/include/dt-bindings/soc/samsung,exynos-usi.h b/include/dt-bindings/soc/samsung,exynos-usi.h
+-#endif
+diff --git a/include/dt-bindings/clock/xlnx-zynqmp-clk.h b/include/dt-bindings/clock/xlnx-zynqmp-clk.h
 deleted file mode 100644
-index a01af169d249..000000000000
---- a/include/dt-bindings/soc/samsung,exynos-usi.h
+index cdc4c0b9a374..000000000000
+--- a/include/dt-bindings/clock/xlnx-zynqmp-clk.h
 +++ /dev/null
-@@ -1,17 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+@@ -1,126 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
 -/*
-- * Copyright (c) 2021 Linaro Ltd.
-- * Author: Sam Protsenko <semen.protsenko@linaro.org>
+- * Xilinx Zynq MPSoC Firmware layer
 - *
-- * Device Tree bindings for Samsung Exynos USI (Universal Serial Interface).
+- *  Copyright (C) 2014-2018 Xilinx, Inc.
+- *
 - */
 -
--#ifndef __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
--#define __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
+-#ifndef _DT_BINDINGS_CLK_ZYNQMP_H
+-#define _DT_BINDINGS_CLK_ZYNQMP_H
 -
--#define USI_V2_NONE		0
--#define USI_V2_UART		1
--#define USI_V2_SPI		2
--#define USI_V2_I2C		3
+-#define IOPLL			0
+-#define RPLL			1
+-#define APLL			2
+-#define DPLL			3
+-#define VPLL			4
+-#define IOPLL_TO_FPD		5
+-#define RPLL_TO_FPD		6
+-#define APLL_TO_LPD		7
+-#define DPLL_TO_LPD		8
+-#define VPLL_TO_LPD		9
+-#define ACPU			10
+-#define ACPU_HALF		11
+-#define DBF_FPD			12
+-#define DBF_LPD			13
+-#define DBG_TRACE		14
+-#define DBG_TSTMP		15
+-#define DP_VIDEO_REF		16
+-#define DP_AUDIO_REF		17
+-#define DP_STC_REF		18
+-#define GDMA_REF		19
+-#define DPDMA_REF		20
+-#define DDR_REF			21
+-#define SATA_REF		22
+-#define PCIE_REF		23
+-#define GPU_REF			24
+-#define GPU_PP0_REF		25
+-#define GPU_PP1_REF		26
+-#define TOPSW_MAIN		27
+-#define TOPSW_LSBUS		28
+-#define GTGREF0_REF		29
+-#define LPD_SWITCH		30
+-#define LPD_LSBUS		31
+-#define USB0_BUS_REF		32
+-#define USB1_BUS_REF		33
+-#define USB3_DUAL_REF		34
+-#define USB0			35
+-#define USB1			36
+-#define CPU_R5			37
+-#define CPU_R5_CORE		38
+-#define CSU_SPB			39
+-#define CSU_PLL			40
+-#define PCAP			41
+-#define IOU_SWITCH		42
+-#define GEM_TSU_REF		43
+-#define GEM_TSU			44
+-#define GEM0_TX			45
+-#define GEM1_TX			46
+-#define GEM2_TX			47
+-#define GEM3_TX			48
+-#define GEM0_RX			49
+-#define GEM1_RX			50
+-#define GEM2_RX			51
+-#define GEM3_RX			52
+-#define QSPI_REF		53
+-#define SDIO0_REF		54
+-#define SDIO1_REF		55
+-#define UART0_REF		56
+-#define UART1_REF		57
+-#define SPI0_REF		58
+-#define SPI1_REF		59
+-#define NAND_REF		60
+-#define I2C0_REF		61
+-#define I2C1_REF		62
+-#define CAN0_REF		63
+-#define CAN1_REF		64
+-#define CAN0			65
+-#define CAN1			66
+-#define DLL_REF			67
+-#define ADMA_REF		68
+-#define TIMESTAMP_REF		69
+-#define AMS_REF			70
+-#define PL0_REF			71
+-#define PL1_REF			72
+-#define PL2_REF			73
+-#define PL3_REF			74
+-#define WDT			75
+-#define IOPLL_INT		76
+-#define IOPLL_PRE_SRC		77
+-#define IOPLL_HALF		78
+-#define IOPLL_INT_MUX		79
+-#define IOPLL_POST_SRC		80
+-#define RPLL_INT		81
+-#define RPLL_PRE_SRC		82
+-#define RPLL_HALF		83
+-#define RPLL_INT_MUX		84
+-#define RPLL_POST_SRC		85
+-#define APLL_INT		86
+-#define APLL_PRE_SRC		87
+-#define APLL_HALF		88
+-#define APLL_INT_MUX		89
+-#define APLL_POST_SRC		90
+-#define DPLL_INT		91
+-#define DPLL_PRE_SRC		92
+-#define DPLL_HALF		93
+-#define DPLL_INT_MUX		94
+-#define DPLL_POST_SRC		95
+-#define VPLL_INT		96
+-#define VPLL_PRE_SRC		97
+-#define VPLL_HALF		98
+-#define VPLL_INT_MUX		99
+-#define VPLL_POST_SRC		100
+-#define CAN0_MIO		101
+-#define CAN1_MIO		102
+-#define ACPU_FULL		103
+-#define GEM0_REF		104
+-#define GEM1_REF		105
+-#define GEM2_REF		106
+-#define GEM3_REF		107
+-#define GEM0_REF_UNG		108
+-#define GEM1_REF_UNG		109
+-#define GEM2_REF_UNG		110
+-#define GEM3_REF_UNG		111
+-#define LPD_WDT			112
 -
--#endif /* __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H */
+-#endif
+diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+deleted file mode 100644
+index 3719cda5679d..000000000000
+--- a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
++++ /dev/null
+@@ -1,16 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+-/*
+- * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+- */
+-
+-#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
+-#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
+-
+-#define ZYNQMP_DPDMA_VIDEO0		0
+-#define ZYNQMP_DPDMA_VIDEO1		1
+-#define ZYNQMP_DPDMA_VIDEO2		2
+-#define ZYNQMP_DPDMA_GRAPHICS		3
+-#define ZYNQMP_DPDMA_AUDIO0		4
+-#define ZYNQMP_DPDMA_AUDIO1		5
+-
+-#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
+diff --git a/include/dt-bindings/pinctrl/pinctrl-zynqmp.h b/include/dt-bindings/pinctrl/pinctrl-zynqmp.h
+deleted file mode 100644
+index cdb215734bdf..000000000000
+--- a/include/dt-bindings/pinctrl/pinctrl-zynqmp.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * MIO pin configuration defines for Xilinx ZynqMP
+- *
+- * Copyright (C) 2020 Xilinx, Inc.
+- */
+-
+-#ifndef _DT_BINDINGS_PINCTRL_ZYNQMP_H
+-#define _DT_BINDINGS_PINCTRL_ZYNQMP_H
+-
+-/* Bit value for different voltage levels */
+-#define IO_STANDARD_LVCMOS33	0
+-#define IO_STANDARD_LVCMOS18	1
+-
+-/* Bit values for Slew Rates */
+-#define SLEW_RATE_FAST		0
+-#define SLEW_RATE_SLOW		1
+-
+-#endif /* _DT_BINDINGS_PINCTRL_ZYNQMP_H */
+diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
+deleted file mode 100644
+index e7eb0960480a..000000000000
+--- a/include/dt-bindings/power/xlnx-zynqmp-power.h
++++ /dev/null
+@@ -1,50 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- *  Copyright (C) 2018 Xilinx, Inc.
+- */
+-
+-#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
+-#define _DT_BINDINGS_ZYNQMP_POWER_H
+-
+-#define		PD_RPU_0	6
+-#define		PD_RPU_1	7
+-#define		PD_OCM_BANK_0	11
+-#define		PD_OCM_BANK_1	12
+-#define		PD_OCM_BANK_2	13
+-#define		PD_OCM_BANK_3	14
+-#define		PD_TCM_BANK_0	15
+-#define		PD_TCM_BANK_1	16
+-#define		PD_TCM_BANK_2	17
+-#define		PD_TCM_BANK_3	18
+-#define		PD_USB_0	22
+-#define		PD_USB_1	23
+-#define		PD_TTC_0	24
+-#define		PD_TTC_1	25
+-#define		PD_TTC_2	26
+-#define		PD_TTC_3	27
+-#define		PD_SATA		28
+-#define		PD_ETH_0	29
+-#define		PD_ETH_1	30
+-#define		PD_ETH_2	31
+-#define		PD_ETH_3	32
+-#define		PD_UART_0	33
+-#define		PD_UART_1	34
+-#define		PD_SPI_0	35
+-#define		PD_SPI_1	36
+-#define		PD_I2C_0	37
+-#define		PD_I2C_1	38
+-#define		PD_SD_0		39
+-#define		PD_SD_1		40
+-#define		PD_DP		41
+-#define		PD_GDMA		42
+-#define		PD_ADMA		43
+-#define		PD_NAND		44
+-#define		PD_QSPI		45
+-#define		PD_GPIO		46
+-#define		PD_CAN_0	47
+-#define		PD_CAN_1	48
+-#define		PD_GPU		58
+-#define		PD_PCIE		59
+-#define		PD_PL		69
+-
+-#endif
+diff --git a/include/dt-bindings/reset/xlnx-versal-resets.h b/include/dt-bindings/reset/xlnx-versal-resets.h
+deleted file mode 100644
+index 895424e9b0e5..000000000000
+--- a/include/dt-bindings/reset/xlnx-versal-resets.h
++++ /dev/null
+@@ -1,105 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- *  Copyright (C) 2020 Xilinx, Inc.
+- */
+-
+-#ifndef _DT_BINDINGS_VERSAL_RESETS_H
+-#define _DT_BINDINGS_VERSAL_RESETS_H
+-
+-#define VERSAL_RST_PMC_POR			(0xc30c001U)
+-#define VERSAL_RST_PMC				(0xc410002U)
+-#define VERSAL_RST_PS_POR			(0xc30c003U)
+-#define VERSAL_RST_PL_POR			(0xc30c004U)
+-#define VERSAL_RST_NOC_POR			(0xc30c005U)
+-#define VERSAL_RST_FPD_POR			(0xc30c006U)
+-#define VERSAL_RST_ACPU_0_POR			(0xc30c007U)
+-#define VERSAL_RST_ACPU_1_POR			(0xc30c008U)
+-#define VERSAL_RST_OCM2_POR			(0xc30c009U)
+-#define VERSAL_RST_PS_SRST			(0xc41000aU)
+-#define VERSAL_RST_PL_SRST			(0xc41000bU)
+-#define VERSAL_RST_NOC				(0xc41000cU)
+-#define VERSAL_RST_NPI				(0xc41000dU)
+-#define VERSAL_RST_SYS_RST_1			(0xc41000eU)
+-#define VERSAL_RST_SYS_RST_2			(0xc41000fU)
+-#define VERSAL_RST_SYS_RST_3			(0xc410010U)
+-#define VERSAL_RST_FPD				(0xc410011U)
+-#define VERSAL_RST_PL0				(0xc410012U)
+-#define VERSAL_RST_PL1				(0xc410013U)
+-#define VERSAL_RST_PL2				(0xc410014U)
+-#define VERSAL_RST_PL3				(0xc410015U)
+-#define VERSAL_RST_APU				(0xc410016U)
+-#define VERSAL_RST_ACPU_0			(0xc410017U)
+-#define VERSAL_RST_ACPU_1			(0xc410018U)
+-#define VERSAL_RST_ACPU_L2			(0xc410019U)
+-#define VERSAL_RST_ACPU_GIC			(0xc41001aU)
+-#define VERSAL_RST_RPU_ISLAND			(0xc41001bU)
+-#define VERSAL_RST_RPU_AMBA			(0xc41001cU)
+-#define VERSAL_RST_R5_0				(0xc41001dU)
+-#define VERSAL_RST_R5_1				(0xc41001eU)
+-#define VERSAL_RST_SYSMON_PMC_SEQ_RST		(0xc41001fU)
+-#define VERSAL_RST_SYSMON_PMC_CFG_RST		(0xc410020U)
+-#define VERSAL_RST_SYSMON_FPD_CFG_RST		(0xc410021U)
+-#define VERSAL_RST_SYSMON_FPD_SEQ_RST		(0xc410022U)
+-#define VERSAL_RST_SYSMON_LPD			(0xc410023U)
+-#define VERSAL_RST_PDMA_RST1			(0xc410024U)
+-#define VERSAL_RST_PDMA_RST0			(0xc410025U)
+-#define VERSAL_RST_ADMA				(0xc410026U)
+-#define VERSAL_RST_TIMESTAMP			(0xc410027U)
+-#define VERSAL_RST_OCM				(0xc410028U)
+-#define VERSAL_RST_OCM2_RST			(0xc410029U)
+-#define VERSAL_RST_IPI				(0xc41002aU)
+-#define VERSAL_RST_SBI				(0xc41002bU)
+-#define VERSAL_RST_LPD				(0xc41002cU)
+-#define VERSAL_RST_QSPI				(0xc10402dU)
+-#define VERSAL_RST_OSPI				(0xc10402eU)
+-#define VERSAL_RST_SDIO_0			(0xc10402fU)
+-#define VERSAL_RST_SDIO_1			(0xc104030U)
+-#define VERSAL_RST_I2C_PMC			(0xc104031U)
+-#define VERSAL_RST_GPIO_PMC			(0xc104032U)
+-#define VERSAL_RST_GEM_0			(0xc104033U)
+-#define VERSAL_RST_GEM_1			(0xc104034U)
+-#define VERSAL_RST_SPARE			(0xc104035U)
+-#define VERSAL_RST_USB_0			(0xc104036U)
+-#define VERSAL_RST_UART_0			(0xc104037U)
+-#define VERSAL_RST_UART_1			(0xc104038U)
+-#define VERSAL_RST_SPI_0			(0xc104039U)
+-#define VERSAL_RST_SPI_1			(0xc10403aU)
+-#define VERSAL_RST_CAN_FD_0			(0xc10403bU)
+-#define VERSAL_RST_CAN_FD_1			(0xc10403cU)
+-#define VERSAL_RST_I2C_0			(0xc10403dU)
+-#define VERSAL_RST_I2C_1			(0xc10403eU)
+-#define VERSAL_RST_GPIO_LPD			(0xc10403fU)
+-#define VERSAL_RST_TTC_0			(0xc104040U)
+-#define VERSAL_RST_TTC_1			(0xc104041U)
+-#define VERSAL_RST_TTC_2			(0xc104042U)
+-#define VERSAL_RST_TTC_3			(0xc104043U)
+-#define VERSAL_RST_SWDT_FPD			(0xc104044U)
+-#define VERSAL_RST_SWDT_LPD			(0xc104045U)
+-#define VERSAL_RST_USB				(0xc104046U)
+-#define VERSAL_RST_DPC				(0xc208047U)
+-#define VERSAL_RST_PMCDBG			(0xc208048U)
+-#define VERSAL_RST_DBG_TRACE			(0xc208049U)
+-#define VERSAL_RST_DBG_FPD			(0xc20804aU)
+-#define VERSAL_RST_DBG_TSTMP			(0xc20804bU)
+-#define VERSAL_RST_RPU0_DBG			(0xc20804cU)
+-#define VERSAL_RST_RPU1_DBG			(0xc20804dU)
+-#define VERSAL_RST_HSDP				(0xc20804eU)
+-#define VERSAL_RST_DBG_LPD			(0xc20804fU)
+-#define VERSAL_RST_CPM_POR			(0xc30c050U)
+-#define VERSAL_RST_CPM				(0xc410051U)
+-#define VERSAL_RST_CPMDBG			(0xc208052U)
+-#define VERSAL_RST_PCIE_CFG			(0xc410053U)
+-#define VERSAL_RST_PCIE_CORE0			(0xc410054U)
+-#define VERSAL_RST_PCIE_CORE1			(0xc410055U)
+-#define VERSAL_RST_PCIE_DMA			(0xc410056U)
+-#define VERSAL_RST_CMN				(0xc410057U)
+-#define VERSAL_RST_L2_0				(0xc410058U)
+-#define VERSAL_RST_L2_1				(0xc410059U)
+-#define VERSAL_RST_ADDR_REMAP			(0xc41005aU)
+-#define VERSAL_RST_CPI0				(0xc41005bU)
+-#define VERSAL_RST_CPI1				(0xc41005cU)
+-#define VERSAL_RST_XRAM				(0xc30c05dU)
+-#define VERSAL_RST_AIE_ARRAY			(0xc10405eU)
+-#define VERSAL_RST_AIE_SHIM			(0xc10405fU)
+-
+-#endif
+diff --git a/include/dt-bindings/reset/xlnx-zynqmp-resets.h b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+deleted file mode 100644
+index d44525b9f8db..000000000000
+--- a/include/dt-bindings/reset/xlnx-zynqmp-resets.h
++++ /dev/null
+@@ -1,130 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- *  Copyright (C) 2018 Xilinx, Inc.
+- */
+-
+-#ifndef _DT_BINDINGS_ZYNQMP_RESETS_H
+-#define _DT_BINDINGS_ZYNQMP_RESETS_H
+-
+-#define		ZYNQMP_RESET_PCIE_CFG		0
+-#define		ZYNQMP_RESET_PCIE_BRIDGE	1
+-#define		ZYNQMP_RESET_PCIE_CTRL		2
+-#define		ZYNQMP_RESET_DP			3
+-#define		ZYNQMP_RESET_SWDT_CRF		4
+-#define		ZYNQMP_RESET_AFI_FM5		5
+-#define		ZYNQMP_RESET_AFI_FM4		6
+-#define		ZYNQMP_RESET_AFI_FM3		7
+-#define		ZYNQMP_RESET_AFI_FM2		8
+-#define		ZYNQMP_RESET_AFI_FM1		9
+-#define		ZYNQMP_RESET_AFI_FM0		10
+-#define		ZYNQMP_RESET_GDMA		11
+-#define		ZYNQMP_RESET_GPU_PP1		12
+-#define		ZYNQMP_RESET_GPU_PP0		13
+-#define		ZYNQMP_RESET_GPU		14
+-#define		ZYNQMP_RESET_GT			15
+-#define		ZYNQMP_RESET_SATA		16
+-#define		ZYNQMP_RESET_ACPU3_PWRON	17
+-#define		ZYNQMP_RESET_ACPU2_PWRON	18
+-#define		ZYNQMP_RESET_ACPU1_PWRON	19
+-#define		ZYNQMP_RESET_ACPU0_PWRON	20
+-#define		ZYNQMP_RESET_APU_L2		21
+-#define		ZYNQMP_RESET_ACPU3		22
+-#define		ZYNQMP_RESET_ACPU2		23
+-#define		ZYNQMP_RESET_ACPU1		24
+-#define		ZYNQMP_RESET_ACPU0		25
+-#define		ZYNQMP_RESET_DDR		26
+-#define		ZYNQMP_RESET_APM_FPD		27
+-#define		ZYNQMP_RESET_SOFT		28
+-#define		ZYNQMP_RESET_GEM0		29
+-#define		ZYNQMP_RESET_GEM1		30
+-#define		ZYNQMP_RESET_GEM2		31
+-#define		ZYNQMP_RESET_GEM3		32
+-#define		ZYNQMP_RESET_QSPI		33
+-#define		ZYNQMP_RESET_UART0		34
+-#define		ZYNQMP_RESET_UART1		35
+-#define		ZYNQMP_RESET_SPI0		36
+-#define		ZYNQMP_RESET_SPI1		37
+-#define		ZYNQMP_RESET_SDIO0		38
+-#define		ZYNQMP_RESET_SDIO1		39
+-#define		ZYNQMP_RESET_CAN0		40
+-#define		ZYNQMP_RESET_CAN1		41
+-#define		ZYNQMP_RESET_I2C0		42
+-#define		ZYNQMP_RESET_I2C1		43
+-#define		ZYNQMP_RESET_TTC0		44
+-#define		ZYNQMP_RESET_TTC1		45
+-#define		ZYNQMP_RESET_TTC2		46
+-#define		ZYNQMP_RESET_TTC3		47
+-#define		ZYNQMP_RESET_SWDT_CRL		48
+-#define		ZYNQMP_RESET_NAND		49
+-#define		ZYNQMP_RESET_ADMA		50
+-#define		ZYNQMP_RESET_GPIO		51
+-#define		ZYNQMP_RESET_IOU_CC		52
+-#define		ZYNQMP_RESET_TIMESTAMP		53
+-#define		ZYNQMP_RESET_RPU_R50		54
+-#define		ZYNQMP_RESET_RPU_R51		55
+-#define		ZYNQMP_RESET_RPU_AMBA		56
+-#define		ZYNQMP_RESET_OCM		57
+-#define		ZYNQMP_RESET_RPU_PGE		58
+-#define		ZYNQMP_RESET_USB0_CORERESET	59
+-#define		ZYNQMP_RESET_USB1_CORERESET	60
+-#define		ZYNQMP_RESET_USB0_HIBERRESET	61
+-#define		ZYNQMP_RESET_USB1_HIBERRESET	62
+-#define		ZYNQMP_RESET_USB0_APB		63
+-#define		ZYNQMP_RESET_USB1_APB		64
+-#define		ZYNQMP_RESET_IPI		65
+-#define		ZYNQMP_RESET_APM_LPD		66
+-#define		ZYNQMP_RESET_RTC		67
+-#define		ZYNQMP_RESET_SYSMON		68
+-#define		ZYNQMP_RESET_AFI_FM6		69
+-#define		ZYNQMP_RESET_LPD_SWDT		70
+-#define		ZYNQMP_RESET_FPD		71
+-#define		ZYNQMP_RESET_RPU_DBG1		72
+-#define		ZYNQMP_RESET_RPU_DBG0		73
+-#define		ZYNQMP_RESET_DBG_LPD		74
+-#define		ZYNQMP_RESET_DBG_FPD		75
+-#define		ZYNQMP_RESET_APLL		76
+-#define		ZYNQMP_RESET_DPLL		77
+-#define		ZYNQMP_RESET_VPLL		78
+-#define		ZYNQMP_RESET_IOPLL		79
+-#define		ZYNQMP_RESET_RPLL		80
+-#define		ZYNQMP_RESET_GPO3_PL_0		81
+-#define		ZYNQMP_RESET_GPO3_PL_1		82
+-#define		ZYNQMP_RESET_GPO3_PL_2		83
+-#define		ZYNQMP_RESET_GPO3_PL_3		84
+-#define		ZYNQMP_RESET_GPO3_PL_4		85
+-#define		ZYNQMP_RESET_GPO3_PL_5		86
+-#define		ZYNQMP_RESET_GPO3_PL_6		87
+-#define		ZYNQMP_RESET_GPO3_PL_7		88
+-#define		ZYNQMP_RESET_GPO3_PL_8		89
+-#define		ZYNQMP_RESET_GPO3_PL_9		90
+-#define		ZYNQMP_RESET_GPO3_PL_10		91
+-#define		ZYNQMP_RESET_GPO3_PL_11		92
+-#define		ZYNQMP_RESET_GPO3_PL_12		93
+-#define		ZYNQMP_RESET_GPO3_PL_13		94
+-#define		ZYNQMP_RESET_GPO3_PL_14		95
+-#define		ZYNQMP_RESET_GPO3_PL_15		96
+-#define		ZYNQMP_RESET_GPO3_PL_16		97
+-#define		ZYNQMP_RESET_GPO3_PL_17		98
+-#define		ZYNQMP_RESET_GPO3_PL_18		99
+-#define		ZYNQMP_RESET_GPO3_PL_19		100
+-#define		ZYNQMP_RESET_GPO3_PL_20		101
+-#define		ZYNQMP_RESET_GPO3_PL_21		102
+-#define		ZYNQMP_RESET_GPO3_PL_22		103
+-#define		ZYNQMP_RESET_GPO3_PL_23		104
+-#define		ZYNQMP_RESET_GPO3_PL_24		105
+-#define		ZYNQMP_RESET_GPO3_PL_25		106
+-#define		ZYNQMP_RESET_GPO3_PL_26		107
+-#define		ZYNQMP_RESET_GPO3_PL_27		108
+-#define		ZYNQMP_RESET_GPO3_PL_28		109
+-#define		ZYNQMP_RESET_GPO3_PL_29		110
+-#define		ZYNQMP_RESET_GPO3_PL_30		111
+-#define		ZYNQMP_RESET_GPO3_PL_31		112
+-#define		ZYNQMP_RESET_RPU_LS		113
+-#define		ZYNQMP_RESET_PS_ONLY		114
+-#define		ZYNQMP_RESET_PL			115
+-#define		ZYNQMP_RESET_PS_PL0		116
+-#define		ZYNQMP_RESET_PS_PL1		117
+-#define		ZYNQMP_RESET_PS_PL2		118
+-#define		ZYNQMP_RESET_PS_PL3		119
+-
+-#endif
 
 -- 
 2.44.0
