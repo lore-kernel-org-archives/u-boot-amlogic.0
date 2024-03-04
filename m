@@ -2,318 +2,610 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91632C54E66
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EAFC54E68
 	for <webhook@archiver.kernel.org>; Mon, 11 Mar 2024 08:51:38 +0000 (UTC)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
- by mx.groups.io with SMTP id smtpd.web10.16574.1709273845709855739
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+ by mx.groups.io with SMTP id smtpd.web10.104578.1709571084637425791
  for <u-boot-amlogic@groups.io>;
- Thu, 29 Feb 2024 22:17:25 -0800
+ Mon, 04 Mar 2024 08:51:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=deml81vX;
- spf=pass (domain: linaro.org, ip: 209.85.217.42, mailfrom: sumit.garg@linaro.org)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-472754e41e7so438298137.3
-        for <u-boot-amlogic@groups.io>; Thu, 29 Feb 2024 22:17:25 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=FcMfgiJd;
+ spf=pass (domain: linaro.org, ip: 209.85.208.180, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d28e465655so67670441fa.0
+        for <u-boot-amlogic@groups.io>; Mon, 04 Mar 2024 08:51:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709273845; x=1709878645; darn=groups.io;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgYXkM45W5rzcrzJJuCIwT2/uUlNuR58rM2M1XihuTg=;
-        b=deml81vXOFGyihC5BIIeDoBYM4nkg3HcNQ79VfIVd/hBm1pzmCQ6u13ePwjVjzQCqY
-         MgTdPfzZQZIsqOc1eFXX0lpFEYbpGeHgfDRJIp0hVhvSTslO8ZdkzNlsghw4M7ftFXoh
-         HqK8aWyfeNqOGNupOXltPbA5heT6Fni/7J5EXk7v6iFwHoGjg4KKxiwuPXJZ76bw7Uol
-         TY22uyPqVDS17oaLdB/jDfHi9zIOcYTRnePaSavW8WzGbk7ZKi2fF8uzho2kbgtae5Hh
-         KLwM5ktaUpq4e3MuSR898DhCtTYLVbcDFm9F8YAOA0jqG3MkNO5WUuESBi38mD1SFr3n
-         Vu3g==
+        d=linaro.org; s=google; t=1709571083; x=1710175883; darn=groups.io;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DheziDYFqDXeR3e++W4O5lxRPlFWOGMtifm26HXJXFk=;
+        b=FcMfgiJd5zH3JMgg/8Q7vL68rgx3zClR4C5m28E9SEt6CwIb7SK8x2IpnoxmPiroOt
+         R8oc9wbeSa6k8zlhg7tOqaT9c/iNPhqdjyxABKDasWtLp8BVHlnsJHiwqZmAnOWV5Q0w
+         4boikJAsFZYQYrf7mokJhs1LSMANbaL1Ura45GlHS3h2D98tpK2XyASZTztW0NdeQVSk
+         dZeuDwq3y4Mw8ckWtS2hfzp3N0w2MBtjoCG7Zbk0gxEAisZ6ujzBPnvjhudnTRiAvLof
+         3W0CaZAo6T/4MCIJlGZ8eH9SFAthj/9FOwtvAEuxNM5C0iKr8gPoKQszsgXgz023pD02
+         bCiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709273845; x=1709878645;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1709571083; x=1710175883;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KgYXkM45W5rzcrzJJuCIwT2/uUlNuR58rM2M1XihuTg=;
-        b=PLdguWINhATenw2myYiuXK1GbwtVUKn29kejUBrqFfDjLd2pzf0hGyw2dz0XfHast5
-         FA7gb1mqvk4M8lyXsXXUywadSBJgF4ZX9Dsbir6hbGxm6y3XqvJ77znjOUozfa4Xl05C
-         nybPbjXpfyokeoM8e/xL1T+l7gsRU7i97pdA3crXz8EXUJ6AqkZ1BU8GBjLFd4QxRmk8
-         Wm8K4ucSo17kH4r1dXCc05DDOBC4++PIpto2qawHial++FtKrcSAr71jLwWdxAGzTsAH
-         K2q/Tc2Uex0ZFZjWRW0fYMuKafSiB29Gi68m9ipxdPc4o7FNEwQi+/9IcXZXdQsNJETW
-         nGCw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2dlbgfPEF1OBmKLFQFGsYO2/B5RUDsQfYcnHfsp5yt8G6Ng2jtBuaIThW1Sa7hcXsplxgPs2OZ7GcwfYSN6yDushjA1rIFr4=
-X-Gm-Message-State: AOJu0YxtkC+ouCeVsNzzYCc1Rzy6De+8WMMlafJKHPLgHjDtFQ0xT4S7
-	bnVyjzc4VpQc5LTJ8bafP3RuqBbFnbdzKh2pbgsHXn3g5CE3sNqCjBHQp0ueBz08tQZp76iSQ8A
-	JeS8XLOUuAqFOzzjl7KwowquoUTYQ7wOjYWXO/w==
-X-Google-Smtp-Source: AGHT+IEhH1bj/C/FBamHXdsY+gOYj43LkQIRIeeh2OVX7IP4ckHlUj0BTAZEcm3JBjJMVHVLtxQjvLwAoJ//P1XCC1E=
-X-Received: by 2002:a67:b408:0:b0:472:7227:b1f8 with SMTP id
- x8-20020a67b408000000b004727227b1f8mr457347vsl.19.1709273844663; Thu, 29 Feb
- 2024 22:17:24 -0800 (PST)
+        bh=DheziDYFqDXeR3e++W4O5lxRPlFWOGMtifm26HXJXFk=;
+        b=geSXW5EaRzL9BNQ0GvS6L35qOd3bxtu6go3JJntCnSTY0Xo77BAFdOeetIlTdcBzoc
+         M7TbJAUJHQXw75u5kmkgNMZ4Kaq/Bf1wsJfZmovEawkWb+IC0Y2og1X8hrc4IxtyjnUr
+         7C/l6RWKPQx4m6rwvl0MxF4uFhNpYO9kFiAMNnjWBVDaM1HhEdXxHMemDTw5A4PUa22U
+         863og7MEhBQPamUf/Sp1+btTIymNorj1iBk31/jqxQZAjWpexk51ivJ1i6tziqlYEmMh
+         F2g+PmgePQWYeCU8qk+8FCTgcKFei4yahlPm5uvpkOeJA+neDr84HoKus7PfTbdpugdf
+         nqIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVkZMHGKx4suufrXUxacoKjBywJ/KOS6eertxrSeJI5xQJ25OCHMbC0rsUXLvLUBw5cFL3jkj5UPYfXWxR/8zoCyVlwZ2Lx5o=
+X-Gm-Message-State: AOJu0Yw4HjyizLwIdQm5nlXK9JTFvaeSMaNP8QIOG4KGZTOXD8dLZDtV
+	UQtINK1lYqzVzreY12HcSdqWOI1x6gnVeB5mZdVVqKElWeRy+8c6eiEP9WJHwYs=
+X-Google-Smtp-Source: AGHT+IHNCyUCAa2iE/EJyqVflCZep/Vn7OgFXUCCa7SlQTRzuPpTyAS4aWe9a5YwLkbfkabGZ2bFcw==
+X-Received: by 2002:a2e:a69e:0:b0:2d2:3392:8c0b with SMTP id q30-20020a2ea69e000000b002d233928c0bmr5502255lje.51.1709571082564;
+        Mon, 04 Mar 2024 08:51:22 -0800 (PST)
+Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
+        by smtp.gmail.com with ESMTPSA id c21-20020a05600c0a5500b00412cb0961fasm10598517wmq.6.2024.03.04.08.51.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 08:51:21 -0800 (PST)
+From: Caleb Connolly <caleb.connolly@linaro.org>
+Subject: [PATCH RFC 00/26] Drop DT upstream compatible dt-binding headers
+Date: Mon, 04 Mar 2024 16:51:08 +0000
+Message-Id: <20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org>
 MIME-Version: 1.0
-References: <20240222093607.3085545-1-sumit.garg@linaro.org>
-In-Reply-To: <20240222093607.3085545-1-sumit.garg@linaro.org>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Fri, 1 Mar 2024 11:47:13 +0530
-Message-ID: <CAFA6WYP4ioYxdY+3EQz-FT_eO5gOmAME+7BcXD4vWuqhLV2uAQ@mail.gmail.com>
-Subject: Re: [PATCH v6 00/11] An effort to bring DT bindings compliance within U-Boot
-To: trini@konsulko.com
+X-B4-Tracking: v=1; b=H4sIAPz75WUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYwMT3SQT3dKC4pKi1MRc3ZQS3YzUxJTUomJdA7Mkw7TUtESjZENjJaD
+ mgqLUtMwKsMHRSkFuzkqxtbUA/9Ucy20AAAA=
+To: Tom Rini <trini@konsulko.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Sumit Garg <sumit.garg@linaro.org>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Patrick Delaunay <patrick.delaunay@foss.st.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Simon Glass <sjg@chromium.org>, 
+ Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+ Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>, 
+ Sean Anderson <seanga2@gmail.com>, 
+ Sam Protsenko <semen.protsenko@linaro.org>, 
+ Matthias Brugger <mbrugger@suse.com>, Peter Robinson <pbrobinson@gmail.com>, 
+ Joe Hershberger <joe.hershberger@ni.com>, 
+ Ramon Fried <rfried.dev@gmail.com>, Thierry Reding <treding@nvidia.com>, 
+ Svyatoslav Ryhel <clamor95@gmail.com>, Michal Simek <michal.simek@amd.com>, 
+ Paul Barker <paul.barker.ct@bp.renesas.com>, 
+ Weijie Gao <weijie.gao@mediatek.com>, 
+ GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, 
+ Ryder Lee <ryder.lee@mediatek.com>, 
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+ Eugen Hristev <eugen.hristev@collabora.com>, Rick Chen <rick@andestech.com>, 
+ Leo <ycliang@andestech.com>, Ryan Chen <ryan_chen@aspeedtech.com>, 
+ Chia-Wei Wang <chiawei_wang@aspeedtech.com>, 
+ Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Dai Okamura <okamura.dai@socionext.com>, 
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	u-boot-custodians@lists.denx.de, sjg@chromium.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor@kernel.org, 
-	neil.armstrong@linaro.org, caleb.connolly@linaro.org, ff@shokubai.tech, 
-	daniel.thompson@linaro.org, dgilmore@fedoraproject.org, pbrobinson@gmail.com, 
-	ilias.apalodimas@linaro.org, b.galvani@gmail.com, xypron.glpk@gmx.de, 
-	michal.simek@amd.com, seanga2@gmail.com, rasmus.villemoes@prevas.dk, 
-	peng.fan@nxp.com, jh80.chung@samsung.com, rfried.dev@gmail.com, marex@denx.de, 
-	mibodhi@gmail.com, bb@ti.com, mark.kettenis@xs4all.nl, festevam@gmail.com, 
-	nm@ti.com, andre.przywara@arm.com, ijc@hellion.org.uk, 
-	paul.barker.ct@bp.renesas.com
-Content-Type: text/plain; charset="UTF-8"
+ uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
+ Caleb Connolly <caleb.connolly@linaro.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=29567;
+ i=caleb.connolly@linaro.org; h=from:subject:message-id;
+ bh=psw7rcvDgKpDFPy9RMB4YihEUlaD2XyXUVjPhdZ9N4Y=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtSnf9iyn1dozM8K/XFRQPug08oQWeW6EBYFObWHgpP5G
+ IsctZU7SlkYBDkYZMUUWcRPLLNsWnvZXmP7ggswc1iZQIYwcHEKwERO1DIy9Jo/fVX78BSTkaio
+ 4ZI9Ovm+v/ldZ06e90vPqcv+wHX96Qy/WawtinO0JXVupr3efdr1+5nLk6Pjr/DseHu1szQ0/f+
+ P5QA=
+X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
+ fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 11 Mar 2024 08:51:38 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2151
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2156
 
-Hi Tom,
+Many of the dt-binding headers in U-Boot are based on the upstream ones
+from Linux, occasionally with minor changes. Although some have
+additional things defined or are totally different.
 
-On Thu, 22 Feb 2024 at 15:06, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> Changes in v6:
-> --------------
-> - v6_dt: https://github.com/b49020/u-boot/tree/v6_dt
-> - Patch #3: Incorporate fix for sandbox CI failure.
-> - Patch #6: Incorporate shell script comments from Marek.
-> - Patch #8: Incorporate documentation review comments from Paul.
->
+This series attempts to drop as many of these headers as is easily
+possible. Those with differing APIs were left as-is.
 
-I haven't heard any major feedback/comments for v6. So can you pick up
-this series for the U-Boot -next branch? As you may already be aware
-that it is a dependency for [1] [2] [3]. Also, we would like to move
-all new Qcom platforms to use upstream DT too.
+Most of this work was done with a script, with some manual fixing at the
+end.
 
-[1] https://patchwork.ozlabs.org/project/uboot/list/?series=396399
-[2] https://patchwork.ozlabs.org/project/uboot/list/?series=396742
-[3] https://patchwork.ozlabs.org/project/uboot/list/?series=396992&state=*
+All-in, we're dropping 393 of the 489 headers from include/dt-bindings.
 
--Sumit
+Due to how the include paths are configured, U-Boot headers override
+upstream ones by the same name, resulting in some upstream DTBs failing
+to compile (e.g. those that use newer linux-event-codes.h). Swapping the
+include order would conversely break a bunch of U-Boot DTS files and
+drivers.
 
-> Changes in v5:
-> --------------
-> - Rebased on tip of master (050a9b981d6a835133521b599be3ae189ce70f41)
-> - Created v5_dt branch for testing purposes:
->   https://github.com/b49020/u-boot/tree/v5_dt
-> - Patch #6: Added support to cherry-pick fixes in subtree update script.
->   Also, used https:// instead of git://.
-> - Patch #7: Fixed inappropriate documentation update.
-> - Patch #8: Document how to cherry-pick fixes from devicetree-rebasing
->   tree.
->
-> Changes in v4:
-> --------------
-> - Switched subtree to be imported as dts/upstream sub-directory rather
->   than devicetree-rebasing sub-directory to better suite U-Boot
->   directory structure.
-> - Since we now have v6.7-dts tag available now, so switch subtree to
->   that from its beginning.
-> - Patch #2: Incorporate build fix to adjust Bindings Makefile rules to
->   old U-Boot Kbuild infrastructure.
-> - Patch #3: Incorporate fix to resolve rk3399 migration issue reported
->   by Simon.
-> - Patch #4: New patch to reuse upstream DT includes by U-Boot as per
->   Brian's use-case for TI K3 SoCs.
-> - Patch #5: Added a note to OF_UPSTREAM Kconfig option.
-> - Patch #6: New patch to add script dts/update-dts-subtree.sh as per
->   Rob's comments.
-> - Patch #7: Separate patch to align documentation to use Kconfig symbols
->   instead.
-> - Patch #8: Clarify subtree uprev schedule as a separate documentation
->   section. Also, fixed documentation typos.
-> - Patch #9: Added commit description.
->
-> Changes in v3:
-> --------------
-> - Patch #4: Minor commit message update
-> - Patch #5: Replace CONFIG_* with Kconfig options
-> - Patch #7: Dropped Makefile portion and enabled OF_UPSTREAM for SoC
->   instead.
-> - Patch #1, #3, #6 and #8: Picked up review tags
->
-> Changes in v2:
-> --------------
-> - Patch #1: excluded gitab CI config check and added commit description.
-> - Patch #3: s/UBOOT_DTSI_LOC/u_boot_dtsi_loc/
-> - Patch #4: s/DEVICE_TREE_LOC/dt_dir/ and s/U-boot/U-Boot/
-> - Patch #5: s/U-boot/U-Boot/
-> - Patch #6 and #7: Picked up review tags
->
-> Prerequisite
-> ------------
->
-> This patch series requires devicetree-rebasing git repo to be added as a
-> subtree to the main U-Boot repo via:
->
-> $ git subtree add --prefix dts/upstream \
->       https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git \
->       v6.7-dts --squash
->
-> Background
-> ----------
->
-> This effort started while I was reviewing patch series corresponding to
-> Qcom platforms [1] which was about to import modified devicetree source
-> files from Linux kernel. I suppose keeping devicetree files sync with
-> Linux kernel without any DT bindings schema validation has been a pain
-> for U-Boot SoC/platform maintainers. There has been past discussions
-> about a single DT repo but that hasn't come up and Linux kernel remained
-> the place where DT source files as well as bindings are placed and
-> maintained.
->
-> However, Linux kernel DT maintainers proposed [2] for U-Boot to rather
-> use devicetree-rebasing repo [3] which is a forked copy from Linux
-> kernel for DT source files as well as bindings. It is tagged at every
-> Linux kernel major release or intermideate release candidates. So here I
-> have tried to reuse that to bring DT bingings compliance as well as a
-> standard way to maintain a regular sync of DT source files with Linux
-> kernel.
->
-> In order to maintain devicetree files sync, U-Boot will maintains a Git
-> subtree for devicetee-rebasing repo as `dts/upstream` sub-directory.
-> U-Boot will regularly sync `dts/upstream/` subtree whenever the next window
-> opens with the next available kernel major release.
-> `dts/update-dts-subtree.sh` script provides a wrapper around git subtree
-> pull command, usage from the top level U-Boot source tree, run:
->
-> $ ./dts/update-dts-subtree.sh pull <devicetree-rebasing-release-tag>
->
-> If required it is also possible to cherry-pick fixes from
-> devicetree-rebasing tree prior to next sync, usage:
->
-> $ ./dts/update-dts-subtree.sh pick <devicetree-rebasing-commit-id>
->
-> The RFC/prototype for this series has been discussed with Linux DT
-> maintainers as well as U-Boot maintainers here [4]. Now we would like to
-> reach out to wider U-Boot community to seek feedback.
->
-> [1] https://lore.kernel.org/all/CAFA6WYMLUD9cnkr=R0Uur+1UeTMkKjM2zDdMJtXb3nmrLk+pDg@mail.gmail.com/
-> [2] https://lore.kernel.org/all/CAL_JsqKEjv2tSGmT+0ZiO7_qbBfhTycbGnhJhYpKDFzfO9jzDg@mail.gmail.com/
-> [3] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
-> [4] https://github.com/u-boot/u-boot/pull/451
->
-> Changes
-> -------
->
-> Traditionally, U-Boot placed copies of devicetree source files from Linux
-> kernel into `arch/<arch>/dts/<name>.dts` which can be selected via setting
-> "<name>" when prompted for `DEFAULT_DEVICE_TREE` by Kconfig.
->
-> SoC/board maintainers are encouraged to migrate to use synced copies from
-> `dts/upstream/src/<arch>/<vendor>`. To do that enable `OF_UPSTREAM` for the
-> SoC being used via Kconfig and set up "<vendor>/<name>" when prompted for
-> `DEFAULT_DEVICE_TREE` by Kconfig.
->
-> An example have been shown for Amlogic meson-gxbb SoC and corresponding
-> derived boards via patch #10 and #11.
->
-> Devicetree bindings schema checks
-> ---------------------------------
->
-> With devicetee-rebasing Git subtree, the devicetree bindings are also
-> regularly synced with Linux kernel as `dts/upstream/Bindings/`
-> sub-directory. This allows U-Boot to run devicetree bindings schema checks
-> which will bring compliance to U-Boot core/drivers regarding usage of
-> devicetree.
->
-> Dependencies
-> ------------
->
-> The DT schema project must be installed in order to validate the DT schema
-> binding documents and validate DTS files using the DT schema. The DT schema
-> project can be installed with pip:
->
-> $ pip3 install dtschema
->
-> Note that 'dtschema' installation requires 'swig' and Python development
-> files installed first. On Debian/Ubuntu systems:
->
-> $ apt install swig python3-dev
->
-> Several executables (dt-doc-validate, dt-mk-schema, dt-validate) will be
-> installed. Ensure they are in your PATH (~/.local/bin by default).
->
-> Recommended is also to install yamllint (used by dtschema when present).
->
-> $ apt install yamllint
->
-> Running checks
-> --------------
->
-> In order to perform validation of DTB files, use the ``dtbs_check`` target:
->
-> $ make dtbs_check
->
-> It is also possible to run checks with a subset of matching schema files by
-> setting the ``DT_SCHEMA_FILES`` variable to 1 or more specific schema files
-> or patterns (partial match of a fixed string). Each file or pattern should
-> be separated by ':'.
->
-> $ make dtbs_check DT_SCHEMA_FILES=trivial-devices.yaml:rtc.yaml
-> $ make dtbs_check DT_SCHEMA_FILES=/gpio/
-> $ make dtbs_check DT_SCHEMA_FILES=trivial-devices.yaml
->
-> Sumit Garg (11):
->   CI: Exclude devicetree-rebasing subtree for CONFIG checks
->   Makefile: Add support for DT bindings schema checks
->   scripts/Makefile.lib: Statically define *-u-boot.dtsi files location
->   Makefile: Allow upstream DT subtree to provide DT includes
->   dts: Add alternative location for upstream DTB builds
->   dts: Add script to uprev dts/upstream subtree
->   doc: devicetree: Align documentation to use Kconfig options
->   doc: devicetree: Updates for devicetree-rebasing subtree
->   MAINTAINERS: Add myself as devicetree-rebasing maintainer
->   dts: meson-gxbb: Switch to using upstream DT
->   dts: meson-gxbb: Drop redundant devicetree files
->
->  .azure-pipelines.yml                    |   3 +-
->  .gitlab-ci.yml                          |   3 +-
->  MAINTAINERS                             |   5 +
->  Makefile                                |  23 +-
->  arch/arm/dts/Makefile                   |   8 -
->  arch/arm/dts/meson-gxbb-kii-pro.dts     | 140 ----
->  arch/arm/dts/meson-gxbb-nanopi-k2.dts   | 426 ------------
->  arch/arm/dts/meson-gxbb-odroidc2.dts    | 414 -----------
->  arch/arm/dts/meson-gxbb-p200.dts        | 100 ---
->  arch/arm/dts/meson-gxbb-p201.dts        |  26 -
->  arch/arm/dts/meson-gxbb-p20x.dtsi       | 250 -------
->  arch/arm/dts/meson-gxbb-wetek-hub.dts   |  58 --
->  arch/arm/dts/meson-gxbb-wetek-play2.dts | 119 ----
->  arch/arm/dts/meson-gxbb-wetek.dtsi      | 292 --------
->  arch/arm/dts/meson-gxbb.dtsi            | 870 ------------------------
->  arch/arm/mach-meson/Kconfig             |   1 +
->  configs/nanopi-k2_defconfig             |   2 +-
->  configs/odroid-c2_defconfig             |   2 +-
->  configs/p200_defconfig                  |   2 +-
->  configs/p201_defconfig                  |   2 +-
->  configs/videostrong-kii-pro_defconfig   |   2 +-
->  configs/wetek-hub_defconfig             |   2 +-
->  configs/wetek-play2_defconfig           |   2 +-
->  doc/develop/devicetree/control.rst      | 159 +++--
->  dts/Kconfig                             |  16 +
->  dts/Makefile                            |  17 +-
->  dts/update-dts-subtree.sh               |  48 ++
->  dts/upstream/Bindings/Makefile          |   6 +-
->  dts/upstream/src/arm64/Makefile         |  14 +
->  scripts/Makefile.lib                    |  50 +-
->  30 files changed, 283 insertions(+), 2779 deletions(-)
->  delete mode 100644 arch/arm/dts/meson-gxbb-kii-pro.dts
->  delete mode 100644 arch/arm/dts/meson-gxbb-nanopi-k2.dts
->  delete mode 100644 arch/arm/dts/meson-gxbb-odroidc2.dts
->  delete mode 100644 arch/arm/dts/meson-gxbb-p200.dts
->  delete mode 100644 arch/arm/dts/meson-gxbb-p201.dts
->  delete mode 100644 arch/arm/dts/meson-gxbb-p20x.dtsi
->  delete mode 100644 arch/arm/dts/meson-gxbb-wetek-hub.dts
->  delete mode 100644 arch/arm/dts/meson-gxbb-wetek-play2.dts
->  delete mode 100644 arch/arm/dts/meson-gxbb-wetek.dtsi
->  delete mode 100644 arch/arm/dts/meson-gxbb.dtsi
->  create mode 100755 dts/update-dts-subtree.sh
->  create mode 100644 dts/upstream/src/arm64/Makefile
->
-> --
-> 2.34.1
->
+Hopefully this makes a good dent, and future efforts to align more
+architectures with upstream DT will help drop the remaining headers.
+
+In addition, the final patch in this series adds support for compiling
+all upstream DTS files for a given vendor. This is useful in cases where
+a single U-Boot binary can support many boards, and maintaining a list
+of supported DTB files would quickly become arduous (as is the case with
+Qualcomm).
+
+To: Tom Rini <trini@konsulko.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+To: Sumit Garg <sumit.garg@linaro.org>
+To: Patrice Chotard <patrice.chotard@foss.st.com>
+To: Patrick Delaunay <patrick.delaunay@foss.st.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+To: Simon Glass <sjg@chromium.org>
+To: Philipp Tomsich <philipp.tomsich@vrull.eu>
+To: Kever Yang <kever.yang@rock-chips.com>
+To: Lukasz Majewski <lukma@denx.de>
+To: Sean Anderson <seanga2@gmail.com>
+To: Sam Protsenko <semen.protsenko@linaro.org>
+To: Matthias Brugger <mbrugger@suse.com>
+To: Peter Robinson <pbrobinson@gmail.com>
+To: Joe Hershberger <joe.hershberger@ni.com>
+To: Ramon Fried <rfried.dev@gmail.com>
+To: Thierry Reding <treding@nvidia.com>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Michal Simek <michal.simek@amd.com>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Weijie Gao <weijie.gao@mediatek.com>
+To: GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>
+To: Ryder Lee <ryder.lee@mediatek.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+To: Eugen Hristev <eugen.hristev@collabora.com>
+To: Rick Chen <rick@andestech.com>
+To: Leo <ycliang@andestech.com>
+To: Ryan Chen <ryan_chen@aspeedtech.com>
+To: Chia-Wei Wang <chiawei_wang@aspeedtech.com>
+To: Aspeed BMC SW team <BMC-SW@aspeedtech.com>
+To: Joel Stanley <joel@jms.id.au>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: Dai Okamura <okamura.dai@socionext.com>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io
+Cc: uboot-stm32@st-md-mailman.stormreply.com
+Cc: uboot-snps-arc@synopsys.com
+
+Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+---
+Caleb Connolly (26):
+      qcom: drop clock dt-binding headers
+      qcom: drop remaining dt-binding headers
+      sunxi: drop clock dt-binding headers
+      sunxi: drop remaining dt-binding headers
+      imx: drop clock dt-binding headers
+      imx: drop dt-binding headers
+      amlogic: drop dt-binding headers
+      stm: drop dt-binding headers
+      rockchip: drop clock dt-binding headers
+      rockchip: drop remaining dt-binding headers
+      exynos: drop dt-binding headers
+      bcm: drop dt-binding headers
+      ti: drop dt-binding headers
+      tegra: drop clock dt-binding headers
+      tegra: drop dt-binding headers
+      xlnx: drop dt-binding headers
+      renesas: drop clock dt-binding headers
+      renesas: drop remaining dt-binding headers
+      mtk: drop dt-binding headers
+      microchip: drop dt-binding headers
+      hisi: drop dt-binding headers
+      sifive: drop clock headers
+      dt-bindings: drop clock headers
+      dt-bindings: drop remaining device headers
+      dt-bindings: drop generic headers
+      dts: support building all dtb files for a specific vendor
+
+ arch/arm/dts/exynos7420.dtsi                       |   2 +-
+ arch/arm/dts/rk3399-u-boot.dtsi                    |   2 +-
+ arch/arm/dts/tegra186.dtsi                         |   2 +-
+ arch/riscv/dts/fu540-c000-u-boot.dtsi              |  26 +-
+ drivers/clk/exynos/clk-exynos7420.c                |   2 +-
+ drivers/clk/rockchip/clk_rk3399.c                  |   2 +-
+ drivers/clk/sifive/fu540-prci.c                    |   8 +-
+ drivers/mailbox/tegra-hsp.c                        |   2 +-
+ drivers/net/phy/dp83869.c                          |   2 +
+ drivers/pinctrl/rockchip/pinctrl-rk3568.c          |  15 +
+ dts/Kconfig                                        |  24 +
+ include/dt-bindings/arm/coresight-cti-dt.h         |  37 -
+ include/dt-bindings/arm/ux500_pm_domains.h         |  15 -
+ include/dt-bindings/ata/ahci.h                     |  20 -
+ include/dt-bindings/bus/moxtet.h                   |  16 -
+ include/dt-bindings/bus/ti-sysc.h                  |  28 -
+ include/dt-bindings/clk/ti-dra7-atl.h              |  40 -
+ include/dt-bindings/clock/actions,s700-cmu.h       | 118 ---
+ include/dt-bindings/clock/actions,s900-cmu.h       | 129 ---
+ include/dt-bindings/clock/agilex-clock.h           |  71 --
+ include/dt-bindings/clock/am3.h                    | 227 -----
+ .../clock/amlogic,a1-peripherals-clkc.h            | 168 ----
+ include/dt-bindings/clock/amlogic,a1-pll-clkc.h    |  25 -
+ include/dt-bindings/clock/ast2600-clock.h          |  62 --
+ include/dt-bindings/clock/at91.h                   |  23 -
+ include/dt-bindings/clock/axg-aoclkc.h             |  31 -
+ include/dt-bindings/clock/axg-audio-clkc.h         |  94 ---
+ include/dt-bindings/clock/axg-clkc.h               | 100 ---
+ include/dt-bindings/clock/bcm-nsp.h                |  51 --
+ include/dt-bindings/clock/bcm2835-aux.h            |   9 -
+ include/dt-bindings/clock/bcm2835.h                |  62 --
+ include/dt-bindings/clock/bcm6318-clock.h          |  47 --
+ include/dt-bindings/clock/bcm63268-clock.h         |  51 --
+ include/dt-bindings/clock/bcm6328-clock.h          |  24 -
+ include/dt-bindings/clock/bcm6358-clock.h          |  23 -
+ include/dt-bindings/clock/bcm6362-clock.h          |  32 -
+ include/dt-bindings/clock/bcm6368-clock.h          |  30 -
+ include/dt-bindings/clock/boston-clock.h           |  12 -
+ include/dt-bindings/clock/exynos7420-clk.h         | 207 -----
+ include/dt-bindings/clock/exynos850.h              | 337 --------
+ include/dt-bindings/clock/fsl,qoriq-clockgen.h     |  15 -
+ include/dt-bindings/clock/g12a-aoclkc.h            |  36 -
+ include/dt-bindings/clock/g12a-clkc.h              | 153 ----
+ include/dt-bindings/clock/gxbb-aoclkc.h            |  74 --
+ include/dt-bindings/clock/gxbb-clkc.h              | 151 ----
+ include/dt-bindings/clock/hi3660-clock.h           | 214 -----
+ include/dt-bindings/clock/hi6220-clock.h           | 173 ----
+ include/dt-bindings/clock/imx5-clock.h             | 219 -----
+ include/dt-bindings/clock/imx6qdl-clock.h          | 278 ------
+ include/dt-bindings/clock/imx6sl-clock.h           | 178 ----
+ include/dt-bindings/clock/imx6sll-clock.h          | 210 -----
+ include/dt-bindings/clock/imx6sx-clock.h           | 281 ------
+ include/dt-bindings/clock/imx6ul-clock.h           | 262 ------
+ include/dt-bindings/clock/imx7d-clock.h            | 456 ----------
+ include/dt-bindings/clock/imx7ulp-clock.h          | 119 ---
+ include/dt-bindings/clock/imx8mm-clock.h           | 286 -------
+ include/dt-bindings/clock/imx8mn-clock.h           | 262 ------
+ include/dt-bindings/clock/imx8mp-clock.h           | 401 ---------
+ include/dt-bindings/clock/imx8mq-clock.h           | 431 ----------
+ include/dt-bindings/clock/imx8ulp-clock.h          | 258 ------
+ include/dt-bindings/clock/imx93-clock.h            | 208 -----
+ include/dt-bindings/clock/imxrt1050-clock.h        |  72 --
+ include/dt-bindings/clock/lpc32xx-clock.h          |  58 --
+ include/dt-bindings/clock/maxim,max77802.h         |  22 -
+ include/dt-bindings/clock/microchip-mpfs-clock.h   |  71 --
+ include/dt-bindings/clock/mt7621-clk.h             |  46 -
+ include/dt-bindings/clock/mt7622-clk.h             | 270 ------
+ include/dt-bindings/clock/mt7629-clk.h             | 206 -----
+ include/dt-bindings/clock/mt8183-clk.h             | 329 --------
+ include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  46 -
+ include/dt-bindings/clock/omap4.h                  | 149 ----
+ include/dt-bindings/clock/omap5.h                  | 129 ---
+ include/dt-bindings/clock/px30-cru.h               | 389 ---------
+ include/dt-bindings/clock/qcom,camcc-sdm845.h      | 116 ---
+ include/dt-bindings/clock/qcom,dispcc-sdm845.h     |  56 --
+ include/dt-bindings/clock/qcom,gcc-ipq4019.h       | 169 ----
+ include/dt-bindings/clock/qcom,gcc-msm8916.h       | 179 ----
+ include/dt-bindings/clock/qcom,gcc-msm8996.h       | 362 --------
+ include/dt-bindings/clock/qcom,gcc-qcs404.h        | 180 ----
+ include/dt-bindings/clock/qcom,gcc-sdm845.h        | 246 ------
+ include/dt-bindings/clock/qcom,gpucc-sdm845.h      |  24 -
+ include/dt-bindings/clock/qcom,lpass-sdm845.h      |  15 -
+ include/dt-bindings/clock/qcom,mmcc-msm8996.h      | 295 -------
+ include/dt-bindings/clock/qcom,rpmcc.h             | 174 ----
+ include/dt-bindings/clock/qcom,rpmh.h              |  37 -
+ include/dt-bindings/clock/qcom,turingcc-qcs404.h   |  15 -
+ include/dt-bindings/clock/qcom,videocc-sdm845.h    |  35 -
+ include/dt-bindings/clock/r7s72100-clock.h         | 112 ---
+ include/dt-bindings/clock/r8a774a1-cpg-mssr.h      |  59 --
+ include/dt-bindings/clock/r8a774b1-cpg-mssr.h      |  57 --
+ include/dt-bindings/clock/r8a774c0-cpg-mssr.h      |  61 --
+ include/dt-bindings/clock/r8a774e1-cpg-mssr.h      |  59 --
+ include/dt-bindings/clock/r8a7790-clock.h          | 158 ----
+ include/dt-bindings/clock/r8a7790-cpg-mssr.h       |  48 --
+ include/dt-bindings/clock/r8a7791-clock.h          | 161 ----
+ include/dt-bindings/clock/r8a7791-cpg-mssr.h       |  44 -
+ include/dt-bindings/clock/r8a7792-clock.h          |  98 ---
+ include/dt-bindings/clock/r8a7792-cpg-mssr.h       |  39 -
+ include/dt-bindings/clock/r8a7793-clock.h          | 159 ----
+ include/dt-bindings/clock/r8a7793-cpg-mssr.h       |  44 -
+ include/dt-bindings/clock/r8a7794-clock.h          | 137 ---
+ include/dt-bindings/clock/r8a7794-cpg-mssr.h       |  43 -
+ include/dt-bindings/clock/r8a7795-cpg-mssr.h       |  66 --
+ include/dt-bindings/clock/r8a7796-cpg-mssr.h       |  65 --
+ include/dt-bindings/clock/r8a77961-cpg-mssr.h      |  65 --
+ include/dt-bindings/clock/r8a77965-cpg-mssr.h      |  62 --
+ include/dt-bindings/clock/r8a77970-cpg-mssr.h      |  44 -
+ include/dt-bindings/clock/r8a77980-cpg-mssr.h      |  51 --
+ include/dt-bindings/clock/r8a77990-cpg-mssr.h      |  62 --
+ include/dt-bindings/clock/r8a77995-cpg-mssr.h      |  54 --
+ include/dt-bindings/clock/r8a779a0-cpg-mssr.h      |  55 --
+ include/dt-bindings/clock/r8a779f0-cpg-mssr.h      |  64 --
+ include/dt-bindings/clock/r8a779g0-cpg-mssr.h      |  90 --
+ include/dt-bindings/clock/r9a06g032-sysctrl.h      | 149 ----
+ include/dt-bindings/clock/r9a07g044-cpg.h          | 220 -----
+ include/dt-bindings/clock/renesas-cpg-mssr.h       |  15 -
+ include/dt-bindings/clock/rk3036-cru.h             | 185 ----
+ include/dt-bindings/clock/rk3066a-cru.h            |  31 -
+ include/dt-bindings/clock/rk3128-cru.h             | 273 ------
+ include/dt-bindings/clock/rk3188-cru-common.h      | 261 ------
+ include/dt-bindings/clock/rk3188-cru.h             |  47 --
+ include/dt-bindings/clock/rk3228-cru.h             | 287 -------
+ include/dt-bindings/clock/rk3288-cru.h             | 381 ---------
+ include/dt-bindings/clock/rk3308-cru.h             | 387 ---------
+ include/dt-bindings/clock/rk3328-cru.h             | 393 ---------
+ include/dt-bindings/clock/rk3368-cru.h             | 381 ---------
+ include/dt-bindings/clock/rk3399-cru.h             | 749 ----------------
+ include/dt-bindings/clock/rk3568-cru.h             | 926 --------------------
+ include/dt-bindings/clock/rockchip,rk3588-cru.h    | 766 -----------------
+ include/dt-bindings/clock/rockchip,rk808.h         |  11 -
+ include/dt-bindings/clock/rockchip,rv1126-cru.h    | 632 --------------
+ include/dt-bindings/clock/rv1108-cru.h             | 356 --------
+ include/dt-bindings/clock/sifive-fu540-prci.h      |  18 -
+ include/dt-bindings/clock/sifive-fu740-prci.h      |  24 -
+ include/dt-bindings/clock/starfive,jh7110-crg.h    | 258 ------
+ include/dt-bindings/clock/ste-ab8500.h             |  12 -
+ include/dt-bindings/clock/stih407-clks.h           |  90 --
+ include/dt-bindings/clock/stih410-clks.h           |  25 -
+ include/dt-bindings/clock/stm32fx-clock.h          |  63 --
+ include/dt-bindings/clock/stm32h7-clks.h           | 167 ----
+ include/dt-bindings/clock/stm32mp1-clks.h          | 274 ------
+ include/dt-bindings/clock/stm32mp13-clks.h         | 229 -----
+ include/dt-bindings/clock/sun20i-d1-ccu.h          | 158 ----
+ include/dt-bindings/clock/sun20i-d1-r-ccu.h        |  19 -
+ include/dt-bindings/clock/sun4i-a10-ccu.h          | 202 -----
+ include/dt-bindings/clock/sun4i-a10-pll2.h         |  53 --
+ include/dt-bindings/clock/sun50i-a64-ccu.h         | 138 ---
+ include/dt-bindings/clock/sun50i-h6-ccu.h          | 125 ---
+ include/dt-bindings/clock/sun50i-h6-r-ccu.h        |  27 -
+ include/dt-bindings/clock/sun50i-h616-ccu.h        | 116 ---
+ include/dt-bindings/clock/sun5i-ccu.h              |  97 ---
+ include/dt-bindings/clock/sun6i-a31-ccu.h          | 193 -----
+ include/dt-bindings/clock/sun6i-rtc.h              |  10 -
+ include/dt-bindings/clock/sun7i-a20-ccu.h          |  53 --
+ include/dt-bindings/clock/sun8i-a23-a33-ccu.h      | 129 ---
+ include/dt-bindings/clock/sun8i-a83t-ccu.h         | 140 ---
+ include/dt-bindings/clock/sun8i-de2.h              |  21 -
+ include/dt-bindings/clock/sun8i-h3-ccu.h           | 152 ----
+ include/dt-bindings/clock/sun8i-r-ccu.h            |  59 --
+ include/dt-bindings/clock/sun8i-r40-ccu.h          | 191 -----
+ include/dt-bindings/clock/sun8i-tcon-top.h         |  11 -
+ include/dt-bindings/clock/sun8i-v3s-ccu.h          | 111 ---
+ include/dt-bindings/clock/sun9i-a80-ccu.h          | 162 ----
+ include/dt-bindings/clock/sun9i-a80-de.h           |  80 --
+ include/dt-bindings/clock/sun9i-a80-usb.h          |  59 --
+ include/dt-bindings/clock/suniv-ccu-f1c100s.h      |  72 --
+ include/dt-bindings/clock/tegra114-car.h           | 343 --------
+ include/dt-bindings/clock/tegra124-car-common.h    | 345 --------
+ include/dt-bindings/clock/tegra124-car.h           |  19 -
+ include/dt-bindings/clock/tegra186-clock.h         | 940 ---------------------
+ include/dt-bindings/clock/tegra20-car.h            | 158 ----
+ include/dt-bindings/clock/tegra210-car.h           | 401 ---------
+ include/dt-bindings/clock/tegra30-car.h            | 273 ------
+ include/dt-bindings/clock/versaclock.h             |  13 -
+ include/dt-bindings/clock/vf610-clock.h            | 202 -----
+ include/dt-bindings/clock/xlnx-versal-clk.h        | 123 ---
+ include/dt-bindings/clock/xlnx-zynqmp-clk.h        | 126 ---
+ include/dt-bindings/display/tda998x.h              |   8 -
+ include/dt-bindings/dma/at91.h                     |  52 --
+ include/dt-bindings/dma/qcom-gpi.h                 |  11 -
+ include/dt-bindings/dma/sun4i-a10.h                |  56 --
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h        |  16 -
+ include/dt-bindings/firmware/qcom,scm.h            |  39 -
+ include/dt-bindings/gpio/aspeed-gpio.h             |  51 --
+ include/dt-bindings/gpio/gpio.h                    |  42 -
+ include/dt-bindings/gpio/meson-a1-gpio.h           |  73 --
+ include/dt-bindings/gpio/meson-axg-gpio.h          | 116 ---
+ include/dt-bindings/gpio/meson-g12a-gpio.h         | 114 ---
+ include/dt-bindings/gpio/meson-gxbb-gpio.h         | 148 ----
+ include/dt-bindings/gpio/meson-gxl-gpio.h          | 125 ---
+ include/dt-bindings/gpio/tegra-gpio.h              |  51 --
+ include/dt-bindings/gpio/uniphier-gpio.h           |  18 -
+ include/dt-bindings/iio/qcom,spmi-vadc.h           | 300 -------
+ include/dt-bindings/input/gpio-keys.h              |  13 -
+ include/dt-bindings/input/input.h                  |  17 -
+ include/dt-bindings/input/linux-event-codes.h      | 806 ------------------
+ include/dt-bindings/interconnect/fsl,imx8mp.h      |  59 --
+ include/dt-bindings/interconnect/imx8mm.h          |  50 --
+ include/dt-bindings/interconnect/imx8mn.h          |  41 -
+ include/dt-bindings/interconnect/imx8mq.h          |  48 --
+ include/dt-bindings/interconnect/qcom,msm8916.h    | 100 ---
+ .../dt-bindings/interconnect/qcom,msm8996-cbf.h    |  12 -
+ include/dt-bindings/interconnect/qcom,msm8996.h    | 163 ----
+ include/dt-bindings/interconnect/qcom,osm-l3.h     |  15 -
+ include/dt-bindings/interconnect/qcom,sdm845.h     | 150 ----
+ .../dt-bindings/interrupt-controller/apple-aic.h   |  15 -
+ include/dt-bindings/interrupt-controller/arm-gic.h |  23 -
+ include/dt-bindings/interrupt-controller/irq-st.h  |  30 -
+ include/dt-bindings/interrupt-controller/irq.h     |  19 -
+ .../dt-bindings/interrupt-controller/irqc-rzg2l.h  |  25 -
+ .../dt-bindings/interrupt-controller/mips-gic.h    |   9 -
+ include/dt-bindings/leds/common.h                  | 106 ---
+ include/dt-bindings/leds/leds-netxbig.h            |  18 -
+ include/dt-bindings/leds/leds-ns2.h                |   9 -
+ include/dt-bindings/leds/leds-pca9532.h            |  18 -
+ include/dt-bindings/mailbox/tegra186-hsp.h         |  19 -
+ include/dt-bindings/media/omap3-isp.h              |  22 -
+ include/dt-bindings/media/tda1997x.h               |  74 --
+ include/dt-bindings/media/video-interfaces.h       |  16 -
+ include/dt-bindings/memory/tegra114-mc.h           |  25 -
+ include/dt-bindings/memory/tegra124-mc.h           |  31 -
+ include/dt-bindings/memory/tegra210-mc.h           |  36 -
+ include/dt-bindings/memory/tegra30-mc.h            |  24 -
+ include/dt-bindings/mfd/at91-usart.h               |  17 -
+ include/dt-bindings/mfd/atmel-flexcom.h            |  15 -
+ include/dt-bindings/mfd/dbx500-prcmu.h             |  84 --
+ include/dt-bindings/mfd/st,stpmic1.h               |  50 --
+ include/dt-bindings/mfd/st-lpc.h                   |  16 -
+ include/dt-bindings/mfd/stm32f4-rcc.h              | 108 ---
+ include/dt-bindings/mfd/stm32f7-rcc.h              | 116 ---
+ include/dt-bindings/mfd/stm32h7-rcc.h              | 138 ---
+ include/dt-bindings/mux/mux.h                      |  17 -
+ include/dt-bindings/mux/ti-serdes.h                | 190 -----
+ include/dt-bindings/net/microchip-lan78xx.h        |  21 -
+ include/dt-bindings/net/mscc-phy-vsc8531.h         |  31 -
+ include/dt-bindings/net/qca-ar803x.h               |  13 -
+ include/dt-bindings/net/ti-dp83867.h               |  53 --
+ include/dt-bindings/net/ti-dp83869.h               |  60 --
+ include/dt-bindings/phy/phy-am654-serdes.h         |  13 -
+ include/dt-bindings/phy/phy-cadence.h              |  24 -
+ include/dt-bindings/phy/phy-imx8-pcie.h            |  14 -
+ include/dt-bindings/phy/phy-qcom-qmp.h             |  20 -
+ include/dt-bindings/phy/phy-qcom-qusb2.h           |  37 -
+ include/dt-bindings/phy/phy-ti.h                   |  21 -
+ include/dt-bindings/phy/phy.h                      |  26 -
+ include/dt-bindings/pinctrl/am33xx.h               | 172 ----
+ include/dt-bindings/pinctrl/am43xx.h               |  39 -
+ include/dt-bindings/pinctrl/apple.h                |  13 -
+ include/dt-bindings/pinctrl/at91.h                 |  49 --
+ include/dt-bindings/pinctrl/bcm2835.h              |  26 -
+ include/dt-bindings/pinctrl/dra.h                  |  79 --
+ include/dt-bindings/pinctrl/hisi.h                 |  74 --
+ include/dt-bindings/pinctrl/mt65xx.h               |  41 -
+ include/dt-bindings/pinctrl/mt8365-pinfunc.h       | 858 -------------------
+ include/dt-bindings/pinctrl/omap.h                 |  91 --
+ include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   |   7 -
+ include/dt-bindings/pinctrl/pinctrl-tegra.h        |  37 -
+ include/dt-bindings/pinctrl/pinctrl-zynqmp.h       |  19 -
+ include/dt-bindings/pinctrl/qcom,pmic-gpio.h       | 164 ----
+ include/dt-bindings/pinctrl/qcom,pmic-mpp.h        | 106 ---
+ include/dt-bindings/pinctrl/r7s72100-pinctrl.h     |  18 -
+ include/dt-bindings/pinctrl/rockchip.h             |  60 --
+ include/dt-bindings/pinctrl/rzg2l-pinctrl.h        |  23 -
+ include/dt-bindings/pinctrl/rzn1-pinctrl.h         | 141 ----
+ include/dt-bindings/pinctrl/stm32-pinfunc.h        |  45 -
+ include/dt-bindings/pinctrl/sun4i-a10.h            |  62 --
+ include/dt-bindings/power/fsl,imx93-power.h        |  15 -
+ include/dt-bindings/power/imx7-power.h             |  13 -
+ include/dt-bindings/power/imx8mm-power.h           |  31 -
+ include/dt-bindings/power/imx8mn-power.h           |  20 -
+ include/dt-bindings/power/imx8mp-power.h           |  59 --
+ include/dt-bindings/power/imx8mq-power.h           |  24 -
+ include/dt-bindings/power/imx8ulp-power.h          |  26 -
+ include/dt-bindings/power/mediatek,mt8365-power.h  |  19 -
+ include/dt-bindings/power/meson-a1-power.h         |  32 -
+ include/dt-bindings/power/meson-axg-power.h        |  14 -
+ include/dt-bindings/power/meson-g12a-power.h       |  13 -
+ include/dt-bindings/power/meson-gxbb-power.h       |  13 -
+ include/dt-bindings/power/meson-sm1-power.h        |  18 -
+ include/dt-bindings/power/owl-s700-powergate.h     |  19 -
+ include/dt-bindings/power/px30-power.h             |  27 -
+ include/dt-bindings/power/qcom-rpmpd.h             | 412 ---------
+ include/dt-bindings/power/r8a774a1-sysc.h          |  31 -
+ include/dt-bindings/power/r8a774b1-sysc.h          |  26 -
+ include/dt-bindings/power/r8a774c0-sysc.h          |  25 -
+ include/dt-bindings/power/r8a774e1-sysc.h          |  36 -
+ include/dt-bindings/power/r8a7790-sysc.h           |  31 -
+ include/dt-bindings/power/r8a7791-sysc.h           |  23 -
+ include/dt-bindings/power/r8a7792-sysc.h           |  23 -
+ include/dt-bindings/power/r8a7793-sysc.h           |  25 -
+ include/dt-bindings/power/r8a7794-sysc.h           |  23 -
+ include/dt-bindings/power/r8a7795-sysc.h           |  38 -
+ include/dt-bindings/power/r8a7796-sysc.h           |  33 -
+ include/dt-bindings/power/r8a77961-sysc.h          |  32 -
+ include/dt-bindings/power/r8a77965-sysc.h          |  29 -
+ include/dt-bindings/power/r8a77970-sysc.h          |  28 -
+ include/dt-bindings/power/r8a77980-sysc.h          |  43 -
+ include/dt-bindings/power/r8a77990-sysc.h          |  26 -
+ include/dt-bindings/power/r8a77995-sysc.h          |  20 -
+ include/dt-bindings/power/r8a779a0-sysc.h          |  59 --
+ include/dt-bindings/power/r8a779f0-sysc.h          |  30 -
+ include/dt-bindings/power/r8a779g0-sysc.h          |  46 -
+ include/dt-bindings/power/raspberrypi-power.h      |  41 -
+ include/dt-bindings/power/rk3066-power.h           |  22 -
+ include/dt-bindings/power/rk3188-power.h           |  24 -
+ include/dt-bindings/power/rk3228-power.h           |  21 -
+ include/dt-bindings/power/rk3288-power.h           |  32 -
+ include/dt-bindings/power/rk3328-power.h           |  19 -
+ include/dt-bindings/power/rk3399-power.h           |  53 --
+ include/dt-bindings/power/rk3568-power.h           |  32 -
+ include/dt-bindings/power/rk3588-power.h           |  69 --
+ include/dt-bindings/power/rockchip,rv1126-power.h  |  35 -
+ include/dt-bindings/power/tegra186-powergate.h     |  28 -
+ include/dt-bindings/power/xlnx-zynqmp-power.h      |  50 --
+ include/dt-bindings/pwm/pwm.h                      |  14 -
+ .../dt-bindings/regulator/dlg,da9063-regulator.h   |  16 -
+ include/dt-bindings/regulator/maxim,max77802.h     |  18 -
+ .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 -
+ .../dt-bindings/regulator/st,stm32mp13-regulator.h |  42 -
+ include/dt-bindings/reset/actions,s700-reset.h     |  34 -
+ include/dt-bindings/reset/actions,s900-reset.h     |  65 --
+ include/dt-bindings/reset/altr,rst-mgr-a10.h       | 110 ---
+ include/dt-bindings/reset/altr,rst-mgr-s10.h       |  96 ---
+ include/dt-bindings/reset/altr,rst-mgr.h           |  82 --
+ include/dt-bindings/reset/amlogic,meson-a1-reset.h |  76 --
+ .../reset/amlogic,meson-axg-audio-arb.h            |  19 -
+ .../dt-bindings/reset/amlogic,meson-axg-reset.h    | 123 ---
+ .../reset/amlogic,meson-g12a-audio-reset.h         |  53 --
+ .../dt-bindings/reset/amlogic,meson-g12a-reset.h   | 137 ---
+ .../dt-bindings/reset/amlogic,meson-gxbb-reset.h   | 161 ----
+ include/dt-bindings/reset/axg-aoclkc.h             |  20 -
+ include/dt-bindings/reset/bcm6318-reset.h          |  25 -
+ include/dt-bindings/reset/bcm63268-reset.h         |  31 -
+ include/dt-bindings/reset/bcm6328-reset.h          |  23 -
+ include/dt-bindings/reset/bcm6358-reset.h          |  20 -
+ include/dt-bindings/reset/bcm6362-reset.h          |  27 -
+ include/dt-bindings/reset/bcm6368-reset.h          |  21 -
+ include/dt-bindings/reset/g12a-aoclkc.h            |  18 -
+ include/dt-bindings/reset/gxbb-aoclkc.h            |  66 --
+ include/dt-bindings/reset/imx7-reset.h             |  52 --
+ include/dt-bindings/reset/imx8mp-reset.h           |  50 --
+ include/dt-bindings/reset/imx8mq-reset.h           |  67 --
+ include/dt-bindings/reset/imx8ulp-pcc-reset.h      |  59 --
+ include/dt-bindings/reset/mt7621-reset.h           |  38 -
+ include/dt-bindings/reset/nuvoton,npcm7xx-reset.h  |  91 --
+ include/dt-bindings/reset/qcom,gcc-msm8916.h       | 100 ---
+ include/dt-bindings/reset/qcom,sdm845-aoss.h       |  17 -
+ include/dt-bindings/reset/qcom,sdm845-pdc.h        |  22 -
+ .../dt-bindings/reset/raspberrypi,firmware-reset.h |  13 -
+ include/dt-bindings/reset/rockchip,rk3588-cru.h    | 754 -----------------
+ include/dt-bindings/reset/sama7g5-reset.h          |  10 -
+ include/dt-bindings/reset/snps,hsdk-reset.h        |  17 -
+ include/dt-bindings/reset/starfive,jh7110-crg.h    | 183 ----
+ include/dt-bindings/reset/stih407-resets.h         |  65 --
+ include/dt-bindings/reset/stm32mp1-resets.h        | 123 ---
+ include/dt-bindings/reset/stm32mp13-resets.h       | 100 ---
+ include/dt-bindings/reset/sun20i-d1-ccu.h          |  79 --
+ include/dt-bindings/reset/sun20i-d1-r-ccu.h        |  16 -
+ include/dt-bindings/reset/sun4i-a10-ccu.h          |  69 --
+ include/dt-bindings/reset/sun50i-a64-ccu.h         |  98 ---
+ include/dt-bindings/reset/sun50i-h6-ccu.h          |  73 --
+ include/dt-bindings/reset/sun50i-h6-r-ccu.h        |  18 -
+ include/dt-bindings/reset/sun50i-h616-ccu.h        |  70 --
+ include/dt-bindings/reset/sun5i-ccu.h              |  23 -
+ include/dt-bindings/reset/sun6i-a31-ccu.h          | 106 ---
+ include/dt-bindings/reset/sun8i-a23-a33-ccu.h      |  87 --
+ include/dt-bindings/reset/sun8i-a83t-ccu.h         |  98 ---
+ include/dt-bindings/reset/sun8i-de2.h              |  15 -
+ include/dt-bindings/reset/sun8i-h3-ccu.h           | 106 ---
+ include/dt-bindings/reset/sun8i-r-ccu.h            |  53 --
+ include/dt-bindings/reset/sun8i-r40-ccu.h          | 130 ---
+ include/dt-bindings/reset/sun8i-v3s-ccu.h          |  81 --
+ include/dt-bindings/reset/sun9i-a80-ccu.h          | 102 ---
+ include/dt-bindings/reset/sun9i-a80-de.h           |  58 --
+ include/dt-bindings/reset/sun9i-a80-usb.h          |  56 --
+ include/dt-bindings/reset/suniv-ccu-f1c100s.h      |  38 -
+ include/dt-bindings/reset/tegra124-car.h           |  12 -
+ include/dt-bindings/reset/tegra186-reset.h         | 205 -----
+ include/dt-bindings/reset/ti-syscon.h              |  38 -
+ include/dt-bindings/reset/xlnx-versal-resets.h     | 105 ---
+ include/dt-bindings/reset/xlnx-zynqmp-resets.h     | 130 ---
+ include/dt-bindings/soc/bcm2835-pm.h               |  28 -
+ include/dt-bindings/soc/qcom,apr.h                 |  28 -
+ include/dt-bindings/soc/qcom,rpmh-rsc.h            |  14 -
+ include/dt-bindings/soc/rockchip,boot-mode.h       |  16 -
+ include/dt-bindings/soc/rockchip,vop2.h            |  18 -
+ include/dt-bindings/soc/samsung,exynos-usi.h       |  17 -
+ include/dt-bindings/soc/ti,sci_pm_domain.h         |   9 -
+ include/dt-bindings/sound/apq8016-lpass.h          |   9 -
+ include/dt-bindings/sound/fsl-imx-audmux.h         |  64 --
+ include/dt-bindings/sound/meson-aiu.h              |  18 -
+ include/dt-bindings/sound/meson-g12a-toacodec.h    |  10 -
+ include/dt-bindings/sound/meson-g12a-tohdmitx.h    |  13 -
+ include/dt-bindings/sound/microchip,pdmc.h         |  13 -
+ include/dt-bindings/sound/qcom,lpass.h             |  46 -
+ include/dt-bindings/sound/qcom,q6afe.h             |   9 -
+ include/dt-bindings/sound/qcom,q6asm.h             |  26 -
+ include/dt-bindings/sound/qcom,q6dsp-lpass-ports.h | 234 -----
+ include/dt-bindings/sound/qcom,wcd9335.h           |  15 -
+ include/dt-bindings/sound/tlv320aic31xx.h          |  14 -
+ include/dt-bindings/spmi/spmi.h                    |  10 -
+ include/dt-bindings/thermal/tegra124-soctherm.h    |  14 -
+ include/dt-bindings/thermal/thermal.h              |  15 -
+ include/dt-bindings/usb/pd.h                       |  88 --
+ scripts/Makefile.dts                               |  17 +-
+ 405 files changed, 80 insertions(+), 39273 deletions(-)
+---
+base-commit: bd465ada0e1172910f64feac6035f2344449c381
+
+// Caleb (they/them)
+
 
