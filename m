@@ -2,65 +2,65 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FB1C54E5D
-	for <webhook@archiver.kernel.org>; Mon, 18 Mar 2024 08:44:13 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web10.38460.1710751447425392166
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E724C54E6A
+	for <webhook@archiver.kernel.org>; Mon, 18 Mar 2024 08:48:53 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web11.38397.1710751726099808681
  for <u-boot-amlogic@groups.io>;
- Mon, 18 Mar 2024 01:44:07 -0700
+ Mon, 18 Mar 2024 01:48:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=ztLvxSJJ;
- spf=pass (domain: linaro.org, ip: 209.85.128.50, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4141a52a98dso1120685e9.0
-        for <u-boot-amlogic@groups.io>; Mon, 18 Mar 2024 01:44:07 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=xMl7oBZq;
+ spf=pass (domain: linaro.org, ip: 209.85.221.44, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33e570ef661so1708044f8f.1
+        for <u-boot-amlogic@groups.io>; Mon, 18 Mar 2024 01:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710751446; x=1711356246; darn=groups.io;
+        d=linaro.org; s=google; t=1710751724; x=1711356524; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=I/oeSBGpWO0iH1Zkmp9crshj4uyKP6/bIYBT+8Lwu1M=;
-        b=ztLvxSJJdqGflYQQXjICjCxIxUhJmEzTeYYxIbMQm4C3fMJk5c3k5bPI0aTFKHl3Qs
-         BZ6BfmsXrgQ7rxCPfENDOMNTyrDSbaYKf2QkSvvgWMoWrCUhtBje084fBRMNtDEjgSrx
-         Bv0nJRO2jQQV1AK9Lbr3X02TWMi/ZmrMy7v/AH9R1cBROJ2R98al8yAlA9AdVVHvrHcs
-         vdKNHzKgmimoAw2yjOxDARSUD5EZ3zFGh6GCJNbpb1LqgJ1cQeM2K0pEqKG73jEPTBtw
-         WESHMj4+YhG4fgbZM/EO7QdFXknogfA4G4lpUJUrxSJSs5b3f1rBemebivrRU5HVYbfo
-         lZzA==
+        bh=eEBdKE3NzvC0kwk+i/Y79ouKhcbA2X9Ja7XXif1QIhw=;
+        b=xMl7oBZq03ffQElHNcICUNhRi+NcXG7MeEu991lYpeC/cgfjBYVDDbs1iH/Zh1xks8
+         qgi09G/O0nifwT17VID58nruN+pP5zOugqE+JX5Wxs2+Ic/uSsAaAWl8Pgs9tponehOA
+         o28KeWwY0K+fESeExsC93yXAaeIngJ7aE0OHsFTIMiZcC07fWE/vC8ozOFIwV68VuMMy
+         4i11cH8yNWs3aHu2PkBVuwQvHw4f9dAYS9WSDhCrdVVC86k6W5YOyGOdKrAtWcYNwkJG
+         O5HVj/8iDahx+u2ZM8RVHLaNKJvZaNt24yoVYlQ+DP8RgvxZdn3/k5/hMH86aJ1ksju8
+         MBNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710751446; x=1711356246;
+        d=1e100.net; s=20230601; t=1710751724; x=1711356524;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :references:to:content-language:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=I/oeSBGpWO0iH1Zkmp9crshj4uyKP6/bIYBT+8Lwu1M=;
-        b=DM65CFDo16AIy+F56pUt2MA+6YVyTUfOpIb7gJdFZIEkZ+laBMaGGS+q5k5A2PXqrI
-         ooMr9SqWLH1N0xBZ2lL4AH+2mcokqYnAJcdeeFDuOHRNUhC+moTxTAd2LnrmZMOKpw1b
-         lGRHZ320TeFQ7LStpDxlVjYnQiCHUNCqt9BKDccPspGMsgRN0sdUvhF/xedEinima7z2
-         nVFHZeYUEjTWIn54tlpuNoeX8s0bdtZvhD8jEIx3Rsk4dHzlFLLiJF+ErE8nZZU6EQkw
-         SZQ0t7YzbE5K0UvBuHoljcRFoFSXPhSV6asH+/XslX3l7LaCFKXw7KsYfo0ApHJCo1TZ
-         JIhQ==
-X-Gm-Message-State: AOJu0YwGXyOhWTieAqsza85Wtx5dnM5jvxqhmP+39HApL7FlL+MAYuWk
-	5u8k5NRhkVu9+whtnXHJ0+LVQoR2+/k8gIk7QbpC35DdBB0o6kdAvObfVU9K4w3T3jGRd32vurh
-	LVwA=
-X-Google-Smtp-Source: AGHT+IFG3I15pv8EdDTE22vM5b12wD+p6ePn0LduKYe7zAW8noH4dNrWWnLC8fVlMdJMd2pOIMKivQ==
-X-Received: by 2002:a05:600c:3509:b0:414:102f:27c2 with SMTP id h9-20020a05600c350900b00414102f27c2mr1328181wmq.1.1710751445796;
-        Mon, 18 Mar 2024 01:44:05 -0700 (PDT)
+        bh=eEBdKE3NzvC0kwk+i/Y79ouKhcbA2X9Ja7XXif1QIhw=;
+        b=oq/JQMOZeMcPnbIVvz1yvx5zK/mZkmamW2rEcVmypLXQZVX30wH5tMR0lOd7hwT+Bh
+         ztSsBgmgapdGSe8I4bqRhEbt/OmZuDkJbY6wYKcIUDMhtAMAS4yQF1a3Q14pvjqGOH9u
+         0ihW2/QLgG5ZC+YiSg1lUmDKrp/dFRiw+78Hn7zmBqq1C5KvjgoX4JY4ClN0PAFRBsVa
+         lRvuqKmggZyE18sELZoP3ZWj/xQ23aOwM8REKpDaxpDAMLowhkT+BsBebZh4yusessSE
+         tZYJkgB+e1WSKQlu4n7Qxs+3qgJQGnEKJPKnnM72MI1MArSvMrd5OZtgB38RwANytvAD
+         fXhw==
+X-Gm-Message-State: AOJu0YxYmW4spM60Q3/J7UOA3OBJY95u6Jub1OU5YxYm7mLKDION9Fk1
+	K+pVv2lhNbyuEVSMGvUq5VRo4Ju83bdu+qj5XXYiB1Rc/bRYQmo3xzk3YMAhgy0YRX0heeEb9hT
+	Lvs4=
+X-Google-Smtp-Source: AGHT+IGPS1yALqMQSZsyXitJFqsMi/lSZDfDkyDCACkvtq79oROfAjIoTHzVeWzm/24ykp/RQycofA==
+X-Received: by 2002:adf:ff87:0:b0:33e:363b:a7dd with SMTP id j7-20020adfff87000000b0033e363ba7ddmr8559992wrr.20.1710751724424;
+        Mon, 18 Mar 2024 01:48:44 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:982:cbb0:ad2b:a316:59d9:3dbc? ([2a01:e0a:982:cbb0:ad2b:a316:59d9:3dbc])
-        by smtp.gmail.com with ESMTPSA id l19-20020a05600c4f1300b004130378fb77sm17529771wmq.6.2024.03.18.01.44.05
+        by smtp.gmail.com with ESMTPSA id y13-20020a056000108d00b0033d202abf01sm9236451wrw.28.2024.03.18.01.48.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 01:44:05 -0700 (PDT)
-Message-ID: <19d5d996-71ce-40e6-874f-70f9f1b6c66b@linaro.org>
-Date: Mon, 18 Mar 2024 09:44:05 +0100
+        Mon, 18 Mar 2024 01:48:44 -0700 (PDT)
+Message-ID: <7cf7abf8-9c38-4481-afc3-7a822f9ddb9f@linaro.org>
+Date: Mon, 18 Mar 2024 09:48:43 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 1/3] ARM: dts: fix Ethernet on WeTek Hub/Play2
+Subject: Re: [PATCH 2/3] ARM: board: meson: update efuse MAC reading code
 Content-Language: en-US, fr
 To: u-boot-amlogic@groups.io, christianshewitt@gmail.com,
  u-boot@lists.denx.de, linux-amlogic@lists.infradead.org
 References: <20240316135430.826898-1-christianshewitt@gmail.com>
- <20240316135430.826898-2-christianshewitt@gmail.com>
+ <20240316135430.826898-3-christianshewitt@gmail.com>
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
  GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
@@ -86,52 +86,91 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro Developer Services
-In-Reply-To: <20240316135430.826898-2-christianshewitt@gmail.com>
+In-Reply-To: <20240316135430.826898-3-christianshewitt@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 18 Mar 2024 08:44:13 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2196
+ <u-boot-amlogic@groups.io>; Mon, 18 Mar 2024 08:48:53 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2197
 
+Hi,
 On 16/03/2024 14:54, Christian Hewitt wrote:
-> Placing the snps,reset content needed for Ethernet to probe in a common
-> uboot.dtsi results in the content not being used and broken Ethernet. Fix
-> this by creating two board specific dtsi files with the right content.
+> Current code used for reading the factory programmed MAC from efuse on
+> p200 boards does not appear to work resulting in a random MAC being
+> generated. Update the p200 board data reusing the function from the VIM3
+> source.
+
+I'm pretty sure this code works on the Odroid-C2, but hardkernel had a custom
+way to store the mac address so perhaps you should move this code to an odroid-c2
+board file first ?
+
+Or try both methods ? if first method doesn't give a valid mac address
+try the ASCII format.
+
+Neil
+
 > 
-> Fixes: 67d5128df950 ("ARM: dts: add support for WeTek Hub and WeTek Play2")
 > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->   ...u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} |  0
->   arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi     | 13 +++++++++++++
->   2 files changed, 13 insertions(+)
->   rename arch/arm/dts/{meson-gxbb-wetek-u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} (100%)
->   create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
+>   board/amlogic/p200/p200.c | 35 +++++++++++++++++++++--------------
+>   1 file changed, 21 insertions(+), 14 deletions(-)
 > 
-> diff --git a/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi
-> similarity index 100%
-> rename from arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
-> rename to arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi
-> diff --git a/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
-> new file mode 100644
-> index 00000000000..3743053eb9c
-> --- /dev/null
-> +++ b/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS.
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
+> diff --git a/board/amlogic/p200/p200.c b/board/amlogic/p200/p200.c
+> index 7c432f9d281..fb07eefa532 100644
+> --- a/board/amlogic/p200/p200.c
+> +++ b/board/amlogic/p200/p200.c
+> @@ -14,29 +14,36 @@
+>   #include <asm/arch/eth.h>
+>   #include <asm/arch/mem.h>
+>   
+> -#define EFUSE_SN_OFFSET		20
+> -#define EFUSE_SN_SIZE		16
+> -#define EFUSE_MAC_OFFSET	52
+> -#define EFUSE_MAC_SIZE		6
+> +#define EFUSE_MAC_OFFSET	0
+> +#define EFUSE_MAC_SIZE		12
+> +#define MAC_ADDR_LEN		6
+>   
+>   int misc_init_r(void)
+>   {
+> -	u8 mac_addr[EFUSE_MAC_SIZE];
+> -	char serial[EFUSE_SN_SIZE];
+> +	u8 mac_addr[MAC_ADDR_LEN];
+> +	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
+>   	ssize_t len;
+>   
+>   	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
+>   		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
+> -					  mac_addr, EFUSE_MAC_SIZE);
+> -		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
+> +					  efuse_mac_addr, EFUSE_MAC_SIZE);
+> +		if (len != EFUSE_MAC_SIZE)
+> +			return 0;
 > +
-> +#include "meson-gx-u-boot.dtsi"
+> +		/* MAC is stored in ASCII format, 1bytes = 2characters */
+> +		for (int i = 0; i < 6; i++) {
+> +			tmp[0] = efuse_mac_addr[i * 2];
+> +			tmp[1] = efuse_mac_addr[i * 2 + 1];
+> +			tmp[2] = '\0';
+> +			mac_addr[i] = simple_strtoul(tmp, NULL, 16);
+> +		}
 > +
-> +&ethmac {
-> +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-> +	snps,reset-delays-us = <0 10000 1000000>;
-> +	snps,reset-active-low;
-> +};
+> +		if (is_valid_ethaddr(mac_addr))
+>   			eth_env_set_enetaddr("ethaddr", mac_addr);
+> -	}
+> +		else
+> +			meson_generate_serial_ethaddr();
+>   
+> -	if (!env_get("serial#")) {
+> -		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
+> -			EFUSE_SN_SIZE);
+> -		if (len == EFUSE_SN_SIZE)
+> -			env_set("serial#", serial);
+> +		eth_env_get_enetaddr("ethaddr", mac_addr);
+>   	}
+>   
+>   	return 0;
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
