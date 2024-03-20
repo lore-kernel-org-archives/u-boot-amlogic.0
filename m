@@ -2,124 +2,218 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAF3CD11DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6ABC47DD9
 	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:20:51 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web11.37039.1710912525300183531
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+ by mx.groups.io with SMTP id smtpd.web10.36431.1710910557794004915
  for <u-boot-amlogic@groups.io>;
- Tue, 19 Mar 2024 22:28:45 -0700
+ Tue, 19 Mar 2024 21:55:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=yAPGVIIm;
- spf=pass (domain: linaro.org, ip: 209.85.128.51, mailfrom: dan.carpenter@linaro.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4146562a839so10164865e9.1
-        for <u-boot-amlogic@groups.io>; Tue, 19 Mar 2024 22:28:45 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=mxo4Tn+v;
+ spf=pass (domain: linaro.org, ip: 209.85.217.54, mailfrom: sumit.garg@linaro.org)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4765cffb446so1947617137.0
+        for <u-boot-amlogic@groups.io>; Tue, 19 Mar 2024 21:55:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710912523; x=1711517323; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IDlOrCVKQ+OXTfLpu6C8wdEc8MeG0rYfIu4Amm4kBmk=;
-        b=yAPGVIImJoQtny0WKSfpp/l3X74RE+OXfz31TX+M1fVIPu9eTwihcZCuQNfPpieCU4
-         KlJpjNtX4q/Gr59SeQNsC4+6dMRU6cg6SVCb+EtFvzL7WUDEharbXI8vQJ5Ekoht9ple
-         BIaX9lWmJ4WAITL5g2SWwDqC0ZM9HbUgM1Jpgu8XmOUmXxy2ij1CudYgcjgNoucuQqY9
-         hmtvv5V7KEDi/fW2fhQOJv2hCkDiLZEsA13b05dTBPpLjRStuFh/EMaMEh5c4RCiBJyY
-         JxPEK2Z5MTmVybobeGRFa/GgMlrPt50E/8p3vvljcSBgFxNZ0+tNKCC+uZ1e8qEOJSwo
-         qdTw==
+        d=linaro.org; s=google; t=1710910557; x=1711515357; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=smk3up9AxLBklHIupCTbu8uJT2sUCHKng4ykA2aQUkg=;
+        b=mxo4Tn+vE7ZPNNEsiRSXZCU9PVxMEO9tpRmSRF0DB5+p/5ArVh24UFexbERSMaLu8F
+         73lt63v3225EUPogNUK2c8v7cjBouJ2AnAcJA4aPt5wL7XefHff1it8k85JwXQgTFZ+6
+         mpvV/Pd+uJQbU5ONmXTddooBE79qeq0feH5aOUqMjjauE/5PkjkMyaRpQLA8c6kX5MLa
+         KiDCYQ6G2IWJbYRPDLIPT0CMSZdiLK2s689wRfyNVBonIRf0+CXfVkLJN4q8a7n9+eCc
+         twmdezCd4wvE3JxuHE9qA2j0mUIs0CGrvTl6mVG4+LaB0qEbXa6A71G5DHyoHi9JJF7M
+         Faiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710912523; x=1711517323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IDlOrCVKQ+OXTfLpu6C8wdEc8MeG0rYfIu4Amm4kBmk=;
-        b=eVgQUvoEVu7j5x5fN0PC7f9R8Muqd+Wd5zyErqTU3jHzDKtXNAz9SdAeSvDGe5fUWg
-         K3X2BKplJdUax6sCFIoylJ5obm8BYvJbsVJrPwxQyqR3Gd2MN7P9bc//FF2U9Pz9aJbB
-         82QJEwqFqI/iYeiCudvxxfaa1uEIp1zqX2JocQ7Uel/8O1Ni/X2/2KGx7Obne4zMOIZc
-         jexOPSEk2U3/1jrTXIuzGS06TzWBIU7KEX9Vj+OJ6gaC0CtP+/83lNnSc5d+GOJA73jU
-         /sLGLuICaI1h9CC3OddEU7t1rNnkZgDhRP016NYue6c7K6UVVcY0M9G3u+y6nLeXnzV2
-         H0ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5R8GWV0WikFDjpmBOsmWDz30lUrH4gy+NKKmYWwJJHWTekQqfgu/6AwYoAva5G5u84fjnupIuCiALf0gbMPkKB77kw5Bwrfc=
-X-Gm-Message-State: AOJu0YxLlstt7Y0fvRqd5wVfHPWbmzaVQaHY1e0xiCjysE8FtZZOM6HF
-	8sdFDW0R7QnBT74SQM6RgZskhg30xXDsJfv2Wqdo19FhSBdmzdGVTAHbhnyZGqw=
-X-Google-Smtp-Source: AGHT+IF+ctcB7UXGdCvuK0N+Be6HmNKhq4wEpi1PA5nc2ZGKWgz4cfX+PFWGZjALPU6lgNdrX8XDiw==
-X-Received: by 2002:a05:6000:544:b0:33e:bf0f:8156 with SMTP id b4-20020a056000054400b0033ebf0f8156mr2922372wrf.38.1710912521517;
-        Tue, 19 Mar 2024 22:28:41 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id p6-20020adfe606000000b0033e79eca6dfsm13781217wrm.50.2024.03.19.22.28.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 22:28:41 -0700 (PDT)
-Date: Wed, 20 Mar 2024 08:28:37 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Vyacheslav Bocharov <adeep@lexina.in>, Tom Rini <trini@konsulko.com>,
-	Beniamino Galvani <b.galvani@gmail.com>, u-boot-amlogic@groups.io,
-	u-boot@lists.denx.de
-Subject: Re: [PATCH] board: amlogic: fix buffler overflow in serial & usid read
-Message-ID: <f6810e14-2058-4bc2-9001-ee2cdaa8f585@moroto.mountain>
-References: <20240319-u-boot-fix-p200-serial-v1-1-9a4e06815de0@linaro.org>
+        d=1e100.net; s=20230601; t=1710910557; x=1711515357;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=smk3up9AxLBklHIupCTbu8uJT2sUCHKng4ykA2aQUkg=;
+        b=I8W/85c2p1JmRGhAWolTl1y9f//03vDD2yd96pmlRLQM+P4tN5BnWn8Q+h2WFGI8Wl
+         GBdjalbeNBBzPfkIjVXpoif9PbpB+BbXRP9jgh4yrWED1bBDSLKIDQV9Sh7CfCXkzsvK
+         mWUf8J1uMhWNDtsuptJ3gNvyNJQ+66L8vYmMX29xPaDUihyLSULszSif3sgOGpBxjlEI
+         5Qobo7s4mtjussKmwlXGdcXPJjoVdTm9qn3GSOUAcDnz+3E1rcq5EBYEgF3Wk+df7hli
+         i/WPJNc3uBA82fH9xxoKud4tyZsIeabjocQk7AWU1tj1weUk06MmO55JXQB6nrSFeiVJ
+         lGfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzqw/m6GdmcqPW2yWQEJr6vCxOhvh9BdaU9d/xcTtTz/hCmHBBfim8d3oaUIKjXYXvHkR5eQ1TbcxK0CEv5cVnCmL/HowK77I=
+X-Gm-Message-State: AOJu0YwX39ljd+qcIAfwjVgL8aHyn5vIpi6nU3uSpA8bMCY1fJGGT3dl
+	PEOEbWLQHbDM2696pqiLNZFrMAzhmIF77anBQ2k3+E2Ez9z2RvMLd5ohxCC3Ny38+cPzYfOW9rJ
+	tzrhrQJVHx30sqiuVBFbMbm9mSr6kfyJDhdmkkVOs5Vkb8L7ufZ4=
+X-Google-Smtp-Source: AGHT+IFo+MHDbN1CJ9nJUkPFmJv2aAUj7RK4xE+cQ+3go6N0AP+fyV453FUGvKPSfgyFxZ20PRRrvCFDT56duZrQcoQ=
+X-Received: by 2002:a67:f5d9:0:b0:473:3431:4f78 with SMTP id
+ t25-20020a67f5d9000000b0047334314f78mr14582697vso.10.1710910556719; Tue, 19
+ Mar 2024 21:55:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20240319-u-boot-fix-p200-serial-v1-1-9a4e06815de0@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240319-u-boot-of-upstream-v1-0-f82bc9fe69c0@linaro.org>
+In-Reply-To: <20240319-u-boot-of-upstream-v1-0-f82bc9fe69c0@linaro.org>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Wed, 20 Mar 2024 10:25:45 +0530
+Message-ID: <CAFA6WYNax2GF3i3o4OzLXe=LqOB5HRS18LbNm-t_FOgwzORftg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] arm: meson: Switch to using upstream DT for GXL, GXM, AXG, G12A, G12B & SM1 SoCs
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Tom Rini <trini@konsulko.com>, Vyacheslav Bocharov <adeep@lexina.in>, 
+	Christian Hewitt <christianshewitt@gmail.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:20:51 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2210
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2209
 
-On Tue, Mar 19, 2024 at 03:53:24PM +0100, Neil Armstrong wrote:
-> While meson_sm_read_efuse() doesn't overflow, the string is not
-> zero terminated and env_set() will buffer overflow and add random
-> characters to environment.
-> 
+Hi Neil,
 
-In the Linux kernel we would give this a CVE because it's information
-disclosure bug...
-
+On Tue, 19 Mar 2024 at 20:13, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+>
+> Enable OF_UPSTREAM to use upstream DT and add amlogic/ prefix to the
+> DEFAULT_DEVICE_TREE. And thereby directly build DTB from dts/upstream/src/
+> including *-u-boot.dtsi files from arch/$(ARCH)/dts/ directory and
+> drop redundant files from arch/arm/dts directory. Only *-u-boot.dtsi files
+> kept in arch/arm/dts directory for these boards.
+>
+> Keep A1 DTs locally since the architecture is still young.
+>
+> CI built & tested at:
+> https://gitlab.com/amlogic-foss/amlogic-u-boot-autotest/-/pipelines/1219273552
+>
 > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->  board/amlogic/jethub-j80/jethub-j80.c | 6 ++++--
->  board/amlogic/p200/p200.c             | 3 ++-
->  board/amlogic/p201/p201.c             | 3 ++-
->  board/amlogic/p212/p212.c             | 3 ++-
->  board/amlogic/q200/q200.c             | 3 ++-
->  5 files changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/board/amlogic/jethub-j80/jethub-j80.c b/board/amlogic/jethub-j80/jethub-j80.c
-> index 185880de13..d10492cc46 100644
-> --- a/board/amlogic/jethub-j80/jethub-j80.c
-> +++ b/board/amlogic/jethub-j80/jethub-j80.c
-> @@ -28,8 +28,8 @@
->  int misc_init_r(void)
->  {
->  	u8 mac_addr[EFUSE_MAC_SIZE];
-           ^^^^^^^^^^^^^^^^^^^^^^^^
+> Neil Armstrong (4):
+>       dts: meson: Switch GXL, GXM & AXG to using upstream DT
+>       dts: meson: Drop redundant GXL, GXM & AXG devicetree files
+>       dts: meson-g12a: Switch to using upstream DT
+>       dts: meson: Drop redundant G12A, G12B & SM1 devicetree files
+>
+>  arch/arm/dts/Makefile                              |   36 +-
+>  arch/arm/dts/meson-axg-jethome-jethub-j100.dts     |  361 ---
+>  arch/arm/dts/meson-axg-s400.dts                    |  602 -----
+>  arch/arm/dts/meson-axg.dtsi                        | 1957 ---------------
+>  arch/arm/dts/meson-g12-common.dtsi                 | 2493 --------------------
+>  arch/arm/dts/meson-g12.dtsi                        |  385 ---
+>  arch/arm/dts/meson-g12a-radxa-zero.dts             |  405 ----
+>  arch/arm/dts/meson-g12a-sei510.dts                 |  566 -----
+>  arch/arm/dts/meson-g12a-u200.dts                   |  308 ---
+>  arch/arm/dts/meson-g12a.dtsi                       |  140 --
+>  arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts     |   33 -
+>  arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts      |   41 -
+>  arch/arm/dts/meson-g12b-a311d.dtsi                 |  149 --
+>  arch/arm/dts/meson-g12b-bananapi-cm4-cm4io.dts     |  165 --
+>  arch/arm/dts/meson-g12b-bananapi-cm4.dtsi          |  388 ---
+>  arch/arm/dts/meson-g12b-bananapi.dtsi              |  521 ----
+>  arch/arm/dts/meson-g12b-gsking-x.dts               |  133 --
+>  arch/arm/dts/meson-g12b-gtking-pro.dts             |  142 --
+>  arch/arm/dts/meson-g12b-gtking.dts                 |  163 --
+>  arch/arm/dts/meson-g12b-khadas-vim3.dtsi           |  107 -
+>  arch/arm/dts/meson-g12b-odroid-go-ultra.dts        |  722 ------
+>  arch/arm/dts/meson-g12b-odroid-n2-plus.dts         |   31 -
+>  arch/arm/dts/meson-g12b-odroid-n2.dts              |   15 -
+>  arch/arm/dts/meson-g12b-odroid-n2.dtsi             |  303 ---
+>  arch/arm/dts/meson-g12b-odroid-n2l.dts             |  125 -
+>  arch/arm/dts/meson-g12b-odroid.dtsi                |  445 ----
+>  arch/arm/dts/meson-g12b-radxa-zero2.dts            |  489 ----
+>  arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts     |   14 -
+>  arch/arm/dts/meson-g12b-s922x.dtsi                 |  139 --
+>  arch/arm/dts/meson-g12b-w400.dtsi                  |  425 ----
+>  arch/arm/dts/meson-g12b.dtsi                       |  146 --
+>  arch/arm/dts/meson-gx-libretech-pc.dtsi            |  447 ----
+>  arch/arm/dts/meson-gx-mali450.dtsi                 |   61 -
+>  arch/arm/dts/meson-gx-p23x-q20x.dtsi               |  324 ---
+>  arch/arm/dts/meson-gx.dtsi                         |  675 ------
+>  arch/arm/dts/meson-gxl-mali.dtsi                   |   17 -
+>  arch/arm/dts/meson-gxl-s805x-libretech-ac.dts      |  319 ---
+>  arch/arm/dts/meson-gxl-s805x.dtsi                  |   23 -
+>  arch/arm/dts/meson-gxl-s905d-libretech-pc.dts      |   16 -
+>  arch/arm/dts/meson-gxl-s905d.dtsi                  |   12 -
+>  .../arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts |  247 --
+>  arch/arm/dts/meson-gxl-s905x-khadas-vim.dts        |  237 --
+>  arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts   |  313 ---
+>  arch/arm/dts/meson-gxl-s905x-libretech-cc.dts      |  356 ---
+>  arch/arm/dts/meson-gxl-s905x-p212.dts              |  134 --
+>  arch/arm/dts/meson-gxl-s905x-p212.dtsi             |  213 --
+>  arch/arm/dts/meson-gxl-s905x.dtsi                  |   18 -
+>  arch/arm/dts/meson-gxl.dtsi                        |  940 --------
+>  arch/arm/dts/meson-gxm-gt1-ultimate.dts            |   91 -
+>  arch/arm/dts/meson-gxm-khadas-vim2.dts             |  424 ----
+>  arch/arm/dts/meson-gxm-s912-libretech-pc.dts       |   62 -
+>  arch/arm/dts/meson-gxm-wetek-core2.dts             |   85 -
+>  arch/arm/dts/meson-gxm.dtsi                        |  216 --
+>  arch/arm/dts/meson-khadas-vim3.dtsi                |  534 -----
+>  arch/arm/dts/meson-sm1-bananapi-m2-pro.dts         |   97 -
+>  arch/arm/dts/meson-sm1-bananapi-m5.dts             |  221 --
+>  arch/arm/dts/meson-sm1-bananapi.dtsi               |  435 ----
+>  arch/arm/dts/meson-sm1-khadas-vim3l.dts            |  113 -
+>  arch/arm/dts/meson-sm1-odroid-c4.dts               |   48 -
+>  arch/arm/dts/meson-sm1-odroid-hc4.dts              |  140 --
+>  arch/arm/dts/meson-sm1-odroid.dtsi                 |  449 ----
+>  arch/arm/dts/meson-sm1-sei610.dts                  |  616 -----
+>  arch/arm/dts/meson-sm1.dtsi                        |  550 -----
+>  arch/arm/mach-meson/Kconfig                        |    4 +
+>  configs/bananapi-cm4-cm4io_defconfig               |    2 +-
+>  configs/bananapi-m2-pro_defconfig                  |    2 +-
+>  configs/bananapi-m2s_defconfig                     |    2 +-
+>  configs/bananapi-m5_defconfig                      |    2 +-
+>  configs/beelink-gsking-x_defconfig                 |    2 +-
+>  configs/beelink-gt1-ultimate_defconfig             |    2 +-
+>  configs/beelink-gtking_defconfig                   |    2 +-
+>  configs/beelink-gtkingpro_defconfig                |    2 +-
+>  configs/jethub_j100_defconfig                      |    2 +-
+>  configs/jethub_j80_defconfig                       |    2 +-
+>  configs/khadas-vim2_defconfig                      |    2 +-
+>  configs/khadas-vim3_android_ab_defconfig           |    2 +-
+>  configs/khadas-vim3_android_defconfig              |    2 +-
+>  configs/khadas-vim3_defconfig                      |    2 +-
+>  configs/khadas-vim3l_android_ab_defconfig          |    2 +-
+>  configs/khadas-vim3l_android_defconfig             |    2 +-
+>  configs/khadas-vim3l_defconfig                     |    2 +-
+>  configs/khadas-vim_defconfig                       |    2 +-
+>  configs/libretech-ac_defconfig                     |    2 +-
+>  configs/libretech-cc_defconfig                     |    2 +-
+>  configs/libretech-cc_v2_defconfig                  |    2 +-
+>  configs/libretech-s905d-pc_defconfig               |    2 +-
+>  configs/libretech-s912-pc_defconfig                |    2 +-
+>  configs/odroid-c4_defconfig                        |    2 +-
+>  configs/odroid-go-ultra_defconfig                  |    2 +-
+>  configs/odroid-hc4_defconfig                       |    2 +-
+>  configs/odroid-n2_defconfig                        |    2 +-
+>  configs/odroid-n2l_defconfig                       |    2 +-
+>  configs/p212_defconfig                             |    2 +-
+>  configs/radxa-zero2_defconfig                      |    2 +-
+>  configs/radxa-zero_defconfig                       |    2 +-
+>  configs/s400_defconfig                             |    2 +-
+>  configs/sei510_defconfig                           |    2 +-
+>  configs/sei610_defconfig                           |    2 +-
+>  configs/u200_defconfig                             |    2 +-
+>  configs/wetek-core2_defconfig                      |    2 +-
+>  include/dt-bindings/gpio/meson-axg-gpio.h          |  116 -
+>  include/dt-bindings/gpio/meson-g12a-gpio.h         |  114 -
+>  include/dt-bindings/gpio/meson-gxbb-gpio.h         |  148 --
+>  include/dt-bindings/gpio/meson-gxl-gpio.h          |  125 -
+>  include/dt-bindings/power/meson-axg-power.h        |   14 -
+>  include/dt-bindings/power/meson-g12a-power.h       |   13 -
+>  include/dt-bindings/power/meson-gxbb-power.h       |   13 -
+>  include/dt-bindings/power/meson-sm1-power.h        |   18 -
+>  .../reset/amlogic,meson-axg-audio-arb.h            |   19 -
+>  .../dt-bindings/reset/amlogic,meson-axg-reset.h    |  123 -
+>  .../reset/amlogic,meson-g12a-audio-reset.h         |   53 -
+>  .../dt-bindings/reset/amlogic,meson-g12a-reset.h   |  137 --
+>  .../dt-bindings/reset/amlogic,meson-gxbb-reset.h   |  161 --
+>  include/dt-bindings/sound/meson-aiu.h              |   18 -
+>  include/dt-bindings/sound/meson-g12a-toacodec.h    |   10 -
+>  include/dt-bindings/sound/meson-g12a-tohdmitx.h    |   13 -
+>  116 files changed, 42 insertions(+), 21511 deletions(-)
 
-This one is also a problem.  You can't pass non-terminated strings to
-eth_env_set_enetaddr().  We call strlen() on it in either hsearch_r() or
-env_get_from_linear().
+Glad to see these diff stats, FWIW:
 
-All the other functions had a mac_addr[] issue as well.
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
-Btw, this kind of bug is a good candidate for a static checker warning.
-I can create a Smatch check for this.  It would probably be easier in
-Coccinelle even, but I'm the Smatch maintainer.
+-Sumit
 
-regards,
-dan carpenter
-
-
-> -	char serial[EFUSE_SN_SIZE];
-> -	char usid[EFUSE_USID_SIZE];
-> +	char serial[EFUSE_SN_SIZE + 1];
-> +	char usid[EFUSE_USID_SIZE + 1];
->  	ssize_t len;
->  	unsigned int adcval;
->  	int ret;
-> @@ -46,6 +46,7 @@ int misc_init_r(void)
->  	if (!env_get("serial")) {
->  		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
->  					  EFUSE_SN_SIZE);
-> +		serial[len] = '\0';
->  		if (len == EFUSE_SN_SIZE)
->  			env_set("serial", serial);
-
+> ---
+> base-commit: b145877c22b391a4872c875145a8f86f6ffebaba
+> change-id: 20240319-u-boot-of-upstream-46454fded5ea
+>
+> Best regards,
+> --
+> Neil Armstrong <neil.armstrong@linaro.org>
+>
 
