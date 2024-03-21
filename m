@@ -2,57 +2,57 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1AFC47DD9
-	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:21:02 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web11.8701.1711055076153964281
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E39CD1287
+	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:20:52 +0000 (UTC)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+ by mx.groups.io with SMTP id smtpd.web11.8690.1711055061390452092
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Mar 2024 14:04:36 -0700
+ Thu, 21 Mar 2024 14:04:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=JA4IVnse;
- spf=pass (domain: linaro.org, ip: 209.85.128.53, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-413f4cb646dso10439645e9.1
-        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:35 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=QzjKVUPC;
+ spf=pass (domain: linaro.org, ip: 209.85.208.182, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d68651e253so23979461fa.0
+        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711055074; x=1711659874; darn=groups.io;
+        d=linaro.org; s=google; t=1711055059; x=1711659859; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=q1ASbhJ8pDNxOQKza4SvWtSWDi9xDgSqdUryll9us+Q=;
-        b=JA4IVnseNaD7AVqGhB5yKehiAmR2nhEhHKSjWqhfJZnJ7PZOIzyBKqQ+w2Hc/QTvwh
-         29AQ3zDeYumYuteTk44CtTsxNTOU2ysh7aJ/i9edK/efiq4NxID7Yrsvo5iYGBSSdMph
-         M8Qk5X+jito7WsC8gtiFiCcWcdFKTRHoswhe6U7blxy0hbEs/rQdeZ09Hb+u7BTI3evI
-         AwHJnurUOUtHHIAWayj6u1xO3Q0bTK+no2fRzk3nebsrX8w0r4Uje1e0kpvFg7un2eK4
-         NCW6bABtSh19WErNN5jR62v0QgxZoTZsFcnEu4nYH+alXOye2KFM//PmRA7aC5JRUVBG
-         bNGw==
+        bh=fB7yg4xXUHczetI7q8483qZQKALGBHvp3bg0h1HSRxA=;
+        b=QzjKVUPCQYDyjQ8PSy3p2WV5wZg8SGq6M3/1zUymSkyN3v67Ag0U63YGDz1P+G+/iR
+         aP21yJkpBPHPKWXbT9VHcV+Ii43LI88zyZMWPFjsVvGQCz8uZ2lVGxlmVVDItMvAskhG
+         UeIRjjpq89GcXq3s0A74CGbFxltF68rKXI9HgCDFiRCOsbBFFDC58Qxw3WIB3xHH5yLM
+         MckpjG567EowOYNZwDokDvtH5A4OrdRLcj5dSDIX4+0s+IffZOIbSc5pQX9ZYMSnetyG
+         OxDoBerD+36HqeUZsJp98/XZgt+q5PGKsfQ1lmieDEJj0Ay/GH0cPdsXzgad8UerZoyX
+         f6eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711055074; x=1711659874;
+        d=1e100.net; s=20230601; t=1711055059; x=1711659859;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q1ASbhJ8pDNxOQKza4SvWtSWDi9xDgSqdUryll9us+Q=;
-        b=TGAXKqIChMOENMkaJ9KjfsUH8XhFRcA2PyqUJJyoPJgeuIZbwNzMQclH82ndbQw/gn
-         AH7rrqdVa/ZUIr3ikBvt4UR9k9YkuhFG65i9DK3EhjmUl6SmjyOiO9/p2n6nXGRkzVJh
-         7nm+cDkpi5Fgec2wLRYRdk3lgAj5le7cqkZUPKdE42p/w2ajeu3ipq20SKtYm14d0aV1
-         6pJUfx2qu81j56khbACp/33KozUKDx3MZck2Wo0Blx05yUfBdd+ROyjnbtMZDuEjP6kN
-         2yDpLZyRF9aC2pjxFys5O4Lh9PSgXWPfWBTO2SrpWrRSrnusLgL5NXYU9qd4gBQf5zSu
-         M5Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMUE0L9qDdejJc87qYPOt3dYrIQAb3D3jWRdefe0eEiwkZvuag98l0492UPd61zp490nzoPsVkYVBM7t8svISIzm3m12XI/58=
-X-Gm-Message-State: AOJu0YzLyOFiVmYEqCNihypcdHhIKBbnAU4VpghD4pBUfsAZFoeqG3Nq
-	XpL8F4SEnqDmzRACzjB9RBJwRcadtUhLqsoWBX1s6nN8ScbdQyoEQ9CMy+vANe3d52GODRMrSsH
-	5
-X-Google-Smtp-Source: AGHT+IFOUuk3cOI6RQWEIfgFFUGW/esMA1Sfa4RQxSLXjS0d7Trvs9K2GY/aVWC08zuStBqlKF50Jw==
-X-Received: by 2002:a05:600c:6b17:b0:414:392:3abc with SMTP id jn23-20020a05600c6b1700b0041403923abcmr211985wmb.11.1711055074285;
-        Thu, 21 Mar 2024 14:04:34 -0700 (PDT)
+        bh=fB7yg4xXUHczetI7q8483qZQKALGBHvp3bg0h1HSRxA=;
+        b=NuUpJAtFvmpvCKWqU90cW4E9IsVdeDm6ppFsvxXOrEoxG2M6qqQyR6MGQJlnvslrMg
+         SWiLC0CWAYcRqBKRPD48HBNKugZmCCNwqV2/uldPuQm7PMiXwj4uFnNeD4SveUVtmc/P
+         ehMYxmga6TqAimges9xgIhLRjOltXpJJgMK42r+6zDrX1mjVoZ1zYd+EwS60qautaz15
+         JbBnLNnK4sPMK2f20xncKhN5Xqf3QlT7btEMMcuAqAMd+PqMp3MUtdptLQu/gmFDSjBo
+         qs6UnaNAztlBCQ3awrAYqOuA3BlreqIGklLqK9HtMHEDJfShNfSEbPX4Gqvv8BiioJ/A
+         nPHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzO8wZ31s4BEN4/FuLO7LDfvdfZajfdG9LkVd7fcJkzkKZGaMBsLr9tkTW1kXUO7jxJ40y1vnwZN0OEDo0sABT0EJ83W41ohI=
+X-Gm-Message-State: AOJu0YzMBGLGYhony8QOoyvNVBHzmobMV9Q8LZQxJQZVEKG+kilEEVcF
+	FZnoB8Bs08kLBDey1z9fJiAuDB2VKufdOgfUrsa2rqbAoB/HexPAE7v5n6ITYJmsEuxdbKvSfwI
+	w
+X-Google-Smtp-Source: AGHT+IGfBnaqFOv15w5Up9vXSO8wKoaUfgAkDZPw1hD6Qr5wVvsFNNknXc+cfPl+Rlpse0Plu79g2Q==
+X-Received: by 2002:a2e:9582:0:b0:2d4:6814:7c98 with SMTP id w2-20020a2e9582000000b002d468147c98mr412714ljh.43.1711055058791;
+        Thu, 21 Mar 2024 14:04:18 -0700 (PDT)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.33
+        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:04:33 -0700 (PDT)
+        Thu, 21 Mar 2024 14:04:18 -0700 (PDT)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Thu, 21 Mar 2024 21:04:02 +0000
-Subject: [PATCH v2 19/24] hisi: drop dt-binding headers
+Date: Thu, 21 Mar 2024 21:03:53 +0000
+Subject: [PATCH v2 10/24] rockchip: drop remaining dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240321-b4-upstream-dt-headers-v2-19-1eac0df875fe@linaro.org>
+Message-Id: <20240321-b4-upstream-dt-headers-v2-10-1eac0df875fe@linaro.org>
 References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 In-Reply-To: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -85,13 +85,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=15260;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=56655;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=S6l2X68dLtPLBye6TdWUWbFGD8YCUQmcKehHGXIg088=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/aK8UsvNzPdqbxhZVHH8T96r1ZfUeZONzvn9bLRU
- aFZp/t+RykLgyAHg6yYIov4iWWWTWsv22tsX3ABZg4rE8gQBi5OAZjIJnGG/zXPRAvslj6unWZ/
- +diR7l1Klrznd5ZLXPhe9zO6x0S3dQnD/8prqxfK7Xj+O/Dsypmell+f7pVxFXLc9Wi9yrucbRz
- e5jsB
+ bh=/IRjC1A1dDkGK3Pc32NpMw+mqlnwkyv5wN1nX46hzEY=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/aI5P/uM+UPqMv7Lm8V/Kl7vsXjXVnGnPO5XQ8qc
+ e1rb7/WUcrCIMjBICumyCJ+Ypll09rL9hrbF1yAmcPKBDKEgYtTACYiqcjwV0Z9r/zhZf9uibNU
+ iS1X6NF+UGsTbcy6Qyloo8rZf/wlnQx/pUR2u/KERGSa5y8vqNvAmBwqKj8j1kJtdtVO4T/yikH
+ XAQ==
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -99,497 +99,1533 @@ Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:21:02 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2231
+ <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:20:52 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2222
 
-Drop in favour of dts/upstream
+Drop in favour of dts/upstream.
+
+Small driver adjustment to fix compatibility, adjusted rk3368-sheep.dts
+to replace some GPIO defines with literals.
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- include/dt-bindings/clock/hi3660-clock.h | 214 -------------------------------
- include/dt-bindings/clock/hi6220-clock.h | 173 -------------------------
- include/dt-bindings/pinctrl/hisi.h       |  74 -----------
- 3 files changed, 461 deletions(-)
+ arch/arm/dts/rk3368-sheep.dts                     |   8 +-
+ drivers/pinctrl/rockchip/pinctrl-rk3568.c         | 186 +++---
+ include/dt-bindings/pinctrl/rockchip.h            |  60 --
+ include/dt-bindings/power/px30-power.h            |  27 -
+ include/dt-bindings/power/rk3066-power.h          |  22 -
+ include/dt-bindings/power/rk3188-power.h          |  24 -
+ include/dt-bindings/power/rk3228-power.h          |  21 -
+ include/dt-bindings/power/rk3288-power.h          |  32 -
+ include/dt-bindings/power/rk3328-power.h          |  19 -
+ include/dt-bindings/power/rk3399-power.h          |  53 --
+ include/dt-bindings/power/rk3568-power.h          |  32 -
+ include/dt-bindings/power/rk3588-power.h          |  69 --
+ include/dt-bindings/power/rockchip,rv1126-power.h |  35 -
+ include/dt-bindings/reset/rockchip,rk3588-cru.h   | 754 ----------------------
+ include/dt-bindings/soc/rockchip,boot-mode.h      |  16 -
+ include/dt-bindings/soc/rockchip,vop2.h           |  18 -
+ 16 files changed, 97 insertions(+), 1279 deletions(-)
 
-diff --git a/include/dt-bindings/clock/hi3660-clock.h b/include/dt-bindings/clock/hi3660-clock.h
+diff --git a/arch/arm/dts/rk3368-sheep.dts b/arch/arm/dts/rk3368-sheep.dts
+index 120dec1a3de9..03fb4c3e8f8b 100644
+--- a/arch/arm/dts/rk3368-sheep.dts
++++ b/arch/arm/dts/rk3368-sheep.dts
+@@ -237,25 +237,25 @@
+ 
+ &pinctrl {
+ 	ir {
+ 		ir_int: ir-int {
+-			rockchip,pins = <3 30 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <3 30 0 &pcfg_pull_none>;
+ 		};
+ 	};
+ 
+ 	keys {
+ 		pwr_key: pwr-key {
+-			rockchip,pins = <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <0 2 0 &pcfg_pull_none>;
+ 		};
+ 	};
+ 
+ 	pmic {
+ 		pmic_sleep: pmic-sleep {
+-			rockchip,pins = <0 0 RK_FUNC_2 &pcfg_pull_none>;
++			rockchip,pins = <0 0 2 &pcfg_pull_none>;
+ 		};
+ 
+ 		pmic_int: pmic-int {
+-			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <0 5 0 &pcfg_pull_up>;
+ 		};
+ 	};
+ };
+ 
+diff --git a/drivers/pinctrl/rockchip/pinctrl-rk3568.c b/drivers/pinctrl/rockchip/pinctrl-rk3568.c
+index 1d4391982605..6a49f02ee3be 100644
+--- a/drivers/pinctrl/rockchip/pinctrl-rk3568.c
++++ b/drivers/pinctrl/rockchip/pinctrl-rk3568.c
+@@ -12,101 +12,101 @@
+ 
+ #include "pinctrl-rockchip.h"
+ 
+ static struct rockchip_mux_route_data rk3568_mux_route_data[] = {
+-	MR_PMUGRF(RK_GPIO0, RK_PB7, RK_FUNC_1, 0x0110, RK_GENMASK_VAL(1, 0, 0)), /* PWM0 IO mux selection M0 */
+-	MR_PMUGRF(RK_GPIO0, RK_PC7, RK_FUNC_2, 0x0110, RK_GENMASK_VAL(1, 0, 1)), /* PWM0 IO mux selection M1 */
+-	MR_PMUGRF(RK_GPIO0, RK_PC0, RK_FUNC_1, 0x0110, RK_GENMASK_VAL(3, 2, 0)), /* PWM1 IO mux selection M0 */
+-	MR_PMUGRF(RK_GPIO0, RK_PB5, RK_FUNC_4, 0x0110, RK_GENMASK_VAL(3, 2, 1)), /* PWM1 IO mux selection M1 */
+-	MR_PMUGRF(RK_GPIO0, RK_PC1, RK_FUNC_1, 0x0110, RK_GENMASK_VAL(5, 4, 0)), /* PWM2 IO mux selection M0 */
+-	MR_PMUGRF(RK_GPIO0, RK_PB6, RK_FUNC_4, 0x0110, RK_GENMASK_VAL(5, 4, 1)), /* PWM2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO0, RK_PB3, RK_FUNC_2, 0x0300, RK_GENMASK_VAL(0, 0, 0)), /* CAN0 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PA1, RK_FUNC_4, 0x0300, RK_GENMASK_VAL(0, 0, 1)), /* CAN0 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA1, RK_FUNC_3, 0x0300, RK_GENMASK_VAL(2, 2, 0)), /* CAN1 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC3, RK_FUNC_3, 0x0300, RK_GENMASK_VAL(2, 2, 1)), /* CAN1 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PB5, RK_FUNC_3, 0x0300, RK_GENMASK_VAL(4, 4, 0)), /* CAN2 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PB2, RK_FUNC_4, 0x0300, RK_GENMASK_VAL(4, 4, 1)), /* CAN2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC4, RK_FUNC_1, 0x0300, RK_GENMASK_VAL(6, 6, 0)), /* EDPDP_HPDIN IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO0, RK_PC2, RK_FUNC_2, 0x0300, RK_GENMASK_VAL(6, 6, 1)), /* EDPDP_HPDIN IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB1, RK_FUNC_3, 0x0300, RK_GENMASK_VAL(8, 8, 0)), /* GMAC1 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PA7, RK_FUNC_3, 0x0300, RK_GENMASK_VAL(8, 8, 1)), /* GMAC1 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PD1, RK_FUNC_1, 0x0300, RK_GENMASK_VAL(10, 10, 0)), /* HDMITX IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO0, RK_PC7, RK_FUNC_1, 0x0300, RK_GENMASK_VAL(10, 10, 1)), /* HDMITX IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO0, RK_PB6, RK_FUNC_1, 0x0300, RK_GENMASK_VAL(14, 14, 0)), /* I2C2 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PB4, RK_FUNC_1, 0x0300, RK_GENMASK_VAL(14, 14, 1)), /* I2C2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA0, RK_FUNC_1, 0x0304, RK_GENMASK_VAL(0, 0, 0)), /* I2C3 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB6, RK_FUNC_4, 0x0304, RK_GENMASK_VAL(0, 0, 1)), /* I2C3 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PB2, RK_FUNC_1, 0x0304, RK_GENMASK_VAL(2, 2, 0)), /* I2C4 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PB1, RK_FUNC_2, 0x0304, RK_GENMASK_VAL(2, 2, 1)), /* I2C4 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB4, RK_FUNC_4, 0x0304, RK_GENMASK_VAL(4, 4, 0)), /* I2C5 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PD0, RK_FUNC_2, 0x0304, RK_GENMASK_VAL(4, 4, 1)), /* I2C5 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB1, RK_FUNC_5, 0x0304, RK_GENMASK_VAL(14, 14, 0)), /* PWM8 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO1, RK_PD5, RK_FUNC_4, 0x0304, RK_GENMASK_VAL(14, 14, 1)), /* PWM8 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB2, RK_FUNC_5, 0x0308, RK_GENMASK_VAL(0, 0, 0)), /* PWM9 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO1, RK_PD6, RK_FUNC_4, 0x0308, RK_GENMASK_VAL(0, 0, 1)), /* PWM9 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB5, RK_FUNC_5, 0x0308, RK_GENMASK_VAL(2, 2, 0)), /* PWM10 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PA1, RK_FUNC_2, 0x0308, RK_GENMASK_VAL(2, 2, 1)), /* PWM10 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB6, RK_FUNC_5, 0x0308, RK_GENMASK_VAL(4, 4, 0)), /* PWM11 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC0, RK_FUNC_3, 0x0308, RK_GENMASK_VAL(4, 4, 1)), /* PWM11 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB7, RK_FUNC_2, 0x0308, RK_GENMASK_VAL(6, 6, 0)), /* PWM12 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC5, RK_FUNC_1, 0x0308, RK_GENMASK_VAL(6, 6, 1)), /* PWM12 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC0, RK_FUNC_2, 0x0308, RK_GENMASK_VAL(8, 8, 0)), /* PWM13 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC6, RK_FUNC_1, 0x0308, RK_GENMASK_VAL(8, 8, 1)), /* PWM13 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC4, RK_FUNC_1, 0x0308, RK_GENMASK_VAL(10, 10, 0)), /* PWM14 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC2, RK_FUNC_1, 0x0308, RK_GENMASK_VAL(10, 10, 1)), /* PWM14 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC5, RK_FUNC_1, 0x0308, RK_GENMASK_VAL(12, 12, 0)), /* PWM15 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC3, RK_FUNC_1, 0x0308, RK_GENMASK_VAL(12, 12, 1)), /* PWM15 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PD2, RK_FUNC_3, 0x0308, RK_GENMASK_VAL(14, 14, 0)), /* SDMMC2 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PA5, RK_FUNC_5, 0x0308, RK_GENMASK_VAL(14, 14, 1)), /* SDMMC2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO0, RK_PB5, RK_FUNC_2, 0x030c, RK_GENMASK_VAL(0, 0, 0)), /* SPI0 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PD3, RK_FUNC_3, 0x030c, RK_GENMASK_VAL(0, 0, 1)), /* SPI0 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PB5, RK_FUNC_3, 0x030c, RK_GENMASK_VAL(2, 2, 0)), /* SPI1 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC3, RK_FUNC_3, 0x030c, RK_GENMASK_VAL(2, 2, 1)), /* SPI1 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PC1, RK_FUNC_4, 0x030c, RK_GENMASK_VAL(4, 4, 0)), /* SPI2 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PA0, RK_FUNC_3, 0x030c, RK_GENMASK_VAL(4, 4, 1)), /* SPI2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PB3, RK_FUNC_4, 0x030c, RK_GENMASK_VAL(6, 6, 0)), /* SPI3 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC2, RK_FUNC_2, 0x030c, RK_GENMASK_VAL(6, 6, 1)), /* SPI3 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PB4, RK_FUNC_2, 0x030c, RK_GENMASK_VAL(8, 8, 0)), /* UART1 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PD6, RK_FUNC_4, 0x030c, RK_GENMASK_VAL(8, 8, 1)), /* UART1 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO0, RK_PD1, RK_FUNC_1, 0x030c, RK_GENMASK_VAL(10, 10, 0)), /* UART2 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO1, RK_PD5, RK_FUNC_2, 0x030c, RK_GENMASK_VAL(10, 10, 1)), /* UART2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA1, RK_FUNC_2, 0x030c, RK_GENMASK_VAL(12, 12, 0)), /* UART3 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB7, RK_FUNC_4, 0x030c, RK_GENMASK_VAL(12, 12, 1)), /* UART3 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA6, RK_FUNC_2, 0x030c, RK_GENMASK_VAL(14, 14, 0)), /* UART4 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PB2, RK_FUNC_4, 0x030c, RK_GENMASK_VAL(14, 14, 1)), /* UART4 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PA2, RK_FUNC_3, 0x0310, RK_GENMASK_VAL(0, 0, 0)), /* UART5 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC2, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(0, 0, 1)), /* UART5 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PA4, RK_FUNC_3, 0x0310, RK_GENMASK_VAL(2, 2, 0)), /* UART6 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO1, RK_PD5, RK_FUNC_3, 0x0310, RK_GENMASK_VAL(2, 2, 1)), /* UART6 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PA6, RK_FUNC_3, 0x0310, RK_GENMASK_VAL(5, 4, 0)), /* UART7 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC4, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(5, 4, 1)), /* UART7 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PA2, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(5, 4, 2)), /* UART7 IO mux selection M2 */
+-	MR_TOPGRF(RK_GPIO2, RK_PC5, RK_FUNC_3, 0x0310, RK_GENMASK_VAL(6, 6, 0)), /* UART8 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PD7, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(6, 6, 1)), /* UART8 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PB0, RK_FUNC_3, 0x0310, RK_GENMASK_VAL(9, 8, 0)), /* UART9 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC5, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(9, 8, 1)), /* UART9 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PA4, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(9, 8, 2)), /* UART9 IO mux selection M2 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA2, RK_FUNC_1, 0x0310, RK_GENMASK_VAL(11, 10, 0)), /* I2S1 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC6, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(11, 10, 1)), /* I2S1 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO2, RK_PD0, RK_FUNC_5, 0x0310, RK_GENMASK_VAL(11, 10, 2)), /* I2S1 IO mux selection M2 */
+-	MR_TOPGRF(RK_GPIO2, RK_PC1, RK_FUNC_1, 0x0310, RK_GENMASK_VAL(12, 12, 0)), /* I2S2 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PB6, RK_FUNC_5, 0x0310, RK_GENMASK_VAL(12, 12, 1)), /* I2S2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PA2, RK_FUNC_4, 0x0310, RK_GENMASK_VAL(14, 14, 0)), /* I2S3 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC2, RK_FUNC_5, 0x0310, RK_GENMASK_VAL(14, 14, 1)), /* I2S3 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA4, RK_FUNC_3, 0x0314, RK_GENMASK_VAL(1, 0, 0)), /* PDM IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA6, RK_FUNC_3, 0x0314, RK_GENMASK_VAL(1, 0, 0)), /* PDM IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO3, RK_PD6, RK_FUNC_5, 0x0314, RK_GENMASK_VAL(1, 0, 1)), /* PDM IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PA0, RK_FUNC_4, 0x0314, RK_GENMASK_VAL(1, 0, 1)), /* PDM IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO3, RK_PC4, RK_FUNC_5, 0x0314, RK_GENMASK_VAL(1, 0, 2)), /* PDM IO mux selection M2 */
+-	MR_TOPGRF(RK_GPIO0, RK_PA5, RK_FUNC_3, 0x0314, RK_GENMASK_VAL(3, 2, 0)), /* PCIE20 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PD0, RK_FUNC_4, 0x0314, RK_GENMASK_VAL(3, 2, 1)), /* PCIE20 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO1, RK_PB0, RK_FUNC_4, 0x0314, RK_GENMASK_VAL(3, 2, 2)), /* PCIE20 IO mux selection M2 */
+-	MR_TOPGRF(RK_GPIO0, RK_PA4, RK_FUNC_3, 0x0314, RK_GENMASK_VAL(5, 4, 0)), /* PCIE30X1 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PD2, RK_FUNC_4, 0x0314, RK_GENMASK_VAL(5, 4, 1)), /* PCIE30X1 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO1, RK_PA5, RK_FUNC_4, 0x0314, RK_GENMASK_VAL(5, 4, 2)), /* PCIE30X1 IO mux selection M2 */
+-	MR_TOPGRF(RK_GPIO0, RK_PA6, RK_FUNC_2, 0x0314, RK_GENMASK_VAL(7, 6, 0)), /* PCIE30X2 IO mux selection M0 */
+-	MR_TOPGRF(RK_GPIO2, RK_PD4, RK_FUNC_4, 0x0314, RK_GENMASK_VAL(7, 6, 1)), /* PCIE30X2 IO mux selection M1 */
+-	MR_TOPGRF(RK_GPIO4, RK_PC2, RK_FUNC_4, 0x0314, RK_GENMASK_VAL(7, 6, 2)), /* PCIE30X2 IO mux selection M2 */
++	MR_PMUGRF(0, RK_PB7, 1, 0x0110, RK_GENMASK_VAL(1, 0, 0)), /* PWM0 IO mux selection M0 */
++	MR_PMUGRF(0, RK_PC7, 2, 0x0110, RK_GENMASK_VAL(1, 0, 1)), /* PWM0 IO mux selection M1 */
++	MR_PMUGRF(0, RK_PC0, 1, 0x0110, RK_GENMASK_VAL(3, 2, 0)), /* PWM1 IO mux selection M0 */
++	MR_PMUGRF(0, RK_PB5, 4, 0x0110, RK_GENMASK_VAL(3, 2, 1)), /* PWM1 IO mux selection M1 */
++	MR_PMUGRF(0, RK_PC1, 1, 0x0110, RK_GENMASK_VAL(5, 4, 0)), /* PWM2 IO mux selection M0 */
++	MR_PMUGRF(0, RK_PB6, 4, 0x0110, RK_GENMASK_VAL(5, 4, 1)), /* PWM2 IO mux selection M1 */
++	MR_TOPGRF(0, RK_PB3, 2, 0x0300, RK_GENMASK_VAL(0, 0, 0)), /* CAN0 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PA1, 4, 0x0300, RK_GENMASK_VAL(0, 0, 1)), /* CAN0 IO mux selection M1 */
++	MR_TOPGRF(1, RK_PA1, 3, 0x0300, RK_GENMASK_VAL(2, 2, 0)), /* CAN1 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC3, 3, 0x0300, RK_GENMASK_VAL(2, 2, 1)), /* CAN1 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PB5, 3, 0x0300, RK_GENMASK_VAL(4, 4, 0)), /* CAN2 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PB2, 4, 0x0300, RK_GENMASK_VAL(4, 4, 1)), /* CAN2 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PC4, 1, 0x0300, RK_GENMASK_VAL(6, 6, 0)), /* EDPDP_HPDIN IO mux selection M0 */
++	MR_TOPGRF(0, RK_PC2, 2, 0x0300, RK_GENMASK_VAL(6, 6, 1)), /* EDPDP_HPDIN IO mux selection M1 */
++	MR_TOPGRF(3, RK_PB1, 3, 0x0300, RK_GENMASK_VAL(8, 8, 0)), /* GMAC1 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PA7, 3, 0x0300, RK_GENMASK_VAL(8, 8, 1)), /* GMAC1 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PD1, 1, 0x0300, RK_GENMASK_VAL(10, 10, 0)), /* HDMITX IO mux selection M0 */
++	MR_TOPGRF(0, RK_PC7, 1, 0x0300, RK_GENMASK_VAL(10, 10, 1)), /* HDMITX IO mux selection M1 */
++	MR_TOPGRF(0, RK_PB6, 1, 0x0300, RK_GENMASK_VAL(14, 14, 0)), /* I2C2 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PB4, 1, 0x0300, RK_GENMASK_VAL(14, 14, 1)), /* I2C2 IO mux selection M1 */
++	MR_TOPGRF(1, RK_PA0, 1, 0x0304, RK_GENMASK_VAL(0, 0, 0)), /* I2C3 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PB6, 4, 0x0304, RK_GENMASK_VAL(0, 0, 1)), /* I2C3 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PB2, 1, 0x0304, RK_GENMASK_VAL(2, 2, 0)), /* I2C4 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PB1, 2, 0x0304, RK_GENMASK_VAL(2, 2, 1)), /* I2C4 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PB4, 4, 0x0304, RK_GENMASK_VAL(4, 4, 0)), /* I2C5 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PD0, 2, 0x0304, RK_GENMASK_VAL(4, 4, 1)), /* I2C5 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PB1, 5, 0x0304, RK_GENMASK_VAL(14, 14, 0)), /* PWM8 IO mux selection M0 */
++	MR_TOPGRF(1, RK_PD5, 4, 0x0304, RK_GENMASK_VAL(14, 14, 1)), /* PWM8 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PB2, 5, 0x0308, RK_GENMASK_VAL(0, 0, 0)), /* PWM9 IO mux selection M0 */
++	MR_TOPGRF(1, RK_PD6, 4, 0x0308, RK_GENMASK_VAL(0, 0, 1)), /* PWM9 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PB5, 5, 0x0308, RK_GENMASK_VAL(2, 2, 0)), /* PWM10 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PA1, 2, 0x0308, RK_GENMASK_VAL(2, 2, 1)), /* PWM10 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PB6, 5, 0x0308, RK_GENMASK_VAL(4, 4, 0)), /* PWM11 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC0, 3, 0x0308, RK_GENMASK_VAL(4, 4, 1)), /* PWM11 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PB7, 2, 0x0308, RK_GENMASK_VAL(6, 6, 0)), /* PWM12 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC5, 1, 0x0308, RK_GENMASK_VAL(6, 6, 1)), /* PWM12 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PC0, 2, 0x0308, RK_GENMASK_VAL(8, 8, 0)), /* PWM13 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC6, 1, 0x0308, RK_GENMASK_VAL(8, 8, 1)), /* PWM13 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PC4, 1, 0x0308, RK_GENMASK_VAL(10, 10, 0)), /* PWM14 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC2, 1, 0x0308, RK_GENMASK_VAL(10, 10, 1)), /* PWM14 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PC5, 1, 0x0308, RK_GENMASK_VAL(12, 12, 0)), /* PWM15 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC3, 1, 0x0308, RK_GENMASK_VAL(12, 12, 1)), /* PWM15 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PD2, 3, 0x0308, RK_GENMASK_VAL(14, 14, 0)), /* SDMMC2 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PA5, 5, 0x0308, RK_GENMASK_VAL(14, 14, 1)), /* SDMMC2 IO mux selection M1 */
++	MR_TOPGRF(0, RK_PB5, 2, 0x030c, RK_GENMASK_VAL(0, 0, 0)), /* SPI0 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PD3, 3, 0x030c, RK_GENMASK_VAL(0, 0, 1)), /* SPI0 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PB5, 3, 0x030c, RK_GENMASK_VAL(2, 2, 0)), /* SPI1 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PC3, 3, 0x030c, RK_GENMASK_VAL(2, 2, 1)), /* SPI1 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PC1, 4, 0x030c, RK_GENMASK_VAL(4, 4, 0)), /* SPI2 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PA0, 3, 0x030c, RK_GENMASK_VAL(4, 4, 1)), /* SPI2 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PB3, 4, 0x030c, RK_GENMASK_VAL(6, 6, 0)), /* SPI3 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC2, 2, 0x030c, RK_GENMASK_VAL(6, 6, 1)), /* SPI3 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PB4, 2, 0x030c, RK_GENMASK_VAL(8, 8, 0)), /* UART1 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PD6, 4, 0x030c, RK_GENMASK_VAL(8, 8, 1)), /* UART1 IO mux selection M1 */
++	MR_TOPGRF(0, RK_PD1, 1, 0x030c, RK_GENMASK_VAL(10, 10, 0)), /* UART2 IO mux selection M0 */
++	MR_TOPGRF(1, RK_PD5, 2, 0x030c, RK_GENMASK_VAL(10, 10, 1)), /* UART2 IO mux selection M1 */
++	MR_TOPGRF(1, RK_PA1, 2, 0x030c, RK_GENMASK_VAL(12, 12, 0)), /* UART3 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PB7, 4, 0x030c, RK_GENMASK_VAL(12, 12, 1)), /* UART3 IO mux selection M1 */
++	MR_TOPGRF(1, RK_PA6, 2, 0x030c, RK_GENMASK_VAL(14, 14, 0)), /* UART4 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PB2, 4, 0x030c, RK_GENMASK_VAL(14, 14, 1)), /* UART4 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PA2, 3, 0x0310, RK_GENMASK_VAL(0, 0, 0)), /* UART5 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PC2, 4, 0x0310, RK_GENMASK_VAL(0, 0, 1)), /* UART5 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PA4, 3, 0x0310, RK_GENMASK_VAL(2, 2, 0)), /* UART6 IO mux selection M0 */
++	MR_TOPGRF(1, RK_PD5, 3, 0x0310, RK_GENMASK_VAL(2, 2, 1)), /* UART6 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PA6, 3, 0x0310, RK_GENMASK_VAL(5, 4, 0)), /* UART7 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PC4, 4, 0x0310, RK_GENMASK_VAL(5, 4, 1)), /* UART7 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PA2, 4, 0x0310, RK_GENMASK_VAL(5, 4, 2)), /* UART7 IO mux selection M2 */
++	MR_TOPGRF(2, RK_PC5, 3, 0x0310, RK_GENMASK_VAL(6, 6, 0)), /* UART8 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PD7, 4, 0x0310, RK_GENMASK_VAL(6, 6, 1)), /* UART8 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PB0, 3, 0x0310, RK_GENMASK_VAL(9, 8, 0)), /* UART9 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC5, 4, 0x0310, RK_GENMASK_VAL(9, 8, 1)), /* UART9 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PA4, 4, 0x0310, RK_GENMASK_VAL(9, 8, 2)), /* UART9 IO mux selection M2 */
++	MR_TOPGRF(1, RK_PA2, 1, 0x0310, RK_GENMASK_VAL(11, 10, 0)), /* I2S1 IO mux selection M0 */
++	MR_TOPGRF(3, RK_PC6, 4, 0x0310, RK_GENMASK_VAL(11, 10, 1)), /* I2S1 IO mux selection M1 */
++	MR_TOPGRF(2, RK_PD0, 5, 0x0310, RK_GENMASK_VAL(11, 10, 2)), /* I2S1 IO mux selection M2 */
++	MR_TOPGRF(2, RK_PC1, 1, 0x0310, RK_GENMASK_VAL(12, 12, 0)), /* I2S2 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PB6, 5, 0x0310, RK_GENMASK_VAL(12, 12, 1)), /* I2S2 IO mux selection M1 */
++	MR_TOPGRF(3, RK_PA2, 4, 0x0310, RK_GENMASK_VAL(14, 14, 0)), /* I2S3 IO mux selection M0 */
++	MR_TOPGRF(4, RK_PC2, 5, 0x0310, RK_GENMASK_VAL(14, 14, 1)), /* I2S3 IO mux selection M1 */
++	MR_TOPGRF(1, RK_PA4, 3, 0x0314, RK_GENMASK_VAL(1, 0, 0)), /* PDM IO mux selection M0 */
++	MR_TOPGRF(1, RK_PA6, 3, 0x0314, RK_GENMASK_VAL(1, 0, 0)), /* PDM IO mux selection M0 */
++	MR_TOPGRF(3, RK_PD6, 5, 0x0314, RK_GENMASK_VAL(1, 0, 1)), /* PDM IO mux selection M1 */
++	MR_TOPGRF(4, RK_PA0, 4, 0x0314, RK_GENMASK_VAL(1, 0, 1)), /* PDM IO mux selection M1 */
++	MR_TOPGRF(3, RK_PC4, 5, 0x0314, RK_GENMASK_VAL(1, 0, 2)), /* PDM IO mux selection M2 */
++	MR_TOPGRF(0, RK_PA5, 3, 0x0314, RK_GENMASK_VAL(3, 2, 0)), /* PCIE20 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PD0, 4, 0x0314, RK_GENMASK_VAL(3, 2, 1)), /* PCIE20 IO mux selection M1 */
++	MR_TOPGRF(1, RK_PB0, 4, 0x0314, RK_GENMASK_VAL(3, 2, 2)), /* PCIE20 IO mux selection M2 */
++	MR_TOPGRF(0, RK_PA4, 3, 0x0314, RK_GENMASK_VAL(5, 4, 0)), /* PCIE30X1 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PD2, 4, 0x0314, RK_GENMASK_VAL(5, 4, 1)), /* PCIE30X1 IO mux selection M1 */
++	MR_TOPGRF(1, RK_PA5, 4, 0x0314, RK_GENMASK_VAL(5, 4, 2)), /* PCIE30X1 IO mux selection M2 */
++	MR_TOPGRF(0, RK_PA6, 2, 0x0314, RK_GENMASK_VAL(7, 6, 0)), /* PCIE30X2 IO mux selection M0 */
++	MR_TOPGRF(2, RK_PD4, 4, 0x0314, RK_GENMASK_VAL(7, 6, 1)), /* PCIE30X2 IO mux selection M1 */
++	MR_TOPGRF(4, RK_PC2, 4, 0x0314, RK_GENMASK_VAL(7, 6, 2)), /* PCIE30X2 IO mux selection M2 */
+ };
+ 
+ static int rk3568_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
+ {
+diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
 deleted file mode 100644
-index e1374e180943..000000000000
---- a/include/dt-bindings/clock/hi3660-clock.h
+index 1c28d6cb1fad..000000000000
+--- a/include/dt-bindings/pinctrl/rockchip.h
 +++ /dev/null
-@@ -1,214 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
+@@ -1,60 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
 -/*
-- * Copyright (c) 2016-2017 Linaro Ltd.
-- * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+- * Header providing constants for Rockchip pinctrl bindings.
+- *
+- * Copyright (c) 2013 MundoReader S.L.
+- * Author: Heiko Stuebner <heiko@sntech.de>
 - */
 -
--#ifndef __DTS_HI3660_CLOCK_H
--#define __DTS_HI3660_CLOCK_H
+-#ifndef __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
+-#define __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
 -
--/* fixed rate clocks */
--#define HI3660_CLKIN_SYS		0
--#define HI3660_CLKIN_REF		1
--#define HI3660_CLK_FLL_SRC		2
--#define HI3660_CLK_PPLL0		3
--#define HI3660_CLK_PPLL1		4
--#define HI3660_CLK_PPLL2		5
--#define HI3660_CLK_PPLL3		6
--#define HI3660_CLK_SCPLL		7
--#define HI3660_PCLK			8
--#define HI3660_CLK_UART0_DBG		9
--#define HI3660_CLK_UART6		10
--#define HI3660_OSC32K			11
--#define HI3660_OSC19M			12
--#define HI3660_CLK_480M			13
--#define HI3660_CLK_INV			14
+-#define RK_GPIO0	0
+-#define RK_GPIO1	1
+-#define RK_GPIO2	2
+-#define RK_GPIO3	3
+-#define RK_GPIO4	4
+-#define RK_GPIO6	6
 -
--/* clk in crgctrl */
--#define HI3660_FACTOR_UART3		15
--#define HI3660_CLK_FACTOR_MMC		16
--#define HI3660_CLK_GATE_I2C0		17
--#define HI3660_CLK_GATE_I2C1		18
--#define HI3660_CLK_GATE_I2C2		19
--#define HI3660_CLK_GATE_I2C6		20
--#define HI3660_CLK_DIV_SYSBUS		21
--#define HI3660_CLK_DIV_320M		22
--#define HI3660_CLK_DIV_A53		23
--#define HI3660_CLK_GATE_SPI0		24
--#define HI3660_CLK_GATE_SPI2		25
--#define HI3660_PCIEPHY_REF		26
--#define HI3660_CLK_ABB_USB		27
--#define HI3660_HCLK_GATE_SDIO0		28
--#define HI3660_HCLK_GATE_SD		29
--#define HI3660_CLK_GATE_AOMM		30
--#define HI3660_PCLK_GPIO0		31
--#define HI3660_PCLK_GPIO1		32
--#define HI3660_PCLK_GPIO2		33
--#define HI3660_PCLK_GPIO3		34
--#define HI3660_PCLK_GPIO4		35
--#define HI3660_PCLK_GPIO5		36
--#define HI3660_PCLK_GPIO6		37
--#define HI3660_PCLK_GPIO7		38
--#define HI3660_PCLK_GPIO8		39
--#define HI3660_PCLK_GPIO9		40
--#define HI3660_PCLK_GPIO10		41
--#define HI3660_PCLK_GPIO11		42
--#define HI3660_PCLK_GPIO12		43
--#define HI3660_PCLK_GPIO13		44
--#define HI3660_PCLK_GPIO14		45
--#define HI3660_PCLK_GPIO15		46
--#define HI3660_PCLK_GPIO16		47
--#define HI3660_PCLK_GPIO17		48
--#define HI3660_PCLK_GPIO18		49
--#define HI3660_PCLK_GPIO19		50
--#define HI3660_PCLK_GPIO20		51
--#define HI3660_PCLK_GPIO21		52
--#define HI3660_CLK_GATE_SPI3		53
--#define HI3660_CLK_GATE_I2C7		54
--#define HI3660_CLK_GATE_I2C3		55
--#define HI3660_CLK_GATE_SPI1		56
--#define HI3660_CLK_GATE_UART1		57
--#define HI3660_CLK_GATE_UART2		58
--#define HI3660_CLK_GATE_UART4		59
--#define HI3660_CLK_GATE_UART5		60
--#define HI3660_CLK_GATE_I2C4		61
--#define HI3660_CLK_GATE_DMAC		62
--#define HI3660_PCLK_GATE_DSS		63
--#define HI3660_ACLK_GATE_DSS		64
--#define HI3660_CLK_GATE_LDI1		65
--#define HI3660_CLK_GATE_LDI0		66
--#define HI3660_CLK_GATE_VIVOBUS		67
--#define HI3660_CLK_GATE_EDC0		68
--#define HI3660_CLK_GATE_TXDPHY0_CFG	69
--#define HI3660_CLK_GATE_TXDPHY0_REF	70
--#define HI3660_CLK_GATE_TXDPHY1_CFG	71
--#define HI3660_CLK_GATE_TXDPHY1_REF	72
--#define HI3660_ACLK_GATE_USB3OTG	73
--#define HI3660_CLK_GATE_SPI4		74
--#define HI3660_CLK_GATE_SD		75
--#define HI3660_CLK_GATE_SDIO0		76
--#define HI3660_CLK_GATE_UFS_SUBSYS	77
--#define HI3660_PCLK_GATE_DSI0		78
--#define HI3660_PCLK_GATE_DSI1		79
--#define HI3660_ACLK_GATE_PCIE		80
--#define HI3660_PCLK_GATE_PCIE_SYS       81
--#define HI3660_CLK_GATE_PCIEAUX		82
--#define HI3660_PCLK_GATE_PCIE_PHY	83
--#define HI3660_CLK_ANDGT_LDI0		84
--#define HI3660_CLK_ANDGT_LDI1		85
--#define HI3660_CLK_ANDGT_EDC0		86
--#define HI3660_CLK_GATE_UFSPHY_GT	87
--#define HI3660_CLK_ANDGT_MMC		88
--#define HI3660_CLK_ANDGT_SD		89
--#define HI3660_CLK_A53HPM_ANDGT		90
--#define HI3660_CLK_ANDGT_SDIO		91
--#define HI3660_CLK_ANDGT_UART0		92
--#define HI3660_CLK_ANDGT_UART1		93
--#define HI3660_CLK_ANDGT_UARTH		94
--#define HI3660_CLK_ANDGT_SPI		95
--#define HI3660_CLK_VIVOBUS_ANDGT	96
--#define HI3660_CLK_AOMM_ANDGT		97
--#define HI3660_CLK_320M_PLL_GT		98
--#define HI3660_AUTODIV_EMMC0BUS		99
--#define HI3660_AUTODIV_SYSBUS		100
--#define HI3660_CLK_GATE_UFSPHY_CFG	101
--#define HI3660_CLK_GATE_UFSIO_REF	102
--#define HI3660_CLK_MUX_SYSBUS		103
--#define HI3660_CLK_MUX_UART0		104
--#define HI3660_CLK_MUX_UART1		105
--#define HI3660_CLK_MUX_UARTH		106
--#define HI3660_CLK_MUX_SPI		107
--#define HI3660_CLK_MUX_I2C		108
--#define HI3660_CLK_MUX_MMC_PLL		109
--#define HI3660_CLK_MUX_LDI1		110
--#define HI3660_CLK_MUX_LDI0		111
--#define HI3660_CLK_MUX_SD_PLL		112
--#define HI3660_CLK_MUX_SD_SYS		113
--#define HI3660_CLK_MUX_EDC0		114
--#define HI3660_CLK_MUX_SDIO_SYS		115
--#define HI3660_CLK_MUX_SDIO_PLL		116
--#define HI3660_CLK_MUX_VIVOBUS		117
--#define HI3660_CLK_MUX_A53HPM		118
--#define HI3660_CLK_MUX_320M		119
--#define HI3660_CLK_MUX_IOPERI		120
--#define HI3660_CLK_DIV_UART0		121
--#define HI3660_CLK_DIV_UART1		122
--#define HI3660_CLK_DIV_UARTH		123
--#define HI3660_CLK_DIV_MMC		124
--#define HI3660_CLK_DIV_SD		125
--#define HI3660_CLK_DIV_EDC0		126
--#define HI3660_CLK_DIV_LDI0		127
--#define HI3660_CLK_DIV_SDIO		128
--#define HI3660_CLK_DIV_LDI1		129
--#define HI3660_CLK_DIV_SPI		130
--#define HI3660_CLK_DIV_VIVOBUS		131
--#define HI3660_CLK_DIV_I2C		132
--#define HI3660_CLK_DIV_UFSPHY		133
--#define HI3660_CLK_DIV_CFGBUS		134
--#define HI3660_CLK_DIV_MMC0BUS		135
--#define HI3660_CLK_DIV_MMC1BUS		136
--#define HI3660_CLK_DIV_UFSPERI		137
--#define HI3660_CLK_DIV_AOMM		138
--#define HI3660_CLK_DIV_IOPERI		139
--#define HI3660_VENC_VOLT_HOLD		140
--#define HI3660_PERI_VOLT_HOLD		141
--#define HI3660_CLK_GATE_VENC		142
--#define HI3660_CLK_GATE_VDEC		143
--#define HI3660_CLK_ANDGT_VENC		144
--#define HI3660_CLK_ANDGT_VDEC		145
--#define HI3660_CLK_MUX_VENC		146
--#define HI3660_CLK_MUX_VDEC		147
--#define HI3660_CLK_DIV_VENC		148
--#define HI3660_CLK_DIV_VDEC		149
--#define HI3660_CLK_FAC_ISP_SNCLK	150
--#define HI3660_CLK_GATE_ISP_SNCLK0	151
--#define HI3660_CLK_GATE_ISP_SNCLK1	152
--#define HI3660_CLK_GATE_ISP_SNCLK2	153
--#define HI3660_CLK_ANGT_ISP_SNCLK	154
--#define HI3660_CLK_MUX_ISP_SNCLK	155
--#define HI3660_CLK_DIV_ISP_SNCLK	156
+-#define RK_PA0		0
+-#define RK_PA1		1
+-#define RK_PA2		2
+-#define RK_PA3		3
+-#define RK_PA4		4
+-#define RK_PA5		5
+-#define RK_PA6		6
+-#define RK_PA7		7
+-#define RK_PB0		8
+-#define RK_PB1		9
+-#define RK_PB2		10
+-#define RK_PB3		11
+-#define RK_PB4		12
+-#define RK_PB5		13
+-#define RK_PB6		14
+-#define RK_PB7		15
+-#define RK_PC0		16
+-#define RK_PC1		17
+-#define RK_PC2		18
+-#define RK_PC3		19
+-#define RK_PC4		20
+-#define RK_PC5		21
+-#define RK_PC6		22
+-#define RK_PC7		23
+-#define RK_PD0		24
+-#define RK_PD1		25
+-#define RK_PD2		26
+-#define RK_PD3		27
+-#define RK_PD4		28
+-#define RK_PD5		29
+-#define RK_PD6		30
+-#define RK_PD7		31
 -
--/* clk in pmuctrl */
--#define HI3660_GATE_ABB_192		0
+-#define RK_FUNC_GPIO	0
+-#define RK_FUNC_1	1
+-#define RK_FUNC_2	2
+-#define RK_FUNC_3	3
+-#define RK_FUNC_4	4
+-#define RK_FUNC_5	5
+-#define RK_FUNC_6	6
 -
--/* clk in pctrl */
--#define HI3660_GATE_UFS_TCXO_EN		0
--#define HI3660_GATE_USB_TCXO_EN		1
--
--/* clk in sctrl */
--#define HI3660_PCLK_AO_GPIO0		0
--#define HI3660_PCLK_AO_GPIO1		1
--#define HI3660_PCLK_AO_GPIO2		2
--#define HI3660_PCLK_AO_GPIO3		3
--#define HI3660_PCLK_AO_GPIO4		4
--#define HI3660_PCLK_AO_GPIO5		5
--#define HI3660_PCLK_AO_GPIO6		6
--#define HI3660_PCLK_GATE_MMBUF		7
--#define HI3660_CLK_GATE_DSS_AXI_MM	8
--#define HI3660_PCLK_MMBUF_ANDGT		9
--#define HI3660_CLK_MMBUF_PLL_ANDGT	10
--#define HI3660_CLK_FLL_MMBUF_ANDGT	11
--#define HI3660_CLK_SYS_MMBUF_ANDGT	12
--#define HI3660_CLK_GATE_PCIEPHY_GT	13
--#define HI3660_ACLK_MUX_MMBUF		14
--#define HI3660_CLK_SW_MMBUF		15
--#define HI3660_CLK_DIV_AOBUS		16
--#define HI3660_PCLK_DIV_MMBUF		17
--#define HI3660_ACLK_DIV_MMBUF		18
--#define HI3660_CLK_DIV_PCIEPHY		19
--
--/* clk in iomcu */
--#define HI3660_CLK_I2C0_IOMCU		0
--#define HI3660_CLK_I2C1_IOMCU		1
--#define HI3660_CLK_I2C2_IOMCU		2
--#define HI3660_CLK_I2C6_IOMCU		3
--#define HI3660_CLK_IOMCU_PERI0		4
--
--/* clk in stub clock */
--#define HI3660_CLK_STUB_CLUSTER0	0
--#define HI3660_CLK_STUB_CLUSTER1	1
--#define HI3660_CLK_STUB_GPU		2
--#define HI3660_CLK_STUB_DDR		3
--#define HI3660_CLK_STUB_NUM		4
--
--#endif	/* __DTS_HI3660_CLOCK_H */
-diff --git a/include/dt-bindings/clock/hi6220-clock.h b/include/dt-bindings/clock/hi6220-clock.h
-deleted file mode 100644
-index 70ee3833a7a0..000000000000
---- a/include/dt-bindings/clock/hi6220-clock.h
-+++ /dev/null
-@@ -1,173 +0,0 @@
--/*
-- * Copyright (c) 2015 Hisilicon Limited.
-- *
-- * Author: Bintian Wang <bintian.wang@huawei.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
--
--#ifndef __DT_BINDINGS_CLOCK_HI6220_H
--#define __DT_BINDINGS_CLOCK_HI6220_H
--
--/* clk in Hi6220 AO (always on) controller */
--#define HI6220_NONE_CLOCK	0
--
--/* fixed rate clocks */
--#define HI6220_REF32K		1
--#define HI6220_CLK_TCXO		2
--#define HI6220_MMC1_PAD		3
--#define HI6220_MMC2_PAD		4
--#define HI6220_MMC0_PAD		5
--#define HI6220_PLL_BBP		6
--#define HI6220_PLL_GPU		7
--#define HI6220_PLL1_DDR		8
--#define HI6220_PLL_SYS		9
--#define HI6220_PLL_SYS_MEDIA	10
--#define HI6220_DDR_SRC		11
--#define HI6220_PLL_MEDIA	12
--#define HI6220_PLL_DDR		13
--
--/* fixed factor clocks */
--#define HI6220_300M		14
--#define HI6220_150M		15
--#define HI6220_PICOPHY_SRC	16
--#define HI6220_MMC0_SRC_SEL	17
--#define HI6220_MMC1_SRC_SEL	18
--#define HI6220_MMC2_SRC_SEL	19
--#define HI6220_VPU_CODEC	20
--#define HI6220_MMC0_SMP		21
--#define HI6220_MMC1_SMP		22
--#define HI6220_MMC2_SMP		23
--
--/* gate clocks */
--#define HI6220_WDT0_PCLK	24
--#define HI6220_WDT1_PCLK	25
--#define HI6220_WDT2_PCLK	26
--#define HI6220_TIMER0_PCLK	27
--#define HI6220_TIMER1_PCLK	28
--#define HI6220_TIMER2_PCLK	29
--#define HI6220_TIMER3_PCLK	30
--#define HI6220_TIMER4_PCLK	31
--#define HI6220_TIMER5_PCLK	32
--#define HI6220_TIMER6_PCLK	33
--#define HI6220_TIMER7_PCLK	34
--#define HI6220_TIMER8_PCLK	35
--#define HI6220_UART0_PCLK	36
--
--#define HI6220_AO_NR_CLKS	37
--
--/* clk in Hi6220 systrl */
--/* gate clock */
--#define HI6220_MMC0_CLK		1
--#define HI6220_MMC0_CIUCLK	2
--#define HI6220_MMC1_CLK		3
--#define HI6220_MMC1_CIUCLK	4
--#define HI6220_MMC2_CLK		5
--#define HI6220_MMC2_CIUCLK	6
--#define HI6220_USBOTG_HCLK	7
--#define HI6220_CLK_PICOPHY	8
--#define HI6220_HIFI		9
--#define HI6220_DACODEC_PCLK	10
--#define HI6220_EDMAC_ACLK	11
--#define HI6220_CS_ATB		12
--#define HI6220_I2C0_CLK		13
--#define HI6220_I2C1_CLK		14
--#define HI6220_I2C2_CLK		15
--#define HI6220_I2C3_CLK		16
--#define HI6220_UART1_PCLK	17
--#define HI6220_UART2_PCLK	18
--#define HI6220_UART3_PCLK	19
--#define HI6220_UART4_PCLK	20
--#define HI6220_SPI_CLK		21
--#define HI6220_TSENSOR_CLK	22
--#define HI6220_MMU_CLK		23
--#define HI6220_HIFI_SEL		24
--#define HI6220_MMC0_SYSPLL	25
--#define HI6220_MMC1_SYSPLL	26
--#define HI6220_MMC2_SYSPLL	27
--#define HI6220_MMC0_SEL		28
--#define HI6220_MMC1_SEL		29
--#define HI6220_BBPPLL_SEL	30
--#define HI6220_MEDIA_PLL_SRC	31
--#define HI6220_MMC2_SEL		32
--#define HI6220_CS_ATB_SYSPLL	33
--
--/* mux clocks */
--#define HI6220_MMC0_SRC		34
--#define HI6220_MMC0_SMP_IN	35
--#define HI6220_MMC1_SRC		36
--#define HI6220_MMC1_SMP_IN	37
--#define HI6220_MMC2_SRC		38
--#define HI6220_MMC2_SMP_IN	39
--#define HI6220_HIFI_SRC		40
--#define HI6220_UART1_SRC	41
--#define HI6220_UART2_SRC	42
--#define HI6220_UART3_SRC	43
--#define HI6220_UART4_SRC	44
--#define HI6220_MMC0_MUX0	45
--#define HI6220_MMC1_MUX0	46
--#define HI6220_MMC2_MUX0	47
--#define HI6220_MMC0_MUX1	48
--#define HI6220_MMC1_MUX1	49
--#define HI6220_MMC2_MUX1	50
--
--/* divider clocks */
--#define HI6220_CLK_BUS		51
--#define HI6220_MMC0_DIV		52
--#define HI6220_MMC1_DIV		53
--#define HI6220_MMC2_DIV		54
--#define HI6220_HIFI_DIV		55
--#define HI6220_BBPPLL0_DIV	56
--#define HI6220_CS_DAPB		57
--#define HI6220_CS_ATB_DIV	58
--
--#define HI6220_SYS_NR_CLKS	59
--
--/* clk in Hi6220 media controller */
--/* gate clocks */
--#define HI6220_DSI_PCLK		1
--#define HI6220_G3D_PCLK		2
--#define HI6220_ACLK_CODEC_VPU	3
--#define HI6220_ISP_SCLK		4
--#define HI6220_ADE_CORE		5
--#define HI6220_MED_MMU		6
--#define HI6220_CFG_CSI4PHY	7
--#define HI6220_CFG_CSI2PHY	8
--#define HI6220_ISP_SCLK_GATE	9
--#define HI6220_ISP_SCLK_GATE1	10
--#define HI6220_ADE_CORE_GATE	11
--#define HI6220_CODEC_VPU_GATE	12
--#define HI6220_MED_SYSPLL	13
--
--/* mux clocks */
--#define HI6220_1440_1200	14
--#define HI6220_1000_1200	15
--#define HI6220_1000_1440	16
--
--/* divider clocks */
--#define HI6220_CODEC_JPEG	17
--#define HI6220_ISP_SCLK_SRC	18
--#define HI6220_ISP_SCLK1	19
--#define HI6220_ADE_CORE_SRC	20
--#define HI6220_ADE_PIX_SRC	21
--#define HI6220_G3D_CLK		22
--#define HI6220_CODEC_VPU_SRC	23
--
--#define HI6220_MEDIA_NR_CLKS	24
--
--/* clk in Hi6220 power controller */
--/* gate clocks */
--#define HI6220_PLL_GPU_GATE	1
--#define HI6220_PLL1_DDR_GATE	2
--#define HI6220_PLL_DDR_GATE	3
--#define HI6220_PLL_MEDIA_GATE	4
--#define HI6220_PLL0_BBP_GATE	5
--
--/* divider clocks */
--#define HI6220_DDRC_SRC		6
--#define HI6220_DDRC_AXI1	7
--
--#define HI6220_POWER_NR_CLKS	8
 -#endif
-diff --git a/include/dt-bindings/pinctrl/hisi.h b/include/dt-bindings/pinctrl/hisi.h
+diff --git a/include/dt-bindings/power/px30-power.h b/include/dt-bindings/power/px30-power.h
 deleted file mode 100644
-index 0359bfdc9119..000000000000
---- a/include/dt-bindings/pinctrl/hisi.h
+index 30917a99ad20..000000000000
+--- a/include/dt-bindings/power/px30-power.h
 +++ /dev/null
-@@ -1,74 +0,0 @@
--/*
-- * This header provides constants for hisilicon pinctrl bindings.
-- *
-- * Copyright (c) 2015 Hisilicon Limited.
-- * Copyright (c) 2015 Linaro Limited.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-- * GNU General Public License for more details.
+@@ -1,27 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_BINDINGS_POWER_PX30_POWER_H__
+-#define __DT_BINDINGS_POWER_PX30_POWER_H__
+-
+-/* VD_CORE */
+-#define PX30_PD_A35_0		0
+-#define PX30_PD_A35_1		1
+-#define PX30_PD_A35_2		2
+-#define PX30_PD_A35_3		3
+-#define PX30_PD_SCU		4
+-
+-/* VD_LOGIC */
+-#define PX30_PD_USB		5
+-#define PX30_PD_DDR		6
+-#define PX30_PD_SDCARD		7
+-#define PX30_PD_CRYPTO		8
+-#define PX30_PD_GMAC		9
+-#define PX30_PD_MMC_NAND	10
+-#define PX30_PD_VPU		11
+-#define PX30_PD_VO		12
+-#define PX30_PD_VI		13
+-#define PX30_PD_GPU		14
+-
+-/* VD_PMU */
+-#define PX30_PD_PMU		15
+-
+-#endif
+diff --git a/include/dt-bindings/power/rk3066-power.h b/include/dt-bindings/power/rk3066-power.h
+deleted file mode 100644
+index acf9f310ac53..000000000000
+--- a/include/dt-bindings/power/rk3066-power.h
++++ /dev/null
+@@ -1,22 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_BINDINGS_POWER_RK3066_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3066_POWER_H__
+-
+-/* VD_CORE */
+-#define RK3066_PD_A9_0		0
+-#define RK3066_PD_A9_1		1
+-#define RK3066_PD_DBG		4
+-#define RK3066_PD_SCU		5
+-
+-/* VD_LOGIC */
+-#define RK3066_PD_VIDEO		6
+-#define RK3066_PD_VIO		7
+-#define RK3066_PD_GPU		8
+-#define RK3066_PD_PERI		9
+-#define RK3066_PD_CPU		10
+-#define RK3066_PD_ALIVE		11
+-
+-/* VD_PMU */
+-#define RK3066_PD_RTC		12
+-
+-#endif
+diff --git a/include/dt-bindings/power/rk3188-power.h b/include/dt-bindings/power/rk3188-power.h
+deleted file mode 100644
+index 93d23dfba33f..000000000000
+--- a/include/dt-bindings/power/rk3188-power.h
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_BINDINGS_POWER_RK3188_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3188_POWER_H__
+-
+-/* VD_CORE */
+-#define RK3188_PD_A9_0		0
+-#define RK3188_PD_A9_1		1
+-#define RK3188_PD_A9_2		2
+-#define RK3188_PD_A9_3		3
+-#define RK3188_PD_DBG		4
+-#define RK3188_PD_SCU		5
+-
+-/* VD_LOGIC */
+-#define RK3188_PD_VIDEO		6
+-#define RK3188_PD_VIO		7
+-#define RK3188_PD_GPU		8
+-#define RK3188_PD_PERI		9
+-#define RK3188_PD_CPU		10
+-#define RK3188_PD_ALIVE		11
+-
+-/* VD_PMU */
+-#define RK3188_PD_RTC		12
+-
+-#endif
+diff --git a/include/dt-bindings/power/rk3228-power.h b/include/dt-bindings/power/rk3228-power.h
+deleted file mode 100644
+index 6a8dc1bf76ce..000000000000
+--- a/include/dt-bindings/power/rk3228-power.h
++++ /dev/null
+@@ -1,21 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_BINDINGS_POWER_RK3228_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3228_POWER_H__
+-
+-/**
+- * RK3228 idle id Summary.
 - */
 -
--#ifndef _DT_BINDINGS_PINCTRL_HISI_H
--#define _DT_BINDINGS_PINCTRL_HISI_H
+-#define RK3228_PD_CORE		0
+-#define RK3228_PD_MSCH		1
+-#define RK3228_PD_BUS		2
+-#define RK3228_PD_SYS		3
+-#define RK3228_PD_VIO		4
+-#define RK3228_PD_VOP		5
+-#define RK3228_PD_VPU		6
+-#define RK3228_PD_RKVDEC	7
+-#define RK3228_PD_GPU		8
+-#define RK3228_PD_PERI		9
+-#define RK3228_PD_GMAC		10
 -
--/* iomg bit definition */
--#define MUX_M0		0
--#define MUX_M1		1
--#define MUX_M2		2
--#define MUX_M3		3
--#define MUX_M4		4
--#define MUX_M5		5
--#define MUX_M6		6
--#define MUX_M7		7
--
--/* iocg bit definition */
--#define PULL_MASK	(3)
--#define PULL_DIS	(0)
--#define PULL_UP		(1 << 0)
--#define PULL_DOWN	(1 << 1)
--
--/* drive strength definition */
--#define DRIVE_MASK	(7 << 4)
--#define DRIVE1_02MA	(0 << 4)
--#define DRIVE1_04MA	(1 << 4)
--#define DRIVE1_08MA	(2 << 4)
--#define DRIVE1_10MA	(3 << 4)
--#define DRIVE2_02MA	(0 << 4)
--#define DRIVE2_04MA	(1 << 4)
--#define DRIVE2_08MA	(2 << 4)
--#define DRIVE2_10MA	(3 << 4)
--#define DRIVE3_04MA	(0 << 4)
--#define DRIVE3_08MA	(1 << 4)
--#define DRIVE3_12MA	(2 << 4)
--#define DRIVE3_16MA	(3 << 4)
--#define DRIVE3_20MA	(4 << 4)
--#define DRIVE3_24MA	(5 << 4)
--#define DRIVE3_32MA	(6 << 4)
--#define DRIVE3_40MA	(7 << 4)
--#define DRIVE4_02MA	(0 << 4)
--#define DRIVE4_04MA	(2 << 4)
--#define DRIVE4_08MA	(4 << 4)
--#define DRIVE4_10MA	(6 << 4)
--
--/* drive strength definition for hi3660 */
--#define DRIVE6_MASK	(15 << 4)
--#define DRIVE6_04MA	(0 << 4)
--#define DRIVE6_12MA	(4 << 4)
--#define DRIVE6_19MA	(8 << 4)
--#define DRIVE6_27MA	(10 << 4)
--#define DRIVE6_32MA	(15 << 4)
--#define DRIVE7_02MA	(0 << 4)
--#define DRIVE7_04MA	(1 << 4)
--#define DRIVE7_06MA	(2 << 4)
--#define DRIVE7_08MA	(3 << 4)
--#define DRIVE7_10MA	(4 << 4)
--#define DRIVE7_12MA	(5 << 4)
--#define DRIVE7_14MA	(6 << 4)
--#define DRIVE7_16MA	(7 << 4)
 -#endif
+diff --git a/include/dt-bindings/power/rk3288-power.h b/include/dt-bindings/power/rk3288-power.h
+deleted file mode 100644
+index f710b56ccd81..000000000000
+--- a/include/dt-bindings/power/rk3288-power.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_BINDINGS_POWER_RK3288_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3288_POWER_H__
+-
+-/**
+- * RK3288 Power Domain and Voltage Domain Summary.
+- */
+-
+-/* VD_CORE */
+-#define RK3288_PD_A17_0		0
+-#define RK3288_PD_A17_1		1
+-#define RK3288_PD_A17_2		2
+-#define RK3288_PD_A17_3		3
+-#define RK3288_PD_SCU		4
+-#define RK3288_PD_DEBUG		5
+-#define RK3288_PD_MEM		6
+-
+-/* VD_LOGIC */
+-#define RK3288_PD_BUS		7
+-#define RK3288_PD_PERI		8
+-#define RK3288_PD_VIO		9
+-#define RK3288_PD_ALIVE		10
+-#define RK3288_PD_HEVC		11
+-#define RK3288_PD_VIDEO		12
+-
+-/* VD_GPU */
+-#define RK3288_PD_GPU		13
+-
+-/* VD_PMU */
+-#define RK3288_PD_PMU		14
+-
+-#endif
+diff --git a/include/dt-bindings/power/rk3328-power.h b/include/dt-bindings/power/rk3328-power.h
+deleted file mode 100644
+index 02e3d7fc1cce..000000000000
+--- a/include/dt-bindings/power/rk3328-power.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_BINDINGS_POWER_RK3328_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3328_POWER_H__
+-
+-/**
+- * RK3328 idle id Summary.
+- */
+-#define RK3328_PD_CORE		0
+-#define RK3328_PD_GPU		1
+-#define RK3328_PD_BUS		2
+-#define RK3328_PD_MSCH		3
+-#define RK3328_PD_PERI		4
+-#define RK3328_PD_VIDEO		5
+-#define RK3328_PD_HEVC		6
+-#define RK3328_PD_SYS		7
+-#define RK3328_PD_VPU		8
+-#define RK3328_PD_VIO		9
+-
+-#endif
+diff --git a/include/dt-bindings/power/rk3399-power.h b/include/dt-bindings/power/rk3399-power.h
+deleted file mode 100644
+index 168b3bfbd6f5..000000000000
+--- a/include/dt-bindings/power/rk3399-power.h
++++ /dev/null
+@@ -1,53 +0,0 @@
+-#ifndef __DT_BINDINGS_POWER_RK3399_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3399_POWER_H__
+-
+-/* VD_CORE_L */
+-#define RK3399_PD_A53_L0	0
+-#define RK3399_PD_A53_L1	1
+-#define RK3399_PD_A53_L2	2
+-#define RK3399_PD_A53_L3	3
+-#define RK3399_PD_SCU_L		4
+-
+-/* VD_CORE_B */
+-#define RK3399_PD_A72_B0	5
+-#define RK3399_PD_A72_B1	6
+-#define RK3399_PD_SCU_B		7
+-
+-/* VD_LOGIC */
+-#define RK3399_PD_TCPD0		8
+-#define RK3399_PD_TCPD1		9
+-#define RK3399_PD_CCI		10
+-#define RK3399_PD_CCI0		11
+-#define RK3399_PD_CCI1		12
+-#define RK3399_PD_PERILP	13
+-#define RK3399_PD_PERIHP	14
+-#define RK3399_PD_VIO		15
+-#define RK3399_PD_VO		16
+-#define RK3399_PD_VOPB		17
+-#define RK3399_PD_VOPL		18
+-#define RK3399_PD_ISP0		19
+-#define RK3399_PD_ISP1		20
+-#define RK3399_PD_HDCP		21
+-#define RK3399_PD_GMAC		22
+-#define RK3399_PD_EMMC		23
+-#define RK3399_PD_USB3		24
+-#define RK3399_PD_EDP		25
+-#define RK3399_PD_GIC		26
+-#define RK3399_PD_SD		27
+-#define RK3399_PD_SDIOAUDIO	28
+-#define RK3399_PD_ALIVE		29
+-
+-/* VD_CENTER */
+-#define RK3399_PD_CENTER	30
+-#define RK3399_PD_VCODEC	31
+-#define RK3399_PD_VDU		32
+-#define RK3399_PD_RGA		33
+-#define RK3399_PD_IEP		34
+-
+-/* VD_GPU */
+-#define RK3399_PD_GPU		35
+-
+-/* VD_PMU */
+-#define RK3399_PD_PMU		36
+-
+-#endif
+diff --git a/include/dt-bindings/power/rk3568-power.h b/include/dt-bindings/power/rk3568-power.h
+deleted file mode 100644
+index 6cc1af1a9d26..000000000000
+--- a/include/dt-bindings/power/rk3568-power.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_BINDINGS_POWER_RK3568_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3568_POWER_H__
+-
+-/* VD_CORE */
+-#define RK3568_PD_CPU_0		0
+-#define RK3568_PD_CPU_1		1
+-#define RK3568_PD_CPU_2		2
+-#define RK3568_PD_CPU_3		3
+-#define RK3568_PD_CORE_ALIVE	4
+-
+-/* VD_PMU */
+-#define RK3568_PD_PMU		5
+-
+-/* VD_NPU */
+-#define RK3568_PD_NPU		6
+-
+-/* VD_GPU */
+-#define RK3568_PD_GPU		7
+-
+-/* VD_LOGIC */
+-#define RK3568_PD_VI		8
+-#define RK3568_PD_VO		9
+-#define RK3568_PD_RGA		10
+-#define RK3568_PD_VPU		11
+-#define RK3568_PD_CENTER	12
+-#define RK3568_PD_RKVDEC	13
+-#define RK3568_PD_RKVENC	14
+-#define RK3568_PD_PIPE		15
+-#define RK3568_PD_LOGIC_ALIVE	16
+-
+-#endif
+diff --git a/include/dt-bindings/power/rk3588-power.h b/include/dt-bindings/power/rk3588-power.h
+deleted file mode 100644
+index 1b92fec013cb..000000000000
+--- a/include/dt-bindings/power/rk3588-power.h
++++ /dev/null
+@@ -1,69 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0 or MIT) */
+-#ifndef __DT_BINDINGS_POWER_RK3588_POWER_H__
+-#define __DT_BINDINGS_POWER_RK3588_POWER_H__
+-
+-/* VD_LITDSU */
+-#define RK3588_PD_CPU_0		0
+-#define RK3588_PD_CPU_1		1
+-#define RK3588_PD_CPU_2		2
+-#define RK3588_PD_CPU_3		3
+-
+-/* VD_BIGCORE0 */
+-#define RK3588_PD_CPU_4		4
+-#define RK3588_PD_CPU_5		5
+-
+-/* VD_BIGCORE1 */
+-#define RK3588_PD_CPU_6		6
+-#define RK3588_PD_CPU_7		7
+-
+-/* VD_NPU */
+-#define RK3588_PD_NPU		8
+-#define RK3588_PD_NPUTOP	9
+-#define RK3588_PD_NPU1		10
+-#define RK3588_PD_NPU2		11
+-
+-/* VD_GPU */
+-#define RK3588_PD_GPU		12
+-
+-/* VD_VCODEC */
+-#define RK3588_PD_VCODEC	13
+-#define RK3588_PD_RKVDEC0	14
+-#define RK3588_PD_RKVDEC1	15
+-#define RK3588_PD_VENC0		16
+-#define RK3588_PD_VENC1		17
+-
+-/* VD_DD01 */
+-#define RK3588_PD_DDR01		18
+-
+-/* VD_DD23 */
+-#define RK3588_PD_DDR23		19
+-
+-/* VD_LOGIC */
+-#define RK3588_PD_CENTER	20
+-#define RK3588_PD_VDPU		21
+-#define RK3588_PD_RGA30		22
+-#define RK3588_PD_AV1		23
+-#define RK3588_PD_VOP		24
+-#define RK3588_PD_VO0		25
+-#define RK3588_PD_VO1		26
+-#define RK3588_PD_VI		27
+-#define RK3588_PD_ISP1		28
+-#define RK3588_PD_FEC		29
+-#define RK3588_PD_RGA31		30
+-#define RK3588_PD_USB		31
+-#define RK3588_PD_PHP		32
+-#define RK3588_PD_GMAC		33
+-#define RK3588_PD_PCIE		34
+-#define RK3588_PD_NVM		35
+-#define RK3588_PD_NVM0		36
+-#define RK3588_PD_SDIO		37
+-#define RK3588_PD_AUDIO		38
+-#define RK3588_PD_SECURE	39
+-#define RK3588_PD_SDMMC		40
+-#define RK3588_PD_CRYPTO	41
+-#define RK3588_PD_BUS		42
+-
+-/* VD_PMU */
+-#define RK3588_PD_PMU1		43
+-
+-#endif
+diff --git a/include/dt-bindings/power/rockchip,rv1126-power.h b/include/dt-bindings/power/rockchip,rv1126-power.h
+deleted file mode 100644
+index 38a68e000d38..000000000000
+--- a/include/dt-bindings/power/rockchip,rv1126-power.h
++++ /dev/null
+@@ -1,35 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-
+-#ifndef __DT_BINDINGS_POWER_RV1126_POWER_H__
+-#define __DT_BINDINGS_POWER_RV1126_POWER_H__
+-
+-/* VD_CORE */
+-#define RV1126_PD_CPU_0		0
+-#define RV1126_PD_CPU_1		1
+-#define RV1126_PD_CPU_2		2
+-#define RV1126_PD_CPU_3		3
+-#define RV1126_PD_CORE_ALIVE	4
+-
+-/* VD_PMU */
+-#define RV1126_PD_PMU		5
+-#define RV1126_PD_PMU_ALIVE	6
+-
+-/* VD_NPU */
+-#define RV1126_PD_NPU		7
+-
+-/* VD_VEPU */
+-#define RV1126_PD_VEPU		8
+-
+-/* VD_LOGIC */
+-#define RV1126_PD_VI		9
+-#define RV1126_PD_VO		10
+-#define RV1126_PD_ISPP		11
+-#define RV1126_PD_VDPU		12
+-#define RV1126_PD_CRYPTO	13
+-#define RV1126_PD_DDR		14
+-#define RV1126_PD_NVM		15
+-#define RV1126_PD_SDIO		16
+-#define RV1126_PD_USB		17
+-#define RV1126_PD_LOGIC_ALIVE	18
+-
+-#endif
+diff --git a/include/dt-bindings/reset/rockchip,rk3588-cru.h b/include/dt-bindings/reset/rockchip,rk3588-cru.h
+deleted file mode 100644
+index 738e56aead93..000000000000
+--- a/include/dt-bindings/reset/rockchip,rk3588-cru.h
++++ /dev/null
+@@ -1,754 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0 or MIT) */
+-/*
+- * Copyright (c) 2021 Rockchip Electronics Co. Ltd.
+- * Copyright (c) 2022 Collabora Ltd.
+- *
+- * Author: Elaine Zhang <zhangqing@rock-chips.com>
+- * Author: Sebastian Reichel <sebastian.reichel@collabora.com>
+- */
+-
+-#ifndef _DT_BINDINGS_RESET_ROCKCHIP_RK3588_H
+-#define _DT_BINDINGS_RESET_ROCKCHIP_RK3588_H
+-
+-#define SRST_A_TOP_BIU			0
+-#define SRST_P_TOP_BIU			1
+-#define SRST_P_CSIPHY0			2
+-#define SRST_CSIPHY0			3
+-#define SRST_P_CSIPHY1			4
+-#define SRST_CSIPHY1			5
+-#define SRST_A_TOP_M500_BIU		6
+-
+-#define SRST_A_TOP_M400_BIU		7
+-#define SRST_A_TOP_S200_BIU		8
+-#define SRST_A_TOP_S400_BIU		9
+-#define SRST_A_TOP_M300_BIU		10
+-#define SRST_USBDP_COMBO_PHY0_INIT	11
+-#define SRST_USBDP_COMBO_PHY0_CMN	12
+-#define SRST_USBDP_COMBO_PHY0_LANE	13
+-#define SRST_USBDP_COMBO_PHY0_PCS	14
+-#define SRST_USBDP_COMBO_PHY1_INIT	15
+-
+-#define SRST_USBDP_COMBO_PHY1_CMN	16
+-#define SRST_USBDP_COMBO_PHY1_LANE	17
+-#define SRST_USBDP_COMBO_PHY1_PCS	18
+-#define SRST_DCPHY0			19
+-#define SRST_P_MIPI_DCPHY0		20
+-#define SRST_P_MIPI_DCPHY0_GRF		21
+-
+-#define SRST_DCPHY1			22
+-#define SRST_P_MIPI_DCPHY1		23
+-#define SRST_P_MIPI_DCPHY1_GRF		24
+-#define SRST_P_APB2ASB_SLV_CDPHY	25
+-#define SRST_P_APB2ASB_SLV_CSIPHY	26
+-#define SRST_P_APB2ASB_SLV_VCCIO3_5	27
+-#define SRST_P_APB2ASB_SLV_VCCIO6	28
+-#define SRST_P_APB2ASB_SLV_EMMCIO	29
+-#define SRST_P_APB2ASB_SLV_IOC_TOP	30
+-#define SRST_P_APB2ASB_SLV_IOC_RIGHT	31
+-
+-#define SRST_P_CRU			32
+-#define SRST_A_CHANNEL_SECURE2VO1USB	33
+-#define SRST_A_CHANNEL_SECURE2CENTER	34
+-#define SRST_H_CHANNEL_SECURE2VO1USB	35
+-#define SRST_H_CHANNEL_SECURE2CENTER	36
+-
+-#define SRST_P_CHANNEL_SECURE2VO1USB	37
+-#define SRST_P_CHANNEL_SECURE2CENTER	38
+-
+-#define SRST_H_AUDIO_BIU		39
+-#define SRST_P_AUDIO_BIU		40
+-#define SRST_H_I2S0_8CH			41
+-#define SRST_M_I2S0_8CH_TX		42
+-#define SRST_M_I2S0_8CH_RX		43
+-#define SRST_P_ACDCDIG			44
+-#define SRST_H_I2S2_2CH			45
+-#define SRST_H_I2S3_2CH			46
+-
+-#define SRST_M_I2S2_2CH			47
+-#define SRST_M_I2S3_2CH			48
+-#define SRST_DAC_ACDCDIG		49
+-#define SRST_H_SPDIF0			50
+-
+-#define SRST_M_SPDIF0			51
+-#define SRST_H_SPDIF1			52
+-#define SRST_M_SPDIF1			53
+-#define SRST_H_PDM1			54
+-#define SRST_PDM1			55
+-
+-#define SRST_A_BUS_BIU			56
+-#define SRST_P_BUS_BIU			57
+-#define SRST_A_GIC			58
+-#define SRST_A_GIC_DBG			59
+-#define SRST_A_DMAC0			60
+-#define SRST_A_DMAC1			61
+-#define SRST_A_DMAC2			62
+-#define SRST_P_I2C1			63
+-#define SRST_P_I2C2			64
+-#define SRST_P_I2C3			65
+-#define SRST_P_I2C4			66
+-#define SRST_P_I2C5			67
+-#define SRST_P_I2C6			68
+-#define SRST_P_I2C7			69
+-#define SRST_P_I2C8			70
+-
+-#define SRST_I2C1			71
+-#define SRST_I2C2			72
+-#define SRST_I2C3			73
+-#define SRST_I2C4			74
+-#define SRST_I2C5			75
+-#define SRST_I2C6			76
+-#define SRST_I2C7			77
+-#define SRST_I2C8			78
+-#define SRST_P_CAN0			79
+-#define SRST_CAN0			80
+-#define SRST_P_CAN1			81
+-#define SRST_CAN1			82
+-#define SRST_P_CAN2			83
+-#define SRST_CAN2			84
+-#define SRST_P_SARADC			85
+-
+-#define SRST_P_TSADC			86
+-#define SRST_TSADC			87
+-#define SRST_P_UART1			88
+-#define SRST_P_UART2			89
+-#define SRST_P_UART3			90
+-#define SRST_P_UART4			91
+-#define SRST_P_UART5			92
+-#define SRST_P_UART6			93
+-#define SRST_P_UART7			94
+-#define SRST_P_UART8			95
+-#define SRST_P_UART9			96
+-#define SRST_S_UART1			97
+-
+-#define SRST_S_UART2			98
+-#define SRST_S_UART3			99
+-#define SRST_S_UART4			100
+-#define SRST_S_UART5			101
+-#define SRST_S_UART6			102
+-#define SRST_S_UART7			103
+-
+-#define SRST_S_UART8			104
+-#define SRST_S_UART9			105
+-#define SRST_P_SPI0			106
+-#define SRST_P_SPI1			107
+-#define SRST_P_SPI2			108
+-#define SRST_P_SPI3			109
+-#define SRST_P_SPI4			110
+-#define SRST_SPI0			111
+-#define SRST_SPI1			112
+-#define SRST_SPI2			113
+-#define SRST_SPI3			114
+-#define SRST_SPI4			115
+-
+-#define SRST_P_WDT0			116
+-#define SRST_T_WDT0			117
+-#define SRST_P_SYS_GRF			118
+-#define SRST_P_PWM1			119
+-#define SRST_PWM1			120
+-#define SRST_P_PWM2			121
+-#define SRST_PWM2			122
+-#define SRST_P_PWM3			123
+-#define SRST_PWM3			124
+-#define SRST_P_BUSTIMER0		125
+-#define SRST_P_BUSTIMER1		126
+-#define SRST_BUSTIMER0			127
+-
+-#define SRST_BUSTIMER1			128
+-#define SRST_BUSTIMER2			129
+-#define SRST_BUSTIMER3			130
+-#define SRST_BUSTIMER4			131
+-#define SRST_BUSTIMER5			132
+-#define SRST_BUSTIMER6			133
+-#define SRST_BUSTIMER7			134
+-#define SRST_BUSTIMER8			135
+-#define SRST_BUSTIMER9			136
+-#define SRST_BUSTIMER10			137
+-#define SRST_BUSTIMER11			138
+-#define SRST_P_MAILBOX0			139
+-#define SRST_P_MAILBOX1			140
+-#define SRST_P_MAILBOX2			141
+-#define SRST_P_GPIO1			142
+-#define SRST_GPIO1			143
+-
+-#define SRST_P_GPIO2			144
+-#define SRST_GPIO2			145
+-#define SRST_P_GPIO3			146
+-#define SRST_GPIO3			147
+-#define SRST_P_GPIO4			148
+-#define SRST_GPIO4			149
+-#define SRST_A_DECOM			150
+-#define SRST_P_DECOM			151
+-#define SRST_D_DECOM			152
+-#define SRST_P_TOP			153
+-#define SRST_A_GICADB_GIC2CORE_BUS	154
+-#define SRST_P_DFT2APB			155
+-#define SRST_P_APB2ASB_MST_TOP		156
+-#define SRST_P_APB2ASB_MST_CDPHY	157
+-#define SRST_P_APB2ASB_MST_BOT_RIGHT	158
+-
+-#define SRST_P_APB2ASB_MST_IOC_TOP	159
+-#define SRST_P_APB2ASB_MST_IOC_RIGHT	160
+-#define SRST_P_APB2ASB_MST_CSIPHY	161
+-#define SRST_P_APB2ASB_MST_VCCIO3_5	162
+-#define SRST_P_APB2ASB_MST_VCCIO6	163
+-#define SRST_P_APB2ASB_MST_EMMCIO	164
+-#define SRST_A_SPINLOCK			165
+-#define SRST_P_OTPC_NS			166
+-#define SRST_OTPC_NS			167
+-#define SRST_OTPC_ARB			168
+-
+-#define SRST_P_BUSIOC			169
+-#define SRST_P_PMUCM0_INTMUX		170
+-#define SRST_P_DDRCM0_INTMUX		171
+-
+-#define SRST_P_DDR_DFICTL_CH0		172
+-#define SRST_P_DDR_MON_CH0		173
+-#define SRST_P_DDR_STANDBY_CH0		174
+-#define SRST_P_DDR_UPCTL_CH0		175
+-#define SRST_TM_DDR_MON_CH0		176
+-#define SRST_P_DDR_GRF_CH01		177
+-#define SRST_DFI_CH0			178
+-#define SRST_SBR_CH0			179
+-#define SRST_DDR_UPCTL_CH0		180
+-#define SRST_DDR_DFICTL_CH0		181
+-#define SRST_DDR_MON_CH0		182
+-#define SRST_DDR_STANDBY_CH0		183
+-#define SRST_A_DDR_UPCTL_CH0		184
+-#define SRST_P_DDR_DFICTL_CH1		185
+-#define SRST_P_DDR_MON_CH1		186
+-#define SRST_P_DDR_STANDBY_CH1		187
+-
+-#define SRST_P_DDR_UPCTL_CH1		188
+-#define SRST_TM_DDR_MON_CH1		189
+-#define SRST_DFI_CH1			190
+-#define SRST_SBR_CH1			191
+-#define SRST_DDR_UPCTL_CH1		192
+-#define SRST_DDR_DFICTL_CH1		193
+-#define SRST_DDR_MON_CH1		194
+-#define SRST_DDR_STANDBY_CH1		195
+-#define SRST_A_DDR_UPCTL_CH1		196
+-#define SRST_A_DDR01_MSCH0		197
+-#define SRST_A_DDR01_RS_MSCH0		198
+-#define SRST_A_DDR01_FRS_MSCH0		199
+-
+-#define SRST_A_DDR01_SCRAMBLE0		200
+-#define SRST_A_DDR01_FRS_SCRAMBLE0	201
+-#define SRST_A_DDR01_MSCH1		202
+-#define SRST_A_DDR01_RS_MSCH1		203
+-#define SRST_A_DDR01_FRS_MSCH1		204
+-#define SRST_A_DDR01_SCRAMBLE1		205
+-#define SRST_A_DDR01_FRS_SCRAMBLE1	206
+-#define SRST_P_DDR01_MSCH0		207
+-#define SRST_P_DDR01_MSCH1		208
+-
+-#define SRST_P_DDR_DFICTL_CH2		209
+-#define SRST_P_DDR_MON_CH2		210
+-#define SRST_P_DDR_STANDBY_CH2		211
+-#define SRST_P_DDR_UPCTL_CH2		212
+-#define SRST_TM_DDR_MON_CH2		213
+-#define SRST_P_DDR_GRF_CH23		214
+-#define SRST_DFI_CH2			215
+-#define SRST_SBR_CH2			216
+-#define SRST_DDR_UPCTL_CH2		217
+-#define SRST_DDR_DFICTL_CH2		218
+-#define SRST_DDR_MON_CH2		219
+-#define SRST_DDR_STANDBY_CH2		220
+-#define SRST_A_DDR_UPCTL_CH2		221
+-#define SRST_P_DDR_DFICTL_CH3		222
+-#define SRST_P_DDR_MON_CH3		223
+-#define SRST_P_DDR_STANDBY_CH3		224
+-
+-#define SRST_P_DDR_UPCTL_CH3		225
+-#define SRST_TM_DDR_MON_CH3		226
+-#define SRST_DFI_CH3			227
+-#define SRST_SBR_CH3			228
+-#define SRST_DDR_UPCTL_CH3		229
+-#define SRST_DDR_DFICTL_CH3		230
+-#define SRST_DDR_MON_CH3		231
+-#define SRST_DDR_STANDBY_CH3		232
+-#define SRST_A_DDR_UPCTL_CH3		233
+-#define SRST_A_DDR23_MSCH2		234
+-#define SRST_A_DDR23_RS_MSCH2		235
+-#define SRST_A_DDR23_FRS_MSCH2		236
+-
+-#define SRST_A_DDR23_SCRAMBLE2		237
+-#define SRST_A_DDR23_FRS_SCRAMBLE2	238
+-#define SRST_A_DDR23_MSCH3		239
+-#define SRST_A_DDR23_RS_MSCH3		240
+-#define SRST_A_DDR23_FRS_MSCH3		241
+-#define SRST_A_DDR23_SCRAMBLE3		242
+-#define SRST_A_DDR23_FRS_SCRAMBLE3	243
+-#define SRST_P_DDR23_MSCH2		244
+-#define SRST_P_DDR23_MSCH3		245
+-
+-#define SRST_ISP1			246
+-#define SRST_ISP1_VICAP			247
+-#define SRST_A_ISP1_BIU			248
+-#define SRST_H_ISP1_BIU			249
+-
+-#define SRST_A_RKNN1			250
+-#define SRST_A_RKNN1_BIU		251
+-#define SRST_H_RKNN1			252
+-#define SRST_H_RKNN1_BIU		253
+-
+-#define SRST_A_RKNN2			254
+-#define SRST_A_RKNN2_BIU		255
+-#define SRST_H_RKNN2			256
+-#define SRST_H_RKNN2_BIU		257
+-
+-#define SRST_A_RKNN_DSU0		258
+-#define SRST_P_NPUTOP_BIU		259
+-#define SRST_P_NPU_TIMER		260
+-#define SRST_NPUTIMER0			261
+-#define SRST_NPUTIMER1			262
+-#define SRST_P_NPU_WDT			263
+-#define SRST_T_NPU_WDT			264
+-#define SRST_P_NPU_PVTM			265
+-#define SRST_P_NPU_GRF			266
+-#define SRST_NPU_PVTM			267
+-
+-#define SRST_NPU_PVTPLL			268
+-#define SRST_H_NPU_CM0_BIU		269
+-#define SRST_F_NPU_CM0_CORE		270
+-#define SRST_T_NPU_CM0_JTAG		271
+-#define SRST_A_RKNN0			272
+-#define SRST_A_RKNN0_BIU		273
+-#define SRST_H_RKNN0			274
+-#define SRST_H_RKNN0_BIU		275
+-
+-#define SRST_H_NVM_BIU			276
+-#define SRST_A_NVM_BIU			277
+-#define SRST_H_EMMC			278
+-#define SRST_A_EMMC			279
+-#define SRST_C_EMMC			280
+-#define SRST_B_EMMC			281
+-#define SRST_T_EMMC			282
+-#define SRST_S_SFC			283
+-#define SRST_H_SFC			284
+-#define SRST_H_SFC_XIP			285
+-
+-#define SRST_P_GRF			286
+-#define SRST_P_DEC_BIU			287
+-#define SRST_P_PHP_BIU			288
+-#define SRST_A_PCIE_GRIDGE		289
+-#define SRST_A_PHP_BIU			290
+-#define SRST_A_GMAC0			291
+-#define SRST_A_GMAC1			292
+-#define SRST_A_PCIE_BIU			293
+-#define SRST_PCIE0_POWER_UP		294
+-#define SRST_PCIE1_POWER_UP		295
+-#define SRST_PCIE2_POWER_UP		296
+-
+-#define SRST_PCIE3_POWER_UP		297
+-#define SRST_PCIE4_POWER_UP		298
+-#define SRST_P_PCIE0			299
+-#define SRST_P_PCIE1			300
+-#define SRST_P_PCIE2			301
+-#define SRST_P_PCIE3			302
+-
+-#define SRST_P_PCIE4			303
+-#define SRST_A_PHP_GIC_ITS		304
+-#define SRST_A_MMU_PCIE			305
+-#define SRST_A_MMU_PHP			306
+-#define SRST_A_MMU_BIU			307
+-
+-#define SRST_A_USB3OTG2			308
+-
+-#define SRST_PMALIVE0			309
+-#define SRST_PMALIVE1			310
+-#define SRST_PMALIVE2			311
+-#define SRST_A_SATA0			312
+-#define SRST_A_SATA1			313
+-#define SRST_A_SATA2			314
+-#define SRST_RXOOB0			315
+-#define SRST_RXOOB1			316
+-#define SRST_RXOOB2			317
+-#define SRST_ASIC0			318
+-#define SRST_ASIC1			319
+-#define SRST_ASIC2			320
+-
+-#define SRST_A_RKVDEC_CCU		321
+-#define SRST_H_RKVDEC0			322
+-#define SRST_A_RKVDEC0			323
+-#define SRST_H_RKVDEC0_BIU		324
+-#define SRST_A_RKVDEC0_BIU		325
+-#define SRST_RKVDEC0_CA			326
+-#define SRST_RKVDEC0_HEVC_CA		327
+-#define SRST_RKVDEC0_CORE		328
+-
+-#define SRST_H_RKVDEC1			329
+-#define SRST_A_RKVDEC1			330
+-#define SRST_H_RKVDEC1_BIU		331
+-#define SRST_A_RKVDEC1_BIU		332
+-#define SRST_RKVDEC1_CA			333
+-#define SRST_RKVDEC1_HEVC_CA		334
+-#define SRST_RKVDEC1_CORE		335
+-
+-#define SRST_A_USB_BIU			336
+-#define SRST_H_USB_BIU			337
+-#define SRST_A_USB3OTG0			338
+-#define SRST_A_USB3OTG1			339
+-#define SRST_H_HOST0			340
+-#define SRST_H_HOST_ARB0		341
+-#define SRST_H_HOST1			342
+-#define SRST_H_HOST_ARB1		343
+-#define SRST_A_USB_GRF			344
+-#define SRST_C_USB2P0_HOST0		345
+-
+-#define SRST_C_USB2P0_HOST1		346
+-#define SRST_HOST_UTMI0			347
+-#define SRST_HOST_UTMI1			348
+-
+-#define SRST_A_VDPU_BIU			349
+-#define SRST_A_VDPU_LOW_BIU		350
+-#define SRST_H_VDPU_BIU			351
+-#define SRST_A_JPEG_DECODER_BIU		352
+-#define SRST_A_VPU			353
+-#define SRST_H_VPU			354
+-#define SRST_A_JPEG_ENCODER0		355
+-#define SRST_H_JPEG_ENCODER0		356
+-#define SRST_A_JPEG_ENCODER1		357
+-#define SRST_H_JPEG_ENCODER1		358
+-#define SRST_A_JPEG_ENCODER2		359
+-#define SRST_H_JPEG_ENCODER2		360
+-
+-#define SRST_A_JPEG_ENCODER3		361
+-#define SRST_H_JPEG_ENCODER3		362
+-#define SRST_A_JPEG_DECODER		363
+-#define SRST_H_JPEG_DECODER		364
+-#define SRST_H_IEP2P0			365
+-#define SRST_A_IEP2P0			366
+-#define SRST_IEP2P0_CORE		367
+-#define SRST_H_RGA2			368
+-#define SRST_A_RGA2			369
+-#define SRST_RGA2_CORE			370
+-#define SRST_H_RGA3_0			371
+-#define SRST_A_RGA3_0			372
+-#define SRST_RGA3_0_CORE		373
+-
+-#define SRST_H_RKVENC0_BIU		374
+-#define SRST_A_RKVENC0_BIU		375
+-#define SRST_H_RKVENC0			376
+-#define SRST_A_RKVENC0			377
+-#define SRST_RKVENC0_CORE		378
+-
+-#define SRST_H_RKVENC1_BIU		379
+-#define SRST_A_RKVENC1_BIU		380
+-#define SRST_H_RKVENC1			381
+-#define SRST_A_RKVENC1			382
+-#define SRST_RKVENC1_CORE		383
+-
+-#define SRST_A_VI_BIU			384
+-#define SRST_H_VI_BIU			385
+-#define SRST_P_VI_BIU			386
+-#define SRST_D_VICAP			387
+-#define SRST_A_VICAP			388
+-#define SRST_H_VICAP			389
+-#define SRST_ISP0			390
+-#define SRST_ISP0_VICAP			391
+-
+-#define SRST_FISHEYE0			392
+-#define SRST_FISHEYE1			393
+-#define SRST_P_CSI_HOST_0		394
+-#define SRST_P_CSI_HOST_1		395
+-#define SRST_P_CSI_HOST_2		396
+-#define SRST_P_CSI_HOST_3		397
+-#define SRST_P_CSI_HOST_4		398
+-#define SRST_P_CSI_HOST_5		399
+-
+-#define SRST_CSIHOST0_VICAP		400
+-#define SRST_CSIHOST1_VICAP		401
+-#define SRST_CSIHOST2_VICAP		402
+-#define SRST_CSIHOST3_VICAP		403
+-#define SRST_CSIHOST4_VICAP		404
+-#define SRST_CSIHOST5_VICAP		405
+-#define SRST_CIFIN			406
+-
+-#define SRST_A_VOP_BIU			407
+-#define SRST_A_VOP_LOW_BIU		408
+-#define SRST_H_VOP_BIU			409
+-#define SRST_P_VOP_BIU			410
+-#define SRST_H_VOP			411
+-#define SRST_A_VOP			412
+-#define SRST_D_VOP0			413
+-#define SRST_D_VOP2HDMI_BRIDGE0		414
+-#define SRST_D_VOP2HDMI_BRIDGE1		415
+-
+-#define SRST_D_VOP1			416
+-#define SRST_D_VOP2			417
+-#define SRST_D_VOP3			418
+-#define SRST_P_VOPGRF			419
+-#define SRST_P_DSIHOST0			420
+-#define SRST_P_DSIHOST1			421
+-#define SRST_DSIHOST0			422
+-#define SRST_DSIHOST1			423
+-#define SRST_VOP_PMU			424
+-#define SRST_P_VOP_CHANNEL_BIU		425
+-
+-#define SRST_H_VO0_BIU			426
+-#define SRST_H_VO0_S_BIU		427
+-#define SRST_P_VO0_BIU			428
+-#define SRST_P_VO0_S_BIU		429
+-#define SRST_A_HDCP0_BIU		430
+-#define SRST_P_VO0GRF			431
+-#define SRST_H_HDCP_KEY0		432
+-#define SRST_A_HDCP0			433
+-#define SRST_H_HDCP0			434
+-#define SRST_HDCP0			435
+-
+-#define SRST_P_TRNG0			436
+-#define SRST_DP0			437
+-#define SRST_DP1			438
+-#define SRST_H_I2S4_8CH			439
+-#define SRST_M_I2S4_8CH_TX		440
+-#define SRST_H_I2S8_8CH			441
+-
+-#define SRST_M_I2S8_8CH_TX		442
+-#define SRST_H_SPDIF2_DP0		443
+-#define SRST_M_SPDIF2_DP0		444
+-#define SRST_H_SPDIF5_DP1		445
+-#define SRST_M_SPDIF5_DP1		446
+-
+-#define SRST_A_HDCP1_BIU		447
+-#define SRST_A_VO1_BIU			448
+-#define SRST_H_VOP1_BIU			449
+-#define SRST_H_VOP1_S_BIU		450
+-#define SRST_P_VOP1_BIU			451
+-#define SRST_P_VO1GRF			452
+-#define SRST_P_VO1_S_BIU		453
+-
+-#define SRST_H_I2S7_8CH			454
+-#define SRST_M_I2S7_8CH_RX		455
+-#define SRST_H_HDCP_KEY1		456
+-#define SRST_A_HDCP1			457
+-#define SRST_H_HDCP1			458
+-#define SRST_HDCP1			459
+-#define SRST_P_TRNG1			460
+-#define SRST_P_HDMITX0			461
+-
+-#define SRST_HDMITX0_REF		462
+-#define SRST_P_HDMITX1			463
+-#define SRST_HDMITX1_REF		464
+-#define SRST_A_HDMIRX			465
+-#define SRST_P_HDMIRX			466
+-#define SRST_HDMIRX_REF			467
+-
+-#define SRST_P_EDP0			468
+-#define SRST_EDP0_24M			469
+-#define SRST_P_EDP1			470
+-#define SRST_EDP1_24M			471
+-#define SRST_M_I2S5_8CH_TX		472
+-#define SRST_H_I2S5_8CH			473
+-#define SRST_M_I2S6_8CH_TX		474
+-
+-#define SRST_M_I2S6_8CH_RX		475
+-#define SRST_H_I2S6_8CH			476
+-#define SRST_H_SPDIF3			477
+-#define SRST_M_SPDIF3			478
+-#define SRST_H_SPDIF4			479
+-#define SRST_M_SPDIF4			480
+-#define SRST_H_SPDIFRX0			481
+-#define SRST_M_SPDIFRX0			482
+-#define SRST_H_SPDIFRX1			483
+-#define SRST_M_SPDIFRX1			484
+-
+-#define SRST_H_SPDIFRX2			485
+-#define SRST_M_SPDIFRX2			486
+-#define SRST_LINKSYM_HDMITXPHY0		487
+-#define SRST_LINKSYM_HDMITXPHY1		488
+-#define SRST_VO1_BRIDGE0		489
+-#define SRST_VO1_BRIDGE1		490
+-
+-#define SRST_H_I2S9_8CH			491
+-#define SRST_M_I2S9_8CH_RX		492
+-#define SRST_H_I2S10_8CH		493
+-#define SRST_M_I2S10_8CH_RX		494
+-#define SRST_P_S_HDMIRX			495
+-
+-#define SRST_GPU			496
+-#define SRST_SYS_GPU			497
+-#define SRST_A_S_GPU_BIU		498
+-#define SRST_A_M0_GPU_BIU		499
+-#define SRST_A_M1_GPU_BIU		500
+-#define SRST_A_M2_GPU_BIU		501
+-#define SRST_A_M3_GPU_BIU		502
+-#define SRST_P_GPU_BIU			503
+-#define SRST_P_GPU_PVTM			504
+-
+-#define SRST_GPU_PVTM			505
+-#define SRST_P_GPU_GRF			506
+-#define SRST_GPU_PVTPLL			507
+-#define SRST_GPU_JTAG			508
+-
+-#define SRST_A_AV1_BIU			509
+-#define SRST_A_AV1			510
+-#define SRST_P_AV1_BIU			511
+-#define SRST_P_AV1			512
+-
+-#define SRST_A_DDR_BIU			513
+-#define SRST_A_DMA2DDR			514
+-#define SRST_A_DDR_SHAREMEM		515
+-#define SRST_A_DDR_SHAREMEM_BIU		516
+-#define SRST_A_CENTER_S200_BIU		517
+-#define SRST_A_CENTER_S400_BIU		518
+-#define SRST_H_AHB2APB			519
+-#define SRST_H_CENTER_BIU		520
+-#define SRST_F_DDR_CM0_CORE		521
+-
+-#define SRST_DDR_TIMER0			522
+-#define SRST_DDR_TIMER1			523
+-#define SRST_T_WDT_DDR			524
+-#define SRST_T_DDR_CM0_JTAG		525
+-#define SRST_P_CENTER_GRF		526
+-#define SRST_P_AHB2APB			527
+-#define SRST_P_WDT			528
+-#define SRST_P_TIMER			529
+-#define SRST_P_DMA2DDR			530
+-#define SRST_P_SHAREMEM			531
+-#define SRST_P_CENTER_BIU		532
+-#define SRST_P_CENTER_CHANNEL_BIU	533
+-
+-#define SRST_P_USBDPGRF0		534
+-#define SRST_P_USBDPPHY0		535
+-#define SRST_P_USBDPGRF1		536
+-#define SRST_P_USBDPPHY1		537
+-#define SRST_P_HDPTX0			538
+-#define SRST_P_HDPTX1			539
+-#define SRST_P_APB2ASB_SLV_BOT_RIGHT	540
+-#define SRST_P_USB2PHY_U3_0_GRF0	541
+-#define SRST_P_USB2PHY_U3_1_GRF0	542
+-#define SRST_P_USB2PHY_U2_0_GRF0	543
+-#define SRST_P_USB2PHY_U2_1_GRF0	544
+-#define SRST_HDPTX0_ROPLL		545
+-#define SRST_HDPTX0_LCPLL		546
+-#define SRST_HDPTX0			547
+-#define SRST_HDPTX1_ROPLL		548
+-
+-#define SRST_HDPTX1_LCPLL		549
+-#define SRST_HDPTX1			550
+-#define SRST_HDPTX0_HDMIRXPHY_SET	551
+-#define SRST_USBDP_COMBO_PHY0		552
+-#define SRST_USBDP_COMBO_PHY0_LCPLL	553
+-#define SRST_USBDP_COMBO_PHY0_ROPLL	554
+-#define SRST_USBDP_COMBO_PHY0_PCS_HS	555
+-#define SRST_USBDP_COMBO_PHY1		556
+-#define SRST_USBDP_COMBO_PHY1_LCPLL	557
+-#define SRST_USBDP_COMBO_PHY1_ROPLL	558
+-#define SRST_USBDP_COMBO_PHY1_PCS_HS	559
+-#define SRST_HDMIHDP0			560
+-#define SRST_HDMIHDP1			561
+-
+-#define SRST_A_VO1USB_TOP_BIU		562
+-#define SRST_H_VO1USB_TOP_BIU		563
+-
+-#define SRST_H_SDIO_BIU			564
+-#define SRST_H_SDIO			565
+-#define SRST_SDIO			566
+-
+-#define SRST_H_RGA3_BIU			567
+-#define SRST_A_RGA3_BIU			568
+-#define SRST_H_RGA3_1			569
+-#define SRST_A_RGA3_1			570
+-#define SRST_RGA3_1_CORE		571
+-
+-#define SRST_REF_PIPE_PHY0		572
+-#define SRST_REF_PIPE_PHY1		573
+-#define SRST_REF_PIPE_PHY2		574
+-
+-#define SRST_P_PHPTOP_CRU		575
+-#define SRST_P_PCIE2_GRF0		576
+-#define SRST_P_PCIE2_GRF1		577
+-#define SRST_P_PCIE2_GRF2		578
+-#define SRST_P_PCIE2_PHY0		579
+-#define SRST_P_PCIE2_PHY1		580
+-#define SRST_P_PCIE2_PHY2		581
+-#define SRST_P_PCIE3_PHY		582
+-#define SRST_P_APB2ASB_SLV_CHIP_TOP	583
+-#define SRST_PCIE30_PHY			584
+-
+-#define SRST_H_PMU1_BIU			585
+-#define SRST_P_PMU1_BIU			586
+-#define SRST_H_PMU_CM0_BIU		587
+-#define SRST_F_PMU_CM0_CORE		588
+-#define SRST_T_PMU1_CM0_JTAG		589
+-
+-#define SRST_DDR_FAIL_SAFE		590
+-#define SRST_P_CRU_PMU1			591
+-#define SRST_P_PMU1_GRF			592
+-#define SRST_P_PMU1_IOC			593
+-#define SRST_P_PMU1WDT			594
+-#define SRST_T_PMU1WDT			595
+-#define SRST_P_PMU1TIMER		596
+-#define SRST_PMU1TIMER0			597
+-#define SRST_PMU1TIMER1			598
+-#define SRST_P_PMU1PWM			599
+-#define SRST_PMU1PWM			600
+-
+-#define SRST_P_I2C0			601
+-#define SRST_I2C0			602
+-#define SRST_S_UART0			603
+-#define SRST_P_UART0			604
+-#define SRST_H_I2S1_8CH			605
+-#define SRST_M_I2S1_8CH_TX		606
+-#define SRST_M_I2S1_8CH_RX		607
+-#define SRST_H_PDM0			608
+-#define SRST_PDM0			609
+-
+-#define SRST_H_VAD			610
+-#define SRST_HDPTX0_INIT		611
+-#define SRST_HDPTX0_CMN			612
+-#define SRST_HDPTX0_LANE		613
+-#define SRST_HDPTX1_INIT		614
+-
+-#define SRST_HDPTX1_CMN			615
+-#define SRST_HDPTX1_LANE		616
+-#define SRST_M_MIPI_DCPHY0		617
+-#define SRST_S_MIPI_DCPHY0		618
+-#define SRST_M_MIPI_DCPHY1		619
+-#define SRST_S_MIPI_DCPHY1		620
+-#define SRST_OTGPHY_U3_0		621
+-#define SRST_OTGPHY_U3_1		622
+-#define SRST_OTGPHY_U2_0		623
+-#define SRST_OTGPHY_U2_1		624
+-
+-#define SRST_P_PMU0GRF			625
+-#define SRST_P_PMU0IOC			626
+-#define SRST_P_GPIO0			627
+-#define SRST_GPIO0			628
+-
+-#define SRST_A_SECURE_NS_BIU		629
+-#define SRST_H_SECURE_NS_BIU		630
+-#define SRST_A_SECURE_S_BIU		631
+-#define SRST_H_SECURE_S_BIU		632
+-#define SRST_P_SECURE_S_BIU		633
+-#define SRST_CRYPTO_CORE		634
+-
+-#define SRST_CRYPTO_PKA			635
+-#define SRST_CRYPTO_RNG			636
+-#define SRST_A_CRYPTO			637
+-#define SRST_H_CRYPTO			638
+-#define SRST_KEYLADDER_CORE		639
+-#define SRST_KEYLADDER_RNG		640
+-#define SRST_A_KEYLADDER		641
+-#define SRST_H_KEYLADDER		642
+-#define SRST_P_OTPC_S			643
+-#define SRST_OTPC_S			644
+-#define SRST_WDT_S			645
+-
+-#define SRST_T_WDT_S			646
+-#define SRST_H_BOOTROM			647
+-#define SRST_A_DCF			648
+-#define SRST_P_DCF			649
+-#define SRST_H_BOOTROM_NS		650
+-#define SRST_P_KEYLADDER		651
+-#define SRST_H_TRNG_S			652
+-
+-#define SRST_H_TRNG_NS			653
+-#define SRST_D_SDMMC_BUFFER		654
+-#define SRST_H_SDMMC			655
+-#define SRST_H_SDMMC_BUFFER		656
+-#define SRST_SDMMC			657
+-#define SRST_P_TRNG_CHK			658
+-#define SRST_TRNG_S			659
+-
+-#endif
+diff --git a/include/dt-bindings/soc/rockchip,boot-mode.h b/include/dt-bindings/soc/rockchip,boot-mode.h
+deleted file mode 100644
+index 4b0914c0989d..000000000000
+--- a/include/dt-bindings/soc/rockchip,boot-mode.h
++++ /dev/null
+@@ -1,16 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __ROCKCHIP_BOOT_MODE_H
+-#define __ROCKCHIP_BOOT_MODE_H
+-
+-/*high 24 bits is tag, low 8 bits is type*/
+-#define REBOOT_FLAG		0x5242C300
+-/* normal boot */
+-#define BOOT_NORMAL		(REBOOT_FLAG + 0)
+-/* enter bootloader rockusb mode */
+-#define BOOT_BL_DOWNLOAD	(REBOOT_FLAG + 1)
+-/* enter recovery */
+-#define BOOT_RECOVERY		(REBOOT_FLAG + 3)
+- /* enter fastboot mode */
+-#define BOOT_FASTBOOT		(REBOOT_FLAG + 9)
+-
+-#endif
+diff --git a/include/dt-bindings/soc/rockchip,vop2.h b/include/dt-bindings/soc/rockchip,vop2.h
+deleted file mode 100644
+index 668f199df9f0..000000000000
+--- a/include/dt-bindings/soc/rockchip,vop2.h
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
+-
+-#ifndef __DT_BINDINGS_ROCKCHIP_VOP2_H
+-#define __DT_BINDINGS_ROCKCHIP_VOP2_H
+-
+-#define ROCKCHIP_VOP2_EP_RGB0	1
+-#define ROCKCHIP_VOP2_EP_HDMI0	2
+-#define ROCKCHIP_VOP2_EP_EDP0	3
+-#define ROCKCHIP_VOP2_EP_MIPI0	4
+-#define ROCKCHIP_VOP2_EP_LVDS0	5
+-#define ROCKCHIP_VOP2_EP_MIPI1	6
+-#define ROCKCHIP_VOP2_EP_LVDS1	7
+-#define ROCKCHIP_VOP2_EP_HDMI1	8
+-#define ROCKCHIP_VOP2_EP_EDP1	9
+-#define ROCKCHIP_VOP2_EP_DP0	10
+-#define ROCKCHIP_VOP2_EP_DP1	11
+-
+-#endif /* __DT_BINDINGS_ROCKCHIP_VOP2_H */
 
 -- 
 2.44.0
