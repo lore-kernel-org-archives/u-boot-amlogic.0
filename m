@@ -2,57 +2,57 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C610CD128E
-	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:20:52 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web10.8931.1711055048768859176
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BD5CD1281
+	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:21:02 +0000 (UTC)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+ by mx.groups.io with SMTP id smtpd.web11.8709.1711055082781124568
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Mar 2024 14:04:09 -0700
+ Thu, 21 Mar 2024 14:04:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=c+8N16lS;
- spf=pass (domain: linaro.org, ip: 209.85.128.51, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4146f2bf8ecso10233215e9.3
-        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:08 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=HSunwDlG;
+ spf=pass (domain: linaro.org, ip: 209.85.208.169, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d46dd5f222so18419391fa.1
+        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711055047; x=1711659847; darn=groups.io;
+        d=linaro.org; s=google; t=1711055081; x=1711659881; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tkvabzrOo3HALcndOtfv6lyTl/sy+4d96fF0aB5O7Xk=;
-        b=c+8N16lSZdr8r+bFeYm1WYZKPA+jZ8jc6KxxYmFLGKpqI2qcPf7pMDSlqPFdiS2xSr
-         bu4BDJMpSpJZ7EmR8KexifKesnFW20uRg88XogPaqwelPveP/GJipHu9Zvj+vpUTomJZ
-         ghqFwOsKhDmHRq5g0+A2faYpbpyxHtNcyqPpN4fzxhVgH+8PfXy8+xjwjbvlm/7MdN+f
-         IvjETXy99DYawVTuloZsDCefqKeUYEfdG9Cw4pWW25kZ4r/UY8rawxUbFpNK5A9v7+EJ
-         84k8vEGhMoI/0/6JaFppN/fmue8HmYLLEk9Eqez6Gu066rss0s0XMHAtgUBNcSonkUQM
-         N4Xw==
+        bh=xxKAVbqOd2NeaFkTAg+ccSnF4IVs2lxnYIPokcvAF7Q=;
+        b=HSunwDlGUq07Zp3dYyy/ECWdzznFikCGsfcHhJ6kaYfV5wE07YT5m/KZQ8h30mT2Yt
+         xe0YwKyC+sxfdKGz89kSS38+1p1xmP2ODr/Wm3N/sRdxzI0S3seaADmU0BhgYR7hYIXX
+         aYcl3FZ+wvUeUfnt2hOgWMdpYsmI7jHbHF0T9aBcjdC/ig6Sps+1R4Lcw9dRuR2Fyp3f
+         e8is44USKTr9NmTQkya95kH8mk4R81IG3FVz0NfvSx0QIVrILpyIgcc9bFyfVsYB/Kfd
+         MTOkJw08Ud9hRTMuiDSAo9VQMazZhxOdMszjC8VYHraIl1g4FYaDpT6f95xbcn0hh57I
+         MKNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711055047; x=1711659847;
+        d=1e100.net; s=20230601; t=1711055081; x=1711659881;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tkvabzrOo3HALcndOtfv6lyTl/sy+4d96fF0aB5O7Xk=;
-        b=HmAat2bVTFlNXAWrToA9mplMOQ3nE4ZFUspWGQx4uJd5QB2VhYzcmczXzcKCmqWUWS
-         7I4WdKTvj1tenP2oQHfFyHzBzNQETCqMGs75x0uS04eRL4y1A8fzoy+cDhnS5x6Jl3ry
-         ruC2qDP1puILDB8p7P8O6fTf0rs9Ba/6qrEGRWLcBVqOc2xQAsPdSJn5GQifXhjQcoTe
-         ix2Qyt6YvVix7bnBlvNbjOixiKd0844iGKyNF1q6vLnonrYbRLNJTiBI+HFW7RBKH8pQ
-         dOrfxQmus9o3g9UkzMWlAkjz/VZfXRA836MVKzggbDqqSPB7C5NaaT5H4HrbkhkIFuXX
-         v/fg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqBLmJTe32u+H4J12udKTF4VGFn6y2/Cf2HWHk7NivubLLCwodPdxEwRzGteFZhpbd5sIAmdo3g10OtG78u1GO/REr0dE+/Og=
-X-Gm-Message-State: AOJu0Yz9z14hcXWq8QW+XXEeFbRGiIBMMfxwWt4t2jm3xOC7yz2A0A4K
-	uMxwlnA9ZDQoxQZ/l0Yjr4+K0+S5Zd0/IXPuH7AhrIl8gHOq2UCPunMQQLhxlMyYOcUPIJUKe8W
-	1
-X-Google-Smtp-Source: AGHT+IGI2NjPKW48BHXTnnVJHk6aBysg/6z8rNCxksKoj2wVL/uQEvXuvPPLNyTqMUAhDn4JkXa5OA==
-X-Received: by 2002:a05:600c:4f4a:b0:414:24b:2f4e with SMTP id m10-20020a05600c4f4a00b00414024b2f4emr173956wmq.39.1711055046054;
-        Thu, 21 Mar 2024 14:04:06 -0700 (PDT)
+        bh=xxKAVbqOd2NeaFkTAg+ccSnF4IVs2lxnYIPokcvAF7Q=;
+        b=I5kYr7xo1xuSSiJwxq60eLz9bl1r7xQxjqYBzn7pC50BElqBmOhGnb/CsKkIAfAwWM
+         nzxqmzW/zNFB0FYTIxq+lTdjqvGg5NvTFeWbqb1L6nsAnzoiK9khMxYewrqnNZKnTz31
+         Hnh0Y39YWcEXQs5aoJKqha45yPjQnKA8XCxYIYac65qh+eRFtKqQEqBChgHcobpQham6
+         IG2Ir0WZLcnsD6lSe7ygYInd0xx2I5x8T4rwsWhxZdRFAsL2Onqpb+SSRBpBzDOJK5/v
+         Qd1Rjy6m3+pqsqQkP+2UlEIZbHY5Q3mXT+ECERAthbC9zTln3VwfrIFDcIlTH/a526Nb
+         ogSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTvCmMEJRkVogJw4pbDir8h53lckUmAxGrg9wwU4AS1okCd9TKvvdWbeKPJzNURKY5mk5LV8NuO2AdkW6gAbYveao4/cmSkZw=
+X-Gm-Message-State: AOJu0YxKIXLZNuXaSHZKlTKhUOB0dxzGJdYTssH+Zydg0GPabkiZfgRY
+	hlMVPB/fBfmQc4Sb74AoCXp7/PUGvTa3Ne9y4tAuWW/NiIAHKq0xvb5BUHszgFeCX30Fg56m9AF
+	H
+X-Google-Smtp-Source: AGHT+IE7NObhxgNtFmOzGEf6Sz8OhM7utldGKsiMYSflHkO5xVUsm/2bw1r8SDhCMM2OArMZ3wXcww==
+X-Received: by 2002:a2e:9613:0:b0:2d3:b37b:6a50 with SMTP id v19-20020a2e9613000000b002d3b37b6a50mr445516ljh.19.1711055080209;
+        Thu, 21 Mar 2024 14:04:40 -0700 (PDT)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.04
+        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:04:05 -0700 (PDT)
+        Thu, 21 Mar 2024 14:04:39 -0700 (PDT)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Thu, 21 Mar 2024 21:03:46 +0000
-Subject: [PATCH v2 03/24] sunxi: drop clock dt-binding headers
+Date: Thu, 21 Mar 2024 21:04:06 +0000
+Subject: [PATCH v2 23/24] dt-bindings: drop generic headers
 MIME-Version: 1.0
-Message-Id: <20240321-b4-upstream-dt-headers-v2-3-1eac0df875fe@linaro.org>
+Message-Id: <20240321-b4-upstream-dt-headers-v2-23-1eac0df875fe@linaro.org>
 References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 In-Reply-To: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -85,13 +85,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=82352;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=41760;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=SozRX0oNkjcJ3cjGZ6WF9HFZRzjrmczHegHNJNuDK98=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C3ZfUHvytnVbW9f7aZ/kVvS1aDBkTGzb3njAYOLmT
- 5efRIX7dpSyMAhyMMiKKbKIn1hm2bT2sr3G9gUXYOawMoEMYeDiFICJtMczMkz9d9AiS2KHaNqG
- 70ICx5rinhh7mKn9m89wQ37m9WgXTw6Gv2JOySzCavEnJF4XH3G49PfIGjczqf0OwfevbhGbmx3
- 80RIA
+ bh=zWfKa4UEsXVufBu++zsn/dv5Lxa/f68cV9TltmC8NNY=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/bWfqrk3PVVkv2KhvCPq8+Obd1+XOqQ2749XBt4m
+ HyYDipodpSyMAhyMMiKKbKIn1hm2bT2sr3G9gUXYOawMoEMYeDiFICJTNvF8M/k0+/9NSu6T/57
+ f2FqzM6XMStXRzfOYV/NtN5fbv10PRclhv/Vv5fu0XL/eS+gX1rNUueZz9I1M58tLhQw8n73b+8
+ +y3snAQ==
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -99,2561 +99,1304 @@ Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:20:52 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2215
+ <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:21:02 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2235
 
-Drop in favour of dts/upstream
+Drop all the subsystem headers that are compatible with the headers in
+dts/upstream.
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on AML-S805X-AC
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on AML-S905X-CC
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on BPI-M2S
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on BPI-M5
 ---
- include/dt-bindings/clock/sun20i-d1-ccu.h     | 158 --------------------
- include/dt-bindings/clock/sun20i-d1-r-ccu.h   |  19 ---
- include/dt-bindings/clock/sun4i-a10-ccu.h     | 202 --------------------------
- include/dt-bindings/clock/sun4i-a10-pll2.h    |  53 -------
- include/dt-bindings/clock/sun50i-a64-ccu.h    | 138 ------------------
- include/dt-bindings/clock/sun50i-h6-ccu.h     | 125 ----------------
- include/dt-bindings/clock/sun50i-h6-r-ccu.h   |  27 ----
- include/dt-bindings/clock/sun50i-h616-ccu.h   | 116 ---------------
- include/dt-bindings/clock/sun5i-ccu.h         |  97 -------------
- include/dt-bindings/clock/sun6i-a31-ccu.h     | 193 ------------------------
- include/dt-bindings/clock/sun6i-rtc.h         |  10 --
- include/dt-bindings/clock/sun7i-a20-ccu.h     |  53 -------
- include/dt-bindings/clock/sun8i-a23-a33-ccu.h | 129 ----------------
- include/dt-bindings/clock/sun8i-a83t-ccu.h    | 140 ------------------
- include/dt-bindings/clock/sun8i-de2.h         |  21 ---
- include/dt-bindings/clock/sun8i-h3-ccu.h      | 152 -------------------
- include/dt-bindings/clock/sun8i-r-ccu.h       |  59 --------
- include/dt-bindings/clock/sun8i-r40-ccu.h     | 191 ------------------------
- include/dt-bindings/clock/sun8i-tcon-top.h    |  11 --
- include/dt-bindings/clock/sun8i-v3s-ccu.h     | 111 --------------
- include/dt-bindings/clock/sun9i-a80-ccu.h     | 162 ---------------------
- include/dt-bindings/clock/sun9i-a80-de.h      |  80 ----------
- include/dt-bindings/clock/sun9i-a80-usb.h     |  59 --------
- include/dt-bindings/clock/suniv-ccu-f1c100s.h |  72 ---------
- 24 files changed, 2378 deletions(-)
+ include/dt-bindings/ata/ahci.h                 |  20 -
+ include/dt-bindings/gpio/gpio.h                |  42 --
+ include/dt-bindings/input/gpio-keys.h          |  13 -
+ include/dt-bindings/input/input.h              |  17 -
+ include/dt-bindings/input/linux-event-codes.h  | 806 -------------------------
+ include/dt-bindings/interrupt-controller/irq.h |  19 -
+ include/dt-bindings/leds/common.h              | 106 ----
+ include/dt-bindings/mux/mux.h                  |  17 -
+ include/dt-bindings/phy/phy.h                  |  26 -
+ include/dt-bindings/pwm/pwm.h                  |  14 -
+ include/dt-bindings/spmi/spmi.h                |  10 -
+ include/dt-bindings/thermal/thermal.h          |  15 -
+ include/dt-bindings/usb/pd.h                   |  88 ---
+ 13 files changed, 1193 deletions(-)
 
-diff --git a/include/dt-bindings/clock/sun20i-d1-ccu.h b/include/dt-bindings/clock/sun20i-d1-ccu.h
+diff --git a/include/dt-bindings/ata/ahci.h b/include/dt-bindings/ata/ahci.h
 deleted file mode 100644
-index fdbfb404f92a..000000000000
---- a/include/dt-bindings/clock/sun20i-d1-ccu.h
+index b3f3b7cf9af8..000000000000
+--- a/include/dt-bindings/ata/ahci.h
 +++ /dev/null
-@@ -1,158 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+@@ -1,20 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
 -/*
-- * Copyright (C) 2020 huangzhenwei@allwinnertech.com
-- * Copyright (C) 2021 Samuel Holland <samuel@sholland.org>
+- * This header provides constants for most AHCI bindings.
 - */
 -
--#ifndef _DT_BINDINGS_CLK_SUN20I_D1_CCU_H_
--#define _DT_BINDINGS_CLK_SUN20I_D1_CCU_H_
--
--#define CLK_PLL_CPUX		0
--#define CLK_PLL_DDR0		1
--#define CLK_PLL_PERIPH0_4X	2
--#define CLK_PLL_PERIPH0_2X	3
--#define CLK_PLL_PERIPH0_800M	4
--#define CLK_PLL_PERIPH0		5
--#define CLK_PLL_PERIPH0_DIV3	6
--#define CLK_PLL_VIDEO0_4X	7
--#define CLK_PLL_VIDEO0_2X	8
--#define CLK_PLL_VIDEO0		9
--#define CLK_PLL_VIDEO1_4X	10
--#define CLK_PLL_VIDEO1_2X	11
--#define CLK_PLL_VIDEO1		12
--#define CLK_PLL_VE		13
--#define CLK_PLL_AUDIO0_4X	14
--#define CLK_PLL_AUDIO0_2X	15
--#define CLK_PLL_AUDIO0		16
--#define CLK_PLL_AUDIO1		17
--#define CLK_PLL_AUDIO1_DIV2	18
--#define CLK_PLL_AUDIO1_DIV5	19
--#define CLK_CPUX		20
--#define CLK_CPUX_AXI		21
--#define CLK_CPUX_APB		22
--#define CLK_PSI_AHB		23
--#define CLK_APB0		24
--#define CLK_APB1		25
--#define CLK_MBUS		26
--#define CLK_DE			27
--#define CLK_BUS_DE		28
--#define CLK_DI			29
--#define CLK_BUS_DI		30
--#define CLK_G2D			31
--#define CLK_BUS_G2D		32
--#define CLK_CE			33
--#define CLK_BUS_CE		34
--#define CLK_VE			35
--#define CLK_BUS_VE		36
--#define CLK_BUS_DMA		37
--#define CLK_BUS_MSGBOX0		38
--#define CLK_BUS_MSGBOX1		39
--#define CLK_BUS_MSGBOX2		40
--#define CLK_BUS_SPINLOCK	41
--#define CLK_BUS_HSTIMER		42
--#define CLK_AVS			43
--#define CLK_BUS_DBG		44
--#define CLK_BUS_PWM		45
--#define CLK_BUS_IOMMU		46
--#define CLK_DRAM		47
--#define CLK_MBUS_DMA		48
--#define CLK_MBUS_VE		49
--#define CLK_MBUS_CE		50
--#define CLK_MBUS_TVIN		51
--#define CLK_MBUS_CSI		52
--#define CLK_MBUS_G2D		53
--#define CLK_MBUS_RISCV		54
--#define CLK_BUS_DRAM		55
--#define CLK_MMC0		56
--#define CLK_MMC1		57
--#define CLK_MMC2		58
--#define CLK_BUS_MMC0		59
--#define CLK_BUS_MMC1		60
--#define CLK_BUS_MMC2		61
--#define CLK_BUS_UART0		62
--#define CLK_BUS_UART1		63
--#define CLK_BUS_UART2		64
--#define CLK_BUS_UART3		65
--#define CLK_BUS_UART4		66
--#define CLK_BUS_UART5		67
--#define CLK_BUS_I2C0		68
--#define CLK_BUS_I2C1		69
--#define CLK_BUS_I2C2		70
--#define CLK_BUS_I2C3		71
--#define CLK_SPI0		72
--#define CLK_SPI1		73
--#define CLK_BUS_SPI0		74
--#define CLK_BUS_SPI1		75
--#define CLK_EMAC_25M		76
--#define CLK_BUS_EMAC		77
--#define CLK_IR_TX		78
--#define CLK_BUS_IR_TX		79
--#define CLK_BUS_GPADC		80
--#define CLK_BUS_THS		81
--#define CLK_I2S0		82
--#define CLK_I2S1		83
--#define CLK_I2S2		84
--#define CLK_I2S2_ASRC		85
--#define CLK_BUS_I2S0		86
--#define CLK_BUS_I2S1		87
--#define CLK_BUS_I2S2		88
--#define CLK_SPDIF_TX		89
--#define CLK_SPDIF_RX		90
--#define CLK_BUS_SPDIF		91
--#define CLK_DMIC		92
--#define CLK_BUS_DMIC		93
--#define CLK_AUDIO_DAC		94
--#define CLK_AUDIO_ADC		95
--#define CLK_BUS_AUDIO		96
--#define CLK_USB_OHCI0		97
--#define CLK_USB_OHCI1		98
--#define CLK_BUS_OHCI0		99
--#define CLK_BUS_OHCI1		100
--#define CLK_BUS_EHCI0		101
--#define CLK_BUS_EHCI1		102
--#define CLK_BUS_OTG		103
--#define CLK_BUS_LRADC		104
--#define CLK_BUS_DPSS_TOP	105
--#define CLK_HDMI_24M		106
--#define CLK_HDMI_CEC_32K	107
--#define CLK_HDMI_CEC		108
--#define CLK_BUS_HDMI		109
--#define CLK_MIPI_DSI		110
--#define CLK_BUS_MIPI_DSI	111
--#define CLK_TCON_LCD0		112
--#define CLK_BUS_TCON_LCD0	113
--#define CLK_TCON_TV		114
--#define CLK_BUS_TCON_TV		115
--#define CLK_TVE			116
--#define CLK_BUS_TVE_TOP		117
--#define CLK_BUS_TVE		118
--#define CLK_TVD			119
--#define CLK_BUS_TVD_TOP		120
--#define CLK_BUS_TVD		121
--#define CLK_LEDC		122
--#define CLK_BUS_LEDC		123
--#define CLK_CSI_TOP		124
--#define CLK_CSI_MCLK		125
--#define CLK_BUS_CSI		126
--#define CLK_TPADC		127
--#define CLK_BUS_TPADC		128
--#define CLK_BUS_TZMA		129
--#define CLK_DSP			130
--#define CLK_BUS_DSP_CFG		131
--#define CLK_RISCV		132
--#define CLK_RISCV_AXI		133
--#define CLK_BUS_RISCV_CFG	134
--#define CLK_FANOUT_24M		135
--#define CLK_FANOUT_12M		136
--#define CLK_FANOUT_16M		137
--#define CLK_FANOUT_25M		138
--#define CLK_FANOUT_32K		139
--#define CLK_FANOUT_27M		140
--#define CLK_FANOUT_PCLK		141
--#define CLK_FANOUT0		142
--#define CLK_FANOUT1		143
--#define CLK_FANOUT2		144
--#define CLK_BUS_CAN0		145
--#define CLK_BUS_CAN1		146
--
--#endif /* _DT_BINDINGS_CLK_SUN20I_D1_CCU_H_ */
-diff --git a/include/dt-bindings/clock/sun20i-d1-r-ccu.h b/include/dt-bindings/clock/sun20i-d1-r-ccu.h
-deleted file mode 100644
-index f95c170711e5..000000000000
---- a/include/dt-bindings/clock/sun20i-d1-r-ccu.h
-+++ /dev/null
-@@ -1,19 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (C) 2021 Samuel Holland <samuel@sholland.org>
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN20I_D1_R_CCU_H_
--#define _DT_BINDINGS_CLK_SUN20I_D1_R_CCU_H_
--
--#define CLK_R_AHB		0
--
--#define CLK_BUS_R_TIMER		2
--#define CLK_BUS_R_TWD		3
--#define CLK_BUS_R_PPU		4
--#define CLK_R_IR_RX		5
--#define CLK_BUS_R_IR_RX		6
--#define CLK_BUS_R_RTC		7
--#define CLK_BUS_R_CPUCFG	8
--
--#endif /* _DT_BINDINGS_CLK_SUN20I_D1_R_CCU_H_ */
-diff --git a/include/dt-bindings/clock/sun4i-a10-ccu.h b/include/dt-bindings/clock/sun4i-a10-ccu.h
-deleted file mode 100644
-index e4fa61be5c75..000000000000
---- a/include/dt-bindings/clock/sun4i-a10-ccu.h
-+++ /dev/null
-@@ -1,202 +0,0 @@
--/*
-- * Copyright (C) 2017 Priit Laes <plaes@plaes.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN4I_A10_H_
--#define _DT_BINDINGS_CLK_SUN4I_A10_H_
--
--#define CLK_HOSC		1
--#define CLK_PLL_VIDEO0_2X	9
--#define CLK_PLL_VIDEO1_2X	18
--#define CLK_CPU			20
--
--/* AHB Gates */
--#define CLK_AHB_OTG		26
--#define CLK_AHB_EHCI0		27
--#define CLK_AHB_OHCI0		28
--#define CLK_AHB_EHCI1		29
--#define CLK_AHB_OHCI1		30
--#define CLK_AHB_SS		31
--#define CLK_AHB_DMA		32
--#define CLK_AHB_BIST		33
--#define CLK_AHB_MMC0		34
--#define CLK_AHB_MMC1		35
--#define CLK_AHB_MMC2		36
--#define CLK_AHB_MMC3		37
--#define CLK_AHB_MS		38
--#define CLK_AHB_NAND		39
--#define CLK_AHB_SDRAM		40
--#define CLK_AHB_ACE		41
--#define CLK_AHB_EMAC		42
--#define CLK_AHB_TS		43
--#define CLK_AHB_SPI0		44
--#define CLK_AHB_SPI1		45
--#define CLK_AHB_SPI2		46
--#define CLK_AHB_SPI3		47
--#define CLK_AHB_PATA		48
--#define CLK_AHB_SATA		49
--#define CLK_AHB_GPS		50
--#define CLK_AHB_HSTIMER		51
--#define CLK_AHB_VE		52
--#define CLK_AHB_TVD		53
--#define CLK_AHB_TVE0		54
--#define CLK_AHB_TVE1		55
--#define CLK_AHB_LCD0		56
--#define CLK_AHB_LCD1		57
--#define CLK_AHB_CSI0		58
--#define CLK_AHB_CSI1		59
--#define CLK_AHB_HDMI0		60
--#define CLK_AHB_HDMI1		61
--#define CLK_AHB_DE_BE0		62
--#define CLK_AHB_DE_BE1		63
--#define CLK_AHB_DE_FE0		64
--#define CLK_AHB_DE_FE1		65
--#define CLK_AHB_GMAC		66
--#define CLK_AHB_MP		67
--#define CLK_AHB_GPU		68
--
--/* APB0 Gates */
--#define CLK_APB0_CODEC		69
--#define CLK_APB0_SPDIF		70
--#define CLK_APB0_I2S0		71
--#define CLK_APB0_AC97		72
--#define CLK_APB0_I2S1		73
--#define CLK_APB0_PIO		74
--#define CLK_APB0_IR0		75
--#define CLK_APB0_IR1		76
--#define CLK_APB0_I2S2		77
--#define CLK_APB0_KEYPAD		78
--
--/* APB1 Gates */
--#define CLK_APB1_I2C0		79
--#define CLK_APB1_I2C1		80
--#define CLK_APB1_I2C2		81
--#define CLK_APB1_I2C3		82
--#define CLK_APB1_CAN		83
--#define CLK_APB1_SCR		84
--#define CLK_APB1_PS20		85
--#define CLK_APB1_PS21		86
--#define CLK_APB1_I2C4		87
--#define CLK_APB1_UART0		88
--#define CLK_APB1_UART1		89
--#define CLK_APB1_UART2		90
--#define CLK_APB1_UART3		91
--#define CLK_APB1_UART4		92
--#define CLK_APB1_UART5		93
--#define CLK_APB1_UART6		94
--#define CLK_APB1_UART7		95
--
--/* IP clocks */
--#define CLK_NAND		96
--#define CLK_MS			97
--#define CLK_MMC0		98
--#define CLK_MMC0_OUTPUT		99
--#define CLK_MMC0_SAMPLE		100
--#define CLK_MMC1		101
--#define CLK_MMC1_OUTPUT		102
--#define CLK_MMC1_SAMPLE		103
--#define CLK_MMC2		104
--#define CLK_MMC2_OUTPUT		105
--#define CLK_MMC2_SAMPLE		106
--#define CLK_MMC3		107
--#define CLK_MMC3_OUTPUT		108
--#define CLK_MMC3_SAMPLE		109
--#define CLK_TS			110
--#define CLK_SS			111
--#define CLK_SPI0		112
--#define CLK_SPI1		113
--#define CLK_SPI2		114
--#define CLK_PATA		115
--#define CLK_IR0			116
--#define CLK_IR1			117
--#define CLK_I2S0		118
--#define CLK_AC97		119
--#define CLK_SPDIF		120
--#define CLK_KEYPAD		121
--#define CLK_SATA		122
--#define CLK_USB_OHCI0		123
--#define CLK_USB_OHCI1		124
--#define CLK_USB_PHY		125
--#define CLK_GPS			126
--#define CLK_SPI3		127
--#define CLK_I2S1		128
--#define CLK_I2S2		129
--
--/* DRAM Gates */
--#define CLK_DRAM_VE		130
--#define CLK_DRAM_CSI0		131
--#define CLK_DRAM_CSI1		132
--#define CLK_DRAM_TS		133
--#define CLK_DRAM_TVD		134
--#define CLK_DRAM_TVE0		135
--#define CLK_DRAM_TVE1		136
--#define CLK_DRAM_OUT		137
--#define CLK_DRAM_DE_FE1		138
--#define CLK_DRAM_DE_FE0		139
--#define CLK_DRAM_DE_BE0		140
--#define CLK_DRAM_DE_BE1		141
--#define CLK_DRAM_MP		142
--#define CLK_DRAM_ACE		143
--
--/* Display Engine Clocks */
--#define CLK_DE_BE0		144
--#define CLK_DE_BE1		145
--#define CLK_DE_FE0		146
--#define CLK_DE_FE1		147
--#define CLK_DE_MP		148
--#define CLK_TCON0_CH0		149
--#define CLK_TCON1_CH0		150
--#define CLK_CSI_SCLK		151
--#define CLK_TVD_SCLK2		152
--#define CLK_TVD			153
--#define CLK_TCON0_CH1_SCLK2	154
--#define CLK_TCON0_CH1		155
--#define CLK_TCON1_CH1_SCLK2	156
--#define CLK_TCON1_CH1		157
--#define CLK_CSI0		158
--#define CLK_CSI1		159
--#define CLK_CODEC		160
--#define CLK_VE			161
--#define CLK_AVS			162
--#define CLK_ACE			163
--#define CLK_HDMI		164
--#define CLK_GPU			165
--
--#endif /* _DT_BINDINGS_CLK_SUN4I_A10_H_ */
-diff --git a/include/dt-bindings/clock/sun4i-a10-pll2.h b/include/dt-bindings/clock/sun4i-a10-pll2.h
-deleted file mode 100644
-index 071c8112d531..000000000000
---- a/include/dt-bindings/clock/sun4i-a10-pll2.h
-+++ /dev/null
-@@ -1,53 +0,0 @@
--/*
-- * Copyright 2015 Maxime Ripard
-- *
-- * Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef __DT_BINDINGS_CLOCK_SUN4I_A10_PLL2_H_
--#define __DT_BINDINGS_CLOCK_SUN4I_A10_PLL2_H_
--
--#define SUN4I_A10_PLL2_1X	0
--#define SUN4I_A10_PLL2_2X	1
--#define SUN4I_A10_PLL2_4X	2
--#define SUN4I_A10_PLL2_8X	3
--
--#endif /* __DT_BINDINGS_CLOCK_SUN4I_A10_PLL2_H_ */
-diff --git a/include/dt-bindings/clock/sun50i-a64-ccu.h b/include/dt-bindings/clock/sun50i-a64-ccu.h
-deleted file mode 100644
-index 175892189e9d..000000000000
---- a/include/dt-bindings/clock/sun50i-a64-ccu.h
-+++ /dev/null
-@@ -1,138 +0,0 @@
--/*
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN50I_A64_H_
--#define _DT_BINDINGS_CLK_SUN50I_A64_H_
--
--#define CLK_PLL_VIDEO0		7
--#define CLK_PLL_PERIPH0		11
--
--#define CLK_CPUX		21
--#define CLK_BUS_MIPI_DSI	28
--#define CLK_BUS_CE		29
--#define CLK_BUS_DMA		30
--#define CLK_BUS_MMC0		31
--#define CLK_BUS_MMC1		32
--#define CLK_BUS_MMC2		33
--#define CLK_BUS_NAND		34
--#define CLK_BUS_DRAM		35
--#define CLK_BUS_EMAC		36
--#define CLK_BUS_TS		37
--#define CLK_BUS_HSTIMER		38
--#define CLK_BUS_SPI0		39
--#define CLK_BUS_SPI1		40
--#define CLK_BUS_OTG		41
--#define CLK_BUS_EHCI0		42
--#define CLK_BUS_EHCI1		43
--#define CLK_BUS_OHCI0		44
--#define CLK_BUS_OHCI1		45
--#define CLK_BUS_VE		46
--#define CLK_BUS_TCON0		47
--#define CLK_BUS_TCON1		48
--#define CLK_BUS_DEINTERLACE	49
--#define CLK_BUS_CSI		50
--#define CLK_BUS_HDMI		51
--#define CLK_BUS_DE		52
--#define CLK_BUS_GPU		53
--#define CLK_BUS_MSGBOX		54
--#define CLK_BUS_SPINLOCK	55
--#define CLK_BUS_CODEC		56
--#define CLK_BUS_SPDIF		57
--#define CLK_BUS_PIO		58
--#define CLK_BUS_THS		59
--#define CLK_BUS_I2S0		60
--#define CLK_BUS_I2S1		61
--#define CLK_BUS_I2S2		62
--#define CLK_BUS_I2C0		63
--#define CLK_BUS_I2C1		64
--#define CLK_BUS_I2C2		65
--#define CLK_BUS_SCR		66
--#define CLK_BUS_UART0		67
--#define CLK_BUS_UART1		68
--#define CLK_BUS_UART2		69
--#define CLK_BUS_UART3		70
--#define CLK_BUS_UART4		71
--#define CLK_BUS_DBG		72
--#define CLK_THS			73
--#define CLK_NAND		74
--#define CLK_MMC0		75
--#define CLK_MMC1		76
--#define CLK_MMC2		77
--#define CLK_TS			78
--#define CLK_CE			79
--#define CLK_SPI0		80
--#define CLK_SPI1		81
--#define CLK_I2S0		82
--#define CLK_I2S1		83
--#define CLK_I2S2		84
--#define CLK_SPDIF		85
--#define CLK_USB_PHY0		86
--#define CLK_USB_PHY1		87
--#define CLK_USB_HSIC		88
--#define CLK_USB_HSIC_12M	89
--
--#define CLK_USB_OHCI0		91
--
--#define CLK_USB_OHCI1		93
--#define CLK_DRAM		94
--#define CLK_DRAM_VE		95
--#define CLK_DRAM_CSI		96
--#define CLK_DRAM_DEINTERLACE	97
--#define CLK_DRAM_TS		98
--#define CLK_DE			99
--#define CLK_TCON0		100
--#define CLK_TCON1		101
--#define CLK_DEINTERLACE		102
--#define CLK_CSI_MISC		103
--#define CLK_CSI_SCLK		104
--#define CLK_CSI_MCLK		105
--#define CLK_VE			106
--#define CLK_AC_DIG		107
--#define CLK_AC_DIG_4X		108
--#define CLK_AVS			109
--#define CLK_HDMI		110
--#define CLK_HDMI_DDC		111
--#define CLK_MBUS		112
--#define CLK_DSI_DPHY		113
--#define CLK_GPU			114
--
--#endif /* _DT_BINDINGS_CLK_SUN50I_H_ */
-diff --git a/include/dt-bindings/clock/sun50i-h6-ccu.h b/include/dt-bindings/clock/sun50i-h6-ccu.h
-deleted file mode 100644
-index ef9123d81937..000000000000
---- a/include/dt-bindings/clock/sun50i-h6-ccu.h
-+++ /dev/null
-@@ -1,125 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN50I_H6_H_
--#define _DT_BINDINGS_CLK_SUN50I_H6_H_
--
--#define CLK_PLL_PERIPH0		3
--
--#define CLK_CPUX		21
--
--#define CLK_APB1		26
--
--#define CLK_DE			29
--#define CLK_BUS_DE		30
--#define CLK_DEINTERLACE		31
--#define CLK_BUS_DEINTERLACE	32
--#define CLK_GPU			33
--#define CLK_BUS_GPU		34
--#define CLK_CE			35
--#define CLK_BUS_CE		36
--#define CLK_VE			37
--#define CLK_BUS_VE		38
--#define CLK_EMCE		39
--#define CLK_BUS_EMCE		40
--#define CLK_VP9			41
--#define CLK_BUS_VP9		42
--#define CLK_BUS_DMA		43
--#define CLK_BUS_MSGBOX		44
--#define CLK_BUS_SPINLOCK	45
--#define CLK_BUS_HSTIMER		46
--#define CLK_AVS			47
--#define CLK_BUS_DBG		48
--#define CLK_BUS_PSI		49
--#define CLK_BUS_PWM		50
--#define CLK_BUS_IOMMU		51
--
--#define CLK_MBUS_DMA		53
--#define CLK_MBUS_VE		54
--#define CLK_MBUS_CE		55
--#define CLK_MBUS_TS		56
--#define CLK_MBUS_NAND		57
--#define CLK_MBUS_CSI		58
--#define CLK_MBUS_DEINTERLACE	59
--
--#define CLK_NAND0		61
--#define CLK_NAND1		62
--#define CLK_BUS_NAND		63
--#define CLK_MMC0		64
--#define CLK_MMC1		65
--#define CLK_MMC2		66
--#define CLK_BUS_MMC0		67
--#define CLK_BUS_MMC1		68
--#define CLK_BUS_MMC2		69
--#define CLK_BUS_UART0		70
--#define CLK_BUS_UART1		71
--#define CLK_BUS_UART2		72
--#define CLK_BUS_UART3		73
--#define CLK_BUS_I2C0		74
--#define CLK_BUS_I2C1		75
--#define CLK_BUS_I2C2		76
--#define CLK_BUS_I2C3		77
--#define CLK_BUS_SCR0		78
--#define CLK_BUS_SCR1		79
--#define CLK_SPI0		80
--#define CLK_SPI1		81
--#define CLK_BUS_SPI0		82
--#define CLK_BUS_SPI1		83
--#define CLK_BUS_EMAC		84
--#define CLK_TS			85
--#define CLK_BUS_TS		86
--#define CLK_IR_TX		87
--#define CLK_BUS_IR_TX		88
--#define CLK_BUS_THS		89
--#define CLK_I2S3		90
--#define CLK_I2S0		91
--#define CLK_I2S1		92
--#define CLK_I2S2		93
--#define CLK_BUS_I2S0		94
--#define CLK_BUS_I2S1		95
--#define CLK_BUS_I2S2		96
--#define CLK_BUS_I2S3		97
--#define CLK_SPDIF		98
--#define CLK_BUS_SPDIF		99
--#define CLK_DMIC		100
--#define CLK_BUS_DMIC		101
--#define CLK_AUDIO_HUB		102
--#define CLK_BUS_AUDIO_HUB	103
--#define CLK_USB_OHCI0		104
--#define CLK_USB_PHY0		105
--#define CLK_USB_PHY1		106
--#define CLK_USB_OHCI3		107
--#define CLK_USB_PHY3		108
--#define CLK_USB_HSIC_12M	109
--#define CLK_USB_HSIC		110
--#define CLK_BUS_OHCI0		111
--#define CLK_BUS_OHCI3		112
--#define CLK_BUS_EHCI0		113
--#define CLK_BUS_XHCI		114
--#define CLK_BUS_EHCI3		115
--#define CLK_BUS_OTG		116
--#define CLK_PCIE_REF_100M	117
--#define CLK_PCIE_REF		118
--#define CLK_PCIE_REF_OUT	119
--#define CLK_PCIE_MAXI		120
--#define CLK_PCIE_AUX		121
--#define CLK_BUS_PCIE		122
--#define CLK_HDMI		123
--#define CLK_HDMI_SLOW		124
--#define CLK_HDMI_CEC		125
--#define CLK_BUS_HDMI		126
--#define CLK_BUS_TCON_TOP	127
--#define CLK_TCON_LCD0		128
--#define CLK_BUS_TCON_LCD0	129
--#define CLK_TCON_TV0		130
--#define CLK_BUS_TCON_TV0	131
--#define CLK_CSI_CCI		132
--#define CLK_CSI_TOP		133
--#define CLK_CSI_MCLK		134
--#define CLK_BUS_CSI		135
--#define CLK_HDCP		136
--#define CLK_BUS_HDCP		137
--
--#endif /* _DT_BINDINGS_CLK_SUN50I_H6_H_ */
-diff --git a/include/dt-bindings/clock/sun50i-h6-r-ccu.h b/include/dt-bindings/clock/sun50i-h6-r-ccu.h
-deleted file mode 100644
-index a96087abc86f..000000000000
---- a/include/dt-bindings/clock/sun50i-h6-r-ccu.h
-+++ /dev/null
-@@ -1,27 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN50I_H6_R_CCU_H_
--#define _DT_BINDINGS_CLK_SUN50I_H6_R_CCU_H_
--
--#define CLK_AR100		0
--
--#define CLK_R_APB1		2
--
--#define CLK_R_APB1_TIMER	4
--#define CLK_R_APB1_TWD		5
--#define CLK_R_APB1_PWM		6
--#define CLK_R_APB2_UART		7
--#define CLK_R_APB2_I2C		8
--#define CLK_R_APB1_IR		9
--#define CLK_R_APB1_W1		10
--
--#define CLK_IR			11
--#define CLK_W1			12
--
--#define CLK_R_APB2_RSB		13
--#define CLK_R_APB1_RTC		14
--
--#endif /* _DT_BINDINGS_CLK_SUN50I_H6_R_CCU_H_ */
-diff --git a/include/dt-bindings/clock/sun50i-h616-ccu.h b/include/dt-bindings/clock/sun50i-h616-ccu.h
-deleted file mode 100644
-index 6f8f01e67628..000000000000
---- a/include/dt-bindings/clock/sun50i-h616-ccu.h
-+++ /dev/null
-@@ -1,116 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (C) 2020 Arm Ltd.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN50I_H616_H_
--#define _DT_BINDINGS_CLK_SUN50I_H616_H_
--
--#define CLK_PLL_PERIPH0		4
--
--#define CLK_CPUX		21
--
--#define CLK_APB1		26
--
--#define CLK_DE			29
--#define CLK_BUS_DE		30
--#define CLK_DEINTERLACE		31
--#define CLK_BUS_DEINTERLACE	32
--#define CLK_G2D			33
--#define CLK_BUS_G2D		34
--#define CLK_GPU0		35
--#define CLK_BUS_GPU		36
--#define CLK_GPU1		37
--#define CLK_CE			38
--#define CLK_BUS_CE		39
--#define CLK_VE			40
--#define CLK_BUS_VE		41
--#define CLK_BUS_DMA		42
--#define CLK_BUS_HSTIMER		43
--#define CLK_AVS			44
--#define CLK_BUS_DBG		45
--#define CLK_BUS_PSI		46
--#define CLK_BUS_PWM		47
--#define CLK_BUS_IOMMU		48
--
--#define CLK_MBUS_DMA		50
--#define CLK_MBUS_VE		51
--#define CLK_MBUS_CE		52
--#define CLK_MBUS_TS		53
--#define CLK_MBUS_NAND		54
--#define CLK_MBUS_G2D		55
--
--#define CLK_NAND0		57
--#define CLK_NAND1		58
--#define CLK_BUS_NAND		59
--#define CLK_MMC0		60
--#define CLK_MMC1		61
--#define CLK_MMC2		62
--#define CLK_BUS_MMC0		63
--#define CLK_BUS_MMC1		64
--#define CLK_BUS_MMC2		65
--#define CLK_BUS_UART0		66
--#define CLK_BUS_UART1		67
--#define CLK_BUS_UART2		68
--#define CLK_BUS_UART3		69
--#define CLK_BUS_UART4		70
--#define CLK_BUS_UART5		71
--#define CLK_BUS_I2C0		72
--#define CLK_BUS_I2C1		73
--#define CLK_BUS_I2C2		74
--#define CLK_BUS_I2C3		75
--#define CLK_BUS_I2C4		76
--#define CLK_SPI0		77
--#define CLK_SPI1		78
--#define CLK_BUS_SPI0		79
--#define CLK_BUS_SPI1		80
--#define CLK_EMAC_25M		81
--#define CLK_BUS_EMAC0		82
--#define CLK_BUS_EMAC1		83
--#define CLK_TS			84
--#define CLK_BUS_TS		85
--#define CLK_BUS_THS		86
--#define CLK_SPDIF		87
--#define CLK_BUS_SPDIF		88
--#define CLK_DMIC		89
--#define CLK_BUS_DMIC		90
--#define CLK_AUDIO_CODEC_1X	91
--#define CLK_AUDIO_CODEC_4X	92
--#define CLK_BUS_AUDIO_CODEC	93
--#define CLK_AUDIO_HUB		94
--#define CLK_BUS_AUDIO_HUB	95
--#define CLK_USB_OHCI0		96
--#define CLK_USB_PHY0		97
--#define CLK_USB_OHCI1		98
--#define CLK_USB_PHY1		99
--#define CLK_USB_OHCI2		100
--#define CLK_USB_PHY2		101
--#define CLK_USB_OHCI3		102
--#define CLK_USB_PHY3		103
--#define CLK_BUS_OHCI0		104
--#define CLK_BUS_OHCI1		105
--#define CLK_BUS_OHCI2		106
--#define CLK_BUS_OHCI3		107
--#define CLK_BUS_EHCI0		108
--#define CLK_BUS_EHCI1		109
--#define CLK_BUS_EHCI2		110
--#define CLK_BUS_EHCI3		111
--#define CLK_BUS_OTG		112
--#define CLK_BUS_KEYADC		113
--#define CLK_HDMI		114
--#define CLK_HDMI_SLOW		115
--#define CLK_HDMI_CEC		116
--#define CLK_BUS_HDMI		117
--#define CLK_BUS_TCON_TOP	118
--#define CLK_TCON_TV0		119
--#define CLK_TCON_TV1		120
--#define CLK_BUS_TCON_TV0	121
--#define CLK_BUS_TCON_TV1	122
--#define CLK_TVE0		123
--#define CLK_BUS_TVE_TOP		124
--#define CLK_BUS_TVE0		125
--#define CLK_HDCP		126
--#define CLK_BUS_HDCP		127
--#define CLK_PLL_SYSTEM_32K	128
--
--#endif /* _DT_BINDINGS_CLK_SUN50I_H616_H_ */
-diff --git a/include/dt-bindings/clock/sun5i-ccu.h b/include/dt-bindings/clock/sun5i-ccu.h
-deleted file mode 100644
-index 75fe5619c3d9..000000000000
---- a/include/dt-bindings/clock/sun5i-ccu.h
-+++ /dev/null
-@@ -1,97 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Copyright 2016 Maxime Ripard
-- *
-- * Maxime Ripard <maxime.ripard@free-electrons.com>
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN5I_H_
--#define _DT_BINDINGS_CLK_SUN5I_H_
--
--#define CLK_HOSC		1
--
--#define CLK_PLL_VIDEO0_2X	9
--
--#define CLK_PLL_VIDEO1_2X	16
--#define CLK_CPU			17
--
--#define CLK_AHB_OTG		23
--#define CLK_AHB_EHCI		24
--#define CLK_AHB_OHCI		25
--#define CLK_AHB_SS		26
--#define CLK_AHB_DMA		27
--#define CLK_AHB_BIST		28
--#define CLK_AHB_MMC0		29
--#define CLK_AHB_MMC1		30
--#define CLK_AHB_MMC2		31
--#define CLK_AHB_NAND		32
--#define CLK_AHB_SDRAM		33
--#define CLK_AHB_EMAC		34
--#define CLK_AHB_TS		35
--#define CLK_AHB_SPI0		36
--#define CLK_AHB_SPI1		37
--#define CLK_AHB_SPI2		38
--#define CLK_AHB_GPS		39
--#define CLK_AHB_HSTIMER		40
--#define CLK_AHB_VE		41
--#define CLK_AHB_TVE		42
--#define CLK_AHB_LCD		43
--#define CLK_AHB_CSI		44
--#define CLK_AHB_HDMI		45
--#define CLK_AHB_DE_BE		46
--#define CLK_AHB_DE_FE		47
--#define CLK_AHB_IEP		48
--#define CLK_AHB_GPU		49
--#define CLK_APB0_CODEC		50
--#define CLK_APB0_SPDIF		51
--#define CLK_APB0_I2S		52
--#define CLK_APB0_PIO		53
--#define CLK_APB0_IR		54
--#define CLK_APB0_KEYPAD		55
--#define CLK_APB1_I2C0		56
--#define CLK_APB1_I2C1		57
--#define CLK_APB1_I2C2		58
--#define CLK_APB1_UART0		59
--#define CLK_APB1_UART1		60
--#define CLK_APB1_UART2		61
--#define CLK_APB1_UART3		62
--#define CLK_NAND		63
--#define CLK_MMC0		64
--#define CLK_MMC1		65
--#define CLK_MMC2		66
--#define CLK_TS			67
--#define CLK_SS			68
--#define CLK_SPI0		69
--#define CLK_SPI1		70
--#define CLK_SPI2		71
--#define CLK_IR			72
--#define CLK_I2S			73
--#define CLK_SPDIF		74
--#define CLK_KEYPAD		75
--#define CLK_USB_OHCI		76
--#define CLK_USB_PHY0		77
--#define CLK_USB_PHY1		78
--#define CLK_GPS			79
--#define CLK_DRAM_VE		80
--#define CLK_DRAM_CSI		81
--#define CLK_DRAM_TS		82
--#define CLK_DRAM_TVE		83
--#define CLK_DRAM_DE_FE		84
--#define CLK_DRAM_DE_BE		85
--#define CLK_DRAM_ACE		86
--#define CLK_DRAM_IEP		87
--#define CLK_DE_BE		88
--#define CLK_DE_FE		89
--#define CLK_TCON_CH0		90
--
--#define CLK_TCON_CH1		92
--#define CLK_CSI			93
--#define CLK_VE			94
--#define CLK_CODEC		95
--#define CLK_AVS			96
--#define CLK_HDMI		97
--#define CLK_GPU			98
--#define CLK_MBUS		99
--#define CLK_IEP			100
--
--#endif /* _DT_BINDINGS_CLK_SUN5I_H_ */
-diff --git a/include/dt-bindings/clock/sun6i-a31-ccu.h b/include/dt-bindings/clock/sun6i-a31-ccu.h
-deleted file mode 100644
-index 39878d9dce9f..000000000000
---- a/include/dt-bindings/clock/sun6i-a31-ccu.h
-+++ /dev/null
-@@ -1,193 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN6I_A31_H_
--#define _DT_BINDINGS_CLK_SUN6I_A31_H_
--
--#define CLK_PLL_VIDEO0_2X	7
--
--#define CLK_PLL_PERIPH		10
--
--#define CLK_PLL_VIDEO1_2X	13
--
--#define CLK_PLL_MIPI		15
--
--#define CLK_CPU			18
--
--#define CLK_AHB1_MIPIDSI	23
--#define CLK_AHB1_SS		24
--#define CLK_AHB1_DMA		25
--#define CLK_AHB1_MMC0		26
--#define CLK_AHB1_MMC1		27
--#define CLK_AHB1_MMC2		28
--#define CLK_AHB1_MMC3		29
--#define CLK_AHB1_NAND1		30
--#define CLK_AHB1_NAND0		31
--#define CLK_AHB1_SDRAM		32
--#define CLK_AHB1_EMAC		33
--#define CLK_AHB1_TS		34
--#define CLK_AHB1_HSTIMER	35
--#define CLK_AHB1_SPI0		36
--#define CLK_AHB1_SPI1		37
--#define CLK_AHB1_SPI2		38
--#define CLK_AHB1_SPI3		39
--#define CLK_AHB1_OTG		40
--#define CLK_AHB1_EHCI0		41
--#define CLK_AHB1_EHCI1		42
--#define CLK_AHB1_OHCI0		43
--#define CLK_AHB1_OHCI1		44
--#define CLK_AHB1_OHCI2		45
--#define CLK_AHB1_VE		46
--#define CLK_AHB1_LCD0		47
--#define CLK_AHB1_LCD1		48
--#define CLK_AHB1_CSI		49
--#define CLK_AHB1_HDMI		50
--#define CLK_AHB1_BE0		51
--#define CLK_AHB1_BE1		52
--#define CLK_AHB1_FE0		53
--#define CLK_AHB1_FE1		54
--#define CLK_AHB1_MP		55
--#define CLK_AHB1_GPU		56
--#define CLK_AHB1_DEU0		57
--#define CLK_AHB1_DEU1		58
--#define CLK_AHB1_DRC0		59
--#define CLK_AHB1_DRC1		60
--
--#define CLK_APB1_CODEC		61
--#define CLK_APB1_SPDIF		62
--#define CLK_APB1_DIGITAL_MIC	63
--#define CLK_APB1_PIO		64
--#define CLK_APB1_DAUDIO0	65
--#define CLK_APB1_DAUDIO1	66
--
--#define CLK_APB2_I2C0		67
--#define CLK_APB2_I2C1		68
--#define CLK_APB2_I2C2		69
--#define CLK_APB2_I2C3		70
--#define CLK_APB2_UART0		71
--#define CLK_APB2_UART1		72
--#define CLK_APB2_UART2		73
--#define CLK_APB2_UART3		74
--#define CLK_APB2_UART4		75
--#define CLK_APB2_UART5		76
--
--#define CLK_NAND0		77
--#define CLK_NAND1		78
--#define CLK_MMC0		79
--#define CLK_MMC0_SAMPLE		80
--#define CLK_MMC0_OUTPUT		81
--#define CLK_MMC1		82
--#define CLK_MMC1_SAMPLE		83
--#define CLK_MMC1_OUTPUT		84
--#define CLK_MMC2		85
--#define CLK_MMC2_SAMPLE		86
--#define CLK_MMC2_OUTPUT		87
--#define CLK_MMC3		88
--#define CLK_MMC3_SAMPLE		89
--#define CLK_MMC3_OUTPUT		90
--#define CLK_TS			91
--#define CLK_SS			92
--#define CLK_SPI0		93
--#define CLK_SPI1		94
--#define CLK_SPI2		95
--#define CLK_SPI3		96
--#define CLK_DAUDIO0		97
--#define CLK_DAUDIO1		98
--#define CLK_SPDIF		99
--#define CLK_USB_PHY0		100
--#define CLK_USB_PHY1		101
--#define CLK_USB_PHY2		102
--#define CLK_USB_OHCI0		103
--#define CLK_USB_OHCI1		104
--#define CLK_USB_OHCI2		105
--
--#define CLK_DRAM_VE		110
--#define CLK_DRAM_CSI_ISP	111
--#define CLK_DRAM_TS		112
--#define CLK_DRAM_DRC0		113
--#define CLK_DRAM_DRC1		114
--#define CLK_DRAM_DEU0		115
--#define CLK_DRAM_DEU1		116
--#define CLK_DRAM_FE0		117
--#define CLK_DRAM_FE1		118
--#define CLK_DRAM_BE0		119
--#define CLK_DRAM_BE1		120
--#define CLK_DRAM_MP		121
--
--#define CLK_BE0			122
--#define CLK_BE1			123
--#define CLK_FE0			124
--#define CLK_FE1			125
--#define CLK_MP			126
--#define CLK_LCD0_CH0		127
--#define CLK_LCD1_CH0		128
--#define CLK_LCD0_CH1		129
--#define CLK_LCD1_CH1		130
--#define CLK_CSI0_SCLK		131
--#define CLK_CSI0_MCLK		132
--#define CLK_CSI1_MCLK		133
--#define CLK_VE			134
--#define CLK_CODEC		135
--#define CLK_AVS			136
--#define CLK_DIGITAL_MIC		137
--#define CLK_HDMI		138
--#define CLK_HDMI_DDC		139
--#define CLK_PS			140
--
--#define CLK_MIPI_DSI		143
--#define CLK_MIPI_DSI_DPHY	144
--#define CLK_MIPI_CSI_DPHY	145
--#define CLK_IEP_DRC0		146
--#define CLK_IEP_DRC1		147
--#define CLK_IEP_DEU0		148
--#define CLK_IEP_DEU1		149
--#define CLK_GPU_CORE		150
--#define CLK_GPU_MEMORY		151
--#define CLK_GPU_HYD		152
--#define CLK_ATS			153
--#define CLK_TRACE		154
--
--#define CLK_OUT_A		155
--#define CLK_OUT_B		156
--#define CLK_OUT_C		157
--
--#endif /* _DT_BINDINGS_CLK_SUN6I_A31_H_ */
-diff --git a/include/dt-bindings/clock/sun6i-rtc.h b/include/dt-bindings/clock/sun6i-rtc.h
-deleted file mode 100644
-index 3bd3aa3d57ce..000000000000
---- a/include/dt-bindings/clock/sun6i-rtc.h
-+++ /dev/null
-@@ -1,10 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--
--#ifndef _DT_BINDINGS_CLK_SUN6I_RTC_H_
--#define _DT_BINDINGS_CLK_SUN6I_RTC_H_
--
--#define CLK_OSC32K		0
--#define CLK_OSC32K_FANOUT	1
--#define CLK_IOSC		2
--
--#endif /* _DT_BINDINGS_CLK_SUN6I_RTC_H_ */
-diff --git a/include/dt-bindings/clock/sun7i-a20-ccu.h b/include/dt-bindings/clock/sun7i-a20-ccu.h
-deleted file mode 100644
-index 045a5178da0c..000000000000
---- a/include/dt-bindings/clock/sun7i-a20-ccu.h
-+++ /dev/null
-@@ -1,53 +0,0 @@
--/*
-- * Copyright (C) 2017 Priit Laes <plaes@plaes.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN7I_A20_H_
--#define _DT_BINDINGS_CLK_SUN7I_A20_H_
--
--#include <dt-bindings/clock/sun4i-a10-ccu.h>
--
--#define CLK_MBUS		166
--#define CLK_HDMI1_SLOW		167
--#define CLK_HDMI1		168
--#define CLK_OUT_A		169
--#define CLK_OUT_B		170
--
--#endif /* _DT_BINDINGS_CLK_SUN7I_A20_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-a23-a33-ccu.h b/include/dt-bindings/clock/sun8i-a23-a33-ccu.h
-deleted file mode 100644
-index eb524d0bbd01..000000000000
---- a/include/dt-bindings/clock/sun8i-a23-a33-ccu.h
-+++ /dev/null
-@@ -1,129 +0,0 @@
--/*
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN8I_A23_A33_H_
--#define _DT_BINDINGS_CLK_SUN8I_A23_A33_H_
--
--#define CLK_PLL_MIPI		13
--
--#define CLK_CPUX		18
--
--#define CLK_BUS_MIPI_DSI	23
--#define CLK_BUS_SS		24
--#define CLK_BUS_DMA		25
--#define CLK_BUS_MMC0		26
--#define CLK_BUS_MMC1		27
--#define CLK_BUS_MMC2		28
--#define CLK_BUS_NAND		29
--#define CLK_BUS_DRAM		30
--#define CLK_BUS_HSTIMER		31
--#define CLK_BUS_SPI0		32
--#define CLK_BUS_SPI1		33
--#define CLK_BUS_OTG		34
--#define CLK_BUS_EHCI		35
--#define CLK_BUS_OHCI		36
--#define CLK_BUS_VE		37
--#define CLK_BUS_LCD		38
--#define CLK_BUS_CSI		39
--#define CLK_BUS_DE_BE		40
--#define CLK_BUS_DE_FE		41
--#define CLK_BUS_GPU		42
--#define CLK_BUS_MSGBOX		43
--#define CLK_BUS_SPINLOCK	44
--#define CLK_BUS_DRC		45
--#define CLK_BUS_SAT		46
--#define CLK_BUS_CODEC		47
--#define CLK_BUS_PIO		48
--#define CLK_BUS_I2S0		49
--#define CLK_BUS_I2S1		50
--#define CLK_BUS_I2C0		51
--#define CLK_BUS_I2C1		52
--#define CLK_BUS_I2C2		53
--#define CLK_BUS_UART0		54
--#define CLK_BUS_UART1		55
--#define CLK_BUS_UART2		56
--#define CLK_BUS_UART3		57
--#define CLK_BUS_UART4		58
--#define CLK_NAND		59
--#define CLK_MMC0		60
--#define CLK_MMC0_SAMPLE		61
--#define CLK_MMC0_OUTPUT		62
--#define CLK_MMC1		63
--#define CLK_MMC1_SAMPLE		64
--#define CLK_MMC1_OUTPUT		65
--#define CLK_MMC2		66
--#define CLK_MMC2_SAMPLE		67
--#define CLK_MMC2_OUTPUT		68
--#define CLK_SS			69
--#define CLK_SPI0		70
--#define CLK_SPI1		71
--#define CLK_I2S0		72
--#define CLK_I2S1		73
--#define CLK_USB_PHY0		74
--#define CLK_USB_PHY1		75
--#define CLK_USB_HSIC		76
--#define CLK_USB_HSIC_12M	77
--#define CLK_USB_OHCI		78
--
--#define CLK_DRAM_VE		80
--#define CLK_DRAM_CSI		81
--#define CLK_DRAM_DRC		82
--#define CLK_DRAM_DE_FE		83
--#define CLK_DRAM_DE_BE		84
--#define CLK_DE_BE		85
--#define CLK_DE_FE		86
--#define CLK_LCD_CH0		87
--#define CLK_LCD_CH1		88
--#define CLK_CSI_SCLK		89
--#define CLK_CSI_MCLK		90
--#define CLK_VE			91
--#define CLK_AC_DIG		92
--#define CLK_AC_DIG_4X		93
--#define CLK_AVS			94
--
--#define CLK_DSI_SCLK		96
--#define CLK_DSI_DPHY		97
--#define CLK_DRC			98
--#define CLK_GPU			99
--#define CLK_ATS			100
--
--#endif /* _DT_BINDINGS_CLK_SUN8I_A23_A33_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-a83t-ccu.h b/include/dt-bindings/clock/sun8i-a83t-ccu.h
-deleted file mode 100644
-index 78af5085f630..000000000000
---- a/include/dt-bindings/clock/sun8i-a83t-ccu.h
-+++ /dev/null
-@@ -1,140 +0,0 @@
--/*
-- * Copyright (C) 2017 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLOCK_SUN8I_A83T_CCU_H_
--#define _DT_BINDINGS_CLOCK_SUN8I_A83T_CCU_H_
--
--#define CLK_PLL_PERIPH		6
--
--#define CLK_PLL_DE		9
--
--#define CLK_C0CPUX		11
--#define CLK_C1CPUX		12
--
--#define CLK_BUS_MIPI_DSI	19
--#define CLK_BUS_SS		20
--#define CLK_BUS_DMA		21
--#define CLK_BUS_MMC0		22
--#define CLK_BUS_MMC1		23
--#define CLK_BUS_MMC2		24
--#define CLK_BUS_NAND		25
--#define CLK_BUS_DRAM		26
--#define CLK_BUS_EMAC		27
--#define CLK_BUS_HSTIMER		28
--#define CLK_BUS_SPI0		29
--#define CLK_BUS_SPI1		30
--#define CLK_BUS_OTG		31
--#define CLK_BUS_EHCI0		32
--#define CLK_BUS_EHCI1		33
--#define CLK_BUS_OHCI0		34
--
--#define CLK_BUS_VE		35
--#define CLK_BUS_TCON0		36
--#define CLK_BUS_TCON1		37
--#define CLK_BUS_CSI		38
--#define CLK_BUS_HDMI		39
--#define CLK_BUS_DE		40
--#define CLK_BUS_GPU		41
--#define CLK_BUS_MSGBOX		42
--#define CLK_BUS_SPINLOCK	43
--
--#define CLK_BUS_SPDIF		44
--#define CLK_BUS_PIO		45
--#define CLK_BUS_I2S0		46
--#define CLK_BUS_I2S1		47
--#define CLK_BUS_I2S2		48
--#define CLK_BUS_TDM		49
--
--#define CLK_BUS_I2C0		50
--#define CLK_BUS_I2C1		51
--#define CLK_BUS_I2C2		52
--#define CLK_BUS_UART0		53
--#define CLK_BUS_UART1		54
--#define CLK_BUS_UART2		55
--#define CLK_BUS_UART3		56
--#define CLK_BUS_UART4		57
--
--#define CLK_NAND		59
--#define CLK_MMC0		60
--#define CLK_MMC0_SAMPLE		61
--#define CLK_MMC0_OUTPUT		62
--#define CLK_MMC1		63
--#define CLK_MMC1_SAMPLE		64
--#define CLK_MMC1_OUTPUT		65
--#define CLK_MMC2		66
--#define CLK_MMC2_SAMPLE		67
--#define CLK_MMC2_OUTPUT		68
--#define CLK_SS			69
--#define CLK_SPI0		70
--#define CLK_SPI1		71
--#define CLK_I2S0		72
--#define CLK_I2S1		73
--#define CLK_I2S2		74
--#define CLK_TDM			75
--#define CLK_SPDIF		76
--#define CLK_USB_PHY0		77
--#define CLK_USB_PHY1		78
--#define CLK_USB_HSIC		79
--#define CLK_USB_HSIC_12M	80
--#define CLK_USB_OHCI0		81
--
--#define CLK_DRAM_VE		83
--#define CLK_DRAM_CSI		84
--
--#define CLK_TCON0		85
--#define CLK_TCON1		86
--#define CLK_CSI_MISC		87
--#define CLK_MIPI_CSI		88
--#define CLK_CSI_MCLK		89
--#define CLK_CSI_SCLK		90
--#define CLK_VE			91
--#define CLK_AVS			92
--#define CLK_HDMI		93
--#define CLK_HDMI_SLOW		94
--
--#define CLK_MIPI_DSI0		96
--#define CLK_MIPI_DSI1		97
--#define CLK_GPU_CORE		98
--#define CLK_GPU_MEMORY		99
--#define CLK_GPU_HYD		100
--
--#endif /* _DT_BINDINGS_CLOCK_SUN8I_A83T_CCU_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-de2.h b/include/dt-bindings/clock/sun8i-de2.h
-deleted file mode 100644
-index 7768f73b051e..000000000000
---- a/include/dt-bindings/clock/sun8i-de2.h
-+++ /dev/null
-@@ -1,21 +0,0 @@
--/*
-- * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.io>
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-- */
--
--#ifndef _DT_BINDINGS_CLOCK_SUN8I_DE2_H_
--#define _DT_BINDINGS_CLOCK_SUN8I_DE2_H_
--
--#define CLK_BUS_MIXER0		0
--#define CLK_BUS_MIXER1		1
--#define CLK_BUS_WB		2
--
--#define CLK_MIXER0		6
--#define CLK_MIXER1		7
--#define CLK_WB			8
--
--#define CLK_BUS_ROT		9
--#define CLK_ROT			10
--
--#endif /* _DT_BINDINGS_CLOCK_SUN8I_DE2_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-h3-ccu.h b/include/dt-bindings/clock/sun8i-h3-ccu.h
-deleted file mode 100644
-index 5d4ada2c22e6..000000000000
---- a/include/dt-bindings/clock/sun8i-h3-ccu.h
-+++ /dev/null
-@@ -1,152 +0,0 @@
--/*
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN8I_H3_H_
--#define _DT_BINDINGS_CLK_SUN8I_H3_H_
--
--#define CLK_PLL_VIDEO		6
--
--#define CLK_PLL_PERIPH0		9
--
--#define CLK_CPUX		14
--
--#define CLK_BUS_CE		20
--#define CLK_BUS_DMA		21
--#define CLK_BUS_MMC0		22
--#define CLK_BUS_MMC1		23
--#define CLK_BUS_MMC2		24
--#define CLK_BUS_NAND		25
--#define CLK_BUS_DRAM		26
--#define CLK_BUS_EMAC		27
--#define CLK_BUS_TS		28
--#define CLK_BUS_HSTIMER		29
--#define CLK_BUS_SPI0		30
--#define CLK_BUS_SPI1		31
--#define CLK_BUS_OTG		32
--#define CLK_BUS_EHCI0		33
--#define CLK_BUS_EHCI1		34
--#define CLK_BUS_EHCI2		35
--#define CLK_BUS_EHCI3		36
--#define CLK_BUS_OHCI0		37
--#define CLK_BUS_OHCI1		38
--#define CLK_BUS_OHCI2		39
--#define CLK_BUS_OHCI3		40
--#define CLK_BUS_VE		41
--#define CLK_BUS_TCON0		42
--#define CLK_BUS_TCON1		43
--#define CLK_BUS_DEINTERLACE	44
--#define CLK_BUS_CSI		45
--#define CLK_BUS_TVE		46
--#define CLK_BUS_HDMI		47
--#define CLK_BUS_DE		48
--#define CLK_BUS_GPU		49
--#define CLK_BUS_MSGBOX		50
--#define CLK_BUS_SPINLOCK	51
--#define CLK_BUS_CODEC		52
--#define CLK_BUS_SPDIF		53
--#define CLK_BUS_PIO		54
--#define CLK_BUS_THS		55
--#define CLK_BUS_I2S0		56
--#define CLK_BUS_I2S1		57
--#define CLK_BUS_I2S2		58
--#define CLK_BUS_I2C0		59
--#define CLK_BUS_I2C1		60
--#define CLK_BUS_I2C2		61
--#define CLK_BUS_UART0		62
--#define CLK_BUS_UART1		63
--#define CLK_BUS_UART2		64
--#define CLK_BUS_UART3		65
--#define CLK_BUS_SCR0		66
--#define CLK_BUS_EPHY		67
--#define CLK_BUS_DBG		68
--
--#define CLK_THS			69
--#define CLK_NAND		70
--#define CLK_MMC0		71
--#define CLK_MMC0_SAMPLE		72
--#define CLK_MMC0_OUTPUT		73
--#define CLK_MMC1		74
--#define CLK_MMC1_SAMPLE		75
--#define CLK_MMC1_OUTPUT		76
--#define CLK_MMC2		77
--#define CLK_MMC2_SAMPLE		78
--#define CLK_MMC2_OUTPUT		79
--#define CLK_TS			80
--#define CLK_CE			81
--#define CLK_SPI0		82
--#define CLK_SPI1		83
--#define CLK_I2S0		84
--#define CLK_I2S1		85
--#define CLK_I2S2		86
--#define CLK_SPDIF		87
--#define CLK_USB_PHY0		88
--#define CLK_USB_PHY1		89
--#define CLK_USB_PHY2		90
--#define CLK_USB_PHY3		91
--#define CLK_USB_OHCI0		92
--#define CLK_USB_OHCI1		93
--#define CLK_USB_OHCI2		94
--#define CLK_USB_OHCI3		95
--#define CLK_DRAM		96
--#define CLK_DRAM_VE		97
--#define CLK_DRAM_CSI		98
--#define CLK_DRAM_DEINTERLACE	99
--#define CLK_DRAM_TS		100
--#define CLK_DE			101
--#define CLK_TCON0		102
--#define CLK_TVE			103
--#define CLK_DEINTERLACE		104
--#define CLK_CSI_MISC		105
--#define CLK_CSI_SCLK		106
--#define CLK_CSI_MCLK		107
--#define CLK_VE			108
--#define CLK_AC_DIG		109
--#define CLK_AVS			110
--#define CLK_HDMI		111
--#define CLK_HDMI_DDC		112
--#define CLK_MBUS		113
--#define CLK_GPU			114
--
--/* New clocks imported in H5 */
--#define CLK_BUS_SCR1		115
--
--#endif /* _DT_BINDINGS_CLK_SUN8I_H3_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-r-ccu.h b/include/dt-bindings/clock/sun8i-r-ccu.h
-deleted file mode 100644
-index 779d20aa0d05..000000000000
---- a/include/dt-bindings/clock/sun8i-r-ccu.h
-+++ /dev/null
-@@ -1,59 +0,0 @@
--/*
-- * Copyright (c) 2016 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN8I_R_CCU_H_
--#define _DT_BINDINGS_CLK_SUN8I_R_CCU_H_
--
--#define CLK_AR100		0
--
--#define CLK_APB0_PIO		3
--#define CLK_APB0_IR		4
--#define CLK_APB0_TIMER		5
--#define CLK_APB0_RSB		6
--#define CLK_APB0_UART		7
--/* 8 is reserved for CLK_APB0_W1 on A31 */
--#define CLK_APB0_I2C		9
--#define CLK_APB0_TWD		10
--
--#define CLK_IR			11
--
--#endif /* _DT_BINDINGS_CLK_SUN8I_R_CCU_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-r40-ccu.h b/include/dt-bindings/clock/sun8i-r40-ccu.h
-deleted file mode 100644
-index d7337b55a4ef..000000000000
---- a/include/dt-bindings/clock/sun8i-r40-ccu.h
-+++ /dev/null
-@@ -1,191 +0,0 @@
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN8I_R40_H_
--#define _DT_BINDINGS_CLK_SUN8I_R40_H_
--
--#define CLK_PLL_VIDEO0		7
--
--#define CLK_PLL_VIDEO1		16
--
--#define CLK_CPU			24
--
--#define CLK_BUS_MIPI_DSI	29
--#define CLK_BUS_CE		30
--#define CLK_BUS_DMA		31
--#define CLK_BUS_MMC0		32
--#define CLK_BUS_MMC1		33
--#define CLK_BUS_MMC2		34
--#define CLK_BUS_MMC3		35
--#define CLK_BUS_NAND		36
--#define CLK_BUS_DRAM		37
--#define CLK_BUS_EMAC		38
--#define CLK_BUS_TS		39
--#define CLK_BUS_HSTIMER		40
--#define CLK_BUS_SPI0		41
--#define CLK_BUS_SPI1		42
--#define CLK_BUS_SPI2		43
--#define CLK_BUS_SPI3		44
--#define CLK_BUS_SATA		45
--#define CLK_BUS_OTG		46
--#define CLK_BUS_EHCI0		47
--#define CLK_BUS_EHCI1		48
--#define CLK_BUS_EHCI2		49
--#define CLK_BUS_OHCI0		50
--#define CLK_BUS_OHCI1		51
--#define CLK_BUS_OHCI2		52
--#define CLK_BUS_VE		53
--#define CLK_BUS_MP		54
--#define CLK_BUS_DEINTERLACE	55
--#define CLK_BUS_CSI0		56
--#define CLK_BUS_CSI1		57
--#define CLK_BUS_HDMI1		58
--#define CLK_BUS_HDMI0		59
--#define CLK_BUS_DE		60
--#define CLK_BUS_TVE0		61
--#define CLK_BUS_TVE1		62
--#define CLK_BUS_TVE_TOP		63
--#define CLK_BUS_GMAC		64
--#define CLK_BUS_GPU		65
--#define CLK_BUS_TVD0		66
--#define CLK_BUS_TVD1		67
--#define CLK_BUS_TVD2		68
--#define CLK_BUS_TVD3		69
--#define CLK_BUS_TVD_TOP		70
--#define CLK_BUS_TCON_LCD0	71
--#define CLK_BUS_TCON_LCD1	72
--#define CLK_BUS_TCON_TV0	73
--#define CLK_BUS_TCON_TV1	74
--#define CLK_BUS_TCON_TOP	75
--#define CLK_BUS_CODEC		76
--#define CLK_BUS_SPDIF		77
--#define CLK_BUS_AC97		78
--#define CLK_BUS_PIO		79
--#define CLK_BUS_IR0		80
--#define CLK_BUS_IR1		81
--#define CLK_BUS_THS		82
--#define CLK_BUS_KEYPAD		83
--#define CLK_BUS_I2S0		84
--#define CLK_BUS_I2S1		85
--#define CLK_BUS_I2S2		86
--#define CLK_BUS_I2C0		87
--#define CLK_BUS_I2C1		88
--#define CLK_BUS_I2C2		89
--#define CLK_BUS_I2C3		90
--#define CLK_BUS_CAN		91
--#define CLK_BUS_SCR		92
--#define CLK_BUS_PS20		93
--#define CLK_BUS_PS21		94
--#define CLK_BUS_I2C4		95
--#define CLK_BUS_UART0		96
--#define CLK_BUS_UART1		97
--#define CLK_BUS_UART2		98
--#define CLK_BUS_UART3		99
--#define CLK_BUS_UART4		100
--#define CLK_BUS_UART5		101
--#define CLK_BUS_UART6		102
--#define CLK_BUS_UART7		103
--#define CLK_BUS_DBG		104
--
--#define CLK_THS			105
--#define CLK_NAND		106
--#define CLK_MMC0		107
--#define CLK_MMC1		108
--#define CLK_MMC2		109
--#define CLK_MMC3		110
--#define CLK_TS			111
--#define CLK_CE			112
--#define CLK_SPI0		113
--#define CLK_SPI1		114
--#define CLK_SPI2		115
--#define CLK_SPI3		116
--#define CLK_I2S0		117
--#define CLK_I2S1		118
--#define CLK_I2S2		119
--#define CLK_AC97		120
--#define CLK_SPDIF		121
--#define CLK_KEYPAD		122
--#define CLK_SATA		123
--#define CLK_USB_PHY0		124
--#define CLK_USB_PHY1		125
--#define CLK_USB_PHY2		126
--#define CLK_USB_OHCI0		127
--#define CLK_USB_OHCI1		128
--#define CLK_USB_OHCI2		129
--#define CLK_IR0			130
--#define CLK_IR1			131
--
--#define CLK_DRAM_VE		133
--#define CLK_DRAM_CSI0		134
--#define CLK_DRAM_CSI1		135
--#define CLK_DRAM_TS		136
--#define CLK_DRAM_TVD		137
--#define CLK_DRAM_MP		138
--#define CLK_DRAM_DEINTERLACE	139
--#define CLK_DE			140
--#define CLK_MP			141
--#define CLK_TCON_LCD0		142
--#define CLK_TCON_LCD1		143
--#define CLK_TCON_TV0		144
--#define CLK_TCON_TV1		145
--#define CLK_DEINTERLACE		146
--#define CLK_CSI1_MCLK		147
--#define CLK_CSI_SCLK		148
--#define CLK_CSI0_MCLK		149
--#define CLK_VE			150
--#define CLK_CODEC		151
--#define CLK_AVS			152
--#define CLK_HDMI		153
--#define CLK_HDMI_SLOW		154
--#define CLK_MBUS		155
--#define CLK_DSI_DPHY		156
--#define CLK_TVE0		157
--#define CLK_TVE1		158
--#define CLK_TVD0		159
--#define CLK_TVD1		160
--#define CLK_TVD2		161
--#define CLK_TVD3		162
--#define CLK_GPU			163
--#define CLK_OUTA		164
--#define CLK_OUTB		165
--
--#endif /* _DT_BINDINGS_CLK_SUN8I_R40_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-tcon-top.h b/include/dt-bindings/clock/sun8i-tcon-top.h
-deleted file mode 100644
-index 25164d767835..000000000000
---- a/include/dt-bindings/clock/sun8i-tcon-top.h
-+++ /dev/null
-@@ -1,11 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/* Copyright (C) 2018 Jernej Skrabec <jernej.skrabec@siol.net> */
--
--#ifndef _DT_BINDINGS_CLOCK_SUN8I_TCON_TOP_H_
--#define _DT_BINDINGS_CLOCK_SUN8I_TCON_TOP_H_
--
--#define CLK_TCON_TOP_TV0	0
--#define CLK_TCON_TOP_TV1	1
--#define CLK_TCON_TOP_DSI	2
--
--#endif /* _DT_BINDINGS_CLOCK_SUN8I_TCON_TOP_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-v3s-ccu.h b/include/dt-bindings/clock/sun8i-v3s-ccu.h
-deleted file mode 100644
-index 014ac6123d17..000000000000
---- a/include/dt-bindings/clock/sun8i-v3s-ccu.h
-+++ /dev/null
-@@ -1,111 +0,0 @@
--/*
-- * Copyright (c) 2016 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- * Based on sun8i-h3-ccu.h, which is:
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUN8I_V3S_H_
--#define _DT_BINDINGS_CLK_SUN8I_V3S_H_
--
--#define CLK_CPU			14
--
--#define CLK_BUS_CE		20
--#define CLK_BUS_DMA		21
--#define CLK_BUS_MMC0		22
--#define CLK_BUS_MMC1		23
--#define CLK_BUS_MMC2		24
--#define CLK_BUS_DRAM		25
--#define CLK_BUS_EMAC		26
--#define CLK_BUS_HSTIMER		27
--#define CLK_BUS_SPI0		28
--#define CLK_BUS_OTG		29
--#define CLK_BUS_EHCI0		30
--#define CLK_BUS_OHCI0		31
--#define CLK_BUS_VE		32
--#define CLK_BUS_TCON0		33
--#define CLK_BUS_CSI		34
--#define CLK_BUS_DE		35
--#define CLK_BUS_CODEC		36
--#define CLK_BUS_PIO		37
--#define CLK_BUS_I2C0		38
--#define CLK_BUS_I2C1		39
--#define CLK_BUS_UART0		40
--#define CLK_BUS_UART1		41
--#define CLK_BUS_UART2		42
--#define CLK_BUS_EPHY		43
--#define CLK_BUS_DBG		44
--
--#define CLK_MMC0		45
--#define CLK_MMC0_SAMPLE		46
--#define CLK_MMC0_OUTPUT		47
--#define CLK_MMC1		48
--#define CLK_MMC1_SAMPLE		49
--#define CLK_MMC1_OUTPUT		50
--#define CLK_MMC2		51
--#define CLK_MMC2_SAMPLE		52
--#define CLK_MMC2_OUTPUT		53
--#define CLK_CE			54
--#define CLK_SPI0		55
--#define CLK_USB_PHY0		56
--#define CLK_USB_OHCI0		57
--
--#define CLK_DRAM_VE		59
--#define CLK_DRAM_CSI		60
--#define CLK_DRAM_EHCI		61
--#define CLK_DRAM_OHCI		62
--#define CLK_DE			63
--#define CLK_TCON0		64
--#define CLK_CSI_MISC		65
--#define CLK_CSI0_MCLK		66
--#define CLK_CSI1_SCLK		67
--#define CLK_CSI1_MCLK		68
--#define CLK_VE			69
--#define CLK_AC_DIG		70
--#define CLK_AVS			71
--
--#define CLK_MIPI_CSI		73
--
--/* Clocks not available on V3s */
--#define CLK_BUS_I2S0		75
--#define CLK_I2S0		76
--
--#endif /* _DT_BINDINGS_CLK_SUN8I_V3S_H_ */
-diff --git a/include/dt-bindings/clock/sun9i-a80-ccu.h b/include/dt-bindings/clock/sun9i-a80-ccu.h
-deleted file mode 100644
-index 6ea1492a73a6..000000000000
---- a/include/dt-bindings/clock/sun9i-a80-ccu.h
-+++ /dev/null
-@@ -1,162 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLOCK_SUN9I_A80_CCU_H_
--#define _DT_BINDINGS_CLOCK_SUN9I_A80_CCU_H_
--
--#define CLK_PLL_AUDIO		2
--#define CLK_PLL_PERIPH0		3
--
--#define CLK_C0CPUX		12
--#define CLK_C1CPUX		13
--
--#define CLK_OUT_A		27
--#define CLK_OUT_B		28
--
--#define CLK_NAND0_0		29
--#define CLK_NAND0_1		30
--#define CLK_NAND1_0		31
--#define CLK_NAND1_1		32
--#define CLK_MMC0		33
--#define CLK_MMC0_SAMPLE		34
--#define CLK_MMC0_OUTPUT		35
--#define CLK_MMC1		36
--#define CLK_MMC1_SAMPLE		37
--#define CLK_MMC1_OUTPUT		38
--#define CLK_MMC2		39
--#define CLK_MMC2_SAMPLE		40
--#define CLK_MMC2_OUTPUT		41
--#define CLK_MMC3		42
--#define CLK_MMC3_SAMPLE		43
--#define CLK_MMC3_OUTPUT		44
--#define CLK_TS			45
--#define CLK_SS			46
--#define CLK_SPI0		47
--#define CLK_SPI1		48
--#define CLK_SPI2		49
--#define CLK_SPI3		50
--#define CLK_I2S0		51
--#define CLK_I2S1		52
--#define CLK_SPDIF		53
--#define CLK_SDRAM		54
--#define CLK_DE			55
--#define CLK_EDP			56
--#define CLK_MP			57
--#define CLK_LCD0		58
--#define CLK_LCD1		59
--#define CLK_MIPI_DSI0		60
--#define CLK_MIPI_DSI1		61
--#define CLK_HDMI		62
--#define CLK_HDMI_SLOW		63
--#define CLK_MIPI_CSI		64
--#define CLK_CSI_ISP		65
--#define CLK_CSI_MISC		66
--#define CLK_CSI0_MCLK		67
--#define CLK_CSI1_MCLK		68
--#define CLK_FD			69
--#define CLK_VE			70
--#define CLK_AVS			71
--#define CLK_GPU_CORE		72
--#define CLK_GPU_MEMORY		73
--#define CLK_GPU_AXI		74
--#define CLK_SATA		75
--#define CLK_AC97		76
--#define CLK_MIPI_HSI		77
--#define CLK_GPADC		78
--#define CLK_CIR_TX		79
--
--#define CLK_BUS_FD		80
--#define CLK_BUS_VE		81
--#define CLK_BUS_GPU_CTRL	82
--#define CLK_BUS_SS		83
--#define CLK_BUS_MMC		84
--#define CLK_BUS_NAND0		85
--#define CLK_BUS_NAND1		86
--#define CLK_BUS_SDRAM		87
--#define CLK_BUS_MIPI_HSI	88
--#define CLK_BUS_SATA		89
--#define CLK_BUS_TS		90
--#define CLK_BUS_SPI0		91
--#define CLK_BUS_SPI1		92
--#define CLK_BUS_SPI2		93
--#define CLK_BUS_SPI3		94
--
--#define CLK_BUS_OTG		95
--#define CLK_BUS_USB		96
--#define CLK_BUS_GMAC		97
--#define CLK_BUS_MSGBOX		98
--#define CLK_BUS_SPINLOCK	99
--#define CLK_BUS_HSTIMER		100
--#define CLK_BUS_DMA		101
--
--#define CLK_BUS_LCD0		102
--#define CLK_BUS_LCD1		103
--#define CLK_BUS_EDP		104
--#define CLK_BUS_CSI		105
--#define CLK_BUS_HDMI		106
--#define CLK_BUS_DE		107
--#define CLK_BUS_MP		108
--#define CLK_BUS_MIPI_DSI	109
--
--#define CLK_BUS_SPDIF		110
--#define CLK_BUS_PIO		111
--#define CLK_BUS_AC97		112
--#define CLK_BUS_I2S0		113
--#define CLK_BUS_I2S1		114
--#define CLK_BUS_LRADC		115
--#define CLK_BUS_GPADC		116
--#define CLK_BUS_TWD		117
--#define CLK_BUS_CIR_TX		118
--
--#define CLK_BUS_I2C0		119
--#define CLK_BUS_I2C1		120
--#define CLK_BUS_I2C2		121
--#define CLK_BUS_I2C3		122
--#define CLK_BUS_I2C4		123
--#define CLK_BUS_UART0		124
--#define CLK_BUS_UART1		125
--#define CLK_BUS_UART2		126
--#define CLK_BUS_UART3		127
--#define CLK_BUS_UART4		128
--#define CLK_BUS_UART5		129
--
--#endif /* _DT_BINDINGS_CLOCK_SUN9I_A80_CCU_H_ */
-diff --git a/include/dt-bindings/clock/sun9i-a80-de.h b/include/dt-bindings/clock/sun9i-a80-de.h
-deleted file mode 100644
-index 3dad6c3cd131..000000000000
---- a/include/dt-bindings/clock/sun9i-a80-de.h
-+++ /dev/null
-@@ -1,80 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLOCK_SUN9I_A80_DE_H_
--#define _DT_BINDINGS_CLOCK_SUN9I_A80_DE_H_
--
--#define CLK_FE0			0
--#define CLK_FE1			1
--#define CLK_FE2			2
--#define CLK_IEP_DEU0		3
--#define CLK_IEP_DEU1		4
--#define CLK_BE0			5
--#define CLK_BE1			6
--#define CLK_BE2			7
--#define CLK_IEP_DRC0		8
--#define CLK_IEP_DRC1		9
--#define CLK_MERGE		10
--
--#define CLK_DRAM_FE0		11
--#define CLK_DRAM_FE1		12
--#define CLK_DRAM_FE2		13
--#define CLK_DRAM_DEU0		14
--#define CLK_DRAM_DEU1		15
--#define CLK_DRAM_BE0		16
--#define CLK_DRAM_BE1		17
--#define CLK_DRAM_BE2		18
--#define CLK_DRAM_DRC0		19
--#define CLK_DRAM_DRC1		20
--
--#define CLK_BUS_FE0		21
--#define CLK_BUS_FE1		22
--#define CLK_BUS_FE2		23
--#define CLK_BUS_DEU0		24
--#define CLK_BUS_DEU1		25
--#define CLK_BUS_BE0		26
--#define CLK_BUS_BE1		27
--#define CLK_BUS_BE2		28
--#define CLK_BUS_DRC0		29
--#define CLK_BUS_DRC1		30
--
--#endif /* _DT_BINDINGS_CLOCK_SUN9I_A80_DE_H_ */
-diff --git a/include/dt-bindings/clock/sun9i-a80-usb.h b/include/dt-bindings/clock/sun9i-a80-usb.h
-deleted file mode 100644
-index 783a60d2ccea..000000000000
---- a/include/dt-bindings/clock/sun9i-a80-usb.h
-+++ /dev/null
-@@ -1,59 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_CLOCK_SUN9I_A80_USB_H_
--#define _DT_BINDINGS_CLOCK_SUN9I_A80_USB_H_
--
--#define CLK_BUS_HCI0	0
--#define CLK_USB_OHCI0	1
--#define CLK_BUS_HCI1	2
--#define CLK_BUS_HCI2	3
--#define CLK_USB_OHCI2	4
--
--#define CLK_USB0_PHY	5
--#define CLK_USB1_HSIC	6
--#define CLK_USB1_PHY	7
--#define CLK_USB2_HSIC	8
--#define CLK_USB2_PHY	9
--#define CLK_USB_HSIC	10
--
--#endif /* _DT_BINDINGS_CLOCK_SUN9I_A80_USB_H_ */
-diff --git a/include/dt-bindings/clock/suniv-ccu-f1c100s.h b/include/dt-bindings/clock/suniv-ccu-f1c100s.h
-deleted file mode 100644
-index d7570765f424..000000000000
---- a/include/dt-bindings/clock/suniv-ccu-f1c100s.h
-+++ /dev/null
-@@ -1,72 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-- *
-- * Copyright (c) 2018 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- */
--
--#ifndef _DT_BINDINGS_CLK_SUNIV_F1C100S_H_
--#define _DT_BINDINGS_CLK_SUNIV_F1C100S_H_
--
--#define CLK_CPU			11
--
--#define CLK_BUS_DMA		14
--#define CLK_BUS_MMC0		15
--#define CLK_BUS_MMC1		16
--#define CLK_BUS_DRAM		17
--#define CLK_BUS_SPI0		18
--#define CLK_BUS_SPI1		19
--#define CLK_BUS_OTG		20
--#define CLK_BUS_VE		21
--#define CLK_BUS_LCD		22
--#define CLK_BUS_DEINTERLACE	23
--#define CLK_BUS_CSI		24
--#define CLK_BUS_TVD		25
--#define CLK_BUS_TVE		26
--#define CLK_BUS_DE_BE		27
--#define CLK_BUS_DE_FE		28
--#define CLK_BUS_CODEC		29
--#define CLK_BUS_SPDIF		30
--#define CLK_BUS_IR		31
--#define CLK_BUS_RSB		32
--#define CLK_BUS_I2S0		33
--#define CLK_BUS_I2C0		34
--#define CLK_BUS_I2C1		35
--#define CLK_BUS_I2C2		36
--#define CLK_BUS_PIO		37
--#define CLK_BUS_UART0		38
--#define CLK_BUS_UART1		39
--#define CLK_BUS_UART2		40
--
--#define CLK_MMC0		41
--#define CLK_MMC0_SAMPLE		42
--#define CLK_MMC0_OUTPUT		43
--#define CLK_MMC1		44
--#define CLK_MMC1_SAMPLE		45
--#define CLK_MMC1_OUTPUT		46
--#define CLK_I2S			47
--#define CLK_SPDIF		48
--
--#define CLK_USB_PHY0		49
--
--#define CLK_DRAM_VE		50
--#define CLK_DRAM_CSI		51
--#define CLK_DRAM_DEINTERLACE	52
--#define CLK_DRAM_TVD		53
--#define CLK_DRAM_DE_FE		54
--#define CLK_DRAM_DE_BE		55
--
--#define CLK_DE_BE		56
--#define CLK_DE_FE		57
--#define CLK_TCON		58
--#define CLK_DEINTERLACE		59
--#define CLK_TVE2_CLK		60
--#define CLK_TVE1_CLK		61
--#define CLK_TVD			62
--#define CLK_CSI			63
--#define CLK_VE			64
--#define CLK_CODEC		65
--#define CLK_AVS			66
--
--#define CLK_IR			67
+-#ifndef _DT_BINDINGS_ATA_AHCI_H
+-#define _DT_BINDINGS_ATA_AHCI_H
+-
+-/* Host Bus Adapter generic platform capabilities */
+-#define HBA_SSS		(1 << 27)
+-#define HBA_SMPS	(1 << 28)
+-
+-/* Host Bus Adapter port-specific platform capabilities */
+-#define HBA_PORT_HPCP	(1 << 18)
+-#define HBA_PORT_MPSP	(1 << 19)
+-#define HBA_PORT_CPD	(1 << 20)
+-#define HBA_PORT_ESP	(1 << 21)
+-#define HBA_PORT_FBSCP	(1 << 22)
 -
 -#endif
+diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
+deleted file mode 100644
+index c029467e828b..000000000000
+--- a/include/dt-bindings/gpio/gpio.h
++++ /dev/null
+@@ -1,42 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides constants for most GPIO bindings.
+- *
+- * Most GPIO bindings include a flags cell as part of the GPIO specifier.
+- * In most cases, the format of the flags cell uses the standard values
+- * defined in this header.
+- */
+-
+-#ifndef _DT_BINDINGS_GPIO_GPIO_H
+-#define _DT_BINDINGS_GPIO_GPIO_H
+-
+-/* Bit 0 express polarity */
+-#define GPIO_ACTIVE_HIGH 0
+-#define GPIO_ACTIVE_LOW 1
+-
+-/* Bit 1 express single-endedness */
+-#define GPIO_PUSH_PULL 0
+-#define GPIO_SINGLE_ENDED 2
+-
+-/* Bit 2 express Open drain or open source */
+-#define GPIO_LINE_OPEN_SOURCE 0
+-#define GPIO_LINE_OPEN_DRAIN 4
+-
+-/*
+- * Open Drain/Collector is the combination of single-ended open drain interface.
+- * Open Source/Emitter is the combination of single-ended open source interface.
+- */
+-#define GPIO_OPEN_DRAIN (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN)
+-#define GPIO_OPEN_SOURCE (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_SOURCE)
+-
+-/* Bit 3 express GPIO suspend/resume and reset persistence */
+-#define GPIO_PERSISTENT 0
+-#define GPIO_TRANSITORY 8
+-
+-/* Bit 4 express pull up */
+-#define GPIO_PULL_UP 16
+-
+-/* Bit 5 express pull down */
+-#define GPIO_PULL_DOWN 32
+-
+-#endif
+diff --git a/include/dt-bindings/input/gpio-keys.h b/include/dt-bindings/input/gpio-keys.h
+deleted file mode 100644
+index 8962df79e753..000000000000
+--- a/include/dt-bindings/input/gpio-keys.h
++++ /dev/null
+@@ -1,13 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides constants for gpio keys bindings.
+- */
+-
+-#ifndef _DT_BINDINGS_GPIO_KEYS_H
+-#define _DT_BINDINGS_GPIO_KEYS_H
+-
+-#define EV_ACT_ANY		0x00	/* asserted or deasserted */
+-#define EV_ACT_ASSERTED		0x01	/* asserted */
+-#define EV_ACT_DEASSERTED	0x02	/* deasserted */
+-
+-#endif /* _DT_BINDINGS_GPIO_KEYS_H */
+diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
+deleted file mode 100644
+index a21413324a3f..000000000000
+--- a/include/dt-bindings/input/input.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/*
+- * This header provides constants for most input bindings.
+- *
+- * Most input bindings include key code, matrix key code format.
+- * In most cases, key code and matrix key code format uses
+- * the standard values/macro defined in this header.
+- */
+-
+-#ifndef _DT_BINDINGS_INPUT_INPUT_H
+-#define _DT_BINDINGS_INPUT_INPUT_H
+-
+-#include "linux-event-codes.h"
+-
+-#define MATRIX_KEY(row, col, code)	\
+-	((((row) & 0xFF) << 24) | (((col) & 0xFF) << 16) | ((code) & 0xFFFF))
+-
+-#endif /* _DT_BINDINGS_INPUT_INPUT_H */
+diff --git a/include/dt-bindings/input/linux-event-codes.h b/include/dt-bindings/input/linux-event-codes.h
+deleted file mode 100644
+index 331458c0e710..000000000000
+--- a/include/dt-bindings/input/linux-event-codes.h
++++ /dev/null
+@@ -1,806 +0,0 @@
+-/*
+- * Input event codes
+- *
+- *    *** IMPORTANT ***
+- * This file is not only included from C-code but also from devicetree source
+- * files. As such this file MUST only contain comments and defines.
+- *
+- * Copyright (c) 1999-2002 Vojtech Pavlik
+- * Copyright (c) 2015 Hans de Goede <hdegoede@redhat.com>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 as published by
+- * the Free Software Foundation.
+- */
+-#ifndef _UAPI_INPUT_EVENT_CODES_H
+-#define _UAPI_INPUT_EVENT_CODES_H
+-
+-/*
+- * Device properties and quirks
+- */
+-
+-#define INPUT_PROP_POINTER		0x00	/* needs a pointer */
+-#define INPUT_PROP_DIRECT		0x01	/* direct input devices */
+-#define INPUT_PROP_BUTTONPAD		0x02	/* has button(s) under pad */
+-#define INPUT_PROP_SEMI_MT		0x03	/* touch rectangle only */
+-#define INPUT_PROP_TOPBUTTONPAD		0x04	/* softbuttons at top of pad */
+-#define INPUT_PROP_POINTING_STICK	0x05	/* is a pointing stick */
+-#define INPUT_PROP_ACCELEROMETER	0x06	/* has accelerometer */
+-
+-#define INPUT_PROP_MAX			0x1f
+-#define INPUT_PROP_CNT			(INPUT_PROP_MAX + 1)
+-
+-/*
+- * Event types
+- */
+-
+-#define EV_SYN			0x00
+-#define EV_KEY			0x01
+-#define EV_REL			0x02
+-#define EV_ABS			0x03
+-#define EV_MSC			0x04
+-#define EV_SW			0x05
+-#define EV_LED			0x11
+-#define EV_SND			0x12
+-#define EV_REP			0x14
+-#define EV_FF			0x15
+-#define EV_PWR			0x16
+-#define EV_FF_STATUS		0x17
+-#define EV_MAX			0x1f
+-#define EV_CNT			(EV_MAX+1)
+-
+-/*
+- * Synchronization events.
+- */
+-
+-#define SYN_REPORT		0
+-#define SYN_CONFIG		1
+-#define SYN_MT_REPORT		2
+-#define SYN_DROPPED		3
+-#define SYN_MAX			0xf
+-#define SYN_CNT			(SYN_MAX+1)
+-
+-/*
+- * Keys and buttons
+- *
+- * Most of the keys/buttons are modeled after USB HUT 1.12
+- * (see http://www.usb.org/developers/hidpage).
+- * Abbreviations in the comments:
+- * AC - Application Control
+- * AL - Application Launch Button
+- * SC - System Control
+- */
+-
+-#define KEY_RESERVED		0
+-#define KEY_ESC			1
+-#define KEY_1			2
+-#define KEY_2			3
+-#define KEY_3			4
+-#define KEY_4			5
+-#define KEY_5			6
+-#define KEY_6			7
+-#define KEY_7			8
+-#define KEY_8			9
+-#define KEY_9			10
+-#define KEY_0			11
+-#define KEY_MINUS		12
+-#define KEY_EQUAL		13
+-#define KEY_BACKSPACE		14
+-#define KEY_TAB			15
+-#define KEY_Q			16
+-#define KEY_W			17
+-#define KEY_E			18
+-#define KEY_R			19
+-#define KEY_T			20
+-#define KEY_Y			21
+-#define KEY_U			22
+-#define KEY_I			23
+-#define KEY_O			24
+-#define KEY_P			25
+-#define KEY_LEFTBRACE		26
+-#define KEY_RIGHTBRACE		27
+-#define KEY_ENTER		28
+-#define KEY_LEFTCTRL		29
+-#define KEY_A			30
+-#define KEY_S			31
+-#define KEY_D			32
+-#define KEY_F			33
+-#define KEY_G			34
+-#define KEY_H			35
+-#define KEY_J			36
+-#define KEY_K			37
+-#define KEY_L			38
+-#define KEY_SEMICOLON		39
+-#define KEY_APOSTROPHE		40
+-#define KEY_GRAVE		41
+-#define KEY_LEFTSHIFT		42
+-#define KEY_BACKSLASH		43
+-#define KEY_Z			44
+-#define KEY_X			45
+-#define KEY_C			46
+-#define KEY_V			47
+-#define KEY_B			48
+-#define KEY_N			49
+-#define KEY_M			50
+-#define KEY_COMMA		51
+-#define KEY_DOT			52
+-#define KEY_SLASH		53
+-#define KEY_RIGHTSHIFT		54
+-#define KEY_KPASTERISK		55
+-#define KEY_LEFTALT		56
+-#define KEY_SPACE		57
+-#define KEY_CAPSLOCK		58
+-#define KEY_F1			59
+-#define KEY_F2			60
+-#define KEY_F3			61
+-#define KEY_F4			62
+-#define KEY_F5			63
+-#define KEY_F6			64
+-#define KEY_F7			65
+-#define KEY_F8			66
+-#define KEY_F9			67
+-#define KEY_F10			68
+-#define KEY_NUMLOCK		69
+-#define KEY_SCROLLLOCK		70
+-#define KEY_KP7			71
+-#define KEY_KP8			72
+-#define KEY_KP9			73
+-#define KEY_KPMINUS		74
+-#define KEY_KP4			75
+-#define KEY_KP5			76
+-#define KEY_KP6			77
+-#define KEY_KPPLUS		78
+-#define KEY_KP1			79
+-#define KEY_KP2			80
+-#define KEY_KP3			81
+-#define KEY_KP0			82
+-#define KEY_KPDOT		83
+-
+-#define KEY_ZENKAKUHANKAKU	85
+-#define KEY_102ND		86
+-#define KEY_F11			87
+-#define KEY_F12			88
+-#define KEY_RO			89
+-#define KEY_KATAKANA		90
+-#define KEY_HIRAGANA		91
+-#define KEY_HENKAN		92
+-#define KEY_KATAKANAHIRAGANA	93
+-#define KEY_MUHENKAN		94
+-#define KEY_KPJPCOMMA		95
+-#define KEY_KPENTER		96
+-#define KEY_RIGHTCTRL		97
+-#define KEY_KPSLASH		98
+-#define KEY_SYSRQ		99
+-#define KEY_RIGHTALT		100
+-#define KEY_LINEFEED		101
+-#define KEY_HOME		102
+-#define KEY_UP			103
+-#define KEY_PAGEUP		104
+-#define KEY_LEFT		105
+-#define KEY_RIGHT		106
+-#define KEY_END			107
+-#define KEY_DOWN		108
+-#define KEY_PAGEDOWN		109
+-#define KEY_INSERT		110
+-#define KEY_DELETE		111
+-#define KEY_MACRO		112
+-#define KEY_MUTE		113
+-#define KEY_VOLUMEDOWN		114
+-#define KEY_VOLUMEUP		115
+-#define KEY_POWER		116	/* SC System Power Down */
+-#define KEY_KPEQUAL		117
+-#define KEY_KPPLUSMINUS		118
+-#define KEY_PAUSE		119
+-#define KEY_SCALE		120	/* AL Compiz Scale (Expose) */
+-
+-#define KEY_KPCOMMA		121
+-#define KEY_HANGEUL		122
+-#define KEY_HANGUEL		KEY_HANGEUL
+-#define KEY_HANJA		123
+-#define KEY_YEN			124
+-#define KEY_LEFTMETA		125
+-#define KEY_RIGHTMETA		126
+-#define KEY_COMPOSE		127
+-
+-#define KEY_STOP		128	/* AC Stop */
+-#define KEY_AGAIN		129
+-#define KEY_PROPS		130	/* AC Properties */
+-#define KEY_UNDO		131	/* AC Undo */
+-#define KEY_FRONT		132
+-#define KEY_COPY		133	/* AC Copy */
+-#define KEY_OPEN		134	/* AC Open */
+-#define KEY_PASTE		135	/* AC Paste */
+-#define KEY_FIND		136	/* AC Search */
+-#define KEY_CUT			137	/* AC Cut */
+-#define KEY_HELP		138	/* AL Integrated Help Center */
+-#define KEY_MENU		139	/* Menu (show menu) */
+-#define KEY_CALC		140	/* AL Calculator */
+-#define KEY_SETUP		141
+-#define KEY_SLEEP		142	/* SC System Sleep */
+-#define KEY_WAKEUP		143	/* System Wake Up */
+-#define KEY_FILE		144	/* AL Local Machine Browser */
+-#define KEY_SENDFILE		145
+-#define KEY_DELETEFILE		146
+-#define KEY_XFER		147
+-#define KEY_PROG1		148
+-#define KEY_PROG2		149
+-#define KEY_WWW			150	/* AL Internet Browser */
+-#define KEY_MSDOS		151
+-#define KEY_COFFEE		152	/* AL Terminal Lock/Screensaver */
+-#define KEY_SCREENLOCK		KEY_COFFEE
+-#define KEY_ROTATE_DISPLAY	153	/* Display orientation for e.g. tablets */
+-#define KEY_DIRECTION		KEY_ROTATE_DISPLAY
+-#define KEY_CYCLEWINDOWS	154
+-#define KEY_MAIL		155
+-#define KEY_BOOKMARKS		156	/* AC Bookmarks */
+-#define KEY_COMPUTER		157
+-#define KEY_BACK		158	/* AC Back */
+-#define KEY_FORWARD		159	/* AC Forward */
+-#define KEY_CLOSECD		160
+-#define KEY_EJECTCD		161
+-#define KEY_EJECTCLOSECD	162
+-#define KEY_NEXTSONG		163
+-#define KEY_PLAYPAUSE		164
+-#define KEY_PREVIOUSSONG	165
+-#define KEY_STOPCD		166
+-#define KEY_RECORD		167
+-#define KEY_REWIND		168
+-#define KEY_PHONE		169	/* Media Select Telephone */
+-#define KEY_ISO			170
+-#define KEY_CONFIG		171	/* AL Consumer Control Configuration */
+-#define KEY_HOMEPAGE		172	/* AC Home */
+-#define KEY_REFRESH		173	/* AC Refresh */
+-#define KEY_EXIT		174	/* AC Exit */
+-#define KEY_MOVE		175
+-#define KEY_EDIT		176
+-#define KEY_SCROLLUP		177
+-#define KEY_SCROLLDOWN		178
+-#define KEY_KPLEFTPAREN		179
+-#define KEY_KPRIGHTPAREN	180
+-#define KEY_NEW			181	/* AC New */
+-#define KEY_REDO		182	/* AC Redo/Repeat */
+-
+-#define KEY_F13			183
+-#define KEY_F14			184
+-#define KEY_F15			185
+-#define KEY_F16			186
+-#define KEY_F17			187
+-#define KEY_F18			188
+-#define KEY_F19			189
+-#define KEY_F20			190
+-#define KEY_F21			191
+-#define KEY_F22			192
+-#define KEY_F23			193
+-#define KEY_F24			194
+-
+-#define KEY_PLAYCD		200
+-#define KEY_PAUSECD		201
+-#define KEY_PROG3		202
+-#define KEY_PROG4		203
+-#define KEY_DASHBOARD		204	/* AL Dashboard */
+-#define KEY_SUSPEND		205
+-#define KEY_CLOSE		206	/* AC Close */
+-#define KEY_PLAY		207
+-#define KEY_FASTFORWARD		208
+-#define KEY_BASSBOOST		209
+-#define KEY_PRINT		210	/* AC Print */
+-#define KEY_HP			211
+-#define KEY_CAMERA		212
+-#define KEY_SOUND		213
+-#define KEY_QUESTION		214
+-#define KEY_EMAIL		215
+-#define KEY_CHAT		216
+-#define KEY_SEARCH		217
+-#define KEY_CONNECT		218
+-#define KEY_FINANCE		219	/* AL Checkbook/Finance */
+-#define KEY_SPORT		220
+-#define KEY_SHOP		221
+-#define KEY_ALTERASE		222
+-#define KEY_CANCEL		223	/* AC Cancel */
+-#define KEY_BRIGHTNESSDOWN	224
+-#define KEY_BRIGHTNESSUP	225
+-#define KEY_MEDIA		226
+-
+-#define KEY_SWITCHVIDEOMODE	227	/* Cycle between available video
+-					   outputs (Monitor/LCD/TV-out/etc) */
+-#define KEY_KBDILLUMTOGGLE	228
+-#define KEY_KBDILLUMDOWN	229
+-#define KEY_KBDILLUMUP		230
+-
+-#define KEY_SEND		231	/* AC Send */
+-#define KEY_REPLY		232	/* AC Reply */
+-#define KEY_FORWARDMAIL		233	/* AC Forward Msg */
+-#define KEY_SAVE		234	/* AC Save */
+-#define KEY_DOCUMENTS		235
+-
+-#define KEY_BATTERY		236
+-
+-#define KEY_BLUETOOTH		237
+-#define KEY_WLAN		238
+-#define KEY_UWB			239
+-
+-#define KEY_UNKNOWN		240
+-
+-#define KEY_VIDEO_NEXT		241	/* drive next video source */
+-#define KEY_VIDEO_PREV		242	/* drive previous video source */
+-#define KEY_BRIGHTNESS_CYCLE	243	/* brightness up, after max is min */
+-#define KEY_BRIGHTNESS_AUTO	244	/* Set Auto Brightness: manual
+-					  brightness control is off,
+-					  rely on ambient */
+-#define KEY_BRIGHTNESS_ZERO	KEY_BRIGHTNESS_AUTO
+-#define KEY_DISPLAY_OFF		245	/* display device to off state */
+-
+-#define KEY_WWAN		246	/* Wireless WAN (LTE, UMTS, GSM, etc.) */
+-#define KEY_WIMAX		KEY_WWAN
+-#define KEY_RFKILL		247	/* Key that controls all radios */
+-
+-#define KEY_MICMUTE		248	/* Mute / unmute the microphone */
+-
+-/* Code 255 is reserved for special needs of AT keyboard driver */
+-
+-#define BTN_MISC		0x100
+-#define BTN_0			0x100
+-#define BTN_1			0x101
+-#define BTN_2			0x102
+-#define BTN_3			0x103
+-#define BTN_4			0x104
+-#define BTN_5			0x105
+-#define BTN_6			0x106
+-#define BTN_7			0x107
+-#define BTN_8			0x108
+-#define BTN_9			0x109
+-
+-#define BTN_MOUSE		0x110
+-#define BTN_LEFT		0x110
+-#define BTN_RIGHT		0x111
+-#define BTN_MIDDLE		0x112
+-#define BTN_SIDE		0x113
+-#define BTN_EXTRA		0x114
+-#define BTN_FORWARD		0x115
+-#define BTN_BACK		0x116
+-#define BTN_TASK		0x117
+-
+-#define BTN_JOYSTICK		0x120
+-#define BTN_TRIGGER		0x120
+-#define BTN_THUMB		0x121
+-#define BTN_THUMB2		0x122
+-#define BTN_TOP			0x123
+-#define BTN_TOP2		0x124
+-#define BTN_PINKIE		0x125
+-#define BTN_BASE		0x126
+-#define BTN_BASE2		0x127
+-#define BTN_BASE3		0x128
+-#define BTN_BASE4		0x129
+-#define BTN_BASE5		0x12a
+-#define BTN_BASE6		0x12b
+-#define BTN_DEAD		0x12f
+-
+-#define BTN_GAMEPAD		0x130
+-#define BTN_SOUTH		0x130
+-#define BTN_A			BTN_SOUTH
+-#define BTN_EAST		0x131
+-#define BTN_B			BTN_EAST
+-#define BTN_C			0x132
+-#define BTN_NORTH		0x133
+-#define BTN_X			BTN_NORTH
+-#define BTN_WEST		0x134
+-#define BTN_Y			BTN_WEST
+-#define BTN_Z			0x135
+-#define BTN_TL			0x136
+-#define BTN_TR			0x137
+-#define BTN_TL2			0x138
+-#define BTN_TR2			0x139
+-#define BTN_SELECT		0x13a
+-#define BTN_START		0x13b
+-#define BTN_MODE		0x13c
+-#define BTN_THUMBL		0x13d
+-#define BTN_THUMBR		0x13e
+-
+-#define BTN_DIGI		0x140
+-#define BTN_TOOL_PEN		0x140
+-#define BTN_TOOL_RUBBER		0x141
+-#define BTN_TOOL_BRUSH		0x142
+-#define BTN_TOOL_PENCIL		0x143
+-#define BTN_TOOL_AIRBRUSH	0x144
+-#define BTN_TOOL_FINGER		0x145
+-#define BTN_TOOL_MOUSE		0x146
+-#define BTN_TOOL_LENS		0x147
+-#define BTN_TOOL_QUINTTAP	0x148	/* Five fingers on trackpad */
+-#define BTN_TOUCH		0x14a
+-#define BTN_STYLUS		0x14b
+-#define BTN_STYLUS2		0x14c
+-#define BTN_TOOL_DOUBLETAP	0x14d
+-#define BTN_TOOL_TRIPLETAP	0x14e
+-#define BTN_TOOL_QUADTAP	0x14f	/* Four fingers on trackpad */
+-
+-#define BTN_WHEEL		0x150
+-#define BTN_GEAR_DOWN		0x150
+-#define BTN_GEAR_UP		0x151
+-
+-#define KEY_OK			0x160
+-#define KEY_SELECT		0x161
+-#define KEY_GOTO		0x162
+-#define KEY_CLEAR		0x163
+-#define KEY_POWER2		0x164
+-#define KEY_OPTION		0x165
+-#define KEY_INFO		0x166	/* AL OEM Features/Tips/Tutorial */
+-#define KEY_TIME		0x167
+-#define KEY_VENDOR		0x168
+-#define KEY_ARCHIVE		0x169
+-#define KEY_PROGRAM		0x16a	/* Media Select Program Guide */
+-#define KEY_CHANNEL		0x16b
+-#define KEY_FAVORITES		0x16c
+-#define KEY_EPG			0x16d
+-#define KEY_PVR			0x16e	/* Media Select Home */
+-#define KEY_MHP			0x16f
+-#define KEY_LANGUAGE		0x170
+-#define KEY_TITLE		0x171
+-#define KEY_SUBTITLE		0x172
+-#define KEY_ANGLE		0x173
+-#define KEY_ZOOM		0x174
+-#define KEY_MODE		0x175
+-#define KEY_KEYBOARD		0x176
+-#define KEY_SCREEN		0x177
+-#define KEY_PC			0x178	/* Media Select Computer */
+-#define KEY_TV			0x179	/* Media Select TV */
+-#define KEY_TV2			0x17a	/* Media Select Cable */
+-#define KEY_VCR			0x17b	/* Media Select VCR */
+-#define KEY_VCR2		0x17c	/* VCR Plus */
+-#define KEY_SAT			0x17d	/* Media Select Satellite */
+-#define KEY_SAT2		0x17e
+-#define KEY_CD			0x17f	/* Media Select CD */
+-#define KEY_TAPE		0x180	/* Media Select Tape */
+-#define KEY_RADIO		0x181
+-#define KEY_TUNER		0x182	/* Media Select Tuner */
+-#define KEY_PLAYER		0x183
+-#define KEY_TEXT		0x184
+-#define KEY_DVD			0x185	/* Media Select DVD */
+-#define KEY_AUX			0x186
+-#define KEY_MP3			0x187
+-#define KEY_AUDIO		0x188	/* AL Audio Browser */
+-#define KEY_VIDEO		0x189	/* AL Movie Browser */
+-#define KEY_DIRECTORY		0x18a
+-#define KEY_LIST		0x18b
+-#define KEY_MEMO		0x18c	/* Media Select Messages */
+-#define KEY_CALENDAR		0x18d
+-#define KEY_RED			0x18e
+-#define KEY_GREEN		0x18f
+-#define KEY_YELLOW		0x190
+-#define KEY_BLUE		0x191
+-#define KEY_CHANNELUP		0x192	/* Channel Increment */
+-#define KEY_CHANNELDOWN		0x193	/* Channel Decrement */
+-#define KEY_FIRST		0x194
+-#define KEY_LAST		0x195	/* Recall Last */
+-#define KEY_AB			0x196
+-#define KEY_NEXT		0x197
+-#define KEY_RESTART		0x198
+-#define KEY_SLOW		0x199
+-#define KEY_SHUFFLE		0x19a
+-#define KEY_BREAK		0x19b
+-#define KEY_PREVIOUS		0x19c
+-#define KEY_DIGITS		0x19d
+-#define KEY_TEEN		0x19e
+-#define KEY_TWEN		0x19f
+-#define KEY_VIDEOPHONE		0x1a0	/* Media Select Video Phone */
+-#define KEY_GAMES		0x1a1	/* Media Select Games */
+-#define KEY_ZOOMIN		0x1a2	/* AC Zoom In */
+-#define KEY_ZOOMOUT		0x1a3	/* AC Zoom Out */
+-#define KEY_ZOOMRESET		0x1a4	/* AC Zoom */
+-#define KEY_WORDPROCESSOR	0x1a5	/* AL Word Processor */
+-#define KEY_EDITOR		0x1a6	/* AL Text Editor */
+-#define KEY_SPREADSHEET		0x1a7	/* AL Spreadsheet */
+-#define KEY_GRAPHICSEDITOR	0x1a8	/* AL Graphics Editor */
+-#define KEY_PRESENTATION	0x1a9	/* AL Presentation App */
+-#define KEY_DATABASE		0x1aa	/* AL Database App */
+-#define KEY_NEWS		0x1ab	/* AL Newsreader */
+-#define KEY_VOICEMAIL		0x1ac	/* AL Voicemail */
+-#define KEY_ADDRESSBOOK		0x1ad	/* AL Contacts/Address Book */
+-#define KEY_MESSENGER		0x1ae	/* AL Instant Messaging */
+-#define KEY_DISPLAYTOGGLE	0x1af	/* Turn display (LCD) on and off */
+-#define KEY_BRIGHTNESS_TOGGLE	KEY_DISPLAYTOGGLE
+-#define KEY_SPELLCHECK		0x1b0   /* AL Spell Check */
+-#define KEY_LOGOFF		0x1b1   /* AL Logoff */
+-
+-#define KEY_DOLLAR		0x1b2
+-#define KEY_EURO		0x1b3
+-
+-#define KEY_FRAMEBACK		0x1b4	/* Consumer - transport controls */
+-#define KEY_FRAMEFORWARD	0x1b5
+-#define KEY_CONTEXT_MENU	0x1b6	/* GenDesc - system context menu */
+-#define KEY_MEDIA_REPEAT	0x1b7	/* Consumer - transport control */
+-#define KEY_10CHANNELSUP	0x1b8	/* 10 channels up (10+) */
+-#define KEY_10CHANNELSDOWN	0x1b9	/* 10 channels down (10-) */
+-#define KEY_IMAGES		0x1ba	/* AL Image Browser */
+-
+-#define KEY_DEL_EOL		0x1c0
+-#define KEY_DEL_EOS		0x1c1
+-#define KEY_INS_LINE		0x1c2
+-#define KEY_DEL_LINE		0x1c3
+-
+-#define KEY_FN			0x1d0
+-#define KEY_FN_ESC		0x1d1
+-#define KEY_FN_F1		0x1d2
+-#define KEY_FN_F2		0x1d3
+-#define KEY_FN_F3		0x1d4
+-#define KEY_FN_F4		0x1d5
+-#define KEY_FN_F5		0x1d6
+-#define KEY_FN_F6		0x1d7
+-#define KEY_FN_F7		0x1d8
+-#define KEY_FN_F8		0x1d9
+-#define KEY_FN_F9		0x1da
+-#define KEY_FN_F10		0x1db
+-#define KEY_FN_F11		0x1dc
+-#define KEY_FN_F12		0x1dd
+-#define KEY_FN_1		0x1de
+-#define KEY_FN_2		0x1df
+-#define KEY_FN_D		0x1e0
+-#define KEY_FN_E		0x1e1
+-#define KEY_FN_F		0x1e2
+-#define KEY_FN_S		0x1e3
+-#define KEY_FN_B		0x1e4
+-
+-#define KEY_BRL_DOT1		0x1f1
+-#define KEY_BRL_DOT2		0x1f2
+-#define KEY_BRL_DOT3		0x1f3
+-#define KEY_BRL_DOT4		0x1f4
+-#define KEY_BRL_DOT5		0x1f5
+-#define KEY_BRL_DOT6		0x1f6
+-#define KEY_BRL_DOT7		0x1f7
+-#define KEY_BRL_DOT8		0x1f8
+-#define KEY_BRL_DOT9		0x1f9
+-#define KEY_BRL_DOT10		0x1fa
+-
+-#define KEY_NUMERIC_0		0x200	/* used by phones, remote controls, */
+-#define KEY_NUMERIC_1		0x201	/* and other keypads */
+-#define KEY_NUMERIC_2		0x202
+-#define KEY_NUMERIC_3		0x203
+-#define KEY_NUMERIC_4		0x204
+-#define KEY_NUMERIC_5		0x205
+-#define KEY_NUMERIC_6		0x206
+-#define KEY_NUMERIC_7		0x207
+-#define KEY_NUMERIC_8		0x208
+-#define KEY_NUMERIC_9		0x209
+-#define KEY_NUMERIC_STAR	0x20a
+-#define KEY_NUMERIC_POUND	0x20b
+-#define KEY_NUMERIC_A		0x20c	/* Phone key A - HUT Telephony 0xb9 */
+-#define KEY_NUMERIC_B		0x20d
+-#define KEY_NUMERIC_C		0x20e
+-#define KEY_NUMERIC_D		0x20f
+-
+-#define KEY_CAMERA_FOCUS	0x210
+-#define KEY_WPS_BUTTON		0x211	/* WiFi Protected Setup key */
+-
+-#define KEY_TOUCHPAD_TOGGLE	0x212	/* Request switch touchpad on or off */
+-#define KEY_TOUCHPAD_ON		0x213
+-#define KEY_TOUCHPAD_OFF	0x214
+-
+-#define KEY_CAMERA_ZOOMIN	0x215
+-#define KEY_CAMERA_ZOOMOUT	0x216
+-#define KEY_CAMERA_UP		0x217
+-#define KEY_CAMERA_DOWN		0x218
+-#define KEY_CAMERA_LEFT		0x219
+-#define KEY_CAMERA_RIGHT	0x21a
+-
+-#define KEY_ATTENDANT_ON	0x21b
+-#define KEY_ATTENDANT_OFF	0x21c
+-#define KEY_ATTENDANT_TOGGLE	0x21d	/* Attendant call on or off */
+-#define KEY_LIGHTS_TOGGLE	0x21e	/* Reading light on or off */
+-
+-#define BTN_DPAD_UP		0x220
+-#define BTN_DPAD_DOWN		0x221
+-#define BTN_DPAD_LEFT		0x222
+-#define BTN_DPAD_RIGHT		0x223
+-
+-#define KEY_ALS_TOGGLE		0x230	/* Ambient light sensor */
+-
+-#define KEY_BUTTONCONFIG		0x240	/* AL Button Configuration */
+-#define KEY_TASKMANAGER		0x241	/* AL Task/Project Manager */
+-#define KEY_JOURNAL		0x242	/* AL Log/Journal/Timecard */
+-#define KEY_CONTROLPANEL		0x243	/* AL Control Panel */
+-#define KEY_APPSELECT		0x244	/* AL Select Task/Application */
+-#define KEY_SCREENSAVER		0x245	/* AL Screen Saver */
+-#define KEY_VOICECOMMAND		0x246	/* Listening Voice Command */
+-
+-#define KEY_BRIGHTNESS_MIN		0x250	/* Set Brightness to Minimum */
+-#define KEY_BRIGHTNESS_MAX		0x251	/* Set Brightness to Maximum */
+-
+-#define KEY_KBDINPUTASSIST_PREV		0x260
+-#define KEY_KBDINPUTASSIST_NEXT		0x261
+-#define KEY_KBDINPUTASSIST_PREVGROUP		0x262
+-#define KEY_KBDINPUTASSIST_NEXTGROUP		0x263
+-#define KEY_KBDINPUTASSIST_ACCEPT		0x264
+-#define KEY_KBDINPUTASSIST_CANCEL		0x265
+-
+-#define BTN_TRIGGER_HAPPY		0x2c0
+-#define BTN_TRIGGER_HAPPY1		0x2c0
+-#define BTN_TRIGGER_HAPPY2		0x2c1
+-#define BTN_TRIGGER_HAPPY3		0x2c2
+-#define BTN_TRIGGER_HAPPY4		0x2c3
+-#define BTN_TRIGGER_HAPPY5		0x2c4
+-#define BTN_TRIGGER_HAPPY6		0x2c5
+-#define BTN_TRIGGER_HAPPY7		0x2c6
+-#define BTN_TRIGGER_HAPPY8		0x2c7
+-#define BTN_TRIGGER_HAPPY9		0x2c8
+-#define BTN_TRIGGER_HAPPY10		0x2c9
+-#define BTN_TRIGGER_HAPPY11		0x2ca
+-#define BTN_TRIGGER_HAPPY12		0x2cb
+-#define BTN_TRIGGER_HAPPY13		0x2cc
+-#define BTN_TRIGGER_HAPPY14		0x2cd
+-#define BTN_TRIGGER_HAPPY15		0x2ce
+-#define BTN_TRIGGER_HAPPY16		0x2cf
+-#define BTN_TRIGGER_HAPPY17		0x2d0
+-#define BTN_TRIGGER_HAPPY18		0x2d1
+-#define BTN_TRIGGER_HAPPY19		0x2d2
+-#define BTN_TRIGGER_HAPPY20		0x2d3
+-#define BTN_TRIGGER_HAPPY21		0x2d4
+-#define BTN_TRIGGER_HAPPY22		0x2d5
+-#define BTN_TRIGGER_HAPPY23		0x2d6
+-#define BTN_TRIGGER_HAPPY24		0x2d7
+-#define BTN_TRIGGER_HAPPY25		0x2d8
+-#define BTN_TRIGGER_HAPPY26		0x2d9
+-#define BTN_TRIGGER_HAPPY27		0x2da
+-#define BTN_TRIGGER_HAPPY28		0x2db
+-#define BTN_TRIGGER_HAPPY29		0x2dc
+-#define BTN_TRIGGER_HAPPY30		0x2dd
+-#define BTN_TRIGGER_HAPPY31		0x2de
+-#define BTN_TRIGGER_HAPPY32		0x2df
+-#define BTN_TRIGGER_HAPPY33		0x2e0
+-#define BTN_TRIGGER_HAPPY34		0x2e1
+-#define BTN_TRIGGER_HAPPY35		0x2e2
+-#define BTN_TRIGGER_HAPPY36		0x2e3
+-#define BTN_TRIGGER_HAPPY37		0x2e4
+-#define BTN_TRIGGER_HAPPY38		0x2e5
+-#define BTN_TRIGGER_HAPPY39		0x2e6
+-#define BTN_TRIGGER_HAPPY40		0x2e7
+-
+-/* We avoid low common keys in module aliases so they don't get huge. */
+-#define KEY_MIN_INTERESTING	KEY_MUTE
+-#define KEY_MAX			0x2ff
+-#define KEY_CNT			(KEY_MAX+1)
+-
+-/*
+- * Relative axes
+- */
+-
+-#define REL_X			0x00
+-#define REL_Y			0x01
+-#define REL_Z			0x02
+-#define REL_RX			0x03
+-#define REL_RY			0x04
+-#define REL_RZ			0x05
+-#define REL_HWHEEL		0x06
+-#define REL_DIAL		0x07
+-#define REL_WHEEL		0x08
+-#define REL_MISC		0x09
+-#define REL_MAX			0x0f
+-#define REL_CNT			(REL_MAX+1)
+-
+-/*
+- * Absolute axes
+- */
+-
+-#define ABS_X			0x00
+-#define ABS_Y			0x01
+-#define ABS_Z			0x02
+-#define ABS_RX			0x03
+-#define ABS_RY			0x04
+-#define ABS_RZ			0x05
+-#define ABS_THROTTLE		0x06
+-#define ABS_RUDDER		0x07
+-#define ABS_WHEEL		0x08
+-#define ABS_GAS			0x09
+-#define ABS_BRAKE		0x0a
+-#define ABS_HAT0X		0x10
+-#define ABS_HAT0Y		0x11
+-#define ABS_HAT1X		0x12
+-#define ABS_HAT1Y		0x13
+-#define ABS_HAT2X		0x14
+-#define ABS_HAT2Y		0x15
+-#define ABS_HAT3X		0x16
+-#define ABS_HAT3Y		0x17
+-#define ABS_PRESSURE		0x18
+-#define ABS_DISTANCE		0x19
+-#define ABS_TILT_X		0x1a
+-#define ABS_TILT_Y		0x1b
+-#define ABS_TOOL_WIDTH		0x1c
+-
+-#define ABS_VOLUME		0x20
+-
+-#define ABS_MISC		0x28
+-
+-#define ABS_MT_SLOT		0x2f	/* MT slot being modified */
+-#define ABS_MT_TOUCH_MAJOR	0x30	/* Major axis of touching ellipse */
+-#define ABS_MT_TOUCH_MINOR	0x31	/* Minor axis (omit if circular) */
+-#define ABS_MT_WIDTH_MAJOR	0x32	/* Major axis of approaching ellipse */
+-#define ABS_MT_WIDTH_MINOR	0x33	/* Minor axis (omit if circular) */
+-#define ABS_MT_ORIENTATION	0x34	/* Ellipse orientation */
+-#define ABS_MT_POSITION_X	0x35	/* Center X touch position */
+-#define ABS_MT_POSITION_Y	0x36	/* Center Y touch position */
+-#define ABS_MT_TOOL_TYPE	0x37	/* Type of touching device */
+-#define ABS_MT_BLOB_ID		0x38	/* Group a set of packets as a blob */
+-#define ABS_MT_TRACKING_ID	0x39	/* Unique ID of initiated contact */
+-#define ABS_MT_PRESSURE		0x3a	/* Pressure on contact area */
+-#define ABS_MT_DISTANCE		0x3b	/* Contact hover distance */
+-#define ABS_MT_TOOL_X		0x3c	/* Center X tool position */
+-#define ABS_MT_TOOL_Y		0x3d	/* Center Y tool position */
+-
+-
+-#define ABS_MAX			0x3f
+-#define ABS_CNT			(ABS_MAX+1)
+-
+-/*
+- * Switch events
+- */
+-
+-#define SW_LID			0x00  /* set = lid shut */
+-#define SW_TABLET_MODE		0x01  /* set = tablet mode */
+-#define SW_HEADPHONE_INSERT	0x02  /* set = inserted */
+-#define SW_RFKILL_ALL		0x03  /* rfkill master switch, type "any"
+-					 set = radio enabled */
+-#define SW_RADIO		SW_RFKILL_ALL	/* deprecated */
+-#define SW_MICROPHONE_INSERT	0x04  /* set = inserted */
+-#define SW_DOCK			0x05  /* set = plugged into dock */
+-#define SW_LINEOUT_INSERT	0x06  /* set = inserted */
+-#define SW_JACK_PHYSICAL_INSERT 0x07  /* set = mechanical switch set */
+-#define SW_VIDEOOUT_INSERT	0x08  /* set = inserted */
+-#define SW_CAMERA_LENS_COVER	0x09  /* set = lens covered */
+-#define SW_KEYPAD_SLIDE		0x0a  /* set = keypad slide out */
+-#define SW_FRONT_PROXIMITY	0x0b  /* set = front proximity sensor active */
+-#define SW_ROTATE_LOCK		0x0c  /* set = rotate locked/disabled */
+-#define SW_LINEIN_INSERT	0x0d  /* set = inserted */
+-#define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
+-#define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
+-#define SW_MAX			0x10
+-#define SW_CNT			(SW_MAX+1)
+-
+-/*
+- * Misc events
+- */
+-
+-#define MSC_SERIAL		0x00
+-#define MSC_PULSELED		0x01
+-#define MSC_GESTURE		0x02
+-#define MSC_RAW			0x03
+-#define MSC_SCAN		0x04
+-#define MSC_TIMESTAMP		0x05
+-#define MSC_MAX			0x07
+-#define MSC_CNT			(MSC_MAX+1)
+-
+-/*
+- * LEDs
+- */
+-
+-#define LED_NUML		0x00
+-#define LED_CAPSL		0x01
+-#define LED_SCROLLL		0x02
+-#define LED_COMPOSE		0x03
+-#define LED_KANA		0x04
+-#define LED_SLEEP		0x05
+-#define LED_SUSPEND		0x06
+-#define LED_MUTE		0x07
+-#define LED_MISC		0x08
+-#define LED_MAIL		0x09
+-#define LED_CHARGING		0x0a
+-#define LED_MAX			0x0f
+-#define LED_CNT			(LED_MAX+1)
+-
+-/*
+- * Autorepeat values
+- */
+-
+-#define REP_DELAY		0x00
+-#define REP_PERIOD		0x01
+-#define REP_MAX			0x01
+-#define REP_CNT			(REP_MAX+1)
+-
+-/*
+- * Sounds
+- */
+-
+-#define SND_CLICK		0x00
+-#define SND_BELL		0x01
+-#define SND_TONE		0x02
+-#define SND_MAX			0x07
+-#define SND_CNT			(SND_MAX+1)
+-
+-#endif
+diff --git a/include/dt-bindings/interrupt-controller/irq.h b/include/dt-bindings/interrupt-controller/irq.h
+deleted file mode 100644
+index 33a1003c55aa..000000000000
+--- a/include/dt-bindings/interrupt-controller/irq.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/*
+- * This header provides constants for most IRQ bindings.
+- *
+- * Most IRQ bindings include a flags cell as part of the IRQ specifier.
+- * In most cases, the format of the flags cell uses the standard values
+- * defined in this header.
+- */
+-
+-#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
+-#define _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
+-
+-#define IRQ_TYPE_NONE		0
+-#define IRQ_TYPE_EDGE_RISING	1
+-#define IRQ_TYPE_EDGE_FALLING	2
+-#define IRQ_TYPE_EDGE_BOTH	(IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING)
+-#define IRQ_TYPE_LEVEL_HIGH	4
+-#define IRQ_TYPE_LEVEL_LOW	8
+-
+-#endif
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+deleted file mode 100644
+index 9a0d33d027ff..000000000000
+--- a/include/dt-bindings/leds/common.h
++++ /dev/null
+@@ -1,106 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides macros for the common LEDs device tree bindings.
+- *
+- * Copyright (C) 2015, Samsung Electronics Co., Ltd.
+- * Author: Jacek Anaszewski <j.anaszewski@samsung.com>
+- *
+- * Copyright (C) 2019 Jacek Anaszewski <jacek.anaszewski@gmail.com>
+- * Copyright (C) 2020 Pavel Machek <pavel@ucw.cz>
+- */
+-
+-#ifndef __DT_BINDINGS_LEDS_H
+-#define __DT_BINDINGS_LEDS_H
+-
+-/* External trigger type */
+-#define LEDS_TRIG_TYPE_EDGE	0
+-#define LEDS_TRIG_TYPE_LEVEL	1
+-
+-/* Boost modes */
+-#define LEDS_BOOST_OFF		0
+-#define LEDS_BOOST_ADAPTIVE	1
+-#define LEDS_BOOST_FIXED	2
+-
+-/* Standard LED colors */
+-#define LED_COLOR_ID_WHITE	0
+-#define LED_COLOR_ID_RED	1
+-#define LED_COLOR_ID_GREEN	2
+-#define LED_COLOR_ID_BLUE	3
+-#define LED_COLOR_ID_AMBER	4
+-#define LED_COLOR_ID_VIOLET	5
+-#define LED_COLOR_ID_YELLOW	6
+-#define LED_COLOR_ID_IR		7
+-#define LED_COLOR_ID_MULTI	8	/* For multicolor LEDs */
+-#define LED_COLOR_ID_RGB	9	/* For multicolor LEDs that can do arbitrary color,
+-					   so this would include RGBW and similar */
+-#define LED_COLOR_ID_PURPLE	10
+-#define LED_COLOR_ID_ORANGE	11
+-#define LED_COLOR_ID_PINK	12
+-#define LED_COLOR_ID_CYAN	13
+-#define LED_COLOR_ID_LIME	14
+-#define LED_COLOR_ID_MAX	15
+-
+-/* Standard LED functions */
+-/* Keyboard LEDs, usually it would be input4::capslock etc. */
+-/*   Obsolete equivalent: "shift-key-light" */
+-#define LED_FUNCTION_CAPSLOCK "capslock"
+-#define LED_FUNCTION_SCROLLLOCK "scrolllock"
+-#define LED_FUNCTION_NUMLOCK "numlock"
+-/*   Obsolete equivalents: "tpacpi::thinklight" (IBM/Lenovo Thinkpads),
+-     "lp5523:kb{1,2,3,4,5,6}" (Nokia N900) */
+-#define LED_FUNCTION_KBD_BACKLIGHT "kbd_backlight"
+-
+-/* System LEDs, usually found on system body.
+-   platform::mute (etc) is sometimes seen, :mute would be better */
+-#define LED_FUNCTION_POWER "power"
+-#define LED_FUNCTION_DISK "disk"
+-
+-/*   Obsolete: "platform:*:charging" (allwinner sun50i) */
+-#define LED_FUNCTION_CHARGING "charging"
+-/*   Used RGB notification LEDs common on phones.
+-     Obsolete equivalents: "status-led:{red,green,blue}" (Motorola Droid 4),
+-     "lp5523:{r,g,b}" (Nokia N900) */
+-#define LED_FUNCTION_STATUS "status"
+-
+-#define LED_FUNCTION_MICMUTE "micmute"
+-#define LED_FUNCTION_MUTE "mute"
+-
+-/* Used for player LEDs as found on game controllers from e.g. Nintendo, Sony. */
+-#define LED_FUNCTION_PLAYER1 "player-1"
+-#define LED_FUNCTION_PLAYER2 "player-2"
+-#define LED_FUNCTION_PLAYER3 "player-3"
+-#define LED_FUNCTION_PLAYER4 "player-4"
+-#define LED_FUNCTION_PLAYER5 "player-5"
+-
+-/* Miscelleaus functions. Use functions above if you can. */
+-#define LED_FUNCTION_ACTIVITY "activity"
+-#define LED_FUNCTION_ALARM "alarm"
+-#define LED_FUNCTION_BACKLIGHT "backlight"
+-#define LED_FUNCTION_BLUETOOTH "bluetooth"
+-#define LED_FUNCTION_BOOT "boot"
+-#define LED_FUNCTION_CPU "cpu"
+-#define LED_FUNCTION_DEBUG "debug"
+-#define LED_FUNCTION_DISK_ACTIVITY "disk-activity"
+-#define LED_FUNCTION_DISK_ERR "disk-err"
+-#define LED_FUNCTION_DISK_READ "disk-read"
+-#define LED_FUNCTION_DISK_WRITE "disk-write"
+-#define LED_FUNCTION_FAULT "fault"
+-#define LED_FUNCTION_FLASH "flash"
+-#define LED_FUNCTION_HEARTBEAT "heartbeat"
+-#define LED_FUNCTION_INDICATOR "indicator"
+-#define LED_FUNCTION_LAN "lan"
+-#define LED_FUNCTION_MAIL "mail"
+-#define LED_FUNCTION_MTD "mtd"
+-#define LED_FUNCTION_PANIC "panic"
+-#define LED_FUNCTION_PROGRAMMING "programming"
+-#define LED_FUNCTION_RX "rx"
+-#define LED_FUNCTION_SD "sd"
+-#define LED_FUNCTION_STANDBY "standby"
+-#define LED_FUNCTION_TORCH "torch"
+-#define LED_FUNCTION_TX "tx"
+-#define LED_FUNCTION_USB "usb"
+-#define LED_FUNCTION_WAN "wan"
+-#define LED_FUNCTION_WLAN "wlan"
+-#define LED_FUNCTION_WPS "wps"
+-
+-#endif /* __DT_BINDINGS_LEDS_H */
+diff --git a/include/dt-bindings/mux/mux.h b/include/dt-bindings/mux/mux.h
+deleted file mode 100644
+index 042719218dbf..000000000000
+--- a/include/dt-bindings/mux/mux.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides constants for most Multiplexer bindings.
+- *
+- * Most Multiplexer bindings specify an idle state. In most cases, the
+- * the multiplexer can be left as is when idle, and in some cases it can
+- * disconnect the input/output and leave the multiplexer in a high
+- * impedance state.
+- */
+-
+-#ifndef _DT_BINDINGS_MUX_MUX_H
+-#define _DT_BINDINGS_MUX_MUX_H
+-
+-#define MUX_IDLE_AS_IS      (-1)
+-#define MUX_IDLE_DISCONNECT (-2)
+-
+-#endif
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+deleted file mode 100644
+index f48c9acf251e..000000000000
+--- a/include/dt-bindings/phy/phy.h
++++ /dev/null
+@@ -1,26 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- *
+- * This header provides constants for the phy framework
+- *
+- * Copyright (C) 2014 STMicroelectronics
+- * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
+- */
+-
+-#ifndef _DT_BINDINGS_PHY
+-#define _DT_BINDINGS_PHY
+-
+-#define PHY_NONE		0
+-#define PHY_TYPE_SATA		1
+-#define PHY_TYPE_PCIE		2
+-#define PHY_TYPE_USB2		3
+-#define PHY_TYPE_USB3		4
+-#define PHY_TYPE_UFS		5
+-#define PHY_TYPE_DP		6
+-#define PHY_TYPE_XPCS		7
+-#define PHY_TYPE_SGMII		8
+-#define PHY_TYPE_QSGMII		9
+-#define PHY_TYPE_DPHY		10
+-#define PHY_TYPE_CPHY		11
+-
+-#endif /* _DT_BINDINGS_PHY */
+diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
+deleted file mode 100644
+index 96f49e82253e..000000000000
+--- a/include/dt-bindings/pwm/pwm.h
++++ /dev/null
+@@ -1,14 +0,0 @@
+-/*
+- * This header provides constants for most PWM bindings.
+- *
+- * Most PWM bindings can include a flags cell as part of the PWM specifier.
+- * In most cases, the format of the flags cell uses the standard values
+- * defined in this header.
+- */
+-
+-#ifndef _DT_BINDINGS_PWM_PWM_H
+-#define _DT_BINDINGS_PWM_PWM_H
+-
+-#define PWM_POLARITY_INVERTED			(1 << 0)
+-
+-#endif
+diff --git a/include/dt-bindings/spmi/spmi.h b/include/dt-bindings/spmi/spmi.h
+deleted file mode 100644
+index ad4a43481de4..000000000000
+--- a/include/dt-bindings/spmi/spmi.h
++++ /dev/null
+@@ -1,10 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
+- */
+-#ifndef __DT_BINDINGS_SPMI_H
+-#define __DT_BINDINGS_SPMI_H
+-
+-#define SPMI_USID	0
+-#define SPMI_GSID	1
+-
+-#endif
+diff --git a/include/dt-bindings/thermal/thermal.h b/include/dt-bindings/thermal/thermal.h
+deleted file mode 100644
+index 7871e5f52b1c..000000000000
+--- a/include/dt-bindings/thermal/thermal.h
++++ /dev/null
+@@ -1,15 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * This header provides constants for most thermal bindings.
+- *
+- * Copyright (C) 2013 Texas Instruments
+- *	Eduardo Valentin <eduardo.valentin@ti.com>
+- */
+-
+-#ifndef _DT_BINDINGS_THERMAL_THERMAL_H
+-#define _DT_BINDINGS_THERMAL_THERMAL_H
+-
+-/* On cooling devices upper and lower limits */
+-#define THERMAL_NO_LIMIT		(~0)
+-
+-#endif
+diff --git a/include/dt-bindings/usb/pd.h b/include/dt-bindings/usb/pd.h
+deleted file mode 100644
+index 985f2bbd4d24..000000000000
+--- a/include/dt-bindings/usb/pd.h
++++ /dev/null
+@@ -1,88 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DT_POWER_DELIVERY_H
+-#define __DT_POWER_DELIVERY_H
+-
+-/* Power delivery Power Data Object definitions */
+-#define PDO_TYPE_FIXED		0
+-#define PDO_TYPE_BATT		1
+-#define PDO_TYPE_VAR		2
+-#define PDO_TYPE_APDO		3
+-
+-#define PDO_TYPE_SHIFT		30
+-#define PDO_TYPE_MASK		0x3
+-
+-#define PDO_TYPE(t)	((t) << PDO_TYPE_SHIFT)
+-
+-#define PDO_VOLT_MASK		0x3ff
+-#define PDO_CURR_MASK		0x3ff
+-#define PDO_PWR_MASK		0x3ff
+-
+-#define PDO_FIXED_DUAL_ROLE	(1 << 29) /* Power role swap supported */
+-#define PDO_FIXED_SUSPEND	(1 << 28) /* USB Suspend supported (Source) */
+-#define PDO_FIXED_HIGHER_CAP	(1 << 28) /* Requires more than vSafe5V (Sink) */
+-#define PDO_FIXED_EXTPOWER	(1 << 27) /* Externally powered */
+-#define PDO_FIXED_USB_COMM	(1 << 26) /* USB communications capable */
+-#define PDO_FIXED_DATA_SWAP	(1 << 25) /* Data role swap supported */
+-#define PDO_FIXED_VOLT_SHIFT	10	/* 50mV units */
+-#define PDO_FIXED_CURR_SHIFT	0	/* 10mA units */
+-
+-#define PDO_FIXED_VOLT(mv)	((((mv) / 50) & PDO_VOLT_MASK) << PDO_FIXED_VOLT_SHIFT)
+-#define PDO_FIXED_CURR(ma)	((((ma) / 10) & PDO_CURR_MASK) << PDO_FIXED_CURR_SHIFT)
+-
+-#define PDO_FIXED(mv, ma, flags)			\
+-	(PDO_TYPE(PDO_TYPE_FIXED) | (flags) |		\
+-	 PDO_FIXED_VOLT(mv) | PDO_FIXED_CURR(ma))
+-
+-#define VSAFE5V 5000 /* mv units */
+-
+-#define PDO_BATT_MAX_VOLT_SHIFT	20	/* 50mV units */
+-#define PDO_BATT_MIN_VOLT_SHIFT	10	/* 50mV units */
+-#define PDO_BATT_MAX_PWR_SHIFT	0	/* 250mW units */
+-
+-#define PDO_BATT_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MIN_VOLT_SHIFT)
+-#define PDO_BATT_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MAX_VOLT_SHIFT)
+-#define PDO_BATT_MAX_POWER(mw) ((((mw) / 250) & PDO_PWR_MASK) << PDO_BATT_MAX_PWR_SHIFT)
+-
+-#define PDO_BATT(min_mv, max_mv, max_mw)			\
+-	(PDO_TYPE(PDO_TYPE_BATT) | PDO_BATT_MIN_VOLT(min_mv) |	\
+-	 PDO_BATT_MAX_VOLT(max_mv) | PDO_BATT_MAX_POWER(max_mw))
+-
+-#define PDO_VAR_MAX_VOLT_SHIFT	20	/* 50mV units */
+-#define PDO_VAR_MIN_VOLT_SHIFT	10	/* 50mV units */
+-#define PDO_VAR_MAX_CURR_SHIFT	0	/* 10mA units */
+-
+-#define PDO_VAR_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MIN_VOLT_SHIFT)
+-#define PDO_VAR_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MAX_VOLT_SHIFT)
+-#define PDO_VAR_MAX_CURR(ma) ((((ma) / 10) & PDO_CURR_MASK) << PDO_VAR_MAX_CURR_SHIFT)
+-
+-#define PDO_VAR(min_mv, max_mv, max_ma)				\
+-	(PDO_TYPE(PDO_TYPE_VAR) | PDO_VAR_MIN_VOLT(min_mv) |	\
+-	 PDO_VAR_MAX_VOLT(max_mv) | PDO_VAR_MAX_CURR(max_ma))
+-
+-#define APDO_TYPE_PPS		0
+-
+-#define PDO_APDO_TYPE_SHIFT	28	/* Only valid value currently is 0x0 - PPS */
+-#define PDO_APDO_TYPE_MASK	0x3
+-
+-#define PDO_APDO_TYPE(t)	((t) << PDO_APDO_TYPE_SHIFT)
+-
+-#define PDO_PPS_APDO_MAX_VOLT_SHIFT	17	/* 100mV units */
+-#define PDO_PPS_APDO_MIN_VOLT_SHIFT	8	/* 100mV units */
+-#define PDO_PPS_APDO_MAX_CURR_SHIFT	0	/* 50mA units */
+-
+-#define PDO_PPS_APDO_VOLT_MASK	0xff
+-#define PDO_PPS_APDO_CURR_MASK	0x7f
+-
+-#define PDO_PPS_APDO_MIN_VOLT(mv)	\
+-	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MIN_VOLT_SHIFT)
+-#define PDO_PPS_APDO_MAX_VOLT(mv)	\
+-	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MAX_VOLT_SHIFT)
+-#define PDO_PPS_APDO_MAX_CURR(ma)	\
+-	((((ma) / 50) & PDO_PPS_APDO_CURR_MASK) << PDO_PPS_APDO_MAX_CURR_SHIFT)
+-
+-#define PDO_PPS_APDO(min_mv, max_mv, max_ma)					\
+-	(PDO_TYPE(PDO_TYPE_APDO) | PDO_APDO_TYPE(APDO_TYPE_PPS) |		\
+-	 PDO_PPS_APDO_MIN_VOLT(min_mv) | PDO_PPS_APDO_MAX_VOLT(max_mv) |	\
+-	 PDO_PPS_APDO_MAX_CURR(max_ma))
+-
+- #endif /* __DT_POWER_DELIVERY_H */
 
 -- 
 2.44.0
