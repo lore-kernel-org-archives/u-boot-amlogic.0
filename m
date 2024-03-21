@@ -2,57 +2,57 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39F7CD1281
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5873CD11DF
 	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:20:51 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.8937.1711055062416652520
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web10.8941.1711055067183147234
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Mar 2024 14:04:22 -0700
+ Thu, 21 Mar 2024 14:04:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=bZBrF1Wg;
- spf=pass (domain: linaro.org, ip: 209.85.128.45, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4146f2b3fafso10237455e9.1
-        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:22 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=sn9jkvZ7;
+ spf=pass (domain: linaro.org, ip: 209.85.128.48, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-414633f7a52so13873815e9.0
+        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711055060; x=1711659860; darn=groups.io;
+        d=linaro.org; s=google; t=1711055065; x=1711659865; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
-        b=bZBrF1WgwOc9SDm8JW8+XdOVFMWgLi7WRYnKPhYHLDpvO0PFNOi6CNLQ0+ozE+2ydC
-         yRyOph8uhbF4TqaEEsfIZkYqc3e/Z3lg7fCTUjzdnVRg9cLcCNMZw+pdm+M8wuPbPd9F
-         f66OD5nPp9qcLpEFd6cXXKf+7ZLWP0U/lpdfL/WlRr+iNyiUs1jjW7G8N61/bCKnxqBU
-         BbPmLsupupD7BnjSxTlE6pXniHx5cpUu2o8XsXsqTPoj+YPP07bbKyZ57b1P1sHyyKWE
-         U4TaplORnL46tzgczuZcA8mkZjcHdXw7dtjA63cTwZO85X0vaSsjY/thyeq6rabK9AYI
-         e9Qg==
+        bh=uiRdn97K6xOZbr+D1s6wrAj84iwqttIRiCW8Yd/fxLA=;
+        b=sn9jkvZ7NG+Fi6iIsRFotLg4Q07+yflQNruI8SOCP4wt8x1DHKKcsSwahZPGT+Rz5L
+         aWNsmOD9xrwXkOHDF/XcppllTMNJbo7loP/a8AZFjwygsvkqV1n2XMkg/x7XUiNsY32n
+         M9qERluYDV5BZ/HTzaYnATTmnQ1MgYEx+K9rcaCW1K1QrL2dCK705DJlJ2rjmAgbGW11
+         hy2q6oJ1IoIf42v+urQM+mzmcrsZ12kD291wM3R3/6dvqXQe9YhuCbfkeUZvMDs57IdS
+         ep5GvJftRccMbVX2D/8oeBFm+paMC/8av/En3YcRDyTQARdsvqi1vNWHsqgdFX9kZ5uu
+         x+Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711055060; x=1711659860;
+        d=1e100.net; s=20230601; t=1711055065; x=1711659865;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
-        b=wPDWdRxAdNN6/1jSsaBbluFRbz5BZBAFLV8wW6fR2CroVjiKzX1U7V8pYoIg17XpHJ
-         6suf3WYupZfy1DdKeUQ4fX+d5LUHrKOpWae2UNElhWucaac7dE7scscdSJuJnPpQuZIz
-         UVsa1Clkwc/NqKbdZjEJMKCxL4XNvcbe8nCiRbU4wMTkCeqyfGPvQZGn1eZp7nw93AHK
-         fIxquUY2iTsUWUDs/AxNNlloTjIebnTbQVoMTNSBkeV2X0L0CIh9xSSeBI2oBJfRM7q4
-         ygs9YMXymQ1e99CuYIkfXi7try9967CCz3J+FTCl5KfNAL/GWXv0mUuXF8zY7C+1JTHl
-         l6GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSoVnk6iWSF3W+npQDOrdXAI+jIj8rf0MMIgM3mJ3uV/12SHxn9j8clSHeJqghD+gZP2VOWl26pfs2tjsH60QQ+Erote9OT5s=
-X-Gm-Message-State: AOJu0YxsyWH71NRKRvh7dJMG5oQ5UfXxlnIULxDc/1zr1xtW60gNYMWV
-	3xRZZT75T3Yues0gOZim38SKBi2OwgcmNHU1Kvmie1XuiTKDkjHF4Exk12BsYNyZgEUwbWfc07u
-	6
-X-Google-Smtp-Source: AGHT+IHvdPEVXMdf/SMP09I+/XbSi7MSWe2e7HSSBD/vZLB51IzCNyIJg1teEwC6ldXHa0E8TdweZA==
-X-Received: by 2002:a05:600c:5494:b0:413:f2c6:df3d with SMTP id iv20-20020a05600c549400b00413f2c6df3dmr229977wmb.13.1711055060566;
-        Thu, 21 Mar 2024 14:04:20 -0700 (PDT)
+        bh=uiRdn97K6xOZbr+D1s6wrAj84iwqttIRiCW8Yd/fxLA=;
+        b=KQ4ovkoivVSedb762TuZWt1BCtkbKRcAAVQXdJPDLf16nzXo45SgmvE8ZXA5EUK3op
+         cNImNkFsutjGp/Bbd9imrAnNEGBRIT67x6/WIH1iWd+OnfDZJOOJBUuytXxd727lxe1f
+         NqRwcBp4LPnZrqWmMhkZbAZGrCAK4lgrGoolqzfNd4ZweZIM+WHbj3YUBXVPLdT40mrI
+         WNjan27SudbS/duDOSeAj8PCdfAgBnJCe3bhnUkef8tHYn84LILqrB9YdHgG2Q8P2MRb
+         RGMlsek5d9mbWvFLsGL+QYp4wB8BEDy0g100NBdGzL42VB7IYNC5BZpo3dryURrK/rwI
+         RpMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3HFB8FzQuZj660tKPwpNLReIO/lKboDY64tmzqBBY2DABrUYEwwsKwMOzCdFIw/P01euIlfRLICfvP+9wfh0ND2KkuH1PGQE=
+X-Gm-Message-State: AOJu0YxpkEMdtJ8ie+mW7HJ/43GkVXP4t2Nk4j22ZLkHSLelrOefOWiS
+	wBhwrrffPZQGLQPUz8UNIYbS2sWIM0js9kxGz1CesfrCgsZwNlW9pmObWZu6OtxAkhZdZnarsef
+	J
+X-Google-Smtp-Source: AGHT+IGtr2RS4DnT8lrmyn8LQHwMAmCQxOGyOW2tACD8vJDB+v4/6T6qh/VcMzx8lcYOqYBdooNoxg==
+X-Received: by 2002:a05:600c:a06:b0:414:37f:2061 with SMTP id z6-20020a05600c0a0600b00414037f2061mr261121wmp.21.1711055064761;
+        Thu, 21 Mar 2024 14:04:24 -0700 (PDT)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.18
+        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:04:19 -0700 (PDT)
+        Thu, 21 Mar 2024 14:04:23 -0700 (PDT)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Thu, 21 Mar 2024 21:03:54 +0000
-Subject: [PATCH v2 11/24] exynos: drop dt-binding headers
+Date: Thu, 21 Mar 2024 21:03:56 +0000
+Subject: [PATCH v2 13/24] ti: drop dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240321-b4-upstream-dt-headers-v2-11-1eac0df875fe@linaro.org>
+Message-Id: <20240321-b4-upstream-dt-headers-v2-13-1eac0df875fe@linaro.org>
 References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 In-Reply-To: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -85,13 +85,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=19475;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=54928;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=kZLqLmWc/ez1mBweoulX7ov9ivbShWuGmqjIVl+U5Tg=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/ZMnFJ/b83V1OCFHDMbJC20n1gca7zs9/iBSEv0/
- j2GLO4pHaUsDIIcDLJiiiziJ5ZZNq29bK+xfcEFmDmsTCBDGLg4BWAiUvcY/ulFSXzeY8M0KXbX
- 6r9Tvjc1iWxmetFUzJap9/jsS9+lX18w/FPy+xKrdOB6hvYV/uDX7A8+3lbKvXnX5uNvliUh5/5
- d9jkGAA==
+ bh=mD2igxSwMWUw1prm5oiNBzGb5Gv9sgWgUUGdZqd4osA=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/aISIk6TK/3+zNxU21L//eULff+FK5h16ye2LH94
+ rX4+W3hHaUsDIIcDLJiiiziJ5ZZNq29bK+xfcEFmDmsTCBDGLg4BWAiuksYGWbf9PHvuXA1x1s2
+ IvSH9vWtdns228j4egvHVc6ZJfc1ZgPDf5ftyc/2+64SYVl4OJrHR0xA/m1qf4QP78xV+8OO+D7
+ pVQAA
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -100,630 +100,1403 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:20:51 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2223
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2225
 
-Drop in favour of dts/upstream.
-
-Small driver and DTS adjustments to use upstream headers.
+Drop in favour of dts/upstream
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- arch/arm/dts/exynos7420.dtsi                 |   2 +-
- drivers/clk/exynos/clk-exynos7420.c          |   2 +-
- include/dt-bindings/clock/exynos7420-clk.h   | 207 ----------------
- include/dt-bindings/clock/exynos850.h        | 337 ---------------------------
- include/dt-bindings/soc/samsung,exynos-usi.h |  17 --
- 5 files changed, 2 insertions(+), 563 deletions(-)
+ drivers/net/phy/dp83869.c                  |   2 +
+ include/dt-bindings/bus/ti-sysc.h          |  28 ----
+ include/dt-bindings/clk/ti-dra7-atl.h      |  40 -----
+ include/dt-bindings/clock/am3.h            | 227 -----------------------------
+ include/dt-bindings/clock/omap4.h          | 149 -------------------
+ include/dt-bindings/clock/omap5.h          | 129 ----------------
+ include/dt-bindings/media/omap3-isp.h      |  22 ---
+ include/dt-bindings/mux/ti-serdes.h        | 190 ------------------------
+ include/dt-bindings/net/ti-dp83867.h       |  53 -------
+ include/dt-bindings/net/ti-dp83869.h       |  60 --------
+ include/dt-bindings/phy/phy-ti.h           |  21 ---
+ include/dt-bindings/pinctrl/am33xx.h       | 172 ----------------------
+ include/dt-bindings/pinctrl/am43xx.h       |  39 -----
+ include/dt-bindings/pinctrl/omap.h         |  91 ------------
+ include/dt-bindings/reset/ti-syscon.h      |  38 -----
+ include/dt-bindings/soc/ti,sci_pm_domain.h |   9 --
+ 16 files changed, 2 insertions(+), 1268 deletions(-)
 
-diff --git a/arch/arm/dts/exynos7420.dtsi b/arch/arm/dts/exynos7420.dtsi
-index 373f48cf2eca..ba9666f3de01 100644
---- a/arch/arm/dts/exynos7420.dtsi
-+++ b/arch/arm/dts/exynos7420.dtsi
-@@ -7,9 +7,9 @@
-  */
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index f9d4782580e9..fa6be1f3ecde 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -105,8 +105,10 @@
+ #define DP83869_IO_MUX_CFG_CLK_O_DISABLE	BIT(6)
+ #define DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+ #define DP83869_IO_MUX_CFG_CLK_O_SEL_MASK	\
+ 		GENMASK(0x1f, DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT)
++/* Special flag to indicate clock should be off */
++#define DP83869_CLK_O_SEL_OFF			0xFFFFFFFF
  
- /dts-v1/;
- #include "skeleton.dtsi"
--#include <dt-bindings/clock/exynos7420-clk.h>
-+#include <dt-bindings/clock/exynos7-clk.h>
- / {
- 	compatible = "samsung,exynos7420";
+ /* CFG3 bits */
+ #define DP83869_CFG3_PORT_MIRROR_EN		BIT(0)
  
- 	fin_pll: xxti {
-diff --git a/drivers/clk/exynos/clk-exynos7420.c b/drivers/clk/exynos/clk-exynos7420.c
-index 9caa932e12fb..cd6d67a0752b 100644
---- a/drivers/clk/exynos/clk-exynos7420.c
-+++ b/drivers/clk/exynos/clk-exynos7420.c
-@@ -10,9 +10,9 @@
- #include <errno.h>
- #include <clk-uclass.h>
- #include <asm/io.h>
- #include <div64.h>
--#include <dt-bindings/clock/exynos7420-clk.h>
-+#include <dt-bindings/clock/exynos7-clk.h>
- 
- #define PLL145X_MDIV_SHIFT	16
- #define PLL145X_MDIV_MASK	0x3ff
- #define PLL145X_PDIV_SHIFT	8
-diff --git a/include/dt-bindings/clock/exynos7420-clk.h b/include/dt-bindings/clock/exynos7420-clk.h
+diff --git a/include/dt-bindings/bus/ti-sysc.h b/include/dt-bindings/bus/ti-sysc.h
 deleted file mode 100644
-index 10c558611085..000000000000
---- a/include/dt-bindings/clock/exynos7420-clk.h
+index eae427454374..000000000000
+--- a/include/dt-bindings/bus/ti-sysc.h
 +++ /dev/null
-@@ -1,207 +0,0 @@
+@@ -1,28 +0,0 @@
+-/* TI sysc interconnect target module defines */
+-
+-/* Generic sysc found on omap2 and later, also known as type1 */
+-#define SYSC_OMAP2_CLOCKACTIVITY	(3 << 8)
+-#define SYSC_OMAP2_EMUFREE		(1 << 5)
+-#define SYSC_OMAP2_ENAWAKEUP		(1 << 2)
+-#define SYSC_OMAP2_SOFTRESET		(1 << 1)
+-#define SYSC_OMAP2_AUTOIDLE		(1 << 0)
+-
+-/* Generic sysc found on omap4 and later, also known as type2 */
+-#define SYSC_OMAP4_DMADISABLE		(1 << 16)
+-#define SYSC_OMAP4_FREEEMU		(1 << 1)	/* Also known as EMUFREE */
+-#define SYSC_OMAP4_SOFTRESET		(1 << 0)
+-
+-/* SmartReflex sysc found on 36xx and later */
+-#define SYSC_OMAP3_SR_ENAWAKEUP		(1 << 26)
+-
+-#define SYSC_DRA7_MCAN_ENAWAKEUP	(1 << 4)
+-
+-/* PRUSS sysc found on AM33xx/AM43xx/AM57xx */
+-#define SYSC_PRUSS_SUB_MWAIT		(1 << 5)
+-#define SYSC_PRUSS_STANDBY_INIT		(1 << 4)
+-
+-/* SYSCONFIG STANDBYMODE/MIDLEMODE/SIDLEMODE supported by hardware */
+-#define SYSC_IDLE_FORCE			0
+-#define SYSC_IDLE_NO			1
+-#define SYSC_IDLE_SMART			2
+-#define SYSC_IDLE_SMART_WKUP		3
+diff --git a/include/dt-bindings/clk/ti-dra7-atl.h b/include/dt-bindings/clk/ti-dra7-atl.h
+deleted file mode 100644
+index 42dd4164f6f4..000000000000
+--- a/include/dt-bindings/clk/ti-dra7-atl.h
++++ /dev/null
+@@ -1,40 +0,0 @@
 -/*
-- * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-- * Author: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+- * This header provides constants for DRA7 ATL (Audio Tracking Logic)
+- *
+- * The constants defined in this header are used in dts files
+- *
+- * Copyright (C) 2013 Texas Instruments, Inc.
+- *
+- * Peter Ujfalusi <peter.ujfalusi@ti.com>
 - *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * published by the Free Software Foundation.
--*/
--
--#ifndef _DT_BINDINGS_CLOCK_EXYNOS7_H
--#define _DT_BINDINGS_CLOCK_EXYNOS7_H
--
--/* TOPC */
--#define DOUT_ACLK_PERIS			1
--#define DOUT_SCLK_BUS0_PLL		2
--#define DOUT_SCLK_BUS1_PLL		3
--#define DOUT_SCLK_CC_PLL		4
--#define DOUT_SCLK_MFC_PLL		5
--#define DOUT_ACLK_CCORE_133		6
--#define DOUT_ACLK_MSCL_532		7
--#define ACLK_MSCL_532			8
--#define DOUT_SCLK_AUD_PLL		9
--#define FOUT_AUD_PLL			10
--#define SCLK_AUD_PLL			11
--#define SCLK_MFC_PLL_B			12
--#define SCLK_MFC_PLL_A			13
--#define SCLK_BUS1_PLL_B			14
--#define SCLK_BUS1_PLL_A			15
--#define SCLK_BUS0_PLL_B			16
--#define SCLK_BUS0_PLL_A			17
--#define SCLK_CC_PLL_B			18
--#define SCLK_CC_PLL_A			19
--#define ACLK_CCORE_133			20
--#define ACLK_PERIS_66			21
--#define TOPC_NR_CLK			22
--
--/* TOP0 */
--#define DOUT_ACLK_PERIC1		1
--#define DOUT_ACLK_PERIC0		2
--#define CLK_SCLK_UART0			3
--#define CLK_SCLK_UART1			4
--#define CLK_SCLK_UART2			5
--#define CLK_SCLK_UART3			6
--#define CLK_SCLK_SPI0			7
--#define CLK_SCLK_SPI1			8
--#define CLK_SCLK_SPI2			9
--#define CLK_SCLK_SPI3			10
--#define CLK_SCLK_SPI4			11
--#define CLK_SCLK_SPDIF			12
--#define CLK_SCLK_PCM1			13
--#define CLK_SCLK_I2S1			14
--#define CLK_ACLK_PERIC0_66		15
--#define CLK_ACLK_PERIC1_66		16
--#define TOP0_NR_CLK			17
--
--/* TOP1 */
--#define DOUT_ACLK_FSYS1_200		1
--#define DOUT_ACLK_FSYS0_200		2
--#define DOUT_SCLK_MMC2			3
--#define DOUT_SCLK_MMC1			4
--#define DOUT_SCLK_MMC0			5
--#define CLK_SCLK_MMC2			6
--#define CLK_SCLK_MMC1			7
--#define CLK_SCLK_MMC0			8
--#define CLK_ACLK_FSYS0_200		9
--#define CLK_ACLK_FSYS1_200		10
--#define CLK_SCLK_PHY_FSYS1		11
--#define CLK_SCLK_PHY_FSYS1_26M		12
--#define MOUT_SCLK_UFSUNIPRO20		13
--#define DOUT_SCLK_UFSUNIPRO20		14
--#define CLK_SCLK_UFSUNIPRO20		15
--#define DOUT_SCLK_PHY_FSYS1		16
--#define DOUT_SCLK_PHY_FSYS1_26M		17
--#define TOP1_NR_CLK			18
--
--/* CCORE */
--#define PCLK_RTC			1
--#define CCORE_NR_CLK			2
--
--/* PERIC0 */
--#define PCLK_UART0			1
--#define SCLK_UART0			2
--#define PCLK_HSI2C0			3
--#define PCLK_HSI2C1			4
--#define PCLK_HSI2C4			5
--#define PCLK_HSI2C5			6
--#define PCLK_HSI2C9			7
--#define PCLK_HSI2C10			8
--#define PCLK_HSI2C11			9
--#define PCLK_PWM			10
--#define SCLK_PWM			11
--#define PCLK_ADCIF			12
--#define PERIC0_NR_CLK			13
--
--/* PERIC1 */
--#define PCLK_UART1			1
--#define PCLK_UART2			2
--#define PCLK_UART3			3
--#define SCLK_UART1			4
--#define SCLK_UART2			5
--#define SCLK_UART3			6
--#define PCLK_HSI2C2			7
--#define PCLK_HSI2C3			8
--#define PCLK_HSI2C6			9
--#define PCLK_HSI2C7			10
--#define PCLK_HSI2C8			11
--#define PCLK_SPI0			12
--#define PCLK_SPI1			13
--#define PCLK_SPI2			14
--#define PCLK_SPI3			15
--#define PCLK_SPI4			16
--#define SCLK_SPI0			17
--#define SCLK_SPI1			18
--#define SCLK_SPI2			19
--#define SCLK_SPI3			20
--#define SCLK_SPI4			21
--#define PCLK_I2S1			22
--#define PCLK_PCM1			23
--#define PCLK_SPDIF			24
--#define SCLK_I2S1			25
--#define SCLK_PCM1			26
--#define SCLK_SPDIF			27
--#define PERIC1_NR_CLK			28
--
--/* PERIS */
--#define PCLK_CHIPID			1
--#define SCLK_CHIPID			2
--#define PCLK_WDT			3
--#define PCLK_TMU			4
--#define SCLK_TMU			5
--#define PERIS_NR_CLK			6
--
--/* FSYS0 */
--#define ACLK_MMC2			1
--#define ACLK_AXIUS_USBDRD30X_FSYS0X	2
--#define ACLK_USBDRD300			3
--#define SCLK_USBDRD300_SUSPENDCLK	4
--#define SCLK_USBDRD300_REFCLK		5
--#define PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER		6
--#define PHYCLK_USBDRD300_UDRD30_PHYCLK_USER		7
--#define OSCCLK_PHY_CLKOUT_USB30_PHY		8
--#define ACLK_PDMA0			9
--#define ACLK_PDMA1			10
--#define FSYS0_NR_CLK			11
--
--/* FSYS1 */
--#define ACLK_MMC1			1
--#define ACLK_MMC0			2
--#define PHYCLK_UFS20_TX0_SYMBOL		3
--#define PHYCLK_UFS20_RX0_SYMBOL		4
--#define PHYCLK_UFS20_RX1_SYMBOL		5
--#define ACLK_UFS20_LINK			6
--#define SCLK_UFSUNIPRO20_USER		7
--#define PHYCLK_UFS20_RX1_SYMBOL_USER	8
--#define PHYCLK_UFS20_RX0_SYMBOL_USER	9
--#define PHYCLK_UFS20_TX0_SYMBOL_USER	10
--#define OSCCLK_PHY_CLKOUT_EMBEDDED_COMBO_PHY	11
--#define SCLK_COMBO_PHY_EMBEDDED_26M	12
--#define DOUT_PCLK_FSYS1			13
--#define PCLK_GPIO_FSYS1			14
--#define MOUT_FSYS1_PHYCLK_SEL1		15
--#define FSYS1_NR_CLK			16
--
--/* MSCL */
--#define USERMUX_ACLK_MSCL_532		1
--#define DOUT_PCLK_MSCL			2
--#define ACLK_MSCL_0			3
--#define ACLK_MSCL_1			4
--#define ACLK_JPEG			5
--#define ACLK_G2D			6
--#define ACLK_LH_ASYNC_SI_MSCL_0		7
--#define ACLK_LH_ASYNC_SI_MSCL_1		8
--#define ACLK_AXI2ACEL_BRIDGE		9
--#define ACLK_XIU_MSCLX_0		10
--#define ACLK_XIU_MSCLX_1		11
--#define ACLK_QE_MSCL_0			12
--#define ACLK_QE_MSCL_1			13
--#define ACLK_QE_JPEG			14
--#define ACLK_QE_G2D			15
--#define ACLK_PPMU_MSCL_0		16
--#define ACLK_PPMU_MSCL_1		17
--#define ACLK_MSCLNP_133			18
--#define ACLK_AHB2APB_MSCL0P		19
--#define ACLK_AHB2APB_MSCL1P		20
--
--#define PCLK_MSCL_0			21
--#define PCLK_MSCL_1			22
--#define PCLK_JPEG			23
--#define PCLK_G2D			24
--#define PCLK_QE_MSCL_0			25
--#define PCLK_QE_MSCL_1			26
--#define PCLK_QE_JPEG			27
--#define PCLK_QE_G2D			28
--#define PCLK_PPMU_MSCL_0		29
--#define PCLK_PPMU_MSCL_1		30
--#define PCLK_AXI2ACEL_BRIDGE		31
--#define PCLK_PMU_MSCL			32
--#define MSCL_NR_CLK			33
--
--/* AUD */
--#define SCLK_I2S			1
--#define SCLK_PCM			2
--#define PCLK_I2S			3
--#define PCLK_PCM			4
--#define ACLK_ADMA			5
--#define AUD_NR_CLK			6
--#endif /* _DT_BINDINGS_CLOCK_EXYNOS7_H */
-diff --git a/include/dt-bindings/clock/exynos850.h b/include/dt-bindings/clock/exynos850.h
-deleted file mode 100644
-index 3090e09c9a55..000000000000
---- a/include/dt-bindings/clock/exynos850.h
-+++ /dev/null
-@@ -1,337 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
--/*
-- * Copyright (C) 2021 Linaro Ltd.
-- * Author: Sam Protsenko <semen.protsenko@linaro.org>
 - *
-- * Device Tree binding constants for Exynos850 clock controller.
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
 - */
 -
--#ifndef _DT_BINDINGS_CLOCK_EXYNOS_850_H
--#define _DT_BINDINGS_CLOCK_EXYNOS_850_H
+-#ifndef _DT_BINDINGS_CLK_DRA7_ATL_H
+-#define _DT_BINDINGS_CLK_DRA7_ATL_H
 -
--/* CMU_TOP */
--#define CLK_FOUT_SHARED0_PLL		1
--#define CLK_FOUT_SHARED1_PLL		2
--#define CLK_FOUT_MMC_PLL		3
--#define CLK_MOUT_SHARED0_PLL		4
--#define CLK_MOUT_SHARED1_PLL		5
--#define CLK_MOUT_MMC_PLL		6
--#define CLK_MOUT_CORE_BUS		7
--#define CLK_MOUT_CORE_CCI		8
--#define CLK_MOUT_CORE_MMC_EMBD		9
--#define CLK_MOUT_CORE_SSS		10
--#define CLK_MOUT_DPU			11
--#define CLK_MOUT_HSI_BUS		12
--#define CLK_MOUT_HSI_MMC_CARD		13
--#define CLK_MOUT_HSI_USB20DRD		14
--#define CLK_MOUT_PERI_BUS		15
--#define CLK_MOUT_PERI_UART		16
--#define CLK_MOUT_PERI_IP		17
--#define CLK_DOUT_SHARED0_DIV3		18
--#define CLK_DOUT_SHARED0_DIV2		19
--#define CLK_DOUT_SHARED1_DIV3		20
--#define CLK_DOUT_SHARED1_DIV2		21
--#define CLK_DOUT_SHARED0_DIV4		22
--#define CLK_DOUT_SHARED1_DIV4		23
--#define CLK_DOUT_CORE_BUS		24
--#define CLK_DOUT_CORE_CCI		25
--#define CLK_DOUT_CORE_MMC_EMBD		26
--#define CLK_DOUT_CORE_SSS		27
--#define CLK_DOUT_DPU			28
--#define CLK_DOUT_HSI_BUS		29
--#define CLK_DOUT_HSI_MMC_CARD		30
--#define CLK_DOUT_HSI_USB20DRD		31
--#define CLK_DOUT_PERI_BUS		32
--#define CLK_DOUT_PERI_UART		33
--#define CLK_DOUT_PERI_IP		34
--#define CLK_GOUT_CORE_BUS		35
--#define CLK_GOUT_CORE_CCI		36
--#define CLK_GOUT_CORE_MMC_EMBD		37
--#define CLK_GOUT_CORE_SSS		38
--#define CLK_GOUT_DPU			39
--#define CLK_GOUT_HSI_BUS		40
--#define CLK_GOUT_HSI_MMC_CARD		41
--#define CLK_GOUT_HSI_USB20DRD		42
--#define CLK_GOUT_PERI_BUS		43
--#define CLK_GOUT_PERI_UART		44
--#define CLK_GOUT_PERI_IP		45
--#define CLK_MOUT_CLKCMU_APM_BUS		46
--#define CLK_DOUT_CLKCMU_APM_BUS		47
--#define CLK_GOUT_CLKCMU_APM_BUS		48
--#define CLK_MOUT_AUD			49
--#define CLK_GOUT_AUD			50
--#define CLK_DOUT_AUD			51
--#define CLK_MOUT_IS_BUS			52
--#define CLK_MOUT_IS_ITP			53
--#define CLK_MOUT_IS_VRA			54
--#define CLK_MOUT_IS_GDC			55
--#define CLK_GOUT_IS_BUS			56
--#define CLK_GOUT_IS_ITP			57
--#define CLK_GOUT_IS_VRA			58
--#define CLK_GOUT_IS_GDC			59
--#define CLK_DOUT_IS_BUS			60
--#define CLK_DOUT_IS_ITP			61
--#define CLK_DOUT_IS_VRA			62
--#define CLK_DOUT_IS_GDC			63
--#define CLK_MOUT_MFCMSCL_MFC		64
--#define CLK_MOUT_MFCMSCL_M2M		65
--#define CLK_MOUT_MFCMSCL_MCSC		66
--#define CLK_MOUT_MFCMSCL_JPEG		67
--#define CLK_GOUT_MFCMSCL_MFC		68
--#define CLK_GOUT_MFCMSCL_M2M		69
--#define CLK_GOUT_MFCMSCL_MCSC		70
--#define CLK_GOUT_MFCMSCL_JPEG		71
--#define CLK_DOUT_MFCMSCL_MFC		72
--#define CLK_DOUT_MFCMSCL_M2M		73
--#define CLK_DOUT_MFCMSCL_MCSC		74
--#define CLK_DOUT_MFCMSCL_JPEG		75
--#define CLK_MOUT_G3D_SWITCH		76
--#define CLK_GOUT_G3D_SWITCH		77
--#define CLK_DOUT_G3D_SWITCH		78
+-#define DRA7_ATL_WS_MCASP1_FSR		0
+-#define DRA7_ATL_WS_MCASP1_FSX		1
+-#define DRA7_ATL_WS_MCASP2_FSR		2
+-#define DRA7_ATL_WS_MCASP2_FSX		3
+-#define DRA7_ATL_WS_MCASP3_FSX		4
+-#define DRA7_ATL_WS_MCASP4_FSX		5
+-#define DRA7_ATL_WS_MCASP5_FSX		6
+-#define DRA7_ATL_WS_MCASP6_FSX		7
+-#define DRA7_ATL_WS_MCASP7_FSX		8
+-#define DRA7_ATL_WS_MCASP8_FSX		9
+-#define DRA7_ATL_WS_MCASP8_AHCLKX	10
+-#define DRA7_ATL_WS_XREF_CLK3		11
+-#define DRA7_ATL_WS_XREF_CLK0		12
+-#define DRA7_ATL_WS_XREF_CLK1		13
+-#define DRA7_ATL_WS_XREF_CLK2		14
+-#define DRA7_ATL_WS_OSC1_X1		15
 -
--/* CMU_APM */
--#define CLK_RCO_I3C_PMIC		1
--#define OSCCLK_RCO_APM			2
--#define CLK_RCO_APM__ALV		3
--#define CLK_DLL_DCO			4
--#define CLK_MOUT_APM_BUS_USER		5
--#define CLK_MOUT_RCO_APM_I3C_USER	6
--#define CLK_MOUT_RCO_APM_USER		7
--#define CLK_MOUT_DLL_USER		8
--#define CLK_MOUT_CLKCMU_CHUB_BUS	9
--#define CLK_MOUT_APM_BUS		10
--#define CLK_MOUT_APM_I3C		11
--#define CLK_DOUT_CLKCMU_CHUB_BUS	12
--#define CLK_DOUT_APM_BUS		13
--#define CLK_DOUT_APM_I3C		14
--#define CLK_GOUT_CLKCMU_CMGP_BUS	15
--#define CLK_GOUT_CLKCMU_CHUB_BUS	16
--#define CLK_GOUT_RTC_PCLK		17
--#define CLK_GOUT_TOP_RTC_PCLK		18
--#define CLK_GOUT_I3C_PCLK		19
--#define CLK_GOUT_I3C_SCLK		20
--#define CLK_GOUT_SPEEDY_PCLK		21
--#define CLK_GOUT_GPIO_ALIVE_PCLK	22
--#define CLK_GOUT_PMU_ALIVE_PCLK		23
--#define CLK_GOUT_SYSREG_APM_PCLK	24
--
--/* CMU_AUD */
--#define CLK_DOUT_AUD_AUDIF		1
--#define CLK_DOUT_AUD_BUSD		2
--#define CLK_DOUT_AUD_BUSP		3
--#define CLK_DOUT_AUD_CNT		4
--#define CLK_DOUT_AUD_CPU		5
--#define CLK_DOUT_AUD_CPU_ACLK		6
--#define CLK_DOUT_AUD_CPU_PCLKDBG	7
--#define CLK_DOUT_AUD_FM			8
--#define CLK_DOUT_AUD_FM_SPDY		9
--#define CLK_DOUT_AUD_MCLK		10
--#define CLK_DOUT_AUD_UAIF0		11
--#define CLK_DOUT_AUD_UAIF1		12
--#define CLK_DOUT_AUD_UAIF2		13
--#define CLK_DOUT_AUD_UAIF3		14
--#define CLK_DOUT_AUD_UAIF4		15
--#define CLK_DOUT_AUD_UAIF5		16
--#define CLK_DOUT_AUD_UAIF6		17
--#define CLK_FOUT_AUD_PLL		18
--#define CLK_GOUT_AUD_ABOX_ACLK		19
--#define CLK_GOUT_AUD_ASB_CCLK		20
--#define CLK_GOUT_AUD_CA32_CCLK		21
--#define CLK_GOUT_AUD_CNT_BCLK		22
--#define CLK_GOUT_AUD_CODEC_MCLK		23
--#define CLK_GOUT_AUD_DAP_CCLK		24
--#define CLK_GOUT_AUD_GPIO_PCLK		25
--#define CLK_GOUT_AUD_PPMU_ACLK		26
--#define CLK_GOUT_AUD_PPMU_PCLK		27
--#define CLK_GOUT_AUD_SPDY_BCLK		28
--#define CLK_GOUT_AUD_SYSMMU_CLK		29
--#define CLK_GOUT_AUD_SYSREG_PCLK	30
--#define CLK_GOUT_AUD_TZPC_PCLK		31
--#define CLK_GOUT_AUD_UAIF0_BCLK		32
--#define CLK_GOUT_AUD_UAIF1_BCLK		33
--#define CLK_GOUT_AUD_UAIF2_BCLK		34
--#define CLK_GOUT_AUD_UAIF3_BCLK		35
--#define CLK_GOUT_AUD_UAIF4_BCLK		36
--#define CLK_GOUT_AUD_UAIF5_BCLK		37
--#define CLK_GOUT_AUD_UAIF6_BCLK		38
--#define CLK_GOUT_AUD_WDT_PCLK		39
--#define CLK_MOUT_AUD_CPU		40
--#define CLK_MOUT_AUD_CPU_HCH		41
--#define CLK_MOUT_AUD_CPU_USER		42
--#define CLK_MOUT_AUD_FM			43
--#define CLK_MOUT_AUD_PLL		44
--#define CLK_MOUT_AUD_TICK_USB_USER	45
--#define CLK_MOUT_AUD_UAIF0		46
--#define CLK_MOUT_AUD_UAIF1		47
--#define CLK_MOUT_AUD_UAIF2		48
--#define CLK_MOUT_AUD_UAIF3		49
--#define CLK_MOUT_AUD_UAIF4		50
--#define CLK_MOUT_AUD_UAIF5		51
--#define CLK_MOUT_AUD_UAIF6		52
--#define IOCLK_AUDIOCDCLK0		53
--#define IOCLK_AUDIOCDCLK1		54
--#define IOCLK_AUDIOCDCLK2		55
--#define IOCLK_AUDIOCDCLK3		56
--#define IOCLK_AUDIOCDCLK4		57
--#define IOCLK_AUDIOCDCLK5		58
--#define IOCLK_AUDIOCDCLK6		59
--#define TICK_USB			60
--#define CLK_GOUT_AUD_CMU_AUD_PCLK	61
--
--/* CMU_CMGP */
--#define CLK_RCO_CMGP			1
--#define CLK_MOUT_CMGP_ADC		2
--#define CLK_MOUT_CMGP_USI0		3
--#define CLK_MOUT_CMGP_USI1		4
--#define CLK_DOUT_CMGP_ADC		5
--#define CLK_DOUT_CMGP_USI0		6
--#define CLK_DOUT_CMGP_USI1		7
--#define CLK_GOUT_CMGP_ADC_S0_PCLK	8
--#define CLK_GOUT_CMGP_ADC_S1_PCLK	9
--#define CLK_GOUT_CMGP_GPIO_PCLK		10
--#define CLK_GOUT_CMGP_USI0_IPCLK	11
--#define CLK_GOUT_CMGP_USI0_PCLK		12
--#define CLK_GOUT_CMGP_USI1_IPCLK	13
--#define CLK_GOUT_CMGP_USI1_PCLK		14
--#define CLK_GOUT_SYSREG_CMGP_PCLK	15
--
--/* CMU_G3D */
--#define CLK_FOUT_G3D_PLL		1
--#define CLK_MOUT_G3D_PLL		2
--#define CLK_MOUT_G3D_SWITCH_USER	3
--#define CLK_MOUT_G3D_BUSD		4
--#define CLK_DOUT_G3D_BUSP		5
--#define CLK_GOUT_G3D_CMU_G3D_PCLK	6
--#define CLK_GOUT_G3D_GPU_CLK		7
--#define CLK_GOUT_G3D_TZPC_PCLK		8
--#define CLK_GOUT_G3D_GRAY2BIN_CLK	9
--#define CLK_GOUT_G3D_BUSD_CLK		10
--#define CLK_GOUT_G3D_BUSP_CLK		11
--#define CLK_GOUT_G3D_SYSREG_PCLK	12
--
--/* CMU_HSI */
--#define CLK_MOUT_HSI_BUS_USER		1
--#define CLK_MOUT_HSI_MMC_CARD_USER	2
--#define CLK_MOUT_HSI_USB20DRD_USER	3
--#define CLK_MOUT_HSI_RTC		4
--#define CLK_GOUT_USB_RTC_CLK		5
--#define CLK_GOUT_USB_REF_CLK		6
--#define CLK_GOUT_USB_PHY_REF_CLK	7
--#define CLK_GOUT_USB_PHY_ACLK		8
--#define CLK_GOUT_USB_BUS_EARLY_CLK	9
--#define CLK_GOUT_GPIO_HSI_PCLK		10
--#define CLK_GOUT_MMC_CARD_ACLK		11
--#define CLK_GOUT_MMC_CARD_SDCLKIN	12
--#define CLK_GOUT_SYSREG_HSI_PCLK	13
--#define CLK_GOUT_HSI_PPMU_ACLK		14
--#define CLK_GOUT_HSI_PPMU_PCLK		15
--#define CLK_GOUT_HSI_CMU_HSI_PCLK	16
--
--/* CMU_IS */
--#define CLK_MOUT_IS_BUS_USER		1
--#define CLK_MOUT_IS_ITP_USER		2
--#define CLK_MOUT_IS_VRA_USER		3
--#define CLK_MOUT_IS_GDC_USER		4
--#define CLK_DOUT_IS_BUSP		5
--#define CLK_GOUT_IS_CMU_IS_PCLK		6
--#define CLK_GOUT_IS_CSIS0_ACLK		7
--#define CLK_GOUT_IS_CSIS1_ACLK		8
--#define CLK_GOUT_IS_CSIS2_ACLK		9
--#define CLK_GOUT_IS_TZPC_PCLK		10
--#define CLK_GOUT_IS_CSIS_DMA_CLK	11
--#define CLK_GOUT_IS_GDC_CLK		12
--#define CLK_GOUT_IS_IPP_CLK		13
--#define CLK_GOUT_IS_ITP_CLK		14
--#define CLK_GOUT_IS_MCSC_CLK		15
--#define CLK_GOUT_IS_VRA_CLK		16
--#define CLK_GOUT_IS_PPMU_IS0_ACLK	17
--#define CLK_GOUT_IS_PPMU_IS0_PCLK	18
--#define CLK_GOUT_IS_PPMU_IS1_ACLK	19
--#define CLK_GOUT_IS_PPMU_IS1_PCLK	20
--#define CLK_GOUT_IS_SYSMMU_IS0_CLK	21
--#define CLK_GOUT_IS_SYSMMU_IS1_CLK	22
--#define CLK_GOUT_IS_SYSREG_PCLK		23
--
--/* CMU_MFCMSCL */
--#define CLK_MOUT_MFCMSCL_MFC_USER		1
--#define CLK_MOUT_MFCMSCL_M2M_USER		2
--#define CLK_MOUT_MFCMSCL_MCSC_USER		3
--#define CLK_MOUT_MFCMSCL_JPEG_USER		4
--#define CLK_DOUT_MFCMSCL_BUSP			5
--#define CLK_GOUT_MFCMSCL_CMU_MFCMSCL_PCLK	6
--#define CLK_GOUT_MFCMSCL_TZPC_PCLK		7
--#define CLK_GOUT_MFCMSCL_JPEG_ACLK		8
--#define CLK_GOUT_MFCMSCL_M2M_ACLK		9
--#define CLK_GOUT_MFCMSCL_MCSC_CLK		10
--#define CLK_GOUT_MFCMSCL_MFC_ACLK		11
--#define CLK_GOUT_MFCMSCL_PPMU_ACLK		12
--#define CLK_GOUT_MFCMSCL_PPMU_PCLK		13
--#define CLK_GOUT_MFCMSCL_SYSMMU_CLK		14
--#define CLK_GOUT_MFCMSCL_SYSREG_PCLK		15
--
--/* CMU_PERI */
--#define CLK_MOUT_PERI_BUS_USER		1
--#define CLK_MOUT_PERI_UART_USER		2
--#define CLK_MOUT_PERI_HSI2C_USER	3
--#define CLK_MOUT_PERI_SPI_USER		4
--#define CLK_DOUT_PERI_HSI2C0		5
--#define CLK_DOUT_PERI_HSI2C1		6
--#define CLK_DOUT_PERI_HSI2C2		7
--#define CLK_DOUT_PERI_SPI0		8
--#define CLK_GOUT_PERI_HSI2C0		9
--#define CLK_GOUT_PERI_HSI2C1		10
--#define CLK_GOUT_PERI_HSI2C2		11
--#define CLK_GOUT_GPIO_PERI_PCLK		12
--#define CLK_GOUT_HSI2C0_IPCLK		13
--#define CLK_GOUT_HSI2C0_PCLK		14
--#define CLK_GOUT_HSI2C1_IPCLK		15
--#define CLK_GOUT_HSI2C1_PCLK		16
--#define CLK_GOUT_HSI2C2_IPCLK		17
--#define CLK_GOUT_HSI2C2_PCLK		18
--#define CLK_GOUT_I2C0_PCLK		19
--#define CLK_GOUT_I2C1_PCLK		20
--#define CLK_GOUT_I2C2_PCLK		21
--#define CLK_GOUT_I2C3_PCLK		22
--#define CLK_GOUT_I2C4_PCLK		23
--#define CLK_GOUT_I2C5_PCLK		24
--#define CLK_GOUT_I2C6_PCLK		25
--#define CLK_GOUT_MCT_PCLK		26
--#define CLK_GOUT_PWM_MOTOR_PCLK		27
--#define CLK_GOUT_SPI0_IPCLK		28
--#define CLK_GOUT_SPI0_PCLK		29
--#define CLK_GOUT_SYSREG_PERI_PCLK	30
--#define CLK_GOUT_UART_IPCLK		31
--#define CLK_GOUT_UART_PCLK		32
--#define CLK_GOUT_WDT0_PCLK		33
--#define CLK_GOUT_WDT1_PCLK		34
--
--/* CMU_CORE */
--#define CLK_MOUT_CORE_BUS_USER		1
--#define CLK_MOUT_CORE_CCI_USER		2
--#define CLK_MOUT_CORE_MMC_EMBD_USER	3
--#define CLK_MOUT_CORE_SSS_USER		4
--#define CLK_MOUT_CORE_GIC		5
--#define CLK_DOUT_CORE_BUSP		6
--#define CLK_GOUT_CCI_ACLK		7
--#define CLK_GOUT_GIC_CLK		8
--#define CLK_GOUT_MMC_EMBD_ACLK		9
--#define CLK_GOUT_MMC_EMBD_SDCLKIN	10
--#define CLK_GOUT_SSS_ACLK		11
--#define CLK_GOUT_SSS_PCLK		12
--#define CLK_GOUT_GPIO_CORE_PCLK		13
--#define CLK_GOUT_SYSREG_CORE_PCLK	14
--
--/* CMU_DPU */
--#define CLK_MOUT_DPU_USER		1
--#define CLK_DOUT_DPU_BUSP		2
--#define CLK_GOUT_DPU_CMU_DPU_PCLK	3
--#define CLK_GOUT_DPU_DECON0_ACLK	4
--#define CLK_GOUT_DPU_DMA_ACLK		5
--#define CLK_GOUT_DPU_DPP_ACLK		6
--#define CLK_GOUT_DPU_PPMU_ACLK		7
--#define CLK_GOUT_DPU_PPMU_PCLK		8
--#define CLK_GOUT_DPU_SMMU_CLK		9
--#define CLK_GOUT_DPU_SYSREG_PCLK	10
--#define DPU_NR_CLK			11
--
--#endif /* _DT_BINDINGS_CLOCK_EXYNOS_850_H */
-diff --git a/include/dt-bindings/soc/samsung,exynos-usi.h b/include/dt-bindings/soc/samsung,exynos-usi.h
+-#endif
+diff --git a/include/dt-bindings/clock/am3.h b/include/dt-bindings/clock/am3.h
 deleted file mode 100644
-index a01af169d249..000000000000
---- a/include/dt-bindings/soc/samsung,exynos-usi.h
+index 86a8806e2140..000000000000
+--- a/include/dt-bindings/clock/am3.h
 +++ /dev/null
-@@ -1,17 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+@@ -1,227 +0,0 @@
 -/*
-- * Copyright (c) 2021 Linaro Ltd.
-- * Author: Sam Protsenko <semen.protsenko@linaro.org>
+- * Copyright 2017 Texas Instruments, Inc.
 - *
-- * Device Tree bindings for Samsung Exynos USI (Universal Serial Interface).
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-#ifndef __DT_BINDINGS_CLK_AM3_H
+-#define __DT_BINDINGS_CLK_AM3_H
+-
+-#define AM3_CLKCTRL_OFFSET	0x0
+-#define AM3_CLKCTRL_INDEX(offset)	((offset) - AM3_CLKCTRL_OFFSET)
+-
+-/* XXX: Compatibility part begin, remove this once compatibility support is no longer needed */
+-
+-/* l4_per clocks */
+-#define AM3_L4_PER_CLKCTRL_OFFSET	0x14
+-#define AM3_L4_PER_CLKCTRL_INDEX(offset)	((offset) - AM3_L4_PER_CLKCTRL_OFFSET)
+-#define AM3_CPGMAC0_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x14)
+-#define AM3_LCDC_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x18)
+-#define AM3_USB_OTG_HS_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x1c)
+-#define AM3_TPTC0_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x24)
+-#define AM3_EMIF_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x28)
+-#define AM3_OCMCRAM_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x2c)
+-#define AM3_GPMC_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x30)
+-#define AM3_MCASP0_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x34)
+-#define AM3_UART6_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x38)
+-#define AM3_MMC1_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x3c)
+-#define AM3_ELM_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x40)
+-#define AM3_I2C3_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x44)
+-#define AM3_I2C2_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x48)
+-#define AM3_SPI0_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x4c)
+-#define AM3_SPI1_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x50)
+-#define AM3_L4_LS_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x60)
+-#define AM3_MCASP1_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x68)
+-#define AM3_UART2_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x6c)
+-#define AM3_UART3_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x70)
+-#define AM3_UART4_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x74)
+-#define AM3_UART5_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x78)
+-#define AM3_TIMER7_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x7c)
+-#define AM3_TIMER2_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x80)
+-#define AM3_TIMER3_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x84)
+-#define AM3_TIMER4_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x88)
+-#define AM3_RNG_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x90)
+-#define AM3_AES_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x94)
+-#define AM3_SHAM_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xa0)
+-#define AM3_GPIO2_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xac)
+-#define AM3_GPIO3_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xb0)
+-#define AM3_GPIO4_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xb4)
+-#define AM3_TPCC_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xbc)
+-#define AM3_D_CAN0_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xc0)
+-#define AM3_D_CAN1_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xc4)
+-#define AM3_EPWMSS1_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xcc)
+-#define AM3_EPWMSS0_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xd4)
+-#define AM3_EPWMSS2_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xd8)
+-#define AM3_L3_INSTR_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xdc)
+-#define AM3_L3_MAIN_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xe0)
+-#define AM3_PRUSS_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xe8)
+-#define AM3_TIMER5_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xec)
+-#define AM3_TIMER6_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xf0)
+-#define AM3_MMC2_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xf4)
+-#define AM3_MMC3_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xf8)
+-#define AM3_TPTC1_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0xfc)
+-#define AM3_TPTC2_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x100)
+-#define AM3_SPINLOCK_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x10c)
+-#define AM3_MAILBOX_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x110)
+-#define AM3_L4_HS_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x120)
+-#define AM3_OCPWP_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x130)
+-#define AM3_CLKDIV32K_CLKCTRL	AM3_L4_PER_CLKCTRL_INDEX(0x14c)
+-
+-/* l4_wkup clocks */
+-#define AM3_L4_WKUP_CLKCTRL_OFFSET	0x4
+-#define AM3_L4_WKUP_CLKCTRL_INDEX(offset)	((offset) - AM3_L4_WKUP_CLKCTRL_OFFSET)
+-#define AM3_CONTROL_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0x4)
+-#define AM3_GPIO1_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0x8)
+-#define AM3_L4_WKUP_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xc)
+-#define AM3_DEBUGSS_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0x14)
+-#define AM3_WKUP_M3_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xb0)
+-#define AM3_UART1_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xb4)
+-#define AM3_I2C1_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xb8)
+-#define AM3_ADC_TSC_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xbc)
+-#define AM3_SMARTREFLEX0_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xc0)
+-#define AM3_TIMER1_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xc4)
+-#define AM3_SMARTREFLEX1_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xc8)
+-#define AM3_WD_TIMER2_CLKCTRL	AM3_L4_WKUP_CLKCTRL_INDEX(0xd4)
+-
+-/* mpu clocks */
+-#define AM3_MPU_CLKCTRL_OFFSET	0x4
+-#define AM3_MPU_CLKCTRL_INDEX(offset)	((offset) - AM3_MPU_CLKCTRL_OFFSET)
+-#define AM3_MPU_CLKCTRL	AM3_MPU_CLKCTRL_INDEX(0x4)
+-
+-/* l4_rtc clocks */
+-#define AM3_RTC_CLKCTRL	AM3_CLKCTRL_INDEX(0x0)
+-
+-/* gfx_l3 clocks */
+-#define AM3_GFX_L3_CLKCTRL_OFFSET	0x4
+-#define AM3_GFX_L3_CLKCTRL_INDEX(offset)	((offset) - AM3_GFX_L3_CLKCTRL_OFFSET)
+-#define AM3_GFX_CLKCTRL	AM3_GFX_L3_CLKCTRL_INDEX(0x4)
+-
+-/* l4_cefuse clocks */
+-#define AM3_L4_CEFUSE_CLKCTRL_OFFSET	0x20
+-#define AM3_L4_CEFUSE_CLKCTRL_INDEX(offset)	((offset) - AM3_L4_CEFUSE_CLKCTRL_OFFSET)
+-#define AM3_CEFUSE_CLKCTRL	AM3_L4_CEFUSE_CLKCTRL_INDEX(0x20)
+-
+-/* XXX: Compatibility part end */
+-
+-/* l4ls clocks */
+-#define AM3_L4LS_CLKCTRL_OFFSET	0x38
+-#define AM3_L4LS_CLKCTRL_INDEX(offset)	((offset) - AM3_L4LS_CLKCTRL_OFFSET)
+-#define AM3_L4LS_UART6_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x38)
+-#define AM3_L4LS_MMC1_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x3c)
+-#define AM3_L4LS_ELM_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x40)
+-#define AM3_L4LS_I2C3_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x44)
+-#define AM3_L4LS_I2C2_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x48)
+-#define AM3_L4LS_SPI0_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x4c)
+-#define AM3_L4LS_SPI1_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x50)
+-#define AM3_L4LS_L4_LS_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x60)
+-#define AM3_L4LS_UART2_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x6c)
+-#define AM3_L4LS_UART3_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x70)
+-#define AM3_L4LS_UART4_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x74)
+-#define AM3_L4LS_UART5_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x78)
+-#define AM3_L4LS_TIMER7_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x7c)
+-#define AM3_L4LS_TIMER2_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x80)
+-#define AM3_L4LS_TIMER3_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x84)
+-#define AM3_L4LS_TIMER4_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x88)
+-#define AM3_L4LS_RNG_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x90)
+-#define AM3_L4LS_GPIO2_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xac)
+-#define AM3_L4LS_GPIO3_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xb0)
+-#define AM3_L4LS_GPIO4_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xb4)
+-#define AM3_L4LS_D_CAN0_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xc0)
+-#define AM3_L4LS_D_CAN1_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xc4)
+-#define AM3_L4LS_EPWMSS1_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xcc)
+-#define AM3_L4LS_EPWMSS0_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xd4)
+-#define AM3_L4LS_EPWMSS2_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xd8)
+-#define AM3_L4LS_TIMER5_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xec)
+-#define AM3_L4LS_TIMER6_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xf0)
+-#define AM3_L4LS_MMC2_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0xf4)
+-#define AM3_L4LS_SPINLOCK_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x10c)
+-#define AM3_L4LS_MAILBOX_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x110)
+-#define AM3_L4LS_OCPWP_CLKCTRL	AM3_L4LS_CLKCTRL_INDEX(0x130)
+-
+-/* l3s clocks */
+-#define AM3_L3S_CLKCTRL_OFFSET	0x1c
+-#define AM3_L3S_CLKCTRL_INDEX(offset)	((offset) - AM3_L3S_CLKCTRL_OFFSET)
+-#define AM3_L3S_USB_OTG_HS_CLKCTRL	AM3_L3S_CLKCTRL_INDEX(0x1c)
+-#define AM3_L3S_GPMC_CLKCTRL	AM3_L3S_CLKCTRL_INDEX(0x30)
+-#define AM3_L3S_MCASP0_CLKCTRL	AM3_L3S_CLKCTRL_INDEX(0x34)
+-#define AM3_L3S_MCASP1_CLKCTRL	AM3_L3S_CLKCTRL_INDEX(0x68)
+-#define AM3_L3S_MMC3_CLKCTRL	AM3_L3S_CLKCTRL_INDEX(0xf8)
+-
+-/* l3 clocks */
+-#define AM3_L3_CLKCTRL_OFFSET	0x24
+-#define AM3_L3_CLKCTRL_INDEX(offset)	((offset) - AM3_L3_CLKCTRL_OFFSET)
+-#define AM3_L3_TPTC0_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0x24)
+-#define AM3_L3_EMIF_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0x28)
+-#define AM3_L3_OCMCRAM_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0x2c)
+-#define AM3_L3_AES_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0x94)
+-#define AM3_L3_SHAM_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0xa0)
+-#define AM3_L3_TPCC_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0xbc)
+-#define AM3_L3_L3_INSTR_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0xdc)
+-#define AM3_L3_L3_MAIN_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0xe0)
+-#define AM3_L3_TPTC1_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0xfc)
+-#define AM3_L3_TPTC2_CLKCTRL	AM3_L3_CLKCTRL_INDEX(0x100)
+-
+-/* l4hs clocks */
+-#define AM3_L4HS_CLKCTRL_OFFSET	0x120
+-#define AM3_L4HS_CLKCTRL_INDEX(offset)	((offset) - AM3_L4HS_CLKCTRL_OFFSET)
+-#define AM3_L4HS_L4_HS_CLKCTRL	AM3_L4HS_CLKCTRL_INDEX(0x120)
+-
+-/* pruss_ocp clocks */
+-#define AM3_PRUSS_OCP_CLKCTRL_OFFSET	0xe8
+-#define AM3_PRUSS_OCP_CLKCTRL_INDEX(offset)	((offset) - AM3_PRUSS_OCP_CLKCTRL_OFFSET)
+-#define AM3_PRUSS_OCP_PRUSS_CLKCTRL	AM3_PRUSS_OCP_CLKCTRL_INDEX(0xe8)
+-
+-/* cpsw_125mhz clocks */
+-#define AM3_CPSW_125MHZ_CPGMAC0_CLKCTRL	AM3_CLKCTRL_INDEX(0x14)
+-
+-/* lcdc clocks */
+-#define AM3_LCDC_CLKCTRL_OFFSET	0x18
+-#define AM3_LCDC_CLKCTRL_INDEX(offset)	((offset) - AM3_LCDC_CLKCTRL_OFFSET)
+-#define AM3_LCDC_LCDC_CLKCTRL	AM3_LCDC_CLKCTRL_INDEX(0x18)
+-
+-/* clk_24mhz clocks */
+-#define AM3_CLK_24MHZ_CLKCTRL_OFFSET	0x14c
+-#define AM3_CLK_24MHZ_CLKCTRL_INDEX(offset)	((offset) - AM3_CLK_24MHZ_CLKCTRL_OFFSET)
+-#define AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL	AM3_CLK_24MHZ_CLKCTRL_INDEX(0x14c)
+-
+-/* l4_wkup clocks */
+-#define AM3_L4_WKUP_CONTROL_CLKCTRL	AM3_CLKCTRL_INDEX(0x4)
+-#define AM3_L4_WKUP_GPIO1_CLKCTRL	AM3_CLKCTRL_INDEX(0x8)
+-#define AM3_L4_WKUP_L4_WKUP_CLKCTRL	AM3_CLKCTRL_INDEX(0xc)
+-#define AM3_L4_WKUP_UART1_CLKCTRL	AM3_CLKCTRL_INDEX(0xb4)
+-#define AM3_L4_WKUP_I2C1_CLKCTRL	AM3_CLKCTRL_INDEX(0xb8)
+-#define AM3_L4_WKUP_ADC_TSC_CLKCTRL	AM3_CLKCTRL_INDEX(0xbc)
+-#define AM3_L4_WKUP_SMARTREFLEX0_CLKCTRL	AM3_CLKCTRL_INDEX(0xc0)
+-#define AM3_L4_WKUP_TIMER1_CLKCTRL	AM3_CLKCTRL_INDEX(0xc4)
+-#define AM3_L4_WKUP_SMARTREFLEX1_CLKCTRL	AM3_CLKCTRL_INDEX(0xc8)
+-#define AM3_L4_WKUP_WD_TIMER2_CLKCTRL	AM3_CLKCTRL_INDEX(0xd4)
+-
+-/* l3_aon clocks */
+-#define AM3_L3_AON_CLKCTRL_OFFSET	0x14
+-#define AM3_L3_AON_CLKCTRL_INDEX(offset)	((offset) - AM3_L3_AON_CLKCTRL_OFFSET)
+-#define AM3_L3_AON_DEBUGSS_CLKCTRL	AM3_L3_AON_CLKCTRL_INDEX(0x14)
+-
+-/* l4_wkup_aon clocks */
+-#define AM3_L4_WKUP_AON_CLKCTRL_OFFSET	0xb0
+-#define AM3_L4_WKUP_AON_CLKCTRL_INDEX(offset)	((offset) - AM3_L4_WKUP_AON_CLKCTRL_OFFSET)
+-#define AM3_L4_WKUP_AON_WKUP_M3_CLKCTRL	AM3_L4_WKUP_AON_CLKCTRL_INDEX(0xb0)
+-
+-/* mpu clocks */
+-#define AM3_MPU_MPU_CLKCTRL	AM3_CLKCTRL_INDEX(0x4)
+-
+-/* l4_rtc clocks */
+-#define AM3_L4_RTC_RTC_CLKCTRL	AM3_CLKCTRL_INDEX(0x0)
+-
+-/* gfx_l3 clocks */
+-#define AM3_GFX_L3_GFX_CLKCTRL	AM3_CLKCTRL_INDEX(0x4)
+-
+-/* l4_cefuse clocks */
+-#define AM3_L4_CEFUSE_CEFUSE_CLKCTRL	AM3_CLKCTRL_INDEX(0x20)
+-
+-#endif
+diff --git a/include/dt-bindings/clock/omap4.h b/include/dt-bindings/clock/omap4.h
+deleted file mode 100644
+index 88d73be84b94..000000000000
+--- a/include/dt-bindings/clock/omap4.h
++++ /dev/null
+@@ -1,149 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright 2017 Texas Instruments, Inc.
+- */
+-#ifndef __DT_BINDINGS_CLK_OMAP4_H
+-#define __DT_BINDINGS_CLK_OMAP4_H
+-
+-#define OMAP4_CLKCTRL_OFFSET	0x20
+-#define OMAP4_CLKCTRL_INDEX(offset)	((offset) - OMAP4_CLKCTRL_OFFSET)
+-
+-/* mpuss clocks */
+-#define OMAP4_MPU_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* tesla clocks */
+-#define OMAP4_DSP_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* abe clocks */
+-#define OMAP4_L4_ABE_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_AESS_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-#define OMAP4_MCPDM_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-#define OMAP4_DMIC_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x38)
+-#define OMAP4_MCASP_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x40)
+-#define OMAP4_MCBSP1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x48)
+-#define OMAP4_MCBSP2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x50)
+-#define OMAP4_MCBSP3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x58)
+-#define OMAP4_SLIMBUS1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x60)
+-#define OMAP4_TIMER5_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x68)
+-#define OMAP4_TIMER6_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x70)
+-#define OMAP4_TIMER7_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x78)
+-#define OMAP4_TIMER8_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x80)
+-#define OMAP4_WD_TIMER3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x88)
+-
+-/* l4_ao clocks */
+-#define OMAP4_SMARTREFLEX_MPU_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-#define OMAP4_SMARTREFLEX_IVA_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-#define OMAP4_SMARTREFLEX_CORE_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x38)
+-
+-/* l3_1 clocks */
+-#define OMAP4_L3_MAIN_1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* l3_2 clocks */
+-#define OMAP4_L3_MAIN_2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_GPMC_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-#define OMAP4_OCMC_RAM_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-
+-/* ducati clocks */
+-#define OMAP4_IPU_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* l3_dma clocks */
+-#define OMAP4_DMA_SYSTEM_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* l3_emif clocks */
+-#define OMAP4_DMM_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_EMIF1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-#define OMAP4_EMIF2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x38)
+-
+-/* d2d clocks */
+-#define OMAP4_C2C_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* l4_cfg clocks */
+-#define OMAP4_L4_CFG_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_SPINLOCK_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-#define OMAP4_MAILBOX_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-
+-/* l3_instr clocks */
+-#define OMAP4_L3_MAIN_3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_L3_INSTR_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-#define OMAP4_OCP_WP_NOC_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x40)
+-
+-/* ivahd clocks */
+-#define OMAP4_IVA_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_SL2IF_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-
+-/* iss clocks */
+-#define OMAP4_ISS_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_FDIF_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-
+-/* l3_dss clocks */
+-#define OMAP4_DSS_CORE_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* l3_gfx clocks */
+-#define OMAP4_GPU_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-/* l3_init clocks */
+-#define OMAP4_MMC1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-#define OMAP4_MMC2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-#define OMAP4_HSI_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x38)
+-#define OMAP4_USB_HOST_HS_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x58)
+-#define OMAP4_USB_OTG_HS_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x60)
+-#define OMAP4_USB_TLL_HS_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x68)
+-#define OMAP4_USB_HOST_FS_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xd0)
+-#define OMAP4_OCP2SCP_USB_PHY_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xe0)
+-
+-/* l4_per clocks */
+-#define OMAP4_TIMER10_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x28)
+-#define OMAP4_TIMER11_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-#define OMAP4_TIMER2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x38)
+-#define OMAP4_TIMER3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x40)
+-#define OMAP4_TIMER4_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x48)
+-#define OMAP4_TIMER9_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x50)
+-#define OMAP4_ELM_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x58)
+-#define OMAP4_GPIO2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x60)
+-#define OMAP4_GPIO3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x68)
+-#define OMAP4_GPIO4_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x70)
+-#define OMAP4_GPIO5_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x78)
+-#define OMAP4_GPIO6_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x80)
+-#define OMAP4_HDQ1W_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x88)
+-#define OMAP4_I2C1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xa0)
+-#define OMAP4_I2C2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xa8)
+-#define OMAP4_I2C3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xb0)
+-#define OMAP4_I2C4_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xb8)
+-#define OMAP4_L4_PER_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xc0)
+-#define OMAP4_MCBSP4_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xe0)
+-#define OMAP4_MCSPI1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xf0)
+-#define OMAP4_MCSPI2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0xf8)
+-#define OMAP4_MCSPI3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x100)
+-#define OMAP4_MCSPI4_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x108)
+-#define OMAP4_MMC3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x120)
+-#define OMAP4_MMC4_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x128)
+-#define OMAP4_SLIMBUS2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x138)
+-#define OMAP4_UART1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x140)
+-#define OMAP4_UART2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x148)
+-#define OMAP4_UART3_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x150)
+-#define OMAP4_UART4_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x158)
+-#define OMAP4_MMC5_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x160)
+-
+-/* l4_secure clocks */
+-#define OMAP4_L4_SECURE_CLKCTRL_OFFSET	0x1a0
+-#define OMAP4_L4_SECURE_CLKCTRL_INDEX(offset)	((offset) - OMAP4_L4_SECURE_CLKCTRL_OFFSET)
+-#define OMAP4_AES1_CLKCTRL	OMAP4_L4_SECURE_CLKCTRL_INDEX(0x1a0)
+-#define OMAP4_AES2_CLKCTRL	OMAP4_L4_SECURE_CLKCTRL_INDEX(0x1a8)
+-#define OMAP4_DES3DES_CLKCTRL	OMAP4_L4_SECURE_CLKCTRL_INDEX(0x1b0)
+-#define OMAP4_PKA_CLKCTRL	OMAP4_L4_SECURE_CLKCTRL_INDEX(0x1b8)
+-#define OMAP4_RNG_CLKCTRL	OMAP4_L4_SECURE_CLKCTRL_INDEX(0x1c0)
+-#define OMAP4_SHA2MD5_CLKCTRL	OMAP4_L4_SECURE_CLKCTRL_INDEX(0x1c8)
+-#define OMAP4_CRYPTODMA_CLKCTRL	OMAP4_L4_SECURE_CLKCTRL_INDEX(0x1d8)
+-
+-/* l4_wkup clocks */
+-#define OMAP4_L4_WKUP_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-#define OMAP4_WD_TIMER2_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x30)
+-#define OMAP4_GPIO1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x38)
+-#define OMAP4_TIMER1_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x40)
+-#define OMAP4_COUNTER_32K_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x50)
+-#define OMAP4_KBD_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x78)
+-
+-/* emu_sys clocks */
+-#define OMAP4_DEBUGSS_CLKCTRL	OMAP4_CLKCTRL_INDEX(0x20)
+-
+-#endif
+diff --git a/include/dt-bindings/clock/omap5.h b/include/dt-bindings/clock/omap5.h
+deleted file mode 100644
+index 41775272fd27..000000000000
+--- a/include/dt-bindings/clock/omap5.h
++++ /dev/null
+@@ -1,129 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright 2017 Texas Instruments, Inc.
+- */
+-#ifndef __DT_BINDINGS_CLK_OMAP5_H
+-#define __DT_BINDINGS_CLK_OMAP5_H
+-
+-#define OMAP5_CLKCTRL_OFFSET	0x20
+-#define OMAP5_CLKCTRL_INDEX(offset)	((offset) - OMAP5_CLKCTRL_OFFSET)
+-
+-/* mpu clocks */
+-#define OMAP5_MPU_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* dsp clocks */
+-#define OMAP5_MMU_DSP_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* abe clocks */
+-#define OMAP5_L4_ABE_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-#define OMAP5_AESS_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
+-#define OMAP5_MCPDM_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
+-#define OMAP5_DMIC_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x38)
+-#define OMAP5_MCBSP1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x48)
+-#define OMAP5_MCBSP2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x50)
+-#define OMAP5_MCBSP3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x58)
+-#define OMAP5_TIMER5_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x68)
+-#define OMAP5_TIMER6_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x70)
+-#define OMAP5_TIMER7_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x78)
+-#define OMAP5_TIMER8_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x80)
+-
+-/* l3main1 clocks */
+-#define OMAP5_L3_MAIN_1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* l3main2 clocks */
+-#define OMAP5_L3_MAIN_2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* ipu clocks */
+-#define OMAP5_MMU_IPU_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* dma clocks */
+-#define OMAP5_DMA_SYSTEM_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* emif clocks */
+-#define OMAP5_DMM_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-#define OMAP5_EMIF1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
+-#define OMAP5_EMIF2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x38)
+-
+-/* l4cfg clocks */
+-#define OMAP5_L4_CFG_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-#define OMAP5_SPINLOCK_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
+-#define OMAP5_MAILBOX_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
+-
+-/* l3instr clocks */
+-#define OMAP5_L3_MAIN_3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-#define OMAP5_L3_INSTR_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
+-
+-/* l4per clocks */
+-#define OMAP5_TIMER10_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
+-#define OMAP5_TIMER11_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
+-#define OMAP5_TIMER2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x38)
+-#define OMAP5_TIMER3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x40)
+-#define OMAP5_TIMER4_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x48)
+-#define OMAP5_TIMER9_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x50)
+-#define OMAP5_GPIO2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x60)
+-#define OMAP5_GPIO3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x68)
+-#define OMAP5_GPIO4_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x70)
+-#define OMAP5_GPIO5_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x78)
+-#define OMAP5_GPIO6_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x80)
+-#define OMAP5_I2C1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xa0)
+-#define OMAP5_I2C2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xa8)
+-#define OMAP5_I2C3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xb0)
+-#define OMAP5_I2C4_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xb8)
+-#define OMAP5_L4_PER_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xc0)
+-#define OMAP5_MCSPI1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xf0)
+-#define OMAP5_MCSPI2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xf8)
+-#define OMAP5_MCSPI3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x100)
+-#define OMAP5_MCSPI4_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x108)
+-#define OMAP5_GPIO7_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x110)
+-#define OMAP5_GPIO8_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x118)
+-#define OMAP5_MMC3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x120)
+-#define OMAP5_MMC4_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x128)
+-#define OMAP5_UART1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x140)
+-#define OMAP5_UART2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x148)
+-#define OMAP5_UART3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x150)
+-#define OMAP5_UART4_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x158)
+-#define OMAP5_MMC5_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x160)
+-#define OMAP5_I2C5_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x168)
+-#define OMAP5_UART5_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x170)
+-#define OMAP5_UART6_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x178)
+-
+-/* l4_secure clocks */
+-#define OMAP5_L4_SECURE_CLKCTRL_OFFSET	0x1a0
+-#define OMAP5_L4_SECURE_CLKCTRL_INDEX(offset)	((offset) - OMAP5_L4_SECURE_CLKCTRL_OFFSET)
+-#define OMAP5_AES1_CLKCTRL	OMAP5_L4_SECURE_CLKCTRL_INDEX(0x1a0)
+-#define OMAP5_AES2_CLKCTRL	OMAP5_L4_SECURE_CLKCTRL_INDEX(0x1a8)
+-#define OMAP5_DES3DES_CLKCTRL	OMAP5_L4_SECURE_CLKCTRL_INDEX(0x1b0)
+-#define OMAP5_FPKA_CLKCTRL	OMAP5_L4_SECURE_CLKCTRL_INDEX(0x1b8)
+-#define OMAP5_RNG_CLKCTRL	OMAP5_L4_SECURE_CLKCTRL_INDEX(0x1c0)
+-#define OMAP5_SHA2MD5_CLKCTRL	OMAP5_L4_SECURE_CLKCTRL_INDEX(0x1c8)
+-#define OMAP5_DMA_CRYPTO_CLKCTRL	OMAP5_L4_SECURE_CLKCTRL_INDEX(0x1d8)
+-
+-/* iva clocks */
+-#define OMAP5_IVA_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-#define OMAP5_SL2IF_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
+-
+-/* dss clocks */
+-#define OMAP5_DSS_CORE_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* gpu clocks */
+-#define OMAP5_GPU_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-
+-/* l3init clocks */
+-#define OMAP5_MMC1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
+-#define OMAP5_MMC2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
+-#define OMAP5_USB_HOST_HS_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x58)
+-#define OMAP5_USB_TLL_HS_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x68)
+-#define OMAP5_SATA_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x88)
+-#define OMAP5_OCP2SCP1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xe0)
+-#define OMAP5_OCP2SCP3_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xe8)
+-#define OMAP5_USB_OTG_SS_CLKCTRL	OMAP5_CLKCTRL_INDEX(0xf0)
+-
+-/* wkupaon clocks */
+-#define OMAP5_L4_WKUP_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
+-#define OMAP5_WD_TIMER2_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
+-#define OMAP5_GPIO1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x38)
+-#define OMAP5_TIMER1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x40)
+-#define OMAP5_COUNTER_32K_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x50)
+-#define OMAP5_KBD_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x78)
+-
+-#endif
+diff --git a/include/dt-bindings/media/omap3-isp.h b/include/dt-bindings/media/omap3-isp.h
+deleted file mode 100644
+index 4e4208462142..000000000000
+--- a/include/dt-bindings/media/omap3-isp.h
++++ /dev/null
+@@ -1,22 +0,0 @@
+-/*
+- * include/dt-bindings/media/omap3-isp.h
+- *
+- * Copyright (C) 2015 Sakari Ailus
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * version 2 as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
 - */
 -
--#ifndef __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
--#define __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
+-#ifndef __DT_BINDINGS_OMAP3_ISP_H__
+-#define __DT_BINDINGS_OMAP3_ISP_H__
 -
--#define USI_V2_NONE		0
--#define USI_V2_UART		1
--#define USI_V2_SPI		2
--#define USI_V2_I2C		3
+-#define OMAP3ISP_PHY_TYPE_COMPLEX_IO   0
+-#define OMAP3ISP_PHY_TYPE_CSIPHY       1
 -
--#endif /* __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H */
+-#endif /* __DT_BINDINGS_OMAP3_ISP_H__ */
+diff --git a/include/dt-bindings/mux/ti-serdes.h b/include/dt-bindings/mux/ti-serdes.h
+deleted file mode 100644
+index b0b1091aad6d..000000000000
+--- a/include/dt-bindings/mux/ti-serdes.h
++++ /dev/null
+@@ -1,190 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides constants for SERDES MUX for TI SoCs
+- */
+-
+-#ifndef _DT_BINDINGS_MUX_TI_SERDES
+-#define _DT_BINDINGS_MUX_TI_SERDES
+-
+-/*
+- * These bindings are deprecated, because they do not match the actual
+- * concept of bindings but rather contain pure constants values used only
+- * in DTS board files.
+- * Instead include the header in the DTS source directory.
+- */
+-#warning "These bindings are deprecated. Instead, use the header in the DTS source directory."
+-
+-/* J721E */
+-
+-#define J721E_SERDES0_LANE0_QSGMII_LANE1	0x0
+-#define J721E_SERDES0_LANE0_PCIE0_LANE0		0x1
+-#define J721E_SERDES0_LANE0_USB3_0_SWAP		0x2
+-#define J721E_SERDES0_LANE0_IP4_UNUSED		0x3
+-
+-#define J721E_SERDES0_LANE1_QSGMII_LANE2	0x0
+-#define J721E_SERDES0_LANE1_PCIE0_LANE1		0x1
+-#define J721E_SERDES0_LANE1_USB3_0		0x2
+-#define J721E_SERDES0_LANE1_IP4_UNUSED		0x3
+-
+-#define J721E_SERDES1_LANE0_QSGMII_LANE3	0x0
+-#define J721E_SERDES1_LANE0_PCIE1_LANE0		0x1
+-#define J721E_SERDES1_LANE0_USB3_1_SWAP		0x2
+-#define J721E_SERDES1_LANE0_SGMII_LANE0		0x3
+-
+-#define J721E_SERDES1_LANE1_QSGMII_LANE4	0x0
+-#define J721E_SERDES1_LANE1_PCIE1_LANE1		0x1
+-#define J721E_SERDES1_LANE1_USB3_1		0x2
+-#define J721E_SERDES1_LANE1_SGMII_LANE1		0x3
+-
+-#define J721E_SERDES2_LANE0_IP1_UNUSED		0x0
+-#define J721E_SERDES2_LANE0_PCIE2_LANE0		0x1
+-#define J721E_SERDES2_LANE0_USB3_1_SWAP		0x2
+-#define J721E_SERDES2_LANE0_SGMII_LANE0		0x3
+-
+-#define J721E_SERDES2_LANE1_IP1_UNUSED		0x0
+-#define J721E_SERDES2_LANE1_PCIE2_LANE1		0x1
+-#define J721E_SERDES2_LANE1_USB3_1		0x2
+-#define J721E_SERDES2_LANE1_SGMII_LANE1		0x3
+-
+-#define J721E_SERDES3_LANE0_IP1_UNUSED		0x0
+-#define J721E_SERDES3_LANE0_PCIE3_LANE0		0x1
+-#define J721E_SERDES3_LANE0_USB3_0_SWAP		0x2
+-#define J721E_SERDES3_LANE0_IP4_UNUSED		0x3
+-
+-#define J721E_SERDES3_LANE1_IP1_UNUSED		0x0
+-#define J721E_SERDES3_LANE1_PCIE3_LANE1		0x1
+-#define J721E_SERDES3_LANE1_USB3_0		0x2
+-#define J721E_SERDES3_LANE1_IP4_UNUSED		0x3
+-
+-#define J721E_SERDES4_LANE0_EDP_LANE0		0x0
+-#define J721E_SERDES4_LANE0_IP2_UNUSED		0x1
+-#define J721E_SERDES4_LANE0_QSGMII_LANE5	0x2
+-#define J721E_SERDES4_LANE0_IP4_UNUSED		0x3
+-
+-#define J721E_SERDES4_LANE1_EDP_LANE1		0x0
+-#define J721E_SERDES4_LANE1_IP2_UNUSED		0x1
+-#define J721E_SERDES4_LANE1_QSGMII_LANE6	0x2
+-#define J721E_SERDES4_LANE1_IP4_UNUSED		0x3
+-
+-#define J721E_SERDES4_LANE2_EDP_LANE2		0x0
+-#define J721E_SERDES4_LANE2_IP2_UNUSED		0x1
+-#define J721E_SERDES4_LANE2_QSGMII_LANE7	0x2
+-#define J721E_SERDES4_LANE2_IP4_UNUSED		0x3
+-
+-#define J721E_SERDES4_LANE3_EDP_LANE3		0x0
+-#define J721E_SERDES4_LANE3_IP2_UNUSED		0x1
+-#define J721E_SERDES4_LANE3_QSGMII_LANE8	0x2
+-#define J721E_SERDES4_LANE3_IP4_UNUSED		0x3
+-
+-/* J7200 */
+-
+-#define J7200_SERDES0_LANE0_QSGMII_LANE3	0x0
+-#define J7200_SERDES0_LANE0_PCIE1_LANE0		0x1
+-#define J7200_SERDES0_LANE0_IP3_UNUSED		0x2
+-#define J7200_SERDES0_LANE0_IP4_UNUSED		0x3
+-
+-#define J7200_SERDES0_LANE1_QSGMII_LANE4	0x0
+-#define J7200_SERDES0_LANE1_PCIE1_LANE1		0x1
+-#define J7200_SERDES0_LANE1_IP3_UNUSED		0x2
+-#define J7200_SERDES0_LANE1_IP4_UNUSED		0x3
+-
+-#define J7200_SERDES0_LANE2_QSGMII_LANE1	0x0
+-#define J7200_SERDES0_LANE2_PCIE1_LANE2		0x1
+-#define J7200_SERDES0_LANE2_IP3_UNUSED		0x2
+-#define J7200_SERDES0_LANE2_IP4_UNUSED		0x3
+-
+-#define J7200_SERDES0_LANE3_QSGMII_LANE2	0x0
+-#define J7200_SERDES0_LANE3_PCIE1_LANE3		0x1
+-#define J7200_SERDES0_LANE3_USB			0x2
+-#define J7200_SERDES0_LANE3_IP4_UNUSED		0x3
+-
+-/* AM64 */
+-
+-#define AM64_SERDES0_LANE0_PCIE0		0x0
+-#define AM64_SERDES0_LANE0_USB			0x1
+-
+-/* J721S2 */
+-
+-#define J721S2_SERDES0_LANE0_EDP_LANE0		0x0
+-#define J721S2_SERDES0_LANE0_PCIE1_LANE0	0x1
+-#define J721S2_SERDES0_LANE0_IP3_UNUSED		0x2
+-#define J721S2_SERDES0_LANE0_IP4_UNUSED		0x3
+-
+-#define J721S2_SERDES0_LANE1_EDP_LANE1		0x0
+-#define J721S2_SERDES0_LANE1_PCIE1_LANE1	0x1
+-#define J721S2_SERDES0_LANE1_USB		0x2
+-#define J721S2_SERDES0_LANE1_IP4_UNUSED		0x3
+-
+-#define J721S2_SERDES0_LANE2_EDP_LANE2		0x0
+-#define J721S2_SERDES0_LANE2_PCIE1_LANE2	0x1
+-#define J721S2_SERDES0_LANE2_IP3_UNUSED		0x2
+-#define J721S2_SERDES0_LANE2_IP4_UNUSED		0x3
+-
+-#define J721S2_SERDES0_LANE3_EDP_LANE3		0x0
+-#define J721S2_SERDES0_LANE3_PCIE1_LANE3	0x1
+-#define J721S2_SERDES0_LANE3_USB		0x2
+-#define J721S2_SERDES0_LANE3_IP4_UNUSED		0x3
+-
+-/* J784S4 */
+-
+-#define J784S4_SERDES0_LANE0_IP1_UNUSED		0x0
+-#define J784S4_SERDES0_LANE0_PCIE1_LANE0	0x1
+-#define J784S4_SERDES0_LANE0_IP3_UNUSED		0x2
+-#define J784S4_SERDES0_LANE0_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES0_LANE1_IP1_UNUSED		0x0
+-#define J784S4_SERDES0_LANE1_PCIE1_LANE1	0x1
+-#define J784S4_SERDES0_LANE1_IP3_UNUSED		0x2
+-#define J784S4_SERDES0_LANE1_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES0_LANE2_PCIE3_LANE0	0x0
+-#define J784S4_SERDES0_LANE2_PCIE1_LANE2	0x1
+-#define J784S4_SERDES0_LANE2_IP3_UNUSED		0x2
+-#define J784S4_SERDES0_LANE2_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES0_LANE3_PCIE3_LANE1	0x0
+-#define J784S4_SERDES0_LANE3_PCIE1_LANE3	0x1
+-#define J784S4_SERDES0_LANE3_USB		0x2
+-#define J784S4_SERDES0_LANE3_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES1_LANE0_QSGMII_LANE3	0x0
+-#define J784S4_SERDES1_LANE0_PCIE0_LANE0	0x1
+-#define J784S4_SERDES1_LANE0_IP3_UNUSED		0x2
+-#define J784S4_SERDES1_LANE0_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES1_LANE1_QSGMII_LANE4	0x0
+-#define J784S4_SERDES1_LANE1_PCIE0_LANE1	0x1
+-#define J784S4_SERDES1_LANE1_IP3_UNUSED		0x2
+-#define J784S4_SERDES1_LANE1_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES1_LANE2_QSGMII_LANE1	0x0
+-#define J784S4_SERDES1_LANE2_PCIE0_LANE2	0x1
+-#define J784S4_SERDES1_LANE2_PCIE2_LANE0	0x2
+-#define J784S4_SERDES1_LANE2_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES1_LANE3_QSGMII_LANE2	0x0
+-#define J784S4_SERDES1_LANE3_PCIE0_LANE3	0x1
+-#define J784S4_SERDES1_LANE3_PCIE2_LANE1	0x2
+-#define J784S4_SERDES1_LANE3_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES2_LANE0_QSGMII_LANE5	0x0
+-#define J784S4_SERDES2_LANE0_IP2_UNUSED		0x1
+-#define J784S4_SERDES2_LANE0_IP3_UNUSED		0x2
+-#define J784S4_SERDES2_LANE0_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES2_LANE1_QSGMII_LANE6	0x0
+-#define J784S4_SERDES2_LANE1_IP2_UNUSED		0x1
+-#define J784S4_SERDES2_LANE1_IP3_UNUSED		0x2
+-#define J784S4_SERDES2_LANE1_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES2_LANE2_QSGMII_LANE7	0x0
+-#define J784S4_SERDES2_LANE2_QSGMII_LANE1	0x1
+-#define J784S4_SERDES2_LANE2_IP3_UNUSED		0x2
+-#define J784S4_SERDES2_LANE2_IP4_UNUSED		0x3
+-
+-#define J784S4_SERDES2_LANE3_QSGMII_LANE8	0x0
+-#define J784S4_SERDES2_LANE3_QSGMII_LANE2	0x1
+-#define J784S4_SERDES2_LANE3_IP3_UNUSED		0x2
+-#define J784S4_SERDES2_LANE3_IP4_UNUSED		0x3
+-
+-#endif /* _DT_BINDINGS_MUX_TI_SERDES */
+diff --git a/include/dt-bindings/net/ti-dp83867.h b/include/dt-bindings/net/ti-dp83867.h
+deleted file mode 100644
+index 6fc4b445d3a1..000000000000
+--- a/include/dt-bindings/net/ti-dp83867.h
++++ /dev/null
+@@ -1,53 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Device Tree constants for the Texas Instruments DP83867 PHY
+- *
+- * Author: Dan Murphy <dmurphy@ti.com>
+- *
+- * Copyright:   (C) 2015 Texas Instruments, Inc.
+- */
+-
+-#ifndef _DT_BINDINGS_TI_DP83867_H
+-#define _DT_BINDINGS_TI_DP83867_H
+-
+-/* PHY CTRL bits */
+-#define DP83867_PHYCR_FIFO_DEPTH_3_B_NIB	0x00
+-#define DP83867_PHYCR_FIFO_DEPTH_4_B_NIB	0x01
+-#define DP83867_PHYCR_FIFO_DEPTH_6_B_NIB	0x02
+-#define DP83867_PHYCR_FIFO_DEPTH_8_B_NIB	0x03
+-
+-/* RGMIIDCTL internal delay for rx and tx */
+-#define	DP83867_RGMIIDCTL_250_PS	0x0
+-#define	DP83867_RGMIIDCTL_500_PS	0x1
+-#define	DP83867_RGMIIDCTL_750_PS	0x2
+-#define	DP83867_RGMIIDCTL_1_NS		0x3
+-#define	DP83867_RGMIIDCTL_1_25_NS	0x4
+-#define	DP83867_RGMIIDCTL_1_50_NS	0x5
+-#define	DP83867_RGMIIDCTL_1_75_NS	0x6
+-#define	DP83867_RGMIIDCTL_2_00_NS	0x7
+-#define	DP83867_RGMIIDCTL_2_25_NS	0x8
+-#define	DP83867_RGMIIDCTL_2_50_NS	0x9
+-#define	DP83867_RGMIIDCTL_2_75_NS	0xa
+-#define	DP83867_RGMIIDCTL_3_00_NS	0xb
+-#define	DP83867_RGMIIDCTL_3_25_NS	0xc
+-#define	DP83867_RGMIIDCTL_3_50_NS	0xd
+-#define	DP83867_RGMIIDCTL_3_75_NS	0xe
+-#define	DP83867_RGMIIDCTL_4_00_NS	0xf
+-
+-/* IO_MUX_CFG - Clock output selection */
+-#define DP83867_CLK_O_SEL_CHN_A_RCLK		0x0
+-#define DP83867_CLK_O_SEL_CHN_B_RCLK		0x1
+-#define DP83867_CLK_O_SEL_CHN_C_RCLK		0x2
+-#define DP83867_CLK_O_SEL_CHN_D_RCLK		0x3
+-#define DP83867_CLK_O_SEL_CHN_A_RCLK_DIV5	0x4
+-#define DP83867_CLK_O_SEL_CHN_B_RCLK_DIV5	0x5
+-#define DP83867_CLK_O_SEL_CHN_C_RCLK_DIV5	0x6
+-#define DP83867_CLK_O_SEL_CHN_D_RCLK_DIV5	0x7
+-#define DP83867_CLK_O_SEL_CHN_A_TCLK		0x8
+-#define DP83867_CLK_O_SEL_CHN_B_TCLK		0x9
+-#define DP83867_CLK_O_SEL_CHN_C_TCLK		0xA
+-#define DP83867_CLK_O_SEL_CHN_D_TCLK		0xB
+-#define DP83867_CLK_O_SEL_REF_CLK		0xC
+-/* Special flag to indicate clock should be off */
+-#define DP83867_CLK_O_SEL_OFF			0xFFFFFFFF
+-#endif
+diff --git a/include/dt-bindings/net/ti-dp83869.h b/include/dt-bindings/net/ti-dp83869.h
+deleted file mode 100644
+index b3a5ac4a17b3..000000000000
+--- a/include/dt-bindings/net/ti-dp83869.h
++++ /dev/null
+@@ -1,60 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * TI DP83869 PHY drivers
+- *
+- */
+-
+-#ifndef _DT_BINDINGS_TI_DP83869_H
+-#define _DT_BINDINGS_TI_DP83869_H
+-
+-/* PHY CTRL bits */
+-#define DP83869_PHYCR_FIFO_DEPTH_3_B_NIB	0x00
+-#define DP83869_PHYCR_FIFO_DEPTH_4_B_NIB	0x01
+-#define DP83869_PHYCR_FIFO_DEPTH_6_B_NIB	0x02
+-#define DP83869_PHYCR_FIFO_DEPTH_8_B_NIB	0x03
+-
+-/* RGMIIDCTL internal delay for rx and tx */
+-#define DP83869_RGMIIDCTL_250_PS	0x0
+-#define DP83869_RGMIIDCTL_500_PS	0x1
+-#define DP83869_RGMIIDCTL_750_PS	0x2
+-#define DP83869_RGMIIDCTL_1_NS		0x3
+-#define DP83869_RGMIIDCTL_1_25_NS	0x4
+-#define DP83869_RGMIIDCTL_1_50_NS	0x5
+-#define DP83869_RGMIIDCTL_1_75_NS	0x6
+-#define DP83869_RGMIIDCTL_2_00_NS	0x7
+-#define DP83869_RGMIIDCTL_2_25_NS	0x8
+-#define DP83869_RGMIIDCTL_2_50_NS	0x9
+-#define DP83869_RGMIIDCTL_2_75_NS	0xa
+-#define DP83869_RGMIIDCTL_3_00_NS	0xb
+-#define DP83869_RGMIIDCTL_3_25_NS	0xc
+-#define DP83869_RGMIIDCTL_3_50_NS	0xd
+-#define DP83869_RGMIIDCTL_3_75_NS	0xe
+-#define DP83869_RGMIIDCTL_4_00_NS	0xf
+-
+-/* IO_MUX_CFG - Clock output selection */
+-#define DP83869_CLK_O_SEL_CHN_A_RCLK		0x0
+-#define DP83869_CLK_O_SEL_CHN_B_RCLK		0x1
+-#define DP83869_CLK_O_SEL_CHN_C_RCLK		0x2
+-#define DP83869_CLK_O_SEL_CHN_D_RCLK		0x3
+-#define DP83869_CLK_O_SEL_CHN_A_RCLK_DIV5	0x4
+-#define DP83869_CLK_O_SEL_CHN_B_RCLK_DIV5	0x5
+-#define DP83869_CLK_O_SEL_CHN_C_RCLK_DIV5	0x6
+-#define DP83869_CLK_O_SEL_CHN_D_RCLK_DIV5	0x7
+-#define DP83869_CLK_O_SEL_CHN_A_TCLK		0x8
+-#define DP83869_CLK_O_SEL_CHN_B_TCLK		0x9
+-#define DP83869_CLK_O_SEL_CHN_C_TCLK		0xA
+-#define DP83869_CLK_O_SEL_CHN_D_TCLK		0xB
+-#define DP83869_CLK_O_SEL_REF_CLK		0xC
+-/* Special flag to indicate clock should be off */
+-#define DP83869_CLK_O_SEL_OFF			0xFFFFFFFF
+-
+-/* OPMODE - Operation mode */
+-#define DP83869_RGMII_COPPER_ETHERNET		0x00
+-#define DP83869_RGMII_1000_BASE			0x01
+-#define DP83869_RGMII_100_BASE			0x02
+-#define DP83869_RGMII_SGMII_BRIDGE		0x03
+-#define DP83869_1000M_MEDIA_CONVERT		0x04
+-#define DP83869_100M_MEDIA_CONVERT		0x05
+-#define DP83869_SGMII_COPPER_ETHERNET		0x06
+-
+-#endif
+diff --git a/include/dt-bindings/phy/phy-ti.h b/include/dt-bindings/phy/phy-ti.h
+deleted file mode 100644
+index ad955d3a56b4..000000000000
+--- a/include/dt-bindings/phy/phy-ti.h
++++ /dev/null
+@@ -1,21 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides constants for TI SERDES.
+- */
+-
+-#ifndef _DT_BINDINGS_TI_SERDES
+-#define _DT_BINDINGS_TI_SERDES
+-
+-/* Clock index for output clocks from WIZ */
+-
+-/* MUX Clocks */
+-#define TI_WIZ_PLL0_REFCLK	0
+-#define TI_WIZ_PLL1_REFCLK	1
+-#define TI_WIZ_REFCLK_DIG	2
+-
+-/* Reserve index here for future additions */
+-
+-/* MISC Clocks */
+-#define TI_WIZ_PHY_EN_REFCLK	16
+-
+-#endif /* _DT_BINDINGS_TI_SERDES */
+diff --git a/include/dt-bindings/pinctrl/am33xx.h b/include/dt-bindings/pinctrl/am33xx.h
+deleted file mode 100644
+index 17877e85980b..000000000000
+--- a/include/dt-bindings/pinctrl/am33xx.h
++++ /dev/null
+@@ -1,172 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides constants specific to AM33XX pinctrl bindings.
+- */
+-
+-#ifndef _DT_BINDINGS_PINCTRL_AM33XX_H
+-#define _DT_BINDINGS_PINCTRL_AM33XX_H
+-
+-#include <dt-bindings/pinctrl/omap.h>
+-
+-/* am33xx specific mux bit defines */
+-#undef PULL_ENA
+-#undef INPUT_EN
+-
+-#define PULL_DISABLE		(1 << 3)
+-#define INPUT_EN		(1 << 5)
+-#define SLEWCTRL_SLOW		(1 << 6)
+-#define SLEWCTRL_FAST		0
+-
+-/* update macro depending on INPUT_EN and PULL_ENA */
+-#undef PIN_OUTPUT
+-#undef PIN_OUTPUT_PULLUP
+-#undef PIN_OUTPUT_PULLDOWN
+-#undef PIN_INPUT
+-#undef PIN_INPUT_PULLUP
+-#undef PIN_INPUT_PULLDOWN
+-
+-#define PIN_OUTPUT		(PULL_DISABLE)
+-#define PIN_OUTPUT_PULLUP	(PULL_UP)
+-#define PIN_OUTPUT_PULLDOWN	0
+-#define PIN_INPUT		(INPUT_EN | PULL_DISABLE)
+-#define PIN_INPUT_PULLUP	(INPUT_EN | PULL_UP)
+-#define PIN_INPUT_PULLDOWN	(INPUT_EN)
+-
+-/* undef non-existing modes */
+-#undef PIN_OFF_NONE
+-#undef PIN_OFF_OUTPUT_HIGH
+-#undef PIN_OFF_OUTPUT_LOW
+-#undef PIN_OFF_INPUT_PULLUP
+-#undef PIN_OFF_INPUT_PULLDOWN
+-#undef PIN_OFF_WAKEUPENABLE
+-
+-#define AM335X_PIN_OFFSET_MIN			0x0800U
+-
+-#define AM335X_PIN_GPMC_AD0			0x800
+-#define AM335X_PIN_GPMC_AD1			0x804
+-#define AM335X_PIN_GPMC_AD2			0x808
+-#define AM335X_PIN_GPMC_AD3			0x80c
+-#define AM335X_PIN_GPMC_AD4			0x810
+-#define AM335X_PIN_GPMC_AD5			0x814
+-#define AM335X_PIN_GPMC_AD6			0x818
+-#define AM335X_PIN_GPMC_AD7			0x81c
+-#define AM335X_PIN_GPMC_AD8			0x820
+-#define AM335X_PIN_GPMC_AD9			0x824
+-#define AM335X_PIN_GPMC_AD10			0x828
+-#define AM335X_PIN_GPMC_AD11			0x82c
+-#define AM335X_PIN_GPMC_AD12			0x830
+-#define AM335X_PIN_GPMC_AD13			0x834
+-#define AM335X_PIN_GPMC_AD14			0x838
+-#define AM335X_PIN_GPMC_AD15			0x83c
+-#define AM335X_PIN_GPMC_A0			0x840
+-#define AM335X_PIN_GPMC_A1			0x844
+-#define AM335X_PIN_GPMC_A2			0x848
+-#define AM335X_PIN_GPMC_A3			0x84c
+-#define AM335X_PIN_GPMC_A4			0x850
+-#define AM335X_PIN_GPMC_A5			0x854
+-#define AM335X_PIN_GPMC_A6			0x858
+-#define AM335X_PIN_GPMC_A7			0x85c
+-#define AM335X_PIN_GPMC_A8			0x860
+-#define AM335X_PIN_GPMC_A9			0x864
+-#define AM335X_PIN_GPMC_A10			0x868
+-#define AM335X_PIN_GPMC_A11			0x86c
+-#define AM335X_PIN_GPMC_WAIT0			0x870
+-#define AM335X_PIN_GPMC_WPN			0x874
+-#define AM335X_PIN_GPMC_BEN1			0x878
+-#define AM335X_PIN_GPMC_CSN0			0x87c
+-#define AM335X_PIN_GPMC_CSN1			0x880
+-#define AM335X_PIN_GPMC_CSN2			0x884
+-#define AM335X_PIN_GPMC_CSN3			0x888
+-#define AM335X_PIN_GPMC_CLK			0x88c
+-#define AM335X_PIN_GPMC_ADVN_ALE		0x890
+-#define AM335X_PIN_GPMC_OEN_REN			0x894
+-#define AM335X_PIN_GPMC_WEN			0x898
+-#define AM335X_PIN_GPMC_BEN0_CLE		0x89c
+-#define AM335X_PIN_LCD_DATA0			0x8a0
+-#define AM335X_PIN_LCD_DATA1			0x8a4
+-#define AM335X_PIN_LCD_DATA2			0x8a8
+-#define AM335X_PIN_LCD_DATA3			0x8ac
+-#define AM335X_PIN_LCD_DATA4			0x8b0
+-#define AM335X_PIN_LCD_DATA5			0x8b4
+-#define AM335X_PIN_LCD_DATA6			0x8b8
+-#define AM335X_PIN_LCD_DATA7			0x8bc
+-#define AM335X_PIN_LCD_DATA8			0x8c0
+-#define AM335X_PIN_LCD_DATA9			0x8c4
+-#define AM335X_PIN_LCD_DATA10			0x8c8
+-#define AM335X_PIN_LCD_DATA11			0x8cc
+-#define AM335X_PIN_LCD_DATA12			0x8d0
+-#define AM335X_PIN_LCD_DATA13			0x8d4
+-#define AM335X_PIN_LCD_DATA14			0x8d8
+-#define AM335X_PIN_LCD_DATA15			0x8dc
+-#define AM335X_PIN_LCD_VSYNC			0x8e0
+-#define AM335X_PIN_LCD_HSYNC			0x8e4
+-#define AM335X_PIN_LCD_PCLK			0x8e8
+-#define AM335X_PIN_LCD_AC_BIAS_EN		0x8ec
+-#define AM335X_PIN_MMC0_DAT3			0x8f0
+-#define AM335X_PIN_MMC0_DAT2			0x8f4
+-#define AM335X_PIN_MMC0_DAT1			0x8f8
+-#define AM335X_PIN_MMC0_DAT0			0x8fc
+-#define AM335X_PIN_MMC0_CLK			0x900
+-#define AM335X_PIN_MMC0_CMD			0x904
+-#define AM335X_PIN_MII1_COL			0x908
+-#define AM335X_PIN_MII1_CRS			0x90c
+-#define AM335X_PIN_MII1_RX_ER			0x910
+-#define AM335X_PIN_MII1_TX_EN			0x914
+-#define AM335X_PIN_MII1_RX_DV			0x918
+-#define AM335X_PIN_MII1_TXD3			0x91c
+-#define AM335X_PIN_MII1_TXD2			0x920
+-#define AM335X_PIN_MII1_TXD1			0x924
+-#define AM335X_PIN_MII1_TXD0			0x928
+-#define AM335X_PIN_MII1_TX_CLK			0x92c
+-#define AM335X_PIN_MII1_RX_CLK			0x930
+-#define AM335X_PIN_MII1_RXD3			0x934
+-#define AM335X_PIN_MII1_RXD2			0x938
+-#define AM335X_PIN_MII1_RXD1			0x93c
+-#define AM335X_PIN_MII1_RXD0			0x940
+-#define AM335X_PIN_RMII1_REF_CLK		0x944
+-#define AM335X_PIN_MDIO				0x948
+-#define AM335X_PIN_MDC				0x94c
+-#define AM335X_PIN_SPI0_SCLK			0x950
+-#define AM335X_PIN_SPI0_D0			0x954
+-#define AM335X_PIN_SPI0_D1			0x958
+-#define AM335X_PIN_SPI0_CS0			0x95c
+-#define AM335X_PIN_SPI0_CS1			0x960
+-#define AM335X_PIN_ECAP0_IN_PWM0_OUT		0x964
+-#define AM335X_PIN_UART0_CTSN			0x968
+-#define AM335X_PIN_UART0_RTSN			0x96c
+-#define AM335X_PIN_UART0_RXD			0x970
+-#define AM335X_PIN_UART0_TXD			0x974
+-#define AM335X_PIN_UART1_CTSN			0x978
+-#define AM335X_PIN_UART1_RTSN			0x97c
+-#define AM335X_PIN_UART1_RXD			0x980
+-#define AM335X_PIN_UART1_TXD			0x984
+-#define AM335X_PIN_I2C0_SDA			0x988
+-#define AM335X_PIN_I2C0_SCL			0x98c
+-#define AM335X_PIN_MCASP0_ACLKX			0x990
+-#define AM335X_PIN_MCASP0_FSX			0x994
+-#define AM335X_PIN_MCASP0_AXR0			0x998
+-#define AM335X_PIN_MCASP0_AHCLKR		0x99c
+-#define AM335X_PIN_MCASP0_ACLKR			0x9a0
+-#define AM335X_PIN_MCASP0_FSR			0x9a4
+-#define AM335X_PIN_MCASP0_AXR1			0x9a8
+-#define AM335X_PIN_MCASP0_AHCLKX		0x9ac
+-#define AM335X_PIN_XDMA_EVENT_INTR0		0x9b0
+-#define AM335X_PIN_XDMA_EVENT_INTR1		0x9b4
+-#define AM335X_PIN_WARMRSTN			0x9b8
+-#define AM335X_PIN_NNMI				0x9c0
+-#define AM335X_PIN_TMS				0x9d0
+-#define AM335X_PIN_TDI				0x9d4
+-#define AM335X_PIN_TDO				0x9d8
+-#define AM335X_PIN_TCK				0x9dc
+-#define AM335X_PIN_TRSTN			0x9e0
+-#define AM335X_PIN_EMU0				0x9e4
+-#define AM335X_PIN_EMU1				0x9e8
+-#define AM335X_PIN_RTC_PWRONRSTN		0x9f8
+-#define AM335X_PIN_PMIC_POWER_EN		0x9fc
+-#define AM335X_PIN_EXT_WAKEUP			0xa00
+-#define AM335X_PIN_USB0_DRVVBUS			0xa1c
+-#define AM335X_PIN_USB1_DRVVBUS			0xa34
+-
+-#define AM335X_PIN_OFFSET_MAX			0x0a34U
+-
+-#endif
+diff --git a/include/dt-bindings/pinctrl/am43xx.h b/include/dt-bindings/pinctrl/am43xx.h
+deleted file mode 100644
+index 292c2ebf58dd..000000000000
+--- a/include/dt-bindings/pinctrl/am43xx.h
++++ /dev/null
+@@ -1,39 +0,0 @@
+-/*
+- * This header provides constants specific to AM43XX pinctrl bindings.
+- */
+-
+-#ifndef _DT_BINDINGS_PINCTRL_AM43XX_H
+-#define _DT_BINDINGS_PINCTRL_AM43XX_H
+-
+-#define MUX_MODE0	0
+-#define MUX_MODE1	1
+-#define MUX_MODE2	2
+-#define MUX_MODE3	3
+-#define MUX_MODE4	4
+-#define MUX_MODE5	5
+-#define MUX_MODE6	6
+-#define MUX_MODE7	7
+-#define MUX_MODE8	8
+-
+-#define PULL_DISABLE		(1 << 16)
+-#define PULL_UP			(1 << 17)
+-#define INPUT_EN		(1 << 18)
+-#define SLEWCTRL_SLOW		(1 << 19)
+-#define SLEWCTRL_FAST		0
+-#define DS0_PULL_UP_DOWN_EN	(1 << 27)
+-#define WAKEUP_ENABLE		(1 << 29)
+-
+-#define PIN_OUTPUT		(PULL_DISABLE)
+-#define PIN_OUTPUT_PULLUP	(PULL_UP)
+-#define PIN_OUTPUT_PULLDOWN	0
+-#define PIN_INPUT		(INPUT_EN | PULL_DISABLE)
+-#define PIN_INPUT_PULLUP	(INPUT_EN | PULL_UP)
+-#define PIN_INPUT_PULLDOWN	(INPUT_EN)
+-
+-/*
+- * Macro to allow using the absolute physical address instead of the
+- * padconf registers instead of the offset from padconf base.
+- */
+-#define AM4372_IOPAD(pa, val)	(((pa) & 0xffff) - 0x0800) (val)
+-
+-#endif
+diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
+deleted file mode 100644
+index 4c060ee0e0ad..000000000000
+--- a/include/dt-bindings/pinctrl/omap.h
++++ /dev/null
+@@ -1,91 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This header provides constants for OMAP pinctrl bindings.
+- *
+- * Copyright (C) 2009 Nokia
+- * Copyright (C) 2009-2010 Texas Instruments
+- */
+-
+-#ifndef _DT_BINDINGS_PINCTRL_OMAP_H
+-#define _DT_BINDINGS_PINCTRL_OMAP_H
+-
+-/* 34xx mux mode options for each pin. See TRM for options */
+-#define MUX_MODE0	0
+-#define MUX_MODE1	1
+-#define MUX_MODE2	2
+-#define MUX_MODE3	3
+-#define MUX_MODE4	4
+-#define MUX_MODE5	5
+-#define MUX_MODE6	6
+-#define MUX_MODE7	7
+-
+-/* 24xx/34xx mux bit defines */
+-#define PULL_ENA		(1 << 3)
+-#define PULL_UP			(1 << 4)
+-#define ALTELECTRICALSEL	(1 << 5)
+-
+-/* omap3/4/5 specific mux bit defines */
+-#define INPUT_EN		(1 << 8)
+-#define OFF_EN			(1 << 9)
+-#define OFFOUT_EN		(1 << 10)
+-#define OFFOUT_VAL		(1 << 11)
+-#define OFF_PULL_EN		(1 << 12)
+-#define OFF_PULL_UP		(1 << 13)
+-#define WAKEUP_EN		(1 << 14)
+-#define WAKEUP_EVENT		(1 << 15)
+-
+-/* Active pin states */
+-#define PIN_OUTPUT		0
+-#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
+-#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
+-#define PIN_INPUT		INPUT_EN
+-#define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
+-#define PIN_INPUT_PULLDOWN	(PULL_ENA | INPUT_EN)
+-
+-/* Off mode states */
+-#define PIN_OFF_NONE		0
+-#define PIN_OFF_OUTPUT_HIGH	(OFF_EN | OFFOUT_EN | OFFOUT_VAL)
+-#define PIN_OFF_OUTPUT_LOW	(OFF_EN | OFFOUT_EN)
+-#define PIN_OFF_INPUT_PULLUP	(OFF_EN | OFFOUT_EN | OFF_PULL_EN | OFF_PULL_UP)
+-#define PIN_OFF_INPUT_PULLDOWN	(OFF_EN | OFFOUT_EN | OFF_PULL_EN)
+-#define PIN_OFF_WAKEUPENABLE	WAKEUP_EN
+-
+-/*
+- * Macros to allow using the absolute physical address instead of the
+- * padconf registers instead of the offset from padconf base.
+- */
+-#define OMAP_IOPAD_OFFSET(pa, offset)	(((pa) & 0xffff) - (offset))
+-
+-#define OMAP2420_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x0030) (val)
+-#define OMAP2430_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030) (val)
+-#define OMAP3_CORE1_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030) (val)
+-#define OMAP3430_CORE2_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x25d8) (val)
+-#define OMAP3630_CORE2_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x25a0) (val)
+-#define OMAP3_WKUP_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2a00) (val)
+-#define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+-#define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+-#define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val) (0)
+-#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
+-
+-/*
+- * Macros to allow using the offset from the padconf physical address
+- * instead  of the offset from padconf base.
+- */
+-#define OMAP_PADCONF_OFFSET(offset, base_offset)	((offset) - (base_offset))
+-
+-#define OMAP4_IOPAD(offset, val)	OMAP_PADCONF_OFFSET((offset), 0x0040) (val)
+-#define OMAP5_IOPAD(offset, val)	OMAP_PADCONF_OFFSET((offset), 0x0040) (val)
+-
+-/*
+- * Define some commonly used pins configured by the boards.
+- * Note that some boards use alternative pins, so check
+- * the schematics before using these.
+- */
+-#define OMAP3_UART1_RX		0x152
+-#define OMAP3_UART2_RX		0x14a
+-#define OMAP3_UART3_RX		0x16e
+-#define OMAP4_UART2_RX		0xdc
+-#define OMAP4_UART3_RX		0x104
+-#define OMAP4_UART4_RX		0x11c
+-
+-#endif
+diff --git a/include/dt-bindings/reset/ti-syscon.h b/include/dt-bindings/reset/ti-syscon.h
+deleted file mode 100644
+index 1427ff140f11..000000000000
+--- a/include/dt-bindings/reset/ti-syscon.h
++++ /dev/null
+@@ -1,38 +0,0 @@
+-/*
+- * TI Syscon Reset definitions
+- *
+- * Copyright (C) 2015-2016 Texas Instruments Incorporated - https://www.ti.com/
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-
+-#ifndef __DT_BINDINGS_RESET_TI_SYSCON_H__
+-#define __DT_BINDINGS_RESET_TI_SYSCON_H__
+-
+-/*
+- * The reset does not support the feature and corresponding
+- * values are not valid
+- */
+-#define ASSERT_NONE	(1 << 0)
+-#define DEASSERT_NONE	(1 << 1)
+-#define STATUS_NONE	(1 << 2)
+-
+-/* When set this function is activated by setting(vs clearing) this bit */
+-#define ASSERT_SET	(1 << 3)
+-#define DEASSERT_SET	(1 << 4)
+-#define STATUS_SET	(1 << 5)
+-
+-/* The following are the inverse of the above and are added for consistency */
+-#define ASSERT_CLEAR	(0 << 3)
+-#define DEASSERT_CLEAR	(0 << 4)
+-#define STATUS_CLEAR	(0 << 5)
+-
+-#endif
+diff --git a/include/dt-bindings/soc/ti,sci_pm_domain.h b/include/dt-bindings/soc/ti,sci_pm_domain.h
+deleted file mode 100644
+index 8f2a7360b65e..000000000000
+--- a/include/dt-bindings/soc/ti,sci_pm_domain.h
++++ /dev/null
+@@ -1,9 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-
+-#ifndef __DT_BINDINGS_TI_SCI_PM_DOMAIN_H
+-#define __DT_BINDINGS_TI_SCI_PM_DOMAIN_H
+-
+-#define TI_SCI_PD_EXCLUSIVE	1
+-#define TI_SCI_PD_SHARED	0
+-
+-#endif /* __DT_BINDINGS_TI_SCI_PM_DOMAIN_H */
 
 -- 
 2.44.0
