@@ -2,59 +2,60 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B74CD1289
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267E3CD1285
 	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:20:52 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.8696.1711055071560651669
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web10.8929.1711055041554176196
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Mar 2024 14:04:32 -0700
+ Thu, 21 Mar 2024 14:04:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=BwENq5F0;
- spf=pass (domain: linaro.org, ip: 209.85.128.42, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4146e9e45c8so11880335e9.1
-        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:31 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=miakbU9c;
+ spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41466e01965so10098645e9.3
+        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711055070; x=1711659870; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7ClZ/U2dCNnx0hFWsWke0QLt+QMuIoc1IIP33XWHwdg=;
-        b=BwENq5F0ZTZjNCwkOTvXPJIBHiD+t6mdyO2q5fs9oMP+nAxbLR9Qq6kWg84SCOINFz
-         4e2WcQXSMqgKhJxAqmZm3FzBKTJOb01E7nHikYxzgc/FOKwOCJCgDnsaxmHWMTpi0V8B
-         TOydI9bR2yPYDp5vCHYQz2NzpqE0dQ61Uw6OWuFQi2XxJpoSY2Opyhfpm9kJWEem6Sw8
-         rLGEVr/MddqKVMoEcwUlgAcVYtelGUWZdK/KaHKZhWQM6/gjpHW7D+Hf4WVZdR5qgrEk
-         qO79GGk5OpAmvH4aW9HL42V1TpdRG1vAHgkqpGR8KobXmCqJ4+SJnuR27IxbsiaS24Yn
-         aUDQ==
+        d=linaro.org; s=google; t=1711055039; x=1711659839; darn=groups.io;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7BY/EE4DXu8F5CqiwaDGP6QlFWiNNB7n6Ta8sHT58DY=;
+        b=miakbU9cb7gl6HrWENhHmNtcWQ6hlNFzhvwiM5z2oQnyJBUpdH0VUOUIE9fjWuh7IA
+         jTh/9Cl7t2rLqHRJYSggNPhWpEKYkeuIGMmqe45TaFIJWANGuORz0DJMCOvyTeo7Sr4L
+         /6X3SubAHYGi8AzCzDg2fF8L7w3lO0VmFeKUq/4RSYdDPdka0hpCa3yL2b9vHtW9BHbx
+         87jkDo+kSJ2AfmLXgA3HIDdkBC4oHpwa5ECAo0g+xml2M77yw8oBJTwC6lpG7HXqjYKG
+         EglXDTGQ0y2OAc/B4kB7Na6PQ2KjksL15pzDmBPFAmYZxTMoF8OF2XEHIXK30A0CQVk9
+         KSRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711055070; x=1711659870;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7ClZ/U2dCNnx0hFWsWke0QLt+QMuIoc1IIP33XWHwdg=;
-        b=aohaZFoS/1++KUkKA97k2U0V/J87RGxYWG1VU+R/DPMtqEOSV87RREkIZ0eZzltlbz
-         S+Q7fmEN1pnT/Dc2D/PpLTxDabvk+54AgDwCiGaaqBShOgWq8knOJSB7XBVCLeJKL4o0
-         aCl8BFRywXwZVqZJY/62bJ4Y/+PP3JuKH9ZPch0y2T3mLlLImI3N8iYgaHH0XdoRNrFz
-         uHjn06p6F5R0Ux8AvTI8GqzTBHp4i3QUmPwxgMO0u+5/ku2MrfDOi9F61SO0OGXcCsKK
-         lCodynSCiNww/J/w1Ab5pEIHejA2L/F7Y57a9mXYMIcfI3n4CScWg5t4eji3kblKlI7b
-         +nsw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7rq1Gg281S7BdjSFPM6kLaKYlvz1OgjIh/nL1kJSYt++dwh/jPKfWYiRFyYM190LcWu/urdXFFWdkQphOSoupiWaCuau77Xs=
-X-Gm-Message-State: AOJu0YzHnDkh5V0GTiwOqrvpPqkXjLzZUY9NR77BFrYPzfuo504sCk7n
-	YaPeSUCh3XDbpFzkhUZ7KqgUKD84jBdT0gsoIameVK4/336BLGb7I+i5cGQcTWpvsGiKJfD42Sm
-	/
-X-Google-Smtp-Source: AGHT+IGwCmMCRJFLeGp20KJgulv1DwtJ3zhUUj6pBshRPal0+kIud99pxGBOdsW///dmKfvUGFKrDQ==
-X-Received: by 2002:a05:600c:3111:b0:413:4299:ec9f with SMTP id g17-20020a05600c311100b004134299ec9fmr135499wmo.5.1711055069640;
-        Thu, 21 Mar 2024 14:04:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711055039; x=1711659839;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7BY/EE4DXu8F5CqiwaDGP6QlFWiNNB7n6Ta8sHT58DY=;
+        b=AHiCeZEOH3RSfVzv7pGOw+kjQOqLwdp0ZNFONeq3qg7MlfKH+cWlYMqEYauWdJzejZ
+         tLGSlw8iywCIHDspQIwLZsKKXXMWEo9EHicy8Vpf94k8vw7C1ONerT3DyMQhV2thnL+l
+         desLT0SNcRuMaLfIope0bD6rdYBAG5Qat7M5xzhrVs9Y74H15/JkrvU0CK0pMMVTQDFM
+         h93iOXNw5b3CKprwX2Qc0XqXH7ai/qrvoF3TiyDeVbM0ATg4eBlJP4II24Phw7vGbTda
+         VCik6zcniP3Gh9GMh1UBLzz5Pl6CiPnN7U9EvUitA2hM8DpgfdJ3O7E9RMO1kJr9I2KN
+         OJ5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUsaVThdgFoVllpMh/AdFQW6rBNOI2oqyKcHlFsBMaSI2/P/FQx4yyMhZPf80+3QfKTtZRRCI8Fk+ED744WONDL6U5VHLubidg=
+X-Gm-Message-State: AOJu0YxLkaOFF86ACsqCOMZB3E5McyGIDl3jDIUxk4jjHk3cC0QU8lqT
+	gzevaY80RqKPJk1B3rC0WGp/xfUqR/gZ69NMow31gERg+GbxAP5YSCDJBygfTrtoz1L5acZJWuK
+	t
+X-Google-Smtp-Source: AGHT+IFxhYLBHgXvsHWxZkBofr9qiLtFgjyAt0vJyezevn/Y6CaZumdFaJUHsT9LTdkyYDvilhjO4w==
+X-Received: by 2002:a05:600c:450f:b0:414:1325:e8a8 with SMTP id t15-20020a05600c450f00b004141325e8a8mr188709wmo.39.1711055039392;
+        Thu, 21 Mar 2024 14:03:59 -0700 (PDT)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.28
+        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.03.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:04:29 -0700 (PDT)
+        Thu, 21 Mar 2024 14:03:58 -0700 (PDT)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Thu, 21 Mar 2024 21:03:59 +0000
-Subject: [PATCH v2 16/24] xlnx: drop dt-binding headers
+Subject: [PATCH v2 00/24] Drop DT upstream compatible dt-binding headers
+Date: Thu, 21 Mar 2024 21:03:43 +0000
+Message-Id: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 MIME-Version: 1.0
-Message-Id: <20240321-b4-upstream-dt-headers-v2-16-1eac0df875fe@linaro.org>
-References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
-In-Reply-To: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAK+g/GUC/4WNQQ6CMBBFr0Jm7Zi2VA2uvIdh0cIUJlFKppVoC
+ He3cgGX7yX//RUSCVOCa7WC0MKJ41TAHCroRjcNhNwXBqOMVbWy6C2+5pSF3BP7jCO5niShOns
+ dKDjT6RrKeBYK/N7D97bwyClH+ew/i/7Zv8lFo0J/CcHqxpxCY24PnpzEY5QB2m3bvn8EIfe9A
+ AAA
 To: Tom Rini <trini@konsulko.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>, 
  Sumit Garg <sumit.garg@linaro.org>, 
@@ -85,13 +86,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=19533;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=25306;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=TAkzYvr9nwbaAz1rFsd4FKI0tB6ez1V6FDMiqYuN7VI=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/aUr7ZbsPen56Vwm9d3TOWXvV1UHff+64TEiuwN8
- ky7b4WVdZSyMAhyMMiKKbKIn1hm2bT2sr3G9gUXYOawMoEMYeDiFICJePxm+J9REvV7Fast89N1
- iR47XjqVP2pk2rpYVSvDImx64/RNEWcZ/gpcuny9uOhLnLTO22/f0hTlrk482nzjx73Uvtykeok
- 9pVkA
+ bh=9CIxTgs477wqpWeUkwPKOpA4sGZPYHcv1ixYdP1ifpM=;
+ b=kA0DAAgReTBFn7kwMhcByyZiAGX8oLuiK+qMol+W/IK4GyBM4XIQvT3Fhw5Kr5NdOugjESfSt
+ Yh1BAARCAAdFiEEF8imOYKt0z8ot6DQeTBFn7kwMhcFAmX8oLsACgkQeTBFn7kwMhfufQD/W+iz
+ 0jpeIinrrCZmOG7oeu3kRSbynLuP3Q1ug+QWLbUBAJ+gaKHWA0UpKDSTnhcepwyt1zExApIKojb
+ ZnvfjIqup
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -100,634 +101,434 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:20:52 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2228
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2212
 
-Drop in favour of dts/upstream
+Many of the dt-binding headers in U-Boot are based on the upstream ones
+from Linux, occasionally with minor changes. Although some have
+additional things defined or are totally different.
 
-Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+This series attempts to drop as many of these headers as is easily
+possible. Those with differing APIs were left as-is.
+
+Most of this work was done with a script, with some manual fixing at the
+end.
+
+All-in, we're dropping 393 of the 489 headers from include/dt-bindings.
+
+Due to how the include paths are configured, U-Boot headers override
+upstream ones by the same name, resulting in some upstream DTBs failing
+to compile (e.g. those that use newer linux-event-codes.h). Swapping the
+include order would conversely break a bunch of U-Boot DTS files and
+drivers.
+
+Hopefully this makes a good dent, and future efforts to align more
+architectures with upstream DT will help drop the remaining headers.
+
+In addition, the final patch in this series adds support for compiling
+all upstream DTS files for a given vendor. This is useful in cases where
+a single U-Boot binary can support many boards, and maintaining a list
+of supported DTB files would quickly become arduous (as is the case with
+Qualcomm).
+
 ---
- include/dt-bindings/clock/xlnx-versal-clk.h    | 123 -----------------------
- include/dt-bindings/clock/xlnx-zynqmp-clk.h    | 126 ------------------------
- include/dt-bindings/dma/xlnx-zynqmp-dpdma.h    |  16 ---
- include/dt-bindings/pinctrl/pinctrl-zynqmp.h   |  19 ----
- include/dt-bindings/power/xlnx-zynqmp-power.h  |  50 ----------
- include/dt-bindings/reset/xlnx-versal-resets.h | 105 --------------------
- include/dt-bindings/reset/xlnx-zynqmp-resets.h | 130 -------------------------
- 7 files changed, 569 deletions(-)
+Changes in v2:
+- Adjust OF_UPSTREAM_VENDOR defaults for marvell
+- Drop renesas patches for now, Marek will pick them up
+- Add back some headers which are actually still needed
+- Fix some additional compilation issues (rk3368-sheep, microchip mpfs,
+  brcm6318)
+- Adjust rockchip/pinctrl-rk3568.c to just use literals instead of
+  U-Boot specific aliases (RK_GPIO1 -> 1, RK_FUNC_1 -> 1).
+- Link to v1: https://lore.kernel.org/r/20240304-b4-upstream-dt-headers-v1-0-b7ff41925f92@linaro.org
 
-diff --git a/include/dt-bindings/clock/xlnx-versal-clk.h b/include/dt-bindings/clock/xlnx-versal-clk.h
-deleted file mode 100644
-index 264d634d226e..000000000000
---- a/include/dt-bindings/clock/xlnx-versal-clk.h
-+++ /dev/null
-@@ -1,123 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- *  Copyright (C) 2019 Xilinx Inc.
-- *
-- */
--
--#ifndef _DT_BINDINGS_CLK_VERSAL_H
--#define _DT_BINDINGS_CLK_VERSAL_H
--
--#define PMC_PLL					1
--#define APU_PLL					2
--#define RPU_PLL					3
--#define CPM_PLL					4
--#define NOC_PLL					5
--#define PLL_MAX					6
--#define PMC_PRESRC				7
--#define PMC_POSTCLK				8
--#define PMC_PLL_OUT				9
--#define PPLL					10
--#define NOC_PRESRC				11
--#define NOC_POSTCLK				12
--#define NOC_PLL_OUT				13
--#define NPLL					14
--#define APU_PRESRC				15
--#define APU_POSTCLK				16
--#define APU_PLL_OUT				17
--#define APLL					18
--#define RPU_PRESRC				19
--#define RPU_POSTCLK				20
--#define RPU_PLL_OUT				21
--#define RPLL					22
--#define CPM_PRESRC				23
--#define CPM_POSTCLK				24
--#define CPM_PLL_OUT				25
--#define CPLL					26
--#define PPLL_TO_XPD				27
--#define NPLL_TO_XPD				28
--#define APLL_TO_XPD				29
--#define RPLL_TO_XPD				30
--#define EFUSE_REF				31
--#define SYSMON_REF				32
--#define IRO_SUSPEND_REF				33
--#define USB_SUSPEND				34
--#define SWITCH_TIMEOUT				35
--#define RCLK_PMC				36
--#define RCLK_LPD				37
--#define WDT					38
--#define TTC0					39
--#define TTC1					40
--#define TTC2					41
--#define TTC3					42
--#define GEM_TSU					43
--#define GEM_TSU_LB				44
--#define MUXED_IRO_DIV2				45
--#define MUXED_IRO_DIV4				46
--#define PSM_REF					47
--#define GEM0_RX					48
--#define GEM0_TX					49
--#define GEM1_RX					50
--#define GEM1_TX					51
--#define CPM_CORE_REF				52
--#define CPM_LSBUS_REF				53
--#define CPM_DBG_REF				54
--#define CPM_AUX0_REF				55
--#define CPM_AUX1_REF				56
--#define QSPI_REF				57
--#define OSPI_REF				58
--#define SDIO0_REF				59
--#define SDIO1_REF				60
--#define PMC_LSBUS_REF				61
--#define I2C_REF					62
--#define TEST_PATTERN_REF			63
--#define DFT_OSC_REF				64
--#define PMC_PL0_REF				65
--#define PMC_PL1_REF				66
--#define PMC_PL2_REF				67
--#define PMC_PL3_REF				68
--#define CFU_REF					69
--#define SPARE_REF				70
--#define NPI_REF					71
--#define HSM0_REF				72
--#define HSM1_REF				73
--#define SD_DLL_REF				74
--#define FPD_TOP_SWITCH				75
--#define FPD_LSBUS				76
--#define ACPU					77
--#define DBG_TRACE				78
--#define DBG_FPD					79
--#define LPD_TOP_SWITCH				80
--#define ADMA					81
--#define LPD_LSBUS				82
--#define CPU_R5					83
--#define CPU_R5_CORE				84
--#define CPU_R5_OCM				85
--#define CPU_R5_OCM2				86
--#define IOU_SWITCH				87
--#define GEM0_REF				88
--#define GEM1_REF				89
--#define GEM_TSU_REF				90
--#define USB0_BUS_REF				91
--#define UART0_REF				92
--#define UART1_REF				93
--#define SPI0_REF				94
--#define SPI1_REF				95
--#define CAN0_REF				96
--#define CAN1_REF				97
--#define I2C0_REF				98
--#define I2C1_REF				99
--#define DBG_LPD					100
--#define TIMESTAMP_REF				101
--#define DBG_TSTMP				102
--#define CPM_TOPSW_REF				103
--#define USB3_DUAL_REF				104
--#define OUTCLK_MAX				105
--#define REF_CLK					106
--#define PL_ALT_REF_CLK				107
--#define MUXED_IRO				108
--#define PL_EXT					109
--#define PL_LB					110
--#define MIO_50_OR_51				111
--#define MIO_24_OR_25				112
--
--#endif
-diff --git a/include/dt-bindings/clock/xlnx-zynqmp-clk.h b/include/dt-bindings/clock/xlnx-zynqmp-clk.h
-deleted file mode 100644
-index cdc4c0b9a374..000000000000
---- a/include/dt-bindings/clock/xlnx-zynqmp-clk.h
-+++ /dev/null
-@@ -1,126 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Xilinx Zynq MPSoC Firmware layer
-- *
-- *  Copyright (C) 2014-2018 Xilinx, Inc.
-- *
-- */
--
--#ifndef _DT_BINDINGS_CLK_ZYNQMP_H
--#define _DT_BINDINGS_CLK_ZYNQMP_H
--
--#define IOPLL			0
--#define RPLL			1
--#define APLL			2
--#define DPLL			3
--#define VPLL			4
--#define IOPLL_TO_FPD		5
--#define RPLL_TO_FPD		6
--#define APLL_TO_LPD		7
--#define DPLL_TO_LPD		8
--#define VPLL_TO_LPD		9
--#define ACPU			10
--#define ACPU_HALF		11
--#define DBF_FPD			12
--#define DBF_LPD			13
--#define DBG_TRACE		14
--#define DBG_TSTMP		15
--#define DP_VIDEO_REF		16
--#define DP_AUDIO_REF		17
--#define DP_STC_REF		18
--#define GDMA_REF		19
--#define DPDMA_REF		20
--#define DDR_REF			21
--#define SATA_REF		22
--#define PCIE_REF		23
--#define GPU_REF			24
--#define GPU_PP0_REF		25
--#define GPU_PP1_REF		26
--#define TOPSW_MAIN		27
--#define TOPSW_LSBUS		28
--#define GTGREF0_REF		29
--#define LPD_SWITCH		30
--#define LPD_LSBUS		31
--#define USB0_BUS_REF		32
--#define USB1_BUS_REF		33
--#define USB3_DUAL_REF		34
--#define USB0			35
--#define USB1			36
--#define CPU_R5			37
--#define CPU_R5_CORE		38
--#define CSU_SPB			39
--#define CSU_PLL			40
--#define PCAP			41
--#define IOU_SWITCH		42
--#define GEM_TSU_REF		43
--#define GEM_TSU			44
--#define GEM0_TX			45
--#define GEM1_TX			46
--#define GEM2_TX			47
--#define GEM3_TX			48
--#define GEM0_RX			49
--#define GEM1_RX			50
--#define GEM2_RX			51
--#define GEM3_RX			52
--#define QSPI_REF		53
--#define SDIO0_REF		54
--#define SDIO1_REF		55
--#define UART0_REF		56
--#define UART1_REF		57
--#define SPI0_REF		58
--#define SPI1_REF		59
--#define NAND_REF		60
--#define I2C0_REF		61
--#define I2C1_REF		62
--#define CAN0_REF		63
--#define CAN1_REF		64
--#define CAN0			65
--#define CAN1			66
--#define DLL_REF			67
--#define ADMA_REF		68
--#define TIMESTAMP_REF		69
--#define AMS_REF			70
--#define PL0_REF			71
--#define PL1_REF			72
--#define PL2_REF			73
--#define PL3_REF			74
--#define WDT			75
--#define IOPLL_INT		76
--#define IOPLL_PRE_SRC		77
--#define IOPLL_HALF		78
--#define IOPLL_INT_MUX		79
--#define IOPLL_POST_SRC		80
--#define RPLL_INT		81
--#define RPLL_PRE_SRC		82
--#define RPLL_HALF		83
--#define RPLL_INT_MUX		84
--#define RPLL_POST_SRC		85
--#define APLL_INT		86
--#define APLL_PRE_SRC		87
--#define APLL_HALF		88
--#define APLL_INT_MUX		89
--#define APLL_POST_SRC		90
--#define DPLL_INT		91
--#define DPLL_PRE_SRC		92
--#define DPLL_HALF		93
--#define DPLL_INT_MUX		94
--#define DPLL_POST_SRC		95
--#define VPLL_INT		96
--#define VPLL_PRE_SRC		97
--#define VPLL_HALF		98
--#define VPLL_INT_MUX		99
--#define VPLL_POST_SRC		100
--#define CAN0_MIO		101
--#define CAN1_MIO		102
--#define ACPU_FULL		103
--#define GEM0_REF		104
--#define GEM1_REF		105
--#define GEM2_REF		106
--#define GEM3_REF		107
--#define GEM0_REF_UNG		108
--#define GEM1_REF_UNG		109
--#define GEM2_REF_UNG		110
--#define GEM3_REF_UNG		111
--#define LPD_WDT			112
--
--#endif
-diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-deleted file mode 100644
-index 3719cda5679d..000000000000
---- a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-- */
--
--#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
--#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
--
--#define ZYNQMP_DPDMA_VIDEO0		0
--#define ZYNQMP_DPDMA_VIDEO1		1
--#define ZYNQMP_DPDMA_VIDEO2		2
--#define ZYNQMP_DPDMA_GRAPHICS		3
--#define ZYNQMP_DPDMA_AUDIO0		4
--#define ZYNQMP_DPDMA_AUDIO1		5
--
--#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
-diff --git a/include/dt-bindings/pinctrl/pinctrl-zynqmp.h b/include/dt-bindings/pinctrl/pinctrl-zynqmp.h
-deleted file mode 100644
-index cdb215734bdf..000000000000
---- a/include/dt-bindings/pinctrl/pinctrl-zynqmp.h
-+++ /dev/null
-@@ -1,19 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * MIO pin configuration defines for Xilinx ZynqMP
-- *
-- * Copyright (C) 2020 Xilinx, Inc.
-- */
--
--#ifndef _DT_BINDINGS_PINCTRL_ZYNQMP_H
--#define _DT_BINDINGS_PINCTRL_ZYNQMP_H
--
--/* Bit value for different voltage levels */
--#define IO_STANDARD_LVCMOS33	0
--#define IO_STANDARD_LVCMOS18	1
--
--/* Bit values for Slew Rates */
--#define SLEW_RATE_FAST		0
--#define SLEW_RATE_SLOW		1
--
--#endif /* _DT_BINDINGS_PINCTRL_ZYNQMP_H */
-diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
-deleted file mode 100644
-index e7eb0960480a..000000000000
---- a/include/dt-bindings/power/xlnx-zynqmp-power.h
-+++ /dev/null
-@@ -1,50 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- *  Copyright (C) 2018 Xilinx, Inc.
-- */
--
--#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
--#define _DT_BINDINGS_ZYNQMP_POWER_H
--
--#define		PD_RPU_0	6
--#define		PD_RPU_1	7
--#define		PD_OCM_BANK_0	11
--#define		PD_OCM_BANK_1	12
--#define		PD_OCM_BANK_2	13
--#define		PD_OCM_BANK_3	14
--#define		PD_TCM_BANK_0	15
--#define		PD_TCM_BANK_1	16
--#define		PD_TCM_BANK_2	17
--#define		PD_TCM_BANK_3	18
--#define		PD_USB_0	22
--#define		PD_USB_1	23
--#define		PD_TTC_0	24
--#define		PD_TTC_1	25
--#define		PD_TTC_2	26
--#define		PD_TTC_3	27
--#define		PD_SATA		28
--#define		PD_ETH_0	29
--#define		PD_ETH_1	30
--#define		PD_ETH_2	31
--#define		PD_ETH_3	32
--#define		PD_UART_0	33
--#define		PD_UART_1	34
--#define		PD_SPI_0	35
--#define		PD_SPI_1	36
--#define		PD_I2C_0	37
--#define		PD_I2C_1	38
--#define		PD_SD_0		39
--#define		PD_SD_1		40
--#define		PD_DP		41
--#define		PD_GDMA		42
--#define		PD_ADMA		43
--#define		PD_NAND		44
--#define		PD_QSPI		45
--#define		PD_GPIO		46
--#define		PD_CAN_0	47
--#define		PD_CAN_1	48
--#define		PD_GPU		58
--#define		PD_PCIE		59
--#define		PD_PL		69
--
--#endif
-diff --git a/include/dt-bindings/reset/xlnx-versal-resets.h b/include/dt-bindings/reset/xlnx-versal-resets.h
-deleted file mode 100644
-index 895424e9b0e5..000000000000
---- a/include/dt-bindings/reset/xlnx-versal-resets.h
-+++ /dev/null
-@@ -1,105 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- *  Copyright (C) 2020 Xilinx, Inc.
-- */
--
--#ifndef _DT_BINDINGS_VERSAL_RESETS_H
--#define _DT_BINDINGS_VERSAL_RESETS_H
--
--#define VERSAL_RST_PMC_POR			(0xc30c001U)
--#define VERSAL_RST_PMC				(0xc410002U)
--#define VERSAL_RST_PS_POR			(0xc30c003U)
--#define VERSAL_RST_PL_POR			(0xc30c004U)
--#define VERSAL_RST_NOC_POR			(0xc30c005U)
--#define VERSAL_RST_FPD_POR			(0xc30c006U)
--#define VERSAL_RST_ACPU_0_POR			(0xc30c007U)
--#define VERSAL_RST_ACPU_1_POR			(0xc30c008U)
--#define VERSAL_RST_OCM2_POR			(0xc30c009U)
--#define VERSAL_RST_PS_SRST			(0xc41000aU)
--#define VERSAL_RST_PL_SRST			(0xc41000bU)
--#define VERSAL_RST_NOC				(0xc41000cU)
--#define VERSAL_RST_NPI				(0xc41000dU)
--#define VERSAL_RST_SYS_RST_1			(0xc41000eU)
--#define VERSAL_RST_SYS_RST_2			(0xc41000fU)
--#define VERSAL_RST_SYS_RST_3			(0xc410010U)
--#define VERSAL_RST_FPD				(0xc410011U)
--#define VERSAL_RST_PL0				(0xc410012U)
--#define VERSAL_RST_PL1				(0xc410013U)
--#define VERSAL_RST_PL2				(0xc410014U)
--#define VERSAL_RST_PL3				(0xc410015U)
--#define VERSAL_RST_APU				(0xc410016U)
--#define VERSAL_RST_ACPU_0			(0xc410017U)
--#define VERSAL_RST_ACPU_1			(0xc410018U)
--#define VERSAL_RST_ACPU_L2			(0xc410019U)
--#define VERSAL_RST_ACPU_GIC			(0xc41001aU)
--#define VERSAL_RST_RPU_ISLAND			(0xc41001bU)
--#define VERSAL_RST_RPU_AMBA			(0xc41001cU)
--#define VERSAL_RST_R5_0				(0xc41001dU)
--#define VERSAL_RST_R5_1				(0xc41001eU)
--#define VERSAL_RST_SYSMON_PMC_SEQ_RST		(0xc41001fU)
--#define VERSAL_RST_SYSMON_PMC_CFG_RST		(0xc410020U)
--#define VERSAL_RST_SYSMON_FPD_CFG_RST		(0xc410021U)
--#define VERSAL_RST_SYSMON_FPD_SEQ_RST		(0xc410022U)
--#define VERSAL_RST_SYSMON_LPD			(0xc410023U)
--#define VERSAL_RST_PDMA_RST1			(0xc410024U)
--#define VERSAL_RST_PDMA_RST0			(0xc410025U)
--#define VERSAL_RST_ADMA				(0xc410026U)
--#define VERSAL_RST_TIMESTAMP			(0xc410027U)
--#define VERSAL_RST_OCM				(0xc410028U)
--#define VERSAL_RST_OCM2_RST			(0xc410029U)
--#define VERSAL_RST_IPI				(0xc41002aU)
--#define VERSAL_RST_SBI				(0xc41002bU)
--#define VERSAL_RST_LPD				(0xc41002cU)
--#define VERSAL_RST_QSPI				(0xc10402dU)
--#define VERSAL_RST_OSPI				(0xc10402eU)
--#define VERSAL_RST_SDIO_0			(0xc10402fU)
--#define VERSAL_RST_SDIO_1			(0xc104030U)
--#define VERSAL_RST_I2C_PMC			(0xc104031U)
--#define VERSAL_RST_GPIO_PMC			(0xc104032U)
--#define VERSAL_RST_GEM_0			(0xc104033U)
--#define VERSAL_RST_GEM_1			(0xc104034U)
--#define VERSAL_RST_SPARE			(0xc104035U)
--#define VERSAL_RST_USB_0			(0xc104036U)
--#define VERSAL_RST_UART_0			(0xc104037U)
--#define VERSAL_RST_UART_1			(0xc104038U)
--#define VERSAL_RST_SPI_0			(0xc104039U)
--#define VERSAL_RST_SPI_1			(0xc10403aU)
--#define VERSAL_RST_CAN_FD_0			(0xc10403bU)
--#define VERSAL_RST_CAN_FD_1			(0xc10403cU)
--#define VERSAL_RST_I2C_0			(0xc10403dU)
--#define VERSAL_RST_I2C_1			(0xc10403eU)
--#define VERSAL_RST_GPIO_LPD			(0xc10403fU)
--#define VERSAL_RST_TTC_0			(0xc104040U)
--#define VERSAL_RST_TTC_1			(0xc104041U)
--#define VERSAL_RST_TTC_2			(0xc104042U)
--#define VERSAL_RST_TTC_3			(0xc104043U)
--#define VERSAL_RST_SWDT_FPD			(0xc104044U)
--#define VERSAL_RST_SWDT_LPD			(0xc104045U)
--#define VERSAL_RST_USB				(0xc104046U)
--#define VERSAL_RST_DPC				(0xc208047U)
--#define VERSAL_RST_PMCDBG			(0xc208048U)
--#define VERSAL_RST_DBG_TRACE			(0xc208049U)
--#define VERSAL_RST_DBG_FPD			(0xc20804aU)
--#define VERSAL_RST_DBG_TSTMP			(0xc20804bU)
--#define VERSAL_RST_RPU0_DBG			(0xc20804cU)
--#define VERSAL_RST_RPU1_DBG			(0xc20804dU)
--#define VERSAL_RST_HSDP				(0xc20804eU)
--#define VERSAL_RST_DBG_LPD			(0xc20804fU)
--#define VERSAL_RST_CPM_POR			(0xc30c050U)
--#define VERSAL_RST_CPM				(0xc410051U)
--#define VERSAL_RST_CPMDBG			(0xc208052U)
--#define VERSAL_RST_PCIE_CFG			(0xc410053U)
--#define VERSAL_RST_PCIE_CORE0			(0xc410054U)
--#define VERSAL_RST_PCIE_CORE1			(0xc410055U)
--#define VERSAL_RST_PCIE_DMA			(0xc410056U)
--#define VERSAL_RST_CMN				(0xc410057U)
--#define VERSAL_RST_L2_0				(0xc410058U)
--#define VERSAL_RST_L2_1				(0xc410059U)
--#define VERSAL_RST_ADDR_REMAP			(0xc41005aU)
--#define VERSAL_RST_CPI0				(0xc41005bU)
--#define VERSAL_RST_CPI1				(0xc41005cU)
--#define VERSAL_RST_XRAM				(0xc30c05dU)
--#define VERSAL_RST_AIE_ARRAY			(0xc10405eU)
--#define VERSAL_RST_AIE_SHIM			(0xc10405fU)
--
--#endif
-diff --git a/include/dt-bindings/reset/xlnx-zynqmp-resets.h b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
-deleted file mode 100644
-index d44525b9f8db..000000000000
---- a/include/dt-bindings/reset/xlnx-zynqmp-resets.h
-+++ /dev/null
-@@ -1,130 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- *  Copyright (C) 2018 Xilinx, Inc.
-- */
--
--#ifndef _DT_BINDINGS_ZYNQMP_RESETS_H
--#define _DT_BINDINGS_ZYNQMP_RESETS_H
--
--#define		ZYNQMP_RESET_PCIE_CFG		0
--#define		ZYNQMP_RESET_PCIE_BRIDGE	1
--#define		ZYNQMP_RESET_PCIE_CTRL		2
--#define		ZYNQMP_RESET_DP			3
--#define		ZYNQMP_RESET_SWDT_CRF		4
--#define		ZYNQMP_RESET_AFI_FM5		5
--#define		ZYNQMP_RESET_AFI_FM4		6
--#define		ZYNQMP_RESET_AFI_FM3		7
--#define		ZYNQMP_RESET_AFI_FM2		8
--#define		ZYNQMP_RESET_AFI_FM1		9
--#define		ZYNQMP_RESET_AFI_FM0		10
--#define		ZYNQMP_RESET_GDMA		11
--#define		ZYNQMP_RESET_GPU_PP1		12
--#define		ZYNQMP_RESET_GPU_PP0		13
--#define		ZYNQMP_RESET_GPU		14
--#define		ZYNQMP_RESET_GT			15
--#define		ZYNQMP_RESET_SATA		16
--#define		ZYNQMP_RESET_ACPU3_PWRON	17
--#define		ZYNQMP_RESET_ACPU2_PWRON	18
--#define		ZYNQMP_RESET_ACPU1_PWRON	19
--#define		ZYNQMP_RESET_ACPU0_PWRON	20
--#define		ZYNQMP_RESET_APU_L2		21
--#define		ZYNQMP_RESET_ACPU3		22
--#define		ZYNQMP_RESET_ACPU2		23
--#define		ZYNQMP_RESET_ACPU1		24
--#define		ZYNQMP_RESET_ACPU0		25
--#define		ZYNQMP_RESET_DDR		26
--#define		ZYNQMP_RESET_APM_FPD		27
--#define		ZYNQMP_RESET_SOFT		28
--#define		ZYNQMP_RESET_GEM0		29
--#define		ZYNQMP_RESET_GEM1		30
--#define		ZYNQMP_RESET_GEM2		31
--#define		ZYNQMP_RESET_GEM3		32
--#define		ZYNQMP_RESET_QSPI		33
--#define		ZYNQMP_RESET_UART0		34
--#define		ZYNQMP_RESET_UART1		35
--#define		ZYNQMP_RESET_SPI0		36
--#define		ZYNQMP_RESET_SPI1		37
--#define		ZYNQMP_RESET_SDIO0		38
--#define		ZYNQMP_RESET_SDIO1		39
--#define		ZYNQMP_RESET_CAN0		40
--#define		ZYNQMP_RESET_CAN1		41
--#define		ZYNQMP_RESET_I2C0		42
--#define		ZYNQMP_RESET_I2C1		43
--#define		ZYNQMP_RESET_TTC0		44
--#define		ZYNQMP_RESET_TTC1		45
--#define		ZYNQMP_RESET_TTC2		46
--#define		ZYNQMP_RESET_TTC3		47
--#define		ZYNQMP_RESET_SWDT_CRL		48
--#define		ZYNQMP_RESET_NAND		49
--#define		ZYNQMP_RESET_ADMA		50
--#define		ZYNQMP_RESET_GPIO		51
--#define		ZYNQMP_RESET_IOU_CC		52
--#define		ZYNQMP_RESET_TIMESTAMP		53
--#define		ZYNQMP_RESET_RPU_R50		54
--#define		ZYNQMP_RESET_RPU_R51		55
--#define		ZYNQMP_RESET_RPU_AMBA		56
--#define		ZYNQMP_RESET_OCM		57
--#define		ZYNQMP_RESET_RPU_PGE		58
--#define		ZYNQMP_RESET_USB0_CORERESET	59
--#define		ZYNQMP_RESET_USB1_CORERESET	60
--#define		ZYNQMP_RESET_USB0_HIBERRESET	61
--#define		ZYNQMP_RESET_USB1_HIBERRESET	62
--#define		ZYNQMP_RESET_USB0_APB		63
--#define		ZYNQMP_RESET_USB1_APB		64
--#define		ZYNQMP_RESET_IPI		65
--#define		ZYNQMP_RESET_APM_LPD		66
--#define		ZYNQMP_RESET_RTC		67
--#define		ZYNQMP_RESET_SYSMON		68
--#define		ZYNQMP_RESET_AFI_FM6		69
--#define		ZYNQMP_RESET_LPD_SWDT		70
--#define		ZYNQMP_RESET_FPD		71
--#define		ZYNQMP_RESET_RPU_DBG1		72
--#define		ZYNQMP_RESET_RPU_DBG0		73
--#define		ZYNQMP_RESET_DBG_LPD		74
--#define		ZYNQMP_RESET_DBG_FPD		75
--#define		ZYNQMP_RESET_APLL		76
--#define		ZYNQMP_RESET_DPLL		77
--#define		ZYNQMP_RESET_VPLL		78
--#define		ZYNQMP_RESET_IOPLL		79
--#define		ZYNQMP_RESET_RPLL		80
--#define		ZYNQMP_RESET_GPO3_PL_0		81
--#define		ZYNQMP_RESET_GPO3_PL_1		82
--#define		ZYNQMP_RESET_GPO3_PL_2		83
--#define		ZYNQMP_RESET_GPO3_PL_3		84
--#define		ZYNQMP_RESET_GPO3_PL_4		85
--#define		ZYNQMP_RESET_GPO3_PL_5		86
--#define		ZYNQMP_RESET_GPO3_PL_6		87
--#define		ZYNQMP_RESET_GPO3_PL_7		88
--#define		ZYNQMP_RESET_GPO3_PL_8		89
--#define		ZYNQMP_RESET_GPO3_PL_9		90
--#define		ZYNQMP_RESET_GPO3_PL_10		91
--#define		ZYNQMP_RESET_GPO3_PL_11		92
--#define		ZYNQMP_RESET_GPO3_PL_12		93
--#define		ZYNQMP_RESET_GPO3_PL_13		94
--#define		ZYNQMP_RESET_GPO3_PL_14		95
--#define		ZYNQMP_RESET_GPO3_PL_15		96
--#define		ZYNQMP_RESET_GPO3_PL_16		97
--#define		ZYNQMP_RESET_GPO3_PL_17		98
--#define		ZYNQMP_RESET_GPO3_PL_18		99
--#define		ZYNQMP_RESET_GPO3_PL_19		100
--#define		ZYNQMP_RESET_GPO3_PL_20		101
--#define		ZYNQMP_RESET_GPO3_PL_21		102
--#define		ZYNQMP_RESET_GPO3_PL_22		103
--#define		ZYNQMP_RESET_GPO3_PL_23		104
--#define		ZYNQMP_RESET_GPO3_PL_24		105
--#define		ZYNQMP_RESET_GPO3_PL_25		106
--#define		ZYNQMP_RESET_GPO3_PL_26		107
--#define		ZYNQMP_RESET_GPO3_PL_27		108
--#define		ZYNQMP_RESET_GPO3_PL_28		109
--#define		ZYNQMP_RESET_GPO3_PL_29		110
--#define		ZYNQMP_RESET_GPO3_PL_30		111
--#define		ZYNQMP_RESET_GPO3_PL_31		112
--#define		ZYNQMP_RESET_RPU_LS		113
--#define		ZYNQMP_RESET_PS_ONLY		114
--#define		ZYNQMP_RESET_PL			115
--#define		ZYNQMP_RESET_PS_PL0		116
--#define		ZYNQMP_RESET_PS_PL1		117
--#define		ZYNQMP_RESET_PS_PL2		118
--#define		ZYNQMP_RESET_PS_PL3		119
--
--#endif
+---
+Caleb Connolly (24):
+      qcom: drop clock dt-binding headers
+      qcom: drop remaining dt-binding headers
+      sunxi: drop clock dt-binding headers
+      sunxi: drop remaining dt-binding headers
+      imx: drop clock dt-binding headers
+      imx: drop dt-binding headers
+      amlogic: drop dt-binding headers
+      stm: drop dt-binding headers
+      rockchip: drop clock dt-binding headers
+      rockchip: drop remaining dt-binding headers
+      exynos: drop dt-binding headers
+      bcm: drop dt-binding headers
+      ti: drop dt-binding headers
+      tegra: drop clock dt-binding headers
+      tegra: drop dt-binding headers
+      xlnx: drop dt-binding headers
+      mtk: drop dt-binding headers
+      microchip: drop dt-binding headers
+      hisi: drop dt-binding headers
+      sifive: drop clock headers
+      dt-bindings: drop clock headers
+      dt-bindings: drop remaining device headers
+      dt-bindings: drop generic headers
+      dts: support building all dtb files for a specific vendor
 
--- 
-2.44.0
+ arch/arm/dts/exynos7420.dtsi                       |   2 +-
+ arch/arm/dts/rk3368-sheep.dts                      |   8 +-
+ arch/arm/dts/rk3399-u-boot.dtsi                    |   2 +-
+ arch/arm/dts/tegra186.dtsi                         |   2 +-
+ arch/mips/dts/brcm,bcm6318.dtsi                    |   2 +-
+ arch/riscv/dts/fu540-c000-u-boot.dtsi              |  26 +-
+ arch/riscv/dts/mpfs.dtsi                           |   2 +-
+ drivers/clk/exynos/clk-exynos7420.c                |   2 +-
+ drivers/clk/microchip/mpfs_clk.c                   |   2 +-
+ drivers/clk/microchip/mpfs_clk_cfg.c               |   2 +-
+ drivers/clk/microchip/mpfs_clk_msspll.c            |   2 +-
+ drivers/clk/microchip/mpfs_clk_periph.c            |   2 +-
+ drivers/clk/rockchip/clk_rk3399.c                  |   2 +-
+ drivers/clk/sifive/fu540-prci.c                    |   8 +-
+ drivers/mailbox/tegra-hsp.c                        |   2 +-
+ drivers/net/phy/dp83869.c                          |   2 +
+ drivers/pinctrl/rockchip/pinctrl-rk3568.c          | 186 ++--
+ dts/Kconfig                                        |  24 +
+ include/dt-bindings/arm/coresight-cti-dt.h         |  37 -
+ include/dt-bindings/arm/ux500_pm_domains.h         |  15 -
+ include/dt-bindings/ata/ahci.h                     |  20 -
+ include/dt-bindings/bus/moxtet.h                   |  16 -
+ include/dt-bindings/bus/ti-sysc.h                  |  28 -
+ include/dt-bindings/clk/ti-dra7-atl.h              |  40 -
+ include/dt-bindings/clock/actions,s700-cmu.h       | 118 ---
+ include/dt-bindings/clock/actions,s900-cmu.h       | 129 ---
+ include/dt-bindings/clock/agilex-clock.h           |  71 --
+ include/dt-bindings/clock/am3.h                    | 227 -----
+ .../clock/amlogic,a1-peripherals-clkc.h            | 168 ----
+ include/dt-bindings/clock/amlogic,a1-pll-clkc.h    |  25 -
+ include/dt-bindings/clock/at91.h                   |  23 -
+ include/dt-bindings/clock/axg-aoclkc.h             |  31 -
+ include/dt-bindings/clock/axg-audio-clkc.h         |  94 ---
+ include/dt-bindings/clock/axg-clkc.h               | 100 ---
+ include/dt-bindings/clock/bcm-nsp.h                |  51 --
+ include/dt-bindings/clock/bcm2835-aux.h            |   9 -
+ include/dt-bindings/clock/bcm2835.h                |  62 --
+ include/dt-bindings/clock/bcm6318-clock.h          |  47 --
+ include/dt-bindings/clock/bcm63268-clock.h         |  51 --
+ include/dt-bindings/clock/bcm6328-clock.h          |  24 -
+ include/dt-bindings/clock/bcm6358-clock.h          |  23 -
+ include/dt-bindings/clock/bcm6362-clock.h          |  32 -
+ include/dt-bindings/clock/bcm6368-clock.h          |  30 -
+ include/dt-bindings/clock/boston-clock.h           |  12 -
+ include/dt-bindings/clock/exynos7420-clk.h         | 207 -----
+ include/dt-bindings/clock/exynos850.h              | 337 --------
+ include/dt-bindings/clock/fsl,qoriq-clockgen.h     |  15 -
+ include/dt-bindings/clock/g12a-aoclkc.h            |  36 -
+ include/dt-bindings/clock/g12a-clkc.h              | 153 ----
+ include/dt-bindings/clock/gxbb-aoclkc.h            |  74 --
+ include/dt-bindings/clock/gxbb-clkc.h              | 151 ----
+ include/dt-bindings/clock/hi3660-clock.h           | 214 -----
+ include/dt-bindings/clock/hi6220-clock.h           | 173 ----
+ include/dt-bindings/clock/imx5-clock.h             | 219 -----
+ include/dt-bindings/clock/imx6qdl-clock.h          | 278 ------
+ include/dt-bindings/clock/imx6sl-clock.h           | 178 ----
+ include/dt-bindings/clock/imx6sll-clock.h          | 210 -----
+ include/dt-bindings/clock/imx6sx-clock.h           | 281 ------
+ include/dt-bindings/clock/imx6ul-clock.h           | 262 ------
+ include/dt-bindings/clock/imx7d-clock.h            | 456 ----------
+ include/dt-bindings/clock/imx7ulp-clock.h          | 119 ---
+ include/dt-bindings/clock/imx8mm-clock.h           | 286 -------
+ include/dt-bindings/clock/imx8mn-clock.h           | 262 ------
+ include/dt-bindings/clock/imx8mp-clock.h           | 401 ---------
+ include/dt-bindings/clock/imx8mq-clock.h           | 431 ----------
+ include/dt-bindings/clock/imx8ulp-clock.h          | 258 ------
+ include/dt-bindings/clock/imx93-clock.h            | 208 -----
+ include/dt-bindings/clock/imxrt1050-clock.h        |  72 --
+ include/dt-bindings/clock/lpc32xx-clock.h          |  58 --
+ include/dt-bindings/clock/maxim,max77802.h         |  22 -
+ include/dt-bindings/clock/microchip-mpfs-clock.h   |  71 --
+ include/dt-bindings/clock/mt7622-clk.h             | 270 ------
+ include/dt-bindings/clock/mt7629-clk.h             | 206 -----
+ include/dt-bindings/clock/mt8183-clk.h             | 329 --------
+ include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  46 -
+ include/dt-bindings/clock/omap4.h                  | 149 ----
+ include/dt-bindings/clock/omap5.h                  | 129 ---
+ include/dt-bindings/clock/px30-cru.h               | 389 ---------
+ include/dt-bindings/clock/qcom,camcc-sdm845.h      | 116 ---
+ include/dt-bindings/clock/qcom,dispcc-sdm845.h     |  56 --
+ include/dt-bindings/clock/qcom,gcc-ipq4019.h       | 169 ----
+ include/dt-bindings/clock/qcom,gcc-msm8916.h       | 179 ----
+ include/dt-bindings/clock/qcom,gcc-msm8996.h       | 362 --------
+ include/dt-bindings/clock/qcom,gcc-qcs404.h        | 180 ----
+ include/dt-bindings/clock/qcom,gcc-sdm845.h        | 246 ------
+ include/dt-bindings/clock/qcom,gpucc-sdm845.h      |  24 -
+ include/dt-bindings/clock/qcom,lpass-sdm845.h      |  15 -
+ include/dt-bindings/clock/qcom,mmcc-msm8996.h      | 295 -------
+ include/dt-bindings/clock/qcom,rpmcc.h             | 174 ----
+ include/dt-bindings/clock/qcom,rpmh.h              |  37 -
+ include/dt-bindings/clock/qcom,turingcc-qcs404.h   |  15 -
+ include/dt-bindings/clock/qcom,videocc-sdm845.h    |  35 -
+ include/dt-bindings/clock/rk3036-cru.h             | 185 ----
+ include/dt-bindings/clock/rk3066a-cru.h            |  31 -
+ include/dt-bindings/clock/rk3128-cru.h             | 273 ------
+ include/dt-bindings/clock/rk3188-cru-common.h      | 261 ------
+ include/dt-bindings/clock/rk3188-cru.h             |  47 --
+ include/dt-bindings/clock/rk3228-cru.h             | 287 -------
+ include/dt-bindings/clock/rk3288-cru.h             | 381 ---------
+ include/dt-bindings/clock/rk3308-cru.h             | 387 ---------
+ include/dt-bindings/clock/rk3328-cru.h             | 393 ---------
+ include/dt-bindings/clock/rk3368-cru.h             | 381 ---------
+ include/dt-bindings/clock/rk3399-cru.h             | 749 ----------------
+ include/dt-bindings/clock/rk3568-cru.h             | 926 --------------------
+ include/dt-bindings/clock/rockchip,rk3588-cru.h    | 766 -----------------
+ include/dt-bindings/clock/rockchip,rk808.h         |  11 -
+ include/dt-bindings/clock/rockchip,rv1126-cru.h    | 632 --------------
+ include/dt-bindings/clock/rv1108-cru.h             | 356 --------
+ include/dt-bindings/clock/sifive-fu540-prci.h      |  18 -
+ include/dt-bindings/clock/sifive-fu740-prci.h      |  24 -
+ include/dt-bindings/clock/ste-ab8500.h             |  12 -
+ include/dt-bindings/clock/stih407-clks.h           |  90 --
+ include/dt-bindings/clock/stih410-clks.h           |  25 -
+ include/dt-bindings/clock/stm32fx-clock.h          |  63 --
+ include/dt-bindings/clock/stm32h7-clks.h           | 167 ----
+ include/dt-bindings/clock/stm32mp1-clks.h          | 274 ------
+ include/dt-bindings/clock/stm32mp13-clks.h         | 229 -----
+ include/dt-bindings/clock/sun20i-d1-ccu.h          | 158 ----
+ include/dt-bindings/clock/sun20i-d1-r-ccu.h        |  19 -
+ include/dt-bindings/clock/sun4i-a10-ccu.h          | 202 -----
+ include/dt-bindings/clock/sun4i-a10-pll2.h         |  53 --
+ include/dt-bindings/clock/sun50i-a64-ccu.h         | 138 ---
+ include/dt-bindings/clock/sun50i-h6-ccu.h          | 125 ---
+ include/dt-bindings/clock/sun50i-h6-r-ccu.h        |  27 -
+ include/dt-bindings/clock/sun50i-h616-ccu.h        | 116 ---
+ include/dt-bindings/clock/sun5i-ccu.h              |  97 ---
+ include/dt-bindings/clock/sun6i-a31-ccu.h          | 193 -----
+ include/dt-bindings/clock/sun6i-rtc.h              |  10 -
+ include/dt-bindings/clock/sun7i-a20-ccu.h          |  53 --
+ include/dt-bindings/clock/sun8i-a23-a33-ccu.h      | 129 ---
+ include/dt-bindings/clock/sun8i-a83t-ccu.h         | 140 ---
+ include/dt-bindings/clock/sun8i-de2.h              |  21 -
+ include/dt-bindings/clock/sun8i-h3-ccu.h           | 152 ----
+ include/dt-bindings/clock/sun8i-r-ccu.h            |  59 --
+ include/dt-bindings/clock/sun8i-r40-ccu.h          | 191 -----
+ include/dt-bindings/clock/sun8i-tcon-top.h         |  11 -
+ include/dt-bindings/clock/sun8i-v3s-ccu.h          | 111 ---
+ include/dt-bindings/clock/sun9i-a80-ccu.h          | 162 ----
+ include/dt-bindings/clock/sun9i-a80-de.h           |  80 --
+ include/dt-bindings/clock/sun9i-a80-usb.h          |  59 --
+ include/dt-bindings/clock/suniv-ccu-f1c100s.h      |  72 --
+ include/dt-bindings/clock/tegra114-car.h           | 343 --------
+ include/dt-bindings/clock/tegra124-car-common.h    | 345 --------
+ include/dt-bindings/clock/tegra124-car.h           |  19 -
+ include/dt-bindings/clock/tegra186-clock.h         | 940 ---------------------
+ include/dt-bindings/clock/tegra20-car.h            | 158 ----
+ include/dt-bindings/clock/tegra210-car.h           | 401 ---------
+ include/dt-bindings/clock/tegra30-car.h            | 273 ------
+ include/dt-bindings/clock/versaclock.h             |  13 -
+ include/dt-bindings/clock/vf610-clock.h            | 202 -----
+ include/dt-bindings/clock/xlnx-versal-clk.h        | 123 ---
+ include/dt-bindings/clock/xlnx-zynqmp-clk.h        | 126 ---
+ include/dt-bindings/display/tda998x.h              |   8 -
+ include/dt-bindings/dma/at91.h                     |  52 --
+ include/dt-bindings/dma/qcom-gpi.h                 |  11 -
+ include/dt-bindings/dma/sun4i-a10.h                |  56 --
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h        |  16 -
+ include/dt-bindings/firmware/qcom,scm.h            |  39 -
+ include/dt-bindings/gpio/aspeed-gpio.h             |  51 --
+ include/dt-bindings/gpio/gpio.h                    |  42 -
+ include/dt-bindings/gpio/meson-a1-gpio.h           |  73 --
+ include/dt-bindings/gpio/meson-axg-gpio.h          | 116 ---
+ include/dt-bindings/gpio/meson-g12a-gpio.h         | 114 ---
+ include/dt-bindings/gpio/meson-gxbb-gpio.h         | 148 ----
+ include/dt-bindings/gpio/meson-gxl-gpio.h          | 125 ---
+ include/dt-bindings/gpio/tegra-gpio.h              |  51 --
+ include/dt-bindings/gpio/uniphier-gpio.h           |  18 -
+ include/dt-bindings/iio/qcom,spmi-vadc.h           | 300 -------
+ include/dt-bindings/input/gpio-keys.h              |  13 -
+ include/dt-bindings/input/input.h                  |  17 -
+ include/dt-bindings/input/linux-event-codes.h      | 806 ------------------
+ include/dt-bindings/interconnect/fsl,imx8mp.h      |  59 --
+ include/dt-bindings/interconnect/imx8mm.h          |  50 --
+ include/dt-bindings/interconnect/imx8mn.h          |  41 -
+ include/dt-bindings/interconnect/imx8mq.h          |  48 --
+ include/dt-bindings/interconnect/qcom,msm8916.h    | 100 ---
+ .../dt-bindings/interconnect/qcom,msm8996-cbf.h    |  12 -
+ include/dt-bindings/interconnect/qcom,msm8996.h    | 163 ----
+ include/dt-bindings/interconnect/qcom,osm-l3.h     |  15 -
+ include/dt-bindings/interconnect/qcom,sdm845.h     | 150 ----
+ .../dt-bindings/interrupt-controller/apple-aic.h   |  15 -
+ include/dt-bindings/interrupt-controller/arm-gic.h |  23 -
+ include/dt-bindings/interrupt-controller/irq-st.h  |  30 -
+ include/dt-bindings/interrupt-controller/irq.h     |  19 -
+ .../dt-bindings/interrupt-controller/irqc-rzg2l.h  |  25 -
+ .../dt-bindings/interrupt-controller/mips-gic.h    |   9 -
+ include/dt-bindings/leds/common.h                  | 106 ---
+ include/dt-bindings/leds/leds-netxbig.h            |  18 -
+ include/dt-bindings/leds/leds-ns2.h                |   9 -
+ include/dt-bindings/leds/leds-pca9532.h            |  18 -
+ include/dt-bindings/mailbox/tegra186-hsp.h         |  19 -
+ include/dt-bindings/media/omap3-isp.h              |  22 -
+ include/dt-bindings/media/tda1997x.h               |  74 --
+ include/dt-bindings/media/video-interfaces.h       |  16 -
+ include/dt-bindings/memory/tegra114-mc.h           |  25 -
+ include/dt-bindings/memory/tegra124-mc.h           |  31 -
+ include/dt-bindings/memory/tegra210-mc.h           |  36 -
+ include/dt-bindings/memory/tegra30-mc.h            |  24 -
+ include/dt-bindings/mfd/at91-usart.h               |  17 -
+ include/dt-bindings/mfd/atmel-flexcom.h            |  15 -
+ include/dt-bindings/mfd/dbx500-prcmu.h             |  84 --
+ include/dt-bindings/mfd/st,stpmic1.h               |  50 --
+ include/dt-bindings/mfd/st-lpc.h                   |  16 -
+ include/dt-bindings/mfd/stm32f4-rcc.h              | 108 ---
+ include/dt-bindings/mfd/stm32f7-rcc.h              | 116 ---
+ include/dt-bindings/mfd/stm32h7-rcc.h              | 138 ---
+ include/dt-bindings/mux/mux.h                      |  17 -
+ include/dt-bindings/mux/ti-serdes.h                | 190 -----
+ include/dt-bindings/net/microchip-lan78xx.h        |  21 -
+ include/dt-bindings/net/mscc-phy-vsc8531.h         |  31 -
+ include/dt-bindings/net/qca-ar803x.h               |  13 -
+ include/dt-bindings/net/ti-dp83867.h               |  53 --
+ include/dt-bindings/net/ti-dp83869.h               |  60 --
+ include/dt-bindings/phy/phy-am654-serdes.h         |  13 -
+ include/dt-bindings/phy/phy-cadence.h              |  24 -
+ include/dt-bindings/phy/phy-imx8-pcie.h            |  14 -
+ include/dt-bindings/phy/phy-qcom-qmp.h             |  20 -
+ include/dt-bindings/phy/phy-qcom-qusb2.h           |  37 -
+ include/dt-bindings/phy/phy-ti.h                   |  21 -
+ include/dt-bindings/phy/phy.h                      |  26 -
+ include/dt-bindings/pinctrl/am33xx.h               | 172 ----
+ include/dt-bindings/pinctrl/am43xx.h               |  39 -
+ include/dt-bindings/pinctrl/apple.h                |  13 -
+ include/dt-bindings/pinctrl/at91.h                 |  49 --
+ include/dt-bindings/pinctrl/bcm2835.h              |  26 -
+ include/dt-bindings/pinctrl/dra.h                  |  79 --
+ include/dt-bindings/pinctrl/hisi.h                 |  74 --
+ include/dt-bindings/pinctrl/mt65xx.h               |  41 -
+ include/dt-bindings/pinctrl/mt8365-pinfunc.h       | 858 -------------------
+ include/dt-bindings/pinctrl/omap.h                 |  91 --
+ include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   |   7 -
+ include/dt-bindings/pinctrl/pinctrl-tegra.h        |  37 -
+ include/dt-bindings/pinctrl/pinctrl-zynqmp.h       |  19 -
+ include/dt-bindings/pinctrl/qcom,pmic-gpio.h       | 164 ----
+ include/dt-bindings/pinctrl/qcom,pmic-mpp.h        | 106 ---
+ include/dt-bindings/pinctrl/rockchip.h             |  60 --
+ include/dt-bindings/pinctrl/stm32-pinfunc.h        |  45 -
+ include/dt-bindings/pinctrl/sun4i-a10.h            |  62 --
+ include/dt-bindings/power/fsl,imx93-power.h        |  15 -
+ include/dt-bindings/power/imx7-power.h             |  13 -
+ include/dt-bindings/power/imx8mm-power.h           |  31 -
+ include/dt-bindings/power/imx8mn-power.h           |  20 -
+ include/dt-bindings/power/imx8mp-power.h           |  59 --
+ include/dt-bindings/power/imx8mq-power.h           |  24 -
+ include/dt-bindings/power/imx8ulp-power.h          |  26 -
+ include/dt-bindings/power/mediatek,mt8365-power.h  |  19 -
+ include/dt-bindings/power/meson-a1-power.h         |  32 -
+ include/dt-bindings/power/meson-axg-power.h        |  14 -
+ include/dt-bindings/power/meson-g12a-power.h       |  13 -
+ include/dt-bindings/power/meson-gxbb-power.h       |  13 -
+ include/dt-bindings/power/meson-sm1-power.h        |  18 -
+ include/dt-bindings/power/owl-s700-powergate.h     |  19 -
+ include/dt-bindings/power/px30-power.h             |  27 -
+ include/dt-bindings/power/qcom-rpmpd.h             | 412 ---------
+ include/dt-bindings/power/raspberrypi-power.h      |  41 -
+ include/dt-bindings/power/rk3066-power.h           |  22 -
+ include/dt-bindings/power/rk3188-power.h           |  24 -
+ include/dt-bindings/power/rk3228-power.h           |  21 -
+ include/dt-bindings/power/rk3288-power.h           |  32 -
+ include/dt-bindings/power/rk3328-power.h           |  19 -
+ include/dt-bindings/power/rk3399-power.h           |  53 --
+ include/dt-bindings/power/rk3568-power.h           |  32 -
+ include/dt-bindings/power/rk3588-power.h           |  69 --
+ include/dt-bindings/power/rockchip,rv1126-power.h  |  35 -
+ include/dt-bindings/power/tegra186-powergate.h     |  28 -
+ include/dt-bindings/power/xlnx-zynqmp-power.h      |  50 --
+ include/dt-bindings/pwm/pwm.h                      |  14 -
+ .../dt-bindings/regulator/dlg,da9063-regulator.h   |  16 -
+ include/dt-bindings/regulator/maxim,max77802.h     |  18 -
+ .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 -
+ .../dt-bindings/regulator/st,stm32mp13-regulator.h |  42 -
+ include/dt-bindings/reset/actions,s700-reset.h     |  34 -
+ include/dt-bindings/reset/actions,s900-reset.h     |  65 --
+ include/dt-bindings/reset/altr,rst-mgr-a10.h       | 110 ---
+ include/dt-bindings/reset/altr,rst-mgr-s10.h       |  96 ---
+ include/dt-bindings/reset/altr,rst-mgr.h           |  82 --
+ include/dt-bindings/reset/amlogic,meson-a1-reset.h |  76 --
+ .../reset/amlogic,meson-axg-audio-arb.h            |  19 -
+ .../dt-bindings/reset/amlogic,meson-axg-reset.h    | 123 ---
+ .../reset/amlogic,meson-g12a-audio-reset.h         |  53 --
+ .../dt-bindings/reset/amlogic,meson-g12a-reset.h   | 137 ---
+ .../dt-bindings/reset/amlogic,meson-gxbb-reset.h   | 161 ----
+ include/dt-bindings/reset/axg-aoclkc.h             |  20 -
+ include/dt-bindings/reset/bcm6318-reset.h          |  25 -
+ include/dt-bindings/reset/bcm63268-reset.h         |  31 -
+ include/dt-bindings/reset/bcm6328-reset.h          |  23 -
+ include/dt-bindings/reset/bcm6358-reset.h          |  20 -
+ include/dt-bindings/reset/bcm6362-reset.h          |  27 -
+ include/dt-bindings/reset/bcm6368-reset.h          |  21 -
+ include/dt-bindings/reset/g12a-aoclkc.h            |  18 -
+ include/dt-bindings/reset/gxbb-aoclkc.h            |  66 --
+ include/dt-bindings/reset/imx7-reset.h             |  52 --
+ include/dt-bindings/reset/imx8mp-reset.h           |  50 --
+ include/dt-bindings/reset/imx8mq-reset.h           |  67 --
+ include/dt-bindings/reset/imx8ulp-pcc-reset.h      |  59 --
+ include/dt-bindings/reset/mt7621-reset.h           |  38 -
+ include/dt-bindings/reset/nuvoton,npcm7xx-reset.h  |  91 --
+ include/dt-bindings/reset/qcom,gcc-msm8916.h       | 100 ---
+ include/dt-bindings/reset/qcom,sdm845-aoss.h       |  17 -
+ include/dt-bindings/reset/qcom,sdm845-pdc.h        |  22 -
+ .../dt-bindings/reset/raspberrypi,firmware-reset.h |  13 -
+ include/dt-bindings/reset/rockchip,rk3588-cru.h    | 754 -----------------
+ include/dt-bindings/reset/sama7g5-reset.h          |  10 -
+ include/dt-bindings/reset/snps,hsdk-reset.h        |  17 -
+ include/dt-bindings/reset/starfive,jh7110-crg.h    | 183 ----
+ include/dt-bindings/reset/stih407-resets.h         |  65 --
+ include/dt-bindings/reset/stm32mp1-resets.h        | 123 ---
+ include/dt-bindings/reset/stm32mp13-resets.h       | 100 ---
+ include/dt-bindings/reset/sun20i-d1-ccu.h          |  79 --
+ include/dt-bindings/reset/sun20i-d1-r-ccu.h        |  16 -
+ include/dt-bindings/reset/sun4i-a10-ccu.h          |  69 --
+ include/dt-bindings/reset/sun50i-a64-ccu.h         |  98 ---
+ include/dt-bindings/reset/sun50i-h6-ccu.h          |  73 --
+ include/dt-bindings/reset/sun50i-h6-r-ccu.h        |  18 -
+ include/dt-bindings/reset/sun50i-h616-ccu.h        |  70 --
+ include/dt-bindings/reset/sun5i-ccu.h              |  23 -
+ include/dt-bindings/reset/sun6i-a31-ccu.h          | 106 ---
+ include/dt-bindings/reset/sun8i-a23-a33-ccu.h      |  87 --
+ include/dt-bindings/reset/sun8i-a83t-ccu.h         |  98 ---
+ include/dt-bindings/reset/sun8i-de2.h              |  15 -
+ include/dt-bindings/reset/sun8i-h3-ccu.h           | 106 ---
+ include/dt-bindings/reset/sun8i-r-ccu.h            |  53 --
+ include/dt-bindings/reset/sun8i-r40-ccu.h          | 130 ---
+ include/dt-bindings/reset/sun8i-v3s-ccu.h          |  81 --
+ include/dt-bindings/reset/sun9i-a80-ccu.h          | 102 ---
+ include/dt-bindings/reset/sun9i-a80-de.h           |  58 --
+ include/dt-bindings/reset/sun9i-a80-usb.h          |  56 --
+ include/dt-bindings/reset/suniv-ccu-f1c100s.h      |  38 -
+ include/dt-bindings/reset/tegra124-car.h           |  12 -
+ include/dt-bindings/reset/tegra186-reset.h         | 205 -----
+ include/dt-bindings/reset/ti-syscon.h              |  38 -
+ include/dt-bindings/reset/xlnx-versal-resets.h     | 105 ---
+ include/dt-bindings/reset/xlnx-zynqmp-resets.h     | 130 ---
+ include/dt-bindings/soc/bcm2835-pm.h               |  28 -
+ include/dt-bindings/soc/qcom,apr.h                 |  28 -
+ include/dt-bindings/soc/qcom,rpmh-rsc.h            |  14 -
+ include/dt-bindings/soc/rockchip,boot-mode.h       |  16 -
+ include/dt-bindings/soc/rockchip,vop2.h            |  18 -
+ include/dt-bindings/soc/samsung,exynos-usi.h       |  17 -
+ include/dt-bindings/soc/ti,sci_pm_domain.h         |   9 -
+ include/dt-bindings/sound/apq8016-lpass.h          |   9 -
+ include/dt-bindings/sound/fsl-imx-audmux.h         |  64 --
+ include/dt-bindings/sound/meson-aiu.h              |  18 -
+ include/dt-bindings/sound/meson-g12a-toacodec.h    |  10 -
+ include/dt-bindings/sound/meson-g12a-tohdmitx.h    |  13 -
+ include/dt-bindings/sound/microchip,pdmc.h         |  13 -
+ include/dt-bindings/sound/qcom,lpass.h             |  46 -
+ include/dt-bindings/sound/qcom,q6afe.h             |   9 -
+ include/dt-bindings/sound/qcom,q6asm.h             |  26 -
+ include/dt-bindings/sound/qcom,q6dsp-lpass-ports.h | 234 -----
+ include/dt-bindings/sound/qcom,wcd9335.h           |  15 -
+ include/dt-bindings/sound/tlv320aic31xx.h          |  14 -
+ include/dt-bindings/spmi/spmi.h                    |  10 -
+ include/dt-bindings/thermal/tegra124-soctherm.h    |  14 -
+ include/dt-bindings/thermal/thermal.h              |  15 -
+ include/dt-bindings/usb/pd.h                       |  88 --
+ scripts/Makefile.dts                               |  13 +
+ 357 files changed, 165 insertions(+), 35859 deletions(-)
+---
+base-commit: 2f387ba4580a2627836ec7054c8b4a64c9a98315
+
+// Caleb (they/them)
 
 
