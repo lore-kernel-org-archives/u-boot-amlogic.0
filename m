@@ -2,57 +2,57 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF55AC54E71
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39F7CD1281
 	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:20:51 +0000 (UTC)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
- by mx.groups.io with SMTP id smtpd.web10.8945.1711055070114109819
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.8937.1711055062416652520
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Mar 2024 14:04:30 -0700
+ Thu, 21 Mar 2024 14:04:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=lyjX7TKN;
- spf=pass (domain: linaro.org, ip: 209.85.208.175, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d46c44dcc0so16645931fa.2
-        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:29 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=bZBrF1Wg;
+ spf=pass (domain: linaro.org, ip: 209.85.128.45, mailfrom: caleb.connolly@linaro.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4146f2b3fafso10237455e9.1
+        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711055068; x=1711659868; darn=groups.io;
+        d=linaro.org; s=google; t=1711055060; x=1711659860; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ak/ZQ98S2ABEr4WIk6RvxQYt7MJPloGnSTsOs5d5fXA=;
-        b=lyjX7TKNc1r/7s7idYQN8jjPSBBystTpxHnCm8/SjrnoTv6eV80lp7gULeyEUCV2ue
-         5DnYl7RozBlmF4raBd6nI0MTIQIHUUhAjaXoz+f2V4lJbzLfBQtNh1gZMeGy7BeKnQkZ
-         ugD/ttFjYrnjk/LsnTokVohIvGhw45PEWMqXfAb1pB49PpIHJDelJsfrhwhIDDTYCmQp
-         0kV2AeAfZbQrMnUR5hDQ9I8UGtT9PZBtfgVzl+Cfd9Zlf0vHmZjXRk/PjtZtrccgjlmx
-         CsZimsMhoXdG+HUP28t7Ge+KlAuVfArL0Sm1eqPyNnsGCZuulrtgyBRotvMBseEVmDaS
-         R23Q==
+        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
+        b=bZBrF1WgwOc9SDm8JW8+XdOVFMWgLi7WRYnKPhYHLDpvO0PFNOi6CNLQ0+ozE+2ydC
+         yRyOph8uhbF4TqaEEsfIZkYqc3e/Z3lg7fCTUjzdnVRg9cLcCNMZw+pdm+M8wuPbPd9F
+         f66OD5nPp9qcLpEFd6cXXKf+7ZLWP0U/lpdfL/WlRr+iNyiUs1jjW7G8N61/bCKnxqBU
+         BbPmLsupupD7BnjSxTlE6pXniHx5cpUu2o8XsXsqTPoj+YPP07bbKyZ57b1P1sHyyKWE
+         U4TaplORnL46tzgczuZcA8mkZjcHdXw7dtjA63cTwZO85X0vaSsjY/thyeq6rabK9AYI
+         e9Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711055068; x=1711659868;
+        d=1e100.net; s=20230601; t=1711055060; x=1711659860;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ak/ZQ98S2ABEr4WIk6RvxQYt7MJPloGnSTsOs5d5fXA=;
-        b=PhiS6A72IntCrVSeZKqkz8+ZZCzuDSVJxXikPa6tvETIAvYkCZrr5ecHOyDw3fqyTp
-         spM/mg99Dk/YITQZL5bZwZm6QiNU+ZYXRNcdyVGLt6FfIwxQC4y3CobJwX3FKCkUr184
-         IB3I9IHCA4VJK6EZIEaH2s/2C3nX9Qur15r6P2HfxVUycQ/Oo1bw44jXf0lkIMXaDWco
-         +JINya3wT2OYCqBi4nkcxC2Zu0y7BpFcWWk7N3Fd2Qhk/BEWmUIAayBOIzyMTesALLFI
-         MX5D3xCW7Pfx0tQ1xmgHppHxzoF0M2Zh0AP4brzQhgj5anUnen1rK6i8RxbO5huU3/4l
-         JZQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNtk3ZO3qOY28sY3Q8EYVY4Wu9rwXEAjGKREJQZlkAvkobRbPDNxdBB7HlzPOvj271XZZdxBPd5wqI0eJxYBpPZkew++09/Ic=
-X-Gm-Message-State: AOJu0YwHm4NiEMBeOs6KRwwqhrF1N8XVHF8W9JTVYkRq414YmWuarlpB
-	oc9Fbd8iqd0p5R4OajD0lUSW/qbUD+8YfRQ6LF84/IJyJdSYaT5jBmgf0ObecOS+BWj96rx9Duh
-	X
-X-Google-Smtp-Source: AGHT+IFcj4WZo/k0Cr0dg0PZ91y6FF85f/4SZV1WGqNwXcbresQZ79QrsyE9cgIHCpgizOZl021ayQ==
-X-Received: by 2002:a2e:a1c7:0:b0:2d4:22d1:d96c with SMTP id c7-20020a2ea1c7000000b002d422d1d96cmr413176ljm.25.1711055068032;
-        Thu, 21 Mar 2024 14:04:28 -0700 (PDT)
+        bh=ho6DUKv8w+2gxCeqMOmcdtjUHQaZUNjWHJh8sb5SGhU=;
+        b=wPDWdRxAdNN6/1jSsaBbluFRbz5BZBAFLV8wW6fR2CroVjiKzX1U7V8pYoIg17XpHJ
+         6suf3WYupZfy1DdKeUQ4fX+d5LUHrKOpWae2UNElhWucaac7dE7scscdSJuJnPpQuZIz
+         UVsa1Clkwc/NqKbdZjEJMKCxL4XNvcbe8nCiRbU4wMTkCeqyfGPvQZGn1eZp7nw93AHK
+         fIxquUY2iTsUWUDs/AxNNlloTjIebnTbQVoMTNSBkeV2X0L0CIh9xSSeBI2oBJfRM7q4
+         ygs9YMXymQ1e99CuYIkfXi7try9967CCz3J+FTCl5KfNAL/GWXv0mUuXF8zY7C+1JTHl
+         l6GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSoVnk6iWSF3W+npQDOrdXAI+jIj8rf0MMIgM3mJ3uV/12SHxn9j8clSHeJqghD+gZP2VOWl26pfs2tjsH60QQ+Erote9OT5s=
+X-Gm-Message-State: AOJu0YxsyWH71NRKRvh7dJMG5oQ5UfXxlnIULxDc/1zr1xtW60gNYMWV
+	3xRZZT75T3Yues0gOZim38SKBi2OwgcmNHU1Kvmie1XuiTKDkjHF4Exk12BsYNyZgEUwbWfc07u
+	6
+X-Google-Smtp-Source: AGHT+IHvdPEVXMdf/SMP09I+/XbSi7MSWe2e7HSSBD/vZLB51IzCNyIJg1teEwC6ldXHa0E8TdweZA==
+X-Received: by 2002:a05:600c:5494:b0:413:f2c6:df3d with SMTP id iv20-20020a05600c549400b00413f2c6df3dmr229977wmb.13.1711055060566;
+        Thu, 21 Mar 2024 14:04:20 -0700 (PDT)
 Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.26
+        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:04:27 -0700 (PDT)
+        Thu, 21 Mar 2024 14:04:19 -0700 (PDT)
 From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Thu, 21 Mar 2024 21:03:58 +0000
-Subject: [PATCH v2 15/24] tegra: drop dt-binding headers
+Date: Thu, 21 Mar 2024 21:03:54 +0000
+Subject: [PATCH v2 11/24] exynos: drop dt-binding headers
 MIME-Version: 1.0
-Message-Id: <20240321-b4-upstream-dt-headers-v2-15-1eac0df875fe@linaro.org>
+Message-Id: <20240321-b4-upstream-dt-headers-v2-11-1eac0df875fe@linaro.org>
 References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 In-Reply-To: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -85,13 +85,13 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
  uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
  Caleb Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=21499;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=19475;
  i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=mQ2O2EyLgWmNk7HU9Pv1IDhVFZQ7gkRM9CVO2LHEmgU=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/ZIs+jGBEZETvhbrD7jxuqc7B2iNlMedb69debT6
- WtvH0h97ShlYRDkYJAVU2QRP7HMsmntZXuN7QsuwMxhZQIZwsDFKQATsf3A8D/+NcubR+tSy769
- ++nuwnZve+zOuG8XE26bXp+1+12D2vcGhj/872x6iopLV1b/N1p94UoFn1eI47w5IjPyFog4tOh
- fbN4PAA==
+ bh=kZLqLmWc/ez1mBweoulX7ov9ivbShWuGmqjIVl+U5Tg=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/ZMnFJ/b83V1OCFHDMbJC20n1gca7zs9/iBSEv0/
+ j2GLO4pHaUsDIIcDLJiiiziJ5ZZNq29bK+xfcEFmDmsTCBDGLg4BWAiUvcY/ulFSXzeY8M0KXbX
+ 6r9Tvjc1iWxmetFUzJap9/jsS9+lX18w/FPy+xKrdOB6hvYV/uDX7A8+3lbKvXnX5uNvliUh5/5
+ d9jkGAA==
 X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -100,621 +100,630 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:20:51 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2227
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2223
 
 Drop in favour of dts/upstream.
 
-Small driver adjustment to fix compatibility.
+Small driver and DTS adjustments to use upstream headers.
 
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
- arch/arm/dts/tegra186.dtsi                       |   2 +-
- drivers/mailbox/tegra-hsp.c                      |   2 +-
- include/dt-bindings/gpio/tegra-gpio.h            |  51 ------
- include/dt-bindings/mailbox/tegra186-hsp.h       |  19 ---
- include/dt-bindings/memory/tegra114-mc.h         |  25 ---
- include/dt-bindings/memory/tegra124-mc.h         |  31 ----
- include/dt-bindings/memory/tegra210-mc.h         |  36 ----
- include/dt-bindings/memory/tegra30-mc.h          |  24 ---
- include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h |   7 -
- include/dt-bindings/pinctrl/pinctrl-tegra.h      |  37 ----
- include/dt-bindings/power/tegra186-powergate.h   |  28 ----
- include/dt-bindings/reset/tegra124-car.h         |  12 --
- include/dt-bindings/reset/tegra186-reset.h       | 205 -----------------------
- include/dt-bindings/thermal/tegra124-soctherm.h  |  14 --
- 14 files changed, 2 insertions(+), 491 deletions(-)
+ arch/arm/dts/exynos7420.dtsi                 |   2 +-
+ drivers/clk/exynos/clk-exynos7420.c          |   2 +-
+ include/dt-bindings/clock/exynos7420-clk.h   | 207 ----------------
+ include/dt-bindings/clock/exynos850.h        | 337 ---------------------------
+ include/dt-bindings/soc/samsung,exynos-usi.h |  17 --
+ 5 files changed, 2 insertions(+), 563 deletions(-)
 
-diff --git a/arch/arm/dts/tegra186.dtsi b/arch/arm/dts/tegra186.dtsi
-index edcb7aacb8ee..58dadc944888 100644
---- a/arch/arm/dts/tegra186.dtsi
-+++ b/arch/arm/dts/tegra186.dtsi
-@@ -313,9 +313,9 @@
- 	};
+diff --git a/arch/arm/dts/exynos7420.dtsi b/arch/arm/dts/exynos7420.dtsi
+index 373f48cf2eca..ba9666f3de01 100644
+--- a/arch/arm/dts/exynos7420.dtsi
++++ b/arch/arm/dts/exynos7420.dtsi
+@@ -7,9 +7,9 @@
+  */
  
- 	bpmp: bpmp {
- 		compatible = "nvidia,tegra186-bpmp";
--		mboxes = <&hsp HSP_MBOX_TYPE_DB HSP_DB_MASTER_BPMP>;
-+		mboxes = <&hsp TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
- 		/*
- 		 * In theory, these references, and the configuration in the
- 		 * node these reference point at, are board-specific, since
- 		 * they depend on the BCT's memory carve-out setup, the
-diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-index 08c51c40f141..e5a3d8243780 100644
---- a/drivers/mailbox/tegra-hsp.c
-+++ b/drivers/mailbox/tegra-hsp.c
-@@ -62,9 +62,9 @@ static void tegra_hsp_writel(struct tegra_hsp *thsp, uint32_t val,
+ /dts-v1/;
+ #include "skeleton.dtsi"
+-#include <dt-bindings/clock/exynos7420-clk.h>
++#include <dt-bindings/clock/exynos7-clk.h>
+ / {
+ 	compatible = "samsung,exynos7420";
  
- static int tegra_hsp_db_id(ulong chan_id)
- {
- 	switch (chan_id) {
--	case (HSP_MBOX_TYPE_DB << 16) | HSP_DB_MASTER_BPMP:
-+	case (TEGRA_HSP_MBOX_TYPE_DB << 16) | TEGRA_HSP_DB_MASTER_BPMP:
- 		return TEGRA_HSP_DB_ID_BPMP;
- 	default:
- 		debug("Invalid channel ID\n");
- 		return -EINVAL;
-diff --git a/include/dt-bindings/gpio/tegra-gpio.h b/include/dt-bindings/gpio/tegra-gpio.h
+ 	fin_pll: xxti {
+diff --git a/drivers/clk/exynos/clk-exynos7420.c b/drivers/clk/exynos/clk-exynos7420.c
+index 9caa932e12fb..cd6d67a0752b 100644
+--- a/drivers/clk/exynos/clk-exynos7420.c
++++ b/drivers/clk/exynos/clk-exynos7420.c
+@@ -10,9 +10,9 @@
+ #include <errno.h>
+ #include <clk-uclass.h>
+ #include <asm/io.h>
+ #include <div64.h>
+-#include <dt-bindings/clock/exynos7420-clk.h>
++#include <dt-bindings/clock/exynos7-clk.h>
+ 
+ #define PLL145X_MDIV_SHIFT	16
+ #define PLL145X_MDIV_MASK	0x3ff
+ #define PLL145X_PDIV_SHIFT	8
+diff --git a/include/dt-bindings/clock/exynos7420-clk.h b/include/dt-bindings/clock/exynos7420-clk.h
 deleted file mode 100644
-index a1c09e88e80b..000000000000
---- a/include/dt-bindings/gpio/tegra-gpio.h
+index 10c558611085..000000000000
+--- a/include/dt-bindings/clock/exynos7420-clk.h
 +++ /dev/null
-@@ -1,51 +0,0 @@
+@@ -1,207 +0,0 @@
 -/*
-- * This header provides constants for binding nvidia,tegra*-gpio.
+- * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+- * Author: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
 - *
-- * The first cell in Tegra's GPIO specifier is the GPIO ID. The macros below
-- * provide names for this.
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+-*/
+-
+-#ifndef _DT_BINDINGS_CLOCK_EXYNOS7_H
+-#define _DT_BINDINGS_CLOCK_EXYNOS7_H
+-
+-/* TOPC */
+-#define DOUT_ACLK_PERIS			1
+-#define DOUT_SCLK_BUS0_PLL		2
+-#define DOUT_SCLK_BUS1_PLL		3
+-#define DOUT_SCLK_CC_PLL		4
+-#define DOUT_SCLK_MFC_PLL		5
+-#define DOUT_ACLK_CCORE_133		6
+-#define DOUT_ACLK_MSCL_532		7
+-#define ACLK_MSCL_532			8
+-#define DOUT_SCLK_AUD_PLL		9
+-#define FOUT_AUD_PLL			10
+-#define SCLK_AUD_PLL			11
+-#define SCLK_MFC_PLL_B			12
+-#define SCLK_MFC_PLL_A			13
+-#define SCLK_BUS1_PLL_B			14
+-#define SCLK_BUS1_PLL_A			15
+-#define SCLK_BUS0_PLL_B			16
+-#define SCLK_BUS0_PLL_A			17
+-#define SCLK_CC_PLL_B			18
+-#define SCLK_CC_PLL_A			19
+-#define ACLK_CCORE_133			20
+-#define ACLK_PERIS_66			21
+-#define TOPC_NR_CLK			22
+-
+-/* TOP0 */
+-#define DOUT_ACLK_PERIC1		1
+-#define DOUT_ACLK_PERIC0		2
+-#define CLK_SCLK_UART0			3
+-#define CLK_SCLK_UART1			4
+-#define CLK_SCLK_UART2			5
+-#define CLK_SCLK_UART3			6
+-#define CLK_SCLK_SPI0			7
+-#define CLK_SCLK_SPI1			8
+-#define CLK_SCLK_SPI2			9
+-#define CLK_SCLK_SPI3			10
+-#define CLK_SCLK_SPI4			11
+-#define CLK_SCLK_SPDIF			12
+-#define CLK_SCLK_PCM1			13
+-#define CLK_SCLK_I2S1			14
+-#define CLK_ACLK_PERIC0_66		15
+-#define CLK_ACLK_PERIC1_66		16
+-#define TOP0_NR_CLK			17
+-
+-/* TOP1 */
+-#define DOUT_ACLK_FSYS1_200		1
+-#define DOUT_ACLK_FSYS0_200		2
+-#define DOUT_SCLK_MMC2			3
+-#define DOUT_SCLK_MMC1			4
+-#define DOUT_SCLK_MMC0			5
+-#define CLK_SCLK_MMC2			6
+-#define CLK_SCLK_MMC1			7
+-#define CLK_SCLK_MMC0			8
+-#define CLK_ACLK_FSYS0_200		9
+-#define CLK_ACLK_FSYS1_200		10
+-#define CLK_SCLK_PHY_FSYS1		11
+-#define CLK_SCLK_PHY_FSYS1_26M		12
+-#define MOUT_SCLK_UFSUNIPRO20		13
+-#define DOUT_SCLK_UFSUNIPRO20		14
+-#define CLK_SCLK_UFSUNIPRO20		15
+-#define DOUT_SCLK_PHY_FSYS1		16
+-#define DOUT_SCLK_PHY_FSYS1_26M		17
+-#define TOP1_NR_CLK			18
+-
+-/* CCORE */
+-#define PCLK_RTC			1
+-#define CCORE_NR_CLK			2
+-
+-/* PERIC0 */
+-#define PCLK_UART0			1
+-#define SCLK_UART0			2
+-#define PCLK_HSI2C0			3
+-#define PCLK_HSI2C1			4
+-#define PCLK_HSI2C4			5
+-#define PCLK_HSI2C5			6
+-#define PCLK_HSI2C9			7
+-#define PCLK_HSI2C10			8
+-#define PCLK_HSI2C11			9
+-#define PCLK_PWM			10
+-#define SCLK_PWM			11
+-#define PCLK_ADCIF			12
+-#define PERIC0_NR_CLK			13
+-
+-/* PERIC1 */
+-#define PCLK_UART1			1
+-#define PCLK_UART2			2
+-#define PCLK_UART3			3
+-#define SCLK_UART1			4
+-#define SCLK_UART2			5
+-#define SCLK_UART3			6
+-#define PCLK_HSI2C2			7
+-#define PCLK_HSI2C3			8
+-#define PCLK_HSI2C6			9
+-#define PCLK_HSI2C7			10
+-#define PCLK_HSI2C8			11
+-#define PCLK_SPI0			12
+-#define PCLK_SPI1			13
+-#define PCLK_SPI2			14
+-#define PCLK_SPI3			15
+-#define PCLK_SPI4			16
+-#define SCLK_SPI0			17
+-#define SCLK_SPI1			18
+-#define SCLK_SPI2			19
+-#define SCLK_SPI3			20
+-#define SCLK_SPI4			21
+-#define PCLK_I2S1			22
+-#define PCLK_PCM1			23
+-#define PCLK_SPDIF			24
+-#define SCLK_I2S1			25
+-#define SCLK_PCM1			26
+-#define SCLK_SPDIF			27
+-#define PERIC1_NR_CLK			28
+-
+-/* PERIS */
+-#define PCLK_CHIPID			1
+-#define SCLK_CHIPID			2
+-#define PCLK_WDT			3
+-#define PCLK_TMU			4
+-#define SCLK_TMU			5
+-#define PERIS_NR_CLK			6
+-
+-/* FSYS0 */
+-#define ACLK_MMC2			1
+-#define ACLK_AXIUS_USBDRD30X_FSYS0X	2
+-#define ACLK_USBDRD300			3
+-#define SCLK_USBDRD300_SUSPENDCLK	4
+-#define SCLK_USBDRD300_REFCLK		5
+-#define PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER		6
+-#define PHYCLK_USBDRD300_UDRD30_PHYCLK_USER		7
+-#define OSCCLK_PHY_CLKOUT_USB30_PHY		8
+-#define ACLK_PDMA0			9
+-#define ACLK_PDMA1			10
+-#define FSYS0_NR_CLK			11
+-
+-/* FSYS1 */
+-#define ACLK_MMC1			1
+-#define ACLK_MMC0			2
+-#define PHYCLK_UFS20_TX0_SYMBOL		3
+-#define PHYCLK_UFS20_RX0_SYMBOL		4
+-#define PHYCLK_UFS20_RX1_SYMBOL		5
+-#define ACLK_UFS20_LINK			6
+-#define SCLK_UFSUNIPRO20_USER		7
+-#define PHYCLK_UFS20_RX1_SYMBOL_USER	8
+-#define PHYCLK_UFS20_RX0_SYMBOL_USER	9
+-#define PHYCLK_UFS20_TX0_SYMBOL_USER	10
+-#define OSCCLK_PHY_CLKOUT_EMBEDDED_COMBO_PHY	11
+-#define SCLK_COMBO_PHY_EMBEDDED_26M	12
+-#define DOUT_PCLK_FSYS1			13
+-#define PCLK_GPIO_FSYS1			14
+-#define MOUT_FSYS1_PHYCLK_SEL1		15
+-#define FSYS1_NR_CLK			16
+-
+-/* MSCL */
+-#define USERMUX_ACLK_MSCL_532		1
+-#define DOUT_PCLK_MSCL			2
+-#define ACLK_MSCL_0			3
+-#define ACLK_MSCL_1			4
+-#define ACLK_JPEG			5
+-#define ACLK_G2D			6
+-#define ACLK_LH_ASYNC_SI_MSCL_0		7
+-#define ACLK_LH_ASYNC_SI_MSCL_1		8
+-#define ACLK_AXI2ACEL_BRIDGE		9
+-#define ACLK_XIU_MSCLX_0		10
+-#define ACLK_XIU_MSCLX_1		11
+-#define ACLK_QE_MSCL_0			12
+-#define ACLK_QE_MSCL_1			13
+-#define ACLK_QE_JPEG			14
+-#define ACLK_QE_G2D			15
+-#define ACLK_PPMU_MSCL_0		16
+-#define ACLK_PPMU_MSCL_1		17
+-#define ACLK_MSCLNP_133			18
+-#define ACLK_AHB2APB_MSCL0P		19
+-#define ACLK_AHB2APB_MSCL1P		20
+-
+-#define PCLK_MSCL_0			21
+-#define PCLK_MSCL_1			22
+-#define PCLK_JPEG			23
+-#define PCLK_G2D			24
+-#define PCLK_QE_MSCL_0			25
+-#define PCLK_QE_MSCL_1			26
+-#define PCLK_QE_JPEG			27
+-#define PCLK_QE_G2D			28
+-#define PCLK_PPMU_MSCL_0		29
+-#define PCLK_PPMU_MSCL_1		30
+-#define PCLK_AXI2ACEL_BRIDGE		31
+-#define PCLK_PMU_MSCL			32
+-#define MSCL_NR_CLK			33
+-
+-/* AUD */
+-#define SCLK_I2S			1
+-#define SCLK_PCM			2
+-#define PCLK_I2S			3
+-#define PCLK_PCM			4
+-#define ACLK_ADMA			5
+-#define AUD_NR_CLK			6
+-#endif /* _DT_BINDINGS_CLOCK_EXYNOS7_H */
+diff --git a/include/dt-bindings/clock/exynos850.h b/include/dt-bindings/clock/exynos850.h
+deleted file mode 100644
+index 3090e09c9a55..000000000000
+--- a/include/dt-bindings/clock/exynos850.h
++++ /dev/null
+@@ -1,337 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+-/*
+- * Copyright (C) 2021 Linaro Ltd.
+- * Author: Sam Protsenko <semen.protsenko@linaro.org>
 - *
-- * The second cell contains standard flag values specified in gpio.h.
+- * Device Tree binding constants for Exynos850 clock controller.
 - */
 -
--#ifndef _DT_BINDINGS_GPIO_TEGRA_GPIO_H
--#define _DT_BINDINGS_GPIO_TEGRA_GPIO_H
+-#ifndef _DT_BINDINGS_CLOCK_EXYNOS_850_H
+-#define _DT_BINDINGS_CLOCK_EXYNOS_850_H
 -
--#include <dt-bindings/gpio/gpio.h>
+-/* CMU_TOP */
+-#define CLK_FOUT_SHARED0_PLL		1
+-#define CLK_FOUT_SHARED1_PLL		2
+-#define CLK_FOUT_MMC_PLL		3
+-#define CLK_MOUT_SHARED0_PLL		4
+-#define CLK_MOUT_SHARED1_PLL		5
+-#define CLK_MOUT_MMC_PLL		6
+-#define CLK_MOUT_CORE_BUS		7
+-#define CLK_MOUT_CORE_CCI		8
+-#define CLK_MOUT_CORE_MMC_EMBD		9
+-#define CLK_MOUT_CORE_SSS		10
+-#define CLK_MOUT_DPU			11
+-#define CLK_MOUT_HSI_BUS		12
+-#define CLK_MOUT_HSI_MMC_CARD		13
+-#define CLK_MOUT_HSI_USB20DRD		14
+-#define CLK_MOUT_PERI_BUS		15
+-#define CLK_MOUT_PERI_UART		16
+-#define CLK_MOUT_PERI_IP		17
+-#define CLK_DOUT_SHARED0_DIV3		18
+-#define CLK_DOUT_SHARED0_DIV2		19
+-#define CLK_DOUT_SHARED1_DIV3		20
+-#define CLK_DOUT_SHARED1_DIV2		21
+-#define CLK_DOUT_SHARED0_DIV4		22
+-#define CLK_DOUT_SHARED1_DIV4		23
+-#define CLK_DOUT_CORE_BUS		24
+-#define CLK_DOUT_CORE_CCI		25
+-#define CLK_DOUT_CORE_MMC_EMBD		26
+-#define CLK_DOUT_CORE_SSS		27
+-#define CLK_DOUT_DPU			28
+-#define CLK_DOUT_HSI_BUS		29
+-#define CLK_DOUT_HSI_MMC_CARD		30
+-#define CLK_DOUT_HSI_USB20DRD		31
+-#define CLK_DOUT_PERI_BUS		32
+-#define CLK_DOUT_PERI_UART		33
+-#define CLK_DOUT_PERI_IP		34
+-#define CLK_GOUT_CORE_BUS		35
+-#define CLK_GOUT_CORE_CCI		36
+-#define CLK_GOUT_CORE_MMC_EMBD		37
+-#define CLK_GOUT_CORE_SSS		38
+-#define CLK_GOUT_DPU			39
+-#define CLK_GOUT_HSI_BUS		40
+-#define CLK_GOUT_HSI_MMC_CARD		41
+-#define CLK_GOUT_HSI_USB20DRD		42
+-#define CLK_GOUT_PERI_BUS		43
+-#define CLK_GOUT_PERI_UART		44
+-#define CLK_GOUT_PERI_IP		45
+-#define CLK_MOUT_CLKCMU_APM_BUS		46
+-#define CLK_DOUT_CLKCMU_APM_BUS		47
+-#define CLK_GOUT_CLKCMU_APM_BUS		48
+-#define CLK_MOUT_AUD			49
+-#define CLK_GOUT_AUD			50
+-#define CLK_DOUT_AUD			51
+-#define CLK_MOUT_IS_BUS			52
+-#define CLK_MOUT_IS_ITP			53
+-#define CLK_MOUT_IS_VRA			54
+-#define CLK_MOUT_IS_GDC			55
+-#define CLK_GOUT_IS_BUS			56
+-#define CLK_GOUT_IS_ITP			57
+-#define CLK_GOUT_IS_VRA			58
+-#define CLK_GOUT_IS_GDC			59
+-#define CLK_DOUT_IS_BUS			60
+-#define CLK_DOUT_IS_ITP			61
+-#define CLK_DOUT_IS_VRA			62
+-#define CLK_DOUT_IS_GDC			63
+-#define CLK_MOUT_MFCMSCL_MFC		64
+-#define CLK_MOUT_MFCMSCL_M2M		65
+-#define CLK_MOUT_MFCMSCL_MCSC		66
+-#define CLK_MOUT_MFCMSCL_JPEG		67
+-#define CLK_GOUT_MFCMSCL_MFC		68
+-#define CLK_GOUT_MFCMSCL_M2M		69
+-#define CLK_GOUT_MFCMSCL_MCSC		70
+-#define CLK_GOUT_MFCMSCL_JPEG		71
+-#define CLK_DOUT_MFCMSCL_MFC		72
+-#define CLK_DOUT_MFCMSCL_M2M		73
+-#define CLK_DOUT_MFCMSCL_MCSC		74
+-#define CLK_DOUT_MFCMSCL_JPEG		75
+-#define CLK_MOUT_G3D_SWITCH		76
+-#define CLK_GOUT_G3D_SWITCH		77
+-#define CLK_DOUT_G3D_SWITCH		78
 -
--#define TEGRA_GPIO_PORT_A 0
--#define TEGRA_GPIO_PORT_B 1
--#define TEGRA_GPIO_PORT_C 2
--#define TEGRA_GPIO_PORT_D 3
--#define TEGRA_GPIO_PORT_E 4
--#define TEGRA_GPIO_PORT_F 5
--#define TEGRA_GPIO_PORT_G 6
--#define TEGRA_GPIO_PORT_H 7
--#define TEGRA_GPIO_PORT_I 8
--#define TEGRA_GPIO_PORT_J 9
--#define TEGRA_GPIO_PORT_K 10
--#define TEGRA_GPIO_PORT_L 11
--#define TEGRA_GPIO_PORT_M 12
--#define TEGRA_GPIO_PORT_N 13
--#define TEGRA_GPIO_PORT_O 14
--#define TEGRA_GPIO_PORT_P 15
--#define TEGRA_GPIO_PORT_Q 16
--#define TEGRA_GPIO_PORT_R 17
--#define TEGRA_GPIO_PORT_S 18
--#define TEGRA_GPIO_PORT_T 19
--#define TEGRA_GPIO_PORT_U 20
--#define TEGRA_GPIO_PORT_V 21
--#define TEGRA_GPIO_PORT_W 22
--#define TEGRA_GPIO_PORT_X 23
--#define TEGRA_GPIO_PORT_Y 24
--#define TEGRA_GPIO_PORT_Z 25
--#define TEGRA_GPIO_PORT_AA 26
--#define TEGRA_GPIO_PORT_BB 27
--#define TEGRA_GPIO_PORT_CC 28
--#define TEGRA_GPIO_PORT_DD 29
--#define TEGRA_GPIO_PORT_EE 30
--#define TEGRA_GPIO_PORT_FF 31
+-/* CMU_APM */
+-#define CLK_RCO_I3C_PMIC		1
+-#define OSCCLK_RCO_APM			2
+-#define CLK_RCO_APM__ALV		3
+-#define CLK_DLL_DCO			4
+-#define CLK_MOUT_APM_BUS_USER		5
+-#define CLK_MOUT_RCO_APM_I3C_USER	6
+-#define CLK_MOUT_RCO_APM_USER		7
+-#define CLK_MOUT_DLL_USER		8
+-#define CLK_MOUT_CLKCMU_CHUB_BUS	9
+-#define CLK_MOUT_APM_BUS		10
+-#define CLK_MOUT_APM_I3C		11
+-#define CLK_DOUT_CLKCMU_CHUB_BUS	12
+-#define CLK_DOUT_APM_BUS		13
+-#define CLK_DOUT_APM_I3C		14
+-#define CLK_GOUT_CLKCMU_CMGP_BUS	15
+-#define CLK_GOUT_CLKCMU_CHUB_BUS	16
+-#define CLK_GOUT_RTC_PCLK		17
+-#define CLK_GOUT_TOP_RTC_PCLK		18
+-#define CLK_GOUT_I3C_PCLK		19
+-#define CLK_GOUT_I3C_SCLK		20
+-#define CLK_GOUT_SPEEDY_PCLK		21
+-#define CLK_GOUT_GPIO_ALIVE_PCLK	22
+-#define CLK_GOUT_PMU_ALIVE_PCLK		23
+-#define CLK_GOUT_SYSREG_APM_PCLK	24
 -
--#define TEGRA_GPIO(port, offset) \
--	((TEGRA_GPIO_PORT_##port * 8) + offset)
+-/* CMU_AUD */
+-#define CLK_DOUT_AUD_AUDIF		1
+-#define CLK_DOUT_AUD_BUSD		2
+-#define CLK_DOUT_AUD_BUSP		3
+-#define CLK_DOUT_AUD_CNT		4
+-#define CLK_DOUT_AUD_CPU		5
+-#define CLK_DOUT_AUD_CPU_ACLK		6
+-#define CLK_DOUT_AUD_CPU_PCLKDBG	7
+-#define CLK_DOUT_AUD_FM			8
+-#define CLK_DOUT_AUD_FM_SPDY		9
+-#define CLK_DOUT_AUD_MCLK		10
+-#define CLK_DOUT_AUD_UAIF0		11
+-#define CLK_DOUT_AUD_UAIF1		12
+-#define CLK_DOUT_AUD_UAIF2		13
+-#define CLK_DOUT_AUD_UAIF3		14
+-#define CLK_DOUT_AUD_UAIF4		15
+-#define CLK_DOUT_AUD_UAIF5		16
+-#define CLK_DOUT_AUD_UAIF6		17
+-#define CLK_FOUT_AUD_PLL		18
+-#define CLK_GOUT_AUD_ABOX_ACLK		19
+-#define CLK_GOUT_AUD_ASB_CCLK		20
+-#define CLK_GOUT_AUD_CA32_CCLK		21
+-#define CLK_GOUT_AUD_CNT_BCLK		22
+-#define CLK_GOUT_AUD_CODEC_MCLK		23
+-#define CLK_GOUT_AUD_DAP_CCLK		24
+-#define CLK_GOUT_AUD_GPIO_PCLK		25
+-#define CLK_GOUT_AUD_PPMU_ACLK		26
+-#define CLK_GOUT_AUD_PPMU_PCLK		27
+-#define CLK_GOUT_AUD_SPDY_BCLK		28
+-#define CLK_GOUT_AUD_SYSMMU_CLK		29
+-#define CLK_GOUT_AUD_SYSREG_PCLK	30
+-#define CLK_GOUT_AUD_TZPC_PCLK		31
+-#define CLK_GOUT_AUD_UAIF0_BCLK		32
+-#define CLK_GOUT_AUD_UAIF1_BCLK		33
+-#define CLK_GOUT_AUD_UAIF2_BCLK		34
+-#define CLK_GOUT_AUD_UAIF3_BCLK		35
+-#define CLK_GOUT_AUD_UAIF4_BCLK		36
+-#define CLK_GOUT_AUD_UAIF5_BCLK		37
+-#define CLK_GOUT_AUD_UAIF6_BCLK		38
+-#define CLK_GOUT_AUD_WDT_PCLK		39
+-#define CLK_MOUT_AUD_CPU		40
+-#define CLK_MOUT_AUD_CPU_HCH		41
+-#define CLK_MOUT_AUD_CPU_USER		42
+-#define CLK_MOUT_AUD_FM			43
+-#define CLK_MOUT_AUD_PLL		44
+-#define CLK_MOUT_AUD_TICK_USB_USER	45
+-#define CLK_MOUT_AUD_UAIF0		46
+-#define CLK_MOUT_AUD_UAIF1		47
+-#define CLK_MOUT_AUD_UAIF2		48
+-#define CLK_MOUT_AUD_UAIF3		49
+-#define CLK_MOUT_AUD_UAIF4		50
+-#define CLK_MOUT_AUD_UAIF5		51
+-#define CLK_MOUT_AUD_UAIF6		52
+-#define IOCLK_AUDIOCDCLK0		53
+-#define IOCLK_AUDIOCDCLK1		54
+-#define IOCLK_AUDIOCDCLK2		55
+-#define IOCLK_AUDIOCDCLK3		56
+-#define IOCLK_AUDIOCDCLK4		57
+-#define IOCLK_AUDIOCDCLK5		58
+-#define IOCLK_AUDIOCDCLK6		59
+-#define TICK_USB			60
+-#define CLK_GOUT_AUD_CMU_AUD_PCLK	61
 -
--#endif
-diff --git a/include/dt-bindings/mailbox/tegra186-hsp.h b/include/dt-bindings/mailbox/tegra186-hsp.h
+-/* CMU_CMGP */
+-#define CLK_RCO_CMGP			1
+-#define CLK_MOUT_CMGP_ADC		2
+-#define CLK_MOUT_CMGP_USI0		3
+-#define CLK_MOUT_CMGP_USI1		4
+-#define CLK_DOUT_CMGP_ADC		5
+-#define CLK_DOUT_CMGP_USI0		6
+-#define CLK_DOUT_CMGP_USI1		7
+-#define CLK_GOUT_CMGP_ADC_S0_PCLK	8
+-#define CLK_GOUT_CMGP_ADC_S1_PCLK	9
+-#define CLK_GOUT_CMGP_GPIO_PCLK		10
+-#define CLK_GOUT_CMGP_USI0_IPCLK	11
+-#define CLK_GOUT_CMGP_USI0_PCLK		12
+-#define CLK_GOUT_CMGP_USI1_IPCLK	13
+-#define CLK_GOUT_CMGP_USI1_PCLK		14
+-#define CLK_GOUT_SYSREG_CMGP_PCLK	15
+-
+-/* CMU_G3D */
+-#define CLK_FOUT_G3D_PLL		1
+-#define CLK_MOUT_G3D_PLL		2
+-#define CLK_MOUT_G3D_SWITCH_USER	3
+-#define CLK_MOUT_G3D_BUSD		4
+-#define CLK_DOUT_G3D_BUSP		5
+-#define CLK_GOUT_G3D_CMU_G3D_PCLK	6
+-#define CLK_GOUT_G3D_GPU_CLK		7
+-#define CLK_GOUT_G3D_TZPC_PCLK		8
+-#define CLK_GOUT_G3D_GRAY2BIN_CLK	9
+-#define CLK_GOUT_G3D_BUSD_CLK		10
+-#define CLK_GOUT_G3D_BUSP_CLK		11
+-#define CLK_GOUT_G3D_SYSREG_PCLK	12
+-
+-/* CMU_HSI */
+-#define CLK_MOUT_HSI_BUS_USER		1
+-#define CLK_MOUT_HSI_MMC_CARD_USER	2
+-#define CLK_MOUT_HSI_USB20DRD_USER	3
+-#define CLK_MOUT_HSI_RTC		4
+-#define CLK_GOUT_USB_RTC_CLK		5
+-#define CLK_GOUT_USB_REF_CLK		6
+-#define CLK_GOUT_USB_PHY_REF_CLK	7
+-#define CLK_GOUT_USB_PHY_ACLK		8
+-#define CLK_GOUT_USB_BUS_EARLY_CLK	9
+-#define CLK_GOUT_GPIO_HSI_PCLK		10
+-#define CLK_GOUT_MMC_CARD_ACLK		11
+-#define CLK_GOUT_MMC_CARD_SDCLKIN	12
+-#define CLK_GOUT_SYSREG_HSI_PCLK	13
+-#define CLK_GOUT_HSI_PPMU_ACLK		14
+-#define CLK_GOUT_HSI_PPMU_PCLK		15
+-#define CLK_GOUT_HSI_CMU_HSI_PCLK	16
+-
+-/* CMU_IS */
+-#define CLK_MOUT_IS_BUS_USER		1
+-#define CLK_MOUT_IS_ITP_USER		2
+-#define CLK_MOUT_IS_VRA_USER		3
+-#define CLK_MOUT_IS_GDC_USER		4
+-#define CLK_DOUT_IS_BUSP		5
+-#define CLK_GOUT_IS_CMU_IS_PCLK		6
+-#define CLK_GOUT_IS_CSIS0_ACLK		7
+-#define CLK_GOUT_IS_CSIS1_ACLK		8
+-#define CLK_GOUT_IS_CSIS2_ACLK		9
+-#define CLK_GOUT_IS_TZPC_PCLK		10
+-#define CLK_GOUT_IS_CSIS_DMA_CLK	11
+-#define CLK_GOUT_IS_GDC_CLK		12
+-#define CLK_GOUT_IS_IPP_CLK		13
+-#define CLK_GOUT_IS_ITP_CLK		14
+-#define CLK_GOUT_IS_MCSC_CLK		15
+-#define CLK_GOUT_IS_VRA_CLK		16
+-#define CLK_GOUT_IS_PPMU_IS0_ACLK	17
+-#define CLK_GOUT_IS_PPMU_IS0_PCLK	18
+-#define CLK_GOUT_IS_PPMU_IS1_ACLK	19
+-#define CLK_GOUT_IS_PPMU_IS1_PCLK	20
+-#define CLK_GOUT_IS_SYSMMU_IS0_CLK	21
+-#define CLK_GOUT_IS_SYSMMU_IS1_CLK	22
+-#define CLK_GOUT_IS_SYSREG_PCLK		23
+-
+-/* CMU_MFCMSCL */
+-#define CLK_MOUT_MFCMSCL_MFC_USER		1
+-#define CLK_MOUT_MFCMSCL_M2M_USER		2
+-#define CLK_MOUT_MFCMSCL_MCSC_USER		3
+-#define CLK_MOUT_MFCMSCL_JPEG_USER		4
+-#define CLK_DOUT_MFCMSCL_BUSP			5
+-#define CLK_GOUT_MFCMSCL_CMU_MFCMSCL_PCLK	6
+-#define CLK_GOUT_MFCMSCL_TZPC_PCLK		7
+-#define CLK_GOUT_MFCMSCL_JPEG_ACLK		8
+-#define CLK_GOUT_MFCMSCL_M2M_ACLK		9
+-#define CLK_GOUT_MFCMSCL_MCSC_CLK		10
+-#define CLK_GOUT_MFCMSCL_MFC_ACLK		11
+-#define CLK_GOUT_MFCMSCL_PPMU_ACLK		12
+-#define CLK_GOUT_MFCMSCL_PPMU_PCLK		13
+-#define CLK_GOUT_MFCMSCL_SYSMMU_CLK		14
+-#define CLK_GOUT_MFCMSCL_SYSREG_PCLK		15
+-
+-/* CMU_PERI */
+-#define CLK_MOUT_PERI_BUS_USER		1
+-#define CLK_MOUT_PERI_UART_USER		2
+-#define CLK_MOUT_PERI_HSI2C_USER	3
+-#define CLK_MOUT_PERI_SPI_USER		4
+-#define CLK_DOUT_PERI_HSI2C0		5
+-#define CLK_DOUT_PERI_HSI2C1		6
+-#define CLK_DOUT_PERI_HSI2C2		7
+-#define CLK_DOUT_PERI_SPI0		8
+-#define CLK_GOUT_PERI_HSI2C0		9
+-#define CLK_GOUT_PERI_HSI2C1		10
+-#define CLK_GOUT_PERI_HSI2C2		11
+-#define CLK_GOUT_GPIO_PERI_PCLK		12
+-#define CLK_GOUT_HSI2C0_IPCLK		13
+-#define CLK_GOUT_HSI2C0_PCLK		14
+-#define CLK_GOUT_HSI2C1_IPCLK		15
+-#define CLK_GOUT_HSI2C1_PCLK		16
+-#define CLK_GOUT_HSI2C2_IPCLK		17
+-#define CLK_GOUT_HSI2C2_PCLK		18
+-#define CLK_GOUT_I2C0_PCLK		19
+-#define CLK_GOUT_I2C1_PCLK		20
+-#define CLK_GOUT_I2C2_PCLK		21
+-#define CLK_GOUT_I2C3_PCLK		22
+-#define CLK_GOUT_I2C4_PCLK		23
+-#define CLK_GOUT_I2C5_PCLK		24
+-#define CLK_GOUT_I2C6_PCLK		25
+-#define CLK_GOUT_MCT_PCLK		26
+-#define CLK_GOUT_PWM_MOTOR_PCLK		27
+-#define CLK_GOUT_SPI0_IPCLK		28
+-#define CLK_GOUT_SPI0_PCLK		29
+-#define CLK_GOUT_SYSREG_PERI_PCLK	30
+-#define CLK_GOUT_UART_IPCLK		31
+-#define CLK_GOUT_UART_PCLK		32
+-#define CLK_GOUT_WDT0_PCLK		33
+-#define CLK_GOUT_WDT1_PCLK		34
+-
+-/* CMU_CORE */
+-#define CLK_MOUT_CORE_BUS_USER		1
+-#define CLK_MOUT_CORE_CCI_USER		2
+-#define CLK_MOUT_CORE_MMC_EMBD_USER	3
+-#define CLK_MOUT_CORE_SSS_USER		4
+-#define CLK_MOUT_CORE_GIC		5
+-#define CLK_DOUT_CORE_BUSP		6
+-#define CLK_GOUT_CCI_ACLK		7
+-#define CLK_GOUT_GIC_CLK		8
+-#define CLK_GOUT_MMC_EMBD_ACLK		9
+-#define CLK_GOUT_MMC_EMBD_SDCLKIN	10
+-#define CLK_GOUT_SSS_ACLK		11
+-#define CLK_GOUT_SSS_PCLK		12
+-#define CLK_GOUT_GPIO_CORE_PCLK		13
+-#define CLK_GOUT_SYSREG_CORE_PCLK	14
+-
+-/* CMU_DPU */
+-#define CLK_MOUT_DPU_USER		1
+-#define CLK_DOUT_DPU_BUSP		2
+-#define CLK_GOUT_DPU_CMU_DPU_PCLK	3
+-#define CLK_GOUT_DPU_DECON0_ACLK	4
+-#define CLK_GOUT_DPU_DMA_ACLK		5
+-#define CLK_GOUT_DPU_DPP_ACLK		6
+-#define CLK_GOUT_DPU_PPMU_ACLK		7
+-#define CLK_GOUT_DPU_PPMU_PCLK		8
+-#define CLK_GOUT_DPU_SMMU_CLK		9
+-#define CLK_GOUT_DPU_SYSREG_PCLK	10
+-#define DPU_NR_CLK			11
+-
+-#endif /* _DT_BINDINGS_CLOCK_EXYNOS_850_H */
+diff --git a/include/dt-bindings/soc/samsung,exynos-usi.h b/include/dt-bindings/soc/samsung,exynos-usi.h
 deleted file mode 100644
-index b4864325d74b..000000000000
---- a/include/dt-bindings/mailbox/tegra186-hsp.h
+index a01af169d249..000000000000
+--- a/include/dt-bindings/soc/samsung,exynos-usi.h
 +++ /dev/null
-@@ -1,19 +0,0 @@
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
 -/*
-- * This header provides constants for binding nvidia,tegra186-hsp.
+- * Copyright (c) 2021 Linaro Ltd.
+- * Author: Sam Protsenko <semen.protsenko@linaro.org>
 - *
-- * The number with HSP_DB_MASTER prefix indicates the bit that is
-- * associated with a master ID in the doorbell registers.
+- * Device Tree bindings for Samsung Exynos USI (Universal Serial Interface).
 - */
 -
--#ifndef _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
--#define _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
+-#ifndef __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
+-#define __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H
 -
--#define HSP_MBOX_TYPE_DB 0x0
--#define HSP_MBOX_TYPE_SM 0x1
--#define HSP_MBOX_TYPE_SS 0x2
--#define HSP_MBOX_TYPE_AS 0x3
+-#define USI_V2_NONE		0
+-#define USI_V2_UART		1
+-#define USI_V2_SPI		2
+-#define USI_V2_I2C		3
 -
--#define HSP_DB_MASTER_CCPLEX 17
--#define HSP_DB_MASTER_BPMP 19
--
--#endif
-diff --git a/include/dt-bindings/memory/tegra114-mc.h b/include/dt-bindings/memory/tegra114-mc.h
-deleted file mode 100644
-index 8f48985a3139..000000000000
---- a/include/dt-bindings/memory/tegra114-mc.h
-+++ /dev/null
-@@ -1,25 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA114_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA114_MC_H
--
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_EPP	3
--#define TEGRA_SWGROUP_G2	4
--#define TEGRA_SWGROUP_AVPC	5
--#define TEGRA_SWGROUP_NV	6
--#define TEGRA_SWGROUP_HDA	7
--#define TEGRA_SWGROUP_HC	8
--#define TEGRA_SWGROUP_MSENC	9
--#define TEGRA_SWGROUP_PPCS	10
--#define TEGRA_SWGROUP_VDE	11
--#define TEGRA_SWGROUP_MPCORELP	12
--#define TEGRA_SWGROUP_MPCORE	13
--#define TEGRA_SWGROUP_VI	14
--#define TEGRA_SWGROUP_ISP	15
--#define TEGRA_SWGROUP_XUSB_HOST	16
--#define TEGRA_SWGROUP_XUSB_DEV	17
--#define TEGRA_SWGROUP_EMUCIF	18
--#define TEGRA_SWGROUP_TSEC	19
--
--#endif
-diff --git a/include/dt-bindings/memory/tegra124-mc.h b/include/dt-bindings/memory/tegra124-mc.h
-deleted file mode 100644
-index 7d8ee798f34e..000000000000
---- a/include/dt-bindings/memory/tegra124-mc.h
-+++ /dev/null
-@@ -1,31 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA124_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA124_MC_H
--
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_AFI	3
--#define TEGRA_SWGROUP_AVPC	4
--#define TEGRA_SWGROUP_HDA	5
--#define TEGRA_SWGROUP_HC	6
--#define TEGRA_SWGROUP_MSENC	7
--#define TEGRA_SWGROUP_PPCS	8
--#define TEGRA_SWGROUP_SATA	9
--#define TEGRA_SWGROUP_VDE	10
--#define TEGRA_SWGROUP_MPCORELP	11
--#define TEGRA_SWGROUP_MPCORE	12
--#define TEGRA_SWGROUP_ISP2	13
--#define TEGRA_SWGROUP_XUSB_HOST	14
--#define TEGRA_SWGROUP_XUSB_DEV	15
--#define TEGRA_SWGROUP_ISP2B	16
--#define TEGRA_SWGROUP_TSEC	17
--#define TEGRA_SWGROUP_A9AVP	18
--#define TEGRA_SWGROUP_GPU	19
--#define TEGRA_SWGROUP_SDMMC1A	20
--#define TEGRA_SWGROUP_SDMMC2A	21
--#define TEGRA_SWGROUP_SDMMC3A	22
--#define TEGRA_SWGROUP_SDMMC4A	23
--#define TEGRA_SWGROUP_VIC	24
--#define TEGRA_SWGROUP_VI	25
--
--#endif
-diff --git a/include/dt-bindings/memory/tegra210-mc.h b/include/dt-bindings/memory/tegra210-mc.h
-deleted file mode 100644
-index d1731bc14dbc..000000000000
---- a/include/dt-bindings/memory/tegra210-mc.h
-+++ /dev/null
-@@ -1,36 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA210_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA210_MC_H
--
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_AFI	3
--#define TEGRA_SWGROUP_AVPC	4
--#define TEGRA_SWGROUP_HDA	5
--#define TEGRA_SWGROUP_HC	6
--#define TEGRA_SWGROUP_NVENC	7
--#define TEGRA_SWGROUP_PPCS	8
--#define TEGRA_SWGROUP_SATA	9
--#define TEGRA_SWGROUP_MPCORE	10
--#define TEGRA_SWGROUP_ISP2	11
--#define TEGRA_SWGROUP_XUSB_HOST	12
--#define TEGRA_SWGROUP_XUSB_DEV	13
--#define TEGRA_SWGROUP_ISP2B	14
--#define TEGRA_SWGROUP_TSEC	15
--#define TEGRA_SWGROUP_A9AVP	16
--#define TEGRA_SWGROUP_GPU	17
--#define TEGRA_SWGROUP_SDMMC1A	18
--#define TEGRA_SWGROUP_SDMMC2A	19
--#define TEGRA_SWGROUP_SDMMC3A	20
--#define TEGRA_SWGROUP_SDMMC4A	21
--#define TEGRA_SWGROUP_VIC	22
--#define TEGRA_SWGROUP_VI	23
--#define TEGRA_SWGROUP_NVDEC	24
--#define TEGRA_SWGROUP_APE	25
--#define TEGRA_SWGROUP_NVJPG	26
--#define TEGRA_SWGROUP_SE	27
--#define TEGRA_SWGROUP_AXIAP	28
--#define TEGRA_SWGROUP_ETR	29
--#define TEGRA_SWGROUP_TSECB	30
--
--#endif
-diff --git a/include/dt-bindings/memory/tegra30-mc.h b/include/dt-bindings/memory/tegra30-mc.h
-deleted file mode 100644
-index 502beb03d777..000000000000
---- a/include/dt-bindings/memory/tegra30-mc.h
-+++ /dev/null
-@@ -1,24 +0,0 @@
--#ifndef DT_BINDINGS_MEMORY_TEGRA30_MC_H
--#define DT_BINDINGS_MEMORY_TEGRA30_MC_H
--
--#define TEGRA_SWGROUP_PTC	0
--#define TEGRA_SWGROUP_DC	1
--#define TEGRA_SWGROUP_DCB	2
--#define TEGRA_SWGROUP_EPP	3
--#define TEGRA_SWGROUP_G2	4
--#define TEGRA_SWGROUP_MPE	5
--#define TEGRA_SWGROUP_VI	6
--#define TEGRA_SWGROUP_AFI	7
--#define TEGRA_SWGROUP_AVPC	8
--#define TEGRA_SWGROUP_NV	9
--#define TEGRA_SWGROUP_NV2	10
--#define TEGRA_SWGROUP_HDA	11
--#define TEGRA_SWGROUP_HC	12
--#define TEGRA_SWGROUP_PPCS	13
--#define TEGRA_SWGROUP_SATA	14
--#define TEGRA_SWGROUP_VDE	15
--#define TEGRA_SWGROUP_MPCORELP	16
--#define TEGRA_SWGROUP_MPCORE	17
--#define TEGRA_SWGROUP_ISP	18
--
--#endif
-diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h b/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
-deleted file mode 100644
-index 914d56da9324..000000000000
---- a/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
-+++ /dev/null
-@@ -1,7 +0,0 @@
--#ifndef _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H
--#define _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H 1
--
--#define TEGRA_XUSB_PADCTL_PCIE 0
--#define TEGRA_XUSB_PADCTL_SATA 1
--
--#endif /* _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H */
-diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra.h b/include/dt-bindings/pinctrl/pinctrl-tegra.h
-deleted file mode 100644
-index c9b57408de68..000000000000
---- a/include/dt-bindings/pinctrl/pinctrl-tegra.h
-+++ /dev/null
-@@ -1,37 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * This header provides constants for Tegra pinctrl bindings.
-- *
-- * Copyright (c) 2013, NVIDIA CORPORATION.  All rights reserved.
-- *
-- * Author: Laxman Dewangan <ldewangan@nvidia.com>
-- */
--
--#ifndef _DT_BINDINGS_PINCTRL_TEGRA_H
--#define _DT_BINDINGS_PINCTRL_TEGRA_H
--
--/*
-- * Enable/disable for diffeent dt properties. This is applicable for
-- * properties nvidia,enable-input, nvidia,tristate, nvidia,open-drain,
-- * nvidia,lock, nvidia,rcv-sel, nvidia,high-speed-mode, nvidia,schmitt.
-- */
--#define TEGRA_PIN_DISABLE				0
--#define TEGRA_PIN_ENABLE				1
--
--#define TEGRA_PIN_PULL_NONE				0
--#define TEGRA_PIN_PULL_DOWN				1
--#define TEGRA_PIN_PULL_UP				2
--
--/* Low power mode driver */
--#define TEGRA_PIN_LP_DRIVE_DIV_8			0
--#define TEGRA_PIN_LP_DRIVE_DIV_4			1
--#define TEGRA_PIN_LP_DRIVE_DIV_2			2
--#define TEGRA_PIN_LP_DRIVE_DIV_1			3
--
--/* Rising/Falling slew rate */
--#define TEGRA_PIN_SLEW_RATE_FASTEST			0
--#define TEGRA_PIN_SLEW_RATE_FAST			1
--#define TEGRA_PIN_SLEW_RATE_SLOW			2
--#define TEGRA_PIN_SLEW_RATE_SLOWEST			3
--
--#endif
-diff --git a/include/dt-bindings/power/tegra186-powergate.h b/include/dt-bindings/power/tegra186-powergate.h
-deleted file mode 100644
-index 17e75498563c..000000000000
---- a/include/dt-bindings/power/tegra186-powergate.h
-+++ /dev/null
-@@ -1,28 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (c) 2015-2016, NVIDIA CORPORATION.
-- */
--
--#ifndef _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
--#define _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
--
--#define TEGRA186_POWER_DOMAIN_AUD	0
--#define TEGRA186_POWER_DOMAIN_DFD	1
--#define TEGRA186_POWER_DOMAIN_DISP	2
--#define TEGRA186_POWER_DOMAIN_DISPB	3
--#define TEGRA186_POWER_DOMAIN_DISPC	4
--#define TEGRA186_POWER_DOMAIN_ISPA	5
--#define TEGRA186_POWER_DOMAIN_NVDEC	6
--#define TEGRA186_POWER_DOMAIN_NVJPG	7
--#define TEGRA186_POWER_DOMAIN_MPE	8
--#define TEGRA186_POWER_DOMAIN_PCX	9
--#define TEGRA186_POWER_DOMAIN_SAX	10
--#define TEGRA186_POWER_DOMAIN_VE	11
--#define TEGRA186_POWER_DOMAIN_VIC	12
--#define TEGRA186_POWER_DOMAIN_XUSBA	13
--#define TEGRA186_POWER_DOMAIN_XUSBB	14
--#define TEGRA186_POWER_DOMAIN_XUSBC	15
--#define TEGRA186_POWER_DOMAIN_GPU	43
--#define TEGRA186_POWER_DOMAIN_MAX	44
--
--#endif
-diff --git a/include/dt-bindings/reset/tegra124-car.h b/include/dt-bindings/reset/tegra124-car.h
-deleted file mode 100644
-index 070e4f6e7486..000000000000
---- a/include/dt-bindings/reset/tegra124-car.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/*
-- * This header provides Tegra124-specific constants for binding
-- * nvidia,tegra124-car.
-- */
--
--#ifndef _DT_BINDINGS_RESET_TEGRA124_CAR_H
--#define _DT_BINDINGS_RESET_TEGRA124_CAR_H
--
--#define TEGRA124_RESET(x)		(6 * 32 + (x))
--#define TEGRA124_RST_DFLL_DVCO		TEGRA124_RESET(0)
--
--#endif	/* _DT_BINDINGS_RESET_TEGRA124_CAR_H */
-diff --git a/include/dt-bindings/reset/tegra186-reset.h b/include/dt-bindings/reset/tegra186-reset.h
-deleted file mode 100644
-index 7efec9200532..000000000000
---- a/include/dt-bindings/reset/tegra186-reset.h
-+++ /dev/null
-@@ -1,205 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (c) 2015, NVIDIA CORPORATION.
-- */
--
--#ifndef _ABI_MACH_T186_RESET_T186_H_
--#define _ABI_MACH_T186_RESET_T186_H_
--
--#define TEGRA186_RESET_ACTMON			0
--#define TEGRA186_RESET_AFI			1
--#define TEGRA186_RESET_CEC			2
--#define TEGRA186_RESET_CSITE			3
--#define TEGRA186_RESET_DP2			4
--#define TEGRA186_RESET_DPAUX			5
--#define TEGRA186_RESET_DSI			6
--#define TEGRA186_RESET_DSIB			7
--#define TEGRA186_RESET_DTV			8
--#define TEGRA186_RESET_DVFS			9
--#define TEGRA186_RESET_ENTROPY			10
--#define TEGRA186_RESET_EXTPERIPH1		11
--#define TEGRA186_RESET_EXTPERIPH2		12
--#define TEGRA186_RESET_EXTPERIPH3		13
--#define TEGRA186_RESET_GPU			14
--#define TEGRA186_RESET_HDA			15
--#define TEGRA186_RESET_HDA2CODEC_2X		16
--#define TEGRA186_RESET_HDA2HDMICODEC		17
--#define TEGRA186_RESET_HOST1X			18
--#define TEGRA186_RESET_I2C1			19
--#define TEGRA186_RESET_I2C2			20
--#define TEGRA186_RESET_I2C3			21
--#define TEGRA186_RESET_I2C4			22
--#define TEGRA186_RESET_I2C5			23
--#define TEGRA186_RESET_I2C6			24
--#define TEGRA186_RESET_ISP			25
--#define TEGRA186_RESET_KFUSE			26
--#define TEGRA186_RESET_LA			27
--#define TEGRA186_RESET_MIPI_CAL			28
--#define TEGRA186_RESET_PCIE			29
--#define TEGRA186_RESET_PCIEXCLK			30
--#define TEGRA186_RESET_SATA			31
--#define TEGRA186_RESET_SATACOLD			32
--#define TEGRA186_RESET_SDMMC1			33
--#define TEGRA186_RESET_SDMMC2			34
--#define TEGRA186_RESET_SDMMC3			35
--#define TEGRA186_RESET_SDMMC4			36
--#define TEGRA186_RESET_SE			37
--#define TEGRA186_RESET_SOC_THERM		38
--#define TEGRA186_RESET_SOR0			39
--#define TEGRA186_RESET_SPI1			40
--#define TEGRA186_RESET_SPI2			41
--#define TEGRA186_RESET_SPI3			42
--#define TEGRA186_RESET_SPI4			43
--#define TEGRA186_RESET_TMR			44
--#define TEGRA186_RESET_TRIG_SYS			45
--#define TEGRA186_RESET_TSEC			46
--#define TEGRA186_RESET_UARTA			47
--#define TEGRA186_RESET_UARTB			48
--#define TEGRA186_RESET_UARTC			49
--#define TEGRA186_RESET_UARTD			50
--#define TEGRA186_RESET_VI			51
--#define TEGRA186_RESET_VIC			52
--#define TEGRA186_RESET_XUSB_DEV			53
--#define TEGRA186_RESET_XUSB_HOST		54
--#define TEGRA186_RESET_XUSB_PADCTL		55
--#define TEGRA186_RESET_XUSB_SS			56
--#define TEGRA186_RESET_AON_APB			57
--#define TEGRA186_RESET_AXI_CBB			58
--#define TEGRA186_RESET_BPMP_APB			59
--#define TEGRA186_RESET_CAN1			60
--#define TEGRA186_RESET_CAN2			61
--#define TEGRA186_RESET_DMIC5			62
--#define TEGRA186_RESET_DSIC			63
--#define TEGRA186_RESET_DSID			64
--#define TEGRA186_RESET_EMC_EMC			65
--#define TEGRA186_RESET_EMC_MEM			66
--#define TEGRA186_RESET_EMCSB_EMC		67
--#define TEGRA186_RESET_EMCSB_MEM		68
--#define TEGRA186_RESET_EQOS			69
--#define TEGRA186_RESET_GPCDMA			70
--#define TEGRA186_RESET_GPIO_CTL0		71
--#define TEGRA186_RESET_GPIO_CTL1		72
--#define TEGRA186_RESET_GPIO_CTL2		73
--#define TEGRA186_RESET_GPIO_CTL3		74
--#define TEGRA186_RESET_GPIO_CTL4		75
--#define TEGRA186_RESET_GPIO_CTL5		76
--#define TEGRA186_RESET_I2C10			77
--#define TEGRA186_RESET_I2C12			78
--#define TEGRA186_RESET_I2C13			79
--#define TEGRA186_RESET_I2C14			80
--#define TEGRA186_RESET_I2C7			81
--#define TEGRA186_RESET_I2C8			82
--#define TEGRA186_RESET_I2C9			83
--#define TEGRA186_RESET_JTAG2AXI			84
--#define TEGRA186_RESET_MPHY_IOBIST		85
--#define TEGRA186_RESET_MPHY_L0_RX		86
--#define TEGRA186_RESET_MPHY_L0_TX		87
--#define TEGRA186_RESET_NVCSI			88
--#define TEGRA186_RESET_NVDISPLAY0_HEAD0		89
--#define TEGRA186_RESET_NVDISPLAY0_HEAD1		90
--#define TEGRA186_RESET_NVDISPLAY0_HEAD2		91
--#define TEGRA186_RESET_NVDISPLAY0_MISC		92
--#define TEGRA186_RESET_NVDISPLAY0_WGRP0		93
--#define TEGRA186_RESET_NVDISPLAY0_WGRP1		94
--#define TEGRA186_RESET_NVDISPLAY0_WGRP2		95
--#define TEGRA186_RESET_NVDISPLAY0_WGRP3		96
--#define TEGRA186_RESET_NVDISPLAY0_WGRP4		97
--#define TEGRA186_RESET_NVDISPLAY0_WGRP5		98
--#define TEGRA186_RESET_PWM1			99
--#define TEGRA186_RESET_PWM2			100
--#define TEGRA186_RESET_PWM3			101
--#define TEGRA186_RESET_PWM4			102
--#define TEGRA186_RESET_PWM5			103
--#define TEGRA186_RESET_PWM6			104
--#define TEGRA186_RESET_PWM7			105
--#define TEGRA186_RESET_PWM8			106
--#define TEGRA186_RESET_SCE_APB			107
--#define TEGRA186_RESET_SOR1			108
--#define TEGRA186_RESET_TACH			109
--#define TEGRA186_RESET_TSC			110
--#define TEGRA186_RESET_UARTF			111
--#define TEGRA186_RESET_UARTG			112
--#define TEGRA186_RESET_UFSHC			113
--#define TEGRA186_RESET_UFSHC_AXI_M		114
--#define TEGRA186_RESET_UPHY			115
--#define TEGRA186_RESET_ADSP			116
--#define TEGRA186_RESET_ADSPDBG			117
--#define TEGRA186_RESET_ADSPINTF			118
--#define TEGRA186_RESET_ADSPNEON			119
--#define TEGRA186_RESET_ADSPPERIPH		120
--#define TEGRA186_RESET_ADSPSCU			121
--#define TEGRA186_RESET_ADSPWDT			122
--#define TEGRA186_RESET_APE			123
--#define TEGRA186_RESET_DPAUX1			124
--#define TEGRA186_RESET_NVDEC			125
--#define TEGRA186_RESET_NVENC			126
--#define TEGRA186_RESET_NVJPG			127
--#define TEGRA186_RESET_PEX_USB_UPHY		128
--#define TEGRA186_RESET_QSPI			129
--#define TEGRA186_RESET_TSECB			130
--#define TEGRA186_RESET_VI_I2C			131
--#define TEGRA186_RESET_UARTE			132
--#define TEGRA186_RESET_TOP_GTE			133
--#define TEGRA186_RESET_SHSP			134
--#define TEGRA186_RESET_PEX_USB_UPHY_L5		135
--#define TEGRA186_RESET_PEX_USB_UPHY_L4		136
--#define TEGRA186_RESET_PEX_USB_UPHY_L3		137
--#define TEGRA186_RESET_PEX_USB_UPHY_L2		138
--#define TEGRA186_RESET_PEX_USB_UPHY_L1		139
--#define TEGRA186_RESET_PEX_USB_UPHY_L0		140
--#define TEGRA186_RESET_PEX_USB_UPHY_PLL1	141
--#define TEGRA186_RESET_PEX_USB_UPHY_PLL0	142
--#define TEGRA186_RESET_TSCTNVI			143
--#define TEGRA186_RESET_EXTPERIPH4		144
--#define TEGRA186_RESET_DSIPADCTL		145
--#define TEGRA186_RESET_AUD_MCLK			146
--#define TEGRA186_RESET_MPHY_CLK_CTL		147
--#define TEGRA186_RESET_MPHY_L1_RX		148
--#define TEGRA186_RESET_MPHY_L1_TX		149
--#define TEGRA186_RESET_UFSHC_LP			150
--#define TEGRA186_RESET_BPMP_NIC			151
--#define TEGRA186_RESET_BPMP_NSYSPORESET		152
--#define TEGRA186_RESET_BPMP_NRESET		153
--#define TEGRA186_RESET_BPMP_DBGRESETN		154
--#define TEGRA186_RESET_BPMP_PRESETDBGN		155
--#define TEGRA186_RESET_BPMP_PM			156
--#define TEGRA186_RESET_BPMP_CVC			157
--#define TEGRA186_RESET_BPMP_DMA			158
--#define TEGRA186_RESET_BPMP_HSP			159
--#define TEGRA186_RESET_TSCTNBPMP		160
--#define TEGRA186_RESET_BPMP_TKE			161
--#define TEGRA186_RESET_BPMP_GTE			162
--#define TEGRA186_RESET_BPMP_PM_ACTMON		163
--#define TEGRA186_RESET_AON_NIC			164
--#define TEGRA186_RESET_AON_NSYSPORESET		165
--#define TEGRA186_RESET_AON_NRESET		166
--#define TEGRA186_RESET_AON_DBGRESETN		167
--#define TEGRA186_RESET_AON_PRESETDBGN		168
--#define TEGRA186_RESET_AON_ACTMON		169
--#define TEGRA186_RESET_AOPM			170
--#define TEGRA186_RESET_AOVC			171
--#define TEGRA186_RESET_AON_DMA			172
--#define TEGRA186_RESET_AON_GPIO			173
--#define TEGRA186_RESET_AON_HSP			174
--#define TEGRA186_RESET_TSCTNAON			175
--#define TEGRA186_RESET_AON_TKE			176
--#define TEGRA186_RESET_AON_GTE			177
--#define TEGRA186_RESET_SCE_NIC			178
--#define TEGRA186_RESET_SCE_NSYSPORESET		179
--#define TEGRA186_RESET_SCE_NRESET		180
--#define TEGRA186_RESET_SCE_DBGRESETN		181
--#define TEGRA186_RESET_SCE_PRESETDBGN		182
--#define TEGRA186_RESET_SCE_ACTMON		183
--#define TEGRA186_RESET_SCE_PM			184
--#define TEGRA186_RESET_SCE_DMA			185
--#define TEGRA186_RESET_SCE_HSP			186
--#define TEGRA186_RESET_TSCTNSCE			187
--#define TEGRA186_RESET_SCE_TKE			188
--#define TEGRA186_RESET_SCE_GTE			189
--#define TEGRA186_RESET_SCE_CFG			190
--#define TEGRA186_RESET_ADSP_ALL			191
--/** @brief controls the power up/down sequence of UFSHC PSW partition. Controls LP_PWR_READY, LP_ISOL_EN, and LP_RESET_N signals */
--#define TEGRA186_RESET_UFSHC_LP_SEQ		192
--#define TEGRA186_RESET_SIZE			193
--
--#endif
-diff --git a/include/dt-bindings/thermal/tegra124-soctherm.h b/include/dt-bindings/thermal/tegra124-soctherm.h
-deleted file mode 100644
-index 729ab9fc325e..000000000000
---- a/include/dt-bindings/thermal/tegra124-soctherm.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/*
-- * This header provides constants for binding nvidia,tegra124-soctherm.
-- */
--
--#ifndef _DT_BINDINGS_THERMAL_TEGRA124_SOCTHERM_H
--#define _DT_BINDINGS_THERMAL_TEGRA124_SOCTHERM_H
--
--#define TEGRA124_SOCTHERM_SENSOR_CPU 0
--#define TEGRA124_SOCTHERM_SENSOR_MEM 1
--#define TEGRA124_SOCTHERM_SENSOR_GPU 2
--#define TEGRA124_SOCTHERM_SENSOR_PLLX 3
--#define TEGRA124_SOCTHERM_SENSOR_NUM 4
--
--#endif
+-#endif /* __DT_BINDINGS_SAMSUNG_EXYNOS_USI_H */
 
 -- 
 2.44.0
