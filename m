@@ -2,1762 +2,823 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6F7CD1290
-	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:20:52 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.8932.1711055050681230874
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B463ACD1282
+	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:21:02 +0000 (UTC)
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (NAM02-BN1-obe.outbound.protection.outlook.com [40.107.212.43])
+ by mx.groups.io with SMTP id smtpd.web11.7267.1711091822896744402
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Mar 2024 14:04:11 -0700
+ Fri, 22 Mar 2024 00:17:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=fM/w2ZOP;
- spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-414689ba80eso11658015e9.2
-        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711055049; x=1711659849; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3x38FyIlnQn8kLwkXTXsLKvDYpxFNbraf5Lu6CNveUM=;
-        b=fM/w2ZOP/MtG90rieA2M92TXlKqBccegZ0eKLig4MaHGZ5KZ2YbOszFhhpQVMTp04e
-         xfrml4NA6kZp4LGhZP3cnOT2dmZ5lzbAOan2UG1uyrmEBdGhB/q/UpsUh2N4auu9NE6q
-         PsrlBTzg2+GfTxqPVBBVrrUfyXILS26EXq4QIEWr3g3JepB1nl4FnVIJCclAMu6bpxws
-         V8nGpLcwT8PeoyQGCAKwFhzsmnGbr4uWD3VxPKK19tqfGG3xnOUWnGp1AtHGIyr38xNL
-         BtZZ+nSqQQ5BNk3pu1XWxvkdJMZCCM6QWKZCyTHkKVDbXmhzKlt12ZJr3r6t5HuI/k7b
-         VUdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711055049; x=1711659849;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3x38FyIlnQn8kLwkXTXsLKvDYpxFNbraf5Lu6CNveUM=;
-        b=SbCSIGnXek4i37lVc4UMy7WAAoonwi8q3VVXnZUkoO4tgdzX5aY9Jwh7WFlmEcoln+
-         cvmdQebMOvMmPYgA1GugwcoIEoQ5ikR7eEcTOqffd6jsH6c3CT94Xofn8yzzS9jpo/ox
-         zFgUVqu0Jfj6BKobNZ635wD4Y7o1g8qPakXpuUcgnnnLM7PSgq1oPEn7Ls+CY3kJ/mGc
-         aTgDEhJICMWR37B0NsOz1WvGaYyKvc5BG9Z11fbLfwGNU6qu8ZnUBtfDoOw90KB2YNJt
-         c+0KSaPBPbC3aJT793h2T0jDdRIEPMf3DX7x8NCuVgv/dkRWijV+AFToBa941FcgBCoi
-         5+Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCVw/wItX24Ek7prU4de3+hr68V0Q0B1ohcuCYDhhnzN/NoZ+QpESRSEecTKECUBxfIk2IznbF+l2NJUnkIehBPUQ2VlqJBAkOY=
-X-Gm-Message-State: AOJu0YwoO1oX3yb18qNPSgxsFTALjpYQuwroxXVD7mRp694ZM+Wiigme
-	7soXTEbXLlNnuM/ZzKp32zRdoNeP9RXLxO6+Ip8rRpWHV6Ykf+3rAsztQJ/xJpC50Z1RTf8SXO0
-	8
-X-Google-Smtp-Source: AGHT+IE33sLTzTP7gAj/3ESi9kl1XaUyYNEDrtaFYq5uEdbPDA4OvUZaLVEAKGqRaw044T44QztCYA==
-X-Received: by 2002:a05:600c:4ba1:b0:414:101a:fa67 with SMTP id e33-20020a05600c4ba100b00414101afa67mr218712wmp.18.1711055047978;
-        Thu, 21 Mar 2024 14:04:07 -0700 (PDT)
-Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:04:07 -0700 (PDT)
-From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Thu, 21 Mar 2024 21:03:47 +0000
-Subject: [PATCH v2 04/24] sunxi: drop remaining dt-binding headers
-MIME-Version: 1.0
-Message-Id: <20240321-b4-upstream-dt-headers-v2-4-1eac0df875fe@linaro.org>
-References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
-In-Reply-To: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
-To: Tom Rini <trini@konsulko.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Sumit Garg <sumit.garg@linaro.org>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Patrick Delaunay <patrick.delaunay@foss.st.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Simon Glass <sjg@chromium.org>, 
- Philipp Tomsich <philipp.tomsich@vrull.eu>, 
- Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>, 
- Sean Anderson <seanga2@gmail.com>, 
- Sam Protsenko <semen.protsenko@linaro.org>, 
- Matthias Brugger <mbrugger@suse.com>, Peter Robinson <pbrobinson@gmail.com>, 
- Joe Hershberger <joe.hershberger@ni.com>, 
- Ramon Fried <rfried.dev@gmail.com>, Thierry Reding <treding@nvidia.com>, 
- Svyatoslav Ryhel <clamor95@gmail.com>, Michal Simek <michal.simek@amd.com>, 
- Paul Barker <paul.barker.ct@bp.renesas.com>, 
- Weijie Gao <weijie.gao@mediatek.com>, 
- GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, 
- Ryder Lee <ryder.lee@mediatek.com>, 
- Chunfeng Yun <chunfeng.yun@mediatek.com>, 
- Eugen Hristev <eugen.hristev@collabora.com>, Rick Chen <rick@andestech.com>, 
- Leo <ycliang@andestech.com>, Ryan Chen <ryan_chen@aspeedtech.com>, 
- Chia-Wei Wang <chiawei_wang@aspeedtech.com>, 
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>, 
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
- Dai Okamura <okamura.dai@socionext.com>, 
+ dkim=pass header.i=@amd.com header.s=selector1 header.b=JvvlFQX0;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: amd.com, ip: 40.107.212.43, mailfrom: michal.simek@amd.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kINQrk8VVNqQHEJ9stlU6VjSvll1BCI0t2+3EH91wBPrZo+3ztVltiDHLQiqDc2X8PldxNyQJudnvC9lU9mYQ9D66INJ5j+QHtn0NWd4V0jWd0L97rz3yfLwS8orYHeBLuE/ZqZEM4/GJZ1j9K5XDMpRKJJU19Tqkveu1H8mdIq11temwWZ8+WQNMjMNlV4xJmfXOY6/IxOsJVoNtEc+ia8uONeA9yIqJxkgXwuKAltb3NEkYHg91rlzd8P1ePPQ/Xcw2/G9NK3zpnpgUuUtx2KBJdIhoLTkCytqliyYir3PyxlJVtH3xHFGsmpGd50I4Ki+fbV3KYWmGOYu9fyHhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vji2rtyI0I08Z5bFLFEU6Ly4AZKqyZebqKMwZTkY/qc=;
+ b=GoOM6ixkFIj4JJM3HRmbJxJNkx5O1SnIDpzmtdosiFitrFSQSU+Mj7d2BZmIA8VqTLdGHnd9W1LTcREge/a2gCJeiyEAl3lMkA61ZiJveCOv3Fq+rJ72fdd0e8mOGSIQj6kkOcLj7EOSXqgwOwvtr6E2/VkKfUPNUOz1+YMtrmOO/7fpQlJc5IR59Yl2vz6M/0JaPX39ENx3WIsWjrPPYGyBWDDnLsbj2jSBgZNjQISDv7LNz4gwb9K3yc8hX4s/3EwSDkUBHkf9ME3lCwY+aicVVJfDIY0aFlbIaB+unN/KjysrETfxr4e3dPVq/eVukA9c7GIjk1p1D/1rBtJ3CQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vji2rtyI0I08Z5bFLFEU6Ly4AZKqyZebqKMwZTkY/qc=;
+ b=JvvlFQX0oSMtXFZA5aRiuHO2noeaEDLoXT17SRcKxeaZQYZd6K4BV3UN50igug7CGlH6vHQrh2xSgHuPtsVjIneQA7RRE62Otfq9Zgh7YvMlkmPzTGvgHhMXg4PCAUAHe3ZBsTVdj2mHGfgevumxPyk9JN5Zsvpz+p5h8MCc2ao=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by CH3PR12MB9430.namprd12.prod.outlook.com (2603:10b6:610:1cd::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.34; Fri, 22 Mar
+ 2024 07:16:59 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::6622:ec76:9367:3907]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::6622:ec76:9367:3907%2]) with mapi id 15.20.7386.025; Fri, 22 Mar 2024
+ 07:16:59 +0000
+Message-ID: <1ad397c3-6732-4e8c-8326-a3443288355c@amd.com>
+Date: Fri, 22 Mar 2024 08:16:30 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 16/24] xlnx: drop dt-binding headers
+To: Caleb Connolly <caleb.connolly@linaro.org>, Tom Rini
+ <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Sumit Garg <sumit.garg@linaro.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Patrick Delaunay <patrick.delaunay@foss.st.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Simon Glass <sjg@chromium.org>,
+ Philipp Tomsich <philipp.tomsich@vrull.eu>,
+ Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>,
+ Sean Anderson <seanga2@gmail.com>, Sam Protsenko
+ <semen.protsenko@linaro.org>, Matthias Brugger <mbrugger@suse.com>,
+ Peter Robinson <pbrobinson@gmail.com>,
+ Joe Hershberger <joe.hershberger@ni.com>, Ramon Fried
+ <rfried.dev@gmail.com>, Thierry Reding <treding@nvidia.com>,
+ Svyatoslav Ryhel <clamor95@gmail.com>, Michal Simek <michal.simek@amd.com>,
+ Paul Barker <paul.barker.ct@bp.renesas.com>,
+ Weijie Gao <weijie.gao@mediatek.com>,
+ GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>,
+ Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun
+ <chunfeng.yun@mediatek.com>, Eugen Hristev <eugen.hristev@collabora.com>,
+ Rick Chen <rick@andestech.com>, Leo <ycliang@andestech.com>,
+ Ryan Chen <ryan_chen@aspeedtech.com>,
+ Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
+ Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Dai Okamura <okamura.dai@socionext.com>,
  Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
- uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
- Caleb Connolly <caleb.connolly@linaro.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=60107;
- i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=bizfKN3Y5eCOUWeElRKqffMXK0rqfJbBO79LfenU0js=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C3Z/W/BaSNPf6OMKp21my3TP/53heF34qcWf37Ncz
- y/bvMRgS0cpC4MgB4OsmCKL+Illlk1rL9trbF9wAWYOKxPIEAYuTgGYSMI8hn82/6/tn7Pr8g1p
- /1+CQcfO/F+1KuWtyZO3vT+++Z6T9eLazciw5UD+x7DUg29/XJKsf/H4qnF6zcN4m/2mEUsV1yd
- 1zeZjBAA=
-X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
- fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
-Content-Type: text/plain; charset="utf-8"
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
+ uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com
+References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
+ <20240321-b4-upstream-dt-headers-v2-16-1eac0df875fe@linaro.org>
+From: Michal Simek <michal.simek@amd.com>
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ xsFNBFFuvDEBEAC9Amu3nk79+J+4xBOuM5XmDmljuukOc6mKB5bBYOa4SrWJZTjeGRf52VMc
+ howHe8Y9nSbG92obZMqsdt+d/hmRu3fgwRYiiU97YJjUkCN5paHXyBb+3IdrLNGt8I7C9RMy
+ svSoH4WcApYNqvB3rcMtJIna+HUhx8xOk+XCfyKJDnrSuKgx0Svj446qgM5fe7RyFOlGX/wF
+ Ae63Hs0RkFo3I/+hLLJP6kwPnOEo3lkvzm3FMMy0D9VxT9e6Y3afe1UTQuhkg8PbABxhowzj
+ SEnl0ICoqpBqqROV/w1fOlPrm4WSNlZJunYV4gTEustZf8j9FWncn3QzRhnQOSuzTPFbsbH5
+ WVxwDvgHLRTmBuMw1sqvCc7CofjsD1XM9bP3HOBwCxKaTyOxbPJh3D4AdD1u+cF/lj9Fj255
+ Es9aATHPvoDQmOzyyRNTQzupN8UtZ+/tB4mhgxWzorpbdItaSXWgdDPDtssJIC+d5+hskys8
+ B3jbv86lyM+4jh2URpnL1gqOPwnaf1zm/7sqoN3r64cml94q68jfY4lNTwjA/SnaS1DE9XXa
+ XQlkhHgjSLyRjjsMsz+2A4otRLrBbumEUtSMlPfhTi8xUsj9ZfPIUz3fji8vmxZG/Da6jx/c
+ a0UQdFFCL4Ay/EMSoGbQouzhC69OQLWNH3rMQbBvrRbiMJbEZwARAQABzSlNaWNoYWwgU2lt
+ ZWsgKEFNRCkgPG1pY2hhbC5zaW1la0BhbWQuY29tPsLBlAQTAQgAPgIbAwULCQgHAgYVCgkI
+ CwIEFgIDAQIeAQIXgBYhBGc1DJv1zO6bU2Q1ajd8fyH+PR+RBQJkK9VOBQkWf4AXAAoJEDd8
+ fyH+PR+ROzEP/1IFM7J4Y58SKuvdWDddIvc7JXcal5DpUtMdpuV+ZiHSOgBQRqvwH4CVBK7p
+ ktDCWQAoWCg0KhdGyBjfyVVpm+Gw4DkZovcvMGUlvY5p5w8XxTE5Xx+cj/iDnj83+gy+0Oyz
+ VFU9pew9rnT5YjSRFNOmL2dsorxoT1DWuasDUyitGy9iBegj7vtyAsvEObbGiFcKYSjvurkm
+ MaJ/AwuJehZouKVfWPY/i4UNsDVbQP6iwO8jgPy3pwjt4ztZrl3qs1gV1F4Zrak1k6qoDP5h
+ 19Q5XBVtq4VSS4uLKjofVxrw0J+sHHeTNa3Qgk9nXJEvH2s2JpX82an7U6ccJSdNLYbogQAS
+ BW60bxq6hWEY/afbT+tepEsXepa0y04NjFccFsbECQ4DA3cdA34sFGupUy5h5la/eEf3/8Kd
+ BYcDd+aoxWliMVmL3DudM0Fuj9Hqt7JJAaA0Kt3pwJYwzecl/noK7kFhWiKcJULXEbi3Yf/Y
+ pwCf691kBfrbbP9uDmgm4ZbWIT5WUptt3ziYOWx9SSvaZP5MExlXF4z+/KfZAeJBpZ95Gwm+
+ FD8WKYjJChMtTfd1VjC4oyFLDUMTvYq77ABkPeKB/WmiAoqMbGx+xQWxW113wZikDy+6WoCS
+ MPXfgMPWpkIUnvTIpF+m1Nyerqf71fiA1W8l0oFmtCF5oTMkzsFNBFFuvDEBEACXqiX5h4IA
+ 03fJOwh+82aQWeHVAEDpjDzK5hSSJZDE55KP8br1FZrgrjvQ9Ma7thSu1mbr+ydeIqoO1/iM
+ fZA+DDPpvo6kscjep11bNhVa0JpHhwnMfHNTSHDMq9OXL9ZZpku/+OXtapISzIH336p4ZUUB
+ 5asad8Ux70g4gmI92eLWBzFFdlyR4g1Vis511Nn481lsDO9LZhKyWelbif7FKKv4p3FRPSbB
+ vEgh71V3NDCPlJJoiHiYaS8IN3uasV/S1+cxVbwz2WcUEZCpeHcY2qsQAEqp4GM7PF2G6gtz
+ IOBUMk7fjku1mzlx4zP7uj87LGJTOAxQUJ1HHlx3Li+xu2oF9Vv101/fsCmptAAUMo7KiJgP
+ Lu8TsP1migoOoSbGUMR0jQpUcKF2L2jaNVS6updvNjbRmFojK2y6A/Bc6WAKhtdv8/e0/Zby
+ iVA7/EN5phZ1GugMJxOLHJ1eqw7DQ5CHcSQ5bOx0Yjmhg4PT6pbW3mB1w+ClAnxhAbyMsfBn
+ XxvvcjWIPnBVlB2Z0YH/gizMDdM0Sa/HIz+q7JR7XkGL4MYeAM15m6O7hkCJcoFV7LMzkNKk
+ OiCZ3E0JYDsMXvmh3S4EVWAG+buA+9beElCmXDcXPI4PinMPqpwmLNcEhPVMQfvAYRqQp2fg
+ 1vTEyK58Ms+0a9L1k5MvvbFg9QARAQABwsF8BBgBCAAmAhsMFiEEZzUMm/XM7ptTZDVqN3x/
+ If49H5EFAmQr1YsFCRZ/gFoACgkQN3x/If49H5H6BQ//TqDpfCh7Fa5v227mDISwU1VgOPFK
+ eo/+4fF/KNtAtU/VYmBrwT/N6clBxjJYY1i60ekFfAEsCb+vAr1W9geYYpuA+lgR3/BOkHlJ
+ eHf4Ez3D71GnqROIXsObFSFfZWGEgBtHBZ694hKwFmIVCg+lqeMV9nPQKlvfx2n+/lDkspGi
+ epDwFUdfJLHOYxFZMQsFtKJX4fBiY85/U4X2xSp02DxQZj/N2lc9OFrKmFJHXJi9vQCkJdIj
+ S6nuJlvWj/MZKud5QhlfZQsixT9wCeOa6Vgcd4vCzZuptx8gY9FDgb27RQxh/b1ZHalO1h3z
+ kXyouA6Kf54Tv6ab7M/fhNqznnmSvWvQ4EWeh8gddpzHKk8ixw9INBWkGXzqSPOztlJbFiQ3
+ YPi6o9Pw/IxdQJ9UZ8eCjvIMpXb4q9cZpRLT/BkD4ttpNxma1CUVljkF4DuGydxbQNvJFBK8
+ ywyA0qgv+Mu+4r/Z2iQzoOgE1SymrNSDyC7u0RzmSnyqaQnZ3uj7OzRkq0fMmMbbrIvQYDS/
+ y7RkYPOpmElF2pwWI/SXKOgMUgigedGCl1QRUio7iifBmXHkRrTgNT0PWQmeGsWTmfRit2+i
+ l2dpB2lxha72cQ6MTEmL65HaoeANhtfO1se2R9dej57g+urO9V2v/UglZG1wsyaP/vOrgs+3
+ 3i3l5DA=
+In-Reply-To: <20240321-b4-upstream-dt-headers-v2-16-1eac0df875fe@linaro.org>
+X-ClientProxiedBy: VI1PR0202CA0005.eurprd02.prod.outlook.com
+ (2603:10a6:803:14::18) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|CH3PR12MB9430:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3c832478-c866-4278-a196-08dc4a401037
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	3HTsLT5Ayr775S7YAew2Kxxl1vHaOIT3B1vY4P5S9rGXmVNYbdxbKNpu/iert8+JTEspGB3LDXn+wfClY4Ks0vmZkPq4xt0DUw2wR6l1DnhZFUpcTTyS2WjIcU91/QuTh7fWHUSaUs0A6LEWd7QkZwufgcShRB/MDeKnkACJ1wm1Bkdbg+5NHkl6LkntyrHZTI4m3vyrHU5yO205gT0bBOIA7qLqgi2IUwHLzsW7jkrTNvdyZJUgg9ha2xeXa27EHcQglDVYEgqId3hw5tJq6pAyNb8HQluk1b2XuHJcRTCVwVhfDsSMPADQpe68RHN4cs7GrjV38z3SKF5XzjKtiz6FDR9VaeJNR9botwzunpAmld9s9SEdObbGlnfCNSH+fO+6j9SR8oxxi04UIo5K/uBM3jTLWrUn88ELJzCbvXQOElSN71UhMUkMPJ50XJHcVuZX42b/1WYrW4oeGyHsmznor6SZwZpaTNezjPpB4tPzikBLGPHLR3DjFZ6gbaOaSUJVCDfvWAAItrhORgQQBl9OPRbQQ01rvzxDW6oKLmUiUKHW7ek8qWjGhin/kVbPz8ofrAtlHertpYR0DEAgaD14elAm/HLqnOGNx5cgxIx5dv4ARpK3/Ze8GCbGwnYpQUXOmsitrRlO2uTiC39KChDB4Ik2Ojbpbve/mdOScGSI7QWoIlefMySXBtcYaQKO1HzCPOPbXwX9aqJX1sIQ3w==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?eW10RkhlNmgwRTcydUpjSDR5K3U2dXNXNy8rOTh2UDBFTSthS3NPYXY0QXZP?=
+ =?utf-8?B?dEtLdyt4STJQM0lEMktXVzZGODFwS3p5NTlhcUpVWTZrMXJQQzhUUTBqRWdq?=
+ =?utf-8?B?YXVMRXd3LzdNZTVSSDBRQ3ZER0pUQmtpWGoyQnc2Q2NaYzhiaFZCRElJOUx4?=
+ =?utf-8?B?WUJjSnhrSm5LbDJkNDFQbWlyZjJLcjFvVVhxSm9JRG1kT3MrMzBmekpqY2Q3?=
+ =?utf-8?B?Y214djloTDBHM0diRVNHQXhHcHhtSXhXMXZCSVJIYk9SK21JZVplZkNDUG9w?=
+ =?utf-8?B?aGJYUjlIdzJzTjJ5YUNBUDVLS3VYcmM1Y1dqYWF3YitYeUhKZE0zY1BnVTFq?=
+ =?utf-8?B?bERlNU5qSW05dnNuNHZkWnFBb0ZRUVdINUVpeC9LdjZaUGVUcXljVTFYYitv?=
+ =?utf-8?B?NFpDNnNCRW1vWThldkhHMGloZUg5T2Z0QmtwNWRJMUx2RDh4SEY4MEUyQmky?=
+ =?utf-8?B?cFBhQVA3UThyQWFvUEZCVmpVR2xGcEl1TG9nRGxocjJadUhWQ1VDcm9QUmts?=
+ =?utf-8?B?YVJQUFhLRklOZzdoeFhJVURSK2Z0bFIwdWhPVkp3MmdkeG1lOUJ5RUhuTE5C?=
+ =?utf-8?B?REVXbmk2NmlJZEJFZ2lGQ1BYbWJyWEN0VHV0V1dmdTNmYjR2WTNBSFZaZThz?=
+ =?utf-8?B?ZXh0TUFzUkxOaXdWTmhtQmV5a0RtQ09rSTR0WTNzTzdJbEFMcno0VG1CQjZ2?=
+ =?utf-8?B?MC9TVlVaaDJHVE9SMUJxZVZGODdtRytyUzk2UEhUUjk4MGRONC9YdEVUL2tx?=
+ =?utf-8?B?djBUVUxObnpXRkRZUnJYM3VxR3ZHa1l3SXZ3MHVtSmszRGprVUVvREprOUI5?=
+ =?utf-8?B?MmxsampWQkZwSnZKRytqcm93R3JPTi9VTlNTRnJrQmhrbFR6Ykt0VG51clNh?=
+ =?utf-8?B?SXVsVzFGT1JOanpUZkJRYnBvN2lsZHJzeFVWKzRlaHFFdDFidGp5WW5HekYx?=
+ =?utf-8?B?dmR1WDFnUzJrZmxIMnBncUlPL0hEYmIzQk1QUG4ycmhoR3FsM2txd1pDRDlN?=
+ =?utf-8?B?LzRKUk03Zmw1eUk4YXdpbnFsK1pqak5ybVN0S0lkVUhoS2FBMVRaYkZVdnZP?=
+ =?utf-8?B?eWpHcWRUWldjZmsvUkxubDdCS0gzcko3SVJ1YjBxMGdVM1c2TG9DU1cvUllS?=
+ =?utf-8?B?aUgvSjd6L2FSSU5IaG15V2hYTGcrVFMwamRCbG5uSjNURXluMkI2MXlvQ2dR?=
+ =?utf-8?B?WUdxbks3MjN4Z2lYaEcxSmEvaGtPUCtwa0dYMXkzVFBuRndaOWNmK1BZSXNm?=
+ =?utf-8?B?ZWthZHI0U2hUV3pBT0owcys1MXVnVVpIMFFNV0lVc3Z6WGdnSUJWN05wL2sw?=
+ =?utf-8?B?Q09rMmZQMXBuRTRwSUZwdUVSVHRySFBRcHNaTzlXWXFFOFBoUXRjZEUxajlx?=
+ =?utf-8?B?TE4rOWUrVXJhbXFVbHIwZEdVNGxtU1Y2QlRGTTVjK1hUdlJhNXlCK3NDM2sv?=
+ =?utf-8?B?OG14R1A1cTF1dU5sNFRGTGdKWWIza09aK1FadzhJV0IzM1RJdTNzTzZVMmFJ?=
+ =?utf-8?B?NjBuZzQvTWZVYTRPa0dSZFJSb3pvMDBaYTc4TU1xSHRLS0xZUGViNE1uQm1l?=
+ =?utf-8?B?ajBkRThzTW51NWhHZXV5VTVEZ0JYd1EvMHkyREdhbVZYaTl6Y0RlV2lNUEV0?=
+ =?utf-8?B?eDJMWDJPM1F6Y3BneWxzaGtqTkFpYndVWTVBSlpaVGhNVkY0RS9ZNDY2L2xU?=
+ =?utf-8?B?NVB4TkxjaE5JNUlNTTVZQkdLUWFOSzJDb2dsK0hKeHlweTFMZko0RnlmcHNO?=
+ =?utf-8?B?SHB2bkJEUi9FaVE4QUxYZDZqQ3F6Q1RyZktobWo5cjlUM1hhZzd5VlFrYW1R?=
+ =?utf-8?B?SFBBTC9Fb0NhcWdIRGo5OFUrMTN1MCs4TFg1OHlOWGlCTmpsSVc3cXdxelFW?=
+ =?utf-8?B?RTZJNEhubmdCSU13ZEt1bmR6UWRTd2FkN1ZnVzZka2VuWld0MlduaS9FV3Ey?=
+ =?utf-8?B?OGxjVzJlUWpqVU51RThmT0pOMkVFZXFPNUpVOGliaENaVnhoQlU3eit5LzBZ?=
+ =?utf-8?B?Y2NMMjVNYlNGaUdXV1dyZXBEdjFFTnNib210elNwT2loT1Q0U3RPaDRUelly?=
+ =?utf-8?B?Y25sWjNEQXVtcjNwMkFlMFdGSFFicldWb3FwUGhOMTNUakozbDF3SGx1YWpH?=
+ =?utf-8?Q?CUX441Y/AXAc+zJ3EuqPSo1qf?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c832478-c866-4278-a196-08dc4a401037
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2024 07:16:59.3225
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y2H1PRRl28258zK/kQ+q9bDV0pQxBBehamq/v7G1qmgetlddFMBDpPRBdah0TQwZ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9430
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:20:52 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2216
+ <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:21:02 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2237
 
-Drop in favour of dts/upstream.
 
-Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
----
- include/dt-bindings/dma/sun4i-a10.h           |  56 -----------
- include/dt-bindings/pinctrl/sun4i-a10.h       |  62 ------------
- include/dt-bindings/reset/sun20i-d1-ccu.h     |  79 ----------------
- include/dt-bindings/reset/sun20i-d1-r-ccu.h   |  16 ----
- include/dt-bindings/reset/sun4i-a10-ccu.h     |  69 --------------
- include/dt-bindings/reset/sun50i-a64-ccu.h    |  98 -------------------
- include/dt-bindings/reset/sun50i-h6-ccu.h     |  73 ---------------
- include/dt-bindings/reset/sun50i-h6-r-ccu.h   |  18 ----
- include/dt-bindings/reset/sun50i-h616-ccu.h   |  70 --------------
- include/dt-bindings/reset/sun5i-ccu.h         |  23 -----
- include/dt-bindings/reset/sun6i-a31-ccu.h     | 106 ---------------------
- include/dt-bindings/reset/sun8i-a23-a33-ccu.h |  87 -----------------
- include/dt-bindings/reset/sun8i-a83t-ccu.h    |  98 -------------------
- include/dt-bindings/reset/sun8i-de2.h         |  15 ---
- include/dt-bindings/reset/sun8i-h3-ccu.h      | 106 ---------------------
- include/dt-bindings/reset/sun8i-r-ccu.h       |  53 -----------
- include/dt-bindings/reset/sun8i-r40-ccu.h     | 130 --------------------------
- include/dt-bindings/reset/sun8i-v3s-ccu.h     |  81 ----------------
- include/dt-bindings/reset/sun9i-a80-ccu.h     | 102 --------------------
- include/dt-bindings/reset/sun9i-a80-de.h      |  58 ------------
- include/dt-bindings/reset/sun9i-a80-usb.h     |  56 -----------
- include/dt-bindings/reset/suniv-ccu-f1c100s.h |  38 --------
- 22 files changed, 1494 deletions(-)
 
-diff --git a/include/dt-bindings/dma/sun4i-a10.h b/include/dt-bindings/dma/sun4i-a10.h
-deleted file mode 100644
-index 8caba9ef7e9d..000000000000
---- a/include/dt-bindings/dma/sun4i-a10.h
-+++ /dev/null
-@@ -1,56 +0,0 @@
--/*
-- * Copyright 2014 Maxime Ripard
-- *
-- * Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- *     You should have received a copy of the GNU General Public
-- *     License along with this file; if not, write to the Free
-- *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-- *     MA 02110-1301 USA
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef __DT_BINDINGS_DMA_SUN4I_A10_H_
--#define __DT_BINDINGS_DMA_SUN4I_A10_H_
--
--#define SUN4I_DMA_NORMAL	0
--#define SUN4I_DMA_DEDICATED	1
--
--#endif /* __DT_BINDINGS_DMA_SUN4I_A10_H_ */
-diff --git a/include/dt-bindings/pinctrl/sun4i-a10.h b/include/dt-bindings/pinctrl/sun4i-a10.h
-deleted file mode 100644
-index f7553c143b40..000000000000
---- a/include/dt-bindings/pinctrl/sun4i-a10.h
-+++ /dev/null
-@@ -1,62 +0,0 @@
--/*
-- * Copyright 2014 Maxime Ripard
-- *
-- * Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- *     You should have received a copy of the GNU General Public
-- *     License along with this file; if not, write to the Free
-- *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-- *     MA 02110-1301 USA
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef __DT_BINDINGS_PINCTRL_SUN4I_A10_H_
--#define __DT_BINDINGS_PINCTRL_SUN4I_A10_H_
--
--#define SUN4I_PINCTRL_10_MA	0
--#define SUN4I_PINCTRL_20_MA	1
--#define SUN4I_PINCTRL_30_MA	2
--#define SUN4I_PINCTRL_40_MA	3
--
--#define SUN4I_PINCTRL_NO_PULL	0
--#define SUN4I_PINCTRL_PULL_UP	1
--#define SUN4I_PINCTRL_PULL_DOWN	2
--
--#endif /* __DT_BINDINGS_PINCTRL_SUN4I_A10_H_ */
-diff --git a/include/dt-bindings/reset/sun20i-d1-ccu.h b/include/dt-bindings/reset/sun20i-d1-ccu.h
-deleted file mode 100644
-index 79e52aca5912..000000000000
---- a/include/dt-bindings/reset/sun20i-d1-ccu.h
-+++ /dev/null
-@@ -1,79 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (c) 2020 huangzhenwei@allwinnertech.com
-- * Copyright (C) 2021 Samuel Holland <samuel@sholland.org>
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN20I_D1_CCU_H_
--#define _DT_BINDINGS_RST_SUN20I_D1_CCU_H_
--
--#define RST_MBUS		0
--#define RST_BUS_DE		1
--#define RST_BUS_DI		2
--#define RST_BUS_G2D		3
--#define RST_BUS_CE		4
--#define RST_BUS_VE		5
--#define RST_BUS_DMA		6
--#define RST_BUS_MSGBOX0		7
--#define RST_BUS_MSGBOX1		8
--#define RST_BUS_MSGBOX2		9
--#define RST_BUS_SPINLOCK	10
--#define RST_BUS_HSTIMER		11
--#define RST_BUS_DBG		12
--#define RST_BUS_PWM		13
--#define RST_BUS_DRAM		14
--#define RST_BUS_MMC0		15
--#define RST_BUS_MMC1		16
--#define RST_BUS_MMC2		17
--#define RST_BUS_UART0		18
--#define RST_BUS_UART1		19
--#define RST_BUS_UART2		20
--#define RST_BUS_UART3		21
--#define RST_BUS_UART4		22
--#define RST_BUS_UART5		23
--#define RST_BUS_I2C0		24
--#define RST_BUS_I2C1		25
--#define RST_BUS_I2C2		26
--#define RST_BUS_I2C3		27
--#define RST_BUS_SPI0		28
--#define RST_BUS_SPI1		29
--#define RST_BUS_EMAC		30
--#define RST_BUS_IR_TX		31
--#define RST_BUS_GPADC		32
--#define RST_BUS_THS		33
--#define RST_BUS_I2S0		34
--#define RST_BUS_I2S1		35
--#define RST_BUS_I2S2		36
--#define RST_BUS_SPDIF		37
--#define RST_BUS_DMIC		38
--#define RST_BUS_AUDIO		39
--#define RST_USB_PHY0		40
--#define RST_USB_PHY1		41
--#define RST_BUS_OHCI0		42
--#define RST_BUS_OHCI1		43
--#define RST_BUS_EHCI0		44
--#define RST_BUS_EHCI1		45
--#define RST_BUS_OTG		46
--#define RST_BUS_LRADC		47
--#define RST_BUS_DPSS_TOP	48
--#define RST_BUS_HDMI_SUB	49
--#define RST_BUS_HDMI_MAIN	50
--#define RST_BUS_MIPI_DSI	51
--#define RST_BUS_TCON_LCD0	52
--#define RST_BUS_TCON_TV		53
--#define RST_BUS_LVDS0		54
--#define RST_BUS_TVE		55
--#define RST_BUS_TVE_TOP		56
--#define RST_BUS_TVD		57
--#define RST_BUS_TVD_TOP		58
--#define RST_BUS_LEDC		59
--#define RST_BUS_CSI		60
--#define RST_BUS_TPADC		61
--#define RST_DSP			62
--#define RST_BUS_DSP_CFG		63
--#define RST_BUS_DSP_DBG		64
--#define RST_BUS_RISCV_CFG	65
--#define RST_BUS_CAN0		66
--#define RST_BUS_CAN1		67
--
--#endif /* _DT_BINDINGS_RST_SUN20I_D1_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun20i-d1-r-ccu.h b/include/dt-bindings/reset/sun20i-d1-r-ccu.h
-deleted file mode 100644
-index e20babc990af..000000000000
---- a/include/dt-bindings/reset/sun20i-d1-r-ccu.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (C) 2021 Samuel Holland <samuel@sholland.org>
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN20I_D1_R_CCU_H_
--#define _DT_BINDINGS_RST_SUN20I_D1_R_CCU_H_
--
--#define RST_BUS_R_TIMER		0
--#define RST_BUS_R_TWD		1
--#define RST_BUS_R_PPU		2
--#define RST_BUS_R_IR_RX		3
--#define RST_BUS_R_RTC		4
--#define RST_BUS_R_CPUCFG	5
--
--#endif /* _DT_BINDINGS_RST_SUN20I_D1_R_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun4i-a10-ccu.h b/include/dt-bindings/reset/sun4i-a10-ccu.h
-deleted file mode 100644
-index 5f4480bedc8a..000000000000
---- a/include/dt-bindings/reset/sun4i-a10-ccu.h
-+++ /dev/null
-@@ -1,69 +0,0 @@
--/*
-- * Copyright (C) 2017 Priit Laes <plaes@plaes.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN4I_A10_H
--#define _DT_BINDINGS_RST_SUN4I_A10_H
--
--#define	RST_USB_PHY0		1
--#define	RST_USB_PHY1		2
--#define	RST_USB_PHY2		3
--#define	RST_GPS			4
--#define	RST_DE_BE0		5
--#define	RST_DE_BE1		6
--#define	RST_DE_FE0		7
--#define	RST_DE_FE1		8
--#define	RST_DE_MP		9
--#define	RST_TVE0		10
--#define	RST_TCON0		11
--#define	RST_TVE1		12
--#define	RST_TCON1		13
--#define	RST_CSI0		14
--#define	RST_CSI1		15
--#define	RST_VE			16
--#define	RST_ACE			17
--#define	RST_LVDS		18
--#define	RST_GPU			19
--#define	RST_HDMI_H		20
--#define	RST_HDMI_SYS		21
--#define	RST_HDMI_AUDIO_DMA	22
--
--#endif /* DT_BINDINGS_RST_SUN4I_A10_H */
-diff --git a/include/dt-bindings/reset/sun50i-a64-ccu.h b/include/dt-bindings/reset/sun50i-a64-ccu.h
-deleted file mode 100644
-index db60b29ddb11..000000000000
---- a/include/dt-bindings/reset/sun50i-a64-ccu.h
-+++ /dev/null
-@@ -1,98 +0,0 @@
--/*
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN50I_A64_H_
--#define _DT_BINDINGS_RST_SUN50I_A64_H_
--
--#define RST_USB_PHY0		0
--#define RST_USB_PHY1		1
--#define RST_USB_HSIC		2
--#define RST_DRAM		3
--#define RST_MBUS		4
--#define RST_BUS_MIPI_DSI	5
--#define RST_BUS_CE		6
--#define RST_BUS_DMA		7
--#define RST_BUS_MMC0		8
--#define RST_BUS_MMC1		9
--#define RST_BUS_MMC2		10
--#define RST_BUS_NAND		11
--#define RST_BUS_DRAM		12
--#define RST_BUS_EMAC		13
--#define RST_BUS_TS		14
--#define RST_BUS_HSTIMER		15
--#define RST_BUS_SPI0		16
--#define RST_BUS_SPI1		17
--#define RST_BUS_OTG		18
--#define RST_BUS_EHCI0		19
--#define RST_BUS_EHCI1		20
--#define RST_BUS_OHCI0		21
--#define RST_BUS_OHCI1		22
--#define RST_BUS_VE		23
--#define RST_BUS_TCON0		24
--#define RST_BUS_TCON1		25
--#define RST_BUS_DEINTERLACE	26
--#define RST_BUS_CSI		27
--#define RST_BUS_HDMI0		28
--#define RST_BUS_HDMI1		29
--#define RST_BUS_DE		30
--#define RST_BUS_GPU		31
--#define RST_BUS_MSGBOX		32
--#define RST_BUS_SPINLOCK	33
--#define RST_BUS_DBG		34
--#define RST_BUS_LVDS		35
--#define RST_BUS_CODEC		36
--#define RST_BUS_SPDIF		37
--#define RST_BUS_THS		38
--#define RST_BUS_I2S0		39
--#define RST_BUS_I2S1		40
--#define RST_BUS_I2S2		41
--#define RST_BUS_I2C0		42
--#define RST_BUS_I2C1		43
--#define RST_BUS_I2C2		44
--#define RST_BUS_SCR		45
--#define RST_BUS_UART0		46
--#define RST_BUS_UART1		47
--#define RST_BUS_UART2		48
--#define RST_BUS_UART3		49
--#define RST_BUS_UART4		50
--
--#endif /* _DT_BINDINGS_RST_SUN50I_A64_H_ */
-diff --git a/include/dt-bindings/reset/sun50i-h6-ccu.h b/include/dt-bindings/reset/sun50i-h6-ccu.h
-deleted file mode 100644
-index d038ddfa4818..000000000000
---- a/include/dt-bindings/reset/sun50i-h6-ccu.h
-+++ /dev/null
-@@ -1,73 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- */
--
--#ifndef _DT_BINDINGS_RESET_SUN50I_H6_H_
--#define _DT_BINDINGS_RESET_SUN50I_H6_H_
--
--#define RST_MBUS		0
--#define RST_BUS_DE		1
--#define RST_BUS_DEINTERLACE	2
--#define RST_BUS_GPU		3
--#define RST_BUS_CE		4
--#define RST_BUS_VE		5
--#define RST_BUS_EMCE		6
--#define RST_BUS_VP9		7
--#define RST_BUS_DMA		8
--#define RST_BUS_MSGBOX		9
--#define RST_BUS_SPINLOCK	10
--#define RST_BUS_HSTIMER		11
--#define RST_BUS_DBG		12
--#define RST_BUS_PSI		13
--#define RST_BUS_PWM		14
--#define RST_BUS_IOMMU		15
--#define RST_BUS_DRAM		16
--#define RST_BUS_NAND		17
--#define RST_BUS_MMC0		18
--#define RST_BUS_MMC1		19
--#define RST_BUS_MMC2		20
--#define RST_BUS_UART0		21
--#define RST_BUS_UART1		22
--#define RST_BUS_UART2		23
--#define RST_BUS_UART3		24
--#define RST_BUS_I2C0		25
--#define RST_BUS_I2C1		26
--#define RST_BUS_I2C2		27
--#define RST_BUS_I2C3		28
--#define RST_BUS_SCR0		29
--#define RST_BUS_SCR1		30
--#define RST_BUS_SPI0		31
--#define RST_BUS_SPI1		32
--#define RST_BUS_EMAC		33
--#define RST_BUS_TS		34
--#define RST_BUS_IR_TX		35
--#define RST_BUS_THS		36
--#define RST_BUS_I2S0		37
--#define RST_BUS_I2S1		38
--#define RST_BUS_I2S2		39
--#define RST_BUS_I2S3		40
--#define RST_BUS_SPDIF		41
--#define RST_BUS_DMIC		42
--#define RST_BUS_AUDIO_HUB	43
--#define RST_USB_PHY0		44
--#define RST_USB_PHY1		45
--#define RST_USB_PHY3		46
--#define RST_USB_HSIC		47
--#define RST_BUS_OHCI0		48
--#define RST_BUS_OHCI3		49
--#define RST_BUS_EHCI0		50
--#define RST_BUS_XHCI		51
--#define RST_BUS_EHCI3		52
--#define RST_BUS_OTG		53
--#define RST_BUS_PCIE		54
--#define RST_PCIE_POWERUP	55
--#define RST_BUS_HDMI		56
--#define RST_BUS_HDMI_SUB	57
--#define RST_BUS_TCON_TOP	58
--#define RST_BUS_TCON_LCD0	59
--#define RST_BUS_TCON_TV0	60
--#define RST_BUS_CSI		61
--#define RST_BUS_HDCP		62
--
--#endif /* _DT_BINDINGS_RESET_SUN50I_H6_H_ */
-diff --git a/include/dt-bindings/reset/sun50i-h6-r-ccu.h b/include/dt-bindings/reset/sun50i-h6-r-ccu.h
-deleted file mode 100644
-index d541ade884fc..000000000000
---- a/include/dt-bindings/reset/sun50i-h6-r-ccu.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN50I_H6_R_CCU_H_
--#define _DT_BINDINGS_RST_SUN50I_H6_R_CCU_H_
--
--#define RST_R_APB1_TIMER	0
--#define RST_R_APB1_TWD		1
--#define RST_R_APB1_PWM		2
--#define RST_R_APB2_UART		3
--#define RST_R_APB2_I2C		4
--#define RST_R_APB1_IR		5
--#define RST_R_APB1_W1		6
--#define RST_R_APB2_RSB		7
--
--#endif /* _DT_BINDINGS_RST_SUN50I_H6_R_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun50i-h616-ccu.h b/include/dt-bindings/reset/sun50i-h616-ccu.h
-deleted file mode 100644
-index 1bd8bb0a11be..000000000000
---- a/include/dt-bindings/reset/sun50i-h616-ccu.h
-+++ /dev/null
-@@ -1,70 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright (C) 2020 Arm Ltd.
-- */
--
--#ifndef _DT_BINDINGS_RESET_SUN50I_H616_H_
--#define _DT_BINDINGS_RESET_SUN50I_H616_H_
--
--#define RST_MBUS		0
--#define RST_BUS_DE		1
--#define RST_BUS_DEINTERLACE	2
--#define RST_BUS_GPU		3
--#define RST_BUS_CE		4
--#define RST_BUS_VE		5
--#define RST_BUS_DMA		6
--#define RST_BUS_HSTIMER		7
--#define RST_BUS_DBG		8
--#define RST_BUS_PSI		9
--#define RST_BUS_PWM		10
--#define RST_BUS_IOMMU		11
--#define RST_BUS_DRAM		12
--#define RST_BUS_NAND		13
--#define RST_BUS_MMC0		14
--#define RST_BUS_MMC1		15
--#define RST_BUS_MMC2		16
--#define RST_BUS_UART0		17
--#define RST_BUS_UART1		18
--#define RST_BUS_UART2		19
--#define RST_BUS_UART3		20
--#define RST_BUS_UART4		21
--#define RST_BUS_UART5		22
--#define RST_BUS_I2C0		23
--#define RST_BUS_I2C1		24
--#define RST_BUS_I2C2		25
--#define RST_BUS_I2C3		26
--#define RST_BUS_I2C4		27
--#define RST_BUS_SPI0		28
--#define RST_BUS_SPI1		29
--#define RST_BUS_EMAC0		30
--#define RST_BUS_EMAC1		31
--#define RST_BUS_TS		32
--#define RST_BUS_THS		33
--#define RST_BUS_SPDIF		34
--#define RST_BUS_DMIC		35
--#define RST_BUS_AUDIO_CODEC	36
--#define RST_BUS_AUDIO_HUB	37
--#define RST_USB_PHY0		38
--#define RST_USB_PHY1		39
--#define RST_USB_PHY2		40
--#define RST_USB_PHY3		41
--#define RST_BUS_OHCI0		42
--#define RST_BUS_OHCI1		43
--#define RST_BUS_OHCI2		44
--#define RST_BUS_OHCI3		45
--#define RST_BUS_EHCI0		46
--#define RST_BUS_EHCI1		47
--#define RST_BUS_EHCI2		48
--#define RST_BUS_EHCI3		49
--#define RST_BUS_OTG		50
--#define RST_BUS_HDMI		51
--#define RST_BUS_HDMI_SUB	52
--#define RST_BUS_TCON_TOP	53
--#define RST_BUS_TCON_TV0	54
--#define RST_BUS_TCON_TV1	55
--#define RST_BUS_TVE_TOP		56
--#define RST_BUS_TVE0		57
--#define RST_BUS_HDCP		58
--#define RST_BUS_KEYADC		59
--
--#endif /* _DT_BINDINGS_RESET_SUN50I_H616_H_ */
-diff --git a/include/dt-bindings/reset/sun5i-ccu.h b/include/dt-bindings/reset/sun5i-ccu.h
-deleted file mode 100644
-index 40cc22ae7630..000000000000
---- a/include/dt-bindings/reset/sun5i-ccu.h
-+++ /dev/null
-@@ -1,23 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Copyright 2016 Maxime Ripard
-- *
-- * Maxime Ripard <maxime.ripard@free-electrons.com>
-- */
--
--#ifndef _RST_SUN5I_H_
--#define _RST_SUN5I_H_
--
--#define RST_USB_PHY0	0
--#define RST_USB_PHY1	1
--#define RST_GPS		2
--#define RST_DE_BE	3
--#define RST_DE_FE	4
--#define RST_TVE		5
--#define RST_LCD		6
--#define RST_CSI		7
--#define RST_VE		8
--#define RST_GPU		9
--#define RST_IEP		10
--
--#endif /* _RST_SUN5I_H_ */
-diff --git a/include/dt-bindings/reset/sun6i-a31-ccu.h b/include/dt-bindings/reset/sun6i-a31-ccu.h
-deleted file mode 100644
-index fbff365ed6e1..000000000000
---- a/include/dt-bindings/reset/sun6i-a31-ccu.h
-+++ /dev/null
-@@ -1,106 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN6I_A31_H_
--#define _DT_BINDINGS_RST_SUN6I_A31_H_
--
--#define RST_USB_PHY0		0
--#define RST_USB_PHY1		1
--#define RST_USB_PHY2		2
--
--#define RST_AHB1_MIPI_DSI	3
--#define RST_AHB1_SS		4
--#define RST_AHB1_DMA		5
--#define RST_AHB1_MMC0		6
--#define RST_AHB1_MMC1		7
--#define RST_AHB1_MMC2		8
--#define RST_AHB1_MMC3		9
--#define RST_AHB1_NAND1		10
--#define RST_AHB1_NAND0		11
--#define RST_AHB1_SDRAM		12
--#define RST_AHB1_EMAC		13
--#define RST_AHB1_TS		14
--#define RST_AHB1_HSTIMER	15
--#define RST_AHB1_SPI0		16
--#define RST_AHB1_SPI1		17
--#define RST_AHB1_SPI2		18
--#define RST_AHB1_SPI3		19
--#define RST_AHB1_OTG		20
--#define RST_AHB1_EHCI0		21
--#define RST_AHB1_EHCI1		22
--#define RST_AHB1_OHCI0		23
--#define RST_AHB1_OHCI1		24
--#define RST_AHB1_OHCI2		25
--#define RST_AHB1_VE		26
--#define RST_AHB1_LCD0		27
--#define RST_AHB1_LCD1		28
--#define RST_AHB1_CSI		29
--#define RST_AHB1_HDMI		30
--#define RST_AHB1_BE0		31
--#define RST_AHB1_BE1		32
--#define RST_AHB1_FE0		33
--#define RST_AHB1_FE1		34
--#define RST_AHB1_MP		35
--#define RST_AHB1_GPU		36
--#define RST_AHB1_DEU0		37
--#define RST_AHB1_DEU1		38
--#define RST_AHB1_DRC0		39
--#define RST_AHB1_DRC1		40
--#define RST_AHB1_LVDS		41
--
--#define RST_APB1_CODEC		42
--#define RST_APB1_SPDIF		43
--#define RST_APB1_DIGITAL_MIC	44
--#define RST_APB1_DAUDIO0	45
--#define RST_APB1_DAUDIO1	46
--#define RST_APB2_I2C0		47
--#define RST_APB2_I2C1		48
--#define RST_APB2_I2C2		49
--#define RST_APB2_I2C3		50
--#define RST_APB2_UART0		51
--#define RST_APB2_UART1		52
--#define RST_APB2_UART2		53
--#define RST_APB2_UART3		54
--#define RST_APB2_UART4		55
--#define RST_APB2_UART5		56
--
--#endif /* _DT_BINDINGS_RST_SUN6I_A31_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-a23-a33-ccu.h b/include/dt-bindings/reset/sun8i-a23-a33-ccu.h
-deleted file mode 100644
-index 6121f2b0cd0a..000000000000
---- a/include/dt-bindings/reset/sun8i-a23-a33-ccu.h
-+++ /dev/null
-@@ -1,87 +0,0 @@
--/*
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN8I_A23_A33_H_
--#define _DT_BINDINGS_RST_SUN8I_A23_A33_H_
--
--#define RST_USB_PHY0		0
--#define RST_USB_PHY1		1
--#define RST_USB_HSIC		2
--#define RST_MBUS		3
--#define RST_BUS_MIPI_DSI	4
--#define RST_BUS_SS		5
--#define RST_BUS_DMA		6
--#define RST_BUS_MMC0		7
--#define RST_BUS_MMC1		8
--#define RST_BUS_MMC2		9
--#define RST_BUS_NAND		10
--#define RST_BUS_DRAM		11
--#define RST_BUS_HSTIMER		12
--#define RST_BUS_SPI0		13
--#define RST_BUS_SPI1		14
--#define RST_BUS_OTG		15
--#define RST_BUS_EHCI		16
--#define RST_BUS_OHCI		17
--#define RST_BUS_VE		18
--#define RST_BUS_LCD		19
--#define RST_BUS_CSI		20
--#define RST_BUS_DE_BE		21
--#define RST_BUS_DE_FE		22
--#define RST_BUS_GPU		23
--#define RST_BUS_MSGBOX		24
--#define RST_BUS_SPINLOCK	25
--#define RST_BUS_DRC		26
--#define RST_BUS_SAT		27
--#define RST_BUS_LVDS		28
--#define RST_BUS_CODEC		29
--#define RST_BUS_I2S0		30
--#define RST_BUS_I2S1		31
--#define RST_BUS_I2C0		32
--#define RST_BUS_I2C1		33
--#define RST_BUS_I2C2		34
--#define RST_BUS_UART0		35
--#define RST_BUS_UART1		36
--#define RST_BUS_UART2		37
--#define RST_BUS_UART3		38
--#define RST_BUS_UART4		39
--
--#endif /* _DT_BINDINGS_RST_SUN8I_A23_A33_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-a83t-ccu.h b/include/dt-bindings/reset/sun8i-a83t-ccu.h
-deleted file mode 100644
-index 784f6e11664e..000000000000
---- a/include/dt-bindings/reset/sun8i-a83t-ccu.h
-+++ /dev/null
-@@ -1,98 +0,0 @@
--/*
-- * Copyright (C) 2017 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RESET_SUN8I_A83T_CCU_H_
--#define _DT_BINDINGS_RESET_SUN8I_A83T_CCU_H_
--
--#define RST_USB_PHY0		0
--#define RST_USB_PHY1		1
--#define RST_USB_HSIC		2
--
--#define RST_DRAM		3
--#define RST_MBUS		4
--
--#define RST_BUS_MIPI_DSI	5
--#define RST_BUS_SS		6
--#define RST_BUS_DMA		7
--#define RST_BUS_MMC0		8
--#define RST_BUS_MMC1		9
--#define RST_BUS_MMC2		10
--#define RST_BUS_NAND		11
--#define RST_BUS_DRAM		12
--#define RST_BUS_EMAC		13
--#define RST_BUS_HSTIMER		14
--#define RST_BUS_SPI0		15
--#define RST_BUS_SPI1		16
--#define RST_BUS_OTG		17
--#define RST_BUS_EHCI0		18
--#define RST_BUS_EHCI1		19
--#define RST_BUS_OHCI0		20
--
--#define RST_BUS_VE		21
--#define RST_BUS_TCON0		22
--#define RST_BUS_TCON1		23
--#define RST_BUS_CSI		24
--#define RST_BUS_HDMI0		25
--#define RST_BUS_HDMI1		26
--#define RST_BUS_DE		27
--#define RST_BUS_GPU		28
--#define RST_BUS_MSGBOX		29
--#define RST_BUS_SPINLOCK	30
--
--#define RST_BUS_LVDS		31
--
--#define RST_BUS_SPDIF		32
--#define RST_BUS_I2S0		33
--#define RST_BUS_I2S1		34
--#define RST_BUS_I2S2		35
--#define RST_BUS_TDM		36
--
--#define RST_BUS_I2C0		37
--#define RST_BUS_I2C1		38
--#define RST_BUS_I2C2		39
--#define RST_BUS_UART0		40
--#define RST_BUS_UART1		41
--#define RST_BUS_UART2		42
--#define RST_BUS_UART3		43
--#define RST_BUS_UART4		44
--
--#endif /* _DT_BINDINGS_RESET_SUN8I_A83T_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-de2.h b/include/dt-bindings/reset/sun8i-de2.h
-deleted file mode 100644
-index 1c36a6ac86d6..000000000000
---- a/include/dt-bindings/reset/sun8i-de2.h
-+++ /dev/null
-@@ -1,15 +0,0 @@
--/*
-- * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.io>
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-- */
--
--#ifndef _DT_BINDINGS_RESET_SUN8I_DE2_H_
--#define _DT_BINDINGS_RESET_SUN8I_DE2_H_
--
--#define RST_MIXER0	0
--#define RST_MIXER1	1
--#define RST_WB		2
--#define RST_ROT		3
--
--#endif /* _DT_BINDINGS_RESET_SUN8I_DE2_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-h3-ccu.h b/include/dt-bindings/reset/sun8i-h3-ccu.h
-deleted file mode 100644
-index 484c2a22919d..000000000000
---- a/include/dt-bindings/reset/sun8i-h3-ccu.h
-+++ /dev/null
-@@ -1,106 +0,0 @@
--/*
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN8I_H3_H_
--#define _DT_BINDINGS_RST_SUN8I_H3_H_
--
--#define RST_USB_PHY0		0
--#define RST_USB_PHY1		1
--#define RST_USB_PHY2		2
--#define RST_USB_PHY3		3
--
--#define RST_MBUS		4
--
--#define RST_BUS_CE		5
--#define RST_BUS_DMA		6
--#define RST_BUS_MMC0		7
--#define RST_BUS_MMC1		8
--#define RST_BUS_MMC2		9
--#define RST_BUS_NAND		10
--#define RST_BUS_DRAM		11
--#define RST_BUS_EMAC		12
--#define RST_BUS_TS		13
--#define RST_BUS_HSTIMER		14
--#define RST_BUS_SPI0		15
--#define RST_BUS_SPI1		16
--#define RST_BUS_OTG		17
--#define RST_BUS_EHCI0		18
--#define RST_BUS_EHCI1		19
--#define RST_BUS_EHCI2		20
--#define RST_BUS_EHCI3		21
--#define RST_BUS_OHCI0		22
--#define RST_BUS_OHCI1		23
--#define RST_BUS_OHCI2		24
--#define RST_BUS_OHCI3		25
--#define RST_BUS_VE		26
--#define RST_BUS_TCON0		27
--#define RST_BUS_TCON1		28
--#define RST_BUS_DEINTERLACE	29
--#define RST_BUS_CSI		30
--#define RST_BUS_TVE		31
--#define RST_BUS_HDMI0		32
--#define RST_BUS_HDMI1		33
--#define RST_BUS_DE		34
--#define RST_BUS_GPU		35
--#define RST_BUS_MSGBOX		36
--#define RST_BUS_SPINLOCK	37
--#define RST_BUS_DBG		38
--#define RST_BUS_EPHY		39
--#define RST_BUS_CODEC		40
--#define RST_BUS_SPDIF		41
--#define RST_BUS_THS		42
--#define RST_BUS_I2S0		43
--#define RST_BUS_I2S1		44
--#define RST_BUS_I2S2		45
--#define RST_BUS_I2C0		46
--#define RST_BUS_I2C1		47
--#define RST_BUS_I2C2		48
--#define RST_BUS_UART0		49
--#define RST_BUS_UART1		50
--#define RST_BUS_UART2		51
--#define RST_BUS_UART3		52
--#define RST_BUS_SCR0		53
--
--/* New resets imported in H5 */
--#define RST_BUS_SCR1		54
--
--#endif /* _DT_BINDINGS_RST_SUN8I_H3_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-r-ccu.h b/include/dt-bindings/reset/sun8i-r-ccu.h
-deleted file mode 100644
-index 4ba64f3d6fc9..000000000000
---- a/include/dt-bindings/reset/sun8i-r-ccu.h
-+++ /dev/null
-@@ -1,53 +0,0 @@
--/*
-- * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN8I_R_CCU_H_
--#define _DT_BINDINGS_RST_SUN8I_R_CCU_H_
--
--#define RST_APB0_IR		0
--#define RST_APB0_TIMER		1
--#define RST_APB0_RSB		2
--#define RST_APB0_UART		3
--/* 4 is reserved for RST_APB0_W1 on A31 */
--#define RST_APB0_I2C		5
--
--#endif /* _DT_BINDINGS_RST_SUN8I_R_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-r40-ccu.h b/include/dt-bindings/reset/sun8i-r40-ccu.h
-deleted file mode 100644
-index c5ebcf6672e4..000000000000
---- a/include/dt-bindings/reset/sun8i-r40-ccu.h
-+++ /dev/null
-@@ -1,130 +0,0 @@
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN8I_R40_H_
--#define _DT_BINDINGS_RST_SUN8I_R40_H_
--
--#define RST_USB_PHY0		0
--#define RST_USB_PHY1		1
--#define RST_USB_PHY2		2
--
--#define RST_DRAM		3
--#define RST_MBUS		4
--
--#define RST_BUS_MIPI_DSI	5
--#define RST_BUS_CE		6
--#define RST_BUS_DMA		7
--#define RST_BUS_MMC0		8
--#define RST_BUS_MMC1		9
--#define RST_BUS_MMC2		10
--#define RST_BUS_MMC3		11
--#define RST_BUS_NAND		12
--#define RST_BUS_DRAM		13
--#define RST_BUS_EMAC		14
--#define RST_BUS_TS		15
--#define RST_BUS_HSTIMER		16
--#define RST_BUS_SPI0		17
--#define RST_BUS_SPI1		18
--#define RST_BUS_SPI2		19
--#define RST_BUS_SPI3		20
--#define RST_BUS_SATA		21
--#define RST_BUS_OTG		22
--#define RST_BUS_EHCI0		23
--#define RST_BUS_EHCI1		24
--#define RST_BUS_EHCI2		25
--#define RST_BUS_OHCI0		26
--#define RST_BUS_OHCI1		27
--#define RST_BUS_OHCI2		28
--#define RST_BUS_VE		29
--#define RST_BUS_MP		30
--#define RST_BUS_DEINTERLACE	31
--#define RST_BUS_CSI0		32
--#define RST_BUS_CSI1		33
--#define RST_BUS_HDMI0		34
--#define RST_BUS_HDMI1		35
--#define RST_BUS_DE		36
--#define RST_BUS_TVE0		37
--#define RST_BUS_TVE1		38
--#define RST_BUS_TVE_TOP		39
--#define RST_BUS_GMAC		40
--#define RST_BUS_GPU		41
--#define RST_BUS_TVD0		42
--#define RST_BUS_TVD1		43
--#define RST_BUS_TVD2		44
--#define RST_BUS_TVD3		45
--#define RST_BUS_TVD_TOP		46
--#define RST_BUS_TCON_LCD0	47
--#define RST_BUS_TCON_LCD1	48
--#define RST_BUS_TCON_TV0	49
--#define RST_BUS_TCON_TV1	50
--#define RST_BUS_TCON_TOP	51
--#define RST_BUS_DBG		52
--#define RST_BUS_LVDS		53
--#define RST_BUS_CODEC		54
--#define RST_BUS_SPDIF		55
--#define RST_BUS_AC97		56
--#define RST_BUS_IR0		57
--#define RST_BUS_IR1		58
--#define RST_BUS_THS		59
--#define RST_BUS_KEYPAD		60
--#define RST_BUS_I2S0		61
--#define RST_BUS_I2S1		62
--#define RST_BUS_I2S2		63
--#define RST_BUS_I2C0		64
--#define RST_BUS_I2C1		65
--#define RST_BUS_I2C2		66
--#define RST_BUS_I2C3		67
--#define RST_BUS_CAN		68
--#define RST_BUS_SCR		69
--#define RST_BUS_PS20		70
--#define RST_BUS_PS21		71
--#define RST_BUS_I2C4		72
--#define RST_BUS_UART0		73
--#define RST_BUS_UART1		74
--#define RST_BUS_UART2		75
--#define RST_BUS_UART3		76
--#define RST_BUS_UART4		77
--#define RST_BUS_UART5		78
--#define RST_BUS_UART6		79
--#define RST_BUS_UART7		80
--
--#endif /* _DT_BINDINGS_RST_SUN8I_R40_H_ */
-diff --git a/include/dt-bindings/reset/sun8i-v3s-ccu.h b/include/dt-bindings/reset/sun8i-v3s-ccu.h
-deleted file mode 100644
-index b6790173afd6..000000000000
---- a/include/dt-bindings/reset/sun8i-v3s-ccu.h
-+++ /dev/null
-@@ -1,81 +0,0 @@
--/*
-- * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- * Based on sun8i-v3s-ccu.h, which is
-- * Copyright (C) 2016 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RST_SUN8I_V3S_H_
--#define _DT_BINDINGS_RST_SUN8I_V3S_H_
--
--#define RST_USB_PHY0		0
--
--#define RST_MBUS		1
--
--#define RST_BUS_CE		5
--#define RST_BUS_DMA		6
--#define RST_BUS_MMC0		7
--#define RST_BUS_MMC1		8
--#define RST_BUS_MMC2		9
--#define RST_BUS_DRAM		11
--#define RST_BUS_EMAC		12
--#define RST_BUS_HSTIMER		14
--#define RST_BUS_SPI0		15
--#define RST_BUS_OTG		17
--#define RST_BUS_EHCI0		18
--#define RST_BUS_OHCI0		22
--#define RST_BUS_VE		26
--#define RST_BUS_TCON0		27
--#define RST_BUS_CSI		30
--#define RST_BUS_DE		34
--#define RST_BUS_DBG		38
--#define RST_BUS_EPHY		39
--#define RST_BUS_CODEC		40
--#define RST_BUS_I2C0		46
--#define RST_BUS_I2C1		47
--#define RST_BUS_UART0		49
--#define RST_BUS_UART1		50
--#define RST_BUS_UART2		51
--
--/* Reset lines not available on V3s */
--#define RST_BUS_I2S0		52
--
--#endif /* _DT_BINDINGS_RST_SUN8I_H3_H_ */
-diff --git a/include/dt-bindings/reset/sun9i-a80-ccu.h b/include/dt-bindings/reset/sun9i-a80-ccu.h
-deleted file mode 100644
-index 4b8df4b36788..000000000000
---- a/include/dt-bindings/reset/sun9i-a80-ccu.h
-+++ /dev/null
-@@ -1,102 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RESET_SUN9I_A80_CCU_H_
--#define _DT_BINDINGS_RESET_SUN9I_A80_CCU_H_
--
--#define RST_BUS_FD		0
--#define RST_BUS_VE		1
--#define RST_BUS_GPU_CTRL	2
--#define RST_BUS_SS		3
--#define RST_BUS_MMC		4
--#define RST_BUS_NAND0		5
--#define RST_BUS_NAND1		6
--#define RST_BUS_SDRAM		7
--#define RST_BUS_SATA		8
--#define RST_BUS_TS		9
--#define RST_BUS_SPI0		10
--#define RST_BUS_SPI1		11
--#define RST_BUS_SPI2		12
--#define RST_BUS_SPI3		13
--
--#define RST_BUS_OTG		14
--#define RST_BUS_OTG_PHY		15
--#define RST_BUS_MIPI_HSI	16
--#define RST_BUS_GMAC		17
--#define RST_BUS_MSGBOX		18
--#define RST_BUS_SPINLOCK	19
--#define RST_BUS_HSTIMER		20
--#define RST_BUS_DMA		21
--
--#define RST_BUS_LCD0		22
--#define RST_BUS_LCD1		23
--#define RST_BUS_EDP		24
--#define RST_BUS_LVDS		25
--#define RST_BUS_CSI		26
--#define RST_BUS_HDMI0		27
--#define RST_BUS_HDMI1		28
--#define RST_BUS_DE		29
--#define RST_BUS_MP		30
--#define RST_BUS_GPU		31
--#define RST_BUS_MIPI_DSI	32
--
--#define RST_BUS_SPDIF		33
--#define RST_BUS_AC97		34
--#define RST_BUS_I2S0		35
--#define RST_BUS_I2S1		36
--#define RST_BUS_LRADC		37
--#define RST_BUS_GPADC		38
--#define RST_BUS_CIR_TX		39
--
--#define RST_BUS_I2C0		40
--#define RST_BUS_I2C1		41
--#define RST_BUS_I2C2		42
--#define RST_BUS_I2C3		43
--#define RST_BUS_I2C4		44
--#define RST_BUS_UART0		45
--#define RST_BUS_UART1		46
--#define RST_BUS_UART2		47
--#define RST_BUS_UART3		48
--#define RST_BUS_UART4		49
--#define RST_BUS_UART5		50
--
--#endif /* _DT_BINDINGS_RESET_SUN9I_A80_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun9i-a80-de.h b/include/dt-bindings/reset/sun9i-a80-de.h
-deleted file mode 100644
-index 205072770171..000000000000
---- a/include/dt-bindings/reset/sun9i-a80-de.h
-+++ /dev/null
-@@ -1,58 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RESET_SUN9I_A80_DE_H_
--#define _DT_BINDINGS_RESET_SUN9I_A80_DE_H_
--
--#define RST_FE0		0
--#define RST_FE1		1
--#define RST_FE2		2
--#define RST_DEU0	3
--#define RST_DEU1	4
--#define RST_BE0		5
--#define RST_BE1		6
--#define RST_BE2		7
--#define RST_DRC0	8
--#define RST_DRC1	9
--#define RST_MERGE	10
--
--#endif /* _DT_BINDINGS_RESET_SUN9I_A80_DE_H_ */
-diff --git a/include/dt-bindings/reset/sun9i-a80-usb.h b/include/dt-bindings/reset/sun9i-a80-usb.h
-deleted file mode 100644
-index ee492864c2aa..000000000000
---- a/include/dt-bindings/reset/sun9i-a80-usb.h
-+++ /dev/null
-@@ -1,56 +0,0 @@
--/*
-- * Copyright (C) 2016 Chen-Yu Tsai <wens@csie.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
--
--#ifndef _DT_BINDINGS_RESET_SUN9I_A80_USB_H_
--#define _DT_BINDINGS_RESET_SUN9I_A80_USB_H_
--
--#define RST_USB0_HCI	0
--#define RST_USB1_HCI	1
--#define RST_USB2_HCI	2
--
--#define RST_USB0_PHY	3
--#define RST_USB1_HSIC	4
--#define RST_USB1_PHY	5
--#define RST_USB2_HSIC	6
--#define RST_USB2_PHY	7
--
--#endif /* _DT_BINDINGS_RESET_SUN9I_A80_USB_H_ */
-diff --git a/include/dt-bindings/reset/suniv-ccu-f1c100s.h b/include/dt-bindings/reset/suniv-ccu-f1c100s.h
-deleted file mode 100644
-index 6a4b4385fe5a..000000000000
---- a/include/dt-bindings/reset/suniv-ccu-f1c100s.h
-+++ /dev/null
-@@ -1,38 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-- *
-- * Copyright (C) 2018 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- */
--
--#ifndef _DT_BINDINGS_RST_SUNIV_F1C100S_H_
--#define _DT_BINDINGS_RST_SUNIV_F1C100S_H_
--
--#define RST_USB_PHY0		0
--#define RST_BUS_DMA		1
--#define RST_BUS_MMC0		2
--#define RST_BUS_MMC1		3
--#define RST_BUS_DRAM		4
--#define RST_BUS_SPI0		5
--#define RST_BUS_SPI1		6
--#define RST_BUS_OTG		7
--#define RST_BUS_VE		8
--#define RST_BUS_LCD		9
--#define RST_BUS_DEINTERLACE	10
--#define RST_BUS_CSI		11
--#define RST_BUS_TVD		12
--#define RST_BUS_TVE		13
--#define RST_BUS_DE_BE		14
--#define RST_BUS_DE_FE		15
--#define RST_BUS_CODEC		16
--#define RST_BUS_SPDIF		17
--#define RST_BUS_IR		18
--#define RST_BUS_RSB		19
--#define RST_BUS_I2S0		20
--#define RST_BUS_I2C0		21
--#define RST_BUS_I2C1		22
--#define RST_BUS_I2C2		23
--#define RST_BUS_UART0		24
--#define RST_BUS_UART1		25
--#define RST_BUS_UART2		26
--
--#endif /* _DT_BINDINGS_RST_SUNIV_F1C100S_H_ */
+On 3/21/24 22:03, Caleb Connolly wrote:
+> Drop in favour of dts/upstream
+> 
+> Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+> ---
+>   include/dt-bindings/clock/xlnx-versal-clk.h    | 123 -----------------------
+>   include/dt-bindings/clock/xlnx-zynqmp-clk.h    | 126 ------------------------
+>   include/dt-bindings/dma/xlnx-zynqmp-dpdma.h    |  16 ---
+>   include/dt-bindings/pinctrl/pinctrl-zynqmp.h   |  19 ----
+>   include/dt-bindings/power/xlnx-zynqmp-power.h  |  50 ----------
+>   include/dt-bindings/reset/xlnx-versal-resets.h | 105 --------------------
+>   include/dt-bindings/reset/xlnx-zynqmp-resets.h | 130 -------------------------
+>   7 files changed, 569 deletions(-)
+> 
+> diff --git a/include/dt-bindings/clock/xlnx-versal-clk.h b/include/dt-bindings/clock/xlnx-versal-clk.h
+> deleted file mode 100644
+> index 264d634d226e..000000000000
+> --- a/include/dt-bindings/clock/xlnx-versal-clk.h
+> +++ /dev/null
+> @@ -1,123 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - *  Copyright (C) 2019 Xilinx Inc.
+> - *
+> - */
+> -
+> -#ifndef _DT_BINDINGS_CLK_VERSAL_H
+> -#define _DT_BINDINGS_CLK_VERSAL_H
+> -
+> -#define PMC_PLL					1
+> -#define APU_PLL					2
+> -#define RPU_PLL					3
+> -#define CPM_PLL					4
+> -#define NOC_PLL					5
+> -#define PLL_MAX					6
+> -#define PMC_PRESRC				7
+> -#define PMC_POSTCLK				8
+> -#define PMC_PLL_OUT				9
+> -#define PPLL					10
+> -#define NOC_PRESRC				11
+> -#define NOC_POSTCLK				12
+> -#define NOC_PLL_OUT				13
+> -#define NPLL					14
+> -#define APU_PRESRC				15
+> -#define APU_POSTCLK				16
+> -#define APU_PLL_OUT				17
+> -#define APLL					18
+> -#define RPU_PRESRC				19
+> -#define RPU_POSTCLK				20
+> -#define RPU_PLL_OUT				21
+> -#define RPLL					22
+> -#define CPM_PRESRC				23
+> -#define CPM_POSTCLK				24
+> -#define CPM_PLL_OUT				25
+> -#define CPLL					26
+> -#define PPLL_TO_XPD				27
+> -#define NPLL_TO_XPD				28
+> -#define APLL_TO_XPD				29
+> -#define RPLL_TO_XPD				30
+> -#define EFUSE_REF				31
+> -#define SYSMON_REF				32
+> -#define IRO_SUSPEND_REF				33
+> -#define USB_SUSPEND				34
+> -#define SWITCH_TIMEOUT				35
+> -#define RCLK_PMC				36
+> -#define RCLK_LPD				37
+> -#define WDT					38
+> -#define TTC0					39
+> -#define TTC1					40
+> -#define TTC2					41
+> -#define TTC3					42
+> -#define GEM_TSU					43
+> -#define GEM_TSU_LB				44
+> -#define MUXED_IRO_DIV2				45
+> -#define MUXED_IRO_DIV4				46
+> -#define PSM_REF					47
+> -#define GEM0_RX					48
+> -#define GEM0_TX					49
+> -#define GEM1_RX					50
+> -#define GEM1_TX					51
+> -#define CPM_CORE_REF				52
+> -#define CPM_LSBUS_REF				53
+> -#define CPM_DBG_REF				54
+> -#define CPM_AUX0_REF				55
+> -#define CPM_AUX1_REF				56
+> -#define QSPI_REF				57
+> -#define OSPI_REF				58
+> -#define SDIO0_REF				59
+> -#define SDIO1_REF				60
+> -#define PMC_LSBUS_REF				61
+> -#define I2C_REF					62
+> -#define TEST_PATTERN_REF			63
+> -#define DFT_OSC_REF				64
+> -#define PMC_PL0_REF				65
+> -#define PMC_PL1_REF				66
+> -#define PMC_PL2_REF				67
+> -#define PMC_PL3_REF				68
+> -#define CFU_REF					69
+> -#define SPARE_REF				70
+> -#define NPI_REF					71
+> -#define HSM0_REF				72
+> -#define HSM1_REF				73
+> -#define SD_DLL_REF				74
+> -#define FPD_TOP_SWITCH				75
+> -#define FPD_LSBUS				76
+> -#define ACPU					77
+> -#define DBG_TRACE				78
+> -#define DBG_FPD					79
+> -#define LPD_TOP_SWITCH				80
+> -#define ADMA					81
+> -#define LPD_LSBUS				82
+> -#define CPU_R5					83
+> -#define CPU_R5_CORE				84
+> -#define CPU_R5_OCM				85
+> -#define CPU_R5_OCM2				86
+> -#define IOU_SWITCH				87
+> -#define GEM0_REF				88
+> -#define GEM1_REF				89
+> -#define GEM_TSU_REF				90
+> -#define USB0_BUS_REF				91
+> -#define UART0_REF				92
+> -#define UART1_REF				93
+> -#define SPI0_REF				94
+> -#define SPI1_REF				95
+> -#define CAN0_REF				96
+> -#define CAN1_REF				97
+> -#define I2C0_REF				98
+> -#define I2C1_REF				99
+> -#define DBG_LPD					100
+> -#define TIMESTAMP_REF				101
+> -#define DBG_TSTMP				102
+> -#define CPM_TOPSW_REF				103
+> -#define USB3_DUAL_REF				104
+> -#define OUTCLK_MAX				105
+> -#define REF_CLK					106
+> -#define PL_ALT_REF_CLK				107
+> -#define MUXED_IRO				108
+> -#define PL_EXT					109
+> -#define PL_LB					110
+> -#define MIO_50_OR_51				111
+> -#define MIO_24_OR_25				112
+> -
+> -#endif
+> diff --git a/include/dt-bindings/clock/xlnx-zynqmp-clk.h b/include/dt-bindings/clock/xlnx-zynqmp-clk.h
+> deleted file mode 100644
+> index cdc4c0b9a374..000000000000
+> --- a/include/dt-bindings/clock/xlnx-zynqmp-clk.h
+> +++ /dev/null
+> @@ -1,126 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - * Xilinx Zynq MPSoC Firmware layer
+> - *
+> - *  Copyright (C) 2014-2018 Xilinx, Inc.
+> - *
+> - */
+> -
+> -#ifndef _DT_BINDINGS_CLK_ZYNQMP_H
+> -#define _DT_BINDINGS_CLK_ZYNQMP_H
+> -
+> -#define IOPLL			0
+> -#define RPLL			1
+> -#define APLL			2
+> -#define DPLL			3
+> -#define VPLL			4
+> -#define IOPLL_TO_FPD		5
+> -#define RPLL_TO_FPD		6
+> -#define APLL_TO_LPD		7
+> -#define DPLL_TO_LPD		8
+> -#define VPLL_TO_LPD		9
+> -#define ACPU			10
+> -#define ACPU_HALF		11
+> -#define DBF_FPD			12
+> -#define DBF_LPD			13
+> -#define DBG_TRACE		14
+> -#define DBG_TSTMP		15
+> -#define DP_VIDEO_REF		16
+> -#define DP_AUDIO_REF		17
+> -#define DP_STC_REF		18
+> -#define GDMA_REF		19
+> -#define DPDMA_REF		20
+> -#define DDR_REF			21
+> -#define SATA_REF		22
+> -#define PCIE_REF		23
+> -#define GPU_REF			24
+> -#define GPU_PP0_REF		25
+> -#define GPU_PP1_REF		26
+> -#define TOPSW_MAIN		27
+> -#define TOPSW_LSBUS		28
+> -#define GTGREF0_REF		29
+> -#define LPD_SWITCH		30
+> -#define LPD_LSBUS		31
+> -#define USB0_BUS_REF		32
+> -#define USB1_BUS_REF		33
+> -#define USB3_DUAL_REF		34
+> -#define USB0			35
+> -#define USB1			36
+> -#define CPU_R5			37
+> -#define CPU_R5_CORE		38
+> -#define CSU_SPB			39
+> -#define CSU_PLL			40
+> -#define PCAP			41
+> -#define IOU_SWITCH		42
+> -#define GEM_TSU_REF		43
+> -#define GEM_TSU			44
+> -#define GEM0_TX			45
+> -#define GEM1_TX			46
+> -#define GEM2_TX			47
+> -#define GEM3_TX			48
+> -#define GEM0_RX			49
+> -#define GEM1_RX			50
+> -#define GEM2_RX			51
+> -#define GEM3_RX			52
+> -#define QSPI_REF		53
+> -#define SDIO0_REF		54
+> -#define SDIO1_REF		55
+> -#define UART0_REF		56
+> -#define UART1_REF		57
+> -#define SPI0_REF		58
+> -#define SPI1_REF		59
+> -#define NAND_REF		60
+> -#define I2C0_REF		61
+> -#define I2C1_REF		62
+> -#define CAN0_REF		63
+> -#define CAN1_REF		64
+> -#define CAN0			65
+> -#define CAN1			66
+> -#define DLL_REF			67
+> -#define ADMA_REF		68
+> -#define TIMESTAMP_REF		69
+> -#define AMS_REF			70
+> -#define PL0_REF			71
+> -#define PL1_REF			72
+> -#define PL2_REF			73
+> -#define PL3_REF			74
+> -#define WDT			75
+> -#define IOPLL_INT		76
+> -#define IOPLL_PRE_SRC		77
+> -#define IOPLL_HALF		78
+> -#define IOPLL_INT_MUX		79
+> -#define IOPLL_POST_SRC		80
+> -#define RPLL_INT		81
+> -#define RPLL_PRE_SRC		82
+> -#define RPLL_HALF		83
+> -#define RPLL_INT_MUX		84
+> -#define RPLL_POST_SRC		85
+> -#define APLL_INT		86
+> -#define APLL_PRE_SRC		87
+> -#define APLL_HALF		88
+> -#define APLL_INT_MUX		89
+> -#define APLL_POST_SRC		90
+> -#define DPLL_INT		91
+> -#define DPLL_PRE_SRC		92
+> -#define DPLL_HALF		93
+> -#define DPLL_INT_MUX		94
+> -#define DPLL_POST_SRC		95
+> -#define VPLL_INT		96
+> -#define VPLL_PRE_SRC		97
+> -#define VPLL_HALF		98
+> -#define VPLL_INT_MUX		99
+> -#define VPLL_POST_SRC		100
+> -#define CAN0_MIO		101
+> -#define CAN1_MIO		102
+> -#define ACPU_FULL		103
+> -#define GEM0_REF		104
+> -#define GEM1_REF		105
+> -#define GEM2_REF		106
+> -#define GEM3_REF		107
+> -#define GEM0_REF_UNG		108
+> -#define GEM1_REF_UNG		109
+> -#define GEM2_REF_UNG		110
+> -#define GEM3_REF_UNG		111
+> -#define LPD_WDT			112
+> -
+> -#endif
+> diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+> deleted file mode 100644
+> index 3719cda5679d..000000000000
+> --- a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+> +++ /dev/null
+> @@ -1,16 +0,0 @@
+> -/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+> -/*
+> - * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> - */
+> -
+> -#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
+> -#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
+> -
+> -#define ZYNQMP_DPDMA_VIDEO0		0
+> -#define ZYNQMP_DPDMA_VIDEO1		1
+> -#define ZYNQMP_DPDMA_VIDEO2		2
+> -#define ZYNQMP_DPDMA_GRAPHICS		3
+> -#define ZYNQMP_DPDMA_AUDIO0		4
+> -#define ZYNQMP_DPDMA_AUDIO1		5
+> -
+> -#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
+> diff --git a/include/dt-bindings/pinctrl/pinctrl-zynqmp.h b/include/dt-bindings/pinctrl/pinctrl-zynqmp.h
+> deleted file mode 100644
+> index cdb215734bdf..000000000000
+> --- a/include/dt-bindings/pinctrl/pinctrl-zynqmp.h
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - * MIO pin configuration defines for Xilinx ZynqMP
+> - *
+> - * Copyright (C) 2020 Xilinx, Inc.
+> - */
+> -
+> -#ifndef _DT_BINDINGS_PINCTRL_ZYNQMP_H
+> -#define _DT_BINDINGS_PINCTRL_ZYNQMP_H
+> -
+> -/* Bit value for different voltage levels */
+> -#define IO_STANDARD_LVCMOS33	0
+> -#define IO_STANDARD_LVCMOS18	1
+> -
+> -/* Bit values for Slew Rates */
+> -#define SLEW_RATE_FAST		0
+> -#define SLEW_RATE_SLOW		1
+> -
+> -#endif /* _DT_BINDINGS_PINCTRL_ZYNQMP_H */
+> diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
+> deleted file mode 100644
+> index e7eb0960480a..000000000000
+> --- a/include/dt-bindings/power/xlnx-zynqmp-power.h
+> +++ /dev/null
+> @@ -1,50 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - *  Copyright (C) 2018 Xilinx, Inc.
+> - */
+> -
+> -#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
+> -#define _DT_BINDINGS_ZYNQMP_POWER_H
+> -
+> -#define		PD_RPU_0	6
+> -#define		PD_RPU_1	7
+> -#define		PD_OCM_BANK_0	11
+> -#define		PD_OCM_BANK_1	12
+> -#define		PD_OCM_BANK_2	13
+> -#define		PD_OCM_BANK_3	14
+> -#define		PD_TCM_BANK_0	15
+> -#define		PD_TCM_BANK_1	16
+> -#define		PD_TCM_BANK_2	17
+> -#define		PD_TCM_BANK_3	18
+> -#define		PD_USB_0	22
+> -#define		PD_USB_1	23
+> -#define		PD_TTC_0	24
+> -#define		PD_TTC_1	25
+> -#define		PD_TTC_2	26
+> -#define		PD_TTC_3	27
+> -#define		PD_SATA		28
+> -#define		PD_ETH_0	29
+> -#define		PD_ETH_1	30
+> -#define		PD_ETH_2	31
+> -#define		PD_ETH_3	32
+> -#define		PD_UART_0	33
+> -#define		PD_UART_1	34
+> -#define		PD_SPI_0	35
+> -#define		PD_SPI_1	36
+> -#define		PD_I2C_0	37
+> -#define		PD_I2C_1	38
+> -#define		PD_SD_0		39
+> -#define		PD_SD_1		40
+> -#define		PD_DP		41
+> -#define		PD_GDMA		42
+> -#define		PD_ADMA		43
+> -#define		PD_NAND		44
+> -#define		PD_QSPI		45
+> -#define		PD_GPIO		46
+> -#define		PD_CAN_0	47
+> -#define		PD_CAN_1	48
+> -#define		PD_GPU		58
+> -#define		PD_PCIE		59
+> -#define		PD_PL		69
+> -
+> -#endif
+> diff --git a/include/dt-bindings/reset/xlnx-versal-resets.h b/include/dt-bindings/reset/xlnx-versal-resets.h
+> deleted file mode 100644
+> index 895424e9b0e5..000000000000
+> --- a/include/dt-bindings/reset/xlnx-versal-resets.h
+> +++ /dev/null
+> @@ -1,105 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - *  Copyright (C) 2020 Xilinx, Inc.
+> - */
+> -
+> -#ifndef _DT_BINDINGS_VERSAL_RESETS_H
+> -#define _DT_BINDINGS_VERSAL_RESETS_H
+> -
+> -#define VERSAL_RST_PMC_POR			(0xc30c001U)
+> -#define VERSAL_RST_PMC				(0xc410002U)
+> -#define VERSAL_RST_PS_POR			(0xc30c003U)
+> -#define VERSAL_RST_PL_POR			(0xc30c004U)
+> -#define VERSAL_RST_NOC_POR			(0xc30c005U)
+> -#define VERSAL_RST_FPD_POR			(0xc30c006U)
+> -#define VERSAL_RST_ACPU_0_POR			(0xc30c007U)
+> -#define VERSAL_RST_ACPU_1_POR			(0xc30c008U)
+> -#define VERSAL_RST_OCM2_POR			(0xc30c009U)
+> -#define VERSAL_RST_PS_SRST			(0xc41000aU)
+> -#define VERSAL_RST_PL_SRST			(0xc41000bU)
+> -#define VERSAL_RST_NOC				(0xc41000cU)
+> -#define VERSAL_RST_NPI				(0xc41000dU)
+> -#define VERSAL_RST_SYS_RST_1			(0xc41000eU)
+> -#define VERSAL_RST_SYS_RST_2			(0xc41000fU)
+> -#define VERSAL_RST_SYS_RST_3			(0xc410010U)
+> -#define VERSAL_RST_FPD				(0xc410011U)
+> -#define VERSAL_RST_PL0				(0xc410012U)
+> -#define VERSAL_RST_PL1				(0xc410013U)
+> -#define VERSAL_RST_PL2				(0xc410014U)
+> -#define VERSAL_RST_PL3				(0xc410015U)
+> -#define VERSAL_RST_APU				(0xc410016U)
+> -#define VERSAL_RST_ACPU_0			(0xc410017U)
+> -#define VERSAL_RST_ACPU_1			(0xc410018U)
+> -#define VERSAL_RST_ACPU_L2			(0xc410019U)
+> -#define VERSAL_RST_ACPU_GIC			(0xc41001aU)
+> -#define VERSAL_RST_RPU_ISLAND			(0xc41001bU)
+> -#define VERSAL_RST_RPU_AMBA			(0xc41001cU)
+> -#define VERSAL_RST_R5_0				(0xc41001dU)
+> -#define VERSAL_RST_R5_1				(0xc41001eU)
+> -#define VERSAL_RST_SYSMON_PMC_SEQ_RST		(0xc41001fU)
+> -#define VERSAL_RST_SYSMON_PMC_CFG_RST		(0xc410020U)
+> -#define VERSAL_RST_SYSMON_FPD_CFG_RST		(0xc410021U)
+> -#define VERSAL_RST_SYSMON_FPD_SEQ_RST		(0xc410022U)
+> -#define VERSAL_RST_SYSMON_LPD			(0xc410023U)
+> -#define VERSAL_RST_PDMA_RST1			(0xc410024U)
+> -#define VERSAL_RST_PDMA_RST0			(0xc410025U)
+> -#define VERSAL_RST_ADMA				(0xc410026U)
+> -#define VERSAL_RST_TIMESTAMP			(0xc410027U)
+> -#define VERSAL_RST_OCM				(0xc410028U)
+> -#define VERSAL_RST_OCM2_RST			(0xc410029U)
+> -#define VERSAL_RST_IPI				(0xc41002aU)
+> -#define VERSAL_RST_SBI				(0xc41002bU)
+> -#define VERSAL_RST_LPD				(0xc41002cU)
+> -#define VERSAL_RST_QSPI				(0xc10402dU)
+> -#define VERSAL_RST_OSPI				(0xc10402eU)
+> -#define VERSAL_RST_SDIO_0			(0xc10402fU)
+> -#define VERSAL_RST_SDIO_1			(0xc104030U)
+> -#define VERSAL_RST_I2C_PMC			(0xc104031U)
+> -#define VERSAL_RST_GPIO_PMC			(0xc104032U)
+> -#define VERSAL_RST_GEM_0			(0xc104033U)
+> -#define VERSAL_RST_GEM_1			(0xc104034U)
+> -#define VERSAL_RST_SPARE			(0xc104035U)
+> -#define VERSAL_RST_USB_0			(0xc104036U)
+> -#define VERSAL_RST_UART_0			(0xc104037U)
+> -#define VERSAL_RST_UART_1			(0xc104038U)
+> -#define VERSAL_RST_SPI_0			(0xc104039U)
+> -#define VERSAL_RST_SPI_1			(0xc10403aU)
+> -#define VERSAL_RST_CAN_FD_0			(0xc10403bU)
+> -#define VERSAL_RST_CAN_FD_1			(0xc10403cU)
+> -#define VERSAL_RST_I2C_0			(0xc10403dU)
+> -#define VERSAL_RST_I2C_1			(0xc10403eU)
+> -#define VERSAL_RST_GPIO_LPD			(0xc10403fU)
+> -#define VERSAL_RST_TTC_0			(0xc104040U)
+> -#define VERSAL_RST_TTC_1			(0xc104041U)
+> -#define VERSAL_RST_TTC_2			(0xc104042U)
+> -#define VERSAL_RST_TTC_3			(0xc104043U)
+> -#define VERSAL_RST_SWDT_FPD			(0xc104044U)
+> -#define VERSAL_RST_SWDT_LPD			(0xc104045U)
+> -#define VERSAL_RST_USB				(0xc104046U)
+> -#define VERSAL_RST_DPC				(0xc208047U)
+> -#define VERSAL_RST_PMCDBG			(0xc208048U)
+> -#define VERSAL_RST_DBG_TRACE			(0xc208049U)
+> -#define VERSAL_RST_DBG_FPD			(0xc20804aU)
+> -#define VERSAL_RST_DBG_TSTMP			(0xc20804bU)
+> -#define VERSAL_RST_RPU0_DBG			(0xc20804cU)
+> -#define VERSAL_RST_RPU1_DBG			(0xc20804dU)
+> -#define VERSAL_RST_HSDP				(0xc20804eU)
+> -#define VERSAL_RST_DBG_LPD			(0xc20804fU)
+> -#define VERSAL_RST_CPM_POR			(0xc30c050U)
+> -#define VERSAL_RST_CPM				(0xc410051U)
+> -#define VERSAL_RST_CPMDBG			(0xc208052U)
+> -#define VERSAL_RST_PCIE_CFG			(0xc410053U)
+> -#define VERSAL_RST_PCIE_CORE0			(0xc410054U)
+> -#define VERSAL_RST_PCIE_CORE1			(0xc410055U)
+> -#define VERSAL_RST_PCIE_DMA			(0xc410056U)
+> -#define VERSAL_RST_CMN				(0xc410057U)
+> -#define VERSAL_RST_L2_0				(0xc410058U)
+> -#define VERSAL_RST_L2_1				(0xc410059U)
+> -#define VERSAL_RST_ADDR_REMAP			(0xc41005aU)
+> -#define VERSAL_RST_CPI0				(0xc41005bU)
+> -#define VERSAL_RST_CPI1				(0xc41005cU)
+> -#define VERSAL_RST_XRAM				(0xc30c05dU)
+> -#define VERSAL_RST_AIE_ARRAY			(0xc10405eU)
+> -#define VERSAL_RST_AIE_SHIM			(0xc10405fU)
+> -
+> -#endif
+> diff --git a/include/dt-bindings/reset/xlnx-zynqmp-resets.h b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+> deleted file mode 100644
+> index d44525b9f8db..000000000000
+> --- a/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+> +++ /dev/null
+> @@ -1,130 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - *  Copyright (C) 2018 Xilinx, Inc.
+> - */
+> -
+> -#ifndef _DT_BINDINGS_ZYNQMP_RESETS_H
+> -#define _DT_BINDINGS_ZYNQMP_RESETS_H
+> -
+> -#define		ZYNQMP_RESET_PCIE_CFG		0
+> -#define		ZYNQMP_RESET_PCIE_BRIDGE	1
+> -#define		ZYNQMP_RESET_PCIE_CTRL		2
+> -#define		ZYNQMP_RESET_DP			3
+> -#define		ZYNQMP_RESET_SWDT_CRF		4
+> -#define		ZYNQMP_RESET_AFI_FM5		5
+> -#define		ZYNQMP_RESET_AFI_FM4		6
+> -#define		ZYNQMP_RESET_AFI_FM3		7
+> -#define		ZYNQMP_RESET_AFI_FM2		8
+> -#define		ZYNQMP_RESET_AFI_FM1		9
+> -#define		ZYNQMP_RESET_AFI_FM0		10
+> -#define		ZYNQMP_RESET_GDMA		11
+> -#define		ZYNQMP_RESET_GPU_PP1		12
+> -#define		ZYNQMP_RESET_GPU_PP0		13
+> -#define		ZYNQMP_RESET_GPU		14
+> -#define		ZYNQMP_RESET_GT			15
+> -#define		ZYNQMP_RESET_SATA		16
+> -#define		ZYNQMP_RESET_ACPU3_PWRON	17
+> -#define		ZYNQMP_RESET_ACPU2_PWRON	18
+> -#define		ZYNQMP_RESET_ACPU1_PWRON	19
+> -#define		ZYNQMP_RESET_ACPU0_PWRON	20
+> -#define		ZYNQMP_RESET_APU_L2		21
+> -#define		ZYNQMP_RESET_ACPU3		22
+> -#define		ZYNQMP_RESET_ACPU2		23
+> -#define		ZYNQMP_RESET_ACPU1		24
+> -#define		ZYNQMP_RESET_ACPU0		25
+> -#define		ZYNQMP_RESET_DDR		26
+> -#define		ZYNQMP_RESET_APM_FPD		27
+> -#define		ZYNQMP_RESET_SOFT		28
+> -#define		ZYNQMP_RESET_GEM0		29
+> -#define		ZYNQMP_RESET_GEM1		30
+> -#define		ZYNQMP_RESET_GEM2		31
+> -#define		ZYNQMP_RESET_GEM3		32
+> -#define		ZYNQMP_RESET_QSPI		33
+> -#define		ZYNQMP_RESET_UART0		34
+> -#define		ZYNQMP_RESET_UART1		35
+> -#define		ZYNQMP_RESET_SPI0		36
+> -#define		ZYNQMP_RESET_SPI1		37
+> -#define		ZYNQMP_RESET_SDIO0		38
+> -#define		ZYNQMP_RESET_SDIO1		39
+> -#define		ZYNQMP_RESET_CAN0		40
+> -#define		ZYNQMP_RESET_CAN1		41
+> -#define		ZYNQMP_RESET_I2C0		42
+> -#define		ZYNQMP_RESET_I2C1		43
+> -#define		ZYNQMP_RESET_TTC0		44
+> -#define		ZYNQMP_RESET_TTC1		45
+> -#define		ZYNQMP_RESET_TTC2		46
+> -#define		ZYNQMP_RESET_TTC3		47
+> -#define		ZYNQMP_RESET_SWDT_CRL		48
+> -#define		ZYNQMP_RESET_NAND		49
+> -#define		ZYNQMP_RESET_ADMA		50
+> -#define		ZYNQMP_RESET_GPIO		51
+> -#define		ZYNQMP_RESET_IOU_CC		52
+> -#define		ZYNQMP_RESET_TIMESTAMP		53
+> -#define		ZYNQMP_RESET_RPU_R50		54
+> -#define		ZYNQMP_RESET_RPU_R51		55
+> -#define		ZYNQMP_RESET_RPU_AMBA		56
+> -#define		ZYNQMP_RESET_OCM		57
+> -#define		ZYNQMP_RESET_RPU_PGE		58
+> -#define		ZYNQMP_RESET_USB0_CORERESET	59
+> -#define		ZYNQMP_RESET_USB1_CORERESET	60
+> -#define		ZYNQMP_RESET_USB0_HIBERRESET	61
+> -#define		ZYNQMP_RESET_USB1_HIBERRESET	62
+> -#define		ZYNQMP_RESET_USB0_APB		63
+> -#define		ZYNQMP_RESET_USB1_APB		64
+> -#define		ZYNQMP_RESET_IPI		65
+> -#define		ZYNQMP_RESET_APM_LPD		66
+> -#define		ZYNQMP_RESET_RTC		67
+> -#define		ZYNQMP_RESET_SYSMON		68
+> -#define		ZYNQMP_RESET_AFI_FM6		69
+> -#define		ZYNQMP_RESET_LPD_SWDT		70
+> -#define		ZYNQMP_RESET_FPD		71
+> -#define		ZYNQMP_RESET_RPU_DBG1		72
+> -#define		ZYNQMP_RESET_RPU_DBG0		73
+> -#define		ZYNQMP_RESET_DBG_LPD		74
+> -#define		ZYNQMP_RESET_DBG_FPD		75
+> -#define		ZYNQMP_RESET_APLL		76
+> -#define		ZYNQMP_RESET_DPLL		77
+> -#define		ZYNQMP_RESET_VPLL		78
+> -#define		ZYNQMP_RESET_IOPLL		79
+> -#define		ZYNQMP_RESET_RPLL		80
+> -#define		ZYNQMP_RESET_GPO3_PL_0		81
+> -#define		ZYNQMP_RESET_GPO3_PL_1		82
+> -#define		ZYNQMP_RESET_GPO3_PL_2		83
+> -#define		ZYNQMP_RESET_GPO3_PL_3		84
+> -#define		ZYNQMP_RESET_GPO3_PL_4		85
+> -#define		ZYNQMP_RESET_GPO3_PL_5		86
+> -#define		ZYNQMP_RESET_GPO3_PL_6		87
+> -#define		ZYNQMP_RESET_GPO3_PL_7		88
+> -#define		ZYNQMP_RESET_GPO3_PL_8		89
+> -#define		ZYNQMP_RESET_GPO3_PL_9		90
+> -#define		ZYNQMP_RESET_GPO3_PL_10		91
+> -#define		ZYNQMP_RESET_GPO3_PL_11		92
+> -#define		ZYNQMP_RESET_GPO3_PL_12		93
+> -#define		ZYNQMP_RESET_GPO3_PL_13		94
+> -#define		ZYNQMP_RESET_GPO3_PL_14		95
+> -#define		ZYNQMP_RESET_GPO3_PL_15		96
+> -#define		ZYNQMP_RESET_GPO3_PL_16		97
+> -#define		ZYNQMP_RESET_GPO3_PL_17		98
+> -#define		ZYNQMP_RESET_GPO3_PL_18		99
+> -#define		ZYNQMP_RESET_GPO3_PL_19		100
+> -#define		ZYNQMP_RESET_GPO3_PL_20		101
+> -#define		ZYNQMP_RESET_GPO3_PL_21		102
+> -#define		ZYNQMP_RESET_GPO3_PL_22		103
+> -#define		ZYNQMP_RESET_GPO3_PL_23		104
+> -#define		ZYNQMP_RESET_GPO3_PL_24		105
+> -#define		ZYNQMP_RESET_GPO3_PL_25		106
+> -#define		ZYNQMP_RESET_GPO3_PL_26		107
+> -#define		ZYNQMP_RESET_GPO3_PL_27		108
+> -#define		ZYNQMP_RESET_GPO3_PL_28		109
+> -#define		ZYNQMP_RESET_GPO3_PL_29		110
+> -#define		ZYNQMP_RESET_GPO3_PL_30		111
+> -#define		ZYNQMP_RESET_GPO3_PL_31		112
+> -#define		ZYNQMP_RESET_RPU_LS		113
+> -#define		ZYNQMP_RESET_PS_ONLY		114
+> -#define		ZYNQMP_RESET_PL			115
+> -#define		ZYNQMP_RESET_PS_PL0		116
+> -#define		ZYNQMP_RESET_PS_PL1		117
+> -#define		ZYNQMP_RESET_PS_PL2		118
+> -#define		ZYNQMP_RESET_PS_PL3		119
+> -
+> -#endif
+> 
 
--- 
-2.44.0
+Acked-by: Michal Simek <michal.simek@amd.com>
 
+Thanks,
+Michal
 
