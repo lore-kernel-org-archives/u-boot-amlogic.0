@@ -1,356 +1,250 @@
-Return-Path: <adeep@lexina.in>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DF1C54E67
-	for <webhook@archiver.kernel.org>; Wed, 20 Mar 2024 09:03:21 +0000 (UTC)
-Received: from mx.msync.work (mx.msync.work [62.182.159.68])
- by mx.groups.io with SMTP id smtpd.web11.39350.1710925394889018263
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF0EC47DD9
+	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 09:03:39 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web11.8651.1711098212288385917
  for <u-boot-amlogic@groups.io>;
- Wed, 20 Mar 2024 02:03:20 -0700
+ Fri, 22 Mar 2024 02:03:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@lexina.in header.s=dkim header.b=ir8hZ2V9;
- spf=pass (domain: lexina.in, ip: 62.182.159.68, mailfrom: adeep@lexina.in)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EEB0B131599;
-	Wed, 20 Mar 2024 09:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1710925391; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references:autocrypt;
-	bh=Jt9xO05ovJXDSw9aTiIkE/qgt2l7SFTMJV4a9Ym0WiI=;
-	b=ir8hZ2V9fh+GCCYIn0sCjkJx3ax9JlOfHjtLzis3DD2ufaz2VRDOKXT8WVClQr8FrsGahz
-	OhzWWc1O5EPCa5dPgzv/Iltq+3TNyl2//Ph4PYB/6WCHYoojX0y7T0WmAN5HQ5uY8rmY5O
-	AznNdqniYE2hT+5WJ0gVYcFXy29HDWBIOlItXE0wXGpZUSPJJr12e3Vvf5N13KMtR+hb3/
-	+gWEAeY+2CbFC+jj+BRe6/jseV342+mZiJ3LTb12IWK9RzAwQEVTOJhfKRQp/JRz/4I/9k
-	qvkeIKVTQuQlj7r19uiSACy7vuf5rtrvWOz2OR6xCLMIANcUZjolyUKMSkU/TQ==
-Message-ID: <a5445dd6-3716-441e-ae47-6e0aee2071bf@lexina.in>
-Date: Wed, 20 Mar 2024 12:03:06 +0300
+ dkim=pass header.i=@linaro.org header.s=google header.b=GOO88AzP;
+ spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-414701303f7so18085655e9.2
+        for <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 02:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711098211; x=1711703011; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TAMH4/1/LYbimxnBM2qb1P0iwDi2hwCWc/v5hXsm8Ms=;
+        b=GOO88AzPj3/vQX1yKOUbzAAjt8c18whjknYMOJNVk2boiwMUF2LV8WvVwXqiJ3CbGn
+         TBjCvoAjSL9VpzAGcRuxCKQlXTJMm3yeuinTWzoJOoqbhbiMGoSgqtDj+m+e7QOg8NAI
+         nUNPjCMd+WJ38XDNFD04sRzyBPz2y0FMwZwr+xbVNGj5xmFUkegSM0tbloSlmmyx5dJI
+         Er9QdA9iNydVU3CX9OLc4xppEoZLVk9toA2CjkBXSBLawvsSIgQKPCwN1xH0/PtnZL5/
+         J1uRDaM9YOrQQ7C2c3qqdC4h7mdNJq6jMx10XF0qM/jTk2R/8C8tMdkHyfl2JDOT4+xu
+         xNcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711098211; x=1711703011;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TAMH4/1/LYbimxnBM2qb1P0iwDi2hwCWc/v5hXsm8Ms=;
+        b=LMZ8iI9DmSLpFIseOZFNKp52KCD0E9k3HmPcPIlUfw1VKrPzhuGtE/bzM1XL8X6Ik0
+         7QTV+KOlmLu96O5DcYBB6P+bPVzBUZg0313tVe3vYp2HYvg6UZPqjg7IRK2dxzZ7Hi4a
+         L5bIVSkG9ofhTDHcP37MylRvoNwtESUMtE5NvoOMBF/AzFLhpqbqnuy6yVZnbKqNUMa+
+         PQEHvSAc+CHCGBmCcxsQgvqq21zwtW9qmsZVR1ACNQPQRmhMEe23IvIEDF+8HmBP4CyI
+         XbcEhKZCMhtim7lPQgUEDyVn1KarsCG4d6buFqIsqRZeegz7JZYJy37N6BCnyxxwJduz
+         xKmg==
+X-Gm-Message-State: AOJu0YzsrSeaKFEwyfRG2zzEp05MqQRdnFNH0lvPshrpu/u4Dhxo88qt
+	MA3xGEOqoE+1J2TONkO/qUPnYyK3Y4gc1BHtGSCVi9cqK4eqO+qhLwo/04OV8FwADWxf1urcM/C
+	V61w=
+X-Google-Smtp-Source: AGHT+IH+4xiURJc6/0bVtCz/XerbSHompPf//FltcoDBPPgwWzNRgo34ybvyYAtJ3AicoVAJWRiakg==
+X-Received: by 2002:a05:600c:1f94:b0:413:2ab7:4396 with SMTP id je20-20020a05600c1f9400b004132ab74396mr1421726wmb.18.1711098210437;
+        Fri, 22 Mar 2024 02:03:30 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:3ee1:a278:2b57:55f7? ([2a01:e0a:982:cbb0:3ee1:a278:2b57:55f7])
+        by smtp.gmail.com with ESMTPSA id en6-20020a056000420600b00341b451a31asm1351464wrb.36.2024.03.22.02.03.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 02:03:29 -0700 (PDT)
+Message-ID: <045a8bb4-e061-4727-9f07-a55825a99518@linaro.org>
+Date: Fri, 22 Mar 2024 10:03:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] board: amlogic: fix buffler overflow in seria, mac &
- usid read
-To: Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini
- <trini@konsulko.com>, Beniamino Galvani <b.galvani@gmail.com>,
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 0/4] arm: meson: Switch to using upstream DT for GXL, GXM,
+ AXG, G12A, G12B & SM1 SoCs
+To: Vyacheslav Bocharov <adeep@lexina.in>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de,
+ Sumit Garg <sumit.garg@linaro.org>, Tom Rini <trini@konsulko.com>,
  Christian Hewitt <christianshewitt@gmail.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-References: <20240320-u-boot-fix-p200-serial-v2-1-972be646a301@linaro.org>
-Content-Language: en-US, ru-RU
-From: Viacheslav <adeep@lexina.in>
-Autocrypt: addr=adeep@lexina.in; keydata=
- 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
-In-Reply-To: <20240320-u-boot-fix-p200-serial-v2-1-972be646a301@linaro.org>
+References: <20240319-u-boot-of-upstream-v1-0-f82bc9fe69c0@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240319-u-boot-of-upstream-v1-0-f82bc9fe69c0@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 20 Mar 2024 09:03:21 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2207
+ <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 09:03:39 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2208
 
-Hi!
-Good catch.
+Hi Viacheslav,
 
-for jethub devices:
-
-Acked-by: Viacheslav Bocharov <adeep@lexina.in>
-
-20/03/2024 11.46, Neil Armstrong wrote:
-> While meson_sm_read_efuse() doesn't overflow, the string is not
-> zero terminated and env_set*() will buffer overflow and add random
-> characters to environment.
+On 19/03/2024 15:42, Neil Armstrong wrote:
+> Enable OF_UPSTREAM to use upstream DT and add amlogic/ prefix to the
+> DEFAULT_DEVICE_TREE. And thereby directly build DTB from dts/upstream/src/
+> including *-u-boot.dtsi files from arch/$(ARCH)/dts/ directory and
+> drop redundant files from arch/arm/dts directory. Only *-u-boot.dtsi files
+> kept in arch/arm/dts directory for these boards.
+> 
+> Keep A1 DTs locally since the architecture is still young.
+> 
+> CI built & tested at:
+> https://gitlab.com/amlogic-foss/amlogic-u-boot-autotest/-/pipelines/1219273552
 > 
 > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
-> Changes in v2:
-> - Also fix mac_addr
-> - Link to v1: https://lore.kernel.org/r/20240319-u-boot-fix-p200-serial-v1-1-9a4e06815de0@linaro.org
-> ---
->   board/amlogic/beelink-s922x/beelink-s922x.c | 3 ++-
->   board/amlogic/jethub-j100/jethub-j100.c     | 3 ++-
->   board/amlogic/jethub-j80/jethub-j80.c       | 9 ++++++---
->   board/amlogic/odroid-n2/odroid-n2.c         | 3 ++-
->   board/amlogic/p200/p200.c                   | 6 ++++--
->   board/amlogic/p201/p201.c                   | 6 ++++--
->   board/amlogic/p212/p212.c                   | 6 ++++--
->   board/amlogic/q200/q200.c                   | 6 ++++--
->   board/amlogic/vim3/vim3.c                   | 3 ++-
->   9 files changed, 30 insertions(+), 15 deletions(-)
+> Neil Armstrong (4):
+>        dts: meson: Switch GXL, GXM & AXG to using upstream DT
+>        dts: meson: Drop redundant GXL, GXM & AXG devicetree files
+
+Could you run a test run on your boards so make sure is still boots fine ?
+
+Thanks,
+Neil
+
+>        dts: meson-g12a: Switch to using upstream DT
+>        dts: meson: Drop redundant G12A, G12B & SM1 devicetree files
 > 
-> diff --git a/board/amlogic/beelink-s922x/beelink-s922x.c b/board/amlogic/beelink-s922x/beelink-s922x.c
-> index adae27fc7e..c2776310a3 100644
-> --- a/board/amlogic/beelink-s922x/beelink-s922x.c
-> +++ b/board/amlogic/beelink-s922x/beelink-s922x.c
-> @@ -20,7 +20,7 @@
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[MAC_ADDR_LEN];
-> +	u8 mac_addr[MAC_ADDR_LEN + 1];
->   	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
->   	ssize_t len;
->   
-> @@ -41,6 +41,7 @@ int misc_init_r(void)
->   			tmp[2] = '\0';
->   			mac_addr[i] = hextoul(tmp, NULL);
->   		}
-> +		mac_addr[MAC_ADDR_LEN] = '\0';
->   
->   		if (is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
-> diff --git a/board/amlogic/jethub-j100/jethub-j100.c b/board/amlogic/jethub-j100/jethub-j100.c
-> index 6a2c4ad4c3..010fc0df7d 100644
-> --- a/board/amlogic/jethub-j100/jethub-j100.c
-> +++ b/board/amlogic/jethub-j100/jethub-j100.c
-> @@ -17,7 +17,7 @@
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[ARP_HLEN];
-> +	u8 mac_addr[ARP_HLEN + 1];
->   	char serial[SM_SERIAL_SIZE];
->   	u32 sid;
->   
-> @@ -34,6 +34,7 @@ int misc_init_r(void)
->   		mac_addr[3] = (sid >> 16) & 0xff;
->   		mac_addr[4] = (sid >>  8) & 0xff;
->   		mac_addr[5] = (sid >>  0) & 0xff;
-> +		mac_addr[ARP_HLEN] = '\0';
->   
->   		eth_env_set_enetaddr("ethaddr", mac_addr);
->   	}
-> diff --git a/board/amlogic/jethub-j80/jethub-j80.c b/board/amlogic/jethub-j80/jethub-j80.c
-> index 185880de13..0b781666e9 100644
-> --- a/board/amlogic/jethub-j80/jethub-j80.c
-> +++ b/board/amlogic/jethub-j80/jethub-j80.c
-> @@ -27,9 +27,9 @@
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[EFUSE_MAC_SIZE];
-> -	char serial[EFUSE_SN_SIZE];
-> -	char usid[EFUSE_USID_SIZE];
-> +	u8 mac_addr[EFUSE_MAC_SIZE + 1];
-> +	char serial[EFUSE_SN_SIZE + 1];
-> +	char usid[EFUSE_USID_SIZE + 1];
->   	ssize_t len;
->   	unsigned int adcval;
->   	int ret;
-> @@ -37,6 +37,7 @@ int misc_init_r(void)
->   	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
->   		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
->   					  mac_addr, EFUSE_MAC_SIZE);
-> +		mac_addr[len] = '\0';
->   		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
->   		else
-> @@ -46,6 +47,7 @@ int misc_init_r(void)
->   	if (!env_get("serial")) {
->   		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
->   					  EFUSE_SN_SIZE);
-> +		serial[len] = '\0';
->   		if (len == EFUSE_SN_SIZE)
->   			env_set("serial", serial);
->   	}
-> @@ -53,6 +55,7 @@ int misc_init_r(void)
->   	if (!env_get("usid")) {
->   		len = meson_sm_read_efuse(EFUSE_USID_OFFSET, usid,
->   					  EFUSE_USID_SIZE);
-> +		usid[len] = '\0';
->   		if (len == EFUSE_USID_SIZE)
->   			env_set("usid", usid);
->   	}
-> diff --git a/board/amlogic/odroid-n2/odroid-n2.c b/board/amlogic/odroid-n2/odroid-n2.c
-> index 2135457edd..a4bcc62174 100644
-> --- a/board/amlogic/odroid-n2/odroid-n2.c
-> +++ b/board/amlogic/odroid-n2/odroid-n2.c
-> @@ -107,7 +107,7 @@ static int odroid_detect_variant(void)
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[MAC_ADDR_LEN];
-> +	u8 mac_addr[MAC_ADDR_LEN + 1];
->   	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
->   	ssize_t len;
->   
-> @@ -128,6 +128,7 @@ int misc_init_r(void)
->   			tmp[2] = '\0';
->   			mac_addr[i] = hextoul(tmp, NULL);
->   		}
-> +		mac_addr[MAC_ADDR_LEN] = '\0';
->   
->   		if (is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
-> diff --git a/board/amlogic/p200/p200.c b/board/amlogic/p200/p200.c
-> index 7c432f9d28..769e2735d2 100644
-> --- a/board/amlogic/p200/p200.c
-> +++ b/board/amlogic/p200/p200.c
-> @@ -21,13 +21,14 @@
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[EFUSE_MAC_SIZE];
-> -	char serial[EFUSE_SN_SIZE];
-> +	u8 mac_addr[EFUSE_MAC_SIZE + 1];
-> +	char serial[EFUSE_SN_SIZE + 1];
->   	ssize_t len;
->   
->   	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
->   		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
->   					  mac_addr, EFUSE_MAC_SIZE);
-> +		mac_addr[len] = '\0';
->   		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
->   	}
-> @@ -35,6 +36,7 @@ int misc_init_r(void)
->   	if (!env_get("serial#")) {
->   		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
->   			EFUSE_SN_SIZE);
-> +		serial[len] = '\0';
->   		if (len == EFUSE_SN_SIZE)
->   			env_set("serial#", serial);
->   	}
-> diff --git a/board/amlogic/p201/p201.c b/board/amlogic/p201/p201.c
-> index 7c432f9d28..769e2735d2 100644
-> --- a/board/amlogic/p201/p201.c
-> +++ b/board/amlogic/p201/p201.c
-> @@ -21,13 +21,14 @@
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[EFUSE_MAC_SIZE];
-> -	char serial[EFUSE_SN_SIZE];
-> +	u8 mac_addr[EFUSE_MAC_SIZE + 1];
-> +	char serial[EFUSE_SN_SIZE + 1];
->   	ssize_t len;
->   
->   	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
->   		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
->   					  mac_addr, EFUSE_MAC_SIZE);
-> +		mac_addr[len] = '\0';
->   		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
->   	}
-> @@ -35,6 +36,7 @@ int misc_init_r(void)
->   	if (!env_get("serial#")) {
->   		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
->   			EFUSE_SN_SIZE);
-> +		serial[len] = '\0';
->   		if (len == EFUSE_SN_SIZE)
->   			env_set("serial#", serial);
->   	}
-> diff --git a/board/amlogic/p212/p212.c b/board/amlogic/p212/p212.c
-> index fcef90bce5..f6e60ae3af 100644
-> --- a/board/amlogic/p212/p212.c
-> +++ b/board/amlogic/p212/p212.c
-> @@ -22,13 +22,14 @@
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[EFUSE_MAC_SIZE];
-> -	char serial[EFUSE_SN_SIZE];
-> +	u8 mac_addr[EFUSE_MAC_SIZE + 1];
-> +	char serial[EFUSE_SN_SIZE + 1];
->   	ssize_t len;
->   
->   	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
->   		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
->   					  mac_addr, EFUSE_MAC_SIZE);
-> +		mac_addr[len] = '\0';
->   		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
->   		else
-> @@ -38,6 +39,7 @@ int misc_init_r(void)
->   	if (!env_get("serial#")) {
->   		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
->   			EFUSE_SN_SIZE);
-> +		serial[len] = '\0';
->   		if (len == EFUSE_SN_SIZE)
->   			env_set("serial#", serial);
->   	}
-> diff --git a/board/amlogic/q200/q200.c b/board/amlogic/q200/q200.c
-> index 3aa6d8f200..47f1566a9d 100644
-> --- a/board/amlogic/q200/q200.c
-> +++ b/board/amlogic/q200/q200.c
-> @@ -22,13 +22,14 @@
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[EFUSE_MAC_SIZE];
-> -	char serial[EFUSE_SN_SIZE];
-> +	u8 mac_addr[EFUSE_MAC_SIZE + 1];
-> +	char serial[EFUSE_SN_SIZE + 1];
->   	ssize_t len;
->   
->   	if (!eth_env_get_enetaddr("ethaddr", mac_addr)) {
->   		len = meson_sm_read_efuse(EFUSE_MAC_OFFSET,
->   					  mac_addr, EFUSE_MAC_SIZE);
-> +		mac_addr[len] = '\0';
->   		if (len == EFUSE_MAC_SIZE && is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
->   		else
-> @@ -38,6 +39,7 @@ int misc_init_r(void)
->   	if (!env_get("serial#")) {
->   		len = meson_sm_read_efuse(EFUSE_SN_OFFSET, serial,
->   					  EFUSE_SN_SIZE);
-> +		serial[len] = '\0';
->   		if (len == EFUSE_SN_SIZE)
->   			env_set("serial#", serial);
->   	}
-> diff --git a/board/amlogic/vim3/vim3.c b/board/amlogic/vim3/vim3.c
-> index 8bdfb302f7..43d7a8e84f 100644
-> --- a/board/amlogic/vim3/vim3.c
-> +++ b/board/amlogic/vim3/vim3.c
-> @@ -151,7 +151,7 @@ int meson_ft_board_setup(void *blob, struct bd_info *bd)
->   
->   int misc_init_r(void)
->   {
-> -	u8 mac_addr[MAC_ADDR_LEN];
-> +	u8 mac_addr[MAC_ADDR_LEN + 1];
->   	char efuse_mac_addr[EFUSE_MAC_SIZE], tmp[3];
->   	char serial_string[EFUSE_MAC_SIZE + 1];
->   	ssize_t len;
-> @@ -169,6 +169,7 @@ int misc_init_r(void)
->   			tmp[2] = '\0';
->   			mac_addr[i] = hextoul(tmp, NULL);
->   		}
-> +		mac_addr[MAC_ADDR_LEN] = '\0';
->   
->   		if (is_valid_ethaddr(mac_addr))
->   			eth_env_set_enetaddr("ethaddr", mac_addr);
-> 
+>   arch/arm/dts/Makefile                              |   36 +-
+>   arch/arm/dts/meson-axg-jethome-jethub-j100.dts     |  361 ---
+>   arch/arm/dts/meson-axg-s400.dts                    |  602 -----
+>   arch/arm/dts/meson-axg.dtsi                        | 1957 ---------------
+>   arch/arm/dts/meson-g12-common.dtsi                 | 2493 --------------------
+>   arch/arm/dts/meson-g12.dtsi                        |  385 ---
+>   arch/arm/dts/meson-g12a-radxa-zero.dts             |  405 ----
+>   arch/arm/dts/meson-g12a-sei510.dts                 |  566 -----
+>   arch/arm/dts/meson-g12a-u200.dts                   |  308 ---
+>   arch/arm/dts/meson-g12a.dtsi                       |  140 --
+>   arch/arm/dts/meson-g12b-a311d-bananapi-m2s.dts     |   33 -
+>   arch/arm/dts/meson-g12b-a311d-khadas-vim3.dts      |   41 -
+>   arch/arm/dts/meson-g12b-a311d.dtsi                 |  149 --
+>   arch/arm/dts/meson-g12b-bananapi-cm4-cm4io.dts     |  165 --
+>   arch/arm/dts/meson-g12b-bananapi-cm4.dtsi          |  388 ---
+>   arch/arm/dts/meson-g12b-bananapi.dtsi              |  521 ----
+>   arch/arm/dts/meson-g12b-gsking-x.dts               |  133 --
+>   arch/arm/dts/meson-g12b-gtking-pro.dts             |  142 --
+>   arch/arm/dts/meson-g12b-gtking.dts                 |  163 --
+>   arch/arm/dts/meson-g12b-khadas-vim3.dtsi           |  107 -
+>   arch/arm/dts/meson-g12b-odroid-go-ultra.dts        |  722 ------
+>   arch/arm/dts/meson-g12b-odroid-n2-plus.dts         |   31 -
+>   arch/arm/dts/meson-g12b-odroid-n2.dts              |   15 -
+>   arch/arm/dts/meson-g12b-odroid-n2.dtsi             |  303 ---
+>   arch/arm/dts/meson-g12b-odroid-n2l.dts             |  125 -
+>   arch/arm/dts/meson-g12b-odroid.dtsi                |  445 ----
+>   arch/arm/dts/meson-g12b-radxa-zero2.dts            |  489 ----
+>   arch/arm/dts/meson-g12b-s922x-bananapi-m2s.dts     |   14 -
+>   arch/arm/dts/meson-g12b-s922x.dtsi                 |  139 --
+>   arch/arm/dts/meson-g12b-w400.dtsi                  |  425 ----
+>   arch/arm/dts/meson-g12b.dtsi                       |  146 --
+>   arch/arm/dts/meson-gx-libretech-pc.dtsi            |  447 ----
+>   arch/arm/dts/meson-gx-mali450.dtsi                 |   61 -
+>   arch/arm/dts/meson-gx-p23x-q20x.dtsi               |  324 ---
+>   arch/arm/dts/meson-gx.dtsi                         |  675 ------
+>   arch/arm/dts/meson-gxl-mali.dtsi                   |   17 -
+>   arch/arm/dts/meson-gxl-s805x-libretech-ac.dts      |  319 ---
+>   arch/arm/dts/meson-gxl-s805x.dtsi                  |   23 -
+>   arch/arm/dts/meson-gxl-s905d-libretech-pc.dts      |   16 -
+>   arch/arm/dts/meson-gxl-s905d.dtsi                  |   12 -
+>   .../arm/dts/meson-gxl-s905w-jethome-jethub-j80.dts |  247 --
+>   arch/arm/dts/meson-gxl-s905x-khadas-vim.dts        |  237 --
+>   arch/arm/dts/meson-gxl-s905x-libretech-cc-v2.dts   |  313 ---
+>   arch/arm/dts/meson-gxl-s905x-libretech-cc.dts      |  356 ---
+>   arch/arm/dts/meson-gxl-s905x-p212.dts              |  134 --
+>   arch/arm/dts/meson-gxl-s905x-p212.dtsi             |  213 --
+>   arch/arm/dts/meson-gxl-s905x.dtsi                  |   18 -
+>   arch/arm/dts/meson-gxl.dtsi                        |  940 --------
+>   arch/arm/dts/meson-gxm-gt1-ultimate.dts            |   91 -
+>   arch/arm/dts/meson-gxm-khadas-vim2.dts             |  424 ----
+>   arch/arm/dts/meson-gxm-s912-libretech-pc.dts       |   62 -
+>   arch/arm/dts/meson-gxm-wetek-core2.dts             |   85 -
+>   arch/arm/dts/meson-gxm.dtsi                        |  216 --
+>   arch/arm/dts/meson-khadas-vim3.dtsi                |  534 -----
+>   arch/arm/dts/meson-sm1-bananapi-m2-pro.dts         |   97 -
+>   arch/arm/dts/meson-sm1-bananapi-m5.dts             |  221 --
+>   arch/arm/dts/meson-sm1-bananapi.dtsi               |  435 ----
+>   arch/arm/dts/meson-sm1-khadas-vim3l.dts            |  113 -
+>   arch/arm/dts/meson-sm1-odroid-c4.dts               |   48 -
+>   arch/arm/dts/meson-sm1-odroid-hc4.dts              |  140 --
+>   arch/arm/dts/meson-sm1-odroid.dtsi                 |  449 ----
+>   arch/arm/dts/meson-sm1-sei610.dts                  |  616 -----
+>   arch/arm/dts/meson-sm1.dtsi                        |  550 -----
+>   arch/arm/mach-meson/Kconfig                        |    4 +
+>   configs/bananapi-cm4-cm4io_defconfig               |    2 +-
+>   configs/bananapi-m2-pro_defconfig                  |    2 +-
+>   configs/bananapi-m2s_defconfig                     |    2 +-
+>   configs/bananapi-m5_defconfig                      |    2 +-
+>   configs/beelink-gsking-x_defconfig                 |    2 +-
+>   configs/beelink-gt1-ultimate_defconfig             |    2 +-
+>   configs/beelink-gtking_defconfig                   |    2 +-
+>   configs/beelink-gtkingpro_defconfig                |    2 +-
+>   configs/jethub_j100_defconfig                      |    2 +-
+>   configs/jethub_j80_defconfig                       |    2 +-
+>   configs/khadas-vim2_defconfig                      |    2 +-
+>   configs/khadas-vim3_android_ab_defconfig           |    2 +-
+>   configs/khadas-vim3_android_defconfig              |    2 +-
+>   configs/khadas-vim3_defconfig                      |    2 +-
+>   configs/khadas-vim3l_android_ab_defconfig          |    2 +-
+>   configs/khadas-vim3l_android_defconfig             |    2 +-
+>   configs/khadas-vim3l_defconfig                     |    2 +-
+>   configs/khadas-vim_defconfig                       |    2 +-
+>   configs/libretech-ac_defconfig                     |    2 +-
+>   configs/libretech-cc_defconfig                     |    2 +-
+>   configs/libretech-cc_v2_defconfig                  |    2 +-
+>   configs/libretech-s905d-pc_defconfig               |    2 +-
+>   configs/libretech-s912-pc_defconfig                |    2 +-
+>   configs/odroid-c4_defconfig                        |    2 +-
+>   configs/odroid-go-ultra_defconfig                  |    2 +-
+>   configs/odroid-hc4_defconfig                       |    2 +-
+>   configs/odroid-n2_defconfig                        |    2 +-
+>   configs/odroid-n2l_defconfig                       |    2 +-
+>   configs/p212_defconfig                             |    2 +-
+>   configs/radxa-zero2_defconfig                      |    2 +-
+>   configs/radxa-zero_defconfig                       |    2 +-
+>   configs/s400_defconfig                             |    2 +-
+>   configs/sei510_defconfig                           |    2 +-
+>   configs/sei610_defconfig                           |    2 +-
+>   configs/u200_defconfig                             |    2 +-
+>   configs/wetek-core2_defconfig                      |    2 +-
+>   include/dt-bindings/gpio/meson-axg-gpio.h          |  116 -
+>   include/dt-bindings/gpio/meson-g12a-gpio.h         |  114 -
+>   include/dt-bindings/gpio/meson-gxbb-gpio.h         |  148 --
+>   include/dt-bindings/gpio/meson-gxl-gpio.h          |  125 -
+>   include/dt-bindings/power/meson-axg-power.h        |   14 -
+>   include/dt-bindings/power/meson-g12a-power.h       |   13 -
+>   include/dt-bindings/power/meson-gxbb-power.h       |   13 -
+>   include/dt-bindings/power/meson-sm1-power.h        |   18 -
+>   .../reset/amlogic,meson-axg-audio-arb.h            |   19 -
+>   .../dt-bindings/reset/amlogic,meson-axg-reset.h    |  123 -
+>   .../reset/amlogic,meson-g12a-audio-reset.h         |   53 -
+>   .../dt-bindings/reset/amlogic,meson-g12a-reset.h   |  137 --
+>   .../dt-bindings/reset/amlogic,meson-gxbb-reset.h   |  161 --
+>   include/dt-bindings/sound/meson-aiu.h              |   18 -
+>   include/dt-bindings/sound/meson-g12a-toacodec.h    |   10 -
+>   include/dt-bindings/sound/meson-g12a-tohdmitx.h    |   13 -
+>   116 files changed, 42 insertions(+), 21511 deletions(-)
 > ---
 > base-commit: b145877c22b391a4872c875145a8f86f6ffebaba
-> change-id: 20240319-u-boot-fix-p200-serial-a017f57caf88
+> change-id: 20240319-u-boot-of-upstream-46454fded5ea
 > 
 > Best regards,
 
