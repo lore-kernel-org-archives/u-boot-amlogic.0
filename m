@@ -2,303 +2,240 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8455FCD11DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5346FC54E71
 	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 15:21:02 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web11.8703.1711055077396671601
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (NAM02-BN1-obe.outbound.protection.outlook.com [40.107.212.55])
+ by mx.groups.io with SMTP id smtpd.web10.7068.1711091887988109918
  for <u-boot-amlogic@groups.io>;
- Thu, 21 Mar 2024 14:04:37 -0700
+ Fri, 22 Mar 2024 00:18:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=yJqB6Q/U;
- spf=pass (domain: linaro.org, ip: 209.85.128.53, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41478297f78so3757135e9.3
-        for <u-boot-amlogic@groups.io>; Thu, 21 Mar 2024 14:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711055075; x=1711659875; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H9z47gxslMXab03nJVN9Zel/hSMnSwz2OuvyhmVXZIg=;
-        b=yJqB6Q/UvIvYu7KD1oOTAiJBuEoWDWMr3WULJnOzidRiNx2BOsT8t3ha7xq5zZIkEM
-         HfJOlQowIGEkfVbuo1MNqd2DL51UuYi3oAx3+xGPWLOQaABDpUgv8O/PKM0HcVqxzy0Y
-         xV/Fj5vF9jlx3YGGRqb/5xVSnmdhD6np9E5fNTQyezaIQm8iux9sn60eXvTznK1lFpu9
-         xouoXWfeBmLojdTsTeBALokRd9HqKKQcRIuroc96OTzC7dx1uz2dhVRuASBYhsRhtZME
-         1/z/jt+bE5rUdlM6K2XdKwHBSnAMeia2O7afjieLeXkIbzZiO0iXItgvP5M4F6ikHqe+
-         FWaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711055075; x=1711659875;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H9z47gxslMXab03nJVN9Zel/hSMnSwz2OuvyhmVXZIg=;
-        b=JWr2uX+spQ2FkhvtQwZkJ4AD9sIoIQyvMimCjvlAptifZmnIksHZGQN2AxL0tNb+do
-         b7fdnfo77Nk5EJ77HKet3w7VnPMraJE3q2lHXNMqsmpeITOQP6ogKcEA6rfn0K3UpyYG
-         LIxDpv5kZvPf0jr6NxNNn0VTEM7Daae77Om+3zVoNNeEqEYKOgabGFPnz0Y20gbfyuxy
-         uQJMETpWabAWzSzgV81kdv2M2v6IlH48nmhjAYlE0mtNbAxyHs/PKnM0KifPxK+D2STj
-         QGRsnufxU2NpCFQ3MPDZRDqpQmB4s68vaDidgMNDurdZ4+Hv9d6nWfaIDUE98BAaGcWr
-         jq9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUTWs+JA8+mKxYeYMwueEU/EKROjq6J3QVcTb/uTxGpw9sjwcJ6T4UP6al+zJ86An1l4Mw1N20EzhbMRwaOyvWqjbAY92pkDp0=
-X-Gm-Message-State: AOJu0YysYH6RtcEY0cIZjAMB6L2UjkOHDX4hPZzWuJ1Mt4IgYAgJavFc
-	59v7ePMqZt0dmUc64asTHlJUvwkiNFDqODlXWWoGV1PnaG6czBn6MszNYzKqwRpdZoquonDyuL2
-	E
-X-Google-Smtp-Source: AGHT+IHGF9T7yrijm/584t3scgEZ6HnMs/+RrCeeLb6GPjdcZ3J6sfDmRL3vibK1zQMrc+LOwrpS3w==
-X-Received: by 2002:a05:600c:1908:b0:414:c63:b9de with SMTP id j8-20020a05600c190800b004140c63b9demr223868wmq.14.1711055075661;
-        Thu, 21 Mar 2024 14:04:35 -0700 (PDT)
-Received: from lion.localdomain (host-92-17-96-232.as13285.net. [92.17.96.232])
-        by smtp.gmail.com with ESMTPSA id ay15-20020a05600c1e0f00b004146f728906sm925462wmb.7.2024.03.21.14.04.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 14:04:35 -0700 (PDT)
-From: Caleb Connolly <caleb.connolly@linaro.org>
-Date: Thu, 21 Mar 2024 21:04:03 +0000
-Subject: [PATCH v2 20/24] sifive: drop clock headers
-MIME-Version: 1.0
-Message-Id: <20240321-b4-upstream-dt-headers-v2-20-1eac0df875fe@linaro.org>
-References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
-In-Reply-To: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
-To: Tom Rini <trini@konsulko.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Sumit Garg <sumit.garg@linaro.org>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Patrick Delaunay <patrick.delaunay@foss.st.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Simon Glass <sjg@chromium.org>, 
- Philipp Tomsich <philipp.tomsich@vrull.eu>, 
- Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>, 
- Sean Anderson <seanga2@gmail.com>, 
- Sam Protsenko <semen.protsenko@linaro.org>, 
- Matthias Brugger <mbrugger@suse.com>, Peter Robinson <pbrobinson@gmail.com>, 
- Joe Hershberger <joe.hershberger@ni.com>, 
- Ramon Fried <rfried.dev@gmail.com>, Thierry Reding <treding@nvidia.com>, 
- Svyatoslav Ryhel <clamor95@gmail.com>, Michal Simek <michal.simek@amd.com>, 
- Paul Barker <paul.barker.ct@bp.renesas.com>, 
- Weijie Gao <weijie.gao@mediatek.com>, 
- GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, 
- Ryder Lee <ryder.lee@mediatek.com>, 
- Chunfeng Yun <chunfeng.yun@mediatek.com>, 
- Eugen Hristev <eugen.hristev@collabora.com>, Rick Chen <rick@andestech.com>, 
- Leo <ycliang@andestech.com>, Ryan Chen <ryan_chen@aspeedtech.com>, 
- Chia-Wei Wang <chiawei_wang@aspeedtech.com>, 
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>, 
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
- Dai Okamura <okamura.dai@socionext.com>, 
+ dkim=pass header.i=@amd.com header.s=selector1 header.b=dgDzKVOs;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: amd.com, ip: 40.107.212.55, mailfrom: michal.simek@amd.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O0Lw89hSwV3RzhIoXSYHEY+iDUrWzRbOlIXLRIGSLIBgQODZUhX01UpxxC+M0MCd5pHdsNBKU7/rEjc3d+K73wb4UXxEjt/uglQ66XYw8c/qprWJlnOniOhE1PjmIuTjAsJ4uDbO3AgGT/E0YmzHX3xTIEmYZ6PwnFFU1qfE2vpvnIIPtMWELvf7zbJmUh/CZOrbHbXNKin45ELyHkIc1DhCkWhVVCBX/vP/f37xvPJ+JLDWVf7bDElTj0LGuCjxvI5rT86JH6r+I5NWPr1UZXdcaUDUn9r2rXIq3bsN5enyoAJC4n5aUig32XdcQoYW/0kAsLa+R68qxl1ubGFAVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FgAiAOC2+R6RWfZWIr+qNbDSBFKYHXRFcLG0SqgN+UA=;
+ b=Xc7HYe0wn7Uefii15V9VZFVNXIVUNIp8wt3lOE6R9LD8I3fy3M9lTLq2+0o3P3xBBoPW4ekbeq9bVkJn7wsdN/9T/wEhcd/m0Y4xlcuK+L0wwaGTfpi1glzRB/FESKhSSxfTlBGMsrN07TJfwUZi6WLPydwaBMybIVZ7AvAzsj0A4k6MALg9ug9MC4msqhs0QSU1p+1Hc13whtYWeZRglNu6xPTMbHkH8iXWxJpUX94E/zt33eYDAQnYnr0HfhbQ2oRfeeVGqoNH+8wh3yDbeRVReB4AneUj2LzHIiHLdPN2WJ+aevXdQd5MVgnoxIHEvP9GpR20V1yoafsfIqT74w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FgAiAOC2+R6RWfZWIr+qNbDSBFKYHXRFcLG0SqgN+UA=;
+ b=dgDzKVOsg1o539L/4JnSpwhXtYnh0SduPMPjjL6fCYfLWdlXjXP4sC04cbKoxsUZ8EK7VFWoZacmp5/ndo4ParbaWFsTuLc3OreFrZ2TfutdOSGV5WUaE+8s3gRc9iilW/BwYuKUBOOruIilJ6J65EEECoUABGyEUn8LsHGhxBg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by CH3PR12MB9430.namprd12.prod.outlook.com (2603:10b6:610:1cd::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.34; Fri, 22 Mar
+ 2024 07:18:05 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::6622:ec76:9367:3907]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::6622:ec76:9367:3907%2]) with mapi id 15.20.7386.025; Fri, 22 Mar 2024
+ 07:18:05 +0000
+Message-ID: <db1febc0-508a-4a1f-a373-c76d38a8f4d7@amd.com>
+Date: Fri, 22 Mar 2024 08:17:40 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 24/24] dts: support building all dtb files for a specific vendor
+To: Caleb Connolly <caleb.connolly@linaro.org>, Tom Rini
+ <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Sumit Garg <sumit.garg@linaro.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Patrick Delaunay <patrick.delaunay@foss.st.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Simon Glass <sjg@chromium.org>,
+ Philipp Tomsich <philipp.tomsich@vrull.eu>,
+ Kever Yang <kever.yang@rock-chips.com>, Lukasz Majewski <lukma@denx.de>,
+ Sean Anderson <seanga2@gmail.com>, Sam Protsenko
+ <semen.protsenko@linaro.org>, Matthias Brugger <mbrugger@suse.com>,
+ Peter Robinson <pbrobinson@gmail.com>,
+ Joe Hershberger <joe.hershberger@ni.com>, Ramon Fried
+ <rfried.dev@gmail.com>, Thierry Reding <treding@nvidia.com>,
+ Svyatoslav Ryhel <clamor95@gmail.com>, Michal Simek <michal.simek@amd.com>,
+ Paul Barker <paul.barker.ct@bp.renesas.com>,
+ Weijie Gao <weijie.gao@mediatek.com>,
+ GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>,
+ Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun
+ <chunfeng.yun@mediatek.com>, Eugen Hristev <eugen.hristev@collabora.com>,
+ Rick Chen <rick@andestech.com>, Leo <ycliang@andestech.com>,
+ Ryan Chen <ryan_chen@aspeedtech.com>,
+ Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
+ Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Dai Okamura <okamura.dai@socionext.com>,
  Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
- uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com, 
- Caleb Connolly <caleb.connolly@linaro.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6003;
- i=caleb.connolly@linaro.org; h=from:subject:message-id;
- bh=5lyJpN4afSur7zKXA+gv+xmN5RUoVNSeg8I0uwN7L3A=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhtQ/C/aqzol53nf08O35Pj66byaWsDD6Zt489kflHlOR8
- Yqctm+cHaUsDIIcDLJiiiziJ5ZZNq29bK+xfcEFmDmsTCBDGLg4BWAi0hKMDA0pTMbvEq+GT193
- I62mpVcksOJpcRLfh3f3VUJc3AJ/KDMyzJbjUVH3Cima0x2odDl4689PEwq4JV9wi5qyPrFsya6
- fCgA=
-X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
- fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
-Content-Type: text/plain; charset="utf-8"
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
+ uboot-stm32@st-md-mailman.stormreply.com, uboot-snps-arc@synopsys.com
+References: <20240321-b4-upstream-dt-headers-v2-0-1eac0df875fe@linaro.org>
+ <20240321-b4-upstream-dt-headers-v2-24-1eac0df875fe@linaro.org>
+From: Michal Simek <michal.simek@amd.com>
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ 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
+ 3i3l5DA=
+In-Reply-To: <20240321-b4-upstream-dt-headers-v2-24-1eac0df875fe@linaro.org>
+X-ClientProxiedBy: VI1PR0202CA0005.eurprd02.prod.outlook.com
+ (2603:10a6:803:14::18) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|CH3PR12MB9430:EE_
+X-MS-Office365-Filtering-Correlation-Id: 39f2d72b-d871-48f9-3431-08dc4a403799
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	KkxlB09KdmiJP0qJGyYSReHrosTN3wy6ObpMTqCf/kKmo1BCZFeIdmjGOi2sRTYCzQiECKY/RC8kXdMpitE4IhYlPYMhju33plm1AZceLdJr2cMIeoNbcPwxYSOCei7rdvTmTfTtPHCMiFFMcHA/M4gwkm+3G9eZ3NcfLuTNnXp3wqIKG/dqeVtCkYobks+X+NF2U35d402/Ibb7+HprFn7NOIY2Z2hqVpc1fWyXK6NfTPyORlCOd7/vnbhs/wVemxx4TM/yH7flGd7aklL8qtnIfL40fwTQ4x5otYgi/BuOYxoQrM9/gCG7HTaCROI/8NJCP4Ot7mVtl2qoxVnsQK/GZkXdZG99qXQU+SL5IUZnx8dCt0/BEURWtXRWxdYrx37tpcIKjfSx9+oxn3ZUmOMISjtJ8agAQUs0W/2MtDrLTc9PE4ep2sHx3uuGULDG92b0J8qDbX6XUrrBHvTjoBxQXmbHJ57UPCVecGNXMocHLSgjp+bDAlLiaBx0Z3gb10Mr46wTpb75VIZxnR2c4lK+Gr+Mq1310k/pccVmpXeS78X+iF2+nqx+HpcVblR7572ShFd8td0UCUrTssS4y5R5eSMWjH3gjYLirX3PbBeD0gCgbyApd/rK1V2Qg6ZAh1gZHIJUTupvXIqhAOvbvLL/n0vfDQ3n0Keq7DrSGOL2hrsBWoC9SLzzIl9eMlX8zC7UYkbGy0unLXhBsB9AEw==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?Z1RlWkR6a0FOUEVTckZJRVJRSjg1ZmVTY2xQeEd3K1hxc1Y1RVhFOEx6SlZE?=
+ =?utf-8?B?dnBnbE1nL3JKUXFZZlk2eDdhSm1VbStyOFhDcmx0VklPbHhiV05ISFhkeU9w?=
+ =?utf-8?B?YWZGbU9VcGZqb091cEpnUTBONFdoNU1vc2hYTE9vV0g4NVFvVGRjazRlTVJG?=
+ =?utf-8?B?eW5nZlJEZGVPZDNZMDJFS3o3eXRnb1VrUS9VRW9rNjdvcWZkYXlrd0RoREVs?=
+ =?utf-8?B?MzZLNURodWtZTEZlcWZUQmRjczF6VVYrMnF6VTRZdDg1aFhKcDk3dWR2bDB6?=
+ =?utf-8?B?cXlZN3RYcDRUcEhiVFZLSmtsSjdXZUlrQ3JKLy8yRTVUK0xLZzBTY1NpWUd1?=
+ =?utf-8?B?WHdWWFBOU0w3NXY4bmlsa090S1FPUUsrUUxXaG02TjZhNTJBRDN2K0Joenkz?=
+ =?utf-8?B?NjhSVjRINzFySm1WSVYzeUwyYStjYkJuc3RYcEdrZ3Y2VjJPWWZML1lYMW5n?=
+ =?utf-8?B?R3lacFFCc2wrZjBob1ZreUtGVXJTTmxsMVZJQ0tGQU55TzBoUURmZzhjVTEr?=
+ =?utf-8?B?VXhmTjQ2NUtLdUwwbmZiNzdqdUNyOWZabFdOSzVLWlA0QTE3R1pVZkJjenRL?=
+ =?utf-8?B?N3RnUG04UEg2dWQ4ODhZa2tiY0hwTlUzSjk1Q1JQWCtyQ1FXQzJ6bzBNdjdF?=
+ =?utf-8?B?VnhJM3REUFBlNTBpTXoxWUN0c1VMUjBJQ25HYWh5S01TQ213clI3SGJMM3pR?=
+ =?utf-8?B?RjBvSE9kMXZHTkJXdVgxTkpTTUZGaTdaOVR4VWF2VG1PRWw2Zkhib0tvRDc1?=
+ =?utf-8?B?c2llUXNta0hCdXQ0Z1JUZlhDdmJudlo4dGJ3d2g3T0hUSWFqc3JpUlFOVTR0?=
+ =?utf-8?B?cjc3RHhGUzdsVW1ndzgzazNxUllXQ0JIMmlsR2FmVE1pT3J4K0NIMENHdTZz?=
+ =?utf-8?B?QkhyQUFVUU5QdGUwQjFSK29ZQkxwTEF3enhBUFdJWnh4Ym9UUUpTQjkyVUE1?=
+ =?utf-8?B?cTAyNHJnYzVTbUZ5Z0pUNWVpbjdHQ1Q4dGQ2Mkx4MkdqajFHdmIrV1VpMkxS?=
+ =?utf-8?B?QURyQkhMVGd4dFBIWVZUL21YR0FHVmpWUG0yL255SzE4UkZqTkJocGxWcFZP?=
+ =?utf-8?B?UWMyVGF4ckFzNTF5VlFUZU93OHI2dFZFQVJBSnovSWdwMFNuUm9Pam1TcVc5?=
+ =?utf-8?B?dEdTaFlQV1BvWWhYNFFxTS9VSW9rUUwvSDNhdVg4SjRZekhLbU1UblZ5TUJ5?=
+ =?utf-8?B?MndwMHJId3FwN2k4bnZBQmpoYUFERXpOQlZFNU1NWXFrTkJCU1dmWm5QOGx2?=
+ =?utf-8?B?VFd6SUphbENLZWxVQnl2bkQvcFNmbjlFUVp6YVluOUZDSjM5amFwOHplakNa?=
+ =?utf-8?B?R3g2RWVHQkpJN2c2bUdOQkZGSFlFLzJCeUhlMytXemxzQnpMd1dlRXBkb3BP?=
+ =?utf-8?B?OVVmQ0d6UkZVcUVJWGNiZ2U5STVNempDaHYvekg1Q1FQM2xlZWdaUTVHMlpH?=
+ =?utf-8?B?WUlOL1F4OXI0VGM5TUZZR0gzaXR1WnlUOHZhNWVTeXVrOU5sbFRGbXFURmVG?=
+ =?utf-8?B?a2RJRk9nMThKQ3NQWXhGT0YwbkdWVXNvcGlsRjltNXRwRW9PWVA2MWJ3V1Za?=
+ =?utf-8?B?K3VvbURBRWUxd1E1bzIzNnY5U3Jkd1F4Snl5bThZUkZENHNFaHM5NXc5QzJ4?=
+ =?utf-8?B?LzdzdkZRc2lia0V6STVzdWg4YnA3NWZ2dlhlUFFKRUdsRHFKdWZJWldYTCtG?=
+ =?utf-8?B?amRORHVDMXY0ZDNwVGRocGZmSU9VMWM0R3B1cWtHbnErOVZxckVVeXNrMTdp?=
+ =?utf-8?B?TGJYd21Kbjg2YjBLeld3YitYalhzM3pnaXdBbUhWWFNaZDllUEJqUUM2Z2Ir?=
+ =?utf-8?B?TnpMcDdOdUdtYUtXWjZXL253V0pVV1A5UC8rUWVVYlovRWtYdFJIT1hWYVJz?=
+ =?utf-8?B?SEIycWU2SEZXTFA3ZllldkxtQ3dOYzFjMXdGL2xkZVVRR3AyK09lOFFybTBK?=
+ =?utf-8?B?Z0JoMWUyQWhQV2pmT2xObWg0cWZIS3lnVGFHSlRJNUlkTWd4U0x6YXB6dE5i?=
+ =?utf-8?B?cEtlV2FmYWpTMWNLazhkOGRzWXQ1MXArU2tLUnZBVzVuNEhwOHRNRVRzMmdi?=
+ =?utf-8?B?a0taSi9NZ0Y2WnlLTXZRN3ZrbS84ZHorRE5ENDNDaXh5a3M3SkxoUFI2ZGY0?=
+ =?utf-8?Q?cgw5OLHW/LXCSCfmvCq9ORwt7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39f2d72b-d871-48f9-3431-08dc4a403799
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2024 07:18:05.3589
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qsj7+4ihYF0W93zsSuQjveb2zMmu7VgoLGJAySNNXbhIjbVyb/OqNsTu3aFbj2ob
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9430
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 22 Mar 2024 15:21:02 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2232
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2238
 
-Drop in favour of dts/upstream.
 
-Small driver/dts change to fix compatibility.
 
-Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
----
- arch/riscv/dts/fu540-c000-u-boot.dtsi         | 26 +++++++++++++-------------
- drivers/clk/sifive/fu540-prci.c               |  8 ++++----
- include/dt-bindings/clock/sifive-fu540-prci.h | 18 ------------------
- include/dt-bindings/clock/sifive-fu740-prci.h | 24 ------------------------
- 4 files changed, 17 insertions(+), 59 deletions(-)
+On 3/21/24 22:04, Caleb Connolly wrote:
+> This adjusts OF_UPSTREAM to behave more like the kernel by allowing for
+> all the devicetree files for a given vendor to be compiled. This is
+> useful for Qualcomm in particular as most boards are supported by a
+> single U-Boot build just provided with a different DT.
+> 
+> Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+> ---
+>   dts/Kconfig          | 24 ++++++++++++++++++++++++
+>   scripts/Makefile.dts | 13 +++++++++++++
+>   2 files changed, 37 insertions(+)
+> 
+> diff --git a/dts/Kconfig b/dts/Kconfig
+> index b9b6367154ef..6883a000a052 100644
+> --- a/dts/Kconfig
+> +++ b/dts/Kconfig
+> @@ -100,8 +100,32 @@ config OF_UPSTREAM
+>   	  However, newer boards whose devicetree source files haven't landed in
+>   	  the dts/upstream subtree, they can override this option to have the
+>   	  DT build from existing U-Boot tree location instead.
+>   
+> +config OF_UPSTREAM_BUILD_VENDOR
+> +	bool "Build all devicetree files for a particular vendor"
+> +	depends on OF_UPSTREAM
+> +	help
+> +	  Enable building all devicetree files for a particular vendor. This
+> +	  is useful for generic U-Boot configurations where many boards can
+> +	  be supported with a single binary.
+> +
+> +	  This is only available for platforms using upstream devicetree.
+> +
+> +config OF_UPSTREAM_VENDOR
+> +	string "Vendor to build all upstream devicetree files for"
+> +	depends on OF_UPSTREAM_BUILD_VENDOR
+> +	default "qcom" if ARCH_SNAPDRAGON
+> +	default "rockchip" if ARCH_ROCKCHIP
+> +	default "amlogic" if ARCH_MESON
+> +	default "allwinner" if ARCH_SUNXI
+> +	default "mediatek" if ARCH_MEDIATEK
+> +	default "marvell" if ARCH_MVEBU || ARCH_KIRKWOOD
+> +	default "xilinx" if ARCH_VERSAL || ARCH_ZYNQ
 
-diff --git a/arch/riscv/dts/fu540-c000-u-boot.dtsi b/arch/riscv/dts/fu540-c000-u-boot.dtsi
-index 360679a1781a..0f8181436410 100644
---- a/arch/riscv/dts/fu540-c000-u-boot.dtsi
-+++ b/arch/riscv/dts/fu540-c000-u-boot.dtsi
-@@ -6,42 +6,42 @@
- #include <dt-bindings/reset/sifive-fu540-prci.h>
- 
- / {
- 	cpus {
--		assigned-clocks = <&prci PRCI_CLK_COREPLL>;
-+		assigned-clocks = <&prci FU540_PRCI_CLK_COREPLL>;
- 		assigned-clock-rates = <1000000000>;
- 		bootph-pre-ram;
- 		cpu0: cpu@0 {
--			clocks = <&prci PRCI_CLK_COREPLL>;
-+			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
- 			bootph-pre-ram;
- 			status = "okay";
- 			cpu0_intc: interrupt-controller {
- 				bootph-pre-ram;
- 			};
- 		};
- 		cpu1: cpu@1 {
--			clocks = <&prci PRCI_CLK_COREPLL>;
-+			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
- 			bootph-pre-ram;
- 			cpu1_intc: interrupt-controller {
- 				bootph-pre-ram;
- 			};
- 		};
- 		cpu2: cpu@2 {
--			clocks = <&prci PRCI_CLK_COREPLL>;
-+			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
- 			bootph-pre-ram;
- 			cpu2_intc: interrupt-controller {
- 				bootph-pre-ram;
- 			};
- 		};
- 		cpu3: cpu@3 {
--			clocks = <&prci PRCI_CLK_COREPLL>;
-+			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
- 			bootph-pre-ram;
- 			cpu3_intc: interrupt-controller {
- 				bootph-pre-ram;
- 			};
- 		};
- 		cpu4: cpu@4 {
--			clocks = <&prci PRCI_CLK_COREPLL>;
-+			clocks = <&prci FU540_PRCI_CLK_COREPLL>;
- 			bootph-pre-ram;
- 			cpu4_intc: interrupt-controller {
- 				bootph-pre-ram;
- 			};
-@@ -66,22 +66,22 @@
- 			bootph-pre-ram;
- 		};
- 		prci: clock-controller@10000000 {
- 			#reset-cells = <1>;
--			resets = <&prci PRCI_RST_DDR_CTRL_N>,
--				 <&prci PRCI_RST_DDR_AXI_N>,
--				 <&prci PRCI_RST_DDR_AHB_N>,
--				 <&prci PRCI_RST_DDR_PHY_N>,
--				 <&prci PRCI_RST_GEMGXL_N>;
-+			resets = <&prci FU540_PRCI_RST_DDR_CTRL_N>,
-+				 <&prci FU540_PRCI_RST_DDR_AXI_N>,
-+				 <&prci FU540_PRCI_RST_DDR_AHB_N>,
-+				 <&prci FU540_PRCI_RST_DDR_PHY_N>,
-+				 <&prci FU540_PRCI_RST_GEMGXL_N>;
- 			reset-names = "ddr_ctrl", "ddr_axi", "ddr_ahb",
- 					"ddr_phy", "gemgxl_reset";
- 		};
- 		dmc: dmc@100b0000 {
- 			compatible = "sifive,fu540-c000-ddr";
- 			reg = <0x0 0x100b0000 0x0 0x0800
- 			       0x0 0x100b2000 0x0 0x2000
- 			       0x0 0x100b8000 0x0 0x1000>;
--			clocks = <&prci PRCI_CLK_DDRPLL>;
-+			clocks = <&prci FU540_PRCI_CLK_DDRPLL>;
- 			clock-frequency = <933333324>;
- 			bootph-pre-ram;
- 		};
- 	};
-@@ -99,9 +99,9 @@
- 	bootph-pre-ram;
- };
- 
- &eth0 {
--	assigned-clocks = <&prci PRCI_CLK_GEMGXLPLL>;
-+	assigned-clocks = <&prci FU540_PRCI_CLK_GEMGXLPLL>;
- 	assigned-clock-rates = <125000000>;
- };
- 
- &l2cache {
-diff --git a/drivers/clk/sifive/fu540-prci.c b/drivers/clk/sifive/fu540-prci.c
-index ceb2c6fab0da..b019f682ac49 100644
---- a/drivers/clk/sifive/fu540-prci.c
-+++ b/drivers/clk/sifive/fu540-prci.c
-@@ -58,27 +58,27 @@ static const struct __prci_clock_ops sifive_fu540_prci_tlclksel_clk_ops = {
- };
- 
- /* List of clock controls provided by the PRCI */
- struct __prci_clock __prci_init_clocks_fu540[] = {
--	[PRCI_CLK_COREPLL] = {
-+	[FU540_PRCI_CLK_COREPLL] = {
- 		.name = "corepll",
- 		.parent_name = "hfclk",
- 		.ops = &sifive_fu540_prci_wrpll_clk_ops,
- 		.pwd = &__prci_corepll_data,
- 	},
--	[PRCI_CLK_DDRPLL] = {
-+	[FU540_PRCI_CLK_DDRPLL] = {
- 		.name = "ddrpll",
- 		.parent_name = "hfclk",
- 		.ops = &sifive_fu540_prci_wrpll_clk_ops,
- 		.pwd = &__prci_ddrpll_data,
- 	},
--	[PRCI_CLK_GEMGXLPLL] = {
-+	[FU540_PRCI_CLK_GEMGXLPLL] = {
- 		.name = "gemgxlpll",
- 		.parent_name = "hfclk",
- 		.ops = &sifive_fu540_prci_wrpll_clk_ops,
- 		.pwd = &__prci_gemgxlpll_data,
- 	},
--	[PRCI_CLK_TLCLK] = {
-+	[FU540_PRCI_CLK_TLCLK] = {
- 		.name = "tlclk",
- 		.parent_name = "corepll",
- 		.ops = &sifive_fu540_prci_tlclksel_clk_ops,
- 	},
-diff --git a/include/dt-bindings/clock/sifive-fu540-prci.h b/include/dt-bindings/clock/sifive-fu540-prci.h
-deleted file mode 100644
-index 6a0b70a37d78..000000000000
---- a/include/dt-bindings/clock/sifive-fu540-prci.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (C) 2018-2019 SiFive, Inc.
-- * Wesley Terpstra
-- * Paul Walmsley
-- */
--
--#ifndef __DT_BINDINGS_CLOCK_SIFIVE_FU540_PRCI_H
--#define __DT_BINDINGS_CLOCK_SIFIVE_FU540_PRCI_H
--
--/* Clock indexes for use by Device Tree data and the PRCI driver */
--
--#define PRCI_CLK_COREPLL	       0
--#define PRCI_CLK_DDRPLL		       1
--#define PRCI_CLK_GEMGXLPLL	       2
--#define PRCI_CLK_TLCLK		       3
--
--#endif
-diff --git a/include/dt-bindings/clock/sifive-fu740-prci.h b/include/dt-bindings/clock/sifive-fu740-prci.h
-deleted file mode 100644
-index 672bdadbf6c0..000000000000
---- a/include/dt-bindings/clock/sifive-fu740-prci.h
-+++ /dev/null
-@@ -1,24 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- * Copyright (C) 2019 SiFive, Inc.
-- * Wesley Terpstra
-- * Paul Walmsley
-- * Zong Li
-- */
--
--#ifndef __DT_BINDINGS_CLOCK_SIFIVE_FU740_PRCI_H
--#define __DT_BINDINGS_CLOCK_SIFIVE_FU740_PRCI_H
--
--/* Clock indexes for use by Device Tree data and the PRCI driver */
--
--#define FU740_PRCI_CLK_COREPLL		0
--#define FU740_PRCI_CLK_DDRPLL		1
--#define FU740_PRCI_CLK_GEMGXLPLL	2
--#define FU740_PRCI_CLK_DVFSCOREPLL	3
--#define FU740_PRCI_CLK_HFPCLKPLL	4
--#define FU740_PRCI_CLK_CLTXPLL		5
--#define FU740_PRCI_CLK_TLCLK		6
--#define FU740_PRCI_CLK_PCLK		7
--#define FU740_PRCI_CLK_PCIE_AUX		8
--
--#endif	/* __DT_BINDINGS_CLOCK_SIFIVE_FU740_PRCI_H */
+This is not enough it should be
 
--- 
-2.44.0
+ARCH_ZYNQ || ARCH_ZYNQMP || ARCH_VERSAL || ARCH_VERSAL_NET
 
+Thanks,
+Michal
 
