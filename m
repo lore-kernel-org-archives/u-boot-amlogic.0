@@ -2,60 +2,62 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A783BC54E58
-	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 08:18:10 +0000 (UTC)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
- by mx.groups.io with SMTP id smtpd.web10.46872.1711354684370192025
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CE0CD11DD
+	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 08:18:20 +0000 (UTC)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+ by mx.groups.io with SMTP id smtpd.web10.46875.1711354692921848654
  for <u-boot-amlogic@groups.io>;
- Mon, 25 Mar 2024 01:18:04 -0700
+ Mon, 25 Mar 2024 01:18:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=aSTtiZFf;
- spf=pass (domain: linaro.org, ip: 209.85.208.171, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d48d75ab70so60087481fa.0
-        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 01:18:04 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=j/7Sxm/U;
+ spf=pass (domain: linaro.org, ip: 209.85.167.54, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-513cfc93f4eso4340367e87.3
+        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 01:18:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711354682; x=1711959482; darn=groups.io;
+        d=linaro.org; s=google; t=1711354691; x=1711959491; darn=groups.io;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VpU1TGchkARObssVrA2Ds2wyENdX8do6LTTdhbXNoIE=;
-        b=aSTtiZFfBGcJnrpfYRUPqthkaComVI2fu5w6O0srtjDS8Jfy57UsWg4Cc4l+GiIZo3
-         jOCURL5zmtITJPPe7Xj9BbPoMc8gQvO2k6G1D9I4mdw4vI6+mFVQ8GCICt9kS1z1D4Uz
-         FFr4MfbVu+S9OnMZxZReElGPTWpu7xK9Kt1eDc4wxNT68nl4SvP/ye8WPik9S+waSFV+
-         NItA02HiSuXmiiGQZ6wt1A8yt7jVASTHExRbfI/p+gxz38YLpfCMs3vKsbCWHhVN1Bx7
-         p3omYwrM/NwTytYcc2/Y5wD64EgHhJf+XDjUKi0dQ74y/KB8cYbtzmtgtFF5G+2KR/7U
-         6lqQ==
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+y+BCQ+IezcAM6J9++TSwV2woiCiuaXVxZ2JRbW4Hm0=;
+        b=j/7Sxm/ULbIjG30Se/s7yULdHBYB2fPB8Hb5xAC2YKj84vca83nRE4QcQFxXU8+47D
+         lSD0INCd7WJv8KIrgxg0syMqPk3la3jN4LOxS4SeffDVS7wQHXCxcYk1ji2fZZHcb3db
+         +sOuksC2CXtqjK8OLWGC+s8SJLY5wDRWLXvYuzqiU6Dso31GZb8/JhMm43oES4ctzrUy
+         YexE2S3En3BYEf/CIMVTuz7QoVnBG/0EJv/mhuUpJNGfoc35ZDNdBbGqZRHcAGIR/LR7
+         FIfHQdTBJk9w44/l4PcrZJvWkUM+FtC9dnIxJ/W4tGBYcFJCDE9sb+FSi3fScG7kt3ON
+         CJOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711354682; x=1711959482;
+        d=1e100.net; s=20230601; t=1711354691; x=1711959491;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VpU1TGchkARObssVrA2Ds2wyENdX8do6LTTdhbXNoIE=;
-        b=wE80cG3okAo9+vKOeQQQEtUzVS55X+WTFYXqWsEH/ee+rq5jylhbrcVS8QtuexwJbE
-         dZOr/eAobjJasaUBBDwriybKQ+EbcBNHXSHkut9QSSZbTQc7be4hqtLdNzkf7dVwB/TR
-         OQ1D45m/gROGBrymxKjZaWilanVYKHANrLS9Xcww6xLpYEJLCYROUSyn+GnuuAOZNWfR
-         ZIrsEH3zEYpB2PciXCTD8t8TRI4TcXGyxlSWWfSNCvV7nsZSCe96oOrqFwHh7jOwWmcI
-         3Y0DtpqOZjIOs22t8rKSKr5g0n5JIyrvQqZm+UlYPDfhK2eGht4LSl7mNcgc9JJZgf4F
-         7NFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVf1FhW8MdSon+433W+4Ph+U82KIXtszrZ9okVp1EK2eFL7J75Y7eoqhHE/d+PiZIqN3jH3alUX2YBJueHAuDts3nWYwaSXx0=
-X-Gm-Message-State: AOJu0YwMViDE1vpK+z1wtK6oVTZxiZoghNRprqpqia+n0GjDtKryyaTX
-	KtvVK3fQW6CCilpRGz60X6FAgYlK3GUKO/3l8q9+d/zeBuFQ6cB0GMIf+ic7jFFMeRr4sMs0ub2
-	HHZk/6g==
-X-Google-Smtp-Source: AGHT+IFE//evOrpPeVLu9STIIFbrNqOZ3JFuxhPxB0yZhy6bAjG2sDrFE59CJewkalSV9jtFCPNhkQ==
-X-Received: by 2002:a2e:b0d2:0:b0:2d4:37ca:92d1 with SMTP id g18-20020a2eb0d2000000b002d437ca92d1mr3626178ljl.42.1711354682118;
-        Mon, 25 Mar 2024 01:18:02 -0700 (PDT)
+        bh=+y+BCQ+IezcAM6J9++TSwV2woiCiuaXVxZ2JRbW4Hm0=;
+        b=pacyQZM/ejUEo4FGN1Zv1MAqI9KS7d2e2twZFDk6qeiHCbOYKTa6LePUD1SMwuhnKB
+         rFkgrqAPXPOsx6ejCzECPE9EgZrSmSsjgYE7QGJClNMxQKLQVqfcgYdi8aRXMfhwSHmW
+         qXOhtb0V0k/krYOVTWvauE+SNqCPZ3l1TvW5/aDA+RgcJ1x8ikO4VGm7u7TRfFIAxDL3
+         OD55Lnrer0rjX97lMv3yqhXra6TUzm7fpvxZep5aLnG41TGkjAdwCeLe9pEVJdFqWVn7
+         i3OgQWFJHC7ADC5bjXA4VfEfttSt/IciIG4u6IxH4ivwb7QvRCslr3N2rhEdtOdtji8+
+         tSuw==
+X-Gm-Message-State: AOJu0YxsdFiSWbpxLkdV7P9hosVmPkfd0KA/nAm4VQzyLoHRSAPY0uGi
+	NCdIby6oG+54pUd1qyMVh6UG1YYedPArbhB9hd+W+0SPtl4FftCLHZ24kG4jkKs=
+X-Google-Smtp-Source: AGHT+IFgTObAQNj8o+xWIbdNOtB5CeJcnuOh2lY3hl3ZM37N3Lio3dRWfP0YABeuGETGy1CKvxvbTw==
+X-Received: by 2002:a19:9149:0:b0:513:dd23:7a02 with SMTP id y9-20020a199149000000b00513dd237a02mr4035607lfj.26.1711354690964;
+        Mon, 25 Mar 2024 01:18:10 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id c10-20020adffb4a000000b0034174566ec4sm8793731wrs.16.2024.03.25.01.18.01
+        by smtp.gmail.com with ESMTPSA id m29-20020a05600c3b1d00b004146750314csm7686212wms.3.2024.03.25.01.18.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 01:18:01 -0700 (PDT)
+        Mon, 25 Mar 2024 01:18:10 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io, 
- u-boot@lists.denx.de, Viacheslav Bocharov <adeep@lexina.in>
-In-Reply-To: <20240227065551.580199-1-adeep@lexina.in>
-References: <20240227065551.580199-1-adeep@lexina.in>
-Subject: Re: [PATCH v1 0/3] board: amlogic: jethubj100: small updates
-Message-Id: <171135468114.4115976.5643461187922609574.b4-ty@linaro.org>
-Date: Mon, 25 Mar 2024 09:18:01 +0100
+To: Vyacheslav Bocharov <adeep@lexina.in>, Tom Rini <trini@konsulko.com>, 
+ Beniamino Galvani <b.galvani@gmail.com>, 
+ Christian Hewitt <christianshewitt@gmail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+In-Reply-To: <20240320-u-boot-fix-p200-serial-v2-1-972be646a301@linaro.org>
+References: <20240320-u-boot-fix-p200-serial-v2-1-972be646a301@linaro.org>
+Subject: Re: [PATCH v2] board: amlogic: fix buffler overflow in seria, mac
+ & usid read
+Message-Id: <171135469018.4116391.8263371182698704176.b4-ty@linaro.org>
+Date: Mon, 25 Mar 2024 09:18:10 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -63,29 +65,22 @@ X-Mailer: b4 0.12.4
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 08:18:10 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2242
+ <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 08:18:20 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2244
 
 Hi,
 
-On Tue, 27 Feb 2024 09:54:03 +0300, Viacheslav Bocharov wrote:
-> Update JetHub D1/D1+ board support files.
+On Wed, 20 Mar 2024 09:46:11 +0100, Neil Armstrong wrote:
+> While meson_sm_read_efuse() doesn't overflow, the string is not
+> zero terminated and env_set*() will buffer overflow and add random
+> characters to environment.
 > 
-> Viacheslav Bocharov (3):
->   board: amlogic: jethubj100: fix common config header
->   board: amlogic: jethubj100: update MAINTAINERS
->   board: amlogic: jethubj100: update docs
 > 
-> [...]
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
+Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
 
-[1/3] board: amlogic: jethubj100: fix common config header
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/803fc9955164e17e8c6d1896ac2770e17c251f11
-[2/3] board: amlogic: jethubj100: update MAINTAINERS
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/5e61fedf3424374a065eb23fb48963df2606bb73
-[3/3] board: amlogic: jethubj100: update docs
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/2fc5e3c1668cffdb4b894986e98c1ee10f6e9955
+[1/1] board: amlogic: fix buffler overflow in seria, mac & usid read
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/d54f87f09a36ac20154955297b7c999b368b0443
 
 -- 
 Neil
