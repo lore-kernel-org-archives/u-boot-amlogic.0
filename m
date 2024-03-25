@@ -2,137 +2,117 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2B9C54E58
-	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 09:45:51 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.47869.1711359946660872875
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229CDCD11BF
+	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 14:07:23 +0000 (UTC)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+ by mx.groups.io with SMTP id smtpd.web10.52653.1711374703600821165
  for <u-boot-amlogic@groups.io>;
- Mon, 25 Mar 2024 02:45:46 -0700
+ Mon, 25 Mar 2024 06:51:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=vct8CJeT;
- spf=pass (domain: linaro.org, ip: 209.85.128.45, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-414866f92beso6226585e9.3
-        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 02:45:46 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=gzAEL1/0;
+ spf=pass (domain: konsulko.com, ip: 209.85.222.169, mailfrom: trini@konsulko.com)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78a2290b48eso349743385a.3
+        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 06:51:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711359945; x=1711964745; darn=groups.io;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UcrEtD3QKqez7BRwuFAL5gLLM1Hprt+fJgIRbNpXL88=;
-        b=vct8CJeTRcZBViIS9fInj6JjHU6BX9TfJPU1vx7zsLgX/WdQshXN0Lc6iZrZomVvXN
-         5MOSYT1Gf08JZqqWcAaPP/PhiudhyxLMvGmzeZbua9QAUr+hTMo/gBNEueMTUrgAnN1W
-         hbmQ7biDCwz03LST3JgoZhqjmhrPHPzzn5oow5LfzA4mkQCyLhAVm8xD1m7kuA3WnQWb
-         CkuMYKx6gn6IKMG9zdcYPCVj6I7nOnGwHLiHasb1WNpLYqrnLcgAZfPZL70Nk9oQN+m5
-         ic9F1Htq8Wr5S5RiqzecctZu8u8jWrC5v1ooHtJkPWS70dDD4Wq/pQ/SZOkUbhO8gXd/
-         I7xw==
+        d=konsulko.com; s=google; t=1711374702; x=1711979502; darn=groups.io;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pdqewitPjkQnwUMvABUV58bfo0FHWqi/mm/IVHh+ZjQ=;
+        b=gzAEL1/0YQb/VlQdJyGCkciDyZJkb+Ha3aTjHUA6ZnBvdVxtOMysvZjQEpVYN6M/cv
+         nOrVthdE2K32L6f5VHM6bc/BVG1Z1WUy4STUVjw942JLNHkFFy86Dq1PcXw55G5lKrE5
+         jD9DTxjSxEvLi6U5WkS2Bhh676qV2p1a51cDQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711359945; x=1711964745;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UcrEtD3QKqez7BRwuFAL5gLLM1Hprt+fJgIRbNpXL88=;
-        b=OWJ8xNrtq3NvLtnpT9uM9bwukyxwNg/VEHyhanq4R1gler5A8XufXkQXtflsE9eN8b
-         GWlAw/TIvFXdBPnAKC2OoYXDmKzax3MCURH+jtelJsLMfGPGSzGiLyl+QrpZ+XlOI/LP
-         xMgE9o+q8r5nuscUguUzVlXLESB6y6ykO4HPse06MVyvTGRgjNDQ5kU5L2oPULOD0Kzl
-         gKE9qh37llP3uNf6S5rhBaTWZ8xLK/GKt7GHxtlrvzuVlzwKH/Yd7KJmWdJTcW7OXfgY
-         VHsD9TxdGs/Hk+BdFbc6zLyV4BRwZOQajr+MUi9nYbml59hy6UpmDb6jK/HGNO6LsujD
-         bl5g==
-X-Gm-Message-State: AOJu0Yx/AKt5yO5keoDt0LeM3+Nw9SzF2QD7cvCvLPbRNYegf31+m5H8
-	mM9HSdT9fSL2mGVfUAnVbqvXKl4vlw9brksPfww4Sf8FKQyTuLMpDlQy6ZwfFm5jV4rY4Btx//7
-	WIh03xw==
-X-Google-Smtp-Source: AGHT+IH/clFILcuiKEU0XbYV4mUD/qtU0/Lj8AUkPNq59Cp5nj9iYsxhP6EXxR5fDirP44O8L79fQg==
-X-Received: by 2002:a05:600c:a02:b0:413:1ae3:8dd2 with SMTP id z2-20020a05600c0a0200b004131ae38dd2mr4515304wmp.37.1711359944691;
-        Mon, 25 Mar 2024 02:45:44 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:32cb:35f3:5930:592a? ([2a01:e0a:982:cbb0:32cb:35f3:5930:592a])
-        by smtp.gmail.com with ESMTPSA id j6-20020a05600c190600b0041480a98bb3sm7239828wmq.15.2024.03.25.02.45.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 02:45:44 -0700 (PDT)
-Message-ID: <b3c9af94-9b6e-4dd8-b5f7-7a59a3520e24@linaro.org>
-Date: Mon, 25 Mar 2024 10:45:43 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [GIT PULL] Please pull u-boot-amlogic-fixes-20240325
-Reply-To: neil.armstrong@linaro.org
-To: trini@konsulko.com
+        d=1e100.net; s=20230601; t=1711374702; x=1711979502;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pdqewitPjkQnwUMvABUV58bfo0FHWqi/mm/IVHh+ZjQ=;
+        b=geBmWMmSMyXkXCICWO5r1RDomaTEWjHddnFnBjX928QqBqU/xwMRYDTF2b5OLioO7N
+         iZcARHVpBR6vMMTXKVY3Zt2AhuxuR6+YAOW8MfmKlh4A+FeKQ+4XfWiQLx11XjXssb5m
+         xsr3OURBNrRtPBdcwQwmUGkkQU4bx9kBBZ7hZKot+b+blkFs5SCZJZfPzUH36CXYp3r9
+         YRh+eKnFvU8OKep6uL7OEnVZ2z7uIb7c7B9Ee3zX/d+hhQ0rdduY59xLn5aFqWSPQmdK
+         ajcZZvtSkgsC/7dRqaen+NJw+w3HQRJqcOgC+7Gi5k1ymOLGoZwfl6vktYaztoqeLBof
+         XsoA==
+X-Gm-Message-State: AOJu0Yywm9GR2LZqGBD3yCzlmhWcqeYTZwfSFB+GDF0iraYep5PDGQ7+
+	20KlF+XBdO4DKqDtBOyHZYqUm/QUMgwFD75Xb3t3PHcaCRA9d0/8MyJgY7SKd5N3obZWkGbIP6K
+	6
+X-Google-Smtp-Source: AGHT+IFYoQhE/hr3z/iQPdAOG5TahMIqBQK/oYP8eyQqMD7lmOAyAMhWsMUiWOX2ZXD5m0Qa1mIKsg==
+X-Received: by 2002:a05:6214:1308:b0:691:e21:736c with SMTP id pn8-20020a056214130800b006910e21736cmr9252973qvb.30.1711374702646;
+        Mon, 25 Mar 2024 06:51:42 -0700 (PDT)
+Received: from bill-the-cat (065-184-193-066.res.spectrum.com. [65.184.193.66])
+        by smtp.gmail.com with ESMTPSA id 15-20020ad45b8f000000b00690b21ff926sm4103245qvp.137.2024.03.25.06.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 06:51:42 -0700 (PDT)
+Date: Mon, 25 Mar 2024 09:51:40 -0400
+From: Tom Rini <trini@konsulko.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [GIT PULL] Please pull u-boot-amlogic-fixes-20240325
+Message-ID: <20240325135140.GD3442575@bill-the-cat>
+References: <b3c9af94-9b6e-4dd8-b5f7-7a59a3520e24@linaro.org>
+MIME-Version: 1.0
+In-Reply-To: <b3c9af94-9b6e-4dd8-b5f7-7a59a3520e24@linaro.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: multipart/mixed; boundary="Groupsio=kn8VU58Iye6a0uNPXuIQ"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 09:45:51 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2246
+ <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 14:07:23 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2247
 
-Hi Tom,
+--Groupsio=kn8VU58Iye6a0uNPXuIQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please pull this set of last minute fixes
+On Mon, Mar 25, 2024 at 10:45:43AM +0100, Neil Armstrong wrote:
 
-Thanks,
-Neil
+> Hi Tom,
+>=20
+> Please pull this set of last minute fixes
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit bd0aedde3ea3691616c17c720e2d25351308c0=
+a1:
+>=20
+>   board: toradex: verdin-am62_r5: Increase SPL_STACK_R_MALLOC_SIMPLE_LEN =
+(2024-03-22 11:10:51 -0400)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-fixes-20240325
+>=20
+> for you to fetch changes up to d54f87f09a36ac20154955297b7c999b368b0443:
+>=20
+>   board: amlogic: fix buffler overflow in seria, mac & usid read (2024-03=
+-25 09:16:19 +0100)
+>=20
 
-The following changes since commit bd0aedde3ea3691616c17c720e2d25351308c0a1:
+Applied to u-boot/master, thanks!
 
-   board: toradex: verdin-am62_r5: Increase SPL_STACK_R_MALLOC_SIMPLE_LEN (2024-03-22 11:10:51 -0400)
+--=20
+Tom
 
-are available in the Git repository at:
+--Groupsio=kn8VU58Iye6a0uNPXuIQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-fixes-20240325
+-----BEGIN PGP SIGNATURE-----
 
-for you to fetch changes up to d54f87f09a36ac20154955297b7c999b368b0443:
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmYBgWwACgkQFHw5/5Y0
+tyzRMgwAqXs1Lo9/UyO+AZHbXT3trxezE7nZq60Fbvm+cFKHct0St32AA/Rbve70
+14MMgfPp/7MCOr9Dtz+M989XyhTRcwOprAg26BhKKiF7ob+Zjm2001Xh/QlVagJ9
+ilsjFXOQvZCogQ4UNomv61Vw3DaKgtCLHUybW1sX9/PAgKslukA1PsLnaUhyeAgW
+beEDygF+pyRqxebWSYseh+YiV/ffZHSfnyicXQH2sPrZnlbdWChs/C95Tj+OeC91
+JBQgeUcP9kiIzJ84tl2gWf27UE20t6S1wGPuWkLOOmAALAr5dUy0Fd7rt9mUNxnF
+Xk3IxLnBIct9XES5tCC7LgRkVxXKDOTi/Pa1zKwPqp6DOTPmTWLU7IlKRAoU0Jm6
+axqQpBQVNVyGfkfz/VSm2l43wpg7i/XHeGCraiV1ahtFR85LpZuqd3kGsCVhHZBB
+SqMGQe5bcX34IXSazUXs3AJS8unpoN7SrpB8fdhUoJC1P/v4g7Ef/qhi/msYI8vW
+vg7LGKiv
+=wRQh
+-----END PGP SIGNATURE-----
 
-   board: amlogic: fix buffler overflow in seria, mac & usid read (2024-03-25 09:16:19 +0100)
-
-----------------------------------------------------------------
-- fix Ethernet and random MAC's on WeTek Hub/Play2
-- fix buffer overflow in serial, mac & usid read
-
-----------------------------------------------------------------
-Christian Hewitt (2):
-       ARM: dts: fix Ethernet on WeTek Hub/Play2
-       board: amlogic: add meson_generate_serial_ethaddr fallback to p200
-
-Neil Armstrong (1):
-       board: amlogic: fix buffler overflow in seria, mac & usid read
-
-  ...b-wetek-u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} |  0
-  arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi             | 13 +++++++++++++
-  board/amlogic/beelink-s922x/beelink-s922x.c                 |  3 ++-
-  board/amlogic/jethub-j100/jethub-j100.c                     |  3 ++-
-  board/amlogic/jethub-j80/jethub-j80.c                       |  9 ++++++---
-  board/amlogic/odroid-n2/odroid-n2.c                         |  3 ++-
-  board/amlogic/p200/p200.c                                   |  8 ++++++--
-  board/amlogic/p201/p201.c                                   |  6 ++++--
-  board/amlogic/p212/p212.c                                   |  6 ++++--
-  board/amlogic/q200/q200.c                                   |  6 ++++--
-  board/amlogic/vim3/vim3.c                                   |  3 ++-
-  11 files changed, 45 insertions(+), 15 deletions(-)
-  rename arch/arm/dts/{meson-gxbb-wetek-u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} (100%)
-  create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
+--Groupsio=kn8VU58Iye6a0uNPXuIQ--
 
