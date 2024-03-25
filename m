@@ -1,108 +1,93 @@
-Return-Path: <christianshewitt@gmail.com>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0704CD11DB
-	for <webhook@archiver.kernel.org>; Sun, 24 Mar 2024 15:19:15 +0000 (UTC)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
- by mx.groups.io with SMTP id smtpd.web11.31248.1711293553218859487
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A783BC54E58
+	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 08:18:10 +0000 (UTC)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+ by mx.groups.io with SMTP id smtpd.web10.46872.1711354684370192025
  for <u-boot-amlogic@groups.io>;
- Sun, 24 Mar 2024 08:19:13 -0700
+ Mon, 25 Mar 2024 01:18:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZhJ1bbrR;
- spf=pass (domain: gmail.com, ip: 209.85.208.49, mailfrom: christianshewitt@gmail.com)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-568c714a9c7so4129475a12.2
-        for <u-boot-amlogic@groups.io>; Sun, 24 Mar 2024 08:19:12 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=aSTtiZFf;
+ spf=pass (domain: linaro.org, ip: 209.85.208.171, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d48d75ab70so60087481fa.0
+        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 01:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711293551; x=1711898351; darn=groups.io;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ze781fdYMJC8X6yPwfz4FQS/isO5gR11eLckzIKPCfI=;
-        b=ZhJ1bbrRIgnCSZx9wy5fsyzJgiixG76sgxLf4o5yBNX7sSaVTjwftHUIuMc1C1VL7D
-         WZTlVXufd7wC7l/08gjfaCxxWHLfwvgVY1r104jzL8j9b0xWZsZULz5jivwYs4Gm+YKI
-         l1bzMH/f3Fkd63ff/FL1ivge44vE2JrrdudhPYqvRzrW0RCnfzMkTqhKYyPDA3lgIC2n
-         Wmr47pSZPi6rtBA8LDJtBQ2ZjuZClWkDCyScPOhoZPUKfmrSuadpUBP0RplW6qtOH9tn
-         nLKdbyTyiOwAYUp5g/rmK13aKtKq5bzJTdNQ1dudFgIqvsPmn6xTmQ8B/26dK+Evs5OV
-         08hw==
+        d=linaro.org; s=google; t=1711354682; x=1711959482; darn=groups.io;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VpU1TGchkARObssVrA2Ds2wyENdX8do6LTTdhbXNoIE=;
+        b=aSTtiZFfBGcJnrpfYRUPqthkaComVI2fu5w6O0srtjDS8Jfy57UsWg4Cc4l+GiIZo3
+         jOCURL5zmtITJPPe7Xj9BbPoMc8gQvO2k6G1D9I4mdw4vI6+mFVQ8GCICt9kS1z1D4Uz
+         FFr4MfbVu+S9OnMZxZReElGPTWpu7xK9Kt1eDc4wxNT68nl4SvP/ye8WPik9S+waSFV+
+         NItA02HiSuXmiiGQZ6wt1A8yt7jVASTHExRbfI/p+gxz38YLpfCMs3vKsbCWHhVN1Bx7
+         p3omYwrM/NwTytYcc2/Y5wD64EgHhJf+XDjUKi0dQ74y/KB8cYbtzmtgtFF5G+2KR/7U
+         6lqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711293551; x=1711898351;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711354682; x=1711959482;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ze781fdYMJC8X6yPwfz4FQS/isO5gR11eLckzIKPCfI=;
-        b=GIMoz8+mGzU/dgAljGLvlTIyuOKpllyNVwBWqvURi78gjWHytQ+G8hV86fVZcdKToy
-         6kSu85qcpSbufwr3Mnbnih0o8ADSMjkHz9n2i571/3Fjg/WeV4BrDoBMCwGITgV5NiK8
-         f+IYuNoRC4UAVSEohSY6xh9Zmv8Xm664jDrErOr/yDi1TUUzyfFPL1J+76DOdwtsKGPu
-         VCA6YzgedN7cglMGyMOaph/ypm2u8MepNMklS1cMgcMHJOJzPiGtfWYyHHLata9QuymR
-         S0aOhzGNSjRBWSFrBmf9HO5/1AE0qVIKKgjItGRDjWchaGNcVJ8CgAWN3Bb79NEYIgvx
-         JNHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkiIBO/PBQw47rGWqHgiujnbK8AjqmSsdMiEYOtv/ZPRyQ0aaI8aeqO/M6Npc+BcCmJhJSC3RMlDb1CHQJujkz0tXPOLqe78I=
-X-Gm-Message-State: AOJu0Yx507mhTjzZtNvzhbTOgj+oGMA9803RhCyOG+4kxpZH3TpBd5e4
-	neJhMogRU3TVqZ9FpEBr5OdM5kz5ETVxvYPRg6O79BSHY0ITl8CA
-X-Google-Smtp-Source: AGHT+IGWop+tRdvatwhyMLUo6vB2OpRCupGJ56dqduh0sfpCfS2PruM3icraWlMqlzpjp74V6KKbQQ==
-X-Received: by 2002:a50:d594:0:b0:56b:902e:b144 with SMTP id v20-20020a50d594000000b0056b902eb144mr2966510edi.12.1711293551532;
-        Sun, 24 Mar 2024 08:19:11 -0700 (PDT)
-Received: from toolbox.. ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id o26-20020aa7c7da000000b0056bf34d656dsm1996114eds.29.2024.03.24.08.19.10
+        bh=VpU1TGchkARObssVrA2Ds2wyENdX8do6LTTdhbXNoIE=;
+        b=wE80cG3okAo9+vKOeQQQEtUzVS55X+WTFYXqWsEH/ee+rq5jylhbrcVS8QtuexwJbE
+         dZOr/eAobjJasaUBBDwriybKQ+EbcBNHXSHkut9QSSZbTQc7be4hqtLdNzkf7dVwB/TR
+         OQ1D45m/gROGBrymxKjZaWilanVYKHANrLS9Xcww6xLpYEJLCYROUSyn+GnuuAOZNWfR
+         ZIrsEH3zEYpB2PciXCTD8t8TRI4TcXGyxlSWWfSNCvV7nsZSCe96oOrqFwHh7jOwWmcI
+         3Y0DtpqOZjIOs22t8rKSKr5g0n5JIyrvQqZm+UlYPDfhK2eGht4LSl7mNcgc9JJZgf4F
+         7NFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVf1FhW8MdSon+433W+4Ph+U82KIXtszrZ9okVp1EK2eFL7J75Y7eoqhHE/d+PiZIqN3jH3alUX2YBJueHAuDts3nWYwaSXx0=
+X-Gm-Message-State: AOJu0YwMViDE1vpK+z1wtK6oVTZxiZoghNRprqpqia+n0GjDtKryyaTX
+	KtvVK3fQW6CCilpRGz60X6FAgYlK3GUKO/3l8q9+d/zeBuFQ6cB0GMIf+ic7jFFMeRr4sMs0ub2
+	HHZk/6g==
+X-Google-Smtp-Source: AGHT+IFE//evOrpPeVLu9STIIFbrNqOZ3JFuxhPxB0yZhy6bAjG2sDrFE59CJewkalSV9jtFCPNhkQ==
+X-Received: by 2002:a2e:b0d2:0:b0:2d4:37ca:92d1 with SMTP id g18-20020a2eb0d2000000b002d437ca92d1mr3626178ljl.42.1711354682118;
+        Mon, 25 Mar 2024 01:18:02 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id c10-20020adffb4a000000b0034174566ec4sm8793731wrs.16.2024.03.25.01.18.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 08:19:11 -0700 (PDT)
-From: Christian Hewitt <christianshewitt@gmail.com>
-To: u-boot@lists.denx.de,
-	u-boot-amlogic@groups.io,
-	linux-amlogic@lists.infradead.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2 1/2] ARM: dts: fix Ethernet on WeTek Hub/Play2
-Date: Sun, 24 Mar 2024 15:19:04 +0000
-Message-Id: <20240324151905.3817732-2-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240324151905.3817732-1-christianshewitt@gmail.com>
-References: <20240324151905.3817732-1-christianshewitt@gmail.com>
+        Mon, 25 Mar 2024 01:18:01 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io, 
+ u-boot@lists.denx.de, Viacheslav Bocharov <adeep@lexina.in>
+In-Reply-To: <20240227065551.580199-1-adeep@lexina.in>
+References: <20240227065551.580199-1-adeep@lexina.in>
+Subject: Re: [PATCH v1 0/3] board: amlogic: jethubj100: small updates
+Message-Id: <171135468114.4115976.5643461187922609574.b4-ty@linaro.org>
+Date: Mon, 25 Mar 2024 09:18:01 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Sun, 24 Mar 2024 15:19:15 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2240
+ <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 08:18:10 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2242
 
-Placing the snps,reset content needed for Ethernet to probe in a common
-uboot.dtsi results in the content not being used and broken Ethernet. Fix
-this by creating two board specific dtsi files with the right content.
+Hi,
 
-Fixes: 67d5128df950 ("ARM: dts: add support for WeTek Hub and WeTek Play2")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- ...u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} |  0
- arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi     | 13 +++++++++++++
- 2 files changed, 13 insertions(+)
- rename arch/arm/dts/{meson-gxbb-wetek-u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} (100%)
- create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
+On Tue, 27 Feb 2024 09:54:03 +0300, Viacheslav Bocharov wrote:
+> Update JetHub D1/D1+ board support files.
+> 
+> Viacheslav Bocharov (3):
+>   board: amlogic: jethubj100: fix common config header
+>   board: amlogic: jethubj100: update MAINTAINERS
+>   board: amlogic: jethubj100: update docs
+> 
+> [...]
 
-diff --git a/arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi
-similarity index 100%
-rename from arch/arm/dts/meson-gxbb-wetek-u-boot.dtsi
-rename to arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi
-diff --git a/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
-new file mode 100644
-index 00000000000..3743053eb9c
---- /dev/null
-+++ b/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gx-u-boot.dtsi"
-+
-+&ethmac {
-+	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+};
+Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
+
+[1/3] board: amlogic: jethubj100: fix common config header
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/803fc9955164e17e8c6d1896ac2770e17c251f11
+[2/3] board: amlogic: jethubj100: update MAINTAINERS
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/5e61fedf3424374a065eb23fb48963df2606bb73
+[3/3] board: amlogic: jethubj100: update docs
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/2fc5e3c1668cffdb4b894986e98c1ee10f6e9955
+
 -- 
-2.34.1
+Neil
 
 
