@@ -2,64 +2,60 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0A6CD11DB
-	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 09:41:31 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web10.47811.1711359681654530116
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2B9C54E58
+	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 09:45:51 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.47869.1711359946660872875
  for <u-boot-amlogic@groups.io>;
- Mon, 25 Mar 2024 02:41:21 -0700
+ Mon, 25 Mar 2024 02:45:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=cG0ZU+RW;
- spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3417a3151c4so3769340f8f.3
-        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 02:41:21 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=vct8CJeT;
+ spf=pass (domain: linaro.org, ip: 209.85.128.45, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-414866f92beso6226585e9.3
+        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 02:45:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711359680; x=1711964480; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0L2naDWR5wSXzNC2dSz36D7V8qn+x0FqAk42bj0OH9c=;
-        b=cG0ZU+RWz7m1sY4ZB4cwgDcA+vFGxW6XBPTAtIvEN7Uh7YAKNh5MMScCV1fCp2EuwY
-         FNEKIEtOcnUYf2/GHKp27KKXFv2Jkw1NlrgsqezL88UOVU3pAoaV8F+aHjsfPh2xz0tN
-         x0lpL8SwtjC2ScDZqLe9nYIYX/jqTf+4Oecl+mdU9ZImSKte31Vo1MH+FYrFNLPOL1+D
-         kaGyxsjzdf6MHkfbhg0iJrL8u0qSdePt2va/xpQu4+g6+LXW6e9RXvAwDs2QxZOFoOoG
-         Z+KpqlWJZpkFUHyVz0a34ydw5M4PE9OKOPKvr32obK+8bCT3deM+f9nOJ9bejhJaN5ar
-         JRhA==
+        d=linaro.org; s=google; t=1711359945; x=1711964745; darn=groups.io;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UcrEtD3QKqez7BRwuFAL5gLLM1Hprt+fJgIRbNpXL88=;
+        b=vct8CJeTRcZBViIS9fInj6JjHU6BX9TfJPU1vx7zsLgX/WdQshXN0Lc6iZrZomVvXN
+         5MOSYT1Gf08JZqqWcAaPP/PhiudhyxLMvGmzeZbua9QAUr+hTMo/gBNEueMTUrgAnN1W
+         hbmQ7biDCwz03LST3JgoZhqjmhrPHPzzn5oow5LfzA4mkQCyLhAVm8xD1m7kuA3WnQWb
+         CkuMYKx6gn6IKMG9zdcYPCVj6I7nOnGwHLiHasb1WNpLYqrnLcgAZfPZL70Nk9oQN+m5
+         ic9F1Htq8Wr5S5RiqzecctZu8u8jWrC5v1ooHtJkPWS70dDD4Wq/pQ/SZOkUbhO8gXd/
+         I7xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711359680; x=1711964480;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0L2naDWR5wSXzNC2dSz36D7V8qn+x0FqAk42bj0OH9c=;
-        b=D/j9Ma3gQXJRAyTHb4zNPc2MgAXBHy3GjgSCdcMCIeqklmpkkY2+3S+1hQ2C3g+qe0
-         0CdVwzsm/TzCgR5QrjhXG7Fn1NVgg37crZ61x6MDbVN3h0ktUIvHzpkpMukAL0rkyT70
-         2FvDMsPHkU3bKlB0mcsn9/A285/elEFQiMYAlYvWkC2ZhYNNQoTse1YdYxwTUKjmAG+X
-         +kz3V5GRjVcymGmnJzHZgFY2qVHPxy+O3aaeBjd9e3fyVVvuz6eUNh2PAMZhE23KE4SM
-         DyWSQ2qzPi0jCOMueIlrbN0tVd+b2CIDkQHVCJw0kjYG+ShkACiNMddA/udCcr67VS7U
-         eN2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXNqvL6cTNT/MQUBPLeVsvkqMNlwnBjGeMgYl7NNoHMNoQ/BunfP3hfi10XjMYhZ4qCSYQjUfkLR2Gh8WRFcm+LPA7VHLO8mSk=
-X-Gm-Message-State: AOJu0Yy/iJ2HW1MWMTiIJ5pmTDqAdZM7qB+PBEsX3GNAW8Eq2twV5hZN
-	ahMpDQGWq/waPc2AZOdUPEvrW6moP0UTl0xGMJWxz+06pAY+4TuDcfJOylk21YM=
-X-Google-Smtp-Source: AGHT+IH0QmT9/nORhVQMFmwvns4C4b1sjBYYfJzE4CJafUDlI4gKu3gmqhkqJ5Ipf853rwlMlr2CDA==
-X-Received: by 2002:adf:f8c5:0:b0:341:76bc:2bfe with SMTP id f5-20020adff8c5000000b0034176bc2bfemr5893140wrq.4.1711359679582;
-        Mon, 25 Mar 2024 02:41:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711359945; x=1711964745;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UcrEtD3QKqez7BRwuFAL5gLLM1Hprt+fJgIRbNpXL88=;
+        b=OWJ8xNrtq3NvLtnpT9uM9bwukyxwNg/VEHyhanq4R1gler5A8XufXkQXtflsE9eN8b
+         GWlAw/TIvFXdBPnAKC2OoYXDmKzax3MCURH+jtelJsLMfGPGSzGiLyl+QrpZ+XlOI/LP
+         xMgE9o+q8r5nuscUguUzVlXLESB6y6ykO4HPse06MVyvTGRgjNDQ5kU5L2oPULOD0Kzl
+         gKE9qh37llP3uNf6S5rhBaTWZ8xLK/GKt7GHxtlrvzuVlzwKH/Yd7KJmWdJTcW7OXfgY
+         VHsD9TxdGs/Hk+BdFbc6zLyV4BRwZOQajr+MUi9nYbml59hy6UpmDb6jK/HGNO6LsujD
+         bl5g==
+X-Gm-Message-State: AOJu0Yx/AKt5yO5keoDt0LeM3+Nw9SzF2QD7cvCvLPbRNYegf31+m5H8
+	mM9HSdT9fSL2mGVfUAnVbqvXKl4vlw9brksPfww4Sf8FKQyTuLMpDlQy6ZwfFm5jV4rY4Btx//7
+	WIh03xw==
+X-Google-Smtp-Source: AGHT+IH/clFILcuiKEU0XbYV4mUD/qtU0/Lj8AUkPNq59Cp5nj9iYsxhP6EXxR5fDirP44O8L79fQg==
+X-Received: by 2002:a05:600c:a02:b0:413:1ae3:8dd2 with SMTP id z2-20020a05600c0a0200b004131ae38dd2mr4515304wmp.37.1711359944691;
+        Mon, 25 Mar 2024 02:45:44 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:982:cbb0:32cb:35f3:5930:592a? ([2a01:e0a:982:cbb0:32cb:35f3:5930:592a])
-        by smtp.gmail.com with ESMTPSA id ch19-20020a5d5d13000000b00341bb338407sm7655387wrb.99.2024.03.25.02.41.18
+        by smtp.gmail.com with ESMTPSA id j6-20020a05600c190600b0041480a98bb3sm7239828wmq.15.2024.03.25.02.45.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 02:41:19 -0700 (PDT)
-Message-ID: <82a76f25-b532-4dac-825e-50d4d5e9e5b9@linaro.org>
-Date: Mon, 25 Mar 2024 10:41:18 +0100
+        Mon, 25 Mar 2024 02:45:44 -0700 (PDT)
+Message-ID: <b3c9af94-9b6e-4dd8-b5f7-7a59a3520e24@linaro.org>
+Date: Mon, 25 Mar 2024 10:45:43 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-fixes-20240325
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v1 3/3] board: amlogic: jethubj100: update docs
-To: Viacheslav Bocharov <adeep@lexina.in>, Tom Rini <trini@konsulko.com>,
- u-boot-amlogic@groups.io, u-boot@lists.denx.de
-References: <20240227065551.580199-1-adeep@lexina.in>
- <20240227065551.580199-4-adeep@lexina.in>
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -86,41 +82,57 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20240227065551.580199-4-adeep@lexina.in>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 09:41:31 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2245
+ <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 09:45:51 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2246
 
-On 27/02/2024 07:54, Viacheslav Bocharov wrote:
-> Improove documentation, add new revision.
-> 
-> Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
-> ---
->   doc/board/amlogic/jethub-j100.rst | 9 ++++++---
->   1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/doc/board/amlogic/jethub-j100.rst b/doc/board/amlogic/jethub-j100.rst
-> index 86acdafa06f..80bed6e919e 100644
-> --- a/doc/board/amlogic/jethub-j100.rst
-> +++ b/doc/board/amlogic/jethub-j100.rst
-> @@ -1,9 +1,9 @@
->   .. SPDX-License-Identifier: GPL-2.0+
->   
-> -U-Boot for JetHub J100 (A113X)
-> +U-Boot for JetHub J100/J110 (A113X)
->   ==============================
->   
+Hi Tom,
 
-I have a CI failure: https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/jobs/804174
-/builds/u-boot/custodians/u-boot-amlogic/doc/board/amlogic/jethub-j100.rst:4:Title underline too short.
-U-Boot for JetHub J100/J110 (A113X)
-
-Could you check and send a follow-up patch I can squash on top?
+Please pull this set of last minute fixes
 
 Thanks,
 Neil
+
+The following changes since commit bd0aedde3ea3691616c17c720e2d25351308c0a1:
+
+   board: toradex: verdin-am62_r5: Increase SPL_STACK_R_MALLOC_SIMPLE_LEN (2024-03-22 11:10:51 -0400)
+
+are available in the Git repository at:
+
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-fixes-20240325
+
+for you to fetch changes up to d54f87f09a36ac20154955297b7c999b368b0443:
+
+   board: amlogic: fix buffler overflow in seria, mac & usid read (2024-03-25 09:16:19 +0100)
+
+----------------------------------------------------------------
+- fix Ethernet and random MAC's on WeTek Hub/Play2
+- fix buffer overflow in serial, mac & usid read
+
+----------------------------------------------------------------
+Christian Hewitt (2):
+       ARM: dts: fix Ethernet on WeTek Hub/Play2
+       board: amlogic: add meson_generate_serial_ethaddr fallback to p200
+
+Neil Armstrong (1):
+       board: amlogic: fix buffler overflow in seria, mac & usid read
+
+  ...b-wetek-u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} |  0
+  arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi             | 13 +++++++++++++
+  board/amlogic/beelink-s922x/beelink-s922x.c                 |  3 ++-
+  board/amlogic/jethub-j100/jethub-j100.c                     |  3 ++-
+  board/amlogic/jethub-j80/jethub-j80.c                       |  9 ++++++---
+  board/amlogic/odroid-n2/odroid-n2.c                         |  3 ++-
+  board/amlogic/p200/p200.c                                   |  8 ++++++--
+  board/amlogic/p201/p201.c                                   |  6 ++++--
+  board/amlogic/p212/p212.c                                   |  6 ++++--
+  board/amlogic/q200/q200.c                                   |  6 ++++--
+  board/amlogic/vim3/vim3.c                                   |  3 ++-
+  11 files changed, 45 insertions(+), 15 deletions(-)
+  rename arch/arm/dts/{meson-gxbb-wetek-u-boot.dtsi => meson-gxbb-wetek-hub-u-boot.dtsi} (100%)
+  create mode 100644 arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
 
