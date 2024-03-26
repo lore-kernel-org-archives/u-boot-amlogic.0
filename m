@@ -1,118 +1,71 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <adeep@lexina.in>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229CDCD11BF
-	for <webhook@archiver.kernel.org>; Mon, 25 Mar 2024 14:07:23 +0000 (UTC)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web10.52653.1711374703600821165
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FD5C54E58
+	for <webhook@archiver.kernel.org>; Tue, 26 Mar 2024 08:20:28 +0000 (UTC)
+Received: from mx.msync.work (mx.msync.work [62.182.159.68])
+ by mx.groups.io with SMTP id smtpd.web11.3609.1711441216479109454
  for <u-boot-amlogic@groups.io>;
- Mon, 25 Mar 2024 06:51:43 -0700
+ Tue, 26 Mar 2024 01:20:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=gzAEL1/0;
- spf=pass (domain: konsulko.com, ip: 209.85.222.169, mailfrom: trini@konsulko.com)
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78a2290b48eso349743385a.3
-        for <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 06:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1711374702; x=1711979502; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pdqewitPjkQnwUMvABUV58bfo0FHWqi/mm/IVHh+ZjQ=;
-        b=gzAEL1/0YQb/VlQdJyGCkciDyZJkb+Ha3aTjHUA6ZnBvdVxtOMysvZjQEpVYN6M/cv
-         nOrVthdE2K32L6f5VHM6bc/BVG1Z1WUy4STUVjw942JLNHkFFy86Dq1PcXw55G5lKrE5
-         jD9DTxjSxEvLi6U5WkS2Bhh676qV2p1a51cDQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711374702; x=1711979502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pdqewitPjkQnwUMvABUV58bfo0FHWqi/mm/IVHh+ZjQ=;
-        b=geBmWMmSMyXkXCICWO5r1RDomaTEWjHddnFnBjX928QqBqU/xwMRYDTF2b5OLioO7N
-         iZcARHVpBR6vMMTXKVY3Zt2AhuxuR6+YAOW8MfmKlh4A+FeKQ+4XfWiQLx11XjXssb5m
-         xsr3OURBNrRtPBdcwQwmUGkkQU4bx9kBBZ7hZKot+b+blkFs5SCZJZfPzUH36CXYp3r9
-         YRh+eKnFvU8OKep6uL7OEnVZ2z7uIb7c7B9Ee3zX/d+hhQ0rdduY59xLn5aFqWSPQmdK
-         ajcZZvtSkgsC/7dRqaen+NJw+w3HQRJqcOgC+7Gi5k1ymOLGoZwfl6vktYaztoqeLBof
-         XsoA==
-X-Gm-Message-State: AOJu0Yywm9GR2LZqGBD3yCzlmhWcqeYTZwfSFB+GDF0iraYep5PDGQ7+
-	20KlF+XBdO4DKqDtBOyHZYqUm/QUMgwFD75Xb3t3PHcaCRA9d0/8MyJgY7SKd5N3obZWkGbIP6K
-	6
-X-Google-Smtp-Source: AGHT+IFYoQhE/hr3z/iQPdAOG5TahMIqBQK/oYP8eyQqMD7lmOAyAMhWsMUiWOX2ZXD5m0Qa1mIKsg==
-X-Received: by 2002:a05:6214:1308:b0:691:e21:736c with SMTP id pn8-20020a056214130800b006910e21736cmr9252973qvb.30.1711374702646;
-        Mon, 25 Mar 2024 06:51:42 -0700 (PDT)
-Received: from bill-the-cat (065-184-193-066.res.spectrum.com. [65.184.193.66])
-        by smtp.gmail.com with ESMTPSA id 15-20020ad45b8f000000b00690b21ff926sm4103245qvp.137.2024.03.25.06.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 06:51:42 -0700 (PDT)
-Date: Mon, 25 Mar 2024 09:51:40 -0400
-From: Tom Rini <trini@konsulko.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Subject: Re: [GIT PULL] Please pull u-boot-amlogic-fixes-20240325
-Message-ID: <20240325135140.GD3442575@bill-the-cat>
-References: <b3c9af94-9b6e-4dd8-b5f7-7a59a3520e24@linaro.org>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@lexina.in header.s=dkim header.b=iIk//Qsy;
+ spf=pass (domain: lexina.in, ip: 62.182.159.68, mailfrom: adeep@lexina.in)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0B126147691;
+	Tue, 26 Mar 2024 08:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
+	t=1711441211; h=from:subject:date:message-id:to:mime-version:
+	 content-transfer-encoding; bh=RoohcvTaeaEsfAtvUQCsbgNJ/d690KMYYqkAfXKjf8Y=;
+	b=iIk//QsygetxvoA8wmiIb7dPVh7kpmrx7vdDOr870mNGKV1ZFLjeWw7FU+VCEdfM8tXyJi
+	FfxfMSoFkUtA5Q2yrzvTO2CiZwHj1qoeBfJTvrGEnDXyVKvdk7XGx0S98oj4AWaAwb5D08
+	llokb0sRkWoEstUZZPUqY666/uYn47ML1/6PgCP/m8uOZ373g4OXzLhV9V8PLpXlixvNsQ
+	AqY6f+/ayzxCr/jCQ7xmP4gnCmmwjlsZe2rh6jgIRfKjKC/4lla6wr9eyra3VuPFLAarUp
+	jyIgIibRisIjLbYhRnay5SKxDuiVD2wHnCH93IlGq+MN2syZ5atuiBYIPwxmtQ==
+From: Viacheslav Bocharov <adeep@lexina.in>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Tom Rini <trini@konsulko.com>,
+	u-boot-amlogic@groups.io,
+	u-boot@lists.denx.de
+Subject: [PATCH v1] board: amlogic: jethubj100: fix update docs
+Date: Tue, 26 Mar 2024 11:19:58 +0300
+Message-ID: <20240326082004.1651782-1-adeep@lexina.in>
+X-Mailer: git-send-email 2.43.2
 MIME-Version: 1.0
-In-Reply-To: <b3c9af94-9b6e-4dd8-b5f7-7a59a3520e24@linaro.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=kn8VU58Iye6a0uNPXuIQ"
+X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 25 Mar 2024 14:07:23 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2247
+ <u-boot-amlogic@groups.io>; Tue, 26 Mar 2024 08:20:28 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2248
 
---Groupsio=kn8VU58Iye6a0uNPXuIQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fix linter errors
 
-On Mon, Mar 25, 2024 at 10:45:43AM +0100, Neil Armstrong wrote:
+Fixes: 2fc5e3c1668cffdb4b894986e98c1ee10f6e9955
 
-> Hi Tom,
->=20
-> Please pull this set of last minute fixes
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit bd0aedde3ea3691616c17c720e2d25351308c0=
-a1:
->=20
->   board: toradex: verdin-am62_r5: Increase SPL_STACK_R_MALLOC_SIMPLE_LEN =
-(2024-03-22 11:10:51 -0400)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-fixes-20240325
->=20
-> for you to fetch changes up to d54f87f09a36ac20154955297b7c999b368b0443:
->=20
->   board: amlogic: fix buffler overflow in seria, mac & usid read (2024-03=
--25 09:16:19 +0100)
->=20
+Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
+---
+ doc/board/amlogic/jethub-j100.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to u-boot/master, thanks!
-
+diff --git a/doc/board/amlogic/jethub-j100.rst b/doc/board/amlogic/jethub=
+-j100.rst
+index 80bed6e919e..cbf1ea76107 100644
+--- a/doc/board/amlogic/jethub-j100.rst
++++ b/doc/board/amlogic/jethub-j100.rst
+@@ -1,7 +1,7 @@
+ .. SPDX-License-Identifier: GPL-2.0+
+=20
+ U-Boot for JetHub J100/J110 (A113X)
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+ JetHome Jethub D1/D1+ (http://jethome.ru/jethub-d1p) is a home automatio=
+n controller device
+ manufactured by JetHome with the following specifications:
 --=20
-Tom
+2.43.2
 
---Groupsio=kn8VU58Iye6a0uNPXuIQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmYBgWwACgkQFHw5/5Y0
-tyzRMgwAqXs1Lo9/UyO+AZHbXT3trxezE7nZq60Fbvm+cFKHct0St32AA/Rbve70
-14MMgfPp/7MCOr9Dtz+M989XyhTRcwOprAg26BhKKiF7ob+Zjm2001Xh/QlVagJ9
-ilsjFXOQvZCogQ4UNomv61Vw3DaKgtCLHUybW1sX9/PAgKslukA1PsLnaUhyeAgW
-beEDygF+pyRqxebWSYseh+YiV/ffZHSfnyicXQH2sPrZnlbdWChs/C95Tj+OeC91
-JBQgeUcP9kiIzJ84tl2gWf27UE20t6S1wGPuWkLOOmAALAr5dUy0Fd7rt9mUNxnF
-Xk3IxLnBIct9XES5tCC7LgRkVxXKDOTi/Pa1zKwPqp6DOTPmTWLU7IlKRAoU0Jm6
-axqQpBQVNVyGfkfz/VSm2l43wpg7i/XHeGCraiV1ahtFR85LpZuqd3kGsCVhHZBB
-SqMGQe5bcX34IXSazUXs3AJS8unpoN7SrpB8fdhUoJC1P/v4g7Ef/qhi/msYI8vW
-vg7LGKiv
-=wRQh
------END PGP SIGNATURE-----
-
---Groupsio=kn8VU58Iye6a0uNPXuIQ--
 
