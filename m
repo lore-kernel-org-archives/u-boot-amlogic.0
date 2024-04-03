@@ -2,268 +2,245 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353EDCD128A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE4ECD129A
 	for <webhook@archiver.kernel.org>; Tue,  9 Apr 2024 15:11:42 +0000 (UTC)
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
- by mx.groups.io with SMTP id smtpd.web10.6051.1712304187862289862
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+ by mx.groups.io with SMTP id smtpd.web11.3143.1712102547958970153
  for <u-boot-amlogic@groups.io>;
- Fri, 05 Apr 2024 01:03:08 -0700
+ Tue, 02 Apr 2024 17:02:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@canonical.com header.s=20210705 header.b=vjm9vvMF;
- spf=pass (domain: canonical.com, ip: 185.125.188.123, mailfrom: heinrich.schuchardt@canonical.com)
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2AF7C3F630
-	for <u-boot-amlogic@groups.io>; Fri,  5 Apr 2024 08:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1712304186;
-	bh=AAPPJoScNUPwvI0DFQBp84Z3ed0SuoO2+/aZj/UXOg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type;
-	b=vjm9vvMFY30VPStbx5avfk17mtS6bxy10+c81Y10vCR0EGvqTElo7SLS9pQlDzwm5
-	 9mzWTTdgwMfVBcRU6NnXxaX2KSek9IbAjnD2mAwsAuTpdloabbpt76DWZEGrS58WnM
-	 85tEJuJwbCq8i9Ehsv74PF+Opv8WBmmwvk+AGukXV1aMQ25Bck8VPVJTOojroGWsEU
-	 4t3ULpcZllpaZjYNqOie/Wcm24h+5bDKKV7i59jy1Jv2FcbW22whNLzcf9+Dq/bKMB
-	 OQGP27zvm9YiJsGA2JiOmITO/X3T2Wzbcmu8CqxW7s8amSiEr/4tI0qzYBU4ugRbv4
-	 tHrBs/dCFt3eA==
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-416259a5fe5so9470075e9.0
-        for <u-boot-amlogic@groups.io>; Fri, 05 Apr 2024 01:03:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712304186; x=1712908986;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AAPPJoScNUPwvI0DFQBp84Z3ed0SuoO2+/aZj/UXOg4=;
-        b=CKpgEfHa9XgjAUJfV+XJvYgSnIppEnFegUwnQ+sKJLCX79EAUhLsbJxQBaqdpib9Kh
-         njM/JKNRPtevwdqUOlJaV8rpxGrlNvxqwmsYjbpBIc94zzDiupc1jwayEUtCtTp+4Dc5
-         nZcFKu/td8wxT3Pt5Jqa6r5GOod+XPSMeSeXXcM5LDlfO4LUJu8b1wzb6PrWHdWGJBlR
-         7GwWCSPGW3vy21AKG0457tYIfS3s+D1zefB5yO1LJzXaSrMpBq6KpyD3cEwdZYvEEDKb
-         C3YRn2d+N76Bb47pBC9w2CwGBQa2BvZvkrueiBO8yVcNg5cDNztxO5ULXshyQqOMYtpd
-         LVSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmHcEyxkUueNTHDRhXT9HfA2IV84UlfqEY1GPK7C+j/7nLkHlcJwtFfZIIeq5huN5s44ESWDcRZQ/ihzTAL+byUwzXrBezzEA=
-X-Gm-Message-State: AOJu0YzbybO85egPvN0CpVo1Y6m5tfiF0IGVxfyMBASdmvZpXjKhiRy0
-	pGliXm3EV+amPQVqo0nKSSoyqF4dk/JYjfi8SyP/2RBfDZ/lbvtWk6UADCLmG4/XOEEuNs7/LLb
-	9jTyp15yfoUCVQzqG0MVCyG4mwkppzVCgv/mWETJMtHZya5xE1bZYoYQa5rIhhChD2XZUhHS6Vv
-	7YCIwJ
-X-Received: by 2002:a05:600c:1554:b0:414:63da:a2a2 with SMTP id f20-20020a05600c155400b0041463daa2a2mr523619wmg.29.1712304185736;
-        Fri, 05 Apr 2024 01:03:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFlb0zj8YVjT6ghhGWxWqxYFldl+KAXy1xcq8BLktwN5b4JWYjk34R41kmK0CkvNKlI51mpMg==
-X-Received: by 2002:a05:600c:1554:b0:414:63da:a2a2 with SMTP id f20-20020a05600c155400b0041463daa2a2mr523604wmg.29.1712304185337;
-        Fri, 05 Apr 2024 01:03:05 -0700 (PDT)
-Received: from [192.168.123.161] (ip-062-143-245-032.um16.pools.vodafone-ip.de. [62.143.245.32])
-        by smtp.gmail.com with ESMTPSA id l8-20020a1c7908000000b004155387c08esm1981349wme.27.2024.04.05.01.03.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 01:03:04 -0700 (PDT)
-Message-ID: <52ad00c9-bd87-4384-81de-133c79c4e6f4@canonical.com>
-Date: Fri, 5 Apr 2024 10:03:03 +0200
+ dkim=pass header.i=@samsung.com header.s=mail20170921 header.b=hc1EoIcx;
+ spf=pass (domain: samsung.com, ip: 203.254.224.25, mailfrom: jh80.chung@samsung.com)
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240403000224epoutp02d5d1cc21a72b1a06a0ea43023303ed25~CnDGKAkmL2070820708epoutp026
+	for <u-boot-amlogic@groups.io>; Wed,  3 Apr 2024 00:02:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240403000224epoutp02d5d1cc21a72b1a06a0ea43023303ed25~CnDGKAkmL2070820708epoutp026
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1712102544;
+	bh=eobNXejZUon8omLqyG4z3h0J4nyHzGoJJ5ng1WcNGn4=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=hc1EoIcxGSYgg+DNRYLahIqFzGEIJh9qXl/dgyL0Gg8sQQwKApmFjT6Ks68sNRJmm
+	 bSHBwlcwtkpt8pfsSSF21EZZpFFIW3xE+CUDe+pSV7x2qkYxWRZH+lgV/ALPiWzSe9
+	 IY/rq8OK0WXyQDST6q2FMF2VUOvLVKBKyBhURYc8=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+	20240403000224epcas1p3d9c078275593f3a5a1a8d4865ad94dd9~CnDF9dWYz2519325193epcas1p39;
+	Wed,  3 Apr 2024 00:02:24 +0000 (GMT)
+Received: from epsmgec1p1.samsung.com (unknown [182.195.36.134]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4V8Q0v3Hlbz4x9Q0; Wed,  3 Apr
+	2024 00:02:23 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	33.BE.08627.F8C9C066; Wed,  3 Apr 2024 09:02:23 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240403000223epcas1p14279f53844b770f4f1b402e9309e100e~CnDEhH4YX0651806518epcas1p1m;
+	Wed,  3 Apr 2024 00:02:23 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240403000223epsmtrp218f5ec2afbafb43eef003d80eff0bbcf~CnDEgcAJg0329803298epsmtrp2S;
+	Wed,  3 Apr 2024 00:02:23 +0000 (GMT)
+X-AuditID: b6c32a33-d59fa700000021b3-53-660c9c8fd0a1
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C9.5D.08390.E8C9C066; Wed,  3 Apr 2024 09:02:23 +0900 (KST)
+Received: from [10.113.113.235] (unknown [10.113.113.235]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240403000222epsmtip11074309418f6d6341be749305d02aa14~CnDEEaCiA1158711587epsmtip1a;
+	Wed,  3 Apr 2024 00:02:22 +0000 (GMT)
+Message-ID: <ac386b15-e7fe-41b5-8be4-6fd1a5d5dc36@samsung.com>
+Date: Wed, 3 Apr 2024 09:02:22 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 33/33] doc: boards: amlogic: add documentation for ODROID-HC4
-To: Christian Hewitt <christianshewitt@gmail.com>
-References: <20230320114609.930145-1-christianshewitt@gmail.com>
- <20230320114609.930145-34-christianshewitt@gmail.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
- linux-amlogic@lists.infradead.org
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <20230320114609.930145-34-christianshewitt@gmail.com>
+Subject: Re: [PATCH v2] mmc: Add SPL_MMC_PWRSEQ to fix link issue when building SPL
+To: Jonas Karlman <jonas@kwiboo.se>, Peng Fan <peng.fan@nxp.com>, Tom Rini
+	<trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>, Simon
+	Glass <sjg@chromium.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Kever
+	Yang <kever.yang@rock-chips.com>
+Cc: Ferass El Hafidi <vitali64pmemail@protonmail.com>, u-boot@lists.denx.de,
+	u-boot-amlogic@groups.io
+From: Jaehoon Chung <jh80.chung@samsung.com>
+In-Reply-To: <20240127171237.320834-1-jonas@kwiboo.se>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEJsWRmVeSWpSXmKPExsWy7bCmgW7/HJ40g675EhYn31xlsdg2/Seb
+	xfudtxgtfqz6wmrRvbLa4tuWbYwWUydtZreYNOEXm8XbvZ3sFgefnGVx4PKY3XCRxWN+53cm
+	j1cHVrF7nJhwicnjzrU9bB5n7+xg9Nj4bgeTR0/bJiaPv7P2s3jsvP2QKYArKtsmIzUxJbVI
+	ITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+hcJYWyxJxSoFBAYnGx
+	kr6dTVF+aUmqQkZ+cYmtUmpBSk6BaYFecWJucWleul5eaomVoYGBkSlQYUJ2xsM3YQV/lCum
+	vOpkbWBcJ9vFyMkhIWAicXlhF2MXIxeHkMAORonZD/uhnE+MEi+f7WKGcL4xSjx8/Z0RpmXh
+	g61MEIm9jBKbJu9gg3DeM0qs3/OTBaSKV8BOYvmGf+wgNouAisSvb5OZIeKCEidnPgGrERWQ
+	l7h/awZYjbBAqMS9/3fBdosItDJJtP09wwSSYBZIl2i9dBfKFpe49WQ+mM0moCOx/dtxIJuD
+	g1PATGLtIimIEnmJ7W/ngJ0tIXCGQ2Lvi81QZ7tIHFx6hg3CFpZ4dXwLO4QtJfH53V42iIZm
+	RomlSw6yQjg9jBL/Gq5DdRhL7F86GWwbs4CmxPpd+hDb+CTefe1hBQlLCPBKdLQJQVSrSFx6
+	/ZIJZv7dJ/9ZIWwPib8TZ7NCQquTUeLCupOMExgVZiEFzCwkf85C8tAshM0LGFlWMYqlFhTn
+	pqcmGxYYwuM7OT93EyM4MWsZ72C8PP+f3iFGJg7GQ4wSHMxKIrw/vTnThHhTEiurUovy44tK
+	c1KLDzGaAqNnIrOUaHI+MDfklcQbmlgamJgZGZtYGJoZKonznrlSliokkJ5YkpqdmlqQWgTT
+	x8TBKdXAZOVRUNos35syZ9o3BX432YxGw93lO/NmHSt7JtL2RKogd42w/b6Hgd9e+wbNEFim
+	/+fF49cTH8sY1Zu1GtyK+JL3yqH8QuCSk//VKw/1NnLfv+WWtnRFwfHf70p2F1Ts+qByJ8pZ
+	/d7nZwu1405sWRmmb7B9pUjYiv33Ly5P37H63MFVgW+V8+9JT93RO9FvS7fZOjUnhq/dS1Pi
+	hVhs1ifo70w/bel7vZ6h+GjELAve+mufluwWO9hcp9qZJ5TPudZrcuqbUzre3jdtzQ2bll2f
+	Irqs26mN9f8r12NN4V3HWi79jhDsYy667fyt5/Yby+Co2m9HPFLMvndxJN9gim/6VWHqXPt7
+	+9XCMy1blViKMxINtZiLihMBwBphU1UEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSnG7/HJ40g1tTmCxOvrnKYrFt+k82
+	i/c7bzFa/Fj1hdWie2W1xbct2xgtpk7azG4xacIvNou3ezvZLQ4+OcviwOUxu+Eii8f8zu9M
+	Hq8OrGL3ODHhEpPHnWt72DzO3tnB6LHx3Q4mj562TUwef2ftZ/HYefshUwBXFJdNSmpOZllq
+	kb5dAlfGwzdhBX+UK6a86mRtYFwn28XIySEhYCKx8MFWpi5GLg4hgd2MElcWfGaESEhJfH46
+	la2LkQPIFpY4fLgYJCwk8JZRYv+GPBCbV8BOYvmGf+wgNouAisSvb5OZIeKCEidnPmEBsUUF
+	5CXu35oBViMsECpx7/9dRpBdIgKtTBJnN60FSzALpEu8e3qbGWKBqcS0/Y1sEHFxiVtP5jOB
+	2GwCOhLbvx1nArmHU8BMYu0iKRCTWUBdYv08IYhqeYntb+cwT2AUmoXkillIBs1C6JiFpGMB
+	I8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzg6NPS2sG4Z9UHvUOMTByMhxglOJiV
+	RHh/enOmCfGmJFZWpRblxxeV5qQWH2KU5mBREuf99ro3RUggPbEkNTs1tSC1CCbLxMEp1cAk
+	65sZ6K74dvVaF89SgX2Pik6mc96fNZczZdK/uft37tvxYc/nSW/23lY2YjYqdfKc19Cyo4T/
+	w2FpLYvZiquSPzolCQlefP3mxEkll8v1U9SnshoV7FKXX1T7LsQ37uSlM6xBT3PCbj8T/qaz
+	xUl3WxTnlSVavYVut9OOB0VHtvEuzV28cZcG+65ze+75Zt4Qn9qwWrIpRarceu3azjS3BZnN
+	U+Ntrz9e9Krtj1NH/U6dXQGrrN3/inRlHFR6cXSCZ7pkUMGauBv+1QY87gdmz7/L5Bri7Pmy
+	8VGqpviR0n4Oz05fKUX+3wVXfhzLETz81jD12pE3F7yuv6490Vb1Ruz8moNv367VV58WGBSp
+	xFKckWioxVxUnAgAThx2qC0DAAA=
+X-CMS-MailID: 20240403000223epcas1p14279f53844b770f4f1b402e9309e100e
+X-Msg-Generator: CA
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240403000223epcas1p14279f53844b770f4f1b402e9309e100e
+References: <20240127171237.320834-1-jonas@kwiboo.se>
+	<CGME20240403000223epcas1p14279f53844b770f4f1b402e9309e100e@epcas1p1.samsung.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 09 Apr 2024 15:11:42 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2267
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2266
 
-On 3/20/23 12:46, Christian Hewitt wrote:
-> Add separate documentation for the ODROID-HC4 board to ensure
-> users build U-Boot using the HC4 defconfig that enables PCIe
-> SATA boot. This avoids user frustration trying to boot after
-> using the C4 recipe which only works from SD card.
+On 1/28/24 02:12, Jonas Karlman wrote:
+> With MMC_PWRSEQ enabled the following link issue may happen when
+> building SPL and SPL_PWRSEQ is not enabled.
 > 
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+>   aarch64-linux-gnu-ld.bfd: drivers/mmc/meson_gx_mmc.o: in function `meson_mmc_probe':
+>   drivers/mmc/meson_gx_mmc.c:295: undefined reference to `pwrseq_set_power'
+> 
+> Fix this by adding a SPL_MMC_PWRSEQ Kconfig option used to enable mmc
+> pwrseq support in SPL.
+> 
+> Also add depends on DM_GPIO to fix following link issue:
+> 
+>   aarch64-linux-gnu-ld.bfd: drivers/mmc/mmc-pwrseq.o: in function `mmc_pwrseq_set_power':
+>   drivers/mmc/mmc-pwrseq.c:26: undefined reference to `gpio_request_by_name'
+>   aarch64-linux-gnu-ld.bfd: drivers/mmc/mmc-pwrseq.c:29: undefined reference to `dm_gpio_set_value'
+>   aarch64-linux-gnu-ld.bfd: drivers/mmc/mmc-pwrseq.c:31: undefined reference to `dm_gpio_set_value'
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Acked-by: Ferass El Hafidi <vitali64pmemail@protonmail.com>
+
+Reviewed-by: Jaehoon Chung <jh80.chung@samsung.com>
+
+Applied to u-boot-mmc/master, thanks! Sorry for late.
+
+Best Regards,
+Jaehoon Chung
+
 > ---
->   doc/board/amlogic/index.rst      |   1 +
->   doc/board/amlogic/odroid-hc4.rst | 141 +++++++++++++++++++++++++++++++
->   2 files changed, 142 insertions(+)
->   create mode 100644 doc/board/amlogic/odroid-hc4.rst
+> Changes in v2:
+> - Fix Ths typo
+> - Collect r-b and a-b tags
 > 
-> diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-> index 7c4c161e0d..9b76bca427 100644
-> --- a/doc/board/amlogic/index.rst
-> +++ b/doc/board/amlogic/index.rst
-> @@ -101,6 +101,7 @@ Board Documentation
->      nanopi-k2
->      odroid-c2
->      odroid-c4
-> +   odroid-hc4
->      odroid-n2
->      odroid-n2l
->      odroid-go-ultra
-> diff --git a/doc/board/amlogic/odroid-hc4.rst b/doc/board/amlogic/odroid-hc4.rst
-> new file mode 100644
-> index 0000000000..94c3312022
-> --- /dev/null
-> +++ b/doc/board/amlogic/odroid-hc4.rst
-> @@ -0,0 +1,141 @@
-> +.. SPDX-License-Identifier: GPL-2.0+
+> Link to v1: https://patchwork.ozlabs.org/patch/1839392/
+> ---
+>  drivers/mmc/Kconfig           | 12 ++++++++++--
+>  drivers/mmc/Makefile          |  2 +-
+>  drivers/mmc/meson_gx_mmc.c    |  2 +-
+>  drivers/mmc/rockchip_dw_mmc.c |  2 +-
+>  include/mmc.h                 |  4 ++--
+>  5 files changed, 15 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/mmc/Kconfig b/drivers/mmc/Kconfig
+> index 17618c3bdcc1..a141007a576f 100644
+> --- a/drivers/mmc/Kconfig
+> +++ b/drivers/mmc/Kconfig
+> @@ -20,11 +20,19 @@ config MMC_WRITE
+>  
+>  config MMC_PWRSEQ
+>  	bool "HW reset support for eMMC"
+> -	depends on PWRSEQ
+> +	depends on PWRSEQ && DM_GPIO
+>  	help
+> -	  Ths select Hardware reset support aka pwrseq-emmc for eMMC
+> +	  This select Hardware reset support aka pwrseq-emmc for eMMC
+>  	  devices.
+>  
+> +config SPL_MMC_PWRSEQ
+> +	bool "HW reset support for eMMC in SPL"
+> +	depends on SPL_PWRSEQ && SPL_DM_GPIO
+> +	default y if MMC_PWRSEQ
+> +	help
+> +	  This select Hardware reset support aka pwrseq-emmc for eMMC
+> +	  devices in SPL.
 > +
-> +U-Boot for ODROID-HC4 (S905X3)
-> +==============================
-> +
-> +ODROID-HC4 is a variant of the ODROID-C4 single board computer manufactured by Hardkernel
-> +with the following specification:
-> +
-> + - Amlogic S905X3 Arm Cortex-A55 quad-core SoC
-> + - 4GB DDR4 SDRAM
-> + - 16MB XT25F128B SPI-NOR flash
-> + - Gigabit Ethernet
-> + - HDMI 2.1 display
-> + - 7-pin GPIO header for OLED display and RTC
-> + - 1x USB 2.0 host (micro)
-> + - 2x SATA ports via ASM1061 PCIe to SATA controller
-> + - microSD
-> + - UART serial
-> + - Infrared receiver
-> +
-> +Schematics are available on the manufacturer website.
-> +
-> +U-Boot Compilation
-> +------------------
-> +
-> +.. code-block:: bash
-> +
-> +    $ export CROSS_COMPILE=aarch64-none-elf-
-> +    $ make odroid-hc4_defconfig
-> +    $ make
-> +
-> +U-Boot Signing with Pre-Built FIP repo
-> +--------------------------------------
-> +
-> +.. code-block:: bash
-> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-> +    $ cd amlogic-boot-fip
-> +    $ mkdir my-output-dir
-> +    $ ./build-fip.sh odroid-hc4 /path/to/u-boot/u-boot.bin my-output-dir
-> +
-> +U-Boot Manual Signing
-> +---------------------
-> +
-> +Amlogic does not provide sources for the firmware and tools needed to create a bootloader
-> +image so it is necessary to obtain binaries from sources published by the board vendor:
-> +
-> +.. code-block:: bash
-> +
-> +    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-> +    $ wget https://releases.linaro.org/archive/13.11/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-> +    $ tar xvfJ gcc-linaro-aarch64-none-elf-4.8-2013.11_linux.tar.xz
-> +    $ tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-> +    $ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
-> +
-> +    $ DIR=odroid-hc4
-> +    $ git clone --depth 1 https://github.com/hardkernel/u-boot.git -b odroidg12-v2015.01 $DIR
-> +
-> +    $ cd odroid-hc4
-> +    $ make odroidc4_defconfig
-> +    $ make
-> +    $ export UBOOTDIR=$PWD
-> +
-> +Go back to mainline U-Boot source tree then:
-> +
-> +.. code-block:: bash
-> +
-> +    $ mkdir fip
-
-Thanks a lot for providing all these board descriptions.
-
-Prefixing with $ makes copy-/pasting multiple commands impossible.
-
-I personally feel distracted by the prompts. But if you really want 
-those $ signs displayed, please, use
-
-     .. prompt:: bash $
-
-       mkdir fip
-
-Best regards
-
-Heinrich
-
-> +
-> +    $ wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh -O fip/blx_fix.sh
-> +    $ cp $UBOOTDIR/build/scp_task/bl301.bin fip/
-> +    $ cp $UBOOTDIR/build/board/hardkernel/odroidc4/firmware/acs.bin fip/
-> +    $ cp $UBOOTDIR/fip/g12a/bl2.bin fip/
-> +    $ cp $UBOOTDIR/fip/g12a/bl30.bin fip/
-> +    $ cp $UBOOTDIR/fip/g12a/bl31.img fip/
-> +    $ cp $UBOOTDIR/fip/g12a/ddr3_1d.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/ddr4_1d.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/ddr4_2d.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/diag_lpddr4.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/lpddr3_1d.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/lpddr4_1d.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/lpddr4_2d.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/piei.fw fip/
-> +    $ cp $UBOOTDIR/fip/g12a/aml_ddr.fw fip/
-> +    $ cp u-boot.bin fip/bl33.bin
-> +
-> +    $ sh fip/blx_fix.sh \
-> +         fip/bl30.bin \
-> +         fip/zero_tmp \
-> +         fip/bl30_zero.bin \
-> +         fip/bl301.bin \
-> +         fip/bl301_zero.bin \
-> +         fip/bl30_new.bin \
-> +         bl30
-> +
-> +    $ sh fip/blx_fix.sh \
-> +         fip/bl2.bin \
-> +         fip/zero_tmp \
-> +         fip/bl2_zero.bin \
-> +         fip/acs.bin \
-> +         fip/bl21_zero.bin \
-> +         fip/bl2_new.bin \
-> +         bl2
-> +
-> +    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl30sig --input fip/bl30_new.bin \
-> +                                                    --output fip/bl30_new.bin.g12a.enc \
-> +                                                    --level v3
-> +    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl30_new.bin.g12a.enc \
-> +                                                   --output fip/bl30_new.bin.enc \
-> +                                                   --level v3 --type bl30
-> +    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl31.img \
-> +                                                   --output fip/bl31.img.enc \
-> +                                                   --level v3 --type bl31
-> +    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl3sig --input fip/bl33.bin --compress lz4 \
-> +                                                   --output fip/bl33.bin.enc \
-> +                                                   --level v3 --type bl33 --compress lz4
-> +    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bl2sig --input fip/bl2_new.bin \
-> +                                                   --output fip/bl2.n.bin.sig
-> +    $ $UBOOTDIR/fip/g12a/aml_encrypt_g12a --bootmk \
-> +                                          --output fip/u-boot.bin \
-> +                                          --bl2 fip/bl2.n.bin.sig \
-> +                                          --bl30 fip/bl30_new.bin.enc \
-> +                                          --bl31 fip/bl31.img.enc \
-> +                                          --bl33 fip/bl33.bin.enc \
-> +                                          --ddrfw1 fip/ddr4_1d.fw \
-> +                                          --ddrfw2 fip/ddr4_2d.fw \
-> +                                          --ddrfw3 fip/ddr3_1d.fw \
-> +                                          --ddrfw4 fip/piei.fw \
-> +                                          --ddrfw5 fip/lpddr4_1d.fw \
-> +                                          --ddrfw6 fip/lpddr4_2d.fw \
-> +                                          --ddrfw7 fip/diag_lpddr4.fw \
-> +                                          --ddrfw8 fip/aml_ddr.fw \
-> +                                          --ddrfw9 fip/lpddr3_1d.fw \
-> +                                          --level v3
-> +
-> +Then write U-Boot to SD or SPI-NOR with:
-> +
-> +.. code-block:: bash
-> +
-> +    $ DEV=/dev/boot_device
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
+>  config MMC_BROKEN_CD
+>  	bool "Poll for broken card detection case"
+>  	help
+> diff --git a/drivers/mmc/Makefile b/drivers/mmc/Makefile
+> index e9cf1fcc6400..2b94cc2f1c34 100644
+> --- a/drivers/mmc/Makefile
+> +++ b/drivers/mmc/Makefile
+> @@ -11,7 +11,7 @@ obj-$(CONFIG_$(SPL_TPL_)BOOTSTD) += mmc_bootdev.o
+>  endif
+>  
+>  obj-$(CONFIG_$(SPL_TPL_)MMC_WRITE) += mmc_write.o
+> -obj-$(CONFIG_MMC_PWRSEQ) += mmc-pwrseq.o
+> +obj-$(CONFIG_$(SPL_)MMC_PWRSEQ) += mmc-pwrseq.o
+>  obj-$(CONFIG_MMC_SDHCI_ADMA_HELPERS) += sdhci-adma.o
+>  
+>  ifndef CONFIG_$(SPL_)BLK
+> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+> index fcf4f03d1e24..0825c0a2a838 100644
+> --- a/drivers/mmc/meson_gx_mmc.c
+> +++ b/drivers/mmc/meson_gx_mmc.c
+> @@ -288,7 +288,7 @@ static int meson_mmc_probe(struct udevice *dev)
+>  
+>  	mmc_set_clock(mmc, cfg->f_min, MMC_CLK_ENABLE);
+>  
+> -#ifdef CONFIG_MMC_PWRSEQ
+> +#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+>  	/* Enable power if needed */
+>  	ret = mmc_pwrseq_get_power(dev, cfg);
+>  	if (!ret) {
+> diff --git a/drivers/mmc/rockchip_dw_mmc.c b/drivers/mmc/rockchip_dw_mmc.c
+> index 72c820ee6330..ad4529d6afa8 100644
+> --- a/drivers/mmc/rockchip_dw_mmc.c
+> +++ b/drivers/mmc/rockchip_dw_mmc.c
+> @@ -145,7 +145,7 @@ static int rockchip_dwmmc_probe(struct udevice *dev)
+>  
+>  	host->fifo_mode = priv->fifo_mode;
+>  
+> -#ifdef CONFIG_MMC_PWRSEQ
+> +#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+>  	/* Enable power if needed */
+>  	ret = mmc_pwrseq_get_power(dev, &plat->cfg);
+>  	if (!ret) {
+> diff --git a/include/mmc.h b/include/mmc.h
+> index 1022db3ffa7c..9aef31ea5deb 100644
+> --- a/include/mmc.h
+> +++ b/include/mmc.h
+> @@ -590,7 +590,7 @@ struct mmc_config {
+>  	uint f_max;
+>  	uint b_max;
+>  	unsigned char part_type;
+> -#ifdef CONFIG_MMC_PWRSEQ
+> +#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+>  	struct udevice *pwr_dev;
+>  #endif
+>  };
+> @@ -808,7 +808,7 @@ int mmc_deinit(struct mmc *mmc);
+>   */
+>  int mmc_of_parse(struct udevice *dev, struct mmc_config *cfg);
+>  
+> -#ifdef CONFIG_MMC_PWRSEQ
+> +#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
+>  /**
+>   * mmc_pwrseq_get_power() - get a power device from device tree
+>   *
 
 
