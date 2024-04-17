@@ -2,325 +2,269 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF72C41513
-	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 17:00:15 +0000 (UTC)
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (NAM02-DM3-obe.outbound.protection.outlook.com [40.107.95.42])
- by mx.groups.io with SMTP id smtpd.web10.14379.1713250531610866336
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E511DC4345F
+	for <webhook@archiver.kernel.org>; Mon, 22 Apr 2024 09:02:20 +0000 (UTC)
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (NAM12-DM6-obe.outbound.protection.outlook.com [40.107.243.64])
+ by mx.groups.io with SMTP id smtpd.web11.6005.1713333764993057681
  for <u-boot-amlogic@groups.io>;
- Mon, 15 Apr 2024 23:55:31 -0700
+ Tue, 16 Apr 2024 23:02:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@amd.com header.s=selector1 header.b=p/vEv+O+;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: amd.com, ip: 40.107.95.42, mailfrom: michal.simek@amd.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@amd.com header.s=selector1 header.b=jnsuQdnC;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: amd.com, ip: 40.107.243.64, mailfrom: michal.simek@amd.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fiGmZObRhaCBpi3ZuzC/C97JUPFalfbkDdIp/8JrUKiKozeCseVGQY5Om6+OKYcd0lt3PjUjZesFbKfHUc+hC7JbzYvAhOmNfTgFEKaIwebF/x6lLZNnYvRGBhLWE+jl2po/KFtsduxpZsgcRrW4q92D2gxmiDnFEwM+DAYHgLVrrH6Dt1WuHx7zZ7Cn0JkHEQft8nVV3/DtjQZ4TgQoFDqatlZLVS/RVlYh8IZ9lzcb85h+fLJYILyMpHCzZq9UA16bfpnmOaZKfcxkgvzbjc8zVRnkmujQ0XQ9bxS5pmvC1fJV2ik/jZia9qI9dw9LzZWsnUzjfIDddVlsd6Q1ww==
+ b=Z2mnsJZ9wOhyhMnOiP7BegKhEc9lDQIY8HwJKCxd0B65PsXQ359343+8kUAUkRGOZN0E0Y0BH/37z5/vkrOprBlo2qZbUfxTMXPD1xP7Vw0aYWcqKlcbU5qkREFNTleAxUuWryDHXaVp8n9IgvMvy87lx0KGOfbR+apv7ODRFgQdriumZC4GBdBxtSjoz5uku82RTdFUTqdbXKn1WT8nhpt4Fr1VfiL8wXM+l5ZpXfcE+M7vPeT3GQwmtAWlhig5I1r9pATaFKxG0/3SN0jmpLcLFh4xBjWwj8Kfxx5X1lv9MnkxTd+p25a0P0JPRBT3HgMhP+5LooVrfEOXvrNQWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H5DZ5PSGz/K3YWOTOIwU/amqFCuRTH+XjOHackMxr48=;
- b=KtWUAE0yA7qt4Ec9Xtpab2TmDA7fS+5cgE1EVdXq09IPrfWgOvDuweuldbmgSrbfuOhJQxT2cWn5j1omhqOxrLAsNw7FYDy88UgcTfb6KHp9CLdBmYhsayu/+WpzZhyBVGQIes2hPN3Z0WI/mLbc71Aa3ZR6/lCWWAwGnK/g9ddifPHrpmRcxpq7wIgaYphBmY/JnR7VvcPTHaPr0xfikquss2DMrHDpITGCyqjiSeGmCoUpY6jdmoCP3VMaFIIH4Nv7J0qR4w1WNRiDM2MAjtAsXQ6VRYIIucEAXE+9NLHuY30jmiQXoA/q9CVHtIX7uGQ9kHs4msx35rv+GKngSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.denx.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
+ bh=550iGHWzR0/Fb+lrltbCktr9L/p3ZZuLExtWFg4DxKs=;
+ b=YNHZ2NwsyLv7TLv0ZxDFQMgJek0lu+Z/G45gXL/I6rCI+DS/bvMOVscBVmHDVfJROiQQbYGVbU2ORt5ZZqI5iBRQprMFjSyRhu0fwdxY0KPupzUGg4ABOuo5SpRkhzLC/zUq7w0B3yVHCyGKsHmM5xmulnpzw4Zp/aK/4aFTBQ2pZE3qHq6tFxMOHQBnv8NDU9SdLVvHXMAHVI6W0CBitupEgF5xQ8LVfG20JvW5g0z4+U8JmtM675Nd3vK/iCcDuxOJ1T9lopvtwzPHBbQwecsRT9S6NtxqoIU6FzfpQdF84L/UEITtkDQjMVMIDdeVzJwpqIDDd2GsSlcU2j12pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H5DZ5PSGz/K3YWOTOIwU/amqFCuRTH+XjOHackMxr48=;
- b=p/vEv+O+/pi7QLtKAUPUlbV+kTKmB4cI+I6it+mQwexZfxbOxJGeb+O+O7Qb1OMyOoHw3a6XV82pYSxUNkS9a8ikDMmTRciMLfCnhwUxPDp2pIiBoqqOnRD8j6K7G2hCMMT+vpTc489KNDn+PSjcDHnyvYlXA2jTOfpb4NDT7BU=
-Received: from SA9PR13CA0089.namprd13.prod.outlook.com (2603:10b6:806:23::34)
- by PH7PR12MB8016.namprd12.prod.outlook.com (2603:10b6:510:26b::19) with
+ bh=550iGHWzR0/Fb+lrltbCktr9L/p3ZZuLExtWFg4DxKs=;
+ b=jnsuQdnCpHmDllmsIX/J7l558h5HDytt84qWdxKdg4Yldg3cO3giRd3PvBh0mtTjosD6e3nZ7pjtVxXvILgemmUpcff1mmEHxH7uph6Q/DefY3s/TB00kFF3dwYr6hmaZeY+ufeGpCdOvZnZfbf+z4OtOAZkALZV3izcVQH9XWg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by SA1PR12MB8965.namprd12.prod.outlook.com (2603:10b6:806:38d::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
- 2024 06:55:28 +0000
-Received: from SN1PEPF00036F3F.namprd05.prod.outlook.com
- (2603:10b6:806:23:cafe::d) by SA9PR13CA0089.outlook.office365.com
- (2603:10b6:806:23::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.20 via Frontend
- Transport; Tue, 16 Apr 2024 06:55:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F3F.mail.protection.outlook.com (10.167.248.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Tue, 16 Apr 2024 06:55:27 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 16 Apr
- 2024 01:55:25 -0500
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Wed, 17 Apr
+ 2024 06:02:42 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::c3fc:3be9:dde7:745f]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::c3fc:3be9:dde7:745f%7]) with mapi id 15.20.7452.049; Wed, 17 Apr 2024
+ 06:02:42 +0000
+Message-ID: <9444bfd8-e441-429c-9d41-b94029288a1e@amd.com>
+Date: Wed, 17 Apr 2024 08:01:59 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] common: Convert *.c/h from UTF-8 to ASCII enconfing
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>, Tom Rini <trini@konsulko.com>
+CC: u-boot@lists.denx.de, git@xilinx.com,
+ AKASHI Takahiro <takahiro.akashi@linaro.org>,
+ Aaron Williams <awilliams@marvell.com>,
+ Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+ Anastasiia Lukianenko <vicooodin@gmail.com>,
+ Anatolij Gustschin <agust@denx.de>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
+ Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ Doug Zobel <douglas.zobel@climate.com>, Enrico Leto
+ <enrico.leto@siemens.com>, Fabio Estevam <festevam@gmail.com>,
+ Gatien Chevallier <gatien.chevallier@foss.st.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Grzegorz Szymaszek <gszymaszek@short.pl>, Heiko Schocher <hs@denx.de>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Johan Jonker <jbx6244@gmail.com>, Kever Yang <kever.yang@rock-chips.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Lars Povlsen <lars.povlsen@microchip.com>,
+ Leo Yu-Chi Liang <ycliang@andestech.com>, Lukasz Majewski <lukma@denx.de>,
+ =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>,
+ Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+ Matthias Winker <matthias.winker@de.bosch.com>,
+ Michael Trimarchi <michael@amarulasolutions.com>,
+ Minda Chen <minda.chen@starfivetech.com>,
+ "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Nishanth Menon <nm@ti.com>,
+ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
+ Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+ Oliver Graute <oliver.graute@kococonnector.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Patrick Delaunay <patrick.delaunay@foss.st.com>,
+ Paul Barker <paul.barker.ct@bp.renesas.com>,
+ =?UTF-8?Q?Pawe=C5=82_Jarosz?= <paweljarosz3691@gmail.com>,
+ Peng Fan <peng.fan@nxp.com>, Philip Oberfichtner <pro@denx.de>,
+ Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+ Sean Anderson <seanga2@gmail.com>, Seung-Woo Kim <sw0312.kim@samsung.com>,
+ Shiji Yang <yangshiji66@outlook.com>, Simon Glass <sjg@chromium.org>,
+ Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
+ Stefan Roese <sr@denx.de>, Stefano Babic <sbabic@denx.de>,
+ Sughosh Ganu <sughosh.ganu@linaro.org>, Svyatoslav Ryhel
+ <clamor95@gmail.com>, Viacheslav Bocharov <adeep@lexina.in>,
+ Yanhong Wang <yanhong.wang@starfivetech.com>,
+ "open list:VIM3" <u-boot-amlogic@groups.io>,
+ "moderated list:ST BOARDS" <uboot-stm32@st-md-mailman.stormreply.com>
+References: <cover.1713250508.git.michal.simek@amd.com>
+ <abe7e535b9e4ee13cea1e6d1c37c8f1f6e6014e3.1713250508.git.michal.simek@amd.com>
+ <20240416160631.GO1054907@bill-the-cat>
+ <58f122b7-e9b4-4028-941a-0f1b647ffe4e@gmx.de>
 From: Michal Simek <michal.simek@amd.com>
-To: <u-boot@lists.denx.de>, <git@xilinx.com>
-CC: AKASHI Takahiro <takahiro.akashi@linaro.org>, Aaron Williams
-	<awilliams@marvell.com>, Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
-	Alexander Sverdlin <alexander.sverdlin@siemens.com>, Anastasiia Lukianenko
-	<vicooodin@gmail.com>, Anatolij Gustschin <agust@denx.de>, Andre Przywara
-	<andre.przywara@arm.com>, Biju Das <biju.das.jz@bp.renesas.com>, Bin Meng
-	<bmeng@tinylab.org>, Caleb Connolly <caleb.connolly@linaro.org>, "Daniel
- Schwierzeck" <daniel.schwierzeck@gmail.com>, Dario Binacchi
-	<dario.binacchi@amarulasolutions.com>, Doug Zobel
-	<douglas.zobel@climate.com>, Dragan Simic <dsimic@manjaro.org>, Eddie James
-	<eajames@linux.ibm.com>, Elon Zhang <zhangzj@rock-chips.com>, Enrico Leto
-	<enrico.leto@siemens.com>, Eugen Hristev <eugen.hristev@collabora.com>,
-	"Fabio Estevam" <festevam@gmail.com>, Francis Laniel
-	<francis.laniel@amarulasolutions.com>, Gatien Chevallier
-	<gatien.chevallier@foss.st.com>, Gregory CLEMENT
-	<gregory.clement@bootlin.com>, Grzegorz Szymaszek <gszymaszek@short.pl>,
-	Heiko Schocher <hs@denx.de>, Heinrich Schuchardt <xypron.glpk@gmx.de>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>, Ilias Apalodimas
-	<ilias.apalodimas@linaro.org>, Jagan Teki <jagan@amarulasolutions.com>,
-	"Jagan Teki" <jagan@edgeble.ai>, Johan Jonker <jbx6244@gmail.com>, John Clark
-	<inindev@gmail.com>, Jonas Karlman <jonas@kwiboo.se>, Joshua Riek
-	<jjriek@verizon.net>, Kever Yang <kever.yang@rock-chips.com>, Lad Prabhakar
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, Lars Povlsen
-	<lars.povlsen@microchip.com>, Leo Yu-Chi Liang <ycliang@andestech.com>,
-	Lukasz Majewski <lukma@denx.de>, Manorit Chawdhry <m-chawdhry@ti.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>, Marek Vasut
-	<marek.vasut+renesas@mailbox.org>, Masahisa Kojima
-	<kojima.masahisa@socionext.com>, Matthias Schiffer
-	<matthias.schiffer@ew.tq-group.com>, Matthias Winker
-	<matthias.winker@de.bosch.com>, Mattijs Korpershoek
-	<mkorpershoek@baylibre.com>, Michael Trimarchi
-	<michael@amarulasolutions.com>, Minda Chen <minda.chen@starfivetech.com>,
-	"NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Nishanth Menon <nm@ti.com>, Nobuhiro Iwamatsu
-	<iwamatsu@nigauri.org>, Oleksandr Andrushchenko
-	<oleksandr_andrushchenko@epam.com>, Oleksandr Suvorov
-	<oleksandr.suvorov@foundries.io>, Oliver Graute
-	<oliver.graute@kococonnector.com>, Patrice Chotard
-	<patrice.chotard@foss.st.com>, Patrick Delaunay
-	<patrick.delaunay@foss.st.com>, Paul Barker <paul.barker.ct@bp.renesas.com>,
-	=?UTF-8?q?Pawe=C5=82=20Jarosz?= <paweljarosz3691@gmail.com>, Peng Fan
-	<peng.fan@nxp.com>, Peter Robinson <pbrobinson@gmail.com>, "Philip
- Oberfichtner" <pro@denx.de>, Philipp Tomsich <philipp.tomsich@vrull.eu>,
-	Quentin Schulz <quentin.schulz@theobroma-systems.com>, Rasmus Villemoes
-	<rasmus.villemoes@prevas.dk>, Sean Anderson <sean.anderson@seco.com>, "Sean
- Anderson" <seanga2@gmail.com>, Sean Edmond <seanedmond@microsoft.com>,
-	Seung-Woo Kim <sw0312.kim@samsung.com>, Shiji Yang <yangshiji66@outlook.com>,
-	Simon Glass <sjg@chromium.org>, Stefan Herbrechtsmeier
-	<stefan.herbrechtsmeier@weidmueller.com>, Stefan Roese <sr@denx.de>, "Stefano
- Babic" <sbabic@denx.de>, Sughosh Ganu <sughosh.ganu@linaro.org>, "Svyatoslav
- Ryhel" <clamor95@gmail.com>, Tim Lunn <tim@feathertop.org>, Tom Fitzhenry
-	<tom@tom-fitzhenry.me.uk>, Tom Rini <trini@konsulko.com>, "Venkatesh Yadav
- Abbarapu" <venkatesh.abbarapu@amd.com>, Viacheslav Bocharov
-	<adeep@lexina.in>, Vignesh R <vigneshr@ti.com>, Yanhong Wang
-	<yanhong.wang@starfivetech.com>, "open list:VIM3" <u-boot-amlogic@groups.io>,
-	"moderated list:ST BOARDS" <uboot-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 0/5] Kconfig: some cleanups
-Date: Tue, 16 Apr 2024 08:55:14 +0200
-Message-ID: <cover.1713250508.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.44.0
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ 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
+ 3i3l5DA=
+In-Reply-To: <58f122b7-e9b4-4028-941a-0f1b647ffe4e@gmx.de>
+X-ClientProxiedBy: VI1PR07CA0244.eurprd07.prod.outlook.com
+ (2603:10a6:802:58::47) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9553; i=michal.simek@amd.com; h=from:subject:message-id; bh=m7spHwnmbiPgeOtYbeW9ZYmv9HSXpTS+QISw8lgczBI=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhjQ5hSshcv/Wfl8yPe91ttHXFSzRe4X6/pVeac1Nvsez2 8/mlqZFRywLgyATg6yYIou0zZUzeytnTBG+eFgOZg4rE8gQBi5OAZjIZEuG+XUSesvStB3v5hqY Py7rTXoe8mfNE4aZjBNyknyYiizSphm9rnc/HXUz6tp8AA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3F:EE_|PH7PR12MB8016:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cd4435a-03e1-44b7-5d66-08dc5de232c0
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|SA1PR12MB8965:EE_
+X-MS-Office365-Filtering-Correlation-Id: 28aedb1b-ffc8-481f-8078-08dc5ea3feaa
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	Yo7t2K/U8wK8UiqYmBpByulr2/CifiBsDiZZ5DihYHvN9es1VLwGcaT2CCByWbA+kWzCUAawmFu9Fuz8U8gfistt5Crh6qxUkXkczkeH2C/SFPAeLYcJQa3KHE5jSiicjkEDGtrBQFEOihjOhWE0SED3MkMLD9X/vXRS0L4uABPHtSrFsRktCPkV2KjnDVbsiW2rk6K4gv5bJn4abCW7BBrfhxLEQAdfbWN+6ktHxgeNR55ps83u9J+Rz6+BS4/Edq4PLfZSYBG2b3Vvbgl2gfIGQhEy97LKAirz2ILvDW+NTn1kjtR8n8gjap2badhf0g2XIznPe7g+THZQe8tueaYLgJAljKXCY9IOYQZc17mii0uKq6B1Huw7/v74ZY/3EgSVLSwcOLUrVisxJ0B0pHLauOIqEdQuptW/S6b8C698yzgeEbttuLnJSqiefZ1i/58LOp/AeH70SOcH8xPeYyFLJJ1eKlSRmxOq13dllUOdHzbDdthtT7K7WpnR+8foAdK1ftkkcAOiqbvlca3WhMhOuI2wWskAMOvpFKd5iqxrFcq1MDfMu0Qhx19vxTl9mHNma0EBfF0sXKRESmnuyVo0/pI0Ir69PCZD7MsKil6g1capXrzB0AuUYjEb5ymiKfmw2KZWDWT438IxQehfBde7fpvFbAA8nGoPRbZlGfYfbP6eaY+ku2e89gYMeE0Kiyg3CRuNcZtSYwvbJlgPQ8l+HY2XYoMNqPRk4ERMJlFq3tFsGA+3zV+uQgFY9/cqbZEeVUVXYqTfNC7WxY6G2Fbe3nbPkDKIaLlYsxeaDs8=
+	n1Yyz6KC7A9cUwgEXbXs3caWT/WWJPxNIIeHRzhNsvOsm5yduprHfewHUqbhNFFxgaMNNMCZ8rLxj2Q1u0sxJTNJjkJM9TCPdh1l4HupTNNZddk0uGO42SdN8d7UHbQ1lz79GN0Du/aNE/1+BHC4NWOptnUgevCeqS+LtzS/CoKjtCOZSUYihLxfhGGle9c0EkjqeeJsCZlaCRPmuvvOqzUNqqTo1jBfrvoAPxZ/Qp77yzwKrqVpNAb8uOwnAD3v3Zc+MO6h6zuL5qCjS933jBUalXjRO6kP12zYX033J6hmxHM1GbQX6kAVRlWFrbMjfj0bMYEOb+zneztQmehXnkrggLbwO1pi75swKIWd/dnSZrKdV1CsYD4thVuUyCINz7EY8Mq2oRYLhxpVQtoHb2Vg5/I5Cp77PiYcUvgPCFLIo52qZ1NQweO1uNCOhotnlEd/qBLhVN8XdamLgHdDmD69Y8XCwErpALtHbktTWmTNUr+PCx/teGBRPPNUgSBjuK/9ovT0IA32PUsUlYkBFooob7HHomZlQGhuQ/FpJHsdHJ0TIQFatjICEfApykdeH+6xgyXA8YkSDGyKsnnRfJBanMGHcKMmKotYylSoSuHZh5+mFpYtxMqoCObLHEpLaOUkfQ1lqwhZHgob6LLARKZdrFuhxeGyXVjKTnht47I=
 X-Forefront-Antispam-Report: 
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(7416005)(1800799015)(36860700004)(32650700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?KMk6a7MNa8hr/xKj/YT3je4bu3RAu3Gj36eHIyRl4vdABUMpzKk1rEo8c5CV?=
+ =?us-ascii?Q?5kpW3N2E6SRkSzyTgaImP7NFgb6Gr6Fbt1KZovJ5MorlyBpPGIIB+xKFbQJ0?=
+ =?us-ascii?Q?NzCW6eJfSqM9bVmmVFybYFdje0Rf5Dy34wohL4up/2FqNfG0YKu9xOEpakuB?=
+ =?us-ascii?Q?kDjJRHV3S8wBjYXO26lTEKUoqsv8Vyn/roQoJ18AOu/yZLnjXGQ/bwKEnSrj?=
+ =?us-ascii?Q?Or4ookzSFz6OGIc+ORcYhBotIxoWYg1gvE+sFQlXhq2V+BGjUj2T/ZUq9itk?=
+ =?us-ascii?Q?5VZJojIx3ni3DvuKYzLsKrRhqJc+YlUjPWavek+Cvnmi0DvyGISsXbcs48ba?=
+ =?us-ascii?Q?SeAa/BRJoj94SlCQ9h8pg0jtYOehoqlGfU+tSYSz7bbZ/pORSUg2na7NRV8A?=
+ =?us-ascii?Q?RCNAyyHmblCGKqqFUSlV+2ta0JnuR2Bn/n1ibxPdAW0HMLedqm0hgxgKbuXh?=
+ =?us-ascii?Q?4ECgo4P5RIE9FIM8J8WnvDTW162ib9KmYVNT/ligoDZ//Xc2/Udt17mVke2l?=
+ =?us-ascii?Q?JL6L5CPUqaAqYg1w+MzG6Ayy5PoL2xqCOoT3riVEH/eIuvH+OpKUHyEBzo39?=
+ =?us-ascii?Q?+zRRSNE1YcGVJNlidBrWvUvloulk5hOnja1r7VVD/qI9WcXwObyOOJkYKZu4?=
+ =?us-ascii?Q?N3/pMYla15Qasv8vLlLa7z5Z+0twFyqgbUhLGsfhukDJUItXn3DvYWdE2ltT?=
+ =?us-ascii?Q?3uhSJre0tFJjA51d5GQoiELHs6F4kpL0pV2kSWE63UeyUUrGyvcwDK6rMX+Z?=
+ =?us-ascii?Q?3oN28lNJwYp+q1YdxLwOsXy/0mztUH/O7Y6tbBm/ETdHOjvf44TsvjdIcd+P?=
+ =?us-ascii?Q?lpKzUknGEHA5Shf0+lnzI9g68xldyALHyXI7LjzdEQq+Qns1ygZvz2+s7YgC?=
+ =?us-ascii?Q?3ExBqDvyc+UO8edrEmQV9R48tcxIa3Aq5kE2x0ndp4HiZMp1pZ+N8vuCAcpE?=
+ =?us-ascii?Q?4MsV/+UqI0JbsmHnSDU0WHGo2etAsIIOYc9UB8u2neWDy+1LdvGgyaK2FSB9?=
+ =?us-ascii?Q?skI2+DF7sJSBOe3LM/44HmehNHZ3cz63NiM+RbLIMVNyQh3A0eSggbTDrdX9?=
+ =?us-ascii?Q?pMrElNLTAu8iOLdZaB2sZKdu/eQOJ3LHM51n6EfVWlztDJxILGx02uXkPFeM?=
+ =?us-ascii?Q?5Mei9DEzGSSVsw80nZRnYgqumwgauMg6tTxLSTMQ1Z2nPOJHOsB6lx5IHIAR?=
+ =?us-ascii?Q?TuCSz84VPePyY2XjOH/YIsqT8/KNlqXu0GOQv01TWrx6q746WpaOTXInP8vh?=
+ =?us-ascii?Q?MCRv2HTKYXhItNkWXe6Ciqxvy+geAHe0lDVv0L0q4Fw+/A6Xbt7ASS9nCY5S?=
+ =?us-ascii?Q?f6IupKlWjhYJUrk33YKgNZ4DL2X8FPZzboqghsTHcyKnPPMjOGLR9bHF7cgy?=
+ =?us-ascii?Q?AgWgd32XrfrNQWT0fE5yhkDjUZNTzwUVi6VV/6Ngp3W3gwEb5rOG/79Ak/yl?=
+ =?us-ascii?Q?hr/0HJ0v0O6xgMMTiGb+3h4pjjr/i72bgfW0XVtF3En2auXxPrTs3FULH6cQ?=
+ =?us-ascii?Q?VUyBXpZUKXfwVTnHXfAhx4xGzeUMFzdLLds1efRjI1RR3MXYOeA7VOr3WGkW?=
+ =?us-ascii?Q?4fGm10XuUviDXUe1QDhAfFm6YuIlQdVHMdOvVi5J?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 06:55:27.3977
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28aedb1b-ffc8-481f-8078-08dc5ea3feaa
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 06:02:42.7908
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cd4435a-03e1-44b7-5d66-08dc5de232c0
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	SN1PEPF00036F3F.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8016
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5NZt5H1q4VOrFYTXdjcMIP+5BS/6CDFByyngtTGPgc54De1D2VwBsJfIMT0Xzrpm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8965
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 16 Apr 2024 17:00:15 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2270
-
-I looked as cleaning up some dependencies and I found that qconfig is
-reporting some issues. This series is fixing some of them. But there are
-still some other pending. That's why please go and fix them if they are
-related to your board.
-
-UTF-8: I am using uni2ascii -B < file to do conversion. When you run it in
-a loop you will find some other issue with copyright chars or some issues
-in files taken from the Linux kernel like DTs. They should be likely fixed
-in the kernel first.
-Based on discussion I am ignoring names too.
-
-Thanks,
-Michal
-
-drivers/pinctrl/intel/Kconfig:12: warning: style: quotes recommended around=
- 'n' in 'bool n'
-warning: the choice symbol CPU_ARCEM6 (defined at arch/arc/Kconfig:46) is s=
-elected by the following symbols, but select/imply has no effect on choice =
-symbols
- - TARGET_EMSDP (defined at arch/arc/Kconfig:173)
- - TARGET_IOT_DEVKIT (defined at arch/arc/Kconfig:180)
-warning: the choice symbol ARC_MMU_ABSENT (defined at arch/arc/Kconfig:77) =
-is selected by the following symbols, but select/imply has no effect on cho=
-ice symbols
- - CPU_ARCEM6 (defined at arch/arc/Kconfig:46)
- - CPU_ARCHS36 (defined at arch/arc/Kconfig:53)
-warning: the choice symbol ARC_MMU_V2 (defined at arch/arc/Kconfig:82) is s=
-elected by the following symbols, but select/imply has no effect on choice =
-symbols
- - CPU_ARC750D (defined at arch/arc/Kconfig:32)
-warning: the choice symbol ARC_MMU_V3 (defined at arch/arc/Kconfig:89) is s=
-elected by the following symbols, but select/imply has no effect on choice =
-symbols
- - CPU_ARC770D (defined at arch/arc/Kconfig:39)
-warning: the choice symbol ARC_MMU_V4 (defined at arch/arc/Kconfig:97) is s=
-elected by the following symbols, but select/imply has no effect on choice =
-symbols
- - CPU_ARCHS38 (defined at arch/arc/Kconfig:60)
-warning: the choice symbol FSP_VERSION2 (defined at arch/x86/Kconfig:396) i=
-s selected by the following symbols, but select/imply has no effect on choi=
-ce symbols
- - INTEL_APOLLOLAKE (defined at arch/x86/cpu/apollolake/Kconfig:6)
-warning: the choice symbol SPL_RISCV_MMODE (defined at arch/riscv/Kconfig:1=
-84) is implied by the following symbols, but select/imply has no effect on =
-choice symbols
- - BOARD_SPECIFIC_OPTIONS (defined at board/bsh/imx8mn_smm_s2/Kconfig:21, b=
-oard/bsh/imx8mn_smm_s2/Kconfig:41, board/engicam/px30_core/Kconfig:12, boar=
-d/theobroma-systems/ringneck_px30/Kconfig:12, board/radxa/rockpi4-rk3399/Kc=
-onfig:12, board/theobroma-systems/puma_rk3399/Kconfig:12, board/theobroma-s=
-ystems/jaguar_rk3588/Kconfig:12, board/edgeble/neural-compute-module-2/Kcon=
-fig:12, board/itead/sonoff-ihost/Kconfig:12, board/emulation/qemu-arm/Kconf=
-ig:6, board/emulation/qemu-arm/Kconfig:22, board/freescale/ls1012aqds/Kconf=
-ig:27, board/freescale/ls1012ardb/Kconfig:27, board/freescale/ls1012ardb/Kc=
-onfig:76, board/freescale/ls1012afrdm/Kconfig:27, board/advantech/som-db580=
-0-som-6867/Kconfig:18, board/congatec/conga-qeval20-qa3-e3845/Kconfig:17, b=
-oard/coreboot/coreboot/Kconfig:15, board/dfi/dfi-bt700/Kconfig:17, board/ef=
-i/efi-x86_app/Kconfig:12, board/efi/efi-x86_payload/Kconfig:15, board/emula=
-tion/qemu-x86/Kconfig:16, board/google/chromebook_coral/Kconfig:18, board/g=
-oogle/chromebook_link/Kconfig:19, board/google/chromebox_panther/Kconfig:19=
-, board/google/chromebook_samus/Kconfig:19, board/intel/bayleybay/Kconfig:1=
-5, board/intel/cherryhill/Kconfig:15, board/intel/cougarcanyon2/Kconfig:15,=
- board/intel/crownbay/Kconfig:15, board/intel/edison/Kconfig:24, board/inte=
-l/galileo/Kconfig:15, board/intel/minnowmax/Kconfig:15, board/intel/slimboo=
-tloader/Kconfig:19, board/AndesTech/ae350/Kconfig:34, board/emulation/qemu-=
-riscv/Kconfig:32, board/microchip/mpfs_icicle/Kconfig:19, board/openpiton/r=
-iscv64/Kconfig:26, board/sifive/unleashed/Kconfig:26, board/sifive/unmatche=
-d/Kconfig:26, board/sipeed/maix/Kconfig:30, board/sophgo/milkv_duo/Kconfig:=
-24, board/starfive/visionfive2/Kconfig:26, board/thead/th1520_lpi4a/Kconfig=
-:30, board/xilinx/mbv/Kconfig:22, board/keymile/km83xx/Kconfig:34, board/ke=
-ymile/km83xx/Kconfig:54, board/keymile/km83xx/Kconfig:74, board/keymile/km8=
-3xx/Kconfig:93, board/keymile/km83xx/Kconfig:112, board/keymile/km83xx/Kcon=
-fig:131, board/keymile/km83xx/Kconfig:150, board/keymile/kmcent2/Kconfig:12=
-, board/keymile/pg-wcom-ls102xa/Kconfig:15, board/keymile/pg-wcom-ls102xa/K=
-config:35)
-warning: the choice symbol SYS_BIG_ENDIAN (defined at arch/Kconfig:528) is =
-selected by the following symbols, but select/imply has no effect on choice=
- symbols
- - ARC (defined at arch/Kconfig:53)
-warning: the choice symbol SYS_LITTLE_ENDIAN (defined at arch/Kconfig:532) =
-is selected by the following symbols, but select/imply has no effect on cho=
-ice symbols
- - ARC (defined at arch/Kconfig:53)
-warning: the choice symbol OF_SEPARATE (defined at dts/Kconfig:108) is sele=
-cted by the following symbols, but select/imply has no effect on choice sym=
-bols
- - ARCH_MVEBU (defined at arch/arm/Kconfig:620)
- - ARCH_SNAPDRAGON (defined at arch/arm/Kconfig:1074)
- - ARCH_SUNXI (defined at arch/arm/Kconfig:1143)
- - ARCH_S5P4418 (defined at arch/arm/mach-nexell/Kconfig:3)
-warning: the choice symbol MULTI_DTB_FIT_USER_DEFINED_AREA (defined at dts/=
-Kconfig:242) is implied by the following symbols, but select/imply has no e=
-ffect on choice symbols
- - RZG2L (defined at arch/arm/mach-renesas/Kconfig:70)
- - TARGET_BEACON_RZG2M (defined at arch/arm/mach-renesas/Kconfig.rcar3:82)
- - TARGET_HIHOPE_RZG2 (defined at arch/arm/mach-renesas/Kconfig.rcar3:130)
- - TARGET_SALVATOR_X (defined at arch/arm/mach-renesas/Kconfig.rcar3:149)
- - TARGET_ULCB (defined at arch/arm/mach-renesas/Kconfig.rcar3:160)
-warning: the choice symbol SYS_NAND_SOFT_ECC (defined at drivers/mtd/nand/r=
-aw/Kconfig:184) is selected by the following symbols, but select/imply has =
-no effect on choice symbols
- - NAND_SANDBOX (defined at drivers/mtd/nand/raw/Kconfig:450)
-warning: the choice symbol USB_ULPI_VIEWPORT (defined at drivers/usb/ulpi/K=
-config:11) is selected by the following symbols, but select/imply has no ef=
-fect on choice symbols
- - USB_EHCI_MSM (defined at drivers/usb/host/Kconfig:263)
-warning: the choice symbol LIB_RAND (defined at lib/Kconfig:275) is selecte=
-d by the following symbols, but select/imply has no effect on choice symbol=
-s
- - CMD_LINK_LOCAL (defined at cmd/Kconfig:1994)
-warning: the choice symbol EFI_APP (defined at lib/efi/Kconfig:15) is selec=
-ted by the following symbols, but select/imply has no effect on choice symb=
-ols
- - TARGET_EFI_APP32 (defined at board/efi/Kconfig:7)
- - TARGET_EFI_APP64 (defined at board/efi/Kconfig:16)
+ <u-boot-amlogic@groups.io>; Mon, 22 Apr 2024 09:02:20 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2276
 
 
-Changes in v2:
-- Describe temperature as deg C instead of just C
-- Update commit message to explain the reason
-- New patch in series
 
-Michal Simek (5):
-  Kconfig: Remove trailing whitespace in its prompt
-  Kconfig: Add missing quotes around source file
-  Kconfig: Add missing quotes around default string value
-  Kconfig: Make all Kconfig encoding ascii
-  common: Convert *.c/h from UTF-8 to ASCII enconfing
+On 4/16/24 18:19, Heinrich Schuchardt wrote:
+> On 16.04.24 18:06, Tom Rini wrote:
+>> On Tue, Apr 16, 2024 at 08:55:19AM +0200, Michal Simek wrote:
+>>
+>>> Convert UTF-8 chars to ASCII in cases where make sense. No Copyright or
+>>> names are converted.
+>>>
+>>> Signed-off-by: Michal Simek <michal.simek@amd.com>
+>>>
+>>
+>> Reviewed-by: Tom Rini <trini@konsulko.com>
+>>
+>> Now, how did you test / find these? Given names a CI test is unlikely
+>> to be doable but if it's otherwise scriptable I can put it in my loops
+>> and just fixup as needed (like I do today for adding <common.h> for
+>> example).
+>>
+>=20
+> There seem no to be too many non-ASCI strings outside of comments.
+> Should we care about non-ASCII comments?
+>=20
+> $ find . -name '*.h' -exec grep -P -Hn "[^\x00-\x7F]" {} \; | grep -v
+> ':\s*[\/\*']
+> ./include/configs/tec-ng.h:13:#define CFG_TEGRA_BOARD_STRING=C2=A0=C2=A0=
+=C2=A0 "Avionic
+> Design Tamonten=E2=84=A2 NG Evaluation Carrier"
+> ./arch/mips/mach-octeon/include/mach/cvmx-pko3.h:369:=C2=A0=C2=A0 MEMALG_=
+SUB =3D 9,
+>  =C2=A0=C2=A0=C2=A0=C2=A0 /* mem =3D mem =E2=80=93 PKO_SEND_MEM_S[OFFSET]=
+ */
+>=20
+> $ find . -name '*.c' -exec grep -P -Hn "[^\x00-\x7F]" {} \; | grep -v
+> ':\s*[\/\*']
+> ./drivers/mtd/nand/raw/nand_ids.c:65:=C2=A0=C2=A0 {"H27QCG8T2E5R=E2=80=90=
+BCF 64G 3.3V 8-bit",
+> ./drivers/video/dw_mipi_dsi.c:861:MODULE_AUTHOR("Yannick Fertr=C3=A9
+> <yannick.fertre@st.com>");
+> ./board/bosch/acc/acc.c:440:=C2=A0=C2=A0=C2=A0 .SRT =3D 0, // Set to 1 fo=
+r temperatures
+> above 85=C2=B0C
+> ./cmd/2048.c:65:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 printf("=C2=A0=C2=A0=
+ =C2=B7=C2=A0=C2=A0 ");
+> ./cmd/2048.c:79:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 printf("=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =E2=86=90, =E2=86=91, =E2=86=92, =E2=
+=86=93 or q=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \n");
 
- .../armv8/fsl-layerscape/fsl_lsch2_serdes.c   |  2 +-
- .../armv8/fsl-layerscape/fsl_lsch3_serdes.c   |  2 +-
- arch/arm/mach-imx/ddrmc-vf610-calibration.c   | 12 +++++-----
- arch/arm/mach-imx/mx6/clock.c                 |  8 +++----
- arch/arm/mach-imx/mx7/psci-mx7.c              |  4 ++--
- arch/arm/mach-rockchip/px30/Kconfig           |  4 ++--
- arch/arm/mach-rockchip/rk3588/Kconfig         | 24 +++++++++----------
- arch/arm/mach-rockchip/rv1108/Kconfig         |  4 ++--
- arch/arm/mach-rockchip/rv1126/Kconfig         |  8 +++----
- arch/mips/mach-mscc/include/mach/ddr.h        |  2 +-
- .../include/mach/cvmx-helper-pki.h            |  2 +-
- arch/mips/mach-octeon/include/mach/cvmx-pki.h |  6 ++---
- .../mips/mach-octeon/include/mach/cvmx-pko3.h |  2 +-
- board/CZ.NIC/turris_mox/turris_mox.c          |  2 +-
- board/amlogic/vim3/vim3.c                     |  2 +-
- board/bosch/acc/acc.c                         |  2 +-
- board/bosch/shc/board.c                       |  2 +-
- board/bosch/shc/board.h                       |  2 +-
- board/congatec/cgtqmx8/cgtqmx8.c              |  4 ++--
- board/freescale/common/i2c_mux.c              |  2 +-
- board/siemens/capricorn/board.c               |  8 +++----
- board/st/common/cmd_stboard.c                 |  2 +-
- .../visionfive2/visionfive2-i2c-eeprom.c      |  4 ++--
- cmd/Kconfig                                   |  2 +-
- drivers/clk/Kconfig                           | 10 ++++----
- drivers/clk/renesas/rzg2l-cpg.c               |  6 ++---
- drivers/clk/stm32/clk-stm32-core.h            | 22 ++++++++---------
- drivers/crypto/Kconfig                        |  8 +++----
- drivers/ddr/imx/imx8ulp/Kconfig               |  2 +-
- drivers/led/led_lp5562.c                      |  4 ++--
- drivers/mtd/nand/raw/nand_ids.c               |  2 +-
- drivers/mtd/spi/Kconfig                       |  2 +-
- drivers/rng/stm32_rng.c                       |  6 ++---
- drivers/soc/ti/k3-navss-ringacc.c             |  2 +-
- drivers/thermal/thermal_sandbox.c             |  2 +-
- drivers/video/renesas-r61307.c                |  2 +-
- drivers/video/renesas-r69328.c                |  2 +-
- drivers/xen/pvblock.c                         |  2 +-
- include/acpi/acpigen.h                        |  6 ++---
- include/linux/mtd/mtd.h                       |  2 +-
- lib/Kconfig                                   | 18 +++++++-------
- lib/crypto/x509_cert_parser.c                 |  2 +-
- lib/efi_loader/Kconfig                        |  2 +-
- 43 files changed, 107 insertions(+), 107 deletions(-)
+I actually use more force way and simply run uni2ascii -B < file to all fil=
+es=20
+and then look at git diff and pick what it is valid.
+Above find is not able to find all that strings.
 
---=20
-2.44.0
+For example this one could be also fixed which above filter it not able to =
+find.
+
+--- a/include/mtd/ubi-user.h
++++ b/include/mtd/ubi-user.h
+@@ -1,8 +1,8 @@
+  /* SPDX-License-Identifier: GPL-2.0+ */
+  /*
+- * Copyright =C2=A9 International Business Machines Corp., 2006
++ * Copyright (c) International Business Machines Corp., 2006
+
+M
 
 
