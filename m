@@ -2,152 +2,172 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE2CC4345F
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 07:54:20 +0000 (UTC)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
- by mx.groups.io with SMTP id smtpd.web11.1468.1713814569819311662
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3A5C04FFE
+	for <webhook@archiver.kernel.org>; Fri, 26 Apr 2024 08:21:34 +0000 (UTC)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+ by mx.groups.io with SMTP id smtpd.web10.8869.1714119689127320287
  for <u-boot-amlogic@groups.io>;
- Mon, 22 Apr 2024 12:36:10 -0700
+ Fri, 26 Apr 2024 01:21:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=Ztt6JEdQ;
- spf=pass (domain: konsulko.com, ip: 209.85.160.179, mailfrom: trini@konsulko.com)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4375ddb9eaeso28731311cf.3
-        for <u-boot-amlogic@groups.io>; Mon, 22 Apr 2024 12:36:09 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=cMrIFuCO;
+ spf=pass (domain: linaro.org, ip: 209.85.208.180, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2da08b06e0dso20068131fa.2
+        for <u-boot-amlogic@groups.io>; Fri, 26 Apr 2024 01:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1713814569; x=1714419369; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L21Ma6lwh0kQWeK64WUAdv5y8b5n+0KVnewRokhfak8=;
-        b=Ztt6JEdQ0kcZc38j7rLdya95FRiPBUJVD/wiG/XHRe2uMvigSeQl7/GSBX5eA7i7AA
-         f8Cdynx9ekxq/EB86SoIES0OBslXSGE2zK0sR75UJRtdpjA28XGgzE29WL+2a1CL28ok
-         cJZGXn4qiJBB/IPA2HRNFJMnQP80uwWfW27VQ=
+        d=linaro.org; s=google; t=1714119687; x=1714724487; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LdlMorqme09z0hgXtFiVhjo8t9ZBg96TuMKwAPPdPKo=;
+        b=cMrIFuCOZ974ip26ZSMr4r4iMZOmVMJiPW8XHz8IAorfX6WFu3i2bAYQuixmqET2f6
+         mBdxqpCquIUVUopp4fWDQWcLxd3U5N5m877W8XMTVQKcXKGuLc/ooDTQSF2QA6mzkxcL
+         piAw4xb7fYwZi5112ASSktfDeWTlR+ftHBdgqaxad6Ev20yjESDCBHpyohRh3AmznYvt
+         Htf/HjKS8HVkr424gpaucPR8eTCPOMDPKhxPtpaITFNk/SiKoNB41ZqlbM83eXzEpKek
+         sM6e4u8z1xwubVbwuxyrORRTpxIMkfWPSs4yDjm+1GzzAWfJjl4Rfb0Y+JOUHWXBcrD8
+         qT0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713814569; x=1714419369;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L21Ma6lwh0kQWeK64WUAdv5y8b5n+0KVnewRokhfak8=;
-        b=d+b1rp/PmqyXk1FEUbNhxOFG+GRUUwT5OJ+x0Ammzs6PXnA1Jkp+POqJh5WQ97eoC9
-         4AQdfdMW3h3/CQbgkvJrU9N9CSPn6HK7u/dvLuvnI2ZYfexfLoCWwO8UTq3lg+45queZ
-         wfRNLG2OVVM8AR0TxF+UlknUNRHGqlgZOVED/5t8JE4CeohEDb7vheFYKS6qSsgTTUZf
-         rTO9jfgxb58g+9iyCW8H1/vH7LALEeFekgNAXUxGERFV3VNCoL3yRsqtTfczjezAYNa/
-         GyGfl26wK1yZxwuviOWr6r+llEYKSTXZr/kXxQgzTWipgJeCwkeFPcxLsjhi7zStAGkB
-         zVxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJTc+y+9+upgHMMz0p7VW6robatsozI6P7QxBCCeOx9uSkCkd+7wNzYiEgXuH4OEXOuRtqZqrioNR8RRGWhU4zbyjsDunlsfQ=
-X-Gm-Message-State: AOJu0YxmxNkHtszRkLX0+nAayzrCrDotaUPb/eSN9nImEIQ0sbBjqFA4
-	JDhAkfJGBtJsaqUrMRVn/v66+oKX9bTkSjZI7sEp8mi9mNk4dv6GWgdwx5LZI9I=
-X-Google-Smtp-Source: AGHT+IGjga4KZKogIyZM1p0irH2LmXlKumpkIhr3LkiiUBMFN9CN5JkF/ZXsUs9LfKSlBuFF6LNkCQ==
-X-Received: by 2002:ac8:7d05:0:b0:435:2351:75c6 with SMTP id g5-20020ac87d05000000b00435235175c6mr14232949qtb.46.1713814568681;
-        Mon, 22 Apr 2024 12:36:08 -0700 (PDT)
-Received: from [127.0.1.1] ([187.144.98.216])
-        by smtp.gmail.com with ESMTPSA id kk3-20020a05622a2c0300b00436b2135b51sm4492448qtb.64.2024.04.22.12.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 12:36:08 -0700 (PDT)
-From: Tom Rini <trini@konsulko.com>
-To: u-boot@lists.denx.de, git@xilinx.com, 
- Michal Simek <michal.simek@amd.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, 
- Aaron Williams <awilliams@marvell.com>, 
- Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>, 
- Alexander Sverdlin <alexander.sverdlin@siemens.com>, 
- Anastasiia Lukianenko <vicooodin@gmail.com>, 
- Anatolij Gustschin <agust@denx.de>, Andre Przywara <andre.przywara@arm.com>, 
- Biju Das <biju.das.jz@bp.renesas.com>, Bin Meng <bmeng@tinylab.org>, 
- Caleb Connolly <caleb.connolly@linaro.org>, 
- Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, 
- Dario Binacchi <dario.binacchi@amarulasolutions.com>, 
- Doug Zobel <douglas.zobel@climate.com>, Dragan Simic <dsimic@manjaro.org>, 
- Eddie James <eajames@linux.ibm.com>, Elon Zhang <zhangzj@rock-chips.com>, 
- Enrico Leto <enrico.leto@siemens.com>, 
- Eugen Hristev <eugen.hristev@collabora.com>, 
- Fabio Estevam <festevam@gmail.com>, 
- Francis Laniel <francis.laniel@amarulasolutions.com>, 
- Gatien Chevallier <gatien.chevallier@foss.st.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Grzegorz Szymaszek <gszymaszek@short.pl>, Heiko Schocher <hs@denx.de>, 
- Heinrich Schuchardt <xypron.glpk@gmx.de>, 
- Horatiu Vultur <horatiu.vultur@microchip.com>, 
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
- Jagan Teki <jagan@amarulasolutions.com>, Jagan Teki <jagan@edgeble.ai>, 
- Johan Jonker <jbx6244@gmail.com>, John Clark <inindev@gmail.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Joshua Riek <jjriek@verizon.net>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
- Lars Povlsen <lars.povlsen@microchip.com>, 
- Leo Yu-Chi Liang <ycliang@andestech.com>, Lukasz Majewski <lukma@denx.de>, 
- Manorit Chawdhry <m-chawdhry@ti.com>, 
- =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
- Marek Vasut <marek.vasut+renesas@mailbox.org>, 
- Masahisa Kojima <kojima.masahisa@socionext.com>, 
- Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, 
- Matthias Winker <matthias.winker@de.bosch.com>, 
- Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
- Michael Trimarchi <michael@amarulasolutions.com>, 
- Minda Chen <minda.chen@starfivetech.com>, 
- "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Nishanth Menon <nm@ti.com>, 
- Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, 
- Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>, 
- Oleksandr Suvorov <oleksandr.suvorov@foundries.io>, 
- Oliver Graute <oliver.graute@kococonnector.com>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Patrick Delaunay <patrick.delaunay@foss.st.com>, 
- Paul Barker <paul.barker.ct@bp.renesas.com>, 
- =?utf-8?q?Pawe=C5=82_Jarosz?= <paweljarosz3691@gmail.com>, 
- Peng Fan <peng.fan@nxp.com>, Peter Robinson <pbrobinson@gmail.com>, 
- Philip Oberfichtner <pro@denx.de>, 
- Philipp Tomsich <philipp.tomsich@vrull.eu>, 
- Quentin Schulz <quentin.schulz@theobroma-systems.com>, 
- Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
- Sean Anderson <sean.anderson@seco.com>, Sean Anderson <seanga2@gmail.com>, 
- Sean Edmond <seanedmond@microsoft.com>, 
- Seung-Woo Kim <sw0312.kim@samsung.com>, 
- Shiji Yang <yangshiji66@outlook.com>, Simon Glass <sjg@chromium.org>, 
- Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>, 
- Stefan Roese <sr@denx.de>, Stefano Babic <sbabic@denx.de>, 
- Sughosh Ganu <sughosh.ganu@linaro.org>, 
- Svyatoslav Ryhel <clamor95@gmail.com>, Tim Lunn <tim@feathertop.org>, 
- Tom Fitzhenry <tom@tom-fitzhenry.me.uk>, 
- Venkatesh Yadav Abbarapu <venkatesh.abbarapu@amd.com>, 
- Viacheslav Bocharov <adeep@lexina.in>, Vignesh R <vigneshr@ti.com>, 
- Yanhong Wang <yanhong.wang@starfivetech.com>, 
- "open list:VIM3" <u-boot-amlogic@groups.io>, 
- "moderated list:ST BOARDS" <uboot-stm32@st-md-mailman.stormreply.com>
-In-Reply-To: <cover.1713250508.git.michal.simek@amd.com>
-References: <cover.1713250508.git.michal.simek@amd.com>
-Subject: Re: [PATCH v2 0/5] Kconfig: some cleanups
-Message-Id: <171381456119.1909236.8049238331801273262.b4-ty@konsulko.com>
-Date: Mon, 22 Apr 2024 13:36:01 -0600
+        d=1e100.net; s=20230601; t=1714119687; x=1714724487;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LdlMorqme09z0hgXtFiVhjo8t9ZBg96TuMKwAPPdPKo=;
+        b=HtSl2fr1qN5hZdsWhyc4Rjj6lnnQdTKVtO8fZA/neqTnjclfAcxw8MBGTIQGqMPDci
+         Xd6F1z+eoel7wnSOYDn87lsH+22PNrT6+DRI5XRgc/7nlqxO/LJ9wUWyvnLDNx2PlvlT
+         9cRqwe5iIIgt9ow0IInoAXk1ntCko6P9TYP6dCG5ztLIx+wF3EdDAKSkPo664Nij1WQS
+         XCuLYStv2ajK2f8G+PbGZVuYHF8Y/YKXfIE8lUl6jJftwq7d38t4pqbMTQ8e6KyKyTK7
+         a5KHoIhOQnAGLX1Oaov+NI1PbpEvgufE7laB5qwmxyeFGZfTdHcLIkvlJORplvzGbjo8
+         0jhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQx2yWRRN+W2etADU57i5jN4NSNyTDTirsWQnmgdhfHjucxabH0KcRHKyhPzkeV88ZN7ByjkFGhNmEJVO2uHVMmSUIqMEQCF0=
+X-Gm-Message-State: AOJu0YyGvcNtTw6XKBc+dbNxm/g8Gm6qtzB9LTPshZ52eSxOGJenB1Ai
+	omiVHQH7JvomZ8mk5wxYtXWgMwuQU8oP03kClBhL6mPeCglGmeG2SK5ybqYnomw=
+X-Google-Smtp-Source: AGHT+IGwj1rv1BmHu5I+nibAjIOS9EzM4+JDhC72189g2OoM0x6JTUB3GknjV/NAmjCJOXNPRkW/oA==
+X-Received: by 2002:a2e:b784:0:b0:2d6:f698:7ecf with SMTP id n4-20020a2eb784000000b002d6f6987ecfmr1123902ljo.9.1714119687144;
+        Fri, 26 Apr 2024 01:21:27 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:f335:a8c9:f9da:cddb? ([2a01:e0a:982:cbb0:f335:a8c9:f9da:cddb])
+        by smtp.gmail.com with ESMTPSA id u11-20020a5d434b000000b0034a2d0b9a4fsm20581577wrr.17.2024.04.26.01.21.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 01:21:26 -0700 (PDT)
+Message-ID: <d272b0f6-2f21-4601-b347-f83eac4f12d4@linaro.org>
+Date: Fri, 26 Apr 2024 10:21:25 +0200
 MIME-Version: 1.0
-X-Mailer: b4 0.13.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v1] arm: dts: meson-axg: add NAND controller node for AXG
+To: Arseniy Krasnov <avkrasnov@salutedevices.com>,
+ Tom Rini <trini@konsulko.com>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, kernel@sberdevices.ru,
+ oxffffaa@gmail.com
+References: <20240425175052.2650301-1-avkrasnov@salutedevices.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240425175052.2650301-1-avkrasnov@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 23 Apr 2024 07:54:20 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2277
+ <u-boot-amlogic@groups.io>; Fri, 26 Apr 2024 08:21:34 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2278
 
-On Tue, 16 Apr 2024 08:55:14 +0200, Michal Simek wrote:
+Hi,
 
-> I looked as cleaning up some dependencies and I found that qconfig is
-> reporting some issues. This series is fixing some of them. But there are
-> still some other pending. That's why please go and fix them if they are
-> related to your board.
+On 25/04/2024 19:50, Arseniy Krasnov wrote:
+> nfc: Synced from Linux commit 7ca2ef33179f ("Linux 6.6-rc1")
+> nand_all_pins: Synced from Linux commit be18d53c32b2 ("Linux 6.7-rc3")
+
+No need to sync DT anymore, this is handled by OF_UPSTREAM and for next release
+it's already aligned with v6.9 DT.
+
+Please try your patches with master or next branch of U-Boot repo.
+
+Neil
+
 > 
-> UTF-8: I am using uni2ascii -B < file to do conversion. When you run it in
-> a loop you will find some other issue with copyright chars or some issues
-> in files taken from the Linux kernel like DTs. They should be likely fixed
-> in the kernel first.
-> Based on discussion I am ignoring names too.
+> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> ---
+>   arch/arm/dts/meson-axg.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 36 insertions(+)
 > 
-> [...]
-
-Applied to u-boot/master, thanks!
-
--- 
-Tom
-
+> diff --git a/arch/arm/dts/meson-axg.dtsi b/arch/arm/dts/meson-axg.dtsi
+> index 3f5254eeb4..4f6fdd5523 100644
+> --- a/arch/arm/dts/meson-axg.dtsi
+> +++ b/arch/arm/dts/meson-axg.dtsi
+> @@ -430,6 +430,27 @@
+>   					};
+>   				};
+>   
+> +				nand_all_pins: nand_all_pins {
+> +					mux {
+> +						groups = "emmc_nand_d0",
+> +							 "emmc_nand_d1",
+> +							 "emmc_nand_d2",
+> +							 "emmc_nand_d3",
+> +							 "emmc_nand_d4",
+> +							 "emmc_nand_d5",
+> +							 "emmc_nand_d6",
+> +							 "emmc_nand_d7",
+> +							 "nand_ce0",
+> +							 "nand_ale",
+> +							 "nand_cle",
+> +							 "nand_wen_clk",
+> +							 "nand_ren_wr";
+> +						function = "nand";
+> +						input-enable;
+> +						bias-pull-up;
+> +					};
+> +				};
+> +
+>   				emmc_ds_pins: emmc_ds {
+>   					mux {
+>   						groups = "emmc_ds";
+> @@ -1906,6 +1927,21 @@
+>   				resets = <&reset RESET_SD_EMMC_C>;
+>   			};
+>   
+> +			nfc: nand-controller@7800 {
+> +				compatible = "amlogic,meson-axg-nfc";
+> +				reg = <0x0 0x7800 0x0 0x100>,
+> +				      <0x0 0x7000 0x0 0x800>;
+> +				reg-names = "nfc", "emmc";
+> +				pinctrl-0 = <&nand_all_pins>;
+> +				pinctrl-names = "default";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&clkc CLKID_SD_EMMC_C>,
+> +					 <&clkc CLKID_FCLK_DIV2>;
+> +				clock-names = "core", "device";
+> +			};
+> +
+>   			usb2_phy1: phy@9020 {
+>   				compatible = "amlogic,meson-gxl-usb2-phy";
+>   				#phy-cells = <0>;
 
 
