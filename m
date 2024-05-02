@@ -2,223 +2,207 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F05C25B4F
-	for <webhook@archiver.kernel.org>; Fri, 26 Apr 2024 13:01:45 +0000 (UTC)
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web10.9172.1714121476273209330
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A63C4345F
+	for <webhook@archiver.kernel.org>; Thu,  2 May 2024 07:39:24 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web10.373.1714635562673992760
  for <u-boot-amlogic@groups.io>;
- Fri, 26 Apr 2024 01:51:18 -0700
+ Thu, 02 May 2024 00:39:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=I9b4UkVD;
- spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: avkrasnov@salutedevices.com)
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 78558100007;
-	Fri, 26 Apr 2024 11:51:13 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 78558100007
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1714121473;
-	bh=oQ1nW+/bZ7sHZAQQKY6zU9DJRlfti/PZLefeh8iiIHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=I9b4UkVDyrHuUQeQS8uWnx/w9P8odpecs1WomRAJ/jMRZUSmrmzP4iIH7By3KY4mx
-	 qXr31IvkNjB8KtJPSULnNNQkySj4qpkVmizXDplEzC6XaWZd1HA4lStuFRbFyVqvua
-	 JLjlbxW6jk3Hrf4147lZEBzkI47P/8CAwrlw1i9rXUx0PqPufuE5KRd/Jwkr2wpJVO
-	 FeMQpZRJCa9TPQrt49fs5d9r+mih+fg3zNBZVK2iU7jZZq8JWPrye3Ir1784nvSRVj
-	 C+I9PNPkB4o+c04D0ldPdQPvN6ll9BkFNXPWzeVOPwTojDZUoOU6lGGBdfZ3dKiPyh
-	 YHwUEaIUanDaw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 26 Apr 2024 11:51:13 +0300 (MSK)
-Received: from [172.28.226.125] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 26 Apr 2024 11:51:12 +0300
-Message-ID: <21b14ae5-1f92-6c7b-2c65-20ef3cb5820d@salutedevices.com>
-Date: Fri, 26 Apr 2024 11:40:06 +0300
+ dkim=pass header.i=@linaro.org header.s=google header.b=L2ka70gh;
+ spf=pass (domain: linaro.org, ip: 209.85.128.41, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41a72f3a20dso52938435e9.0
+        for <u-boot-amlogic@groups.io>; Thu, 02 May 2024 00:39:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714635561; x=1715240361; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7JTQNjccdYBM6/7Ss23ts6kd28ppsd2kA60yw50qhSA=;
+        b=L2ka70ghMdla1KjD9WLtNZOoZQg0G71NADRbX5SvfV8Zo2SVq0Rj2xJaEUsH2mKWob
+         FmTSKhNPFIlqOTz1qlg8ycZ315zaoI6rfwM4VDOGUkOpA8hDuJQaxrCTpvy9ifVObnuT
+         eGccAHKeuSfHjFxzJHjqApgVBu5W8UnVH/x4YoZU+vEXMuzSm7gnT/yE8vRReBkSiLWX
+         4ZXlAzWojlONjRYCR7j7ZRFattCTdfgL4mM5UxnGLbNSqbebewNFocj8QG/R0j6zc1ZC
+         agK6Csje3vWXUd0/OIO3UiqPq6reGwhiKtK+JOiVkn6btyklzDqr3QB+QoqbH0MF4+Ne
+         zWtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714635561; x=1715240361;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7JTQNjccdYBM6/7Ss23ts6kd28ppsd2kA60yw50qhSA=;
+        b=ArkN5IXAU1xt8EHTllBjiOEp7j4GZhJDpVfBd046re0kmQ8ES9lQkZNqcEvAOw3I8N
+         XXAjyAKpd+a2qNLKfjzAEHE9mmetRFsZRgQ3AvgC+D6tH6JZ4pkJBmU9jqXCQWwYkT+o
+         5/E7UAQ+XXIgRdPmuIng3pwpcl4mW9NtcMnR8V1XcinnCg/phkn8+4m09kIMWOx13veL
+         joiAlS4qTIqdPoMQIqIpulZwP/t3oqmdEy8uhwhrXP7MgqO5SeKGUH/2xGl5ANqIIwuI
+         bs4LHkTPJjI4emTpjlrCfI1K7hV0MTOUGDWs/ZLvdTYThzq1dUZGFlVQ62J3AKiZe4a6
+         tHpA==
+X-Gm-Message-State: AOJu0YxeOz8/E3OfbfDORIpUD0UzHfo0R7kt0d/iajD2IlJg9Xx/zRul
+	N2cpIc2iKZw8tAVQ0AVXtxVv9xTS8v/BLKatYHdQf6BNynMmcOOOkldc46p42Jw=
+X-Google-Smtp-Source: AGHT+IG8Iah7UVjLqp3wTURaAugeCujtgoJq8RA1OFQPO0+g4vnMKi8J8UmMXivBkRZgUqNQxr6AwQ==
+X-Received: by 2002:a05:600c:4fce:b0:41c:2313:da92 with SMTP id o14-20020a05600c4fce00b0041c2313da92mr952735wmq.4.1714635560829;
+        Thu, 02 May 2024 00:39:20 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:cad:2140:67e2:5e2:652b:4129? ([2a01:e0a:cad:2140:67e2:5e2:652b:4129])
+        by smtp.gmail.com with ESMTPSA id c7-20020adfe707000000b0034d24477662sm562942wrm.8.2024.05.02.00.39.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 00:39:20 -0700 (PDT)
+Message-ID: <cf027072-72af-41fa-9ecc-5f3c21b69519@linaro.org>
+Date: Thu, 2 May 2024 09:39:18 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v1] arm: dts: meson-axg: add NAND controller node for AXG
-To: <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>
-CC: <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
-	<kernel@sberdevices.ru>, <oxffffaa@gmail.com>
-References: <20240425175052.2650301-1-avkrasnov@salutedevices.com>
- <d272b0f6-2f21-4601-b347-f83eac4f12d4@linaro.org>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-In-Reply-To: <d272b0f6-2f21-4601-b347-f83eac4f12d4@linaro.org>
-X-Originating-IP: [100.64.160.123]
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184945 [Apr 26 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/26 07:13:00 #24973180
-X-KSMG-AntiVirus-Status: Clean, skipped
-Content-Language: en-US
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 19/33] arm: meson: Remove <common.h> and add needed
+ includes
+To: Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de
+Cc: u-boot-amlogic@groups.io
+References: <20240430133559.1836389-1-trini@konsulko.com>
+ <20240430133559.1836389-19-trini@konsulko.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240430133559.1836389-19-trini@konsulko.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 26 Apr 2024 13:01:45 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2282
+ <u-boot-amlogic@groups.io>; Thu, 02 May 2024 07:39:24 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2283
 
-Hi,
+On 30/04/2024 15:35, Tom Rini wrote:
+> Remove <common.h> from all mach-meson files and when needed add missing
+> include files directly.
+> 
+> Signed-off-by: Tom Rini <trini@konsulko.com>
+> ---
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: u-boot-amlogic@groups.io
+> ---
+>   arch/arm/mach-meson/board-a1.c     | 2 +-
+>   arch/arm/mach-meson/board-axg.c    | 1 -
+>   arch/arm/mach-meson/board-common.c | 1 -
+>   arch/arm/mach-meson/board-g12a.c   | 1 -
+>   arch/arm/mach-meson/board-gx.c     | 1 -
+>   arch/arm/mach-meson/board-info.c   | 1 -
+>   arch/arm/mach-meson/sm.c           | 1 -
+>   7 files changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/mach-meson/board-a1.c b/arch/arm/mach-meson/board-a1.c
+> index 967bb671822e..f848c0f068ed 100644
+> --- a/arch/arm/mach-meson/board-a1.c
+> +++ b/arch/arm/mach-meson/board-a1.c
+> @@ -3,12 +3,12 @@
+>    * (C) Copyright 2023 SberDevices, Inc.
+>    */
+>   
+> -#include <common.h>
+>   #include <asm/arch/a1.h>
+>   #include <asm/arch/boot.h>
+>   #include <asm/armv8/mmu.h>
+>   #include <asm/io.h>
+>   #include <linux/compiler.h>
+> +#include <linux/errno.h>
+>   #include <linux/sizes.h>
+>   
+>   phys_size_t get_effective_memsize(void)
+> diff --git a/arch/arm/mach-meson/board-axg.c b/arch/arm/mach-meson/board-axg.c
+> index fdf18752cdd0..6535539184cc 100644
+> --- a/arch/arm/mach-meson/board-axg.c
+> +++ b/arch/arm/mach-meson/board-axg.c
+> @@ -4,7 +4,6 @@
+>    * (C) Copyright 2018 Neil Armstrong <narmstrong@baylibre.com>
+>    */
+>   
+> -#include <common.h>
+>   #include <init.h>
+>   #include <net.h>
+>   #include <asm/arch/boot.h>
+> diff --git a/arch/arm/mach-meson/board-common.c b/arch/arm/mach-meson/board-common.c
+> index 7ceba7cede85..39774c43049a 100644
+> --- a/arch/arm/mach-meson/board-common.c
+> +++ b/arch/arm/mach-meson/board-common.c
+> @@ -3,7 +3,6 @@
+>    * (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
+>    */
+>   
+> -#include <common.h>
+>   #include <cpu_func.h>
+>   #include <fastboot.h>
+>   #include <init.h>
+> diff --git a/arch/arm/mach-meson/board-g12a.c b/arch/arm/mach-meson/board-g12a.c
+> index d5a830fb1db8..dc4abe1e1074 100644
+> --- a/arch/arm/mach-meson/board-g12a.c
+> +++ b/arch/arm/mach-meson/board-g12a.c
+> @@ -4,7 +4,6 @@
+>    * (C) Copyright 2018 Neil Armstrong <narmstrong@baylibre.com>
+>    */
+>   
+> -#include <common.h>
+>   #include <init.h>
+>   #include <log.h>
+>   #include <net.h>
+> diff --git a/arch/arm/mach-meson/board-gx.c b/arch/arm/mach-meson/board-gx.c
+> index c3fbdfffeae8..0370ed57e205 100644
+> --- a/arch/arm/mach-meson/board-gx.c
+> +++ b/arch/arm/mach-meson/board-gx.c
+> @@ -4,7 +4,6 @@
+>    * (C) Copyright 2018 Neil Armstrong <narmstrong@baylibre.com>
+>    */
+>   
+> -#include <common.h>
+>   #include <init.h>
+>   #include <net.h>
+>   #include <asm/arch/boot.h>
+> diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
+> index d51d9b8f0645..b4058f593234 100644
+> --- a/arch/arm/mach-meson/board-info.c
+> +++ b/arch/arm/mach-meson/board-info.c
+> @@ -4,7 +4,6 @@
+>    * (C) Copyright 2019 Neil Armstrong <narmstrong@baylibre.com>
+>    */
+>   
+> -#include <common.h>
+>   #include <init.h>
+>   #include <asm/global_data.h>
+>   #include <asm/io.h>
+> diff --git a/arch/arm/mach-meson/sm.c b/arch/arm/mach-meson/sm.c
+> index 914fd11c9894..4d9f83d3b38d 100644
+> --- a/arch/arm/mach-meson/sm.c
+> +++ b/arch/arm/mach-meson/sm.c
+> @@ -5,7 +5,6 @@
+>    * Secure monitor calls.
+>    */
+>   
+> -#include <common.h>
+>   #include <dm.h>
+>   #include <log.h>
+>   #include <regmap.h>
 
-On 26.04.2024 11:21, Neil Armstrong wrote:
-> Hi,
->=20
-> On 25/04/2024 19:50, Arseniy Krasnov wrote:
->> nfc: Synced from Linux commit 7ca2ef33179f ("Linux 6.6-rc1")
->> nand_all_pins: Synced from Linux commit be18d53c32b2 ("Linux 6.7-rc3")
->=20
-> No need to sync DT anymore, this is handled by OF_UPSTREAM and for next r=
-elease
-> it's already aligned with v6.9 DT.
->=20
-> Please try your patches with master or next branch of U-Boot repo.
-
-Ok, so I can remove "Synced from" from commit description, thus make it emp=
-ty, and test that patch applies correctly
-on uboot master/ next ?
-
-Thanks
-
->=20
-> Neil
->=20
->>
->> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
->> ---
->> =C2=A0 arch/arm/dts/meson-axg.dtsi | 36 ++++++++++++++++++++++++++++++++=
-++++
->> =C2=A0 1 file changed, 36 insertions(+)
->>
->> diff --git a/arch/arm/dts/meson-axg.dtsi b/arch/arm/dts/meson-axg.dtsi
->> index 3f5254eeb4..4f6fdd5523 100644
->> --- a/arch/arm/dts/meson-axg.dtsi
->> +++ b/arch/arm/dts/meson-axg.dtsi
->> @@ -430,6 +430,27 @@
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 nand_all_pins: nand_all_pins {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 group=
-s =3D "emmc_nand_d0",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d1",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d2",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d3",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d4",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d5",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d6",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "emmc_nand_d7",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_ce0",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_ale",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_cle",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_wen_clk",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "nand_ren_wr";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 funct=
-ion =3D "nand";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input=
--enable;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bias-=
-pull-up;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 };
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 emmc_ds_pins: emmc_ds {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 groups =3D "emmc_ds";
->> @@ -1906,6 +1927,21 @@
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resets =3D <&reset RESET_SD_EMMC_C>;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 };
->> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 nfc: nand-controller@7800 {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 compatible =3D "amlogic,meson-axg-nfc";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x0 0x7800 0x0 0x100>,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <0x0 0x7000 0x0 0=
-x800>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 reg-names =3D "nfc", "emmc";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&nand_all_pins>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 interrupts =3D <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&clkc CLKID_SD_EMMC_C>,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <&clkc CLKID_FCLK_DIV2>=
-;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "core", "device";
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 usb2_phy1: phy@9020 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "amlogic,meson-gxl-usb2-phy";
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #phy-cells =3D <0>;
->=20
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
