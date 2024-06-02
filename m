@@ -2,29 +2,29 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A2C27C54
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483EEC41513
 	for <webhook@archiver.kernel.org>; Thu,  6 Jun 2024 14:49:43 +0000 (UTC)
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web10.67420.1717359623987469314
+ by mx.groups.io with SMTP id smtpd.web11.67325.1717359623676186300
  for <u-boot-amlogic@groups.io>;
- Sun, 02 Jun 2024 13:20:25 -0700
+ Sun, 02 Jun 2024 13:20:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: no key for signature: lookup mail._domainkey.salutedevices.com on 100.100.100.100:53: no such host" header.i=@salutedevices.com header.s=mail header.b=so9Vw2Tt;
+ dkim=fail reason="dkim: no key for signature: lookup mail._domainkey.salutedevices.com on 100.100.100.100:53: no such host" header.i=@salutedevices.com header.s=mail header.b=JbEzH6Im;
  spf=none, err=permanent DNS error (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: avkrasnov@salutedevices.com)
 Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 8E72A120005;
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 621D6120003;
 	Sun,  2 Jun 2024 23:20:19 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8E72A120005
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 621D6120003
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
 	s=mail; t=1717359619;
-	bh=4ugCExJmHF1+tHCj3oOXll10egW6Hh3ePAOXKIoZvRc=;
+	bh=IX9PKhQrVEsgb26fBNBt4+24ui2Kic9YuLxVDhHDQI4=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=so9Vw2Tt/cF7L6P/U7fShk0d3xyFqINnHbXhBPX5On16VtFrX27dzu7xZzLdN6V6c
-	 Ytt5ApP0Keq9T8vtn8ZbLzR/NBlLbbbdEBwsNOhMNdVVfDtQBC5WAf1CWxbqvkWDSn
-	 uIb1FppQanBePV2YSrcXXdmWzw24kP+8ZhCxK/Xj+46rmseP5/hp607q+wCPZWJKoT
-	 6+V83Rz5JZ36xtcTPSjDDVCbCxOnB9xjnox9gtcUZ0CAFYGUUgXca03fIY3mHyo0bx
-	 eU9PBO1tKZ1DZa3MN58kBTORpg4/Ey+yF735hiEHApAJ5z3eRpet4grrkPinCSZPbH
-	 TgrhBbrhSv81A==
+	b=JbEzH6ImREH04HBmb6uxHqlhcxIHAmTu28TsMaZasS0sn0Jb1liRAMMk9nehWbyPt
+	 Ns9uHCPF4R9zlj8JLfExODQ3Fbdgo2plq/Pt9ncecEIF6rPUqm3KsjYWfe1Aj0W/cS
+	 sLGfbMupKC8G/qT1J/DKPwPKyudiKhVRPHcS94lCNygKgrxWeDAPBeNE5yo0GzDask
+	 Ec+uidmeuobPGkpbGzL/qREt/VgUXirdKukZtKpeaFanjm0XZyu6Sk/oUpOO2tL8gC
+	 SkmMecEu6hzSuj01oja7FZHLi9Ki5TsZt5YD1qiEVBaG4m5xN/Dz2qjm9HX7oDIELL
+	 SVuJaCZEFVNpA==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
@@ -33,7 +33,7 @@ Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.1
 Received: from localhost.localdomain (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sun, 2 Jun 2024 23:20:19 +0300
+ 15.2.1118.40; Sun, 2 Jun 2024 23:20:18 +0300
 From: Arseniy Krasnov <avkrasnov@salutedevices.com>
 To: Dario Binacchi <dario.binacchi@amarulasolutions.com>, Michael Trimarchi
 	<michael@amarulasolutions.com>, Neil Armstrong <neil.armstrong@linaro.org>,
@@ -41,9 +41,9 @@ To: Dario Binacchi <dario.binacchi@amarulasolutions.com>, Michael Trimarchi
 	Sean Anderson <seanga2@gmail.com>
 CC: <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
 	<kernel@sberdevices.ru>, <oxffffaa@gmail.com>, <avkrasnov@salutedevices.com>
-Subject: [PATCH v1 2/3] mtd: rawnand: meson: refactor use of 'meson_nfc_cmd_access()'
-Date: Sun, 2 Jun 2024 23:08:35 +0300
-Message-ID: <20240602200836.3949773-3-avkrasnov@salutedevices.com>
+Subject: [PATCH v1 1/3] mtd: rawnand: nand_base: support for 'NAND_IS_BOOT_MEDIUM' flag
+Date: Sun, 2 Jun 2024 23:08:34 +0300
+Message-ID: <20240602200836.3949773-2-avkrasnov@salutedevices.com>
 X-Mailer: git-send-email 2.35.0
 In-Reply-To: <20240602200836.3949773-1-avkrasnov@salutedevices.com>
 References: <20240602200836.3949773-1-avkrasnov@salutedevices.com>
@@ -73,92 +73,57 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 06 Jun 2024 14:49:43 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2288
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2289
 
-Move call 'meson_nfc_cmd_seed()' and check for 'NAND_NEED_SCRAMBLING'
-to 'meson_nfc_cmd_access()', thus removing code duplication.
+Based on Linux kernel:
+commit f922bd798bb9 ("mtd: rawnand: add an option to specify NAND chip as a=
+ boot device")
+
+Allow to define a NAND chip as a boot device. This can be helpful
+for the selection of the ECC algorithm and strength in case the boot
+ROM supports only a subset of controller provided options.
 
 Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
 ---
- drivers/mtd/nand/raw/meson_nand.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+ drivers/mtd/nand/raw/nand_base.c | 3 +++
+ include/linux/mtd/rawnand.h      | 6 ++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/meson=
-_nand.c
-index 5d411c4594..19f005202b 100644
---- a/drivers/mtd/nand/raw/meson_nand.c
-+++ b/drivers/mtd/nand/raw/meson_nand.c
-@@ -229,14 +229,19 @@ static void meson_nfc_cmd_seed(const struct meson_nfc=
- *nfc, u32 seed)
- 	       nfc->reg_base + NFC_REG_CMD);
- }
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_b=
+ase.c
+index c40a0f23d7..ed605b4af5 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -4458,6 +4458,9 @@ static int nand_dt_init(struct mtd_info *mtd, struct =
+nand_chip *chip, ofnode nod
+ 	if (ret =3D=3D 16)
+ 		chip->options |=3D NAND_BUSWIDTH_16;
 =20
--static void meson_nfc_cmd_access(struct nand_chip *nand, bool raw, bool di=
-r,
--				 int scrambler)
-+static void meson_nfc_cmd_access(struct nand_chip *nand, bool raw, bool di=
-r, int page)
- {
- 	struct mtd_info *mtd =3D nand_to_mtd(nand);
- 	const struct meson_nfc *nfc =3D nand_get_controller_data(mtd_to_nand(mtd)=
-);
- 	const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
- 	u32 bch =3D meson_chip->bch_mode, cmd;
- 	int len =3D mtd->writesize, pagesize, pages;
-+	int scrambler;
++	if (ofnode_read_bool(node, "nand-is-boot-medium"))
++		chip->options |=3D NAND_IS_BOOT_MEDIUM;
 +
-+	if (nand->options & NAND_NEED_SCRAMBLING)
-+		scrambler =3D NFC_CMD_SCRAMBLER_ENABLE;
-+	else
-+		scrambler =3D NFC_CMD_SCRAMBLER_DISABLE;
+ 	if (ofnode_read_bool(node, "nand-on-flash-bbt"))
+ 		chip->bbt_options |=3D NAND_BBT_USE_FLASH;
 =20
- 	pagesize =3D nand->ecc.size;
+diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+index fb002ae641..4eb880d8fb 100644
+--- a/include/linux/mtd/rawnand.h
++++ b/include/linux/mtd/rawnand.h
+@@ -218,6 +218,12 @@ enum nand_ecc_algo {
+ /* Device needs 3rd row address cycle */
+ #define NAND_ROW_ADDR_3		0x00004000
 =20
-@@ -252,6 +257,9 @@ static void meson_nfc_cmd_access(struct nand_chip *nand=
-, bool raw, bool dir,
- 	cmd =3D CMDRWGEN(DMA_DIR(dir), scrambler, bch,
- 		       NFC_CMD_SHORTMODE_DISABLE, pagesize, pages);
-=20
-+	if (scrambler =3D=3D NFC_CMD_SCRAMBLER_ENABLE)
-+		meson_nfc_cmd_seed(nfc, page);
++/*
++ * Whether the NAND chip is a boot medium. Drivers might use this informat=
+ion
++ * to select ECC algorithms supported by the boot ROM or similar restricti=
+ons.
++ */
++#define NAND_IS_BOOT_MEDIUM	0x00400000
 +
- 	writel(cmd, nfc->reg_base + NFC_REG_CMD);
- }
+ /* Options valid for Samsung large page devices */
+ #define NAND_SAMSUNG_LP_OPTIONS NAND_CACHEPRG
 =20
-@@ -566,14 +574,7 @@ static int meson_nfc_write_page_sub(struct nand_chip *=
-nand,
- 		return ret;
- 	}
-=20
--	if (nand->options & NAND_NEED_SCRAMBLING) {
--		meson_nfc_cmd_seed(nfc, page);
--		meson_nfc_cmd_access(nand, raw, DIRWRITE,
--				     NFC_CMD_SCRAMBLER_ENABLE);
--	} else {
--		meson_nfc_cmd_access(nand, raw, DIRWRITE,
--				     NFC_CMD_SCRAMBLER_DISABLE);
--	}
-+	meson_nfc_cmd_access(nand, raw, DIRWRITE, page);
-=20
- 	cmd =3D nfc->param.chip_select | NFC_CMD_CLE | NAND_CMD_PAGEPROG;
- 	writel(cmd, nfc->reg_base + NFC_REG_CMD);
-@@ -644,14 +645,7 @@ static int meson_nfc_read_page_sub(struct nand_chip *n=
-and,
- 	if (ret)
- 		return ret;
-=20
--	if (nand->options & NAND_NEED_SCRAMBLING) {
--		meson_nfc_cmd_seed(nfc, page);
--		meson_nfc_cmd_access(nand, raw, DIRREAD,
--				     NFC_CMD_SCRAMBLER_ENABLE);
--	} else {
--		meson_nfc_cmd_access(nand, raw, DIRREAD,
--				     NFC_CMD_SCRAMBLER_DISABLE);
--	}
-+	meson_nfc_cmd_access(nand, raw, DIRREAD, page);
-=20
- 	meson_nfc_wait_dma_finish(nfc);
- 	meson_nfc_check_ecc_pages_valid(nfc, nand, raw);
 --=20
 2.35.0
 
