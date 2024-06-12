@@ -2,128 +2,102 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C56DC41513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FE4C27C4F
 	for <webhook@archiver.kernel.org>; Thu, 13 Jun 2024 15:23:04 +0000 (UTC)
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
- by mx.groups.io with SMTP id smtpd.web11.213.1718208186793187391
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+ by mx.groups.io with SMTP id smtpd.web11.4545.1718223897438823598
  for <u-boot-amlogic@groups.io>;
- Wed, 12 Jun 2024 09:03:06 -0700
+ Wed, 12 Jun 2024 13:24:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=h6mso7UC;
- spf=pass (domain: konsulko.com, ip: 209.85.161.41, mailfrom: trini@konsulko.com)
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5ba1f60eb96so20389eaf.3
-        for <u-boot-amlogic@groups.io>; Wed, 12 Jun 2024 09:03:06 -0700 (PDT)
+ dkim=pass header.i=@chromium.org header.s=google header.b=HZplc8Y7;
+ spf=pass (domain: chromium.org, ip: 209.85.215.169, mailfrom: sjg@chromium.org)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-6c4926bf9bbso163513a12.2
+        for <u-boot-amlogic@groups.io>; Wed, 12 Jun 2024 13:24:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1718208186; x=1718812986; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BVL0K+4RVRG/L5MOsD20eMVxBw1m0p8/HrcUyfTcVIs=;
-        b=h6mso7UCtjEB09p/F8J4hzIkJxP27zN7pdr9B32N8DuYanAJKwfbupr2dm5lO1pWhh
-         gXcpBWAtK3sF8tW1HnAIdynaYGvbEZGzfY693GYdeVTufC49NRGKRAGacnX2RofzP2js
-         PkCkyHZI9hX/P5fn3xH0rWifsdaEISfHU4IeM=
+        d=chromium.org; s=google; t=1718223897; x=1718828697; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Se1SXhKr6SLpDBmEMEFkaN7sgM8srHIXel/BHHfei9w=;
+        b=HZplc8Y70WEhx/MxwIXkKQgi0NUaWStgYEdXeeEdQVvZIqETK98NfhYYHpWdHYJS4A
+         2rYP1XoFhkHO0fMedAohb+lGjcpuqj6G6x+cIzW5+UOsa0eJxrodoFZAxC9MQHJjXzXw
+         yYrxNPgAd68wTJIjbuG5qC3q9PzvxkHg92TdA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718208186; x=1718812986;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BVL0K+4RVRG/L5MOsD20eMVxBw1m0p8/HrcUyfTcVIs=;
-        b=NZWDtfzrT5iHFFqzJz/mtcLPszrkoUnSAKQba3MtHHchTNzwfZwxckwwgE1ijK1egm
-         IlFs6qvY94OMWkY0xnDTu+NEz5/gplSv8xi28/DGoHW8mQDvWpRlA1XVHBHxU91WjX6A
-         5cd6jd9hVZmu4A0+zmgqmwZISboPCiMO1p+j1TiXUj69K/ux9Fw91X1vp6Sbls+vy3S+
-         Pp+t0hZJPDKad409Z835TQyCWmA49JNTobatf59xbrvFil2aRJ4LttOAz1xX4uaDMgaA
-         tFzmuqKu0kQjfeA7MOLAGp1EiIek+nLeoeS/fpUn51s7kz3Y1Ku/2DcXxDJMoBjZJ/x8
-         fcxA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6MQt1ht09UszJqbNG39n75MMwulo9a0baTQ7m/KUB1xqLctQ1W3v0X5Lfq/V01UEw2dBCQoUrPSmwPrdIQO0lqJYi6HSZjLk=
-X-Gm-Message-State: AOJu0Yxm+av+T+3MtQKJYgVb3fdoUjfbDotrwfpalfPbK4TqHa5VbRGj
-	coLqtxefjXMOddnZUgFOH8dEPoNKqbSnLKSuDiaXb2mjZ5qb616X0SGdFjlMr6Q=
-X-Google-Smtp-Source: AGHT+IEgASZEah86I/fbSifEySJiQWlrzH5jCPpBPAO/K2UieK91RF4s+KwwhDg0yNl1RhHqZN43/w==
-X-Received: by 2002:a05:6820:1c88:b0:5ba:e995:3efb with SMTP id 006d021491bc7-5bb3ba4d347mr2666898eaf.4.1718208185778;
-        Wed, 12 Jun 2024 09:03:05 -0700 (PDT)
-Received: from bill-the-cat (fixed-189-203-100-45.totalplay.net. [189.203.100.45])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5ba976bf79fsm2262424eaf.20.2024.06.12.09.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 09:03:05 -0700 (PDT)
-Date: Wed, 12 Jun 2024 10:03:01 -0600
-From: Tom Rini <trini@konsulko.com>
-To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc: Simon Glass <sjg@chromium.org>,
-	U-Boot Mailing List <u-boot@lists.denx.de>,
-	AKASHI Takahiro <akashi.tkhro@gmail.com>,
-	Alexander Gendin <agendin@matrox.com>,
-	Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-	Allen Martin <amartin@nvidia.com>,
-	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>,
-	Andrew Davis <afd@ti.com>, Bin Meng <bmeng.cn@gmail.com>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Christian Taedcke <christian.taedcke@weidmueller.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Francis Laniel <francis.laniel@amarulasolutions.com>,
-	Heinrich Schuchardt <xypron.glpk@gmx.de>,
-	Jaehoon Chung <jh80.chung@samsung.com>,
-	Jagan Teki <jagan@amarulasolutions.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Leo Yu-Chi Liang <ycliang@andestech.com>,
-	Lukas Funke <lukas.funke@weidmueller.com>,
-	Manorit Chawdhry <m-chawdhry@ti.com>,
-	Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-	Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Marek Vasut <marex@denx.de>,
-	Martyn Welch <martyn.welch@collabora.com>,
-	Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
-	Neha Malcom Francis <n-francis@ti.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Nishanth Menon <nm@ti.com>,
-	Pavel Herrmann <morpheus.ibis@gmail.com>,
-	Peng Fan <peng.fan@nxp.com>, Peter Robinson <pbrobinson@gmail.com>,
-	Philippe Reynes <philippe.reynes@softathome.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Sean Anderson <seanga2@gmail.com>,
-	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
-	Sughosh Ganu <sughosh.ganu@linaro.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	Trevor Woerner <twoerner@gmail.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>, u-boot-amlogic@groups.io
-Subject: Re: [PATCH 00/42] labgrid: Provide an integration with Labgrid
-Message-ID: <20240612160301.GB68077@bill-the-cat>
-References: <20240611200156.2245525-1-sjg@chromium.org>
- <CAC_iWjKAaWnphnBUi6YTRMn1EthbX5mZtjh78YXyxWoXqmJcGw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1718223897; x=1718828697;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Se1SXhKr6SLpDBmEMEFkaN7sgM8srHIXel/BHHfei9w=;
+        b=VMLygcBAJ0aoitmsFKFwnDQRamzEoklNr6mRK2+IOyKuFZvdBgMaD6g6uI0lQgCcd3
+         qCI8tk3sYbTI4tdpTlpqsxk9wE0Wh4KqUhp8Wj4JJ93kD5raVZ4WQduQzkQeSiW2z1C9
+         uLdNruDoyFnm9ThaFR/q8xeDqAC0atEXY/MOw+MaOinrxtVeuuNIxjKS/2F/+yWgcU29
+         2smfgn+eV08qAiuaddoCtNtI3YAH2gDnmLtD1YVq0Rx5CZBkmCWYcQltJHYDYwCPKwPQ
+         aAZfkYPa+Ev21++zx/KUraDqLy889dNPZLEON8hJweY0cu7dfb1E9wb+WD273vzsOWCg
+         aqEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUk8KlDlMgHIdk4rldNbWPEt3QUWMkUoqQGJ8TlQW75U3nnduzhEVUtYTriDdNFxgM0WnIcK5EPb08EBKubK5VRqj8VpdwUJ7g=
+X-Gm-Message-State: AOJu0YziaBBvzEgsCBZVf1/DiHG7AaX7oYHbzWZuljtsUlgLQzit6bk+
+	gANY+6z+q9O0h6CmNVRA8X4n/HOJaEKzdW5amP5Zd02YC5XuUB6Su/1w3j/XGtYRN+KE1nrNRoF
+	yrGo01yoehcuORufh/Oyh1rWWvKSZWcE2CyS9
+X-Google-Smtp-Source: AGHT+IFmTy4fW3SQf1NiS7xl7kbYhyiHePllnbH5Sqbm5EyvdkHkSGpfFXU8wKlXlF0dtelm8HL13wBNtd+Ip+WNjfI=
+X-Received: by 2002:a05:6a20:daa2:b0:1b8:3ddc:913b with SMTP id
+ adf61e73a8af0-1b8a8dfb0ecmr3217076637.0.1718223896724; Wed, 12 Jun 2024
+ 13:24:56 -0700 (PDT)
 MIME-Version: 1.0
+References: <20240611200156.2245525-1-sjg@chromium.org> <CAC_iWjKAaWnphnBUi6YTRMn1EthbX5mZtjh78YXyxWoXqmJcGw@mail.gmail.com>
 In-Reply-To: <CAC_iWjKAaWnphnBUi6YTRMn1EthbX5mZtjh78YXyxWoXqmJcGw@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=4Qxi8TBBIte6zofRvoSi"
+From: Simon Glass <sjg@chromium.org>
+Date: Wed, 12 Jun 2024 14:24:36 -0600
+Message-ID: <CAFLszTi7BoAoDc9=+m77pwSAuGSZDQeX-MgzWc9ZJC3ZxJXwMQ@mail.gmail.com>
+Subject: Re: [PATCH 00/42] labgrid: Provide an integration with Labgrid
+To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Tom Rini <trini@konsulko.com>, 
+	AKASHI Takahiro <akashi.tkhro@gmail.com>, Alexander Gendin <agendin@matrox.com>, 
+	Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Allen Martin <amartin@nvidia.com>, 
+	Alper Nebi Yasak <alpernebiyasak@gmail.com>, Andre Przywara <andre.przywara@arm.com>, 
+	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>, Andrew Davis <afd@ti.com>, 
+	Bin Meng <bmeng.cn@gmail.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
+	Christian Taedcke <christian.taedcke@weidmueller.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, 
+	Francis Laniel <francis.laniel@amarulasolutions.com>, 
+	Heinrich Schuchardt <xypron.glpk@gmx.de>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Leo Yu-Chi Liang <ycliang@andestech.com>, Lukas Funke <lukas.funke@weidmueller.com>, 
+	Manorit Chawdhry <m-chawdhry@ti.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, 
+	Marek Vasut <marek.vasut+renesas@mailbox.org>, Marek Vasut <marex@denx.de>, 
+	Martyn Welch <martyn.welch@collabora.com>, =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
+	Neha Malcom Francis <n-francis@ti.com>, Neil Armstrong <neil.armstrong@linaro.org>, Nishanth Menon <nm@ti.com>, 
+	Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
+	Peter Robinson <pbrobinson@gmail.com>, Philippe Reynes <philippe.reynes@softathome.com>, 
+	Samuel Holland <samuel@sholland.org>, Sean Anderson <seanga2@gmail.com>, 
+	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>, 
+	Sughosh Ganu <sughosh.ganu@linaro.org>, Svyatoslav Ryhel <clamor95@gmail.com>, 
+	Trevor Woerner <twoerner@gmail.com>, Vignesh Raghavendra <vigneshr@ti.com>, u-boot-amlogic@groups.io
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 13 Jun 2024 15:23:04 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2295
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2296
 
---Groupsio=4Qxi8TBBIte6zofRvoSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Ilias,
 
-On Wed, Jun 12, 2024 at 09:08:32AM +0300, Ilias Apalodimas wrote:
+On Wed, 12 Jun 2024 at 00:09, Ilias Apalodimas
+<ilias.apalodimas@linaro.org> wrote:
+>
 > Hi Simon
->=20
+>
 > On Tue, 11 Jun 2024 at 23:02, Simon Glass <sjg@chromium.org> wrote:
 > >
 > > Labgrid provides access to a hardware lab in an automated way. It is
-> > possible to boot U-Boot on boards in the lab without physically touchin=
-g
+> > possible to boot U-Boot on boards in the lab without physically touching
 > > them. It relies on relays, USB UARTs and SD muxes, among other things.
 > >
-> > By way of background, about 4 years ago I wrong a thing called Labman[1=
-]
+> > By way of background, about 4 years ago I wrong a thing called Labman[1]
 > > which allowed my lab of about 30 devices to be operated remotely, using
 > > tbot for the console and build integration. While it worked OK and I
 > > used it for many bisects, I didn't take it any further.
 > >
-> > It turns out that there was already an existing program, called Labgrid=
-,
-> > which I did not know about at time (thank you Tom for telling me). It i=
-s
+> > It turns out that there was already an existing program, called Labgrid,
+> > which I did not know about at time (thank you Tom for telling me). It is
 > > more rounded than Labman and has a number of advantages:
 > >
 > > - does not need udev rules, mostly
@@ -142,16 +116,14 @@ s
 > > automatically, rather than relying on infrequent, manual test. Perhaps
 > > it may even be possible to have a number of labs available.
 > >
-> > Included in the integration are a number of simple scripts which make i=
-t
+> > Included in the integration are a number of simple scripts which make it
 > > easy to connect to boards and run tests:
 > >
 > > ub-int <target>
 > >     Build and boot on a target, starting an interactive session
 > >
 > > ub-cli <target>
-> >     Build and boot on a target, ensure U-Boot starts and provide an int=
-eractive
+> >     Build and boot on a target, ensure U-Boot starts and provide an interactive
 > >     session from there
 > >
 > > ub-smoke <target>
@@ -172,50 +144,123 @@ eractive
 > > what you suggest.
 > >
 > > I hope you find this interesting and take a look!
->=20
+>
 > Thanks this is interesting!
+
+Thanks!
+
 > I only got cc'ed on the cover letter and I'll slowly have a look on
 > the rest. A naive question -- I saw you did integrate this on gitlab
 > with your internal lab. How secure is this? Could we schedule weekly
 > builds that run on various remote labs and get results on actual
 > hardware? Or do we have to rely on users for that ?
 
-That's where this certainly gets a little tricky. Ideally, and part of
-why I've been hoping to get Labgrid going with our pytest suite, since
-it's good enough for kernelci (and people to be reasonably confident
-about allowing not-exactly-random-user-access), it should be good enough
-for us too. So my long term hope is that we can:
-- Have Labgrid based labs + something know to monitor trees+branches at
-  X location (like I know today some people poll and test my WIP
-  branches).
-- Have it be reasonably clear that if you maintain a lab for kernelci,
-  you can add testing U-Boot in too.
+I believe this could be done. My understanding is that any custodian
+can push to a tree which runs on all available runners.
 
-In the medium term, I am hopeful we can at least expose this to all
-custodian trees on source.denx.de. And I'm saying "we" here as I have
-two much smaller labs also going, one with Labgrid, and both a much
-smaller set of targets currently.
+If you have any ideas on the script I mentioned, let me know!
 
---=20
-Tom
+Regards,
+Simon
 
---Groupsio=4Qxi8TBBIte6zofRvoSi
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmZpxrUACgkQFHw5/5Y0
-tyz0JQv7BuRanyt/in37dCMi8s0RE69nlJaj9j+Y8mABNRlBVBO9Jae4RjkYBWK8
-gOaxu6bN3AQ0TkEb/MGI9froWlSNnNWMzoodGwXUm3HUEIl3ykIRaQmtRQkNA9r5
-0UXDQloITORfJh+7kCPHgmcRaCJE+IaOt08upsAWZnUS/kdxxgnmTGBacJWhicp7
-Uek30F73/dl/K4ajtdvm8lwocR83pbGSWyBiYUYvwPks5/LpQMhxMqi11vdpXF5j
-rWLwRiRx7qg5eZ8JsBowvb5No5d/aG+MVYi3U9bnubBVnu4aByKbGD6SK/HNMJFX
-/OKmHX2aEqKW11Ik1JUU/+aUxRmhlAp3o0ErVaS4hbYbhjAHL7lUwsKsxlwjm36w
-cvEfJpwL8D8+wLUjUbuIzDDidc1GhE6GWSSkI91H48wPSWfh2pdfAcV5d1OonQcz
-FHLHpUpDW+1QJhQ+f+HJZ55a63m4+W0bMpBgFHC24PsiPcje07GkZWTrWjkoBw4s
-oaN/Lt40
-=R7Yr
------END PGP SIGNATURE-----
-
---Groupsio=4Qxi8TBBIte6zofRvoSi--
+>
+> Thanks
+> /Ilias
+>
+> >
+> > [1] https://github.com/sjg20/u-boot/tree/lab6a
+> > [2] https://github.com/labgrid-project/labgrid/pull/1411
+> > [3] https://github.com/sjg20/uboot-test-hooks/tree/labgrid
+> > [4] https://tbot.tools/index.html
+> >
+> >
+> > Simon Glass (42):
+> >   trace: Update test to tolerate different trace-cmd version
+> >   binman: efi: Correct entry docs
+> >   binman: Regenerate nxp docs
+> >   binman: ti: Regenerate entry docs
+> >   binman: Update the entrydocs header
+> >   buildman: Make mrproper an argument to _reconfigure()
+> >   buildman: Make mrproper an argument to _config_and_build()
+> >   buildman: Make mrproper an argument to run_commit()
+> >   buildman: Avoid rebuilding when --mrproper is used
+> >   buildman: Add a flag to force mrproper on failure
+> >   buildman: Retry the build for current source
+> >   buildman: Add a way to limit the number of buildmans
+> >   dm: core: Enhance comments on bind_drivers_pass()
+> >   initcall: Correct use of relocation offset
+> >   am33xx: Provide a function to set up the debug UART
+> >   sunxi: Mark scp as optional
+> >   google: Disable TPMv2 on most Chromebooks
+> >   meson: Correct driver declaration for meson_axg_gpio
+> >   test: Allow signaling that U-Boot is ready
+> >   test: Make bootstd init run only on sandbox
+> >   test: Use a constant for the test timeout
+> >   test: Pass stderr to stdout
+> >   test: Release board after tests complete
+> >   log: Allow tests to pass with CONFIG_LOGF_FUNC_PAD set
+> >   test: Allow connecting to a running board
+> >   test: Decode exceptions only with sandbox
+> >   test: Avoid failing skipped tests
+> >   test: dm: Show failing driver name
+> >   test: Check help output
+> >   test: Create a common function to get the config
+> >   test: Introduce the concept of a role
+> >   test: Move the receive code into a function
+> >   test: Separate out the exception handling
+> >   test: Detect dead connections
+> >   test: Tidy up remaining exceptions
+> >   test: Introduce lab mode
+> >   test: Improve handling of sending commands
+> >   test: Fix mulptiplex_log typo
+> >   test: Avoid double echo when starting up
+> >   test: Try to shut down the lab console gracefully
+> >   test: Add a section for closing the connection
+> >   CI: Allow running tests on sjg lab
+> >
+> >  .gitlab-ci.yml                                | 151 +++++++++++++++++
+> >  arch/arm/dts/sunxi-u-boot.dtsi                |   1 +
+> >  arch/arm/mach-omap2/am33xx/board.c            |  18 +-
+> >  configs/chromebook_link64_defconfig           |   1 +
+> >  configs/chromebook_link_defconfig             |   1 +
+> >  configs/chromebook_samus_defconfig            |   1 +
+> >  configs/chromebook_samus_tpl_defconfig        |   1 +
+> >  configs/nyan-big_defconfig                    |   4 +-
+> >  configs/snow_defconfig                        |   1 +
+> >  drivers/core/lists.c                          |  16 ++
+> >  drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c |   2 +-
+> >  drivers/pinctrl/meson/pinctrl-meson-axg.c     |   4 +-
+> >  drivers/pinctrl/meson/pinctrl-meson-axg.h     |   2 +-
+> >  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |   4 +-
+> >  lib/initcall.c                                |   6 +-
+> >  test/py/conftest.py                           |  86 ++++++++--
+> >  test/py/tests/test_dm.py                      |   5 +-
+> >  test/py/tests/test_help.py                    |   6 +-
+> >  test/py/tests/test_log.py                     |  11 +-
+> >  test/py/tests/test_trace.py                   |   6 +-
+> >  test/py/tests/test_ut.py                      |   1 +
+> >  test/py/u_boot_console_base.py                | 154 ++++++++++++------
+> >  test/py/u_boot_console_exec_attach.py         |  31 +++-
+> >  test/py/u_boot_console_sandbox.py             |   2 +-
+> >  test/py/u_boot_spawn.py                       | 123 ++++++++++++--
+> >  test/test-main.c                              |  16 +-
+> >  tools/binman/entries.rst                      | 115 +++++++++----
+> >  tools/binman/entry.py                         |   2 +-
+> >  tools/binman/etype/efi_capsule.py             |  40 ++---
+> >  tools/binman/etype/efi_empty_capsule.py       |  22 +--
+> >  tools/binman/etype/ti_secure.py               |  45 ++---
+> >  tools/buildman/builder.py                     |  18 +-
+> >  tools/buildman/builderthread.py               |  44 +++--
+> >  tools/buildman/buildman.rst                   |   8 +-
+> >  tools/buildman/cmdline.py                     |   6 +-
+> >  tools/buildman/control.py                     | 141 +++++++++++++++-
+> >  tools/buildman/pyproject.toml                 |   6 +-
+> >  tools/buildman/test.py                        | 121 ++++++++++++++
+> >  tools/u_boot_pylib/terminal.py                |   7 +-
+> >  39 files changed, 1003 insertions(+), 226 deletions(-)
+> >
+> > --
+> > 2.34.1
+> >
 
