@@ -2,69 +2,71 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C4AC27C77
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E306CC2BA15
 	for <webhook@archiver.kernel.org>; Wed, 12 Jun 2024 14:37:47 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.web10.366.1718136580071962014
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+ by mx.groups.io with SMTP id smtpd.web11.4995.1718172550097667082
  for <u-boot-amlogic@groups.io>;
- Tue, 11 Jun 2024 13:09:40 -0700
+ Tue, 11 Jun 2024 23:09:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=d60s77XH;
- spf=pass (domain: chromium.org, ip: 209.85.219.54, mailfrom: sjg@chromium.org)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6b05e504bceso35787276d6.2
-        for <u-boot-amlogic@groups.io>; Tue, 11 Jun 2024 13:09:39 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=WNzcOPEJ;
+ spf=pass (domain: linaro.org, ip: 209.85.216.51, mailfrom: ilias.apalodimas@linaro.org)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c2ccff8f0aso3940324a91.0
+        for <u-boot-amlogic@groups.io>; Tue, 11 Jun 2024 23:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718136579; x=1718741379; darn=groups.io;
+        d=linaro.org; s=google; t=1718172549; x=1718777349; darn=groups.io;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tko77FxFECfapW6ub6Nfpp7SBXNLb1hOK7jOJ5eNWjA=;
-        b=d60s77XHvAx3t0+7UHOrKalWCieA9sWFT5VUJO2KZr7D3wiCEe38WY6VA/IYbkg61+
-         4fQlLdzs8z9/6PX55TrR4NsRIho++EC8+J/rZxCu07G0+J7SsfoqfinYKkhfvGZYMbKQ
-         tXHwWPgLHir5DYzMX6BXiFJG/vvdJNabNKGNw=
+        bh=OjOb54Va8/R94/e6Jm9Kb7VQxeHfUpxTZ8mJGId4JU0=;
+        b=WNzcOPEJiAOEi3yziGcJ3UU12BDewNkGRrSlbQH1vPasXzc6J3IdDiAqfjLLS85ffg
+         7I/35UjMsbVHBmEwCWQEh9jwOeo8BHszmj1v3nrLp5YZGQa3rX2U+Etd4pnj62yyfpAA
+         hto5X7GPlEuJW5bjzYyIBuBl3ymf8Pc5krafnMbgD+bfPXB/FYtop8+wCZbRSpHAFSJN
+         7NdBN3XB7Q9z80GKN2keYvsmElyq1ZLCk+Rkpfxd6g2xMbDIJNMEuGha5G7mNC9CANq+
+         oCQE8ZZFUFe/uGP42GcKknrFxL2rGuPWlABqz5TCp2Pc75IYEt3hhtZJuybqUDOUZ5ot
+         JiPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718136579; x=1718741379;
+        d=1e100.net; s=20230601; t=1718172549; x=1718777349;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tko77FxFECfapW6ub6Nfpp7SBXNLb1hOK7jOJ5eNWjA=;
-        b=MCB3EzFe5UMe5B0A1DYgvlhYDF06iht/rsvQz01FomSHpRZwWr3RqJRYX8xl1eTBfl
-         fEFgcdYhCRtjKPRMF7Z5LGPVI+5qbCepygq1+ZH2CkMefV7cMuZg+ep/mREV5Dk61tdf
-         QRkHE+gwzZ82shG7wDAOF2gOfTMkO3YXQ2rFeEXuZI6OFr0+CD6ConISiq9TBkxPpgC8
-         B6fa0fzKBN2oqdabrqs1VSpzQVJ3e6SXllo5pJlcvzokPf7ulKaBAPqr9/ZM5W8NwoWI
-         1XjWDUkeOlVyi2/NmQpDjPCc4oplrEp5IuCbVGk6Ow1+Wh/WRcwyIHihg0r6jNQmynFY
-         7VtA==
-X-Forwarded-Encrypted: i=1; AJvYcCUppkc+tUpSK2SfimWssEcGkNY4cuTODU2yPedlYPtb26P+LImBGnpyETwlOrKEcbKWai49FGoagAUqMShzgmGxzSqAcLQZXwo=
-X-Gm-Message-State: AOJu0YyspdJ5gv7pp7xaMWbMO6j6LUkqKkUQGiZ9Mbi+0YwkRP30xjBz
-	03nvcJldQ1mJsNYc/zuf8e6znSG+T3DT/h6cp0V32kEa1HWSqDw/6kZD0Kn7bq7DhuHsHnfesQB
-	d4kul0nXJ4sweOrfo11Qvmeypk69TKiGANUbi
-X-Google-Smtp-Source: AGHT+IG4qQvS5Dc2vHuRfyLzXkIQARykQC4lUbyYX5EWR11HOv3CxtWKrfQqIPPawT5B9B5p/3qXRomDrjQmiwOnJnk=
-X-Received: by 2002:a05:6214:5d8c:b0:6b0:737f:5348 with SMTP id
- 6a1803df08f44-6b0737f5600mr84698436d6.29.1718136579027; Tue, 11 Jun 2024
- 13:09:39 -0700 (PDT)
+        bh=OjOb54Va8/R94/e6Jm9Kb7VQxeHfUpxTZ8mJGId4JU0=;
+        b=ZThp+7+bG5VTWtLJ3yPLKwcuH10jXgEatQapq2QfGBJdTat0PfkKwYci4ibIVN0jw/
+         0Hx0B1M84r8SUDWX7yDmvelxynRGImwXJr8UUqV8YihDutmfa1Lsh1fbJKULiPvgkZmd
+         An44OoUqQlY8orGH1KVYS1hxZDvQ2Mi+oO0j+HBJ079C7p9WO/ChFDA8geuhysz7YCQp
+         x4XQinWXTwzjGm2RP0W38po8aeTPsPzv2+UkdAuME3tzZh/cr+wwWvtI1bEq2Q8KMBJK
+         FqFvkwgCbMOeWrhfRpprvbeo1CWTnecUSat5ldKpKOISTh6NldY5zRbq+QVBeBGB4uCb
+         60fg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQI0eji3DuwVsqg7sv9KZ2+bCKHaZcVkvZdMOPE07Ts21AeZ92XJF7aUhZ9e679266GiRYn6PNsU0shuL5rOAL+zqGL6DKfd4=
+X-Gm-Message-State: AOJu0YxNc2GCxtRbzKNYv3GFuGscqPurpgjJ21DAAjtMbAReo3fzHXpF
+	mEtTGimkKbhRz5G1vqj/jiDfnOsq3s9ObnTA1QelGQQvdpQUKyKvXO7pwTkumNTa9VjOgYl9flz
+	URl7o5RwQQh25oibXbv/Oz55AGCAKuSQGmMocig==
+X-Google-Smtp-Source: AGHT+IHqVOwo/X7Rt+CtAR/zAIoyem+PJkJ+AEYrX1Lpd9Aqx3Wfs+3SFqLNJ614FZ4w9KJCItKvTgWombNynpVWlpQ=
+X-Received: by 2002:a17:90b:30c2:b0:2c2:7dd5:eb3c with SMTP id
+ 98e67ed59e1d1-2c4a771995cmr839787a91.44.1718172549410; Tue, 11 Jun 2024
+ 23:09:09 -0700 (PDT)
 MIME-Version: 1.0
 References: <20240611200156.2245525-1-sjg@chromium.org>
 In-Reply-To: <20240611200156.2245525-1-sjg@chromium.org>
-From: Simon Glass <sjg@chromium.org>
-Date: Tue, 11 Jun 2024 14:09:28 -0600
-Message-ID: <CAFLszTiF=JdWuDsunut1WAKUOPKaH-PTjLvRoRBtEy07SXQAOw@mail.gmail.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Wed, 12 Jun 2024 09:08:32 +0300
+Message-ID: <CAC_iWjKAaWnphnBUi6YTRMn1EthbX5mZtjh78YXyxWoXqmJcGw@mail.gmail.com>
 Subject: Re: [PATCH 00/42] labgrid: Provide an integration with Labgrid
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Tom Rini <trini@konsulko.com>, AKASHI Takahiro <akashi.tkhro@gmail.com>, 
-	Alexander Gendin <agendin@matrox.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, 
-	Allen Martin <amartin@nvidia.com>, Alper Nebi Yasak <alpernebiyasak@gmail.com>, 
-	Andre Przywara <andre.przywara@arm.com>, Andrejs Cainikovs <andrejs.cainikovs@toradex.com>, 
-	Andrew Davis <afd@ti.com>, Bin Meng <bmeng.cn@gmail.com>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, 
+To: Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Tom Rini <trini@konsulko.com>, 
+	AKASHI Takahiro <akashi.tkhro@gmail.com>, Alexander Gendin <agendin@matrox.com>, 
+	Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Allen Martin <amartin@nvidia.com>, 
+	Alper Nebi Yasak <alpernebiyasak@gmail.com>, Andre Przywara <andre.przywara@arm.com>, 
+	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>, Andrew Davis <afd@ti.com>, 
+	Bin Meng <bmeng.cn@gmail.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
 	Christian Taedcke <christian.taedcke@weidmueller.com>, 
 	Dan Carpenter <dan.carpenter@linaro.org>, 
 	Francis Laniel <francis.laniel@amarulasolutions.com>, 
-	Heinrich Schuchardt <xypron.glpk@gmx.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Leo Yu-Chi Liang <ycliang@andestech.com>, 
-	Lukas Funke <lukas.funke@weidmueller.com>, Manorit Chawdhry <m-chawdhry@ti.com>, 
-	Marcel Ziswiler <marcel.ziswiler@toradex.com>, Marek Vasut <marek.vasut+renesas@mailbox.org>, 
-	Marek Vasut <marex@denx.de>, Martyn Welch <martyn.welch@collabora.com>, 
-	=?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
+	Heinrich Schuchardt <xypron.glpk@gmx.de>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Leo Yu-Chi Liang <ycliang@andestech.com>, Lukas Funke <lukas.funke@weidmueller.com>, 
+	Manorit Chawdhry <m-chawdhry@ti.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, 
+	Marek Vasut <marek.vasut+renesas@mailbox.org>, Marek Vasut <marex@denx.de>, 
+	Martyn Welch <martyn.welch@collabora.com>, =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
 	Neha Malcom Francis <n-francis@ti.com>, Neil Armstrong <neil.armstrong@linaro.org>, Nishanth Menon <nm@ti.com>, 
 	Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
 	Peter Robinson <pbrobinson@gmail.com>, Philippe Reynes <philippe.reynes@softathome.com>, 
@@ -77,11 +79,11 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 12 Jun 2024 14:37:47 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2293
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2294
 
-Hi,
+Hi Simon
 
-On Tue, 11 Jun 2024 at 14:02, Simon Glass <sjg@chromium.org> wrote:
+On Tue, 11 Jun 2024 at 23:02, Simon Glass <sjg@chromium.org> wrote:
 >
 > Labgrid provides access to a hardware lab in an automated way. It is
 > possible to boot U-Boot on boards in the lab without physically touching
@@ -140,6 +142,17 @@ On Tue, 11 Jun 2024 at 14:02, Simon Glass <sjg@chromium.org> wrote:
 > what you suggest.
 >
 > I hope you find this interesting and take a look!
+
+Thanks this is interesting!
+I only got cc'ed on the cover letter and I'll slowly have a look on
+the rest. A naive question -- I saw you did integrate this on gitlab
+with your internal lab. How secure is this? Could we schedule weekly
+builds that run on various remote labs and get results on actual
+hardware? Or do we have to rely on users for that ?
+
+Thanks
+/Ilias
+
 >
 > [1] https://github.com/sjg20/u-boot/tree/lab6a
 > [2] https://github.com/labgrid-project/labgrid/pull/1411
@@ -235,11 +248,4 @@ On Tue, 11 Jun 2024 at 14:02, Simon Glass <sjg@chromium.org> wrote:
 > --
 > 2.34.1
 >
-
-Here is an example run (scroll to the right):
-
-https://source.denx.de/u-boot/custodians/u-boot-dm/-/pipelines/21081
-
-Regards,
-Simon
 
