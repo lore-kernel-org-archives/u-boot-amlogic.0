@@ -2,31 +2,31 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52993C41513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6C8C30658
 	for <webhook@archiver.kernel.org>; Thu, 27 Jun 2024 08:00:11 +0000 (UTC)
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
- by mx.groups.io with SMTP id smtpd.web10.200.1719446277656451876
+ by mx.groups.io with SMTP id smtpd.web11.228.1719446275320206270
  for <u-boot-amlogic@groups.io>;
- Wed, 26 Jun 2024 16:57:58 -0700
+ Wed, 26 Jun 2024 16:57:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@denx.de header.s=phobos-20191101 header.b=EsXBtQBK;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@denx.de header.s=phobos-20191101 header.b=COSdsZQA;
  spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
 Received: from tr.lan (ip-86-49-120-218.bb.vodafone.cz [86.49.120.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 1B11D884C9;
-	Thu, 27 Jun 2024 01:57:55 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id 98CCA88495;
+	Thu, 27 Jun 2024 01:57:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1719446276;
-	bh=27+6eTN2FcuHQYfWU79Rhy5D2e6lNaQfoiKILOzPOqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EsXBtQBKIWU5wy30+pJEdzP3H+DCbMErCn+xr2K0dNLbXhx1zAFpYjjqFf1h4Uw5B
-	 gvHzQ3gb7Vs6BobAZPZbAqB/2vH6s9AHgF1Q7Hl3GyMT2+gz17npJPy7uHvsfhyfci
-	 7CmwKC3vKEu8rLIOfdSdnbyqX+ARUa6HMprnEYADoT4g0k/dPCAnMf3SqyREZdXsPR
-	 9oSdSyBJBYxeqgwV7m617wp8ONXRgYQevgEebMayAHS1Dp09RO9elqpaBFfDk5+C9k
-	 gamS7q8pTi+dv6YkHghL6Lfue4YQAWKvZ0Ntjnnw8aALHG4OtPyWmzzf5leqskZTM8
-	 CW823SCXHJyiA==
+	s=phobos-20191101; t=1719446272;
+	bh=j9+gNS0RvBKJupbfHAroI1F5otxQD2cptbmul1pdCUM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=COSdsZQAdkVFtgDBSrlF5Gijkt24B+EwJUTAil4EgCGlSPK7tKKQNMBhS1LeEPzgB
+	 FVedUPKHF/6hNGCHFTGVcDYW9CMWiWaxUTVPyNmXPoKI6XzBO9SfZcGLVDDQKGE5YL
+	 cvveotTcSSuvFePkTqGuWWBwwsqKcopsyFCLUNz6eL8CIFsR31okrjZCoUKk/im+Zj
+	 RZhSEdj/vWwbWFPkgdJ8Wow9SALESRiFy/AhGjqfA3VB3/vnE/4m1Sc+GIlCODkGGw
+	 eY8mzKd06viDAMPdaT+WEr/Hk5zGCewjRHlgcbgcVrIaMq8oGUc3FUV0avjIhpgt/y
+	 S7RNug7vFx9mA==
 From: Marek Vasut <marex@denx.de>
 To: u-boot@lists.denx.de
 Cc: Marek Vasut <marex@denx.de>,
@@ -61,12 +61,10 @@ Cc: Marek Vasut <marex@denx.de>,
 	u-boot-qcom@groups.io,
 	u-boot@dh-electronics.com,
 	uboot-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 4/4] power: regulator: Drop regulators_enable_boot_on/off()
-Date: Thu, 27 Jun 2024 01:55:44 +0200
-Message-ID: <20240626235717.272219-4-marex@denx.de>
+Subject: [PATCH 1/4] power: regulator: Trigger probe of regulators which are always-on or boot-on
+Date: Thu, 27 Jun 2024 01:55:41 +0200
+Message-ID: <20240626235717.272219-1-marex@denx.de>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240626235717.272219-1-marex@denx.de>
-References: <20240626235717.272219-1-marex@denx.de>
 MIME-Version: 1.0
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
@@ -75,10 +73,22 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 27 Jun 2024 08:00:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2331
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2332
 
-Both regulators_enable_boot_on/off() are unused and superseded by
-regulator uclass regulator_post_probe(). Remove both functions.
+In case a regulator DT node contains regulator-always-on or regulator-boo=
+t-on
+property, make sure the regulator gets correctly configured by U-Boot on =
+start
+up. Unconditionally probe such regulator drivers. This is a preparatory p=
+atch
+for introduction of .regulator_post_probe() which would trigger the regul=
+ator
+configuration.
+
+Parsing of regulator-always-on and regulator-boot-on DT property has been
+moved to regulator_post_bind() as the information is required early, the
+rest of the DT parsing has been kept in regulator_pre_probe() to avoid
+slowing down the boot process.
 
 Signed-off-by: Marek Vasut <marex@denx.de>
 ---
@@ -115,227 +125,61 @@ Cc: u-boot@dh-electronics.com
 Cc: u-boot@lists.denx.de
 Cc: uboot-stm32@st-md-mailman.stormreply.com
 ---
- arch/arm/mach-rockchip/board.c                |  8 --------
- arch/arm/mach-snapdragon/board.c              |  1 -
- arch/arm/mach-tegra/board2.c                  |  3 ---
- board/Marvell/octeontx2_cn913x/board.c        |  5 -----
- .../amlogic/odroid-go-ultra/odroid-go-ultra.c |  2 --
- board/dhelectronics/dh_stm32mp1/board.c       |  2 --
- board/engicam/stm32mp1/stm32mp1.c             |  3 ---
- board/google/veyron/veyron.c                  |  6 ------
- board/samsung/common/exynos5-dt.c             |  4 ----
- board/st/stm32mp1/stm32mp1.c                  |  2 --
- drivers/power/regulator/regulator-uclass.c    | 10 ----------
- include/power/regulator.h                     | 20 -------------------
- 12 files changed, 66 deletions(-)
+ drivers/power/regulator/regulator-uclass.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/mach-rockchip/board.c b/arch/arm/mach-rockchip/boar=
-d.c
-index 8a57b8217ff..a1933300653 100644
---- a/arch/arm/mach-rockchip/board.c
-+++ b/arch/arm/mach-rockchip/board.c
-@@ -202,14 +202,6 @@ int board_late_init(void)
-=20
- int board_init(void)
- {
--	int ret;
--
--#ifdef CONFIG_DM_REGULATOR
--	ret =3D regulators_enable_boot_on(false);
--	if (ret)
--		debug("%s: Cannot enable boot on regulator\n", __func__);
--#endif
--
- 	return 0;
- }
-=20
-diff --git a/arch/arm/mach-snapdragon/board.c b/arch/arm/mach-snapdragon/=
-board.c
-index b439a19ec7e..feb2a1157de 100644
---- a/arch/arm/mach-snapdragon/board.c
-+++ b/arch/arm/mach-snapdragon/board.c
-@@ -162,7 +162,6 @@ void __weak qcom_board_init(void)
-=20
- int board_init(void)
- {
--	regulators_enable_boot_on(false);
- 	show_psci_version();
- 	qcom_of_fixup_nodes();
- 	qcom_board_init();
-diff --git a/arch/arm/mach-tegra/board2.c b/arch/arm/mach-tegra/board2.c
-index 479137e457c..193220f29c9 100644
---- a/arch/arm/mach-tegra/board2.c
-+++ b/arch/arm/mach-tegra/board2.c
-@@ -187,9 +187,6 @@ int board_init(void)
- 	warmboot_prepare_code(TEGRA_LP0_ADDR, TEGRA_LP0_SIZE);
- #endif
-=20
--	/* Set up boot-on regulators */
--	regulators_enable_boot_on(_DEBUG);
--
- 	return nvidia_board_init();
- }
-=20
-diff --git a/board/Marvell/octeontx2_cn913x/board.c b/board/Marvell/octeo=
-ntx2_cn913x/board.c
-index 3d20cfb2fab..3ffe15d42b8 100644
---- a/board/Marvell/octeontx2_cn913x/board.c
-+++ b/board/Marvell/octeontx2_cn913x/board.c
-@@ -23,11 +23,6 @@ int board_early_init_f(void)
-=20
- int board_early_init_r(void)
- {
--	if (CONFIG_IS_ENABLED(DM_REGULATOR)) {
--		/* Check if any existing regulator should be turned down */
--		regulators_enable_boot_off(false);
--	}
--
- 	return 0;
- }
-=20
-diff --git a/board/amlogic/odroid-go-ultra/odroid-go-ultra.c b/board/amlo=
-gic/odroid-go-ultra/odroid-go-ultra.c
-index 8f3f2045d74..f9412071737 100644
---- a/board/amlogic/odroid-go-ultra/odroid-go-ultra.c
-+++ b/board/amlogic/odroid-go-ultra/odroid-go-ultra.c
-@@ -16,7 +16,5 @@ int mmc_get_env_dev(void)
-=20
- int board_init(void)
- {
--	regulators_enable_boot_on(_DEBUG);
--
- 	return 0;
- }
-diff --git a/board/dhelectronics/dh_stm32mp1/board.c b/board/dhelectronic=
-s/dh_stm32mp1/board.c
-index 4f4f537fee5..24c5f37c12f 100644
---- a/board/dhelectronics/dh_stm32mp1/board.c
-+++ b/board/dhelectronics/dh_stm32mp1/board.c
-@@ -622,8 +622,6 @@ static void board_init_regulator_av96(void)
- static void board_init_regulator(void)
- {
- 	board_init_regulator_av96();
--
--	regulators_enable_boot_on(_DEBUG);
- }
- #else
- static inline int board_get_regulator_buck3_nvm_uv_av96(int *uv)
-diff --git a/board/engicam/stm32mp1/stm32mp1.c b/board/engicam/stm32mp1/s=
-tm32mp1.c
-index bc2af66d8e9..56557d56429 100644
---- a/board/engicam/stm32mp1/stm32mp1.c
-+++ b/board/engicam/stm32mp1/stm32mp1.c
-@@ -37,9 +37,6 @@ int checkboard(void)
- /* board dependent setup after realloc */
- int board_init(void)
- {
--	if (IS_ENABLED(CONFIG_DM_REGULATOR))
--		regulators_enable_boot_on(_DEBUG);
--
- 	return 0;
- }
-=20
-diff --git a/board/google/veyron/veyron.c b/board/google/veyron/veyron.c
-index 53c3435c92f..055c1c5fc6d 100644
---- a/board/google/veyron/veyron.c
-+++ b/board/google/veyron/veyron.c
-@@ -61,12 +61,6 @@ static int veyron_init(void)
- 	if (ret)
- 		return ret;
-=20
--	ret =3D regulators_enable_boot_on(false);
--	if (ret) {
--		debug("%s: Cannot enable boot on regulators\n", __func__);
--		return ret;
--	}
--
- 	return 0;
- }
- #endif
-diff --git a/board/samsung/common/exynos5-dt.c b/board/samsung/common/exy=
-nos5-dt.c
-index 56862bcb34d..68edd1ec282 100644
---- a/board/samsung/common/exynos5-dt.c
-+++ b/board/samsung/common/exynos5-dt.c
-@@ -88,10 +88,6 @@ int exynos_power_init(void)
- 	if (ret =3D=3D -ENODEV)
- 		return 0;
-=20
--	ret =3D regulators_enable_boot_on(false);
--	if (ret)
--		return ret;
--
- 	ret =3D exynos_set_regulator("vdd_mif", 1100000);
- 	if (ret)
- 		return ret;
-diff --git a/board/st/stm32mp1/stm32mp1.c b/board/st/stm32mp1/stm32mp1.c
-index 97532a8156f..d5e5e776d2a 100644
---- a/board/st/stm32mp1/stm32mp1.c
-+++ b/board/st/stm32mp1/stm32mp1.c
-@@ -665,8 +665,6 @@ int board_init(void)
- 	if (board_is_stm32mp15x_dk2())
- 		board_stm32mp15x_dk2_init();
-=20
--	regulators_enable_boot_on(_DEBUG);
--
- 	/*
- 	 * sysconf initialisation done only when U-Boot is running in secure
- 	 * done in TF-A for TFABOOT.
 diff --git a/drivers/power/regulator/regulator-uclass.c b/drivers/power/r=
 egulator/regulator-uclass.c
-index bcbcec1567e..7d59d0f0cbd 100644
+index 66fd531da04..ccc4ef33d83 100644
 --- a/drivers/power/regulator/regulator-uclass.c
 +++ b/drivers/power/regulator/regulator-uclass.c
-@@ -520,16 +520,6 @@ static int regulator_post_probe(struct udevice *dev)
- 	return 0;
+@@ -433,6 +433,8 @@ static int regulator_post_bind(struct udevice *dev)
+ 	const char *property =3D "regulator-name";
+=20
+ 	uc_pdata =3D dev_get_uclass_plat(dev);
++	uc_pdata->always_on =3D dev_read_bool(dev, "regulator-always-on");
++	uc_pdata->boot_on =3D dev_read_bool(dev, "regulator-boot-on");
+=20
+ 	/* Regulator's mandatory constraint */
+ 	uc_pdata->name =3D dev_read_string(dev, property);
+@@ -444,13 +446,21 @@ static int regulator_post_bind(struct udevice *dev)
+ 			return -EINVAL;
+ 	}
+=20
+-	if (regulator_name_is_unique(dev, uc_pdata->name))
+-		return 0;
++	if (!regulator_name_is_unique(dev, uc_pdata->name)) {
++		debug("'%s' of dev: '%s', has nonunique value: '%s\n",
++		      property, dev->name, uc_pdata->name);
++		return -EINVAL;
++	}
+=20
+-	debug("'%s' of dev: '%s', has nonunique value: '%s\n",
+-	      property, dev->name, uc_pdata->name);
++	/*
++	 * In case the regulator has regulator-always-on or
++	 * regulator-boot-on DT property, trigger probe() to
++	 * configure its default state during startup.
++	 */
++	if (uc_pdata->always_on && uc_pdata->boot_on)
++		dev_or_flags(dev, DM_FLAG_PROBE_AFTER_BIND);
+=20
+-	return -EINVAL;
++	return 0;
  }
 =20
--int regulators_enable_boot_on(bool verbose)
--{
--	return 0;
--}
--
--int regulators_enable_boot_off(bool verbose)
--{
--	return 0;
--}
--
- UCLASS_DRIVER(regulator) =3D {
- 	.id		=3D UCLASS_REGULATOR,
- 	.name		=3D "regulator",
-diff --git a/include/power/regulator.h b/include/power/regulator.h
-index 5363483d02a..f49bcf76b68 100644
---- a/include/power/regulator.h
-+++ b/include/power/regulator.h
-@@ -414,26 +414,6 @@ int regulator_get_mode(struct udevice *dev);
-  */
- int regulator_set_mode(struct udevice *dev, int mode_id);
-=20
--/**
-- * regulators_enable_boot_on() - enable regulators needed for boot
-- *
-- * This enables all regulators which are marked to be on at boot time. T=
-his
-- * only works for regulators which don't have a range for voltage/curren=
-t,
-- * since in that case it is not possible to know which value to use.
-- *
-- * This effectively calls regulator_autoset() for every regulator.
-- */
--int regulators_enable_boot_on(bool verbose);
--
--/**
-- * regulators_enable_boot_off() - disable regulators needed for boot
-- *
-- * This disables all regulators which are marked to be off at boot time.
-- *
-- * This effectively does nothing.
-- */
--int regulators_enable_boot_off(bool verbose);
--
- /**
-  * regulator_autoset: setup the voltage/current on a regulator
-  *
+ static int regulator_pre_probe(struct udevice *dev)
+@@ -473,8 +483,6 @@ static int regulator_pre_probe(struct udevice *dev)
+ 						-ENODATA);
+ 	uc_pdata->max_uA =3D dev_read_u32_default(dev, "regulator-max-microamp"=
+,
+ 						-ENODATA);
+-	uc_pdata->always_on =3D dev_read_bool(dev, "regulator-always-on");
+-	uc_pdata->boot_on =3D dev_read_bool(dev, "regulator-boot-on");
+ 	uc_pdata->ramp_delay =3D dev_read_u32_default(dev, "regulator-ramp-dela=
+y",
+ 						    0);
+ 	uc_pdata->force_off =3D dev_read_bool(dev, "regulator-force-boot-off");
 --=20
 2.43.0
 
