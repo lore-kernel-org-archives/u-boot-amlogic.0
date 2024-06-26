@@ -2,31 +2,31 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6C8C30658
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61594C3065A
 	for <webhook@archiver.kernel.org>; Thu, 27 Jun 2024 08:00:11 +0000 (UTC)
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
- by mx.groups.io with SMTP id smtpd.web11.228.1719446275320206270
+ by mx.groups.io with SMTP id smtpd.web11.229.1719446275336988645
  for <u-boot-amlogic@groups.io>;
  Wed, 26 Jun 2024 16:57:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@denx.de header.s=phobos-20191101 header.b=COSdsZQA;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@denx.de header.s=phobos-20191101 header.b=GIvt4wLk;
  spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
 Received: from tr.lan (ip-86-49-120-218.bb.vodafone.cz [86.49.120.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 98CCA88495;
-	Thu, 27 Jun 2024 01:57:50 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id C59D4884BE;
+	Thu, 27 Jun 2024 01:57:52 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1719446272;
-	bh=j9+gNS0RvBKJupbfHAroI1F5otxQD2cptbmul1pdCUM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=COSdsZQAdkVFtgDBSrlF5Gijkt24B+EwJUTAil4EgCGlSPK7tKKQNMBhS1LeEPzgB
-	 FVedUPKHF/6hNGCHFTGVcDYW9CMWiWaxUTVPyNmXPoKI6XzBO9SfZcGLVDDQKGE5YL
-	 cvveotTcSSuvFePkTqGuWWBwwsqKcopsyFCLUNz6eL8CIFsR31okrjZCoUKk/im+Zj
-	 RZhSEdj/vWwbWFPkgdJ8Wow9SALESRiFy/AhGjqfA3VB3/vnE/4m1Sc+GIlCODkGGw
-	 eY8mzKd06viDAMPdaT+WEr/Hk5zGCewjRHlgcbgcVrIaMq8oGUc3FUV0avjIhpgt/y
-	 S7RNug7vFx9mA==
+	s=phobos-20191101; t=1719446273;
+	bh=aHen6832IKsb5XblySpJKp+JaCzMetw7y5X/WvFEHI0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GIvt4wLk228mGRS5/n3S60iJ1fmnMsjCeZr5j3MTmD5P0NaJFcZgJqZyQcYBSRPR0
+	 l2qrnKApFJIR7hnN2kbHpWVRnyYhLi7F4Ktc4yHtcw2X6LYUTnzpmIkd2mhPHgqfvL
+	 674QgiUjeveMOI4XgmIjsDMSybEyFNc+yEJZ/dBup3vAGul0C87X6VXv8Uavj7cUNu
+	 AhCWewS0KD9pecCkWGDVbFqKzc3FA8TGlH87VWfczEK0vWxPTsXV0DdfMQozgfYibG
+	 +3JQFYfsYZHkjHT5QR4pmzkEMKGnoxS2ge43KGDUQr9KKlhfXAyy3i0I3tFdCF50CR
+	 BY4iU/hbwiHAw==
 From: Marek Vasut <marex@denx.de>
 To: u-boot@lists.denx.de
 Cc: Marek Vasut <marex@denx.de>,
@@ -61,10 +61,12 @@ Cc: Marek Vasut <marex@denx.de>,
 	u-boot-qcom@groups.io,
 	u-boot@dh-electronics.com,
 	uboot-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 1/4] power: regulator: Trigger probe of regulators which are always-on or boot-on
-Date: Thu, 27 Jun 2024 01:55:41 +0200
-Message-ID: <20240626235717.272219-1-marex@denx.de>
+Subject: [PATCH 2/4] power: regulator: Convert regulators_enable_boot_on/off() to regulator_post_probe
+Date: Thu, 27 Jun 2024 01:55:42 +0200
+Message-ID: <20240626235717.272219-2-marex@denx.de>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240626235717.272219-1-marex@denx.de>
+References: <20240626235717.272219-1-marex@denx.de>
 MIME-Version: 1.0
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
@@ -73,22 +75,19 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 27 Jun 2024 08:00:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2332
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2333
 
-In case a regulator DT node contains regulator-always-on or regulator-boo=
-t-on
-property, make sure the regulator gets correctly configured by U-Boot on =
-start
-up. Unconditionally probe such regulator drivers. This is a preparatory p=
-atch
-for introduction of .regulator_post_probe() which would trigger the regul=
-ator
-configuration.
+Turn regulators_enable_boot_on() and regulators_enable_boot_off() into
+empty functions. Implement matching functionality in regulator_post_probe=
+()
+instead. The regulator_post_probe() is called for all regulators after th=
+ey
+probe, and regulators that have regulator-always-on or regulator-boot-on =
+DT
+properties now always probe due to DM_FLAG_PROBE_AFTER_BIND being set on
+such regulators in regulator_post_bind().
 
-Parsing of regulator-always-on and regulator-boot-on DT property has been
-moved to regulator_post_bind() as the information is required early, the
-rest of the DT parsing has been kept in regulator_pre_probe() to avoid
-slowing down the boot process.
+Finally, fold regulator_unset() functionality into regulator_autoset().
 
 Signed-off-by: Marek Vasut <marex@denx.de>
 ---
@@ -125,61 +124,103 @@ Cc: u-boot@dh-electronics.com
 Cc: u-boot@lists.denx.de
 Cc: uboot-stm32@st-md-mailman.stormreply.com
 ---
- drivers/power/regulator/regulator-uclass.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/power/regulator/regulator-uclass.c | 60 +++++++---------------
+ 1 file changed, 19 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/power/regulator/regulator-uclass.c b/drivers/power/r=
 egulator/regulator-uclass.c
-index 66fd531da04..ccc4ef33d83 100644
+index ccc4ef33d83..d52f273042f 100644
 --- a/drivers/power/regulator/regulator-uclass.c
 +++ b/drivers/power/regulator/regulator-uclass.c
-@@ -433,6 +433,8 @@ static int regulator_post_bind(struct udevice *dev)
- 	const char *property =3D "regulator-name";
-=20
- 	uc_pdata =3D dev_get_uclass_plat(dev);
-+	uc_pdata->always_on =3D dev_read_bool(dev, "regulator-always-on");
-+	uc_pdata->boot_on =3D dev_read_bool(dev, "regulator-boot-on");
-=20
- 	/* Regulator's mandatory constraint */
- 	uc_pdata->name =3D dev_read_string(dev, property);
-@@ -444,13 +446,21 @@ static int regulator_post_bind(struct udevice *dev)
- 			return -EINVAL;
+@@ -308,6 +308,11 @@ int regulator_autoset(struct udevice *dev)
+ 			return ret;
  	}
 =20
--	if (regulator_name_is_unique(dev, uc_pdata->name))
--		return 0;
-+	if (!regulator_name_is_unique(dev, uc_pdata->name)) {
-+		debug("'%s' of dev: '%s', has nonunique value: '%s\n",
-+		      property, dev->name, uc_pdata->name);
-+		return -EINVAL;
++	if (uc_pdata->force_off) {
++		ret =3D regulator_set_enable(dev, false);
++		goto out;
 +	}
++
+ 	if (!uc_pdata->always_on && !uc_pdata->boot_on) {
+ 		ret =3D -EMEDIUMTYPE;
+ 		goto out;
+@@ -512,56 +517,28 @@ static int regulator_pre_probe(struct udevice *dev)
+ 	return 0;
+ }
 =20
--	debug("'%s' of dev: '%s', has nonunique value: '%s\n",
--	      property, dev->name, uc_pdata->name);
-+	/*
-+	 * In case the regulator has regulator-always-on or
-+	 * regulator-boot-on DT property, trigger probe() to
-+	 * configure its default state during startup.
-+	 */
-+	if (uc_pdata->always_on && uc_pdata->boot_on)
-+		dev_or_flags(dev, DM_FLAG_PROBE_AFTER_BIND);
+-int regulators_enable_boot_on(bool verbose)
++static int regulator_post_probe(struct udevice *dev)
+ {
+-	struct udevice *dev;
+-	struct uclass *uc;
+ 	int ret;
 =20
--	return -EINVAL;
+-	ret =3D uclass_get(UCLASS_REGULATOR, &uc);
+-	if (ret)
++	ret =3D regulator_autoset(dev);
++	if (ret && ret !=3D -EMEDIUMTYPE && ret !=3D ENOSYS)
+ 		return ret;
+-	for (uclass_first_device(UCLASS_REGULATOR, &dev);
+-	     dev;
+-	     uclass_next_device(&dev)) {
+-		ret =3D regulator_autoset(dev);
+-		if (ret =3D=3D -EMEDIUMTYPE) {
+-			ret =3D 0;
+-			continue;
+-		}
+-		if (verbose)
+-			regulator_show(dev, ret);
+-		if (ret =3D=3D -ENOSYS)
+-			ret =3D 0;
+-	}
+=20
+-	return ret;
++	if (_DEBUG)
++		regulator_show(dev, ret);
++
 +	return 0;
  }
 =20
- static int regulator_pre_probe(struct udevice *dev)
-@@ -473,8 +483,6 @@ static int regulator_pre_probe(struct udevice *dev)
- 						-ENODATA);
- 	uc_pdata->max_uA =3D dev_read_u32_default(dev, "regulator-max-microamp"=
-,
- 						-ENODATA);
--	uc_pdata->always_on =3D dev_read_bool(dev, "regulator-always-on");
--	uc_pdata->boot_on =3D dev_read_bool(dev, "regulator-boot-on");
- 	uc_pdata->ramp_delay =3D dev_read_u32_default(dev, "regulator-ramp-dela=
-y",
- 						    0);
- 	uc_pdata->force_off =3D dev_read_bool(dev, "regulator-force-boot-off");
+-int regulators_enable_boot_off(bool verbose)
++int regulators_enable_boot_on(bool verbose)
+ {
+-	struct udevice *dev;
+-	struct uclass *uc;
+-	int ret;
+-
+-	ret =3D uclass_get(UCLASS_REGULATOR, &uc);
+-	if (ret)
+-		return ret;
+-	for (uclass_first_device(UCLASS_REGULATOR, &dev);
+-	     dev;
+-	     uclass_next_device(&dev)) {
+-		ret =3D regulator_unset(dev);
+-		if (ret =3D=3D -EMEDIUMTYPE) {
+-			ret =3D 0;
+-			continue;
+-		}
+-		if (verbose)
+-			regulator_show(dev, ret);
+-		if (ret =3D=3D -ENOSYS)
+-			ret =3D 0;
+-	}
++	return 0;
++}
+=20
+-	return ret;
++int regulators_enable_boot_off(bool verbose)
++{
++	return 0;
+ }
+=20
+ UCLASS_DRIVER(regulator) =3D {
+@@ -569,5 +546,6 @@ UCLASS_DRIVER(regulator) =3D {
+ 	.name		=3D "regulator",
+ 	.post_bind	=3D regulator_post_bind,
+ 	.pre_probe	=3D regulator_pre_probe,
++	.post_probe	=3D regulator_post_probe,
+ 	.per_device_plat_auto	=3D sizeof(struct dm_regulator_uclass_plat),
+ };
 --=20
 2.43.0
 
