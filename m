@@ -2,93 +2,62 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02525C41513
-	for <webhook@archiver.kernel.org>; Wed, 26 Jun 2024 09:43:58 +0000 (UTC)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
- by mx.groups.io with SMTP id smtpd.web10.22042.1719395031954155341
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040B5C30653
+	for <webhook@archiver.kernel.org>; Wed, 26 Jun 2024 09:43:59 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web10.22043.1719395032715594096
  for <u-boot-amlogic@groups.io>;
- Wed, 26 Jun 2024 02:43:52 -0700
+ Wed, 26 Jun 2024 02:43:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=AMzfpBrR;
- spf=pass (domain: linaro.org, ip: 209.85.208.178, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ed5ac077f5so6612401fa.1
-        for <u-boot-amlogic@groups.io>; Wed, 26 Jun 2024 02:43:51 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=T9RWesII;
+ spf=pass (domain: linaro.org, ip: 209.85.128.44, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4248ff53f04so22278215e9.0
+        for <u-boot-amlogic@groups.io>; Wed, 26 Jun 2024 02:43:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719395030; x=1719999830; darn=groups.io;
+        d=linaro.org; s=google; t=1719395031; x=1719999831; darn=groups.io;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f9yXouYFFVoeh+wzgUNghZOG6eQE4xLISuuG/NrBTh4=;
-        b=AMzfpBrRhGgGBmsQxAYuA5sRLM6R3l9Plg01Y57Aqzrm3Wdcqvt/DhDuE2wuhEiZiG
-         Nz62Y8XBEMjR6Y6RW0/Nva/ZZkOA3RY9qzADINqOvDf6onQ4VQ4jhvC+hJVK711Jwd4L
-         kw1HUfoHtgg3Vxx/1WKOhyDSOoEXIQTj3dT3DOxybq5hegMGtCCtRZxzGQy8xRzkvoA1
-         MIh9lOfHUOEniF48TqQh0Q30E4B8QpzwoBu+Dj4/7a127LxgYy5SgjZeSMD/Ns7RpYqb
-         rS+0Kl1yGbo2t3gj1y3lOcQkRU5cZpKyebWbMMTC46FnCpoVj8FgbIGGz79y6K8dUIQw
-         TM2w==
+        bh=XKN1p1pamJhVTARy7UdKn6sH7uxhDkWsOL5N+6QzpG8=;
+        b=T9RWesIIMCi6f0TuKVf1k7wJE668j/MDZOy+Oy8QOg937Eiis6hBCjlmWP+P81dYME
+         bG5DBk9iCZIf6hMda+SwdqGP52wD8ojAyuLJmmQsvht0u4b0xXh4+JJAHwMgeax9DOFc
+         D07tGENLiRqhANaiYoFBxkwDTKkQYKGg018BVEKHLiw2DhHoeolbCZtsZUG+xZBGbqv3
+         RvrMs57l9DjIrB7FahXHY+9CwzJwG8jutPhCgjsQpAOZhJ88feDR9CZ7U0L30p5TB8GW
+         iQ7xlv2gj43H9Ee8MIsD+ZCCNn5TsfY38ln4osWiZb/efvRKdtHuzMRp/cK2FnxdMUei
+         vFdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719395030; x=1719999830;
+        d=1e100.net; s=20230601; t=1719395031; x=1719999831;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f9yXouYFFVoeh+wzgUNghZOG6eQE4xLISuuG/NrBTh4=;
-        b=GW3M6UiNnnYnXDsAWBGMGOmI/2j39mjJmBIdatS9j9IkAkilrc2/O2+FkGwtcgkqk5
-         4fOeDtov/81OakLTmRm+Unnj8Qc6G3dlKwoopvaSIU4OJHGeWoqPNt4eHg3qqoGkiTuw
-         gazncvzXm13PV6gJPX+3Cwl+FO08vHvXc3gk26qhz7wVOAWTgrEBSjT1k+FtWzxlUusV
-         74du+WmBcsLDgLISUnw+SJqobAT5DS3ru8DnYXlvym2/UR1R70ppAY0AYLEymLXBholn
-         VG1PKBAZipey+IU8dTYrcworwBsv/J7H/A4iuGqQi8VQBlR13L1M7ea7RUkx5BmLJ6gj
-         km1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUbonpJktptzuL6KkDtzqrg2dWRGj+ClRpC5QeWKUaMafqG6JSFm0V+5oUWdCMHmx9GTuQ5Mk+OejKoU7UOb0mu76ISPQwzPo0=
-X-Gm-Message-State: AOJu0Yw5dRS1Hy5hYVVjmYNDyaD41hrqss5VqUJrevKb+Cymr82YG38M
-	5NXgfLKInRxqHVrN2HlvsTIHUvbJ717cqz9PRZc7zydNZUEvwH+xDTKWxA7fjc8=
-X-Google-Smtp-Source: AGHT+IHysr8Tgc5ey5jrgRUt5Qg2zyfxJ/YAUp2E2EN6PHVL/ZhhgxHZGrHQoak+XPgNwj8vKXUiGg==
-X-Received: by 2002:a05:651c:1a1e:b0:2ec:59b6:ad71 with SMTP id 38308e7fff4ca-2ec59b6ae47mr75393621fa.40.1719395029661;
-        Wed, 26 Jun 2024 02:43:49 -0700 (PDT)
+        bh=XKN1p1pamJhVTARy7UdKn6sH7uxhDkWsOL5N+6QzpG8=;
+        b=WT7g3y5Dh0Kosh+nA5BkbaAJNaWSjtV89y1VtDWIqqw9fu0JN0ddT682ssc3vqsBmq
+         /qGANaUTtdzqjVjp/ZwhuvOQQ6eNeRrRFEMC7UvGM6sQ9+0EdiSpsJQf7qkATG41xpTf
+         BJT3F6N6WdHluYsLyHGf/70pwkrGIc+9Cm89r9UMumDoJ2W93+DQB4gdG4NV0mFo+9Sd
+         bD1OtrTGQs/3d7mYnoFWwkTCFWrpFa+/QhsxE2LrUldcZxdJZnvhPvoN9ncwL2BeSeGX
+         ZgRAWOsiA134b8k8MX0MLdmJoozWxDoVALytFEjO7uwyJtSzLEjZUeNUbo9RkXKIykVw
+         nVHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXra3YgX9ia6UqKeCMnEJdy56YB8kjy8wH34EpnFeDtZJqhsJhUYgtbP25XjjdpJyYaURrGVyEkhBe9yGG6z8r44g65eQqoEhA=
+X-Gm-Message-State: AOJu0YylWtCEyvgrNy6WPjWpM5G91AoiWrZWHRvZGVagKvgfM4pCB3IW
+	2x+hbvhkOj7do8cYWrNw3oWT/88gK7z2L15DtefuN5786i6o56o0ACc80r73qzk=
+X-Google-Smtp-Source: AGHT+IFLpNAmCIyiFsgMIXhxvp9bsVR0CgEPv4Ds8KG+cQyjGgV2OcXFpbYDUbYUy9kIQrEJEmM97g==
+X-Received: by 2002:a05:600c:56cc:b0:421:7bed:5274 with SMTP id 5b1f17b1804b1-4248b95d0edmr84554065e9.10.1719395030498;
+        Wed, 26 Jun 2024 02:43:50 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c84692c0sm18857175e9.43.2024.06.26.02.43.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c84692c0sm18857175e9.43.2024.06.26.02.43.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 02:43:49 -0700 (PDT)
+        Wed, 26 Jun 2024 02:43:50 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-To: U-Boot Mailing List <u-boot@lists.denx.de>, 
- Simon Glass <sjg@chromium.org>
-Cc: Tom Rini <trini@konsulko.com>, AKASHI Takahiro <akashi.tkhro@gmail.com>, 
- Alexander Gendin <agendin@matrox.com>, 
- Alexey Brodkin <Alexey.Brodkin@synopsys.com>, 
- Allen Martin <amartin@nvidia.com>, 
- Alper Nebi Yasak <alpernebiyasak@gmail.com>, 
- Andre Przywara <andre.przywara@arm.com>, 
- Andrejs Cainikovs <andrejs.cainikovs@toradex.com>, 
- Andrew Davis <afd@ti.com>, Bin Meng <bmeng.cn@gmail.com>, 
- Caleb Connolly <caleb.connolly@linaro.org>, 
- Christian Taedcke <christian.taedcke@weidmueller.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, 
- Francis Laniel <francis.laniel@amarulasolutions.com>, 
- Heinrich Schuchardt <xypron.glpk@gmx.de>, 
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Leo Yu-Chi Liang <ycliang@andestech.com>, 
- Lukas Funke <lukas.funke@weidmueller.com>, 
- Manorit Chawdhry <m-chawdhry@ti.com>, 
- Marcel Ziswiler <marcel.ziswiler@toradex.com>, 
- Marek Vasut <marek.vasut+renesas@mailbox.org>, Marek Vasut <marex@denx.de>, 
- Martyn Welch <martyn.welch@collabora.com>, 
- =?utf-8?q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
- Neha Malcom Francis <n-francis@ti.com>, Nishanth Menon <nm@ti.com>, 
- Pavel Herrmann <morpheus.ibis@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
- Peter Robinson <pbrobinson@gmail.com>, 
- Philippe Reynes <philippe.reynes@softathome.com>, 
- Samuel Holland <samuel@sholland.org>, Sean Anderson <seanga2@gmail.com>, 
- Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>, 
- Sughosh Ganu <sughosh.ganu@linaro.org>, 
- Svyatoslav Ryhel <clamor95@gmail.com>, Trevor Woerner <twoerner@gmail.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, u-boot-amlogic@groups.io
-In-Reply-To: <20240611200156.2245525-1-sjg@chromium.org>
-References: <20240611200156.2245525-1-sjg@chromium.org>
-Subject: Re: (subset) [PATCH 00/42] labgrid: Provide an integration with
- Labgrid
-Message-Id: <171939502804.2754394.6148007977344212026.b4-ty@linaro.org>
-Date: Wed, 26 Jun 2024 11:43:48 +0200
+To: Tom Rini <trini@konsulko.com>, Marek Vasut <marex@denx.de>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
+ u-boot-amlogic@groups.io, u-boot@lists.denx.de
+In-Reply-To: <20240620-u-boot-usb-gxl-phy-set-mode-v2-0-b81c027bc02c@linaro.org>
+References: <20240620-u-boot-usb-gxl-phy-set-mode-v2-0-b81c027bc02c@linaro.org>
+Subject: Re: [PATCH v2 0/5] usb: meson: switch to set_mode callback and
+ other cleanup
+Message-Id: <171939502981.2754394.12351884665745788367.b4-ty@linaro.org>
+Date: Wed, 26 Jun 2024 11:43:49 +0200
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -97,26 +66,29 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 26 Jun 2024 09:43:58 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2328
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2329
 
 Hi,
 
-On Tue, 11 Jun 2024 14:01:14 -0600, Simon Glass wrote:
-> Labgrid provides access to a hardware lab in an automated way. It is
-> possible to boot U-Boot on boards in the lab without physically touching
-> them. It relies on relays, USB UARTs and SD muxes, among other things.
+On Thu, 20 Jun 2024 09:42:49 +0200, Neil Armstrong wrote:
+> Switch to set_mode callback now it's available and in the same
+> time make public functions static and drop useless mach-meson
+> headers that are no more needed.
 > 
-> By way of background, about 4 years ago I wrong a thing called Labman[1]
-> which allowed my lab of about 30 devices to be operated remotely, using
-> tbot for the console and build integration. While it worked OK and I
-> used it for many bisects, I didn't take it any further.
 > 
-> [...]
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
 
-[18/42] meson: Correct driver declaration for meson_axg_gpio
-        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/96e1a156e90a0674b21c56e7121b17a9211176ec
+[1/5] phy: meson-gxl-usb2: add set_mode callback
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/e7265f62aa6bf20c9011d0848926d6206fdf7d51
+[2/5] usb: dwc3: meson-gxl: switch to generic_phy_set_mode
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/8c58c35048cb47a999c050aad9c6c9785fc5870e
+[3/5] phy: meson-gxl-usb2: remove phy_meson_gxl_usb2_set_mode
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/affb461d9aa235d12075fbd943cb11e481ada79d
+[4/5] usb: dwc3: meson-gxl: drop usb-gx.h and make dwc3_meson_gxl_force_mode static
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/98ce6d3e322c428f37e75956d316fb76479472ea
+[5/5] usb: dwc3: meson-g12a: drop usb.h and make dwc3_meson_g12a_force_mode static
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/93b6a52f5a9754e3077c31590a7d5fcc2858d415
 
 -- 
 Neil
