@@ -2,137 +2,222 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E7DC30653
-	for <webhook@archiver.kernel.org>; Mon,  1 Jul 2024 08:48:54 +0000 (UTC)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
- by mx.groups.io with SMTP id smtpd.web11.15396.1719823731326606131
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD4CC30653
+	for <webhook@archiver.kernel.org>; Mon,  1 Jul 2024 11:57:15 +0000 (UTC)
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.web11.3435.1719477443882366716
  for <u-boot-amlogic@groups.io>;
- Mon, 01 Jul 2024 01:48:51 -0700
+ Thu, 27 Jun 2024 01:37:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=WcOuAJCG;
- spf=pass (domain: linaro.org, ip: 209.85.167.44, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52ce6c8db7bso4027083e87.1
-        for <u-boot-amlogic@groups.io>; Mon, 01 Jul 2024 01:48:51 -0700 (PDT)
+ dkim=pass header.i=@chromium.org header.s=google header.b=dG2QG3s7;
+ spf=pass (domain: chromium.org, ip: 209.85.219.42, mailfrom: sjg@chromium.org)
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6b4fced5999so32108176d6.2
+        for <u-boot-amlogic@groups.io>; Thu, 27 Jun 2024 01:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719823729; x=1720428529; darn=groups.io;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jUvdH3IXhEmKAjhpbxVrzYZY642aKB40M8uAj9K8WhA=;
-        b=WcOuAJCGmGKklmECgXjjQPG4pQe9sY/NEwfzOu0TQ0OGTeocquKhJjUKfonmlqRtpZ
-         IwvmSnRSC5xBOF2bBM0dQ1M5LiZbqsmyEHyorjjN/6nAGUspo4SwL9xrbDRpoU0LL9x9
-         vPZ8oz4cNS5phtdB1IOLB1vtclskDQwdWHZ6xIe7KZdkULB1sTqxLYl7p1wd3bskzWYE
-         92+DG8WOAQrbOn7NDr3Ov+IBp2C1soIbfm6VKHUHZ7Nu8mJUHABFUci1IUau5hUyLzNp
-         ZswJT18Ps9V1gFFMD5lHEY82g2APYOy/mKv1JoUvwasZcLBcY3oEws0xPxQJGHDFAgyl
-         ihqg==
+        d=chromium.org; s=google; t=1719477443; x=1720082243; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lMc4ljFg7l2S+adb42/qqkZ0lAiGcoiXen99I9SZOAg=;
+        b=dG2QG3s7GORoIeDBnf7sX2jyqvpbOPb/Lqz+/ACa9kANLGFvDE8aSA/bbWlQitawWh
+         uYLXECrHMK5P2sytoYHGdRif+PomYFobljkqrdoascwiTK/Feln+VZSjNQwyCQHoNLDY
+         OcjEBv8QwgAkeHB9/VUnltFeqEv/SXUiju/zw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719823729; x=1720428529;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jUvdH3IXhEmKAjhpbxVrzYZY642aKB40M8uAj9K8WhA=;
-        b=bY2DGuV/uKUdZrHuJrlf6QbeSdLDSa7SaIboS2yH3Uy9tPosu0gzhQqnU8v8AXWEjG
-         OKcyr2fu9ZQp9na8IABzMuu2MwxEsYrcFHpkVgTYnqRi7f5S+tw3DmvAT+Mtqd1ach6j
-         gLHd9ddGQ9AOWrr+xRrrliBI1JjpyIbmol0SKW9lAbfAa65zjs74EOBavBt/kBXbgqXF
-         h8fOxBLgvM7EM3kXelfwWPf+X80Xntfp2qYH4spzSnuSZWZfqJQ2Pompm55UD47nM1Im
-         YpzDyxQ7Yqn0CFLUS5VWPKUBnDt+vqhx8SR+ZvA2wf2bsvlmFtz5U4N+9zNfGx5SOflH
-         W5JA==
-X-Gm-Message-State: AOJu0YwGb+Cex5bb058pjD/TvkiDx+aTOSqxrNp4bx44fOqewlO+AXiJ
-	SU1unHvbnQ7tY2/s7VhYV62PMXaBzwSfGY/rJGSSEa585GYNtb+NpwV5PEnZ+Jk=
-X-Google-Smtp-Source: AGHT+IH4nK5l053KkmUPRiCdT8mRwhKf7gXLnj3rNWqk0vLPhXOAoXQ5TJMOsKhVFoWSYFBgrxupWQ==
-X-Received: by 2002:a05:6512:31cc:b0:52e:76d5:9504 with SMTP id 2adb3069b0e04-52e82651c26mr3838107e87.3.1719823728742;
-        Mon, 01 Jul 2024 01:48:48 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:4719:99ea:652b:10d0? ([2a01:e0a:982:cbb0:4719:99ea:652b:10d0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af3c25esm143339375e9.9.2024.07.01.01.48.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 01:48:48 -0700 (PDT)
-Message-ID: <a4690cd1-33ef-4537-885b-6782c135c43b@linaro.org>
-Date: Mon, 1 Jul 2024 10:48:47 +0200
+        d=1e100.net; s=20230601; t=1719477443; x=1720082243;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lMc4ljFg7l2S+adb42/qqkZ0lAiGcoiXen99I9SZOAg=;
+        b=nKj3wwhP51YOPSQTOw/lDncdBA4ahDgMyLipnEnXHoU420WjwAtPGsEfX2fpx005Tx
+         6M62fyuGY82QTWPOAm7s45CuAm/ZkYZtzBUXwAzUZ26iQ6XGNQWfnRCO62waDTYrfWxc
+         X8Nq3Nj5al2SifaX5uZbFTdRcSCoS64RCnBUoAKDtYf5u9F41TI8V+Geu9YDh9FNM0bi
+         4Hsx4bPkvp+MxkU053zETMaCpQQExygRiGtS5SZNCZgrYWdS+rjScp3kgKNXylUSMlJH
+         F7yy/D+i0lMX3AlH4bgDG0KxmeHt+TtG6HEXneAWbOKHOkRWwJNXR6siJfz4SxNHavUB
+         d+vA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1DAzB+RE2dMIGSXQL75tJXqHRerb61ghaz7lxjovUICCg7qi0etp2D9EjyAPXKJxowXXfqEJaJ6np7vQv+RsFKlnHzYxKaGQ=
+X-Gm-Message-State: AOJu0Yx5pCJk+8RnnrdRswnr4f1RE55nQfZMjGUjPdHlRoJNWlbLh+eR
+	slKl/Z0YKC+zN1wo3vFaQ0JDBPQWRd/fCPknh+0fvRF9e44l6nt8H2ROYoWcFkK0p8Qj83Lcwn+
+	siDZTE9FDVfU5fBVtBK/K2zdlpWuw3sGtQuFK
+X-Google-Smtp-Source: AGHT+IFhGtaZsYu+JsYbMdjHkL2dtU5fQIErE4zdPS5c616U3P2RmZjS4NhZe2IDSecjFCkeWrNkXlWWgx+G8U2nAF0=
+X-Received: by 2002:a0c:cb87:0:b0:6b4:fc60:a835 with SMTP id
+ 6a1803df08f44-6b540cedfb6mr137771266d6.56.1719477442975; Thu, 27 Jun 2024
+ 01:37:22 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [GIT PULL] Please pull u-boot-amlogic-next-20240404
-Reply-To: neil.armstrong@linaro.org
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240626235717.272219-1-marex@denx.de> <20240626235717.272219-2-marex@denx.de>
+In-Reply-To: <20240626235717.272219-2-marex@denx.de>
+From: Simon Glass <sjg@chromium.org>
+Date: Thu, 27 Jun 2024 09:37:12 +0100
+Message-ID: <CAFLszTjb7=x78V7-75Ch11wdJy2CBnuYE1_+11b+mivokCFm=Q@mail.gmail.com>
+Subject: Re: [PATCH 2/4] power: regulator: Convert regulators_enable_boot_on/off() to regulator_post_probe
+To: Marek Vasut <marex@denx.de>
+Cc: u-boot@lists.denx.de, Ben Wolsieffer <benwolsieffer@gmail.com>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Chris Morgan <macromorgan@hotmail.com>, 
+	Dragan Simic <dsimic@manjaro.org>, Eugen Hristev <eugen.hristev@collabora.com>, 
+	Francesco Dolcini <francesco.dolcini@toradex.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, 
+	Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Kever Yang <kever.yang@rock-chips.com>, 
+	Kostya Porotchkin <kostap@marvell.com>, Matteo Lisi <matteo.lisi@engicam.com>, 
+	Mattijs Korpershoek <mkorpershoek@baylibre.com>, Max Krummenacher <max.krummenacher@toradex.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Patrice Chotard <patrice.chotard@foss.st.com>, 
+	Patrick Delaunay <patrick.delaunay@foss.st.com>, Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+	Quentin Schulz <quentin.schulz@cherry.de>, Sam Day <me@samcday.com>, 
+	Sumit Garg <sumit.garg@linaro.org>, Svyatoslav Ryhel <clamor95@gmail.com>, 
+	Thierry Reding <treding@nvidia.com>, Tom Rini <trini@konsulko.com>, 
+	Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>, u-boot-amlogic@groups.io, 
+	u-boot-qcom@groups.io, u-boot@dh-electronics.com, 
+	uboot-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 01 Jul 2024 08:48:54 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2335
+ <u-boot-amlogic@groups.io>; Mon, 01 Jul 2024 11:57:15 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2347
 
-Hi Tom,
+Hi Marek,
 
-A set of changes to switch meson dwc3/usb PHY to set_mode callback for switching USB mode,
-and a driver declaration fixup for meson_axg_gpio.
 
-Thanks,
-Neil
-
-The following changes since commit a7eada24327a40f7ef6c55c220e119839c9d4227:
-
-   Merge tag 'v2024.07-rc5' into next (2024-06-24 13:34:52 -0600)
-
-are available in the Git repository at:
-
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20240701
-
-for you to fetch changes up to 96e1a156e90a0674b21c56e7121b17a9211176ec:
-
-   meson: Correct driver declaration for meson_axg_gpio (2024-06-26 11:19:57 +0200)
-
-----------------------------------------------------------------
-- Switch meson dwc3/usb PHY to set_mode callback for switching USB mode
-
-----------------------------------------------------------------
-Neil Armstrong (5):
-       phy: meson-gxl-usb2: add set_mode callback
-       usb: dwc3: meson-gxl: switch to generic_phy_set_mode
-       phy: meson-gxl-usb2: remove phy_meson_gxl_usb2_set_mode
-       usb: dwc3: meson-gxl: drop usb-gx.h and make dwc3_meson_gxl_force_mode static
-       usb: dwc3: meson-g12a: drop usb.h and make dwc3_meson_g12a_force_mode static
-
-Simon Glass (1):
-       meson: Correct driver declaration for meson_axg_gpio
-
-  arch/arm/include/asm/arch-meson/usb-gx.h      | 17 ---------------
-  arch/arm/include/asm/arch-meson/usb.h         | 12 -----------
-  drivers/phy/meson-gxl-usb2.c                  | 30 ++++++++++++++++-----------
-  drivers/pinctrl/meson/pinctrl-meson-axg-pmx.c |  2 +-
-  drivers/pinctrl/meson/pinctrl-meson-axg.c     |  4 ++--
-  drivers/pinctrl/meson/pinctrl-meson-axg.h     |  2 +-
-  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  4 ++--
-  drivers/usb/dwc3/dwc3-meson-g12a.c            |  2 +-
-  drivers/usb/dwc3/dwc3-meson-gxl.c             | 18 +++++++++-------
-  9 files changed, 35 insertions(+), 56 deletions(-)
-  delete mode 100644 arch/arm/include/asm/arch-meson/usb-gx.h
-  delete mode 100644 arch/arm/include/asm/arch-meson/usb.h
+On Thu, 27 Jun 2024 at 00:57, Marek Vasut <marex@denx.de> wrote:
+>
+> Turn regulators_enable_boot_on() and regulators_enable_boot_off() into
+> empty functions. Implement matching functionality in regulator_post_probe()
+> instead. The regulator_post_probe() is called for all regulators after they
+> probe, and regulators that have regulator-always-on or regulator-boot-on DT
+> properties now always probe due to DM_FLAG_PROBE_AFTER_BIND being set on
+> such regulators in regulator_post_bind().
+>
+> Finally, fold regulator_unset() functionality into regulator_autoset().
+>
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> ---
+> Cc: Ben Wolsieffer <benwolsieffer@gmail.com>
+> Cc: Caleb Connolly <caleb.connolly@linaro.org>
+> Cc: Chris Morgan <macromorgan@hotmail.com>
+> Cc: Dragan Simic <dsimic@manjaro.org>
+> Cc: Eugen Hristev <eugen.hristev@collabora.com>
+> Cc: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Jagan Teki <jagan@amarulasolutions.com>
+> Cc: Jonas Karlman <jonas@kwiboo.se>
+> Cc: Kever Yang <kever.yang@rock-chips.com>
+> Cc: Kostya Porotchkin <kostap@marvell.com>
+> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> Cc: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+> Cc: Max Krummenacher <max.krummenacher@toradex.com>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Patrice Chotard <patrice.chotard@foss.st.com>
+> Cc: Patrick Delaunay <patrick.delaunay@foss.st.com>
+> Cc: Philipp Tomsich <philipp.tomsich@vrull.eu>
+> Cc: Quentin Schulz <quentin.schulz@cherry.de>
+> Cc: Sam Day <me@samcday.com>
+> Cc: Simon Glass <sjg@chromium.org>
+> Cc: Sumit Garg <sumit.garg@linaro.org>
+> Cc: Svyatoslav Ryhel <clamor95@gmail.com>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Tom Rini <trini@konsulko.com>
+> Cc: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+> Cc: u-boot-amlogic@groups.io
+> Cc: u-boot-qcom@groups.io
+> Cc: u-boot@dh-electronics.com
+> Cc: u-boot@lists.denx.de
+> Cc: uboot-stm32@st-md-mailman.stormreply.com
+> ---
+>  drivers/power/regulator/regulator-uclass.c | 60 +++++++---------------
+>  1 file changed, 19 insertions(+), 41 deletions(-)
+>
+> diff --git a/drivers/power/regulator/regulator-uclass.c b/drivers/power/regulator/regulator-uclass.c
+> index ccc4ef33d83..d52f273042f 100644
+> --- a/drivers/power/regulator/regulator-uclass.c
+> +++ b/drivers/power/regulator/regulator-uclass.c
+> @@ -308,6 +308,11 @@ int regulator_autoset(struct udevice *dev)
+>                         return ret;
+>         }
+>
+> +       if (uc_pdata->force_off) {
+> +               ret = regulator_set_enable(dev, false);
+> +               goto out;
+> +       }
+> +
+>         if (!uc_pdata->always_on && !uc_pdata->boot_on) {
+>                 ret = -EMEDIUMTYPE;
+>                 goto out;
+> @@ -512,56 +517,28 @@ static int regulator_pre_probe(struct udevice *dev)
+>         return 0;
+>  }
+>
+> -int regulators_enable_boot_on(bool verbose)
+> +static int regulator_post_probe(struct udevice *dev)
+>  {
+> -       struct udevice *dev;
+> -       struct uclass *uc;
+>         int ret;
+>
+> -       ret = uclass_get(UCLASS_REGULATOR, &uc);
+> -       if (ret)
+> +       ret = regulator_autoset(dev);
+> +       if (ret && ret != -EMEDIUMTYPE && ret != ENOSYS)
+>                 return ret;
+> -       for (uclass_first_device(UCLASS_REGULATOR, &dev);
+> -            dev;
+> -            uclass_next_device(&dev)) {
+> -               ret = regulator_autoset(dev);
+> -               if (ret == -EMEDIUMTYPE) {
+> -                       ret = 0;
+> -                       continue;
+> -               }
+> -               if (verbose)
+> -                       regulator_show(dev, ret);
+> -               if (ret == -ENOSYS)
+> -                       ret = 0;
+> -       }
+>
+> -       return ret;
+> +       if (_DEBUG)
+> +               regulator_show(dev, ret);
+> +
+> +       return 0;
+>  }
+>
+> -int regulators_enable_boot_off(bool verbose)
+> +int regulators_enable_boot_on(bool verbose)
+>  {
+> -       struct udevice *dev;
+> -       struct uclass *uc;
+> -       int ret;
+> -
+> -       ret = uclass_get(UCLASS_REGULATOR, &uc);
+> -       if (ret)
+> -               return ret;
+> -       for (uclass_first_device(UCLASS_REGULATOR, &dev);
+> -            dev;
+> -            uclass_next_device(&dev)) {
+> -               ret = regulator_unset(dev);
+> -               if (ret == -EMEDIUMTYPE) {
+> -                       ret = 0;
+> -                       continue;
+> -               }
+> -               if (verbose)
+> -                       regulator_show(dev, ret);
+> -               if (ret == -ENOSYS)
+> -                       ret = 0;
+> -       }
+> +       return 0;
+> +}
+>
+> -       return ret;
+> +int regulators_enable_boot_off(bool verbose)
+> +{
+> +       return 0;
+>  }
+>
+>  UCLASS_DRIVER(regulator) = {
+> @@ -569,5 +546,6 @@ UCLASS_DRIVER(regulator) = {
+>         .name           = "regulator",
+>         .post_bind      = regulator_post_bind,
+>         .pre_probe      = regulator_pre_probe,
+> +       .post_probe     = regulator_post_probe,
+>         .per_device_plat_auto   = sizeof(struct dm_regulator_uclass_plat),
+>  };
+> --
+> 2.43.0
+>
 
