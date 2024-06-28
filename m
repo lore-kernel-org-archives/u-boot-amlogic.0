@@ -2,59 +2,39 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DD6C2BD09
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8043AC30659
 	for <webhook@archiver.kernel.org>; Mon,  1 Jul 2024 11:57:25 +0000 (UTC)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
- by mx.groups.io with SMTP id smtpd.web10.13986.1719570191501397763
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+ by mx.groups.io with SMTP id smtpd.web10.16835.1719581220675708394
  for <u-boot-amlogic@groups.io>;
- Fri, 28 Jun 2024 03:23:11 -0700
+ Fri, 28 Jun 2024 06:27:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=qJhGUV8p;
- spf=pass (domain: linaro.org, ip: 209.85.218.47, mailfrom: caleb.connolly@linaro.org)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a70c0349b64so54952366b.1
-        for <u-boot-amlogic@groups.io>; Fri, 28 Jun 2024 03:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719570190; x=1720174990; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MqsgQ1eLQ0uiSW4nlzjnB3sCbmoe62JZW1v1i4GDWP0=;
-        b=qJhGUV8phMU2GBwTl/5Pil7fhuxmoMLY086+PjNHZS5GtnH/41sYpaNutRQVWOCu0v
-         VBJpscPlzZkO9kR3Zi8GgelsjByD/KkIfPgTshek93wHs1bWNXWXziTtrhc8VpUYyYhV
-         GOh5qBEaunin2UHlxDUUGuyITrEL2KPr2poQzYiedWAzlNyaPcVkzgpePBsxRb8qW2AT
-         F3kxgQUm+xTfQMU0uej8vsL/y3JZqXU3MmW2x52X9RwBMuR/wOkgFS9UekSU5ON0U8JP
-         O1zIbxXHDyIyQw0LSZTgbQu+QRU0GYiUuIDj98WQ41Y3YE9Tf1ubhCOlofZX2m3Sfx/8
-         27Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719570190; x=1720174990;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MqsgQ1eLQ0uiSW4nlzjnB3sCbmoe62JZW1v1i4GDWP0=;
-        b=geZYKbUGPWwxvC8fW4gIOOXDWwR3LDb5k8Az59uVi2YfE9+DyDul9S9PHwednjxYWu
-         wBuCDqxTwAr2O4ox9ZNL/Kbd+Pvq9L3B8Zph4BPzKJf59CwofPurz6AVHu7/Nej+7iqZ
-         CNpoHMHCvE/bz+5qcYLa721bOt/kjjZb9pLHejfjLjLBP2jXnllp9SAsss81IbhbbK1i
-         XoLUEoTsyw5qx5Wzabc8quR9DxQPGy0gUVKwC8FIpxIDoWUFVkwXACnozG2kmmOPXnuH
-         pNyUfnh+kf+oGFUtrRALl3bc2Vg6GxsmOHPks/YrDYyKjSSA9vfi6VIw4bzD1xKWs1bZ
-         sp+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXiGzug71Cw2/LUZbsXdbKfa6EGgRILhh6s8c8Wy1n1AxfDcXL2lOrglyfVeJ9b+wThVzCjXgETM00mVl9ZQk/CL7L4nMsoPVE=
-X-Gm-Message-State: AOJu0YzAksEil9XcYDS/6Tm6LANtM9CS8XlDJR/Ven1rjjahdRZ23Tlf
-	g4N3k4adzCDA6nSZZEPzjSDG0PHmmBQTbmQxVgInEwO+vowUWmIhrUCxcG500X0=
-X-Google-Smtp-Source: AGHT+IENOK4lyqsP/C8G9OL/LSuejh4RLzbOPyh/vsC53PQVajvsTQbEU6Pj24oQWwBk6lN+2hZQPQ==
-X-Received: by 2002:a17:907:874e:b0:a72:8323:4298 with SMTP id a640c23a62f3a-a7283234518mr590607166b.68.1719570189850;
-        Fri, 28 Jun 2024 03:23:09 -0700 (PDT)
-Received: from ?IPV6:2a02:8109:aa0d:be00::18f8? ([2a02:8109:aa0d:be00::18f8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf63914sm65811366b.87.2024.06.28.03.23.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jun 2024 03:23:09 -0700 (PDT)
-Message-ID: <7fcaa045-2d27-483e-84d1-72c0434854d2@linaro.org>
-Date: Fri, 28 Jun 2024 12:23:07 +0200
+ dkim=pass header.i=@denx.de header.s=phobos-20191101 header.b=pV5jhr+e;
+ spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 951EB882D6;
+	Fri, 28 Jun 2024 15:26:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1719581218;
+	bh=mnbA2OdO99mTN6WqYtNoEThk73Pueo/uLr09Ckx+SYk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pV5jhr+eWmVjyo8ogvjyAAwGj5yt7CG1O0PWgsuUrMnfPdPsBmLtWFUZuPKdNXHs9
+	 b8scU++2u1L09f1/kg3jbEvqS0Wc1qoj6urvNMiKShVUidrr51dsNCgxI1MI3HO3C4
+	 O2dIdTObheVoSou5McngQJy8BaTaQw924CQ0i83t3Jj4DJFC4hZkJFRa2uYz155ja0
+	 MP9o5NPeMeAeeAsTshscrrzzMFPj79fAu0BZATmpDwbA2aKm80IUB0EudVWMw2Rr1w
+	 rMZW/RIntQjON6NPj4yc/YTiwe/hluxRr+aKBMk6GYh+B3JNxSxUx6RohpWcZj6+YL
+	 qsISyGrNcyKhQ==
+Message-ID: <616b231b-0291-4bb3-93d9-85970419ed62@denx.de>
+Date: Fri, 28 Jun 2024 14:54:26 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/4] power: regulator: Trigger probe of regulators which are always-on or boot-on
 To: Simon Glass <sjg@chromium.org>
-Cc: Marek Vasut <marex@denx.de>, u-boot@lists.denx.de,
- Ben Wolsieffer <benwolsieffer@gmail.com>,
+Cc: u-boot@lists.denx.de, Ben Wolsieffer <benwolsieffer@gmail.com>,
+ Caleb Connolly <caleb.connolly@linaro.org>,
  Chris Morgan <macromorgan@hotmail.com>, Dragan Simic <dsimic@manjaro.org>,
  Eugen Hristev <eugen.hristev@collabora.com>,
  Francesco Dolcini <francesco.dolcini@toradex.com>,
@@ -77,12 +57,12 @@ Cc: Marek Vasut <marex@denx.de>, u-boot@lists.denx.de,
  uboot-stm32@st-md-mailman.stormreply.com
 References: <20240626235717.272219-1-marex@denx.de>
  <CAFLszTjwbWdKqs_UBqXvr2F2ahoGd0-BFE-XLNr3-uq73ZLFHg@mail.gmail.com>
- <b84e8b10-8698-41f2-9648-0b3f5c399b02@linaro.org>
- <CAFLszTijRhB1dRraPBQSTU3ypJ_wJU7yghJ9c9Rk-XcbcfvkFg@mail.gmail.com>
- <38150a1b-6c71-4b42-a8ec-6b0de8ad6848@linaro.org>
- <CAFLszTg078XuQ5WxUVvMktA95zZm+PHs+MtVu2eL-xZYYkHxFA@mail.gmail.com>
-From: Caleb Connolly <caleb.connolly@linaro.org>
-In-Reply-To: <CAFLszTg078XuQ5WxUVvMktA95zZm+PHs+MtVu2eL-xZYYkHxFA@mail.gmail.com>
+ <6abad4ba-b29a-47a3-addb-91e8f46ee425@denx.de>
+ <CAFLszTgAqOXbkcJxYKxM4gn6_oOg7+nyaBK-Y34r_zVaPBScvA@mail.gmail.com>
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <CAFLszTgAqOXbkcJxYKxM4gn6_oOg7+nyaBK-Y34r_zVaPBScvA@mail.gmail.com>
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -90,70 +70,84 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 01 Jul 2024 11:57:25 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2348
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2349
 
-Hi Simon,
+On 6/28/24 9:32 AM, Simon Glass wrote:
+> Hi Marek,
 
->>>>>
->>>>> This is reading a lot of DT stuff very early, which may be slow. It is
->>>>> also reading from the DT in the bind() step which we sometimes have to
->>>>> do, but try to avoid.
+Hi,
+
+[...]
+
+>>>> @@ -473,8 +483,6 @@ static int regulator_pre_probe(struct udevice *dev)
+>>>>                                                   -ENODATA);
+>>>>           uc_pdata->max_uA = dev_read_u32_default(dev, "regulator-max-microamp",
+>>>>                                                   -ENODATA);
+>>>> -       uc_pdata->always_on = dev_read_bool(dev, "regulator-always-on");
+>>>> -       uc_pdata->boot_on = dev_read_bool(dev, "regulator-boot-on");
+>>>>           uc_pdata->ramp_delay = dev_read_u32_default(dev, "regulator-ramp-delay",
+>>>>                                                       0);
+>>>>           uc_pdata->force_off = dev_read_bool(dev, "regulator-force-boot-off");
+>>>> --
+>>>> 2.43.0
 >>>>
->>>> Could we set up the livetree pre-bind? What about MMU? On armv8 at least
->>>> this would have a huge impact on performance. I've done some
->>>> measurements and there is at least 1 order of magnitude difference
->>>> between parsing FDT with no caches vs parsing livetree with, it's huge.
 >>>
->>> That seems like a great idea to me, in general. The fact that SPL sets
->>> up the MMU on armv8 makes it more practical.
+>>> This is reading a lot of DT stuff very early, which may be slow. It is
+>>> also reading from the DT in the bind() step which we sometimes have to
+>>> do, but try to avoid.
 >>
->> Well, on qcom we don't use SPL (yet?), we did have a cyclical dependency
->> since we rely on DTB for the memory layout, although I have some patches
->> to do all the memory parsing in board_fdt_blob_setup() since that's
->> needed for multi-dtb FIT. So I guess we could enable caches at the same
->> time.
+>> Actually, it is reading only the bare minimum very early in bind, the
+>> always-on and boot-on, the rest is in pre_probe, i.e. later.
 > 
-> Yes...it seems that enabling cache in SPL has become common on armv8.
+> Yes, I see that. Also it is inevitable that these properties need to
+> be read before probe(), since they control whether to probe().
 > 
-> As to the memory layout, I'm not sure what is happening there, but it
-> seems that the DT does not describe it in general (at least not until
-> U-Boot adds the nodes).
-
-I suppose this depends on the platform. On Qualcomm we use DT as the 
-source of truth as it lets us support many platforms (with totally 
-different memory maps) with a single U-Boot binary, at least for 
-development this is quite nice.
-> 
->>>
->>> But for this series I believe we are going to have to define what
->>> happens in what phase. We have power_init_board() which is the old way
->>> of doing this...but perhaps we could use that as a way to start up
->>> regulators which are needed.
->>>
->>> As to my question about whether this happens in SPL / pre-reloc /
->>> proper, I forgot that we have the bootph tags for that, so it should
->>> be fine. The main issue is that in U-Boot proper we will re-init the
->>> regulators even though that has already been done. Probably that can
->>> be handled by Kconfig or a flag in SPL handoff.
 >>
->> Ensuring that it isn't done multiple times sounds like the right
->> approach to me.
+>>> Also this seems to happen in SPL and again pre-reloc and again in
+>>> U-Boot post-reloc?
+>>
+>> What does, the uclass post_bind ?
 > 
-> OK...I wonder how we can solve this. Needs some though.
-> 
-> 
->>>
->>>
->>>>>
->>>>> Also this seems to happen in SPL and again pre-reloc and again in
->>>>> U-Boot post-reloc?
->>>>>
->>>>> Should we have a step in the init sequence where we set up the
->>>>> regulators, by calling regulators_enable_boot_on() ?
-> 
-> Regards,
-> Simon
+> I mean that this code will be called in SPL (if the regulators are in
+> the DT there), U-Boot pre-reloc and post-reloc, each time turning on
+> the regulators. We need a way to control that, don't we?
 
--- 
-// Caleb (they/them)
+I would assume that if those regulators are turned on once in the 
+earliest stage , turning them on again in the follow up stage would be a 
+noop ? This is the point of regulator-*-on, to keep the regulators on.
+
+>>> Should we have a step in the init sequence where we set up the
+>>> regulators, by calling regulators_enable_boot_on() ?
+>>
+>> Let's not do this , the entire point of this series is to get rid of
+>> those functions and do the regulator configuration the same way LED
+>> subsystem does it -- by probing always-on/boot-on regulators and
+>> configuring them correctly on probe.
+>>
+>> To me regulators_enable_boot_on() and the like was always an
+>> inconsistently applied workaround for missing DM_FLAG_PROBE_AFTER_BIND ,
+>> which is now implemented, so such workarounds can be removed.
+> 
+> That patch seemed to slip under the radar, sent and applied on the
+> same day! We really need to add a test for it, BTW.
+
+Which patch ? My recollection of DM_FLAG_PROBE_AFTER_BIND was that it 
+took a while to get in.
+
+> My concern is that this might cause us ordering problems. We perhaps
+> want the regulators to be done first. If drivers are probed which use
+> regulators, then presumably they will enable them. Consider this:
+> 
+> - LED driver auto-probes
+>     - probes I2C bus 2
+>     - probes LDO1 which is autoset so turns on
+> - LDO1 probes, but is already running
+> - LDO2 probes, which is autoset so turns on
+> 
+> So long as it is OK to enable the regulators in any order, then this
+> seems fine. But is it? How do we handle the case where are particular
+> sequence is needed?
+
+Did we finally arrive at the point where we need -EPROBE_DEFER alike 
+mechanism ?
 
