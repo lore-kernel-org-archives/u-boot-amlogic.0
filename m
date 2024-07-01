@@ -2,152 +2,117 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8043AC30659
-	for <webhook@archiver.kernel.org>; Mon,  1 Jul 2024 11:57:25 +0000 (UTC)
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
- by mx.groups.io with SMTP id smtpd.web10.16835.1719581220675708394
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DE1C31D97
+	for <webhook@archiver.kernel.org>; Wed,  3 Jul 2024 09:22:45 +0000 (UTC)
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+ by mx.groups.io with SMTP id smtpd.web10.3997.1719857333750207618
  for <u-boot-amlogic@groups.io>;
- Fri, 28 Jun 2024 06:27:01 -0700
+ Mon, 01 Jul 2024 11:08:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@denx.de header.s=phobos-20191101 header.b=pV5jhr+e;
- spf=pass (domain: denx.de, ip: 85.214.62.61, mailfrom: marex@denx.de)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 951EB882D6;
-	Fri, 28 Jun 2024 15:26:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1719581218;
-	bh=mnbA2OdO99mTN6WqYtNoEThk73Pueo/uLr09Ckx+SYk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pV5jhr+eWmVjyo8ogvjyAAwGj5yt7CG1O0PWgsuUrMnfPdPsBmLtWFUZuPKdNXHs9
-	 b8scU++2u1L09f1/kg3jbEvqS0Wc1qoj6urvNMiKShVUidrr51dsNCgxI1MI3HO3C4
-	 O2dIdTObheVoSou5McngQJy8BaTaQw924CQ0i83t3Jj4DJFC4hZkJFRa2uYz155ja0
-	 MP9o5NPeMeAeeAsTshscrrzzMFPj79fAu0BZATmpDwbA2aKm80IUB0EudVWMw2Rr1w
-	 rMZW/RIntQjON6NPj4yc/YTiwe/hluxRr+aKBMk6GYh+B3JNxSxUx6RohpWcZj6+YL
-	 qsISyGrNcyKhQ==
-Message-ID: <616b231b-0291-4bb3-93d9-85970419ed62@denx.de>
-Date: Fri, 28 Jun 2024 14:54:26 +0200
+ dkim=pass header.i=@konsulko.com header.s=google header.b=WInD04Cf;
+ spf=pass (domain: konsulko.com, ip: 209.85.161.43, mailfrom: trini@konsulko.com)
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5c25ebf6380so1350696eaf.0
+        for <u-boot-amlogic@groups.io>; Mon, 01 Jul 2024 11:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google; t=1719857333; x=1720462133; darn=groups.io;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=I+XPuVau1N5UPISM5bxeCFeBICz8WAjWnfvGxnYSrDY=;
+        b=WInD04CfHg+c0rnBX+W/oC9Ny1AAYmL2Gynz+ImVTRMOS1WHVfykzJ4bIxmZtc52aE
+         jvte5wN9PBiqM7yvf9J89+WU1Vpg9/DaSl1FDFULnXhjv2dgPlG6KggTggXmQ08p0vtQ
+         GCzdmQRT/doet18kcniSxIp3E1ITmiURt5kM4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719857333; x=1720462133;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I+XPuVau1N5UPISM5bxeCFeBICz8WAjWnfvGxnYSrDY=;
+        b=KijbhyOVi5JIGiQsKAxPW5lO75nfecU0SdmEiX3kOy161x6m6D0wr15k4g1ImzOk1F
+         5/bxD/115MUZmoQXe8EF5YY4FuuqEJ/QY5ApD1UhXEqY5NRgAkYsQFeIn/+Q5jBB1DOz
+         wQg9Pt8kdlcCKKXSIyyHId2CjEbiP6JMcBUrlUzjLIbem2rSJypT7L3Ge8If3/TkBCCp
+         cXDQBw85ywVgzy9SA9lu0QOakMcLQ0hzwNcgTjyupnw48lk9UH5z5j00yxs7EzUBpVhY
+         RT162vv7scQy3QJJdf5AXUxKLZqXeKsFzVtApLo0HNXWxlV6w2UBfbbaZiPHk0eXmeYP
+         +YsQ==
+X-Gm-Message-State: AOJu0YzZJDfWYnDbuBw1H9WrrZ0/k1Tc+aEpJBvQ8hW83bgoc/xD5s1U
+	w76Hf0+rp+GqOweCJo2+tu7s0kHCn/WAsC9I/8SIdZNJKArtkLeolk2ZPOXr1OY=
+X-Google-Smtp-Source: AGHT+IHJ8TXRdpWPBny8jj79+wT/UdbfHcgJLAqr1onI4BnLwByOl4xHUIl9ApxRNLCYyFso+/5cGw==
+X-Received: by 2002:a4a:4b05:0:b0:5c2:1a93:f52a with SMTP id 006d021491bc7-5c437926999mr3096192eaf.4.1719857332923;
+        Mon, 01 Jul 2024 11:08:52 -0700 (PDT)
+Received: from bill-the-cat (fixed-187-190-197-45.totalplay.net. [187.190.197.45])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5c4149b37e5sm1056096eaf.37.2024.07.01.11.08.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 11:08:52 -0700 (PDT)
+Date: Mon, 1 Jul 2024 12:08:50 -0600
+From: Tom Rini <trini@konsulko.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Subject: Re: [GIT PULL] Please pull u-boot-amlogic-next-20240404
+Message-ID: <20240701180850.GM38804@bill-the-cat>
+References: <a4690cd1-33ef-4537-885b-6782c135c43b@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] power: regulator: Trigger probe of regulators which are always-on or boot-on
-To: Simon Glass <sjg@chromium.org>
-Cc: u-boot@lists.denx.de, Ben Wolsieffer <benwolsieffer@gmail.com>,
- Caleb Connolly <caleb.connolly@linaro.org>,
- Chris Morgan <macromorgan@hotmail.com>, Dragan Simic <dsimic@manjaro.org>,
- Eugen Hristev <eugen.hristev@collabora.com>,
- Francesco Dolcini <francesco.dolcini@toradex.com>,
- Heinrich Schuchardt <xypron.glpk@gmx.de>,
- Jaehoon Chung <jh80.chung@samsung.com>,
- Jagan Teki <jagan@amarulasolutions.com>, Jonas Karlman <jonas@kwiboo.se>,
- Kever Yang <kever.yang@rock-chips.com>,
- Kostya Porotchkin <kostap@marvell.com>, Matteo Lisi
- <matteo.lisi@engicam.com>, Mattijs Korpershoek <mkorpershoek@baylibre.com>,
- Max Krummenacher <max.krummenacher@toradex.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- Patrick Delaunay <patrick.delaunay@foss.st.com>,
- Philipp Tomsich <philipp.tomsich@vrull.eu>,
- Quentin Schulz <quentin.schulz@cherry.de>, Sam Day <me@samcday.com>,
- Sumit Garg <sumit.garg@linaro.org>, Svyatoslav Ryhel <clamor95@gmail.com>,
- Thierry Reding <treding@nvidia.com>, Tom Rini <trini@konsulko.com>,
- Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>, u-boot-amlogic@groups.io,
- u-boot-qcom@groups.io, u-boot@dh-electronics.com,
- uboot-stm32@st-md-mailman.stormreply.com
-References: <20240626235717.272219-1-marex@denx.de>
- <CAFLszTjwbWdKqs_UBqXvr2F2ahoGd0-BFE-XLNr3-uq73ZLFHg@mail.gmail.com>
- <6abad4ba-b29a-47a3-addb-91e8f46ee425@denx.de>
- <CAFLszTgAqOXbkcJxYKxM4gn6_oOg7+nyaBK-Y34r_zVaPBScvA@mail.gmail.com>
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <CAFLszTgAqOXbkcJxYKxM4gn6_oOg7+nyaBK-Y34r_zVaPBScvA@mail.gmail.com>
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <a4690cd1-33ef-4537-885b-6782c135c43b@linaro.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: multipart/mixed; boundary="Groupsio=PRtRSiAU1Ee87YChkdcN"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 01 Jul 2024 11:57:25 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2349
+ <u-boot-amlogic@groups.io>; Wed, 03 Jul 2024 09:22:45 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2350
 
-On 6/28/24 9:32 AM, Simon Glass wrote:
-> Hi Marek,
+--Groupsio=PRtRSiAU1Ee87YChkdcN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Jul 01, 2024 at 10:48:47AM +0200, Neil Armstrong wrote:
 
-[...]
+> Hi Tom,
+>=20
+> A set of changes to switch meson dwc3/usb PHY to set_mode callback for sw=
+itching USB mode,
+> and a driver declaration fixup for meson_axg_gpio.
+>=20
+> Thanks,
+> Neil
+>=20
+> The following changes since commit a7eada24327a40f7ef6c55c220e119839c9d42=
+27:
+>=20
+>   Merge tag 'v2024.07-rc5' into next (2024-06-24 13:34:52 -0600)
+>=20
+> are available in the Git repository at:
+>=20
+>   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
+-amlogic-20240701
+>=20
+> for you to fetch changes up to 96e1a156e90a0674b21c56e7121b17a9211176ec:
+>=20
+>   meson: Correct driver declaration for meson_axg_gpio (2024-06-26 11:19:=
+57 +0200)
+>=20
 
->>>> @@ -473,8 +483,6 @@ static int regulator_pre_probe(struct udevice *dev)
->>>>                                                   -ENODATA);
->>>>           uc_pdata->max_uA = dev_read_u32_default(dev, "regulator-max-microamp",
->>>>                                                   -ENODATA);
->>>> -       uc_pdata->always_on = dev_read_bool(dev, "regulator-always-on");
->>>> -       uc_pdata->boot_on = dev_read_bool(dev, "regulator-boot-on");
->>>>           uc_pdata->ramp_delay = dev_read_u32_default(dev, "regulator-ramp-delay",
->>>>                                                       0);
->>>>           uc_pdata->force_off = dev_read_bool(dev, "regulator-force-boot-off");
->>>> --
->>>> 2.43.0
->>>>
->>>
->>> This is reading a lot of DT stuff very early, which may be slow. It is
->>> also reading from the DT in the bind() step which we sometimes have to
->>> do, but try to avoid.
->>
->> Actually, it is reading only the bare minimum very early in bind, the
->> always-on and boot-on, the rest is in pre_probe, i.e. later.
-> 
-> Yes, I see that. Also it is inevitable that these properties need to
-> be read before probe(), since they control whether to probe().
-> 
->>
->>> Also this seems to happen in SPL and again pre-reloc and again in
->>> U-Boot post-reloc?
->>
->> What does, the uclass post_bind ?
-> 
-> I mean that this code will be called in SPL (if the regulators are in
-> the DT there), U-Boot pre-reloc and post-reloc, each time turning on
-> the regulators. We need a way to control that, don't we?
+Applied to u-boot/next, thanks!
 
-I would assume that if those regulators are turned on once in the 
-earliest stage , turning them on again in the follow up stage would be a 
-noop ? This is the point of regulator-*-on, to keep the regulators on.
+--=20
+Tom
 
->>> Should we have a step in the init sequence where we set up the
->>> regulators, by calling regulators_enable_boot_on() ?
->>
->> Let's not do this , the entire point of this series is to get rid of
->> those functions and do the regulator configuration the same way LED
->> subsystem does it -- by probing always-on/boot-on regulators and
->> configuring them correctly on probe.
->>
->> To me regulators_enable_boot_on() and the like was always an
->> inconsistently applied workaround for missing DM_FLAG_PROBE_AFTER_BIND ,
->> which is now implemented, so such workarounds can be removed.
-> 
-> That patch seemed to slip under the radar, sent and applied on the
-> same day! We really need to add a test for it, BTW.
+--Groupsio=PRtRSiAU1Ee87YChkdcN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Which patch ? My recollection of DM_FLAG_PROBE_AFTER_BIND was that it 
-took a while to get in.
+-----BEGIN PGP SIGNATURE-----
 
-> My concern is that this might cause us ordering problems. We perhaps
-> want the regulators to be done first. If drivers are probed which use
-> regulators, then presumably they will enable them. Consider this:
-> 
-> - LED driver auto-probes
->     - probes I2C bus 2
->     - probes LDO1 which is autoset so turns on
-> - LDO1 probes, but is already running
-> - LDO2 probes, which is autoset so turns on
-> 
-> So long as it is OK to enable the regulators in any order, then this
-> seems fine. But is it? How do we handle the case where are particular
-> sequence is needed?
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmaC8LIACgkQFHw5/5Y0
+tywUggv/eBz1YhJa7uf0U5MNtt3xQL+kX5NsnfEey0cNz0eZHcqCoj9WNbFZr0AS
+5+iQzfDjCHmXqf6g/v2vEOGbCdD4GHXGsdFTbT5g3AmcgHWcJeOIFuYQhcR+qTqe
+QE7s0bCE+x473CsKp4uJKzbOCi0pbI52n36ePvkC1NhpB0n9kGLQ/unwKif174Gf
+bEhJu0kaJjsXae7O59UQ5JwY/VT0tQnO8ddPwX8beVy3WKGsHk66iHEOqyyDzDBB
+S65l64AS7mz+dZkYRpQ7mYfvBcT4L1IDFSUESLQDDvvyxvtYjqweaJ0EY/PODse9
+1srpymYFz93t4Y/pYEKc1iKS6d/5AoiClFKAJxqCvoU5BC6U/7rBwwozFrUaEpx/
+miS2l3vaLofcH/qABDjXRhAU4gvLFE6GjY7PWcbROneMSpVOSHfBEC1p4D9D+b8+
+PRe5/P+h4D6XrYWXSDAeyqkIwmlj2550wfcPbMC1Bb5+9wUerXrJ9CYQklf/tcwe
+OucXzaFF
+=0iw/
+-----END PGP SIGNATURE-----
 
-Did we finally arrive at the point where we need -EPROBE_DEFER alike 
-mechanism ?
+--Groupsio=PRtRSiAU1Ee87YChkdcN--
 
