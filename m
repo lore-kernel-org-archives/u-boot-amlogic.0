@@ -2,116 +2,215 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BF5C3271E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972F7C41513
 	for <webhook@archiver.kernel.org>; Mon,  8 Jul 2024 07:52:36 +0000 (UTC)
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
- by mx.groups.io with SMTP id smtpd.web10.2099.1720119045501805000
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+ by mx.groups.io with SMTP id smtpd.web11.74535.1720423572657876219
  for <u-boot-amlogic@groups.io>;
- Thu, 04 Jul 2024 11:50:45 -0700
+ Mon, 08 Jul 2024 00:26:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=cYe5xy9F;
- spf=pass (domain: konsulko.com, ip: 209.85.210.50, mailfrom: trini@konsulko.com)
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-701f397e8ffso517740a34.0
-        for <u-boot-amlogic@groups.io>; Thu, 04 Jul 2024 11:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1720119045; x=1720723845; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OlPKAxcdp7uHTf40f9Qzt4qAZY3oOYLTi3e7PH68b6k=;
-        b=cYe5xy9F4WYWC0aPYl03LPzZkuZbvRYi1bSYC0IyIIIzv0vmIuoZizKNjAvOB266mp
-         S1VcVUOtuRw0NAhUO6p7h6El84gds99RD4EICCLkAAu1XxaGS7ubZh2uwBtIoNWcyRGU
-         Ou3SfYY4SDxuTehRDrTft0fGJdYvdiCJkXdVk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720119045; x=1720723845;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OlPKAxcdp7uHTf40f9Qzt4qAZY3oOYLTi3e7PH68b6k=;
-        b=VzclSawO31hDWOx/wZzkCm7MJvpYvcInrEobfODAS0N8FCyBDe8TuDfUxyJYxMnl9t
-         XHdo//k0S7Ttm4D1JpjL6ysf6UecCkO+PPwN57IUOA5eKji0VKSZjDH2lJHCVxGSAkGu
-         QY17ofsxZBbDNgWqLboy1cfwLEZEvpfqCRH/Cgq13kxkDpg8wJhwGM5qiU1/K1IKdNvQ
-         MGJQjJhm/YTbg0Q7QmzYFPGwSpytypCwWI9cMH9dmHR5+M9HkjtDiKOnFQPR4xgd3qCd
-         JoZMtWrDJkDwLZ63rpen+sgAvvF9N58DQEceZlYOtEplcsoOVnMKHTcXqG2aFgJnyeks
-         je2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVVMkLpmljbpkxtpzZNJ6BRKGw7ONfDZEBvhHBL0Wc9T9KylVOTx1+PRMEYYwO4bIufGd09HyodFUHaJRoD3E3qf8zuHQxbzuY=
-X-Gm-Message-State: AOJu0YyYpLSkn5Vk2lkt0z6diB+aeVnGA/H7lBZ51kKf2HzMEF01ABP/
-	fZ+JUIzukPCHVQPtkqaVWeF2cIVNK+A08Q4HRTprZkuydNleID7kIR8d2e9Sz2s=
-X-Google-Smtp-Source: AGHT+IFKMYVLcYTDxMgwlnWohBLxAXBZRdaTWzdn2w8R0XGhRVBR91/lpfH2H4+m6At8eYov9A0RFw==
-X-Received: by 2002:a05:6830:206:b0:700:cf6e:e261 with SMTP id 46e09a7af769-7034a80cfbamr2692107a34.31.1720119044693;
-        Thu, 04 Jul 2024 11:50:44 -0700 (PDT)
-Received: from [127.0.1.1] (fixed-189-203-97-45.totalplay.net. [189.203.97.45])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-701f7ac8dccsm2454997a34.34.2024.07.04.11.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 11:50:44 -0700 (PDT)
-From: Tom Rini <trini@konsulko.com>
-To: U-Boot Mailing List <u-boot@lists.denx.de>, 
- Simon Glass <sjg@chromium.org>
-Cc: Alexander Gendin <agendin@matrox.com>, 
- Allen Martin <amartin@nvidia.com>, Andre Przywara <andre.przywara@arm.com>, 
- Bin Meng <bmeng.cn@gmail.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
- Dan Carpenter <dan.carpenter@linaro.org>, 
- Francis Laniel <francis.laniel@amarulasolutions.com>, 
- Heinrich Schuchardt <xypron.glpk@gmx.de>, 
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Marcel Ziswiler <marcel.ziswiler@toradex.com>, 
- Marek Vasut <marek.vasut+renesas@mailbox.org>, Marek Vasut <marex@denx.de>, 
- Michal Simek <michal.simek@amd.com>, 
- =?utf-8?q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Nishanth Menon <nm@ti.com>, 
- Pavel Herrmann <morpheus.ibis@gmail.com>, 
- Peter Robinson <pbrobinson@gmail.com>, Samuel Holland <samuel@sholland.org>, 
- Sughosh Ganu <sughosh.ganu@linaro.org>, 
- Svyatoslav Ryhel <clamor95@gmail.com>, Trevor Woerner <twoerner@gmail.com>, 
- u-boot-amlogic@groups.io
-In-Reply-To: <20240623203033.1566505-1-sjg@chromium.org>
-References: <20240623203033.1566505-1-sjg@chromium.org>
-Subject: Re: (subset) [PATCH 00/14] testb: Various tweaks and fixes for Labgrid
-Message-Id: <172011904231.1502730.5769264481687986280.b4-ty@konsulko.com>
-Date: Thu, 04 Jul 2024 12:50:42 -0600
+ dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=GqBOU8U3;
+ spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: avkrasnov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 09D30100006;
+	Mon,  8 Jul 2024 10:26:10 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 09D30100006
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1720423570;
+	bh=1ZgOD44RrLiewpGqSsIvzySZ9YhmmbSHGi8ygd60HyM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=GqBOU8U3RKsFchNzvseAe1UwDHsrTcLhOrA0LHWAgoNusI41KBDbUzCB3GnP6jfPe
+	 Qrb/5g8wjwaR6mw0k7ta8nGDxviC3aZ7ygXPMgDYMmY3ipGpQqLLZcA1HnKxp2HTtf
+	 WNVm8xYNnnbfurBCJGXlYs4Ww5potKfffNKdYyNVF7ls3GHNfyejipRD1Mn831vmvI
+	 M/K8NDVVPXL2mpmBsipGRl3Y+kR57KdNkhZygARspW//5LnZJIZDkUbNsjUn59dUs2
+	 fyu+UR8BzAhPcejzn1juo++T820Myq+RjUsmZnAosLtaRxFyNnAh55HsS0CM7WkohL
+	 CSN5rOVq3YiLQ==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon,  8 Jul 2024 10:26:09 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 8 Jul 2024 10:26:09 +0300
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>, Michael Trimarchi
+	<michael@amarulasolutions.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>, Tom Rini <trini@konsulko.com>,
+	Sean Anderson <seanga2@gmail.com>
+CC: <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
+	<kernel@sberdevices.ru>, <oxffffaa@gmail.com>, <avkrasnov@salutedevices.com>
+Subject: [PATCH v2 3/3] mtd: rawnand: meson: read/write access for boot ROM pages
+Date: Mon, 8 Jul 2024 10:13:52 +0300
+Message-ID: <20240708071352.3022327-4-avkrasnov@salutedevices.com>
+X-Mailer: git-send-email 2.35.0
+In-Reply-To: <20240708071352.3022327-1-avkrasnov@salutedevices.com>
+References: <20240708071352.3022327-1-avkrasnov@salutedevices.com>
 MIME-Version: 1.0
-X-Mailer: b4 0.13.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [100.64.160.123]
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186360 [Jul 08 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/08 05:54:00 #25895811
+X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 08 Jul 2024 07:52:36 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2352
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2351
 
-On Sun, 23 Jun 2024 14:30:19 -0600, Simon Glass wrote:
+Boot ROM on Meson needs some pages to be read/written in a special mode:
+384 byte ECC mode (so called "short" by Amlogic) and with scrambling
+enabled. Such pages are located on the chip in the following way (for
+example):
 
-> This series includes a number of mostly unrelated changes which are in
-> service of running U-Boot on a lab using Labgrid.
-> 
-> Changes in v2:
-> - Add new patch to update u-boot.cfg with CFG_... options
-> 
-> Simon Glass (14):
->   trace: Update test to tolerate different trace-cmd version
->   dm: core: Enhance comments on bind_drivers_pass()
->   initcall: Correct use of relocation offset
->   am33xx: Provide a function to set up the debug UART
->   sunxi: Mark scp as optional
->   google: Disable TPMv2 on most Chromebooks
->   meson: Correct driver declaration for meson_axg_gpio
->   test: Make bootstd init run only on sandbox
->   log: Allow tests to pass with CONFIG_LOGF_FUNC_PAD set
->   test: dm: Show failing driver name
->   test: Decode exceptions only with sandbox
->   test: Check help output
->   Update u-boot.cfg to include CFG also
->   smbios: Correct error handling when writing tables
-> 
-> [...]
+[ p0 ][ p1 ][ p2 ][ p3 ][ p4 ][ p5 ][ p6 ][ p7 ] ... [ pN ]
+  ^           ^           ^           ^
 
-Applied to u-boot/master, thanks!
+pX is page number "X". "^" means "special" page used by boot ROM - e.g.
+every 2nd page in the range of [0, 7]. Step (2 here) and last page in
+range is read from the device tree.
 
--- 
-Tom
+Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+---
+ drivers/mtd/nand/raw/meson_nand.c | 56 +++++++++++++++++++++++++------
+ 1 file changed, 46 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/meson=
+_nand.c
+index 19f005202b..54ea035d8d 100644
+--- a/drivers/mtd/nand/raw/meson_nand.c
++++ b/drivers/mtd/nand/raw/meson_nand.c
+@@ -40,6 +40,7 @@
+ #define NFC_CMD_RB			BIT(20)
+ #define NFC_CMD_SCRAMBLER_ENABLE	BIT(19)
+ #define NFC_CMD_SCRAMBLER_DISABLE	0
++#define NFC_CMD_SHORTMODE_ENABLE	1
+ #define NFC_CMD_SHORTMODE_DISABLE	0
+ #define NFC_CMD_RB_INT			BIT(14)
+ #define NFC_CMD_RB_INT_NO_PIN		((0xb << 10) | BIT(18) | BIT(16))
+@@ -78,6 +79,8 @@
+=20
+ #define DMA_DIR(dir)		((dir) ? NFC_CMD_N2M : NFC_CMD_M2N)
+=20
++#define NFC_SHORT_MODE_ECC_SZ	384
++
+ #define ECC_CHECK_RETURN_FF	-1
+=20
+ #define NAND_CE0		(0xe << 10)
+@@ -141,6 +144,8 @@
+ struct meson_nfc_nand_chip {
+ 	struct list_head node;
+ 	struct nand_chip nand;
++	u32 boot_pages;
++	u32 boot_page_step;
+=20
+ 	u32 bch_mode;
+ 	u8 *data_buf;
+@@ -229,33 +234,46 @@ static void meson_nfc_cmd_seed(const struct meson_nfc=
+ *nfc, u32 seed)
+ 	       nfc->reg_base + NFC_REG_CMD);
+ }
+=20
++static int meson_nfc_is_boot_page(struct nand_chip *nand, int page)
++{
++	const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
++
++	return (nand->options & NAND_IS_BOOT_MEDIUM) &&
++	       !(page % meson_chip->boot_page_step) &&
++	       (page < meson_chip->boot_pages);
++}
++
+ static void meson_nfc_cmd_access(struct nand_chip *nand, bool raw, bool di=
+r, int page)
+ {
++	const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+ 	struct mtd_info *mtd =3D nand_to_mtd(nand);
+ 	const struct meson_nfc *nfc =3D nand_get_controller_data(mtd_to_nand(mtd)=
+);
+-	const struct meson_nfc_nand_chip *meson_chip =3D to_meson_nand(nand);
+-	u32 bch =3D meson_chip->bch_mode, cmd;
+ 	int len =3D mtd->writesize, pagesize, pages;
+ 	int scrambler;
++	u32 cmd;
+=20
+ 	if (nand->options & NAND_NEED_SCRAMBLING)
+ 		scrambler =3D NFC_CMD_SCRAMBLER_ENABLE;
+ 	else
+ 		scrambler =3D NFC_CMD_SCRAMBLER_DISABLE;
+=20
+-	pagesize =3D nand->ecc.size;
+-
+ 	if (raw) {
+ 		len =3D mtd->writesize + mtd->oobsize;
+ 		cmd =3D len | scrambler | DMA_DIR(dir);
+-		writel(cmd, nfc->reg_base + NFC_REG_CMD);
+-		return;
+-	}
++	} else if (meson_nfc_is_boot_page(nand, page)) {
++		pagesize =3D NFC_SHORT_MODE_ECC_SZ >> 3;
++		pages =3D mtd->writesize / 512;
+=20
+-	pages =3D len / nand->ecc.size;
++		scrambler =3D NFC_CMD_SCRAMBLER_ENABLE;
++		cmd =3D CMDRWGEN(DMA_DIR(dir), scrambler, NFC_ECC_BCH8_1K,
++			       NFC_CMD_SHORTMODE_ENABLE, pagesize, pages);
++	} else {
++		pagesize =3D nand->ecc.size >> 3;
++		pages =3D len / nand->ecc.size;
+=20
+-	cmd =3D CMDRWGEN(DMA_DIR(dir), scrambler, bch,
+-		       NFC_CMD_SHORTMODE_DISABLE, pagesize, pages);
++		cmd =3D CMDRWGEN(DMA_DIR(dir), scrambler, meson_chip->bch_mode,
++			       NFC_CMD_SHORTMODE_DISABLE, pagesize, pages);
++	}
+=20
+ 	if (scrambler =3D=3D NFC_CMD_SCRAMBLER_ENABLE)
+ 		meson_nfc_cmd_seed(nfc, page);
+@@ -1132,6 +1150,24 @@ static int meson_nfc_nand_chip_init(struct udevice *=
+dev, struct meson_nfc *nfc,
+ 		goto err_chip_buf_free;
+ 	}
+=20
++	if (nand->options & NAND_IS_BOOT_MEDIUM) {
++		ret =3D ofnode_read_u32(node, "amlogic,boot-pages",
++				      &meson_chip->boot_pages);
++		if (ret) {
++			dev_err(dev, "could not retrieve 'amlogic,boot-pages' property: %d",
++				ret);
++			goto err_chip_buf_free;
++		}
++
++		ret =3D ofnode_read_u32(node, "amlogic,boot-page-step",
++				      &meson_chip->boot_page_step);
++		if (ret) {
++			dev_err(dev, "could not retrieve 'amlogic,boot-page-step' property: %d"=
+,
++				ret);
++			goto err_chip_buf_free;
++		}
++	}
++
+ 	ret =3D nand_register(0, mtd);
+ 	if (ret) {
+ 		dev_err(dev, "'nand_register()' failed: %d\n", ret);
+--=20
+2.30.1
 
 
