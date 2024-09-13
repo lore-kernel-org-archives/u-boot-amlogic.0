@@ -2,202 +2,214 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05669C3601F
-	for <webhook@archiver.kernel.org>; Tue, 17 Sep 2024 12:34:59 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.19742.1726576493821759550
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF5FCF58F9
+	for <webhook@archiver.kernel.org>; Fri, 20 Sep 2024 09:27:38 +0000 (UTC)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+ by mx.groups.io with SMTP id smtpd.web11.69906.1726221421839191307
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Sep 2024 05:34:54 -0700
+ Fri, 13 Sep 2024 02:57:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=tohctgSx;
- spf=pass (domain: linaro.org, ip: 209.85.221.54, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-374bfc395a5so3595357f8f.0
-        for <u-boot-amlogic@groups.io>; Tue, 17 Sep 2024 05:34:53 -0700 (PDT)
+ dkim=pass header.i=@amarulasolutions.com header.s=google header.b=TaFk4Q8R;
+ spf=pass (domain: amarulasolutions.com, ip: 209.85.208.51, mailfrom: dario.binacchi@amarulasolutions.com)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c3ed267a7bso2165447a12.3
+        for <u-boot-amlogic@groups.io>; Fri, 13 Sep 2024 02:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726576492; x=1727181292; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aJrg2ShcpGeoJr2BRuQhpu5iq0h9WOCdFu465pSgpys=;
-        b=tohctgSxn+VCs70bgnwrMdryi7bWb5FEnGQJsFNBUnrignO9kUvPh7+HyxZG+Wow3e
-         SLpUHQsF7Ui2050EYRT+Gq/88EuHGjVi8+zWtxSXVZ59D9Tegvq5bbz/Q7CNYzODoUle
-         2boc5n94GlUIX1gX0SlFGtS+4FEoVY02rV7GaxlpIo/dfSNncuh1YF4A23EyrR8QfxtA
-         zOTGTMEZOlXOWY3yt7SOgN0Vu8v8KP/CUDf9h5pK2U4A5x7IeE5r/dfNefzw/p7fAQsA
-         GS2k7JA/guSzQblOojGC2cH9cdqzOLq2DPxzdjLpPfavvmMjWyuQNsqqLyeaN2j6KgI1
-         /jng==
+        d=amarulasolutions.com; s=google; t=1726221420; x=1726826220; darn=groups.io;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=swiTdlXpxz7ztsvlYK79VGvCm12s6t/1zlzaJmhbPu8=;
+        b=TaFk4Q8RprSXRH5nPwACMSZN9Pz7XTNrXcmjw2gKXZwxhU13AQv8AMi0Z7/uWUDW/T
+         FrnklZeIrdDOPLFKrBB2ZYudA+oAxtGwlCMWkDsyXJZZONKi0xVzI6IhHZIxarvgf13t
+         AhhqK2PRNxaH1+w6pCZeJiGbepgbLEKRIZAWE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726576492; x=1727181292;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aJrg2ShcpGeoJr2BRuQhpu5iq0h9WOCdFu465pSgpys=;
-        b=bY+z2qYZyHugOErDK4eVOnVATQtRob0sDKxk1aS9OIDfzV1FbgAD88uIIzmhIqwGCQ
-         T9NZUk6f1UwblO3+yYvbH2VhsKrDi2QVwaLjpEZwvLFEbpr1LYbCEnV4PsDv+3BYI+tu
-         46q50jHtaOH6FFRMTIeWh5qtgywC2cYcI8y3jcP2lmigGqpHugcg3LQuccvgDe9Wx/+s
-         ByXjpMXkGQaNSWi7vgX89wPXXopb0vhqelyYe79z5VfaDmv4Eab+H0u6JwNwpZ4qjk7q
-         7YbmKu8PwcZlY3xi+uhOLEYUTTGHmpzYCJ5aNXkDqlV4SzqQKjVZKWpzZC8/uuZeDTa2
-         Pl4w==
-X-Gm-Message-State: AOJu0Yyrvrv43cEKDI/YC9ynMmf2R86K+06B9RpYiyxiPBK5viVzjwG4
-	dXgLvHdplp80yKe85ByKGIv8j8lbY0LRUuuv74/vDnxcYsNx3bo2vqxQZ8JuAAk=
-X-Google-Smtp-Source: AGHT+IEr3EoxWGvHuhBYbo6cZ7OYOEf8eCwZvMmcd9BgvhEnuAoSmpX4Weip1PZM2N41klJ/Uu1sFA==
-X-Received: by 2002:a05:6000:1249:b0:374:c400:8556 with SMTP id ffacd0b85a97d-378c27a8a80mr10214214f8f.11.1726576492079;
-        Tue, 17 Sep 2024 05:34:52 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e73e80eesm9381772f8f.30.2024.09.17.05.34.51
+        d=1e100.net; s=20230601; t=1726221420; x=1726826220;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=swiTdlXpxz7ztsvlYK79VGvCm12s6t/1zlzaJmhbPu8=;
+        b=eyYVj91mLMVNuQ563049sLVnq623pu8t7tVNFeluSCrxqe7Pb9po9875vY82a2KEpR
+         DoZlzmvz4sHQYjcs1Fuy2O9uYiBc7c6JAwmH3TMZ6CVn1lkyxW/9yh90NX5+U8SZNVdI
+         BujMPkHqZVR8SL3dn3tpXobSZOlsO0p87by9fgCg+lH4mkIyv31QDKraw02yxGFxT/ae
+         F3Xz2YAoKEtQgjO4GbZiOcR41GLquF/0xZRLfxlg2SMxjlyyFMkg9pho2DyxCfa5yqzf
+         EiKl4q2Mw27UUeW/a4Qh42l7i++eIgan8kcXPPJrfGkNGAtcy8vjxOdDsEKtpgEp1HoJ
+         t+jw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkRkBq5gYXY97J9K8qCXye8t+FJBOvEd3X9niLvzCP2WH9N4b3oRt12P2Q2FNSazrUSpj/rUHv7pelC87UvA==@groups.io
+X-Gm-Message-State: AOJu0YxvrG+/Hup8tIy2owse67Dwp7NmRfR9daEjv3Nn6ds15JS5LCTH
+	mVZdiUQCMAuDF5a9imR5/iSoTrGvGjOFxiD7DtSKiq9JfuquKkbTZ2puw36hxN4=
+X-Google-Smtp-Source: AGHT+IGLl12s3eWwNMQAnqBHvSe8OPkRJojHZeHEtacQm0VkuqPbz2JNV3Wa01/dbRiAwJV9HtJReg==
+X-Received: by 2002:a17:907:940e:b0:a8d:2ab2:c9b1 with SMTP id a640c23a62f3a-a90296716efmr520301166b.56.1726221419343;
+        Fri, 13 Sep 2024 02:56:59 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-87-4-102-18.retail.telecomitalia.it. [87.4.102.18])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25cee72bsm863224766b.173.2024.09.13.02.56.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2024 05:34:51 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Tue, 17 Sep 2024 14:34:46 +0200
-Subject: [PATCH v2 2/2] board: libre-computer: aml-s805x-cc: Enable capsule
- updates
+        Fri, 13 Sep 2024 02:56:59 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: u-boot@lists.denx.de
+Cc: Fabio Estevam <festevam@denx.de>,
+	linux-amarula@amarulasolutions.com,
+	michael@amarulasolutions.com,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	AKASHI Takahiro <akashi.tkhro@gmail.com>,
+	Alexander Dahl <ada@thorsis.com>,
+	Anatolij Gustschin <agust@denx.de>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Anton Bambura <jenneron@protonmail.com>,
+	Ashok Reddy Soma <ashok.reddy.soma@amd.com>,
+	Devarsh Thakkar <devarsht@ti.com>,
+	Eugen Hristev <eugen.hristev@collabora.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Heinrich Schuchardt <xypron.glpk@gmx.de>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Igor Prusov <ivprusov@salutedevices.com>,
+	Igor Prusov <ivprusov@sberdevices.ru>,
+	Jaehoon Chung <jh80.chung@samsung.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Joe Hershberger <joe.hershberger@ni.com>,
+	=?UTF-8?q?Jonas=20Schw=C3=B6bel?= <jonasschwoebel@yahoo.de>,
+	Julien Masson <jmasson@baylibre.com>,
+	Liu Ying <victor.liu@nxp.com>,
+	Lukasz Majewski <lukma@denx.de>,
+	Maksim Kiselev <bigunclemax@gmail.com>,
+	Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Marek Vasut <marex@denx.de>,
+	Martyn Welch <martyn.welch@collabora.com>,
+	Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+	Minkyu Kang <mk7.kang@samsung.com>,
+	"NXP i.MX U-Boot Team" <uboot-imx@nxp.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Nicolas Heemeryck <nicolas.heemeryck@devialet.com>,
+	Nikhil M Jain <n-jain1@ti.com>,
+	Patrick Barsanti <patrick.barsanti@amarulasolutions.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	Peter Robinson <pbrobinson@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Sam Protsenko <semen.protsenko@linaro.org>,
+	Sean Anderson <seanga2@gmail.com>,
+	Simon Glass <sjg@chromium.org>,
+	Stefan Bosch <stefan_b@posteo.net>,
+	Stefano Babic <sbabic@denx.de>,
+	Svyatoslav Ryhel <clamor95@gmail.com>,
+	=?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>,
+	Tim Harvey <tharvey@gateworks.com>,
+	Tom Rini <trini@konsulko.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Yang Xiwen <forbidden405@outlook.com>,
+	Ye Li <ye.li@nxp.com>,
+	u-boot-amlogic@groups.io
+Subject: [PATCH 00/26] Support display (and even more) on the BSH SMM S2/PRO boards
+Date: Fri, 13 Sep 2024 11:55:42 +0200
+Message-ID: <20240913095622.72377-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240917-u-boot-topic-dynamic-uuid-v2-2-416e39c6e271@linaro.org>
-References: <20240917-u-boot-topic-dynamic-uuid-v2-0-416e39c6e271@linaro.org>
-In-Reply-To: <20240917-u-boot-topic-dynamic-uuid-v2-0-416e39c6e271@linaro.org>
-To: Tom Rini <trini@konsulko.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, Da Xue <da@libre.computer>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3593;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=zPvetaBnOXIbwLciZ582jmJJxdSfwJxTLM7x5mHwgFs=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBm6XdoaNLyaTdYxEmyzmMqLRFS57XgKpKPFqjoKcxS
- LiH0Vh+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZul3aAAKCRB33NvayMhJ0XsLD/
- oCm3/Imtrd3QplxZRmxzJ/Lx58OEbwSkyn4FY+0zY2adP4e8WfoFkVM7fooJjvODV44c4tkJrxuIkm
- h1pdCD0C5Pva7yLHEKBSDfHcV5fzoTT1hAdVv5vYGdrAoOHK1mkqbjpxtRFyaMKeiGiZb6ZzMSRvA+
- LzoZwHcmnYjlbAvlsyYtDaqh9qQPBwzFYhnnQ9oJ9PcJ3iZeVGycKIgp4TKRPcKeP3UxIQ9d8HBEV1
- 5+TJarMPT7Jaa2xgoKM2bVcKDPcp2mVeysC8R3hNHCorKnY+MSPNI3Zu20eYVx1xuMBvnLi2Pl5q+g
- 60B1jM5H6xHL5jMU84w1IUiZgluXm0iH/O/mr/3eUMmhWHjoAWzAzt6jxIrfu1M5SPcd9a6X1luxzk
- E+m4qI4A1czl4kCv5ZQAVDrrblAnP1s/icb/U1IUkgPj0UPeUHROepsOm2ou0F8Tx+kiiHBe9x00X/
- ecFDDRx6xR7Jsr6pxvkR8eppJf8XRqqQmVMEq6Mc/QvjAZvDfafuyRaDaFPJId9FM97rzuQNSVFMkn
- x5UNKAPSGAyt5fwJcDtLUXKd3HzPYH9bx6bNntvDXa1eZjcU839MBMl4WFB9Zrkpz2rON4/rtluhJd
- tlqXY5wE/fnSBSMyg6BHNeEgKZAwYA8gFRnPaFEw/Id2CAnqC6s5xT+UrS3w==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 17 Sep 2024 12:34:59 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2393
+ <u-boot-amlogic@groups.io>; Fri, 20 Sep 2024 09:27:38 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2395
 
-Since the aml-s805-cc works well using EFI, and now the capsule updates
-backend has been merged, let's enable the missing configs and add
-the required structures to support it.
 
-The GUID is dynamically generated for the board, to get it:
-=> efidebug capsule esrt
-========================================
-ESRT: fw_resource_count=1
-ESRT: fw_resource_count_max=1
-ESRT: fw_resource_version=1
-[entry 0]==============================
-ESRT: fw_class=B8079027-9B2C-57D4-86AA-CC782ADA598C
-ESRT: fw_type=unknown
-ESRT: fw_version=0
-ESRT: lowest_supported_fw_version=0
-ESRT: capsule_flags=0
-ESRT: last_attempt_version=0
-ESRT: last_attempt_status=success
-========================================
+This series was created out of the need to supportsimple-framebuffer for
+BSH boards SMM_S2 and SMM_S2PRO. To achieve this goal, it was necessary
+to develop additional code and/or drivers for all the required components
+(i. e. clock, power domain, video, etc.). This series has a Linux
+counterpart that will also be submitted upstream as soon as possible.
+Furthermore, given the overlap in topics with the recent series [1], we
+are open to collaborate on the common parts to ensure proper development.
 
-On the host (with the aml_encrypt_gxl result binary):
-$ eficapsule --guid B8079027-9B2C-57D4-86AA-CC782ADA598C -i 1 u-boot.bin u-boot.cap
+[1] https://lore.kernel.org/all/20240910101344.110633-1-miquel.raynal@bootlin.com/T/#mb7cd440abc6fcc0de205f577eb3225e1c1c76823
 
-On the board (from USB disk containing u-boot.cap at root):
-=> load usb 0:1 $kernel_addr_r u-boot.cap
-=> efidebug capsule update $kernel_addr_r
 
-The binary will then be flashed on the SPI.
+Dario Binacchi (6):
+  boot: fdt_simplefb: add a debug message
+  video: mxsfb: support simple frame-buffer
+  video: bridge: samsung: support simple frame-buffer
+  imx8mn_bsh_smm_s2/pro: support simple frame-buffer
+  imx8mn_bsh_smm_s2/pro: enable simple frame-buffer
+  imx8mn_bsh_smm_s2/pro: add splash screen with BSH logo
 
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- board/libre-computer/aml-s805x-ac/aml-s805x-ac.c | 24 ++++++++++++++++++++++++
- configs/libretech-ac_defconfig                   |  6 ++++++
- 2 files changed, 30 insertions(+)
+Michael Trimarchi (20):
+  clk: Propagate clk_set_rate() if CLK_SET_PARENT_RATE present for gate
+    and mux
+  clk: imx8mn: Prevent clock critical path from disabling during
+    reparent and set_rate
+  clk: imx8mm: Prevent clock critical path from disabling during
+    reparent and set_rate
+  clk: clk-uclass: Implement CLK_OPS_PARENT_ENABLE
+  clk: imx8mm: Mark IMX8MM_SYS_PLL2 and IMX8MM_SYS_PLL3 as enabled
+  clk: imx8mn: Mark IMX8MN_SYS_PLL2 and IMX8MN_SYS_PLL3 as enabled
+  clk: imx8mn: add video clocks support
+  power: Add iMX8M block ctrl driver for dispmix
+  video: Add video link framework
+  video: bridge: Add check_timing interface
+  video: dsi_host: add disable host interface
+  video: Update mxsfb video drivers for iMX8MM/iMX8MN display
+  video: Enable DM_UC_FLAG_SEQ_ALIAS for display and bridge
+  phy: dphy: add support to calculate the timing based on hs_clk_rate
+  phy: dphy: Correct lpx parameter and its derivatives(ta_{get,go,sure})
+  phy: dphy: Correct clk_pre parameter
+  lib: div64: sync with Linux
+  video: bridge: Add Samsung DSIM bridge
+  video: Add Synaptics R63353 panel driver
+  imx8mn_bsh_smm_s2/pro: Enable display on reference design
 
-diff --git a/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c b/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
-index ae9834c0bf8..94cf5b4361f 100644
---- a/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
-+++ b/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
-@@ -8,6 +8,7 @@
- #include <env.h>
- #include <init.h>
- #include <net.h>
-+#include <efi_loader.h>
- #include <asm/io.h>
- #include <asm/arch/gx.h>
- #include <asm/arch/sm.h>
-@@ -19,6 +20,29 @@
- #define EFUSE_MAC_OFFSET	52
- #define EFUSE_MAC_SIZE		6
- 
-+struct efi_fw_image fw_images[] = {
-+	{
-+		.fw_name = u"AML_S805X_AC_BOOT",
-+		.image_index = 1,
-+	},
-+};
-+
-+struct efi_capsule_update_info update_info = {
-+	.dfu_string = "sf 0:0=u-boot-bin raw 0 0x10000",
-+	.num_images = ARRAY_SIZE(fw_images),
-+	.images = fw_images,
-+};
-+
-+#if IS_ENABLED(CONFIG_SET_DFU_ALT_INFO)
-+void set_dfu_alt_info(char *interface, char *devstr)
-+{
-+	if (strcmp(interface, "ram") == 0)
-+		env_set("dfu_alt_info", "fitimage ram 0x08080000 0x4000000");
-+	else if (IS_ENABLED(CONFIG_EFI_HAVE_CAPSULE_SUPPORT))
-+		env_set("dfu_alt_info", update_info.dfu_string);
-+}
-+#endif
-+
- int misc_init_r(void)
- {
- 	u8 mac_addr[EFUSE_MAC_SIZE + 1];
-diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
-index 11d9795e05d..7763a14f203 100644
---- a/configs/libretech-ac_defconfig
-+++ b/configs/libretech-ac_defconfig
-@@ -35,6 +35,7 @@ CONFIG_SYS_MAXARGS=32
- # CONFIG_CMD_IMI is not set
- CONFIG_CMD_ADC=y
- CONFIG_CMD_DFU=y
-+CONFIG_CMD_NVEDIT_EFI=y
- CONFIG_CMD_GPIO=y
- # CONFIG_CMD_LOADS is not set
- CONFIG_CMD_MMC=y
-@@ -42,6 +43,7 @@ CONFIG_CMD_SF_TEST=y
- CONFIG_CMD_SPI=y
- CONFIG_CMD_USB=y
- CONFIG_CMD_USB_MASS_STORAGE=y
-+CONFIG_CMD_EFIDEBUG=y
- # CONFIG_CMD_SETEXPR is not set
- CONFIG_CMD_REGULATOR=y
- CONFIG_OF_CONTROL=y
-@@ -49,6 +51,8 @@ CONFIG_ENV_IS_IN_SPI_FLASH=y
- CONFIG_SYS_RELOC_GD_ENV_ADDR=y
- CONFIG_SARADC_MESON=y
- CONFIG_DFU_RAM=y
-+CONFIG_DFU_SF=y
-+CONFIG_SET_DFU_ALT_INFO=y
- CONFIG_MMC_MESON_GX=y
- CONFIG_MTD=y
- CONFIG_DM_MTD=y
-@@ -98,3 +102,5 @@ CONFIG_VIDEO_BMP_RLE8=y
- CONFIG_BMP_16BPP=y
- CONFIG_BMP_24BPP=y
- CONFIG_BMP_32BPP=y
-+CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
-+CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
+ .../dts/imx8mn-bsh-smm-s2-u-boot-common.dtsi  |   23 +
+ board/bsh/imx8mn_smm_s2/imx8mn_smm_s2.c       |   99 ++
+ boot/fdt_simplefb.c                           |    2 +
+ common/stdio.c                                |    4 +
+ configs/imx8mn_bsh_smm_s2_defconfig           |   21 +
+ configs/imx8mn_bsh_smm_s2pro_defconfig        |   21 +
+ drivers/clk/clk-gate.c                        |    1 +
+ drivers/clk/clk-mux.c                         |    2 +-
+ drivers/clk/clk-uclass.c                      |   67 +-
+ drivers/clk/clk.c                             |    9 +
+ drivers/clk/imx/clk-imx8mm.c                  |   73 +-
+ drivers/clk/imx/clk-imx8mn.c                  |  131 +-
+ drivers/phy/meson-axg-mipi-dphy.c             |    2 +-
+ drivers/phy/phy-core-mipi-dphy.c              |   36 +-
+ drivers/power/domain/Kconfig                  |    6 +
+ drivers/power/domain/Makefile                 |    1 +
+ drivers/power/domain/imx8m-blk-ctrl.c         |  438 +++++
+ drivers/power/domain/imx8m-power-domain.c     |  213 ++-
+ drivers/video/Kconfig                         |   14 +
+ drivers/video/Makefile                        |    2 +
+ drivers/video/bridge/Kconfig                  |   13 +
+ drivers/video/bridge/Makefile                 |    1 +
+ drivers/video/bridge/samsung-dsi-host.c       | 1576 +++++++++++++++++
+ drivers/video/bridge/samsung-dsim.c           |  151 ++
+ drivers/video/bridge/samsung-dsim.h           |   20 +
+ drivers/video/bridge/video-bridge-uclass.c    |   11 +
+ drivers/video/display-uclass.c                |    1 +
+ drivers/video/dsi-host-uclass.c               |   10 +
+ drivers/video/mxsfb.c                         |  144 +-
+ drivers/video/synaptics-r63353.c              |  228 +++
+ drivers/video/video_link.c                    |  529 ++++++
+ include/clk.h                                 |    9 +
+ include/configs/imx8mn_bsh_smm_s2.h           |    1 +
+ include/configs/imx8mn_bsh_smm_s2_common.h    |    4 +
+ include/configs/imx8mn_bsh_smm_s2pro.h        |    1 +
+ include/dsi_host.h                            |    8 +
+ include/linux/clk-provider.h                  |    1 +
+ include/linux/math64.h                        |  110 ++
+ include/phy-mipi-dphy.h                       |    3 +
+ include/video_bridge.h                        |   20 +
+ include/video_link.h                          |   19 +
+ tools/logos/bsh.bmp                           |  Bin 0 -> 10644 bytes
+ 42 files changed, 3942 insertions(+), 83 deletions(-)
+ create mode 100644 drivers/power/domain/imx8m-blk-ctrl.c
+ create mode 100644 drivers/video/bridge/samsung-dsi-host.c
+ create mode 100644 drivers/video/bridge/samsung-dsim.c
+ create mode 100644 drivers/video/bridge/samsung-dsim.h
+ create mode 100644 drivers/video/synaptics-r63353.c
+ create mode 100644 drivers/video/video_link.c
+ create mode 100644 include/video_link.h
+ create mode 100644 tools/logos/bsh.bmp
 
 -- 
-2.34.1
+2.43.0
 
 
