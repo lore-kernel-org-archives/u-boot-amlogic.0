@@ -2,174 +2,236 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C92CF58FC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1792CDD578
 	for <webhook@archiver.kernel.org>; Fri, 20 Sep 2024 09:27:38 +0000 (UTC)
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
- by mx.groups.io with SMTP id smtpd.web10.5141.1726480921982517404
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+ by mx.groups.io with SMTP id smtpd.web11.13209.1726504087189876251
  for <u-boot-amlogic@groups.io>;
- Mon, 16 Sep 2024 03:02:02 -0700
+ Mon, 16 Sep 2024 09:28:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=n8gFFElo;
- spf=pass (domain: linaro.org, ip: 209.85.215.179, mailfrom: ilias.apalodimas@linaro.org)
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7db4f323b12so599843a12.1
-        for <u-boot-amlogic@groups.io>; Mon, 16 Sep 2024 03:02:01 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=H0qob2/F;
+ spf=pass (domain: konsulko.com, ip: 209.85.210.53, mailfrom: trini@konsulko.com)
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-71100987d1cso2088741a34.2
+        for <u-boot-amlogic@groups.io>; Mon, 16 Sep 2024 09:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726480921; x=1727085721; darn=groups.io;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FUNCq/Bym/5pya1wBmlxBtW7izxYsMhCT+/QGvBsK0Y=;
-        b=n8gFFElov/S2dbZaV6hMBz3XJ/QTV1NW8QzC2prkY1b1gwL2lpACLvHYOM2D1GMg5t
-         ok6uD45pIwKWShdK/ByUIScX1tpDXfn0HPAj2XYS/F1icjgRHfBJ4xFYksZJfK1QhP6B
-         vJogtxShVRG8GTDRi5F7hX0qQKX+Ze0n2mcVZRH0HLJnb8BZw/F+UAF/puZ9IVmWDPG8
-         Ouu4Gb+9T9g03hQHFdkw8fme0CcAKfig9hzS4Wnsjvz4De9z16GEEe8z7B7TbG4imrqW
-         pl/Y0yM+3lR3fJdh1afVqceu3eWIqr3zOkH1tXhJlFi8c80QeQ+swy5VhmQ7WIQN/h/n
-         E3jg==
+        d=konsulko.com; s=google; t=1726504086; x=1727108886; darn=groups.io;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EF0G2jQNMJy6viIsTcTH6P2KkptSEkkmUDZfppdy6k4=;
+        b=H0qob2/Fr5nsdbvnOxdXLN4opkDkiR9PEd7Oc+cSTqMpr/6QZzgeoQwu8TPpKcW7HN
+         sS+Qao6Wsks/qojs6UQdRvzDb5oe6/H64UXQFJiNvCVl2R/266rOO4BB+Gtxj3vsQIvd
+         Jvi8Yd87+KQ/l8k2pLNbBVurma30m16yUOdLQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726480921; x=1727085721;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FUNCq/Bym/5pya1wBmlxBtW7izxYsMhCT+/QGvBsK0Y=;
-        b=hX0X1ArzXvbfleV8jc1GtH6mVogoTgErL16Q2zudUGDGnJrcwLEKuJHAdIFwy3pdVR
-         nXDCA6G+iWQ3Rp7R4nw+qjIjChaIN27qK9Kqkr10swid3NBCstlM0tyNdN/zjVmeAoid
-         65Hq2QD05EVdhVzpZzWJ8pgkH9+TjK1ZCcfEmBjtARwUf93KG9+po93A9Gu0cBhVTDrh
-         aVX5vXxIv3oDZwg/t/YYrCyOGWE9awaRS6949E1LrZNaOSlznmNCLrfg9Jkk9ueaW6Of
-         tv5pfz9E0FjSew08Ca0B3XfeOooSZHZ75BB1Ps3sKIVVXM92HWPXBkgPuBwM2c31JIL+
-         rnDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDBb7lD7lCO9RCePaz+1BhnbY+yrf2vOP0bXOtl0aWBnedV2RS6guMhQkdC8bWDgo8jg3kF3A93U9cxcBh+A==@groups.io
-X-Gm-Message-State: AOJu0YzRAGicwiLeDLxIqMJs5v3lClKk1iDIugtBjo8O7ehoPX90QWjq
-	Gn9/RrZpVbWjpDlDg/JVBhVRNgBzRxcmaB6zsQhK20B7yBA3+tlYIvEEA6xwjmLAVf8AOVu56FF
-	qL2rAX/LA1/7aEj+qKJXboooSRZrvfFQVrESAdQ==
-X-Google-Smtp-Source: AGHT+IFI/NIjPOYkJHDsBH99WqZFOUC66wqvtzLeCntW55cBlLranQhWHIKOYkB2a3CZLqO8kEeFrVrg8on1XnysCv4=
-X-Received: by 2002:a17:90a:890d:b0:2cb:50fa:b01e with SMTP id
- 98e67ed59e1d1-2dba0093514mr15158197a91.41.1726480921169; Mon, 16 Sep 2024
- 03:02:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726504086; x=1727108886;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EF0G2jQNMJy6viIsTcTH6P2KkptSEkkmUDZfppdy6k4=;
+        b=rpcgqrkWC8XIkUfeiga73anqsYH5xSVQmDzUV/hy8oYq/E2wwCZ9zGn0UTUkD8QgzD
+         /c/uXxI57ulbXrJnxdrbDdpYs02SELUUoU9aY6zVylhak/vUHRMtC7z7hVT8eJrCA+Mp
+         Lxu+fRuGzC2f9oNbOdFXZDVTPzVsb+8sqs1bAcH8PkfuOIpgu27+N/vdgZuTAeD9lx7A
+         aL65d2QsVjVvVmVTnSb3mX959ZEYxqag/xg2h0onJgc3niW5NNQXXYSEbDkZr/VfAHDj
+         NKwzdvS8QsPpR9jy7wFYXFCYKSZtYGfQBMW5q2vMNrM/LBpF5AOoW9auMpOM06NcTxyD
+         zyGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfnEgZ/AjKe3foI6SacPdebA/vbnYyLYx1/Z6o3GYYxa7pzPPY32d423CnzGWXfHEJnUtZeptCdYb6uBH87A==@groups.io
+X-Gm-Message-State: AOJu0YxwfwhNgJ5lFcAaKC80BQIa+R/uzvHfUHhPtWOaBz9jbKu8+83q
+	zyafuvzDcezifJ1+vFmL1aYcM20Cgo5oWKvvQF6QOolkoVPvI1ZW9EsSLzIzcB8=
+X-Google-Smtp-Source: AGHT+IEGGoKrkeYZTDx6+y8aLlMeNnu3/sLcIrs3HtPAPlkPWVWoTR7nkC5JxQreu3BBrQ0Jr7LRIg==
+X-Received: by 2002:a05:6358:430c:b0:1b8:33b2:1482 with SMTP id e5c5f4694b2df-1bc3941ab52mr261652355d.1.1726504085991;
+        Mon, 16 Sep 2024 09:28:05 -0700 (PDT)
+Received: from bill-the-cat ([187.144.65.244])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-459aac61237sm28776961cf.16.2024.09.16.09.28.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2024 09:28:04 -0700 (PDT)
+Date: Mon, 16 Sep 2024 10:27:58 -0600
+From: Tom Rini <trini@konsulko.com>
+To: Simon Glass <sjg@chromium.org>
+Cc: Marek Vasut <marex@denx.de>, u-boot@lists.denx.de,
+	Ben Wolsieffer <benwolsieffer@gmail.com>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Eugen Hristev <eugen.hristev@collabora.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Heinrich Schuchardt <xypron.glpk@gmx.de>,
+	Jaehoon Chung <jh80.chung@samsung.com>,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Kostya Porotchkin <kostap@marvell.com>,
+	Matteo Lisi <matteo.lisi@engicam.com>,
+	Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+	Max Krummenacher <max.krummenacher@toradex.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	Patrick Delaunay <patrick.delaunay@foss.st.com>,
+	Philipp Tomsich <philipp.tomsich@vrull.eu>,
+	Quentin Schulz <quentin.schulz@cherry.de>, Sam Day <me@samcday.com>,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Svyatoslav Ryhel <clamor95@gmail.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
+	u-boot-amlogic@groups.io, u-boot-qcom@groups.io,
+	u-boot@dh-electronics.com, uboot-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 1/4] power: regulator: Trigger probe of regulators which are always-on or boot-on
+Message-ID: <20240916162758.GE4252@bill-the-cat>
+References: <20240626235717.272219-1-marex@denx.de>
+ <CAFLszTjwbWdKqs_UBqXvr2F2ahoGd0-BFE-XLNr3-uq73ZLFHg@mail.gmail.com>
+ <6abad4ba-b29a-47a3-addb-91e8f46ee425@denx.de>
+ <CAFLszTgAqOXbkcJxYKxM4gn6_oOg7+nyaBK-Y34r_zVaPBScvA@mail.gmail.com>
+ <616b231b-0291-4bb3-93d9-85970419ed62@denx.de>
+ <CAFLszTiHy7yn0Z18GdkSLgykH0s=z8tJ=-QGf+knXPggKwyk9Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20240916-u-boot-topic-dynamic-uuid-v1-0-7e4f48542a0f@linaro.org> <20240916-u-boot-topic-dynamic-uuid-v1-2-7e4f48542a0f@linaro.org>
-In-Reply-To: <20240916-u-boot-topic-dynamic-uuid-v1-2-7e4f48542a0f@linaro.org>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Mon, 16 Sep 2024 13:01:25 +0300
-Message-ID: <CAC_iWjLY3V=CGFDzXv38r0_oZjhMC5T=hzxHNDCEbULw0Q_FuA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] board: libre-computer: aml-s805-cc: Enable capsule updates
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
-	Da Xue <da@libre.computer>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFLszTiHy7yn0Z18GdkSLgykH0s=z8tJ=-QGf+knXPggKwyk9Q@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: multipart/mixed; boundary="Groupsio=0i2kLBA72K0hRiP1iAHl"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 20 Sep 2024 09:27:38 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2398
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2399
 
-Thanks Neil!
+--Groupsio=0i2kLBA72K0hRiP1iAHl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Sept 2024 at 12:41, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->
-> Since the aml-s805-cc works well using EFI, and now the capsule updates
-> backend has been merged, let's enable the missing configs and add
-> the required structures to support it.
->
-> The GUID is dynamically generated for the board, to get it:
-> => efidebug capsule esrt
-> ========================================
-> ESRT: fw_resource_count=1
-> ESRT: fw_resource_count_max=1
-> ESRT: fw_resource_version=1
-> [entry 0]==============================
-> ESRT: fw_class=B8079027-9B2C-57D4-86AA-CC782ADA598C
-> ESRT: fw_type=unknown
-> ESRT: fw_version=0
-> ESRT: lowest_supported_fw_version=0
-> ESRT: capsule_flags=0
-> ESRT: last_attempt_version=0
-> ESRT: last_attempt_status=success
-> ========================================
->
-> On the host (with the aml_encrypt_gxl result binary):
-> $ eficapsule --guid B8079027-9B2C-57D4-86AA-CC782ADA598C -i 1 u-boot.bin u-boot.cap
->
-> On the board (from USB disk containing u-boot.cap at root):
-> => load usb 0:1 $kernel_addr_r u-boot.cap
-> => efidebug capsule update $kernel_addr_r
->
-> The binary will then be flashed on the SPI.
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  board/libre-computer/aml-s805x-ac/aml-s805x-ac.c | 14 ++++++++++++++
->  configs/libretech-ac_defconfig                   |  5 +++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c b/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
-> index ae9834c0bf8..ba14df54967 100644
-> --- a/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
-> +++ b/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
-> @@ -8,6 +8,7 @@
->  #include <env.h>
->  #include <init.h>
->  #include <net.h>
-> +#include <efi_loader.h>
->  #include <asm/io.h>
->  #include <asm/arch/gx.h>
->  #include <asm/arch/sm.h>
-> @@ -19,6 +20,19 @@
->  #define EFUSE_MAC_OFFSET       52
->  #define EFUSE_MAC_SIZE         6
->
-> +struct efi_fw_image fw_images[] = {
-> +       {
-> +               .fw_name = u"AML_S805X_AC_BOOT",
-> +               .image_index = 1,
-> +       },
-> +};
-> +
-> +struct efi_capsule_update_info update_info = {
-> +       .dfu_string = "sf 0:0=u-boot-bin raw 0 0x10000",
-> +       .num_images = ARRAY_SIZE(fw_images),
-> +       .images = fw_images,
-> +};
-> +
->  int misc_init_r(void)
->  {
->         u8 mac_addr[EFUSE_MAC_SIZE + 1];
-> diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
-> index 11d9795e05d..f146a495654 100644
-> --- a/configs/libretech-ac_defconfig
-> +++ b/configs/libretech-ac_defconfig
-> @@ -35,6 +35,7 @@ CONFIG_SYS_MAXARGS=32
->  # CONFIG_CMD_IMI is not set
->  CONFIG_CMD_ADC=y
->  CONFIG_CMD_DFU=y
-> +CONFIG_CMD_NVEDIT_EFI=y
->  CONFIG_CMD_GPIO=y
->  # CONFIG_CMD_LOADS is not set
->  CONFIG_CMD_MMC=y
-> @@ -42,6 +43,7 @@ CONFIG_CMD_SF_TEST=y
->  CONFIG_CMD_SPI=y
->  CONFIG_CMD_USB=y
->  CONFIG_CMD_USB_MASS_STORAGE=y
-> +CONFIG_CMD_EFIDEBUG=y
->  # CONFIG_CMD_SETEXPR is not set
->  CONFIG_CMD_REGULATOR=y
->  CONFIG_OF_CONTROL=y
-> @@ -49,6 +51,7 @@ CONFIG_ENV_IS_IN_SPI_FLASH=y
->  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
->  CONFIG_SARADC_MESON=y
->  CONFIG_DFU_RAM=y
-> +CONFIG_DFU_SF=y
->  CONFIG_MMC_MESON_GX=y
->  CONFIG_MTD=y
->  CONFIG_DM_MTD=y
-> @@ -98,3 +101,5 @@ CONFIG_VIDEO_BMP_RLE8=y
->  CONFIG_BMP_16BPP=y
->  CONFIG_BMP_24BPP=y
->  CONFIG_BMP_32BPP=y
-> +CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
-> +CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
->
-> --
-> 2.34.1
->
+On Wed, Sep 11, 2024 at 07:00:56PM -0600, Simon Glass wrote:
+> Hi Marek,
+>=20
+> On Fri, 28 Jun 2024 at 07:26, Marek Vasut <marex@denx.de> wrote:
+> >
+> > On 6/28/24 9:32 AM, Simon Glass wrote:
+> > > Hi Marek,
+> >
+> > Hi,
+> >
+> > [...]
+> >
+> > >>>> @@ -473,8 +483,6 @@ static int regulator_pre_probe(struct udevice =
+*dev)
+> > >>>>                                                   -ENODATA);
+> > >>>>           uc_pdata->max_uA =3D dev_read_u32_default(dev, "regulato=
+r-max-microamp",
+> > >>>>                                                   -ENODATA);
+> > >>>> -       uc_pdata->always_on =3D dev_read_bool(dev, "regulator-alwa=
+ys-on");
+> > >>>> -       uc_pdata->boot_on =3D dev_read_bool(dev, "regulator-boot-o=
+n");
+> > >>>>           uc_pdata->ramp_delay =3D dev_read_u32_default(dev, "regu=
+lator-ramp-delay",
+> > >>>>                                                       0);
+> > >>>>           uc_pdata->force_off =3D dev_read_bool(dev, "regulator-fo=
+rce-boot-off");
+> > >>>> --
+> > >>>> 2.43.0
+> > >>>>
+> > >>>
+> > >>> This is reading a lot of DT stuff very early, which may be slow. It=
+ is
+> > >>> also reading from the DT in the bind() step which we sometimes have=
+ to
+> > >>> do, but try to avoid.
+> > >>
+> > >> Actually, it is reading only the bare minimum very early in bind, th=
+e
+> > >> always-on and boot-on, the rest is in pre_probe, i.e. later.
+> > >
+> > > Yes, I see that. Also it is inevitable that these properties need to
+> > > be read before probe(), since they control whether to probe().
+> > >
+> > >>
+> > >>> Also this seems to happen in SPL and again pre-reloc and again in
+> > >>> U-Boot post-reloc?
+> > >>
+> > >> What does, the uclass post_bind ?
+> > >
+> > > I mean that this code will be called in SPL (if the regulators are in
+> > > the DT there), U-Boot pre-reloc and post-reloc, each time turning on
+> > > the regulators. We need a way to control that, don't we?
+> >
+> > I would assume that if those regulators are turned on once in the
+> > earliest stage , turning them on again in the follow up stage would be =
+a
+> > noop ? This is the point of regulator-*-on, to keep the regulators on.
+>=20
+> No, there is sometimes a particular sequence needed.
+>=20
+> >
+> > >>> Should we have a step in the init sequence where we set up the
+> > >>> regulators, by calling regulators_enable_boot_on() ?
+> > >>
+> > >> Let's not do this , the entire point of this series is to get rid of
+> > >> those functions and do the regulator configuration the same way LED
+> > >> subsystem does it -- by probing always-on/boot-on regulators and
+> > >> configuring them correctly on probe.
+> > >>
+> > >> To me regulators_enable_boot_on() and the like was always an
+> > >> inconsistently applied workaround for missing DM_FLAG_PROBE_AFTER_BI=
+ND ,
+> > >> which is now implemented, so such workarounds can be removed.
+> > >
+> > > That patch seemed to slip under the radar, sent and applied on the
+> > > same day! We really need to add a test for it, BTW.
+> >
+> > Which patch ? My recollection of DM_FLAG_PROBE_AFTER_BIND was that it
+> > took a while to get in.
+>=20
+> [1]
+>=20
+> >
+> > > My concern is that this might cause us ordering problems. We perhaps
+> > > want the regulators to be done first. If drivers are probed which use
+> > > regulators, then presumably they will enable them. Consider this:
+> > >
+> > > - LED driver auto-probes
+> > >     - probes I2C bus 2
+> > >     - probes LDO1 which is autoset so turns on
+> > > - LDO1 probes, but is already running
+> > > - LDO2 probes, which is autoset so turns on
+> > >
+> > > So long as it is OK to enable the regulators in any order, then this
+> > > seems fine. But is it? How do we handle the case where are particular
+> > > sequence is needed?
+> >
+> > Did we finally arrive at the point where we need -EPROBE_DEFER alike
+> > mechanism ?
+>=20
+> Nope. But I am concerned that this patch is leading us there. bind()
+> really needs to be as clean as possible. It is one of the design
+> elements of driver model which Linux should adopt.
+>=20
+> There is always a race to be the first to init something, move the
+> init earlier, etc... I don't see any general need to init the
+> regulators right at the start. It should be done in a separate
+> function and be optional. I am happy to send a patch if you like.
 
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Since we're currently stuck on the point where Marek has patches that
+fix a real problem, and Svyatoslav has a problem with them, but isn't
+currently able to debug it, yes, please put forward your patch that
+might address both sets of problems so we can all figure out how to
+resolve the problems, thanks!
+
+--=20
+Tom
+
+--Groupsio=0i2kLBA72K0hRiP1iAHl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmboXIsACgkQFHw5/5Y0
+tyxNjQv+MMGXX9xIKCbeFdYltaw7eLEqMQFyig/4VOgf1x82FcxpYrfFMa4gopjM
+j3I111hWh4tO69F8O+j2guT2Sr08pa0rO7JL+vaJY1iukXFHMtNJrL3WgIL3EpS9
+cqgRLEe7e5YbPibKqXPKconEfjXwcjXVOSwwFXFfNFnJJ+0IWLUUxd/pgWXpTziK
+2CwoDLICFx/OE2EXTWIC9gQZPrIeK24jOjMJbKur953KBIYOxNcYFLJML7k78kQc
+swjPNXeQZMq4PwmUZpsvO9Aq0O1iBAx8ly9rMQYtCYD9/dx2N0qplie0M/IHI0O1
+IO0WtlHPNpOTdJzcgEYpDqLUE2rced+GjE6piuxkr/zepocm4MXm03fFc5Kh3Ltf
+cfryRrBotyqYLH5ldXbtrKSSSSps0NeDO4e9uDCN1vEq4QSMdXGSEhKFD0jIa5f6
+LgUcniXI4IzWxHPCfCCmcIKtN6wF7o7xEXA/HCHv8T+sJmxZDi6SdVWOBgtfxAlq
+z2sx3b6p
+=JwHe
+-----END PGP SIGNATURE-----
+
+--Groupsio=0i2kLBA72K0hRiP1iAHl--
 
