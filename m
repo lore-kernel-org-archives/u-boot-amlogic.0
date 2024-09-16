@@ -2,151 +2,174 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03E4CF58FA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C92CF58FC
 	for <webhook@archiver.kernel.org>; Fri, 20 Sep 2024 09:27:38 +0000 (UTC)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
- by mx.groups.io with SMTP id smtpd.web10.69983.1726221440640965910
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+ by mx.groups.io with SMTP id smtpd.web10.5141.1726480921982517404
  for <u-boot-amlogic@groups.io>;
- Fri, 13 Sep 2024 02:57:20 -0700
+ Mon, 16 Sep 2024 03:02:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@amarulasolutions.com header.s=google header.b=kNZXvDrG;
- spf=pass (domain: amarulasolutions.com, ip: 209.85.218.51, mailfrom: dario.binacchi@amarulasolutions.com)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a8d64b27c45so96029366b.3
-        for <u-boot-amlogic@groups.io>; Fri, 13 Sep 2024 02:57:20 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=n8gFFElo;
+ spf=pass (domain: linaro.org, ip: 209.85.215.179, mailfrom: ilias.apalodimas@linaro.org)
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7db4f323b12so599843a12.1
+        for <u-boot-amlogic@groups.io>; Mon, 16 Sep 2024 03:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1726221439; x=1726826239; darn=groups.io;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fJ6Zjs8lUX/jMH8JhmryfFLNpN3PXuow+IQQ28EHkRM=;
-        b=kNZXvDrGRNm8QazH4KOe//V05zd+hS27gNTPqIk0IyZX72zHQanwSgOUpEY0vrxh/Q
-         yuseyoutyp5/zb+Hhhok38pQxoBZi8Dqc3umX1yVRICi7NRc675FZyu9nKlqA6F3eswx
-         UvHn4Ho7iUS1xkSf0rkOHg1gk2HOyHm/ZQy2s=
+        d=linaro.org; s=google; t=1726480921; x=1727085721; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FUNCq/Bym/5pya1wBmlxBtW7izxYsMhCT+/QGvBsK0Y=;
+        b=n8gFFElov/S2dbZaV6hMBz3XJ/QTV1NW8QzC2prkY1b1gwL2lpACLvHYOM2D1GMg5t
+         ok6uD45pIwKWShdK/ByUIScX1tpDXfn0HPAj2XYS/F1icjgRHfBJ4xFYksZJfK1QhP6B
+         vJogtxShVRG8GTDRi5F7hX0qQKX+Ze0n2mcVZRH0HLJnb8BZw/F+UAF/puZ9IVmWDPG8
+         Ouu4Gb+9T9g03hQHFdkw8fme0CcAKfig9hzS4Wnsjvz4De9z16GEEe8z7B7TbG4imrqW
+         pl/Y0yM+3lR3fJdh1afVqceu3eWIqr3zOkH1tXhJlFi8c80QeQ+swy5VhmQ7WIQN/h/n
+         E3jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726221439; x=1726826239;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fJ6Zjs8lUX/jMH8JhmryfFLNpN3PXuow+IQQ28EHkRM=;
-        b=K8RUuTDrpNKeeqXXybDTlr1ifrMDXMglpFpTHJqj8R/LLd1Q2zI0xZAfyIhI5cgtKP
-         NGl+xn8DchKnfOZuRpSLHpP78Jgm+SZkPnYbBJxMbRzWmAc1hx/Swsk1f9J+XBQXjlhU
-         n9bLlhQRYbKwfn1Iz/DQp9soggnV8/EbO3krjftWQO6p7TXT7Yl7OcKRukmwOiArV7DQ
-         FS+8WejejQW8MVOSnfJSzrERAi3sRn/GTPDfn17V6eFk8OSEfjReobiF0f9ULQpx1cxf
-         QNgKTJqB2jv1n6F0l14howbcKLmmiCD7ZdfJ+HRlF7Mc2CCXWUuftRylqHrpo75B/JY3
-         tH1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUhuBNoCLvMTc4J4SdLxlUhwaQW0py7xCcqJOJwNXVEVJfCYLtqrPj/X/bMiQM1Cz8/0/jjqQCrFjYvZmy5gg==@groups.io
-X-Gm-Message-State: AOJu0YxjGGIZi5Hyuhp5wYmZK47ZYcqdzYIZ2Sg4hIY6wdoROV3KjUAY
-	sUGD+04qVzjvxvwASUrZVk7nR0uAtMGfMPdczEOwhrlbPtVRnQYUXey0ROUUjJQ=
-X-Google-Smtp-Source: AGHT+IFtxQKb63UM6GMG9K81P+QpGYTeQ/j4vQXZODsrfLx3+FWJL3AWzXyf+r6tfdxKhw17DbCfHA==
-X-Received: by 2002:a17:906:c113:b0:a8a:835f:4cb9 with SMTP id a640c23a62f3a-a9048105fd9mr184073166b.46.1726221438905;
-        Fri, 13 Sep 2024 02:57:18 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-87-4-102-18.retail.telecomitalia.it. [87.4.102.18])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25cee72bsm863224766b.173.2024.09.13.02.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2024 02:57:18 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: u-boot@lists.denx.de
-Cc: Fabio Estevam <festevam@denx.de>,
-	linux-amarula@amarulasolutions.com,
-	michael@amarulasolutions.com,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <narmstrong@baylibre.com>,
-	=?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Igor Prusov <ivprusov@salutedevices.com>,
-	Joe Hershberger <joe.hershberger@ni.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Sean Anderson <seanga2@gmail.com>,
-	Tom Rini <trini@konsulko.com>,
-	u-boot-amlogic@groups.io
-Subject: [PATCH 16/26] phy: dphy: Correct clk_pre parameter
-Date: Fri, 13 Sep 2024 11:55:58 +0200
-Message-ID: <20240913095622.72377-17-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240913095622.72377-1-dario.binacchi@amarulasolutions.com>
-References: <20240913095622.72377-1-dario.binacchi@amarulasolutions.com>
+        d=1e100.net; s=20230601; t=1726480921; x=1727085721;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FUNCq/Bym/5pya1wBmlxBtW7izxYsMhCT+/QGvBsK0Y=;
+        b=hX0X1ArzXvbfleV8jc1GtH6mVogoTgErL16Q2zudUGDGnJrcwLEKuJHAdIFwy3pdVR
+         nXDCA6G+iWQ3Rp7R4nw+qjIjChaIN27qK9Kqkr10swid3NBCstlM0tyNdN/zjVmeAoid
+         65Hq2QD05EVdhVzpZzWJ8pgkH9+TjK1ZCcfEmBjtARwUf93KG9+po93A9Gu0cBhVTDrh
+         aVX5vXxIv3oDZwg/t/YYrCyOGWE9awaRS6949E1LrZNaOSlznmNCLrfg9Jkk9ueaW6Of
+         tv5pfz9E0FjSew08Ca0B3XfeOooSZHZ75BB1Ps3sKIVVXM92HWPXBkgPuBwM2c31JIL+
+         rnDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDBb7lD7lCO9RCePaz+1BhnbY+yrf2vOP0bXOtl0aWBnedV2RS6guMhQkdC8bWDgo8jg3kF3A93U9cxcBh+A==@groups.io
+X-Gm-Message-State: AOJu0YzRAGicwiLeDLxIqMJs5v3lClKk1iDIugtBjo8O7ehoPX90QWjq
+	Gn9/RrZpVbWjpDlDg/JVBhVRNgBzRxcmaB6zsQhK20B7yBA3+tlYIvEEA6xwjmLAVf8AOVu56FF
+	qL2rAX/LA1/7aEj+qKJXboooSRZrvfFQVrESAdQ==
+X-Google-Smtp-Source: AGHT+IFI/NIjPOYkJHDsBH99WqZFOUC66wqvtzLeCntW55cBlLranQhWHIKOYkB2a3CZLqO8kEeFrVrg8on1XnysCv4=
+X-Received: by 2002:a17:90a:890d:b0:2cb:50fa:b01e with SMTP id
+ 98e67ed59e1d1-2dba0093514mr15158197a91.41.1726480921169; Mon, 16 Sep 2024
+ 03:02:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240916-u-boot-topic-dynamic-uuid-v1-0-7e4f48542a0f@linaro.org> <20240916-u-boot-topic-dynamic-uuid-v1-2-7e4f48542a0f@linaro.org>
+In-Reply-To: <20240916-u-boot-topic-dynamic-uuid-v1-2-7e4f48542a0f@linaro.org>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Mon, 16 Sep 2024 13:01:25 +0300
+Message-ID: <CAC_iWjLY3V=CGFDzXv38r0_oZjhMC5T=hzxHNDCEbULw0Q_FuA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] board: libre-computer: aml-s805-cc: Enable capsule updates
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
+	Da Xue <da@libre.computer>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 20 Sep 2024 09:27:38 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2396
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2398
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+Thanks Neil!
 
-Upstream linux commit 9a8406ba1a9a29.
+On Mon, 16 Sept 2024 at 12:41, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+>
+> Since the aml-s805-cc works well using EFI, and now the capsule updates
+> backend has been merged, let's enable the missing configs and add
+> the required structures to support it.
+>
+> The GUID is dynamically generated for the board, to get it:
+> => efidebug capsule esrt
+> ========================================
+> ESRT: fw_resource_count=1
+> ESRT: fw_resource_count_max=1
+> ESRT: fw_resource_version=1
+> [entry 0]==============================
+> ESRT: fw_class=B8079027-9B2C-57D4-86AA-CC782ADA598C
+> ESRT: fw_type=unknown
+> ESRT: fw_version=0
+> ESRT: lowest_supported_fw_version=0
+> ESRT: capsule_flags=0
+> ESRT: last_attempt_version=0
+> ESRT: last_attempt_status=success
+> ========================================
+>
+> On the host (with the aml_encrypt_gxl result binary):
+> $ eficapsule --guid B8079027-9B2C-57D4-86AA-CC782ADA598C -i 1 u-boot.bin u-boot.cap
+>
+> On the board (from USB disk containing u-boot.cap at root):
+> => load usb 0:1 $kernel_addr_r u-boot.cap
+> => efidebug capsule update $kernel_addr_r
+>
+> The binary will then be flashed on the SPI.
+>
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  board/libre-computer/aml-s805x-ac/aml-s805x-ac.c | 14 ++++++++++++++
+>  configs/libretech-ac_defconfig                   |  5 +++++
+>  2 files changed, 19 insertions(+)
+>
+> diff --git a/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c b/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
+> index ae9834c0bf8..ba14df54967 100644
+> --- a/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
+> +++ b/board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
+> @@ -8,6 +8,7 @@
+>  #include <env.h>
+>  #include <init.h>
+>  #include <net.h>
+> +#include <efi_loader.h>
+>  #include <asm/io.h>
+>  #include <asm/arch/gx.h>
+>  #include <asm/arch/sm.h>
+> @@ -19,6 +20,19 @@
+>  #define EFUSE_MAC_OFFSET       52
+>  #define EFUSE_MAC_SIZE         6
+>
+> +struct efi_fw_image fw_images[] = {
+> +       {
+> +               .fw_name = u"AML_S805X_AC_BOOT",
+> +               .image_index = 1,
+> +       },
+> +};
+> +
+> +struct efi_capsule_update_info update_info = {
+> +       .dfu_string = "sf 0:0=u-boot-bin raw 0 0x10000",
+> +       .num_images = ARRAY_SIZE(fw_images),
+> +       .images = fw_images,
+> +};
+> +
+>  int misc_init_r(void)
+>  {
+>         u8 mac_addr[EFUSE_MAC_SIZE + 1];
+> diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
+> index 11d9795e05d..f146a495654 100644
+> --- a/configs/libretech-ac_defconfig
+> +++ b/configs/libretech-ac_defconfig
+> @@ -35,6 +35,7 @@ CONFIG_SYS_MAXARGS=32
+>  # CONFIG_CMD_IMI is not set
+>  CONFIG_CMD_ADC=y
+>  CONFIG_CMD_DFU=y
+> +CONFIG_CMD_NVEDIT_EFI=y
+>  CONFIG_CMD_GPIO=y
+>  # CONFIG_CMD_LOADS is not set
+>  CONFIG_CMD_MMC=y
+> @@ -42,6 +43,7 @@ CONFIG_CMD_SF_TEST=y
+>  CONFIG_CMD_SPI=y
+>  CONFIG_CMD_USB=y
+>  CONFIG_CMD_USB_MASS_STORAGE=y
+> +CONFIG_CMD_EFIDEBUG=y
+>  # CONFIG_CMD_SETEXPR is not set
+>  CONFIG_CMD_REGULATOR=y
+>  CONFIG_OF_CONTROL=y
+> @@ -49,6 +51,7 @@ CONFIG_ENV_IS_IN_SPI_FLASH=y
+>  CONFIG_SYS_RELOC_GD_ENV_ADDR=y
+>  CONFIG_SARADC_MESON=y
+>  CONFIG_DFU_RAM=y
+> +CONFIG_DFU_SF=y
+>  CONFIG_MMC_MESON_GX=y
+>  CONFIG_MTD=y
+>  CONFIG_DM_MTD=y
+> @@ -98,3 +101,5 @@ CONFIG_VIDEO_BMP_RLE8=y
+>  CONFIG_BMP_16BPP=y
+>  CONFIG_BMP_24BPP=y
+>  CONFIG_BMP_32BPP=y
+> +CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
+> +CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
+>
+> --
+> 2.34.1
+>
 
-The D-PHY specification (v1.2) explicitly mentions that the T-CLK-PRE
-parameter's unit is Unit Interval(UI) and the minimum value is 8.  Also,
-kernel doc of the 'clk_pre' member of struct phy_configure_opts_mipi_dphy
-mentions that it should be in UI.  However, the dphy core driver wrongly
-sets 'clk_pre' to 8000, which seems to hint that it's in picoseconds.
-
-So, let's fix the dphy core driver to correctly reflect the T-CLK-PRE
-parameter's minimum value according to the D-PHY specification.
-
-I'm assuming that all impacted custom drivers shall program values in
-TxByteClkHS cycles into hardware for the T-CLK-PRE parameter.  The D-PHY
-specification mentions that the frequency of TxByteClkHS is exactly 1/8
-the High-Speed(HS) bit rate(each HS bit consumes one UI).  So, relevant
-custom driver code is changed to program those values as
-DIV_ROUND_UP(cfg->clk_pre, BITS_PER_BYTE), then.
-
-Note that I've only tested the patch with RM67191 DSI panel on i.MX8mq EVK.
-Help is needed to test with other i.MX8mq, Meson and Rockchip platforms,
-as I don't have the hardwares.
-
-Tested-by: Liu Ying <victor.liu@nxp.com> # RM67191 DSI panel on i.MX8mq EVK
-Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com> # for phy-meson-axg-mipi-dphy.c
-Tested-by: Neil Armstrong <narmstrong@baylibre.com> # for phy-meson-axg-mipi-dphy.c
-Tested-by: Guido Günther <agx@sigxcpu.org> # Librem 5 (imx8mq) with it's rather picky panel
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
-Link: https://lore.kernel.org/r/20220124024007.1465018-1-victor.liu@nxp.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
----
-
- drivers/phy/meson-axg-mipi-dphy.c | 2 +-
- drivers/phy/phy-core-mipi-dphy.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/phy/meson-axg-mipi-dphy.c b/drivers/phy/meson-axg-mipi-dphy.c
-index 3f89de19970b..fb10ccca6ac1 100644
---- a/drivers/phy/meson-axg-mipi-dphy.c
-+++ b/drivers/phy/meson-axg-mipi-dphy.c
-@@ -237,7 +237,7 @@ static int phy_meson_axg_mipi_dphy_power_on(struct phy *phy)
- 		     (DIV_ROUND_UP(priv->config.clk_zero, temp) << 16) |
- 		     (DIV_ROUND_UP(priv->config.clk_prepare, temp) << 24));
- 	regmap_write(priv->regmap, MIPI_DSI_CLK_TIM1,
--		     DIV_ROUND_UP(priv->config.clk_pre, temp));
-+		     DIV_ROUND_UP(priv->config.clk_pre, BITS_PER_BYTE));
- 
- 	regmap_write(priv->regmap, MIPI_DSI_HS_TIM,
- 		     DIV_ROUND_UP(priv->config.hs_exit, temp) |
-diff --git a/drivers/phy/phy-core-mipi-dphy.c b/drivers/phy/phy-core-mipi-dphy.c
-index 79cab9125002..27cff85709d9 100644
---- a/drivers/phy/phy-core-mipi-dphy.c
-+++ b/drivers/phy/phy-core-mipi-dphy.c
-@@ -36,7 +36,7 @@ static int phy_mipi_dphy_calc_config(unsigned long pixel_clock,
- 
- 	cfg->clk_miss = 0;
- 	cfg->clk_post = 60000 + 52 * ui;
--	cfg->clk_pre = 8000;
-+	cfg->clk_pre = 8;
- 	cfg->clk_prepare = 38000;
- 	cfg->clk_settle = 95000;
- 	cfg->clk_term_en = 0;
--- 
-2.43.0
-
+Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
