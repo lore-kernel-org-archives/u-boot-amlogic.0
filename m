@@ -2,107 +2,146 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E63CEACE5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58C8CEACE6
 	for <webhook@archiver.kernel.org>; Tue,  1 Oct 2024 16:07:10 +0000 (UTC)
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
- by mx.groups.io with SMTP id smtpd.web10.82761.1727792797974651715
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+ by mx.groups.io with SMTP id smtpd.web10.53873.1727701675195927602
  for <u-boot-amlogic@groups.io>;
- Tue, 01 Oct 2024 07:26:38 -0700
+ Mon, 30 Sep 2024 06:07:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=UbJAnwHo;
- spf=pass (domain: konsulko.com, ip: 209.85.160.170, mailfrom: trini@konsulko.com)
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4583083d019so37084151cf.3
-        for <u-boot-amlogic@groups.io>; Tue, 01 Oct 2024 07:26:37 -0700 (PDT)
+ dkim=pass header.i=@amarulasolutions.com header.s=google header.b=d24VTt0u;
+ spf=pass (domain: amarulasolutions.com, ip: 209.85.128.179, mailfrom: dario.binacchi@amarulasolutions.com)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6e20a8141c7so39842597b3.0
+        for <u-boot-amlogic@groups.io>; Mon, 30 Sep 2024 06:07:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1727792797; x=1728397597; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=amarulasolutions.com; s=google; t=1727701674; x=1728306474; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rUs7seA3ZKvlwzncV7ZzeBRhe+CiXMo3Ri/ChJePYXw=;
-        b=UbJAnwHoQT9vF6gwmkBMPqCvT1Hc82qgiCE+wUUC1Hsb7DgSmenLzdqvMaLhjit5XW
-         LJGWdBv9pKcXrmiYrTsX8iN7b9fgBWzCx9g9E57oRYShBIF+h5EZvniuEbudGLiG/4K8
-         2UILBpO+RS7Nnae7YeoPkdW2gnKbLgLfWe7B4=
+        bh=I07UDFo2c3AKz30udHA706rmDftWknYWG6Tamh7HJ70=;
+        b=d24VTt0uI/cwfEDqsmiNFesavYqv9WcDXwd5TH84NW1RLIYe65CIYFzvnZd2QL3WyR
+         yiBJcWoSmuZ2JH1cdSs/dJGkRANS2RLKMN2JsBZcxcGrngsobUlCJibhuDchtmN2WIi/
+         MUOcjDTi5qIMQKX26aGWLnyW0GwZOEKPJMK6g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727792797; x=1728397597;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1727701674; x=1728306474;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rUs7seA3ZKvlwzncV7ZzeBRhe+CiXMo3Ri/ChJePYXw=;
-        b=FwMHElLRzAKGGz9U54L2UpExAdsRs2+UmGbCx+wIFmtQvNGIZDi8/qdYz/U3ij4XCe
-         K9Cjb5YHpCshw39OVkmwpjmunGGsLSKzoak0UQ2+ejElOdIs6/MHWCwNA7Fv6UjY5c8j
-         nfIoh4u/FJZ9YqpUHtqt6C7minGAjMqlaL53M4YkOcoPYz+RLYXNSK0E8ETSewxC6YLk
-         /altFx25eCuSIMZGb8YhVVab04LDY6M4i7VHqKjYVTR/MGUXo669Txe5ydYIGVMILzQx
-         iy5mq5nVTYf+BK6XUmahDVPscRpM/LxMAEgtK2LyvGTvvyJL+NFTDmj8zqhwucpcHgMl
-         zhQg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ie3W19B3PS2pTR0GItes98l4mJzgUW/b0ZMRgeTTO2W28ueQ/jFz7Vr02LJRsXfNvBL7WzEUX8WS+MiavQ==@groups.io
-X-Gm-Message-State: AOJu0YyQdMN9TttaGcLY8hXbjw+rNqYEG4gJI1UC9KQ1+PsF9EAeQv0b
-	hsNksdWQHyby8CXLBXRSp7HYsXGioO/NqL/v6PEWiAedP3LvCJRWO8OF5E/oUmY=
-X-Google-Smtp-Source: AGHT+IGwcIDJfPGAE7sDAYQ0QA/zf6cPHjY3vkeOK4j3hCDZHoQPzPRRcvw/kCHUiCDZwu9Ch6Jiow==
-X-Received: by 2002:ac8:5885:0:b0:458:34df:1e65 with SMTP id d75a77b69052e-45c9f270fbbmr191931881cf.44.1727792796898;
-        Tue, 01 Oct 2024 07:26:36 -0700 (PDT)
-Received: from [127.0.1.1] ([187.144.65.244])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45c9f2dff74sm46058441cf.47.2024.10.01.07.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2024 07:26:35 -0700 (PDT)
-From: Tom Rini <trini@konsulko.com>
-To: u-boot@lists.denx.de, Marek Vasut <marex@denx.de>
-Cc: Ben Wolsieffer <benwolsieffer@gmail.com>, 
- Caleb Connolly <caleb.connolly@linaro.org>, 
- Chris Morgan <macromorgan@hotmail.com>, Dragan Simic <dsimic@manjaro.org>, 
- Eugen Hristev <eugen.hristev@collabora.com>, 
- Francesco Dolcini <francesco.dolcini@toradex.com>, 
- Heinrich Schuchardt <xypron.glpk@gmx.de>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Jonas Karlman <jonas@kwiboo.se>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Kostya Porotchkin <kostap@marvell.com>, 
- Matteo Lisi <matteo.lisi@engicam.com>, 
- Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
- Max Krummenacher <max.krummenacher@toradex.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Patrick Delaunay <patrick.delaunay@foss.st.com>, 
- Philipp Tomsich <philipp.tomsich@vrull.eu>, 
- Quentin Schulz <quentin.schulz@cherry.de>, Sam Day <me@samcday.com>, 
- Simon Glass <sjg@chromium.org>, Sumit Garg <sumit.garg@linaro.org>, 
- Svyatoslav Ryhel <clamor95@gmail.com>, Thierry Reding <treding@nvidia.com>, 
- Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>, u-boot-amlogic@groups.io, 
- u-boot-qcom@groups.io, u-boot@dh-electronics.com, 
- uboot-stm32@st-md-mailman.stormreply.com
-In-Reply-To: <20240926231457.2933914-1-marex@denx.de>
-References: <20240926231457.2933914-1-marex@denx.de>
-Subject: Re: [PATCH v3 1/4] power: regulator: Trigger probe of regulators which are always-on or boot-on
-Message-Id: <172779279069.133202.868540972759905145.b4-ty@konsulko.com>
-Date: Tue, 01 Oct 2024 08:26:30 -0600
+        bh=I07UDFo2c3AKz30udHA706rmDftWknYWG6Tamh7HJ70=;
+        b=pTPGzuORkhchGcfmP/xRPG7gCLDefso1KB0di8F+PKYuR/RqgK0BtTsNnYP2Y2+cml
+         QGqTBNMMkBnHGp4FqWy6egR4BTfXKwFJz77GfPDKhZrJ8hX/+n5Yuebc2P/wBkjy5Mim
+         ihTsfh0KAm/AOz/Jhb+tEfSAWBx87AJtFtzuXMf2oexWgzmU5Wug6NQsyPrv11G+r8ID
+         S3k3kv0GhKMec+MHAK2ilPSW0N65f/ReBYkR4WCuprNZ33doMAq0K/BovhBP/MyTDWrK
+         TPAqBgYUKmm2ro5eHQshj05Inh2DA5G93Dyvqb/SMbuW22NobvGeb3qjqpFI6CvSsQO5
+         DsiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHhPE4RF18WzccRk5WooVsgZbBe00+IsaKF6DlMtSThgCzw7epjGxnQoaB/vmdoEcoLfOfCI7C4/6Ay1FINA==@groups.io
+X-Gm-Message-State: AOJu0YwziFHvuuVexIm5Wak+kPHm3pMDsqWwEQw07g0SX6COT15DGqmN
+	RnvgwwlK6dd4pHBr/dZhO2Z1t0Rzu5+CbM1knyGbhD46MXd2/cGjdA6WA5V8mMnBIm2RV7GqIjs
+	Vwq+XBRb7kC0x+1l/K6i/hL3jf6PGc+SRASbvbg==
+X-Google-Smtp-Source: AGHT+IHw2/Q8ksjFGnypQOBC/C8iwHFm00NOCjspvi00Cs4y+DxvtZ4oypo69D/InSZpLUWBwYD/ga+ugxy0VkQ7y4g=
+X-Received: by 2002:a05:690c:6788:b0:6dc:97d6:bf7d with SMTP id
+ 00721157ae682-6e24754dfa9mr95018177b3.10.1727701674303; Mon, 30 Sep 2024
+ 06:07:54 -0700 (PDT)
 MIME-Version: 1.0
-X-Mailer: b4 0.13.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20240913095622.72377-1-dario.binacchi@amarulasolutions.com> <20240930114314.30b9e1f5@xps-13>
+In-Reply-To: <20240930114314.30b9e1f5@xps-13>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Mon, 30 Sep 2024 15:07:43 +0200
+Message-ID: <CABGWkvo24fJnyQMau1y2K543mfwFmRdzt2OwTSvbTjv==Pa_OA@mail.gmail.com>
+Subject: Re: [PATCH 00/26] Support display (and even more) on the BSH SMM S2/PRO boards
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: u-boot@lists.denx.de, Fabio Estevam <festevam@denx.de>, 
+	linux-amarula@amarulasolutions.com, michael@amarulasolutions.com, 
+	AKASHI Takahiro <akashi.tkhro@gmail.com>, Alexander Dahl <ada@thorsis.com>, 
+	Anatolij Gustschin <agust@denx.de>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Anton Bambura <jenneron@protonmail.com>, Ashok Reddy Soma <ashok.reddy.soma@amd.com>, 
+	Devarsh Thakkar <devarsht@ti.com>, Eugen Hristev <eugen.hristev@collabora.com>, 
+	Fabio Estevam <festevam@gmail.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, 
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Igor Prusov <ivprusov@salutedevices.com>, 
+	Igor Prusov <ivprusov@sberdevices.ru>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, Joe Hershberger <joe.hershberger@ni.com>, 
+	=?UTF-8?Q?Jonas_Schw=C3=B6bel?= <jonasschwoebel@yahoo.de>, 
+	Julien Masson <jmasson@baylibre.com>, Liu Ying <victor.liu@nxp.com>, 
+	Lukasz Majewski <lukma@denx.de>, Maksim Kiselev <bigunclemax@gmail.com>, 
+	Marcel Ziswiler <marcel.ziswiler@toradex.com>, Marco Felsch <m.felsch@pengutronix.de>, 
+	Marek Vasut <marek.vasut+renesas@mailbox.org>, Marek Vasut <marex@denx.de>, 
+	Martyn Welch <martyn.welch@collabora.com>, 
+	Mattijs Korpershoek <mkorpershoek@baylibre.com>, Minkyu Kang <mk7.kang@samsung.com>, 
+	"NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Nicolas Heemeryck <nicolas.heemeryck@devialet.com>, Nikhil M Jain <n-jain1@ti.com>, 
+	Patrick Barsanti <patrick.barsanti@amarulasolutions.com>, Peng Fan <peng.fan@nxp.com>, 
+	Peter Robinson <pbrobinson@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Sam Protsenko <semen.protsenko@linaro.org>, Sean Anderson <seanga2@gmail.com>, 
+	Simon Glass <sjg@chromium.org>, Stefan Bosch <stefan_b@posteo.net>, Stefano Babic <sbabic@denx.de>, 
+	Svyatoslav Ryhel <clamor95@gmail.com>, 
+	=?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>, 
+	Tim Harvey <tharvey@gateworks.com>, Tom Rini <trini@konsulko.com>, 
+	Vinod Koul <vkoul@kernel.org>, Yang Xiwen <forbidden405@outlook.com>, Ye Li <ye.li@nxp.com>, 
+	u-boot-amlogic@groups.io
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 01 Oct 2024 16:07:10 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2429
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2428
 
-On Fri, 27 Sep 2024 01:14:12 +0200, Marek Vasut wrote:
+Hi Miquel,
 
-> In case a regulator DT node contains regulator-always-on or regulator-boot-on
-> property, make sure the regulator gets correctly configured by U-Boot on start
-> up. Unconditionally probe such regulator drivers. This is a preparatory patch
-> for introduction of .regulator_post_probe() which would trigger the regulator
-> configuration.
-> 
-> Parsing of regulator-always-on and regulator-boot-on DT property has been
-> moved to regulator_post_bind() as the information is required early, the
-> rest of the DT parsing has been kept in regulator_pre_probe() to avoid
-> slowing down the boot process.
-> 
-> [...]
+On Mon, Sep 30, 2024 at 11:43=E2=80=AFAM Miquel Raynal
+<miquel.raynal@bootlin.com> wrote:
+>
+> Hi Dario,
+>
+> dario.binacchi@amarulasolutions.com wrote on Fri, 13 Sep 2024 11:55:42
+> +0200:
+>
+> > This series was created out of the need to supportsimple-framebuffer fo=
+r
+> > BSH boards SMM_S2 and SMM_S2PRO. To achieve this goal, it was necessary
+> > to develop additional code and/or drivers for all the required componen=
+ts
+> > (i. e. clock, power domain, video, etc.). This series has a Linux
+> > counterpart that will also be submitted upstream as soon as possible.
+> > Furthermore, given the overlap in topics with the recent series [1], we
+> > are open to collaborate on the common parts to ensure proper developmen=
+t.
+> >
+> > [1] https://lore.kernel.org/all/20240910101344.110633-1-miquel.raynal@b=
+ootlin.com/T/#mb7cd440abc6fcc0de205f577eb3225e1c1c76823
+>
+> I received a bit of feedback on this U-Boot series, I can take the
+> feedback into account and send a v2. Then, if you are still okay, you
+> can stack your patches on top of mine and do the required adaptations
+> (on both sides).
 
-Applied to u-boot/next, thanks!
+Sure, go ahead with version 2.
 
--- 
-Tom
+Thanks and regards,
+Dario
+>
+> Thanks,
+> Miqu=C3=A8l
 
 
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
 
