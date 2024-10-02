@@ -2,401 +2,238 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82089D1A43B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84998D1A45A
 	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 07:00:52 +0000 (UTC)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
- by mx.groups.io with SMTP id smtpd.web11.12554.1728138503488660567
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+ by mx.groups.io with SMTP id smtpd.web11.7404.1727909751484330353
  for <u-boot-amlogic@groups.io>;
- Sat, 05 Oct 2024 07:28:23 -0700
+ Wed, 02 Oct 2024 15:55:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=PTB3Q7A2;
- spf=pass (domain: linaro.org, ip: 209.85.218.45, mailfrom: ilias.apalodimas@linaro.org)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a99422c796eso33751766b.3
-        for <u-boot-amlogic@groups.io>; Sat, 05 Oct 2024 07:28:23 -0700 (PDT)
+ dkim=pass header.i=@chromium.org header.s=google header.b=mu17uDB5;
+ spf=pass (domain: chromium.org, ip: 209.85.219.54, mailfrom: sjg@chromium.org)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6cb3d2ce75eso13269056d6.0
+        for <u-boot-amlogic@groups.io>; Wed, 02 Oct 2024 15:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728138502; x=1728743302; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UJqx36LTRFanznV9SQT/K9dn0QODsB2BTgV3CsGwE/o=;
-        b=PTB3Q7A2JhWX/InA6954smrWtjDboXmJPTH0TgorCcndV/aanKDk5evOkHqh45jAuh
-         JI4mjQ21N5F1Qq0LLJTbW5S4D82CSqmieYcYLHUjEMxSYp24gQFkoYixn3lkNXI6CphW
-         ODNCbMHIjXGu+/dFnqoDRHx1+GVYgC4jG5Kvv7ZE6VvRAbn8GsN1aD2g7szsX3xROxUv
-         /POVGp7Nb0mvHqQC74BGQ2t7ENPZaRqfba+Yl8P+4N4gtAgLU2TiJCeowygOkHhgsOOI
-         62ClSf0lLc+sAvqa7itsI/Aki3Jk1CI6Z1VRj2SvLwj+ERY5dQ9VvaZa+0s3lLoooAqc
-         aaiw==
+        d=chromium.org; s=google; t=1727909750; x=1728514550; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tHT05oy9Zb03oLutDMF4gtb1zHH+EywA/Pf5IkPVlZw=;
+        b=mu17uDB5YyNKajexG3BOkSOga+oFMQAw3adzacuke2/itec6nT8F2+yY/zxF7UlIHm
+         BPg1Z2dYeP7/B2yR0bU9u4JJC0wDgz5QvZDZTWopLcEOGnr8XOqAks+X+MnZwQl5dz4H
+         TIHlPT5SCJUPGAgBhcyLsHHKFTGdC7I4uFlJA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728138502; x=1728743302;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UJqx36LTRFanznV9SQT/K9dn0QODsB2BTgV3CsGwE/o=;
-        b=q03Gp+4G6JOKGyT9623aY7OpTMf4KaDfG48qmFiRFb6TM2HKJPC32NCF2nq6jFwzR/
-         XLES/dH+l3etY/ezsSBEyKY+UfEGRiCf8RrIz+gHnOvChKs3NYkPAO7mLLx2UaQeyM9X
-         ZzzIRtIgPJAg0arJWDx+tb38TfIjIt1zRb5slIpyo5vZaYZG2jQO9zQFVafazjAIwY28
-         NzbHbxNsx5ikX4P/WyDE9Et1xge/CsScP/lddmQB0UJUuHcl+mNY7d0RY4Sj/M1tpzCx
-         5NZJ5RIUzhyg3oq+VYdj/HCK3l/Sg5WVU+6gaAHnyrJvh4VYIy0P2YJ6nTAxG2ltzYU4
-         zcPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFJOJhnZ8Yq4eOqEq3tGG1sxELEeeEkgfNSJmxonqha9URvnrWEmuSSvTzrCOWZHmLce2658tN3drwz5m6GA==@groups.io
-X-Gm-Message-State: AOJu0YyuL9a04Sh2tuebQENGmGKP+JUlnHvUPAu+Ot7gPayZoS2Fr4zV
-	b5CAiV8GxHz8mpQ5npFC+ZYUo90rlgSVbkj1gEAujZPN9aLDcz/IBrIY+Y4s8rk=
-X-Google-Smtp-Source: AGHT+IGtdPGumZIjsATBJ/K9jNG8jxQtANIre/eZcJRIYN2sBEEVds3uJqRS5MhYbQ9fzrg3pd3hRQ==
-X-Received: by 2002:a17:907:d1a:b0:a99:3c13:9131 with SMTP id a640c23a62f3a-a993c1391eamr206895166b.25.1728138500302;
-        Sat, 05 Oct 2024 07:28:20 -0700 (PDT)
-Received: from hera (ppp176092143132.access.hol.gr. [176.92.143.132])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a992e7d65acsm137178466b.184.2024.10.05.07.28.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2024 07:28:19 -0700 (PDT)
-Date: Sat, 5 Oct 2024 17:28:16 +0300
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io,
-	u-boot@lists.denx.de, da@libre.computer
-Subject: Re: [PATCH 1/2] ARM: meson: add support for Libre Computer aml-a311d-cc
-Message-ID: <ZwFNAHBcMuxbSrDr@hera>
-References: <20240920-u-boot-topic-libre-computer-solitude-alta-v1-0-8915b108840b@linaro.org>
- <20240920-u-boot-topic-libre-computer-solitude-alta-v1-1-8915b108840b@linaro.org>
+        d=1e100.net; s=20230601; t=1727909750; x=1728514550;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tHT05oy9Zb03oLutDMF4gtb1zHH+EywA/Pf5IkPVlZw=;
+        b=n0u8fZbGXwKzb2aVR6OWv/GU1Q0OAL4ID4Ppog2L4cDf3Vb2EGvjhjoMfJjlPJLrEt
+         E1C+7X4UcjwCNpiWNBIhSOSpoetm66ERKcSGcmv+MTDrbPL7qVgP53Z/ZnsZ7uFsLMlN
+         CNnrjt7540qXzpvlWWb97cSaFC1CIZp6ejGQOzelBPZCFmJOPCaG79sO3yQa9Fu47E7d
+         HkE9xUQln8lCNwVlfr21vhq4qM7leDtePQFf9bKl2od2ubT41W1KsFDH4Ewna3sNs6Dp
+         bBC1+3CN6mfcABEV88H3ep5CNhJD/9eVuSUCiVPA4L+T8uOO8Hlu0ZMzFCZZ91Gj4cS2
+         v1bA==
+X-Forwarded-Encrypted: i=1; AJvYcCWepaaEpzZW5tAmNoDS57NuFtYSt2b5oDvIF/uI90djJS05+V8TPBmv4Q2p1LLbchur071Qh/Z478kqDeunqQ==@groups.io
+X-Gm-Message-State: AOJu0Yx0X0TOmnGrPLZxgrojFZLWwuWSMsk8dS9U+uJY1iJ14LDN9wrU
+	Tpd3Gk44tdFSem02d786JUHdcCkmeHTbKk0SkljASN23GgtSOV7s0pewkk1QIAwLfQKNITm5T1y
+	t8VzlmXEc6bYVZwMtRntWrJoU4AvIjc6lCe6C
+X-Google-Smtp-Source: AGHT+IFjuoS7/Zw3tzNvR+meA5geMK78vcwT93kXjxfgxpwBD0lzcVblJiT7llCr4T1Wb+Nyae6rvj4vbgAj1dmj790=
+X-Received: by 2002:a05:6214:5a07:b0:6c7:c646:4b7f with SMTP id
+ 6a1803df08f44-6cb900ad4c5mr19312976d6.3.1727909750523; Wed, 02 Oct 2024
+ 15:55:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20240920-u-boot-topic-libre-computer-solitude-alta-v1-1-8915b108840b@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240926231457.2933914-1-marex@denx.de> <20240926231457.2933914-2-marex@denx.de>
+In-Reply-To: <20240926231457.2933914-2-marex@denx.de>
+From: Simon Glass <sjg@chromium.org>
+Date: Wed, 2 Oct 2024 16:55:39 -0600
+Message-ID: <CAFLszThbZ5t+siC0Gz_7KaecTTwUA6J2uTdtHEaYoK+V6Rm_7A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] power: regulator: Convert regulators_enable_boot_on/off() to regulator_post_probe
+To: Marek Vasut <marex@denx.de>
+Cc: u-boot@lists.denx.de, Ben Wolsieffer <benwolsieffer@gmail.com>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Chris Morgan <macromorgan@hotmail.com>, 
+	Dragan Simic <dsimic@manjaro.org>, Eugen Hristev <eugen.hristev@collabora.com>, 
+	Francesco Dolcini <francesco.dolcini@toradex.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, 
+	Jaehoon Chung <jh80.chung@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Kever Yang <kever.yang@rock-chips.com>, 
+	Matteo Lisi <matteo.lisi@engicam.com>, Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
+	Max Krummenacher <max.krummenacher@toradex.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, 
+	Patrick Delaunay <patrick.delaunay@foss.st.com>, Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+	Quentin Schulz <quentin.schulz@cherry.de>, Sam Day <me@samcday.com>, 
+	Sumit Garg <sumit.garg@linaro.org>, Svyatoslav Ryhel <clamor95@gmail.com>, 
+	Thierry Reding <treding@nvidia.com>, Tom Rini <trini@konsulko.com>, 
+	Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>, u-boot-amlogic@groups.io, 
+	u-boot-qcom@groups.io, u-boot@dh-electronics.com, 
+	uboot-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 14 Oct 2024 07:00:52 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2455
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2459
 
-Thanks Neil,
+Hi,
 
-
-On Fri, Sep 20, 2024 at 03:33:33PM +0200, Neil Armstrong wrote:
-> Add support for the Libre Computer aml-a311d-cc "Alta" board:
-> https://libre.computer/products/aml-a311d-cc/
+On Thu, 26 Sept 2024 at 17:15, Marek Vasut <marex@denx.de> wrote:
 >
-> The Alta board has a Credit Card form factor, similar to the
-> the prvevious "Le Potato" card, but with the Amlogic A311D SoC,
-> MIPI DSI and CSI connectors. PoE header and a single USB2 Type-C
-> connector replacing the microUSB one for power and USB 2.0.
+> Turn regulators_enable_boot_on() and regulators_enable_boot_off() into
+> empty functions. Implement matching functionality in regulator_post_probe()
+> instead. The regulator_post_probe() is called for all regulators after they
+> probe, and regulators that have regulator-always-on or regulator-boot-on DT
+> properties now always probe due to DM_FLAG_PROBE_AFTER_BIND being set on
+> such regulators in regulator_post_bind().
 >
-> The board has an embedded SPI NOR flash, and EFI Capsule support
-> is added.
+> Finally, fold regulator_unset() functionality into regulator_autoset().
 >
-> The GUID is dynamically generated for the board, to get it:
-> => efidebug capsule esrt
-> ========================================
-> ESRT: fw_resource_count=1
-> ESRT: fw_resource_count_max=1
-> ESRT: fw_resource_version=1
-> [entry 0]==============================
-> ESRT: fw_class=17E07D9D-4D91-53F4-8780-1D91F279C1A5
-> ESRT: fw_type=unknown
-> ESRT: fw_version=0
-> ESRT: lowest_supported_fw_version=0
-> ESRT: capsule_flags=0
-> ESRT: last_attempt_version=0
-> ESRT: last_attempt_status=success
-> ========================================
->
-> On the host (with the aml_encrypt_g12a result binary):
-> $ eficapsule --guid 17E07D9D-4D91-53F4-8780-1D91F279C1A5 -i 1 u-boot.bin u-boot.cap
->
-> On the board (from USB disk containing u-boot.cap at root):
-> => load usb 0:1 $kernel_addr_r u-boot.cap
-> => efidebug capsule update $kernel_addr_r
->
-> The binary will then be flashed on the SPI.
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Marek Vasut <marex@denx.de>
 > ---
->  .../dts/meson-g12b-a311d-libretech-cc-u-boot.dtsi  |  15 +++
->  board/libre-computer/aml-a311d-cc/MAINTAINERS      |   7 ++
->  board/libre-computer/aml-a311d-cc/Makefile         |   6 ++
->  board/libre-computer/aml-a311d-cc/aml-a311d-cc.c   |  44 +++++++++
->  configs/aml-a311d-cc_defconfig                     | 108 +++++++++++++++++++++
->  doc/board/amlogic/aml-a311d-cc.rst                 |  46 +++++++++
->  doc/board/amlogic/index.rst                        |   1 +
->  7 files changed, 227 insertions(+)
+> Cc: Ben Wolsieffer <benwolsieffer@gmail.com>
+> Cc: Caleb Connolly <caleb.connolly@linaro.org>
+> Cc: Chris Morgan <macromorgan@hotmail.com>
+> Cc: Dragan Simic <dsimic@manjaro.org>
+> Cc: Eugen Hristev <eugen.hristev@collabora.com>
+> Cc: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Jagan Teki <jagan@amarulasolutions.com>
+> Cc: Jonas Karlman <jonas@kwiboo.se>
+> Cc: Kever Yang <kever.yang@rock-chips.com>
+> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> Cc: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+> Cc: Max Krummenacher <max.krummenacher@toradex.com>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Patrice Chotard <patrice.chotard@foss.st.com>
+> Cc: Patrick Delaunay <patrick.delaunay@foss.st.com>
+> Cc: Philipp Tomsich <philipp.tomsich@vrull.eu>
+> Cc: Quentin Schulz <quentin.schulz@cherry.de>
+> Cc: Sam Day <me@samcday.com>
+> Cc: Simon Glass <sjg@chromium.org>
+> Cc: Sumit Garg <sumit.garg@linaro.org>
+> Cc: Svyatoslav Ryhel <clamor95@gmail.com>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Tom Rini <trini@konsulko.com>
+> Cc: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+> Cc: u-boot-amlogic@groups.io
+> Cc: u-boot-qcom@groups.io
+> Cc: u-boot@dh-electronics.com
+> Cc: u-boot@lists.denx.de
+> Cc: uboot-stm32@st-md-mailman.stormreply.com
+> ---
+> V2: Rebase on current u-boot/next
+> V3: No change
+> ---
+>  drivers/power/regulator/regulator-uclass.c | 60 +++++++---------------
+>  1 file changed, 19 insertions(+), 41 deletions(-)
 >
-> diff --git a/arch/arm/dts/meson-g12b-a311d-libretech-cc-u-boot.dtsi b/arch/arm/dts/meson-g12b-a311d-libretech-cc-u-boot.dtsi
-> new file mode 100644
-> index 00000000000..cbada739042
-> --- /dev/null
-> +++ b/arch/arm/dts/meson-g12b-a311d-libretech-cc-u-boot.dtsi
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2023 Neil Armstrong <neil.armstrong@linaro.org>
-> + */
+> diff --git a/drivers/power/regulator/regulator-uclass.c b/drivers/power/regulator/regulator-uclass.c
+> index 1a970004540..9fcc4bd85b9 100644
+> --- a/drivers/power/regulator/regulator-uclass.c
+> +++ b/drivers/power/regulator/regulator-uclass.c
+> @@ -314,6 +314,11 @@ int regulator_autoset(struct udevice *dev)
+>                         return ret;
+>         }
+>
+> +       if (uc_pdata->force_off) {
+> +               ret = regulator_set_enable(dev, false);
+> +               goto out;
+> +       }
 > +
-> +#include "meson-g12-common-u-boot.dtsi"
+>         if (!uc_pdata->always_on && !uc_pdata->boot_on) {
+>                 ret = -EMEDIUMTYPE;
+>                 goto out;
+> @@ -518,56 +523,28 @@ static int regulator_pre_probe(struct udevice *dev)
+>         return 0;
+>  }
+>
+> -int regulators_enable_boot_on(bool verbose)
+> +static int regulator_post_probe(struct udevice *dev)
+>  {
+> -       struct udevice *dev;
+> -       struct uclass *uc;
+>         int ret;
+>
+> -       ret = uclass_get(UCLASS_REGULATOR, &uc);
+> -       if (ret)
+> +       ret = regulator_autoset(dev);
+> +       if (ret && ret != -EMEDIUMTYPE && ret != -EALREADY && ret != ENOSYS)
+>                 return ret;
+> -       for (uclass_first_device(UCLASS_REGULATOR, &dev);
+> -            dev;
+> -            uclass_next_device(&dev)) {
+> -               ret = regulator_autoset(dev);
+> -               if (ret == -EMEDIUMTYPE || ret == -EALREADY) {
+> -                       ret = 0;
+> -                       continue;
+> -               }
+> -               if (verbose)
+> -                       regulator_show(dev, ret);
+> -               if (ret == -ENOSYS)
+> -                       ret = 0;
+> -       }
+>
+> -       return ret;
+> +       if (_DEBUG)
+> +               regulator_show(dev, ret);
 > +
-> +&sd_emmc_c {
-> +	pinctrl-0 = <&emmc_ctrl_pins>, <&emmc_data_4b_pins>;
-> +	bus-width = <4>;
-> +};
-> +
-> +&spifc {
-> +	status = "okay";
-> +};
-> diff --git a/board/libre-computer/aml-a311d-cc/MAINTAINERS b/board/libre-computer/aml-a311d-cc/MAINTAINERS
-> new file mode 100644
-> index 00000000000..b4b77acd23b
-> --- /dev/null
-> +++ b/board/libre-computer/aml-a311d-cc/MAINTAINERS
-> @@ -0,0 +1,7 @@
-> +LIBRE-COMPUTER AML-A311D-CC
-> +M:	Neil Armstrong <neil.armstrong@linaro.org>
-> +S:	Maintained
-> +L:	u-boot-amlogic@groups.io
-> +F:	board/amlogic/aml-a311d-cc/
-> +F:	configs/aml-a311d-cc_defconfig
-> +F:	doc/board/amlogic/aml-a311d-cc.rst
-> diff --git a/board/libre-computer/aml-a311d-cc/Makefile b/board/libre-computer/aml-a311d-cc/Makefile
-> new file mode 100644
-> index 00000000000..461955def3a
-> --- /dev/null
-> +++ b/board/libre-computer/aml-a311d-cc/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +#
-> +# (C) Copyright 2016 BayLibre, SAS
-> +# Author: Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +obj-y	:= aml-a311d-cc.o
-> diff --git a/board/libre-computer/aml-a311d-cc/aml-a311d-cc.c b/board/libre-computer/aml-a311d-cc/aml-a311d-cc.c
-> new file mode 100644
-> index 00000000000..e45cfd5d8a3
-> --- /dev/null
-> +++ b/board/libre-computer/aml-a311d-cc/aml-a311d-cc.c
-> @@ -0,0 +1,44 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2016 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include <dm.h>
-> +#include <env.h>
-> +#include <init.h>
-> +#include <net.h>
-> +#include <efi_loader.h>
-> +#include <asm/io.h>
-> +#include <asm/arch/eth.h>
-> +
-> +struct efi_fw_image fw_images[] = {
-> +	{
-> +		.fw_name = u"AML_A311D_CC_BOOT",
-> +		.image_index = 1,
-> +	},
-> +};
-> +
-> +struct efi_capsule_update_info update_info = {
-> +	.dfu_string = "sf 0:0=u-boot-bin raw 0 0x10000",
-> +	.num_images = ARRAY_SIZE(fw_images),
-> +	.images = fw_images,
-> +};
-> +
-> +
-> +#if IS_ENABLED(CONFIG_SET_DFU_ALT_INFO)
-> +void set_dfu_alt_info(char *interface, char *devstr)
-> +{
-> +	if (strcmp(interface, "ram") == 0)
-> +		env_set("dfu_alt_info", "fitimage ram 0x08080000 0x4000000");
-> +	else if (IS_ENABLED(CONFIG_EFI_HAVE_CAPSULE_SUPPORT))
-> +		env_set("dfu_alt_info", update_info.dfu_string);
+> +       return 0;
+>  }
+>
+> -int regulators_enable_boot_off(bool verbose)
+> +int regulators_enable_boot_on(bool verbose)
+>  {
+> -       struct udevice *dev;
+> -       struct uclass *uc;
+> -       int ret;
+> -
+> -       ret = uclass_get(UCLASS_REGULATOR, &uc);
+> -       if (ret)
+> -               return ret;
+> -       for (uclass_first_device(UCLASS_REGULATOR, &dev);
+> -            dev;
+> -            uclass_next_device(&dev)) {
+> -               ret = regulator_unset(dev);
+> -               if (ret == -EMEDIUMTYPE) {
+> -                       ret = 0;
+> -                       continue;
+> -               }
+> -               if (verbose)
+> -                       regulator_show(dev, ret);
+> -               if (ret == -ENOSYS)
+> -                       ret = 0;
+> -       }
+> +       return 0;
 > +}
-> +#endif
-> +
-> +int misc_init_r(void)
+>
+> -       return ret;
+> +int regulators_enable_boot_off(bool verbose)
 > +{
-> +	meson_generate_serial_ethaddr();
-> +
-> +	return 0;
-> +}
-> diff --git a/configs/aml-a311d-cc_defconfig b/configs/aml-a311d-cc_defconfig
-> new file mode 100644
-> index 00000000000..c8e22200419
-> --- /dev/null
-> +++ b/configs/aml-a311d-cc_defconfig
-> @@ -0,0 +1,108 @@
-> +CONFIG_ARM=y
-> +CONFIG_SYS_VENDOR="libre-computer"
-> +CONFIG_SYS_BOARD="aml-a311d-cc"
-> +CONFIG_ARCH_MESON=y
-> +CONFIG_TEXT_BASE=0x01000000
-> +CONFIG_NR_DRAM_BANKS=1
-> +CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=y
-> +CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
-> +CONFIG_ENV_SIZE=0x2000
-> +CONFIG_ENV_OFFSET=0xFFFF0000
-> +CONFIG_ENV_SECT_SIZE=0x10000
-> +CONFIG_DM_GPIO=y
-> +CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-g12b-a311d-libretech-cc"
-> +CONFIG_OF_LIBFDT_OVERLAY=y
-> +CONFIG_DM_RESET=y
-> +CONFIG_MESON_G12A=y
-> +CONFIG_DEBUG_UART_BASE=0xff803000
-> +CONFIG_DEBUG_UART_CLOCK=24000000
-> +CONFIG_IDENT_STRING="aml-a311d-cc"
-> +CONFIG_SYS_LOAD_ADDR=0x1000000
-> +CONFIG_DEBUG_UART=y
-> +CONFIG_REMAKE_ELF=y
-> +CONFIG_FIT=y
-> +CONFIG_FIT_SIGNATURE=y
-> +CONFIG_FIT_VERBOSE=y
-> +CONFIG_LEGACY_IMAGE_FORMAT=y
-> +CONFIG_OF_BOARD_SETUP=y
-> +# CONFIG_DISPLAY_CPUINFO is not set
-> +CONFIG_MISC_INIT_R=y
-> +CONFIG_SYS_MAXARGS=32
-> +# CONFIG_CMD_BDI is not set
-> +# CONFIG_CMD_IMI is not set
-> +CONFIG_CMD_DFU=y
-> +CONFIG_CMD_NVEDIT_EFI=y
-> +CONFIG_CMD_GPIO=y
-> +# CONFIG_CMD_LOADS is not set
-> +CONFIG_CMD_MMC=y
-> +CONFIG_CMD_SF_TEST=y
-> +CONFIG_CMD_SPI=y
-> +CONFIG_CMD_USB=y
-> +CONFIG_CMD_USB_MASS_STORAGE=y
-> +CONFIG_CMD_EFIDEBUG=y
-> +# CONFIG_CMD_SETEXPR is not set
-> +CONFIG_CMD_REGULATOR=y
-> +CONFIG_OF_CONTROL=y
-> +CONFIG_ENV_IS_IN_SPI_FLASH=y
-> +CONFIG_SYS_RELOC_GD_ENV_ADDR=y
-> +CONFIG_ADC=y
-> +CONFIG_SARADC_MESON=y
-> +CONFIG_BUTTON=y
-> +CONFIG_BUTTON_ADC=y
-> +CONFIG_DFU_RAM=y
-> +CONFIG_DFU_SF=y
-> +CONFIG_SET_DFU_ALT_INFO=y
-> +CONFIG_MMC_MESON_GX=y
-> +CONFIG_MTD=y
-> +CONFIG_DM_MTD=y
-> +CONFIG_DM_SPI_FLASH=y
-> +CONFIG_SPI_FLASH_GIGADEVICE=y
-> +CONFIG_SPI_FLASH_SPANSION=y
-> +CONFIG_PHY_REALTEK=y
-> +CONFIG_DM_MDIO=y
-> +CONFIG_DM_MDIO_MUX=y
-> +CONFIG_ETH_DESIGNWARE_MESON8B=y
-> +CONFIG_MDIO_MUX_MESON_G12A=y
-> +CONFIG_MESON_G12A_USB_PHY=y
-> +CONFIG_PINCTRL=y
-> +CONFIG_PINCTRL_MESON_G12A=y
-> +CONFIG_POWER_DOMAIN=y
-> +CONFIG_MESON_EE_POWER_DOMAIN=y
-> +CONFIG_DM_REGULATOR=y
-> +CONFIG_DM_REGULATOR_FIXED=y
-> +CONFIG_DEBUG_UART_ANNOUNCE=y
-> +CONFIG_DEBUG_UART_SKIP_INIT=y
-> +CONFIG_MESON_SERIAL=y
-> +CONFIG_SPI=y
-> +CONFIG_DM_SPI=y
-> +CONFIG_MESON_SPIFC=y
-> +CONFIG_SYSINFO=y
-> +CONFIG_SYSINFO_SMBIOS=y
-> +CONFIG_USB=y
-> +CONFIG_DM_USB_GADGET=y
-> +CONFIG_USB_XHCI_HCD=y
-> +CONFIG_USB_XHCI_DWC3=y
-> +CONFIG_USB_DWC3=y
-> +# CONFIG_USB_DWC3_GADGET is not set
-> +CONFIG_USB_DWC3_MESON_G12A=y
-> +CONFIG_USB_KEYBOARD=y
-> +CONFIG_USB_GADGET=y
-> +CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
-> +CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
-> +CONFIG_USB_GADGET_DWC2_OTG=y
-> +CONFIG_USB_GADGET_DWC2_OTG_PHY_BUS_WIDTH_8=y
-> +CONFIG_USB_GADGET_DOWNLOAD=y
-> +CONFIG_VIDEO=y
-> +# CONFIG_VIDEO_BPP8 is not set
-> +# CONFIG_VIDEO_BPP16 is not set
-> +CONFIG_SYS_WHITE_ON_BLACK=y
-> +CONFIG_VIDEO_MESON=y
-> +CONFIG_VIDEO_DT_SIMPLEFB=y
-> +CONFIG_SPLASH_SCREEN=y
-> +CONFIG_SPLASH_SCREEN_ALIGN=y
-> +CONFIG_VIDEO_BMP_RLE8=y
-> +CONFIG_BMP_16BPP=y
-> +CONFIG_BMP_24BPP=y
-> +CONFIG_BMP_32BPP=y
-> +CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
-> +CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
-> diff --git a/doc/board/amlogic/aml-a311d-cc.rst b/doc/board/amlogic/aml-a311d-cc.rst
-> new file mode 100644
-> index 00000000000..25c1e01906a
-> --- /dev/null
-> +++ b/doc/board/amlogic/aml-a311d-cc.rst
-> @@ -0,0 +1,46 @@
-> +.. SPDX-License-Identifier: GPL-2.0+
-> +
-> +U-Boot for Libre Computer AML-A311D-CC 'Alta' (A311D)
-> +=====================================================
-> +
-> +AML-A311D-CC is a Single Board Computer manufactured by Libre Computer Technology with
-> +the following specifications:
-> +
-> + - Amlogic A311D Arm Cortex-A53 dual-core + Cortex-A73 quad-core SoC
-> + - 2 or 4GB LPDDR4 SDRAM
-> + - Gigabit Ethernet
-> + - HDMI 2.1 display
-> + - 40-pin GPIO header
-> + - 4 x USB 3.0 Host, 1 x USB 2.0 Type-C
-> + - eMMC 5.x SM Interface for Libre Computer Modules
-> + - microSD
-> + - Infrared receiver
-> +
-> +Schematics are available on the manufacturer website.
-> +
-> +U-Boot Compilation
-> +------------------
-> +
-> +.. code-block:: bash
-> +
-> +    $ export CROSS_COMPILE=aarch64-none-elf-
-> +    $ make aml-a311d-cc_defconfig
-> +    $ make
-> +
-> +U-Boot Signing with Pre-Built FIP repo
-> +--------------------------------------
-> +
-> +.. code-block:: bash
-> +
-> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-> +    $ cd amlogic-boot-fip
-> +    $ mkdir my-output-dir
-> +    $ ./build-fip.sh aml-a311d-cc /path/to/u-boot/u-boot.bin my-output-dir
-> +
-> +Then write U-Boot to SD or eMMC with:
-> +
-> +.. code-block:: bash
-> +
-> +    $ DEV=/dev/boot_device
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
-> diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-> index 46f44bf34ec..de91b21f977 100644
-> --- a/doc/board/amlogic/index.rst
-> +++ b/doc/board/amlogic/index.rst
-> @@ -85,6 +85,7 @@ Board Documentation
->  .. toctree::
->     :maxdepth: 1
+> +       return 0;
+>  }
 >
-> +   aml-a311d-cc
->     bananapi-cm4io
->     bananapi-m2pro
->     bananapi-m2s
->
+>  UCLASS_DRIVER(regulator) = {
+> @@ -575,5 +552,6 @@ UCLASS_DRIVER(regulator) = {
+>         .name           = "regulator",
+>         .post_bind      = regulator_post_bind,
+>         .pre_probe      = regulator_pre_probe,
+> +       .post_probe     = regulator_post_probe,
+>         .per_device_plat_auto   = sizeof(struct dm_regulator_uclass_plat),
+>  };
 > --
-> 2.34.1
+> 2.45.2
 >
 
-Board boots fine, I haven't tested everything though
+I thought I objected to this patch, but it seems to be in -next? Does
+anyone know what has happened here?
 
-Tested-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+I am seeing these errors now when running sandbox 'u-boot -D':
 
+       i2c_emul_find() No emulators for device 'sandbox_pmic'
+  sandbox_pmic_write() write error to device: 0000000018c49db0 register: 0x0!
+       out_set_value() PMIC write failed: -5
+       i2c_emul_find() No emulators for device 'sandbox_pmic'
+  sandbox_pmic_write() write error to device: 0000000018c49db0 register: 0x0!
+       out_set_value() PMIC write failed: -5
+
+Regards,
+Simon
 
