@@ -2,123 +2,226 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9286DD1A43A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F550D1A45A
 	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 07:01:02 +0000 (UTC)
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web10.13602.1728657923850546233
+ by mx.groups.io with SMTP id smtpd.web10.5723.1728418708223733940
  for <u-boot-amlogic@groups.io>;
- Fri, 11 Oct 2024 07:45:25 -0700
+ Tue, 08 Oct 2024 13:18:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@salutedevices.com header.s=mail header.b=JlSKJfFN;
+ dkim=pass header.i=@salutedevices.com header.s=mail header.b=DsIsF0jD;
  spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: ddrokosov@salutedevices.com)
 Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 25CC210000B;
-	Fri, 11 Oct 2024 17:45:20 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 25CC210000B
+	by mx1.sberdevices.ru (Postfix) with ESMTP id E5F15100008;
+	Tue,  8 Oct 2024 23:18:24 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E5F15100008
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1728657920;
-	bh=okmdvEherz+gJD2zQiYiqmmEiKyC6LL5ZKLRSoxV51U=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=JlSKJfFNswtYh8rldqaZbO+2thhX5VazaZA8xFdU05pS9mMpWovmX2pfIMolIhJp2
-	 LyDp4o9PH5i95JjaDXto/qLVQBZ/xOV47Dw5HPFHhkFZtboAgrO6aMUJ/xxVeBakPA
-	 ehASG/5y3IBqB5bwFEaZUEJ6zAJpIcygeKJckwx4mw7CMr2jln46N2QhaBgf3jHX21
-	 4+H4BFqE52jxkiL78BjRVc2MUO3oIt4raJBQJ33tbdMrQKJPe5qIwZZhO6Z27BczDL
-	 8j3C/sttwyxKydjW3Rj42DZIV9nXkl9y09c028TATMVNVgZ0WTdyfrfM9FGr46epQS
-	 Imu11YwSv6tvw==
-Received: from smtp.sberdevices.ru (unknown [172.16.192.107])
+	s=mail; t=1728418704;
+	bh=xvCNYDOt7bkNJlCvGjE0DnRCwyi1iy7IXkDx3hTqiIA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:From;
+	b=DsIsF0jDSdgIuWSLDImi9R3psqPm1Lh4qW2zPd9cPTE2iHINTvHnLqg0gkUJ7J+Kl
+	 jP8bBSt4lKA8kOZzsufOaLku+xnbxLA7VBBinkEObEbWQt5oZyIg7AI0TTvYhmGwAn
+	 jneR2WckNd8FPVn9g9mf96MfkZ7JcB8qNOzWb82fRWt0FlkFNfccDLBptg90DXAX97
+	 yVNo1dsgl5liz7kXwbcau3XJMy+zPnCbW8M+GAfofa3X8RnhIr5rzJAnunaFPR536v
+	 p+PXGSZqsQJCxDFBQo3B0s0ZAcFKPP3UDB8DppsRRywmubtnxAcJCqnmBjDnh0qKIn
+	 nVXo/cHSdvKrw==
+Received: from smtp.sberdevices.ru (unknown [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 11 Oct 2024 17:45:19 +0300 (MSK)
-Date: Fri, 11 Oct 2024 17:45:19 +0300
+	Tue,  8 Oct 2024 23:18:24 +0300 (MSK)
 From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-CC: <u-boot-amlogic@groups.io>, Simon Glass <sjg@chromium.org>, Igor Opaniuk
-	<igor.opaniuk@gmail.com>, Sam Protsenko <semen.protsenko@linaro.org>, "Tom
- Rini" <trini@konsulko.com>, "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Mario Six <mario.six@gdsys.cc>,
-	<u-boot@lists.denx.de>, <rockosov@gmail.com>, <kernel@salutedevices.com>
-Subject: Re: [PATCH v3 4/6] cmd: bcb: introduce 'ab_dump' command to print BCB block content
-Message-ID: <20241011144519.xukl22ksrjsqz55l@CAB-WSD-L081021>
-References: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
- <20241008-android_ab_master-v3-4-f292c45a33e4@salutedevices.com>
- <CAFLszTh7qjUN__MvAbcMPL+W4V=mfBrgt9zcg8zyfx+WBN=9bg@mail.gmail.com>
- <20241009132614.mlkpfkdni4cp2tgg@CAB-WSD-L081021>
- <CAFLszTgr-qHXF2QU7toZXOU0FgRMPU0XXnQ6SzMq32a_pguAww@mail.gmail.com>
- <20241010102051.q67usj6oaykjaixx@CAB-WSD-L081021>
- <17FD1697482D61A4.19251@groups.io>
- <87bjzqhg7g.fsf@baylibre.com>
+Date: Tue, 8 Oct 2024 23:18:04 +0300
+Subject: [PATCH v3 1/6] include/android_ab: move ab_select_slot() documentation to @ notation
 MIME-Version: 1.0
-In-Reply-To: <87bjzqhg7g.fsf@baylibre.com>
-User-Agent: NeoMutt/20220415
-X-Originating-IP: [172.28.226.150]
+Message-ID: <20241008-android_ab_master-v3-1-f292c45a33e4@salutedevices.com>
+References: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
+In-Reply-To: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
+To: Igor Opaniuk <igor.opaniuk@gmail.com>, Mattijs Korpershoek
+	<mkorpershoek@baylibre.com>, Sam Protsenko <semen.protsenko@linaro.org>, "Tom
+ Rini" <trini@konsulko.com>, "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Simon Glass <sjg@chromium.org>, Mario Six
+	<mario.six@gdsys.cc>
+CC: <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>, <rockosov@gmail.com>,
+	<kernel@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728418703; l=5778;
+ i=ddrokosov@salutedevices.com; s=20241008; h=from:subject:message-id;
+ bh=hakh7FlSOyijBR2x3swZ7TSCfY2c3naOzKoKmxp26Z0=;
+ b=FYEKVB9m0i/GSa2ewxzqh2//VXZCjzlkaXL0nERN3fgV49aDkG46Wq7VF+r380oy7eXmZ3Mhm
+ pUAVaYmHDzMAR8LbsN3N8OL3PRaF+z99XKsWJdyZn4UI4Nt55u7vZXv
+X-Developer-Key: i=ddrokosov@salutedevices.com; a=ed25519;
+ pk=J6t8z4aofCVwzR1Xs7royc+IGyQcL0cTby92cz3i8B4=
+X-Originating-IP: [172.28.129.94]
 X-ClientProxiedBy: p-i-exch-a-m1.sberdevices.ru (172.24.196.116) To
  p-i-exch-a-m1.sberdevices.ru (172.24.196.116)
 X-KSMG-Rule-ID: 10
 X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 188387 [Oct 11 2024]
+X-KSMG-AntiSpam-Lua-Profiles: 188309 [Oct 08 2024]
 X-KSMG-AntiSpam-Version: 6.1.0.4
 X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
 X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 39 0.3.39 e168d0b3ce73b485ab2648dd465313add1404cce, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-KSMG-AntiSpam-Info: LuaCore: 39 0.3.39 e168d0b3ce73b485ab2648dd465313add1404cce, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/10/11 13:07:00
-X-KSMG-LinksScanning: Clean, bases: 2024/10/11 13:07:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/10/11 09:57:00 #26735895
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/10/08 14:43:00 #26717371
 X-KSMG-AntiVirus-Status: Clean, skipped
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 14 Oct 2024 07:01:02 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2474
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2472
 
-Hello Mattijs,
+There are new function documentation requirements in U-Boot, so apply
+these changes for android_ab.
 
-On Fri, Oct 11, 2024 at 04:22:43PM +0200, Mattijs Korpershoek wrote:
-> Hi Dmitry,
-> 
-> On jeu., oct. 10, 2024 at 14:17, "Mattijs Korpershoek via groups.io" <mkorpershoek=baylibre.com@groups.io> wrote:
-> 
-> [...]
-> 
-> >>> > >
-> >>> > > Reviewed-by: Simon Glass <sjg@chromium.org>
-> >>> > >
-> >>> > > Can you also update the test?
-> >>> >
-> >>> > I apologize, but I didn't quite understand your point. Could you please
-> >>> > clarify? This patch series includes additional tests for the 'ab_dump'
-> >>> > subcommand. For more details, please refer to:
-> >>> >
-> >>> > https://lore.kernel.org/all/20241008-android_ab_master-v3-6-f292c45a33e4@salutedevices.com/
-> >>> 
-> >>> OK, thank you. Sometimes it is easier (for reviewers) if you update
-> >>> the test in the same commit.
-> >>
-> >> Should I resend the patch series with ab_dump implementation and tests
-> >> in the same commit?
-> >>
-> >> I can prepare new version, if needed, no problem.
-> >
-> > No need to resend a new version just for this, since it's already
-> > been reviewed.
-> >
-> > Keep the suggestion in mind for future series!
-> 
-> If you do need to re-spin this as v4, you can squash the test commit
-> with this one if you wish.
+Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Reviewed-by: Simon Glass <sjg@chromium.org>
+Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+---
+ boot/android_ab.c    | 43 ++++++++++++++++++++++++-------------------
+ include/android_ab.h |  7 ++++---
+ 2 files changed, 28 insertions(+), 22 deletions(-)
 
-Of course, I can re-spin that.
-I believe I can save all RvB trailers during the squashing process.
-Could you please clarify if my understanding is correct? 
+diff --git a/boot/android_ab.c b/boot/android_ab.c
+index 1196a189ed5349ca5c088e3b6ef1796b11c69a84..0045c8133a8e164f1fdd4c0f9b683de0f13f26e0 100644
+--- a/boot/android_ab.c
++++ b/boot/android_ab.c
+@@ -13,13 +13,13 @@
+ #include <u-boot/crc.h>
+ 
+ /**
+- * Compute the CRC-32 of the bootloader control struct.
++ * ab_control_compute_crc() - Compute the CRC32 of the bootloader control.
++ *
++ * @abc: Bootloader control block
+  *
+  * Only the bytes up to the crc32_le field are considered for the CRC-32
+  * calculation.
+  *
+- * @param[in] abc bootloader control block
+- *
+  * Return: crc32 sum
+  */
+ static uint32_t ab_control_compute_crc(struct bootloader_control *abc)
+@@ -28,14 +28,14 @@ static uint32_t ab_control_compute_crc(struct bootloader_control *abc)
+ }
+ 
+ /**
+- * Initialize bootloader_control to the default value.
++ * ab_control_default() - Initialize bootloader_control to the default value.
++ *
++ * @abc: Bootloader control block
+  *
+  * It allows us to boot all slots in order from the first one. This value
+  * should be used when the bootloader message is corrupted, but not when
+  * a valid message indicates that all slots are unbootable.
+  *
+- * @param[in] abc bootloader control block
+- *
+  * Return: 0 on success and a negative on error
+  */
+ static int ab_control_default(struct bootloader_control *abc)
+@@ -67,7 +67,13 @@ static int ab_control_default(struct bootloader_control *abc)
+ }
+ 
+ /**
+- * Load the boot_control struct from disk into newly allocated memory.
++ * ab_control_create_from_disk() - Load the boot_control from disk into memory.
++ *
++ * @dev_desc: Device where to read the boot_control struct from
++ * @part_info: Partition in 'dev_desc' where to read from, normally
++ *             the "misc" partition should be used
++ * @abc: pointer to pointer to bootloader_control data
++ * @offset: boot_control struct offset
+  *
+  * This function allocates and returns an integer number of disk blocks,
+  * based on the block size of the passed device to help performing a
+@@ -75,10 +81,6 @@ static int ab_control_default(struct bootloader_control *abc)
+  * The boot_control struct offset (2 KiB) must be a multiple of the device
+  * block size, for simplicity.
+  *
+- * @param[in] dev_desc Device where to read the boot_control struct from
+- * @param[in] part_info Partition in 'dev_desc' where to read from, normally
+- *			the "misc" partition should be used
+- * @param[out] pointer to pointer to bootloader_control data
+  * Return: 0 on success and a negative on error
+  */
+ static int ab_control_create_from_disk(struct blk_desc *dev_desc,
+@@ -122,15 +124,17 @@ static int ab_control_create_from_disk(struct blk_desc *dev_desc,
+ }
+ 
+ /**
+- * Store the loaded boot_control block.
++ * ab_control_store() - Store the loaded boot_control block.
++ *
++ * @dev_desc: Device where we should write the boot_control struct
++ * @part_info: Partition on the 'dev_desc' where to write
++ * @abc Pointer to the boot control struct and the extra bytes after
++ *      it up to the nearest block boundary
++ * @offset: boot_control struct offset
+  *
+  * Store back to the same location it was read from with
+  * ab_control_create_from_misc().
+  *
+- * @param[in] dev_desc Device where we should write the boot_control struct
+- * @param[in] part_info Partition on the 'dev_desc' where to write
+- * @param[in] abc Pointer to the boot control struct and the extra bytes after
+- *                it up to the nearest block boundary
+  * Return: 0 on success and a negative on error
+  */
+ static int ab_control_store(struct blk_desc *dev_desc,
+@@ -160,12 +164,13 @@ static int ab_control_store(struct blk_desc *dev_desc,
+ }
+ 
+ /**
+- * Compare two slots.
++ * ab_compare_slots() - Compare two slots.
++ *
++ * @a: The first bootable slot metadata
++ * @b: The second bootable slot metadata
+  *
+  * The function determines slot which is should we boot from among the two.
+  *
+- * @param[in] a The first bootable slot metadata
+- * @param[in] b The second bootable slot metadata
+  * Return: Negative if the slot "a" is better, positive of the slot "b" is
+  *         better or 0 if they are equally good.
+  */
+diff --git a/include/android_ab.h b/include/android_ab.h
+index dbf20343da62447a237ec845e216517d34455ad3..1e53879a25f145a9d18ac0a6553d8c217123aa6f 100644
+--- a/include/android_ab.h
++++ b/include/android_ab.h
+@@ -18,7 +18,10 @@ struct disk_partition;
+ #define NUM_SLOTS 2
+ 
+ /**
+- * Select the slot where to boot from.
++ * ab_select_slot() - Select the slot where to boot from.
++ *
++ * @dev_desc: Place to store the device description pointer
++ * @part_info: Place to store the partition information
+  *
+  * On Android devices with more than one boot slot (multiple copies of the
+  * kernel and system images) selects which slot should be used to boot from and
+@@ -28,8 +31,6 @@ struct disk_partition;
+  * registered before returning from this function so it isn't selected
+  * indefinitely.
+  *
+- * @param[in] dev_desc Place to store the device description pointer
+- * @param[in] part_info Place to store the partition information
+  * Return: The slot number (>= 0) on success, or a negative on error
+  */
+ int ab_select_slot(struct blk_desc *dev_desc, struct disk_partition *part_info,
 
 -- 
-Thank you,
-Dmitry
+2.43.0
+
 
