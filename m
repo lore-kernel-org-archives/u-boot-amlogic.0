@@ -2,113 +2,122 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD877CEFC2D
-	for <webhook@archiver.kernel.org>; Tue,  8 Oct 2024 16:23:52 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.13656.1728404628942933083
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F77BCED622
+	for <webhook@archiver.kernel.org>; Wed,  9 Oct 2024 08:02:09 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web10.11037.1728460923036604816
  for <u-boot-amlogic@groups.io>;
- Tue, 08 Oct 2024 09:23:49 -0700
+ Wed, 09 Oct 2024 01:02:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=QOFLkBFe;
- spf=pass (domain: linaro.org, ip: 209.85.128.41, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42ca6ba750eso37141615e9.0
-        for <u-boot-amlogic@groups.io>; Tue, 08 Oct 2024 09:23:48 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=n9POohL3;
+ spf=pass (domain: linaro.org, ip: 209.85.128.42, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43055b43604so13314755e9.3
+        for <u-boot-amlogic@groups.io>; Wed, 09 Oct 2024 01:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728404627; x=1729009427; darn=groups.io;
+        d=linaro.org; s=google; t=1728460921; x=1729065721; darn=groups.io;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7OGYqGu5EZtnsKA8EOPjldtYVA6bSkYUKohrOQPTGg=;
-        b=QOFLkBFeDPI/fzW55v/DVX0Pwy81BS9+fAby/rbd+p5zsWw5QtPNAOhaR2GVauyoQf
-         PrwyYPCqmGeiWs8nM/tl7JCj8Evt8AYdlLG6vdVymUmDWFpnqXvV1zyVBMbe6RBE8OdU
-         xQombnPh010yqRleZCuniTy0fDnsohXKjaEiil4HmBDGuvpJ8CBBf7Mi3BCVIWhOrvhx
-         cGcIAwSZmtQYyGgFheFXJdaMS1v3/VJmXXJcyPRRyId1/PPxHvoI+ZkL/Q1ftYUY5Br4
-         pguGCZuFz3mLfG+8uA35Lj9QUNK1gZ3XsCHu+SfZoLtFS2MnxF4yGrruR580QzsTusKs
-         FmQg==
+        bh=jrizSI+ELeBvfxtAi3OSK9ynlbK/KOEjGCmCUv3PK3I=;
+        b=n9POohL3VZrMNVrPAIXv08R5P20tfRPcFm5p17x/3PByDyFzv6e/4mbXsy9f5llpin
+         zZPWXPhHMTGA6epR0IQBI4QFPRUmce88TShAozIrRFn/0lrz390Ctf3TaCZ3aIDJcgFo
+         GT33lLzKG475+GZzZ+9NSLfKBiOjvXBsvbf3Lj/M1vFashUoF06D04lEJTPdr0CBY7G5
+         uRq6ijtzcXJNk4tgszNh5B77nCac0qVGH1J/pk3qoPGMcH2SXEoYXxrUFV6OaJmiBwAy
+         tid6MEiZQuBKcEYB4ZDLK7pwq0XQqTYPfabKVSUrApKeWhONGJVeLXBAon8EVqPuykkb
+         0wZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728404627; x=1729009427;
+        d=1e100.net; s=20230601; t=1728460921; x=1729065721;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a7OGYqGu5EZtnsKA8EOPjldtYVA6bSkYUKohrOQPTGg=;
-        b=ODLH+3wieBHU24TxhFNQ32SA5zwyD0AFjjcC7jSizGwzKHs6gLb00iA7oaszA2d2eF
-         iH5hgTiHo0Rq1e/zSTWsyrmCvOhGcM+Kigpxac4Sp33NeE95fVE0GSg6XG16fJ5zpTsO
-         TOV6Ea15yQaEBhv3FZ3c+RWP2kP+flXCIJHJZfy8G8yTMb0OI3/kQdiaL4ZeFfLW+zhE
-         Lv+d0KEH3haIFKqGXog4yB4fIbV373ubhz2DSe+He/6qTnseh79DLSfQQhpMXohtPRSd
-         fMB08IwAhi445szjJ0JhRKM/NoeVDOczZ/Nw3GredFHm6O2uRy3AaANzrnjYcE6xTD0z
-         TAGw==
-X-Gm-Message-State: AOJu0YxxgvYk2cqUC9wq9jzwdeUkfRnLqzoqscjnRZvhex4XZYwuPvmR
-	BoeqGjkHaEfkRgAm+yzZiIEJxG4fdtzBkJ5Q8KKOuM9fGhvoR/yP7xuc9EsMcCo=
-X-Google-Smtp-Source: AGHT+IFcbE8qdwlN5iQXHW4F0szPzEucIVp7WUWHzd+M9Hw4IS0IWTZA5wocptODo3G83so661qNmA==
-X-Received: by 2002:a05:600c:5104:b0:42c:b991:98bc with SMTP id 5b1f17b1804b1-42f94b71121mr24737175e9.0.1728404627134;
-        Tue, 08 Oct 2024 09:23:47 -0700 (PDT)
+        bh=jrizSI+ELeBvfxtAi3OSK9ynlbK/KOEjGCmCUv3PK3I=;
+        b=BySj1zXlr3TF4nysk76J4953djZhmARwQbVGdzJKnb/ZkYqZXV3yLKUrcKAg/Yh2bn
+         C53caQmHjrcgcU+8arynVa16GwG+P6MlIRMxYvjVtPns2UXjzQ1BFzkFgsA8fu9vBmRZ
+         0PPvXT/bZM8JNql9bHZ/dahakqkxWNCS55AoUUZhv0eCrZnt7ZPokQ29m05uRbU5vgPD
+         ydSYJJ3ZVi+sgn4/38F6ZJrvpZa3te9yru11rBFVqMVTisdk7FNNQ7INuxbjlQ0fLfca
+         wkS9bXXx+LRiQaVLIaUnwjHbH6wWMVR2vjhdii2GSS67Izj3OoX+Gzjn+aDzcfgpLBpG
+         62NQ==
+X-Gm-Message-State: AOJu0YyJ2+hDHdCsmeE1TVoPyD4HYG4QwuGRSRz2GOt2bzWW2bYudLC6
+	d8v2y/043KY2merRcY3e9fX1d0sSC+5pXlkV++TuWXyw7iuivtCSPnX6+ypAyZKk1cQ3nBVVh/+
+	LnZ4=
+X-Google-Smtp-Source: AGHT+IHdnmDhIU6ot3F1UXcCd6yjW9/mg/OHawQyiH93sQCv18qy+1FhURQwC20XlXw9u4AH2lXgzQ==
+X-Received: by 2002:a05:600c:1c8b:b0:42c:bbd5:af60 with SMTP id 5b1f17b1804b1-430d6faca75mr12231315e9.24.1728460921392;
+        Wed, 09 Oct 2024 01:02:01 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f89e89b42sm112810205e9.13.2024.10.08.09.23.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430ccf5f462sm11991225e9.23.2024.10.09.01.02.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 09:23:46 -0700 (PDT)
+        Wed, 09 Oct 2024 01:02:00 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Tue, 08 Oct 2024 18:23:42 +0200
-Subject: [PATCH] dts: meson-g12-common-u-boot: do not disable canvas
+Date: Wed, 09 Oct 2024 10:01:56 +0200
+Subject: [PATCH v2] video: meson: dw-hdmi: do not fail probe if HDMI
+ regulator is already enabled
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241008-u-boot-topic-g12-do-not-disable-canvas-v1-1-b89659370012@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAI1cBWcC/x2NMQrDMAwAvxI0V2CbDmm+EjLItpwKghWsNBRC/
- l7T8W64u8C4CRtMwwWNTzHR2sE/Bkhvqiuj5M4QXHh650b8YFQ98NBdEq4+YFasXWQxihtjonq
- SISd2r+JHjlSgx/bGRb7/0bzc9w9/xlqveAAAAA==
-To: Tom Rini <trini@konsulko.com>, Anatolij Gustschin <agust@denx.de>
+Message-Id: <20241009-u-boot-video-fix-hdmi-supply-already-on-v2-1-4478a28d1f49@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAHM4BmcC/5WNQQ6CMBBFr0K6dgwtRtSV9zAsCp3CJNghU2gkh
+ LtbuYHL9/Pz3qYiCmFUj2JTgokicchgToXqBht6BHKZlSnNRZflDRZomWdI5JDB0wcG9yaIyzS
+ NK9hR0LoVOABe7d16U7caW5Vtk2B+H6VXk3mgOLOsRzjp3/p/I2nQUFlturryvvL6OVKwwmeWX
+ jX7vn8Bo0/PCd8AAAA=
+To: Anatolij Gustschin <agust@denx.de>, Tom Rini <trini@konsulko.com>
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
- Neil Armstrong <neil.armstrong@linaro.org>
+ Jonas Karlman <jonas@kwiboo.se>, Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=939;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1312;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=w5EYAVkbofpjTS78oTwVI+hLmHoyio61nDbw2Z4MH+8=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnBVyRSzo2sjPxK6urSmcBDnsevue7ah4auY8yYUUu
- o9srrEuJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZwVckQAKCRB33NvayMhJ0U51D/
- 0VVgMK+OjtJSL6Jvf3M/M1v4HGhYjCXvIfuni6imgaM+hmPJJYEk+P1N8w6WmuvVcYurM6C+wLE3za
- s+p+4YcwFVPi706OdzKdUQPCPexE7q1FyuUw8EeAhZkYG4TJQfcCn1BfJb7XzETKLP+No59N1Egehd
- 8YAKNL56kEbC1yMX6FgSz6csFiFxZZe9pDz+RprzfbLTszkxGrTIYKDzlOb3aSO8WzS2ljkt4KtZYK
- krI/jtpnkgZmUCFo4MG4NUIPLmPfcuIqc91ZB3+fGpd1cSp3goVdxK2cXkIV9sR5H0eIm6dMuYvivt
- 6/3+cenazhW+nOf+a5/O8qtGlXhV1Tbst7Jp1bWxqrEBEjwS8nGFOn4+NMfiXE3SU5m7aaxXTBW2L2
- FVj2+1phpOGVi79cY1kJ5VhxPDI5LMw4MibiTgABPTFxT3Zpt18LoJUpJ+ukvhgEiWEiZiSNkRQcbI
- 6qfQXbZJsVzc3GhAMtLSXLXMA/XmQxWqZb9UVG7Qz3s3BuQiCzGKpnM6T0S0Kd0wdsAatYQkCFKPVg
- FgjTPECwtFUNOvpS55jNpGC7YKA1CPmXVa1zoeHM4e/WVZ6O38qEcbru6KlkXX//Qf7kKbZN+A5HyR
- MMm3OojDPk4Z8gIHINK4QVd3RGgU32INBXbqg6zG7iYm/UikS2jX1PwdNh4g==
+ bh=IXHFvbVWLsi7Byr7b1kFIvrgdwygIPJYK6vOYIuphXw=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnBjh3tpt0WZKKGqSIqO8c/FqgwbIOAavBcdSbAKta
+ Ya0tX42JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZwY4dwAKCRB33NvayMhJ0QEbD/
+ 9Kq498cpAgZcrhgjI04kb+9LuN3zIYsBgFef8n+JwVwf6I8T/jRvY8SaquuDM0MA3cG3UjMhcgoL1i
+ INeONlv7kWgTUODyMQkcw56mcxBxfjySAipedhERFvGERPYqnUCvmkwQ4dL6JmtZxw022WBnLz2m2Q
+ mhOjq9O06WzlmvDeAs+I7iss9zYXxy+AmQA3GT6w3VeR1/A9qVoinM3jd0TKNnJgc+ezzurwoU2a1v
+ UOgCLIszTVGY1ostCza+mhyCXysKUEp3Pq340T0RQOceFQDY+Zf/UTldX1FNdI0WntAuc9KJ+TmjtD
+ JBFbRvjTXuOvEIPY5QaPA11TC2UZCHsP7mzpnQRWzT4EBmuh7oWwdA2FMeA1PORn8yFuJSCX8Z0DjT
+ D5AeVZUzAzvVgWIEgjDUR3Yux9kH6Lbf4Xh4JY/mbQfJV5AioINmyL/rMVkhjZp6bNx90G+b1aGP40
+ ZElzkcfrPLYsnLgySaKAQCMP5Y8yUQucuYhIP7u8fxxkE/nZLkMXbHhiJ5BHWyVp2O5osxNVx+WX5y
+ /JHGAfaqN4mdRtzn9ZBk2LGnTBIXgkD55b71Qt1tK/yVEEEFMMeL/IjxW9UodTzX0KxTO0PzqGkwrG
+ J5kTFWYMH9pfhTULXcp0WL6hVuViOVm6kKkf+Ceghue/aKoNardOQg7UjBHA==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 08 Oct 2024 16:23:52 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2432
+ <u-boot-amlogic@groups.io>; Wed, 09 Oct 2024 08:02:09 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2433
 
-We were disabling canvas, which causes meson vpu probe failure,
-just stop and leave canvas alone.
+If the regulator is already enabled, this happens if the regulator
+is set in regulator-always-on, regulator_set_enable() return -EALREADY.
 
-Fixes: ce9fa7bffc5 ("ARM: dts: meson-g12a: add U-Boot specific DT for graphics")
+Ignore the -EALREADY return since it's not an error.
+
+Suggested-by: Jonas Karlman <jonas@kwiboo.se>
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- arch/arm/dts/meson-g12-common-u-boot.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+Changes in v2:
+- Switch to regulator_set_enable_if_allowed thanks to Jonas's suggestion
+- Link to v1: https://lore.kernel.org/r/20241008-u-boot-video-fix-hdmi-supply-already-on-v1-1-3a12c73ff3f1@linaro.org
+---
+ drivers/video/meson/meson_dw_hdmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/dts/meson-g12-common-u-boot.dtsi b/arch/arm/dts/meson-g12-common-u-boot.dtsi
-index 8070b62af5b..6629f3256a8 100644
---- a/arch/arm/dts/meson-g12-common-u-boot.dtsi
-+++ b/arch/arm/dts/meson-g12-common-u-boot.dtsi
-@@ -17,10 +17,6 @@
- 	};
- };
+diff --git a/drivers/video/meson/meson_dw_hdmi.c b/drivers/video/meson/meson_dw_hdmi.c
+index 587df7beb9b..1631dc38416 100644
+--- a/drivers/video/meson/meson_dw_hdmi.c
++++ b/drivers/video/meson/meson_dw_hdmi.c
+@@ -418,8 +418,8 @@ static int meson_dw_hdmi_probe(struct udevice *dev)
+ 	}
  
--&canvas {
--	status = "disabled";
--};
--
- &vpu {
- 	reg = <0x0 0xff900000 0x0 0x100000>,
- 	      <0x0 0xff63c000 0x0 0x1000>,
+ 	if (!ret) {
+-		ret = regulator_set_enable(supply, true);
+-		if (ret)
++		ret = regulator_set_enable_if_allowed(supply, true);
++		if (ret && ret != -ENOSYS)
+ 			return ret;
+ 	}
+ #endif
 
 ---
 base-commit: 28dc47038edc4e93f32d75a357131bcf01a18d85
-change-id: 20241008-u-boot-topic-g12-do-not-disable-canvas-ece09f18ebaf
+change-id: 20241008-u-boot-video-fix-hdmi-supply-already-on-e6a9af27b1eb
 
 Best regards,
 -- 
