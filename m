@@ -1,148 +1,174 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <glaroque@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D9FCED25D
-	for <webhook@archiver.kernel.org>; Wed,  9 Oct 2024 09:15:29 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web10.11911.1728465327222325785
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361D7CEDD9B
+	for <webhook@archiver.kernel.org>; Wed,  9 Oct 2024 14:06:01 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.17480.1728482755386985637
  for <u-boot-amlogic@groups.io>;
- Wed, 09 Oct 2024 02:15:27 -0700
+ Wed, 09 Oct 2024 07:05:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=bxbfz6qj;
- spf=pass (domain: linaro.org, ip: 209.85.221.49, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-37cdac05af9so6066532f8f.0
-        for <u-boot-amlogic@groups.io>; Wed, 09 Oct 2024 02:15:27 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=EKC/dwp5;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.45, mailfrom: glaroque@baylibre.com)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42cba8340beso5869715e9.1
+        for <u-boot-amlogic@groups.io>; Wed, 09 Oct 2024 07:05:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728465325; x=1729070125; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+ZLum84mjuCXiydoHw4h8lxl3O2fj6xHhIlf9mM3a+c=;
-        b=bxbfz6qjPVQ0dgsGDP3XYDuBMA/EDkrJt1xN9dSQ6GuKbze2VPZa5QoQLKhwp20EMg
-         lc2PTyDhZHp7ergl2tRGIcy+kK2hF0NAr0qalK8YzXA8CBJ/8DNXwbu5esbbG/9fp5L9
-         QlubtuqTQ+H5xJVJDnKf488RGmM9pPOsm5cL5WWaUcfXsMTWFYLxpeNpZQ8ytu9JW3oI
-         1eNhd/7IMkG9UpY/YORiPBZ/oUvjtyb/BdmXKjBR0BEbMUSrYq0SeiW5l/+AXopR0EWt
-         svvW62PAav/h5zT+MmRpIIDoqc+kbkojMoJuJbxOl/BoX24RezvgzJDv+Js3PwwWPJZD
-         KdeQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728482754; x=1729087554; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nEXYhGUpt3lex8EEnhqZVXPY4Fe5dox/5PvVm9sdB54=;
+        b=EKC/dwp5AfDuxCOlHz3PwpJbqRU4O/nwYev2YPvKT+eBIqJKrvWn+d0/CUYMpBoL+B
+         4qkCTDIzWbG1ZDluchoe0m2extdsxAX+wvV/IsmDGhDPTms8No6Ui4X12/BypMRvpWs5
+         Rm2cq0MPF12M7oevVjjuBADLa7VE1IfW83BJqhtOeJJgnLd0/+uCiLAkwJyycH/JAVCF
+         acpF1nao59SzsI6C86hKZr6n9E/zfnRWHM6UrP4mPgquiPUsBSy4KhN+1jqlSCR4XZIe
+         KtbMyX0D/6A2+XCoZcUfQrLivMtDWM0y/IEg6dqHmdrwiOoIgNOGN4rvvW0L1F9lc7MF
+         94WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728465325; x=1729070125;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+ZLum84mjuCXiydoHw4h8lxl3O2fj6xHhIlf9mM3a+c=;
-        b=TaJpMySsPNyIYtFF6Ze0RL/yLUwHS4UV98T/OeDs9gEuITxnJpO3sWKfxtJMR67nps
-         kRVdjeCb54zmzxfL0hmebD2bWQpf6O9OuRR2EMhuAtoFcNPGgMDwJ0rZN0Tup9Uzh8hr
-         gOi82aq7bBYSke29y91VPpG0UU6IwdjPWzBkPE1mN28qi0L14lPUZ3etHWZ/8SrP1a3b
-         gU6pWR4hI8bQEYduBVcDfhBGha7F+vgq6iBWMw7HxclMqGuM7CbdgBnZS7yjOCjsxQZl
-         5TlylY1DE2yBF6Kwo2unJi86tbk7tz6peGGnu2dlJhJmeT0eEKCqRSuv/10baQiyPjfy
-         BtsA==
-X-Gm-Message-State: AOJu0YyacPg9pepebFJNFAfc0/2JaaJgVuqNo8J3XMmYaNfMzz1Acfb+
-	TiAWrG4hCnGS785J5hhJrpPxpk4tGTSajwuQcCGy0te3RxqWSBWBafsIceKvSq8=
-X-Google-Smtp-Source: AGHT+IE4V/4yjBMx5z2FThtsn7aA0j5mGIoFWUo1FjKofaB7IKi1yNybj2lcHnybg4Ct2AiruhiWEA==
-X-Received: by 2002:a5d:4ed0:0:b0:37c:c4c0:9b78 with SMTP id ffacd0b85a97d-37d3ab01196mr1380824f8f.48.1728465325498;
-        Wed, 09 Oct 2024 02:15:25 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1690f270sm9865471f8f.21.2024.10.09.02.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 02:15:25 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Wed, 09 Oct 2024 11:15:21 +0200
-Subject: [PATCH 2/2] power/domain: meson-ee-pwrc: make sure to not enable a
- domain twice
+        d=1e100.net; s=20230601; t=1728482754; x=1729087554;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nEXYhGUpt3lex8EEnhqZVXPY4Fe5dox/5PvVm9sdB54=;
+        b=c/vfg6zXrGHzTePqScVnEunXfeMs2zv4pOksHaoxyqDcr0qcz0MF+lb/br1jJrzY4/
+         oKUn1BKZJtyaYRBqDw8rpnN10FVcOekvmqwz9Fhq5BJ/AQ4nQ6lwwLo5T5WvPfazJ7R7
+         qcxw3Os7VqdqJylKJgJARzHUqng848VO9iUojzPbIAXIN31B7L1Ez08zNWG6K3mfd6TN
+         lrxPKrCAfnBag44pRhtA4h9Oyt+3K7/5F74b+gCLacsNJyncchzUQ5ZqVsXfFgk7pwxv
+         yFRouejAE3UqNYj31QXwbO0i3sxR+k1962e6F8du4f+Da38l5Sb7zZ5aZSGfWQg9kjqM
+         GdTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzv9zXJAOLBj83GWCxFn7JUUpJDr5WBr5FCAiSty/xwvXSGg4iOyy7enlMMamYCzZYnD4a3ASV/sYJ6f2hyw==@groups.io
+X-Gm-Message-State: AOJu0YzNoDmseTE4OBiVEiAKLKZB0q0cb/k0QOBq9i7jUiE2HpUGIQml
+	8hNa6r24J3P+nCOsaAJLsHGRUU83T5+nZ+jV29AAnfcQUcqV8vsfJVSTjzGpSRI=
+X-Google-Smtp-Source: AGHT+IFzHvvQumDNsZK2t0ahDm1BDv9AAfzjxmRaHuZG0eXmO1tB/UF8hlRYjojmyz9Y9jiYoWQcag==
+X-Received: by 2002:adf:9c0a:0:b0:374:cee6:c298 with SMTP id ffacd0b85a97d-37d293405c3mr4172533f8f.21.1728482753496;
+        Wed, 09 Oct 2024 07:05:53 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:10a5:e010:591a:75a8:66a2:c5c3? ([2a05:6e02:10a5:e010:591a:75a8:66a2:c5c3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1691a4d8sm10529099f8f.36.2024.10.09.07.05.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2024 07:05:52 -0700 (PDT)
+Message-ID: <c3dae5c8-6465-471c-b262-99b925eeac37@baylibre.com>
+Date: Wed, 9 Oct 2024 16:05:51 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241009-u-boot-topic-fix-hdmi-v1-2-2479cd90c4ea@linaro.org>
-References: <20241009-u-boot-topic-fix-hdmi-v1-0-2479cd90c4ea@linaro.org>
-In-Reply-To: <20241009-u-boot-topic-fix-hdmi-v1-0-2479cd90c4ea@linaro.org>
-To: Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, 
- Tom Rini <trini@konsulko.com>, Jaehoon Chung <jh80.chung@samsung.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1734;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=QqKlaNG2u18NoqfXoFDLKgPkKwXjhg4sGwQNKuvTmI4=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnBkmqWfTejNYWz+pX3trg035RyATW0CdSse5185t8
- lgwI8BGJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZwZJqgAKCRB33NvayMhJ0SAMD/
- 9k6AAs9pzV5z+ZTr4itQbqcsERUNbvCPdpaSUZ+JfBxDbj7liKjs0EGKqxwmTf3RAgeRGX244ONbnA
- hNarb56pOAolU/68NNNnVwDWF3J8u7MaybglY+YsRIbq1CvJ3Y2Pir9uHRN6bcPBvUOb5NPlTCgp6v
- qT8M3tc3+eiWZbR18y7EiurGcPVWkuurIUASRzW/Hwuc7nmcvklHykP2vyXpzFvFWf2VfMl/olLAzJ
- d34CDA/m2nKUVRCiHTP3y2kOOHZN7k7zjBX81/mkv/wkmtcgddcCPWkvylvOPU4wMB37FGINvsOeMc
- isGSl70+qWAFRARRMXcd/rP0+cRGQSHdOI0/nX9yH/PFjXciNVzA7IlbOXmzjC5TEoWUAtysE596FN
- Nibd1PkRX1hY3kmbSHjHzSFV86CfhWJa/bbdrofY7UJ1KRje9tUWsQRLguXxjBO9lgRpSxARzG9Pc9
- HkMdhIBUpwGuIFNBjrL9ou1x9uLwWDTvzVguS8bsfztGlByZEsi6/QavhpgoEuFzGA4Klr9a2VAvSv
- nvOwc+C1ynFZB92eRV0/hzUPt8GAwFfFXjAxaNoU0StIm42i3mjyfFVQrWGzY45tqALSH9gxjLCWry
- xAzYx3gInkjbgP3ovEHGQ8VBNBHKzrUvf58hEr0C+lfJM9LiE/TQWpVKfnIQ==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] android_ab: introduce bcb ab_dump command and
+ provide several bcb fixes
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>,
+ Igor Opaniuk <igor.opaniuk@gmail.com>,
+ Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+ Sam Protsenko <semen.protsenko@linaro.org>, Tom Rini <trini@konsulko.com>,
+ "Andrew F. Davis" <afd@ti.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Simon Glass <sjg@chromium.org>, Mario Six <mario.six@gdsys.cc>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, rockosov@gmail.com,
+ kernel@salutedevices.com
+References: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
+Content-Language: en-US
+From: Guillaume LA ROQUE <glaroque@baylibre.com>
+In-Reply-To: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 09 Oct 2024 09:15:29 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2436
+ <u-boot-amlogic@groups.io>; Wed, 09 Oct 2024 14:06:01 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2437
 
-The upstream Device Tree for GXBB/GXL/G12A was updated with VPU domain
-shared between the VPU and HDMI node, causing a double enable.
+Hi,
 
-Simply store the enable state and avoid enabling twice, fixing
-HDMI output on all platforms.
+just test this series on Khadas vim3 board and it's working fine
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- drivers/power/domain/meson-ee-pwrc.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+bcb ab_dump mmc 2#misc
+Bootloader Control:       [misc]
+Active Slot:              _a
+Magic Number:             0x42414342
+Version:                  1
+Number of Slots:          2
+Recovery Tries Remaining: 0
+CRC:                      0xd438d1b9 (Valid)
 
-diff --git a/drivers/power/domain/meson-ee-pwrc.c b/drivers/power/domain/meson-ee-pwrc.c
-index 20e9f32b381..4d9f3bba644 100644
---- a/drivers/power/domain/meson-ee-pwrc.c
-+++ b/drivers/power/domain/meson-ee-pwrc.c
-@@ -60,6 +60,7 @@ struct meson_ee_pwrc_domain_desc {
- 	unsigned int mem_pd_count;
- 	struct meson_ee_pwrc_mem_domain *mem_pd;
- 	bool (*get_power)(struct power_domain *power_domain);
-+	bool enabled;
- };
- 
- struct meson_ee_pwrc_domain_data {
-@@ -306,6 +307,8 @@ static int meson_ee_pwrc_off(struct power_domain *power_domain)
- 		clk_disable_bulk(&priv->clks);
- 	}
- 
-+	pwrc_domain->enabled = false;
-+
- 	return 0;
- }
- 
-@@ -317,6 +320,9 @@ static int meson_ee_pwrc_on(struct power_domain *power_domain)
- 
- 	pwrc_domain = &priv->data->domains[power_domain->id];
- 
-+	if (pwrc_domain->enabled)
-+		return 0;
-+
- 	if (pwrc_domain->top_pd)
- 		regmap_update_bits(priv->regmap_ao,
- 				   pwrc_domain->top_pd->sleep_reg,
-@@ -347,8 +353,13 @@ static int meson_ee_pwrc_on(struct power_domain *power_domain)
- 			return ret;
- 	}
- 
--	if (pwrc_domain->clk_names_count)
--		return clk_enable_bulk(&priv->clks);
-+	if (pwrc_domain->clk_names_count) {
-+		ret = clk_enable_bulk(&priv->clks);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	pwrc_domain->enabled = true;
- 
- 	return 0;
- }
+Slot[0] Metadata:
+         - Priority:         15
+         - Tries Remaining:  6
+         - Successful Boot:  0
+         - Verity Corrupted: 0
 
--- 
-2.34.1
+Slot[1] Metadata:
+         - Priority:         15
+         - Tries Remaining:  7
+         - Successful Boot:  0
+         - Verity Corrupted: 0
+
+
+Thanks for your patches.
+
+Tested-by: Guillaume La Roque <glaroque@baylibre.com>
+
+
+Le 08/10/2024 à 22:18, Dmitry Rokosov a écrit :
+> The patch series include changes:
+>      - move ab_select_slot() documentation to @ notation
+>      - move ab_select command to bcb subcommands
+>      - introduce the ab_dump command to print the content of the BCB
+>        block; it's useful for debugging A/B logic on supported boards
+>      - fix the slot suffix format in the ABC block to align with official
+>        Android BCB specifications
+>      - add a test for the ab_dump command to verify the accuracy of each
+>        field within the ABC data displayed, it's also useful for testing
+>        slot_suffix problem code paths
+>
+> Changes v3 since v2 at [2]:
+>      - return "Legend" block for bcb command
+>      - additionally, verify the CONFIG_ANDROID_AB configuration alongside
+>        CONFIG_CMD_BCB to ensure that the A/B scheme is used for the
+>        designated board.
+>
+> Changes v2 since v1 at [1]:
+>      - move ab_select_slot() documentation to @ notation
+>      - move ab_select command to bcb subcommands per Simon and Mattijs
+>        suggestions
+>      - redesign ab_dump as bcb subcommand
+>      - use spaces instead of tabs in the ab_dump command output
+>      - print hex values in the lowercase
+>      - add RvB tags
+>
+> Links:
+>      [1] https://lore.kernel.org/all/20240725194716.32232-1-ddrokosov@salutedevices.com/
+>      [2] https://lore.kernel.org/all/20240911214945.15873-1-ddrokosov@salutedevices.com/
+>
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> ---
+> Dmitry Rokosov (6):
+>        include/android_ab: move ab_select_slot() documentation to @ notation
+>        treewide: bcb: move ab_select command to bcb subcommands
+>        cmd: bcb: change strcmp() usage style in the do_bcb_ab_select()
+>        cmd: bcb: introduce 'ab_dump' command to print BCB block content
+>        common: android_ab: fix slot suffix for abc block
+>        test/py: introduce test for ab_dump command
+>
+>   MAINTAINERS                               |   1 -
+>   boot/android_ab.c                         | 116 ++++++++++++++++++++++++------
+>   cmd/Kconfig                               |  15 +---
+>   cmd/Makefile                              |   1 -
+>   cmd/ab_select.c                           |  66 -----------------
+>   cmd/bcb.c                                 |  98 +++++++++++++++++++++++++
+>   configs/am57xx_hs_evm_usb_defconfig       |   1 -
+>   configs/khadas-vim3_android_ab_defconfig  |   1 -
+>   configs/khadas-vim3l_android_ab_defconfig |   1 -
+>   configs/sandbox64_defconfig               |   4 +-
+>   configs/sandbox_defconfig                 |   4 +-
+>   doc/android/ab.rst                        |  12 ++--
+>   include/android_ab.h                      |  17 ++++-
+>   include/configs/khadas-vim3_android.h     |   2 +-
+>   include/configs/khadas-vim3l_android.h    |   2 +-
+>   include/configs/meson64_android.h         |   4 +-
+>   include/configs/ti_omap5_common.h         |   4 +-
+>   test/py/tests/test_android/test_ab.py     |  31 ++++++--
+>   18 files changed, 252 insertions(+), 128 deletions(-)
+> ---
+> base-commit: fbe16bc28014dc1ed957f5fee7e53d6eee781aa9
+> change-id: 20241008-android_ab_master-d86d71c839ae
+>
+> Best regards,
+
 
 
