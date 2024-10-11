@@ -2,59 +2,59 @@ Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E177D0EE15
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D288D0D7BB
 	for <webhook@archiver.kernel.org>; Fri, 11 Oct 2024 15:51:21 +0000 (UTC)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
- by mx.groups.io with SMTP id smtpd.web10.15405.1728661873654227487
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web11.15347.1728661874194284205
  for <u-boot-amlogic@groups.io>;
  Fri, 11 Oct 2024 08:51:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=DCErq9Rm;
- spf=pass (domain: baylibre.com, ip: 209.85.208.182, mailfrom: mkorpershoek@baylibre.com)
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb2f4b282cso12378601fa.2
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=LENnpQUj;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.50, mailfrom: mkorpershoek@baylibre.com)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42cb57f8b41so23820615e9.0
         for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 08:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728661872; x=1729266672; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uW8IdV05RANjzdKmGhDvEMhEwsA9h4fg235gPLYTrYA=;
-        b=DCErq9RmP0doCrEhVVdMy+7EAgqflAgQxwbtOvAwRy5CLCiNuHoPbTEyIKaqlxd7ms
-         x5JFOJMxMOufItXWqCu1EiI0QTcRaVd5krDwDWFi/LZx4vd3LTzbW01hbIeZBTYKxDQv
-         G5F11tavHLqlt00JzC4vkTYZ9RV+1/kJhJvhzOGrmvD4Hc2S9z5YjBTSu91JEXgembyg
-         ENuXxlA7PrqlNU4DHaSohK+d7wTIE2sOIkQu8KH+DaLLePwnxDHVGzd2SHw3yIlXLX2Z
-         CQPGwCSq3sbNKdDLpeZbTrjRuN75COYS2b2541XEtBhOY89MoHpXrbzYlgdAtAuSIJ9I
-         RX/A==
+        bh=st3gsl4Hv1L87ZmhBwuH6nFBVIE/pTqHf20GzKXC8XE=;
+        b=LENnpQUj98IDCiy3Hl+brbnI+XF1r56YyS0SJGw/MRNOje/iO8gDa2TeRvC3EHMdtA
+         /uI6jvgygwYkirNrAxmAKnpyAM6VFbHKinAkzA03Yr6RsWjeFBD3LHT1rIBRtuJomXFF
+         DNhgqdk/wSsEggoKraou30w/DolmlpSZ53ASPTs2hYTqGRMK9QsSIz2uMYkH0OHFBp8I
+         6hSLkIiyFepyiEKXIVy7gY8vlDD7TJbzgUSD7bR8aoXLJ/XheOAM5Iq6AW7ZD024HMOf
+         7z98de31xCD+vY4zYL3UnidDZfUBeVo4dsJqtgSSCt2cw+NvQfhJE8UKT9fn1y8fyR70
+         X5bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1728661872; x=1729266672;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uW8IdV05RANjzdKmGhDvEMhEwsA9h4fg235gPLYTrYA=;
-        b=IY7KhF9MvKuFa6eLnNUHRtsGwsQ6oTdMVJ/BB+DvBugIwR8wtKk01jLraif25uFpz7
-         nruV3KLGPjcKRinM6at3YptjmQE7YsWbwcTEHEj8i6Q8EeSI1lRcq4k81bCE/krlLV04
-         PhsgVaLvQgEGhNkQA2b9sV0R1hp+iZb5qBnqRkrH+3qjkSpYzX6Dp9saWyO8CmK/zRdk
-         /BLY9IjZwY7REIOHirB3wq26AQNmoszux2hKtHfTOekQQKRjMHePoF0Ny47lEVwbC6gN
-         fbvQe3LNk62xY1NO4fI/vqQGDIYS+Z2Xci2b3HzLI6zP6s/D/szm3oNQVgQkB3DOEibv
-         0ykA==
-X-Forwarded-Encrypted: i=1; AJvYcCXz3KN1oSPcZNPyXyTGprbTDHkfpYDrMmBOcSqbeY7GLSv2Sax9ODwRbdh23ueFqL0/T5zrhd/Fpe1wctWWFA==@groups.io
-X-Gm-Message-State: AOJu0YwZ3kZjrN0WrzWEXwgMa8oJxXLN72axFQ1sbTxZo/XKgO7pGmkR
-	MFegpoamZI01htSFD+3IHfYuS+GFMK9Ter/vyg181vlejE8dV7BOhWaj8U2P2BY=
-X-Google-Smtp-Source: AGHT+IHSPTkof1aGdCl/QXztBgg35wZz+4EB6/AbGyOxHxjwVuKBoF79QBlDvZ/oVeonq4Dyv5ZPPw==
-X-Received: by 2002:ac2:4e16:0:b0:539:d10b:e389 with SMTP id 2adb3069b0e04-539da3c6469mr2175158e87.13.1728661871686;
-        Fri, 11 Oct 2024 08:51:11 -0700 (PDT)
+        bh=st3gsl4Hv1L87ZmhBwuH6nFBVIE/pTqHf20GzKXC8XE=;
+        b=kDXXifvEZONPJ93k0Ukmm626QJ4gcSq4hV8sz8hnYYyUa7mxcSI9oXfcL+B9FMYsak
+         u9fi7P+J2sPkPOA4ezgxF4OKBQdi+R29pYRtESqwmvZTSvoVLHAfigCHXbYLOEnsfnmm
+         GO8OkzqQ+fc9EE/eU5Et29bk6Mq56YO6akNfLb/cj9FMrvLaxy9z0gFNG1M4t3/LRn6G
+         fvk2JpCXe6u+qEcvL/NWGa8G5i+xZ+VZzb0W8fJdqIyf10wrDSda2G5YIGJCpdkQf9zo
+         wz0jrqP3QlbJck89UHB5uVwDIXMPVLxZVFdjh426rQkKoHirJqQJTMA1eQT0jIZa2cyI
+         mmjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMeBTk6hgenCQHFq052IHowygU+R83dnVmWli12jtTsFw9K1+ZOLsLUpE+q4rA2ULAjSI2wpEoUcYX7gTb9w==@groups.io
+X-Gm-Message-State: AOJu0YzfKfEiOWr95yAju2/PsPvmeISCg5rF0vCj9OoPdYLFQQ3yMR9C
+	fJ/ZHOPjbs3Ic/POs20T9p768+szFuBkW8n03nKSNaKqmOZmuFTJO1PGqdkVt09sIqU87YLT/fH
+	P
+X-Google-Smtp-Source: AGHT+IHKaqZDknRe25/ylaGTj6J8KLjhJqrN8L62hWfhu6Oix5rfoPkVlGqBEb+CXF9LoGovWwq9tw==
+X-Received: by 2002:a05:600c:21ce:b0:431:24c3:dbaa with SMTP id 5b1f17b1804b1-43124c3dd9cmr4610915e9.2.1728661872590;
+        Fri, 11 Oct 2024 08:51:12 -0700 (PDT)
 Received: from mkorpershoek-xps13.home ([2a01:cb19:8941:9800:3dae:610e:6435:d98e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431182d794asm45769005e9.1.2024.10.11.08.51.10
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431182d794asm45769005e9.1.2024.10.11.08.51.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 08:51:11 -0700 (PDT)
+        Fri, 11 Oct 2024 08:51:12 -0700 (PDT)
 From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Date: Fri, 11 Oct 2024 17:51:02 +0200
-Subject: [PATCH 1/2] configs: khadas-vim3{l}: Increase boot/recovery
- partition size
+Date: Fri, 11 Oct 2024 17:51:03 +0200
+Subject: [PATCH 2/2] configs: meson64_android: Remove dtbo support
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241011-yukawa-aosp-parts-v1-1-7d74aa13ff8e@baylibre.com>
+Message-Id: <20241011-yukawa-aosp-parts-v1-2-7d74aa13ff8e@baylibre.com>
 References: <20241011-yukawa-aosp-parts-v1-0-7d74aa13ff8e@baylibre.com>
 In-Reply-To: <20241011-yukawa-aosp-parts-v1-0-7d74aa13ff8e@baylibre.com>
 To: Tom Rini <trini@konsulko.com>, 
@@ -66,73 +66,59 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 15:51:21 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2448
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2449
 
-The Android Common Kernel is over 34MiB now [1]. This does not
-include any kernel modules nor the Android ramdisk.
+The device tree overlays are not part of the
+Android Common Kernel code [1]
 
-To make sure we are future proof, increase both recovery
-and boot partitions to 64 MiB.
+Historically, they existed to enable some Android specific
+features but they have been removed.
 
-[1] https://source.android.com/docs/core/architecture/kernel/gki-android15-6_6-release-builds
+Remove the dtbos logic since these files do no longer exist.
+
+[1] https://android.googlesource.com/kernel/common/+/ac2ea0bb91a3b5f5e71eba66c441e58beca6767e/arch/arm64/boot/dts/amlogic/
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 ---
- include/configs/khadas-vim3_android.h  | 8 ++++----
- include/configs/khadas-vim3l_android.h | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ include/configs/meson64_android.h | 26 +-------------------------
+ 1 file changed, 1 insertion(+), 25 deletions(-)
 
-diff --git a/include/configs/khadas-vim3_android.h b/include/configs/khadas-vim3_android.h
-index da6adf6c413a..b76e049f09cc 100644
---- a/include/configs/khadas-vim3_android.h
-+++ b/include/configs/khadas-vim3_android.h
-@@ -21,8 +21,8 @@
- 	"name=dtbo_b,size=8M,uuid=${uuid_gpt_dtbo_b};" \
- 	"name=vbmeta_a,size=512K,uuid=${uuid_gpt_vbmeta_a};" \
- 	"name=vbmeta_b,size=512K,uuid=${uuid_gpt_vbmeta_b};" \
--	"name=boot_a,size=32M,bootable,uuid=${uuid_gpt_boot_a};" \
--	"name=boot_b,size=32M,bootable,uuid=${uuid_gpt_boot_b};" \
-+	"name=boot_a,size=64M,bootable,uuid=${uuid_gpt_boot_a};" \
-+	"name=boot_b,size=64M,bootable,uuid=${uuid_gpt_boot_b};" \
- 	"name=super,size=3072M,uuid=${uuid_gpt_super};" \
- 	"name=userdata,size=11282M,uuid=${uuid_gpt_userdata};" \
- 	"name=rootfs,size=-,uuid=" ROOT_UUID
-@@ -33,8 +33,8 @@
- 	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
- 	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
- 	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
--	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
--	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
-+	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
-+	"name=recovery,size=64M,uuid=${uuid_gpt_recovery};" \
- 	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
- 	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
- 	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
-diff --git a/include/configs/khadas-vim3l_android.h b/include/configs/khadas-vim3l_android.h
-index b1768e2d8211..0ab8ffd372a4 100644
---- a/include/configs/khadas-vim3l_android.h
-+++ b/include/configs/khadas-vim3l_android.h
-@@ -21,8 +21,8 @@
- 	"name=dtbo_b,size=8M,uuid=${uuid_gpt_dtbo_b};" \
- 	"name=vbmeta_a,size=512K,uuid=${uuid_gpt_vbmeta_a};" \
- 	"name=vbmeta_b,size=512K,uuid=${uuid_gpt_vbmeta_b};" \
--	"name=boot_a,size=32M,bootable,uuid=${uuid_gpt_boot_a};" \
--	"name=boot_b,size=32M,bootable,uuid=${uuid_gpt_boot_b};" \
-+	"name=boot_a,size=64M,bootable,uuid=${uuid_gpt_boot_a};" \
-+	"name=boot_b,size=64M,bootable,uuid=${uuid_gpt_boot_b};" \
- 	"name=super,size=3072M,uuid=${uuid_gpt_super};" \
- 	"name=userdata,size=11282M,uuid=${uuid_gpt_userdata};" \
- 	"name=rootfs,size=-,uuid=" ROOT_UUID
-@@ -33,8 +33,8 @@
- 	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
- 	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
- 	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
--	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
--	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
-+	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
-+	"name=recovery,size=64M,uuid=${uuid_gpt_recovery};" \
- 	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
- 	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
- 	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
+diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
+index c0e977abb01f..fa520265800c 100644
+--- a/include/configs/meson64_android.h
++++ b/include/configs/meson64_android.h
+@@ -116,31 +116,7 @@
+ 	"fi; " \
+ 	"abootimg get dtb --index=$dtb_index dtb_start dtb_size; " \
+ 	"cp.b $dtb_start $fdt_addr_r $dtb_size; " \
+-	"fdt addr $fdt_addr_r  0x80000; " \
+-	"if test $board_name = sei510; then " \
+-		"echo \"  Reading DTBO for sei510...\"; " \
+-		"setenv dtbo_index 0;" \
+-	"elif test $board_name = sei610; then " \
+-		"echo \"  Reading DTBO for sei610...\"; " \
+-		"setenv dtbo_index 1;" \
+-	"elif test $board_name = vim3l; then " \
+-		"echo \"  Reading DTBO for vim3l...\"; " \
+-		"setenv dtbo_index 2;" \
+-	"elif test $board_name = vim3; then " \
+-		"echo \"  Reading DTBO for vim3...\"; " \
+-		"setenv dtbo_index 3;" \
+-	"else " \
+-		"echo Error: Android boot is not supported for $board_name; " \
+-		"exit; " \
+-	"fi; " \
+-	"part start mmc ${mmcdev} dtbo${slot_suffix} p_dtbo_start; " \
+-	"part size mmc ${mmcdev} dtbo${slot_suffix} p_dtbo_size; " \
+-	"mmc read ${dtboaddr} ${p_dtbo_start} ${p_dtbo_size}; " \
+-	"echo \"  Applying DTBOs...\"; " \
+-	"adtimg addr $dtboaddr; " \
+-	"adtimg get dt --index=$dtbo_index dtbo0_addr; " \
+-	"fdt apply $dtbo0_addr;" \
+-	"setenv bootargs \"$bootargs androidboot.dtbo_idx=$dtbo_index \";"\
++	"fdt addr $fdt_addr_r  0x80000; "
+ 
+ #define BOOT_CMD "bootm ${loadaddr} ${loadaddr} ${fdt_addr_r};"
+ 
 
 -- 
 2.46.2
