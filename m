@@ -1,90 +1,123 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E517AD0D7A7
-	for <webhook@archiver.kernel.org>; Fri, 11 Oct 2024 14:42:20 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.13551.1728657736699600893
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE62D0D7BA
+	for <webhook@archiver.kernel.org>; Fri, 11 Oct 2024 15:06:41 +0000 (UTC)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+ by mx.groups.io with SMTP id smtpd.web11.14192.1728659198779369695
  for <u-boot-amlogic@groups.io>;
- Fri, 11 Oct 2024 07:42:17 -0700
+ Fri, 11 Oct 2024 08:06:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=w84HzAxU;
- spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42cb57f8b41so23108785e9.0
-        for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 07:42:16 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=cRX+idLj;
+ spf=pass (domain: baylibre.com, ip: 209.85.208.182, mailfrom: mkorpershoek@baylibre.com)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fac47f0b1aso21471211fa.1
+        for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 08:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728657735; x=1729262535; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CLXdBPDRSmqEjjNZKvk7ZTzEERtGuAWK9DyddN5WdBA=;
-        b=w84HzAxUggtoQBppXCqpb4rOEqIbzBnHZkZCGqAVIeb2s1UkDYH6HOwsfppTM0Wb7A
-         hWrLCDJ/2GLFQSPKaxb7NroAoydmSJxr0ffO37DmJFAdsD1LRnEgd99/kVLsbxI8BCCi
-         G5lYGjAVt/9EixLyAMMtRvWOC0LAhuX4FbTmBqxmmpwJVGR5N1tT+xQ3nKmGAVIYgOaA
-         ekdKrs9o6C/W+aSqmBr0y9ZpC3Iz4u88ALQe7DLHYFniDVWVwmdNDizUGQBGLSNg8W4e
-         1Kxpnd23+72IQoDepdGfrZl0Q8SaPgAJ2+JiQ5E04E54C71j7zb+oITMYo7Ly3L06ncw
-         Zs2A==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728659197; x=1729263997; darn=groups.io;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LnC10CaG24WPSzLSNKOFOgGsi6jjDThxQwiyj7ue9sI=;
+        b=cRX+idLjrJch2KaeRUod3azmszn+6NwEtdp3OJxdf2ylFGYc3mk9BSJALdJNpoX2y9
+         RV2JDEAKvjgb58EVLIdtU5TzHoVpgx3APAJdO5/i7lib9Wf/ZOE3ot+kkNP0NyXIQRAN
+         W+cQL4lKdBhieF0zmQNlyb9sVuLkVQcoeFupMCDuGqy44GxAs3whkYaOsIAu8QqjZMdi
+         nKzz+RUNmfxtL632qKx9rz4+1lb7I0JP4wstGw25KP4rpWriR643hZsljwgCK/UaZYsI
+         DccJwz81HUbsebS83IERqbEkD8zJYCao9m4D13Pjp0DtF0dFM+gLGInVZZHTRzQ0ucsE
+         VOEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728657735; x=1729262535;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CLXdBPDRSmqEjjNZKvk7ZTzEERtGuAWK9DyddN5WdBA=;
-        b=fKNB+yRraFuTxyIOT7uTiRl0sBLw+7z1NkGWZSllKexSGnGQjjIEjWXlQ6VImxE1VV
-         bcYsh5WVgkexu3zz4iouYdmthhFLY0mInMjkJjXICIHAaZE1Njxmhdrq/ozd+9UcDT+P
-         +4GHrwd5nGu3x5joOfVxNsRQrMitb+kkktZt01c1ZrxxExz5mo9AOVkeFJ3GF3S4hi2x
-         bRWCb0J/O1Aiu5od5tUHlzZVAF91dqExqPMNqxRIQTawntVUqWgoKZeskjeBu19FIe6n
-         B/Pw8TobxxFMmJQjJwVCCp6IQ0r6od4GqS1Li9LUK2IAgOS1YmnQrCz+ng+PlxeKdKS/
-         GpUQ==
-X-Gm-Message-State: AOJu0YzejX5519Pj8JZbEuWqclafw6daNclNEOEgXjFA847pClIgVtoR
-	VmIc9/yg22MtM7M64gC6NTuLgK8iAOz7LbCNWGmiQ+YAdMY+Xq9YETjTRHBzkWhobBVcyZ24gaV
-	Rt0U=
-X-Google-Smtp-Source: AGHT+IH2lZqK3X61ypK5hclLt3Xn/kifXG0kvpIpzDSMGs23/KMRXA7tLSHV27u1TjUkNw6NtUlsew==
-X-Received: by 2002:a05:600c:1e16:b0:42c:bcc8:5882 with SMTP id 5b1f17b1804b1-4311dea3584mr28230705e9.7.1728657735062;
-        Fri, 11 Oct 2024 07:42:15 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431182ffd14sm43951385e9.18.2024.10.11.07.42.14
+        d=1e100.net; s=20230601; t=1728659197; x=1729263997;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LnC10CaG24WPSzLSNKOFOgGsi6jjDThxQwiyj7ue9sI=;
+        b=G4dOaYQuax0wQH06/0d4Avy4CyXjapdVmAqcsJkbQktgtc6kRuYD3LopELfmAowDzu
+         Pns8W4uG9NBswp/b3rV326GuPjobOVsN/Z7e5YaqqXXGEXjIAXS0Ij4jKYIC8HOU0lgS
+         VAzkmnpdLS4Xx1CthPfFCZ+doBqHHSvAQbdzvxGArSzO6SVl+mx0Wwe82ZS3z+37dnPK
+         3RMNZMXoEOvyk1fio20EEh/2o8C0HSA/2cSlrQwYfEnB6yc418yHpcamH342fOr7+LIj
+         0Jt8YmaIleDVQQfjAlTC0Ss2sEKKV/ljmb5bsnoZU05csZmlFonNDQNJlsuPdEDA6NHM
+         x+8g==
+X-Gm-Message-State: AOJu0Yz1RYGN1kA1lETJQudhlxUrGovnAk3Dy4XUoErRSBJkG9x8pOpI
+	lD0/xPPfVWyWbxG158ln3JR8UBtiW/wnwSokpDOyrqktigO6wm6w+V4a/NXDxek=
+X-Google-Smtp-Source: AGHT+IECnKBqoOc7k/CFj4x1daaYO3nw/jGKlt/7w1KCslOD5pYHxmM8tu+9qFbNR8DtXOtxcoFVgw==
+X-Received: by 2002:a2e:460a:0:b0:2fb:2f7c:28dd with SMTP id 38308e7fff4ca-2fb32740971mr12143731fa.18.1728659196758;
+        Fri, 11 Oct 2024 08:06:36 -0700 (PDT)
+Received: from localhost ([2a01:cb19:8941:9800:3dae:610e:6435:d98e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a82f3sm4138899f8f.24.2024.10.11.08.06.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 07:42:14 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, 
- Tom Rini <trini@konsulko.com>, Jaehoon Chung <jh80.chung@samsung.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-In-Reply-To: <20241009-u-boot-topic-fix-hdmi-v1-0-2479cd90c4ea@linaro.org>
-References: <20241009-u-boot-topic-fix-hdmi-v1-0-2479cd90c4ea@linaro.org>
-Subject: Re: [PATCH 0/2] ARM: mach-meson: fix HDMI since DT update to v6.11
-Message-Id: <172865773433.2734796.4668834305012644771.b4-ty@linaro.org>
-Date: Fri, 11 Oct 2024 16:42:14 +0200
+        Fri, 11 Oct 2024 08:06:34 -0700 (PDT)
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>
+Cc: u-boot-amlogic@groups.io, Simon Glass <sjg@chromium.org>, Igor Opaniuk
+ <igor.opaniuk@gmail.com>, Sam Protsenko <semen.protsenko@linaro.org>, Tom
+ Rini <trini@konsulko.com>, "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Mario Six <mario.six@gdsys.cc>,
+ u-boot@lists.denx.de, rockosov@gmail.com, kernel@salutedevices.com
+Subject: Re: [PATCH v3 4/6] cmd: bcb: introduce 'ab_dump' command to print
+ BCB block content
+In-Reply-To: <20241011144519.xukl22ksrjsqz55l@CAB-WSD-L081021>
+References: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
+ <20241008-android_ab_master-v3-4-f292c45a33e4@salutedevices.com>
+ <CAFLszTh7qjUN__MvAbcMPL+W4V=mfBrgt9zcg8zyfx+WBN=9bg@mail.gmail.com>
+ <20241009132614.mlkpfkdni4cp2tgg@CAB-WSD-L081021>
+ <CAFLszTgr-qHXF2QU7toZXOU0FgRMPU0XXnQ6SzMq32a_pguAww@mail.gmail.com>
+ <20241010102051.q67usj6oaykjaixx@CAB-WSD-L081021>
+ <17FD1697482D61A4.19251@groups.io> <87bjzqhg7g.fsf@baylibre.com>
+ <20241011144519.xukl22ksrjsqz55l@CAB-WSD-L081021>
+Date: Fri, 11 Oct 2024 17:06:30 +0200
+Message-ID: <8734l2he6h.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.1
+Content-Type: text/plain
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 14:42:20 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2445
+ <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 15:06:41 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2446
 
-Hi,
+On ven., oct. 11, 2024 at 17:45, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
 
-On Wed, 09 Oct 2024 11:15:19 +0200, Neil Armstrong wrote:
-> The DT was updated with unhandled clocks and a shared
-> power domain, causing a probe failure and a green output.
-> 
-> Add the missing clocks and avoid enabling a power domain twice.
-> 
-> 
+> Hello Mattijs,
+>
+> On Fri, Oct 11, 2024 at 04:22:43PM +0200, Mattijs Korpershoek wrote:
+>> Hi Dmitry,
+>> 
+>> On jeu., oct. 10, 2024 at 14:17, "Mattijs Korpershoek via groups.io" <mkorpershoek=baylibre.com@groups.io> wrote:
+>> 
+>> [...]
+>> 
+>> >>> > >
+>> >>> > > Reviewed-by: Simon Glass <sjg@chromium.org>
+>> >>> > >
+>> >>> > > Can you also update the test?
+>> >>> >
+>> >>> > I apologize, but I didn't quite understand your point. Could you please
+>> >>> > clarify? This patch series includes additional tests for the 'ab_dump'
+>> >>> > subcommand. For more details, please refer to:
+>> >>> >
+>> >>> > https://lore.kernel.org/all/20241008-android_ab_master-v3-6-f292c45a33e4@salutedevices.com/
+>> >>> 
+>> >>> OK, thank you. Sometimes it is easier (for reviewers) if you update
+>> >>> the test in the same commit.
+>> >>
+>> >> Should I resend the patch series with ab_dump implementation and tests
+>> >> in the same commit?
+>> >>
+>> >> I can prepare new version, if needed, no problem.
+>> >
+>> > No need to resend a new version just for this, since it's already
+>> > been reviewed.
+>> >
+>> > Keep the suggestion in mind for future series!
+>> 
+>> If you do need to re-spin this as v4, you can squash the test commit
+>> with this one if you wish.
+>
+> Of course, I can re-spin that.
+> I believe I can save all RvB trailers during the squashing process.
+> Could you please clarify if my understanding is correct? 
 
-Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
+Yes, I believe your understanding is correct
 
-[1/2] clk: meson: gxbb: add HDMI clocks
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/2958fd431af7d08a0b15881b59b0df2e32963ba8
-[2/2] power/domain: meson-ee-pwrc: make sure to not enable a domain twice
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/25b489e2cb816f52467138665b9b6203c358f03b
-
--- 
-Neil
-
+>
+> -- 
+> Thank you,
+> Dmitry
 
