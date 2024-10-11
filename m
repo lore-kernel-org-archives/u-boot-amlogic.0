@@ -2,122 +2,139 @@ Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE62D0D7BA
-	for <webhook@archiver.kernel.org>; Fri, 11 Oct 2024 15:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E177D0EE15
+	for <webhook@archiver.kernel.org>; Fri, 11 Oct 2024 15:51:21 +0000 (UTC)
 Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
- by mx.groups.io with SMTP id smtpd.web11.14192.1728659198779369695
+ by mx.groups.io with SMTP id smtpd.web10.15405.1728661873654227487
  for <u-boot-amlogic@groups.io>;
- Fri, 11 Oct 2024 08:06:39 -0700
+ Fri, 11 Oct 2024 08:51:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=cRX+idLj;
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=DCErq9Rm;
  spf=pass (domain: baylibre.com, ip: 209.85.208.182, mailfrom: mkorpershoek@baylibre.com)
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fac47f0b1aso21471211fa.1
-        for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 08:06:38 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb2f4b282cso12378601fa.2
+        for <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 08:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728659197; x=1729263997; darn=groups.io;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LnC10CaG24WPSzLSNKOFOgGsi6jjDThxQwiyj7ue9sI=;
-        b=cRX+idLjrJch2KaeRUod3azmszn+6NwEtdp3OJxdf2ylFGYc3mk9BSJALdJNpoX2y9
-         RV2JDEAKvjgb58EVLIdtU5TzHoVpgx3APAJdO5/i7lib9Wf/ZOE3ot+kkNP0NyXIQRAN
-         W+cQL4lKdBhieF0zmQNlyb9sVuLkVQcoeFupMCDuGqy44GxAs3whkYaOsIAu8QqjZMdi
-         nKzz+RUNmfxtL632qKx9rz4+1lb7I0JP4wstGw25KP4rpWriR643hZsljwgCK/UaZYsI
-         DccJwz81HUbsebS83IERqbEkD8zJYCao9m4D13Pjp0DtF0dFM+gLGInVZZHTRzQ0ucsE
-         VOEg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728661872; x=1729266672; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uW8IdV05RANjzdKmGhDvEMhEwsA9h4fg235gPLYTrYA=;
+        b=DCErq9RmP0doCrEhVVdMy+7EAgqflAgQxwbtOvAwRy5CLCiNuHoPbTEyIKaqlxd7ms
+         x5JFOJMxMOufItXWqCu1EiI0QTcRaVd5krDwDWFi/LZx4vd3LTzbW01hbIeZBTYKxDQv
+         G5F11tavHLqlt00JzC4vkTYZ9RV+1/kJhJvhzOGrmvD4Hc2S9z5YjBTSu91JEXgembyg
+         ENuXxlA7PrqlNU4DHaSohK+d7wTIE2sOIkQu8KH+DaLLePwnxDHVGzd2SHw3yIlXLX2Z
+         CQPGwCSq3sbNKdDLpeZbTrjRuN75COYS2b2541XEtBhOY89MoHpXrbzYlgdAtAuSIJ9I
+         RX/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728659197; x=1729263997;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LnC10CaG24WPSzLSNKOFOgGsi6jjDThxQwiyj7ue9sI=;
-        b=G4dOaYQuax0wQH06/0d4Avy4CyXjapdVmAqcsJkbQktgtc6kRuYD3LopELfmAowDzu
-         Pns8W4uG9NBswp/b3rV326GuPjobOVsN/Z7e5YaqqXXGEXjIAXS0Ij4jKYIC8HOU0lgS
-         VAzkmnpdLS4Xx1CthPfFCZ+doBqHHSvAQbdzvxGArSzO6SVl+mx0Wwe82ZS3z+37dnPK
-         3RMNZMXoEOvyk1fio20EEh/2o8C0HSA/2cSlrQwYfEnB6yc418yHpcamH342fOr7+LIj
-         0Jt8YmaIleDVQQfjAlTC0Ss2sEKKV/ljmb5bsnoZU05csZmlFonNDQNJlsuPdEDA6NHM
-         x+8g==
-X-Gm-Message-State: AOJu0Yz1RYGN1kA1lETJQudhlxUrGovnAk3Dy4XUoErRSBJkG9x8pOpI
-	lD0/xPPfVWyWbxG158ln3JR8UBtiW/wnwSokpDOyrqktigO6wm6w+V4a/NXDxek=
-X-Google-Smtp-Source: AGHT+IECnKBqoOc7k/CFj4x1daaYO3nw/jGKlt/7w1KCslOD5pYHxmM8tu+9qFbNR8DtXOtxcoFVgw==
-X-Received: by 2002:a2e:460a:0:b0:2fb:2f7c:28dd with SMTP id 38308e7fff4ca-2fb32740971mr12143731fa.18.1728659196758;
-        Fri, 11 Oct 2024 08:06:36 -0700 (PDT)
-Received: from localhost ([2a01:cb19:8941:9800:3dae:610e:6435:d98e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a82f3sm4138899f8f.24.2024.10.11.08.06.33
+        d=1e100.net; s=20230601; t=1728661872; x=1729266672;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uW8IdV05RANjzdKmGhDvEMhEwsA9h4fg235gPLYTrYA=;
+        b=IY7KhF9MvKuFa6eLnNUHRtsGwsQ6oTdMVJ/BB+DvBugIwR8wtKk01jLraif25uFpz7
+         nruV3KLGPjcKRinM6at3YptjmQE7YsWbwcTEHEj8i6Q8EeSI1lRcq4k81bCE/krlLV04
+         PhsgVaLvQgEGhNkQA2b9sV0R1hp+iZb5qBnqRkrH+3qjkSpYzX6Dp9saWyO8CmK/zRdk
+         /BLY9IjZwY7REIOHirB3wq26AQNmoszux2hKtHfTOekQQKRjMHePoF0Ny47lEVwbC6gN
+         fbvQe3LNk62xY1NO4fI/vqQGDIYS+Z2Xci2b3HzLI6zP6s/D/szm3oNQVgQkB3DOEibv
+         0ykA==
+X-Forwarded-Encrypted: i=1; AJvYcCXz3KN1oSPcZNPyXyTGprbTDHkfpYDrMmBOcSqbeY7GLSv2Sax9ODwRbdh23ueFqL0/T5zrhd/Fpe1wctWWFA==@groups.io
+X-Gm-Message-State: AOJu0YwZ3kZjrN0WrzWEXwgMa8oJxXLN72axFQ1sbTxZo/XKgO7pGmkR
+	MFegpoamZI01htSFD+3IHfYuS+GFMK9Ter/vyg181vlejE8dV7BOhWaj8U2P2BY=
+X-Google-Smtp-Source: AGHT+IHSPTkof1aGdCl/QXztBgg35wZz+4EB6/AbGyOxHxjwVuKBoF79QBlDvZ/oVeonq4Dyv5ZPPw==
+X-Received: by 2002:ac2:4e16:0:b0:539:d10b:e389 with SMTP id 2adb3069b0e04-539da3c6469mr2175158e87.13.1728661871686;
+        Fri, 11 Oct 2024 08:51:11 -0700 (PDT)
+Received: from mkorpershoek-xps13.home ([2a01:cb19:8941:9800:3dae:610e:6435:d98e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431182d794asm45769005e9.1.2024.10.11.08.51.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 08:06:34 -0700 (PDT)
+        Fri, 11 Oct 2024 08:51:11 -0700 (PDT)
 From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-To: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Cc: u-boot-amlogic@groups.io, Simon Glass <sjg@chromium.org>, Igor Opaniuk
- <igor.opaniuk@gmail.com>, Sam Protsenko <semen.protsenko@linaro.org>, Tom
- Rini <trini@konsulko.com>, "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Mario Six <mario.six@gdsys.cc>,
- u-boot@lists.denx.de, rockosov@gmail.com, kernel@salutedevices.com
-Subject: Re: [PATCH v3 4/6] cmd: bcb: introduce 'ab_dump' command to print
- BCB block content
-In-Reply-To: <20241011144519.xukl22ksrjsqz55l@CAB-WSD-L081021>
-References: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
- <20241008-android_ab_master-v3-4-f292c45a33e4@salutedevices.com>
- <CAFLszTh7qjUN__MvAbcMPL+W4V=mfBrgt9zcg8zyfx+WBN=9bg@mail.gmail.com>
- <20241009132614.mlkpfkdni4cp2tgg@CAB-WSD-L081021>
- <CAFLszTgr-qHXF2QU7toZXOU0FgRMPU0XXnQ6SzMq32a_pguAww@mail.gmail.com>
- <20241010102051.q67usj6oaykjaixx@CAB-WSD-L081021>
- <17FD1697482D61A4.19251@groups.io> <87bjzqhg7g.fsf@baylibre.com>
- <20241011144519.xukl22ksrjsqz55l@CAB-WSD-L081021>
-Date: Fri, 11 Oct 2024 17:06:30 +0200
-Message-ID: <8734l2he6h.fsf@baylibre.com>
+Date: Fri, 11 Oct 2024 17:51:02 +0200
+Subject: [PATCH 1/2] configs: khadas-vim3{l}: Increase boot/recovery
+ partition size
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241011-yukawa-aosp-parts-v1-1-7d74aa13ff8e@baylibre.com>
+References: <20241011-yukawa-aosp-parts-v1-0-7d74aa13ff8e@baylibre.com>
+In-Reply-To: <20241011-yukawa-aosp-parts-v1-0-7d74aa13ff8e@baylibre.com>
+To: Tom Rini <trini@konsulko.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Guillaume La Roque <glaroque@baylibre.com>, u-boot@lists.denx.de, 
+ u-boot-amlogic@groups.io, Mattijs Korpershoek <mkorpershoek@baylibre.com>
+X-Mailer: b4 0.14.0
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 15:06:41 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2446
+ <u-boot-amlogic@groups.io>; Fri, 11 Oct 2024 15:51:21 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2448
 
-On ven., oct. 11, 2024 at 17:45, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+The Android Common Kernel is over 34MiB now [1]. This does not
+include any kernel modules nor the Android ramdisk.
 
-> Hello Mattijs,
->
-> On Fri, Oct 11, 2024 at 04:22:43PM +0200, Mattijs Korpershoek wrote:
->> Hi Dmitry,
->> 
->> On jeu., oct. 10, 2024 at 14:17, "Mattijs Korpershoek via groups.io" <mkorpershoek=baylibre.com@groups.io> wrote:
->> 
->> [...]
->> 
->> >>> > >
->> >>> > > Reviewed-by: Simon Glass <sjg@chromium.org>
->> >>> > >
->> >>> > > Can you also update the test?
->> >>> >
->> >>> > I apologize, but I didn't quite understand your point. Could you please
->> >>> > clarify? This patch series includes additional tests for the 'ab_dump'
->> >>> > subcommand. For more details, please refer to:
->> >>> >
->> >>> > https://lore.kernel.org/all/20241008-android_ab_master-v3-6-f292c45a33e4@salutedevices.com/
->> >>> 
->> >>> OK, thank you. Sometimes it is easier (for reviewers) if you update
->> >>> the test in the same commit.
->> >>
->> >> Should I resend the patch series with ab_dump implementation and tests
->> >> in the same commit?
->> >>
->> >> I can prepare new version, if needed, no problem.
->> >
->> > No need to resend a new version just for this, since it's already
->> > been reviewed.
->> >
->> > Keep the suggestion in mind for future series!
->> 
->> If you do need to re-spin this as v4, you can squash the test commit
->> with this one if you wish.
->
-> Of course, I can re-spin that.
-> I believe I can save all RvB trailers during the squashing process.
-> Could you please clarify if my understanding is correct? 
+To make sure we are future proof, increase both recovery
+and boot partitions to 64 MiB.
 
-Yes, I believe your understanding is correct
+[1] https://source.android.com/docs/core/architecture/kernel/gki-android15-6_6-release-builds
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+---
+ include/configs/khadas-vim3_android.h  | 8 ++++----
+ include/configs/khadas-vim3l_android.h | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
->
-> -- 
-> Thank you,
-> Dmitry
+diff --git a/include/configs/khadas-vim3_android.h b/include/configs/khadas-vim3_android.h
+index da6adf6c413a..b76e049f09cc 100644
+--- a/include/configs/khadas-vim3_android.h
++++ b/include/configs/khadas-vim3_android.h
+@@ -21,8 +21,8 @@
+ 	"name=dtbo_b,size=8M,uuid=${uuid_gpt_dtbo_b};" \
+ 	"name=vbmeta_a,size=512K,uuid=${uuid_gpt_vbmeta_a};" \
+ 	"name=vbmeta_b,size=512K,uuid=${uuid_gpt_vbmeta_b};" \
+-	"name=boot_a,size=32M,bootable,uuid=${uuid_gpt_boot_a};" \
+-	"name=boot_b,size=32M,bootable,uuid=${uuid_gpt_boot_b};" \
++	"name=boot_a,size=64M,bootable,uuid=${uuid_gpt_boot_a};" \
++	"name=boot_b,size=64M,bootable,uuid=${uuid_gpt_boot_b};" \
+ 	"name=super,size=3072M,uuid=${uuid_gpt_super};" \
+ 	"name=userdata,size=11282M,uuid=${uuid_gpt_userdata};" \
+ 	"name=rootfs,size=-,uuid=" ROOT_UUID
+@@ -33,8 +33,8 @@
+ 	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
+ 	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
+ 	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
+-	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
+-	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
++	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
++	"name=recovery,size=64M,uuid=${uuid_gpt_recovery};" \
+ 	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
+ 	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
+ 	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
+diff --git a/include/configs/khadas-vim3l_android.h b/include/configs/khadas-vim3l_android.h
+index b1768e2d8211..0ab8ffd372a4 100644
+--- a/include/configs/khadas-vim3l_android.h
++++ b/include/configs/khadas-vim3l_android.h
+@@ -21,8 +21,8 @@
+ 	"name=dtbo_b,size=8M,uuid=${uuid_gpt_dtbo_b};" \
+ 	"name=vbmeta_a,size=512K,uuid=${uuid_gpt_vbmeta_a};" \
+ 	"name=vbmeta_b,size=512K,uuid=${uuid_gpt_vbmeta_b};" \
+-	"name=boot_a,size=32M,bootable,uuid=${uuid_gpt_boot_a};" \
+-	"name=boot_b,size=32M,bootable,uuid=${uuid_gpt_boot_b};" \
++	"name=boot_a,size=64M,bootable,uuid=${uuid_gpt_boot_a};" \
++	"name=boot_b,size=64M,bootable,uuid=${uuid_gpt_boot_b};" \
+ 	"name=super,size=3072M,uuid=${uuid_gpt_super};" \
+ 	"name=userdata,size=11282M,uuid=${uuid_gpt_userdata};" \
+ 	"name=rootfs,size=-,uuid=" ROOT_UUID
+@@ -33,8 +33,8 @@
+ 	"name=misc,size=512K,uuid=${uuid_gpt_misc};" \
+ 	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
+ 	"name=vbmeta,size=512K,uuid=${uuid_gpt_vbmeta};" \
+-	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
+-	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
++	"name=boot,size=64M,bootable,uuid=${uuid_gpt_boot};" \
++	"name=recovery,size=64M,uuid=${uuid_gpt_recovery};" \
+ 	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
+ 	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
+ 	"name=userdata,size=12786M,uuid=${uuid_gpt_userdata};" \
+
+-- 
+2.46.2
+
 
