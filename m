@@ -2,362 +2,228 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6387DD206BF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543E3D206BB
 	for <webhook@archiver.kernel.org>; Wed, 16 Oct 2024 07:57:55 +0000 (UTC)
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web10.13480.1728998795174969327
+ by mx.groups.io with SMTP id smtpd.web10.2996.1728939991846391816
  for <u-boot-amlogic@groups.io>;
- Tue, 15 Oct 2024 06:26:40 -0700
+ Mon, 14 Oct 2024 14:06:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@salutedevices.com header.s=mail header.b=ROSvrrMm;
- spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: ddrokosov@salutedevices.com)
+ dkim=pass header.i=@salutedevices.com header.s=mail header.b=uNA/7t0M;
+ spf=temperror, err=temporary DNS error (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: ddrokosov@salutedevices.com)
 Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id A2735120018;
-	Tue, 15 Oct 2024 16:26:32 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A2735120018
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 4477312000F;
+	Tue, 15 Oct 2024 00:06:29 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 4477312000F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1728998792;
-	bh=Oad8sKf61QQyxJ5eWRZdJ/ihpkbqlWtcNbe8xOroYsY=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=ROSvrrMmf50AHxlBhOYAau8p1XJOWddn65rPBfpTWZ9WeQR6iSq6I8iC92KsNlukL
-	 ku0TlnjoGvaxWj8TYaDlEkMPV2AEmiBcFx1GOx7tJyUs+hEsPoFp1yy+Uei9Pu0c4w
-	 hzk8ICPE7oR5CPFRUqZYTh8kJWHyq/cVU8JbgRY3E9WLDP9JakUxw52BzElFwzucUG
-	 PYJpHjk5HwT7cxrrmEHuJmmOVNpEqcYOK0vfkluf18UbdN7f8j+0kTGljVHHb2hySk
-	 sshFzU7lmgOgH/x9afsXT3kEpcrAEJ7daw/EQpWp+6w9jUH+DvsX1TizODk0ksytZR
-	 3z4BPSbtoc8UQ==
-Received: from smtp.sberdevices.ru (unknown [172.16.192.107])
+	s=mail; t=1728939989;
+	bh=jDgtglNmQIL7kQXdLyvLB8BCoi1bwRMSptZ8GXjobZk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:From;
+	b=uNA/7t0MUXBr6b+2PguvYbitM3KFjC2SAeVIlmCVG5Fa7e+3TIWjGwm8+Qk56xNnW
+	 DKSgdzRugzxLXTgBbk2hR0YzUjxOVqtxDOt3Mtsy/7P/m3eD6ud8xpvy8Tasq3da17
+	 z5BzTQHxwUlEusXfkAem55IfI5xGr8NaMMcdfoqEZx/OjHfLC0os/XDbv2LzK7Yq3b
+	 aRayJFpHE76BlKiamxv5ccU/75Ufc2S/eCxbYNw/aqF3EWDUcksEX7mZMDGJUx0yaq
+	 pEjpm8b+KF3q4gddyC2UYYu+m1/5n2JAR+lcs8mqsYCNfH8n7PCqDd3ushAme2Q4zL
+	 uVfl3qvdxVumA==
+Received: from smtp.sberdevices.ru (unknown [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 15 Oct 2024 16:26:32 +0300 (MSK)
-Date: Tue, 15 Oct 2024 16:26:31 +0300
+	Tue, 15 Oct 2024 00:06:29 +0300 (MSK)
 From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-CC: Simon Glass <sjg@chromium.org>, <u-boot-amlogic@groups.io>, Igor Opaniuk
-	<igor.opaniuk@gmail.com>, Sam Protsenko <semen.protsenko@linaro.org>, "Tom
- Rini" <trini@konsulko.com>, "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Mario Six <mario.six@gdsys.cc>,
-	<u-boot@lists.denx.de>, <rockosov@gmail.com>, <kernel@salutedevices.com>
-Subject: Re: [PATCH v3 2/6] treewide: bcb: move ab_select command to bcb subcommands
-Message-ID: <20241015132631.qnnbrmnuwp6zr7r5@CAB-WSD-L081021>
-References: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
- <20241008-android_ab_master-v3-2-f292c45a33e4@salutedevices.com>
- <17FD691FA1477948.8140@groups.io>
- <87ed4mhgaw.fsf@baylibre.com>
- <20241011180031.cgvuhks7zo772wl6@CAB-WSD-L081021>
- <87frp1r9iz.fsf@baylibre.com>
- <20241014203820.riljx72bkqw762v5@CAB-WSD-L081021>
- <CAFLszTgO5h1zdXJTk-PCcDWx6nAz3riV34K_sHcvnO4AYMNSqA@mail.gmail.com>
- <87ikttzhwd.fsf@baylibre.com>
+Date: Tue, 15 Oct 2024 00:06:13 +0300
+Subject: [PATCH v4 1/5] include/android_ab: move ab_select_slot() documentation to @ notation
 MIME-Version: 1.0
-In-Reply-To: <87ikttzhwd.fsf@baylibre.com>
-User-Agent: NeoMutt/20220415
+Message-ID: <20241015-android_ab_master-v4-1-a91cca9513c4@salutedevices.com>
+References: <20241015-android_ab_master-v4-0-a91cca9513c4@salutedevices.com>
+In-Reply-To: <20241015-android_ab_master-v4-0-a91cca9513c4@salutedevices.com>
+To: Igor Opaniuk <igor.opaniuk@gmail.com>, Mattijs Korpershoek
+	<mkorpershoek@baylibre.com>, Sam Protsenko <semen.protsenko@linaro.org>, "Tom
+ Rini" <trini@konsulko.com>, "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Simon Glass <sjg@chromium.org>, Mario Six
+	<mario.six@gdsys.cc>
+CC: <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>, <rockosov@gmail.com>,
+	<kernel@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>,
+	Guillaume La Roque <glaroque@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728939988; l=5833;
+ i=ddrokosov@salutedevices.com; s=20241008; h=from:subject:message-id;
+ bh=gZ96OF9nLUs1cQx3rbW/um/mm+jL89LJMvti/2xLQZw=;
+ b=kswIHtGIdF+jSX84fkyYFBrSlLBoh+cQIa8VTWOQJxL5CUmRwhICADvu0tLN6WKVbYyfvyjWE
+ CSn/RwpZOa1CI1mYWwrgLT6ARZNA2ekQwQMFOt5gE9clPD0Jih1AA1o
+X-Developer-Key: i=ddrokosov@salutedevices.com; a=ed25519;
+ pk=J6t8z4aofCVwzR1Xs7royc+IGyQcL0cTby92cz3i8B4=
 X-Originating-IP: [172.28.129.94]
-X-ClientProxiedBy: p-i-exch-a-m1.sberdevices.ru (172.24.196.116) To
+X-ClientProxiedBy: p-i-exch-a-m2.sberdevices.ru (172.24.196.120) To
  p-i-exch-a-m1.sberdevices.ru (172.24.196.116)
 X-KSMG-Rule-ID: 10
 X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 188447 [Oct 15 2024]
+X-KSMG-AntiSpam-Lua-Profiles: 188429 [Oct 14 2024]
 X-KSMG-AntiSpam-Version: 6.1.0.4
 X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
 X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 39 0.3.39 e168d0b3ce73b485ab2648dd465313add1404cce, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_bl_eng_cat, c15}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;source.denx.de:7.1.1;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Info: LuaCore: 39 0.3.39 e168d0b3ce73b485ab2648dd465313add1404cce, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/10/15 12:17:00
-X-KSMG-LinksScanning: Clean, bases: 2024/10/15 12:17:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/10/15 10:33:00 #26756269
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/10/14 19:21:00 #26753819
 X-KSMG-AntiVirus-Status: Clean, skipped
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 16 Oct 2024 07:57:55 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2494
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2488
 
-Hi Mattijs,
+There are new function documentation requirements in U-Boot, so apply
+these changes for android_ab.
 
-On Tue, Oct 15, 2024 at 02:10:10PM +0200, Mattijs Korpershoek wrote:
-> Hi Simon, Dmitry
-> 
-> On lun., oct. 14, 2024 at 15:06, Simon Glass <sjg@chromium.org> wrote:
-> 
-> > Hi Dmitry,
-> >
-> > On Mon, 14 Oct 2024 at 14:38, Dmitry Rokosov
-> > <ddrokosov@salutedevices.com> wrote:
-> >>
-> >> Hello Mattijs,
-> >>
-> >> On Sat, Oct 12, 2024 at 10:49:08AM +0200, Mattijs Korpershoek wrote:
-> >> > Hi Dmitry,
-> >> >
-> >> > On ven., oct. 11, 2024 at 21:00, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
-> >> >
-> >> > > On Fri, Oct 11, 2024 at 04:20:39PM +0200, Mattijs Korpershoek wrote:
-> >> > >> On ven., oct. 11, 2024 at 15:30, "Mattijs Korpershoek via groups.io" <mkorpershoek=baylibre.com@groups.io> wrote:
-> >> > >>
-> >> > >> > Hi Dmitry,
-> >> > >> >
-> >> > >> > Thank you for the patch.
-> >> > >> >
-> >> > >> > On mar., oct. 08, 2024 at 23:18, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
-> >> > >> >
-> >> > >> >> To enhance code organization, it is beneficial to consolidate all A/B
-> >> > >> >> BCB management routines into a single super-command.
-> >> > >> >> The 'bcb' command is an excellent candidate for this purpose.
-> >> > >> >>
-> >> > >> >> This patch integrates the separate 'ab_select' command into the 'bcb'
-> >> > >> >> group as the 'ab_select' subcommand, maintaining the same parameter list
-> >> > >> >> for consistency.
-> >> > >> >>
-> >> > >> >> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> >> > >> >> ---
-> >> > >> >>  MAINTAINERS                               |  1 -
-> >> > >> >>  cmd/Kconfig                               | 15 +------
-> >> > >> >>  cmd/Makefile                              |  1 -
-> >> > >> >>  cmd/ab_select.c                           | 66 -------------------------------
-> >> > >> >>  cmd/bcb.c                                 | 63 +++++++++++++++++++++++++++++
-> >> > >> >>  configs/am57xx_hs_evm_usb_defconfig       |  1 -
-> >> > >> >>  configs/khadas-vim3_android_ab_defconfig  |  1 -
-> >> > >> >>  configs/khadas-vim3l_android_ab_defconfig |  1 -
-> >> > >> >>  configs/sandbox64_defconfig               |  4 +-
-> >> > >> >>  configs/sandbox_defconfig                 |  4 +-
-> >> > >> >>  doc/android/ab.rst                        | 12 +++---
-> >> > >> >>  include/configs/khadas-vim3_android.h     |  2 +-
-> >> > >> >>  include/configs/khadas-vim3l_android.h    |  2 +-
-> >> > >> >>  include/configs/meson64_android.h         |  4 +-
-> >> > >> >>  include/configs/ti_omap5_common.h         |  4 +-
-> >> > >> >>  test/py/tests/test_android/test_ab.py     |  8 ++--
-> >> > >> >>  16 files changed, 85 insertions(+), 104 deletions(-)
-> >> > >> >>
-> >> > >> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> > >> >> index 7aefda93d017f07d616f0f6d191129914fbeb484..668ccec9ae6df47192b1af668e3fdbeb1dfa15ea 100644
-> >> > >> >> --- a/MAINTAINERS
-> >> > >> >> +++ b/MAINTAINERS
-> >> > >> >> @@ -65,7 +65,6 @@ R:    Sam Protsenko <semen.protsenko@linaro.org>
-> >> > >> >>  S:     Maintained
-> >> > >> >>  T:     git https://source.denx.de/u-boot/custodians/u-boot-dfu.git
-> >> > >> >>  F:     boot/android_ab.c
-> >> > >> >> -F:     cmd/ab_select.c
-> >> > >> >>  F:     doc/android/ab.rst
-> >> > >> >>  F:     include/android_ab.h
-> >> > >> >>  F:     test/py/tests/test_android/test_ab.py
-> >> > >> >> diff --git a/cmd/Kconfig b/cmd/Kconfig
-> >> > >> >> index dd33266cec70a2b134b7244acae1b7f098b921e8..11e8d363dc9b137723a86a240412d82dd0dbccc5 100644
-> >> > >> >> --- a/cmd/Kconfig
-> >> > >> >> +++ b/cmd/Kconfig
-> >> > >> >> @@ -1067,6 +1067,7 @@ config CMD_ADC
-> >> > >> >>  config CMD_BCB
-> >> > >> >>         bool "bcb"
-> >> > >> >>         depends on PARTITIONS
-> >> > >> >> +       depends on ANDROID_AB
-> >> > >> >
-> >> > >> > When building with khadas-vim3_android_defconfig, we can see that CMD_BCB is no
-> >> > >> > longer part of that build:
-> >> > >> >
-> >> > >> > $ grep CMD_BCB .config
-> >> > >> > <empty>
-> >> > >> >
-> >> > >> > However, if we look at include/configs/meson64_android.h, we can see
-> >> > >> > that the "bcb" command is not only used for checking the _slot suffix.
-> >> > >> >
-> >> > >> > It's also used for checking the bootloader reason. For example, in
-> >> > >> > BOOTENV_DEV_FASTBOOT, we call:
-> >> > >> >
-> >> > >> >    "if bcb test command = bootonce-bootloader; then " \
-> >> > >> >
-> >> > >> > Since CMD_BCB is no longer part of the .config (due to this dependency),
-> >> > >> > the boot script now shows errors:
-> >> > >> >
-> >> > >> > """
-> >> > >> > U-Boot 2024.10-00796-g969325278805 (Oct 11 2024 - 14:46:00 +0200) khadas-vim3
-> >> > >> >
-> >> > >> > Model: Khadas VIM3
-> >> > >> > SoC:   Amlogic Meson G12B (A311D) Revision 29:b (10:2)
-> >> > >> > DRAM:  2 GiB (effective 3.8 GiB)
-> >> > >> > Core:  411 devices, 36 uclasses, devicetree: separate
-> >> > >> > MMC:   mmc@ffe03000: 0, mmc@ffe05000: 1, mmc@ffe07000: 2
-> >> > >> > Loading Environment from MMC... fs uses incompatible features: 00020000, ignoring
-> >> > >> > Reading from MMC(2)... *** Warning - bad CRC, using default environment
-> >> > >> >
-> >> > >> > In:    usbkbd,serial
-> >> > >> > Out:   vidconsole,serial
-> >> > >> > Err:   vidconsole,serial
-> >> > >> > Net:   eth0: ethernet@ff3f0000
-> >> > >> >
-> >> > >> > Hit any key to stop autoboot:  0
-> >> > >> > Verify GPT: success!
-> >> > >> > Unknown command 'bcb' - try 'help'
-> >> > >> > Warning: BCB is corrupted or does not exist
-> >> > >> > dev: pinctrl@14
-> >> > >> > dev: pinctrl@40
-> >> > >> > gpio: pin 88 (gpio 88) value is 1
-> >> > >> > Unknown command 'bcb' - try 'help'
-> >> > >> > Warning: BCB is corrupted or does not exist
-> >> > >> > Loading Android boot partition...
-> >> > >> > switch to partitions #0, OK
-> >> > >> > mmc2(part 0) is current device
-> >> > >> > """
-> >> > >> >
-> >> > >> > I know we should not be using a boot script, nor non A/B configs but
-> >> > >> > it's a bummer that this series breaks an upstream
-> >> > >> > defconfig (khadas-vim3_android_defconfig)
-> >> > >> >
-> >> > >> > My recommendation:
-> >> > >> >
-> >> > >> > Make BCB_CMD_AB_SELECT implementation dependant on ANDROID_AB.
-> >> > >> > This way, users can use CMD_BCB with and without ANDROID_AB being enabled.
-> >> > >> >
-> >> > >> > We could do:
-> >> > >> > When ANDROID_AB=y, implement bcb ab_select subcommand
-> >> > >> > When ANDROID_AB=n, command is not accessible.
-> >> > >> >
-> >> > >> > I'll send you a diff shortly for this.
-> >> > >>
-> >> > >> Here is an illustration on how that would work:
-> >> > >>
-> >> > >> diff --git a/cmd/Kconfig b/cmd/Kconfig
-> >> > >> index 861c31e26408..e1a4a97b042d 100644
-> >> > >> --- a/cmd/Kconfig
-> >> > >> +++ b/cmd/Kconfig
-> >> > >> @@ -1055,7 +1055,6 @@ config CMD_ADC
-> >> > >>  config CMD_BCB
-> >> > >>    bool "bcb"
-> >> > >>    depends on PARTITIONS
-> >> > >> -  depends on ANDROID_AB
-> >> > >>    help
-> >> > >>      Read/modify/write the fields of Bootloader Control Block, usually
-> >> > >>      stored on the flash "misc" partition with its structure defined in:
-> >> > >> diff --git a/cmd/bcb.c b/cmd/bcb.c
-> >> > >> index 4fd32186ae65..4fe634f14cc5 100644
-> >> > >> --- a/cmd/bcb.c
-> >> > >> +++ b/cmd/bcb.c
-> >> > >> @@ -438,6 +438,9 @@ static int do_bcb_ab_select(struct cmd_tbl *cmdtp, int flag, int argc,
-> >> > >>    char slot[2];
-> >> > >>    bool dec_tries = true;
-> >> > >>
-> >> > >> +  if (!CONFIG_IS_ENABLED(AB_SELECT))
-> >> > >> +          return CMD_RET_SUCCESS;
-> >> > >> +
-> >> > >>    for (int i = 4; i < argc; i++) {
-> >> > >>            if (!strcmp(argv[i], "--no-dec"))
-> >> > >>                    dec_tries = false;
-> >> > >> @@ -474,6 +477,9 @@ static int do_bcb_ab_dump(struct cmd_tbl *cmdtp, int flag, int argc,
-> >> > >>    struct blk_desc *dev_desc;
-> >> > >>    struct disk_partition part_info;
-> >> > >>
-> >> > >> +  if (!CONFIG_IS_ENABLED(AB_SELECT))
-> >> > >> +          return CMD_RET_SUCCESS;
-> >> > >> +
-> >> > >>    if (part_get_info_by_dev_and_name_or_num(argv[1], argv[2],
-> >> > >>                                             &dev_desc, &part_info,
-> >> > >>                                             false) < 0) {
-> >> > >>
-> >> > >
-> >> > > We also need to include an #ifdef directive for the ab_select_slot()
-> >> > > function usage; otherwise, the code will not compile successfully.
-> >> >
-> >> > Are you sure? Per my understanding, it's possible that the compiler
-> >> > optimizes this out because CONFIG_IS_ENABLED(AB_SELECT)
-> >> > is known as build time.
-> >> >
-> >> > When I tried this diff with khadas-vim3_android_defconfig I did not see
-> >> > any build errors. I will try again early next week.
-> >> >
-> >>
-> >> As I recall, the IS_ENABLED() mechanism serves as a runtime checker to
-> >> determine whether specific CONFIG_* options are enabled. Consequently,
-> >> all code paths under this mechanism are always compiled. I attempted to
-> >> disable CONFIG_ANDROID_AB for the sandbox_defconfig, but it resulted in
-> >> the expected linker error.
-> >>
-> >> /tmp/ccAvYrKL.ltrans25.ltrans.o: In function `do_bcb_ab_select':
-> >> <artificial>:(.text+0x6d5d): undefined reference to `ab_select_slot'
-> >> collect2: error: ld returned 1 exit status
-> >> Makefile:1813: recipe for target 'u-boot' failed
-> >> make: *** [u-boot] Error 1
-> >>
-> >> I have already prepared a new version using #ifdef directives. I will
-> >> send it shortly.
-> >
-> > Something else is going on here, since we do this all the time and
-> > rely on it. So long as the code is behind an if() the dead code should
-> > be eliminated.
-> >
-> 
-> I have passed my diff (using CONFIG_IS_ENABLED) through the U-Boot CI:
-> https://source.denx.de/u-boot/custodians/u-boot-dfu/-/pipelines/22700
-> 
-> See the branch:
-> https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commits/dmitry/ab-dump-v3
-> 
-> There are some test errors (sandbox test) but the "world build" stage
-> finished sucessfully.
-> 
-> I have also tested locally using the CI container:
-> $ cd ~/work/upstream/u-boot
-> $ git clean -xdf
-> $ make mproper
-> $ docker run -v $PWD:$PWD -it trini/u-boot-gitlab-ci-runner:jammy-20240227-14Mar2024 /bin/bash
-> 
-> # In container
-> uboot@0ba059e8b7af/$ cd /home/mkorpershoek/work/upstream/u-boot
-> uboot@0ba059e8b7af:/home/mkorpershoek/work/upstream/u-boot$ pip install -r test/py/requirements.txt
-> uboot@0ba059e8b7af:/home/mkorpershoek/work/upstream/u-boot$ ./test/py/test.py --bd sandbox --build -k test_ut
-> 
-> No build errors either.
-> 
-> Dmitry, can you clarify what compiler/build commands you've used to see
-> that error?
-> 
-> For reference, here is what buildman has in the CI container:
-> 
-> uboot@0ba059e8b7af:/home/mkorpershoek/work/upstream/u-boot$ ./tools/buildman/buildman --list-tool-chains
-> List of available toolchains (17):
-> aarch64   : /opt/gcc-13.2.0-nolibc/aarch64-linux/bin/aarch64-linux-gcc
-> arc       : /opt/gcc-13.2.0-nolibc/arc-linux/bin/arc-linux-gcc
-> arm       : /opt/gcc-13.2.0-nolibc/arm-linux-gnueabi/bin/arm-linux-gnueabi-gcc
-> c89       : /usr/bin/c89-gcc
-> c99       : /usr/bin/c99-gcc
-> i386      : /opt/gcc-13.2.0-nolibc/i386-linux/bin/i386-linux-gcc
-> m68k      : /opt/gcc-13.2.0-nolibc/m68k-linux/bin/m68k-linux-gcc
-> microblaze: /opt/gcc-13.2.0-nolibc/microblaze-linux/bin/microblaze-linux-gcc
-> mips      : /opt/gcc-13.2.0-nolibc/mips-linux/bin/mips-linux-gcc
-> nios2     : /opt/gcc-13.2.0-nolibc/nios2-linux/bin/nios2-linux-gcc
-> powerpc   : /opt/gcc-13.2.0-nolibc/powerpc-linux/bin/powerpc-linux-gcc
-> riscv32   : /opt/gcc-13.2.0-nolibc/riscv32-linux/bin/riscv32-linux-gcc
-> riscv64   : /opt/gcc-13.2.0-nolibc/riscv64-linux/bin/riscv64-linux-gcc
-> sandbox   : /usr/bin/cgcc
-> sh2       : /opt/gcc-13.2.0-nolibc/sh2-linux/bin/sh2-linux-gcc
-> x86_64    : /usr/bin/x86_64-linux-gnu-gcc
-> xtensa    : /opt/2020.07/xtensa-dc233c-elf/bin/xtensa-dc233c-elf-gcc
-> 
-> I think we should use CONFIG_IS_ENABLED if possible
+Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Reviewed-by: Simon Glass <sjg@chromium.org>
+Tested-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+---
+ boot/android_ab.c    | 43 ++++++++++++++++++++++++-------------------
+ include/android_ab.h |  7 ++++---
+ 2 files changed, 28 insertions(+), 22 deletions(-)
 
-I just run build on the my x86 Ubuntu machine.
-
-$ cd uboot
-$ make mproper
-$ make sandbox_defconfig
-$ make -j$(nproc)
-
-That's all.
-
-I've already sent the v4 patch with #ifdef. I can prepare the v5 patch
-using the IS_ENABLED() macro and will aim to send it today.
-
-But I have one question:
-
-Do we really want to display the ab_select and ab_dump subcommands to
-users if these commands are just stubs? Perhaps we should consider
-adding #ifdef directives to the subcommand arrays.
+diff --git a/boot/android_ab.c b/boot/android_ab.c
+index 1196a189ed5349ca5c088e3b6ef1796b11c69a84..0045c8133a8e164f1fdd4c0f9b683de0f13f26e0 100644
+--- a/boot/android_ab.c
++++ b/boot/android_ab.c
+@@ -13,13 +13,13 @@
+ #include <u-boot/crc.h>
+ 
+ /**
+- * Compute the CRC-32 of the bootloader control struct.
++ * ab_control_compute_crc() - Compute the CRC32 of the bootloader control.
++ *
++ * @abc: Bootloader control block
+  *
+  * Only the bytes up to the crc32_le field are considered for the CRC-32
+  * calculation.
+  *
+- * @param[in] abc bootloader control block
+- *
+  * Return: crc32 sum
+  */
+ static uint32_t ab_control_compute_crc(struct bootloader_control *abc)
+@@ -28,14 +28,14 @@ static uint32_t ab_control_compute_crc(struct bootloader_control *abc)
+ }
+ 
+ /**
+- * Initialize bootloader_control to the default value.
++ * ab_control_default() - Initialize bootloader_control to the default value.
++ *
++ * @abc: Bootloader control block
+  *
+  * It allows us to boot all slots in order from the first one. This value
+  * should be used when the bootloader message is corrupted, but not when
+  * a valid message indicates that all slots are unbootable.
+  *
+- * @param[in] abc bootloader control block
+- *
+  * Return: 0 on success and a negative on error
+  */
+ static int ab_control_default(struct bootloader_control *abc)
+@@ -67,7 +67,13 @@ static int ab_control_default(struct bootloader_control *abc)
+ }
+ 
+ /**
+- * Load the boot_control struct from disk into newly allocated memory.
++ * ab_control_create_from_disk() - Load the boot_control from disk into memory.
++ *
++ * @dev_desc: Device where to read the boot_control struct from
++ * @part_info: Partition in 'dev_desc' where to read from, normally
++ *             the "misc" partition should be used
++ * @abc: pointer to pointer to bootloader_control data
++ * @offset: boot_control struct offset
+  *
+  * This function allocates and returns an integer number of disk blocks,
+  * based on the block size of the passed device to help performing a
+@@ -75,10 +81,6 @@ static int ab_control_default(struct bootloader_control *abc)
+  * The boot_control struct offset (2 KiB) must be a multiple of the device
+  * block size, for simplicity.
+  *
+- * @param[in] dev_desc Device where to read the boot_control struct from
+- * @param[in] part_info Partition in 'dev_desc' where to read from, normally
+- *			the "misc" partition should be used
+- * @param[out] pointer to pointer to bootloader_control data
+  * Return: 0 on success and a negative on error
+  */
+ static int ab_control_create_from_disk(struct blk_desc *dev_desc,
+@@ -122,15 +124,17 @@ static int ab_control_create_from_disk(struct blk_desc *dev_desc,
+ }
+ 
+ /**
+- * Store the loaded boot_control block.
++ * ab_control_store() - Store the loaded boot_control block.
++ *
++ * @dev_desc: Device where we should write the boot_control struct
++ * @part_info: Partition on the 'dev_desc' where to write
++ * @abc Pointer to the boot control struct and the extra bytes after
++ *      it up to the nearest block boundary
++ * @offset: boot_control struct offset
+  *
+  * Store back to the same location it was read from with
+  * ab_control_create_from_misc().
+  *
+- * @param[in] dev_desc Device where we should write the boot_control struct
+- * @param[in] part_info Partition on the 'dev_desc' where to write
+- * @param[in] abc Pointer to the boot control struct and the extra bytes after
+- *                it up to the nearest block boundary
+  * Return: 0 on success and a negative on error
+  */
+ static int ab_control_store(struct blk_desc *dev_desc,
+@@ -160,12 +164,13 @@ static int ab_control_store(struct blk_desc *dev_desc,
+ }
+ 
+ /**
+- * Compare two slots.
++ * ab_compare_slots() - Compare two slots.
++ *
++ * @a: The first bootable slot metadata
++ * @b: The second bootable slot metadata
+  *
+  * The function determines slot which is should we boot from among the two.
+  *
+- * @param[in] a The first bootable slot metadata
+- * @param[in] b The second bootable slot metadata
+  * Return: Negative if the slot "a" is better, positive of the slot "b" is
+  *         better or 0 if they are equally good.
+  */
+diff --git a/include/android_ab.h b/include/android_ab.h
+index dbf20343da62447a237ec845e216517d34455ad3..1e53879a25f145a9d18ac0a6553d8c217123aa6f 100644
+--- a/include/android_ab.h
++++ b/include/android_ab.h
+@@ -18,7 +18,10 @@ struct disk_partition;
+ #define NUM_SLOTS 2
+ 
+ /**
+- * Select the slot where to boot from.
++ * ab_select_slot() - Select the slot where to boot from.
++ *
++ * @dev_desc: Place to store the device description pointer
++ * @part_info: Place to store the partition information
+  *
+  * On Android devices with more than one boot slot (multiple copies of the
+  * kernel and system images) selects which slot should be used to boot from and
+@@ -28,8 +31,6 @@ struct disk_partition;
+  * registered before returning from this function so it isn't selected
+  * indefinitely.
+  *
+- * @param[in] dev_desc Place to store the device description pointer
+- * @param[in] part_info Place to store the partition information
+  * Return: The slot number (>= 0) on success, or a negative on error
+  */
+ int ab_select_slot(struct blk_desc *dev_desc, struct disk_partition *part_info,
 
 -- 
-Thank you,
-Dmitry
+2.43.0
+
 
