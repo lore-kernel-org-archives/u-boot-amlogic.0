@@ -1,184 +1,339 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFB2CFC500
-	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 08:44:13 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.50175.1728895444160848783
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F13CFC29A
+	for <webhook@archiver.kernel.org>; Tue, 15 Oct 2024 12:10:20 +0000 (UTC)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+ by mx.groups.io with SMTP id smtpd.web10.11759.1728994216706202395
  for <u-boot-amlogic@groups.io>;
- Mon, 14 Oct 2024 01:44:04 -0700
+ Tue, 15 Oct 2024 05:10:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=QPeEx4I1;
- spf=pass (domain: linaro.org, ip: 209.85.221.53, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-37d70df0b1aso794431f8f.3
-        for <u-boot-amlogic@groups.io>; Mon, 14 Oct 2024 01:44:03 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=3QpX/HTB;
+ spf=pass (domain: baylibre.com, ip: 209.85.167.42, mailfrom: mkorpershoek@baylibre.com)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-539f4d8ef84so2654336e87.0
+        for <u-boot-amlogic@groups.io>; Tue, 15 Oct 2024 05:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728895442; x=1729500242; darn=groups.io;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hGnn/1kuvFEYRPlOdtnHvVcZzIkFWxwfHv7bxdm+vKo=;
-        b=QPeEx4I1fOhDpJ5ZW5Jjxo3eCP0hFkX35pfaZAR0UKNAFsjfr84lK7CoqhVUONJrAA
-         vAc/fTvSnz5RDbP1ZYcmuE+UZ2S3vPgfuvFTL/2SNBvQo/ghIPcV5c5OEv4c+A8Irct5
-         vGE7uY0trq4N8sC9L5rjzmA4LJj4rhMXcWiMk6DAL4idtdnnznlAZs70pF2fxwXy4v0G
-         9k1orb9au/urAj/CXLFJuqAOtpwVJi4rHuZYMFV6yZtPed1JHCx7bebRqVU2CO/uVIfN
-         PJUxaJU7ZPjDA3fy99BrK6u9+FEpQT/xlYRgFKjANbGbid+pjRxefXn+uGRWtYzhn2ky
-         /Iiw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728994215; x=1729599015; darn=groups.io;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m3mlDMVujwPUGZ5GdWkLk3F5vF8r1ZxFSLF9nb7XUr4=;
+        b=3QpX/HTB/ewvYKKfTszEJoprpRoNb4sC6z0ZdpTC55x/5uyDUeadDUQeIBVGrxzCSl
+         JYPb94sN8zwgmXWofyoOKwpVz4Ry2U0zRZbhqoVUfqOVm//URQY1viJB94tVWRXopp2C
+         +TdUS3yq8HiHre5zC8GBoYaYjTymo84ryIt50wU5m31OURfQWW1V/OLyMj7lMzjCPoC5
+         hBcZYBmiJuWJkgMo7zV2MCiHhXQA7hXcSr8tYRik1GEIZT3DDlJeP3qfZsYTis95a+Lc
+         Qy5DctEW9H3Hdg2k4z4mT6jQkCa1D+lS+O+OQXxe+kAa1FTqsWbo/iNvodEGPeqJvLsE
+         PyLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728895442; x=1729500242;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hGnn/1kuvFEYRPlOdtnHvVcZzIkFWxwfHv7bxdm+vKo=;
-        b=DjwaJuhtMGB4MYoYmPEnM2ZIABQcgDQ/WfuZuNzcM6MrJu47uHkIYfQI6KU9Id7KhA
-         ZJxlAskfl+TPURi1BWzLzSjUQIpmCKK/dYUK6vl1AJ+zyi1+mOZmOYyPWCp2uPI8a7+e
-         RzJGg4QMDhmkLHIc6iMn+T1mA+empmdcv+hwtXLM2Ue1qmqCyQ0P5nbDriFUxClM+4Ht
-         65sUYks58L/rqhQnThRSevLAaWkrKNLk8liMF2nN3Rti2kadIg1VMmxSvgP7tmjjH1Qd
-         ifYHaI+FVAMiqYbcaWK2hVj67kptpHhgA20ok2uFgxINRcNZtxjPIxSCSmFBoZlcEd57
-         eszA==
-X-Gm-Message-State: AOJu0YyQlJ8x5HuxOyOoEBArUlX2UCWLOjYg0Dgxg6MfI6rJaL6wGwPa
-	18ogh7t3+9g/7FHorJ9WMSfdEjUlSI0Hnonv9VkQKDoavmKoGGX58TROSr5dGhVOLwuYP0hEi+A
-	8cB8=
-X-Google-Smtp-Source: AGHT+IH7Kus1GHRW62r22CceeHs+6kfZAOeO2YHfWGGvQL2EnOtghf8lkgqJGDGoQWCsqlJ2CryHXQ==
-X-Received: by 2002:a5d:5f56:0:b0:37d:5047:76d8 with SMTP id ffacd0b85a97d-37d5532847bmr9054503f8f.59.1728895442435;
-        Mon, 14 Oct 2024 01:44:02 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:6bf3:bb7:467:a56f? ([2a01:e0a:982:cbb0:6bf3:bb7:467:a56f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6cfcdbsm10795813f8f.58.2024.10.14.01.44.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2024 01:44:01 -0700 (PDT)
-Message-ID: <d2b5a5e5-c50b-459e-a81e-90c952efdd16@linaro.org>
-Date: Mon, 14 Oct 2024 10:44:01 +0200
+        d=1e100.net; s=20230601; t=1728994215; x=1729599015;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m3mlDMVujwPUGZ5GdWkLk3F5vF8r1ZxFSLF9nb7XUr4=;
+        b=GvY2I8A4c5+z4YfPCfgsgEmyR5ItwAOv2duG+pg7NR87VFdJO+lD1hq+nM6YXCF6wj
+         wxdy0lKJ9dlLLAymrBjAfxc0rsuQKfgyX+QfB/qPHrxWzTrskJGDdytc+RCOQ+7hSHAY
+         Q04PQby6orF/ZLt4ZxA5Po3vPi772ypnux+S9LGcPvw9Ex0SnLe7s+SUw5MIfsfGUWvf
+         JUPK1FL8oSYJGaNW/ExEK3sdroiM0NnYX6D01DcmldLUSSWBXn8/3Ji/hD5yv4f72pLg
+         uBXPbRYxCKfCu8It922xfKKtuRDcG98UlUYkLbO8n9CDrx0AZJuvybxBML1XypKGRKs8
+         PPwA==
+X-Gm-Message-State: AOJu0YxGI3fnVz3VZ7uBZDNdoo5ZKiO25P/vtTn0/ozgZGqpG4nkuojI
+	62eZGwEvCJ2DoZKeJSokbLcQe3uBZ0Rej9FenTuh4khmjsU9E5UKyPjWIJGGxys=
+X-Google-Smtp-Source: AGHT+IF1qDwjzDccz+tNCo4hESciajreBSm/xzgQC9HBMzo5o2kTf9D4zY+/uepW6AMkkpKkSmgSUA==
+X-Received: by 2002:a05:6512:238b:b0:539:f7c1:5feb with SMTP id 2adb3069b0e04-539f7c16172mr3354683e87.39.1728994214376;
+        Tue, 15 Oct 2024 05:10:14 -0700 (PDT)
+Received: from localhost ([82.66.159.240])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4313f6b1f4csm15982555e9.30.2024.10.15.05.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2024 05:10:13 -0700 (PDT)
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+To: Simon Glass <sjg@chromium.org>, Dmitry Rokosov
+ <ddrokosov@salutedevices.com>
+Cc: u-boot-amlogic@groups.io, Igor Opaniuk <igor.opaniuk@gmail.com>, Sam
+ Protsenko <semen.protsenko@linaro.org>, Tom Rini <trini@konsulko.com>,
+ "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Mario Six <mario.six@gdsys.cc>,
+ u-boot@lists.denx.de, rockosov@gmail.com, kernel@salutedevices.com
+Subject: Re: [PATCH v3 2/6] treewide: bcb: move ab_select command to bcb
+ subcommands
+In-Reply-To: <CAFLszTgO5h1zdXJTk-PCcDWx6nAz3riV34K_sHcvnO4AYMNSqA@mail.gmail.com>
+References: <20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com>
+ <20241008-android_ab_master-v3-2-f292c45a33e4@salutedevices.com>
+ <17FD691FA1477948.8140@groups.io> <87ed4mhgaw.fsf@baylibre.com>
+ <20241011180031.cgvuhks7zo772wl6@CAB-WSD-L081021>
+ <87frp1r9iz.fsf@baylibre.com>
+ <20241014203820.riljx72bkqw762v5@CAB-WSD-L081021>
+ <CAFLszTgO5h1zdXJTk-PCcDWx6nAz3riV34K_sHcvnO4AYMNSqA@mail.gmail.com>
+Date: Tue, 15 Oct 2024 14:10:10 +0200
+Message-ID: <87ikttzhwd.fsf@baylibre.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [GIT PULL] Please pull u-boot-amlogic-next-20241014
-Reply-To: neil.armstrong@linaro.org
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 14 Oct 2024 08:44:13 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2482
+ <u-boot-amlogic@groups.io>; Tue, 15 Oct 2024 12:10:20 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2483
 
-Hi Tom,
+Hi Simon, Dmitry
 
-New Libre Computer boards are added with UEFI Capsule Update support,
-plus various fixes for HDMI support, boot targets and android-mainline
-kernel support for khadas-vim3 android config.
+On lun., oct. 14, 2024 at 15:06, Simon Glass <sjg@chromium.org> wrote:
 
-Thanks,
-Neil
+> Hi Dmitry,
+>
+> On Mon, 14 Oct 2024 at 14:38, Dmitry Rokosov
+> <ddrokosov@salutedevices.com> wrote:
+>>
+>> Hello Mattijs,
+>>
+>> On Sat, Oct 12, 2024 at 10:49:08AM +0200, Mattijs Korpershoek wrote:
+>> > Hi Dmitry,
+>> >
+>> > On ven., oct. 11, 2024 at 21:00, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+>> >
+>> > > On Fri, Oct 11, 2024 at 04:20:39PM +0200, Mattijs Korpershoek wrote:
+>> > >> On ven., oct. 11, 2024 at 15:30, "Mattijs Korpershoek via groups.io" <mkorpershoek=baylibre.com@groups.io> wrote:
+>> > >>
+>> > >> > Hi Dmitry,
+>> > >> >
+>> > >> > Thank you for the patch.
+>> > >> >
+>> > >> > On mar., oct. 08, 2024 at 23:18, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+>> > >> >
+>> > >> >> To enhance code organization, it is beneficial to consolidate all A/B
+>> > >> >> BCB management routines into a single super-command.
+>> > >> >> The 'bcb' command is an excellent candidate for this purpose.
+>> > >> >>
+>> > >> >> This patch integrates the separate 'ab_select' command into the 'bcb'
+>> > >> >> group as the 'ab_select' subcommand, maintaining the same parameter list
+>> > >> >> for consistency.
+>> > >> >>
+>> > >> >> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+>> > >> >> ---
+>> > >> >>  MAINTAINERS                               |  1 -
+>> > >> >>  cmd/Kconfig                               | 15 +------
+>> > >> >>  cmd/Makefile                              |  1 -
+>> > >> >>  cmd/ab_select.c                           | 66 -------------------------------
+>> > >> >>  cmd/bcb.c                                 | 63 +++++++++++++++++++++++++++++
+>> > >> >>  configs/am57xx_hs_evm_usb_defconfig       |  1 -
+>> > >> >>  configs/khadas-vim3_android_ab_defconfig  |  1 -
+>> > >> >>  configs/khadas-vim3l_android_ab_defconfig |  1 -
+>> > >> >>  configs/sandbox64_defconfig               |  4 +-
+>> > >> >>  configs/sandbox_defconfig                 |  4 +-
+>> > >> >>  doc/android/ab.rst                        | 12 +++---
+>> > >> >>  include/configs/khadas-vim3_android.h     |  2 +-
+>> > >> >>  include/configs/khadas-vim3l_android.h    |  2 +-
+>> > >> >>  include/configs/meson64_android.h         |  4 +-
+>> > >> >>  include/configs/ti_omap5_common.h         |  4 +-
+>> > >> >>  test/py/tests/test_android/test_ab.py     |  8 ++--
+>> > >> >>  16 files changed, 85 insertions(+), 104 deletions(-)
+>> > >> >>
+>> > >> >> diff --git a/MAINTAINERS b/MAINTAINERS
+>> > >> >> index 7aefda93d017f07d616f0f6d191129914fbeb484..668ccec9ae6df47192b1af668e3fdbeb1dfa15ea 100644
+>> > >> >> --- a/MAINTAINERS
+>> > >> >> +++ b/MAINTAINERS
+>> > >> >> @@ -65,7 +65,6 @@ R:    Sam Protsenko <semen.protsenko@linaro.org>
+>> > >> >>  S:     Maintained
+>> > >> >>  T:     git https://source.denx.de/u-boot/custodians/u-boot-dfu.git
+>> > >> >>  F:     boot/android_ab.c
+>> > >> >> -F:     cmd/ab_select.c
+>> > >> >>  F:     doc/android/ab.rst
+>> > >> >>  F:     include/android_ab.h
+>> > >> >>  F:     test/py/tests/test_android/test_ab.py
+>> > >> >> diff --git a/cmd/Kconfig b/cmd/Kconfig
+>> > >> >> index dd33266cec70a2b134b7244acae1b7f098b921e8..11e8d363dc9b137723a86a240412d82dd0dbccc5 100644
+>> > >> >> --- a/cmd/Kconfig
+>> > >> >> +++ b/cmd/Kconfig
+>> > >> >> @@ -1067,6 +1067,7 @@ config CMD_ADC
+>> > >> >>  config CMD_BCB
+>> > >> >>         bool "bcb"
+>> > >> >>         depends on PARTITIONS
+>> > >> >> +       depends on ANDROID_AB
+>> > >> >
+>> > >> > When building with khadas-vim3_android_defconfig, we can see that CMD_BCB is no
+>> > >> > longer part of that build:
+>> > >> >
+>> > >> > $ grep CMD_BCB .config
+>> > >> > <empty>
+>> > >> >
+>> > >> > However, if we look at include/configs/meson64_android.h, we can see
+>> > >> > that the "bcb" command is not only used for checking the _slot suffix.
+>> > >> >
+>> > >> > It's also used for checking the bootloader reason. For example, in
+>> > >> > BOOTENV_DEV_FASTBOOT, we call:
+>> > >> >
+>> > >> >    "if bcb test command = bootonce-bootloader; then " \
+>> > >> >
+>> > >> > Since CMD_BCB is no longer part of the .config (due to this dependency),
+>> > >> > the boot script now shows errors:
+>> > >> >
+>> > >> > """
+>> > >> > U-Boot 2024.10-00796-g969325278805 (Oct 11 2024 - 14:46:00 +0200) khadas-vim3
+>> > >> >
+>> > >> > Model: Khadas VIM3
+>> > >> > SoC:   Amlogic Meson G12B (A311D) Revision 29:b (10:2)
+>> > >> > DRAM:  2 GiB (effective 3.8 GiB)
+>> > >> > Core:  411 devices, 36 uclasses, devicetree: separate
+>> > >> > MMC:   mmc@ffe03000: 0, mmc@ffe05000: 1, mmc@ffe07000: 2
+>> > >> > Loading Environment from MMC... fs uses incompatible features: 00020000, ignoring
+>> > >> > Reading from MMC(2)... *** Warning - bad CRC, using default environment
+>> > >> >
+>> > >> > In:    usbkbd,serial
+>> > >> > Out:   vidconsole,serial
+>> > >> > Err:   vidconsole,serial
+>> > >> > Net:   eth0: ethernet@ff3f0000
+>> > >> >
+>> > >> > Hit any key to stop autoboot:  0
+>> > >> > Verify GPT: success!
+>> > >> > Unknown command 'bcb' - try 'help'
+>> > >> > Warning: BCB is corrupted or does not exist
+>> > >> > dev: pinctrl@14
+>> > >> > dev: pinctrl@40
+>> > >> > gpio: pin 88 (gpio 88) value is 1
+>> > >> > Unknown command 'bcb' - try 'help'
+>> > >> > Warning: BCB is corrupted or does not exist
+>> > >> > Loading Android boot partition...
+>> > >> > switch to partitions #0, OK
+>> > >> > mmc2(part 0) is current device
+>> > >> > """
+>> > >> >
+>> > >> > I know we should not be using a boot script, nor non A/B configs but
+>> > >> > it's a bummer that this series breaks an upstream
+>> > >> > defconfig (khadas-vim3_android_defconfig)
+>> > >> >
+>> > >> > My recommendation:
+>> > >> >
+>> > >> > Make BCB_CMD_AB_SELECT implementation dependant on ANDROID_AB.
+>> > >> > This way, users can use CMD_BCB with and without ANDROID_AB being enabled.
+>> > >> >
+>> > >> > We could do:
+>> > >> > When ANDROID_AB=y, implement bcb ab_select subcommand
+>> > >> > When ANDROID_AB=n, command is not accessible.
+>> > >> >
+>> > >> > I'll send you a diff shortly for this.
+>> > >>
+>> > >> Here is an illustration on how that would work:
+>> > >>
+>> > >> diff --git a/cmd/Kconfig b/cmd/Kconfig
+>> > >> index 861c31e26408..e1a4a97b042d 100644
+>> > >> --- a/cmd/Kconfig
+>> > >> +++ b/cmd/Kconfig
+>> > >> @@ -1055,7 +1055,6 @@ config CMD_ADC
+>> > >>  config CMD_BCB
+>> > >>    bool "bcb"
+>> > >>    depends on PARTITIONS
+>> > >> -  depends on ANDROID_AB
+>> > >>    help
+>> > >>      Read/modify/write the fields of Bootloader Control Block, usually
+>> > >>      stored on the flash "misc" partition with its structure defined in:
+>> > >> diff --git a/cmd/bcb.c b/cmd/bcb.c
+>> > >> index 4fd32186ae65..4fe634f14cc5 100644
+>> > >> --- a/cmd/bcb.c
+>> > >> +++ b/cmd/bcb.c
+>> > >> @@ -438,6 +438,9 @@ static int do_bcb_ab_select(struct cmd_tbl *cmdtp, int flag, int argc,
+>> > >>    char slot[2];
+>> > >>    bool dec_tries = true;
+>> > >>
+>> > >> +  if (!CONFIG_IS_ENABLED(AB_SELECT))
+>> > >> +          return CMD_RET_SUCCESS;
+>> > >> +
+>> > >>    for (int i = 4; i < argc; i++) {
+>> > >>            if (!strcmp(argv[i], "--no-dec"))
+>> > >>                    dec_tries = false;
+>> > >> @@ -474,6 +477,9 @@ static int do_bcb_ab_dump(struct cmd_tbl *cmdtp, int flag, int argc,
+>> > >>    struct blk_desc *dev_desc;
+>> > >>    struct disk_partition part_info;
+>> > >>
+>> > >> +  if (!CONFIG_IS_ENABLED(AB_SELECT))
+>> > >> +          return CMD_RET_SUCCESS;
+>> > >> +
+>> > >>    if (part_get_info_by_dev_and_name_or_num(argv[1], argv[2],
+>> > >>                                             &dev_desc, &part_info,
+>> > >>                                             false) < 0) {
+>> > >>
+>> > >
+>> > > We also need to include an #ifdef directive for the ab_select_slot()
+>> > > function usage; otherwise, the code will not compile successfully.
+>> >
+>> > Are you sure? Per my understanding, it's possible that the compiler
+>> > optimizes this out because CONFIG_IS_ENABLED(AB_SELECT)
+>> > is known as build time.
+>> >
+>> > When I tried this diff with khadas-vim3_android_defconfig I did not see
+>> > any build errors. I will try again early next week.
+>> >
+>>
+>> As I recall, the IS_ENABLED() mechanism serves as a runtime checker to
+>> determine whether specific CONFIG_* options are enabled. Consequently,
+>> all code paths under this mechanism are always compiled. I attempted to
+>> disable CONFIG_ANDROID_AB for the sandbox_defconfig, but it resulted in
+>> the expected linker error.
+>>
+>> /tmp/ccAvYrKL.ltrans25.ltrans.o: In function `do_bcb_ab_select':
+>> <artificial>:(.text+0x6d5d): undefined reference to `ab_select_slot'
+>> collect2: error: ld returned 1 exit status
+>> Makefile:1813: recipe for target 'u-boot' failed
+>> make: *** [u-boot] Error 1
+>>
+>> I have already prepared a new version using #ifdef directives. I will
+>> send it shortly.
+>
+> Something else is going on here, since we do this all the time and
+> rely on it. So long as the code is behind an if() the dead code should
+> be eliminated.
+>
 
-The following changes since commit 580fb5773634c4a01f907a164b2a05961840b4c0:
+I have passed my diff (using CONFIG_IS_ENABLED) through the U-Boot CI:
+https://source.denx.de/u-boot/custodians/u-boot-dfu/-/pipelines/22700
 
-   Merge tag 'u-boot-imx-master-20241013' of https://gitlab.denx.de/u-boot/custodians/u-boot-imx (2024-10-13 16:25:01 -0600)
+See the branch:
+https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commits/dmitry/ab-dump-v3
 
-are available in the Git repository at:
+There are some test errors (sandbox test) but the "world build" stage
+finished sucessfully.
 
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-next-20241014
+I have also tested locally using the CI container:
+$ cd ~/work/upstream/u-boot
+$ git clean -xdf
+$ make mproper
+$ docker run -v $PWD:$PWD -it trini/u-boot-gitlab-ci-runner:jammy-20240227-14Mar2024 /bin/bash
 
-for you to fetch changes up to 315cad97a5ae09b1b975fff2413ce785b3b8592a:
+# In container
+uboot@0ba059e8b7af/$ cd /home/mkorpershoek/work/upstream/u-boot
+uboot@0ba059e8b7af:/home/mkorpershoek/work/upstream/u-boot$ pip install -r test/py/requirements.txt
+uboot@0ba059e8b7af:/home/mkorpershoek/work/upstream/u-boot$ ./test/py/test.py --bd sandbox --build -k test_ut
 
-   configs: meson64: Ensure commands for boot targets are available (2024-10-14 09:06:16 +0200)
+No build errors either.
 
-----------------------------------------------------------------
-- Add Libre Computer boards into proper libre-computer board directory
-- Add new Boards:
-  - Libre Computer aml-s905d3-cc
-  - Libre Computer aml-a311d-cc
-- Add capsule update to libretech-ac and the new boards since they have an onboard SPI nor flash
-- Fix HDMI support after sync to v6.11 and regulator enable from Marek
-- Fix khadas-vim3 android config for android-mainline kernel
-- Disable meson64 boot targets when configs are not eavailable
+Dmitry, can you clarify what compiler/build commands you've used to see
+that error?
 
-----------------------------------------------------------------
-Callum Parsey (1):
-       configs: meson64: Ensure commands for boot targets are available
+For reference, here is what buildman has in the CI container:
 
-Mattijs Korpershoek (2):
-       configs: khadas-vim3{l}: Increase boot/recovery partition size
-       configs: meson64_android: Remove dtbo support
+uboot@0ba059e8b7af:/home/mkorpershoek/work/upstream/u-boot$ ./tools/buildman/buildman --list-tool-chains
+List of available toolchains (17):
+aarch64   : /opt/gcc-13.2.0-nolibc/aarch64-linux/bin/aarch64-linux-gcc
+arc       : /opt/gcc-13.2.0-nolibc/arc-linux/bin/arc-linux-gcc
+arm       : /opt/gcc-13.2.0-nolibc/arm-linux-gnueabi/bin/arm-linux-gnueabi-gcc
+c89       : /usr/bin/c89-gcc
+c99       : /usr/bin/c99-gcc
+i386      : /opt/gcc-13.2.0-nolibc/i386-linux/bin/i386-linux-gcc
+m68k      : /opt/gcc-13.2.0-nolibc/m68k-linux/bin/m68k-linux-gcc
+microblaze: /opt/gcc-13.2.0-nolibc/microblaze-linux/bin/microblaze-linux-gcc
+mips      : /opt/gcc-13.2.0-nolibc/mips-linux/bin/mips-linux-gcc
+nios2     : /opt/gcc-13.2.0-nolibc/nios2-linux/bin/nios2-linux-gcc
+powerpc   : /opt/gcc-13.2.0-nolibc/powerpc-linux/bin/powerpc-linux-gcc
+riscv32   : /opt/gcc-13.2.0-nolibc/riscv32-linux/bin/riscv32-linux-gcc
+riscv64   : /opt/gcc-13.2.0-nolibc/riscv64-linux/bin/riscv64-linux-gcc
+sandbox   : /usr/bin/cgcc
+sh2       : /opt/gcc-13.2.0-nolibc/sh2-linux/bin/sh2-linux-gcc
+x86_64    : /usr/bin/x86_64-linux-gnu-gcc
+xtensa    : /opt/2020.07/xtensa-dc233c-elf/bin/xtensa-dc233c-elf-gcc
 
-Neil Armstrong (8):
-       board: libretech-ac: move board support into dedicated directory
-       board: libre-computer: aml-s805x-cc: Enable capsule updates
-       ARM: meson: add support for Libre Computer aml-a311d-cc
-       ARM: meson: add support for Libre Computer aml-s905d3-cc
-       dts: meson-g12-common-u-boot: do not disable canvas
-       video: meson: dw-hdmi: do not fail probe if HDMI regulator is already enabled
-       clk: meson: gxbb: add HDMI clocks
-       power/domain: meson-ee-pwrc: make sure to not enable a domain twice
+I think we should use CONFIG_IS_ENABLED if possible
 
-  arch/arm/dts/meson-g12-common-u-boot.dtsi          |   4 -
-  .../dts/meson-g12b-a311d-libretech-cc-u-boot.dtsi  |  15 +++
-  .../dts/meson-sm1-s905d3-libretech-cc-u-boot.dtsi  |  15 +++
-  board/amlogic/p212/MAINTAINERS                     |   2 -
-  board/libre-computer/aml-a311d-cc/MAINTAINERS      |   7 ++
-  board/libre-computer/aml-a311d-cc/Makefile         |   6 ++
-  board/libre-computer/aml-a311d-cc/aml-a311d-cc.c   |  44 +++++++++
-  board/libre-computer/aml-s805x-ac/MAINTAINERS      |   8 ++
-  board/libre-computer/aml-s805x-ac/Makefile         |   6 ++
-  board/libre-computer/aml-s805x-ac/aml-s805x-ac.c   |  71 ++++++++++++++
-  board/libre-computer/aml-s905d3-cc/MAINTAINERS     |   7 ++
-  board/libre-computer/aml-s905d3-cc/Makefile        |   6 ++
-  board/libre-computer/aml-s905d3-cc/aml-s905d3-cc.c |  44 +++++++++
-  configs/aml-a311d-cc_defconfig                     | 108 +++++++++++++++++++++
-  configs/aml-s905d3-cc_defconfig                    | 108 +++++++++++++++++++++
-  configs/libretech-ac_defconfig                     |   8 ++
-  doc/board/amlogic/aml-a311d-cc.rst                 |  46 +++++++++
-  doc/board/amlogic/aml-s905d3-cc.rst                |  46 +++++++++
-  doc/board/amlogic/index.rst                        |   2 +
-  drivers/clk/meson/gxbb.c                           |  50 +++++++++-
-  drivers/power/domain/meson-ee-pwrc.c               |  15 ++-
-  drivers/video/meson/meson_dw_hdmi.c                |   4 +-
-  include/configs/khadas-vim3_android.h              |   8 +-
-  include/configs/khadas-vim3l_android.h             |   8 +-
-  include/configs/meson64.h                          |  28 +++++-
-  include/configs/meson64_android.h                  |  26 +----
-  26 files changed, 643 insertions(+), 49 deletions(-)
-  create mode 100644 arch/arm/dts/meson-g12b-a311d-libretech-cc-u-boot.dtsi
-  create mode 100644 arch/arm/dts/meson-sm1-s905d3-libretech-cc-u-boot.dtsi
-  create mode 100644 board/libre-computer/aml-a311d-cc/MAINTAINERS
-  create mode 100644 board/libre-computer/aml-a311d-cc/Makefile
-  create mode 100644 board/libre-computer/aml-a311d-cc/aml-a311d-cc.c
-  create mode 100644 board/libre-computer/aml-s805x-ac/MAINTAINERS
-  create mode 100644 board/libre-computer/aml-s805x-ac/Makefile
-  create mode 100644 board/libre-computer/aml-s805x-ac/aml-s805x-ac.c
-  create mode 100644 board/libre-computer/aml-s905d3-cc/MAINTAINERS
-  create mode 100644 board/libre-computer/aml-s905d3-cc/Makefile
-  create mode 100644 board/libre-computer/aml-s905d3-cc/aml-s905d3-cc.c
-  create mode 100644 configs/aml-a311d-cc_defconfig
-  create mode 100644 configs/aml-s905d3-cc_defconfig
-  create mode 100644 doc/board/amlogic/aml-a311d-cc.rst
-  create mode 100644 doc/board/amlogic/aml-s905d3-cc.rst
+
+>>
+>> [...]
+>>
+>
+> Regards,
+> Simon
 
