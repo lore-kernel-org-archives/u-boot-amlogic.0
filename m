@@ -2,64 +2,60 @@ Return-Path: <glaroque@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C8ED374B8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4393CD374B9
 	for <webhook@archiver.kernel.org>; Thu, 17 Oct 2024 16:10:52 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web11.1932.1729181446663515800
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.1854.1729181448037830613
  for <u-boot-amlogic@groups.io>;
- Thu, 17 Oct 2024 09:10:47 -0700
+ Thu, 17 Oct 2024 09:10:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=V+WNsQfi;
- spf=pass (domain: baylibre.com, ip: 209.85.128.52, mailfrom: glaroque@baylibre.com)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4315839a7c9so12221925e9.3
-        for <u-boot-amlogic@groups.io>; Thu, 17 Oct 2024 09:10:46 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=rvYJEO+j;
+ spf=pass (domain: baylibre.com, ip: 209.85.221.43, mailfrom: glaroque@baylibre.com)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d3e8d923fso880269f8f.0
+        for <u-boot-amlogic@groups.io>; Thu, 17 Oct 2024 09:10:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729181445; x=1729786245; darn=groups.io;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/6g9QE3f+WP55Ncpx5cM2zPhfavAXgJcyJU+2FsYcI=;
-        b=V+WNsQfiiexyANgUG23D1z090uDAYy3oPyheDbEOPVCh/Vy88tsGW5Khhpg04A5ppA
-         sBlqy7t9GXl+wv6x9VAIXOlst/mpIG4L872dHEiWyjxIqwiJdQrhs2G8RKFXqBbeqGr/
-         OpVnGlL2mODnWDIhTM+aJijoSXbEc0x6JibHadsWhQEkfVVoc+PhFiFAI8q7XjN2n9FU
-         v5ASoUOphFmOshW2CsmJUyKZO9u/1qyueeMQ9MtZWfAwxrRRymmHG6erXle81cH03YXy
-         2AxiVc22cRkpKRVrB3IY/9K9jfSfsYFT3+70LUz5EGiiUmq4mlCBf1/lyr8w5e8AdhBG
-         /JYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729181445; x=1729786245;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729181446; x=1729786246; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=i/6g9QE3f+WP55Ncpx5cM2zPhfavAXgJcyJU+2FsYcI=;
-        b=KwoZ6fMmD+Ydxr70L/bKphT53ytYXRrfX3ZpA2C2kKzHgtqrn7QBg1/abgy/MzuWrY
-         ejsMqu+1/7CPAl0/F7YrGy970ewOQpDc/TJsKplD3NL6wyp80uqDmI3SswEtbtb/N0Yq
-         3eWAA4M5yf//vQ+59bQnSohBHhMx79vRzLbJoEVeykn02jGsFlH0S2xN041YRgnzgt9m
-         1YXn4Vxe5Ybbu8taPdEQGP/N9D9S6mYGieVzMkbBFA/Yaal586Z0ndckFn9xGuHC8h1D
-         PgcCI5nwZdfjKo7n4OQ0czeOPRReejk1s4JRYA2oTWh4jdbRkvSo2D9gszYt6d9SgikS
-         DseQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXapVeG6s+E2y4XLMG6fKdBqKgeL5wKg+JiIAmQL5UI32vl89h0227Lz8WkQJLhdFlWYYaX+HUSkTrEK4IANA==@groups.io
-X-Gm-Message-State: AOJu0Yw9e7kUKB5jgd4N/HmAi2m5WyJA8NWGJSNoTKXScm0KAsjVeCgq
-	nT2ItsQtvaUcxoqw35/CGIdWVAhYYxILdn+CfvvsF+JO+v6k2INHAli5lsiKlHe8v+NV5z42BZc
-	c
-X-Google-Smtp-Source: AGHT+IHbE83aCpnHHzxRLlCjwThlkUFut0WEG2Sso3O1TvVSLZ9HJQjBXE0E1rzyQrCkLJzczPNP5A==
-X-Received: by 2002:a05:600c:1d94:b0:42c:b1ee:4b04 with SMTP id 5b1f17b1804b1-4314a38157emr62678055e9.28.1729181444757;
-        Thu, 17 Oct 2024 09:10:44 -0700 (PDT)
+        bh=rI865ORU5M3+h8g6Id1rOMoKVljvk5cflOPVUidj2Ok=;
+        b=rvYJEO+jCzWtR+VBTC0zD1wZP3ctA84rwwjxFK96410bn/FkuWyGaJ0RmvNOAR3Yck
+         1c+P+GZw+maOl9lSJitKPWenKzKWSgjj3CJZYGZiImDJGPmCa2D7ijFVPp/sP31tqH05
+         K3fa8OR67eWwuP2n5Rr7RNfLZnUR469ZprI7mk5b6RbfuXwvLejLlX3ch/291xxF3MTJ
+         dyG3KMtVfRkAD0DIBSw1J9r5udyQvS7CRvtGCVy3BEdHc4PULnp0dFXLx2YG8azBm0d8
+         g2zpyBW1gFUUs9m3dHQHPti4Dme/ZIQXtSySnJdUHpQNfPqC+mZcj2u0AMkZpBs5s1Ta
+         GZPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729181446; x=1729786246;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rI865ORU5M3+h8g6Id1rOMoKVljvk5cflOPVUidj2Ok=;
+        b=ijjO3ob3Q+02MAsSALYb9KdA4TO1YwY5/wcp9nHZcyL5DFgElGuSgJJia79tedTEt8
+         xeySMFHEZBDvljNQt0oV82P8ELQs3h3s7L/exeu5+qym4jhqCTyXmOgeKmPI1jYD3eM6
+         bW2BxSIrLNM8h2vpe7dFdvqCe6GQzPCP9K8XaB1MBYqyoTSadQEjTlCAWQRE0dEasFyl
+         vGfVJObgdIhEkyViBS/ds7U3SVXGj3W2wrZZWHgxIWPVqJh+r7RIN0bxJLlfL+kru9n5
+         b329UXnB81ofl6zihNHHKoVIOVL3xLrQRF+g+tZnWND0kExDSpvFnIvfM6NnLMAcJlWp
+         Xqkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpalJz1GzSjCDaDPyjinbgz2FLZWHbXVby3YSMC2wNcEzbXb1NPNWBK0TofaI/V9awL8q4FYXyAi4uao4bKg==@groups.io
+X-Gm-Message-State: AOJu0Yxv9KAryjZ8cQnq796rweHeSX6d0UhSX7pNCtsyMnt08LzoKJ+K
+	wIxUWZ9Vz1hmGdLarppo9HU7uzBrl9qQWQtcEaU6zlrOg4a+VBRIDlGY9zBSy30=
+X-Google-Smtp-Source: AGHT+IFZ+ZgyMCO9Hm1RZf07wJLvzl+dqzIpsknhtVKFghTdbv9eqzeRBtJOMdk0OSwUna7qM1l4iw==
+X-Received: by 2002:a5d:64e1:0:b0:37d:3a2d:8577 with SMTP id ffacd0b85a97d-37d86c03b05mr5909717f8f.33.1729181446339;
+        Thu, 17 Oct 2024 09:10:46 -0700 (PDT)
 Received: from [127.0.1.1] ([2a05:6e02:10a5:e010:4754:2b9f:eb4f:125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fc42160sm7653993f8f.112.2024.10.17.09.10.43
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fc42160sm7653993f8f.112.2024.10.17.09.10.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 09:10:44 -0700 (PDT)
+        Thu, 17 Oct 2024 09:10:45 -0700 (PDT)
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH 0/6] Add support of Android Boot Image version 2 and non-AB
- image
-Date: Thu, 17 Oct 2024 18:10:24 +0200
-Message-Id: <20241017-adnroidv2-v1-0-781c939902c9@baylibre.com>
+Date: Thu, 17 Oct 2024 18:10:26 +0200
+Subject: [PATCH 2/6] bootstd: android: add non-A/B image support
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPA2EWcC/23OTW7DIBCG4atYrDsR4PgHr3KPKoqGYeyiBpOAY
- 1WKcvdip8suX4Se+Z4ic/KcxVA9ReLVZx/nEuqjEvSF88TgXWmhpT4qqRpAN6fo3aoBpXKErTS
- d7ET5f0s8+p/d+jy/O/H9Ucjl/SgC54w7OVR/YAc4uw28oL0EzAsnWBuQcKztSCRN60xzynh9L
- OzKPuJ8oBi2e/9qS7x5grFANsYF9kEQvrfwYYIyWwLVRndKamdqdbr6GVM8xDRtpsXMUPzgl6E
- yrMjpUZPt275trCUpNTvTKpSmoQ57S2R6I86v1y++TgRsSQEAAA==
+Message-Id: <20241017-adnroidv2-v1-2-781c939902c9@baylibre.com>
+References: <20241017-adnroidv2-v1-0-781c939902c9@baylibre.com>
+In-Reply-To: <20241017-adnroidv2-v1-0-781c939902c9@baylibre.com>
 To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
  Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>
@@ -72,60 +68,210 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 17 Oct 2024 16:10:52 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2502
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2504
 
-Actually bootmethod android only support android boot image version 4
-and with AB image, some old platform wtill use android boot image
-version 2 with AB or without AB slot.
-
-This patchset add support of both version 2 and non-AB slot images.
-It's fixed in same time a boot issue seen on khadas vim3{l} board with 16GB eMMC
-
-patchset was tested on khadas VIM3 and VIM3L with AOSP main branch and
-android-mainline kernel and with TI AM62P with android release provided
-by TI.
+Update android bootmeth to support non-A/B image.
+Enable AB support only when ANDROID_AB is enabled.
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
-Guillaume La Roque (6):
-      bootstd: android: add support of bootimage v2
-      bootstd: android: add non-A/B image support
-      configs: khadas-vim3{l}: fix userdata size
-      configs: khadas-vim3l_android{_ab}: move on bootmeth android
-      configs: khadas-vim3_android{_ab}: move on bootmeth android
-      bootstd: Add test for Android boot image v2
+ boot/Kconfig                     |  1 -
+ boot/bootmeth_android.c          | 53 ++++++++++++++++++++++++++++++++++------
+ configs/am62x_a53_android.config |  1 +
+ configs/sandbox_defconfig        |  1 +
+ 4 files changed, 47 insertions(+), 9 deletions(-)
 
- arch/sandbox/dts/test.dts                 | 10 +++-
- boot/Kconfig                              |  1 -
- boot/bootmeth_android.c                   | 80 ++++++++++++++++++++++---------
- configs/am62x_a53_android.config          |  1 +
- configs/khadas-vim3_android_ab_defconfig  |  7 ++-
- configs/khadas-vim3_android_defconfig     |  7 ++-
- configs/khadas-vim3l_android_ab_defconfig |  7 ++-
- configs/khadas-vim3l_android_defconfig    |  7 ++-
- configs/sandbox_defconfig                 |  1 +
- include/configs/khadas-vim3_android.h     | 31 +++++++++---
- include/configs/khadas-vim3l_android.h    | 33 ++++++++++---
- test/boot/bootflow.c                      | 29 +++++++++--
- test/py/tests/test_ut.py                  | 49 +++++++++++++++++++
- 13 files changed, 219 insertions(+), 44 deletions(-)
----
-base-commit: 9e1cd2f2cb86865bbc002ed961a095c7a8bcc989
-change-id: 20241015-adnroidv2-a01dca609707
-prerequisite-message-id: 20241017-android_ab_master-v5-0-43bfcc096d95@salutedevices.com
-prerequisite-patch-id: 2741d3997913068fd4ce70645feaf67036adf401
-prerequisite-patch-id: 3aee9fe1151f7f358c37dd18068f2270cfd11bf9
-prerequisite-patch-id: d43a2bb0407de9b4d76464f5edc7d08eecb6e637
-prerequisite-patch-id: 887f326fb6118f3b032f843d4f9edd382a0f3e8f
-prerequisite-patch-id: 51498bd770f7fe82cf6954ba61564cfd4644aace
-prerequisite-patch-id: 93d7bac8e10fad672833df6647f346cfce38f008
-prerequisite-message-id: 20241017-topic-fastboot-fixes-mkbootimg-v2-0-c3927102d931@linaro.org
-prerequisite-patch-id: 03ee7fe890d6cc5734ba5950fcda820466f9eee5
-prerequisite-patch-id: cdef2f4a68a8ae2eb4ffee5467ef45d1638e5266
-prerequisite-patch-id: 93aa15770f62ff17e55b74480456cf1f305de65e
+diff --git a/boot/Kconfig b/boot/Kconfig
+index 1d50a83a2d2f..fa0739ff05dd 100644
+--- a/boot/Kconfig
++++ b/boot/Kconfig
+@@ -500,7 +500,6 @@ config BOOTMETH_ANDROID
+ 	bool "Bootdev support for Android"
+ 	depends on X86 || ARM || SANDBOX
+ 	depends on CMDLINE
+-	select ANDROID_AB
+ 	select ANDROID_BOOT_IMAGE
+ 	select CMD_BCB
+ 	imply CMD_FASTBOOT
+diff --git a/boot/bootmeth_android.c b/boot/bootmeth_android.c
+index 2e7f85e4a708..8fa4952df3f2 100644
+--- a/boot/bootmeth_android.c
++++ b/boot/bootmeth_android.c
+@@ -29,6 +29,7 @@
+ #define BCB_PART_NAME "misc"
+ #define BOOT_PART_NAME "boot"
+ #define VENDOR_BOOT_PART_NAME "vendor_boot"
++#define SLOT_LEN 2
+ 
+ /**
+  * struct android_priv - Private data
+@@ -42,7 +43,7 @@
+  */
+ struct android_priv {
+ 	enum android_boot_mode boot_mode;
+-	char slot[2];
++	char *slot;
+ 	u32 header_version;
+ };
+ 
+@@ -71,7 +72,11 @@ static int scan_boot_part(struct udevice *blk, struct android_priv *priv)
+ 	char *buf;
+ 	int ret;
+ 
+-	sprintf(partname, BOOT_PART_NAME "_%s", priv->slot);
++	if (priv->slot)
++		sprintf(partname, BOOT_PART_NAME "_%s", priv->slot);
++	else
++		sprintf(partname, BOOT_PART_NAME);
++
+ 	ret = part_get_info_by_name(desc, partname, &partition);
+ 	if (ret < 0)
+ 		return log_msg_ret("part info", ret);
+@@ -108,7 +113,11 @@ static int scan_vendor_boot_part(struct udevice *blk, struct android_priv *priv)
+ 	char *buf;
+ 	int ret;
+ 
+-	sprintf(partname, VENDOR_BOOT_PART_NAME "_%s", priv->slot);
++	if (priv->slot)
++		sprintf(partname, VENDOR_BOOT_PART_NAME "_%s", priv->slot);
++	else
++		sprintf(partname, VENDOR_BOOT_PART_NAME);
++
+ 	ret = part_get_info_by_name(desc, partname, &partition);
+ 	if (ret < 0)
+ 		return log_msg_ret("part info", ret);
+@@ -142,6 +151,11 @@ static int android_read_slot_from_bcb(struct bootflow *bflow, bool decrement)
+ 	char slot_suffix[3];
+ 	int ret;
+ 
++	if (!CONFIG_IS_ENABLED(ANDROID_AB)) {
++		priv->slot = NULL;
++		return 0;
++	}
++
+ 	ret = part_get_info_by_name(desc, BCB_PART_NAME, &misc);
+ 	if (ret < 0)
+ 		return log_msg_ret("part", ret);
+@@ -150,6 +164,7 @@ static int android_read_slot_from_bcb(struct bootflow *bflow, bool decrement)
+ 	if (ret < 0)
+ 		return log_msg_ret("slot", ret);
+ 
++	priv->slot = malloc(SLOT_LEN);
+ 	priv->slot[0] = BOOT_SLOT_NAME(ret);
+ 	priv->slot[1] = '\0';
+ 
+@@ -274,7 +289,7 @@ static int android_read_bootflow(struct udevice *dev, struct bootflow *bflow)
+ 	configure_serialno(bflow);
+ 	configure_bootloader_version(bflow);
+ 
+-	if (priv->boot_mode == ANDROID_BOOT_MODE_NORMAL) {
++	if (priv->boot_mode == ANDROID_BOOT_MODE_NORMAL && priv->slot) {
+ 		ret = bootflow_cmdline_set_arg(bflow, "androidboot.force_normal_boot",
+ 					       "1", false);
+ 		if (ret < 0) {
+@@ -323,14 +338,24 @@ static int read_slotted_partition(struct blk_desc *desc, const char *const name,
+ {
+ 	struct disk_partition partition;
+ 	char partname[PART_NAME_LEN];
++	int partname_len;
+ 	int ret;
+ 	u32 n;
+ 
+ 	/* Ensure name fits in partname it should be: <name>_<slot>\0 */
+-	if (strlen(name) > (PART_NAME_LEN - 2 - 1))
++	if (CONFIG_IS_ENABLED(ANDROID_AB))
++		partname_len = PART_NAME_LEN - 2 - 1;
++	else
++		partname_len = PART_NAME_LEN - 1;
++
++	if (strlen(name) > partname_len)
+ 		return log_msg_ret("name too long", -EINVAL);
+ 
+-	sprintf(partname, "%s_%s", name, slot);
++	if (slot)
++		sprintf(partname, "%s_%s", name, slot);
++	else
++		sprintf(partname, "%s", name);
++
+ 	ret = part_get_info_by_name(desc, partname, &partition);
+ 	if (ret < 0)
+ 		return log_msg_ret("part", ret);
+@@ -382,7 +407,7 @@ static int run_avb_verification(struct bootflow *bflow)
+ 	AvbSlotVerifyData *out_data;
+ 	enum avb_boot_state boot_state;
+ 	char *extra_args;
+-	char slot_suffix[3];
++	char *slot_suffix = "";
+ 	bool unlocked = false;
+ 	int ret;
+ 
+@@ -390,7 +415,10 @@ static int run_avb_verification(struct bootflow *bflow)
+ 	if (!avb_ops)
+ 		return log_msg_ret("avb ops", -ENOMEM);
+ 
+-	sprintf(slot_suffix, "_%s", priv->slot);
++	if (priv->slot) {
++		slot_suffix = malloc(3);
++		sprintf(slot_suffix, "_%s", priv->slot);
++	}
+ 
+ 	ret = avb_ops->read_is_device_unlocked(avb_ops, &unlocked);
+ 	if (ret != AVB_IO_RESULT_OK)
+@@ -427,12 +455,18 @@ static int run_avb_verification(struct bootflow *bflow)
+ 	if (ret < 0)
+ 		goto free_out_data;
+ 
++	if (priv->slot)
++		free(slot_suffix);
++
+ 	return 0;
+ 
+  free_out_data:
+ 	if (out_data)
+ 		avb_slot_verify_data_free(out_data);
+ 
++	if (priv->slot)
++		free(slot_suffix);
++
+ 	return log_msg_ret("avb cmdline", ret);
+ }
+ #else
+@@ -480,6 +514,9 @@ static int boot_android_normal(struct bootflow *bflow)
+ 	}
+ 	set_abootimg_addr(loadaddr);
+ 
++	if (priv->slot)
++		free(priv->slot);
++
+ 	ret = bootm_boot_start(loadaddr, bflow->cmdline);
+ 
+ 	return log_msg_ret("boot", ret);
+diff --git a/configs/am62x_a53_android.config b/configs/am62x_a53_android.config
+index adbe2b8e126f..2aca51e3a107 100644
+--- a/configs/am62x_a53_android.config
++++ b/configs/am62x_a53_android.config
+@@ -11,6 +11,7 @@ CONFIG_RANDOM_UUID=y # Needed for FASTBOOT_CMD_OEM_FORMAT
+ CONFIG_FASTBOOT_CMD_OEM_FORMAT=y
+ # Enable Android boot flow
+ CONFIG_BOOTMETH_ANDROID=y
++CONFIG_ANDROID_AB=y
+ CONFIG_SYS_BOOTM_LEN=0x4000000
+ CONFIG_SYS_MALLOC_LEN=0x08000000
+ CONFIG_AVB_VERIFY=y
+diff --git a/configs/sandbox_defconfig b/configs/sandbox_defconfig
+index d111858082d5..6b8dedf20712 100644
+--- a/configs/sandbox_defconfig
++++ b/configs/sandbox_defconfig
+@@ -50,6 +50,7 @@ CONFIG_LOG_DEFAULT_LEVEL=6
+ CONFIG_LOGF_FUNC=y
+ CONFIG_DISPLAY_BOARDINFO_LATE=y
+ CONFIG_STACKPROTECTOR=y
++CONFIG_ANDROID_AB=y
+ CONFIG_CMD_CPU=y
+ CONFIG_CMD_LICENSE=y
+ CONFIG_CMD_SMBIOS=y
 
-Best regards,
 -- 
-Guillaume La Roque <glaroque@baylibre.com>
+2.34.1
 
 
