@@ -1,113 +1,131 @@
-Return-Path: <mkorpershoek@baylibre.com>
+Return-Path: <glaroque@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8CAD2A53A
-	for <webhook@archiver.kernel.org>; Thu, 17 Oct 2024 11:43:44 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web10.46428.1729165415692743763
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C8ED374B8
+	for <webhook@archiver.kernel.org>; Thu, 17 Oct 2024 16:10:52 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web11.1932.1729181446663515800
  for <u-boot-amlogic@groups.io>;
- Thu, 17 Oct 2024 04:43:36 -0700
+ Thu, 17 Oct 2024 09:10:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=2qnT5rj4;
- spf=pass (domain: baylibre.com, ip: 209.85.128.50, mailfrom: mkorpershoek@baylibre.com)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4315839a7c9so9384805e9.3
-        for <u-boot-amlogic@groups.io>; Thu, 17 Oct 2024 04:43:35 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=V+WNsQfi;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.52, mailfrom: glaroque@baylibre.com)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4315839a7c9so12221925e9.3
+        for <u-boot-amlogic@groups.io>; Thu, 17 Oct 2024 09:10:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729165414; x=1729770214; darn=groups.io;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LWxILAH51/hr4Bd3wiqzoyqgNuq6HGgVx7DXpURG2dY=;
-        b=2qnT5rj4mEL0QUraEM2gJyCLUCuBp5WAtOAJOQnNz/8EWCOBTCy7LwZU1vKZVkoEIU
-         putWx61Q0PuCnCab57Feo44TVHzEbGWn2c6kn0A72xH7zl7fgCFLAMByFiSgzPV7c3du
-         WgS8IHJ1cMiWbkBffiA32imFlPTGVkkPtMI+h7zojmGYEkmTAIp81dqwgFlB5CZNum+d
-         Io46l0OWL/y6ihCe91EPpmZQ5BkU0jnucDMXS3sqz3sP6wt6rwtrjO0ZzAQ/KRZUVBq8
-         rkgMrV2mqAfnf94ZTP9gPcJ5XaiA8za4W8fsUgq4YQFsfkDZfZea5WvxvMawwTOA9ueb
-         UJ0w==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729181445; x=1729786245; darn=groups.io;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i/6g9QE3f+WP55Ncpx5cM2zPhfavAXgJcyJU+2FsYcI=;
+        b=V+WNsQfiiexyANgUG23D1z090uDAYy3oPyheDbEOPVCh/Vy88tsGW5Khhpg04A5ppA
+         sBlqy7t9GXl+wv6x9VAIXOlst/mpIG4L872dHEiWyjxIqwiJdQrhs2G8RKFXqBbeqGr/
+         OpVnGlL2mODnWDIhTM+aJijoSXbEc0x6JibHadsWhQEkfVVoc+PhFiFAI8q7XjN2n9FU
+         v5ASoUOphFmOshW2CsmJUyKZO9u/1qyueeMQ9MtZWfAwxrRRymmHG6erXle81cH03YXy
+         2AxiVc22cRkpKRVrB3IY/9K9jfSfsYFT3+70LUz5EGiiUmq4mlCBf1/lyr8w5e8AdhBG
+         /JYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729165414; x=1729770214;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LWxILAH51/hr4Bd3wiqzoyqgNuq6HGgVx7DXpURG2dY=;
-        b=tHgPI/JzzDf2NGcdtMOTimp++aqbqpdSdMs0Bd61+qAyMd+FsD2NeixjJXubUm3b1g
-         ViV4ldxSxgKNpnQPclvF9ogex2h5VRT31o9AgaNHy4daZI/cn8bCoBvZJN1lFstSsV/i
-         XqQKKKjtTIaXPrwNUhKd/YWXmyslPXG6ByKHR2DYF344v+1q4l5k+drmESZCRs2XPIPz
-         XSb0T9wZan7IjrOkteHFmHi9rYIf7/uLOLkIInGzeKKgV2ubTmDgpnosL6YDH8eogENr
-         q9jYl6sD+65M4wUDzfrc/55vlL18OQf0XVCSVT1v9msh4XzGLOUwe4qQNf0yze6nWTtX
-         W7sw==
-X-Gm-Message-State: AOJu0YxceGnRA92NkcJNbTS2Dd+2oRuqRhJWliy/VWaYgMeeQJjUtr1V
-	QRR70s2nVlpmgvITd1zlZV4xanSvsFtolnWzU4QTnkmGFtmY+scO5s+MHGoloWI=
-X-Google-Smtp-Source: AGHT+IF8gpGKNU9yeLZBU4xTnZZuPDG5z8OleqTeTDOIN8jJTSJ6QysvOPirH4z7/ThBi/+9LZa/NA==
-X-Received: by 2002:a05:600c:4e93:b0:431:5bae:c600 with SMTP id 5b1f17b1804b1-4315baec7eemr13049515e9.34.1729165413997;
-        Thu, 17 Oct 2024 04:43:33 -0700 (PDT)
-Received: from localhost ([82.66.159.240])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43158c4dd28sm23676705e9.37.2024.10.17.04.43.33
+        d=1e100.net; s=20230601; t=1729181445; x=1729786245;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i/6g9QE3f+WP55Ncpx5cM2zPhfavAXgJcyJU+2FsYcI=;
+        b=KwoZ6fMmD+Ydxr70L/bKphT53ytYXRrfX3ZpA2C2kKzHgtqrn7QBg1/abgy/MzuWrY
+         ejsMqu+1/7CPAl0/F7YrGy970ewOQpDc/TJsKplD3NL6wyp80uqDmI3SswEtbtb/N0Yq
+         3eWAA4M5yf//vQ+59bQnSohBHhMx79vRzLbJoEVeykn02jGsFlH0S2xN041YRgnzgt9m
+         1YXn4Vxe5Ybbu8taPdEQGP/N9D9S6mYGieVzMkbBFA/Yaal586Z0ndckFn9xGuHC8h1D
+         PgcCI5nwZdfjKo7n4OQ0czeOPRReejk1s4JRYA2oTWh4jdbRkvSo2D9gszYt6d9SgikS
+         DseQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXapVeG6s+E2y4XLMG6fKdBqKgeL5wKg+JiIAmQL5UI32vl89h0227Lz8WkQJLhdFlWYYaX+HUSkTrEK4IANA==@groups.io
+X-Gm-Message-State: AOJu0Yw9e7kUKB5jgd4N/HmAi2m5WyJA8NWGJSNoTKXScm0KAsjVeCgq
+	nT2ItsQtvaUcxoqw35/CGIdWVAhYYxILdn+CfvvsF+JO+v6k2INHAli5lsiKlHe8v+NV5z42BZc
+	c
+X-Google-Smtp-Source: AGHT+IHbE83aCpnHHzxRLlCjwThlkUFut0WEG2Sso3O1TvVSLZ9HJQjBXE0E1rzyQrCkLJzczPNP5A==
+X-Received: by 2002:a05:600c:1d94:b0:42c:b1ee:4b04 with SMTP id 5b1f17b1804b1-4314a38157emr62678055e9.28.1729181444757;
+        Thu, 17 Oct 2024 09:10:44 -0700 (PDT)
+Received: from [127.0.1.1] ([2a05:6e02:10a5:e010:4754:2b9f:eb4f:125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fc42160sm7653993f8f.112.2024.10.17.09.10.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 04:43:33 -0700 (PDT)
-From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-To: Dmitry Rokosov <ddrokosov@salutedevices.com>, Simon Glass
- <sjg@chromium.org>
-Cc: u-boot-amlogic@groups.io, Igor Opaniuk <igor.opaniuk@gmail.com>, Sam
- Protsenko <semen.protsenko@linaro.org>, Tom Rini <trini@konsulko.com>,
- "Andrew F. Davis" <afd@ti.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Mario Six <mario.six@gdsys.cc>,
- u-boot@lists.denx.de, rockosov@gmail.com, kernel@salutedevices.com
-Subject: Re: [PATCH v3 2/6] treewide: bcb: move ab_select command to bcb
- subcommands
-In-Reply-To: <20241016154832.nqlyspranlrsl6l7@CAB-WSD-L081021>
-References: <20241008-android_ab_master-v3-2-f292c45a33e4@salutedevices.com>
- <17FD691FA1477948.8140@groups.io> <87ed4mhgaw.fsf@baylibre.com>
- <20241011180031.cgvuhks7zo772wl6@CAB-WSD-L081021>
- <87frp1r9iz.fsf@baylibre.com>
- <20241014203820.riljx72bkqw762v5@CAB-WSD-L081021>
- <CAFLszTgO5h1zdXJTk-PCcDWx6nAz3riV34K_sHcvnO4AYMNSqA@mail.gmail.com>
- <87ikttzhwd.fsf@baylibre.com>
- <20241015144245.e4zzhuuqguwnxafg@CAB-WSD-L081021>
- <CAFLszTjYYa_LO2eOj_5fFjGAMivq298g8n_U=-L20pKk6Tkw1Q@mail.gmail.com>
- <20241016154832.nqlyspranlrsl6l7@CAB-WSD-L081021>
-Date: Thu, 17 Oct 2024 13:43:31 +0200
-Message-ID: <874j5b2bvg.fsf@baylibre.com>
+        Thu, 17 Oct 2024 09:10:44 -0700 (PDT)
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH 0/6] Add support of Android Boot Image version 2 and non-AB
+ image
+Date: Thu, 17 Oct 2024 18:10:24 +0200
+Message-Id: <20241017-adnroidv2-v1-0-781c939902c9@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPA2EWcC/23OTW7DIBCG4atYrDsR4PgHr3KPKoqGYeyiBpOAY
+ 1WKcvdip8suX4Se+Z4ic/KcxVA9ReLVZx/nEuqjEvSF88TgXWmhpT4qqRpAN6fo3aoBpXKErTS
+ d7ET5f0s8+p/d+jy/O/H9Ucjl/SgC54w7OVR/YAc4uw28oL0EzAsnWBuQcKztSCRN60xzynh9L
+ OzKPuJ8oBi2e/9qS7x5grFANsYF9kEQvrfwYYIyWwLVRndKamdqdbr6GVM8xDRtpsXMUPzgl6E
+ yrMjpUZPt275trCUpNTvTKpSmoQ57S2R6I86v1y++TgRsSQEAAA==
+To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
+ Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+ Guillaume La Roque <glaroque@baylibre.com>, 
+ 20241017-android_ab_master-v5-0-43bfcc096d95@salutedevices.com, 
+ 20241017-topic-fastboot-fixes-mkbootimg-v2-0-c3927102d931@linaro.org
+X-Mailer: b4 0.14.1
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 17 Oct 2024 11:43:44 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2501
+ <u-boot-amlogic@groups.io>; Thu, 17 Oct 2024 16:10:52 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2502
 
-Hi Dmitry,
+Actually bootmethod android only support android boot image version 4
+and with AB image, some old platform wtill use android boot image
+version 2 with AB or without AB slot.
 
-On mer., oct. 16, 2024 at 18:48, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+This patchset add support of both version 2 and non-AB slot images.
+It's fixed in same time a boot issue seen on khadas vim3{l} board with 16GB eMMC
 
-[...]
+patchset was tested on khadas VIM3 and VIM3L with AOSP main branch and
+android-mainline kernel and with TI AM62P with android release provided
+by TI.
 
->> > ```
->> 
->> Long help should use U_BOOT_LONGHELP, we normally handle this with
->> #ifdef - see cmd/bootflow.c for example
->
-> Thank you for pointing me to U_BOOT_LONGHELP. I have redesigned
-> cmd/bcb.c to utilize the U_BOOT_LONGHELP(), U_BOOT_CMD_WITH_SUBCMDS(),
-> and U_BOOT_SUBCMD_MKENT() functions. As a result, a significant amount
-> of command management code has been removed from cmd/bcb.c, making it
-> look much more compact.
->
-> To be honest, I think I missed the minargs parameter in
-> U_BOOT_CMD_WITH_SUBCMDS(). Including minargs would enable us to avoid
-> checking argc for a minimum value in the each subcmd callback and
-> returning CMD_RET_USAGE in case of any errors.
->
-> Anyway, I will prepare v5 version with refactored cmd/bcb.c to
-> U_BOOT_LONGHELP usage.
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+Guillaume La Roque (6):
+      bootstd: android: add support of bootimage v2
+      bootstd: android: add non-A/B image support
+      configs: khadas-vim3{l}: fix userdata size
+      configs: khadas-vim3l_android{_ab}: move on bootmeth android
+      configs: khadas-vim3_android{_ab}: move on bootmeth android
+      bootstd: Add test for Android boot image v2
 
-Thank you for your patience with all the back and forth on this. Looking
-forward to v5 !
+ arch/sandbox/dts/test.dts                 | 10 +++-
+ boot/Kconfig                              |  1 -
+ boot/bootmeth_android.c                   | 80 ++++++++++++++++++++++---------
+ configs/am62x_a53_android.config          |  1 +
+ configs/khadas-vim3_android_ab_defconfig  |  7 ++-
+ configs/khadas-vim3_android_defconfig     |  7 ++-
+ configs/khadas-vim3l_android_ab_defconfig |  7 ++-
+ configs/khadas-vim3l_android_defconfig    |  7 ++-
+ configs/sandbox_defconfig                 |  1 +
+ include/configs/khadas-vim3_android.h     | 31 +++++++++---
+ include/configs/khadas-vim3l_android.h    | 33 ++++++++++---
+ test/boot/bootflow.c                      | 29 +++++++++--
+ test/py/tests/test_ut.py                  | 49 +++++++++++++++++++
+ 13 files changed, 219 insertions(+), 44 deletions(-)
+---
+base-commit: 9e1cd2f2cb86865bbc002ed961a095c7a8bcc989
+change-id: 20241015-adnroidv2-a01dca609707
+prerequisite-message-id: 20241017-android_ab_master-v5-0-43bfcc096d95@salutedevices.com
+prerequisite-patch-id: 2741d3997913068fd4ce70645feaf67036adf401
+prerequisite-patch-id: 3aee9fe1151f7f358c37dd18068f2270cfd11bf9
+prerequisite-patch-id: d43a2bb0407de9b4d76464f5edc7d08eecb6e637
+prerequisite-patch-id: 887f326fb6118f3b032f843d4f9edd382a0f3e8f
+prerequisite-patch-id: 51498bd770f7fe82cf6954ba61564cfd4644aace
+prerequisite-patch-id: 93d7bac8e10fad672833df6647f346cfce38f008
+prerequisite-message-id: 20241017-topic-fastboot-fixes-mkbootimg-v2-0-c3927102d931@linaro.org
+prerequisite-patch-id: 03ee7fe890d6cc5734ba5950fcda820466f9eee5
+prerequisite-patch-id: cdef2f4a68a8ae2eb4ffee5467ef45d1638e5266
+prerequisite-patch-id: 93aa15770f62ff17e55b74480456cf1f305de65e
 
-Cheers
-Mattijs
+Best regards,
+-- 
+Guillaume La Roque <glaroque@baylibre.com>
 
->
-> -- 
-> Thank you,
-> Dmitry
 
