@@ -2,49 +2,49 @@ Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C154D2C548
-	for <webhook@archiver.kernel.org>; Tue, 22 Oct 2024 12:44:15 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web11.17232.1729601045554757098
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41555D2C549
+	for <webhook@archiver.kernel.org>; Tue, 22 Oct 2024 12:46:45 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web11.17278.1729601202414098078
  for <u-boot-amlogic@groups.io>;
- Tue, 22 Oct 2024 05:44:05 -0700
+ Tue, 22 Oct 2024 05:46:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=zrdjZwHg;
- spf=pass (domain: baylibre.com, ip: 209.85.128.51, mailfrom: mkorpershoek@baylibre.com)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4315c1c7392so51255465e9.1
-        for <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 05:44:05 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=xpR6onar;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.49, mailfrom: mkorpershoek@baylibre.com)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43161c0068bso41788075e9.1
+        for <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 05:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729601044; x=1730205844; darn=groups.io;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729601201; x=1730206001; darn=groups.io;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HnndWNwRsL1q8HvAW3FI4EMo0HeD8M4loMRst/Y8j+4=;
-        b=zrdjZwHgJGrV3+In8K67nGazV62mDKjWnHJlGaUsuTWwuLLlNTs6rE8Q1AyH97ys5b
-         pJ4KAprQOxKCQO2HLWCEtVblgfDUyAXjH/gbRNEEJZtQG825fQBQ48MmRiVE/7a+631I
-         hJAY7S+q8p0abensVNcLU30pNNdiO8pOarJfc1evfZkwd06LDF2cLEIxyye1Py1fxW2l
-         6h0HkbxvntKgBcDJw/WN5N3ug+DbqZk8SQSTq3BvD1erjFJ63FFG02YmsUHLeLnPmOwY
-         /Ana2dnejuansPfgqd2LrQSutl7TjLYjcWNuF/5dO3Ht6R1sK1AYve7Q1iSzWVLKlopg
-         Ka9w==
+        bh=LBoyQ6YybvW2ed3USuSGHRo92Y/y9rMgOfXSEGyDSpo=;
+        b=xpR6onarMdbqZRoHZdIlPBoGjPJy0eu/GWe6ADH4HcCSFjtM4n4uMuC0YurZKzS78b
+         xSLOHBAn4EAYCo9VR3a87GMHPI+GA+8IkE08Wu06cOkwN+X1KRdIdcGP8jjKuXjhRI0t
+         vUmh64bO7V6R8mHHzE/V/ueV77GKM8oQ7sjb7d6KIUgjUn62pZKaBmogU6DondALoaSM
+         BZNkQ0qC0vIHorRHu9bL65ZdzixQgMiIHPUWE3We/Lx0Yb6m8qHVTeDp57m9+fnSMRir
+         h794AJChk1oBaObhcIL9TRguNggDJywu5SN82syShH6LAF/408KozKia6zbQ/MkGV0/4
+         vmGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729601044; x=1730205844;
+        d=1e100.net; s=20230601; t=1729601201; x=1730206001;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HnndWNwRsL1q8HvAW3FI4EMo0HeD8M4loMRst/Y8j+4=;
-        b=f3DH78iB5mUVoh0kHGXF+OBxLt4eBr+qInrNnL+Kn9382irV7sUhUu2EidmU8S2CcN
-         AwhoBfzwH8/UgIKo1kUmXkADc1hDB0Ye2fmXXg9JvimzYhVAhM5k+cDTQPRYxcX3cjAc
-         ZF3DQ3SZPpmaNgumNgklOkK8SmJj0gfCcsH4xd4DJOBXfecGoq4AmJYvroRW1Gh4dGk/
-         mKDNN4Py6Ls6WzFywlzLldIj9XhpyFIKaid5ruLjTCvApP+DOLAN3dyJIyfVwJMKTxMz
-         DdxDfJpXMh3DkFnTMqIMOlPTipRM76LlnLwzgbG3Ro3jujBnRm8LdBNcwsrR4aWSdLHl
-         Ddyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWt+8QxH+MwaBQysu03y1TlF5zUCwnrUOzqnBe/TZKEmws8mbdnoG8OBSMomqM8QDHf5ke7JgOi3W7N77bIuQ==@groups.io
-X-Gm-Message-State: AOJu0YxNPA6u9iUChTSsiAOHgzuV6A//SoECBbnTc4LDC1Jr+0/5RPNz
-	cdqxgTdgt+e+MxSMTL7ZvtWclH7NY/6yYgAR+Bcar8tK9ZQUBKUINyZIfWuahjw=
-X-Google-Smtp-Source: AGHT+IGOnkc82nBls6tNCvq1352Sfvcu1ltRgMwkAF/KKa8wz7+ZgfsWBJqpisVgm4M29jYoqiShmg==
-X-Received: by 2002:a05:600c:674a:b0:42f:8229:a0a1 with SMTP id 5b1f17b1804b1-431616adba5mr108854245e9.33.1729601043935;
-        Tue, 22 Oct 2024 05:44:03 -0700 (PDT)
+        bh=LBoyQ6YybvW2ed3USuSGHRo92Y/y9rMgOfXSEGyDSpo=;
+        b=tvUqAk8oslmFPSeSFO5MS3nxS3tTGlnybDQTYXRe4K2ttxyfIRe5XmyY5f/UpPOzZP
+         7gMTnuGnFWV12xJgQFKdc+E7PIa1ZjnOud6KEGbBFGF3VDVnrjzvjelKOau7Lak8uBUJ
+         y+BT63ZRkzPvXt5hOsLrV4jQCCMY6dY70XIM8zB+q7qS4ONtnuNnOR+i3AS9mAb5nyRe
+         aJNc/+bwvaZ0u5YSRvvzRepq4GdNhQI1rH2XedAWhdEupXYR2Cp1JtuZwQjUi5RDa2dB
+         431MmNMbJt8D+WL1lhlHI9huMIXgN0eMaiv1BsylCkRHhC8MTc6KcM4gnjzZapXyXq+l
+         JKXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAKWJBEx+O8XYELglPpAQKhksfu57p9ei7UKR1wCqxu0zna5QC9pd9C3iBIIe3tTim8Bac5g9AZxFvjj7qfw==@groups.io
+X-Gm-Message-State: AOJu0YwxKwXwBMnHWNMR0zZWjOStQ9/vsh/TczxiOQcC2nj5e0J2MGU+
+	i8EUAY50DAkMefxuqt78EbcQ6Okp38mOpo4575TLMoECTGHOGBAubYSeZUTQm4U=
+X-Google-Smtp-Source: AGHT+IFjG3TtiRtXWrm7ap2tEgR9N1KoOC4+1geVpVD4SjcDnaJWpIDHrLmg0zJU+z3fKb4AmXWj7A==
+X-Received: by 2002:a05:600c:4349:b0:431:5f1b:a7c6 with SMTP id 5b1f17b1804b1-4317744a9dfmr46642685e9.30.1729601200640;
+        Tue, 22 Oct 2024 05:46:40 -0700 (PDT)
 Received: from localhost ([82.66.159.240])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0a58cc2sm6559144f8f.54.2024.10.22.05.44.03
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f5c2c8esm87883605e9.36.2024.10.22.05.46.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 05:44:03 -0700 (PDT)
+        Tue, 22 Oct 2024 05:46:40 -0700 (PDT)
 From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 To: Guillaume La Roque <glaroque@baylibre.com>, Simon Glass
  <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, Neil Armstrong
@@ -53,20 +53,20 @@ Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, Guillaume La Roque
  <glaroque@baylibre.com>,
  20241017-android_ab_master-v5-0-43bfcc096d95@salutedevices.com,
  20241017-topic-fastboot-fixes-mkbootimg-v2-0-c3927102d931@linaro.org
-Subject: Re: [PATCH 4/6] configs: khadas-vim3l_android{_ab}: move on
- bootmeth android
-In-Reply-To: <20241017-adnroidv2-v1-4-781c939902c9@baylibre.com>
+Subject: Re: [PATCH 5/6] configs: khadas-vim3_android{_ab}: move on bootmeth
+ android
+In-Reply-To: <20241017-adnroidv2-v1-5-781c939902c9@baylibre.com>
 References: <20241017-adnroidv2-v1-0-781c939902c9@baylibre.com>
- <20241017-adnroidv2-v1-4-781c939902c9@baylibre.com>
-Date: Tue, 22 Oct 2024 14:43:52 +0200
-Message-ID: <871q08wbnb.fsf@baylibre.com>
+ <20241017-adnroidv2-v1-5-781c939902c9@baylibre.com>
+Date: Tue, 22 Oct 2024 14:46:36 +0200
+Message-ID: <87y12guwyb.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 12:44:15 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2514
+ <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 12:46:45 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2515
 
 Hi Guillaume,
 
@@ -74,20 +74,20 @@ Thank you for the patch.
 
 On jeu., oct. 17, 2024 at 18:10, Guillaume La Roque <glaroque@baylibre.com> wrote:
 
-> Actually khadas vim3l use distro command to boot android image.
-> Move on new bootmeth android for A/B and non-A/B vim3l android.
+> Actually khadas vim3 use distro command to boot android image.
+> Move on new bootmeth android for A/B and non-A/B vim3 android.
 >
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->  configs/khadas-vim3l_android_ab_defconfig |  7 ++++++-
->  configs/khadas-vim3l_android_defconfig    |  7 ++++++-
->  include/configs/khadas-vim3l_android.h    | 29 +++++++++++++++++++++++++----
->  3 files changed, 37 insertions(+), 6 deletions(-)
+>  configs/khadas-vim3_android_ab_defconfig |  7 ++++++-
+>  configs/khadas-vim3_android_defconfig    |  7 ++++++-
+>  include/configs/khadas-vim3_android.h    | 27 +++++++++++++++++++++++----
+>  3 files changed, 35 insertions(+), 6 deletions(-)
 >
-> diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
-> index 4d7b90f23002..43db61056baf 100644
-> --- a/configs/khadas-vim3l_android_ab_defconfig
-> +++ b/configs/khadas-vim3l_android_ab_defconfig
+> diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
+> index de5357c45cbf..a078c5d363ae 100644
+> --- a/configs/khadas-vim3_android_ab_defconfig
+> +++ b/configs/khadas-vim3_android_ab_defconfig
 > @@ -24,6 +24,12 @@ CONFIG_REMAKE_ELF=y
 >  CONFIG_FIT=y
 >  CONFIG_FIT_SIGNATURE=y
@@ -109,10 +109,10 @@ On jeu., oct. 17, 2024 at 18:10, Guillaume La Roque <glaroque@baylibre.com> wrot
 >  CONFIG_CMD_GPIO=y
 >  CONFIG_CMD_GPT=y
 >  CONFIG_CMD_I2C=y
-> diff --git a/configs/khadas-vim3l_android_defconfig b/configs/khadas-vim3l_android_defconfig
-> index 4ec27262cdc7..32d57a5b9090 100644
-> --- a/configs/khadas-vim3l_android_defconfig
-> +++ b/configs/khadas-vim3l_android_defconfig
+> diff --git a/configs/khadas-vim3_android_defconfig b/configs/khadas-vim3_android_defconfig
+> index a0d9c423c3c3..b77a44ce859b 100644
+> --- a/configs/khadas-vim3_android_defconfig
+> +++ b/configs/khadas-vim3_android_defconfig
 > @@ -24,6 +24,12 @@ CONFIG_REMAKE_ELF=y
 >  CONFIG_FIT=y
 >  CONFIG_FIT_SIGNATURE=y
@@ -134,40 +134,23 @@ On jeu., oct. 17, 2024 at 18:10, Guillaume La Roque <glaroque@baylibre.com> wrot
 >  CONFIG_CMD_GPIO=y
 >  CONFIG_CMD_GPT=y
 >  CONFIG_CMD_I2C=y
-> diff --git a/include/configs/khadas-vim3l_android.h b/include/configs/khadas-vim3l_android.h
-> index f39a3782d663..4455898b5262 100644
-> --- a/include/configs/khadas-vim3l_android.h
-> +++ b/include/configs/khadas-vim3l_android.h
-> @@ -26,6 +26,7 @@
->  	"name=super,size=3072M,uuid=${uuid_gpt_super};" \
->  	"name=userdata,size=11218M,uuid=${uuid_gpt_userdata};" \
+> diff --git a/include/configs/khadas-vim3_android.h b/include/configs/khadas-vim3_android.h
+> index 0e2953fe71b3..498afd0287f4 100644
+> --- a/include/configs/khadas-vim3_android.h
+> +++ b/include/configs/khadas-vim3_android.h
+> @@ -41,10 +41,29 @@
 >  	"name=rootfs,size=-,uuid=" ROOT_UUID
-> +
-
-nit: un-necessary change here?
-
->  #else
->  #define PARTS_DEFAULT \
->  	"uuid_disk=${uuid_gpt_disk};" \
-> @@ -39,12 +40,32 @@
->  	"name=super,size=1792M,uuid=${uuid_gpt_super};" \
->  	"name=userdata,size=12722M,uuid=${uuid_gpt_userdata};" \
->  	"name=rootfs,size=-,uuid=" ROOT_UUID
-> +
-
-nit: un-necessary change here?
-
 >  #endif
 >  
 > -#define EXTRA_ANDROID_ENV_SETTINGS \
-> -	"board=vim3l\0" \
-> -	"board_name=vim3l\0" \
+> -	"board=vim3\0" \
+> -	"board_name=vim3\0" \
 > +#define CFG_EXTRA_ENV_SETTINGS                                    \
-> +	"board=vim3l\0"                                               \
-> +	"board_name=vim3l\0"                                          \
+> +	"board=vim3\0"                                               \
+> +	"board_name=vim3\0"                                          \
 > +	"bootmeths=android\0"                                         \
 > +	"bootcmd=bootflow scan\0"                                     \
-> +	"adtb_idx=2\0"                                                \
+> +	"adtb_idx=3\0"                                                \
 > +	"partitions=" PARTS_DEFAULT "\0"                              \
 > +	"mmcdev=2\0"                                                  \
 > +	"fastboot_raw_partition_bootloader=0x1 0xfff mmcpart 1\0"     \
