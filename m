@@ -2,49 +2,49 @@ Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4038D1CDB6
-	for <webhook@archiver.kernel.org>; Tue, 22 Oct 2024 08:32:43 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web10.13612.1729585959475187464
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34F3D1CDBD
+	for <webhook@archiver.kernel.org>; Tue, 22 Oct 2024 08:45:03 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web10.13738.1729586689716936109
  for <u-boot-amlogic@groups.io>;
- Tue, 22 Oct 2024 01:32:40 -0700
+ Tue, 22 Oct 2024 01:44:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=jxgP8d8P;
- spf=pass (domain: baylibre.com, ip: 209.85.128.50, mailfrom: mkorpershoek@baylibre.com)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-431548bd1b4so52189685e9.3
-        for <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 01:32:39 -0700 (PDT)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=LdPWNcaB;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.44, mailfrom: mkorpershoek@baylibre.com)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4316f3d3c21so23938365e9.3
+        for <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 01:44:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729585958; x=1730190758; darn=groups.io;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729586688; x=1730191488; darn=groups.io;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ewlRDRy9rSStzBpNiy2SmbDXWnIcvHgbQLDAoT1XjrU=;
-        b=jxgP8d8Ps2d6LSeYvpBXLrdAFBJOa7/tJ1piLelSR80m2eAZZLsS+V1PGZR6FOvJp1
-         +DbF9rKsneJwCOxQ8vmkZcWMUDDCZm7CI+wVmEs9Itw1ng9tI008r2Ot6ihMuLXJ7qwI
-         NBohOGeNCfA4/zwu8jXcL+qHbDVW8uuPQNZSmn2z48yA9eMDJLcxbJMi5f9kmGYa2VV7
-         dQkf2d5H87pthNwnP6VCYLGFGL/UQq2kpuGlpWlw5hY2xdIL/RTwjbfH7rQXE67nHbWF
-         /AVolJ0bFtFkF3C07tsihJDM4Z3WN1w2Z8QoyLTwdrtaqFpFwNvRyvI3MFuO8Fkg0CJI
-         /xiw==
+        bh=OY2BBrhPS7Lyes5L929fFvZVBrzvvw8q2g7ywA8nw5o=;
+        b=LdPWNcaBnfvqPkV/HWOUp6zdh0P5ksQI9ouEXwi/VTJBZd/KwimwrXgp+HLWFu9dgN
+         PgyreXcAhF09rakTnRO7VkKS3YI/eZdESEyWLKNKd2S8BnOhyXfklRk5BCwT3dthllE2
+         vtnilror+vrfkGc5KgnC7MhOYvMcuTNG5mMaFgNe2b+MrJQQh1cQjb6NFCO49ngmzphx
+         aH/2lve+z/ymbvsAaMM41JGyIbizLQSiq01mdSIbNp6luxJlvw7dPA2jogiZNWJg/pHA
+         LOcWOgQnuHNjhh0t9gWkw/ekB6wWFJTFjgdIjtBxeift0KF3ehqJr0K0BXiTXdsIk6MZ
+         CbhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729585958; x=1730190758;
+        d=1e100.net; s=20230601; t=1729586688; x=1730191488;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ewlRDRy9rSStzBpNiy2SmbDXWnIcvHgbQLDAoT1XjrU=;
-        b=k3QDpRfOGSZ9jhaB+BB8mNw2GJAfy4OtaVBFUySlGIKxQjaxHy0fFgsX9VNCB2rzOP
-         7cSMwsVAt0M1Tne2Q5tUUMGgvixezop5VChqaNLTop7nOZV8i0RBFmZ25oGiDtGgUpFy
-         ymEDXbNn3w+FUOcdSK0ZNit3e1HDU97jrspzyudOK+edbl9yP/BVPSUB0wSlOrI8+cq/
-         BM8gttusZJUUdRxc6wT+1yJ38keqS6/oj2iVNzNOra4x5qwQ507GrPu99U3vlhVlsIvn
-         ZC9oMPcy1ISSV5kZqZdo6JgRuiLwJu2lUaZkTZdST261dYhvMCTm555ogqrjwfDbW5x/
-         kUjg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/oi8ISUj3BtKqD888zQ8tlctdv0avFtJBv9jG2WxmNZyuGo7kNUUtMcJHlUbB5WFomgnz9TDc+UJI+06zpw==@groups.io
-X-Gm-Message-State: AOJu0YySEfMf0O+OzicXy04AojPCjDNavQMptNO/6JLZbi72ipG/eDAp
-	XSY26qmOX/cFyy4XTXPXtxWleokKWuHd4kIpjJKubiJQMY0pmgECaaqTjYA3f2I=
-X-Google-Smtp-Source: AGHT+IH620t5DBpF6+J/rjWeUv1k560iRER3FSXu7Gw6Viveebz0L8IwbUS7xPbIcS5tN0IZLx/eZw==
-X-Received: by 2002:a05:600c:1d27:b0:431:5847:f63f with SMTP id 5b1f17b1804b1-4316164ac7amr113798365e9.13.1729585957599;
-        Tue, 22 Oct 2024 01:32:37 -0700 (PDT)
+        bh=OY2BBrhPS7Lyes5L929fFvZVBrzvvw8q2g7ywA8nw5o=;
+        b=XM6ifST5TIOKwNLZD/rzK4phlBjGdZFTPWfdl9C5ZrfFecRSh3EC7bK1qJawNJgZFV
+         en8yUlqqQ7cDYdxtqSQX2PwYiAdX976K4edbueCDgMkmq5JOy8P1l4f8adZOJktEdFb4
+         3TiMDMaTo2NUmZbvpilJDne3GltgAgfW3qLW5kUoVUDMArGeu9Nlos2Qwv+w+PE1Hw2N
+         GzaW4+woZCP9IxunSSdhVvXoeU4WGov1EupMwOZkGSoL7SK5jpiOotN5ctFOVc1Q7Umi
+         GNEfaB7qu9Za3R81VnmiCz6dTx59uafQDXjPFAsJA75RqyVe5PCCJYgY1ZsR7UgnEbL0
+         pJUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsdDr9nly758HaaaPPCesebrjWoEvsg/nS9CCUK4JHtxPPUf8Khtpu9k2wlMx5yBJY6hyZfVPkZzNbVvAdfw==@groups.io
+X-Gm-Message-State: AOJu0Yz/WKQDB3D60+d3+u/g7MRhOIRgDLIa+edJ0MQvLeI084mzDje5
+	FANeCeIztD34HJExJ/2VIbSChTESTSQ4FLlrfQ6aB54FCDl7R8A49NbC2cJAqFI=
+X-Google-Smtp-Source: AGHT+IFjAjzEOXFBtjzru9ZFaTTTyQvW5xDOqWW2S9ic4tGdQ6mxh012eHNWi0X9zZeL5vGEX4YKOw==
+X-Received: by 2002:a05:600c:1c9f:b0:42c:b80e:5e50 with SMTP id 5b1f17b1804b1-4317b68c9e6mr23442735e9.0.1729586688020;
+        Tue, 22 Oct 2024 01:44:48 -0700 (PDT)
 Received: from localhost ([82.66.159.240])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f5709efsm82701435e9.10.2024.10.22.01.32.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f58af90sm83076505e9.21.2024.10.22.01.44.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 01:32:36 -0700 (PDT)
+        Tue, 22 Oct 2024 01:44:46 -0700 (PDT)
 From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 To: Dmitry Rokosov <ddrokosov@salutedevices.com>, Igor Opaniuk
  <igor.opaniuk@gmail.com>, Sam Protsenko <semen.protsenko@linaro.org>, Tom
@@ -52,120 +52,271 @@ To: Dmitry Rokosov <ddrokosov@salutedevices.com>, Igor Opaniuk
  <neil.armstrong@linaro.org>, Simon Glass <sjg@chromium.org>, Mario Six
  <mario.six@gdsys.cc>
 Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io, rockosov@gmail.com,
- kernel@salutedevices.com, Dmitry Rokosov <ddrokosov@salutedevices.com>,
- Guillaume La Roque <glaroque@baylibre.com>
-Subject: Re: [PATCH v5 0/6] android_ab: introduce bcb ab_dump command and
- provide several bcb fixes
-In-Reply-To: <20241017-android_ab_master-v5-0-43bfcc096d95@salutedevices.com>
+ kernel@salutedevices.com, Dmitry Rokosov <ddrokosov@salutedevices.com>
+Subject: Re: [PATCH v5 2/6] cmd: bcb: rework the command to U_BOOT_LONGHELP
+ approach
+In-Reply-To: <20241017-android_ab_master-v5-2-43bfcc096d95@salutedevices.com>
 References: <20241017-android_ab_master-v5-0-43bfcc096d95@salutedevices.com>
-Date: Tue, 22 Oct 2024 10:32:34 +0200
-Message-ID: <87ttd4wna5.fsf@baylibre.com>
+ <20241017-android_ab_master-v5-2-43bfcc096d95@salutedevices.com>
+Date: Tue, 22 Oct 2024 10:44:43 +0200
+Message-ID: <87r088wmpw.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 08:32:43 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2509
+ <u-boot-amlogic@groups.io>; Tue, 22 Oct 2024 08:45:03 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2510
 
 Hi Dmitry,
 
-Thank you for this series.
+Thank you for the patch.
 
 On jeu., oct. 17, 2024 at 17:12, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
 
-> The patch series include changes:
->     - move ab_select_slot() documentation to @ notation
->     - redesign 'bcb' command to U_BOOT_LONGHELP approach
->     - move ab_select command to bcb subcommands
->     - introduce the ab_dump command to print the content of the BCB
->       block; it's useful for debugging A/B logic on supported boards
->     - fix the slot suffix format in the ABC block to align with official
->       Android BCB specifications
->     - add a test for the ab_dump command to verify the accuracy of each
->       field within the ABC data displayed, it's also useful for testing
->       slot_suffix problem code paths
+> U_BOOT_LONGHELP and U_BOOT_CMD_WITH_SUBCMDS offer numerous advantages,
+> including:
+> - common argument restrictions checking
+> - automatic subcommand matching
+> - improved usage and help handling
+>
+> By utilizing the U_BOOT_LONGHELP approach, we can reduce the amount of
+> command management code and describe commands more succinctly.
 >
 > Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-
-Boot tested AOSP using on Khadas VIM3 using khadas_vim3_android_defconfig
-
-Tested-by: Mattijs Korpershoek <mkorpershoek@baylibre.com> # vim3_android
-
-Boot tested Android 14 on Beagle Play using:
-am62x_beagleplay_a53_defconfig and am62x_a53_android.config
-
-Tested-by: Mattijs Korpershoek <mkorpershoek@baylibre.com> # beagleplay
-
 > ---
-> Changes in v5:
-> - rework direct #ifdefs to IS_ENABLED() macro
-> - redesign 'bcb' command to U_BOOT_LONGHELP approach
-> - check argc directly in the ab_select and ab_dump subcommands handlers
-> - Link to v4: https://lore.kernel.org/r/20241015-android_ab_master-v4-0-a91cca9513c4@salutedevices.com
+>  cmd/bcb.c | 151 ++++++++++++++++++--------------------------------------------
+>  1 file changed, 43 insertions(+), 108 deletions(-)
+
+Nice diffstat, always great to see code removed!
+
+Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+
 >
-> Changes in v4:
-> - add #ifdefs for CONFIG_ANDROID_AB in cmd/bcb.c to allow the usage of
->   the bcb command without A/B enabled
-> - run the savedefconfig command for all defconfigs that include the
->   CMD_BCB configuration
-> - resolve merge conflicts with latest master
-> - provide additional trailers from the previous version (excluding
->   changed patches)
-> - Link to v3: https://lore.kernel.org/r/20241008-android_ab_master-v3-0-f292c45a33e4@salutedevices.com
+> diff --git a/cmd/bcb.c b/cmd/bcb.c
+> index 97a96c009641cc094645607ef833575f3c03fe4b..98b2a71087a27b1721f4bed4160095d65ec75402 100644
+> --- a/cmd/bcb.c
+> +++ b/cmd/bcb.c
+> @@ -16,15 +16,6 @@
+>  #include <vsprintf.h>
+>  #include <linux/err.h>
+>  
+> -enum bcb_cmd {
+> -	BCB_CMD_LOAD,
+> -	BCB_CMD_FIELD_SET,
+> -	BCB_CMD_FIELD_CLEAR,
+> -	BCB_CMD_FIELD_TEST,
+> -	BCB_CMD_FIELD_DUMP,
+> -	BCB_CMD_STORE,
+> -};
+> -
+>  static const char * const fields[] = {
+>  	"command",
+>  	"status",
+> @@ -38,67 +29,9 @@ static struct disk_partition partition_data;
+>  static struct blk_desc *block;
+>  static struct disk_partition *partition = &partition_data;
+>  
+> -static int bcb_cmd_get(char *cmd)
+> -{
+> -	if (!strcmp(cmd, "load"))
+> -		return BCB_CMD_LOAD;
+> -	if (!strcmp(cmd, "set"))
+> -		return BCB_CMD_FIELD_SET;
+> -	if (!strcmp(cmd, "clear"))
+> -		return BCB_CMD_FIELD_CLEAR;
+> -	if (!strcmp(cmd, "test"))
+> -		return BCB_CMD_FIELD_TEST;
+> -	if (!strcmp(cmd, "store"))
+> -		return BCB_CMD_STORE;
+> -	if (!strcmp(cmd, "dump"))
+> -		return BCB_CMD_FIELD_DUMP;
+> -	else
+> -		return -1;
+> -}
+> -
+> -static int bcb_is_misused(int argc, char *const argv[])
+> +static int bcb_not_loaded(void)
+>  {
+> -	int cmd = bcb_cmd_get(argv[0]);
+> -
+> -	switch (cmd) {
+> -	case BCB_CMD_LOAD:
+> -		if (argc != 3 && argc != 4)
+> -			goto err;
+> -		break;
+> -	case BCB_CMD_FIELD_SET:
+> -		if (argc != 3)
+> -			goto err;
+> -		break;
+> -	case BCB_CMD_FIELD_TEST:
+> -		if (argc != 4)
+> -			goto err;
+> -		break;
+> -	case BCB_CMD_FIELD_CLEAR:
+> -		if (argc != 1 && argc != 2)
+> -			goto err;
+> -		break;
+> -	case BCB_CMD_STORE:
+> -		if (argc != 1)
+> -			goto err;
+> -		break;
+> -	case BCB_CMD_FIELD_DUMP:
+> -		if (argc != 2)
+> -			goto err;
+> -		break;
+> -	default:
+> -		printf("Error: 'bcb %s' not supported\n", argv[0]);
+> -		return -1;
+> -	}
+> -
+> -	if (cmd != BCB_CMD_LOAD && !block) {
+> -		printf("Error: Please, load BCB first!\n");
+> -		return -1;
+> -	}
+> -
+> -	return 0;
+> -err:
+> -	printf("Error: Bad usage of 'bcb %s'\n", argv[0]);
+> -
+> +	printf("Error: Please, load BCB first!\n");
+>  	return -1;
+>  }
+>  
+> @@ -216,6 +149,9 @@ static int do_bcb_load(struct cmd_tbl *cmdtp, int flag, int argc,
+>  	char *endp;
+>  	char *iface = "mmc";
+>  
+> +	if (argc < 3)
+> +		return CMD_RET_USAGE;
+> +
+>  	if (argc == 4) {
+>  		iface = argv[1];
+>  		argc--;
+> @@ -270,6 +206,12 @@ static int __bcb_set(const char *fieldp, const char *valp)
+>  static int do_bcb_set(struct cmd_tbl *cmdtp, int flag, int argc,
+>  		      char * const argv[])
+>  {
+> +	if (argc < 3)
+> +		return CMD_RET_USAGE;
+> +
+> +	if (!block)
+> +		return bcb_not_loaded();
+> +
+>  	return __bcb_set(argv[1], argv[2]);
+>  }
+>  
+> @@ -279,6 +221,9 @@ static int do_bcb_clear(struct cmd_tbl *cmdtp, int flag, int argc,
+>  	int size;
+>  	char *field;
+>  
+> +	if (!block)
+> +		return bcb_not_loaded();
+> +
+>  	if (argc == 1) {
+>  		memset(&bcb, 0, sizeof(bcb));
+>  		return CMD_RET_SUCCESS;
+> @@ -297,7 +242,15 @@ static int do_bcb_test(struct cmd_tbl *cmdtp, int flag, int argc,
+>  {
+>  	int size;
+>  	char *field;
+> -	char *op = argv[2];
+> +	char *op;
+> +
+> +	if (argc < 4)
+> +		return CMD_RET_USAGE;
+> +
+> +	if (!block)
+> +		return bcb_not_loaded();
+> +
+> +	op = argv[2];
+>  
+>  	if (bcb_field_get(argv[1], &field, &size))
+>  		return CMD_RET_FAILURE;
+> @@ -325,6 +278,12 @@ static int do_bcb_dump(struct cmd_tbl *cmdtp, int flag, int argc,
+>  	int size;
+>  	char *field;
+>  
+> +	if (argc < 2)
+> +		return CMD_RET_USAGE;
+> +
+> +	if (!block)
+> +		return bcb_not_loaded();
+> +
+>  	if (bcb_field_get(argv[1], &field, &size))
+>  		return CMD_RET_FAILURE;
+>  
+> @@ -356,6 +315,9 @@ err:
+>  static int do_bcb_store(struct cmd_tbl *cmdtp, int flag, int argc,
+>  			char * const argv[])
+>  {
+> +	if (!block)
+> +		return bcb_not_loaded();
+> +
+>  	return __bcb_store();
+>  }
+>  
+> @@ -414,44 +376,7 @@ void bcb_reset(void)
+>  	__bcb_reset();
+>  }
+>  
+> -static struct cmd_tbl cmd_bcb_sub[] = {
+> -	U_BOOT_CMD_MKENT(load, CONFIG_SYS_MAXARGS, 1, do_bcb_load, "", ""),
+> -	U_BOOT_CMD_MKENT(set, CONFIG_SYS_MAXARGS, 1, do_bcb_set, "", ""),
+> -	U_BOOT_CMD_MKENT(clear, CONFIG_SYS_MAXARGS, 1, do_bcb_clear, "", ""),
+> -	U_BOOT_CMD_MKENT(test, CONFIG_SYS_MAXARGS, 1, do_bcb_test, "", ""),
+> -	U_BOOT_CMD_MKENT(dump, CONFIG_SYS_MAXARGS, 1, do_bcb_dump, "", ""),
+> -	U_BOOT_CMD_MKENT(store, CONFIG_SYS_MAXARGS, 1, do_bcb_store, "", ""),
+> -};
+> -
+> -static int do_bcb(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
+> -{
+> -	struct cmd_tbl *c;
+> -
+> -	if (argc < 2)
+> -		return CMD_RET_USAGE;
+> -
+> -	argc--;
+> -	argv++;
+> -
+> -	c = find_cmd_tbl(argv[0], cmd_bcb_sub, ARRAY_SIZE(cmd_bcb_sub));
+> -	if (!c)
+> -		return CMD_RET_USAGE;
+> -
+> -	if (bcb_is_misused(argc, argv)) {
+> -		/*
+> -		 * We try to improve the user experience by reporting the
+> -		 * root-cause of misusage, so don't return CMD_RET_USAGE,
+> -		 * since the latter prints out the full-blown help text
+> -		 */
+> -		return CMD_RET_FAILURE;
+> -	}
+> -
+> -	return c->cmd(cmdtp, flag, argc, argv);
+> -}
+> -
+> -U_BOOT_CMD(
+> -	bcb, CONFIG_SYS_MAXARGS, 1, do_bcb,
+> -	"Load/set/clear/test/dump/store Android BCB fields",
+> +U_BOOT_LONGHELP(bcb,
+>  	"load <interface> <dev> <part>  - load  BCB from <interface> <dev>:<part>\n"
+>  	"load <dev> <part>              - load  BCB from mmc <dev>:<part>\n"
+>  	"bcb set   <field> <val>        - set   BCB <field> to <val>\n"
+> @@ -472,3 +397,13 @@ U_BOOT_CMD(
+>  	"              NOTE: any ':' character in <val> will be replaced by line feed\n"
+>  	"              during 'bcb set' and used as separator by upper layers\n"
+>  );
+> +
+> +U_BOOT_CMD_WITH_SUBCMDS(bcb,
+> +	"Load/set/clear/test/dump/store Android BCB fields", bcb_help_text,
+> +	U_BOOT_SUBCMD_MKENT(load, 4, 1, do_bcb_load),
+> +	U_BOOT_SUBCMD_MKENT(set, 3, 1, do_bcb_set),
+> +	U_BOOT_SUBCMD_MKENT(clear, 2, 1, do_bcb_clear),
+> +	U_BOOT_SUBCMD_MKENT(test, 4, 1, do_bcb_test),
+> +	U_BOOT_SUBCMD_MKENT(dump, 2, 1, do_bcb_dump),
+> +	U_BOOT_SUBCMD_MKENT(store, 1, 1, do_bcb_store),
+> +);
 >
-> Changes in v3:
-> - return "Legend" block for bcb command
-> - additionally, verify the CONFIG_ANDROID_AB configuration alongside
->   CONFIG_CMD_BCB to ensure that the A/B scheme is used for the
->   designated board.
-> - Link to v2: https://lore.kernel.org/all/20240911214945.15873-1-ddrokosov@salutedevices.com/
->
-> Changes in v2:
-> - move ab_select_slot() documentation to @ notation
-> - move ab_select command to bcb subcommands per Simon and Mattijs
->   suggestions
-> - redesign ab_dump as bcb subcommand
-> - use spaces instead of tabs in the ab_dump command output
-> - print hex values in the lowercase
-> - add RvB tags
-> - Link to v1: https://lore.kernel.org/all/20240725194716.32232-1-ddrokosov@salutedevices.com/
->
-> ---
-> Dmitry Rokosov (6):
->       include/android_ab: move ab_select_slot() documentation to @ notation
->       cmd: bcb: rework the command to U_BOOT_LONGHELP approach
->       treewide: bcb: move ab_select command to bcb subcommands
->       cmd: bcb: change strcmp() usage style in the do_bcb_ab_select()
->       cmd: bcb: introduce 'ab_dump' command to print BCB block content
->       common: android_ab: fix slot suffix for abc block
->
->  MAINTAINERS                               |   1 -
->  boot/android_ab.c                         | 116 +++++++++++++---
->  cmd/Kconfig                               |  14 --
->  cmd/Makefile                              |   1 -
->  cmd/ab_select.c                           |  66 ---------
->  cmd/bcb.c                                 | 221 +++++++++++++++++-------------
->  configs/am57xx_evm_defconfig              |   1 -
->  configs/am57xx_hs_evm_defconfig           |   1 -
->  configs/am57xx_hs_evm_usb_defconfig       |   1 -
->  configs/khadas-vim3_android_ab_defconfig  |   1 -
->  configs/khadas-vim3l_android_ab_defconfig |   1 -
->  configs/sandbox64_defconfig               |   2 +
->  configs/sandbox_defconfig                 |   1 -
->  doc/android/ab.rst                        |  12 +-
->  include/android_ab.h                      |  17 ++-
->  include/configs/khadas-vim3_android.h     |   2 +-
->  include/configs/khadas-vim3l_android.h    |   2 +-
->  include/configs/meson64_android.h         |   4 +-
->  include/configs/ti_omap5_common.h         |   4 +-
->  test/py/tests/test_android/test_ab.py     |  31 ++++-
->  20 files changed, 275 insertions(+), 224 deletions(-)
-> ---
-> base-commit: 98a36deb9ab7aaea70b0b0db47718100e08cf3e8
-> change-id: 20241008-android_ab_master-d86d71c839ae
->
-> Best regards,
 > -- 
-> Dmitry Rokosov <ddrokosov@salutedevices.com>
+> 2.43.0
 
