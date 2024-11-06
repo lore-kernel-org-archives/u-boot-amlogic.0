@@ -2,291 +2,162 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72988D42B97
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8752FD42B9E
 	for <webhook@archiver.kernel.org>; Tue, 12 Nov 2024 15:08:18 +0000 (UTC)
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web10.85896.1731416338949245501
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+ by mx.groups.io with SMTP id smtpd.web10.35930.1730854699023460733
  for <u-boot-amlogic@groups.io>;
- Tue, 12 Nov 2024 04:59:00 -0800
+ Tue, 05 Nov 2024 16:58:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=dXZw9QFi;
- spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: avromanov@salutedevices.com)
-Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 6C716100012;
-	Tue, 12 Nov 2024 15:58:57 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6C716100012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1731416337;
-	bh=BRDQxhNx5o2QumS73a4TlVBLksIfcboeioSGkHWZdYo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=dXZw9QFiqz1FeBBkTKCTpNw5CP+qvqdvDx2UUhia4IfBOI2BqegdLgVFwb3GemjWN
-	 YBuD7EucMnb/glgiIOOyuXLC2jpVNPMd/s2/e4xZg6NO1jYm1oByciBdvh0Xi6JBgy
-	 MMXHGvQMm23a+wFggz5q0GhSqX1Hru81DlxiAkQyvqspZ3wksoWnhfZie6oRYFPgrW
-	 X/OdHtQ2MYdm6xX0FSd0MlkLxqnAEr/dMeHm1Z8CcLyYIDCHHYqYowS5iTki6gf8NN
-	 noPPpx7mxj4ReaHWEnm8NrII4/q/IID3BSwdtkFcikIPgjuscBxk8emmEUS4+b6JO4
-	 m/J45jROh3Bgw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 12 Nov 2024 15:58:57 +0300 (MSK)
-From: Alexey Romanov <avromanov@salutedevices.com>
-To: <trini@konsulko.com>, <neil.armstrong@linaro.org>
-CC: <u-boot-amlogic@groups.io>, <u-boot@lists.denx.de>,
-	<kernel@salutedevices.com>, Alexey Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v1 3/4] dt-bindings: remove axg bindings from include/
-Date: Tue, 12 Nov 2024 15:58:35 +0300
-Message-ID: <20241112125836.3239832-4-avromanov@salutedevices.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241112125836.3239832-1-avromanov@salutedevices.com>
-References: <20241112125836.3239832-1-avromanov@salutedevices.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=OYC/kjar;
+ spf=pass (domain: linaro.org, ip: 209.85.219.173, mailfrom: semen.protsenko@linaro.org)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e2e444e355fso316952276.1
+        for <u-boot-amlogic@groups.io>; Tue, 05 Nov 2024 16:58:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730854698; x=1731459498; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B0T625n7xhdhvD5r9zXSr9RDqmz7giA2s8bSypQmLkQ=;
+        b=OYC/kjar8nxxQfMeRYU5aztAJLgIymMQn7qVcK4VZ7F2W3qQNuyLs50eQZLYNiO1LL
+         FkrydLIcwv5q1FN7sjMXlUnkdpJxcNFFsK5bjh+dj6bUmoNMRe9kDnH9dRVNdpg+32gc
+         tdLbhFf0AsGVTF5yaX5U0dgKn3ONRB2G0DMHLD7DhGwkrqsVDmizsdBeCsScz3r1l2As
+         4PGTQXy99S/1n8668QNYbDX7vC9oyGDMuvKUpHsCdzDut5IlZFefcEd2kutOq1pIAei2
+         LNLFyFErxJkm5a3exa7g/fAT7mR4Sd2HsXOI7Ry6U8Se98KBsey77xrSoFmZ1iBBggaz
+         OvLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730854698; x=1731459498;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B0T625n7xhdhvD5r9zXSr9RDqmz7giA2s8bSypQmLkQ=;
+        b=SQznQ2BetHUucBx8k6eiRhx0JtbiwSPZEsQMl1A7VI+VtN3h+otilA3xfT7zR4KMYx
+         1StirqAXzu1OfEQ6Trm9I+R+nukVSRxW2rRMlIb2jNPq/yAuHbwbVnUMtARb2paKcjNN
+         JmghgZQWGEnR/fsrBkakSffcfU5T1SQj1nXm/ZAAY4OIvAsJArEMpM8RDd9FKbliHjQz
+         vocjgqmCGf0ocPZ1UWD2wmGD6GLTdHc9ZtyBsMnSXIlC+fskdTfrztkC8boUNagH4fqK
+         HMSMzWE9TvIPBOCNv7kTi/IA7+dbsMB5Hj/wm2RElBGv1Lg6hehW8LgZBktZjKfI3jsp
+         WuyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2OLH3y9veWGkXvHcKBkUKlSSOAwc3WrHvlVZrYJKw0wcBs9WkV/EPyQgNnBj33MjI/TxIRUS5srLULRSm8g==@groups.io
+X-Gm-Message-State: AOJu0YxVt2kdeqEqMZd7Qm9PIYXC2oSN3npVGE2pB9N9Se7ZWTsBapnC
+	VmGpG5IDNLVikbMrEjnIumvNGryMG1P0v1tS4kTBcZNuXufMGteC5Kq2K5MlWQN2m6Mp1GFEgGj
+	VdpSvYcpKLHdG8TZk+uEBD8Er0MbqXuMDLncvTA==
+X-Google-Smtp-Source: AGHT+IGMRCuceF+eAofYz263lImLlyi0T3K6Bygh/KHtwRTW1Ys7zsjs/I6pK1YRFz3W+z0u5r7v6zWuQVXd5wgs3OE=
+X-Received: by 2002:a05:690c:3382:b0:6ea:88d4:fd4f with SMTP id
+ 00721157ae682-6eabf04814cmr5414917b3.18.1730854698192; Tue, 05 Nov 2024
+ 16:58:18 -0800 (PST)
 MIME-Version: 1.0
-X-Originating-IP: [172.28.130.77]
-X-ClientProxiedBy: p-i-exch-a-m2.sberdevices.ru (172.24.196.120) To
- p-i-exch-a-m1.sberdevices.ru (172.24.196.116)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 189114 [Nov 12 2024]
-X-KSMG-AntiSpam-Version: 6.1.1.7
-X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 41 0.3.41 623e98d5198769c015c72f45fabbb9f77bdb702b, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/11/12 09:54:00 #26847665
-X-KSMG-AntiVirus-Status: Clean, skipped
-Content-Type: text/plain
+References: <20241017-android_ab_master-v5-0-43bfcc096d95@salutedevices.com>
+ <20241017-android_ab_master-v5-6-43bfcc096d95@salutedevices.com>
+ <CAPLW+4msra4=oUDCSWx8sfM7uCGgfmJbRi++Q=wf8cQ-ERoHGw@mail.gmail.com> <87v7x1soto.fsf@baylibre.com>
+In-Reply-To: <87v7x1soto.fsf@baylibre.com>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 5 Nov 2024 18:58:07 -0600
+Message-ID: <CAPLW+4=-yPgMeDM5XRkBXR-nD4Ni2VtWqTKxJVVrfdU8g2sG4g@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] common: android_ab: fix slot suffix for abc block
+To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Cc: Dmitry Rokosov <ddrokosov@salutedevices.com>, Igor Opaniuk <igor.opaniuk@gmail.com>, 
+	Tom Rini <trini@konsulko.com>, "Andrew F. Davis" <afd@ti.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Simon Glass <sjg@chromium.org>, 
+	Mario Six <mario.six@gdsys.cc>, u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+	rockosov@gmail.com, kernel@salutedevices.com, 
+	Guillaume La Roque <glaroque@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 12 Nov 2024 15:08:18 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2544
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2547
 
-We have exactly the same in upstream bindings.
+On Tue, Nov 5, 2024 at 9:06=E2=80=AFAM Mattijs Korpershoek
+<mkorpershoek@baylibre.com> wrote:
+>
+> Hi Sam,
+>
 
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
----
- include/dt-bindings/clock/axg-audio-clkc.h |  94 -------------------
- include/dt-bindings/clock/axg-clkc.h       | 100 ---------------------
- 2 files changed, 194 deletions(-)
- delete mode 100644 include/dt-bindings/clock/axg-audio-clkc.h
- delete mode 100644 include/dt-bindings/clock/axg-clkc.h
+Hey Mattijs,
 
-diff --git a/include/dt-bindings/clock/axg-audio-clkc.h b/include/dt-bindin=
-gs/clock/axg-audio-clkc.h
-deleted file mode 100644
-index f561f5c5ef..0000000000
---- a/include/dt-bindings/clock/axg-audio-clkc.h
-+++ /dev/null
-@@ -1,94 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/*
-- * Copyright (c) 2018 Baylibre SAS.
-- * Author: Jerome Brunet <jbrunet@baylibre.com>
-- */
--
--#ifndef __AXG_AUDIO_CLKC_BINDINGS_H
--#define __AXG_AUDIO_CLKC_BINDINGS_H
--
--#define AUD_CLKID_DDR_ARB		29
--#define AUD_CLKID_PDM			30
--#define AUD_CLKID_TDMIN_A		31
--#define AUD_CLKID_TDMIN_B		32
--#define AUD_CLKID_TDMIN_C		33
--#define AUD_CLKID_TDMIN_LB		34
--#define AUD_CLKID_TDMOUT_A		35
--#define AUD_CLKID_TDMOUT_B		36
--#define AUD_CLKID_TDMOUT_C		37
--#define AUD_CLKID_FRDDR_A		38
--#define AUD_CLKID_FRDDR_B		39
--#define AUD_CLKID_FRDDR_C		40
--#define AUD_CLKID_TODDR_A		41
--#define AUD_CLKID_TODDR_B		42
--#define AUD_CLKID_TODDR_C		43
--#define AUD_CLKID_LOOPBACK		44
--#define AUD_CLKID_SPDIFIN		45
--#define AUD_CLKID_SPDIFOUT		46
--#define AUD_CLKID_RESAMPLE		47
--#define AUD_CLKID_POWER_DETECT		48
--#define AUD_CLKID_MST_A_MCLK		49
--#define AUD_CLKID_MST_B_MCLK		50
--#define AUD_CLKID_MST_C_MCLK		51
--#define AUD_CLKID_MST_D_MCLK		52
--#define AUD_CLKID_MST_E_MCLK		53
--#define AUD_CLKID_MST_F_MCLK		54
--#define AUD_CLKID_SPDIFOUT_CLK		55
--#define AUD_CLKID_SPDIFIN_CLK		56
--#define AUD_CLKID_PDM_DCLK		57
--#define AUD_CLKID_PDM_SYSCLK		58
--#define AUD_CLKID_MST_A_SCLK		79
--#define AUD_CLKID_MST_B_SCLK		80
--#define AUD_CLKID_MST_C_SCLK		81
--#define AUD_CLKID_MST_D_SCLK		82
--#define AUD_CLKID_MST_E_SCLK		83
--#define AUD_CLKID_MST_F_SCLK		84
--#define AUD_CLKID_MST_A_LRCLK		86
--#define AUD_CLKID_MST_B_LRCLK		87
--#define AUD_CLKID_MST_C_LRCLK		88
--#define AUD_CLKID_MST_D_LRCLK		89
--#define AUD_CLKID_MST_E_LRCLK		90
--#define AUD_CLKID_MST_F_LRCLK		91
--#define AUD_CLKID_TDMIN_A_SCLK_SEL	116
--#define AUD_CLKID_TDMIN_B_SCLK_SEL	117
--#define AUD_CLKID_TDMIN_C_SCLK_SEL	118
--#define AUD_CLKID_TDMIN_LB_SCLK_SEL	119
--#define AUD_CLKID_TDMOUT_A_SCLK_SEL	120
--#define AUD_CLKID_TDMOUT_B_SCLK_SEL	121
--#define AUD_CLKID_TDMOUT_C_SCLK_SEL	122
--#define AUD_CLKID_TDMIN_A_SCLK		123
--#define AUD_CLKID_TDMIN_B_SCLK		124
--#define AUD_CLKID_TDMIN_C_SCLK		125
--#define AUD_CLKID_TDMIN_LB_SCLK		126
--#define AUD_CLKID_TDMOUT_A_SCLK		127
--#define AUD_CLKID_TDMOUT_B_SCLK		128
--#define AUD_CLKID_TDMOUT_C_SCLK		129
--#define AUD_CLKID_TDMIN_A_LRCLK		130
--#define AUD_CLKID_TDMIN_B_LRCLK		131
--#define AUD_CLKID_TDMIN_C_LRCLK		132
--#define AUD_CLKID_TDMIN_LB_LRCLK	133
--#define AUD_CLKID_TDMOUT_A_LRCLK	134
--#define AUD_CLKID_TDMOUT_B_LRCLK	135
--#define AUD_CLKID_TDMOUT_C_LRCLK	136
--#define AUD_CLKID_SPDIFOUT_B		151
--#define AUD_CLKID_SPDIFOUT_B_CLK	152
--#define AUD_CLKID_TDM_MCLK_PAD0		155
--#define AUD_CLKID_TDM_MCLK_PAD1		156
--#define AUD_CLKID_TDM_LRCLK_PAD0	157
--#define AUD_CLKID_TDM_LRCLK_PAD1	158
--#define AUD_CLKID_TDM_LRCLK_PAD2	159
--#define AUD_CLKID_TDM_SCLK_PAD0		160
--#define AUD_CLKID_TDM_SCLK_PAD1		161
--#define AUD_CLKID_TDM_SCLK_PAD2		162
--#define AUD_CLKID_TOP			163
--#define AUD_CLKID_TORAM			164
--#define AUD_CLKID_EQDRC			165
--#define AUD_CLKID_RESAMPLE_B		166
--#define AUD_CLKID_TOVAD			167
--#define AUD_CLKID_LOCKER		168
--#define AUD_CLKID_SPDIFIN_LB		169
--#define AUD_CLKID_FRDDR_D		170
--#define AUD_CLKID_TODDR_D		171
--#define AUD_CLKID_LOOPBACK_B		172
--
--#endif /* __AXG_AUDIO_CLKC_BINDINGS_H */
-diff --git a/include/dt-bindings/clock/axg-clkc.h b/include/dt-bindings/clo=
-ck/axg-clkc.h
-deleted file mode 100644
-index 93752ea107..0000000000
---- a/include/dt-bindings/clock/axg-clkc.h
-+++ /dev/null
-@@ -1,100 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Meson-AXG clock tree IDs
-- *
-- * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
-- */
--
--#ifndef __AXG_CLKC_H
--#define __AXG_CLKC_H
--
--#define CLKID_SYS_PLL				0
--#define CLKID_FIXED_PLL				1
--#define CLKID_FCLK_DIV2				2
--#define CLKID_FCLK_DIV3				3
--#define CLKID_FCLK_DIV4				4
--#define CLKID_FCLK_DIV5				5
--#define CLKID_FCLK_DIV7				6
--#define CLKID_GP0_PLL				7
--#define CLKID_CLK81				10
--#define CLKID_MPLL0				11
--#define CLKID_MPLL1				12
--#define CLKID_MPLL2				13
--#define CLKID_MPLL3				14
--#define CLKID_DDR				15
--#define CLKID_AUDIO_LOCKER			16
--#define CLKID_MIPI_DSI_HOST			17
--#define CLKID_ISA				18
--#define CLKID_PL301				19
--#define CLKID_PERIPHS				20
--#define CLKID_SPICC0				21
--#define CLKID_I2C				22
--#define CLKID_RNG0				23
--#define CLKID_UART0				24
--#define CLKID_MIPI_DSI_PHY			25
--#define CLKID_SPICC1				26
--#define CLKID_PCIE_A				27
--#define CLKID_PCIE_B				28
--#define CLKID_HIU_IFACE				29
--#define CLKID_ASSIST_MISC			30
--#define CLKID_SD_EMMC_B				31
--#define CLKID_SD_EMMC_C				32
--#define CLKID_DMA				33
--#define CLKID_SPI				34
--#define CLKID_AUDIO				35
--#define CLKID_ETH				36
--#define CLKID_UART1				37
--#define CLKID_G2D				38
--#define CLKID_USB0				39
--#define CLKID_USB1				40
--#define CLKID_RESET				41
--#define CLKID_USB				42
--#define CLKID_AHB_ARB0				43
--#define CLKID_EFUSE				44
--#define CLKID_BOOT_ROM				45
--#define CLKID_AHB_DATA_BUS			46
--#define CLKID_AHB_CTRL_BUS			47
--#define CLKID_USB1_DDR_BRIDGE			48
--#define CLKID_USB0_DDR_BRIDGE			49
--#define CLKID_MMC_PCLK				50
--#define CLKID_VPU_INTR				51
--#define CLKID_SEC_AHB_AHB3_BRIDGE		52
--#define CLKID_GIC				53
--#define CLKID_AO_MEDIA_CPU			54
--#define CLKID_AO_AHB_SRAM			55
--#define CLKID_AO_AHB_BUS			56
--#define CLKID_AO_IFACE				57
--#define CLKID_AO_I2C				58
--#define CLKID_SD_EMMC_B_CLK0			59
--#define CLKID_SD_EMMC_C_CLK0			60
--#define CLKID_HIFI_PLL				69
--#define CLKID_PCIE_CML_EN0			79
--#define CLKID_PCIE_CML_EN1			80
--#define CLKID_GEN_CLK				84
--#define CLKID_VPU_0_SEL				92
--#define CLKID_VPU_0				93
--#define CLKID_VPU_1_SEL				95
--#define CLKID_VPU_1				96
--#define CLKID_VPU				97
--#define CLKID_VAPB_0_SEL			99
--#define CLKID_VAPB_0				100
--#define CLKID_VAPB_1_SEL			102
--#define CLKID_VAPB_1				103
--#define CLKID_VAPB_SEL				104
--#define CLKID_VAPB				105
--#define CLKID_VCLK				106
--#define CLKID_VCLK2				107
--#define CLKID_VCLK_DIV1				122
--#define CLKID_VCLK_DIV2				123
--#define CLKID_VCLK_DIV4				124
--#define CLKID_VCLK_DIV6				125
--#define CLKID_VCLK_DIV12			126
--#define CLKID_VCLK2_DIV1			127
--#define CLKID_VCLK2_DIV2			128
--#define CLKID_VCLK2_DIV4			129
--#define CLKID_VCLK2_DIV6			130
--#define CLKID_VCLK2_DIV12			131
--#define CLKID_CTS_ENCL				133
--#define CLKID_VDIN_MEAS				136
--
--#endif /* __AXG_CLKC_H */
---=20
-2.34.1
+[snip]
 
+> >> @@ -328,7 +328,8 @@ int ab_select_slot(struct blk_desc *dev_desc, stru=
+ct disk_partition *part_info,
+> >>                  * or the device tree.
+> >>                  */
+> >>                 memset(slot_suffix, 0, sizeof(slot_suffix));
+> >> -               slot_suffix[0] =3D BOOT_SLOT_NAME(slot);
+> >> +               slot_suffix[0] =3D '_';
+> >> +               slot_suffix[1] =3D BOOT_SLOT_NAME(slot);
+> >
+> > AFAIU, this changes the behavior of two above functions, and
+> > consequently of "bcb ab_select" command? If so, just to double check:
+> > were all users of those reworked correspondingly? I can see next
+> > occurrences (there may be more):
+> >
+> > $ grep -sIrHn '"_' boot/bootmeth_android.c
+>
+> I thought the same when first reviewing the patch.
+> Looking a bit closer...
+>
+> >
+> > boot/bootmeth_android.c:74:    sprintf(partname, BOOT_PART_NAME "_%s",
+> > priv->slot);
+> > boot/bootmeth_android.c:111:    sprintf(partname,
+> > VENDOR_BOOT_PART_NAME "_%s", priv->slot);
+> > boot/bootmeth_android.c:156:    sprintf(slot_suffix, "_%s", priv->slot)=
+;
+> > boot/bootmeth_android.c:397:    sprintf(slot_suffix, "_%s", priv->slot)=
+;
+>
+> ... We can see that ab_select_slot() returns an integer
+> That integer is used later on to initialize priv->slot:
+>
+> """
+>         priv->slot[0] =3D BOOT_SLOT_NAME(ret);
+>         priv->slot[1] =3D '\0';
+> """
+>
+> The change from Dmitry only changes what we **write** to the BCB (into
+> the misc partition), not what is returned by ab_select_slot().
+>
+
+Sure. Just wanted to double check that the behavior is not changed in
+any related parts, as the commit message doesn't mention that. Btw,
+BCB is an interface between the bootloader and AOSP, so if this patch
+changes what's being written into BCB, does it affect AOSP part of it
+somehow? Especially for already existing devices with particular BCB
+data, in case U-Boot gets updated there.
+
+> ab_select_slot() still returns an integer which needs to be converted
+> via the BOOT_SLOT_NAME() macro.
+>
+> >
+> > $ grep -sIrHn 'slot_suffix _' include/configs/
+> > include/configs/ti_omap5_common.h:107:    "setenv slot_suffix _${slot_n=
+ame};"
+> > include/configs/meson64_android.h:65:        "setenv slot_suffix
+> > _${current_slot}; " \
+>
+> Same goes for these 2 examples, we use:
+> The "bcb ab_select current_slot" command to store the slot into the
+> "current_slot" environment variable.
+> Looking at cmd/bcb.c we can see:
+>
+> """
+>         ret =3D ab_select_slot(dev_desc, &part_info, dec_tries);
+>         if (ret < 0) {
+>                 printf("Android boot failed, error %d.\n", ret);
+>                 return CMD_RET_FAILURE;
+>         }
+>
+>         /* Android standard slot names are 'a', 'b', ... */
+>         slot[0] =3D BOOT_SLOT_NAME(ret);
+>         slot[1] =3D '\0';
+>         env_set(argv[1], slot);
+>         printf("ANDROID: Booting slot: %s\n", slot);
+> """
+>
+> So I think this is fine.
+>
+
+[snip]
 
