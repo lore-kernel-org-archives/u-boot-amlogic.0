@@ -1,92 +1,105 @@
-Return-Path: <mkorpershoek@baylibre.com>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3536BD5E156
-	for <webhook@archiver.kernel.org>; Fri,  8 Nov 2024 10:39:04 +0000 (UTC)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
- by mx.groups.io with SMTP id smtpd.web10.9843.1731062340632950883
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7424FD42B91
+	for <webhook@archiver.kernel.org>; Tue, 12 Nov 2024 15:08:18 +0000 (UTC)
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
+ by mx.groups.io with SMTP id smtpd.web11.86294.1731416337344724425
  for <u-boot-amlogic@groups.io>;
- Fri, 08 Nov 2024 02:39:00 -0800
+ Tue, 12 Nov 2024 04:59:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=SyELNlca;
- spf=pass (domain: baylibre.com, ip: 209.85.167.50, mailfrom: mkorpershoek@baylibre.com)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-539f4d8ef84so2378616e87.0
-        for <u-boot-amlogic@groups.io>; Fri, 08 Nov 2024 02:39:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1731062339; x=1731667139; darn=groups.io;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ChoqMoh2T+eig/XpTTE8Tcj5u81rqtdZXLhWcSY6EWc=;
-        b=SyELNlcaYP4GwKHKbcmYjU3Em8kdqFa2d5m3pIIt9yevrGkx2T6W1s2y79Wq3Lqoi7
-         46XeeirOyZiNZjYakapsfJGBPGQQ2fj8AA0jv+uRMx0Q/6zhfCQIfa3uEJixuRJ+rOGf
-         +EmboS1xKWPu//MRhz7zh3psupCFVeBrpqcd9gQm18cu67KBU0O9M0H/IhYpl0AIRvqL
-         V7H+QUknpaK9ExUVeiSMMO03QDgj4woMDFZoo5BRA3HeU98/zBay9Nn4Ig/hA9i8St3U
-         rn5x5d4CRdyMUkEdQ3+TUJY5aprF44bQfa08fLLJFnomCKLAyOzapJr5VHRCiMuOgh7j
-         0/7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731062339; x=1731667139;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ChoqMoh2T+eig/XpTTE8Tcj5u81rqtdZXLhWcSY6EWc=;
-        b=JJvHhYPm0/p9GUoXYEL2pAmecrPSWcX0iPIZsnCGT1AynX6BZJFIGEW7nS6sFSUbS5
-         E1Kw4Zoq7gXlOGCdW4x2lq6yGsIDyT8F50aKmeB8sgUIt1VcoAzFXfp4pgHTy40olTuk
-         jwQ9Q+uhWxrgLKp+tmmN45WiAmv89EueMIhAEUzAVFnSYb0rI5ScjsTnhGoCr+Bp+5u7
-         xlw3HrF1gXyRbPzzDrJvqXHx8pL069lg8+T+X6yO7ycT1N0M0CHhj1Tgm1ZIqR20JZ4w
-         wlDkps0E0D5JNZ3KbE1ndDCYgkaeqRgPH4dscTwMMxiH7UYddlooaS4Ejs/+f4mSa7rj
-         U66Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVoNPhQ6v8lG5t+jIjXZnIJkNKz545cxRlAdHJ9qMx6riA7zmdJWBH3TnRvGrHYurMT2D35S8b9hOS6yJ1m6Q==@groups.io
-X-Gm-Message-State: AOJu0YxzAgwx1s10ieLvqSPNOA0B3EOdVca0eVVAk/rxRKZvXas+/8ka
-	Hd3GIeS9k3O+MV1mOa4PAJ+zI+fRGhNKpFFgIYgL/7i4OreOWJalfVqFgEklhVw=
-X-Google-Smtp-Source: AGHT+IFW8QVCN5MP2DyN8EOgoayKfgEaOrqjB9pOITOne1wJM368GLG5uI8OkEwJOgIwljEbs4P55A==
-X-Received: by 2002:a05:6512:3d1d:b0:539:fc45:a292 with SMTP id 2adb3069b0e04-53d8626c94amr1266790e87.43.1731062338516;
-        Fri, 08 Nov 2024 02:38:58 -0800 (PST)
-Received: from localhost ([2a01:cb19:8f40:f900:f167:cb53:a707:1347])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432b05c202asm59621335e9.30.2024.11.08.02.38.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2024 02:38:58 -0800 (PST)
-From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, Simon Glass
- <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, Guillaume La Roque
- <glaroque@baylibre.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io
-Subject: Re: (subset) [PATCH 0/6] Add support of Android Boot Image version
- 2 and non-AB image
-In-Reply-To: <173106070708.3295577.5479637179760743078.b4-ty@linaro.org>
-References: <20241017-adnroidv2-v1-0-781c939902c9@baylibre.com>
- <173106070708.3295577.5479637179760743078.b4-ty@linaro.org>
-Date: Fri, 08 Nov 2024 11:38:55 +0100
-Message-ID: <87jzde3t8g.fsf@baylibre.com>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=BEqs+eAF;
+ spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: avromanov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 98EAD120003;
+	Tue, 12 Nov 2024 15:58:53 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 98EAD120003
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1731416333;
+	bh=S2WFxF4RwI2AgaZH1XaVbpzilYjpfjK+K4rQd/R9vh8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=BEqs+eAFClJYLSBuLI3V5jDw8XILrjzb2CYBozrPOuNNVekkJbNu+E8rmhGs/Oyzi
+	 Avz8lVoY9e+rTv2gpRvav6LaGvf9h1Z0bN6RYR1mFzDME3smkBOeUV7Brdv5xF88TP
+	 /6KIVBENaoLH1q0Ub7BK20+f3B/F6P6lg0kIb4Ecu+Oyj3LGj1zd/5y9nyWskGQs/k
+	 iZtxsnCn7d5pp8B6PM0fFp9mwOyKE7UTHld3Z5HYwLGdaX4MKhQnqTkaiwOf0toO+o
+	 9Aii1oErwzAn+RWFvMln0a3k46T6/H3bgw9Ri0ZMcxVNkloqKC/h/PRbdPrYt32ZKr
+	 Ky7yr+/2AhEaQ==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue, 12 Nov 2024 15:58:53 +0300 (MSK)
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: <trini@konsulko.com>, <neil.armstrong@linaro.org>
+CC: <u-boot-amlogic@groups.io>, <u-boot@lists.denx.de>,
+	<kernel@salutedevices.com>, Alexey Romanov <avromanov@salutedevices.com>
+Subject: [PATCH v1 0/4] Remove legacy Amlogic dtsi and bindings
+Date: Tue, 12 Nov 2024 15:58:32 +0300
+Message-ID: <20241112125836.3239832-1-avromanov@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+X-Originating-IP: [172.28.130.77]
+X-ClientProxiedBy: p-i-exch-a-m2.sberdevices.ru (172.24.196.120) To
+ p-i-exch-a-m1.sberdevices.ru (172.24.196.116)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 189115 [Nov 12 2024]
+X-KSMG-AntiSpam-Version: 6.1.1.7
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 41 0.3.41 623e98d5198769c015c72f45fabbb9f77bdb702b, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/11/12 09:54:00 #26847665
+X-KSMG-AntiVirus-Status: Clean, skipped
 Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 08 Nov 2024 10:39:04 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2540
+ <u-boot-amlogic@groups.io>; Tue, 12 Nov 2024 15:08:18 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2543
 
-On ven., nov. 08, 2024 at 11:11, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+We should remove bindings and dtsi from include/ folder for A1
+and AXG Amlogic devices. We have exactly the same, or with minor
+differences in dts/upstream folder.
 
-> Hi,
->
-> On Thu, 17 Oct 2024 18:10:24 +0200, Guillaume La Roque wrote:
->> Actually bootmethod android only support android boot image version 4
->> and with AB image, some old platform wtill use android boot image
->> version 2 with AB or without AB slot.
->> 
->> This patchset add support of both version 2 and non-AB slot images.
->> It's fixed in same time a boot issue seen on khadas vim3{l} board with 16GB eMMC
->> 
->> [...]
->
-> Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
->
-> [3/6] configs: khadas-vim3{l}: fix userdata size
->       https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/895b54998e57a5d099c09915341dd9312e0ad7a7
+I tested this changes on devices closes to reference A1 and AXG SoCs
+devices and didn't receive any problems.
 
-Great, thanks a lot, Neil !
+Alexey Romanov (4):
+  arm: dts: meson: remove meson-a1.dtsi
+  dt-bindings: remove a1 bindings from include/
+  dt-bindings: remove axg bindings from include/
+  dt-bindings: interrupt-controller: remove arm-gic.h from include/
 
->
-> -- 
-> Neil
+ arch/arm/dts/meson-a1.dtsi                    | 518 ------------------
+ .../clock/amlogic,a1-peripherals-clkc.h       | 168 ------
+ .../dt-bindings/clock/amlogic,a1-pll-clkc.h   |  25 -
+ include/dt-bindings/clock/axg-audio-clkc.h    |  94 ----
+ include/dt-bindings/clock/axg-clkc.h          | 100 ----
+ include/dt-bindings/gpio/meson-a1-gpio.h      |  73 ---
+ .../interrupt-controller/arm-gic.h            |  23 -
+ include/dt-bindings/power/meson-a1-power.h    |  32 --
+ .../reset/amlogic,meson-a1-reset.h            |  76 ---
+ 9 files changed, 1109 deletions(-)
+ delete mode 100644 arch/arm/dts/meson-a1.dtsi
+ delete mode 100644 include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h
+ delete mode 100644 include/dt-bindings/clock/amlogic,a1-pll-clkc.h
+ delete mode 100644 include/dt-bindings/clock/axg-audio-clkc.h
+ delete mode 100644 include/dt-bindings/clock/axg-clkc.h
+ delete mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
+ delete mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
+ delete mode 100644 include/dt-bindings/power/meson-a1-power.h
+ delete mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+
+--=20
+2.34.1
+
 
