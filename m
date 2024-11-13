@@ -2,117 +2,74 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE29D6DDFD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD08D6DDFE
 	for <webhook@archiver.kernel.org>; Fri, 15 Nov 2024 13:14:22 +0000 (UTC)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
- by mx.groups.io with SMTP id smtpd.web11.2202.1731610778622608762
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+ by mx.groups.io with SMTP id smtpd.web11.15894.1731515809672524601
  for <u-boot-amlogic@groups.io>;
- Thu, 14 Nov 2024 10:59:38 -0800
+ Wed, 13 Nov 2024 08:36:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=gxSA2lMM;
- spf=pass (domain: konsulko.com, ip: 209.85.221.180, mailfrom: trini@konsulko.com)
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-50de14e7d8cso443423e0c.1
-        for <u-boot-amlogic@groups.io>; Thu, 14 Nov 2024 10:59:38 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Scu5jiU4;
+ spf=pass (domain: gmail.com, ip: 209.85.166.182, mailfrom: caconeta1234@gmail.com)
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a6bc65e414so1030215ab.0
+        for <u-boot-amlogic@groups.io>; Wed, 13 Nov 2024 08:36:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1731610777; x=1732215577; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LmyaJTy0P0D0Xkyj/Ucld+TRFm4Kl/uDXkKb7tYsPFc=;
-        b=gxSA2lMM6E5Gd+wg9yPTvAubksaOOGXITT0WsD9+nqabClgNG61LEltnMsKqCPesRH
-         p2B81AVfpK2z5hkXa2ZNdmQisopMQSMoiOWtXwl8PLlrv3fClnIX+tKkcE5/XP4mR5hK
-         jEbSZolZWDzUW0zFKPR2QiNtvq2QjMi9dcKAA=
+        d=gmail.com; s=20230601; t=1731515809; x=1732120609; darn=groups.io;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/zciTR+8EblpsTG4JK1B5st2cc5bvniBmZ6U0BZjSVY=;
+        b=Scu5jiU47nGHOQvwL9YQchno8oYHRXrI/K4QEu6qtEHb6vn7xC8a9+O/SERBZmh7GA
+         vu6qkRfhR1iBq+rT88y8gn7VriguaPwWgPNEBVU2wSgD9uOiBQCanUxpVRC2xBC0nN9A
+         seOxdqTzq9s4gKFlZl6eOMdzFwzzCCkJ1tuiDjgG3cPWigVe/MAnZNu3mIR65lL9AO+1
+         rmffdrJF10LBbOVilc/rnEJh4v6OPMstFjxTC857MvotZUl/pRJFnFKEre68usd3XPrq
+         DB5hPzwRprmJzceyhc21q2dzY3HfqbqA9NjzmR4i1uRY63eQXL/ukPfQkw1MKtWd+QwM
+         fioA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731610777; x=1732215577;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LmyaJTy0P0D0Xkyj/Ucld+TRFm4Kl/uDXkKb7tYsPFc=;
-        b=Su96XkO6Z5oI/S/0uAK+IqqL0wgUZR3pisw+jPqmRRalAFHOEG4qYkhTgOMR+nfHI6
-         T8TFmrPtHWYpDL0vS1Et7DGBPEGAmF1jGUsOiNVvbim+l0+VIelao1jfHbofYjYzov65
-         UDnhZ2CD4ThxPw3KU2dFTvNIYIxV/eHamesqvcyTUcL2Vt8ppSExzhPSY7RuJZsKrtDj
-         Z8UO4dm+ktxEj7ueNvUHmGw93EcxdP9InKnZonQE1rE66+RBPjWuacxXKojFF9mfh+QA
-         TCKCARch2KGfh/hiepP3vmP0a8/whZJIvFU3StPsC3sJJkdAizPcXivhT89sfuzLaJu1
-         JLnQ==
-X-Gm-Message-State: AOJu0YzF3IEIzkChz85PheGb39OIxaPqUVTorVuWBVlFeGDxB7hGg2Dw
-	i6C469q+OgvxlpFjtHuUvYzH3Jgwyh3nNYCBq78IGdRgTkJnBmrUWzVzbBrPJ7Y=
-X-Google-Smtp-Source: AGHT+IHCVeJCTCdL5GKp5pegN395jvV0QZcNOEVuLTh492zzOzcKoViKi/ueSlMPot8LqhmcZD8RHQ==
-X-Received: by 2002:a05:6102:50ac:b0:4a4:8fc3:9b7 with SMTP id ada2fe7eead31-4ad62b9073bmr193946137.14.1731610777586;
-        Thu, 14 Nov 2024 10:59:37 -0800 (PST)
-Received: from bill-the-cat ([187.144.30.219])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b35c99d7ebsm78486985a.35.2024.11.14.10.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 10:59:36 -0800 (PST)
-Date: Thu, 14 Nov 2024 12:59:33 -0600
-From: Tom Rini <trini@konsulko.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Subject: Re: [GIT PULL] Please pull u-boot-amlogic-next-20241113
-Message-ID: <20241114185933.GL3600562@bill-the-cat>
-References: <6d6d1630-838b-460b-ac4f-1c4923bfb40b@linaro.org>
+        d=1e100.net; s=20230601; t=1731515809; x=1732120609;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/zciTR+8EblpsTG4JK1B5st2cc5bvniBmZ6U0BZjSVY=;
+        b=YKRMUDfLTT9w1E+GN35g7Y8HD68CspxQBNYpWS5qFzEOGwfg2saJGagAtAnrP+t7rZ
+         Q8zf25TqdM04EhnKUfIYgsoyCRbwrCf0Eu6H/3J/f6b2LnZPVBOi7GdVe0/m8CuK59BT
+         uelPOdEPeKf7oLqpVNBxUqYdiQ4bQqJUNUuMtnoNlfcvJzH79r7Ins46636kfENbC2iG
+         FgzhUEBRLjHNIfXcYx/+q28+6JgYDTqg1WSfB2gaz2Aazz1XwkTM+GPBtWlG8gJUNNkX
+         D0K3vGpiKXmfkwvohLsPEwnNExb5hws7NDAUh9kauh6aFCzhXUb/YlKEd3A16vtWZn92
+         R0kA==
+X-Gm-Message-State: AOJu0Ywn58ZRIEHT/inVx7XM0jSGlU4csTV6g99oXyascPX6lnyIt9yc
+	FhjLLL7N9ac5V4XEIc5qUn1C1K1cR/7tb74DlFar81zrx23KoC5SJ++d332CszSvpZ7Gpt6Xu/E
+	QMd0N7GboHJdMNsb/6jhgbvT+lvNa3g==
+X-Google-Smtp-Source: AGHT+IHkb0GG4wCRYDv8QEsetDUdtMKsNDQ4B7pLnlamPiRj9bZTTjsBLIKiIoWJSAqfzWPGNZnWq1LI0/DkGpQ700k=
+X-Received: by 2002:a05:6e02:13ad:b0:3a3:c207:b4cd with SMTP id
+ e9e14a558f8ab-3a6f1a6aa81mr61917245ab.5.1731515808740; Wed, 13 Nov 2024
+ 08:36:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <6d6d1630-838b-460b-ac4f-1c4923bfb40b@linaro.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=0EYz627dE4uoxpHBzDa2"
+From: caconeta1234@gmail.com
+Date: Wed, 13 Nov 2024 17:36:12 +0100
+Message-ID: <CAKPkay15xf85cbMb244=gCfiXSeLqzHEOTxaA22FTHLAyuTBOg@mail.gmail.com>
+Subject: NAND for Amlogic status
+To: u-boot-amlogic@groups.io
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 15 Nov 2024 13:14:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2558
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2557
 
---Groupsio=0EYz627dE4uoxpHBzDa2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi there,
 
-On Wed, Nov 13, 2024 at 06:45:23PM +0100, Neil Armstrong wrote:
+I would like to know current status for NAND support in amlogic u-boot.
+We're using the 2015.xx version provided by the manufacturer and would like
+to try u-boot-amlogic.
 
-> Hi Tom,
->=20
-> Here's a small fix for khadas-vim3{l} android config, and a drop of
-> obsolete dtsi and include bindings in favor or the upstream ones.
->=20
-> Thanks,
-> Neil
->=20
-> The following changes since commit 56accc56b9aab87ef4809ccc588e1257969cd2=
-71:
->=20
->   bios_emulator: fix first argument of pci_{read,write}_config_* function=
- calls (2024-11-04 18:01:58 -0600)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot=
--amlogic-next-20241113
->=20
-> for you to fetch changes up to 1cdb4e03e684d94456dee0cc30c935d7e25b263d:
->=20
->   dt-bindings: interrupt-controller: remove arm-gic.h from include/ (2024=
--11-13 17:25:07 +0100)
->=20
+From the status table in linux-meson.com it seems NAND is not supported
+yet, but it looks like there's been some work on that. I'm interested
+particularly in the A113X (axg).
 
-Applied to u-boot/next, thanks!
+Another important feature is whether there would be something equivalent to
+'aml-flash-tool' ('update' tool) for flashing the device over USB.
 
---=20
-Tom
+Thanks a lot.
 
---Groupsio=0EYz627dE4uoxpHBzDa2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmc2SI4ACgkQFHw5/5Y0
-tywYUQv6A5GLwvO2YgrKax6PHubBrhnF+OqcJnDUDnkb+oc4y+u5wttgR+jZf3aL
-Zj2KpDGuKzPKYzQS7+ufJW9l7h37IHiEFd7evwLt/LziMu0rRYc0wjxz57ov+6cq
-ZCgakI2th9pjFAR6zj+iRfARVJafAuB/oNL1wS0skzt4tgyPITrR5KA6DkcqB5Je
-lynYPqcQxBM/9J6KDqtKxjqsC9Q3uWHm3NzG/eE+Oe/jYIcOCP2UYdc+Q2AiFYaa
-DaoR4FjB5dQj+vvPiYWtkGd1V9wLPF9hOQy28tQC9fkS0KJ/tSit+LFahbULPYWL
-o05XQ0+aeAUnsgl76lh5CtkJ0iNNM5UqlSfbPDTPKQ/PIRJwk0ZvmV18rx0S8avY
-s2KIlctRRnmrJ3B7RQ2bnaZWr5oJOpQCs+OJg5ZdZdSHNXaypGqP1lT9DtqcnAIn
-WF48Unx8efSx32QQ4YK0eNDPNBFOkZAkqdzSr8u4Nvt0umKcyFu84u9h7956jSot
-QEwZlGMr
-=7nJ7
------END PGP SIGNATURE-----
-
---Groupsio=0EYz627dE4uoxpHBzDa2--
+Regards,
+Juan
 
