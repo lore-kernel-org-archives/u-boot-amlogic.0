@@ -1,147 +1,127 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <glaroque@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5555BD637A5
-	for <webhook@archiver.kernel.org>; Wed, 13 Nov 2024 17:45:33 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.17993.1731519926196256225
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0DBD6A230
+	for <webhook@archiver.kernel.org>; Thu, 14 Nov 2024 21:29:57 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.5704.1731619796317167845
  for <u-boot-amlogic@groups.io>;
- Wed, 13 Nov 2024 09:45:26 -0800
+ Thu, 14 Nov 2024 13:29:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=CElJxYRO;
- spf=pass (domain: linaro.org, ip: 209.85.221.46, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-37d51055097so4374842f8f.3
-        for <u-boot-amlogic@groups.io>; Wed, 13 Nov 2024 09:45:25 -0800 (PST)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=I8/8coox;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.45, mailfrom: glaroque@baylibre.com)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4314f38d274so12359515e9.1
+        for <u-boot-amlogic@groups.io>; Thu, 14 Nov 2024 13:29:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731519924; x=1732124724; darn=groups.io;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Uvyp5aHJ1Z7JGiBkv2RmSv2DsxVkKk5hPpUi2GOqfns=;
-        b=CElJxYROy/loSZ0YW8ixIj8nclUnWYfZPj6CMcen/9C0zgV2Htv0yiSCDSztY8x9J0
-         zW0Vf+DL63LTvfLMn494pFE+W+l4ZXSUtfBt1JBdVHEAHAKMkn5noYVZJdxXWVUCvDny
-         OTbjZhy1zaBHFdHJg2PqccYZpPrDa5w1RtsL2FSOCAVXo9QIWa9l5qdMlRYTsq9GDFWR
-         cGn+RDotZrQo5bLavNwKzuf2SpS5oHnsKYwXjLM0YZ6B0AhWcT7KK3p/MB4/SavesoGo
-         83L9BxQVknjByCX+qbGAjnqSwEJhjuv/brneRayDwDd7cQX1qpqqlmQwc6U+z2PN6b37
-         osUg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1731619794; x=1732224594; darn=groups.io;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RjN3qlgGFfhL4mVwuA/OEAAvF6xy8UbYiYCvSsUW5+8=;
+        b=I8/8cooxDgn4cBlMVhzIMUIgYLDVavsu5XuaDhCbetPQS3su5vEa/xeHkgmBBB2HgY
+         I3XaZ1v8ZTvh6tSnOKH0046VHuElShAr8rbumRzxnNQ4geFXKabYs5zEE4OpUmmu9W9e
+         rXdD/AZS1rwhyuqMX8LXrvKJoNMUQ9OgwIewvAUk9dFASEBFht3Ss6/W7u32VkAVNpQd
+         RmBT+hsZsJ+9a5MV6F0BB/tj7j9n11a9O+sd2ygn+R57HAopUzs/KG5DUzEtCaSrIm68
+         ZH1LPvcVbCUjGX+MPIO+pvKYN2rfhzPp1OB6s4osVbeqz8D2CR6aDB5mZai4gh3bdNpM
+         QuCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731519924; x=1732124724;
-        h=content-transfer-encoding:organization:autocrypt:content-language
-         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uvyp5aHJ1Z7JGiBkv2RmSv2DsxVkKk5hPpUi2GOqfns=;
-        b=C9zDGfGvAKsuyKLVyzzqz1Z7ECfg9vFGajb+cp8XpPiSn3C5yGbIyx1w64I7Sjzg6z
-         8hCpix5yvdhNWQfV33YIxwVgCn26shTZBC0IauDcYeQiCrFPH3uXprS1iIIDd0deE9Nk
-         jjYMhc+ZH+u9IT+NPrNThpLA3m++SiXWRuU5OQFDpt9O4f+k4rd06H/w/wwm2nJCoJUF
-         /G/7IDZqcQZ4Drx5qai6TwzGfn0tNJk5seO/ykfDh2Lqsa1+6/EwFnRLft2KyPW1k/YL
-         FB7GO1FvADDdqdcyVmrNS0A2/5Ex2YEqFBt6oDOyVyZgDgfc+1lRKGUgGWDkHc3paXdG
-         K6pg==
-X-Gm-Message-State: AOJu0YwrhaGn3gToFqktMxcAEeoSa/20H7tnXK/he2AWhBRintUN/T+Q
-	4s0NWrsGSaxCcMBjXJDD5HYDpmZgEFxfpf5j2ZGna2QwWItvp2y7UfnyFK9bRcc=
-X-Google-Smtp-Source: AGHT+IH1vh0n17Nih4qZdtZq6M8bInGGG8ibt19OQwFpr6y4fky9AiYt0mXkBi3ZZvbC5/Yov/0FMg==
-X-Received: by 2002:a5d:47ae:0:b0:37d:481e:8e29 with SMTP id ffacd0b85a97d-381f186bfdemr17651728f8f.25.1731519924572;
-        Wed, 13 Nov 2024 09:45:24 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:e35e:22ff:8c36:1a4a? ([2a01:e0a:982:cbb0:e35e:22ff:8c36:1a4a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381ed987d95sm19159878f8f.44.2024.11.13.09.45.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2024 09:45:24 -0800 (PST)
-Message-ID: <6d6d1630-838b-460b-ac4f-1c4923bfb40b@linaro.org>
-Date: Wed, 13 Nov 2024 18:45:23 +0100
+        d=1e100.net; s=20230601; t=1731619794; x=1732224594;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RjN3qlgGFfhL4mVwuA/OEAAvF6xy8UbYiYCvSsUW5+8=;
+        b=eeSbV4zPbhixVNMpTrOAgY51+fV0yeZT2M+sCTFyn/pPFXAVUZ/zShZIgGez6yvNm3
+         XOUENUdIpArqrh4se5xQk3mjP4LRa8dNWHX4LE1M1tFleOl2RXKulfJk50Bd5pZg9Gck
+         6SoyhZy4xjnddauLg715Bp3k3lUBS/M9Di2l/TNKyOVvfdA30RdTbzKZz8/kPVcT+34E
+         Avi3E7rUG85uV5FcuWS5mB+YLp0dFSeVaoKGucPQLjllda6LRc1ODqrpCYrUP3eMT5OZ
+         yr2DngLQG9OwMgo4+WaZZbnBYolc17ENCcoQIDgvWjakzICv9nFBdZktyQhtTAqxxGJP
+         07rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNsFAph/ijNKrVhPWv1V9YfganxvSX6sM4iGTrWyJpTaw/r63C+wJjrkc00nkF74BqLPbgDITiStbg06tmxA==@groups.io
+X-Gm-Message-State: AOJu0Yw2cqbePCOgDpZarww5vEyavJAc0Uj9LRAZ/uxtzMFyV76w6JOC
+	aF+HGsjb7qUAC4AURvE+i6v3TTkf0oGbZdH5ackMijXoeZbpJdSUQpM295y8zbcEWFc+PQBI+Xn
+	1Tyk=
+X-Google-Smtp-Source: AGHT+IEkIpw1ZEX9yT+w0svWDyxf20o1KQv18adjSSn6HL2sPd1WARXjXmP7/q6zSkO7GjGesqG83w==
+X-Received: by 2002:a5d:64c7:0:b0:381:d890:b5b7 with SMTP id ffacd0b85a97d-38225ac47famr231167f8f.52.1731619793619;
+        Thu, 14 Nov 2024 13:29:53 -0800 (PST)
+Received: from [127.0.1.1] ([2001:861:d40:ed60:89e8:c8e2:1fe:645])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ada3febsm2459782f8f.19.2024.11.14.13.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2024 13:29:53 -0800 (PST)
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH v2 0/5] Add support of Android Boot Image version 2 and
+ non-AB image
+Date: Thu, 14 Nov 2024 22:29:43 +0100
+Message-Id: <20241114-adnroidv2-v2-0-015bffb1373a@baylibre.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [GIT PULL] Please pull u-boot-amlogic-next-20241113
-Reply-To: neil.armstrong@linaro.org
-To: trini@konsulko.com
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMhrNmcC/02Nyw7CIBBFf6WZtZgBH4gr/8N0QQHtJFp0qMSm6
+ b+LNUaX5+Tm3BFSYAoJ9tUIHDIlil0BtajAtbY7B0G+MChUa4lyI6zvOJLPSliU3tktGo0ayv7
+ G4UTPuXWsP8zh/ijJ/idbSn3kYf7L8m2/af2XzlKg0DvpzMoYVM4cGjtcqOGwdPEK9TRNL1pl9
+ JW6AAAA
+To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
+ Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Julien Masson <jmasson@baylibre.com>, u-boot@lists.denx.de, 
+ u-boot-amlogic@groups.io, Guillaume La Roque <glaroque@baylibre.com>
+X-Mailer: b4 0.14.1
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 13 Nov 2024 17:45:33 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2550
+ <u-boot-amlogic@groups.io>; Thu, 14 Nov 2024 21:29:57 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2552
 
-Hi Tom,
+Actually bootmethod android only support android boot image version 4
+and with AB image, some old platform wtill use android boot image
+version 2 with AB or without AB slot.
 
-Here's a small fix for khadas-vim3{l} android config, and a drop of
-obsolete dtsi and include bindings in favor or the upstream ones.
+This patchset add support of both version 2 and non-AB slot images.
+It's fixed in same time a boot issue seen on khadas vim3{l} board with 16GB eMMC
 
-Thanks,
-Neil
+patchset was tested on khadas VIM3 and VIM3L with AOSP main branch and
+android-mainline kernel and with TI AM62P with android release provided
+by TI.
 
-The following changes since commit 56accc56b9aab87ef4809ccc588e1257969cd271:
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+Changes in v2:
+- Drop patch 3 (configs: khadas-vim3{l}: fix userdata size) already
+  applied 
+- Apply Tested-by and Reviewed-by from v1
+- Fix comments
+- Revert malloc/free for slot_suffix
+- Remove vim3/vim3l stuff in meson64_android.h 
+- Link to v1: https://lore.kernel.org/r/20241017-adnroidv2-v1-0-781c939902c9@baylibre.com
 
-   bios_emulator: fix first argument of pci_{read,write}_config_* function calls (2024-11-04 18:01:58 -0600)
+---
+Guillaume La Roque (5):
+      bootstd: android: add support of bootimage v2
+      bootstd: android: add non-A/B image support
+      configs: khadas-vim3l_android{_ab}: move on bootmeth android
+      configs: khadas-vim3_android{_ab}: move on bootmeth android
+      bootstd: Add test for Android boot image v2
 
-are available in the Git repository at:
+ arch/sandbox/dts/test.dts                 | 10 +++-
+ boot/Kconfig                              |  1 -
+ boot/bootmeth_android.c                   | 78 +++++++++++++++++++++----------
+ configs/am62x_a53_android.config          |  1 +
+ configs/khadas-vim3_android_ab_defconfig  |  7 ++-
+ configs/khadas-vim3_android_defconfig     |  7 ++-
+ configs/khadas-vim3l_android_ab_defconfig |  7 ++-
+ configs/khadas-vim3l_android_defconfig    |  7 ++-
+ configs/sandbox_defconfig                 |  1 +
+ include/configs/khadas-vim3_android.h     | 26 +++++++++--
+ include/configs/khadas-vim3l_android.h    | 26 +++++++++--
+ include/configs/meson64_android.h         |  6 ---
+ test/boot/bootflow.c                      | 29 ++++++++++--
+ test/py/tests/test_ut.py                  | 49 +++++++++++++++++++
+ 14 files changed, 208 insertions(+), 47 deletions(-)
+---
+base-commit: ce427e40a2422b75374ee3404e3f5c6536e8984a
+change-id: 20241015-adnroidv2-a01dca609707
 
-   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-next-20241113
+Best regards,
+-- 
+Guillaume La Roque <glaroque@baylibre.com>
 
-for you to fetch changes up to 1cdb4e03e684d94456dee0cc30c935d7e25b263d:
-
-   dt-bindings: interrupt-controller: remove arm-gic.h from include/ (2024-11-13 17:25:07 +0100)
-
-----------------------------------------------------------------
-- khadas-vim3{l}: fix userdata size for android config
-- drop A1 dtsi and other bindings includes in favor of Upstream ones
-
-----------------------------------------------------------------
-Alexey Romanov (4):
-       arm: dts: meson: remove meson-a1.dtsi
-       dt-bindings: remove a1 bindings from include/
-       dt-bindings: remove axg bindings from include/
-       dt-bindings: interrupt-controller: remove arm-gic.h from include/
-
-Guillaume La Roque (1):
-       configs: khadas-vim3{l}: fix userdata size
-
-  arch/arm/dts/meson-a1.dtsi                         | 518 ---------------------
-  include/configs/khadas-vim3_android.h              |   4 +-
-  include/configs/khadas-vim3l_android.h             |   4 +-
-  .../clock/amlogic,a1-peripherals-clkc.h            | 168 -------
-  include/dt-bindings/clock/amlogic,a1-pll-clkc.h    |  25 -
-  include/dt-bindings/clock/axg-audio-clkc.h         |  94 ----
-  include/dt-bindings/clock/axg-clkc.h               | 100 ----
-  include/dt-bindings/gpio/meson-a1-gpio.h           |  73 ---
-  include/dt-bindings/interrupt-controller/arm-gic.h |  23 -
-  include/dt-bindings/power/meson-a1-power.h         |  32 --
-  include/dt-bindings/reset/amlogic,meson-a1-reset.h |  76 ---
-  11 files changed, 4 insertions(+), 1113 deletions(-)
-  delete mode 100644 arch/arm/dts/meson-a1.dtsi
-  delete mode 100644 include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h
-  delete mode 100644 include/dt-bindings/clock/amlogic,a1-pll-clkc.h
-  delete mode 100644 include/dt-bindings/clock/axg-audio-clkc.h
-  delete mode 100644 include/dt-bindings/clock/axg-clkc.h
-  delete mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
-  delete mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
-  delete mode 100644 include/dt-bindings/power/meson-a1-power.h
-  delete mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
 
