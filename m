@@ -2,60 +2,61 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC3CD637DD
-	for <webhook@archiver.kernel.org>; Fri, 15 Nov 2024 14:04:22 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.21581.1731679453521560018
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A4FD65C7C
+	for <webhook@archiver.kernel.org>; Fri, 15 Nov 2024 14:12:02 +0000 (UTC)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+ by mx.groups.io with SMTP id smtpd.web11.21542.1731679915891016413
  for <u-boot-amlogic@groups.io>;
- Fri, 15 Nov 2024 06:04:13 -0800
+ Fri, 15 Nov 2024 06:11:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=wNsMNeBH;
- spf=pass (domain: linaro.org, ip: 209.85.128.44, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4315baa51d8so6083925e9.0
-        for <u-boot-amlogic@groups.io>; Fri, 15 Nov 2024 06:04:13 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Znoqf9hN;
+ spf=pass (domain: linaro.org, ip: 209.85.208.46, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5c9693dc739so2583088a12.3
+        for <u-boot-amlogic@groups.io>; Fri, 15 Nov 2024 06:11:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731679452; x=1732284252; darn=groups.io;
+        d=linaro.org; s=google; t=1731679914; x=1732284714; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lpB0qu0GSGHrXDcJf/fV0re+V5hcE5UctaQ+JRYlOx4=;
-        b=wNsMNeBHD72vHDxSJg6dhI4fccJgs6AdjzkB55fL9c7nuthmIH1Mnd0Utb9C/a9Td3
-         ZSmZQ/yirZ889XZ+CqVf48lIPh49SHAGxsExfwnzTHIrEn3VDd6TkxfifS+XzUP7NtZD
-         fTurUWefvOV1O7K6i7RHndkoENar5vvnI13SFmJcdcQCPb3GJT7QzAokI5KxhtvSNAZ6
-         NefxiCoeQZV2g0juDp6+bZk2XQ1LtpA65mczqv0le9YRs7ctp5+O97Cph1iQk0VtvCmQ
-         hCLgqKQ0K0noCu2cfEFwixrlw74jmCLjMEVyt+UWuqjXufosUTSZDGhMb6n0ZyknUqdJ
-         tO6g==
+        bh=gYQzkHHEBgkrCxvU3hEQ1QMq6ajHyt0vlJYF4e8RfcI=;
+        b=Znoqf9hNJQ+Homu/N5aw08NGpVv6kt0uxN65eM7yc6L5mWHfdxRrxYSomcL4GMG6GG
+         UVlWuGJcBrnlz/3V4oO84SgXH4zDHDPtylU/zF4XRzJDjc39Oey2R7vmd6i3DE7arEFN
+         EWCoBmcg47V1UKsphsV3LWsJgBT10xqDA4BloxEDokbPOksH3nonyOVncRxEO+MB/NCa
+         Ja27gtrYIBenJdO7DYnVSoc1or6c1y9m9slucbEgKp1B0poGgAwOLaA98c7dBPtZmKJO
+         TSfSIig3CinnExTsZFAmrWfA934X0p3Skgm3TiP2AiNZKJG69PnQuGt3CYK1NEucBwXz
+         rfHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731679452; x=1732284252;
+        d=1e100.net; s=20230601; t=1731679914; x=1732284714;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=lpB0qu0GSGHrXDcJf/fV0re+V5hcE5UctaQ+JRYlOx4=;
-        b=laFHCf21Tocp8Y2kSqqfIN0YNEvVeEMV7HXZANoOvDaiNkXcVeCazIBJFoI3ikPBJN
-         AHXFFigl1zzF+CWzjyUS+YoGb8gRDs6WjB9mKFY/Kxw7icsnOnTg10vY9WaKvcVAvm9q
-         R6sUybJI0qaMUIk5aAAudey1I4AXfz1b9cUkpeNMm0w9ZBXI3osDXtnNEQiR9RVEeRaA
-         ZKVnfNtiy1rHOBBrpns0PXwWVqnCFex8L/Ly8VFuxuwJiXp291OZ49W2HIjWD9D3hj5J
-         0QXD+VUlNmuuRSPGOepJAWu7sniESDJeDgL2Jh2bqWs8oUoPEa8OONWinq+Uu9iSJ0lu
-         SLAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpmiVrGywgxiR7VsUwjPTdUZVeFW+/xdGZyg7tu8ACMH/NzTtYs/4DxwGAjzbekvHhaCVl4PwoSdCw9oEMVQ==@groups.io
-X-Gm-Message-State: AOJu0YzCQxM0EsHkn4dEws5tSuEp4szVtJcxuWBirLIEeOp/M/TyIQU5
-	+3sZCTGttTkTyZI6aSL7OgNvWGPcoHdBmf2fTJnyQMKz7jeUJq23L0tkykYWr4w=
-X-Google-Smtp-Source: AGHT+IG/H2rXaPEypfg/arEShsMb6iIyTSAfnBTzdySY3ga6aUWt8W9nQa+lW4X+PT5nMK8QNeoe2Q==
-X-Received: by 2002:a05:600c:138f:b0:431:7c78:b885 with SMTP id 5b1f17b1804b1-432df7179d4mr23188545e9.4.1731679450111;
-        Fri, 15 Nov 2024 06:04:10 -0800 (PST)
+        bh=gYQzkHHEBgkrCxvU3hEQ1QMq6ajHyt0vlJYF4e8RfcI=;
+        b=CuGusFadSBJJHkTFDNXOpB/rTsB2BVlj8SvSipnM0UXoBaPn9K96gPvsWRed49iKzs
+         53/f+2IAQCYGTFCSHKnzjZPTGoSHZnnwbv7CVCI01F68mTrnkwvy1Tbi+hSPEhxWt4nc
+         kNHpEeyvVtUYfY6+TWuBnomlf8cQ4Kc6pb9YvONQOwL2jzufzUzdd38NlucHToX+bsdb
+         2ajYPZPwOVA7cEBWW8hSU63P2v9q2lgiRnSKwEQoJ7A0dxZtEsdEp+vbfSk893hutwwj
+         EXYOgApMyipSvyWqrBH0NuCqVekvbcebSiCfsmfMcGoYr2fMqZCEF6Z4LOtMoB+xaSQU
+         F82w==
+X-Forwarded-Encrypted: i=1; AJvYcCVnHMP2x2IvWAGK6ns7YRIWnuACB4llsMvnpcXbEPhETkK6N6yaQBt01DsjiuMNruHKAdP2TVIH8W74lqjqbQ==@groups.io
+X-Gm-Message-State: AOJu0YzpXMjdTaBG3nk2hNv+h13QQMBmrpodzTKwpue2nycW7WNyqbcc
+	g9nO8QUW1oKjiATBiSH4yffApJIfiFtZ2BAq6QsGE23ZcCFUhlc4My4SVD6DrI8l6G2zyPBvVYL
+	3
+X-Google-Smtp-Source: AGHT+IHbi85f9k78amp/H+s9oKvz6yJkk2LCsgQbJmYehreD2BQifuK0HNd5uId21Q+nov2ffitZ4A==
+X-Received: by 2002:a05:6000:1863:b0:382:1c00:d47a with SMTP id ffacd0b85a97d-38225a91de7mr2367663f8f.36.1731679461984;
+        Fri, 15 Nov 2024 06:04:21 -0800 (PST)
 Received: from ?IPV6:2a01:e0a:982:cbb0:8512:42be:302f:f436? ([2a01:e0a:982:cbb0:8512:42be:302f:f436])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432d478511dsm80500835e9.0.2024.11.15.06.04.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-382247849b0sm2490795f8f.97.2024.11.15.06.04.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2024 06:04:09 -0800 (PST)
-Message-ID: <6f0f015b-e5b2-4ea6-be6a-bddd945fdcf7@linaro.org>
-Date: Fri, 15 Nov 2024 15:04:08 +0100
+        Fri, 15 Nov 2024 06:04:21 -0800 (PST)
+Message-ID: <95aa89c1-f0f0-4c2c-93b7-d3f77f0d60b8@linaro.org>
+Date: Fri, 15 Nov 2024 15:04:20 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 3/5] configs: khadas-vim3l_android{_ab}: move on
+Subject: Re: [PATCH v2 4/5] configs: khadas-vim3_android{_ab}: move on
  bootmeth android
 To: Guillaume La Roque <glaroque@baylibre.com>,
  Mattijs Korpershoek <mkorpershoek@baylibre.com>,
@@ -63,7 +64,7 @@ To: Guillaume La Roque <glaroque@baylibre.com>,
 Cc: Julien Masson <jmasson@baylibre.com>, u-boot@lists.denx.de,
  u-boot-amlogic@groups.io
 References: <20241114-adnroidv2-v2-0-015bffb1373a@baylibre.com>
- <20241114-adnroidv2-v2-3-015bffb1373a@baylibre.com>
+ <20241114-adnroidv2-v2-4-015bffb1373a@baylibre.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -90,31 +91,31 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20241114-adnroidv2-v2-3-015bffb1373a@baylibre.com>
+In-Reply-To: <20241114-adnroidv2-v2-4-015bffb1373a@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 15 Nov 2024 14:04:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2559
+ <u-boot-amlogic@groups.io>; Fri, 15 Nov 2024 14:12:02 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2560
 
 On 14/11/2024 22:29, Guillaume La Roque wrote:
-> Actually khadas vim3l use distro command to boot android image.
-> Move on new bootmeth android for A/B and non-A/B vim3l android.
+> Actually khadas vim3 use distro command to boot android image.
+> Move on new bootmeth android for A/B and non-A/B vim3 android.
 > 
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->   configs/khadas-vim3l_android_ab_defconfig |  7 ++++++-
->   configs/khadas-vim3l_android_defconfig    |  7 ++++++-
->   include/configs/khadas-vim3l_android.h    | 26 ++++++++++++++++++++++----
->   include/configs/meson64_android.h         |  3 ---
+>   configs/khadas-vim3_android_ab_defconfig |  7 ++++++-
+>   configs/khadas-vim3_android_defconfig    |  7 ++++++-
+>   include/configs/khadas-vim3_android.h    | 26 ++++++++++++++++++++++----
+>   include/configs/meson64_android.h        |  3 ---
 >   4 files changed, 34 insertions(+), 9 deletions(-)
 > 
-> diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
-> index 4d7b90f23002..43db61056baf 100644
-> --- a/configs/khadas-vim3l_android_ab_defconfig
-> +++ b/configs/khadas-vim3l_android_ab_defconfig
+> diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
+> index de5357c45cbf..a078c5d363ae 100644
+> --- a/configs/khadas-vim3_android_ab_defconfig
+> +++ b/configs/khadas-vim3_android_ab_defconfig
 > @@ -24,6 +24,12 @@ CONFIG_REMAKE_ELF=y
 >   CONFIG_FIT=y
 >   CONFIG_FIT_SIGNATURE=y
@@ -136,10 +137,10 @@ On 14/11/2024 22:29, Guillaume La Roque wrote:
 >   CONFIG_CMD_GPIO=y
 >   CONFIG_CMD_GPT=y
 >   CONFIG_CMD_I2C=y
-> diff --git a/configs/khadas-vim3l_android_defconfig b/configs/khadas-vim3l_android_defconfig
-> index 4ec27262cdc7..32d57a5b9090 100644
-> --- a/configs/khadas-vim3l_android_defconfig
-> +++ b/configs/khadas-vim3l_android_defconfig
+> diff --git a/configs/khadas-vim3_android_defconfig b/configs/khadas-vim3_android_defconfig
+> index a0d9c423c3c3..b77a44ce859b 100644
+> --- a/configs/khadas-vim3_android_defconfig
+> +++ b/configs/khadas-vim3_android_defconfig
 > @@ -24,6 +24,12 @@ CONFIG_REMAKE_ELF=y
 >   CONFIG_FIT=y
 >   CONFIG_FIT_SIGNATURE=y
@@ -161,23 +162,23 @@ On 14/11/2024 22:29, Guillaume La Roque wrote:
 >   CONFIG_CMD_GPIO=y
 >   CONFIG_CMD_GPT=y
 >   CONFIG_CMD_I2C=y
-> diff --git a/include/configs/khadas-vim3l_android.h b/include/configs/khadas-vim3l_android.h
-> index f39a3782d663..31068c59d5ed 100644
-> --- a/include/configs/khadas-vim3l_android.h
-> +++ b/include/configs/khadas-vim3l_android.h
+> diff --git a/include/configs/khadas-vim3_android.h b/include/configs/khadas-vim3_android.h
+> index 0e2953fe71b3..096ab4e5fb1f 100644
+> --- a/include/configs/khadas-vim3_android.h
+> +++ b/include/configs/khadas-vim3_android.h
 > @@ -41,10 +41,28 @@
 >   	"name=rootfs,size=-,uuid=" ROOT_UUID
 >   #endif
 >   
 > -#define EXTRA_ANDROID_ENV_SETTINGS \
-> -	"board=vim3l\0" \
-> -	"board_name=vim3l\0" \
+> -	"board=vim3\0" \
+> -	"board_name=vim3\0" \
 > +#define CFG_EXTRA_ENV_SETTINGS                                    \
-> +	"board=vim3l\0"                                               \
-> +	"board_name=vim3l\0"                                          \
+> +	"board=vim3\0"                                               \
+> +	"board_name=vim3\0"                                          \
 > +	"bootmeths=android\0"                                         \
 > +	"bootcmd=bootflow scan\0"                                     \
-> +	"adtb_idx=2\0"                                                \
+> +	"adtb_idx=3\0"                                                \
 > +	"partitions=" PARTS_DEFAULT "\0"                              \
 > +	"mmcdev=2\0"                                                  \
 > +	"fastboot_raw_partition_bootloader=0x1 0xfff mmcpart 1\0"     \
@@ -199,19 +200,19 @@ On 14/11/2024 22:29, Guillaume La Roque wrote:
 >   
 >   #endif /* __CONFIG_H */
 > diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-> index 77364bbf9cf0..37ef8b8f7a7e 100644
+> index 37ef8b8f7a7e..d6ef0a83a686 100644
 > --- a/include/configs/meson64_android.h
 > +++ b/include/configs/meson64_android.h
 > @@ -104,9 +104,6 @@
 >   	"elif test $board_name = sei610; then " \
 >   		"echo \"  Reading DTB for sei610...\"; " \
 >   		"setenv dtb_index 1;" \
-> -	"elif test $board_name = vim3l; then " \
-> -		"echo \"  Reading DTB for vim3l...\"; " \
-> -		"setenv dtb_index 2;" \
->   	"elif test $board_name = vim3; then " \
->   		"echo \"  Reading DTB for vim3...\"; " \
->   		"setenv dtb_index 3;" \
+> -	"elif test $board_name = vim3; then " \
+> -		"echo \"  Reading DTB for vim3...\"; " \
+> -		"setenv dtb_index 3;" \
+>   	"else " \
+>   		"echo Error: Android boot is not supported for $board_name; " \
+>   		"exit; " \
 > 
 
 Acked-by: Neil Armstrong <neil.armstrong@linaro.org>
