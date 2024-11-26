@@ -1,243 +1,103 @@
-Return-Path: <glaroque@baylibre.com>
+Return-Path: <mkorpershoek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1687CD5A6F6
-	for <webhook@archiver.kernel.org>; Tue, 26 Nov 2024 08:07:11 +0000 (UTC)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web10.40858.1732608422040940944
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3951D3B7CA
+	for <webhook@archiver.kernel.org>; Tue, 26 Nov 2024 09:00:11 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.41369.1732611595480343720
  for <u-boot-amlogic@groups.io>;
- Tue, 26 Nov 2024 00:07:02 -0800
+ Tue, 26 Nov 2024 00:59:55 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=k3q4hrlt;
- spf=pass (domain: baylibre.com, ip: 209.85.221.48, mailfrom: glaroque@baylibre.com)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-382442b7d9aso4028202f8f.1
-        for <u-boot-amlogic@groups.io>; Tue, 26 Nov 2024 00:07:01 -0800 (PST)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=uWApUjKd;
+ spf=pass (domain: baylibre.com, ip: 209.85.128.46, mailfrom: mkorpershoek@baylibre.com)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4315e9e9642so49333305e9.0
+        for <u-boot-amlogic@groups.io>; Tue, 26 Nov 2024 00:59:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732608420; x=1733213220; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6YG0n9iqjEGSOZGNbSF7tdn5zq9rY9uCABPaJK+FiNE=;
-        b=k3q4hrltPITf4IpeuDIDl8tun331njVt6iDV4KhKGUEuy3d6HshQynXnlcd95FNjsX
-         Ms+KxWbe7GhS9LQ0V8/CHWq9K0B92x5+jLN/Aig4mbI3Ce6OXdEnzwpkKVsKjA5cJLkN
-         M8XTKvYHnLJdS2xDRyDboN+g3cLSguCpScc6f5pTxw7QWCoOgh+jQnyVjH2FVjod5HB/
-         33z91nRERw90KhM4B6uGfT3QAbbxN3px3lXzzqSTxCHzfPvBe5qMODhhD7eVyZjuP3J0
-         sFZSUbvhepvBTBmLax6r4e9C+CGkl6aVVyedeiZePVJMKzxMR/msyBnfFKNWE/aJwNIQ
-         t67w==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732611594; x=1733216394; darn=groups.io;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9LD8MmZIJbHnKQDfo8crB9BO5AKF2k0n8EcSatAkd2M=;
+        b=uWApUjKdnfAlwuyV8WWo5cW+GGxiopuyAT+LEKRxW5EQmic+aKN6k6igyzQM4dHfif
+         b9yJQqBJJlxk0+V1cR2DwjmO2WnTIbZptZyDH2B+A99hKfXs4GUyUojpeRUIFe5438fJ
+         00SEJtc4YKez+kGgJfpGtQHkIOaXWdQDb8RWJhJTgIHRaNMtw1CXOkAnf6j9xGxp2i3u
+         u2x2JmrNHWght90E4YIzh2gyozUp2Pi6fcjn7tYN+LpM7aHJdJ0eaY4fezPVkwF1PPQq
+         WErbKH1eIm2gq7MfEm8nhFxfUgd8zLmB4VJ+YVAIus7sRId1noa+wwIAP8SQEEPISDvJ
+         V5SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732608420; x=1733213220;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1732611594; x=1733216394;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6YG0n9iqjEGSOZGNbSF7tdn5zq9rY9uCABPaJK+FiNE=;
-        b=rvD8s16WCSSdj0kpgbGDMm+9eOwNlpL5VfTtAJrXO8mjud7FdVAkIIPOc23tWJRIr+
-         yUut3rof+NH2Xv0P6BKVVwcyrcAH73JTysLPkQKShB22SfCag5mfH/m9gZOS4V6RZo28
-         +vv3b2CwZA+UrBGOQHZS2WtOsix0MuBT7XUdcaOhVapJ9eQ4tWU+wNBmu+x9rLADptNl
-         PHZKILVqFcUDOXRroZNjQ0tBaoH8JE6YSeqk/kwaF4UQ4R1cFwZc7pnb0vkbqipNRRAR
-         tUV6UPFmZSH3BIqgCe7Fsrsek+riMCoxqaXlPNqlXedAQot4JyA+qx8wEQhIyaLvqgIM
-         jDng==
-X-Forwarded-Encrypted: i=1; AJvYcCXJEAEUgTLoioGBX6aa8oGdAtA+sa0WyImRc8To2XizDWpIe5AC1ZszIJMhwIwThz0ZUyEeUi1xDgXbcNs4lw==@groups.io
-X-Gm-Message-State: AOJu0YwGBNshaO/qw4df4d6jNqnOZ/+P3DJXdH9cYux1R9IZ+YAYlBbe
-	F4e0qlQ7nnss1AyIsCKZtkVZoao2fH2LiyjCwKlsRQ0oyzPKAef/vFG/kgQU664=
-X-Gm-Gg: ASbGncuD6yVSOeZA9Z5Dm8qc55x1A3un6ktCzXebvN77fqnSDQipI1XjDbHY+EwJEz/
-	iCRIrlg4m0u78Zbh6DkIR7IxyFQk/gJkfCaF38vMoqhXXpvcPSZZ7LW1r+40hi8ZHil3Xtdfn53
-	fmJdtU0H4u0M30ra71Zf99lZZLhLclNSTnL0fiSAr4n/F4W0BaDtLus709jxRI6wxexPHIx5Bwq
-	Jma9Wl/VNm8oDXpQPUmqT2Pbx2y0gVO+cJ+OlfFxmyuIT8FpxgTtw==
-X-Google-Smtp-Source: AGHT+IEJf8xT4KHKBlYGByUDFoKIBpHxbHZfCda3FlCjXKn+pWgnlOY0BftfNDiRlPB5dk3mZg0BKw==
-X-Received: by 2002:a5d:6c69:0:b0:382:31ca:4dca with SMTP id ffacd0b85a97d-38260b4d679mr13157115f8f.7.1732608420443;
-        Tue, 26 Nov 2024 00:07:00 -0800 (PST)
-Received: from [127.0.1.1] ([2001:861:d40:ed60:86be:4d54:1784:8cf7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825fb36612sm12513102f8f.59.2024.11.26.00.06.59
+        bh=9LD8MmZIJbHnKQDfo8crB9BO5AKF2k0n8EcSatAkd2M=;
+        b=eKLUFcAWTMqb6weh88AW46ixaWoEpanoBP99qwKpYG3U9exqgF4SgOvBknN312fRYV
+         OSr4kCx0PiflwC4O3cY8d5Arxpvk2zZAdgRTczQnH2gdxU9+zccGPgIeXEl/uHLMOYko
+         1TmSD9gtYKzU1mzgaJ4H2EjGQ8DsML53w7YQsOtpgtUcdtyIGZG/+KHrgIs6kWbNdSxd
+         b7YYm9hzpKfbqMNGuPrU0zUbS1Wv2UQeOJOwDPwwUXZNC8GRLsdtKI5V59QkwuI1fR7B
+         t3b3EDvAwDYVDA3H0YLNeifU0BbvhlUyhc/fc8Ve/Z9LpVEDYdFmkIM5yqLNNPbygPUv
+         54ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUDx7quUEvtTylRMY/5bQH6QItAJ1IRmc1dfhmOa++Kvtox73LfRqxcgDdMhHZ1YtvXz+joQUuWhUkeQEsyYA==@groups.io
+X-Gm-Message-State: AOJu0Ywp1ZutKA4QEWv4flda9oTcrOWEn9XNApPrFcARt4KEkP9RD3mt
+	Yy2qh4EMObrH7K4WHWrRxc5Gbhro8+Xspa+YMv5Vi3fZjw+0qgqGD11yOrg1Rlc=
+X-Gm-Gg: ASbGnctTjvLOg2fF2SNnMWk4Lb+vJCykwHRuQdkaqFX6nfT+iEOdlq/9yfHCf/p1II2
+	bWCX9ZFzH2eKvoLaDATi4Zcv620zboKakgnncdwPIhSzrQos0Sq4ubKzfpmHj32x8gxvrJfJqmv
+	BdJ5239aR2EYAYoe6va0VA2lIWm9kWIzsB47Dj1HqhEOmwT+BtlwV9TlUaYwvC/gSb8NZxZIgig
+	n3TNv7CY3hElWeLUMawsfZ3AysBrr9d2Ux8rK81EzL1fR2KIEDqFINz6/cLfw==
+X-Google-Smtp-Source: AGHT+IGlIzDqKNHLyRs9NkK/IDChm6kHRFW9xWqhYxKWt+SCBWQzWkZ4yr60+g9SsHS9aiFmdkU/+A==
+X-Received: by 2002:a05:600c:4f47:b0:431:5aea:964 with SMTP id 5b1f17b1804b1-433ce42882bmr135821765e9.19.1732611593933;
+        Tue, 26 Nov 2024 00:59:53 -0800 (PST)
+Received: from [192.168.2.169] ([82.66.159.240])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433cde10eabsm157632215e9.13.2024.11.26.00.59.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 00:06:59 -0800 (PST)
-From: Guillaume La Roque <glaroque@baylibre.com>
-Date: Tue, 26 Nov 2024 09:06:13 +0100
-Subject: [PATCH v4 5/5] bootstd: Add test for Android boot image v2
+        Tue, 26 Nov 2024 00:59:52 -0800 (PST)
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+To: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Guillaume La Roque <glaroque@baylibre.com>
+Cc: Julien Masson <jmasson@baylibre.com>, u-boot@lists.denx.de, 
+ u-boot-amlogic@groups.io
+In-Reply-To: <20241126-adnroidv2-v4-0-11636106dc69@baylibre.com>
+References: <20241126-adnroidv2-v4-0-11636106dc69@baylibre.com>
+Subject: Re: [PATCH v4 0/5] Add support of Android Boot Image version 2 and
+ non-AB image
+Message-Id: <173261159203.11812.5321569268294652228.b4-ty@baylibre.com>
+Date: Tue, 26 Nov 2024 09:59:52 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241126-adnroidv2-v4-5-11636106dc69@baylibre.com>
-References: <20241126-adnroidv2-v4-0-11636106dc69@baylibre.com>
-In-Reply-To: <20241126-adnroidv2-v4-0-11636106dc69@baylibre.com>
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
- Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Julien Masson <jmasson@baylibre.com>, u-boot@lists.denx.de, 
- u-boot-amlogic@groups.io, Guillaume La Roque <glaroque@baylibre.com>
-X-Mailer: b4 0.14.1
+X-Mailer: b4 0.14.0
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 26 Nov 2024 08:07:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2588
+ <u-boot-amlogic@groups.io>; Tue, 26 Nov 2024 09:00:11 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2589
 
-Rename actual android bootmethod test to specify it's for boot image
-version 4.
-Add a unit test for testing the Android bootmethod with boot image
-version 2.
+Hi,
 
-This requires another mmc image (mmc8) to contain the following
-partitions:
-- misc: contains the Bootloader Control Block (BCB)
-- boot_a: contains a fake generic kernel image
+On Tue, 26 Nov 2024 09:06:08 +0100, Guillaume La Roque wrote:
+> Actually bootmethod android only support android boot image version 4
+> and with AB image, some old platform wtill use android boot image
+> version 2 with AB or without AB slot.
+> 
+> This patchset add support of both version 2 and non-AB slot images.
+> It's fixed in same time a boot issue seen on khadas vim3{l} board with 16GB eMMC
+> 
+> [...]
 
-we can test this with:
+Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-dfu (u-boot-dfu-next)
 
-$ ./test/py/test.py --bd sandbox --build -k test_ut # build the mmc8.img
-$ ./test/py/test.py --bd sandbox --build -k bootflow_android
+[1/5] bootstd: android: add support of bootimage v2
+      https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commit/51a2fc40d399888ee45c452d2f40fa1b0cb1456e
+[2/5] bootstd: android: add non-A/B image support
+      https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commit/9ef8b3bf8a1062c69a2417b850c30b39255f61bd
+[3/5] configs: khadas-vim3l_android{_ab}: move on bootmeth android
+      https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commit/86e931535cf6c2014ef384bd7cacea94aadf1645
+[4/5] configs: khadas-vim3_android{_ab}: move on bootmeth android
+      https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commit/83a6ae671680010ae52e83554c431b095fe2b5d5
+[5/5] bootstd: Add test for Android boot image v2
+      https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commit/126254ab97691a93902d8fe02fdff0a783921c39
 
-Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- arch/sandbox/dts/test.dts | 10 +++++++++-
- test/boot/bootflow.c      | 29 +++++++++++++++++++++++++---
- test/py/tests/test_ut.py  | 49 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 84 insertions(+), 4 deletions(-)
-
-diff --git a/arch/sandbox/dts/test.dts b/arch/sandbox/dts/test.dts
-index dee280184b1b..36cfbf213e4c 100644
---- a/arch/sandbox/dts/test.dts
-+++ b/arch/sandbox/dts/test.dts
-@@ -44,6 +44,7 @@
- 		mmc5 = "/mmc5";
- 		mmc6 = "/mmc6";
- 		mmc7 = "/mmc7";
-+		mmc8 = "/mmc8";
- 		pci0 = &pci0;
- 		pci1 = &pci1;
- 		pci2 = &pci2;
-@@ -1138,13 +1139,20 @@
- 		filename = "mmc6.img";
- 	};
- 
--	/* This is used for Android tests */
-+	/* This is used for Android boot image v4 tests */
- 	mmc7 {
- 		status = "disabled";
- 		compatible = "sandbox,mmc";
- 		filename = "mmc7.img";
- 	};
- 
-+	/* This is used for Android boot image v2 tests. */
-+	mmc8 {
-+		status = "disabled";
-+		compatible = "sandbox,mmc";
-+		filename = "mmc8.img";
-+	};
-+
- 	pch {
- 		compatible = "sandbox,pch";
- 	};
-diff --git a/test/boot/bootflow.c b/test/boot/bootflow.c
-index da713d8ed72b..e33b08aa8cda 100644
---- a/test/boot/bootflow.c
-+++ b/test/boot/bootflow.c
-@@ -1199,8 +1199,8 @@ static int bootflow_cros(struct unit_test_state *uts)
- }
- BOOTSTD_TEST(bootflow_cros, UTF_CONSOLE | UTF_DM | UTF_SCAN_FDT);
- 
--/* Test Android bootmeth  */
--static int bootflow_android(struct unit_test_state *uts)
-+/* Test Android bootmeth  with boot image version 4 */
-+static int bootflow_android_image_v4(struct unit_test_state *uts)
- {
- 	if (!IS_ENABLED(CONFIG_BOOTMETH_ANDROID))
- 		return -EAGAIN;
-@@ -1220,7 +1220,30 @@ static int bootflow_android(struct unit_test_state *uts)
- 
- 	return 0;
- }
--BOOTSTD_TEST(bootflow_android, UTF_CONSOLE | UTF_DM | UTF_SCAN_FDT);
-+BOOTSTD_TEST(bootflow_android_image_v4, UTF_CONSOLE | UTF_DM | UTF_SCAN_FDT);
-+
-+/* Test Android bootmeth with boot image version 2 */
-+static int bootflow_android_image_v2(struct unit_test_state *uts)
-+{
-+	if (!IS_ENABLED(CONFIG_BOOTMETH_ANDROID))
-+		return -EAGAIN;
-+
-+	ut_assertok(scan_mmc_android_bootdev(uts, "mmc8"));
-+	ut_assertok(run_command("bootflow list", 0));
-+
-+	ut_assert_nextlinen("Showing all");
-+	ut_assert_nextlinen("Seq");
-+	ut_assert_nextlinen("---");
-+	ut_assert_nextlinen("  0  extlinux");
-+	ut_assert_nextlinen("  1  android      ready   mmc          0  mmc8.bootdev.whole        ");
-+	ut_assert_nextlinen("---");
-+	ut_assert_skip_to_line("(2 bootflows, 2 valid)");
-+
-+	ut_assert_console_end();
-+
-+	return 0;
-+}
-+BOOTSTD_TEST(bootflow_android_image_v2, UTF_CONSOLE | UTF_DM | UTF_SCAN_FDT);
- 
- /* Test EFI bootmeth */
- static int bootflow_efi(struct unit_test_state *uts)
-diff --git a/test/py/tests/test_ut.py b/test/py/tests/test_ut.py
-index 6d44191976bb..7a0bde4da256 100644
---- a/test/py/tests/test_ut.py
-+++ b/test/py/tests/test_ut.py
-@@ -501,6 +501,55 @@ def setup_android_image(cons):
- 
-     print(f'wrote to {fname}')
- 
-+    mmc_dev = 8
-+    fname = os.path.join(cons.config.source_dir, f'mmc{mmc_dev}.img')
-+    u_boot_utils.run_and_log(cons, f'qemu-img create {fname} 20M')
-+    u_boot_utils.run_and_log(cons, f'cgpt create {fname}')
-+
-+    ptr = 40
-+
-+    # Number of sectors in 1MB
-+    sect_size = 512
-+    sect_1mb = (1 << 20) // sect_size
-+
-+    required_parts = [
-+        {'num': 1, 'label':'misc', 'size': '1M'},
-+        {'num': 2, 'label':'boot_a', 'size': '4M'},
-+        {'num': 3, 'label':'boot_b', 'size': '4M'},
-+    ]
-+
-+    for part in required_parts:
-+        size_str = part['size']
-+        if 'M' in size_str:
-+            size = int(size_str[:-1]) * sect_1mb
-+        else:
-+            size = int(size_str)
-+        u_boot_utils.run_and_log(
-+            cons,
-+            f"cgpt add -i {part['num']} -b {ptr} -s {size} -l {part['label']} -t basicdata {fname}")
-+        ptr += size
-+
-+    u_boot_utils.run_and_log(cons, f'cgpt boot -p {fname}')
-+    out = u_boot_utils.run_and_log(cons, f'cgpt show -q {fname}')
-+
-+    # Create a dict (indexed by partition number) containing the above info
-+    for line in out.splitlines():
-+        start, size, num, name = line.split(maxsplit=3)
-+        parts[int(num)] = Partition(int(start), int(size), name)
-+
-+    with open(fname, 'rb') as inf:
-+        disk_data = inf.read()
-+
-+    test_abootimg.AbootimgTestDiskImage(cons, 'boot.img', test_abootimg.img_hex)
-+    boot_img = os.path.join(cons.config.result_dir, 'boot.img')
-+    with open(boot_img, 'rb') as inf:
-+        set_part_data(2, inf.read())
-+
-+    with open(fname, 'wb') as outf:
-+        outf.write(disk_data)
-+
-+    print(f'wrote to {fname}')
-+
-     return fname
- 
- def setup_cedit_file(cons):
-
--- 
-2.34.1
-
+--
+Mattijs
 
