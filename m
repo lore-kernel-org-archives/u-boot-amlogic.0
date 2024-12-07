@@ -2,135 +2,225 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B07DE7716C
-	for <webhook@archiver.kernel.org>; Thu,  5 Dec 2024 09:41:22 +0000 (UTC)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
- by mx.groups.io with SMTP id smtpd.web10.61029.1732666445733940774
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF3EE7717F
+	for <webhook@archiver.kernel.org>; Tue, 10 Dec 2024 09:24:57 +0000 (UTC)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+ by mx.groups.io with SMTP id smtpd.web11.70157.1733615003584786520
  for <u-boot-amlogic@groups.io>;
- Tue, 26 Nov 2024 16:14:05 -0800
+ Sat, 07 Dec 2024 15:43:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=EkfHWk1D;
- spf=pass (domain: konsulko.com, ip: 209.85.160.182, mailfrom: trini@konsulko.com)
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-466847440a6so22042521cf.2
-        for <u-boot-amlogic@groups.io>; Tue, 26 Nov 2024 16:14:05 -0800 (PST)
+ dkim=pass header.i=@chromium.org header.s=google header.b=cXk6AMXI;
+ spf=pass (domain: chromium.org, ip: 209.85.218.53, mailfrom: sjg@chromium.org)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aa560a65fd6so583709666b.0
+        for <u-boot-amlogic@groups.io>; Sat, 07 Dec 2024 15:43:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1732666444; x=1733271244; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjPGps0lhjB2EaFANpr58/4wAgQt5ecX6l0RD+4fxhE=;
-        b=EkfHWk1Dus6os97iHnqcfmmLgGxZGtYZF4+Ksmomr6MZp3v9NhLDwhjAWdmFNY4MiM
-         wcLlkARfYHdVjs46/y+12yE53woMuxRBz4DVDiaxKASuMl2YY6HVv7MjYIOXwiG+Z+33
-         +T0gNiXDBbav5iloY5ZNjlhx8U4x+n5oOM5vE=
+        d=chromium.org; s=google; t=1733615002; x=1734219802; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OJIhuMAWzV8raRAv1jJAZT5DP5cIG7000jONP2NFqBk=;
+        b=cXk6AMXIUUrdd389iXGNuWLLfz6VmQI7mXh/s1XmTeyYkVrG/sJ3K6bhKT1qLZrxzt
+         C3j+J/ngMdUw95Sxs4WzcHYWwxaz+q9HBu6BJLBfqgFPRQ3+wND1kh3zkNUDWAWxf9Ch
+         DRP3txrMAb1q0Po/QR64YTQlcvqBha5AFwtf4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732666444; x=1733271244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jjPGps0lhjB2EaFANpr58/4wAgQt5ecX6l0RD+4fxhE=;
-        b=FXZ7r6upSd/MTpwPHMyC3UrEMd4fFEh/Eg/O3Bu7zeIYh8gvydw8i+JRsvvD6UW34e
-         KFBIoGL0dmrE+fsYd13Pnz5cq/InndCezVhTbKODsoh8pLPRcWAuIiIpaAmKvsZ4w5to
-         YdsmJiYet89Fxj/dWKUOI26h9hDw+l92ZTshjSRxB4M2OVagfvgBrFS6gGmpuLgPlbpE
-         egtx1/fqzSYbfgOBxDjJxKHQaGlSypUZ6OgiGzhAQDH+TA6K23KL3dlyuYVhlhteLtzh
-         P3Cga9JJfCGor8/AVWJCXIphZxKAGqLY1w+UHCvUCmeWuLtoz/YQnfD/mT29XvNQS8uv
-         OQ1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVKJt7yAt+QEu8w84koCF9NIBP2XPvhApNKUfPx7TuUsRAJQW25HbHUmaAHCyY3hO5gkfCQI4rlfbpzO6gItg==@groups.io
-X-Gm-Message-State: AOJu0YzPqkfciOaFMRKO+fWtLFkpGlqcuNedfUR/dJ53IhGSzRhzKGZW
-	C0/slIOafPP5jQ3bq72DPl8C+jjr9VyfVVM1rrKpzMZajJhzJdvItwOJ5xVoyIOhnECDp/crrH6
-	ei8c=
-X-Gm-Gg: ASbGnct3Xo5sNImoiK5VCYNCrhnCMHo/vQ/OcW6L0vNmvlXwlZbRrcGWQDXSx/kHN8F
-	0veIQanwulMlkYQ19enBXyWR7YV+dtD2Jr7w2IxSHJD21fQ+JaSE32CmxfvoKY3EYb/mVkBwUL2
-	RCq5J74Ibos+CzdDN6gk3w2umvhgO1CYMS/5yO+GBaiW23ur4IbRlUKxG2+t+AaoxcyOhdhCFmC
-	8alM/gkebRWOxCO+9lybO75eKwaozfwYUn9dSUokqb3E9/Bxg==
-X-Google-Smtp-Source: AGHT+IGSOYYE2fzjIdNm6l/raqNBfYtljSEoZLcMayymF7Pd1OULjil5pTLRCbBXC/QLyzheCTPn2A==
-X-Received: by 2002:a05:622a:47:b0:45d:9357:1cca with SMTP id d75a77b69052e-466b351e8c4mr12178551cf.14.1732666444577;
-        Tue, 26 Nov 2024 16:14:04 -0800 (PST)
-Received: from bill-the-cat ([187.144.30.219])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-466aedab15asm8370451cf.66.2024.11.26.16.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2024 16:14:03 -0800 (PST)
-Date: Tue, 26 Nov 2024 18:14:01 -0600
-From: Tom Rini <trini@konsulko.com>
-To: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Cc: u-boot@lists.denx.de, u-boot-amlogic@groups.io,
-	Lukasz Majewski <lukma@denx.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Guillaume La Roque <glaroque@baylibre.com>,
-	Julien Masson <jmasson@baylibre.com>
-Subject: Re: [GIT PULL] Please pull u-boot-dfu-next-20241126
-Message-ID: <20241127001401.GY3600562@bill-the-cat>
-References: <87plmip1m6.fsf@baylibre.com>
+        d=1e100.net; s=20230601; t=1733615002; x=1734219802;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OJIhuMAWzV8raRAv1jJAZT5DP5cIG7000jONP2NFqBk=;
+        b=xU2mPsfkJWkqmZ4Ye1qD6C6WDtxEmuuxuIRajxH/2Yi8mpOIA8HmsC233DeT2pIXzK
+         +KPwvdbVDGqliqFTNouN1KPanTRfxyBLcpAlEdM3Qa8ilKk+pq8AUFigQl5Ionbhz0OK
+         vozITSdVOPvC4LRl+Kk7ZD1Fds0+xLeXb7Ru2/ZEpmlO8oBLeHbUzyIWhB20le1SsKe8
+         JlrLIWzfmP7z3y4ETeMLQkHiwZRi2gyEmtCyr7D4Wuj0Gas5ysTVLnYo1oKpC9r3Dgog
+         0ssfMoX4MLIqjsUF/mdmQm1pDnW/KPewlinx142OWwu5tMG0JLG2Bge9S/hlpIsEBujy
+         3IjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxcI8njYPHiiJRks5/RRz7YULl7mVqLcZLnq8zei83eErif+RGiXk9EO9/K+jeU/qYU34o3oXo2w3xC0DUDw==@groups.io
+X-Gm-Message-State: AOJu0YzI11Zyb9yd3f2lTPBqEJBXkO0JF7vjjGol1FzR2RO7RelKgrSY
+	fYIUtBptNmamZ5uGJw2rn5pYs4CdDqX5jTsgk+B771N6JIC5HL5S2s+uUFZf7VPn+S/O1NsQGbJ
+	AZa2+5qbnWZ+pAbUG2iFL7CqRC7xxvZS5jrun
+X-Gm-Gg: ASbGnctWSvUEfUXHIqs/smthB95kexmRE7P7SkgbbzmPag75ybvM57aIv7FWTlCOfv0
+	2b2xfiAOyIe/gzfIifPfm89noDi5Kqztb
+X-Google-Smtp-Source: AGHT+IHAMN9I8KQXAfG6e5u6VUP6pyv2OADyqO/u7npItgclDHcsKtlK9yh4KNj4zcb/jlRbovX9KNG8rQyXSs/z1Kg=
+X-Received: by 2002:a17:906:2929:b0:aa5:f2c0:2378 with SMTP id
+ a640c23a62f3a-aa6373a1bf4mr811424866b.13.1733615001794; Sat, 07 Dec 2024
+ 15:43:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87plmip1m6.fsf@baylibre.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=eESSw2uDTlcb2Hj5VhU1"
+From: Simon Glass <sjg@chromium.org>
+Date: Sat, 7 Dec 2024 16:43:10 -0700
+Message-ID: <CAFLszThXbhVtYqi27BtKv6PHwVNnhvwJ5+vKQ_yMMJ33GrYd4g@mail.gmail.com>
+Subject: [PATCH v5 00/13] Add video damage tracking
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Kever Yang <kever.yang@rock-chips.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Andre Przywara <andre.przywara@arm.com>, Svyatoslav Ryhel <clamor95@gmail.com>, 
+	Philipp Tomsich <philipp.tomsich@vrull.eu>, Andrew Davis <afd@ti.com>, Da Xue <da@libre.computer>, 
+	Heinrich Schuchardt <xypron.glpk@gmx.de>, Patrice Chotard <patrice.chotard@foss.st.com>, 
+	Patrick Delaunay <patrick.delaunay@foss.st.com>, Derald Woods <woods.technical@gmail.com>, 
+	Anatolij Gustschin <agust@denx.de>, uboot-stm32@st-md-mailman.stormreply.com, 
+	Matthias Brugger <mbrugger@suse.com>, u-boot-amlogic@groups.io, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 05 Dec 2024 09:41:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2591
+ <u-boot-amlogic@groups.io>; Tue, 10 Dec 2024 09:24:57 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2592
 
---Groupsio=eESSw2uDTlcb2Hj5VhU1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 21, 2023 at 01:50 PM Alper Nebi Yasak
+<alpernebiyasak@gmail.com> wrote:
+>
+> This is a rebase of Alexander Graf's video damage tracking series, with
+> some tests and other changes. The original cover letter is as follows:
+>
+>
+> > This patch set speeds up graphics output on ARM by a factor of 60x.
+> >
+> > On most ARM SBCs, we keep the frame buffer in DRAM and map it as cached,
+> > but need it accessible by the display controller which reads directly
+> > from a later point of consistency. Hence, we flush the frame buffer to
+> > DRAM on every change. The full frame buffer.
+> >
+> > Unfortunately, with the advent of 4k displays, we are seeing frame buffers
+> > that can take a while to flush out. This was reported by Da Xue with grub,
+> > which happily print 1000s of spaces on the screen to draw a menu. Every
+> > printed space triggers a cache flush.
+> >
+> > This patch set implements the easiest mitigation against this problem:
+> > Damage tracking. We remember the lowest common denominator region that was
+> > touched since the last video_sync() call and only flush that. The most
+> > typical writer to the frame buffer is the video console, which always
+> > writes rectangles of characters on the screen and syncs afterwards.
+> >
+> > With this patch set applied, we reduce drawing a large grub menu (with
+> > serial console attached for size information) on an RK3399-ROC system
+> > at 1440p from 55 seconds to less than 1 second.
+> >
+> > Version 2 also implements VIDEO_COPY using this mechanism, reducing its
+> > overhead compared to before as well. So even x86 systems should be faster
+> > with this now :).
+> >
+> >
+> > Alternatives considered:
+> >
+> >   1) Lazy sync - Sandbox does this. It only calls video_sync(true) ever
+> >      so often. We are missing timers to do this generically.
+> >
+> >   2) Double buffering - We could try to identify whether anything changed
+> >      at all and only draw to the FB if it did. That would require
+> >      maintaining a second buffer that we need to scan.
+> >
+> >   3) Text buffer - Maintain a buffer of all text printed on the screen with
+> >      respective location. Don't write if the old and new character are
+> >      identical. This would limit applicability to text only and is an
+> >      optimization on top of this patch set.
+> >
+> >   4) Hash screen lines - Create a hash (sha256?) over every line when it
+> >      changes. Only flush when it does. I'm not sure if this would waste
+> >      more time, memory and cache than the current approach. It would make
+> >      full screen updates much more expensive.
+>
+>
+> Changes in v5:
+> - Add patch "video: test: Split copy frame buffer check into a function"
+> - Add patch "video: test: Support checking copy frame buffer contents"
+> - Add patch "video: test: Test partial updates of hardware frame buffer"
+> - Use xstart, ystart, xend, yend as names for damage region
+> - Document damage struct and fields in struct video_priv comment
+> - Return void from video_damage()
+> - Fix undeclared priv error in video_sync()
+> - Drop unused headers from video-uclass.c
+> - Use IS_ENABLED() instead of CONFIG_IS_ENABLED()
+> - Call video_damage() also in video_fill_part()
+> - Use met->baseline instead of priv->baseline
+> - Use fontdata->height/width instead of VIDEO_FONT_HEIGHT/WIDTH
+> - Update console_rotate.c video_damage() calls to pass video tests
+> - Remove mention about not having minimal damage for console_rotate.c
+> - Add patch "video: test: Test video damage tracking via vidconsole"
+> - Document new vdev field in struct efi_gop_obj comment
+> - Remove video_sync_copy() also from video_fill(), video_fill_part()
+> - Fix memmove() calls by removing the extra dev argument
+> - Call video_sync() before checking copy_fb in video tests
+> - Imply VIDEO_DAMAGE for video drivers instead of selecting it
+> - Imply VIDEO_DAMAGE also for VIDEO_TIDSS
+>
+>
+> v4: https://lore.kernel.org/all/20230103215004.22646-1-agraf@csgraf.de/
+>
+>
+> Changes in v4:
+> - Move damage clear to patch "dm: video: Add damage tracking API"
+> - Simplify first damage logic
+> - Remove VIDEO_DAMAGE default for ARM
+> - Skip damage on EfiBltVideoToBltBuffer
+> - Add patch "video: Always compile cache flushing code"
+> - Add patch "video: Enable VIDEO_DAMAGE for drivers that need it"
+>
+>
+> v3: https://lore.kernel.org/all/20221230195828.88134-1-agraf@csgraf.de/
+>
+>
+> Changes in v3:
+> - Adapt to always assume DM is used
+> - Adapt to always assume DM is used
+> - Make VIDEO_COPY always select VIDEO_DAMAGE
+>
+>
+> v2: https://lore.kernel.org/all/20220609225921.62462-1-agraf@csgraf.de/
+>
+>
+> Changes in v2:
+> - Remove ifdefs
+> - Fix ranges in truetype target
+> - Limit rotate to necessary damage
+> - Remove ifdefs from gop
+> - Fix dcache range; we were flushing too much before
+> - Add patch "video: Use VIDEO_DAMAGE for VIDEO_COPY"
+>
+>
+> v1: https://lore.kernel.org/all/20220606234336.5021-1-agraf@csgraf.de/
+>
+>
+> Alexander Graf (9):
+>   dm: video: Add damage tracking API
+>   dm: video: Add damage notification on display fills
+>   vidconsole: Add damage notifications to all vidconsole drivers
+>   video: Add damage notification on bmp display
+>   efi_loader: GOP: Add damage notification on BLT
+>   video: Only dcache flush damaged lines
+>   video: Use VIDEO_DAMAGE for VIDEO_COPY
+>   video: Always compile cache flushing code
+>   video: Enable VIDEO_DAMAGE for drivers that need it
+>
+>
+> Alper Nebi Yasak (4):
+>   video: test: Split copy frame buffer check into a function
+>   video: test: Support checking copy frame buffer contents
+>   video: test: Test partial updates of hardware frame buffer
+>   video: test: Test video damage tracking via vidconsole
+>
+>
+>  arch/arm/mach-omap2/omap3/Kconfig |   1 +
+>  arch/arm/mach-sunxi/Kconfig       |   1 +
+>  drivers/video/Kconfig             |  26 +++
+>  drivers/video/console_normal.c    |  27 ++--
+>  drivers/video/console_rotate.c    |  94 +++++++----
+>  drivers/video/console_truetype.c  |  37 +++--
+>  drivers/video/exynos/Kconfig      |   1 +
+>  drivers/video/imx/Kconfig         |   1 +
+>  drivers/video/meson/Kconfig       |   1 +
+>  drivers/video/rockchip/Kconfig    |   1 +
+>  drivers/video/stm32/Kconfig       |   1 +
+>  drivers/video/tegra20/Kconfig     |   1 +
+>  drivers/video/tidss/Kconfig       |   1 +
+>  drivers/video/vidconsole-uclass.c |  16 --
+>  drivers/video/video-uclass.c      | 190 ++++++++++++----------
+>  drivers/video/video_bmp.c         |   7 +-
+>  include/video.h                   |  59 +++----
+>  include/video_console.h           |  52 ------
+>  lib/efi_loader/efi_gop.c          |   7 +
+>  test/dm/video.c                   | 256 ++++++++++++++++++++++++------
+>  20 files changed, 483 insertions(+), 297 deletions(-)
+>
+>
+>
+> base-commit: 3881c9fbb7fdd98f6eae5cd33f7e9abe9455a585
 
-On Tue, Nov 26, 2024 at 02:26:41PM +0100, Mattijs Korpershoek wrote:
-
-> Hi Tom,
->=20
-> Please find some new developments for next:
->=20
-> Android:
-> - bootstd: Implement bootimage v2 support
-> - bootstd: Support non-A/B in bootmeth_android
-> - Migrate VIM3 and VIM3L to use bootmeth_android
-> - bootstd: Additional test for bootimage v2
-> - bootstd: Optimize load time when reading partitions
->=20
-> CI job:
-> - https://source.denx.de/u-boot/custodians/u-boot-dfu/-/pipelines/23573
->=20
-> Thanks,
-> Mattijs
->=20
-> The following changes since commit 48380f9b2a12e3fc6339d6af5a154bded769d9=
-11:
->=20
->   Merge tag 'v2025.01-rc3' into next (2024-11-25 17:34:08 -0600)
->=20
-> are available in the Git repository at:
->=20
->   https://source.denx.de/u-boot/custodians/u-boot-dfu.git tags/u-boot-dfu=
--next-20241126
->=20
-> for you to fetch changes up to abadcda24b100b8eb0f138085cca6595518cec85:
->=20
->   bootstd: android: don't read whole partition sizes (2024-11-26 10:04:40=
- +0100)
->=20
-
-Applied to u-boot/next, thanks!
-
---=20
-Tom
-
---Groupsio=eESSw2uDTlcb2Hj5VhU1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAmdGZEkACgkQFHw5/5Y0
-tyzP9wv9Fzlng0EllbkrDdRFFmGe0i/nTaZH3/FkghTmOVqH9X2hj26r5xldiOQS
-L3uaqGDcA0Q6sQSMWie9kPFidTFIOgXneCYntyL7hFmkvOgFt3nAIcDvXcgKzeov
-eNFskgo1GRlye2KLV42DHjBzWQ0ozIXbfgC6n5Pf8bkifYAv6B6xgSG4bcNdx8Oy
-Qc8lkNffcuGJBpteB23QJ10JD8WGPqgSF/VHTDdjNWSirIDm8/BCHzz/VR/FfXC0
-K8vaZt3+eNgWM1QFwaewdBs+sLaJVHd2uCcqPSjXBUNVrGa9mmFtG3GpTbOO3sB1
-Lbpcxxbq4gGrLPhySK+AL5MiAx+hyweHZW96AG3ed/6WqOoRT5ZC3RwpA+bMAfip
-STtp8FPkOdVExVDtGY74RLBUtNXXwn5qQlquLzg1ZlvA9zpR14e+mbBL+0onzORs
-k3TD7hEYudjHH3R0ZQsW8smxsadSPWyyZGQipLcDAw3SWyTsehTIuDAdCUkfetos
-397H1LJV
-=Uz2+
------END PGP SIGNATURE-----
-
---Groupsio=eESSw2uDTlcb2Hj5VhU1--
+Rebased and applied to ci/master, thanks!
 
