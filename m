@@ -1,136 +1,207 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <adeep@lexina.in>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CCDE77188
-	for <webhook@archiver.kernel.org>; Fri, 10 Jan 2025 14:17:50 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.15972.1736507644482696075
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBE4C02183
+	for <webhook@archiver.kernel.org>; Fri, 17 Jan 2025 10:42:08 +0000 (UTC)
+Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
+ by mx.groups.io with SMTP id smtpd.web11.7910.1737110520094217635
  for <u-boot-amlogic@groups.io>;
- Fri, 10 Jan 2025 03:14:04 -0800
+ Fri, 17 Jan 2025 02:42:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=AF40okJ+;
- spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: baltazar.radics@gmail.com)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4361815b96cso14072135e9.1
-        for <u-boot-amlogic@groups.io>; Fri, 10 Jan 2025 03:14:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736507643; x=1737112443; darn=groups.io;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oPd19QcP7V3uZa7KsYCbdkODezOp4JfahAu8Fpuf+wk=;
-        b=AF40okJ+xfg7ZnDOI4wAYIcRmiRiI9RFOPPzLhEwrsXHU1uQu7aQpABLDA8rSHzgDs
-         jILWcH6Cm+ru84n+Q7MToTSINnQHAkCqMr4hJ8F7N/qFqQ4qcXthE3hOc2WsRu99ISCv
-         8Ko4N2pv8XZqyGgHYM6d3ErO/H7FQmXLAhA+pXNYi6lkXSSGOSduzHCz1qlFguRct2N9
-         0Hf6urh2daTarw1qQE/k9i/h5mDSM53uy4rTr4ylWWFoPnuYvimyABiBKKmdiSxZk8b8
-         xX+4q3slaKCI+Z+i/6URU1XmB+ECkWhkxCryiMSFCOwESo/rkOI31ddfUsmIA1g0R0LD
-         gXfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736507643; x=1737112443;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oPd19QcP7V3uZa7KsYCbdkODezOp4JfahAu8Fpuf+wk=;
-        b=v+pLAZouJP5yjClMlGygC00hHbPW99dD1PdsfA1nprrctA/cLlm+HzgvN+orqxT8H7
-         XNjelrIDMN4X2awW56nyR760FqfckYUzmddyBfben2Qhj6UtxFEXILPureTbY4OJOUiO
-         Om5ZmvsenRvjz3EuskcVU2LEZJHmGHutZe5XHbOYPFxtpRLLn3KXEtc1J69KrWWt+L3r
-         EcNaE4ah/A4IxMVs7/y43pwZjVrDKSpf+HAsKqRz434SOH1DKGmyCO+UZ+D4IEraJfh6
-         z1taWfuWZ0G2BbqNoye333lkW5ZUyORLg0T8RcldcE2hQ60z2pmGs0zfootYkY4u/O3B
-         RiTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6wP+Tw2qOJAjlA0JggKokOtc+d2+8eIBNEAjG3h+8Zp4eSEUt1YplIMYx79wLB6LRGRktSakLUyyF5T8rag==@groups.io
-X-Gm-Message-State: AOJu0YwfFPI1P7Pp0VRNeX0wuE9POgiXjERkvYjqWBiud0bBY6ZmQtNw
-	knyVy4yP1TnCTjFPgWeDzoFAd9YYr9517NxIrG6ExFV7Kfyt6SC2
-X-Gm-Gg: ASbGncsa5E8WnXUtPj3FjDBrf3PlclQs1szjEnI5WDwCkXS4nWOzRhjbPzbcIL2PEBO
-	by+ZImm9F+BRJlRM3GB5CeJo2pN8S4cg6orntWBAGkKTMLjNuFaHug9MgYohriOsvDPmOGn+XZh
-	BnaD3IBNGKw6t2FB/YRLf6BUy7xNBv+kd79f+EJ8k57UaphVm8uMZkLWHhhQY98n3ibVTouG14S
-	56JtyxLjfGEKgFVVxhzdsyYQLZWT1oud5/FCqIqP2kb1qDNkxnKnV4pu5Lli4JdbB08toXEZJy5
-	Cx8=
-X-Google-Smtp-Source: AGHT+IGlttaxKPpoAYPz4GQvpy6zbS9ubm1lRliMdHZNh02xpU6cQst+F/wbTquvAMzs6Q7zLq64Vw==
-X-Received: by 2002:a05:600c:1d10:b0:434:9e46:5bc with SMTP id 5b1f17b1804b1-436e26a7af2mr106392185e9.10.1736507642469;
-        Fri, 10 Jan 2025 03:14:02 -0800 (PST)
-Received: from pluto.karinthy.edu.hu ([2001:738:80e:b5f3:51ba:c885:8ac2:fd5d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a9407fd62sm2469452f8f.92.2025.01.10.03.14.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 03:14:02 -0800 (PST)
-From: =?UTF-8?q?Baltaz=C3=A1r=20Radics?= <baltazar.radics@gmail.com>
-To: u-boot@lists.denx.de
-Cc: =?UTF-8?q?Baltaz=C3=A1r=20Radics?= <baltazar.radics@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
+ dkim=fail reason="dkim: body hash did not verify" header.i=@lexina.in header.s=dkim header.b=DudGZCUt;
+ spf=pass (domain: lexina.in, ip: 185.250.0.168, mailfrom: adeep@lexina.in)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AE92E6762E;
+	Fri, 17 Jan 2025 13:41:49 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
+	t=1737110515;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SZ/VmcvO8emmPak1eqXWMmtVbndzdMrX/yhhyhX4e7c=;
+	b=DudGZCUtRPh6LYTsNxNCs6CIrLrkkgyDL+CzgG5+sYIIvnkz8Pdv9ha2c+sIloLZ45cIK4
+	VQx0LZ629+noNkY+rM6kS785h9U6HNL3bQZ6sW4w1Bp0s+3Yfi/MYaSWGdLqVGBRUxlD5C
+	0kLKOGdVOqZ7KN7ZAHaSxDy4yFjgVYQYC61qURXn0uHTUe/ovDyt/M5N5FFPjIKhcwRNBe
+	Tnblkqv7B7H6ICetqWmxc3sYUqCKKGp2m4YaZhnS90z5bDgcp7hca0XoIwbnNQfdh0Wag6
+	Z8k8QbwitRKocmG+xa1MQvDw4F4NiXoa3W+AYcxx5/+tz7hSQ5Kc3T0nV6/Tdg==
+From: Viacheslav Bocharov <adeep@lexina.in>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
 	Tom Rini <trini@konsulko.com>,
-	u-boot-amlogic@groups.io
-Subject: [PATCH v2] board: odroid-n2: Update docs for signing
-Date: Fri, 10 Jan 2025 12:11:24 +0100
-Message-ID: <20250110111335.9221-1-baltazar.radics@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	u-boot-amlogic@groups.io,
+	u-boot@lists.denx.de
+Cc: Nikita Maslo <nam@jethome.ru>
+Subject: [PATCH v1] arch: meson: sm: add retrieve SoC chipid
+Date: Fri, 17 Jan 2025 13:41:35 +0300
+Message-ID: <20250117104141.90348-1-adeep@lexina.in>
+X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 10 Jan 2025 14:17:50 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2613
+ <u-boot-amlogic@groups.io>; Fri, 17 Jan 2025 10:42:08 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2614
 
-The previous instructions resulted in a bootloader that wouldn't fit in
-an MBR gap. I have updated the docs based on upstream's build process.
+From: Nikita Maslo <nam@jethome.ru>
 
-Signed-off-by: Baltazár Radics <baltazar.radics@gmail.com>
+The Amlogic Meson SoC Secure Monitor implements a call to retrieve an
+unique SoC ID starting from the GX Family and all new families.
+But GX-family chips (e.g. GXB, GXL and newer) supports also 128-bit
+chip ID. 128-bit chip ID consists 32-bit SoC version and 96-bit OTP data.
+
+Add new subcommand "chipid" to Amlogic specific "sm" cmd to write the SoC
+chip ID to memory.
+
+Signed-off-by: Nikita Maslo <nam@jethome.ru>
+Co-developed-by: Viacheslav Bocharov <adeep@lexina.in>
+Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
 ---
+ arch/arm/include/asm/arch-meson/sm.h | 12 ++++++++++-
+ arch/arm/mach-meson/sm.c             | 32 +++++++++++++++++++++++++++-
+ cmd/meson/sm.c                       | 22 ++++++++++++++++++-
+ 3 files changed, 63 insertions(+), 3 deletions(-)
 
- doc/board/amlogic/odroid-n2.rst | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
-
-diff --git a/doc/board/amlogic/odroid-n2.rst b/doc/board/amlogic/odroid-n2.rst
-index 883720f8fb..5222a21c80 100644
---- a/doc/board/amlogic/odroid-n2.rst
-+++ b/doc/board/amlogic/odroid-n2.rst
-@@ -54,10 +54,9 @@ image so it is necessary to obtain binaries from sources published by the board
-     $ tar xvfJ gcc-linaro-arm-none-eabi-4.8-2013.11_linux.tar.xz
-     $ export PATH=$PWD/gcc-linaro-aarch64-none-elf-4.8-2013.11_linux/bin:$PWD/gcc-linaro-arm-none-eabi-4.8-2013.11_linux/bin:$PATH
- 
--    $ DIR=odroid-n2
--    $ git clone --depth 1 https://github.com/hardkernel/u-boot.git -b odroidn2-v2015.01 $DIR
-+    $ git clone --depth 1 https://github.com/hardkernel/u-boot.git -b odroidg12-v2015.01 odroidg12
- 
--    $ cd odroid-n2
-+    $ cd odroidg12
-     $ make odroidn2_defconfig
-     $ make
-     $ export UBOOTDIR=$PWD
-@@ -74,12 +73,8 @@ Go back to the mainline U-Boot source tree then:
-     $ cp $UBOOTDIR/fip/g12b/bl2.bin fip/
-     $ cp $UBOOTDIR/fip/g12b/bl30.bin fip/
-     $ cp $UBOOTDIR/fip/g12b/bl31.img fip/
--    $ cp $UBOOTDIR/fip/g12b/ddr3_1d.fw fip/
-     $ cp $UBOOTDIR/fip/g12b/ddr4_1d.fw fip/
-     $ cp $UBOOTDIR/fip/g12b/ddr4_2d.fw fip/
--    $ cp $UBOOTDIR/fip/g12b/diag_lpddr4.fw fip/
--    $ cp $UBOOTDIR/fip/g12b/lpddr4_1d.fw fip/
--    $ cp $UBOOTDIR/fip/g12b/lpddr4_2d.fw fip/
-     $ cp $UBOOTDIR/fip/g12b/piei.fw fip/
-     $ cp $UBOOTDIR/fip/g12b/aml_ddr.fw fip/
-     $ cp u-boot.bin fip/bl33.bin
-@@ -113,7 +108,7 @@ Go back to the mainline U-Boot source tree then:
-                                           --level v3 --type bl31
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl3sig --input fip/bl33.bin --compress lz4 \
-                                           --output fip/bl33.bin.enc \
--                                          --level v3 --type bl33 --compress lz4
-+                                          --level v3 --type bl33
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bl2sig --input fip/bl2_new.bin \
-                                           --output fip/bl2.n.bin.sig
-     $ $UBOOTDIR/fip/g12b/aml_encrypt_g12b --bootmk \
-@@ -124,11 +119,7 @@ Go back to the mainline U-Boot source tree then:
-                                           --bl33 fip/bl33.bin.enc \
-                                           --ddrfw1 fip/ddr4_1d.fw \
-                                           --ddrfw2 fip/ddr4_2d.fw \
--                                          --ddrfw3 fip/ddr3_1d.fw \
-                                           --ddrfw4 fip/piei.fw \
--                                          --ddrfw5 fip/lpddr4_1d.fw \
--                                          --ddrfw6 fip/lpddr4_2d.fw \
--                                          --ddrfw7 fip/diag_lpddr4.fw \
-                                           --ddrfw8 fip/aml_ddr.fw \
-                                           --level v3
- 
--- 
-2.47.1
+diff --git a/arch/arm/include/asm/arch-meson/sm.h b/arch/arm/include/asm/=
+arch-meson/sm.h
+index 4b1d564bc48..812c5ed020a 100644
+--- a/arch/arm/include/asm/arch-meson/sm.h
++++ b/arch/arm/include/asm/arch-meson/sm.h
+@@ -27,9 +27,10 @@ ssize_t meson_sm_read_efuse(uintptr_t offset, void *bu=
+ffer, size_t size);
+ ssize_t meson_sm_write_efuse(uintptr_t offset, void *buffer, size_t size=
+);
+=20
+ #define SM_SERIAL_SIZE	12
++#define SM_CHIP_ID_SIZE	16
+=20
+ /**
+- * meson_sm_get_serial - read chip unique id into buffer
++ * meson_sm_get_serial - read chip unique serial into buffer
+  *
+  * @buffer: pointer to buffer
+  * @size: buffer size.
+@@ -37,6 +38,15 @@ ssize_t meson_sm_write_efuse(uintptr_t offset, void *b=
+uffer, size_t size);
+  */
+ int meson_sm_get_serial(void *buffer, size_t size);
+=20
++/**
++ * meson_sm_get_chip_id - read unique chip ID into buffer
++ *
++ * @buffer: pointer to buffer
++ * @size: buffer size.
++ * @return: zero on success or -errno on failure
++ */
++int meson_sm_get_chip_id(void *buffer, size_t size);
++
+ enum {
+ 	REBOOT_REASON_COLD =3D 0,
+ 	REBOOT_REASON_NORMAL =3D 1,
+diff --git a/arch/arm/mach-meson/sm.c b/arch/arm/mach-meson/sm.c
+index 4d9f83d3b38..05d92f878d9 100644
+--- a/arch/arm/mach-meson/sm.c
++++ b/arch/arm/mach-meson/sm.c
+@@ -78,7 +78,6 @@ ssize_t meson_sm_write_efuse(uintptr_t offset, void *bu=
+ffer, size_t size)
+=20
+ #define SM_CHIP_ID_LENGTH	119
+ #define SM_CHIP_ID_OFFSET	4
+-#define SM_CHIP_ID_SIZE		12
+=20
+ int meson_sm_get_serial(void *buffer, size_t size)
+ {
+@@ -101,6 +100,37 @@ int meson_sm_get_serial(void *buffer, size_t size)
+ 	return 0;
+ }
+=20
++int meson_sm_get_chip_id(void *buffer, size_t size)
++{
++	struct udevice *dev;
++	struct pt_regs regs =3D { 0 };
++	u8 id_buffer[SM_CHIP_ID_LENGTH];
++	int err;
++
++	dev =3D meson_get_sm_device();
++	if (IS_ERR(dev))
++		return PTR_ERR(dev);
++
++	regs.regs[1] =3D 2;
++	err =3D sm_call_read(dev, id_buffer, SM_CHIP_ID_LENGTH,
++			   MESON_SMC_CMD_CHIP_ID_GET, &regs);
++
++	if (err < 0) {
++		pr_err("Failed to read chipid (%d)\n", err);
++		return err;
++	}
++
++	if (((u32 *)id_buffer)[0] !=3D 2) {
++		pr_err("Failed to read chipid: invalid chipid call version\n");
++		return -EINVAL;
++	}
++
++	memcpy(buffer, id_buffer + SM_CHIP_ID_OFFSET,
++	       size > SM_CHIP_ID_LENGTH ? SM_CHIP_ID_LENGTH : size);
++
++	return 0;
++}
++
+ #define AO_SEC_SD_CFG15		0xfc
+ #define REBOOT_REASON_MASK	GENMASK(15, 12)
+=20
+diff --git a/cmd/meson/sm.c b/cmd/meson/sm.c
+index b69f8123ee2..21bfa58e507 100644
+--- a/cmd/meson/sm.c
++++ b/cmd/meson/sm.c
+@@ -33,6 +33,24 @@ static int do_sm_serial(struct cmd_tbl *cmdtp, int fla=
+g, int argc,
+ 	return CMD_RET_SUCCESS;
+ }
+=20
++static int do_sm_chip_id(struct cmd_tbl *cmdtp, int flag, int argc,
++			 char *const argv[])
++{
++	ulong address;
++	int ret;
++
++	if (argc < 2)
++		return CMD_RET_USAGE;
++
++	address =3D simple_strtoul(argv[1], NULL, 0);
++
++	ret =3D meson_sm_get_chip_id((void *)address, SM_CHIP_ID_SIZE);
++	if (ret)
++		return CMD_RET_FAILURE;
++
++	return CMD_RET_SUCCESS;
++}
++
+ #define MAX_REBOOT_REASONS 14
+=20
+ static const char *reboot_reasons[MAX_REBOOT_REASONS] =3D {
+@@ -154,6 +172,7 @@ free_buffer:
+=20
+ static struct cmd_tbl cmd_sm_sub[] =3D {
+ 	U_BOOT_CMD_MKENT(serial, 2, 1, do_sm_serial, "", ""),
++	U_BOOT_CMD_MKENT(chipid, 2, 1, do_sm_chip_id, "", ""),
+ 	U_BOOT_CMD_MKENT(reboot_reason, 1, 1, do_sm_reboot_reason, "", ""),
+ 	U_BOOT_CMD_MKENT(efuseread, 4, 1, do_efuse_read, "", ""),
+ 	U_BOOT_CMD_MKENT(efusewrite, 4, 0, do_efuse_write, "", ""),
+@@ -183,7 +202,8 @@ static int do_sm(struct cmd_tbl *cmdtp, int flag, int=
+ argc,
+ U_BOOT_CMD(
+ 	sm, 5, 0, do_sm,
+ 	"Secure Monitor Control",
+-	"serial <address> - read chip unique id to memory address\n"
++	"serial <address> - read chip unique serial to memory address\n"
++	"sm chipid <address> - read unique chip id to memory address\n"
+ 	"sm reboot_reason [name] - get reboot reason and store to environment\n=
+"
+ 	"sm efuseread <offset> <size> <address> - read efuse to memory address\=
+n"
+ 	"sm efusewrite <offset> <size> <address> - write into efuse from memory=
+ address\n"
+--=20
+2.48.1
 
 
