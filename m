@@ -2,39 +2,39 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D562C021A2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3811BC0219D
 	for <webhook@archiver.kernel.org>; Tue, 11 Feb 2025 12:30:10 +0000 (UTC)
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web10.58751.1739209839712057399
+ by mx.groups.io with SMTP id smtpd.web11.58490.1739209839923652815
  for <u-boot-amlogic@groups.io>;
  Mon, 10 Feb 2025 09:50:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@salutedevices.com header.s=mail header.b=rmdVFIvH;
+ dkim=pass header.i=@salutedevices.com header.s=mail header.b=d9kxtGNj;
  spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: eabachinin@salutedevices.com)
 Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 5442E10000E;
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 2C65B10000D;
 	Mon, 10 Feb 2025 20:50:37 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 5442E10000E
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2C65B10000D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
 	s=mail; t=1739209837;
-	bh=tNvKOIR+HZX9t/Yoy0oTfT/QavuSFhmDylsrc87LCRs=;
+	bh=/VqItYJTaM6pUHgIX7rYhgvJhXuoSTnY37AMQJD3/BU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:From;
-	b=rmdVFIvH61dnT9ayFv+6TQCvIXh00KPJ7amd8uPydlI4UIy3WbC/8XwrqLMHZwe5h
-	 m06RZyLjPkwyvh3xORBbRLlh3MFgvHY5CmWd8M2LPQgikbCCPPIzjQ6naIMFCp7Fn/
-	 +7qOzNQWmrAIQ88zEmG/eSRATE8zQopgoF/5Rta4H2kHjMMwrrj2mFGmLHp24zyett
-	 c3kMXFclkPo28qBCXREXKY6gyoNk3CHUvpQK2BwcOJ7NSZWYwjFvaaPdbz8nG8Wqdz
-	 OVjuz838CXZqu1sJ9cGgl5U6Kk2S4up24AmgvXB0ggBy4jU/jpkNtqtD47f1mxgWJi
-	 hTSksX0XpUkSg==
+	b=d9kxtGNjlIS5GsD7XEBUdchBFjyxcFnNgChA7WacSMfI88uQOIYKiLTp8xZBSUpzU
+	 i5OiwRzQbYb/0YWGMDbTM6rd4KSXhH34WZLCeAUDGq2HewSkRgVH+HVCPDOnW/3KrT
+	 on/Uwb4NF9RZystBYicxJvU6C9uTDkLLHPi+36gjYEAQ1KmxgOvgDJDlI7Us+3NKzY
+	 2KAimdY+mZLNhn99WHFrpMKffGqgJnpn05JRHWasUWAviypsCHeQL/QRLKYYiZfCTb
+	 SIQr/I1iqPGCD8ySVqhNjCQDhIXMrccBTj1fA6vajcw+FvGf7Up2ymPkAlvnHQ8/29
+	 Ph1dA6+8/9oAw==
 Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
 	Mon, 10 Feb 2025 20:50:37 +0300 (MSK)
 From: Evgeny Bachinin <EABachinin@salutedevices.com>
-Date: Mon, 10 Feb 2025 20:50:15 +0300
-Subject: [PATCH 2/3] arm: meson: sm: get rid of SM_CHIP_ID_SIZE
+Date: Mon, 10 Feb 2025 20:50:14 +0300
+Subject: [PATCH 1/3] arm: meson: unify type being used for socinfo
 MIME-Version: 1.0
-Message-ID: <20250210-meson_chip_id_all_vers-v1-2-b98f8b6880b8@salutedevices.com>
+Message-ID: <20250210-meson_chip_id_all_vers-v1-1-b98f8b6880b8@salutedevices.com>
 References: <20250210-meson_chip_id_all_vers-v1-0-b98f8b6880b8@salutedevices.com>
 In-Reply-To: <20250210-meson_chip_id_all_vers-v1-0-b98f8b6880b8@salutedevices.com>
 To: Tom Rini <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
@@ -69,28 +69,61 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 11 Feb 2025 12:30:10 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2621
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2622
 
-SM_CHIP_ID_SIZE is used nowhere. Moreover, it specifies wrong
-chip_id size: Amlogic chip_id v1 and v2 is always 16 bytes long.
+socinfo_ API uses u32 type, hence let's use it everywhere
+for consistency.
 
 Signed-off-by: Evgeny Bachinin <EABachinin@salutedevices.com>
 ---
- arch/arm/mach-meson/sm.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/mach-meson/board-info.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-meson/sm.c b/arch/arm/mach-meson/sm.c
-index 4d9f83d3b38d54e20d7d2bec997793cca5d7f0e4..43a259d695b058361445d7ef7047353b3afd5419 100644
---- a/arch/arm/mach-meson/sm.c
-+++ b/arch/arm/mach-meson/sm.c
-@@ -78,7 +78,6 @@ ssize_t meson_sm_write_efuse(uintptr_t offset, void *buffer, size_t size)
+diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
+index b4058f593234e940fc2c00b82cdf9bd758cef567..94b066170c43019b379f05ab8d1e6d426592a1e1 100644
+--- a/arch/arm/mach-meson/board-info.c
++++ b/arch/arm/mach-meson/board-info.c
+@@ -7,6 +7,7 @@
+ #include <init.h>
+ #include <asm/global_data.h>
+ #include <asm/io.h>
++#include <asm/types.h>
+ #include <dm.h>
+ #include <linux/bitfield.h>
+ #include <regmap.h>
+@@ -125,12 +126,12 @@ static const char *socinfo_to_soc_id(u32 socinfo)
+ 	return "Unknown";
+ }
  
- #define SM_CHIP_ID_LENGTH	119
- #define SM_CHIP_ID_OFFSET	4
--#define SM_CHIP_ID_SIZE		12
- 
- int meson_sm_get_serial(void *buffer, size_t size)
+-static unsigned int get_socinfo(void)
++static u32 get_socinfo(void)
  {
+ 	struct regmap *regmap;
+ 	int nodeoffset, ret;
+ 	ofnode node;
+-	unsigned int socinfo;
++	u32 socinfo;
+ 
+ 	/* find the offset of compatible node */
+ 	nodeoffset = fdt_node_offset_by_compatible(gd->fdt_blob, -1,
+@@ -162,7 +163,7 @@ static unsigned int get_socinfo(void)
+ 
+ int checkboard(void)
+ {
+-	unsigned int socinfo;
++	u32 socinfo;
+ 
+ 	socinfo = get_socinfo();
+ 	if (!socinfo)
+@@ -181,7 +182,7 @@ int checkboard(void)
+ 
+ int meson_get_soc_rev(char *buff, size_t buff_len)
+ {
+-	unsigned int socinfo;
++	u32 socinfo;
+ 
+ 	socinfo = get_socinfo();
+ 	if (!socinfo)
 
 -- 
 2.34.1
