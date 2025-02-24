@@ -2,97 +2,90 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4C9C021BC
-	for <webhook@archiver.kernel.org>; Mon, 24 Feb 2025 19:54:18 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web10.99121.1740426852623335727
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0041C021A4
+	for <webhook@archiver.kernel.org>; Mon, 24 Feb 2025 19:55:38 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.99951.1740426934797154888
  for <u-boot-amlogic@groups.io>;
- Mon, 24 Feb 2025 11:54:12 -0800
+ Mon, 24 Feb 2025 11:55:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=fb6E9prX;
- spf=pass (domain: linaro.org, ip: 209.85.221.52, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so2706470f8f.2
-        for <u-boot-amlogic@groups.io>; Mon, 24 Feb 2025 11:54:12 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=qUOEp/eW;
+ spf=pass (domain: linaro.org, ip: 209.85.128.54, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so46037515e9.1
+        for <u-boot-amlogic@groups.io>; Mon, 24 Feb 2025 11:55:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740426851; x=1741031651; darn=groups.io;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JDKHSE6ZfR8soxKP8JY1D+MdXuWHpGO3JPz0sJdX1RQ=;
-        b=fb6E9prXCEmW4Vlo5Swf8Cf4yLFbttpb6gQ7LWZyJPWItPTHHObM/0SJnCSw6/4H9U
-         hF36NTCzfep1SEI1FCeBjRV0XAHW2iHlGPL3Bt6/PGFNGCXoqtfOb3ksP9pt5BK6jm5M
-         Wyv4lmx2fa2IxMZvy3o9WzskeMIElEoy2ota9x6OQI3ZD7HZjLaDfZforx4bHyP+0fzP
-         mmOOQ2p2zaSDQ9kAEgggvL39rPDBz3MWLW9OEq7aySQHi0EpDfEB3a9tPkEDWWGlG0IP
-         x9Bf26rBGRz4qFL3w43TbAxv9h4xrlYoCY0A0RekVk7ZygxwPSzh9nAo4ewkgkb0ZGFh
-         rwmw==
+        d=linaro.org; s=google; t=1740426933; x=1741031733; darn=groups.io;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gsjwVIyW0RklY+BkHj7XeSOdzz3X+VS3AebK9Z13sXg=;
+        b=qUOEp/eWuLZnpW/GrPEmSOQalQTLbqZSCupwqW3GQ4tcg0q+LZSNLSs2ja/UXZyFu5
+         FSXwxYChdWOY2q22omztrpmysaGUBUN8wf4Ispvz/kzx9JI7i+rpErslYojbx/rpHhuR
+         ZgQVFudJDpZcesq+F4BV/aa7cal0OPOmMkSoo44AnlO9tsCesN8bt07qenOilr/zclSj
+         IGEaK8bLscbv54QbQbH9B1kdnb+E2K5B/7nIxajvpl+6FXXBlvhaapiBia6dq/HPb4jc
+         Sr4mihpiT0sbPIxqJPLzTcjHl2k7eMksJAxT3FEw29GXsBpegCrjO+tV7HQ25+KpFBwE
+         qbwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740426851; x=1741031651;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JDKHSE6ZfR8soxKP8JY1D+MdXuWHpGO3JPz0sJdX1RQ=;
-        b=p1hLvYGcQB4KtVPKax0JqKKjIs/dT/jTIPeAJiWZu0LN1p9YiPI9LkHUSw3wZLfQNk
-         WaUsYJ1zjME5RGxcOfBLOxeZ5YUNDOUSLPhs9K1N0WeW+jKQAjYUv+vrefL1+T5Nsacn
-         aOoxxRI414ah6BX3yD/zg0o6fuSH9J61/0ZzRCcyzqaJnFP88qYOsUkElyjt26mUk2o5
-         utKYx59Eu+oPPiysMJTlp0tNBcaNeePNKrVad1M6mSYjWFDVVCadwL5ILI7bHiLy5nqM
-         c/VS/sAgdZ9wafmVe9vd9BJutKYBWV8IsXiAJqlftMWcrZ+DxNZ0I1Afi/aveZ9+ioNW
-         CnXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCdvDdMihW28QqVDuElGoskumDkZuiC58BWi+BS5jQYeEuEd6xIjRZu2EaO8rXN3yqpRe8J2eZUG0rp5l68g==@groups.io
-X-Gm-Message-State: AOJu0Yy81lo6A3zZpcJ1lAG0skEXtG0mFuTqX3Er2f2EVZI8LoEPwvST
-	P9thM260aiVZaljWBtgQLQc61cfgtCzJJWTTcAqbEV28gbh0rqqLwaS3W3sPSPials3Gh0GqqGB
-	M
-X-Gm-Gg: ASbGncsMQaGKBZErLUVSwUVQdQ/Wg9MsQRBKs47Ce08dd3jWrz/WMNmI3qN84Te8w7a
-	8vo2c5cHdKoLvS8NT0IT9cgePM0cY98uxA9jdaDCDNSvZdvFPtJEVITBuT5+6fjg001smgPehPN
-	dyttRu9s921An4kHE+e5tXjomVmEnP3wIUgtbPWUHoT+MrV5wjLMRuL3IpxgCkwgidTplBnMlex
-	VQT/XDyTuv5XBnycl9HJ6pzFkIGyvG83QSQjOvKlsu3bdhsEXC7hQ76l20t5EbV6QjFLWLvdBgI
-	KRC9oZR2RDE+/KxdbWExe39mFmZFSZDSkgmo701lugjDaLI=
-X-Google-Smtp-Source: AGHT+IFWjEkA/GbJ5vuUamwOu8pCrHw410vr9a61+YuDcrwRMY/vn0b6/gHzxnGCb0ufFQq0geX14Q==
-X-Received: by 2002:a5d:59a3:0:b0:38d:e15e:17e9 with SMTP id ffacd0b85a97d-38f6f0b2161mr16193983f8f.35.1740426850894;
-        Mon, 24 Feb 2025 11:54:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740426933; x=1741031733;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gsjwVIyW0RklY+BkHj7XeSOdzz3X+VS3AebK9Z13sXg=;
+        b=i3XG4HzRf69IiIBf2TxYzPp466oVuD4coPnEZEsc+ON2WRY15LYBtZwfB/gZHYeO3s
+         zj7KngZjCG5uBm6kjiRRbPLUM5ddcEtNpIJOsvMB3QALxunajUNJseIh8czHGgNOQklV
+         KPf2TdSjqjbtkgzND4u94efJPTf6Wc/yQD+hw1YPQX1bLG7LgO8Myb4dcc/JXYAXfliT
+         lKzRdACuGGxhDXC0QbcQXc/6LISay5823MbLjrrBT5f5yQ1NXgZaMPZHnYTJ89LcKQmR
+         lq1gOv1j9vyb6GkrLB0+dnE7sZsUj5WEHf8X2O1uH1bsfQczv8xgNbA3spCKDh69+tW5
+         5NNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBy+QL+/tw9COKO5fZjB5JkAHMQCaquy8PTxHRxzzDfnn+yCoBgEZTIug03c6bwcn5Fw9vZOnuu24WsYYkbQ==@groups.io
+X-Gm-Message-State: AOJu0Yx3UiJhsJaAqJv4vMm/k13Ho9nwBDZuehJibe1U8/WZRVTWa/M9
+	zjUiqMCydGFwxp7RtUxsroDrCyz4Et0gFV/8ts1IsiUiqb6crBfNiLkqnlqNMU7Cr9kbV7+0H9P
+	h
+X-Gm-Gg: ASbGnctTRKvn+Jk/DX1gkuAQkG3YfFsbI/0WGX3PznRiUstjo8TDMSNDbjps8hCOa8K
+	iBEFblsdIa55ENYSlYsxfsweSa+HB2XOGtk9C61+BnImJtU0ZOBan7U5bBBwznWEOY+qTm46YPf
+	Z9bpl36/O+sqeggITkswErpB8IIUOX9Yjow38IXoX7pDl+EfYJaTfwKcjCGLF7+J7j+hoOMyoxq
+	2dmKnwviqvnh5qFm28ezaxkFje8Lcq88FYE2KgCVQAV3LYYD4tvuCtAfQl5YSlfzonH8nZBPWS5
+	qaXYGbRM1zIB16MMd32e0AVV1OQrygB/If5ooxOqt5JWf4c=
+X-Google-Smtp-Source: AGHT+IH8369Zb5qEoDqgPCff4afkwCWfcJRTJMmuYFh8yKBMnpemj8ycrWRgOb4bYT5bmEApqzZJ2A==
+X-Received: by 2002:a05:6000:1f87:b0:38f:3224:660b with SMTP id ffacd0b85a97d-38f7079aae3mr10337419f8f.22.1740426933176;
+        Mon, 24 Feb 2025 11:55:33 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b03675dfsm115992285e9.29.2025.02.24.11.54.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d58f3sm32417836f8f.73.2025.02.24.11.55.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 11:54:10 -0800 (PST)
-From: neil.armstrong@linaro.org
-To: Tom Rini <trini@konsulko.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	u-boot-amlogic@groups.io,
-	u-boot@lists.denx.de
-Subject: Re: [PATCH 0/3] arm: meson: extend sm calls to support Amlogic chip_id v1, v2
-Date: Mon, 24 Feb 2025 20:54:06 +0100
-Message-Id: <20250224195406.748700-1-neil.armstrong@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        Mon, 24 Feb 2025 11:55:32 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: u-boot@lists.denx.de, 
+ =?utf-8?q?Baltaz=C3=A1r_Radics?= <baltazar.radics@gmail.com>
+Cc: Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io
+In-Reply-To: <20250110111335.9221-1-baltazar.radics@gmail.com>
+References: <20250110111335.9221-1-baltazar.radics@gmail.com>
+Subject: Re: [PATCH v2] board: odroid-n2: Update docs for signing
+Message-Id: <174042693241.751150.12654581157570837012.b4-ty@linaro.org>
+Date: Mon, 24 Feb 2025 20:55:32 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.14.2
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 24 Feb 2025 19:54:18 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2625
-
-From: Neil Armstrong <neil.armstrong@linaro.org>
+ <u-boot-amlogic@groups.io>; Mon, 24 Feb 2025 19:55:38 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2626
 
 Hi,
 
-On Mon, 10 Feb 2025 20:50:13 +0300, Evgeny Bachinin wrote:
-> The Amlogic Meson SoC secure monitor (TF-A) handles a call (0x82000044)
-> to retrieve a chip_id from eFuse OTP data [1].
+On Fri, 10 Jan 2025 12:11:24 +0100, Baltazár Radics wrote:
+> The previous instructions resulted in a bootloader that wouldn't fit in
+> an MBR gap. I have updated the docs based on upstream's build process.
 > 
-> Previously, this sm call (0x82000044) was used to retrieve just unique
-> SoC number [2] (a.k.a. SoC "serial" [3]), identifying particular die.
-> This SoC serial, stored in the eFuse, is always 12 bytes long.
 > 
-> [...]
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
 
-[1/3] arm: meson: unify type being used for socinfo
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/bcacf50d9defd49f12335866570fb41753bc9dc7
-[2/3] arm: meson: sm: get rid of SM_CHIP_ID_SIZE
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/a64a4149e39b574bb8d550da1356209caa75274e
-[3/3] arch: arm: meson: support Amlogic chip_id v1 and v2
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/f6b4f91117984a3ecba486f728b9619e75f06d52
+[1/1] board: odroid-n2: Update docs for signing
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/a2f995ec5c0cfa4876ad98fefb8603b24d96efad
 
 -- 
 Neil
+
 
