@@ -1,301 +1,132 @@
-Return-Path: <funderscore@postmarketos.org>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D3BC282D9
-	for <webhook@archiver.kernel.org>; Wed,  5 Mar 2025 08:01:31 +0000 (UTC)
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
- by mx.groups.io with SMTP id smtpd.web11.8577.1741161685172219969
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B458FC35FF8
+	for <webhook@archiver.kernel.org>; Mon, 17 Mar 2025 09:19:28 +0000 (UTC)
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+ by mx.groups.io with SMTP id smtpd.web10.45752.1742191806897791199
  for <u-boot-amlogic@groups.io>;
- Wed, 05 Mar 2025 00:01:26 -0800
+ Sun, 16 Mar 2025 23:10:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=WjfVLJeA;
- spf=pass (domain: postmarketos.org, ip: 95.215.58.171, mailfrom: funderscore@postmarketos.org)
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1741161682;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SO3gIqChpOn2AGcTGDOy1KG0Bgs40MrpOBqi9iC2CE0=;
-	b=WjfVLJeACeaY9ehYkdCKvo5GNmr0OtQtlbVLrbt7K88+48neAmE33y/IvsQIUA4NfBPXdS
-	HcPMq65q8j+feQP5+QXy0MPcNz2r5vzJ6LN8cIEN3EMiyRt8Ps/2ZMwCbnB7r86lfBuJ5r
-	VfQ/Zt+eO8E3bAW9ZajNSyg+fz55PmaflhKOQiLhnACKbRbNeHoeN0BVomqNFo4BKybfGN
-	i4sg0JO7Elq8V9KBb3wW6waR1URa7g7Srus6r+QsoUuqe4xviX9Qeqajv3goq8ptZzU2Ay
-	4x6wayY2y3sF46JSLXrPMXfbF1/f5J/HFNdfgHtyor6fs9wymZxmBJB6dNUxNw==
+ dkim=pass header.i=@amarulasolutions.com header.s=google header.b=Dasfk6t2;
+ spf=pass (domain: amarulasolutions.com, ip: 209.85.216.54, mailfrom: michael@amarulasolutions.com)
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff65d88103so2632926a91.2
+        for <u-boot-amlogic@groups.io>; Sun, 16 Mar 2025 23:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1742191806; x=1742796606; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Im+SEKkBx0ka4Rb93/n+FPrhbHZgh/rtT60QCwpXH14=;
+        b=Dasfk6t24PxS4CKGJydanOrIkfnZw2WXLaMru2wmNkgdfQHatsHuMOr+ejEZTsu1H4
+         PIAV832bQNyuR2YsiHsBS8TsvdRreT2jhCzu9wgsFr/+TwGqstMcHXH7jDRvHBB83wLk
+         V897sv1zzRx9meD9380FReLwV5tfi0/OdurR8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742191806; x=1742796606;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Im+SEKkBx0ka4Rb93/n+FPrhbHZgh/rtT60QCwpXH14=;
+        b=wHOxKFkM0FrghVvmdVm9FhevQ1Q86t+JN9krDOM6Tq1YWyzg9zwZ1bz9aBKlRgV9uQ
+         h3NVVlmfwlNMmr7qh1NuTB0u3QB58OJ263PP+VXzfoWrK8H7V0g3jZS2v+3ufk2y1+d5
+         mw18+E1adCoZtrSbjsUT22iH+zWTxJYLDhv90+kdhy/FLy2ojgx9FwQU/5N+98StgnW1
+         IaRl1yakHS/mWPOeYD80ClZzu6TV2UKgZi7oHR0ORa42DyiOeDb0bm6HONLKpu26k4wE
+         XUwQM8GKjuhLJggdnDsfLwlc66KpPvUn/Iy/szVCm2eEyf8/xSeK+w4NCxylEutPmJcq
+         rlAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgR/Ny+kH8NlpaCWtxGiDEMCfg1K5vBr7qQHmU8Ridk17WKQyLrIYCiABduh5qiE0p4psBuF1MyDuu7gSf5g==@groups.io
+X-Gm-Message-State: AOJu0YwzihFTbGtdpzsYZfONxdh1kxKxvh5Ne4RPsQd92re0iftuCDd6
+	gtbzEQxHDV6k4lqJhwem1EcFqlUS2ji6bjdc+/UTfj/qolitHsUHEAyryzs/D1Btbtpp2VQOkgy
+	52N8N+nQhmI56y5evSYbYWyxZJk/duu2P/gTDHQ==
+X-Gm-Gg: ASbGnctDsBsSNEEL0leR+qtG/NG8J03yOURaxMkMKNg6faXPqN8myMROoJcQ6crQmbF
+	FlxgCnakkYn+xowsBY+z7TSnVWgEo9v8DJI+Phr0VJYxh/HvC/bvNC8iL8osOEX7PhmTdmcdTXb
+	Ok101d8kS4ODTdDMqlk+YDfWk=
+X-Google-Smtp-Source: AGHT+IHkpQqn2hEpVGLNHyxc7AUNlmVvQh6llwp3StzTseehZSMTTR6t/moamhnqdIZWfWvj/W/vmp9tSnHjmJM5/nQ=
+X-Received: by 2002:a17:90b:1dc3:b0:2f8:b2c:5ef3 with SMTP id
+ 98e67ed59e1d1-30151c9a5a3mr16450140a91.14.1742191806228; Sun, 16 Mar 2025
+ 23:10:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <d087411f-c2fd-75a8-6041-31623aba53ae@salutedevices.com>
+In-Reply-To: <d087411f-c2fd-75a8-6041-31623aba53ae@salutedevices.com>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date: Mon, 17 Mar 2025 07:09:53 +0100
+X-Gm-Features: AQ5f1JrWT1PwikHmpOV9wPTIaeF7k-8UjcDBB-EZiXkzx_fzJ4Sx5-z1EKI3GUg
+Message-ID: <CAOf5uwmftbyysOL_Gf1BRgQmP7EyCS_=Jn5ge4KUbA5efbe_Hw@mail.gmail.com>
+Subject: Re: [PATCH v1] mtd: rawnand: meson: always use OOB bytes during write
+To: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Cc: Dario Binacchi <dario.binacchi@amarulasolutions.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	u-boot@lists.denx.de, u-boot-amlogic@groups.io, kernel@salutedevices.com, 
+	oxffffaa@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 05 Mar 2025 08:01:17 +0000
-Message-Id: <D886AW8YTV0U.2ZLL0915HJINO@postmarketos.org>
-To: <u-boot-amlogic@groups.io>, <jonas@kwiboo.se>, "Neil Armstrong"
- <neil.armstrong@linaro.org>, "Tom Rini" <trini@konsulko.com>
-Subject: Re: [PATCH 2/2] tools: amlimage: Add support for GXBB eMMC header
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ferass El Hafidi" <funderscore@postmarketos.org>
-Cc: "Ferass El Hafidi" <vitali64pmemail@protonmail.com>,
- <u-boot@lists.denx.de>
-References: <20250103215904.2590769-1-jonas@kwiboo.se>
- <20250103215904.2590769-3-jonas@kwiboo.se>
-In-Reply-To: <20250103215904.2590769-3-jonas@kwiboo.se>
-X-Migadu-Flow: FLOW_OUT
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 05 Mar 2025 08:01:31 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2629
+ <u-boot-amlogic@groups.io>; Mon, 17 Mar 2025 09:19:28 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2630
 
-Hi,
+Hi Arseniy
 
-On Fri Jan 3, 2025 at 9:58 PM UTC, Jonas Karlman via groups.io wrote:
-> GXBB BL1 only tries to read boot image from sector 0 on eMMC and sector
-> 1 on SD-card. GXL and newer read boot image from sector 1 on both eMMC
-> and SD-card.
+On Sun, Dec 22, 2024 at 10:23=E2=80=AFPM Arseniy Krasnov <
+avkrasnov@salutedevices.com> wrote:
+
+> If 'oob_required' is not set by the caller (for example 'oobbuf' is NULL)=
+,
+> then driver doesn't copy OOB data from 'oob_poi' to special controller
+> structures, so zeroes will be written as OOB. But, generic raw NAND logic
+> in 'nand_base.c' already handles case when OOB is not required to write b=
+y
+> filling 'oob_poi' with 0xFF's. So let's remove 'oob_required' check to
+> always read 'oob_poi' data for OOB.
 >
-> Vendor BL2 have solved the issue with different offsets by considering
-> where BL2 was loaded from to adjust the offset where BL3 is read from.
+> Kernel driver (drivers/mtd/nand/raw/meson_nand.c) works in the same way,
+> so need to keep same behaviour here.
 >
-> This provide a different solution to create a boot image that can be
-> booted from both eMMC and SD-card and where the offset for reading next
-> stage loader can be shared for both boot options.
->
-> Inject code, that relocate the payload located at 0x1200 offset in TZRAM
-> to the expected offset of 0x1000, into the padding area at offset 0x200
-> when a normal GXBB boot image is created. A special GXBB eMMC header can
-> then be created that have the payload offset point to this relocate
-> code, BL1 will jump to this relocate code when booted from eMMC instead
-> of the normal payload start. One effect of this is that the payload size
-> limit must be reduced by 512 bytes on GXBB.
->
-> Example of how to use it:
->   # Create a normal boot image
->   tools/mkimage -T amlimage -n gxbb -d u-boot-spl.bin bl2.bin
->
->   # Create a boot image with a special eMMC header
->   tools/mkimage -T amlimage -n emmc -d bl2.bin bl2-emmc.bin
->
->   # Write normal boot image to sector 1 of eMMC/SD-card
->   dd if=3Dbl2.bin of=3D/path/to/dev bs=3D512 seek=3D1
->
->   # Write eMMC header, 112 bytes, to start of eMMC
->   dd if=3Dbl2-emmc.bin of=3D/path/to/dev bs=3D1 count=3D112
->
-> Or with binman using something like:
->   binman {
-> 	multiple-images;
->
-> 	u-boot-gxbb-sd {
-> 		filename =3D "u-boot-gxbb-sd.bin";
-> 		pad-byte =3D <0xff>;
->
-> 		mkimage {
-> 			filename =3D "bl2.bin";
-> 			args =3D "-n", "gxbb", "-T", "amlimage";
->
-> 			u-boot-spl {
-> 			};
-> 		};
-> 	};
->
-> 	u-boot-gxbb-emmc {
-> 		filename =3D "u-boot-gxbb-emmc.bin";
-> 		pad-byte =3D <0xff>;
->
-> 		mkimage {
-> 			filename =3D "bl2-emmc.bin";
-> 			args =3D "-n", "emmc", "-T", "amlimage";
->
-> 			blob-ext {
-> 				filename =3D "bl2.bin";
-> 			}
-> 		};
-> 	};
->   };
->
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> Fixes: c2e8c4d09a7a ("mtd: rawnand: Meson NAND controller support")
+> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
 > ---
-
-Acked-by: Ferass El Hafidi <funderscore@postmarketos.org>
-
->  tools/amlimage-gxbb-relocate.c | 79 ++++++++++++++++++++++++++++++++++
->  tools/amlimage.c               | 37 ++++++++++++++++
->  2 files changed, 116 insertions(+)
->  create mode 100644 tools/amlimage-gxbb-relocate.c
+>  drivers/mtd/nand/raw/meson_nand.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/tools/amlimage-gxbb-relocate.c b/tools/amlimage-gxbb-relocat=
-e.c
-> new file mode 100644
-> index 000000000000..3503805c460e
-> --- /dev/null
-> +++ b/tools/amlimage-gxbb-relocate.c
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright Contributors to the U-Boot project.
-> +
-> +/*
-> + * The following commands can be used to reproduce the gxbb_relocate
-> + * byte array in amlimage.c
-> + *
-> + * Start U-Boot CI docker container from U-Boot source code root folder:
-> + *  docker run --rm -v $(pwd):/build -u uboot -it docker.io/trini/u-boot=
--gitlab-ci-runner:jammy-20240911.1-08Dec2024
-> + *
-> + * Run the following commands inside the docker container:
-> + *  export PATH=3D/opt/gcc-13.2.0-nolibc/aarch64-linux/bin:$PATH
-> + *  cd /build/tools
-> + *
-> + * Generate assembly code for the c code in this file:
-> + *  aarch64-linux-gcc -nostdlib -ffreestanding -Os -S -o amlimage-gxbb-r=
-elocate.S amlimage-gxbb-relocate.c
-> + *
-> + * Manually remove 'mov x16, x2' and replace 'x16' with 'x2' on the last=
- line.
-> + *
-> + * Compile assembly code and extract the AArch64 binary code:
-> + *  aarch64-linux-as -o amlimage-gxbb-relocate.o amlimage-gxbb-relocate.=
-S
-> + *  aarch64-linux-objcopy -O binary -j .text amlimage-gxbb-relocate.o am=
-limage-gxbb-relocate.bin
-> + *
-> + * Print binary code as a byte array that can be copied into amlimage.c
-> + *  hexdump -ve '1/1 "0x%.2x, "' amlimage-gxbb-relocate.bin | fold -w 72=
- && echo
-> + *
-> + * Remember to update assembly code below when byte array is updated.
-> + */
-> +
-> +#include <stdint.h>
-> +
-> +#define TZRAM_BASE		0xd9000000
-> +#define PAYLOAD_OFFSET		0x200
-> +#define BL2_OFFSET		0x1000
-> +#define BL2_BASE		(void *)(TZRAM_BASE + BL2_OFFSET)
-> +#define BL2_SIZE		0xb000
-> +
-> +void _start(uint64_t x0, uint64_t x1)
-> +{
-> +	void (*bl2)(uint64_t, uint64_t) =3D BL2_BASE;
-> +	uint64_t i, *dst =3D BL2_BASE, *src =3D BL2_BASE + PAYLOAD_OFFSET;
-> +
-> +	/* memmove payload from 0x1200 to 0x1000 offset in TZRAM */
-> +	for (i =3D 0; i < BL2_SIZE / sizeof(*src); i++)
-> +		*(dst + i) =3D *(src + i);
-> +
-> +	/* goto entry point with x0 and x1 reg intact */
-> +	bl2(x0, x1);
-> +}
-> +
-> +/*
-> +	.arch armv8-a
-> +	.file	"amlimage-gxbb-relocate.c"
-> +	.text
-> +	.align	2
-> +	.global	_start
-> +	.type	_start, %function
-> +_start:
-> +.LFB0:
-> +	.cfi_startproc
-> +	mov	x2, 4608
-> +	movk	x2, 0xd900, lsl 16
-> +	add	x3, x2, 45056
-> +.L2:
-> +	sub	x4, x2, #32768
-> +	add	x2, x2, 8
-> +	ldr	x5, [x2, -8]
-> +	str	x5, [x4, 32256]
-> +	cmp	x2, x3
-> +	bne	.L2
-> +	mov	x2, 4096
-> +	movk	x2, 0xd900, lsl 16
-> +	br	x2
-> +	.cfi_endproc
-> +.LFE0:
-> +	.size	_start, .-_start
-> +	.ident	"GCC: (GNU) 13.2.0"
-> +	.section	.note.GNU-stack,"",@progbits
-> +*/
-> diff --git a/tools/amlimage.c b/tools/amlimage.c
-> index 9af795602e69..43be1636ed11 100644
-> --- a/tools/amlimage.c
-> +++ b/tools/amlimage.c
-> @@ -51,6 +51,7 @@ struct amlimage_variant {
->  		  .payload_size =3D size, } }
-> =20
->  static const struct amlimage_variant variants[] =3D {
-> +	VARIANT("emmc", 1, 0, 0xb000 + PAYLOAD_OFFSET),
->  	VARIANT("gxbb", 1, 0, 0xb000),
->  	VARIANT("gxl",  1, 1, 0xb000),
->  	VARIANT("gxm",  1, 1, 0xb000),
-> @@ -176,6 +177,17 @@ static void amlimage_set_header(void *buf, struct st=
-at *sbuf, int ifd,
->  	hdr->data_offset =3D hdr->digest_offset + SHA256_SUM_LEN;
->  	hdr->data_size =3D hdr->total_size - hdr->data_offset;
-> =20
-> +	/* Adjust offset and size in GXBB eMMC header */
-> +	if (!strcmp("emmc", params->imagename)) {
-> +		hdr->total_size -=3D PAYLOAD_OFFSET;
-> +		/* Use offset to relocate code relative to eMMC header */
-> +		hdr->payload_offset =3D 0x400 - HEADER_OFFSET;
-> +		hdr->payload_size =3D hdr->total_size - hdr->payload_offset;
-> +		/* Use 0x200 offset to exclude MBR from the data range */
-> +		hdr->data_offset =3D 0x200 - HEADER_OFFSET;
-> +		hdr->data_size =3D hdr->total_size - hdr->data_offset;
-> +	}
-> +
->  	sha256_starts(&ctx);
->  	/* Header and data is used as input for sha256 digest */
->  	sha256_update(&ctx, (void *)hdr, hdr->header_size);
-> @@ -203,6 +215,22 @@ static int amlimage_check_image_type(uint8_t type)
->  	return EXIT_FAILURE;
+> diff --git a/drivers/mtd/nand/raw/meson_nand.c
+> b/drivers/mtd/nand/raw/meson_nand.c
+> index 81122315f4..82a12ac061 100644
+> --- a/drivers/mtd/nand/raw/meson_nand.c
+> +++ b/drivers/mtd/nand/raw/meson_nand.c
+> @@ -607,9 +607,7 @@ static int meson_nfc_write_page_hwecc(struct mtd_info
+> *mtd, struct nand_chip *ch
+>                 memcpy(meson_chip->data_buf, buf, mtd->writesize);
+>
+>         memset(meson_chip->info_buf, 0, chip->ecc.steps * PER_INFO_BYTE);
+> -
+> -       if (oob_required)
+> -               meson_nfc_set_user_byte(chip, chip->oob_poi);
+> +       meson_nfc_set_user_byte(chip, chip->oob_poi);
+>
+>         return meson_nfc_write_page_sub(chip, page, false);
 >  }
-> =20
-> +/*
-> + * AArch64 binary code to relocate payload when booting from eMMC on GXB=
-B.
-> + *
-> + * Payload is relocated from offset 0x1200 to 0x1000 in TZRAM, similar t=
-o:
-> + * memmove(0xd9001000, 0xd9001200, 0xb000)
-> + * goto 0xd9001000
-> + *
-> + * See amlimage-gxbb-relocate.c on how to reproduce the following byte a=
-rray.
-> + */
-> +static const uint8_t gxbb_relocate[] =3D {
-> +	0x02, 0x40, 0x82, 0xd2, 0x02, 0x20, 0xbb, 0xf2, 0x43, 0x2c, 0x40, 0x91,
-> +	0x44, 0x20, 0x40, 0xd1, 0x42, 0x20, 0x00, 0x91, 0x45, 0x80, 0x5f, 0xf8,
-> +	0x85, 0x00, 0x3f, 0xf9, 0x5f, 0x00, 0x03, 0xeb, 0x61, 0xff, 0xff, 0x54,
-> +	0x02, 0x00, 0x82, 0xd2, 0x02, 0x20, 0xbb, 0xf2, 0x40, 0x00, 0x1f, 0xd6,
-> +};
-> +
->  static int amlimage_vrec_header(struct image_tool_params *params,
->  				struct image_type_params *tparams)
->  {
-> @@ -213,6 +241,10 @@ static int amlimage_vrec_header(struct image_tool_pa=
-rams *params,
->  	/* Use payload offset as header size, datafile will be appended */
->  	tparams->header_size =3D PAYLOAD_OFFSET;
-> =20
-> +	/* Only prepend 512 bytes for GXBB eMMC header */
-> +	if (!strcmp("emmc", variant->name))
-> +		tparams->header_size =3D 0x200;
-> +
->  	tparams->hdr =3D calloc(1, tparams->header_size);
->  	if (!tparams->hdr) {
->  		fprintf(stderr, "%s: Can't alloc header: %s\n",
-> @@ -223,6 +255,11 @@ static int amlimage_vrec_header(struct image_tool_pa=
-rams *params,
->  	/* Start with a copy of the variant header */
->  	memcpy(tparams->hdr + HEADER_OFFSET, hdr, hdr->header_size);
-> =20
-> +	/* Insert relocate code to move payload from 0x1200 to 0x1000 on GXBB *=
-/
-> +	if (!strcmp("gxbb", variant->name))
-> +		memcpy(tparams->hdr + 0x200,
-> +		       gxbb_relocate, sizeof(gxbb_relocate));
-> +
->  	/* Pad up to payload size of the variant header */
->  	return hdr->payload_size - params->file_size;
->  }
+>
 
+Applied and sent already the pull request
+
+Michael
+
+
+> --
+> 2.30.1
+>
+
+
+--=20
+Michael Nazzareno Trimarchi
+Co-Founder & Chief Executive Officer
+M. +39 347 913 2170
+michael@amarulasolutions.com
+__________________________________
+
+Amarula Solutions BV
+Joop Geesinkweg 125, 1114 AB, Amsterdam, NL
+T. +31 (0)85 111 9172
+info@amarulasolutions.com
+www.amarulasolutions.com
 
