@@ -2,133 +2,136 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1D5C35FF8
-	for <webhook@archiver.kernel.org>; Mon, 17 Mar 2025 16:08:41 +0000 (UTC)
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
- by mx.groups.io with SMTP id smtpd.web10.48981.1742206898894989815
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5888C282EC
+	for <webhook@archiver.kernel.org>; Tue, 18 Mar 2025 16:06:25 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web10.498.1742313981392162961
  for <u-boot-amlogic@groups.io>;
- Mon, 17 Mar 2025 03:21:39 -0700
+ Tue, 18 Mar 2025 09:06:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=kFOjsEnK;
- spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: avkrasnov@salutedevices.com)
-Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 2CCF8100016;
-	Mon, 17 Mar 2025 13:21:36 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2CCF8100016
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1742206896;
-	bh=kPTIm+IvHjAnO3L48o+g0vuGETZRHpDx75pjqV313DY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=kFOjsEnKnAiCSh+fQErzmqI0qkypoYbPn2/AlQu+tSx7GjejDTVLvX+sfHobn3UOy
-	 /XmQLcirYiaZGyNfwC5ZVwCnaERTpCvAat0TYCdhY3U26+TH3a3y0mylnWO1dRf/4S
-	 BOQcNARDmlixnrzKmhJG3w9Pq3NJaCZzf5pWZ3doWLOi9E9ZBD5ymRhqJD0V/jqESV
-	 gl33C7lOd3/2tg2mks0UARd3dVgtQe6Q/75Rj3JJUHWBKpPHaJpB4v19YOFSRe4ARK
-	 fUfE9Ze34cb71VTdtnTdRzGPGPfbWph/1CAs4NlP9FHszDSnezDKY7NuWjSr1LH0vs
-	 Sb99E/xMld3ww==
-Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Mon, 17 Mar 2025 13:21:36 +0300 (MSK)
-Message-ID: <b6cb6f26-91d3-902f-652d-50e8e6f21122@salutedevices.com>
-Date: Mon, 17 Mar 2025 13:21:30 +0300
+ dkim=pass header.i=@linaro.org header.s=google header.b=orR2984E;
+ spf=pass (domain: linaro.org, ip: 209.85.128.41, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0618746bso27370355e9.2
+        for <u-boot-amlogic@groups.io>; Tue, 18 Mar 2025 09:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742313980; x=1742918780; darn=groups.io;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PWaWpeZxNvP7SpV0ZNApUVcLRnavCoScAR0tW6hGmiE=;
+        b=orR2984EGmBjb6iar/ZfNdu/I2pUtAve2CVcjSu4kIVx1Q/AYs3I8aQnf/bcMiPhvd
+         aQgPf9WBITVnUTGw1nP2+k6ajBzyjmQx4nfVI/iWZFb3mkOIEtUILDK26hdCWTbRVT7v
+         ORkiBpGPTwNNgRFsb2Q1z5zAzIFR/tRWIdJOn6hTjwOmDyidI6s9IuyFKjtOE2lssNp3
+         5/TUrgDJOC3rj8neLWnkcx95MeXiH1jkrgLj0Tl4E8d4x5AlEXcdJ+LFagMMa10NZ7Vg
+         2+PVOmSDvUjmIXhpge0MJ/4yVvo8+o+H6pAG3usRUxOXdv/yZiy0ZMBPJlcL2IFEDzqI
+         8GmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742313980; x=1742918780;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWaWpeZxNvP7SpV0ZNApUVcLRnavCoScAR0tW6hGmiE=;
+        b=twU4BKsmniyovKpK1VVJ4FORDdawd9kjGf3warNZEj45qQjxY6nF62+uW0WNhRau/E
+         qaY4q50Zedun6Cp+exs1HHSBfxNJmDVwJ++ioxTz3LYrgAH2W3N7PEd3ThQ7sIltts/7
+         YfocBNn91FeVSdmzSv/g9TA3d9TxWwevHTRAam1LduNSLHC+K8Si8+pzthLW2csTNeGW
+         ZRY2lnUYDXCqZq5z7RNd+EJ7C30mVyoYZ1oC38dw4Ycs1197FgBsunuHjHKVHUhw5R+f
+         a73e8gREIFczb1SIGwDoNcQeJfq9Fg+P4RtFO/YmtgsJiW0YYPbZCVF/94X7IZMjqOxr
+         4cfg==
+X-Gm-Message-State: AOJu0YwG6pu4KtD2XqUBjKa8CiUSkKtZgFTV8UCZ/7+d/txGsbO2kniP
+	pu8hUAJGZTwaXt02CqNbGJ6zrESeu3M1c2FYuOjjV5wfriUYFECl4PbfGyHtHhKB9IOGu11niOi
+	Q
+X-Gm-Gg: ASbGncveqMLdz7l50dFFf8O/ZCVi+ks/wIrAUR2O8OS/tZT7akYZyV7PKy02fkP779h
+	Y9E8hSeX9E65I80IV1L+CLx8yzOxPJTVoUBIK9u9WcEjgK+7H0j0zQ7nrW13SNXUKqjVGCwa4+X
+	Rz+d/44KqzpUlSDTbjImOCMRAnQTtgqiN32owuxSRG119AEBcgMK+wom5mUhBmAW+N/yBOvFbvY
+	C58z/Tf4d4NYEZR9Fl+Qb72Z1yr4fSI2x5bVeRPOS4dJ7j2QhX3auPHgtRpzvLpkoFiUkWiaXKx
+	5PmBReWxxt+FYzmAMP6tn6UZovdeZCWxlJtphMi2ZYyjpHzvaVRGPIpIo8Ag8iPOUp1FB+BPemn
+	qTZ/nWrrQTJ6XM7rWbqrwzQ==
+X-Google-Smtp-Source: AGHT+IEj4YZposyR3KNZaAB0g3jjgnXTLdusIpOcmC0illv8PLBDcW8sId2LzoAZV1GThGM7RYMccw==
+X-Received: by 2002:a5d:588e:0:b0:390:fb37:1ca with SMTP id ffacd0b85a97d-3972121b9a5mr17946264f8f.53.1742313979764;
+        Tue, 18 Mar 2025 09:06:19 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:eac1:f2d4:84a8:c5ff? ([2a01:e0a:3d9:2080:eac1:f2d4:84a8:c5ff])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fe60951sm138366635e9.26.2025.03.18.09.06.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 09:06:19 -0700 (PDT)
+Message-ID: <76380583-858e-4d69-a412-25ddef988705@linaro.org>
+Date: Tue, 18 Mar 2025 17:06:18 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v1] mtd: rawnand: meson: always use OOB bytes during write
-To: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-CC: Dario Binacchi <dario.binacchi@amarulasolutions.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
-	<u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
-	<kernel@salutedevices.com>, <oxffffaa@gmail.com>
-References: <d087411f-c2fd-75a8-6041-31623aba53ae@salutedevices.com>
- <CAOf5uwmftbyysOL_Gf1BRgQmP7EyCS_=Jn5ge4KUbA5efbe_Hw@mail.gmail.com>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-In-Reply-To: <CAOf5uwmftbyysOL_Gf1BRgQmP7EyCS_=Jn5ge4KUbA5efbe_Hw@mail.gmail.com>
-X-Originating-IP: [172.28.65.111]
-X-ClientProxiedBy: p-i-exch-a-m1.sberdevices.ru (172.24.196.116) To
- p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 191835 [Mar 17 2025]
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/03/17 05:57:00 #27790323
-X-KSMG-AntiVirus-Status: Clean, skipped
-Content-Language: en-US
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-20250318 into next
+Reply-To: neil.armstrong@linaro.org
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 17 Mar 2025 16:08:41 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2631
+ <u-boot-amlogic@groups.io>; Tue, 18 Mar 2025 16:06:25 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2632
 
-Hi, thanks!
+Hi Tom,
 
-On 17.03.2025 09:09, Michael Nazzareno Trimarchi wrote:
-> Hi Arseniy
->=20
-> On Sun, Dec 22, 2024 at 10:23=E2=80=AFPM Arseniy Krasnov <
-> avkrasnov@salutedevices.com> wrote:
->=20
->> If 'oob_required' is not set by the caller (for example 'oobbuf' is NULL=
-),
->> then driver doesn't copy OOB data from 'oob_poi' to special controller
->> structures, so zeroes will be written as OOB. But, generic raw NAND logi=
-c
->> in 'nand_base.c' already handles case when OOB is not required to write =
-by
->> filling 'oob_poi' with 0xFF's. So let's remove 'oob_required' check to
->> always read 'oob_poi' data for OOB.
->>
->> Kernel driver (drivers/mtd/nand/raw/meson_nand.c) works in the same way,
->> so need to keep same behaviour here.
->>
->> Fixes: c2e8c4d09a7a ("mtd: rawnand: Meson NAND controller support")
->> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
->> ---
->>  drivers/mtd/nand/raw/meson_nand.c | 4 +---
->>  1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/drivers/mtd/nand/raw/meson_nand.c
->> b/drivers/mtd/nand/raw/meson_nand.c
->> index 81122315f4..82a12ac061 100644
->> --- a/drivers/mtd/nand/raw/meson_nand.c
->> +++ b/drivers/mtd/nand/raw/meson_nand.c
->> @@ -607,9 +607,7 @@ static int meson_nfc_write_page_hwecc(struct mtd_inf=
-o
->> *mtd, struct nand_chip *ch
->>                 memcpy(meson_chip->data_buf, buf, mtd->writesize);
->>
->>         memset(meson_chip->info_buf, 0, chip->ecc.steps * PER_INFO_BYTE)=
-;
->> -
->> -       if (oob_required)
->> -               meson_nfc_set_user_byte(chip, chip->oob_poi);
->> +       meson_nfc_set_user_byte(chip, chip->oob_poi);
->>
->>         return meson_nfc_write_page_sub(chip, page, false);
->>  }
->>
->=20
-> Applied and sent already the pull request
->=20
-> Michael
->=20
->=20
->> --
->> 2.30.1
->>
->=20
->=20
+Here's a small set of changes for Amlogic SoC support.
+
+Thanks,
+Neil
+
+The following changes since commit 0e1fc465fea62ebae91f2f56cb823e8b37ee1077:
+
+   Merge tag 'dm-pull-15mar25' of git://git.denx.de/u-boot-dm into next (2025-03-15 08:19:31 -0600)
+
+are available in the Git repository at:
+
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-20250318
+
+for you to fetch changes up to e80b586cfc73ee123dae42d5d85543798ff7a3c5:
+
+   board: odroid-n2: Update docs for signing (2025-03-18 15:27:25 +0100)
+
+----------------------------------------------------------------
+- odroid-n2: Update docs for signing
+- support Amlogic chip_id v1 and v2
+
+----------------------------------------------------------------
+Baltazár Radics (1):
+       board: odroid-n2: Update docs for signing
+
+Evgeny Bachinin (3):
+       arm: meson: unify type being used for socinfo
+       arm: meson: sm: get rid of SM_CHIP_ID_SIZE
+       arch: arm: meson: support Amlogic chip_id v1 and v2
+
+  arch/arm/include/asm/arch-meson/boot.h |  14 ++++
+  arch/arm/include/asm/arch-meson/sm.h   |  48 ++++++++++++-
+  arch/arm/mach-meson/board-info.c       |  13 ++--
+  arch/arm/mach-meson/sm.c               | 120 ++++++++++++++++++++++++++++++---
+  doc/board/amlogic/odroid-n2.rst        |  15 +----
+  5 files changed, 182 insertions(+), 28 deletions(-)
 
