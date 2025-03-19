@@ -2,34 +2,34 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D77DC28B30
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D3EC36001
 	for <webhook@archiver.kernel.org>; Thu, 20 Mar 2025 14:56:49 +0000 (UTC)
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [45.89.224.132])
- by mx.groups.io with SMTP id smtpd.web11.4619.1742415663377067477
+ by mx.groups.io with SMTP id smtpd.web10.4466.1742415663375139538
  for <u-boot-amlogic@groups.io>;
  Wed, 19 Mar 2025 13:21:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=Mpl82KTc;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=I67JCPKU;
  spf=pass (domain: salutedevices.com, ip: 45.89.224.132, mailfrom: avkrasnov@salutedevices.com)
 Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 06D8D120014;
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 8430B120015;
 	Wed, 19 Mar 2025 23:21:01 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 06D8D120014
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8430B120015
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
 	s=mail; t=1742415661;
-	bh=beN8T1cB4+EB2MZsbBmqpWowbJ9IKNEn0swDpJ8PUP0=;
+	bh=f4w9RmMeHgiQaN14upAA5pVyCE17/cNa1SQ+rwvBpUA=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Mpl82KTcakZYx9B/Dz8CBBJZIQCuljuAJj7zFhBGCTilr+n21WqmAD51M/rszAugC
-	 VttrqNtvzHtFbjtPhGYS5WGqCeqhr4gYxmGaZLjEGfTALOnv5GqHOaIIqhF9Uf37OK
-	 H7CH6BTa9HjWZDnoHKwn3PeJKOSToFGiLhB7tK46Z4kr2rVW7zXtWZWzFUU/qEOmMs
-	 /siDvnZVWhlhX8smd8d7XXK6axPGADJh9deYp49F7OWZEqfqf7V3Sd92ojBwp9GF63
-	 Fa7nbEYNRSAd2qpkKYsPYrW8fsRU7MJMaWVwfHjUSbQdPDibww/sZpuwRgh+ELFaoZ
-	 93wcjKdBwVcKA==
+	b=I67JCPKU+Tqvbfp95+phKIqsbjUD8HBBTFEA/mA8goe7/LX6bH6dVkN0tvNFvtRWX
+	 MfQB8cl8FiCkLVv+geGdkxZSX5lPp0MYmwe53+rZ2najd1uHUKnmNuXUtwojbT0j9A
+	 50ZTPWr9LHdTLF6fEg7ahn7Em8XjC+K+0hfAgJPEXn7O0OlzBen9JfaN2KNx5H5ykJ
+	 R+6fc+J8Km8MryI7K/qgxDFkxkIr4tHsH5iC8aabbWxTcihjlmHUAdB3q1cpKV4lVx
+	 pzIcMRI2+SQgHCFs8QEQrezcRh8kaknv++YofaHJf+06gsOaCV01lA6QWRkDN77RPl
+	 8mAxm+7AyeXGg==
 Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 19 Mar 2025 23:21:00 +0300 (MSK)
+	Wed, 19 Mar 2025 23:21:01 +0300 (MSK)
 From: Arseniy Krasnov <avkrasnov@salutedevices.com>
 To: Tom Rini <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
 	Dario Binacchi <dario.binacchi@amarulasolutions.com>, Michael Trimarchi
@@ -42,10 +42,11 @@ To: Tom Rini <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
 	Vitaliy Vasylskyy <vitaliy.vasylskyy@globallogic.com>
 CC: <u-boot-amlogic@groups.io>, <u-boot@lists.denx.de>,
 	<kernel@salutedevices.com>, <oxffffaa@gmail.com>,
-	<avkrasnov@salutedevices.com>
-Subject: [PATCH v1 09/11] arm: meson: a1: ADNL protocol support
-Date: Wed, 19 Mar 2025 23:20:43 +0300
-Message-ID: <20250319202045.1407-10-avkrasnov@salutedevices.com>
+	<avkrasnov@salutedevices.com>, Vladimir Mitrofanov
+	<vvmitrofanov@salutedevices.com>
+Subject: [PATCH v1 11/11] arch: arm: axg: Optimus protocol support
+Date: Wed, 19 Mar 2025 23:20:45 +0300
+Message-ID: <20250319202045.1407-12-avkrasnov@salutedevices.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250319202045.1407-1-avkrasnov@salutedevices.com>
 References: <20250319202045.1407-1-avkrasnov@salutedevices.com>
@@ -75,42 +76,41 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 20 Mar 2025 14:56:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2634
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2640
 
-During ADNL protocol operations, BootROM may request to enter
-ADNL mode after boot. So to support this, let's check for values
+From: Vladimir Mitrofanov <vvmitrofanov@salutedevices.com>
+
+During Optimus protocol operations, BootROM may request to enter
+Optimus mode after boot. So to support this, let's check for values
 in sticky registers after boot (such registers could be updated
-earlier by boot ROM, telling U-boot to enter ADNL mode.
+earlier by boot ROM, telling U-boot to enter Optimus mode).
 
+Signed-off-by: Vladimir Mitrofanov <vvmitrofanov@salutedevices.com>
 Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
 ---
- arch/arm/include/asm/arch-meson/a1.h | 13 +++++++++++
- arch/arm/mach-meson/board-a1.c       | 32 +++++++++++++++++++++++++++-
- arch/arm/mach-meson/board-common.c   | 17 +++++++++++++++
- 3 files changed, 61 insertions(+), 1 deletion(-)
+ arch/arm/include/asm/arch-meson/axg.h | 12 ++++++++++++
+ arch/arm/mach-meson/board-axg.c       | 12 ++++++++++++
+ arch/arm/mach-meson/board-common.c    | 15 +++++++++++++++
+ 3 files changed, 39 insertions(+)
 
-diff --git a/arch/arm/include/asm/arch-meson/a1.h b/arch/arm/include/asm/ar=
-ch-meson/a1.h
-index 16e209ed932..4a22aaf5627 100644
---- a/arch/arm/include/asm/arch-meson/a1.h
-+++ b/arch/arm/include/asm/arch-meson/a1.h
-@@ -12,6 +12,7 @@
- /* SYSCTRL registers */
- #define A1_SYSCTRL_ADDR(off)		(A1_SYSCTRL_BASE + ((off) << 2))
+diff --git a/arch/arm/include/asm/arch-meson/axg.h b/arch/arm/include/asm/a=
+rch-meson/axg.h
+index 12042de9359..e99cd3aa780 100644
+--- a/arch/arm/include/asm/arch-meson/axg.h
++++ b/arch/arm/include/asm/arch-meson/axg.h
+@@ -23,6 +23,7 @@
+ #define AXG_AO_SEC_GP_CFG3	AXG_AO_ADDR(0x93)
+ #define AXG_AO_SEC_GP_CFG4	AXG_AO_ADDR(0x94)
+ #define AXG_AO_SEC_GP_CFG5	AXG_AO_ADDR(0x95)
++#define AXG_AO_SEC_GP_CFG7	AXG_AO_ADDR(0x97)
 =20
-+#define A1_SYSCTRL_SEC_STATUS_REG1	A1_SYSCTRL_ADDR(0xc1)
- #define A1_SYSCTRL_SEC_STATUS_REG4	A1_SYSCTRL_ADDR(0xc4)
- /*
-  * Checked during boot. Tells, that previous code, e.g.
-@@ -20,7 +21,19 @@
-  */
- #define A1_SYSCTRL_SEC_STICKY_REG2	A1_SYSCTRL_ADDR(0xe2)
+ #define AXG_AO_BOOT_DEVICE	0xF
+ #define AXG_AO_MEM_SIZE_MASK	0xFFFF0000
+@@ -31,4 +32,15 @@
+ #define AXG_AO_BL31_RSVMEM_SIZE_SHIFT	16
+ #define AXG_AO_BL32_RSVMEM_SIZE_MASK	0xFFFF
 =20
-+#define A1_AO_BOOT_DEVICE		0xF
- #define A1_SYSCTRL_MEM_SIZE_MASK	0xFFFF0000
- #define A1_SYSCTRL_MEM_SIZE_SHIFT	16
-=20
-+#if CONFIG_IS_ENABLED(ADNL)
++#if CONFIG_IS_ENABLED(CMD_OPTIMUS)
 +/**
 + * is_tpl_loaded_from_usb - Checks, that this instance of U-boot was
 + *                          loaded from USB during firmware update
@@ -121,107 +121,81 @@ index 16e209ed932..4a22aaf5627 100644
 +int is_tpl_loaded_from_usb(void);
 +#endif
 +
- #endif /* __MESON_A1_H__ */
-diff --git a/arch/arm/mach-meson/board-a1.c b/arch/arm/mach-meson/board-a1.=
-c
-index f848c0f068e..9cc410f1e57 100644
---- a/arch/arm/mach-meson/board-a1.c
-+++ b/arch/arm/mach-meson/board-a1.c
-@@ -3,6 +3,7 @@
-  * (C) Copyright 2023 SberDevices, Inc.
+ #endif /* __AXG_H__ */
+diff --git a/arch/arm/mach-meson/board-axg.c b/arch/arm/mach-meson/board-ax=
+g.c
+index 6535539184c..13eb66dfc21 100644
+--- a/arch/arm/mach-meson/board-axg.c
++++ b/arch/arm/mach-meson/board-axg.c
+@@ -4,12 +4,14 @@
+  * (C) Copyright 2018 Neil Armstrong <narmstrong@baylibre.com>
   */
 =20
 +#include <command.h>
- #include <asm/arch/a1.h>
+ #include <init.h>
+ #include <net.h>
  #include <asm/arch/boot.h>
+ #include <asm/arch/eth.h>
+ #include <asm/arch/axg.h>
+ #include <asm/arch/mem.h>
++#include <asm/arch-meson/sm.h>
+ #include <asm/global_data.h>
+ #include <asm/io.h>
  #include <asm/armv8/mmu.h>
-@@ -23,9 +24,38 @@ void meson_init_reserved_memory(__maybe_unused void *fdt=
-)
-=20
- int meson_get_boot_device(void)
- {
--	return -ENOSYS;
-+	return readl(A1_SYSCTRL_SEC_STATUS_REG4) & A1_AO_BOOT_DEVICE;
+@@ -62,6 +64,16 @@ phys_size_t get_effective_memsize(void)
+ 			>> AXG_AO_MEM_SIZE_SHIFT) * SZ_1M;
  }
 =20
-+#if CONFIG_IS_ENABLED(ADNL)
-+
-+static bool is_boot_device_usb(void)
-+{
-+	return meson_get_boot_device() =3D=3D BOOT_DEVICE_USB;
-+}
-+
-+#define MESON_ADNL_BL1_USB_PROTO_DNL_BIT	BIT(12)
-+
-+static bool is_bl1_usb_protocol_DNL(void)
-+{
-+	u32 val =3D readl(A1_SYSCTRL_SEC_STATUS_REG1);
-+
-+	return !(val & MESON_ADNL_BL1_USB_PROTO_DNL_BIT);
-+}
-+
++#if CONFIG_IS_ENABLED(CMD_OPTIMUS)
 +int is_tpl_loaded_from_usb(void)
 +{
-+	if (!is_boot_device_usb())
-+		return false;
++	const int boot_id =3D meson_get_boot_device();
++	const unsigned int force_usb_boot =3D readl(AXG_AO_SEC_GP_CFG7);
 +
-+	if (!is_bl1_usb_protocol_DNL())
-+		return false;
-+
-+	return true;
++	return (boot_id =3D=3D BOOT_DEVICE_USB || (force_usb_boot & BIT(31)));
 +}
-+
 +#endif
 +
- static struct mm_region a1_mem_map[] =3D {
+ static struct mm_region axg_mem_map[] =3D {
  	{
- 		.virt =3D 0x00000000UL,
+ 		.virt =3D 0x0UL,
 diff --git a/arch/arm/mach-meson/board-common.c b/arch/arm/mach-meson/board=
 -common.c
-index 39774c43049..0624d557e40 100644
+index 0624d557e40..639c7a64507 100644
 --- a/arch/arm/mach-meson/board-common.c
 +++ b/arch/arm/mach-meson/board-common.c
-@@ -3,6 +3,7 @@
-  * (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
-  */
-=20
-+#include <command.h>
- #include <cpu_func.h>
- #include <fastboot.h>
- #include <init.h>
-@@ -14,9 +15,11 @@
- #include <asm/ptrace.h>
+@@ -16,6 +16,7 @@
  #include <linux/libfdt.h>
  #include <linux/err.h>
-+#include <asm/arch/a1.h>
+ #include <asm/arch/a1.h>
++#include <asm/arch/axg.h>
  #include <asm/arch/mem.h>
  #include <asm/arch/sm.h>
  #include <asm/armv8/mmu.h>
-+#include <asm/io.h>
- #include <asm/unaligned.h>
- #include <efi_loader.h>
- #include <u-boot/crc.h>
-@@ -141,10 +144,24 @@ __weak int meson_board_late_init(void)
+@@ -144,6 +145,18 @@ __weak int meson_board_late_init(void)
  	return 0;
  }
 =20
-+static void meson_board_try_enter_adnl(void)
++static void meson_board_try_enter_optimus(void)
 +{
-+#if (IS_ENABLED(CONFIG_CMD_ADNL))
++#if (IS_ENABLED(CONFIG_CMD_OPTIMUS))
 +	if (!is_tpl_loaded_from_usb())
 +		return;
 +
-+	meson_sm_set_bl1_first_boot_source(SCPI_CMD_CLEAR_BOOT);
++	meson_sm_set_usb_boot_mode(CLEAR_USB_BOOT);
 +
-+	run_command("adnl", 0);
++	run_command("optimus", 0);
 +#endif
 +}
 +
- int board_late_init(void)
+ static void meson_board_try_enter_adnl(void)
  {
- 	meson_set_boot_source();
+ #if (IS_ENABLED(CONFIG_CMD_ADNL))
+@@ -162,6 +175,8 @@ int board_late_init(void)
 =20
-+	meson_board_try_enter_adnl();
+ 	meson_board_try_enter_adnl();
+=20
++	meson_board_try_enter_optimus();
 +
  	return meson_board_late_init();
  }
