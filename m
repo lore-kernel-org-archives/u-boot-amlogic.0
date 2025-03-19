@@ -2,88 +2,108 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC31C35FFA
-	for <webhook@archiver.kernel.org>; Wed, 19 Mar 2025 09:23:10 +0000 (UTC)
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
- by mx.groups.io with SMTP id smtpd.web10.3814.1742325117802213231
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7B8C35FFF
+	for <webhook@archiver.kernel.org>; Thu, 20 Mar 2025 14:56:49 +0000 (UTC)
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+ by mx.groups.io with SMTP id smtpd.web11.4615.1742415661769779531
  for <u-boot-amlogic@groups.io>;
- Tue, 18 Mar 2025 12:11:57 -0700
+ Wed, 19 Mar 2025 13:21:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=RLO7y5uK;
- spf=pass (domain: konsulko.com, ip: 209.85.214.175, mailfrom: trini@konsulko.com)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-225e3002dffso67551405ad.1
-        for <u-boot-amlogic@groups.io>; Tue, 18 Mar 2025 12:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1742325117; x=1742929917; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b9AdQ/iZQiEybKKt2D+WifV6k+bYnDJmJ8WmY5ZlY6k=;
-        b=RLO7y5uKApBdSrLA9ZeJYjLvhLgBd8NAykDSg+NOizMbXAp3itb+NhsgdZmThAwi24
-         wyGHk9ptyqMPacQjMT1CMS/SQ0fveRbGRe+xWNvIcZJzN3e2THtBIlhxjNoR/34Fvk45
-         4vMl4CUO25E3u8/TFbOZUOKTnGLIffp3p8o3k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742325117; x=1742929917;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b9AdQ/iZQiEybKKt2D+WifV6k+bYnDJmJ8WmY5ZlY6k=;
-        b=u1QEUGZovmdNOsrxO5YNEKxCTAF79/LW04dVndeKx9r8Z3v1wXVLrZtwljyCUN44yu
-         Oehy7CESy90T78Vmwvs9E1Z0HHf3S7UmR6y3K3qQ4C8jRkuljDas4CzM1u0kAKmSiD/u
-         sX1hW9hfZpcdP1oYBvz7I7JVikUnrdsPTr5h9dych6VH1me9ELsIcTr4HtfdqYmRtl//
-         I3NZY4D8mZBvCpuGRSYhGaXvW4uKqzINOtg2YnSqmOCTzdhVrFhIM//ipbJjWMO82WOR
-         KN2GYIcG2FKJKASuZCmx4IRh9N75VdbRoLaegIh0p2TRlcdHWQGLrD5zuEHyImtPRDrg
-         oGdg==
-X-Gm-Message-State: AOJu0YwS5HqRU75PUvheFryTi37KpqqZwuV2ajZyGvgMbOPqIRZWW9gO
-	Qk8UEEl+Ky2Y0QqOsXztuilNU57k5AbFNPe9Hn8wN+1RHWq9gBfzqn1S8CicMTDFTZl9dUSUuq6
-	G
-X-Gm-Gg: ASbGnctjjNEAi2p/K75DdWIWPsRSvQzjNSaTK5UsZzrL7WhlHZzu7zDpAYEGyMZhHeF
-	7PYm3wlZK4SA8MmJG17EBNNbbjxu38Z5XICelGCahp5pQM51kSMpJpteCdVoQJK0E01CmvaGBsq
-	ECHzabxRvutQU30MhF0WkJ3ZHfZh411s6zEwgNiQI9LdKSR5qhbsNSTGIJlHCr8/xudNio7jjQA
-	wXBXulrRYoL6KAiphpBhkxsmSH77iYHNaXT9LoY3Id4pYN+24tRtMdn6G99Nf3oGwyqvfNw/OdK
-	TTvMil0kYXNjw/a8XAktUgPBa9rOr4Y4w0zqgIhj4mfv
-X-Google-Smtp-Source: AGHT+IFN4oOlYTemewjK4U02gZSfSFDuLdJWGqrqdGs0uMMEx7wIQQMfTTM9v6Jw8bW/OHS7Mmtl4Q==
-X-Received: by 2002:a17:902:da87:b0:220:cd9f:a180 with SMTP id d9443c01a7336-2262c625001mr61732925ad.53.1742325117253;
-        Tue, 18 Mar 2025 12:11:57 -0700 (PDT)
-Received: from [127.0.1.1] ([187.144.138.125])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c688866asm98989985ad.50.2025.03.18.12.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 12:11:56 -0700 (PDT)
-From: Tom Rini <trini@konsulko.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-In-Reply-To: <76380583-858e-4d69-a412-25ddef988705@linaro.org>
-References: <76380583-858e-4d69-a412-25ddef988705@linaro.org>
-Subject: Re: [GIT PULL] Please pull u-boot-amlogic-20250318 into next
-Message-Id: <174232511609.1770758.3649930286570115403.b4-ty@konsulko.com>
-Date: Tue, 18 Mar 2025 13:11:56 -0600
+ dkim=fail reason="dkim: body hash did not verify" header.i=@salutedevices.com header.s=mail header.b=W99Hder+;
+ spf=pass (domain: salutedevices.com, ip: 37.18.73.165, mailfrom: avkrasnov@salutedevices.com)
+Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 48A67100015;
+	Wed, 19 Mar 2025 23:21:00 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 48A67100015
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1742415660;
+	bh=55VQToj4Te6FUgYKTvotsEqGDkJWFu0WJVhvD06nrh4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=W99Hder+2yTEcMDX/XOQ345qfgaRIdv8QTwop2DVRLtcuen107lfJ+f61XFjhvH6c
+	 GY7TmueaNMZk7yd0EQJ7wHpBy4HAQp6QvhY8/MFEcOnbjeWF3m3tweL3MNHY7GdSqS
+	 vFW0U2yhi5IsG8epDwYQpLZfr+e5GKxnD68dwTNzjQUfrb1LdLC3iwEbJMY8Eqr6ne
+	 8h6KwsZasDBGYtLA2nZ0+J0ve8AmCYCPwQiLN7B2h174e08P1TakhuZLb4N48/31A+
+	 9noSTuqH2wEEGDOA38lB7WEkFa+PimwEETCh2qACKxyA2x/N31xrvRGpzbGy34G5YI
+	 XEtoISeQZxWzQ==
+Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Wed, 19 Mar 2025 23:21:00 +0300 (MSK)
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+To: Tom Rini <trini@konsulko.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>, Michael Trimarchi
+	<michael@amarulasolutions.com>, Lukasz Majewski <lukma@denx.de>, Mattijs
+ Korpershoek <mkorpershoek@baylibre.com>, Marek Vasut <marex@denx.de>,
+	Viacheslav Bocharov <adeep@lexina.in>, Sumit Garg <sumit.garg@linaro.org>,
+	Simon Glass <sjg@chromium.org>, Ilias Apalodimas
+	<ilias.apalodimas@linaro.org>, Jerome Forissier
+	<jerome.forissier@linaro.org>, Heinrich Schuchardt <xypron.glpk@gmx.de>,
+	Vitaliy Vasylskyy <vitaliy.vasylskyy@globallogic.com>
+CC: <u-boot-amlogic@groups.io>, <u-boot@lists.denx.de>,
+	<kernel@salutedevices.com>, <oxffffaa@gmail.com>,
+	<avkrasnov@salutedevices.com>
+Subject: [PATCH v1 07/11] arm: meson: a1: add A1_SYSCTRL_SEC_STICKY_REG2
+Date: Wed, 19 Mar 2025 23:20:41 +0300
+Message-ID: <20250319202045.1407-8-avkrasnov@salutedevices.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250319202045.1407-1-avkrasnov@salutedevices.com>
+References: <20250319202045.1407-1-avkrasnov@salutedevices.com>
 MIME-Version: 1.0
-X-Mailer: b4 0.14.2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.28.65.111]
+X-ClientProxiedBy: p-exch-cas-a-m2.sberdevices.ru (172.24.201.210) To
+ p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 191951 [Mar 19 2025]
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;salutedevices.com:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/03/19 17:18:00 #27803216
+X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 19 Mar 2025 09:23:10 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2633
+ <u-boot-amlogic@groups.io>; Thu, 20 Mar 2025 14:56:49 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2645
 
-On Tue, 18 Mar 2025 17:06:18 +0100, Neil Armstrong wrote:
+This register is used by ADNL protocol, to check boot source
+of current U-boot instance.
 
-> Here's a small set of changes for Amlogic SoC support.
-> 
-> Thanks,
-> Neil
-> 
-> The following changes since commit 0e1fc465fea62ebae91f2f56cb823e8b37ee1077:
-> 
->    Merge tag 'dm-pull-15mar25' of git://git.denx.de/u-boot-dm into next (2025-03-15 08:19:31 -0600)
-> 
-> [...]
+Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+---
+ arch/arm/include/asm/arch-meson/a1.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Merged into u-boot/next, thanks!
-
--- 
-Tom
-
+diff --git a/arch/arm/include/asm/arch-meson/a1.h b/arch/arm/include/asm/ar=
+ch-meson/a1.h
+index 86d1a68de8c..16e209ed932 100644
+--- a/arch/arm/include/asm/arch-meson/a1.h
++++ b/arch/arm/include/asm/arch-meson/a1.h
+@@ -13,6 +13,12 @@
+ #define A1_SYSCTRL_ADDR(off)		(A1_SYSCTRL_BASE + ((off) << 2))
+=20
+ #define A1_SYSCTRL_SEC_STATUS_REG4	A1_SYSCTRL_ADDR(0xc4)
++/*
++ * Checked during boot. Tells, that previous code, e.g.
++ * executed before reboot requested to continue boot
++ * from USB. Used by ADNL protocol.
++ */
++#define A1_SYSCTRL_SEC_STICKY_REG2	A1_SYSCTRL_ADDR(0xe2)
+=20
+ #define A1_SYSCTRL_MEM_SIZE_MASK	0xFFFF0000
+ #define A1_SYSCTRL_MEM_SIZE_SHIFT	16
+--=20
+2.30.1
 
 
