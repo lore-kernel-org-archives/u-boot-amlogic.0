@@ -2,180 +2,141 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D906BC3ABA9
-	for <webhook@archiver.kernel.org>; Thu,  1 May 2025 14:56:02 +0000 (UTC)
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
- by mx.groups.io with SMTP id smtpd.web11.1774.1746061514481749839
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12273C3ABA3
+	for <webhook@archiver.kernel.org>; Fri,  2 May 2025 06:51:57 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web10.13615.1746168708250915476
  for <u-boot-amlogic@groups.io>;
- Wed, 30 Apr 2025 18:05:14 -0700
+ Thu, 01 May 2025 23:51:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=kyHvKK1v;
- spf=pass (domain: chromium.org, ip: 209.85.166.181, mailfrom: sjg@chromium.org)
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d57143ee39so4021445ab.1
-        for <u-boot-amlogic@groups.io>; Wed, 30 Apr 2025 18:05:14 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Iaykv1au;
+ spf=pass (domain: linaro.org, ip: 209.85.221.47, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso1713166f8f.0
+        for <u-boot-amlogic@groups.io>; Thu, 01 May 2025 23:51:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746061514; x=1746666314; darn=groups.io;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4mXzvpxBoe0hJTZFZci+DBKVEXx/PiFiiDGA+OsJDLI=;
-        b=kyHvKK1vQJdd+NQh4KP6nV9nEKmJQ8GaXpgdOCVfHVNtrM5yAiJqAskdRARUPwafLY
-         MxpWVYpjzKsSrkjENuxQp/mxi16msFHzlaDzqn46r1EaAzDhCu3k2wMOEbX3kZIuY4E9
-         TYrIe3cgifVAegrCq4OYsdCmhBvVdbF7zTVmc=
+        d=linaro.org; s=google; t=1746168706; x=1746773506; darn=groups.io;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jvqo3sXWziR8Flkh0fsHX/laX/gCDKF6x4XRvzgY4Q4=;
+        b=Iaykv1auJm6obV+Rp06jxhAq+OKvWSdMso6xuxBlFd5DElM6u6k1bqWDgO/8+ony7+
+         U8n3fazSRs9Jj6mWg6u8ANCQI22uOT+G/Zyn+onBycfgYm1JbN8luDgbpt+7sdvh5oCp
+         BvrTk4UCXG+bL9CmalCQ4WPvsRaB4k7WB9HNvJ/W7fCiyji4fMIne3S8ncHL0/WoKWER
+         EkLmdAvgEe4jkW7nGo7t+KVKj72WjxzOXLsaz1Q2wLPVUV+UaUje6ljB5dpNuDq9LwvP
+         /mqiX63nv3PViB+sdpyP1DUsRTkzxkUngu8UdPuhVNtKwgcQz7u76EB0r5QDUwSYpP0a
+         LpCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746061514; x=1746666314;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746168706; x=1746773506;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4mXzvpxBoe0hJTZFZci+DBKVEXx/PiFiiDGA+OsJDLI=;
-        b=HVblyJSNHj+I8qO7+mZxLt6o1cImyidF7R+1qXDKhIusawfn9GRjfQS31Cg2/sdQUf
-         +g5z0zCS84AaxMzs+fzD4vvDzV3Uh77tlzNEj3wLxRjdRmp8cqumFN5mY0BDheOGbaeC
-         BLjIEiWi24x4VBcx0s6XAd4jyr6j7bxGsxPDpVCiUrzg12585yNyYUQOOsc9ZFunLwNI
-         Q7OxxuWKrDf9EpjA9DDhaE3eomewAhkNNJtyKnNyVmybOSbmif2X6J76Bjz+UsoxcIAF
-         0qYgk8+7l3hI9LjxzoAMza1KyDSVw8ai3BRpu9JwJ/kwmZ5xgbyZl/8DLRZGEIB3gzxf
-         8xKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvoygTUAzgMdRV0WyEl1C6DNJWR1zQO7T51n3rksFIPdGhdTjR8jLccS22HDRAd1UAUlY8WMiZGZw1VKMS/Q==@groups.io
-X-Gm-Message-State: AOJu0YzC9wnYwIXE6N/nT9ivBHtZWJJ7eHJpjtdvnHETgpmh3J53i7ZB
-	+SXpu2XoE1NHYoRWRwBPUquozrReMt3UQGVm9hSPN1LSsIQ21ZmtXQtePgCpvw==
-X-Gm-Gg: ASbGnct/DeJAYDFadFJxClpdA5EtwVxX5kxsXtKvHzMZw2PxcXW5URVSYPXP1p49B5W
-	6L1Ni9yxOEsPJsIV0qcIPbKfJsAu9QueL+X6ey0SmtpOA6q4dDmkm/yMERsRMKlWhEP8Kz6gUyT
-	ZHmy5AF3EGjSdZu7Lbm5bG8j7xMxpiVCtLY56MzjXV6J5m99CkJteS2I4XI9HCjKExzuvvWFoxb
-	ePfffdYp9W2xlvJHzI3HMkccDQ/HjLmW7pv/oMBMfok/mcPB0xa+nQ+2kYNdpUQWSzrQUQlS/iM
-	qFrGORG92z+GzN1PRNy3lrzmlCaLqJPz2lcJRigBSgCgSUheZcRxPtr8PvNo5MjFIA5Xm/d7LBF
-	Ieg==
-X-Google-Smtp-Source: AGHT+IFPmrXMeW9+cuf3yW9byCqlHgsKs/WwOrUEw8MXqrC8BPDhwkMk+ao8hsRB6Sxdwwh05YLQhw==
-X-Received: by 2002:a05:6e02:1689:b0:3d9:2aa3:fe2e with SMTP id e9e14a558f8ab-3d967fb0b20mr51876945ab.10.1746061513606;
-        Wed, 30 Apr 2025 18:05:13 -0700 (PDT)
-Received: from chromium.org (c-73-203-119-151.hsd1.co.comcast.net. [73.203.119.151])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d95f480a99sm10771855ab.68.2025.04.30.18.05.10
+        bh=Jvqo3sXWziR8Flkh0fsHX/laX/gCDKF6x4XRvzgY4Q4=;
+        b=LnHkTpwgt6aNSTx5ymkfd4r6Ifi2gqfOW7oSN/MaSaB/zFLNDw2tpd5CtA7Ms4TzNF
+         Y6oUyxoQS2ZeRCNeO0SXBS1ABkHte3jEg3HfmhNpyYgd6b2UaAenuPDMEizbKU3azyeP
+         JPO7V0m/1cd8V3+EFjhgb+HTL6pO4fJxf/geQCELpVgGhZbiaHM+plzj9ZeFycSmNizm
+         Uo6XvdQzgMD+iGFYzjlZpu22p4RbxPPFb7cW4Rwa0Uk6PCMtpLl9p9AZpjAPna9j4eF2
+         HB7I7ehFBcsYsaYcsAEK0mVdzjvEY66dN0lAQn0TIbJBIWpBBseYO+kdjMOjJYa1v8Jc
+         EGtw==
+X-Gm-Message-State: AOJu0Yxz+fvmSGI6KP/IY3bkax+fi3ltbHZF/PwH0Y5p3sUPKs5oBiuN
+	nE1DtiIwoQFHKrYT8K3eIa9W/G30uHutljUoNQIRIGABsRB+FOwIVlxl/ra6mmQ=
+X-Gm-Gg: ASbGncvQMnxOb2eF3oZabbNkmiQRxCC+/u7GT4YR2jbSBJt22QwJgLeQiSPBgjMgSr4
+	J+Uw83Y735yW7hPmgbCjWUum81nU6NLRXnLLjSf/VScWMGKs3QWFkC5Fg4lT6AxCcwsmXudvRQ8
+	x11NmtpO49t9S8Y12O6WBhB3VPTwYmUlweAeLxbRRMoQqv7YSeYdmNCkmowejbfmM9oUtzTVLdH
+	LUc3LTywjvU3LznVsxhNVgixIQwTkqj/YEw3sh1BvqOFRH/TC0F9BanvAbKoAE0YtSSGm3mcDWY
+	fP4ge8+N3rTYaUK7DbJbMNut+jR62+InNkv8qRZzUvexckW4xY4gIyrvDQ6D6A==
+X-Google-Smtp-Source: AGHT+IH3ERCJL7wsWYOR2zV3do8JLHVQP0huSgFpIItt+jX/OPTNJ7j7EhbAsoynDbXnGbVFiuueZw==
+X-Received: by 2002:a05:6000:2908:b0:3a0:88d5:7fca with SMTP id ffacd0b85a97d-3a099ad29fbmr995361f8f.12.1746168706470;
+        Thu, 01 May 2025 23:51:46 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0c3dsm1301109f8f.12.2025.05.01.23.51.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 18:05:12 -0700 (PDT)
-From: Simon Glass <sjg@chromium.org>
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Tom Rini <trini@konsulko.com>,
-	Jerome Forissier <jerome.forissier@linaro.org>,
-	Simon Glass <sjg@chromium.org>,
-	Adrian Alonso <adrian.alonso@nxp.com>,
-	Adriano Cordova <adrianox@gmail.com>,
-	Daniel Palmer <daniel@0x0f.com>,
-	Daniel Schultz <d.schultz@phytec.de>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Hanyuan Zhao <hanyuan-z@qq.com>,
-	Heinrich Schuchardt <xypron.glpk@gmx.de>,
-	Ilko Iliev <iliev@ronetix.at>,
-	Jason Liu <jason.hui.liu@nxp.com>,
-	Joe Hershberger <joe.hershberger@ni.com>,
-	Lukasz Majewski <lukma@denx.de>,
-	Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Maxim Moskalets <maximmosk4@gmail.com>,
-	"NXP i.MX U-Boot Team" <uboot-imx@nxp.com>,
-	Oliver Graute <oliver.graute@kococonnector.com>,
-	Otavio Salvador <otavio@ossystems.com.br>,
-	=?UTF-8?q?Pawe=C5=82=20Anikiel?= <pan@semihalf.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	Phil Sutter <phil@nwl.cc>,
-	Ramon Fried <rfried.dev@gmail.com>,
-	Stefan Roese <sr@denx.de>,
-	Stefano Babic <sbabic@denx.de>,
-	Stephen Warren <swarren@nvidia.com>,
-	Stephen Warren <swarren@wwwdotorg.org>,
-	Sughosh Ganu <sughosh.ganu@linaro.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Tim Harvey <tharvey@gateworks.com>,
-	Tom Warren <twarren@nvidia.com>,
-	Tony Dinh <mibodhi@gmail.com>,
-	Viacheslav Bocharov <adeep@lexina.in>,
-	u-boot-amlogic@groups.io
-Subject: [PATCH v2 00/22] Deal with exfat versus byteorder
-Date: Wed, 30 Apr 2025 19:04:25 -0600
-Message-ID: <20250501010456.3930701-1-sjg@chromium.org>
-X-Mailer: git-send-email 2.43.0
+        Thu, 01 May 2025 23:51:46 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Fri, 02 May 2025 08:51:45 +0200
+Subject: [PATCH] net: mdio: mux-meson-gxl: set reversed bit when using
+ internal phy
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250502-u-boot-topic-mdio-mux-gxl-bit28-v1-1-399f6c3db154@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAIBrFGgC/x3NQQqDMBBG4avIrPtDmmAJvUrpwpjRDlRHkigB8
+ e4NXX6b907KnIQzPbuTEh+SRdeG+62j8TOsM0NiM1lje9Mbix1BtaDoJiOWKIplr5jrF0GK9Rg
+ e0bgweXbeUatsiSep/8PrfV0/MwMTYXEAAAA=
+X-Change-ID: 20250502-u-boot-topic-mdio-mux-gxl-bit28-a6d03bf8e383
+To: Joe Hershberger <joe.hershberger@ni.com>, 
+ Ramon Fried <rfried.dev@gmail.com>, Tom Rini <trini@konsulko.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
+ Da Xue <da@libre.computer>, Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1880;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=zTJoWKUCYaJ+JTk9qHMoBRiWtUADaEfro8L/suVST7w=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoFGuBqWdAidMyi9YN1ynArFf8CC9iinwrPABLfZZ9
+ oMQ/k7mJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaBRrgQAKCRB33NvayMhJ0WxCEA
+ DDAGNEX+sUkBB6OkOPhXnss0LPhuWHbYz2/ZgRwuvPPbFgjB690cBu93nRpy0u450Iziqut6KBUv/V
+ 1aVThyoJaLpNWahJv83D+gyCud4f9s8nR830Wd/bhj9yac0EuZz/kXiSKfoQNY3zWjB5V2Z3ZNCDQ6
+ JKSOGxkXtuo8foo2afV1xtaam2fJBuQfcCrJzVOxG0Rtg9/eqf5eC+BlQDF9cA1+n4a4ZJmWgc19YZ
+ 6rIk5j3zoE8DGuK9JU+Lu8RQdl7IVKXICSoCzwOW4ELp8UZ6cU7VK8toHW/6PHffVIleJbcmzN+/jz
+ ItXvoREyJhqwAPHQlRFeHa/1NvQ4822cGAgvaqX1/4X5kQuMJKTIYkRA3hjrMn5tq5IhSpN4FhLeDq
+ DPQhtiW9N2qKCRv+Dzf+SdwNDoQAlsNMfjfSaOvecOLuRmy+eTUsoPUblxv3RVZ+/OJIDmHyYKY9sz
+ zcnu5vfMfRIrIpIbwNMv9z7kCx4xiiHwiHw7WzyIJ5s6el0R450ZI0OZgcdegGyoni4Vyc9sFWo5T6
+ EwknbB+ZKW4ke65yHG+RplqcIoJrEBJdVz2c3oFWoEgYI2UWCQhXzcou/37LoEBoZOK4aZEmMUdwAM
+ QcBPQnNCtaLmCUfF5iSrs7+uviipHlueR89ePpOudaKXVLKmycx/j8ZGpPrQ==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 01 May 2025 14:56:02 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2665
+ <u-boot-amlogic@groups.io>; Fri, 02 May 2025 06:51:57 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2666
 
-Since exfat has its own byteorder functions we need to be careful about
-including the normal U-Boot byteorder headers in code included by exfat.
+This bit is necessary to receive packets from the internal PHY.
+Without this bit set, no activity occurs on the interface.
 
-One chain for include/linux/byteorder/little_endian.h is like this:
+Normally u-boot sets this bit, but if u-boot is compiled without
+net support, the interface will be up but without any activity.
 
-In file included from arch/sandbox/include/asm/byteorder.h:19,
-                 from arch/sandbox/include/asm/byteorder.h:19,
-                 from include/compiler.h:132,
-                 from include/env.h:12,
-                 from include/command.h:13,
-                 from include/net-common.h:7,
-                 from include/net.h:6,
-                 from include/efi.h:23,
-                 from include/blk.h:12,
-                 from include/part.h:9,
-                 from include/fs_internal.h:11,
-                 from fs/exfat/io.c:52:
+The vendor SDK sets this bit along with the PHY_ID bits.
 
-This series tidies things up so that efi.h can include net.h as
-required.
+Ported from the Linux change at [1] from Da Xu merged in
+commit [2].
 
-Changes in v2:
-- Add patches for other files exposed by this change
+[1] https://lore.kernel.org/all/20250425192009.1439508-1-da@libre.computer/
+[2] b23285e93bef ("net: mdio: mux-meson-gxl: set reversed bit when using internal phy")
 
-Simon Glass (22):
-  net: Use a forward declaration for cmd_tbl in net-common.h
-  congatec: Include env.h to permit reading the environment
-  dhelectronics: Include env.h to permit reading the environment
-  imx8ulp_evk: Include env.h to permit reading the environment
-  venice: Include env.h to permit reading the environment
-  phytec: Include env.h to permit reading the environment
-  ronetix: Include env.h to permit reading the environment
-  toradex: Include env.h to permit reading the environment
-  advantech: Include env.h in imx8qm_dmsse20_a1
-  tegra: Include env.h to permit reading the environment
-  synology: Include env.h to permit reading the environment
-  amlogic: Include env.h to permit reading the environment
-  freescale: Include env.h to permit reading the environment
-  google: Include env.h to permit reading the environment
-  liebherr: Include env.h to permit reading the environment
-  technexion: Include env.h to permit reading the environment
-  elf: Only use network environment-variables if net enabled
-  net: Include byteorder in net6.h
-  net: Include string.h in net-legacy.h
-  net: Include env.h in pcap.c
-  net: dc2114x: Include env.h to permit reading the environment
-  net: Move env_get_ip() out of the header file
+Suggested-by: Da Xue <da@libre.computer>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ drivers/net/mdio_mux_meson_gxl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- arch/arm/mach-tegra/dt-setup.c                |  1 +
- board/Synology/ds414/ds414.c                  |  1 +
- .../imx8qm_dmsse20_a1/imx8qm_dmsse20_a1.c     |  1 +
- board/amlogic/jethub-j100/jethub-j100.c       |  1 +
- board/congatec/cgtqmx8/cgtqmx8.c              |  3 +-
- board/dhelectronics/common/dh_common.c        |  1 +
- board/freescale/imx8ulp_evk/imx8ulp_evk.c     |  1 +
- board/freescale/mx7dsabresd/mx7dsabresd.c     |  1 +
- board/gateworks/venice/venice.c               |  1 +
- board/google/chameleonv3/board.c              |  2 +
- board/liebherr/xea/xea.c                      |  1 +
- .../common/phytec_som_detection_blocks.c      |  1 +
- board/ronetix/imx8mq-cm/imx8mq_cm.c           |  1 +
- board/technexion/pico-imx7d/pico-imx7d.c      |  1 +
- board/toradex/colibri_imx7/colibri_imx7.c     |  1 +
- board/toradex/verdin-imx8mm/verdin-imx8mm.c   |  2 +-
- cmd/elf.c                                     | 41 ++++++++++---------
- drivers/net/dc2114x.c                         |  1 +
- include/net-common.h                          |  9 ++--
- include/net-legacy.h                          |  1 +
- include/net6.h                                |  1 +
- net/net-common.c                              |  6 +++
- net/pcap.c                                    |  1 +
- 23 files changed, 53 insertions(+), 27 deletions(-)
+diff --git a/drivers/net/mdio_mux_meson_gxl.c b/drivers/net/mdio_mux_meson_gxl.c
+index 8ef3ae598b77fabf7b992900141d309708428b13..31898ed437e4857dd7027d311ab496be3e448d16 100644
+--- a/drivers/net/mdio_mux_meson_gxl.c
++++ b/drivers/net/mdio_mux_meson_gxl.c
+@@ -19,6 +19,7 @@
+ #define  REG2_LEDACT		GENMASK(23, 22)
+ #define  REG2_LEDLINK		GENMASK(25, 24)
+ #define  REG2_DIV4SEL		BIT(27)
++#define  REG2_REVERSED		BIT(28)
+ #define  REG2_ADCBYPASS		BIT(30)
+ #define  REG2_CLKINSEL		BIT(31)
+ #define ETH_REG3		0x4
+@@ -66,7 +67,7 @@ static int meson_gxl_enable_internal_mdio(struct mdio_mux_meson_gxl_priv *priv)
+ 	 * The only constraint is that it must match the one in
+ 	 * drivers/net/phy/meson-gxl.c to properly match the PHY.
+ 	 */
+-	writel(FIELD_PREP(REG2_PHYID, EPHY_GXL_ID),
++	writel(REG2_REVERSED | FIELD_PREP(REG2_PHYID, EPHY_GXL_ID),
+ 	       priv->regs + ETH_REG2);
+ 
+ 	/* Enable the internal phy */
 
+---
+base-commit: 98a898e58499c78245e4fe36ee404b1b1208e32b
+change-id: 20250502-u-boot-topic-mdio-mux-gxl-bit28-a6d03bf8e383
+
+Best regards,
 -- 
-2.43.0
+Neil Armstrong <neil.armstrong@linaro.org>
 
-base-commit: b5d6220dd2f4612912989f3c2b5a710f2248cb36
-branch: fix-net2
 
