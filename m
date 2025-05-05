@@ -2,146 +2,80 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E156C3ABB7
-	for <webhook@archiver.kernel.org>; Mon,  5 May 2025 07:07:35 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.44919.1746428850455440032
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE10C3ABBF
+	for <webhook@archiver.kernel.org>; Wed,  7 May 2025 11:54:32 +0000 (UTC)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+ by mx.groups.io with SMTP id smtpd.web11.49988.1746450775334467028
  for <u-boot-amlogic@groups.io>;
- Mon, 05 May 2025 00:07:30 -0700
+ Mon, 05 May 2025 06:12:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=nQxYidPV;
- spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c1efc457bso2661363f8f.2
-        for <u-boot-amlogic@groups.io>; Mon, 05 May 2025 00:07:30 -0700 (PDT)
+ dkim=pass header.i=@chewies-net.20230601.gappssmtp.com header.s=20230601 header.b=pBOZRvGV;
+ spf=pass (domain: chewies.net, ip: 209.85.208.48, mailfrom: raz@chewies.net)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso9975105a12.1
+        for <u-boot-amlogic@groups.io>; Mon, 05 May 2025 06:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746428849; x=1747033649; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BAcvdE2xY/zpD3KTmU7HwvxmS2gSLmyMDAFLT80zCwA=;
-        b=nQxYidPVdoavjAXlWsqSkUwBG/Z138Al3TVkwgTgKPgvaLjs4ZhZQydlVD+PmF7Hme
-         WjYgGKTi8Ll5CVCDKw8fFO7MyoEfb7hGTTgYvUjicQyWYvGwub8Fz2zevRJ4YfDoUZqj
-         kuV+dDF8KxLrIdkaHS34P5sHUZk4ZqnFZLrKXPxhWw6KItZB5cAb7Wm/ByCkhwQFr3oL
-         aBqnOotAleHWQKzm2IrEvnDvsECZ5+WK3eiEQEO0r7XVVBbDhIYryTo/qdFKVlyM4JUJ
-         8/kgIt8XmdiqVIjoLAAj8ehhdlIsToRNxI4zehpxSqmBQZfQxs4/iiKxNQExGjz13Ept
-         rmBQ==
+        d=chewies-net.20230601.gappssmtp.com; s=20230601; t=1746450774; x=1747055574; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4PLmUJUdgMb4I0FCDdfNItxNNG3T0tV4J7kVIBv0o0U=;
+        b=pBOZRvGViTeG8BxPhlk53ZMP/MyLbEUKAhU+py0/YoQdVAgyvwTCjqVMedONq83MfI
+         M7HpxyHuesJ62xcCDfO2XChB9OM0/Avy6gPzGEbCNMzXvE6VTZ21Yh0ysWZWazwwFQ3O
+         8/V64ZBocb47lcmMOxoUtyokl8c4zhPnlnRFbx/dNigMA5AVMp80Euu+R5VyZk70YsEA
+         RGngXrF+X5sbuvvslTCBwPMAz+yhzK/BDOLpn8A8TG9nCS9x8D0QGPjSkpUsL8KZm5um
+         0vrETIaNUvu2u7CFKxC5IcNHsNN/V3Xeq69IdgXxvAgGAEd+Mkwb8EAIN32nGg0Evtts
+         eUig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746428849; x=1747033649;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BAcvdE2xY/zpD3KTmU7HwvxmS2gSLmyMDAFLT80zCwA=;
-        b=O9s/g4Ow8M6ysNaC+bsp0ol5fJ0tZNyM/ciRA+ws9NjgJAO7ZqWUdoDoNfWT95UltM
-         uWdzEBh6twRxI1lfzkwt+HhTG+mi9pppX7C2v0z8uWfFXfRAM6FDCA3fbNmIsZHmQ7UC
-         SKcEmTLN5zE/zFSLDek1yEg0M5FPUXzFnvSXD2Wlb20j2V9IjwOdkA8HL6nZB1ineWfK
-         6JnoviVuOhP3IvIXHg58Ku/8NGK7RHiw3y0pP5yvFYl3otLZF2Czq/FUTLzMAYMjsPP5
-         NK16SC91o2Uy/TYha3MOzbMzavvRj73iZ74pjyueC2uXJakTo49fCKWdPYdd4Jt5y5Ha
-         li0A==
-X-Gm-Message-State: AOJu0YzUuhqBYW036s1N7+CHbccR8yi+mG4cxPi5fsnK6mKV2OnSqw78
-	taOuYZvFhXkiHUBj76c1UvBJlY1OcE2Z6e9bG5gXRRYjGUazc2DNY+Tu9GCwPiE=
-X-Gm-Gg: ASbGncuonc07wAO1kEL9LaGHOwNOXQOPHRuvdByGHcm53MIw/5Lx3qqQIGqbSFMMTmC
-	sN4caIIcUa6Vn6w42faVRkx1mV8Z1FUCHLCp+/tJm1ADm/xy1NCiH+KwwQeJ0O6L+9dr+XuiwZt
-	NxQSDmMyg7c/b9f/kF2YzgnmVfgoPSWHaHT6LebLjxtTLp98JjJoB86Uok+QCEPwmEaH3I9YZF3
-	i1F9YJ94izxgFGOiz/gUL6yMbvTJsaAi+aehd7vifv/sVo1fEo2ZxwhQNJ3uE0vKn0DBwCubgtO
-	4X4/yj/5P4yF0ysTU2TqMgdznLzENXtn34o5BT1xn0RYSNU3YzhqDBbSnKBFwnbxXYq7qoWKs9l
-	xjWbAwx+J/1aQPhDLOyfAON01V9A0
-X-Google-Smtp-Source: AGHT+IHydklTwgvkH9q6GqOTfYh+FoH8zbjEJ/ifB4D6ubYun8TosSrDO7fZcpMAINEvL9rzwviU+w==
-X-Received: by 2002:a05:6000:400e:b0:39a:ca04:3dff with SMTP id ffacd0b85a97d-3a09fdbb907mr4641524f8f.40.1746428848634;
-        Mon, 05 May 2025 00:07:28 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3? ([2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b16f00sm9251942f8f.84.2025.05.05.00.07.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 00:07:28 -0700 (PDT)
-Message-ID: <f073dad7-337e-499a-8cb5-9dae0842de17@linaro.org>
-Date: Mon, 5 May 2025 09:07:28 +0200
+        d=1e100.net; s=20230601; t=1746450774; x=1747055574;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4PLmUJUdgMb4I0FCDdfNItxNNG3T0tV4J7kVIBv0o0U=;
+        b=Q4zzddd7wqTeOiTK2E7p5tYsHDosXKo6ZCYEqxzREsG9i8rTMHaRXbo4g8eMWuhVen
+         EmYfER7wuYMDR+k7/AgYOdzn1BYc7b2w2hvNOOH5+177FQurdL7FyXtHH2g1ArzHW5Dx
+         y5by0k2Mp8xB1Uw5M3jWSRht6QKoTqog1P5TJBz1eovOdxx4rDh+v3MKB3RZ1zqNYBCT
+         IZQxVrjshkbUMZAe64Lpw4eMMoJJMo0106FRpkg7vhxzaWs5s5pEyPtOLvRyfxG2dpsS
+         74GfiPLjvDw+TU85STAll/4Ierud+Q/VV4IoP/b3bt3itqlCydma0niKO1RjGNFS39h5
+         efbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrXRQlMFAvjQ00wZw2Pzbi3vlNfrTsI1m/t1CRNspEyi8OQsa/C0Cfta+vTTcFV2+SEbRnJ9xKMFZUINTI/g==@groups.io
+X-Gm-Message-State: AOJu0Yz1w8m7336YHVe/p0DqYGfKT//t2rQh+4aUBb+xunEigR3gYo26
+	8Xb9wg0uWsxHsezsz5eDzNlo7m3n8ifTGgE0+ieNoe+umM3lfZW6C/0ubFZAn7QvmXXinyorqLH
+	UegHNqkjt9BI3VKMI/Bc/+dkvXvdHerJcDLL3
+X-Gm-Gg: ASbGnctfmqeS01P/anOLDMk0ojAPjcn4jGDHXxW48WDiY1iD1JdeMoW2AQKXWlW+b3L
+	VK23uBJVilrApDRMI18MM7E6KNTmDdF6Alu8Ip6DGBR0Q1yamroNn9vmaXsDe23Lpk+emZb7ji9
+	bRN51mB0j/KiXAnzzDaCE=
+X-Google-Smtp-Source: AGHT+IFYElk0llN1ge4pi4ZSXHpMCLLnNKx89JuhozP4HSomsgFEAmnq/9ASvVYW1zWldmmYnM0dnyeW/hjmdTFJlwE=
+X-Received: by 2002:a17:907:c1f:b0:ac1:791c:153a with SMTP id
+ a640c23a62f3a-ad17af8392cmr1114328266b.27.1746450773558; Mon, 05 May 2025
+ 06:12:53 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: Odroid n2+ usb broken on reboot
-To: Wayne Schroeder <raz@chewies.net>, u-boot@lists.denx.de
 References: <CAEUiLubXaPGZsE6y_X6mBTD1ZK-2w82fbRD5z8+MKvDZtZKOtA@mail.gmail.com>
-Content-Language: en-US, fr
-Cc: "u-boot-amlogic@groups.io" <u-boot-amlogic@groups.io>,
- "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <CAEUiLubXaPGZsE6y_X6mBTD1ZK-2w82fbRD5z8+MKvDZtZKOtA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <f073dad7-337e-499a-8cb5-9dae0842de17@linaro.org>
+In-Reply-To: <f073dad7-337e-499a-8cb5-9dae0842de17@linaro.org>
+From: Wayne Schroeder <raz@chewies.net>
+Date: Mon, 5 May 2025 08:12:39 -0500
+X-Gm-Features: ATxdqUF4lges0CS6ogY4qszXoi_2lLRibq4vcliRXnEvivpaFf0MHzWf0mKZKmM
+Message-ID: <CAEUiLuYBVyLm4HgJG88r1J8RcUu38uEVPbV5c+-ArqjU4aUOAA@mail.gmail.com>
+Subject: Re: Odroid n2+ usb broken on reboot
+To: neil.armstrong@linaro.org
+Cc: u-boot@lists.denx.de, 
+	"u-boot-amlogic@groups.io" <u-boot-amlogic@groups.io>, 
+	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 05 May 2025 07:07:35 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2667
+ <u-boot-amlogic@groups.io>; Wed, 07 May 2025 11:54:32 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2669
 
-Hi,
+If I add the usb reset command, it works reliably at reboot, but it
+does not work on a fresh power-up with that change.
 
-+CC u-boot-amlogic@groups.io
-+CC linux-amlogic@lists.infradead.org
 
-On 05/05/2025 00:34, Wayne Schroeder wrote:
-> Hello.  I am not sure if this is a bug, or even related to u-boot, but I am
-> reporting it here because it was easiest to resolve via a u-boot change.
-> 
-> I am using u-boot-2025.04 (source) with a mainline linux from Arch Linux
-> Arm.
-> Linux alarm 6.14.4-1-aarch64-ARCH #1 SMP PREEMPT_DYNAMIC Sat Apr 26
-> 13:02:01 MDT 2025 aarch64 GNU/Linux
-> 
-> On my odroid-n2+, the USB ports work on the first boot after power.  If I
-> run shutdown -r now, or hit ctl-alt-del and otherwise reboot the system,
-> the usb ports do not function at the next or subsequent boot up.
+On Mon, May 5, 2025 at 2:07=E2=80=AFAM <neil.armstrong@linaro.org> wrote:
 
-I think it's a very long term issue, USB lacks a proper reset at probe on
-warm reset, does USB still work from U-Boot after the reboot ?
-
-> 
-> My apologies if this is not applicable to u-boot because it is a linux
-> issue--I am not sure what the source of the issue is, but adjusting the
-> u-boot .config after make odroid-n2_defconfig resolved the issue entirely.
-> 
-> I am booting via extlinux/extlinux.conf and have adjusted my
-> CONFIG_BOOTCOMMAND before build to execute a usb reset prior to the
-> existing run distro_bootcmd.
-> 
-> CONFIG_BOOTCOMMAND="usb reset; run distro_bootcmd"
-
-I'm pretty sure there's driver callbacks we should implement to do the
-same here, I need to check.
-
-> 
-> This has allowed me to reboot the system and successfully have access to
-> the USB devices such as my keyboard, mouse, and root file system on USB3
-> SSD.
-> 
-> Thanks!
-> 
-> Wayne
-
+> I think it's a very long term issue, USB lacks a proper reset at probe on
+> warm reset, does USB still work from U-Boot after the reboot ?
+>
 
