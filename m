@@ -1,137 +1,98 @@
-Return-Path: <linux.amoon@gmail.com>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FF1C3ABC9
-	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 09:17:43 +0000 (UTC)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
- by mx.groups.io with SMTP id smtpd.web10.10122.1746782257366508611
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1C5C3ABBC
+	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 12:47:26 +0000 (UTC)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+ by mx.groups.io with SMTP id smtpd.web10.5280.1746734079663798220
  for <u-boot-amlogic@groups.io>;
- Fri, 09 May 2025 02:17:37 -0700
+ Thu, 08 May 2025 12:54:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=E9fVQTFZ;
- spf=pass (domain: gmail.com, ip: 209.85.218.42, mailfrom: linux.amoon@gmail.com)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so340692766b.0
-        for <u-boot-amlogic@groups.io>; Fri, 09 May 2025 02:17:37 -0700 (PDT)
+ dkim=pass header.i=@chewies-net.20230601.gappssmtp.com header.s=20230601 header.b=W6c89YbM;
+ spf=pass (domain: chewies.net, ip: 209.85.218.46, mailfrom: raz@chewies.net)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-acb5ec407b1so231776066b.1
+        for <u-boot-amlogic@groups.io>; Thu, 08 May 2025 12:54:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746782256; x=1747387056; darn=groups.io;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bbJrlLUQ6svsRNkgzM2jlafvPx8bClSRlXDsPrwb1Nc=;
-        b=E9fVQTFZSvEIbRmQpVYKkIFdug0q4dmVw2khQ/qXs7KFPPTHN+iXc8AGagjjPI/0jL
-         UnbF/1DiyxNYckfN20hBBcmoxp3lMsUkJ9+gSrp1+Qa0emXXnR9fyXXsFAy3i/x9r0SO
-         vyvC8yss/8KFnZdSg6guZSeD6tWTr3DutK9oF/cfuwhdQaHlwmDIgckAWnlAWawYKRpG
-         pFqBR09hFmo0ocZoc3MttMdMMMaNlOqcgNYfeDsuaUK0ZaCjmsZKEXM01ErkjoIlSZA3
-         er3dRhlj3wNTLQTGp85T9D/RipZCMUpneu5g2ThS4/so3rZnyj3e11dwhbdKwqk4hwPB
-         sl5A==
+        d=chewies-net.20230601.gappssmtp.com; s=20230601; t=1746734077; x=1747338877; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3stnx/8tSv02z2R+WZ/pNypTKXfQ6hJ4O4a92YG83Ic=;
+        b=W6c89YbMvyIdGPfav5UTgTWrkHvIBTnAlk4naRkpS2u1oirX//s4fZ2zFmErFIUjzR
+         BC81wuhbN5hvc2RQiHGwFizNbRqykWcqwPPjlLKjkEAz2spDoZPuzDTN6bssR6waGZs+
+         X6v/tpzX8Sz/RQuYX+C2bEV/VH5FBNRaB9ZbW+y43B5mHuoKcysg8ChpmzbhM72aef1w
+         3n2Lmiicc1G4CEabZ4K9Ez/dY5Q1PhYMuxRXuoxGpLDjyY3BkZMbS7Z8irKMf0fwjMPf
+         X0Ui3ZrKAgixzbcwfH45keDr63zSzM1Qb5AzZagDUo88O5yUI5gnS4hmQlnOSh1bMlT/
+         OtmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746782256; x=1747387056;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bbJrlLUQ6svsRNkgzM2jlafvPx8bClSRlXDsPrwb1Nc=;
-        b=DOIeiCiKnCWWtL2BJl1THp6wmRFynTb966nQRlTpNRuNju4vDIAjkIwb/DLYDwKk7Z
-         ggskr/861SWfkN7NNWDdv9XqX83ck2yTEEscifvOyTbx9M+usbrxC5IrBfnQL/j/SjxT
-         Je5+JQCncAsPSKERcYiZAJdXecAakBMVMnSd0YBacvXMTt0IPPnczVWua25u8RlV4IgE
-         5FUCASBaRcCoNh+8fA+1J2L5kf5J7uvFdwJ+5gC0g/Z+KPpaMt8EXrPNhR8ykI3+bLk6
-         4MhGDVb7MWQzcRi4msdlYFxrmRwQ1mBVPNGWEuBRXOm4dkWsnGPegGRsgneEJ6SS+eQG
-         XriA==
-X-Forwarded-Encrypted: i=1; AJvYcCUW8Z/YmjYLsYqr8OfOZvS2AvaCeVJ8ynHte0I4qQeekjPMVyTVr5l3Y1lumMhc6GZ0WU14MAHtBVnOJHUGrQ==@groups.io
-X-Gm-Message-State: AOJu0YyXGskJ2d1sdGxKq9xVpA9zYPvikpWL69Nu/0jeQUjQGyDb6CMW
-	0Zwa2H5QffM1wZbbQjdPqNPD426OWp7jjh7vKPKLFCHbCv7VzsMzC4PCDs/56naujGbb/MywXxL
-	giiiDZ7fh5loyXQqdgKMSPsOXjjQ=
-X-Gm-Gg: ASbGncsrud2OR+MtYhcgkaKSB9GF2PGXIbsuWcPXAnFPQsl9INOqVM5tDQAfpCU/LWX
-	hYZml4BydcnFi69MdnD8gts0URRsPgqYvMbvB8YfJe0heZ3D9wxKAF0V/rxTnCuQSe8Mjb1Ei1L
-	UaAvkcNvZuDLKf6cImA1ZDV3s1AFAuFw==
-X-Google-Smtp-Source: AGHT+IHQuh99vrJvhJTLwK2LgGgSrub0rDyzUox5KYbb8cMg9mFjSDWKKRgmG3CSQjsc00YfVbmD94fQvzasWEmlOS4=
-X-Received: by 2002:a17:907:3cd4:b0:ac4:169:3664 with SMTP id
- a640c23a62f3a-ad218fa9075mr245025266b.33.1746782255461; Fri, 09 May 2025
- 02:17:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746734077; x=1747338877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3stnx/8tSv02z2R+WZ/pNypTKXfQ6hJ4O4a92YG83Ic=;
+        b=vfjVWbnOQ73DqCIxDMW8BSR6303E4eAO+iT/eYowUmSmFVDjH+VLZQW9/5lzbKWLPg
+         /26gnYVYacAORzeIyFHAqMOEMzjh4FViXlaF7S7w9+fvo86FEc8f1wI8QiccJHRK763k
+         ZTsFsw8XfnWHwDT706/fu6TpaNo56l8nWMdpuH14PFLPC2GkZi9Dy5IwszmZG2j8AYxl
+         RA74gh2+wWbST8B6qOjgjopo8ErgAf+/4mJhj0lXCzGUUxzSPRYDZrwbzaMC2OhZpF9H
+         TTDQanFsEd9KMYG9ul57z5EnMVu0hMlmda2jgJ6bsOWnX9mgOgSW64dxd/TNLEhEMCEc
+         x8Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpKtyPMS3aHqCCEDqSEiLu1YKvfO24Hgl8+9kBbPP/eXNBIWGK6pSV8hpl1/Z/T6bwQBo27G8GPRj7sGpa7w==@groups.io
+X-Gm-Message-State: AOJu0YwEV/WfdegEcHn1wuYlfwhswPY+bS+kq+VyCkT2HNf2ByTmaeXT
+	6poGj1iq9yLIdCcfIjpk/SRH/alY2wc/fKzDLl/bBL2Gi9O3XdcJNkzvg7HjwO/oDAouZcWZbwV
+	9+NLlc+FuyxlyshQOQIZpPGivYuYhEGQJdzAi
+X-Gm-Gg: ASbGncs9IHELBvTC6ospFQUhG8xEcVsUi18wZFrEM5XbRmqVSsxL61IK1Eckic8jKOO
+	PWkGal4fYiL42pj1yALBqILMGD1VIazQzVtxHXd/wRH+IA1H42ReUmMGBaO2k6Y1JqwzQPDW9aq
+	TXVZxkFRsvla5IarvKYV/3rqSob+1NIA==
+X-Google-Smtp-Source: AGHT+IH2+/gg13T5NN5Eyoum1lKK2XajbhrJ0rZkP+NMR+BmxtRzYNi93HyAeD7SxIGunz1ad62B7jFOeKm5i/whAuo=
+X-Received: by 2002:a17:907:c081:b0:ad1:e587:9387 with SMTP id
+ a640c23a62f3a-ad218f19a66mr78477966b.21.1746734076821; Thu, 08 May 2025
+ 12:54:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20250509070258.5077-1-linux.amoon@gmail.com> <20250509070258.5077-8-linux.amoon@gmail.com>
- <78cb05b6-3014-40f0-947d-f2b8f737fcaa@linaro.org>
-In-Reply-To: <78cb05b6-3014-40f0-947d-f2b8f737fcaa@linaro.org>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Fri, 9 May 2025 14:47:18 +0530
-X-Gm-Features: AX0GCFuDywG-8PbQ9fOy7CRtFOe40AueNo0ZsI_QbLQRlPPSaESCJ6UrsuUEgS8
-Message-ID: <CANAwSgTOTCwUKcodWixXKQg4u3nvABrSidSb8iREsqVSaaVg3w@mail.gmail.com>
-Subject: Re: [RFC v1 7/7] usb: onboard-hub: Add conditional compilation for
- I2C initialization
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Tom Rini <trini@konsulko.com>, Beniamino Galvani <b.galvani@gmail.com>, 
-	Venkatesh Yadav Abbarapu <venkatesh.abbarapu@amd.com>, Marek Vasut <marex@denx.de>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, Michal Simek <michal.simek@amd.com>, 
-	open list <u-boot@lists.denx.de>, "open list:P200" <u-boot-amlogic@groups.io>, 
-	Wayne Schroeder <raz@chewies.net>
+References: <CAEUiLubXaPGZsE6y_X6mBTD1ZK-2w82fbRD5z8+MKvDZtZKOtA@mail.gmail.com>
+ <f073dad7-337e-499a-8cb5-9dae0842de17@linaro.org> <CAEUiLuYBVyLm4HgJG88r1J8RcUu38uEVPbV5c+-ArqjU4aUOAA@mail.gmail.com>
+ <3783aef0-a7a0-489f-add0-21e1fc2bfad1@linaro.org> <CAEUiLubVazb4rgfBd-r-5AtyfBVaMFmy89OO_UZB97FM43if7w@mail.gmail.com>
+ <D9QX0MRWSYW6.3ELRB73BS6PRT@postmarketos.org>
+In-Reply-To: <D9QX0MRWSYW6.3ELRB73BS6PRT@postmarketos.org>
+From: Wayne Schroeder <raz@chewies.net>
+Date: Thu, 8 May 2025 14:54:25 -0500
+X-Gm-Features: ATxdqUGw2CG134B1aSNbqeEu0cZ_c6g2trXskQS6xYNTP-PlR6OnNDQu0nF5Xnk
+Message-ID: <CAEUiLuYW61Vz4zAie2K9cnXXQxxRj150Nc-fJMQCh9NwXZQmzQ@mail.gmail.com>
+Subject: Re: Odroid n2+ usb broken on reboot
+To: Ferass El Hafidi <funderscore@postmarketos.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, u-boot@lists.denx.de, 
+	"u-boot-amlogic@groups.io" <u-boot-amlogic@groups.io>, 
+	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 09 May 2025 09:17:43 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2692
+ <u-boot-amlogic@groups.io>; Fri, 09 May 2025 12:47:26 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2694
 
-Hi Neil,
+I actually already have a working solution that I documented in my
+github repo (dubschro/odroid-n2).  All I do is set BOOTCOMMAND to
+check/delete a flag file on my boot partition and if it is found, then
+reset usb and sleep for 10 seconds.  I then have a systemd shutdown
+script only on reboot to touch that file.
 
-On Fri, 9 May 2025 at 13:27, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->
-> On 09/05/2025 09:02, Anand Moon wrote:
-> > Add conditional compilation for the usb5744_i2c_init() function based
-> > on the CONFIG_DM_I2C configuration, to avoid compilation failure.
-> >
-> >    CC      net/net-common.o
-> >    AR      net/built-in.o
-> >    LDS     u-boot.lds
-> >    LD      u-boot
-> > aarch64-linux-gnu-ld.bfd: common/usb_onboard_hub.o: in function `usb5744_i2c_init':
-> > /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:74:(.text.usb5744_i2c_init+0xfc): undefined reference to `i2c_get_chip'
-> > aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:89:(.text.usb5744_i2c_init+0x1a0): undefined reference to `dm_i2c_write'
-> > aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:96:(.text.usb5744_i2c_init+0x1c8): undefined reference to `dm_i2c_write'
-> > aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:104:(.text.usb5744_i2c_init+0x1f0): undefined reference to `dm_i2c_write'
-> > Segmentation fault (core dumped)
-> > make: *** [Makefile:1824: u-boot] Error 139
-> > make: *** Deleting file 'u-boot'
-> >
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >   common/usb_onboard_hub.c | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> >
-> > diff --git a/common/usb_onboard_hub.c b/common/usb_onboard_hub.c
-> > index 1242513c631..92e3f3a92c9 100644
-> > --- a/common/usb_onboard_hub.c
-> > +++ b/common/usb_onboard_hub.c
-> > @@ -30,6 +30,7 @@ struct onboard_hub_data {
-> >       int (*init)(struct udevice *dev);
-> >   };
-> >
-> > +#if CONFIG_IS_ENABLED(DM_I2C)
-> >   static int usb5744_i2c_init(struct udevice *dev)
-> >   {
-> >       /*
-> > @@ -109,6 +110,7 @@ static int usb5744_i2c_init(struct udevice *dev)
-> >
-> >       return 0;
-> >   }
-> > +#endif
-> >
-> >   int usb_onboard_hub_reset(struct udevice *dev)
-> >   {
-> > @@ -222,7 +224,9 @@ static const struct onboard_hub_data usb2514_data = {
-> >   };
-> >
-> >   static const struct onboard_hub_data usb5744_data = {
-> > +#if CONFIG_IS_ENABLED(DM_I2C)
-> >       .init = usb5744_i2c_init,
-> > +#endif
-> >       .power_on_delay_us = 1000,
-> >       .reset_us = 5,
-> >   };
->
-> I think you should completely disable usb5744_data in this case
->
-Let me check this. I will update it in the next version.
-> Neil
+CONFIG_BOOTCOMMAND=3D"fatrm mmc 0:1 reboot && echo Resetting USB on
+reboot... && usb reset && sleep 10; run distro_bootcmd"
 
-Thanks
--Anand
+It is a hack, but... the system reliably reboots remotely now, and
+that's the important part for now.
+
+Wayne
+
+On Thu, May 8, 2025 at 11:22=E2=80=AFAM Ferass El Hafidi
+<funderscore@postmarketos.org> wrote:
+>
+> On Wed May 7, 2025 at 1:03 PM UTC, Wayne Schroeder wrote:
+> > It's hard for me to quantify if usb works in u-boot as I'm not loading
+> > off of any usb storage devices.  It certainly never lets me use the
+> > keyboard to abort auto boot, and never has.  On reboot, to reliably
+>
+> You can send bytes via UART to abort boot, if you happen to have a UART
+> adapter around.
 
