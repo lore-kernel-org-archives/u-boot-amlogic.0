@@ -2,76 +2,75 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745BFC3ABBC
-	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 07:58:02 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.9199.1746777473036703776
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77857C3ABBC
+	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 07:58:22 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web11.9206.1746777502012556558
  for <u-boot-amlogic@groups.io>;
- Fri, 09 May 2025 00:57:53 -0700
+ Fri, 09 May 2025 00:58:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=HGXV7MGX;
- spf=pass (domain: linaro.org, ip: 209.85.221.53, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a0ebf39427so1042919f8f.3
-        for <u-boot-amlogic@groups.io>; Fri, 09 May 2025 00:57:52 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=wlaPUn44;
+ spf=pass (domain: linaro.org, ip: 209.85.128.48, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so19047985e9.3
+        for <u-boot-amlogic@groups.io>; Fri, 09 May 2025 00:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746777471; x=1747382271; darn=groups.io;
+        d=linaro.org; s=google; t=1746777500; x=1747382300; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=537ApYJVvV/ApCFtMd8qXCBRmZIJTadbfBAhKdv2Gk0=;
-        b=HGXV7MGXTRC4u1nJ2Qyb5LOxD0ugDiA3UfSKU/kU1i7rVcM7+JnNCkIVkJxOMkY1YH
-         NcxW7rwWoSpw0hPeMIoAqeu+VX4ACjRp614xcjh6Ki7nwoXWKTvjW6u1+7boyJo4H4x4
-         ANONaTI1OT3PVmX5B+VYze6hiXACilh5Wqwx65WsPf/7M7ALkA7oH5lrKiLjjYud32u4
-         oUhadRq/3gnaZaAfYj4yoS5H0GawppfJiB2zHAMc4WWU4MSdmL9C3tQHaMA8bZCG5i/O
-         WX4JuU+pElDRFE+J3s/iOttP2cq3FK7EEMkq6gmBxtY2XsAT5XeMDt3mnFFAEGdxHuML
-         fYWw==
+        bh=sLe/IZ4rXnBdZgnZ4/eWyXuOlnh9tUiYke1zR9KxH1c=;
+        b=wlaPUn443zclsIQgWuMxcuH+7wDGGul3OK+iWoIFEn4ljkmohPLUEXGzwvhA/3Qams
+         bg8BIdLJfB6zchsncQE00NB3iaDqDVuAK7fTRhyiAZyVk6Px2tt4UzC4TlgPy1YVEwYH
+         gWHX8zpSsCShizFMjfTak6/GLuwllYvySuObNeybQWSz2eFTa4YnaNHaEJskrSo+E1IQ
+         hBKr7JwprPazw99gXYmnqJqaOWNX+vDlVyG7X/Oui44wL1DXiG/ljO2Ugxl6D4ueqQVF
+         z+ziN/0JmuAyKTYZ9daV7/rk2EY9XypIIYzDuO6dehnn9+QZ2Aqi9tKTXaYu7veCyodD
+         EspQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746777471; x=1747382271;
+        d=1e100.net; s=20230601; t=1746777500; x=1747382300;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=537ApYJVvV/ApCFtMd8qXCBRmZIJTadbfBAhKdv2Gk0=;
-        b=JiktsPOJzgNONI5EznHFjHE1kh8SPslrBW5EOVUapMj9GUCHbJMlAr+uWlTOAkxsMV
-         y8O35YqqWF9OU0u5gitFzzk5d11UAHrtE+Qq4eMUv0tOvi+AIdV4IxvS2Y8UDFx2xOlR
-         8wtV0XNrSfiJyvA9s2A5qdV6LQsE3V5V0bpRbY0Q80SWs3B5E+uPn9WWNgaSJK99kPwF
-         z9j9Dzvk+QOpsKuy/uL3qMS/iPnrh2UIx+X9FaGrdx17/aUJguhS45zo9aThE/n+4oEG
-         PPfnYgjmvgWB7BE5QdMSisL96IOOwZplwNLzcAX4/9n6JqG7iSvfgwvAvPxgJswtc5K3
-         yaPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXa8D+XhJRctZqCxxTGcPTNbOCbfi4L4bfPHK+ZK8l8mk4NWYqrdVA7lfFyBl07+JosnAgICYW2Gt9ueos5Jg==@groups.io
-X-Gm-Message-State: AOJu0YwcWNfoU1qrQAGrMMtnQBZmmqakvzxP/IjcPuvvPFvqCSwm/4uy
-	trVquS7+DgQMvuRr6U4YW0NljpuWBOA0YHudlA4tlziQJwinNnozMCZEryVCStk=
-X-Gm-Gg: ASbGncsDozciAkVeeq0yN1RbcrqPyUBHWRE3wM6g4ygXyBRayDPlhnZJt89nRkePsyJ
-	349jbNOh7qRdROqcWwXvIZs/1KkUadCZwU26SMB1UuN20cYQmvxCwdNTeTg4zNeQvSf8pIEQXbr
-	MEyQDTpzdyT65UVmEotpbnCjj6PwFfertaQea0qchDu+WJyCPeL948XIc83InaetQ11EnmSUT8+
-	ZRMMm39Rhsp/Ad7BoHK7XyjiOiVOFy9haJITxeVbBjygwSOglwyVSsgo/ksrlcOtMKdOZuxtHET
-	6Un+Av/eImnuA4IJe4DemCX+td5WsjwgQzD48OPvpLqglksi2Z7xmLsb7AP7xpRjSaY52ytcFMj
-	9dSD9ig2PKTRRlTA=
-X-Google-Smtp-Source: AGHT+IFcOSl4QAzwGHLN9jbf65X64/698U4qW5z8/bNcsYnOW7udUGohajwmigOlYVOg5BmZXnoKhQ==
-X-Received: by 2002:a05:6000:420f:b0:39e:e438:8e4b with SMTP id ffacd0b85a97d-3a1f64ae792mr1985191f8f.50.1746777471458;
-        Fri, 09 May 2025 00:57:51 -0700 (PDT)
+        bh=sLe/IZ4rXnBdZgnZ4/eWyXuOlnh9tUiYke1zR9KxH1c=;
+        b=wn0aeaStRtcxEvDNHOhI+giHIREGzZReg1CHSzAGeDsmFmQfFs1eHhfSuSVHEhGLZs
+         FuwNl1Lg3wQlfjtv87vHe/ASOxgkpbUc+nf0emML0NSRwKGVQdv49gtHF7J+n7GQa5Mi
+         dKAdTWMi8qxfaS6h7Jb0H8KKs2+Fs5iGT1OP2WK5NvcunMENBS+zn7tUrIywg5BOgL1r
+         N6ITVoqPgzRMRpVXErAScoVq+Yi6h2MIlboWwi5mTqWtnvL+dMZdKcqi2NJTvWBE2m2G
+         4bdTDMcWebzl8aoPDidEMG2bebjugjRg8ryFeVa5ZAvrT+4uVTA5aS/rcePPwxnMI0HG
+         YkEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUR2GX0mOAWGHQtkeDqO3y+lQ1GlIZP6/WWlw7UO2x6fWEgxeGYnhQ7sJsuN323tFaRBmawTxaPdL2IpeP3hg==@groups.io
+X-Gm-Message-State: AOJu0YyHsXz1t7Y/DejXYq1CkqF+Q2pYdbcWtRUVWbaItelYB/aVou4J
+	D2w92mu/QZHp+KSY6JcH/55+T1TBJTgs3Y7dCYAmEGDzxNHQJ6th0SmmMskkm74=
+X-Gm-Gg: ASbGncuzQZm/kRvohHWyG8KCqoB3B37vO4WkStQYjODlQ3I+x221nejFtsAvVnmxUu+
+	3J+qpE64RKjbw2nuvM/hHFG4FcXM0S+HjBT0ikBjQlvPEKcvtHWRoYgRtQycbHsbokHuNlPsf2w
+	Z4QKcixGx92JKCulVtnbhByA78ALfTVDAFfBlY20T7bOONP29IaU85zYGVOuYxtgkx+9qfdZR1j
+	jZkNBqlI9MVjcwgn8PNosigRO+0TLcccBudJpvABY/k24GHRUOhu5vNdDmzG9t+NaaDLOfvidDE
+	9AXkbvq4y6Z5H5XX/I6axklJKhTV/PGpQux/EY6uhJ9do9wJq3m6OKrSbkKNnlM7scxcdbfrOQq
+	Nk/k6jfOREEtn4LVuAGANyGmHTw==
+X-Google-Smtp-Source: AGHT+IGurNYMve6HR6jhsSK8a2GA1GX0uhAtMDYOzVLPjYGeG5eoYCcQ6PxJYZKonFoVPI9c/Z0X0A==
+X-Received: by 2002:a05:600c:4e8f:b0:43c:ef55:f1e8 with SMTP id 5b1f17b1804b1-442d6d44d0fmr19199525e9.13.1746777500386;
+        Fri, 09 May 2025 00:58:20 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:22d7:71a:9f62:f7e2? ([2a01:e0a:3d9:2080:22d7:71a:9f62:f7e2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2a1dsm2383872f8f.43.2025.05.09.00.57.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d6bf96bfsm20245885e9.6.2025.05.09.00.58.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 00:57:51 -0700 (PDT)
-Message-ID: <78cb05b6-3014-40f0-947d-f2b8f737fcaa@linaro.org>
-Date: Fri, 9 May 2025 09:57:51 +0200
+        Fri, 09 May 2025 00:58:20 -0700 (PDT)
+Message-ID: <a51537fe-0960-40da-a039-e112a7d8413d@linaro.org>
+Date: Fri, 9 May 2025 09:58:19 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [RFC v1 7/7] usb: onboard-hub: Add conditional compilation for
- I2C initialization
+Subject: Re: [RFC v1 5/7] usb: onboard-hub: Add support for VL817 USB hub
 To: Anand Moon <linux.amoon@gmail.com>, Tom Rini <trini@konsulko.com>,
  Beniamino Galvani <b.galvani@gmail.com>,
  Venkatesh Yadav Abbarapu <venkatesh.abbarapu@amd.com>,
- Marek Vasut <marex@denx.de>, Patrice Chotard <patrice.chotard@foss.st.com>,
- Michal Simek <michal.simek@amd.com>, open list <u-boot@lists.denx.de>,
- "open list:P200" <u-boot-amlogic@groups.io>
+ Marek Vasut <marex@denx.de>, Michal Simek <michal.simek@amd.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ open list <u-boot@lists.denx.de>, "open list:P200" <u-boot-amlogic@groups.io>
 Cc: Wayne Schroeder <raz@chewies.net>
 References: <20250509070258.5077-1-linux.amoon@gmail.com>
- <20250509070258.5077-8-linux.amoon@gmail.com>
+ <20250509070258.5077-6-linux.amoon@gmail.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -98,69 +97,68 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250509070258.5077-8-linux.amoon@gmail.com>
+In-Reply-To: <20250509070258.5077-6-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 09 May 2025 07:58:02 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2688
+ <u-boot-amlogic@groups.io>; Fri, 09 May 2025 07:58:22 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2689
 
 On 09/05/2025 09:02, Anand Moon wrote:
-> Add conditional compilation for the usb5744_i2c_init() function based
-> on the CONFIG_DM_I2C configuration, to avoid compilation failure.
-> 
->    CC      net/net-common.o
->    AR      net/built-in.o
->    LDS     u-boot.lds
->    LD      u-boot
-> aarch64-linux-gnu-ld.bfd: common/usb_onboard_hub.o: in function `usb5744_i2c_init':
-> /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:74:(.text.usb5744_i2c_init+0xfc): undefined reference to `i2c_get_chip'
-> aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:89:(.text.usb5744_i2c_init+0x1a0): undefined reference to `dm_i2c_write'
-> aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:96:(.text.usb5744_i2c_init+0x1c8): undefined reference to `dm_i2c_write'
-> aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:104:(.text.usb5744_i2c_init+0x1f0): undefined reference to `dm_i2c_write'
-> Segmentation fault (core dumped)
-> make: *** [Makefile:1824: u-boot] Error 139
-> make: *** Deleting file 'u-boot'
+> Enable support for the Via labs VL817 USB2.0 and USB3.1 Hub
+> on the Odroid C4. The Via labs VL817 USB driver activates the
+> hub reset signal, which toggles the GPIO.
 > 
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->   common/usb_onboard_hub.c | 4 ++++
->   1 file changed, 4 insertions(+)
+> => dm tree
+>   simple_bus   11  [ + ]   dwc3-meson-g12a       |   `-- usb@ffe09000
+>   usb_gadget    0  [   ]   dwc2-udc-otg          |       |-- usb@ff400000
+>   usb           0  [ + ]   xhci-dwc3             |       `-- usb@ff500000
+>   usb_hub       0  [ + ]   usb_hub               |           `-- usb_hub
+>   usb_hub       1  [ + ]   usb_hub               |               |-- usb_hub
+>   usb_mass_s    0  [ + ]   usb_mass_storage      |               |   `-- usb_mass_storage
+>   blk           2  [ + ]   usb_storage_blk       |               |       |-- usb_mass_storage.lun0
+>   partition     0  [ + ]   blk_partition         |               |       |   |-- usb_mass_storage.lun0:1
+>   partition     1  [ + ]   blk_partition         |               |       |   |-- usb_mass_storage.lun0:2
+>   partition     2  [ + ]   blk_partition         |               |       |   |-- usb_mass_storage.lun0:3
+>   partition     3  [ + ]   blk_partition         |               |       |   `-- usb_mass_storage.lun0:4
+>   bootdev       3  [   ]   usb_bootdev           |               |       `-- usb_mass_storage.lun0.bootdev
+>   usb_hub       2  [ + ]   usb_hub               |               `-- usb_hub
+> ---
+>   common/usb_onboard_hub.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
 > 
 > diff --git a/common/usb_onboard_hub.c b/common/usb_onboard_hub.c
-> index 1242513c631..92e3f3a92c9 100644
+> index 3914e2f773d..1242513c631 100644
 > --- a/common/usb_onboard_hub.c
 > +++ b/common/usb_onboard_hub.c
-> @@ -30,6 +30,7 @@ struct onboard_hub_data {
->   	int (*init)(struct udevice *dev);
+> @@ -235,6 +235,10 @@ static const struct onboard_hub_data genesys_gl853g_data = {
+>   	.reset_us = 50,
 >   };
 >   
-> +#if CONFIG_IS_ENABLED(DM_I2C)
->   static int usb5744_i2c_init(struct udevice *dev)
->   {
->   	/*
-> @@ -109,6 +110,7 @@ static int usb5744_i2c_init(struct udevice *dev)
->   
->   	return 0;
->   }
-> +#endif
->   
->   int usb_onboard_hub_reset(struct udevice *dev)
->   {
-> @@ -222,7 +224,9 @@ static const struct onboard_hub_data usb2514_data = {
+> +static const struct onboard_hub_data vialab_vl817_data = {
+> +	.reset_us = 10,
+> +};
+> +
+>   static const struct udevice_id usb_onboard_hub_ids[] = {
+>   	/* Use generic usbVID,PID dt-bindings (usb-device.yaml) */
+>   	{	.compatible = "usb424,2514",	/* USB2514B USB 2.0 */
+> @@ -251,6 +255,12 @@ static const struct udevice_id usb_onboard_hub_ids[] = {
+>   	}, {
+>   		.compatible = "usb5e3,620",     /* GL852G USB 3.1 */
+>   		.data = (ulong)&genesys_gl853g_data,
+> +	}, {
+> +		.compatible = "usb2109,817",	/* Via labs VL817 2.0 */
+> +		.data = (ulong)&vialab_vl817_data,
+> +	}, {
+> +		.compatible = "usb2109,2817",	/* Via labs VL817 3.1 */
+> +		.data = (ulong)&vialab_vl817_data,
+>   	}
 >   };
 >   
->   static const struct onboard_hub_data usb5744_data = {
-> +#if CONFIG_IS_ENABLED(DM_I2C)
->   	.init = usb5744_i2c_init,
-> +#endif
->   	.power_on_delay_us = 1000,
->   	.reset_us = 5,
->   };
 
-I think you should completely disable usb5744_data in this case
-
-Neil
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
