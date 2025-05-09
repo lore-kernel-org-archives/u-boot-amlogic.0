@@ -2,134 +2,115 @@ Return-Path: <linux.amoon@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B5BC3ABC3
-	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 07:04:22 +0000 (UTC)
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
- by mx.groups.io with SMTP id smtpd.web11.8670.1746774256042876279
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C8AC3ABC3
+	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 07:09:02 +0000 (UTC)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+ by mx.groups.io with SMTP id smtpd.web11.8714.1746774537177789703
  for <u-boot-amlogic@groups.io>;
- Fri, 09 May 2025 00:04:16 -0700
+ Fri, 09 May 2025 00:08:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=j7xGtii5;
- spf=pass (domain: gmail.com, ip: 209.85.216.46, mailfrom: linux.amoon@gmail.com)
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30c3a038acfso1003826a91.3
-        for <u-boot-amlogic@groups.io>; Fri, 09 May 2025 00:04:16 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=HNoqxreV;
+ spf=pass (domain: gmail.com, ip: 209.85.208.50, mailfrom: linux.amoon@gmail.com)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so3289601a12.1
+        for <u-boot-amlogic@groups.io>; Fri, 09 May 2025 00:08:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746774255; x=1747379055; darn=groups.io;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746774535; x=1747379335; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VksTAc8MfNtj+Zo80Tsk7dVzZ22M2QTVt0cXDy/zQAg=;
-        b=j7xGtii50jYXnn7W3d2dng0gj7PftZjpAfwW6XLonjm0pzeQHgWT9Tb3fgzd7Snfr9
-         sZwV0D0/OkKZmVId5ICqCwYR8g91EriClHzIwG4QT+6CsXOTxsn+ktAozy/QVP/bjLRQ
-         QIvRIc1GcaEOae9+fZq7TZEybrdz7ZwOR/Y7R7aiBQsI/9Co56g6XYCGdCuZB98VZtSR
-         SzeqLtFkDTT9z40NCVjLrRPCwEVkVNljK6vBs13kwdNC4c9Oj8dYLE1wdqGmuXCmPnOB
-         rnCOpYvdE1/nJcoOxQ2tHEc9722/y78Gh1uIzd5hJlKEx9IXrn/geboM3jdJp3sftVg8
-         u7hw==
+        bh=rDOVTvBY2hQzl4x0xlAS9VP7sT+X5C+A8PuttaCFmyA=;
+        b=HNoqxreVamxUyvj9sXKEnwwxfqDAOUFKdVkGfFlA4iMnesnf8JQVolfH/4tHWaaNT8
+         zHQ5a5i5L/reBP9buzBH5vsBlbE377XC1KI64drseo+R1Ujrto5lPSkgLa1oSGHwhm8K
+         cigEk7Ltkukf3M+BadvmK8dgJTh9hPgi79SZnxtn3NY+oZLjxFOdxRb6tMJu4rK7RpFU
+         3DrhIdOqH44NBTpla/uKRmCyJmfhwgwvJSA+0wTTbetl06wAuHDlfqG45oYcxq+Z15TP
+         n/znz1WM+WHAHTkgvDDIwolyhaQouUiFX7Vezd2FrdA7y9FPiU5NGraqnhbQJCRUW2hh
+         CS4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746774255; x=1747379055;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746774535; x=1747379335;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VksTAc8MfNtj+Zo80Tsk7dVzZ22M2QTVt0cXDy/zQAg=;
-        b=ly2dUSc5rzwn75OJCZJOCXAraqfTAG1dLzJB030hXQlBDDlNCwJiB/Uwmwb+pX7JqJ
-         2XYgOFpcbIMy9la6aTIqUMpQM2N+6SpV5TpxkP72pJaZ9UqjikfgxpOjPY39gtfbl9X3
-         bdvW034nWUBuaUqk+wdcOf/hOAovlKGNGUAcrB+1Ju7dmYMua0qCff9/zRTVqzlrzIrW
-         wiSg5fwuHKC5KJcRqZmnkUIlZpn1zEArNjksoIx4MlTtJUZbd1a6G/QLwJm+IwO9UvWP
-         cuRjD8H1Gq1cs5BwFCAeMSrg0fHrUZxOgRWfc4jYd55Iq5h+DHx/W2aRlrwQx+xwSSai
-         usxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvFeESvrP+61bZp8Z+ugFFdjgp5n738RAe0C/8pElT1+vfJQOv7fNZArI5xI7eLALZ/cPMBwxSTMfVMq3fOQ==@groups.io
-X-Gm-Message-State: AOJu0YzVQwTfAsiqCT2n09EB8XZHri0uwaK/I0VpEffCeG8BlJuovseC
-	ZSYMAnjYDvVSeT2rMnBevkTrxcKYP5UrjFzfzDfcbpTVRDRfK7e9
-X-Gm-Gg: ASbGncu1UvRzZeD2JmUQnuYSyKApxR5O+DfiR6kX0UIgwcdEGHv9P3RSVDGXzKRbR8y
-	HVJ0EPrvRIByIfFNIlmphcxnlNfHdWabzftDa+80EvH53W+IKN5W2jRyrLEE3OrQmJ/xxmH7nZs
-	pGTG5esH1bzhAUhF27pKVLjQV2qiwymywa/G1BWAvigqJDI+rbBRpjSpk/6abVJFmpMWi3RZQAD
-	7d67hKbDipOHVBP/6DZzKjVBYnymMqwkOt1yd1GWiU5DoFihSOeKb6on9kjvtDhn+yRU3VGCTgZ
-	KyXgQj0FPWoYtMb1JIHsklo6nFXQjr2X6AV88IV3iXcDWPe1v3W2lxwBFmF+iMY=
-X-Google-Smtp-Source: AGHT+IGYOoQXT9TsOq5YEK1vhXpUdE1ezLVSnzq5QPWWManGeJD5veYDMeg1Sgf8GpZHVc8FJmr5rg==
-X-Received: by 2002:a17:90b:2701:b0:2ff:6f8a:3a13 with SMTP id 98e67ed59e1d1-30c3d6290d6mr3853219a91.25.1746774255375;
-        Fri, 09 May 2025 00:04:15 -0700 (PDT)
-Received: from localhost.localdomain ([45.112.0.38])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39dc8aeasm1173932a91.2.2025.05.09.00.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 00:04:14 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Tom Rini <trini@konsulko.com>,
-	Beniamino Galvani <b.galvani@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Venkatesh Yadav Abbarapu <venkatesh.abbarapu@amd.com>,
-	Marek Vasut <marex@denx.de>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Michal Simek <michal.simek@amd.com>,
-	u-boot@lists.denx.de (open list),
-	u-boot-amlogic@groups.io (open list:P200)
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	Wayne Schroeder <raz@chewies.net>
-Subject: [RFC v1 7/7] usb: onboard-hub: Add conditional compilation for I2C initialization
-Date: Fri,  9 May 2025 12:32:12 +0530
-Message-ID: <20250509070258.5077-8-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250509070258.5077-1-linux.amoon@gmail.com>
-References: <20250509070258.5077-1-linux.amoon@gmail.com>
+        bh=rDOVTvBY2hQzl4x0xlAS9VP7sT+X5C+A8PuttaCFmyA=;
+        b=ISHWT1h8zSwk1y9JDhAUAnN27B3yh22q7KLMCtSmpFQxsv9WyO+OFJBgZuo/Kfq8yB
+         Gvu1+xZRgL5Gs6ExjliF298kNIxOvz+zR4Zl8zVzCLGYV5t6fZJIhCaYZi06xJDeQugh
+         P0apPba6Gd9Vim2VcUzmF+BJkGZCkdaYkcSpJ7LDvhv0bg6R/t206ECtCEjDNW810JAw
+         k/Opu09cV9P4MZrvjOLSNQZx7pA1DzqiDvl4D8oI7mrF5jEUEi0KuazTCbSdMwI4RTKd
+         Fv1WF+b9EV9yZY9AlYsy1L3qBMtPhOzIRv5jKjbaeUaKP5KTvCal/pfO0NgK47XMn8gF
+         G84w==
+X-Forwarded-Encrypted: i=1; AJvYcCUuN8DWzKBxz9DO0BaTaGlPIyaEsKiLMUoTCMfCxDyP2b6tGeHCNorkPpcG/b22EjVdD0Y0ebw3fNAcDDU6uw==@groups.io
+X-Gm-Message-State: AOJu0Yy3ZPzjtbZw2EpJzZ38pbjl3pzvmSOEff7k9u9x4Vks+Ih7NvuJ
+	7/s6JBifSJ5YyXgd1qsyn+T7d8fzJQquuP/ayhA9Is4hGW0YSJIhPJe32XQEVFzOLQtkTRRkPED
+	oh34ZkH3gS9voaCKwlrddyw92Ano=
+X-Gm-Gg: ASbGncurHm4Wd1wgbqdFHtiFsAMGItBlvOKytiYsHvpDT63aVHOlF/JmXR4aijDR8ux
+	RQF0gKUCnIV9J5r6U3QTXinmZusA4drYkprSrMoETs/dS+U1b7ZNB95/XtdQXk/9gqQQfWOvFzQ
+	Eqf9Jp3xw7hPh7d/odzbA=
+X-Google-Smtp-Source: AGHT+IFy6xSeENnr6GpZhNdMlhkEbAuN+UZ4rG9yxOM+Fw1GvytEt7cTK20FJVRt02pTE3RFKoZFSKkTIULzJWvTRRc=
+X-Received: by 2002:a17:907:688a:b0:ad2:2417:12d9 with SMTP id
+ a640c23a62f3a-ad2241716a5mr51158766b.39.1746774535293; Fri, 09 May 2025
+ 00:08:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAEUiLubXaPGZsE6y_X6mBTD1ZK-2w82fbRD5z8+MKvDZtZKOtA@mail.gmail.com>
+ <f073dad7-337e-499a-8cb5-9dae0842de17@linaro.org> <CAEUiLuYBVyLm4HgJG88r1J8RcUu38uEVPbV5c+-ArqjU4aUOAA@mail.gmail.com>
+ <3783aef0-a7a0-489f-add0-21e1fc2bfad1@linaro.org> <CAEUiLubVazb4rgfBd-r-5AtyfBVaMFmy89OO_UZB97FM43if7w@mail.gmail.com>
+ <D9QX0MRWSYW6.3ELRB73BS6PRT@postmarketos.org> <CAEUiLuYW61Vz4zAie2K9cnXXQxxRj150Nc-fJMQCh9NwXZQmzQ@mail.gmail.com>
+In-Reply-To: <CAEUiLuYW61Vz4zAie2K9cnXXQxxRj150Nc-fJMQCh9NwXZQmzQ@mail.gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Fri, 9 May 2025 12:38:38 +0530
+X-Gm-Features: AX0GCFvlAIyHMSqomrT8B9EkBmrGtOImqqnXVMTyKPDTZq4Vn-h2XNtU_Hhsenk
+Message-ID: <CANAwSgRkqAj5Q4LMO-CKBSoMgO-+zd6JpbVs+eWY3kPgmj9bug@mail.gmail.com>
+Subject: Re: Odroid n2+ usb broken on reboot
+To: Wayne Schroeder <raz@chewies.net>
+Cc: Ferass El Hafidi <funderscore@postmarketos.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, u-boot@lists.denx.de, 
+	"u-boot-amlogic@groups.io" <u-boot-amlogic@groups.io>, 
+	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 09 May 2025 07:04:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2682
+ <u-boot-amlogic@groups.io>; Fri, 09 May 2025 07:09:02 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2683
 
-Add conditional compilation for the usb5744_i2c_init() function based
-on the CONFIG_DM_I2C configuration, to avoid compilation failure.
+Hi Wayne,
 
-  CC      net/net-common.o
-  AR      net/built-in.o
-  LDS     u-boot.lds
-  LD      u-boot
-aarch64-linux-gnu-ld.bfd: common/usb_onboard_hub.o: in function `usb5744_i2c_init':
-/home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:74:(.text.usb5744_i2c_init+0xfc): undefined reference to `i2c_get_chip'
-aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:89:(.text.usb5744_i2c_init+0x1a0): undefined reference to `dm_i2c_write'
-aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:96:(.text.usb5744_i2c_init+0x1c8): undefined reference to `dm_i2c_write'
-aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/usb_onboard_hub.c:104:(.text.usb5744_i2c_init+0x1f0): undefined reference to `dm_i2c_write'
-Segmentation fault (core dumped)
-make: *** [Makefile:1824: u-boot] Error 139
-make: *** Deleting file 'u-boot'
+On Fri, 9 May 2025 at 01:25, Wayne Schroeder <raz@chewies.net> wrote:
+>
+> I actually already have a working solution that I documented in my
+> github repo (dubschro/odroid-n2).  All I do is set BOOTCOMMAND to
+> check/delete a flag file on my boot partition and if it is found, then
+> reset usb and sleep for 10 seconds.  I then have a systemd shutdown
+> script only on reboot to touch that file.
+>
+> CONFIG_BOOTCOMMAND=3D"fatrm mmc 0:1 reboot && echo Resetting USB on
+> reboot... && usb reset && sleep 10; run distro_bootcmd"
+>
+> It is a hack, but... the system reliably reboots remotely now, and
+> that's the important part for now.
+>
+> Wayne
+>
+> On Thu, May 8, 2025 at 11:22=E2=80=AFAM Ferass El Hafidi
+> <funderscore@postmarketos.org> wrote:
+> >
+> > On Wed May 7, 2025 at 1:03 PM UTC, Wayne Schroeder wrote:
+> > > It's hard for me to quantify if usb works in u-boot as I'm not loadin=
+g
+> > > off of any usb storage devices.  It certainly never lets me use the
+> > > keyboard to abort auto boot, and never has.  On reboot, to reliably
+> >
+> > You can send bytes via UART to abort boot, if you happen to have a UART
+> > adapter around.
+>
+Can you test this series to see if this resolves the issue?
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- common/usb_onboard_hub.c | 4 ++++
- 1 file changed, 4 insertions(+)
+https://patchwork.ozlabs.org/project/uboot/list/?series=3D456088
 
-diff --git a/common/usb_onboard_hub.c b/common/usb_onboard_hub.c
-index 1242513c631..92e3f3a92c9 100644
---- a/common/usb_onboard_hub.c
-+++ b/common/usb_onboard_hub.c
-@@ -30,6 +30,7 @@ struct onboard_hub_data {
- 	int (*init)(struct udevice *dev);
- };
- 
-+#if CONFIG_IS_ENABLED(DM_I2C)
- static int usb5744_i2c_init(struct udevice *dev)
- {
- 	/*
-@@ -109,6 +110,7 @@ static int usb5744_i2c_init(struct udevice *dev)
- 
- 	return 0;
- }
-+#endif
- 
- int usb_onboard_hub_reset(struct udevice *dev)
- {
-@@ -222,7 +224,9 @@ static const struct onboard_hub_data usb2514_data = {
- };
- 
- static const struct onboard_hub_data usb5744_data = {
-+#if CONFIG_IS_ENABLED(DM_I2C)
- 	.init = usb5744_i2c_init,
-+#endif
- 	.power_on_delay_us = 1000,
- 	.reset_us = 5,
- };
--- 
-2.49.0
+Thanks
+-Anand
 
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
 
