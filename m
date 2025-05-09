@@ -2,75 +2,75 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7337BC3ABC3
-	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 07:56:32 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.9233.1746777390388390353
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72066C3ABC3
+	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 07:57:12 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.9247.1746777430663463778
  for <u-boot-amlogic@groups.io>;
- Fri, 09 May 2025 00:56:30 -0700
+ Fri, 09 May 2025 00:57:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=nCGoGADw;
- spf=pass (domain: linaro.org, ip: 209.85.128.41, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0618746bso13642865e9.2
-        for <u-boot-amlogic@groups.io>; Fri, 09 May 2025 00:56:30 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=wHV9vrfa;
+ spf=pass (domain: linaro.org, ip: 209.85.128.45, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so13407525e9.1
+        for <u-boot-amlogic@groups.io>; Fri, 09 May 2025 00:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746777389; x=1747382189; darn=groups.io;
+        d=linaro.org; s=google; t=1746777429; x=1747382229; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6d5OttQ2yXQra1+rh5D/qH1+rbl79e3GdoLmqSd8Rvc=;
-        b=nCGoGADw3S6Cj4cpqSZuun517XmLKJKtXPZ7WLrkDpRSwJ5kXhVWlhzR0EwW5WyhrK
-         BtuEuZ6Je9+ZaLsDuejsHpl6WhST5wnfkesex5Pcym1xT0HO+FRdMGh39nqAw7Y/ugS3
-         TF9nzj5d59GNms+CgaUzzmtXeh5WqJdKd8Yp3S+jgfeLvLaNAeHlFVcFnsS/GxuoPAsf
-         YUFomVodcSYxEodwE3ZXIkv8PtmaWqIvDPPPMoXMVgtrgNZvEDnGVJGCvnYTs1ODo0Hi
-         6sjUKebOOJMHISbhMyvLGrPl+bG+KF5rf1fsu/rg7HovcVxiukl4UAjheuYTP1oi9M9J
-         EHig==
+        bh=FBjTLfQ4AhJpzJkA5Qo6kqbiHyIan+7HgHTbezLqgaM=;
+        b=wHV9vrfa0BIVfs2wZQ3SFMN7+Djb5VzZs0guernV9tm6eTub1XS7Lrr0HlmU6dt8f0
+         EVg3aCsk6C7i0j3kPRGD5iHwS7T4W+hraM6MWMgPzTKen6kaFAhp5bSx9RCgvwWvr0ha
+         KSs9FobVrMLO7uO2Pkcolwf2Xn5oRtehxOopXnC6hNnp6waxY3gLgTLQe+Flml7wywcd
+         OnpGs7WY83wtkS6op8VfXkiLvvgpGNgc4YHtqF0G8mJjbyxFrI8hHbodY60m+QNLWCdM
+         pJ9StNGuHA+q105gZqDY2D6THmwoQQlZJkHCny2amngO+73YTRr/tDVRYpGIJ3auV+pd
+         UUlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746777389; x=1747382189;
+        d=1e100.net; s=20230601; t=1746777429; x=1747382229;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=6d5OttQ2yXQra1+rh5D/qH1+rbl79e3GdoLmqSd8Rvc=;
-        b=O2oEZKiG0Z5JOAg3IfNi1knNbUh6ScoFvsYpsQAEnZ0h2E7MNbIXmnyvcgF9sEjjzo
-         HrEbaw/a9sCy7kXklfObDjUKhsUdbQ7FqShD6PGppwxyI00aw1ZcWjczK3Zq0S/zhdvh
-         faDJU5qqvC9DV1K56LolQdwTYpoTht1cYQwwKtaoJJ6NFOSghX/YeIzznPeSALjcmIIP
-         /g7qxKGmaQMnh1P0Kx//b6ICAFjkcPa0S6EuR6NSgz0Gfq/yAG5iNRsB8S7RxyyOFUdw
-         oMn3xTS2+Jg86hm2IDAyxJN+cXBs7d9j9rNRuTuY/mC+C773NRLZMxjXIPmAwVEET9RT
-         bjLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxluDkEqT8/uxJoXNgf0uA+m76ugbhVZp55Bh97h+Y2W7Sj0I/T0MVB9WjUsJ2ILrm8oqCwZjfbmHok675rw==@groups.io
-X-Gm-Message-State: AOJu0YzLrRL3Tf8d/d9uLkwPmCLq6JKz89Hqr/YYVEZ/X7ONvRdY5vAU
-	6OTpkUYXoeAbfxjBe+g7N6jkfNthMS5TTxd+pQe54BtOzhp/tNAZwySJk8uYvp4=
-X-Gm-Gg: ASbGncsdNYg8dBBKcc+Ixoo/ldXtVoe9SWYg3AEGDsjL51NbK5x7EU+THUtvuSjPWib
-	lR8uy+rUYu+fNXieuwE56QEfQMIS8SQPyomvLSnmx+oxKIVb7+dlmUcK+kiT4IoZDCLGroIeTsN
-	dbykSJHm/U3QsyNX+0QDO3B419266CHFGIQGpDbPkcjrI7ccGRWI38P8wPhRbhY1cbV2D1y+yHY
-	+Lwk0263B3JatN8Ep+rEVyMFImozVHczz+52bU7ef8IVBvOH4gJIKSfudBJqO6y+HLe9ndo+rXQ
-	J3k1cmWRyUY4FO9duFiMVaYIrkOdu1HFQo1t27uHK3P0q+k3zgbXrd/lTN+M8sT584CFqIXHYEi
-	ChW8022gtxEARn1IMjHZ4aFcCSw==
-X-Google-Smtp-Source: AGHT+IE4r787EqeWN5hkVggL9Owkxa7wQTIrh+SRwwXQ6XYsAl8aa896gImLteC7wftHff8sUwjhYg==
-X-Received: by 2002:a05:600c:4454:b0:440:9b1a:cd78 with SMTP id 5b1f17b1804b1-442d6d44aa7mr22221275e9.10.1746777388825;
-        Fri, 09 May 2025 00:56:28 -0700 (PDT)
+        bh=FBjTLfQ4AhJpzJkA5Qo6kqbiHyIan+7HgHTbezLqgaM=;
+        b=U8XbuwSpo4Ibu9f5SBKFGEPmjLb7b2txHvyftzDb6RNBEMsmk/ZVgJE5+iOEYk+enF
+         SYkH1Iu1iaRLASB2SPrNKPVLSShlabXRKma+ZqKMc5CZNqhASqTE077SUxna55/h8F2J
+         9aG2XGqpQIY4khzR98iYU9/j6k0ZJasXpXlpfmf628d6SuvEGZ/Yn+ba13JuhSgV9rkW
+         jesyid8AFdGzZTSmEosPJHo5iLx/mP49N0m5EKTeNI+S3HM2EYFzAT/zSbJhEQH4i+7V
+         0eFOzpvZVzE6izNzxopTT2PCwZtkg+IVQPQjsVfsiZkegvCt6r1QBVjft0/EhST0Mq4N
+         rJ3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXY5axCRi5j+8FV5gHt2v5kDU4YDYpegOaxaIDOk8oq+w2dAVlVx+DSI8qcmBYzt8pWzZwaBsWIfDewWYjvDA==@groups.io
+X-Gm-Message-State: AOJu0YzBwVhJ95iSufNbFje40WIiPbbhamYriUfj5ntED2w3zvnnY63Z
+	A6SvaoGrnPAmJzb73wWN+w+7y0adqSNugrHWt0ZQIynmYolHA/YRNbzZHJEGC3U=
+X-Gm-Gg: ASbGncvx3DugIVpwduacnVqaLifbdoFOnvW3AuUAGp6WHAIro4zjTPSaEs1Km+OMN5L
+	yrTxyI+62ZbBE5//BzXldNQ56OdqhMvmL/+C/LixB5+tN00O83PT/mnFQCdxendx4ZnIxMkvhL3
+	QaTYLtSwQlYQGNka7Q/swpX2MkNBhunsGiP2UPt8Nf6ln06rQq28kTPJ2rANrdFc1xPuyFFjm02
+	quBOX6oPMyAmb05IgdKyveKaUyrNDZFoJp2NpJk9XTuDiMTtHW7f+bTFOJhI78th8Cc9L+UzAvE
+	Hh948HpcnrxuxbpzWrNyEQ11f0HUkTAh3vHY9lO6Mf5bKZoV5+mQ3seKpbOQp302O6q8U2f/EdF
+	Bw1nUxaHMaLfOttHFiTYXMI3AFw==
+X-Google-Smtp-Source: AGHT+IFluptaWC2Si9dtFIGgSWzThEXrDpBy61T+VHt4xpRZ4zIXhNmx67A/Kv6G9dvGgW9MtJ3d/Q==
+X-Received: by 2002:a5d:59a8:0:b0:3a0:831c:dff6 with SMTP id ffacd0b85a97d-3a1f643115bmr1952428f8f.18.1746777429029;
+        Fri, 09 May 2025 00:57:09 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:22d7:71a:9f62:f7e2? ([2a01:e0a:3d9:2080:22d7:71a:9f62:f7e2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ed0a5sm2401350f8f.21.2025.05.09.00.56.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddde0sm2485222f8f.14.2025.05.09.00.57.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 00:56:28 -0700 (PDT)
-Message-ID: <5c3f5474-5b5e-4e73-baf7-b211c482badc@linaro.org>
-Date: Fri, 9 May 2025 09:56:28 +0200
+        Fri, 09 May 2025 00:57:08 -0700 (PDT)
+Message-ID: <8a57e0d5-bc7e-47a4-a901-1e16ff686ce9@linaro.org>
+Date: Fri, 9 May 2025 09:57:08 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [RFC v1 2/7] configs: odorid-c2: Enable Onboard HUB driver
+Subject: Re: [RFC v1 6/7] configs: odorid-c4: Enable Oboard HUB driver
 To: Anand Moon <linux.amoon@gmail.com>, Tom Rini <trini@konsulko.com>,
  Beniamino Galvani <b.galvani@gmail.com>,
  Venkatesh Yadav Abbarapu <venkatesh.abbarapu@amd.com>,
- Marek Vasut <marex@denx.de>, Michal Simek <michal.simek@amd.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- open list <u-boot@lists.denx.de>, "open list:P200" <u-boot-amlogic@groups.io>
+ Marek Vasut <marex@denx.de>, Patrice Chotard <patrice.chotard@foss.st.com>,
+ Michal Simek <michal.simek@amd.com>, open list <u-boot@lists.denx.de>,
+ "open list:P200" <u-boot-amlogic@groups.io>
 Cc: Wayne Schroeder <raz@chewies.net>
 References: <20250509070258.5077-1-linux.amoon@gmail.com>
- <20250509070258.5077-3-linux.amoon@gmail.com>
+ <20250509070258.5077-7-linux.amoon@gmail.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -97,39 +97,37 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250509070258.5077-3-linux.amoon@gmail.com>
+In-Reply-To: <20250509070258.5077-7-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 09 May 2025 07:56:32 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2685
-
-s/odorid-c2/odroid-c2/ in the subject
+ <u-boot-amlogic@groups.io>; Fri, 09 May 2025 07:57:12 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2687
 
 On 09/05/2025 09:02, Anand Moon wrote:
 > Enable the onboard USB HUB driver to power the
-> USB_HUB_GL852G-OHG on the Odroid C2.
+> Via labs VL817 USB 3.1 hub on the Odroid C4.
 > 
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->   configs/odroid-c2_defconfig | 1 +
+>   configs/odroid-c4_defconfig | 1 +
 >   1 file changed, 1 insertion(+)
 > 
-> diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
-> index bcaab46f8bc..f8a66a923c9 100644
-> --- a/configs/odroid-c2_defconfig
-> +++ b/configs/odroid-c2_defconfig
-> @@ -59,6 +59,7 @@ CONFIG_SYSINFO_SMBIOS=y
->   CONFIG_USB=y
->   CONFIG_USB_DWC2=y
+> diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
+> index cc3d7fc7484..3c5e53828a1 100644
+> --- a/configs/odroid-c4_defconfig
+> +++ b/configs/odroid-c4_defconfig
+> @@ -64,6 +64,7 @@ CONFIG_USB_DWC3=y
+>   # CONFIG_USB_DWC3_GADGET is not set
+>   CONFIG_USB_DWC3_MESON_G12A=y
 >   CONFIG_USB_KEYBOARD=y
 > +CONFIG_USB_ONBOARD_HUB=y
->   CONFIG_VIDEO=y
->   # CONFIG_VIDEO_BPP8 is not set
->   # CONFIG_VIDEO_BPP16 is not set
+>   CONFIG_USB_GADGET=y
+>   CONFIG_USB_GADGET_VENDOR_NUM=0x1b8e
+>   CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
 
-With that fixed:
+Same as patch 2, with that fixed:
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
