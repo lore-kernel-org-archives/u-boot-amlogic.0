@@ -1,253 +1,273 @@
-Return-Path: <linux.amoon@gmail.com>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E980C3ABCD
-	for <webhook@archiver.kernel.org>; Mon, 12 May 2025 10:04:44 +0000 (UTC)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
- by mx.groups.io with SMTP id smtpd.web10.46650.1747044277983229394
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC85C3ABCB
+	for <webhook@archiver.kernel.org>; Mon, 12 May 2025 14:08:05 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.44])
+ by mx.groups.io with SMTP id smtpd.web11.44469.1747033612977983330
  for <u-boot-amlogic@groups.io>;
- Mon, 12 May 2025 03:04:38 -0700
+ Mon, 12 May 2025 00:06:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=C/Q15Itc;
- spf=pass (domain: gmail.com, ip: 209.85.218.50, mailfrom: linux.amoon@gmail.com)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad21a5466f6so561052766b.1
-        for <u-boot-amlogic@groups.io>; Mon, 12 May 2025 03:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747044276; x=1747649076; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H7wqUmeQxImZo9I4UjDMb0Yuabns1sdp2FRzB39Gx70=;
-        b=C/Q15Itcp719VFSlPWRStqqQ8ARNV0G28pnwLBLIYmskglDT0vz6MOGCd4C+5+AqEU
-         gOxtFsebhjf9aeIsAOFCT+Ivg0RSXvQM/0M9Z7mI70xLSNSYuHdLJkStHHih1AVDVGxQ
-         Cjg+QHY3Zj4FmD3zPrLvXYBbaLIfJW3jFIhUY7MAq1LYhP3Tt1D2ubj9jyWc/1PLyyMm
-         aOpnHbkv4A/cyM6KGbgU3q5eRFRUvurR3BaxUicSBIFfiMdDeqQ3Pjbd4aJ9qcPCeTir
-         tpc0XZeJqzrN6F3YaXasivfhsErLLSwCHPHy+cVW03f7uU505U8TFtJV0eq9D+S7ZwfG
-         wAow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747044276; x=1747649076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H7wqUmeQxImZo9I4UjDMb0Yuabns1sdp2FRzB39Gx70=;
-        b=ZpT0SIbRYGoB5PJM2LlD49Cg/RMPlPaLgYFSuG6vomXU4caCYbGqEesAbsezbEWPqN
-         Rl/2KsIPzeUjyBVsyuRVILDZUbQiwxCtDxIcsw6TFGbOX1k2vP2uAPYDIUUw76vOu+r/
-         no3TeCW0vBB3nhGU8irezRdQv3NfWCRJsUalpNHWHV7Dm4X3GO/XPTbEem9/yWHxwloQ
-         yHTT8FkP15pe0eOmRnAJvFm0wPY/ZPygGhxFzPYxjb8fU5AnHmDQsq8bSxIUPATsRWIh
-         6U+zxj7exYz8Zi/fn93mqpSf5hz0tERNyQAUEGqNvRnwTY2t85vIaO4w3JZr8F8n/oZ/
-         yxZg==
-X-Gm-Message-State: AOJu0YyWp4fIMggFiKm57NUxhDTLmDU338TiRcloiHSvZnjxbLXDZsRO
-	h0W9ADvIQ5QF7CiAq6Kbl0oZesXqkAzg8Mx/ep1sYk2rRUuT0+DiVHF0Fprtxg5Kte/XipXB9xY
-	ERoVSGd8dWVlkkNf7P8TNyk107uk=
-X-Gm-Gg: ASbGncuSbsHj+1KbrUtUwGsp9Z6JR1yuan8FGcv3l1EFlDqgG1l6KLwr1ha+69t2VyV
-	mhNxxqqt+zGPKEb1zL87iDWk8j/mnpR2WG9Xs36zoiQrfD2LlNhKoeRnR2Nj2T2YsGqwBBOpgN3
-	7p/9TJPuDsBpCwz9c2oAK5y87YpfLwH9o=
-X-Google-Smtp-Source: AGHT+IFa00fBbASZiwwzqM5ZvytS2NjW0Pi9nonQttu1kOtUwY1W98EiZyn0wzjG8V4b10zs8cDhHYC7NRv5OTm1olA=
-X-Received: by 2002:a17:907:980f:b0:ad2:5212:5e87 with SMTP id
- a640c23a62f3a-ad252126162mr354983066b.16.1747044276051; Mon, 12 May 2025
- 03:04:36 -0700 (PDT)
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=OSgOchDF;
+ spf=pass (domain: cherry.de, ip: 40.107.22.44, mailfrom: quentin.schulz@cherry.de)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KDuyhSYgHFlwH+DaSnr5RtxL4lJNOqVeo9HJqVTDWkW5gVvWIVj9MmlLNEZc0mHU4eD29zoOQ6hJaDqCd64JxzRXgibjLyK5kaQnOx8RYOFdNpMGoH+h4slGWf29v604MNjcFLc0psa69QhU2kIHY5p6NaakHRVaZ04auSNRx5idye0CmIWC25Qu56KdR8kAGOffmMoqRX2t7drfDwxt9QKbPj1v4wPf6zM8WG0qSMA5aCWkEHccUKywAje3pImAICQDRBvwFfvS/MoX+0wWugVwNz6nTepqEzMwgRbCk2EsA8ZkYcwZEAAZHGUOokptjpZ55+3UaxP08tSaqDZUhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H2FiWFV7VuxBNoLFyFBTrcxwMyuUVxShs381px7K8UI=;
+ b=Leh0knwLLxIWZ+34SgCo4hXfPogShdpIIqcqVYcKyahx5/FVic0doFbJaE3hZEPKjk4MZFmNRXxk9qxAkK97rg7ZL2QZW3WUhDAQs0wcNkl0v6Sd9agQNYgm8BVV/ul7vurDkZNH8Ofy14Ze2jNI/SOm00pLfWu895P5V282ZAftgbaHr538xXycuR4r361wq/CUR+wpDhGwHDcfAkJ7bGvHDf+WWU4OrCfdwJgkP/ek3JJpgAnmU7DZmkCn62R/l92qmT3MdgesG7elkward3ZegXuNwVJRfLT2ID6ZMcLkYb9UG/uQPs/Lj2/GtUdloiw79Hl3RO79DYdFLnBazw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H2FiWFV7VuxBNoLFyFBTrcxwMyuUVxShs381px7K8UI=;
+ b=OSgOchDF17Z8MoH5d3XzeB+VipwoF+M42D1bxmLe4gMdNRhv3gJC0IJbwIIwgo/pMedgVKsDVrJb519oadGIe6foxmj083SAnA8kYk0qWZaCKkHJK0QP2VYYveMnp3UUs+ZTbBgKveX46hCRTA4OItqYXjwrwqxk5nzNcpPc2VI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by GVXPR04MB10537.eurprd04.prod.outlook.com (2603:10a6:150:21b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
+ 2025 07:06:48 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 07:06:47 +0000
+Message-ID: <c5f26b7c-b205-42f6-b315-c50bdf4ff0c0@cherry.de>
+Date: Mon, 12 May 2025 09:06:45 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v1 7/7] usb: onboard-hub: Add conditional compilation for I2C initialization
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini
+ <trini@konsulko.com>, Beniamino Galvani <b.galvani@gmail.com>,
+ Venkatesh Yadav Abbarapu <venkatesh.abbarapu@amd.com>,
+ Marek Vasut <marex@denx.de>, Patrice Chotard <patrice.chotard@foss.st.com>,
+ Michal Simek <michal.simek@amd.com>, open list <u-boot@lists.denx.de>,
+ "open list:P200" <u-boot-amlogic@groups.io>,
+ Wayne Schroeder <raz@chewies.net>
+References: <20250509070258.5077-1-linux.amoon@gmail.com>
+ <20250509070258.5077-8-linux.amoon@gmail.com>
+ <78cb05b6-3014-40f0-947d-f2b8f737fcaa@linaro.org>
+ <b581293c-9ab1-4fd5-965a-66469926acb9@cherry.de>
+ <CANAwSgQRK4zNot8+R3xXX9SadtJ09H5ApezGApKtt-D2KkBbfA@mail.gmail.com>
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <CANAwSgQRK4zNot8+R3xXX9SadtJ09H5ApezGApKtt-D2KkBbfA@mail.gmail.com>
+X-ClientProxiedBy: WA2P291CA0007.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1e::10) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 MIME-Version: 1.0
-References: <CAEUiLubXaPGZsE6y_X6mBTD1ZK-2w82fbRD5z8+MKvDZtZKOtA@mail.gmail.com>
- <f073dad7-337e-499a-8cb5-9dae0842de17@linaro.org> <CAEUiLuYBVyLm4HgJG88r1J8RcUu38uEVPbV5c+-ArqjU4aUOAA@mail.gmail.com>
- <3783aef0-a7a0-489f-add0-21e1fc2bfad1@linaro.org> <CAEUiLubVazb4rgfBd-r-5AtyfBVaMFmy89OO_UZB97FM43if7w@mail.gmail.com>
- <D9QX0MRWSYW6.3ELRB73BS6PRT@postmarketos.org> <CAEUiLuYW61Vz4zAie2K9cnXXQxxRj150Nc-fJMQCh9NwXZQmzQ@mail.gmail.com>
- <CANAwSgRkqAj5Q4LMO-CKBSoMgO-+zd6JpbVs+eWY3kPgmj9bug@mail.gmail.com>
- <CAEUiLubakMjzhi2sUTQx1S4ciTjkL6ysx465i1t-T5zKUQdUvw@mail.gmail.com>
- <CAEUiLuY2D_CzkEH0+gCvkbC_MtJ4B-MLYYkx_r2E9BHxPvuVjg@mail.gmail.com>
- <CANAwSgRvtgsejhsj=TyRAYWdQRfGRigvw9+=HzcdxbDopoiFYw@mail.gmail.com> <7BAB0A37-3DA8-4FC9-AFFE-7CAE6FA92367@gmail.com>
-In-Reply-To: <7BAB0A37-3DA8-4FC9-AFFE-7CAE6FA92367@gmail.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Mon, 12 May 2025 15:34:21 +0530
-X-Gm-Features: AX0GCFvF7325CEN4o8poH8aCEiTW3B4cGtpSuk-e07uajOPJy3vAypccAc3rTK4
-Message-ID: <CANAwSgTtU2oe4jwJySGk7wq3QqShuyUedFjeUrE-VRi=uH1_TQ@mail.gmail.com>
-Subject: Re: Odroid n2+ usb broken on reboot
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: u-boot-amlogic@groups.io, Wayne Schroeder <raz@chewies.net>, 
-	Ferass El Hafidi <funderscore@postmarketos.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	u-boot@lists.denx.de, 
-	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|GVXPR04MB10537:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e6cebb0-df1c-41d1-a3b5-08dd91238f8e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?L2NvZU9HREczdTF5aFZRNFNHZWIwUFlRaUNmK1B3OURCaW9YcFdMY1VZYUtF?=
+ =?utf-8?B?YWNBSU9yVm5tV2FVaytzYVZDb0xBS2ZoWm85UmRKUTUvTlkzeElnSHdHWXEy?=
+ =?utf-8?B?eTRSaXVhZ1NOY0lpM0JIc1F6Y1Zhb1p4YWw1RnEwY1ZUc1MyaWFTWW5pbktS?=
+ =?utf-8?B?c3Bmem1taHFCakxtaVVOVTlKdllhemthOHcyc0tQem0yRC9yQStSOXFyYisy?=
+ =?utf-8?B?TDRKZm40bk5UdUxWb1N3MDY2RDg4UzBRNzI2b3dHVCtTYk1LZ0ROaENESnpU?=
+ =?utf-8?B?Qk5IUW1CakpVek1zeno1T3NEWkFoVVZOQmtvYzVLQk1JeEJKZmt6c2pBcTRw?=
+ =?utf-8?B?NGFPV1UxbWlPRFFxRjN1WVJGOVFLcVFnRTYyN2h3aUlDNStYN1lZT1NKSmJD?=
+ =?utf-8?B?ZmZxdVpZTld3eXRLNWJveFVXZWVuZExSdVNPTGY1WThwVmFic2QvVGtrL3Z2?=
+ =?utf-8?B?SGpXUDU1bGZIeTNJeU1ZbjJsY1BaWkduNlVKaEhWV3RRakJmejB0cFhGelo4?=
+ =?utf-8?B?clFuVEhBWFhTY3R3Ym5xa0NBYk1vMURRS21BcGlNbG9tUUpXSE94SkRMaytL?=
+ =?utf-8?B?Y0FSZjFVZ0tKMTgyeUNmdHJjYUtZSlpEZENoTTJoaG1ncWV1UUpUYjJlQWpK?=
+ =?utf-8?B?VFovckpac0NYeHhTRGUyWm96dE9jUy9IeEcrODR4NVg4MWpUUGtHcklYUnJD?=
+ =?utf-8?B?WkJUQXREOThzakJ0TUhyMVYwa2VsejJTQU1ZYWhEaWJvdThYbytRYWdVSmZZ?=
+ =?utf-8?B?SUtRc3U5WTlrQTJEOU5waGREWGQ1N3M0bytnUFJZejF2amhaWnlKTWg5WkdW?=
+ =?utf-8?B?ZFVESkhOMGZDVGdPcFRTRDJoLzkvb3ZVVTgwa0FTL2tTOE1qV2pGV3RHLzJk?=
+ =?utf-8?B?aTB2UytvcW5IVm1FeFB4Vms0bFNmY0FOak1LUiswaFJWTnFOZTNuTklkR0Mw?=
+ =?utf-8?B?dGw1bnEzUS8zcktPVnBEODdkQ0Rla2VvYjdJREV4bEx2S2lLcHZMMjlOTDdI?=
+ =?utf-8?B?dk5La1VxejIwbjB2QkI0MFQ4US94Y2lPRFIwcTh2c1FmZHFENWR6eGlFQ0U1?=
+ =?utf-8?B?R3V4QmtVZFN4TFJZK2tjUnV2UjdoMDVueWpDWVlPVVRoZzRaNW1GdnVEYlVY?=
+ =?utf-8?B?R1RtajVCODJKWkV0WnBLYlVSZnQ5dWhXazRleitpOVpxb0FWWjhiMEE5U2ps?=
+ =?utf-8?B?bVc4cUtKTDk2Nk5GY09jNXNrSkpYa3FGOVVEdkZ6SjFxT1pYd2RvUldaNmZH?=
+ =?utf-8?B?YjF3cml3ZWdRZlZuMjFqZEhYREYyRG1EWm92SE9Idy93UFRla2dmT1d3VDJD?=
+ =?utf-8?B?ZUwwR200b1lVczVGaWtJc0JWYTgvMGN6SU5IRHM5Y3FJYnlPekRXWFVlenFU?=
+ =?utf-8?B?Q0hFVHBzVzAxdXZFVDltOW9XM0UyTE03UXBsSDNGakZYR3NWaWh1cEN6aVNW?=
+ =?utf-8?B?VkxEeFlMVWEzNEZSWHpiRVZmQnFmRmgweEpkbWQvT0JJbUVQL1hGMzRMTTR5?=
+ =?utf-8?B?KzBQdGRLb1VzRDQ4Y1dwL2R0VjQ3QlNBbTgzWmpldURzVVpzYWZTNGJER0Ju?=
+ =?utf-8?B?WGwwTGl1dWtCWkhZQVBQdTNPS1NhQUNkNVZqNEtXcTAzSjdJOFNTbHc2MUtu?=
+ =?utf-8?B?VUIzMmZPWHpsTHJqTXN2d2pYS0MybW04OEZFSUtlN3hVWkJRRGZ2M2tuaVht?=
+ =?utf-8?B?NGo2UHl6aU5HazR3cmpzVEptSk9ZYTVtQWJUMjB6Y1lGaGFnQTg5cnZ5SmdK?=
+ =?utf-8?B?bUJ3K29IWWFWdGs3NUhRY1lyQTBCRHowWENSNVVoT1pFay9iRHpFa1lyaW9T?=
+ =?utf-8?B?WVVLbEhxYXhxUWlkaWVFOTRiVmsxOUYrTHRLQ1pSOVlmZlVCbkxKTmVGOGho?=
+ =?utf-8?B?eEc0UlFmMTgwdVBQZlRJOU9yQ0d4Q0xBMENrV0RpMW1ra0FZZGk0SzNEell5?=
+ =?utf-8?Q?m5iAbuOjyRw=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?bWhnemF6UU53VmNaT2Exci8zYTQ0Z2dZeFhLc3V1a3p1RGlZOVJtcFlwMzYz?=
+ =?utf-8?B?KzRwVmpFaEEyWnBYRy83VGs2UnJINUVFKzFlZWZRV0xRKzZRWDB5NWFDcVFI?=
+ =?utf-8?B?Q25JUzJWM3lUaFhjdHYwWjlrZ2VLRmNaUkNkTkJsOUNOYW5FdDFQOHM4UWJV?=
+ =?utf-8?B?MEV3cUY5YlVockdxZS95THBPNnRaTzEzaEF4anV5QjRic1lBc2xFRFhUVTVy?=
+ =?utf-8?B?eXdVcVpCaUx0NHprWlVCY1JXbUhiRWJqVnhDVjNmTXVTUW8zb0hLYnNULzM4?=
+ =?utf-8?B?MTJyNDU4cW9KS2xIeVB2ZnZWNUZTcWJDTHNpNWFjNVFXQ21LZVJhcUVneGox?=
+ =?utf-8?B?YVBXYnIxbWRaS0I5R0RmOENVRkdJRTY2ZXlnVzZjZjdoZjBwTlo1NXF4UHk0?=
+ =?utf-8?B?alM4ZURpNE0xMlhpRmE1MmpHNHhmek5wYmduNzZkTmwzWUFxWDRZZG5zaUd4?=
+ =?utf-8?B?YktxVCswYUlJLy9WSFJxQzArSmIzaTNSazJzYXlPUW9xRm1mbUhQUlVsbVc4?=
+ =?utf-8?B?RklzSkpoSUx1YVEwbmZiR2tia0xvVFE3QXNoQkxlS3g3ZERqSkwxWjdXRm5T?=
+ =?utf-8?B?VWoxTlVlSUk5SlZqcHAzdVBCMUFjUUQwOHJ0dGVsUkNWdU9UZ1ZoMFJzdW1J?=
+ =?utf-8?B?NVdHcEo2Q1hyZU9aUS9DTjFibWVCa2JDaGhqdkpHMzExbTRCSUpQanlqQ0Ns?=
+ =?utf-8?B?S1h6a3pZbVFZLzlqWDR5MVJLQkE4cStGczFKTDVPS3NobGt0ZHA5V0xzemkw?=
+ =?utf-8?B?TUNPd2tqeW8vY0Q1ZGtsbHdlWVZ0bjZjWkhkY0pHemRHcHhtZVlFV0pHWWd0?=
+ =?utf-8?B?OFducnlINFQ2U0RYWEpDa3NFZlNSZEg2UmNVOFZGblQwQkEzVlJUS3dvc2hF?=
+ =?utf-8?B?NytlQ054ek9tNGNsUFNyTFVFcllPeURtcnRiVTZTRFVWZXgwTmZ5aEdldHYw?=
+ =?utf-8?B?RkJTc2hDRmpFbnc2NmlpTWxBUy9GN0VLMTl5YXcvK21OdmhOeitKaGd4Tkxw?=
+ =?utf-8?B?aHhmSzlPNFJUdXl3MjNQNUpsdzZDSFg2R1JRWFVQd2s0N0xlYlhLSXRJQk5F?=
+ =?utf-8?B?K2tWUHV6TnMzQ0pocXZDdURPeGdYM0tBc0VlMEtzZUl6QVlSZjBtRlJqbHUr?=
+ =?utf-8?B?djlpSkVCZVg4TU4vSmw1SkZGQXlUYTRPME85KzhEai9oY25BcnNhZzVFN2lw?=
+ =?utf-8?B?bzdHYUllaWRFV0hSYlp4Sy9XbzJGMDRvbFFjRU5iV2g3d3YxbW83dzVRY2tl?=
+ =?utf-8?B?NmZnUFgvb1lpTEIwU3JncjBaOXpVOGtwREt5UGx0VTIwdlVxb0hWTDRnc3BB?=
+ =?utf-8?B?NGM4V2NHYjBMcWRtNWNsYUxKRWNXOFNmYUNuVFJieUtoTUQra3VCNFlUL0xF?=
+ =?utf-8?B?Nm9mT2V1b3hjWkNxTFU4L29jTGd0YjVMc1poLytJWlhWcmsrdVdpLytDMkoy?=
+ =?utf-8?B?YmEvMmJxNjQrNnZhdVJ6RWlhd1pSS2JncXV6UkJaSGRvcVFPblZTVzg5czU0?=
+ =?utf-8?B?TUtoV2p5RHRyUDZIejdKcXllcFA4anB3a1E3clJTaDlORW9XV1N3VDRIQmVi?=
+ =?utf-8?B?ZEgwZ2k4QzlwWUw3RmNFTzdMd0NxYmdXOEZwdFFSNHhXaFdmNGxQOUZHRFN1?=
+ =?utf-8?B?cXZpeXVpSDB6QW5QVWhYcVVVcm94aHJHQWhDd2tRKy9xaklnT0RwbDFCV2M3?=
+ =?utf-8?B?ck5BZ0UwYy8ySm9wT3hlbjFzeVRXR2gyZlI0eHBxWnp2Q0QrcVpCZlFLYUtv?=
+ =?utf-8?B?VEpHUHU2Vk9oOEZUejlDN3NUUmozdG43SmgwMnkwZGdHL2lBNXUxY3dvMSt1?=
+ =?utf-8?B?a3BKZHpkZklDUVZpWG4wZzVlbUZoNW0wWkIwVE5qQ0NaVWM1MXZza0xEeVVC?=
+ =?utf-8?B?YkV4MThkSHNMejY5RTJuK2Y2c3ZYTEQvTXNxaEJ6VzRPcWVlYzFkWkx1Tnc3?=
+ =?utf-8?B?anA2S2ZZb0xSSHBIeTY3ZDZyVnZzTE9LYXFzQWNtZWcwWlcxYk9QNWZMQTg4?=
+ =?utf-8?B?NGdSa2hiWlpjSnBmYnptNkR0V2lQdjF1am9rMWNKSWgxb3NxaFZSSnUrWmlY?=
+ =?utf-8?B?T3RQL3NTb09MZ0cvQ3BCdFNBNUVIS25yNVpzMVh0RUtRdVQvb1lPWVZuTVNW?=
+ =?utf-8?B?eVJJN2ZBNjJEVlEzajZpN0lib3hHWnl5aWpVWXQwbHUybDFUWjhJUERtR3BQ?=
+ =?utf-8?B?Z0E9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e6cebb0-df1c-41d1-a3b5-08dd91238f8e
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 07:06:47.6866
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W0gNseiiJwNrjJ4d08NhftA6tS9Fm0g3n9pEdCWAw/c4MTvE9KbMbOd5ZU1tAnV16gH1jpvZa8/le1Wj/o7ToZE06j0veOfVqOIkHb7wtWA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10537
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 12 May 2025 10:04:44 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2699
+ <u-boot-amlogic@groups.io>; Mon, 12 May 2025 14:08:05 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2702
 
-Hi Christian,
+Hi Anand,
 
-On Mon, 12 May 2025 at 15:05, Christian Hewitt
-<christianshewitt@gmail.com> wrote:
->
-> > On 12 May 2025, at 10:59=E2=80=AFam, Anand Moon via groups.io <linux.am=
-oon=3Dgmail.com@groups.io> wrote:
-> >
-> > Hi Wayne,
-> >
-> > On Sun, 11 May 2025 at 01:51, Wayne Schroeder <raz@chewies.net> wrote:
-> >>
-> >> Applied patches to 2025.04 release (applied clean).  Made stock
-> >> defconfig for odroid n2, built, signed, installed.  The reboot issue
-> >> remains and usb ports are unavailable to linux kernel after reboot.
-> >>
-> >> It is worth noting that linux does see some enumeration of devices
-> >> after a while, but even if it logs to the console about device
-> >> attachment, the devices don't actually function.  This was the same
-> >> behavior with the release version.
-> >>
-> > Thanks for testing these patches.
-> > We need to modify the boot order to probe USB before MMC
->
-> Why? Most Amlogic boards boot from an mmc device (SD or internal flash
-> storage) not USB. It smells like a workaround not a fix, and I wonder
-> what the performance impact on boot will be?
->
-I'm providing a solution that may not apply to all Amlogic boards.
-The goal is to ensure the USB device binds early, allowing the USB keyboard
-and mass storage device to be detected promptly.
-However, I'm unsure if booting from USB mass storage is supported.
+On 5/9/25 7:45 PM, Anand Moon wrote:
+> Hi Quentin,
+> 
+> On Fri, 9 May 2025 at 17:21, Quentin Schulz <quentin.schulz@cherry.de> wrote:
+>>
+>> Hi Neil, Anand,
+>>
+>> On 5/9/25 9:57 AM, Neil Armstrong wrote:
+>>> On 09/05/2025 09:02, Anand Moon wrote:
+>>>> Add conditional compilation for the usb5744_i2c_init() function based
+>>>> on the CONFIG_DM_I2C configuration, to avoid compilation failure.
+>>>>
+>>>>     CC      net/net-common.o
+>>>>     AR      net/built-in.o
+>>>>     LDS     u-boot.lds
+>>>>     LD      u-boot
+>>>> aarch64-linux-gnu-ld.bfd: common/usb_onboard_hub.o: in function
+>>>> `usb5744_i2c_init':
+>>>> /home/amoon/mainline/u-boot/amlogic/u-boot-maineline/common/
+>>>> usb_onboard_hub.c:74:(.text.usb5744_i2c_init+0xfc): undefined
+>>>> reference to `i2c_get_chip'
+>>>> aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-
+>>>> maineline/common/usb_onboard_hub.c:89:(.text.usb5744_i2c_init+0x1a0):
+>>>> undefined reference to `dm_i2c_write'
+>>>> aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-
+>>>> maineline/common/usb_onboard_hub.c:96:(.text.usb5744_i2c_init+0x1c8):
+>>>> undefined reference to `dm_i2c_write'
+>>>> aarch64-linux-gnu-ld.bfd: /home/amoon/mainline/u-boot/amlogic/u-boot-
+>>>> maineline/common/usb_onboard_hub.c:104:(.text.usb5744_i2c_init+0x1f0):
+>>>> undefined reference to `dm_i2c_write'
+>>>> Segmentation fault (core dumped)
+>>>> make: *** [Makefile:1824: u-boot] Error 139
+>>>> make: *** Deleting file 'u-boot'
+>>>>
+>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>> ---
+>>>>    common/usb_onboard_hub.c | 4 ++++
+>>>>    1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/common/usb_onboard_hub.c b/common/usb_onboard_hub.c
+>>>> index 1242513c631..92e3f3a92c9 100644
+>>>> --- a/common/usb_onboard_hub.c
+>>>> +++ b/common/usb_onboard_hub.c
+>>>> @@ -30,6 +30,7 @@ struct onboard_hub_data {
+>>>>        int (*init)(struct udevice *dev);
+>>>>    };
+>>>> +#if CONFIG_IS_ENABLED(DM_I2C)
+>>>>    static int usb5744_i2c_init(struct udevice *dev)
+>>>>    {
+>>>>        /*
+>>>> @@ -109,6 +110,7 @@ static int usb5744_i2c_init(struct udevice *dev)
+>>>>        return 0;
+>>>>    }
+>>>> +#endif
+>>>>    int usb_onboard_hub_reset(struct udevice *dev)
+>>>>    {
+>>>> @@ -222,7 +224,9 @@ static const struct onboard_hub_data usb2514_data = {
+>>>>    };
+>>>>    static const struct onboard_hub_data usb5744_data = {
+>>>> +#if CONFIG_IS_ENABLED(DM_I2C)
+>>>>        .init = usb5744_i2c_init,
+>>>> +#endif
+>>>>        .power_on_delay_us = 1000,
+>>>>        .reset_us = 5,
+>>>>    };
+>>>
+>>> I think you should completely disable usb5744_data in this case
+>>>
+>>
+>> I would recommend to go the same route as the Linux kernel which has a
+>> special Kconfig option for it, c.f. USB_ONBOARD_DEV_USB5744 which adds
+>> the necessary dependencies.
+>>
+> On Linux kernel, it needs to parse the device node with i2c-bus.
+> 
 
-Thanks
--Anand
-> Christian
->
-> > diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-> > index f3275b37a51..3ace59880bd 100644
-> > --- a/include/configs/meson64.h
-> > +++ b/include/configs/meson64.h
-> > @@ -119,8 +119,8 @@
-> > #define BOOT_TARGET_DEVICES(func) \
-> >        func(ROMUSB, romusb, na)  \
-> >        func(USB_DFU, usbdfu, na)  \
-> > -       BOOT_TARGET_MMC(func) \
-> >        BOOT_TARGET_DEVICES_USB(func) \
-> > +       BOOT_TARGET_MMC(func) \
-> >        BOOT_TARGET_NVME(func) \
-> >        BOOT_TARGET_SCSI(func) \
-> >        BOOT_TARGET_PXE(func) \
-> >
-> > Here is the boot sequence at my end.
-> > ------------------------
-> > U-Boot 2025.07-rc1-00223-g704a4d1fd804 (May 12 2025 - 12:15:29 +0530)
-> > odroid-n2/n2-plus
-> >
-> > Model: Hardkernel ODROID-N2
-> > SoC:   Amlogic Meson G12B (S922X) Revision 29:c (40:2)
-> > DRAM:  1 GiB (total 3.8 GiB)
-> > Core:  402 devices, 30 uclasses, devicetree: separate
-> > MMC:   mmc@ffe05000: 0, mmc@ffe07000: 1
-> > Loading Environment from nowhere... OK
-> > In:    usbkbd,serial
-> > Out:   vidconsole,serial
-> > Err:   vidconsole,serial
-> > Board variant: n2-plus
-> > Net:   eth0: ethernet@ff3f0000
-> >
-> > Hit any key to stop autoboot:  0
-> > starting USB...
-> > Register 3000140 NbrPorts 3
-> > Starting the controller
-> > USB XHCI 1.10
-> > Bus usb@ff500000: 4 USB Device(s) found
-> >       scanning usb for storage devices... 1 Storage Device(s) found
-> >
-> > Device 0: Vendor: ASMT     Rev: 0    Prod: 2115
-> >            Type: Hard Disk
-> >            Capacity: 114473.4 MB =3D 111.7 GB (234441648 x 512)
-> > ... is now current device
-> > Scanning usb 0:1...
-> > Card did not respond to voltage select! : -110
-> > Cannot persist EFI variables without system partition
-> > Loading Boot0000 'mmc 1' failed
-> > Loading Boot0001 'usb 0' failed
-> > EFI boot manager: Cannot load any image
-> > Card did not respond to voltage select! : -110
-> > switch to partitions #0, OK
-> > mmc1(part 0) is current device
-> > Scanning mmc 1:1...
-> > Found /extlinux/extlinux.conf
-> > Retrieving file: /extlinux/extlinux.conf
-> > 1:      Manjaro ARM
-> > Retrieving file: /Image
-> > Retrieving file: /initramfs-linux.img
-> > append: initrd=3D/initramfs-linux.img console=3DttyAML0,115200n8
-> > root=3DPARTUUID=3D0efc7c36-02 rootwait audit=3D0 clk_ignore_unused
-> > plymouth.ignore-serial-consoles
-> >
-> >> Wayne
-> >>
-> >> On Fri, May 9, 2025 at 10:01=E2=80=AFAM Wayne Schroeder <raz@chewies.n=
-et> wrote:
-> >>>
-> >>> Yes.  Will report back how it works on the n2+.
-> >>>
-> >>>
-> >>> On Fri, May 9, 2025 at 2:08=E2=80=AFAM Anand Moon <linux.amoon@gmail.=
-com> wrote:
-> >>>>
-> >>>> Hi Wayne,
-> >>>>
-> >>>> On Fri, 9 May 2025 at 01:25, Wayne Schroeder <raz@chewies.net> wrote=
-:
-> >>>>>
-> >>>>> I actually already have a working solution that I documented in my
-> >>>>> github repo (dubschro/odroid-n2).  All I do is set BOOTCOMMAND to
-> >>>>> check/delete a flag file on my boot partition and if it is found, t=
-hen
-> >>>>> reset usb and sleep for 10 seconds.  I then have a systemd shutdown
-> >>>>> script only on reboot to touch that file.
-> >>>>>
-> >>>>> CONFIG_BOOTCOMMAND=3D"fatrm mmc 0:1 reboot && echo Resetting USB on
-> >>>>> reboot... && usb reset && sleep 10; run distro_bootcmd"
-> >>>>>
-> >>>>> It is a hack, but... the system reliably reboots remotely now, and
-> >>>>> that's the important part for now.
-> >>>>>
-> >>>>> Wayne
-> > I did not modify this at my end. However, this is not required with
-> > the above fix.
-> >
-> > Thanks
-> > -Anand
-> >>>>>
-> >>>>> On Thu, May 8, 2025 at 11:22=E2=80=AFAM Ferass El Hafidi
-> >>>>> <funderscore@postmarketos.org> wrote:
-> >>>>>>
-> >>>>>> On Wed May 7, 2025 at 1:03 PM UTC, Wayne Schroeder wrote:
-> >>>>>>> It's hard for me to quantify if usb works in u-boot as I'm not lo=
-ading
-> >>>>>>> off of any usb storage devices.  It certainly never lets me use t=
-he
-> >>>>>>> keyboard to abort auto boot, and never has.  On reboot, to reliab=
-ly
-> >>>>>>
-> >>>>>> You can send bytes via UART to abort boot, if you happen to have a=
- UART
-> >>>>>> adapter around.
-> >>>>>
-> >>>> Can you test this series to see if this resolves the issue?
-> >>>>
-> >>>> https://patchwork.ozlabs.org/project/uboot/list/?series=3D456088
-> >>>>
-> >>>> Thanks
-> >>>> -Anand
-> >>>>
-> >>>>> _______________________________________________
-> >>>>> linux-amlogic mailing list
-> >>>>> linux-amlogic@lists.infradead.org
-> >>>>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> >
-> >
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> > Groups.io Links: You receive all messages sent to this group.
-> > View/Reply Online (#2696): https://groups.io/g/u-boot-amlogic/message/2=
-696
-> > Mute This Topic: https://groups.io/mt/112625435/6407323
-> > Group Owner: u-boot-amlogic+owner@groups.io
-> > Unsubscribe: https://groups.io/g/u-boot-amlogic/unsub [christianshewitt=
-@gmail.com]
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+Seems like it does in U-Boot too? c.f. usb5744_i2c_init() with 
+dev_read_phandle_with_args with i2c-bus?
+
+>> We probably should be careful and figure out which boards are actually
+>> using the usb5744 and add this symbol to their defconfig so they don't
+>> regress.
+>>
+>  From my initial analysis configs/xilinx_zynqmp_kria_defconfig
+> which use CONFIG_USB_ONBOARD_HUB
+> I believe using DM_I2C to guard the code is the best approach.
+> it should be around .init() callback to guard this to work.
+> 
+
+I disagree. The driver clearly supports the USB5744 and the driver is 
+compiled regardless of DM_I2C support which is required (as far as I 
+understood, maybe that's incorrect?) for being able to use USB5744? I 
+don't like hidden dependencies.
+
+Also, I believe Neil's point is we shouldn't try to probe the USB5744 if 
+there is no DM_I2C support, simply excluding .init() callback will 
+probably just render this "support" of USB5744 non-functional?
+
+Cheers,
+Quentin
+
+>> Cheers,
+>> Quentin
+> Thanks
+> -Anand
+
 
