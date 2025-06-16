@@ -2,775 +2,123 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B425C7115B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D4BC77B7C
 	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:51:50 +0000 (UTC)
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web10.13397.1750148241050784367
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+ by mx.groups.io with SMTP id smtpd.web10.1394.1750091007170325236
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Jun 2025 01:17:21 -0700
+ Mon, 16 Jun 2025 09:23:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=mCCaDdkR;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=h92p86wZ;
- spf=pass (domain: mailbox.org, ip: 80.241.56.171, mailfrom: marek.vasut+renesas@mailbox.org)
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bM08v3WQ4z9sj8;
-	Tue, 17 Jun 2025 10:17:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750148239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+FDRPCqHBL6Z6hMrcQlRL81ou0ZscMlUcP1LKuc+Es=;
-	b=mCCaDdkR532aagZPkr5BiIHAqreA1cJtpiVr+aMOVXn43Hicf9nJ6pDyOcQSsl/YwAOPh5
-	apHwe1mTreHd0So8+lwmcdmg9Wz+cTnnVG2f8NyRxt8wUmXzAr5kYbNzrtVnbOjYla8R6R
-	6AEsSAufUUCS8lRScfs4dzUVMJyHBKNXflfyw4M+7R0e46YtYY+oLyjcKhOX1PYB4w/CVa
-	/wWnzYObjViiGw3Tos2/H02paRgogXGsekCdMSBgsUkuaw8xiDU6PCuaK1R6/7a+xa81J1
-	A2Qc709RfbV3fYiW0Cfn27NanMwnb3G093bekmxi6Fk1XoIV9ODV8YNSVE/p8A==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750148237;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+FDRPCqHBL6Z6hMrcQlRL81ou0ZscMlUcP1LKuc+Es=;
-	b=h92p86wZbTOcQN76oeBMFMm8jq0dHvZW3wl6J15ZIpnfxCPukGPBLCOFV7RATLUBC5Woz2
-	1Z2oXa2mufWMRnckNMwzMl0RebiEYsb7uac6sRhPnBC+j5ua0AWr19ZZKIXdloykUBZkZL
-	fa3Rn0ug8qL89hl6hzkkt44aajCT5IjDAhVNz7SA34EqGS1s/zmsPQJZNFWqGpH2VRQvg+
-	SDik3smJs9kxW1J0B1MXaof5xphZhL3G/hCblKwD3MbarqfREefO/pAoI3fZEX4oqXquzs
-	mP9O7MkI7+i3jYgV1fvNZxMgIlgFGb89OEduKzZ0bGEE1bEG3eLo9bA7yBmAqg==
-To: u-boot@lists.denx.de
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	John Crispin <john@phrozen.org>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
-	Philipp Tomsich <philipp.tomsich@vrull.eu>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Simon Glass <sjg@chromium.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Tom Rini <trini@konsulko.com>,
-	u-boot-amlogic@groups.io,
-	u-boot-qcom@groups.io
-Subject: [PATCH 5/6] pci: pcie-rcar-gen4: Add Renesas R-Car Gen4 DW PCIe controller driver
-Date: Tue, 17 Jun 2025 10:16:31 +0200
-Message-ID: <20250617081641.8385-5-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
-References: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
+ dkim=pass header.i=@kernel.org header.s=k20201202 header.b=nYP/ZzKH;
+ spf=pass (domain: kernel.org, ip: 172.105.4.254, mailfrom: devnull+forbidden405.outlook.com@kernel.org)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 1F2EA629C7;
+	Mon, 16 Jun 2025 16:23:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E3DB6C4CEF0;
+	Mon, 16 Jun 2025 16:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750091005;
+	bh=/vG90dHfi1h9BoDnWkDkrBE9RQ4qrezquV5ho656kFc=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=nYP/ZzKHCG0PGLU9nR4ZOuAmXRWBnbygyL9Djc0gEHimTJ65vu5cJFWOux+xaCski
+	 ylaymqpi8mDGHJY7jKePmx9m1DFJsk0DWP8nBPBZVFvdANhXANbBDecH6sdJ98mpDU
+	 KACCl4ZbVW0ksUql+0Q85U09JnYPO+R5D1VFlLE8xE/pCzgXqjN5iGlmyhK72XrTOh
+	 zLPbvqeQZIM2hv1wjewlj8x8v5q0e5fyYACvv/PNM2yEUa9+rZEemrGzJmkv7ZmFU9
+	 B6K0lKfvYh5msIHBOcbvLVZqBHnACFwn86tUyJuj/Cv7iNORY+8tgjNqILkjbyrilg
+	 A85bxOeE/zUPw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E25C71159;
+	Mon, 16 Jun 2025 16:23:25 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Tue, 17 Jun 2025 00:23:25 +0800
+Subject: [PATCH] pinctrl: meson: support gpio toggle command
 MIME-Version: 1.0
-X-MBO-RS-META: gu1snpfpaqxt9wnngjq1f9yagcif3jha
-X-MBO-RS-ID: 3086efbe3ff2ea9376f
-X-Rspamd-Queue-Id: 4bM08v3WQ4z9sj8
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <20250617-meson_ppinctrl-v1-1-593aa15f288a@outlook.com>
+X-B4-Tracking: v=1; b=H4sIAPxEUGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0Nz3dzU4vy8+IKCzLzkkqIcXVNDY8vkRAOzJAsjCyWgpoKi1LTMCrC
+ B0bG1tQAbBW7dYAAAAA==
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Tom Rini <trini@konsulko.com>, Beniamino Galvani <b.galvani@gmail.com>, 
+ Simon Glass <sjg@chromium.org>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
+ Yang Xiwen <forbidden405@outlook.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750091005; l=1668;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=0tgA8LIJQgOLFGBN5dqiTZa7VCU/mclDvr6myN+Iw9E=;
+ b=9JNasCTwImUq3/mgCKjD83jCPDU5fSry/Od/09oEtn+5umgI4CvkoztaWe4i06qk/11xezifO
+ gtxuCsl/2G1D5z/+PsfzAvUh2UtFwU5zgYnNVUD2sFb2H3zLkZYqKY4
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received: by B4 Relay for forbidden405@outlook.com/20230724 with
+ auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: forbidden405@outlook.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:51:50 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2721
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2718
 
-Add R-Car Gen4 PCIe controller support for host mode.
+From: Yang Xiwen <forbidden405@outlook.com>
 
-This controller is based on Synopsys DesignWare PCIe. However, this
-particular controller has a number of vendor-specific registers, and as
-such, requires initialization code, including PHY firmware loading.
+meson_gpio_get() always assumes gpio is configured to input mode. This
+is incorrect and breaks `gpio toggle` command:
 
-The PHY firmware loading is implemented in an entirely generic manner,
-by calling a firmware loading script, which the user can configure in
-a way they require. This provides the user with flexibility of loading
-the PCIe firmware from whichever storage device they need to load it
-from.
+gpio: pin aobus-banks2 (gpio 2) value is 0
+   Warning: value of pin is still 1
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Fix it by adding the logic to handle both input and output mode.
+
+Fixes: 2009a8d03fe5 ("pinctrl: meson: add GPIO support")
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
-Cc: Casey Connolly <casey.connolly@linaro.org>
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Daniel Schwierzeck <daniel.schwierzeck@gmail.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: John Crispin <john@phrozen.org>
-Cc: Kever Yang <kever.yang@rock-chips.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Cc: Philipp Tomsich <philipp.tomsich@vrull.eu>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: Simon Glass <sjg@chromium.org>
-Cc: Sumit Garg <sumit.garg@kernel.org>
-Cc: Tom Rini <trini@konsulko.com>
-Cc: u-boot-amlogic@groups.io
-Cc: u-boot-qcom@groups.io
-Cc: u-boot@lists.denx.de
----
- drivers/pci/Kconfig          |  10 +
- drivers/pci/Makefile         |   1 +
- drivers/pci/pci-rcar-gen4.c  | 565 +++++++++++++++++++++++++++++++++++
- drivers/pci/pcie_dw_common.h |   7 +
- 4 files changed, 583 insertions(+)
- create mode 100644 drivers/pci/pci-rcar-gen4.c
+ drivers/pinctrl/meson/pinctrl-meson.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 409049137cc..8ffd88c722d 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -389,6 +389,16 @@ config PCIE_DW_QCOM
- 	  Say Y here if you want to enable DW PCIe controller support on
- 	  Qualcomm SoCs.
-=20
-+config PCI_RCAR_GEN4
-+	bool "Renesas R-Car Gen4 PCIe driver"
-+	depends on RCAR_GEN4
-+	select DM_RESET
-+	select DM_GPIO
-+	select PCIE_DW_COMMON
-+	help
-+	  Say Y here if you want to enable PCIe controller support on
-+	  Renesas R-Car Gen4 SoCs.
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index babf1bccc969..a1f4afd11f94 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -117,8 +117,27 @@ int meson_gpio_get(struct udevice *dev, unsigned int offset)
+ 	struct meson_pinctrl *priv = dev_get_priv(dev->parent);
+ 	unsigned int reg, bit;
+ 	int ret;
++	enum gpio_func_t direction;
++	enum meson_reg_type reg_type;
+ 
+-	ret = meson_gpio_calc_reg_and_bit(dev->parent, offset, REG_IN, &reg,
++	direction = meson_gpio_get_direction(dev, offset);
 +
- config PCIE_ROCKCHIP
- 	bool "Enable Rockchip PCIe driver"
- 	depends on ARCH_ROCKCHIP
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index ba53f594963..a0420e733ed 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PCIE_IMX) +=3D pcie_imx.o
- obj-$(CONFIG_PCI_MVEBU) +=3D pci_mvebu.o
- obj-$(CONFIG_PCI_RCAR_GEN2) +=3D pci-rcar-gen2.o
- obj-$(CONFIG_PCI_RCAR_GEN3) +=3D pci-rcar-gen3.o
-+obj-$(CONFIG_PCI_RCAR_GEN4) +=3D pci-rcar-gen4.o
- obj-$(CONFIG_SH7751_PCI) +=3Dpci_sh7751.o
- obj-$(CONFIG_PCI_TEGRA) +=3D pci_tegra.o
- obj-$(CONFIG_PCIE_IPROC) +=3D pcie_iproc.o
-diff --git a/drivers/pci/pci-rcar-gen4.c b/drivers/pci/pci-rcar-gen4.c
-new file mode 100644
-index 00000000000..87cd69f989d
---- /dev/null
-+++ b/drivers/pci/pci-rcar-gen4.c
-@@ -0,0 +1,565 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * PCIe controller driver for Renesas R-Car Gen4 Series SoCs
-+ * Copyright (C) 2025 Marek Vasut <marek.vasut+renesas@mailbox.org>
-+ * Based on Linux kernel driver
-+ * Copyright (C) 2022-2023 Renesas Electronics Corporation
-+ *
-+ * The r8a779g0 (R-Car V4H) controller requires a specific firmware to b=
-e
-+ * provided, to initialize the PHY. Otherwise, the PCIe controller will =
-not
-+ * work.
-+ */
++	switch (direction) {
++	case GPIOF_INPUT:
++		reg_type = REG_IN;
++		break;
 +
-+#include <asm-generic/gpio.h>
-+#include <asm/arch/gpio.h>
-+#include <asm/global_data.h>
-+#include <asm/io.h>
-+#include <clk.h>
-+#include <command.h>
-+#include <dm.h>
-+#include <dm/device_compat.h>
-+#include <env.h>
-+#include <log.h>
-+#include <reset.h>
++	case GPIOF_OUTPUT:
++		reg_type = REG_OUT;
++		break;
 +
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/iopoll.h>
-+
-+#include "pcie_dw_common.h"
-+
-+/* Renesas-specific */
-+/* PCIe Mode Setting Register 0 */
-+#define PCIEMSR0				0x0000
-+#define APP_SRIS_MODE				BIT(6)
-+#define DEVICE_TYPE_EP				0
-+#define DEVICE_TYPE_RC				BIT(4)
-+#define BIFUR_MOD_SET_ON			BIT(0)
-+
-+/* PCIe Interrupt Status 0 */
-+#define PCIEINTSTS0				0x0084
-+
-+/* PCIe Interrupt Status 0 Enable */
-+#define PCIEINTSTS0EN				0x0310
-+#define MSI_CTRL_INT				BIT(26)
-+#define SMLH_LINK_UP				BIT(7)
-+#define RDLH_LINK_UP				BIT(6)
-+
-+/* PCIe DMA Interrupt Status Enable */
-+#define PCIEDMAINTSTSEN				0x0314
-+#define PCIEDMAINTSTSEN_INIT			GENMASK(15, 0)
-+
-+/* Port Logic Registers 89 */
-+#define PRTLGC89				0x0b70
-+
-+/* Port Logic Registers 90 */
-+#define PRTLGC90				0x0b74
-+
-+/* PCIe Reset Control Register 1 */
-+#define PCIERSTCTRL1				0x0014
-+#define APP_HOLD_PHY_RST			BIT(16)
-+#define APP_LTSSM_ENABLE			BIT(0)
-+
-+/* PCIe Power Management Control */
-+#define PCIEPWRMNGCTRL				0x0070
-+#define APP_CLK_REQ_N				BIT(11)
-+#define APP_CLK_PM_EN				BIT(10)
-+
-+#define RCAR_NUM_SPEED_CHANGE_RETRIES		10
-+#define RCAR_MAX_LINK_SPEED			4
-+
-+#define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
-+#define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
-+
-+#define RCAR_GEN4_PCIE_FIRMWARE_NAME		"rcar_gen4_pcie.bin"
-+#define RCAR_GEN4_PCIE_FIRMWARE_BASE_ADDR	0xc000
-+
-+#define PCIE_T_PVPERL_MS			100
-+
-+/**
-+ * struct rcar_gen4_pcie - Renesas R-Car Gen4 DW PCIe controller state
-+ *
-+ * @rcar:		The common PCIe DW structure
-+ * @pwr_rst:		The PWR reset of the PCIe core
-+ * @core_clk:		The core clock of the PCIe core
-+ * @ref_clk:		The reference clock of the PCIe core and possibly bus
-+ * @pe_rst:		PERST GPIO
-+ * @app_base:		The base address of application register space
-+ * @dbi2_base:		The base address of DBI2 register space
-+ * @phy_base:		The base address of PHY register space
-+ * @max_link_speed:	Maximum PCIe link speed supported by the setup
-+ * @num_lanes:		Number of PCIe lanes used by the setup
-+ * @firmware:		PHY firmware
-+ * @firmware_size:	PHY firmware size in Bytes
-+ */
-+struct rcar_gen4_pcie {
-+	/* Must be first member of the struct */
-+	struct			pcie_dw dw;
-+	struct reset_ctl	pwr_rst;
-+	struct clk		*core_clk;
-+	struct clk		*ref_clk;
-+	struct gpio_desc	pe_rst;
-+	void			*app_base;
-+	void			*dbi2_base;
-+	void			*phy_base;
-+	u32			max_link_speed;
-+	u32			num_lanes;
-+	u16			*firmware;
-+	u32			firmware_size;
-+};
-+
-+/* Common */
-+static bool rcar_gen4_pcie_link_up(struct rcar_gen4_pcie *rcar)
-+{
-+	u32 val, mask;
-+
-+	val =3D readl(rcar->app_base + PCIEINTSTS0);
-+	mask =3D RDLH_LINK_UP | SMLH_LINK_UP;
-+
-+	return (val & mask) =3D=3D mask;
-+}
-+
-+/*
-+ * Manually initiate the speed change. Return 0 if change succeeded; oth=
-erwise
-+ * -ETIMEDOUT.
-+ */
-+static int rcar_gen4_pcie_speed_change(struct rcar_gen4_pcie *rcar)
-+{
-+	u32 val;
-+	int i;
-+
-+	clrbits_le32(rcar->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL,
-+		     PORT_LOGIC_SPEED_CHANGE);
-+
-+	setbits_le32(rcar->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL,
-+		     PORT_LOGIC_SPEED_CHANGE);
-+
-+	for (i =3D 0; i < RCAR_NUM_SPEED_CHANGE_RETRIES; i++) {
-+		val =3D readl(rcar->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
-+		if (!(val & PORT_LOGIC_SPEED_CHANGE))
-+			return 0;
-+		mdelay(10);
++	default:
++		reg_type = REG_IN;
++		dev_warn(dev, "Failed to get current direction of Pin %u\n", offset);
++		break;
 +	}
 +
-+	return -ETIMEDOUT;
-+}
-+
-+/*
-+ * SoC datasheet suggests checking port logic register bits during firmw=
-are
-+ * write. If read returns non-zero value, then this function returns -EA=
-GAIN
-+ * indicating that the write needs to be done again. If read returns zer=
-o,
-+ * then return 0 to indicate success.
-+ */
-+static int rcar_gen4_pcie_reg_test_bit(struct rcar_gen4_pcie *rcar,
-+				       u32 offset, u32 mask)
-+{
-+	if (readl(rcar->dw.dbi_base + offset) & mask)
-+		return -EAGAIN;
-+
-+	return 0;
-+}
-+
-+static int rcar_gen4_pcie_download_phy_firmware(struct rcar_gen4_pcie *r=
-car)
-+{
-+	/* The check_addr values are magical numbers in the datasheet */
-+	static const u32 check_addr[] =3D {
-+		0x00101018,
-+		0x00101118,
-+		0x00101021,
-+		0x00101121,
-+	};
-+	unsigned int i, timeout;
-+	u32 data;
-+	int ret;
-+
-+	for (i =3D 0; i < rcar->firmware_size / 2; i++) {
-+		data =3D rcar->firmware[i];
-+		timeout =3D 100;
-+		do {
-+			writel(RCAR_GEN4_PCIE_FIRMWARE_BASE_ADDR + i, rcar->dw.dbi_base + PRT=
-LGC89);
-+			writel(data, rcar->dw.dbi_base + PRTLGC90);
-+			if (!rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC89, BIT(30)))
-+				break;
-+			if (!(--timeout))
-+				return -ETIMEDOUT;
-+			udelay(100);
-+		} while (1);
-+	}
-+
-+	setbits_le32(rcar->phy_base + 0x0f8, BIT(17));
-+
-+	for (i =3D 0; i < ARRAY_SIZE(check_addr); i++) {
-+		timeout =3D 100;
-+		do {
-+			writel(check_addr[i], rcar->dw.dbi_base + PRTLGC89);
-+			ret =3D rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC89, BIT(30));
-+			ret |=3D rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC90, BIT(0));
-+			if (!ret)
-+				break;
-+			if (!(--timeout))
-+				return -ETIMEDOUT;
-+			udelay(100);
-+		} while (1);
-+	}
-+
-+	return ret;
-+}
-+
-+static int rcar_gen4_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, boo=
-l enable)
-+{
-+	u32 val;
-+	int ret;
-+
-+	if (!enable) {
-+		clrbits_le32(rcar->app_base + PCIERSTCTRL1, APP_LTSSM_ENABLE);
-+		return 0;
-+	}
-+
-+	setbits_le32(rcar->dw.dbi_base + PCIE_PORT_FORCE,
-+		     PORT_FORCE_DO_DESKEW_FOR_SRIS);
-+
-+	setbits_le32(rcar->app_base + PCIEMSR0, APP_SRIS_MODE);
-+
-+	/*
-+	 * The R-Car Gen4 datasheet doesn't describe the PHY registers' name.
-+	 * But, the initialization procedure describes these offsets. So,
-+	 * this driver has magical offset numbers.
-+	 */
-+	clrsetbits_le32(rcar->phy_base + 0x700, BIT(28), 0);
-+	clrsetbits_le32(rcar->phy_base + 0x700, BIT(20), 0);
-+	clrsetbits_le32(rcar->phy_base + 0x700, BIT(12), 0);
-+	clrsetbits_le32(rcar->phy_base + 0x700, BIT(4), 0);
-+
-+	clrsetbits_le32(rcar->phy_base + 0x148, GENMASK(23, 22), BIT(22));
-+	clrsetbits_le32(rcar->phy_base + 0x148, GENMASK(18, 16), GENMASK(17, 16=
-));
-+	clrsetbits_le32(rcar->phy_base + 0x148, GENMASK(7, 6), BIT(6));
-+	clrsetbits_le32(rcar->phy_base + 0x148, GENMASK(2, 0), GENMASK(11, 0));
-+	clrsetbits_le32(rcar->phy_base + 0x1d4, GENMASK(16, 15), GENMASK(16, 15=
-));
-+	clrsetbits_le32(rcar->phy_base + 0x514, BIT(26), BIT(26));
-+	clrsetbits_le32(rcar->phy_base + 0x0f8, BIT(16), 0);
-+	clrsetbits_le32(rcar->phy_base + 0x0f8, BIT(19), BIT(19));
-+
-+	clrbits_le32(rcar->app_base + PCIERSTCTRL1, APP_HOLD_PHY_RST);
-+
-+	ret =3D readl_poll_timeout(rcar->phy_base + 0x0f8, val, !(val & BIT(18)=
-), 10000);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D rcar_gen4_pcie_download_phy_firmware(rcar);
-+	if (ret)
-+		return ret;
-+
-+	setbits_le32(rcar->app_base + PCIERSTCTRL1, APP_LTSSM_ENABLE);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Enable LTSSM of this controller and manually initiate the speed chang=
-e.
-+ * Always return 0.
-+ */
-+static int rcar_gen4_pcie_start_link(struct rcar_gen4_pcie *rcar)
-+{
-+	int i, ret;
-+
-+	ret =3D rcar_gen4_pcie_ltssm_control(rcar, true);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Require direct speed change with retrying here if the max_link_speed
-+	 * is PCIe Gen2 or higher.
-+	 */
-+	if (rcar->max_link_speed =3D=3D LINK_SPEED_GEN_1)
-+		return 0;
-+
-+	for (i =3D 0; i < RCAR_MAX_LINK_SPEED; i++) {
-+		/* It may not be connected in EP mode yet. So, break the loop */
-+		if (rcar_gen4_pcie_speed_change(rcar))
-+			break;
-+	}
-+
-+	return 0;
-+}
-+
-+static void rcar_gen4_pcie_additional_common_init(struct rcar_gen4_pcie =
-*rcar)
-+{
-+	clrsetbits_le32(rcar->dw.dbi_base + PCIE_PORT_LANE_SKEW,
-+			PORT_LANE_SKEW_INSERT_MASK,
-+			(rcar->num_lanes < 4) ? BIT(6) : 0);
-+
-+	setbits_le32(rcar->app_base + PCIEPWRMNGCTRL,
-+		     APP_CLK_REQ_N | APP_CLK_PM_EN);
-+}
-+
-+static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
-+{
-+	int ret;
-+
-+	ret =3D clk_prepare_enable(rcar->core_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D reset_assert(&rcar->pwr_rst);
-+	if (ret)
-+		goto err_unprepare;
-+
-+	setbits_le32(rcar->app_base + PCIEMSR0,
-+		     DEVICE_TYPE_RC |
-+		     ((rcar->num_lanes < 4) ? BIFUR_MOD_SET_ON : 0));
-+
-+	ret =3D reset_deassert(&rcar->pwr_rst);
-+	if (ret)
-+		goto err_unprepare;
-+
-+	rcar_gen4_pcie_additional_common_init(rcar);
-+
-+	return 0;
-+
-+err_unprepare:
-+	clk_disable_unprepare(rcar->core_clk);
-+
-+	return ret;
-+}
-+
-+/* Host mode */
-+static int rcar_gen4_pcie_host_init(struct udevice *dev)
-+{
-+	struct rcar_gen4_pcie *rcar =3D dev_get_priv(dev);
-+	int ret;
-+
-+	dm_gpio_set_value(&rcar->pe_rst, 1);
-+
-+	ret =3D rcar_gen4_pcie_common_init(rcar);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
-+	 * Rev.5.20a and 3.5.6.1 "RC mode" in DWC PCIe RC databook v5.20a, we
-+	 * should disable two BARs to avoid unnecessary memory assignment
-+	 * during device enumeration.
-+	 */
-+	writel(0x0, rcar->dbi2_base + PCI_BASE_ADDRESS_0);
-+	writel(0x0, rcar->dbi2_base + PCI_BASE_ADDRESS_1);
-+
-+	/* Disable MSI interrupt signal */
-+	clrbits_le32(rcar->app_base + PCIEINTSTS0EN, MSI_CTRL_INT);
-+
-+	mdelay(PCIE_T_PVPERL_MS);	/* pe_rst requires 100msec delay */
-+
-+	dm_gpio_set_value(&rcar->pe_rst, 0);
-+
-+	return 0;
-+}
-+
-+static int rcar_gen4_pcie_load_firmware(struct rcar_gen4_pcie *rcar)
-+{
-+	ulong addr, size;
-+	int ret;
-+
-+	/*
-+	 * Run user specified firmware loading script, which loads the
-+	 * firmware from whichever location the user decides it should
-+	 * load the firmware from, by whatever means the user decides.
-+	 */
-+	ret =3D run_command_list("run renesas_rcar_gen4_load_firmware", -1, 0);
-+	if (ret) {
-+		printf("Firmware loading script 'renesas_rcar_gen4_load_firmware' not =
-defined or failed.\n");
-+		goto fail;
-+	}
-+
-+	/* Find out where the firmware got loaded and how long it is. */
-+	addr =3D env_get_hex("renesas_rcar_gen4_load_firmware_addr", 0);
-+	size =3D env_get_hex("renesas_rcar_gen4_load_firmware_size", 0);
-+
-+	/*
-+	 * Clear the variables set by the firmware loading script, as
-+	 * their content would become stale once this function exits.
-+	 */
-+	env_set("renesas_rcar_gen4_load_firmware_addr", NULL);
-+	env_set("renesas_rcar_gen4_load_firmware_size", NULL);
-+
-+	if (!addr || !size) {
-+		printf("Firmware address (%lx) or size (%lx) are invalid.\n", addr, si=
-ze);
-+		goto fail;
-+	}
-+
-+	/* Create local copy of the loaded firmware. */
-+	rcar->firmware =3D (u16 *)memdup((void *)addr, size);
-+	if (!rcar->firmware)
-+		return -ENOMEM;
-+
-+	rcar->firmware_size =3D size;
-+
-+	return 0;
-+
-+fail:
-+	printf("Define 'renesas_rcar_gen4_load_firmware' script which loads the=
- R-Car\n"
-+	       "Gen4 PCIe controller firmware from storage into memory and sets=
- these\n"
-+	       "two environment variables:\n"
-+	       "  renesas_rcar_gen4_load_firmware_addr ... address of firmware =
-in memory\n"
-+	       "  renesas_rcar_gen4_load_firmware_size ... length of firmware i=
-n bytes\n"
-+	       "\n"
-+	       "Example:\n"
-+	       "  =3D> env set renesas_rcar_gen4_load_firmware 'env set renesas=
-_rcar_gen4_load_firmware_addr 0x54000000 && load mmc 0:1 ${renesas_rcar_g=
-en4_load_firmware_addr} lib/firmware/rcar_gen4_pcie.bin && env set renesa=
-s_rcar_gen4_load_firmware_size ${filesize}'\n"
-+	       );
-+	return -EINVAL;
-+}
-+
-+/**
-+ * rcar_gen4_pcie_probe() - Probe the PCIe bus for active link
-+ *
-+ * @dev: A pointer to the device being operated on
-+ *
-+ * Probe for an active link on the PCIe bus and configure the controller
-+ * to enable this port.
-+ *
-+ * Return: 0 on success, else -ENODEV
-+ */
-+static int rcar_gen4_pcie_probe(struct udevice *dev)
-+{
-+	struct rcar_gen4_pcie *rcar =3D dev_get_priv(dev);
-+	struct udevice *ctlr =3D pci_get_controller(dev);
-+	struct pci_controller *hose =3D dev_get_uclass_priv(ctlr);
-+	int ret;
-+
-+	ret =3D rcar_gen4_pcie_load_firmware(rcar);
-+	if (ret)
-+		return ret;
-+
-+	rcar->dw.first_busno =3D dev_seq(dev);
-+	rcar->dw.dev =3D dev;
-+
-+	ret =3D reset_get_by_name(dev, "pwr", &rcar->pwr_rst);
-+	if (ret)
-+		return ret;
-+
-+	rcar->core_clk =3D devm_clk_get(dev, "core");
-+	if (IS_ERR(rcar->core_clk))
-+		return PTR_ERR(rcar->core_clk);
-+
-+	rcar->ref_clk =3D devm_clk_get(dev, "ref");
-+	if (IS_ERR(rcar->ref_clk))
-+		return PTR_ERR(rcar->ref_clk);
-+
-+	ret =3D clk_prepare_enable(rcar->ref_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D gpio_request_by_name(dev, "reset-gpios", 0, &rcar->pe_rst,
-+				   GPIOD_IS_OUT | GPIOD_IS_OUT_ACTIVE);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D rcar_gen4_pcie_host_init(dev);
-+	if (ret)
-+		return ret;
-+
-+	pcie_dw_setup_host(&rcar->dw);
-+
-+	dw_pcie_dbi_write_enable(&rcar->dw, true);
-+
-+	dw_pcie_link_set_max_link_width(&rcar->dw, rcar->num_lanes);
-+
-+	ret =3D rcar_gen4_pcie_start_link(rcar);
-+	if (ret)
-+		return ret;
-+
-+	dw_pcie_dbi_write_enable(&rcar->dw, false);
-+
-+	if (!rcar_gen4_pcie_link_up(rcar)) {
-+		printf("PCIE-%d: Link down\n", dev_seq(dev));
-+		return -ENODEV;
-+	}
-+
-+	printf("PCIE-%d: Link up (Gen%d-x%d, Bus%d)\n", dev_seq(dev),
-+	       pcie_dw_get_link_speed(&rcar->dw),
-+	       pcie_dw_get_link_width(&rcar->dw),
-+	       hose->first_busno);
-+
-+	pcie_dw_prog_outbound_atu_unroll(&rcar->dw, PCIE_ATU_REGION_INDEX0,
-+					 PCIE_ATU_TYPE_MEM,
-+					 rcar->dw.mem.phys_start,
-+					 rcar->dw.mem.bus_start, rcar->dw.mem.size);
-+
-+	return 0;
-+}
-+
-+/**
-+ * rcar_gen4_pcie_of_to_plat() - Translate from DT to device state
-+ *
-+ * @dev: A pointer to the device being operated on
-+ *
-+ * Translate relevant data from the device tree pertaining to device @de=
-v into
-+ * state that the driver will later make use of. This state is stored in=
- the
-+ * device's private data structure.
-+ *
-+ * Return: 0 on success, else -EINVAL
-+ */
-+static int rcar_gen4_pcie_of_to_plat(struct udevice *dev)
-+{
-+	struct rcar_gen4_pcie *rcar =3D dev_get_priv(dev);
-+
-+	/* Get the controller base address */
-+	rcar->dw.dbi_base =3D (void *)dev_read_addr_name(dev, "dbi");
-+	if ((fdt_addr_t)rcar->dw.dbi_base =3D=3D FDT_ADDR_T_NONE)
-+		return -EINVAL;
-+
-+	/* Get the config space base address and size */
-+	rcar->dw.cfg_base =3D (void *)dev_read_addr_size_name(dev, "config",
-+							    &rcar->dw.cfg_size);
-+	if ((fdt_addr_t)rcar->dw.cfg_base =3D=3D FDT_ADDR_T_NONE)
-+		return -EINVAL;
-+
-+	/* Get the iATU base address and size */
-+	rcar->dw.atu_base =3D (void *)dev_read_addr_name(dev, "atu");
-+	if ((fdt_addr_t)rcar->dw.atu_base =3D=3D FDT_ADDR_T_NONE)
-+		return -EINVAL;
-+
-+	/* Get the PHY base address and size */
-+	rcar->phy_base =3D (void *)dev_read_addr_name(dev, "phy");
-+	if ((fdt_addr_t)rcar->phy_base =3D=3D FDT_ADDR_T_NONE)
-+		return -EINVAL;
-+
-+	/* Get the app base address and size */
-+	rcar->app_base =3D (void *)dev_read_addr_name(dev, "app");
-+	if ((fdt_addr_t)rcar->app_base =3D=3D FDT_ADDR_T_NONE)
-+		return -EINVAL;
-+
-+	/* Get the dbi2 base address and size */
-+	rcar->dbi2_base =3D (void *)dev_read_addr_name(dev, "dbi2");
-+	if ((fdt_addr_t)rcar->dbi2_base =3D=3D FDT_ADDR_T_NONE)
-+		return -EINVAL;
-+
-+	rcar->max_link_speed =3D
-+		clamp(dev_read_u32_default(dev, "max-link-speed",
-+					   LINK_SPEED_GEN_4),
-+		      LINK_SPEED_GEN_1, RCAR_MAX_LINK_SPEED);
-+
-+	rcar->num_lanes =3D dev_read_u32_default(dev, "num-lanes", 4);
-+
-+	return 0;
-+}
-+
-+static const struct dm_pci_ops rcar_gen4_pcie_ops =3D {
-+	.read_config	=3D pcie_dw_read_config,
-+	.write_config	=3D pcie_dw_write_config,
-+};
-+
-+static const struct udevice_id rcar_gen4_pcie_ids[] =3D {
-+	{ .compatible =3D "renesas,rcar-gen4-pcie" },
-+	{ }
-+};
-+
-+U_BOOT_DRIVER(rcar_gen4_pcie) =3D {
-+	.name		=3D "rcar_gen4_pcie",
-+	.id		=3D UCLASS_PCI,
-+	.of_match	=3D rcar_gen4_pcie_ids,
-+	.ops		=3D &rcar_gen4_pcie_ops,
-+	.of_to_plat	=3D rcar_gen4_pcie_of_to_plat,
-+	.probe		=3D rcar_gen4_pcie_probe,
-+	.priv_auto	=3D sizeof(struct rcar_gen4_pcie),
-+};
-diff --git a/drivers/pci/pcie_dw_common.h b/drivers/pci/pcie_dw_common.h
-index ccd423081eb..5fa50f3dc3a 100644
---- a/drivers/pci/pcie_dw_common.h
-+++ b/drivers/pci/pcie_dw_common.h
-@@ -66,8 +66,12 @@
- #define LINK_SPEED_GEN_1		0x1
- #define LINK_SPEED_GEN_2		0x2
- #define LINK_SPEED_GEN_3		0x3
-+#define LINK_SPEED_GEN_4		0x4
-=20
- /* Synopsys-specific PCIe configuration registers */
-+#define PCIE_PORT_FORCE			0x708
-+#define PORT_FORCE_DO_DESKEW_FOR_SRIS	BIT(23)
-+
- #define PCIE_PORT_LINK_CONTROL		0x710
- #define PORT_LINK_DLL_LINK_EN		BIT(5)
- #define PORT_LINK_FAST_LINK_MODE	BIT(7)
-@@ -78,6 +82,9 @@
- #define PORT_LINK_MODE_4_LANES		PORT_LINK_MODE(0x7)
- #define PORT_LINK_MODE_8_LANES		PORT_LINK_MODE(0xf)
-=20
-+#define PCIE_PORT_LANE_SKEW		0x714
-+#define PORT_LANE_SKEW_INSERT_MASK	GENMASK(23, 0)
-+
- #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
- #define PORT_LOGIC_N_FTS_MASK		GENMASK(7, 0)
- #define PORT_LOGIC_SPEED_CHANGE		BIT(17)
---=20
-2.47.2
++	ret = meson_gpio_calc_reg_and_bit(dev->parent, offset, reg_type, &reg,
+ 					  &bit);
+ 	if (ret)
+ 		return ret;
+
+---
+base-commit: c5afa1fef49f55146e78d6157470520391c40eca
+change-id: 20250617-meson_ppinctrl-5139ca06b828
+
+Best regards,
+-- 
+Yang Xiwen <forbidden405@outlook.com>
+
 
 
