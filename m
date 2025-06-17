@@ -2,123 +2,184 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D4BC77B7C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306BDC73C66
 	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:51:50 +0000 (UTC)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
- by mx.groups.io with SMTP id smtpd.web10.1394.1750091007170325236
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+ by mx.groups.io with SMTP id smtpd.web10.13389.1750148228759533062
  for <u-boot-amlogic@groups.io>;
- Mon, 16 Jun 2025 09:23:27 -0700
+ Tue, 17 Jun 2025 01:17:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kernel.org header.s=k20201202 header.b=nYP/ZzKH;
- spf=pass (domain: kernel.org, ip: 172.105.4.254, mailfrom: devnull+forbidden405.outlook.com@kernel.org)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1F2EA629C7;
-	Mon, 16 Jun 2025 16:23:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E3DB6C4CEF0;
-	Mon, 16 Jun 2025 16:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750091005;
-	bh=/vG90dHfi1h9BoDnWkDkrBE9RQ4qrezquV5ho656kFc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=nYP/ZzKHCG0PGLU9nR4ZOuAmXRWBnbygyL9Djc0gEHimTJ65vu5cJFWOux+xaCski
-	 ylaymqpi8mDGHJY7jKePmx9m1DFJsk0DWP8nBPBZVFvdANhXANbBDecH6sdJ98mpDU
-	 KACCl4ZbVW0ksUql+0Q85U09JnYPO+R5D1VFlLE8xE/pCzgXqjN5iGlmyhK72XrTOh
-	 zLPbvqeQZIM2hv1wjewlj8x8v5q0e5fyYACvv/PNM2yEUa9+rZEemrGzJmkv7ZmFU9
-	 B6K0lKfvYh5msIHBOcbvLVZqBHnACFwn86tUyJuj/Cv7iNORY+8tgjNqILkjbyrilg
-	 A85bxOeE/zUPw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E25C71159;
-	Mon, 16 Jun 2025 16:23:25 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Tue, 17 Jun 2025 00:23:25 +0800
-Subject: [PATCH] pinctrl: meson: support gpio toggle command
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=WKr8fK/I;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=g61eqPjF;
+ spf=pass (domain: mailbox.org, ip: 80.241.56.171, mailfrom: marek.vasut+renesas@mailbox.org)
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bM08f3y02z9sj8;
+	Tue, 17 Jun 2025 10:17:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750148226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tXwLfxZl7b5bpFdvtoVG2h6MNJIZ3sUK2eC8lIB3PCo=;
+	b=WKr8fK/IUJPPzg/R5gxAkCRgPFMhAlsyXm7u6zOddZvSs/+gX461qDc2GUi2dSKNsGnd1q
+	Dfn40RnZlUwd4q9sT63T1LVOhEJFy5kEPFBliQAdHYZ1XRoQ2BOKGK4TvJiexQpTK9q3pd
+	pdX5uQnXHKtG87yeo+L1n3R7ZPtXqn8ldlyZOJhvCIQCl6xnD01AXgHcgf6XWJmdiir17b
+	QQSYWOEPZ7YJjCVZe437m4k8LLDwepOaSrKTUuNeIdjpAJq3fqNZFNKtUI06gQ6MUFfOVN
+	LFuA5l6f2RhIxWFN8+yAUB6ZmxsiSV9AAOUvkqtVAl3XNLn3h35hncZlfu6itA==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750148224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tXwLfxZl7b5bpFdvtoVG2h6MNJIZ3sUK2eC8lIB3PCo=;
+	b=g61eqPjFLQJ9dbvAF0YOD0VM+MV5mpkQFfGCO195f/kGnevciVvL+1rSiTcrc5nUbUs5VZ
+	W3N04yBAX8UbqPd1khckrKpuzw3gAr3+6MovO4eqp1ixxP19Stq88NTVts2PPuDbz0x0x/
+	3HAPGJNu6piJLo7UgR5IG1bGHXggnmTdYpiU6oT8CLCtDRiwPjFQsCMgk6Xg3oITPWxoqM
+	UjqfRaBRYqVIioq8Q5UChG5JeDIPkd0yIzMd5Uy7Qa4az2uFOn/Xm/TVK0JFPimjZf3UFt
+	3+wONkfrDgS1ZBU5P0DDOGuqNjeqnvHizy8EWFL3fFEUvEL0hU5WgF3zfGpiJg==
+To: u-boot@lists.denx.de
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Casey Connolly <casey.connolly@linaro.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Crispin <john@phrozen.org>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
+	Philipp Tomsich <philipp.tomsich@vrull.eu>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Simon Glass <sjg@chromium.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Tom Rini <trini@konsulko.com>,
+	u-boot-amlogic@groups.io,
+	u-boot-qcom@groups.io
+Subject: [PATCH 1/6] drivers: pci: pcie_dw_common: Add dw_pcie_link_set_max_link_width()
+Date: Tue, 17 Jun 2025 10:16:27 +0200
+Message-ID: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
-Message-Id: <20250617-meson_ppinctrl-v1-1-593aa15f288a@outlook.com>
-X-B4-Tracking: v=1; b=H4sIAPxEUGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0Nz3dzU4vy8+IKCzLzkkqIcXVNDY8vkRAOzJAsjCyWgpoKi1LTMCrC
- B0bG1tQAbBW7dYAAAAA==
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Tom Rini <trini@konsulko.com>, Beniamino Galvani <b.galvani@gmail.com>, 
- Simon Glass <sjg@chromium.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
- Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750091005; l=1668;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=0tgA8LIJQgOLFGBN5dqiTZa7VCU/mclDvr6myN+Iw9E=;
- b=9JNasCTwImUq3/mgCKjD83jCPDU5fSry/Od/09oEtn+5umgI4CvkoztaWe4i06qk/11xezifO
- gtxuCsl/2G1D5z/+PsfzAvUh2UtFwU5zgYnNVUD2sFb2H3zLkZYqKY4
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received: by B4 Relay for forbidden405@outlook.com/20230724 with
- auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: forbidden405@outlook.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: jsqh458kah7znud1zek95ui56fbjitua
+X-MBO-RS-ID: 190a0fa05b78b32e24d
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:51:50 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2718
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2717
 
-From: Yang Xiwen <forbidden405@outlook.com>
+Add dw_pcie_link_set_max_link_width() implementation ported from Linux ke=
+rnel
+as of commit 89db0793c9f2 ("PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW hand=
+ling").
+This is common code which is already duplicated in multiple drivers.
 
-meson_gpio_get() always assumes gpio is configured to input mode. This
-is incorrect and breaks `gpio toggle` command:
-
-gpio: pin aobus-banks2 (gpio 2) value is 0
-   Warning: value of pin is still 1
-
-Fix it by adding the logic to handle both input and output mode.
-
-Fixes: 2009a8d03fe5 ("pinctrl: meson: add GPIO support")
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Cc: Casey Connolly <casey.connolly@linaro.org>
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Daniel Schwierzeck <daniel.schwierzeck@gmail.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: John Crispin <john@phrozen.org>
+Cc: Kever Yang <kever.yang@rock-chips.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Cc: Philipp Tomsich <philipp.tomsich@vrull.eu>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Simon Glass <sjg@chromium.org>
+Cc: Sumit Garg <sumit.garg@kernel.org>
+Cc: Tom Rini <trini@konsulko.com>
+Cc: u-boot-amlogic@groups.io
+Cc: u-boot-qcom@groups.io
+Cc: u-boot@lists.denx.de
+---
+ drivers/pci/pcie_dw_common.c | 45 ++++++++++++++++++++++++++++++++++++
+ drivers/pci/pcie_dw_common.h |  2 ++
+ 2 files changed, 47 insertions(+)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index babf1bccc969..a1f4afd11f94 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -117,8 +117,27 @@ int meson_gpio_get(struct udevice *dev, unsigned int offset)
- 	struct meson_pinctrl *priv = dev_get_priv(dev->parent);
- 	unsigned int reg, bit;
- 	int ret;
-+	enum gpio_func_t direction;
-+	enum meson_reg_type reg_type;
- 
--	ret = meson_gpio_calc_reg_and_bit(dev->parent, offset, REG_IN, &reg,
-+	direction = meson_gpio_get_direction(dev, offset);
+diff --git a/drivers/pci/pcie_dw_common.c b/drivers/pci/pcie_dw_common.c
+index 78961271a8e..c4cad019373 100644
+--- a/drivers/pci/pcie_dw_common.c
++++ b/drivers/pci/pcie_dw_common.c
+@@ -13,6 +13,7 @@
+ #include <pci.h>
+ #include <dm/device_compat.h>
+ #include <asm/io.h>
++#include <linux/bitfield.h>
+ #include <linux/delay.h>
+ #include "pcie_dw_common.h"
+=20
+@@ -28,6 +29,50 @@ int pcie_dw_get_link_width(struct pcie_dw *pci)
+ 		PCIE_LINK_STATUS_WIDTH_MASK) >> PCIE_LINK_STATUS_WIDTH_OFF;
+ }
+=20
++void dw_pcie_link_set_max_link_width(struct pcie_dw *pci, u32 num_lanes)
++{
++	u32 lnkcap, lwsc, plc;
++	u8 cap;
 +
-+	switch (direction) {
-+	case GPIOF_INPUT:
-+		reg_type = REG_IN;
++	if (!num_lanes)
++		return;
++
++	/* Set the number of lanes */
++	plc =3D readl(pci->dbi_base + PCIE_PORT_LINK_CONTROL);
++	plc &=3D ~PORT_LINK_FAST_LINK_MODE;
++	plc &=3D ~PORT_LINK_MODE_MASK;
++
++	/* Set link width speed control register */
++	lwsc =3D readl(pci->dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
++	lwsc &=3D ~PORT_LOGIC_LINK_WIDTH_MASK;
++	lwsc |=3D PORT_LOGIC_LINK_WIDTH_1_LANES;
++	switch (num_lanes) {
++	case 1:
++		plc |=3D PORT_LINK_MODE_1_LANES;
 +		break;
-+
-+	case GPIOF_OUTPUT:
-+		reg_type = REG_OUT;
++	case 2:
++		plc |=3D PORT_LINK_MODE_2_LANES;
 +		break;
-+
++	case 4:
++		plc |=3D PORT_LINK_MODE_4_LANES;
++		break;
++	case 8:
++		plc |=3D PORT_LINK_MODE_8_LANES;
++		break;
 +	default:
-+		reg_type = REG_IN;
-+		dev_warn(dev, "Failed to get current direction of Pin %u\n", offset);
-+		break;
++		dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
++		return;
 +	}
++	writel(plc, pci->dbi_base + PCIE_PORT_LINK_CONTROL);
++	writel(lwsc, pci->dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
 +
-+	ret = meson_gpio_calc_reg_and_bit(dev->parent, offset, reg_type, &reg,
- 					  &bit);
- 	if (ret)
- 		return ret;
-
----
-base-commit: c5afa1fef49f55146e78d6157470520391c40eca
-change-id: 20250617-meson_ppinctrl-5139ca06b828
-
-Best regards,
--- 
-Yang Xiwen <forbidden405@outlook.com>
-
++	cap =3D pcie_dw_find_capability(pci, PCI_CAP_ID_EXP);
++	lnkcap =3D readl(pci->dbi_base + cap + PCI_EXP_LNKCAP);
++	lnkcap &=3D ~PCI_EXP_LNKCAP_MLW;
++	lnkcap |=3D FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes);
++	writel(lnkcap, pci->dbi_base + cap + PCI_EXP_LNKCAP);
++}
++
+ static void dw_pcie_writel_ob_unroll(struct pcie_dw *pci, u32 index, u32=
+ reg,
+ 				     u32 val)
+ {
+diff --git a/drivers/pci/pcie_dw_common.h b/drivers/pci/pcie_dw_common.h
+index 8cb99a12ea1..ccd423081eb 100644
+--- a/drivers/pci/pcie_dw_common.h
++++ b/drivers/pci/pcie_dw_common.h
+@@ -130,6 +130,8 @@ int pcie_dw_get_link_speed(struct pcie_dw *pci);
+=20
+ int pcie_dw_get_link_width(struct pcie_dw *pci);
+=20
++void dw_pcie_link_set_max_link_width(struct pcie_dw *pci, u32 num_lanes)=
+;
++
+ int pcie_dw_prog_outbound_atu_unroll(struct pcie_dw *pci, int index, int=
+ type, u64 cpu_addr,
+ 				     u64 pci_addr, u32 size);
+=20
+--=20
+2.47.2
 
 
