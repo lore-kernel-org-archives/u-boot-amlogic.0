@@ -2,47 +2,47 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13589C71157
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B39FC71136
 	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:51:50 +0000 (UTC)
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
- by mx.groups.io with SMTP id smtpd.web10.13393.1750148237756763218
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+ by mx.groups.io with SMTP id smtpd.web10.13399.1750148244165203816
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Jun 2025 01:17:18 -0700
+ Tue, 17 Jun 2025 01:17:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=HEw4Dr/L;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=uL13hceg;
- spf=pass (domain: mailbox.org, ip: 80.241.56.161, mailfrom: marek.vasut+renesas@mailbox.org)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=TDhArHd9;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=xGY1TUYx;
+ spf=pass (domain: mailbox.org, ip: 80.241.56.171, mailfrom: marek.vasut+renesas@mailbox.org)
 Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bM08q66yvz9t8H;
-	Tue, 17 Jun 2025 10:17:15 +0200 (CEST)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bM08y4Sjyz9tVJ;
+	Tue, 17 Jun 2025 10:17:22 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750148235;
+	t=1750148242;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xE+dx8Y4QXyRL5+o6FLEKrTvZCHx6HoZp9XoNaOs4Go=;
-	b=HEw4Dr/Lhwis8NU1yr2UGTA4E1y5H6VhkHh/abTbPrCSOKqXMfI4+GC8pNxu2gq/kqqKM5
-	dPUJ5pXQUk/Q/A03QeMC7RRZXxovGRnqmQr1hQIxPga8PKTHEv+nveIvVFn1VHM/yMWjx5
-	YDPpNTJZVro+znmdIZwB4CF1oMfaje6hRswx+0GWRDUrRi3Wt109aaWjLOYonvxR3nzKdm
-	CvlNgjXMrDLibL1aXZ1nGCtbcq197WuxKcIvRhOjP/+ZPJk3rVbZqYemJaFJAMjCJIeDbX
-	eqCoJVSdoH/wm2ULXBHTG/b+GVq3ah4siQFsmiLPBjuFBGf41rwTeXRqKtEBnw==
+	bh=Hd5lZ/5VgUehwyBdhYvMTdDBDC1Ty5xhG3GE+ksee+U=;
+	b=TDhArHd9hDaiFBpcjnw2PImdvcDG7GI6J4vVqNAtSN1V4Y5bmReujS0kR1LXsmVCA4i+j6
+	l1+IrIFbgsr2Gbxx9dPgZzSchw284AcSmxfbRL6qGYAPinIB6rD6YCLdHlnkd1B6MFj/v0
+	zsYu11BYF44sH2conIivrBu9GIJtiyTUCfzMFpHONzNIyCZe5Hst/q6AtgoEmcJwiSEohJ
+	XuMneTvzmaSEObvexrweLkby5NDpnBfihe5P5A+/fmEzXgaxs8E7IlUPUlCW5qDWbaAfL6
+	9S+JtA+kY8phyIPZWxuVPmx/ETXWI6cLsdPly6/+3cTnW/ITUsMR0nsRp+SbVg==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750148234;
+	t=1750148240;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xE+dx8Y4QXyRL5+o6FLEKrTvZCHx6HoZp9XoNaOs4Go=;
-	b=uL13hcegUpFu7NralYEmQIv5tj8ig+gYKXo+1YSu9kNmGgQddQsHupLJLnjuKhTVXvyTDN
-	b81Alq8+pu/tJXzZ2HUhLKri1/jdb820jkPEIoVxD3bjA5zPIa5Q/7mWu6r3q0+SL5n6pK
-	1Y4RClcMFoGO4gtnH3P9QHEp7ppEA5DFxnOmA/Zgf/6tU6PmDaPBS4l1xSGlVQwLue2qFy
-	Ptwrg89G7Gqgqz4/1A6PAYqihKzF9mSxWHmGLepHFoGvkVki3UQoK/+sJKjSnGhM8K/3Ag
-	oJhI12PHccF+AtRVBjiE40i9TvhypDeupF3Y+PEVSM8o94GdQY4MptcSUKoR2Q==
+	bh=Hd5lZ/5VgUehwyBdhYvMTdDBDC1Ty5xhG3GE+ksee+U=;
+	b=xGY1TUYxlZCsntgt+cO49Z14PCwluf+ZI4pI6q/s6D+M2hWIDxnub7BxCVtyJCKcIKFle5
+	nuOYVijPZnxu14+ssMFlz1DBA1RBYIlcK7/5GOPZVYnHCUn7kDWH1OelkWvZS3mX5Z7QFf
+	BMecj1SSJ9O8R7mtv4tqEtdq42s2hZUBD8LNHCGiBb5RaA2+SdgN6gAlRpf0KqEMQe2LDJ
+	vMPIbxyb2BMcECSLDsQCxVwB87CGTY+U4pWFnbVo/2BpOxsvi02tHjAttJ7RuCBUZRv1aL
+	7e4tGHx36ZlV9EGk5cfPm77u/J5v6Fk6v+FPcDmmmgT4Z6fEtwFgzrmJsAyXdA==
 To: u-boot@lists.denx.de
 Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	Casey Connolly <casey.connolly@linaro.org>,
@@ -60,26 +60,23 @@ Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	Tom Rini <trini@konsulko.com>,
 	u-boot-amlogic@groups.io,
 	u-boot-qcom@groups.io
-Subject: [PATCH 4/6] pci: pcie_dw_rockchip: Use dw_pcie_link_set_max_link_width()
-Date: Tue, 17 Jun 2025 10:16:30 +0200
-Message-ID: <20250617081641.8385-4-marek.vasut+renesas@mailbox.org>
+Subject: [PATCH 6/6] arm64: dts: renesas: r8a779g3: Enable PCIe/NVMe on Retronix R-Car V4H Sparrow Hawk board
+Date: Tue, 17 Jun 2025 10:16:32 +0200
+Message-ID: <20250617081641.8385-6-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
 References: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
-X-MBO-RS-META: m3gw3kz1kotzfcuw7t8o68cuioweickj
-X-MBO-RS-ID: 218f44eb7c00e8c089a
+X-MBO-RS-META: jsgodad4kfnn341qoopcxx6qhfzu33mr
+X-MBO-RS-ID: 63bc324e6a0e2716d0a
 Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:51:50 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2714
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2715
 
-Use dw_pcie_link_set_max_link_width() instead of local implementation
-of the same functionality. This does change the behavior slightly, as
-the dw_pcie_link_set_max_link_width() implementation also programs the
-LNKCAP register MLW, this should however be correct and is now aligned
-with Linux kernel behavior.
+Enable support for R-Car Gen4 PCIe controller and NVMe storage
+on Retronix R-Car V4H Sparrow Hawk board .
 
 Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
@@ -100,69 +97,27 @@ Cc: u-boot-amlogic@groups.io
 Cc: u-boot-qcom@groups.io
 Cc: u-boot@lists.denx.de
 ---
- drivers/pci/pcie_dw_rockchip.c | 39 +---------------------------------
- 1 file changed, 1 insertion(+), 38 deletions(-)
+ configs/r8a779g3_sparrowhawk_defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pci/pcie_dw_rockchip.c b/drivers/pci/pcie_dw_rockchi=
-p.c
-index ac7faa4cc19..208aa30463a 100644
---- a/drivers/pci/pcie_dw_rockchip.c
-+++ b/drivers/pci/pcie_dw_rockchip.c
-@@ -158,8 +158,6 @@ static inline void rk_pcie_writel_apb(struct rk_pcie =
-*rk_pcie, u32 reg,
-  */
- static void rk_pcie_configure(struct rk_pcie *pci)
- {
--	u32 val;
--
- 	dw_pcie_dbi_write_enable(&pci->dw, true);
-=20
- 	/* Disable BAR 0 and BAR 1 */
-@@ -175,43 +173,8 @@ static void rk_pcie_configure(struct rk_pcie *pci)
- 			TARGET_LINK_SPEED_MASK, pci->gen);
-=20
- 	/* Set the number of lanes */
--	val =3D readl(pci->dw.dbi_base + PCIE_PORT_LINK_CONTROL);
--	val &=3D ~PORT_LINK_FAST_LINK_MODE;
--	val |=3D PORT_LINK_DLL_LINK_EN;
--	val &=3D ~PORT_LINK_MODE_MASK;
--	switch (pci->num_lanes) {
--	case 1:
--		val |=3D PORT_LINK_MODE_1_LANES;
--		break;
--	case 2:
--		val |=3D PORT_LINK_MODE_2_LANES;
--		break;
--	case 4:
--		val |=3D PORT_LINK_MODE_4_LANES;
--		break;
--	default:
--		dev_err(pci->dw.dev, "num-lanes %u: invalid value\n", pci->num_lanes);
--		goto out;
--	}
--	writel(val, pci->dw.dbi_base + PCIE_PORT_LINK_CONTROL);
--
--	/* Set link width speed control register */
--	val =3D readl(pci->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &=3D ~PORT_LOGIC_LINK_WIDTH_MASK;
--	switch (pci->num_lanes) {
--	case 1:
--		val |=3D PORT_LOGIC_LINK_WIDTH_1_LANES;
--		break;
--	case 2:
--		val |=3D PORT_LOGIC_LINK_WIDTH_2_LANES;
--		break;
--	case 4:
--		val |=3D PORT_LOGIC_LINK_WIDTH_4_LANES;
--		break;
--	}
--	writel(val, pci->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
-+	dw_pcie_link_set_max_link_width(&pci->dw, pci->num_lanes);
-=20
--out:
- 	dw_pcie_dbi_write_enable(&pci->dw, false);
- }
-=20
+diff --git a/configs/r8a779g3_sparrowhawk_defconfig b/configs/r8a779g3_sp=
+arrowhawk_defconfig
+index 7202828cd66..9aa8dc83317 100644
+--- a/configs/r8a779g3_sparrowhawk_defconfig
++++ b/configs/r8a779g3_sparrowhawk_defconfig
+@@ -24,7 +24,12 @@ CONFIG_CMD_REMOTEPROC=3Dy
+ CONFIG_GPIO_HOG=3Dy
+ CONFIG_REMOTEPROC_RENESAS_APMU=3Dy
+ CONFIG_BITBANGMII=3Dy
++CONFIG_CMD_PCI=3Dy
+ CONFIG_NET_RANDOM_ETHADDR=3Dy
++CONFIG_NVME_PCI=3Dy
++CONFIG_PCI=3Dy
++CONFIG_PCI_RCAR_GEN4=3Dy
++CONFIG_PCI_REGION_MULTI_ENTRY=3Dy
+ CONFIG_PHY_MICREL=3Dy
+ CONFIG_PHY_MICREL_KSZ90X1=3Dy
+ CONFIG_RENESAS_RAVB=3Dy
 --=20
 2.47.2
 
