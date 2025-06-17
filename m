@@ -2,66 +2,66 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E04C71136
-	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:32:10 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web10.13687.1750149125999263710
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69EAC71136
+	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:32:39 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web11.13766.1750149158879514840
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Jun 2025 01:32:06 -0700
+ Tue, 17 Jun 2025 01:32:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=njHS+lTF;
- spf=pass (domain: linaro.org, ip: 209.85.128.46, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453066fad06so40316125e9.2
-        for <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 01:32:05 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=BkRcDN1K;
+ spf=pass (domain: linaro.org, ip: 209.85.128.42, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45305c280a3so21912265e9.3
+        for <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 01:32:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750149124; x=1750753924; darn=groups.io;
+        d=linaro.org; s=google; t=1750149157; x=1750753957; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Q5e8UgkFbIFWIUQBRkWuZBxSGuwk7wSwa+a3JS6rHS0=;
-        b=njHS+lTFLxrgbjIjmqQCvuW4AQNUQHpopkruh/WWzM8LflW+xb74z+qa46L+9OdTiI
-         a9BYqzBR+farTWIasmHB9etzvMpHLih/P0nqsY69KHTmxKba571mq1zLXRNfC0wDY0n7
-         Vmd6vf0/q0Fd9XujH27sbSN4zalcx17MBMdF65pImBPFqimBoZSVs6R0rrnn9LgQmFIH
-         B7nmmL4YdVSIVXvPQE1AQeE7dYPTwRGh+4mFBazeo1ORtjOqPZWveDoAZ49/oUifJwXu
-         0LfogJ9gKUAOjxNdKKTHQ9fF7pHh5VlRdA7lfQXRo+k6Oern9Gc9VgelLnuQ2I7eD9ke
-         /p3Q==
+        bh=nwqxchRTLurVFTfO5VBlW5Va1x1dnyiDlX+kHYQ02Ew=;
+        b=BkRcDN1KpOlladLZQd+bckDNxMtrqM9oBnZeXV/3CFFy5j9tm4bR5m2mqpPmY6d46P
+         UTn/8oWWgutCaX9v2gmYfXXHou7Wh+9PFzZN47vyEBA/rNg7eEnhr+TZnNfM3rOU5vme
+         jeo7FFOkCbP2SG2c3YWMy0LjuMSk0dsf3UbPhBmD/p4i+uhe115H+lK6yRt6kQ1JI7iP
+         FfoJRMI8LhHNWxVGB31Xwva7u53U8LOs8BrS/Knds3bCJQ0Yoi893Ik5FxcTRfd3GtBu
+         sPOGhs8L24oZKKGj91JhM5XKYVuJDjAY7CFM607Y5dY/+OgtYpPPV2UCw88zJVVqzxN2
+         gU2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750149124; x=1750753924;
+        d=1e100.net; s=20230601; t=1750149157; x=1750753957;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Q5e8UgkFbIFWIUQBRkWuZBxSGuwk7wSwa+a3JS6rHS0=;
-        b=XkwC4ERTT7FfJgJ2Hq3r6S+MKGWJC19DYt8NmETY1W46fLHn5si6vd0ijFoSlp/R9i
-         XV+eodxjLvWj70I6FWEEbmDNDZGEFzFF20antPL6EaXooPoWLnY1zRvAMCIxRA1VoQSZ
-         qUQNepSaC1qePRL9Mmd/E7i0u5hdFBYNypshDKsn7p2o5mH86kKEwpWu90jgN7kN2iFN
-         VeGh1AP0zEYHtECiAfYNP+F0nTk+1aZlvZlSGe9lorOYfzgaLC6/GbeURY675gcfQjos
-         G2+y5i0EA930KckIhbFeyR+kF6iylbBNn6sp0j+hnjPhGpU/I65KSGU/LEr5fAFQFN6D
-         i3bA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbrZw03xu4sK94vJWooqUt5qcL9sN/MkMQY7IP3dzjqoz5+D6oM7I+zBkI4f+49V2Js+bXiZwp6EfYKacOAA==@groups.io
-X-Gm-Message-State: AOJu0YwN06nSfe0WtG64gcgSv3hvQS1RuMa3FsQRWD2Kceu9SvjUm0yl
-	4Q5rmbqPoEYHweHcGDs7WA+fxLg+qOEn0LkSeI0ZeiV/kfbzL2TOc82sVW9rJagS7jw=
-X-Gm-Gg: ASbGncuYQqqDFuViLrAUP2t2RPS2a0rjoqCM8eC2aWyuPoCEBamKC5mw4uRzZlEp12u
-	mbj7y7uWrpkKVrFGb1yjOb5PiGZb/sLxIBPPXBiV0e6+bLY/idLH4XpmgYgSdp3NJ78oyUa1mHi
-	4X5dmT5dWIBrEUK1/x5PE/mHFwHtF6U0JId4vYD4216fVbkPpJbDL0NxKczWTyaKhVJJLSiqPcW
-	xTy6LLlhPcgNgV54M6GDDycvsgf19olDAIZIMkQLKici3lInqKP94hpmWsSFDMPIS3rW+6f5jSd
-	DJ1CX5g46sLkty9kcSbNT9tdt6nijpyqm0PY0/1ecYuDASWN7XgOv8nlMy9jeYuMPQctH/DLcGo
-	ZYiIFUXysm3/t/gyrJ1zEK2eHPvMazleKtn0Ae6U=
-X-Google-Smtp-Source: AGHT+IEDq0I7JXxNk3z1+9cwpMaGJRj4S5TGFD8z9iqrr/48AMDKDX4UcIAWBl/wYe5ViB0av7tbiQ==
-X-Received: by 2002:a05:600c:1ca1:b0:453:84a:8cf1 with SMTP id 5b1f17b1804b1-4533cac6479mr96977885e9.33.1750149124315;
-        Tue, 17 Jun 2025 01:32:04 -0700 (PDT)
+        bh=nwqxchRTLurVFTfO5VBlW5Va1x1dnyiDlX+kHYQ02Ew=;
+        b=WkMqny9mpkmeo20cvCB20jnFcC5SfdQ+B/Fug3+dn9ubHV+eOoKPn0y63DhGDaJdNa
+         /9X8BVqeZi0nM8D/yP+DCshAOno7UNesnm1+ZyJrhKK7MoZyGzTtPGYf6rHHhQIVfzXs
+         ELKo2OGjklUu5Et16MHC+4mcy5+hHgPOxi9JWHNattdQOD4yKbps97wfQkDRJtIKJYnx
+         bZ+zuxuwyUmM/0qdIbIK0oML1XxVVW27kCWty5XZDofGIOur0A2njuYmlFPnCOD4ICKi
+         UM0TW0tn2JPAhiDQ+kIPTsc+1drOtrQ2vJAA7fsKBJOY61d0VFLZCOCobS9COQVlL03/
+         al8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWpsJcP5SbgA65GpSK/DaPT3O6vNqhb3QMqYDdyqCiPTAoHjhCs9KiSYDomGbfssOV91FjQDPE2OEuLoG2yJQ==@groups.io
+X-Gm-Message-State: AOJu0YxrSzsRpfLk1mbDiXiK/XeHvhS08GxvZAn6MIav7KgtImse8CO+
+	4kMfD07K02jw8ThR/DbUx0seNgiV0y5eX6GgZNBaag71Qwg/ARZVEQz9VODzXqYL/vo=
+X-Gm-Gg: ASbGnctxohZSu1RQc9TdtAo/CaPClq+igtxS1rWMDFS8L2eLO0CdMLy9JJhKT8/jE06
+	Ju0Hz7VMEst8QDxhDkThufI9NN1NQgpwqEC6bbr/6fbTcg6JVBz0PIEqAF8DM41Zr7w/b7Ie9W2
+	79A4ksyAmfGTFfxByiYx4n2c7CA+tZRRFJXtzrT2aIrZcew50IhtxkbcFnXOUcgUxpHMVBtycJk
+	Wv0TXtBLHbf+0LWT/PsE/TDKiFXjKTQAJZwbHOQ4bPFRlLUGXp/p0WK2bnjHgzaFMVgSMPSzPeF
+	Ss51r0+BJ3hwKbqCC3N6Td46wwoNEEKtNy0O47IKNaTuVncwHArpTbYeo/k0xBVHA2cWea9qIDp
+	Zc4sWLxubRZOtLA+Asj7zzSyjiau2RYv5kW+xsM0=
+X-Google-Smtp-Source: AGHT+IHkNt2mpOn3Hq1fszesvFqA20mKARSUyQVrtuZgopfk0rZ2vDYgQRdlXsQwGMgLnOXYdAt+1g==
+X-Received: by 2002:a05:600c:8b29:b0:450:cf42:7565 with SMTP id 5b1f17b1804b1-4533cb0aeb2mr108266295e9.23.1750149157226;
+        Tue, 17 Jun 2025 01:32:37 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:3819:3250:4f73:db31? ([2a01:e0a:3d9:2080:3819:3250:4f73:db31])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e16b425sm165904285e9.34.2025.06.17.01.32.03
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b28240sm13337658f8f.72.2025.06.17.01.32.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 01:32:03 -0700 (PDT)
-Message-ID: <85c6a4c0-400d-433c-bcf3-e089f15f0c1c@linaro.org>
-Date: Tue, 17 Jun 2025 10:32:02 +0200
+        Tue, 17 Jun 2025 01:32:36 -0700 (PDT)
+Message-ID: <e5b3f23a-60d9-4d4b-8cd3-ac6bd77e4b7f@linaro.org>
+Date: Tue, 17 Jun 2025 10:32:35 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 2/6] pci: pcie_dw_meson: Use
+Subject: Re: [PATCH 3/6] pci: pcie_dw_qcom: Use
  dw_pcie_link_set_max_link_width()
 To: Marek Vasut <marek.vasut+renesas@mailbox.org>, u-boot@lists.denx.de
 Cc: Casey Connolly <casey.connolly@linaro.org>,
@@ -75,7 +75,7 @@ Cc: Casey Connolly <casey.connolly@linaro.org>,
  Sumit Garg <sumit.garg@kernel.org>, Tom Rini <trini@konsulko.com>,
  u-boot-amlogic@groups.io, u-boot-qcom@groups.io
 References: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
- <20250617081641.8385-2-marek.vasut+renesas@mailbox.org>
+ <20250617081641.8385-3-marek.vasut+renesas@mailbox.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -102,21 +102,18 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250617081641.8385-2-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250617081641.8385-3-marek.vasut+renesas@mailbox.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:32:09 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2710
+ <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:32:39 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2711
 
 On 17/06/2025 10:16, Marek Vasut wrote:
 > Use dw_pcie_link_set_max_link_width() instead of local implementation
-> of the same functionality. This does change the behavior slightly, as
-> the dw_pcie_link_set_max_link_width() implementation also programs the
-> LNKCAP register MLW, this should however be correct and is now aligned
-> with Linux kernel behavior.
+> of the same functionality.
 > 
 > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 > ---
@@ -137,34 +134,49 @@ On 17/06/2025 10:16, Marek Vasut wrote:
 > Cc: u-boot-qcom@groups.io
 > Cc: u-boot@lists.denx.de
 > ---
->   drivers/pci/pcie_dw_meson.c | 6 +-----
->   1 file changed, 1 insertion(+), 5 deletions(-)
+>   drivers/pci/pcie_dw_qcom.c | 19 +------------------
+>   1 file changed, 1 insertion(+), 18 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie_dw_meson.c b/drivers/pci/pcie_dw_meson.c
-> index bb78e7874b1..483b07ce078 100644
-> --- a/drivers/pci/pcie_dw_meson.c
-> +++ b/drivers/pci/pcie_dw_meson.c
-> @@ -115,13 +115,9 @@ static void meson_pcie_configure(struct meson_pcie *priv)
+> diff --git a/drivers/pci/pcie_dw_qcom.c b/drivers/pci/pcie_dw_qcom.c
+> index 39b4cd4efe2..978754e8472 100644
+> --- a/drivers/pci/pcie_dw_qcom.c
+> +++ b/drivers/pci/pcie_dw_qcom.c
+> @@ -213,17 +213,6 @@ static void qcom_pcie_clear_hpc(struct qcom_pcie *priv)
+>   	dw_pcie_dbi_write_enable(&priv->dw, false);
+>   }
+>   
+> -static void qcom_pcie_set_lanes(struct qcom_pcie *priv, unsigned int lanes)
+> -{
+> -	u8 offset = pcie_dw_find_capability(&priv->dw, PCI_CAP_ID_EXP);
+> -	u32 val;
+> -
+> -	val = readl(priv->dw.dbi_base + offset + PCI_EXP_LNKCAP);
+> -	val &= ~PCI_EXP_LNKCAP_MLW;
+> -	val |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, lanes);
+> -	writel(val, priv->dw.dbi_base + offset + PCI_EXP_LNKCAP);
+> -}
+> -
+>   static int qcom_pcie_config_sid_1_9_0(struct qcom_pcie *priv)
+>   {
+>   	/* iommu map structure */
+> @@ -299,15 +288,9 @@ static void qcom_pcie_configure(struct qcom_pcie *priv)
 >   	val &= ~PORT_LINK_FAST_LINK_MODE;
 >   	val |= PORT_LINK_DLL_LINK_EN;
 >   	val &= ~PORT_LINK_MODE_MASK;
-> -	val |= PORT_LINK_MODE_1_LANES;
+> -	val |= PORT_LINK_MODE_2_LANES;
 >   	writel(val, priv->dw.dbi_base + PCIE_PORT_LINK_CONTROL);
 >   
 > -	val = readl(priv->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
 > -	val &= ~PORT_LOGIC_LINK_WIDTH_MASK;
-> -	val |= PORT_LOGIC_LINK_WIDTH_1_LANES;
+> -	val |= PORT_LOGIC_LINK_WIDTH_2_LANES;
 > -	writel(val, priv->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +	dw_pcie_link_set_max_link_width(&priv->dw, 1);
-
-This also changes PCI_EXP_LNKCAP but I guess it's also done like this
-on Linux when calling dw_pcie_host_init.
-
-I'll need to test it, but AFAIK it looks fine:
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-
+> -
+> -	qcom_pcie_set_lanes(priv, 2);
+> +	dw_pcie_link_set_max_link_width(&priv->dw, 2);
 >   
 >   	dw_pcie_dbi_write_enable(&priv->dw, false);
 >   }
 
+I'll need to validate it on HW, but it looks fine:
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
