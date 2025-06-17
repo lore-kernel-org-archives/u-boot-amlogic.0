@@ -2,45 +2,47 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306BDC73C66
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E945C7EE24
 	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:51:50 +0000 (UTC)
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
- by mx.groups.io with SMTP id smtpd.web10.13389.1750148228759533062
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+ by mx.groups.io with SMTP id smtpd.web10.13390.1750148231461961933
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Jun 2025 01:17:09 -0700
+ Tue, 17 Jun 2025 01:17:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=WKr8fK/I;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=g61eqPjF;
- spf=pass (domain: mailbox.org, ip: 80.241.56.171, mailfrom: marek.vasut+renesas@mailbox.org)
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=X5tuOysb;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=QoamdNLo;
+ spf=pass (domain: mailbox.org, ip: 80.241.56.172, mailfrom: marek.vasut+renesas@mailbox.org)
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bM08f3y02z9sj8;
-	Tue, 17 Jun 2025 10:17:06 +0200 (CEST)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bM08j3dQmz9smB;
+	Tue, 17 Jun 2025 10:17:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750148226;
+	t=1750148229;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tXwLfxZl7b5bpFdvtoVG2h6MNJIZ3sUK2eC8lIB3PCo=;
-	b=WKr8fK/IUJPPzg/R5gxAkCRgPFMhAlsyXm7u6zOddZvSs/+gX461qDc2GUi2dSKNsGnd1q
-	Dfn40RnZlUwd4q9sT63T1LVOhEJFy5kEPFBliQAdHYZ1XRoQ2BOKGK4TvJiexQpTK9q3pd
-	pdX5uQnXHKtG87yeo+L1n3R7ZPtXqn8ldlyZOJhvCIQCl6xnD01AXgHcgf6XWJmdiir17b
-	QQSYWOEPZ7YJjCVZe437m4k8LLDwepOaSrKTUuNeIdjpAJq3fqNZFNKtUI06gQ6MUFfOVN
-	LFuA5l6f2RhIxWFN8+yAUB6ZmxsiSV9AAOUvkqtVAl3XNLn3h35hncZlfu6itA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CSMO/BLjDEs0jGnvchY+T89tfQOiTxtFct0VpnnHWCE=;
+	b=X5tuOysbd0WuA/z3kdLOG/u932x0ASLDicrSBqi/YFxnrAUYCvIONZTjYXI9m7YmKLLQWW
+	CzZtIus+zGfM6wbOdspUhMVSGtCCtyGR8K5MVWkcRTGEDwcSKOBR11vra+Z79VuzqW7X3r
+	Oan0dbt2G9mN70zfJ5uf3pI+ASY3n0sbuHCZxT/P+Eyx/mTuxdpk78ZVbjiRi6lHIpQNfO
+	VGLlW3wLOjGVKtJja8QHPGGIqGbm3a21k4KMzy0K20NRBdh8WbB9qnMLy/RVV5kHi93ltB
+	dIIQ1zLyPg+HrWpYKpXWZCpMDeTtJZ61Gr81w+RzG6G3djlzzhUi2LiftrfAjA==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750148224;
+	t=1750148227;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tXwLfxZl7b5bpFdvtoVG2h6MNJIZ3sUK2eC8lIB3PCo=;
-	b=g61eqPjFLQJ9dbvAF0YOD0VM+MV5mpkQFfGCO195f/kGnevciVvL+1rSiTcrc5nUbUs5VZ
-	W3N04yBAX8UbqPd1khckrKpuzw3gAr3+6MovO4eqp1ixxP19Stq88NTVts2PPuDbz0x0x/
-	3HAPGJNu6piJLo7UgR5IG1bGHXggnmTdYpiU6oT8CLCtDRiwPjFQsCMgk6Xg3oITPWxoqM
-	UjqfRaBRYqVIioq8Q5UChG5JeDIPkd0yIzMd5Uy7Qa4az2uFOn/Xm/TVK0JFPimjZf3UFt
-	3+wONkfrDgS1ZBU5P0DDOGuqNjeqnvHizy8EWFL3fFEUvEL0hU5WgF3zfGpiJg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CSMO/BLjDEs0jGnvchY+T89tfQOiTxtFct0VpnnHWCE=;
+	b=QoamdNLon2aqYSUnkl219kukEOEJ66llL4swfuL5pxFjEfVDWskC6tsYTF2sBdwdnUsB4a
+	De75O8B2K3/UwgmvfY0v9E/X68HH5/+vS8k1g2rvYm/FNAajPw+kuFpSYM3OhRx8ThIVZ5
+	rNnRc12FrU7w/X8nQlAQBAqMSNrPvha+KMTAGx72xs3tLV2yfgGqcPfZRe8u6SCiMoeosW
+	vlHKAQRB1wmKMA0VdMb5asdCGbjTe/gyWUhXOn82GzlJ7qPVRt5X9AdxCPBGRA4idn03SP
+	4aXFZUsUVwvjb5rQEkdNQSREqMRulowdAqDFOuV1lNDhk1Kf4JwzhGvXy26aSw==
 To: u-boot@lists.denx.de
 Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	Casey Connolly <casey.connolly@linaro.org>,
@@ -58,24 +60,27 @@ Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	Tom Rini <trini@konsulko.com>,
 	u-boot-amlogic@groups.io,
 	u-boot-qcom@groups.io
-Subject: [PATCH 1/6] drivers: pci: pcie_dw_common: Add dw_pcie_link_set_max_link_width()
-Date: Tue, 17 Jun 2025 10:16:27 +0200
-Message-ID: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
+Subject: [PATCH 2/6] pci: pcie_dw_meson: Use dw_pcie_link_set_max_link_width()
+Date: Tue, 17 Jun 2025 10:16:28 +0200
+Message-ID: <20250617081641.8385-2-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
+References: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
-X-MBO-RS-META: jsqh458kah7znud1zek95ui56fbjitua
-X-MBO-RS-ID: 190a0fa05b78b32e24d
+X-MBO-RS-META: kd5asew6ynbi93557i5ngsbeswmh4dta
+X-MBO-RS-ID: eba0aa1e4e0fe73ba2f
+X-Rspamd-Queue-Id: 4bM08j3dQmz9smB
 Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:51:50 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2717
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2720
 
-Add dw_pcie_link_set_max_link_width() implementation ported from Linux ke=
-rnel
-as of commit 89db0793c9f2 ("PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW hand=
-ling").
-This is common code which is already duplicated in multiple drivers.
+Use dw_pcie_link_set_max_link_width() instead of local implementation
+of the same functionality. This does change the behavior slightly, as
+the dw_pcie_link_set_max_link_width() implementation also programs the
+LNKCAP register MLW, this should however be correct and is now aligned
+with Linux kernel behavior.
 
 Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
@@ -96,89 +101,29 @@ Cc: u-boot-amlogic@groups.io
 Cc: u-boot-qcom@groups.io
 Cc: u-boot@lists.denx.de
 ---
- drivers/pci/pcie_dw_common.c | 45 ++++++++++++++++++++++++++++++++++++
- drivers/pci/pcie_dw_common.h |  2 ++
- 2 files changed, 47 insertions(+)
+ drivers/pci/pcie_dw_meson.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pcie_dw_common.c b/drivers/pci/pcie_dw_common.c
-index 78961271a8e..c4cad019373 100644
---- a/drivers/pci/pcie_dw_common.c
-+++ b/drivers/pci/pcie_dw_common.c
-@@ -13,6 +13,7 @@
- #include <pci.h>
- #include <dm/device_compat.h>
- #include <asm/io.h>
-+#include <linux/bitfield.h>
- #include <linux/delay.h>
- #include "pcie_dw_common.h"
+diff --git a/drivers/pci/pcie_dw_meson.c b/drivers/pci/pcie_dw_meson.c
+index bb78e7874b1..483b07ce078 100644
+--- a/drivers/pci/pcie_dw_meson.c
++++ b/drivers/pci/pcie_dw_meson.c
+@@ -115,13 +115,9 @@ static void meson_pcie_configure(struct meson_pcie *=
+priv)
+ 	val &=3D ~PORT_LINK_FAST_LINK_MODE;
+ 	val |=3D PORT_LINK_DLL_LINK_EN;
+ 	val &=3D ~PORT_LINK_MODE_MASK;
+-	val |=3D PORT_LINK_MODE_1_LANES;
+ 	writel(val, priv->dw.dbi_base + PCIE_PORT_LINK_CONTROL);
 =20
-@@ -28,6 +29,50 @@ int pcie_dw_get_link_width(struct pcie_dw *pci)
- 		PCIE_LINK_STATUS_WIDTH_MASK) >> PCIE_LINK_STATUS_WIDTH_OFF;
+-	val =3D readl(priv->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
+-	val &=3D ~PORT_LOGIC_LINK_WIDTH_MASK;
+-	val |=3D PORT_LOGIC_LINK_WIDTH_1_LANES;
+-	writel(val, priv->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
++	dw_pcie_link_set_max_link_width(&priv->dw, 1);
+=20
+ 	dw_pcie_dbi_write_enable(&priv->dw, false);
  }
-=20
-+void dw_pcie_link_set_max_link_width(struct pcie_dw *pci, u32 num_lanes)
-+{
-+	u32 lnkcap, lwsc, plc;
-+	u8 cap;
-+
-+	if (!num_lanes)
-+		return;
-+
-+	/* Set the number of lanes */
-+	plc =3D readl(pci->dbi_base + PCIE_PORT_LINK_CONTROL);
-+	plc &=3D ~PORT_LINK_FAST_LINK_MODE;
-+	plc &=3D ~PORT_LINK_MODE_MASK;
-+
-+	/* Set link width speed control register */
-+	lwsc =3D readl(pci->dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
-+	lwsc &=3D ~PORT_LOGIC_LINK_WIDTH_MASK;
-+	lwsc |=3D PORT_LOGIC_LINK_WIDTH_1_LANES;
-+	switch (num_lanes) {
-+	case 1:
-+		plc |=3D PORT_LINK_MODE_1_LANES;
-+		break;
-+	case 2:
-+		plc |=3D PORT_LINK_MODE_2_LANES;
-+		break;
-+	case 4:
-+		plc |=3D PORT_LINK_MODE_4_LANES;
-+		break;
-+	case 8:
-+		plc |=3D PORT_LINK_MODE_8_LANES;
-+		break;
-+	default:
-+		dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
-+		return;
-+	}
-+	writel(plc, pci->dbi_base + PCIE_PORT_LINK_CONTROL);
-+	writel(lwsc, pci->dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
-+
-+	cap =3D pcie_dw_find_capability(pci, PCI_CAP_ID_EXP);
-+	lnkcap =3D readl(pci->dbi_base + cap + PCI_EXP_LNKCAP);
-+	lnkcap &=3D ~PCI_EXP_LNKCAP_MLW;
-+	lnkcap |=3D FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes);
-+	writel(lnkcap, pci->dbi_base + cap + PCI_EXP_LNKCAP);
-+}
-+
- static void dw_pcie_writel_ob_unroll(struct pcie_dw *pci, u32 index, u32=
- reg,
- 				     u32 val)
- {
-diff --git a/drivers/pci/pcie_dw_common.h b/drivers/pci/pcie_dw_common.h
-index 8cb99a12ea1..ccd423081eb 100644
---- a/drivers/pci/pcie_dw_common.h
-+++ b/drivers/pci/pcie_dw_common.h
-@@ -130,6 +130,8 @@ int pcie_dw_get_link_speed(struct pcie_dw *pci);
-=20
- int pcie_dw_get_link_width(struct pcie_dw *pci);
-=20
-+void dw_pcie_link_set_max_link_width(struct pcie_dw *pci, u32 num_lanes)=
-;
-+
- int pcie_dw_prog_outbound_atu_unroll(struct pcie_dw *pci, int index, int=
- type, u64 cpu_addr,
- 				     u64 pci_addr, u32 size);
-=20
 --=20
 2.47.2
 
