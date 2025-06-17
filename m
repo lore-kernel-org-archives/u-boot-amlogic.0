@@ -2,167 +2,168 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDACEC71136
-	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:33:49 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web10.13720.1750149226885299026
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13589C71157
+	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 08:51:50 +0000 (UTC)
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+ by mx.groups.io with SMTP id smtpd.web10.13393.1750148237756763218
  for <u-boot-amlogic@groups.io>;
- Tue, 17 Jun 2025 01:33:47 -0700
+ Tue, 17 Jun 2025 01:17:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=drdtkjX7;
- spf=pass (domain: linaro.org, ip: 209.85.128.49, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442fda876a6so47642855e9.0
-        for <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 01:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750149225; x=1750754025; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1X6D0CmZFKuhKIucaXsHS1PW0QXBMviPNG+2skzn+Fs=;
-        b=drdtkjX7zgqEK/HNyg/h9Tq8qsFldfT3V2Y+HcU/MmZFetU8UWaLEL6JKSLII2wy/k
-         B6vxAvejDSWeNi+qYh3EEvD/ZZixkwlvK0BlxHcV6wDvwhs7bvzIU7wgHLP0op7D1sJe
-         EG+WD0tKHyv4Ft1hTj8vygFDlKqltMD/tjkTxZJfWK6rTAdLmgsYLbNyCaXyd10va3Hq
-         2XIBqSSoHnZNrVkaSzx+DeDgvtD9FcRehdLkXcBaNzH1g7usef0DzBZwUT6ZfODt7yw2
-         QmIk4s8xp85hAVhmgRdBDyxCcFr3Q3xCMqx5nNIFFWiV4Iip98PyqJ2eICkA3Q+kAqDn
-         O/sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750149225; x=1750754025;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1X6D0CmZFKuhKIucaXsHS1PW0QXBMviPNG+2skzn+Fs=;
-        b=lbigVgFst/D4zEGAZeeW5um+PHs63yDxZLYLXmc7k2ZULcFokmbDpD8jBFko5TQfr7
-         nU2S9ZHsAOMm7rGQweVIBx+mSbC9CUyRXwMp0XO8jy78ZthHUkoIi4Wr4afiHyVuyYif
-         N8E9VQ5ocbwDC5Ehyug4KLz3/A6bwTuNKhcbFfpT/kVRgzQG2r6y1VZUWVI1ZzyPSQbT
-         UGeC0SMlB0HODBtrR7ngKmofyIYEfTdPsjGoBCWJc8W+ccKPoHqKd66AkCmMiVbJ24gg
-         sNsrwBsCTKthMoHIFLtG5agEOj62w24ednNzD9tNBxjgvN3wr1TKMiNt5EuHyjDULL2p
-         h3Tg==
-X-Gm-Message-State: AOJu0Yyf8o2rlN1yK8gtN96jCoRNPvSspVobuMNjxzP4/QvK1ucfaXUn
-	rJPlTkit/0AwCDqK/vOQ3OzvnJh6b38DrmNPk7kav4zhYwqDW6K+GvrILrA2o568LBM=
-X-Gm-Gg: ASbGnctlVTM/JVHHOF0+6VGc9VQoSslR7zA65zKm0iSJG5oxsBOVnnT+B0ME0hQz6xB
-	rufAdsCJ+r2Z2EbZTjYWYbQHwJZcg3kQy1Q6dJIBD7bpjo99fPZtvNQ70f/kVSizAwnGAh4R0ns
-	+j2p/6K6v+E5Jixz2e28B+t6a2c84CQdijnlmnzarMgJNwxjTwN0tjERzd2xHU0CULoRpVW16bu
-	zCtR85z8dRHtBgfnnOOVvm5KN3/YJVVmVSSFe+c408+MOBnRDpw1x5JTJiiR8rvvO6s9IjWtULI
-	Xy2Djir2nTu+GDSxtR7YLEVNHa1D/eKjp3DH5bKf00c13at2pFBo8nLl+eo3wkNEcxfVRY5z2qX
-	ng/T//rZJN7+DDP/LZ6GZozI8KtXZfyL84acD/x4=
-X-Google-Smtp-Source: AGHT+IFdrRUimj6V0XE0nSEu1tYMp0HmMwO+Uls5v2hph97JboMPH6lltzRQ4skSOM8/kVLyx2G0KA==
-X-Received: by 2002:a05:600c:3587:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-4533cad1aa0mr125155075e9.31.1750149225312;
-        Tue, 17 Jun 2025 01:33:45 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:3819:3250:4f73:db31? ([2a01:e0a:3d9:2080:3819:3250:4f73:db31])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a6389esm13083320f8f.27.2025.06.17.01.33.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 01:33:44 -0700 (PDT)
-Message-ID: <9a5abd7c-e4f1-41fb-9622-57f10092421f@linaro.org>
-Date: Tue, 17 Jun 2025 10:33:43 +0200
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=HEw4Dr/L;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=uL13hceg;
+ spf=pass (domain: mailbox.org, ip: 80.241.56.161, mailfrom: marek.vasut+renesas@mailbox.org)
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bM08q66yvz9t8H;
+	Tue, 17 Jun 2025 10:17:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750148235;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xE+dx8Y4QXyRL5+o6FLEKrTvZCHx6HoZp9XoNaOs4Go=;
+	b=HEw4Dr/Lhwis8NU1yr2UGTA4E1y5H6VhkHh/abTbPrCSOKqXMfI4+GC8pNxu2gq/kqqKM5
+	dPUJ5pXQUk/Q/A03QeMC7RRZXxovGRnqmQr1hQIxPga8PKTHEv+nveIvVFn1VHM/yMWjx5
+	YDPpNTJZVro+znmdIZwB4CF1oMfaje6hRswx+0GWRDUrRi3Wt109aaWjLOYonvxR3nzKdm
+	CvlNgjXMrDLibL1aXZ1nGCtbcq197WuxKcIvRhOjP/+ZPJk3rVbZqYemJaFJAMjCJIeDbX
+	eqCoJVSdoH/wm2ULXBHTG/b+GVq3ah4siQFsmiLPBjuFBGf41rwTeXRqKtEBnw==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750148234;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xE+dx8Y4QXyRL5+o6FLEKrTvZCHx6HoZp9XoNaOs4Go=;
+	b=uL13hcegUpFu7NralYEmQIv5tj8ig+gYKXo+1YSu9kNmGgQddQsHupLJLnjuKhTVXvyTDN
+	b81Alq8+pu/tJXzZ2HUhLKri1/jdb820jkPEIoVxD3bjA5zPIa5Q/7mWu6r3q0+SL5n6pK
+	1Y4RClcMFoGO4gtnH3P9QHEp7ppEA5DFxnOmA/Zgf/6tU6PmDaPBS4l1xSGlVQwLue2qFy
+	Ptwrg89G7Gqgqz4/1A6PAYqihKzF9mSxWHmGLepHFoGvkVki3UQoK/+sJKjSnGhM8K/3Ag
+	oJhI12PHccF+AtRVBjiE40i9TvhypDeupF3Y+PEVSM8o94GdQY4MptcSUKoR2Q==
+To: u-boot@lists.denx.de
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Casey Connolly <casey.connolly@linaro.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Crispin <john@phrozen.org>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
+	Philipp Tomsich <philipp.tomsich@vrull.eu>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Simon Glass <sjg@chromium.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Tom Rini <trini@konsulko.com>,
+	u-boot-amlogic@groups.io,
+	u-boot-qcom@groups.io
+Subject: [PATCH 4/6] pci: pcie_dw_rockchip: Use dw_pcie_link_set_max_link_width()
+Date: Tue, 17 Jun 2025 10:16:30 +0200
+Message-ID: <20250617081641.8385-4-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
+References: <20250617081641.8385-1-marek.vasut+renesas@mailbox.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3] pinctrl: meson: support gpio toggle command
-To: forbidden405@outlook.com, Tom Rini <trini@konsulko.com>,
- Beniamino Galvani <b.galvani@gmail.com>, Simon Glass <sjg@chromium.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-References: <20250617-meson_ppinctrl-v3-1-218d9321a8d2@outlook.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250617-meson_ppinctrl-v3-1-218d9321a8d2@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: m3gw3kz1kotzfcuw7t8o68cuioweickj
+X-MBO-RS-ID: 218f44eb7c00e8c089a
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:33:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2712
+ <u-boot-amlogic@groups.io>; Tue, 17 Jun 2025 08:51:50 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2714
 
-On 16/06/2025 19:01, Yang Xiwen via B4 Relay wrote:
-> From: Yang Xiwen <forbidden405@outlook.com>
-> 
-> meson_gpio_get() always assumes gpio is configured to input mode. This
-> is incorrect and breaks `gpio toggle` command:
-> 
-> gpio: pin aobus-banks2 (gpio 2) value is 0
->     Warning: value of pin is still 1
-> 
-> Fix it by adding the logic to handle both input and output mode.
-> 
-> Fixes: 2009a8d03fe5 ("pinctrl: meson: add GPIO support")
-> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
-> ---
-> Changes in v3:
-> - remove unused reg_type assignment.
-> - Link to v2: https://lore.kernel.org/r/20250617-meson_ppinctrl-v2-1-16d1cb294ef4@outlook.com
-> 
-> Changes in v2:
-> - return -EINVAL directly in case of error. (Neil Armstrong <neil.armstrong@linaro.org>)
-> - Link to v1: https://lore.kernel.org/r/20250617-meson_ppinctrl-v1-1-593aa15f288a@outlook.com
-> ---
->   drivers/pinctrl/meson/pinctrl-meson.c | 20 +++++++++++++++++++-
->   1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-> index babf1bccc969..7dbaf966f93f 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> @@ -117,8 +117,26 @@ int meson_gpio_get(struct udevice *dev, unsigned int offset)
->   	struct meson_pinctrl *priv = dev_get_priv(dev->parent);
->   	unsigned int reg, bit;
->   	int ret;
-> +	enum gpio_func_t direction;
-> +	enum meson_reg_type reg_type;
->   
-> -	ret = meson_gpio_calc_reg_and_bit(dev->parent, offset, REG_IN, &reg,
-> +	direction = meson_gpio_get_direction(dev, offset);
-> +
-> +	switch (direction) {
-> +	case GPIOF_INPUT:
-> +		reg_type = REG_IN;
-> +		break;
-> +
-> +	case GPIOF_OUTPUT:
-> +		reg_type = REG_OUT;
-> +		break;
-> +
-> +	default:
-> +		dev_warn(dev, "Failed to get current direction of Pin %u\n", offset);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = meson_gpio_calc_reg_and_bit(dev->parent, offset, reg_type, &reg,
->   					  &bit);
->   	if (ret)
->   		return ret;
-> 
-> ---
-> base-commit: c5afa1fef49f55146e78d6157470520391c40eca
-> change-id: 20250617-meson_ppinctrl-5139ca06b828
-> 
-> Best regards,
+Use dw_pcie_link_set_max_link_width() instead of local implementation
+of the same functionality. This does change the behavior slightly, as
+the dw_pcie_link_set_max_link_width() implementation also programs the
+LNKCAP register MLW, this should however be correct and is now aligned
+with Linux kernel behavior.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+---
+Cc: Casey Connolly <casey.connolly@linaro.org>
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Daniel Schwierzeck <daniel.schwierzeck@gmail.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: John Crispin <john@phrozen.org>
+Cc: Kever Yang <kever.yang@rock-chips.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Cc: Philipp Tomsich <philipp.tomsich@vrull.eu>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Simon Glass <sjg@chromium.org>
+Cc: Sumit Garg <sumit.garg@kernel.org>
+Cc: Tom Rini <trini@konsulko.com>
+Cc: u-boot-amlogic@groups.io
+Cc: u-boot-qcom@groups.io
+Cc: u-boot@lists.denx.de
+---
+ drivers/pci/pcie_dw_rockchip.c | 39 +---------------------------------
+ 1 file changed, 1 insertion(+), 38 deletions(-)
+
+diff --git a/drivers/pci/pcie_dw_rockchip.c b/drivers/pci/pcie_dw_rockchi=
+p.c
+index ac7faa4cc19..208aa30463a 100644
+--- a/drivers/pci/pcie_dw_rockchip.c
++++ b/drivers/pci/pcie_dw_rockchip.c
+@@ -158,8 +158,6 @@ static inline void rk_pcie_writel_apb(struct rk_pcie =
+*rk_pcie, u32 reg,
+  */
+ static void rk_pcie_configure(struct rk_pcie *pci)
+ {
+-	u32 val;
+-
+ 	dw_pcie_dbi_write_enable(&pci->dw, true);
+=20
+ 	/* Disable BAR 0 and BAR 1 */
+@@ -175,43 +173,8 @@ static void rk_pcie_configure(struct rk_pcie *pci)
+ 			TARGET_LINK_SPEED_MASK, pci->gen);
+=20
+ 	/* Set the number of lanes */
+-	val =3D readl(pci->dw.dbi_base + PCIE_PORT_LINK_CONTROL);
+-	val &=3D ~PORT_LINK_FAST_LINK_MODE;
+-	val |=3D PORT_LINK_DLL_LINK_EN;
+-	val &=3D ~PORT_LINK_MODE_MASK;
+-	switch (pci->num_lanes) {
+-	case 1:
+-		val |=3D PORT_LINK_MODE_1_LANES;
+-		break;
+-	case 2:
+-		val |=3D PORT_LINK_MODE_2_LANES;
+-		break;
+-	case 4:
+-		val |=3D PORT_LINK_MODE_4_LANES;
+-		break;
+-	default:
+-		dev_err(pci->dw.dev, "num-lanes %u: invalid value\n", pci->num_lanes);
+-		goto out;
+-	}
+-	writel(val, pci->dw.dbi_base + PCIE_PORT_LINK_CONTROL);
+-
+-	/* Set link width speed control register */
+-	val =3D readl(pci->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
+-	val &=3D ~PORT_LOGIC_LINK_WIDTH_MASK;
+-	switch (pci->num_lanes) {
+-	case 1:
+-		val |=3D PORT_LOGIC_LINK_WIDTH_1_LANES;
+-		break;
+-	case 2:
+-		val |=3D PORT_LOGIC_LINK_WIDTH_2_LANES;
+-		break;
+-	case 4:
+-		val |=3D PORT_LOGIC_LINK_WIDTH_4_LANES;
+-		break;
+-	}
+-	writel(val, pci->dw.dbi_base + PCIE_LINK_WIDTH_SPEED_CONTROL);
++	dw_pcie_link_set_max_link_width(&pci->dw, pci->num_lanes);
+=20
+-out:
+ 	dw_pcie_dbi_write_enable(&pci->dw, false);
+ }
+=20
+--=20
+2.47.2
+
 
