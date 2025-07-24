@@ -2,107 +2,146 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476D3C83F26
-	for <webhook@archiver.kernel.org>; Thu, 24 Jul 2025 08:32:22 +0000 (UTC)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web11.20098.1753288647162604281
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B1C87FCD
+	for <webhook@archiver.kernel.org>; Fri, 25 Jul 2025 08:18:14 +0000 (UTC)
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+ by mx.groups.io with SMTP id smtpd.web11.5269.1753393006919851523
  for <u-boot-amlogic@groups.io>;
- Wed, 23 Jul 2025 09:37:27 -0700
+ Thu, 24 Jul 2025 14:36:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=hJd+pLTK;
- spf=pass (domain: linaro.org, ip: 209.85.221.42, mailfrom: andrew.goodbody@linaro.org)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a54700a46eso28704f8f.1
-        for <u-boot-amlogic@groups.io>; Wed, 23 Jul 2025 09:37:26 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=CMjbgXv0;
+ spf=pass (domain: konsulko.com, ip: 209.85.160.176, mailfrom: trini@konsulko.com)
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4ab6416496dso19065881cf.1
+        for <u-boot-amlogic@groups.io>; Thu, 24 Jul 2025 14:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753288645; x=1753893445; darn=groups.io;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lpZ6EeYs+LGWNt5MketzLyae4vHBD6BLVZAXkb6Gzpk=;
-        b=hJd+pLTKkxfhqvZMp6Tl01OwYTVaz2BltzTKbFhDqqy3+rc1FNiuf04wNhTv7AO4tp
-         oLKlutRzKFzUtf388+BmmZ3woLvUbicanya+qLatZKyBUEqNhWb1iuuyy6+mcoQXelJR
-         OT+4h20lZluenFSJLtC5PtCKXtfjqhDoX+PmGP9pG3F8B2jWwjuqUpcNVykQohgwyfog
-         SHyMjY00qn/LPM6Sv/lSnU/IYM6SX227oFHCmL9hnKnDwwRnL9NwIcNBlSzyQdNtXWXK
-         pLUE/dTvQJYmyv7MfDoWl2LreJYyippAqd9UOMr2wQdreHYrLoIrQj0opvN3paSM7fpQ
-         +SXA==
+        d=konsulko.com; s=google; t=1753393006; x=1753997806; darn=groups.io;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZPxVMYbbKVbjD1LnqDvMp6mdQbbSwvqoiCWolQ08/gE=;
+        b=CMjbgXv0eCc3p5gsfa3eQqk7A1qs/DcbrXnBkdTn7ZkCF3kmiVM/iE2ZKPpmrcVzYo
+         6r06HAdS/I/ou25v61e/bRWODMKdEEZFRwtLDa/SqXQ4hraUT3k0AtQXKaUCir+KuahI
+         P27CkEUphVfLOiw7jtSQDCzLwNOi+2BX4ka3s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753288645; x=1753893445;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lpZ6EeYs+LGWNt5MketzLyae4vHBD6BLVZAXkb6Gzpk=;
-        b=gFuhhd2Tv2C1usCWiiOtfVBT92n+XjN1xaE/C67eOTM7t39NfU0w6C69fidu7DY8PN
-         hPLJ5bLpz1ZT/OFeqZS2OH2HspmEYFqlrreoCgTJA9sidkjHS3nyLQywAvd6DiZ7lq+W
-         rP6IXD0Zf7sDggeQUwotB/CaCuqshJUA3Z87gIa1qZV1qzYukENKyAB0Xi/ePxm5r/Et
-         dutgxyASN/9wCdCf2GY2DEcm1HQguiXxupZ013clnkhvCrtseSkwf0jhkU13pN2FqE2D
-         SnY9nC3SVgTjzbQ/j+wlxhfG46uBh+06CD0zzcwyYbZY5eR/hdKx6SyM0I+arjZjXi2l
-         9vkw==
-X-Gm-Message-State: AOJu0YzcuT5AMt5QaIUbw2NzQwL2JGWayh/NVWqp2O8buuHmIZKOv4ba
-	dAJMqWhB9vUI9MF4SGkCjjIdl0y/cTVn4E9EFUk/7orSGaOaRxpA0XmDxawjrh0ubpBc2FEt4tZ
-	hBml3
-X-Gm-Gg: ASbGncsc9+kmmQTZX6kgUGf+vg9Z3LT7U7NKHR010emTnlFUxidCCqxw0JrRfBjZVeq
-	yqtjWyhQQ55GSoRsVSorBnpZqB7Q6Dk8xYj8aM86ZE7lbQ/8yGy/BzYYIDt8WKMd1IgnmieulKY
-	TLpsH2723VILBzLW8LFduNbVGqP6JBKPgZNRcZ6CxT1T+LbS5dxuit33KBuolK4dMwWzVT1GdQl
-	2FdPhhn1aV66Cr27jjMXXxdufXYu0rr7RIExDS46upl3jLfrkrHXFACSNjqdfXD81kq/U07mMNG
-	irx+D9JixIbXSmW6OvnKOGOm9qio2SsU0nyv/Kio1PmJQZ6uiIpV7Hv3TOv28ddd0tnwbxla57s
-	4Uxq9yzBrW2E62NoOgCk+WYfEYkXQXV/jYrdXJe5NahqtUsiLxsU=
-X-Google-Smtp-Source: AGHT+IFD1QG5/tPpr7t1LFGKsn1FDEr7VExg5+sqDAjwyE1HY9kcu/ZwXgtvxKINttXpJlPX4VYY9g==
-X-Received: by 2002:a05:6000:208a:b0:3a5:25e0:1851 with SMTP id ffacd0b85a97d-3b768eb077emr3485130f8f.7.1753288645430;
-        Wed, 23 Jul 2025 09:37:25 -0700 (PDT)
-Received: from artemis2.elfringham.co.uk ([2a0a:ef40:f9e:3c01:cdd8:a59a:1949:12ce])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca4c754sm16855166f8f.59.2025.07.23.09.37.24
+        d=1e100.net; s=20230601; t=1753393006; x=1753997806;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZPxVMYbbKVbjD1LnqDvMp6mdQbbSwvqoiCWolQ08/gE=;
+        b=Bo5IzEjH9BlA02sJKUNlVz5+yVZk6Ky+TX8EJdbFkJMPfHNVvSr9KX//nxytaEa4Et
+         qYAH4GFGMdfI81vF8pIGfwK45XqWUB5GXYb65o/S8cnToDCDGyBci9J95PmOdiam2g31
+         HR+Ub+zmugcvI2DFKaKtE12Ii2hOgoip2FEAbOxIxr+5xhkwsUoblm4ynI/e9ALtML8/
+         y6lCr/9OhhKA/UR9ywnqLCqfRK7rO4ShQvAD+CBvMZyfIq2Qr5wQs/kiDLbtjia4qdRh
+         pkpj9nPHL72n7EacllX24IgZSIdzNwojVwvypVn5EOFkvToQRzJo1U/ueJ40WavQMPUW
+         F/Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCWxcC9T1LzYgkOD3qwDX1Wqb4dgp1Fyq4I5RnbJ9+gnhE+TtVBf8BIfLuMR1fpSiIHHxq8OOvOuf1kZRUvo2Q==@groups.io
+X-Gm-Message-State: AOJu0Yxh4eSHoAAesTJqmJbReSMpMqfNrN4jrgIVO6bb2nLlwc61VT7z
+	qBoCGoauvoz/3wekZB3WXwU8AxgtU7S50T2M/C9BV9g6XVT0Mtq9s+eRs4OATDx10UFGP0gHY4q
+	dyXLx74E=
+X-Gm-Gg: ASbGncsaVcW5Yndiqe4EIhZsXUROE4/eRIQF2P6O3SQwGMxFFHEaFkaivRL9zhffr0P
+	WWdAU4yJ7DaI/eagfLJir831veFwkGylHSYoAkoiA3TJOSMIUjed6jMXHhlrtfCubtmDajb/F9h
+	73fRVN4LykPBZbLbGA1cXlMeD55U21CgcSZBL+H2Sth9o6dZ8UyZzUv39rZX+KjPnYHCtKLJ63E
+	MUbCRZvAeI8DrlDDNWnh2nhC9/Pw/LEik5bSWIJpVhJ3r0o5/tLe+Liv/RCBhkKJQ/1iskiqN1k
+	QVtsb97TrImkjaTYIT1yRZECE3BclQavyPdb6paoLCiRaPKzPn2sRGqfRgbk7wU7YN3m4qsDbIj
+	mWuE2fSUTn885rUxemGCSnFVq/htquu1EBIBYEoi1I3DRjiyIUefeHmhixV7YJQOMyg==
+X-Google-Smtp-Source: AGHT+IG0FY2EDvYGbb64jrHdiWUQWKS88Y8wn2wbX8Iy1WYMr5QZ7j5xiKwzKDoUxQj8GpweL8iRng==
+X-Received: by 2002:a05:6870:6f0c:b0:303:5cb:4296 with SMTP id 586e51a60fabf-306c728975emr6224526fac.30.1753392632210;
+        Thu, 24 Jul 2025 14:30:32 -0700 (PDT)
+Received: from [127.0.1.1] (fixed-189-203-97-42.totalplay.net. [189.203.97.42])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-306e1f8a7adsm660520fac.42.2025.07.24.14.30.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jul 2025 09:37:24 -0700 (PDT)
-From: Andrew Goodbody <andrew.goodbody@linaro.org>
-Date: Wed, 23 Jul 2025 17:37:24 +0100
-Subject: [PATCH] clk: meson: Remove unreachable code
+        Thu, 24 Jul 2025 14:30:31 -0700 (PDT)
+From: Tom Rini <trini@konsulko.com>
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Aaron Williams <awilliams@marvell.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>, 
+ Hugues Kamba Mpiana <hugues.kambampiana@arm.com>, 
+ Ben Horgan <ben.horgan@arm.com>, Adam Ford <aford173@gmail.com>, 
+ Nishanth Menon <nm@ti.com>, Robert Nelson <robertcnelson@gmail.com>, 
+ Anand Gore <anand.gore@broadcom.com>, 
+ William Zhang <william.zhang@broadcom.com>, 
+ Kursad Oney <kursad.oney@broadcom.com>, 
+ Philippe Reynes <philippe.reynes@softathome.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Thomas Fitzsimmons <fitzsim@fitzsim.org>, 
+ Michael Trimarchi <michael@amarulasolutions.com>, 
+ Junhui Liu <junhui.liu@pigmoral.tech>, 
+ Sergey Temerkhanov <s.temerkhanov@gmail.com>, Marek Vasut <marex@denx.de>, 
+ Gilles Talis <gilles.talis@gmail.com>, 
+ Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>, Bin Meng <bmeng.cn@gmail.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ Matteo Lisi <matteo.lisi@engicam.com>, 
+ Patrick Delaunay <patrick.delaunay@foss.st.com>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>, 
+ "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>, 
+ Alice Guo <alice.guo@nxp.com>, Eric Nelson <eric@nelint.com>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Frieder Schrempf <frieder.schrempf@kontron.de>, 
+ Michael Walle <michael@walle.cc>, Sam Shih <sam.shih@mediatek.com>, 
+ Ryder Lee <ryder.lee@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, 
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+ GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, 
+ Julien Masson <jmasson@baylibre.com>, Fabien Parent <fparent@baylibre.com>, 
+ Stanley Chu <yschu@nuvoton.com>, Jim Liu <JJLIU0@nuvoton.com>, 
+ Tianrui Wei <tianrui-wei@outlook.com>, 
+ Garrett Giordano <ggiordano@phytec.com>, Wadim Egorov <w.egorov@phytec.de>, 
+ liuhao <liuhao@phytium.com.cn>, shuyiqi <shuyiqi@phytium.com.cn>, 
+ lixinde <lixinde@phytium.com.cn>, 
+ weichangzheng <weichangzheng@phytium.com.cn>, 
+ Nobuhiro Iwamatsu <iwamatsu.nobuhiro@renesas.com>, 
+ Paul Barker <paul@pbarker.dev>, Simon Glass <sjg@chromium.org>, 
+ Mario Six <mario.six@gdsys.cc>, Le Jin <le.jin@siemens.com>, 
+ Jan Kiszka <jan.kiszka@siemens.com>, Sean Anderson <seanga2@gmail.com>, 
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+ Huan Zhou <pericycle.cc@gmail.com>, Kamil Lulko <kamil.lulko@gmail.com>, 
+ Dario Binacchi <dario.binacchi@amarulasolutions.com>, 
+ Dillon Min <dillon.minfei@gmail.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Bryan Brattlof <bb@ti.com>, Manorit Chawdhry <m-chawdhry@ti.com>, 
+ Vaishnav Achath <vaishnav.a@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>, 
+ Apurva Nandan <a-nandan@ti.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>, 
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+ Anastasiia Lukianenko <anastasiia_lukianenko@epam.com>, 
+ Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>, 
+ Michal Simek <michal.simek@amd.com>, u-boot@lists.denx.de, 
+ u-boot-amlogic@groups.io, u-boot@dh-electronics.com, 
+ uboot-stm32@st-md-mailman.stormreply.com
+In-Reply-To: <20250717024426.26953-1-semen.protsenko@linaro.org>
+References: <20250717024426.26953-1-semen.protsenko@linaro.org>
+Subject: Re: [PATCH] treewide: Remove empty board_init() function from all boards
+Message-Id: <175339262777.1899261.14751318047956466864.b4-ty@konsulko.com>
+Date: Thu, 24 Jul 2025 15:30:27 -0600
 MIME-Version: 1.0
-Message-Id: <20250723-clk_meson-v1-1-8cd6e73145a4@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAMMPgWgC/x2NUQqDMBAFryL73UAaEbVXKaUkm1UXNZbdIoJ4d
- 6Ofw5vH7KAkTAqvYgehlZWXlOH5KAAHn3oyHDODs66ytSsNTuN3Jl2SKWNrA7q2ayJC9oNXMkF
- 8wuF6zF7/JNfwE+p4uyPvz3GcPO1M3HQAAAA=
-To: Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
- Andrew Goodbody <andrew.goodbody@linaro.org>
-X-Mailer: b4 0.12.0
+X-Mailer: b4 0.14.2
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 24 Jul 2025 08:32:22 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2731
+ <u-boot-amlogic@groups.io>; Fri, 25 Jul 2025 08:18:14 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2732
 
-A second return following the first return is unreachable code so remove
-it.
+On Wed, 16 Jul 2025 21:44:26 -0500, Sam Protsenko wrote:
 
-This issue was found by Smatch.
+> Commit 86acdce2ba88 ("common: add config for board_init() call")
+> introduced CONFIG_BOARD_INIT option. This option can be disabled for the
+> boards where board_init() function is not needed. Remove empty
+> board_init() calls for all boards where it's possible, and disable
+> CONFIG_BOARD_INIT in all related defconfigs.
+> 
+> This cleanup was made semi-automatically using these scripts: [1].
+> 
+> [...]
 
-Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
----
- drivers/clk/meson/g12a.c | 2 --
- 1 file changed, 2 deletions(-)
+Applied to u-boot/master, thanks!
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index 5d7faaa3eab..a7a42b2edb6 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -916,8 +916,6 @@ static ulong meson_clk_set_rate_by_id(struct clk *clk, unsigned long id,
- 			return -EINVAL;
- 	case CLKID_PCIE_PLL:
- 		return meson_pcie_pll_set_rate(clk, rate);
--
--		return 0;
- 	case CLKID_VPU:
- 		return meson_clk_set_rate_by_id(clk,
- 				meson_mux_get_parent(clk, CLKID_VPU), rate,
-
----
-base-commit: bd0ade7d090a334b3986936d63a34001d99722ad
-change-id: 20250723-clk_meson-3d90bc29f8dc
-
-Best regards,
+[1/1] treewide: Remove empty board_init() function from all boards
+      commit: 70a4d1fa1ddb2f5f8f9a27442563f182549abbb5
 -- 
-Andrew Goodbody <andrew.goodbody@linaro.org>
+Tom
+
 
 
