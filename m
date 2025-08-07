@@ -2,146 +2,131 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B1C87FCD
-	for <webhook@archiver.kernel.org>; Fri, 25 Jul 2025 08:18:14 +0000 (UTC)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
- by mx.groups.io with SMTP id smtpd.web11.5269.1753393006919851523
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAF1C87FCF
+	for <webhook@archiver.kernel.org>; Thu,  7 Aug 2025 15:27:30 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web10.54636.1754579699470350236
  for <u-boot-amlogic@groups.io>;
- Thu, 24 Jul 2025 14:36:47 -0700
+ Thu, 07 Aug 2025 08:14:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=CMjbgXv0;
- spf=pass (domain: konsulko.com, ip: 209.85.160.176, mailfrom: trini@konsulko.com)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4ab6416496dso19065881cf.1
-        for <u-boot-amlogic@groups.io>; Thu, 24 Jul 2025 14:36:46 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=BqHv81AF;
+ spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: andrew.goodbody@linaro.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3b792b0b829so913999f8f.3
+        for <u-boot-amlogic@groups.io>; Thu, 07 Aug 2025 08:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1753393006; x=1753997806; darn=groups.io;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZPxVMYbbKVbjD1LnqDvMp6mdQbbSwvqoiCWolQ08/gE=;
-        b=CMjbgXv0eCc3p5gsfa3eQqk7A1qs/DcbrXnBkdTn7ZkCF3kmiVM/iE2ZKPpmrcVzYo
-         6r06HAdS/I/ou25v61e/bRWODMKdEEZFRwtLDa/SqXQ4hraUT3k0AtQXKaUCir+KuahI
-         P27CkEUphVfLOiw7jtSQDCzLwNOi+2BX4ka3s=
+        d=linaro.org; s=google; t=1754579698; x=1755184498; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1NPoBVvBVglgwFwseFIQSlJTjrIPpVM+D9vZtsczBUk=;
+        b=BqHv81AFfZU5MsvuJGv4Zg8xc5ypQOnm3VZz6xHrQ6B6iVDGqWj7TR4ejttWXP0i1O
+         D2GK5RoUdnzwvK8DS3PBTQxWQfMplifo2dfY0orF5JNT3vFg2AXfTcejUI0CsF7MwNZW
+         ZPfLLe7kpa4GTaH9IaRYhOC0RVyxe33V+DsznucpT/C4cb6M56U0aToOVOoky1H0FIAo
+         8Ywc9sClhLCexJzZMIkT8kNPzh3bTwl+XJ4yXfrpKtttyhVvZBP0NqEPa8rH1aBoxyPP
+         3eVvf1pBHWh9iA/I94z/B23o6KY43TjvTfvMcfJTkvTbI6ZMOjDiYJnXUmtavyZzySN3
+         Cvig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753393006; x=1753997806;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZPxVMYbbKVbjD1LnqDvMp6mdQbbSwvqoiCWolQ08/gE=;
-        b=Bo5IzEjH9BlA02sJKUNlVz5+yVZk6Ky+TX8EJdbFkJMPfHNVvSr9KX//nxytaEa4Et
-         qYAH4GFGMdfI81vF8pIGfwK45XqWUB5GXYb65o/S8cnToDCDGyBci9J95PmOdiam2g31
-         HR+Ub+zmugcvI2DFKaKtE12Ii2hOgoip2FEAbOxIxr+5xhkwsUoblm4ynI/e9ALtML8/
-         y6lCr/9OhhKA/UR9ywnqLCqfRK7rO4ShQvAD+CBvMZyfIq2Qr5wQs/kiDLbtjia4qdRh
-         pkpj9nPHL72n7EacllX24IgZSIdzNwojVwvypVn5EOFkvToQRzJo1U/ueJ40WavQMPUW
-         F/Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWxcC9T1LzYgkOD3qwDX1Wqb4dgp1Fyq4I5RnbJ9+gnhE+TtVBf8BIfLuMR1fpSiIHHxq8OOvOuf1kZRUvo2Q==@groups.io
-X-Gm-Message-State: AOJu0Yxh4eSHoAAesTJqmJbReSMpMqfNrN4jrgIVO6bb2nLlwc61VT7z
-	qBoCGoauvoz/3wekZB3WXwU8AxgtU7S50T2M/C9BV9g6XVT0Mtq9s+eRs4OATDx10UFGP0gHY4q
-	dyXLx74E=
-X-Gm-Gg: ASbGncsaVcW5Yndiqe4EIhZsXUROE4/eRIQF2P6O3SQwGMxFFHEaFkaivRL9zhffr0P
-	WWdAU4yJ7DaI/eagfLJir831veFwkGylHSYoAkoiA3TJOSMIUjed6jMXHhlrtfCubtmDajb/F9h
-	73fRVN4LykPBZbLbGA1cXlMeD55U21CgcSZBL+H2Sth9o6dZ8UyZzUv39rZX+KjPnYHCtKLJ63E
-	MUbCRZvAeI8DrlDDNWnh2nhC9/Pw/LEik5bSWIJpVhJ3r0o5/tLe+Liv/RCBhkKJQ/1iskiqN1k
-	QVtsb97TrImkjaTYIT1yRZECE3BclQavyPdb6paoLCiRaPKzPn2sRGqfRgbk7wU7YN3m4qsDbIj
-	mWuE2fSUTn885rUxemGCSnFVq/htquu1EBIBYEoi1I3DRjiyIUefeHmhixV7YJQOMyg==
-X-Google-Smtp-Source: AGHT+IG0FY2EDvYGbb64jrHdiWUQWKS88Y8wn2wbX8Iy1WYMr5QZ7j5xiKwzKDoUxQj8GpweL8iRng==
-X-Received: by 2002:a05:6870:6f0c:b0:303:5cb:4296 with SMTP id 586e51a60fabf-306c728975emr6224526fac.30.1753392632210;
-        Thu, 24 Jul 2025 14:30:32 -0700 (PDT)
-Received: from [127.0.1.1] (fixed-189-203-97-42.totalplay.net. [189.203.97.42])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-306e1f8a7adsm660520fac.42.2025.07.24.14.30.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jul 2025 14:30:31 -0700 (PDT)
-From: Tom Rini <trini@konsulko.com>
-To: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Aaron Williams <awilliams@marvell.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>, 
- Hugues Kamba Mpiana <hugues.kambampiana@arm.com>, 
- Ben Horgan <ben.horgan@arm.com>, Adam Ford <aford173@gmail.com>, 
- Nishanth Menon <nm@ti.com>, Robert Nelson <robertcnelson@gmail.com>, 
- Anand Gore <anand.gore@broadcom.com>, 
- William Zhang <william.zhang@broadcom.com>, 
- Kursad Oney <kursad.oney@broadcom.com>, 
- Philippe Reynes <philippe.reynes@softathome.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Thomas Fitzsimmons <fitzsim@fitzsim.org>, 
- Michael Trimarchi <michael@amarulasolutions.com>, 
- Junhui Liu <junhui.liu@pigmoral.tech>, 
- Sergey Temerkhanov <s.temerkhanov@gmail.com>, Marek Vasut <marex@denx.de>, 
- Gilles Talis <gilles.talis@gmail.com>, 
- Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>, Bin Meng <bmeng.cn@gmail.com>, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Matteo Lisi <matteo.lisi@engicam.com>, 
- Patrick Delaunay <patrick.delaunay@foss.st.com>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>, 
- "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>, 
- Alice Guo <alice.guo@nxp.com>, Eric Nelson <eric@nelint.com>, 
- Peter Griffin <peter.griffin@linaro.org>, 
- Frieder Schrempf <frieder.schrempf@kontron.de>, 
- Michael Walle <michael@walle.cc>, Sam Shih <sam.shih@mediatek.com>, 
- Ryder Lee <ryder.lee@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, 
- Chunfeng Yun <chunfeng.yun@mediatek.com>, 
- GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, 
- Julien Masson <jmasson@baylibre.com>, Fabien Parent <fparent@baylibre.com>, 
- Stanley Chu <yschu@nuvoton.com>, Jim Liu <JJLIU0@nuvoton.com>, 
- Tianrui Wei <tianrui-wei@outlook.com>, 
- Garrett Giordano <ggiordano@phytec.com>, Wadim Egorov <w.egorov@phytec.de>, 
- liuhao <liuhao@phytium.com.cn>, shuyiqi <shuyiqi@phytium.com.cn>, 
- lixinde <lixinde@phytium.com.cn>, 
- weichangzheng <weichangzheng@phytium.com.cn>, 
- Nobuhiro Iwamatsu <iwamatsu.nobuhiro@renesas.com>, 
- Paul Barker <paul@pbarker.dev>, Simon Glass <sjg@chromium.org>, 
- Mario Six <mario.six@gdsys.cc>, Le Jin <le.jin@siemens.com>, 
- Jan Kiszka <jan.kiszka@siemens.com>, Sean Anderson <seanga2@gmail.com>, 
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
- Huan Zhou <pericycle.cc@gmail.com>, Kamil Lulko <kamil.lulko@gmail.com>, 
- Dario Binacchi <dario.binacchi@amarulasolutions.com>, 
- Dillon Min <dillon.minfei@gmail.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Bryan Brattlof <bb@ti.com>, Manorit Chawdhry <m-chawdhry@ti.com>, 
- Vaishnav Achath <vaishnav.a@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>, 
- Apurva Nandan <a-nandan@ti.com>, 
- Francesco Dolcini <francesco.dolcini@toradex.com>, 
- Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
- Anastasiia Lukianenko <anastasiia_lukianenko@epam.com>, 
- Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>, 
- Michal Simek <michal.simek@amd.com>, u-boot@lists.denx.de, 
- u-boot-amlogic@groups.io, u-boot@dh-electronics.com, 
- uboot-stm32@st-md-mailman.stormreply.com
-In-Reply-To: <20250717024426.26953-1-semen.protsenko@linaro.org>
-References: <20250717024426.26953-1-semen.protsenko@linaro.org>
-Subject: Re: [PATCH] treewide: Remove empty board_init() function from all boards
-Message-Id: <175339262777.1899261.14751318047956466864.b4-ty@konsulko.com>
-Date: Thu, 24 Jul 2025 15:30:27 -0600
+        d=1e100.net; s=20230601; t=1754579698; x=1755184498;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1NPoBVvBVglgwFwseFIQSlJTjrIPpVM+D9vZtsczBUk=;
+        b=YGLbJimJLz2skUGgOIyQyMRswYeQZzE8yjXcFUBclWX1C8+4HpVtxiBiElbhs/OWhc
+         vXGLCngKiditN9MrlCm4EUnY/83kHzTaaoyvlBGQIP2LRt+M5QZTtmX2ngK4qXfHhuGI
+         7O1HlY/sSp/53SxgDVArvz64FVFbkXyqyBIJjCyU0i0gB07BOs8XJ11UIZGuHoptGKsW
+         lt6YYrGcFL6lpzK9x+WewqyvZjO/b/d7YCpPaUMT/l9lUKruUM4QAtOLxikr8pAVE8zP
+         ghoDf9wLJPJxj2a9tUMjRuT5tOHuDvognegepx9afC8+1HYw7DcgtUSsK111h9wbGdBt
+         8fDQ==
+X-Gm-Message-State: AOJu0YzOgwccKKfbBmJfR+Q2kpW/W/h+FWGpAc7yEsv2XcusywKwC+UB
+	8bt5thguDiJm2sUsgIXgs4uOd6eCryYe+uI2qC41b7g0jd3XqyWl9fkamaO76KRV0KdE9ZCCCpH
+	Phs0HnLs=
+X-Gm-Gg: ASbGncvGNBgQMlL8e8ot4h3EXXMgs7UOAQJhR0ApA4gk379Aqn4TLK1ZmWDkSuP/msM
+	YjZiBjNkliZghmvnJR9qxZxXjBhycSJBp8hfAXpaSorPcwjQae0JYUq3TtfC5fQ50qb/cm5EJGf
+	jpS0KISqG1PiTV03K5qfrWxy+Agcuas8NN4Mh1+aN1FuLcNeOLrDi6oIOsD0pcj7xymVgswSYHm
+	kFL/M3rSmnzANCgj/ogmXoDche6iIY4J3NytCET+wFgGUFZByxJAYGhVATNJaXmsgSc4t1EJG7a
+	TwGA1pZ/lUg4p1M3A0FPIfY7D5pGEQW1XljKtfdETpwwQ9zosfJ8WkSpvp2zobsWU1e2IlT5zgp
+	hmtyTDuBvWQ3lBqF9XqlCXxRQAmB9vCa10mUERpGAwzIXzq7cZXGxbbfzkMKPmAD5A+oCkN7GpV
+	Vynw==
+X-Google-Smtp-Source: AGHT+IEgeXGFqt/8N7ZVklBT55xfGRgC+GqfqTENQ9uCNgz/8aJqMRq2oPSMRfukR28VamzIgD/dKw==
+X-Received: by 2002:a05:6000:2d0b:b0:3b8:f8e5:f6be with SMTP id ffacd0b85a97d-3b8f8e5f822mr2780159f8f.4.1754579227916;
+        Thu, 07 Aug 2025 08:07:07 -0700 (PDT)
+Received: from ?IPV6:2a0a:ef40:f9e:3c01:377e:cf4f:d0ff:80bf? ([2a0a:ef40:f9e:3c01:377e:cf4f:d0ff:80bf])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9eddsm27059428f8f.22.2025.08.07.08.07.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Aug 2025 08:07:07 -0700 (PDT)
+Message-ID: <e70bf33e-49a8-4141-8a1e-a7a6c6d73375@linaro.org>
+Date: Thu, 7 Aug 2025 16:07:04 +0100
 MIME-Version: 1.0
-X-Mailer: b4 0.14.2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] adc: meson-saradc: uint cannot be less than zero
+To: Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+References: <20250722-meson_saradc-v1-1-1ab45d53da9d@linaro.org>
+ <17e87341-745b-4f5e-af9c-4c9abe9a2e72@linaro.org>
+From: Andrew Goodbody <andrew.goodbody@linaro.org>
+In-Reply-To: <17e87341-745b-4f5e-af9c-4c9abe9a2e72@linaro.org>
+Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 25 Jul 2025 08:18:14 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2732
+ <u-boot-amlogic@groups.io>; Thu, 07 Aug 2025 15:27:30 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2733
 
-On Wed, 16 Jul 2025 21:44:26 -0500, Sam Protsenko wrote:
-
-> Commit 86acdce2ba88 ("common: add config for board_init() call")
-> introduced CONFIG_BOARD_INIT option. This option can be disabled for the
-> boards where board_init() function is not needed. Remove empty
-> board_init() calls for all boards where it's possible, and disable
-> CONFIG_BOARD_INIT in all related defconfigs.
+On 24/07/2025 09:30, Neil Armstrong wrote:
+> On 22/07/2025 16:06, Andrew Goodbody wrote:
+>> timeout is declared as a uint but then tested for being less than zero
+>> which must always fail. Change the while loop for a pre-decrement on
+>> timeout and test timeout for being zero.
+>>
+>> This issue was found by Smatch.
+>>
+>> Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
+>> ---
+>>   drivers/adc/meson-saradc.c | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/adc/meson-saradc.c b/drivers/adc/meson-saradc.c
+>> index 60e348968fb..0144ff828c5 100644
+>> --- a/drivers/adc/meson-saradc.c
+>> +++ b/drivers/adc/meson-saradc.c
+>> @@ -205,9 +205,9 @@ static int meson_saradc_lock(struct 
+>> meson_saradc_priv *priv)
+>>       do {
+>>           udelay(1);
+>>           regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
+>> -    } while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
+>> +    } while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && --timeout);
+>> -    if (timeout < 0) {
+>> +    if (!timeout) {
+>>           printf("Timeout while waiting for BL30 unlock\n");
+>>           return -ETIMEDOUT;
+>>       }
+>> @@ -256,9 +256,9 @@ static int meson_saradc_wait_busy_clear(struct 
+>> meson_saradc_priv *priv)
+>>       do {
+>>           udelay(1);
+>>           regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
+>> -    } while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && 
+>> timeout--);
+>> +    } while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && -- 
+>> timeout);
+>> -    if (timeout < 0)
+>> +    if (!timeout)
+>>           return -ETIMEDOUT;
+>>       return 0;
+>>
+>> ---
+>> base-commit: bd0ade7d090a334b3986936d63a34001d99722ad
+>> change-id: 20250722-meson_saradc-4bba9dc18333
+>>
+>> Best regards,
 > 
-> This cleanup was made semi-automatically using these scripts: [1].
-> 
-> [...]
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Applied to u-boot/master, thanks!
+Is there anything else needed before this can be merged please?
 
-[1/1] treewide: Remove empty board_init() function from all boards
-      commit: 70a4d1fa1ddb2f5f8f9a27442563f182549abbb5
--- 
-Tom
-
-
+Thanks,
+Andrew
 
