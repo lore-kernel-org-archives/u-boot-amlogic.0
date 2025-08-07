@@ -2,128 +2,107 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAF1C87FCF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF79EC87FDA
 	for <webhook@archiver.kernel.org>; Thu,  7 Aug 2025 15:27:30 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web10.54636.1754579699470350236
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.54853.1754580169697856837
  for <u-boot-amlogic@groups.io>;
- Thu, 07 Aug 2025 08:14:59 -0700
+ Thu, 07 Aug 2025 08:22:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=BqHv81AF;
- spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: andrew.goodbody@linaro.org)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3b792b0b829so913999f8f.3
-        for <u-boot-amlogic@groups.io>; Thu, 07 Aug 2025 08:14:59 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Rnmd1AG3;
+ spf=pass (domain: linaro.org, ip: 209.85.128.49, mailfrom: andrew.goodbody@linaro.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-459ddada9b1so10857775e9.0
+        for <u-boot-amlogic@groups.io>; Thu, 07 Aug 2025 08:22:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754579698; x=1755184498; darn=groups.io;
+        d=linaro.org; s=google; t=1754580168; x=1755184968; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1NPoBVvBVglgwFwseFIQSlJTjrIPpVM+D9vZtsczBUk=;
-        b=BqHv81AFfZU5MsvuJGv4Zg8xc5ypQOnm3VZz6xHrQ6B6iVDGqWj7TR4ejttWXP0i1O
-         D2GK5RoUdnzwvK8DS3PBTQxWQfMplifo2dfY0orF5JNT3vFg2AXfTcejUI0CsF7MwNZW
-         ZPfLLe7kpa4GTaH9IaRYhOC0RVyxe33V+DsznucpT/C4cb6M56U0aToOVOoky1H0FIAo
-         8Ywc9sClhLCexJzZMIkT8kNPzh3bTwl+XJ4yXfrpKtttyhVvZBP0NqEPa8rH1aBoxyPP
-         3eVvf1pBHWh9iA/I94z/B23o6KY43TjvTfvMcfJTkvTbI6ZMOjDiYJnXUmtavyZzySN3
-         Cvig==
+        bh=FJMqAiLZBfMzcgH+4cc0KROaqlvcSvrO/53Ei60uLVc=;
+        b=Rnmd1AG3OgEQaDTjh9xts5tryAMyx+sqJJ5lUViPQ/a0eQVReywq03iFiIsR4peSLd
+         e8QfsxItmnh+RJzp1t9vSGZf1sd+7lS60O37xiS4sas4ItbzOwsrFZ+FMSmBQqo7+yQG
+         L9DqMwxSz0asqdF12CiqxWw5hBi6bDnFv/w7PD6N7rbFmBzF8gm6QuaV9cmJRmawDU+g
+         gCBzAEtUQgZFEH6VKUpu6NDTIb1h0o/Kl/Pu5cYXotpUuSTC2+P8wIEl16+fuBrFYhDP
+         6Geu9/xyaBfOSkzKetru/SSqtHF2ANu72c06hkcrhVXz+aL9VxJFtiSZDGRBi36mYG0f
+         5dDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754579698; x=1755184498;
+        d=1e100.net; s=20230601; t=1754580168; x=1755184968;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1NPoBVvBVglgwFwseFIQSlJTjrIPpVM+D9vZtsczBUk=;
-        b=YGLbJimJLz2skUGgOIyQyMRswYeQZzE8yjXcFUBclWX1C8+4HpVtxiBiElbhs/OWhc
-         vXGLCngKiditN9MrlCm4EUnY/83kHzTaaoyvlBGQIP2LRt+M5QZTtmX2ngK4qXfHhuGI
-         7O1HlY/sSp/53SxgDVArvz64FVFbkXyqyBIJjCyU0i0gB07BOs8XJ11UIZGuHoptGKsW
-         lt6YYrGcFL6lpzK9x+WewqyvZjO/b/d7YCpPaUMT/l9lUKruUM4QAtOLxikr8pAVE8zP
-         ghoDf9wLJPJxj2a9tUMjRuT5tOHuDvognegepx9afC8+1HYw7DcgtUSsK111h9wbGdBt
-         8fDQ==
-X-Gm-Message-State: AOJu0YzOgwccKKfbBmJfR+Q2kpW/W/h+FWGpAc7yEsv2XcusywKwC+UB
-	8bt5thguDiJm2sUsgIXgs4uOd6eCryYe+uI2qC41b7g0jd3XqyWl9fkamaO76KRV0KdE9ZCCCpH
-	Phs0HnLs=
-X-Gm-Gg: ASbGncvGNBgQMlL8e8ot4h3EXXMgs7UOAQJhR0ApA4gk379Aqn4TLK1ZmWDkSuP/msM
-	YjZiBjNkliZghmvnJR9qxZxXjBhycSJBp8hfAXpaSorPcwjQae0JYUq3TtfC5fQ50qb/cm5EJGf
-	jpS0KISqG1PiTV03K5qfrWxy+Agcuas8NN4Mh1+aN1FuLcNeOLrDi6oIOsD0pcj7xymVgswSYHm
-	kFL/M3rSmnzANCgj/ogmXoDche6iIY4J3NytCET+wFgGUFZByxJAYGhVATNJaXmsgSc4t1EJG7a
-	TwGA1pZ/lUg4p1M3A0FPIfY7D5pGEQW1XljKtfdETpwwQ9zosfJ8WkSpvp2zobsWU1e2IlT5zgp
-	hmtyTDuBvWQ3lBqF9XqlCXxRQAmB9vCa10mUERpGAwzIXzq7cZXGxbbfzkMKPmAD5A+oCkN7GpV
-	Vynw==
-X-Google-Smtp-Source: AGHT+IEgeXGFqt/8N7ZVklBT55xfGRgC+GqfqTENQ9uCNgz/8aJqMRq2oPSMRfukR28VamzIgD/dKw==
-X-Received: by 2002:a05:6000:2d0b:b0:3b8:f8e5:f6be with SMTP id ffacd0b85a97d-3b8f8e5f822mr2780159f8f.4.1754579227916;
-        Thu, 07 Aug 2025 08:07:07 -0700 (PDT)
+        bh=FJMqAiLZBfMzcgH+4cc0KROaqlvcSvrO/53Ei60uLVc=;
+        b=izhm1f6KP64O91b4cL4U0Hu9iLzni93vRvkcHyzSYD9RDyTVjz1xDC0XWN19fiE0S+
+         4kI0enJLifrAnU7EeRdmMm76TbaI5DgRn9H7JIc1KPcpUD7E/rCHDAhisB/X3OtoP/zu
+         JvVv5wnwKo3pbT9hkh7Tn9TIb82YemrbBQQjwGzxAiMypyBcZgPM54iJ5Pj1Fd2LmFvI
+         Uiv/qwPrO2F4xJBHbi6v6c5bTo5Xr5aZUn7nAacFd41NRhPR6Rc6XW0SSYg15kr4NUh/
+         XreKnnrTPJl8u6n7QcUCKk8oqd2rC5iMmrQrbepk+u76L2qP/5x1U90vjUlK652g4lDm
+         6Pyw==
+X-Gm-Message-State: AOJu0Ywk2j/fJYWlK/D2b0s9XrTySdalsWovJ9JZGJqtWWAXoQnyWbk5
+	hoO5TzJ0e27awGPvvcZEaiR5kR8/rG2jowYgbK7vc0biVDXxPo5yjOInuGtubxiYNfo=
+X-Gm-Gg: ASbGnctbKfwmtkv0qIt09F2KfjrgOOLF6BVM4YQtbZNBkwCIHjWW3JO90Tkeo2C9f4v
+	1Ea3ApsKUjAm0p2+s6Zst8Hryl+tAAuimACVot9XOAFd+y3H7z12YNajwVk+XRow2IYCmYOgjYv
+	b9Ss8Jg5Ux3LoEQ8SVwzn3MSDhs8iXsz2g05cC/DYlntriCbcfnz4EWShtPhEtbXuWP4zOkQLPc
+	L1N1lbBeIOp2W2zz6iJn09vyY8TJ7P3hZn+Ms8lu4Lvj27WwWrFceXMNn7wBLGJ5Yz9xu+mpKWP
+	WBIL7TBcWIJyZKE1SvT91wvGLApdFVk0kdwpBAKBzQz4AoSbEMGczaSs7gJw97f1auHR+hBTaB9
+	fpH+xkywLbojLh+E4c4+uV/mz5tXhzY5He1XZVtMWQoRslGuMNgFDwxOxc4TOLIiKZsmP3HqDpF
+	ADHQ==
+X-Google-Smtp-Source: AGHT+IG+S6wbRf+5EtYGrRIQK8rAZIBoMJodiJVNXaAt4xCBVT+el9Zc4s9Gut992+o/Yx83qiy0jw==
+X-Received: by 2002:a05:600c:1911:b0:456:f1e:205c with SMTP id 5b1f17b1804b1-459f358b94fmr14058045e9.4.1754580168076;
+        Thu, 07 Aug 2025 08:22:48 -0700 (PDT)
 Received: from ?IPV6:2a0a:ef40:f9e:3c01:377e:cf4f:d0ff:80bf? ([2a0a:ef40:f9e:3c01:377e:cf4f:d0ff:80bf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9eddsm27059428f8f.22.2025.08.07.08.07.07
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459e5853104sm98636655e9.8.2025.08.07.08.22.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Aug 2025 08:07:07 -0700 (PDT)
-Message-ID: <e70bf33e-49a8-4141-8a1e-a7a6c6d73375@linaro.org>
-Date: Thu, 7 Aug 2025 16:07:04 +0100
+        Thu, 07 Aug 2025 08:22:47 -0700 (PDT)
+Message-ID: <492b9fe5-c25a-4523-8819-3886ecbbdd5e@linaro.org>
+Date: Thu, 7 Aug 2025 16:22:44 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] adc: meson-saradc: uint cannot be less than zero
-To: Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>
+Subject: Re: [PATCH] clk: meson: Remove unreachable code
+To: Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>
 Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-References: <20250722-meson_saradc-v1-1-1ab45d53da9d@linaro.org>
- <17e87341-745b-4f5e-af9c-4c9abe9a2e72@linaro.org>
+References: <20250723-clk_meson-v1-1-8cd6e73145a4@linaro.org>
 From: Andrew Goodbody <andrew.goodbody@linaro.org>
-In-Reply-To: <17e87341-745b-4f5e-af9c-4c9abe9a2e72@linaro.org>
+In-Reply-To: <20250723-clk_meson-v1-1-8cd6e73145a4@linaro.org>
 Content-Language: en-GB
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 07 Aug 2025 15:27:30 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2733
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2734
 
-On 24/07/2025 09:30, Neil Armstrong wrote:
-> On 22/07/2025 16:06, Andrew Goodbody wrote:
->> timeout is declared as a uint but then tested for being less than zero
->> which must always fail. Change the while loop for a pre-decrement on
->> timeout and test timeout for being zero.
->>
->> This issue was found by Smatch.
->>
->> Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
->> ---
->>   drivers/adc/meson-saradc.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/adc/meson-saradc.c b/drivers/adc/meson-saradc.c
->> index 60e348968fb..0144ff828c5 100644
->> --- a/drivers/adc/meson-saradc.c
->> +++ b/drivers/adc/meson-saradc.c
->> @@ -205,9 +205,9 @@ static int meson_saradc_lock(struct 
->> meson_saradc_priv *priv)
->>       do {
->>           udelay(1);
->>           regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
->> -    } while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
->> +    } while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && --timeout);
->> -    if (timeout < 0) {
->> +    if (!timeout) {
->>           printf("Timeout while waiting for BL30 unlock\n");
->>           return -ETIMEDOUT;
->>       }
->> @@ -256,9 +256,9 @@ static int meson_saradc_wait_busy_clear(struct 
->> meson_saradc_priv *priv)
->>       do {
->>           udelay(1);
->>           regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
->> -    } while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && 
->> timeout--);
->> +    } while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && -- 
->> timeout);
->> -    if (timeout < 0)
->> +    if (!timeout)
->>           return -ETIMEDOUT;
->>       return 0;
->>
->> ---
->> base-commit: bd0ade7d090a334b3986936d63a34001d99722ad
->> change-id: 20250722-meson_saradc-4bba9dc18333
->>
->> Best regards,
+On 23/07/2025 17:37, Andrew Goodbody wrote:
+> A second return following the first return is unreachable code so remove
+> it.
 > 
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> This issue was found by Smatch.
+> 
+> Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
+> ---
+>   drivers/clk/meson/g12a.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 5d7faaa3eab..a7a42b2edb6 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -916,8 +916,6 @@ static ulong meson_clk_set_rate_by_id(struct clk *clk, unsigned long id,
+>   			return -EINVAL;
+>   	case CLKID_PCIE_PLL:
+>   		return meson_pcie_pll_set_rate(clk, rate);
+> -
+> -		return 0;
+>   	case CLKID_VPU:
+>   		return meson_clk_set_rate_by_id(clk,
+>   				meson_mux_get_parent(clk, CLKID_VPU), rate,
+> 
+> ---
+> base-commit: bd0ade7d090a334b3986936d63a34001d99722ad
+> change-id: 20250723-clk_meson-3d90bc29f8dc
+> 
+> Best regards,
 
 Is there anything else needed before this can be merged please?
 
