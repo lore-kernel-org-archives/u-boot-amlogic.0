@@ -2,35 +2,35 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A75ACA1017
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD80CAC585
 	for <webhook@archiver.kernel.org>; Sun,  7 Sep 2025 14:36:39 +0000 (UTC)
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
- by mx.groups.io with SMTP id smtpd.web10.19821.1757255793682079808
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+ by mx.groups.io with SMTP id smtpd.web10.19822.1757255794633060903
  for <u-boot-amlogic@groups.io>;
- Sun, 07 Sep 2025 07:36:33 -0700
+ Sun, 07 Sep 2025 07:36:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=lHhUuxfK;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.185, mailfrom: funderscore@postmarketos.org)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=oax/M4WR;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.181, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1757255792;
+	s=key1; t=1757255793;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Gv6FCZWp4VR2JrabdtHumoJUusT4rpu1mBioYzP5QBc=;
-	b=lHhUuxfKLSPMAksx1C5O1LixrHH6TG7bmaLWSfq16hvKd3pIb+L+XIxOEHb91xVxUXP+6/
-	lER77ioeIW2WaKnob672Ma1yEhdnQl7cG8cLluG3xj04Od+klSugx6CdBClsE6tZVyyqK4
-	5+TOOQPkygT4yZa4b8izfxOcOWjL5UpoBek1KZcDQmjGRp13pyXlrO9JPlfQMAChRuX8Jh
-	z3Ckf+JwLaYNk8kFyYWHNegok4Pb16rl1xLRav3o3lernPOHYTrrPaNjpsiFKHM2Ij+XH/
-	ssjXIIB8mGJ8mptfR9PGyXs3IowMjmDK4xwx8H5gCLwEyDE9TlObi1AoICXPUQ==
+	bh=H3oZR+Pte6SydUPb4c/XmU6pUzaBpYwUXhyuYUynkwU=;
+	b=oax/M4WRF3xj8LdXWkd3JGGwLJBjFxchXu90Z7ZQj50MsLRcWCHP9OhEq77tlWu+RluGZI
+	0inwvltPrGcj5PT06OXqhDYpGdoEhooH6W+hbIr9UafPNELFUuFzka459G5p4y6aQN8pB7
+	yFmovbMeY6qzhRKUsXdzDj9PEa8/zoSSSjTMsYnpjZQghlIRBE0/Rv0rgMaF6d0/F6t3UE
+	Pv1TowLRftzC++9N1ogV62yQdwd7lx5ERkBDyrjbOx5vRm2nW7fMiRsRRb7MjtcKPPft9R
+	oA6RJ5Zo0E9LHZf4mLvStDTJfdmL7jzR/jvFe2ZitmO6DRPY53O21jf+SV/CJQ==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Sun, 07 Sep 2025 14:36:08 +0000
-Subject: [PATCH RFC 2/9] mmc: meson_gx_mmc: add minimal non-DM driver
+Date: Sun, 07 Sep 2025 14:36:09 +0000
+Subject: [PATCH RFC 3/9] mmc: meson_gx_mmc: don't bail if there is no clock
+ driver
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250907-spl-gx-v1-2-37395d9ff5af@postmarketos.org>
+Message-Id: <20250907-spl-gx-v1-3-37395d9ff5af@postmarketos.org>
 References: <20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org>
 In-Reply-To: <20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -41,194 +41,60 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5038;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=908;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=ebJD2FNBe9DByCt2k3nHhBr1mj7Kxl8J6JqYSPqORTo=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBovZhqKAmOMzBuJSVCDT3oD6ASXQdzS3oTBZmhd
- NSxi/+vOteJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaL2YagAKCRCEr8vQ14ma
- A5+3D/4ogJL+8XmM6UsS93drVGujOD2PFJVOSOb0rNpA9k/m/kU+z6wKz0UVCh6XhFE8yYfX7MO
- gim5ou0sQ3zbNeebAy9IHXRhtyN6jaNe3weddbs7Kpp5gqELxCiA/R2iqAi+9AWtFO/0fwtCIHS
- +xb6Q/AC1ab23omUFcOgHQ5X4eV1GJDmKcrQYvNInCBrk7TnOmeCsdds3EoQ4oT2DoNQa5SwJq8
- qGxPCeTTi42NUTnYcxGsn9rlLEm+/ADxHbUhpvBhS/mtutIHYP8J/hCCnzKuO7WXCL+F6SrZN9m
- SmXIfSW5qwYEF9qpU4CQTQQ5BW/oBBlDburaDKGlka2z78jDpkgTfET9VBzfAWrDdoD4HIyWk6y
- dkDkQdzMJ94GWeeV3IQQjtK6L3u4L/mrbbuBgoKAuGlcoSp+5CvdQxGw6E/rn19ePH9GcTz8Rvd
- UcNWhd0ObJ7Ir4u2+B4hwa/b92PnEI1rvrDr3UsZMf3Xl6B4c5KyDOnWMyvC5PQuxrsp3LbJYvG
- uwIv8QaUaeLflGa5vRwQ69b5Ygh1mxcQ1iKIP3fqu5f/Fk18fmqKfbJx+YogC/lqZQHXq/77ZET
- L6x2bkwHK0eyZPHvxbvZiPQ+Z480Ecuk0McQvliaEoQS7tpHk2+MLFlaEldfOD0ozgCukVHAR5j
- yDEJqPHZamimo3Q==
+ bh=ZAqe53vXbc3r6mJD0G2dDahAiGeTIuetSy5hg5sR3mU=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBovZhq8VwigyBR9Ev9X8AlUNcsjmEUGY7e1Zim+
+ QdeespNyEGJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaL2YagAKCRCEr8vQ14ma
+ Aw1OD/9IKwmcD91DICwg9lxqBYmjEcxSsir0PbygQTeVXWtAcwrotzqakDOPglKSYBA8P5IUtSl
+ oKvhGXHO+3hquxDCgUJqSJ3WCWhRKlRWz8JvCuGYXFXeqE2lCiA7h8G+ilen2ELJ1wRjd3+WQnj
+ 4vk8K/IUCjTCB4gEmt48a4uH1UEv1piVK6CJXhh3NVr0p85ZQ+QvV99pIbqM7bj52sEtSMFrSUr
+ G5DsmCtVt5XFDcqt6w7mNdZXKL+o8n1ASIsZeUHCio7YMGtQquyb36ZD6Kb8xMH6VIe56ERi3n6
+ Ix/NfkeV8AIgvymYqfpheqM/arGzuKTyqrxlFFBvqFgu2oRhxyN3veUhtIEVEWzQCKjXxqJa9oQ
+ t/t2MaU49bgPKJNi6I7gYYhnYAev4bJjOpoijpeIMx2aAWs+b3keJhr4RCteEwDHS1nIGRUjmCX
+ 3uMoey9GzmImyuiVH+DPzwgrAHTT8ltes7rIqNUtMYfUlJarcR1j4kHnBsasrOzZi8hoftCjpkE
+ 6qE3/7lLfQWNhBpBPL+6tOKQamadVbQ8CcsfsxIKXFMuCse9KZvZNSMsedAC6qQp75oCNwC6UHm
+ zPH01IifQLNBZs7CW4RXyDfMQFQx+Vrvj9FHvb8u5ITuWNZq8/Qcaw8eRDRJX9LWhdan4toGCvh
+ 0i0O8UmTxD6/vmQ==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Sun, 07 Sep 2025 14:36:39 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2745
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2746
 
-Add a minimal non-DM MMC driver for use in size-constrained
-environments.
+The clock driver is too big for U-Boot SPL at the moment.  In the
+meantime, continue mmc init even if it is not present.
 
-Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
+Signed-off-by: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
 ---
- arch/arm/include/asm/arch-meson/gx.h |  5 +++
- drivers/mmc/meson_gx_mmc.c           | 75 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 79 insertions(+), 1 deletion(-)
+ drivers/mmc/meson_gx_mmc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/arch-meson/gx.h b/arch/arm/include/asm/arch-meson/gx.h
-index 26ec5d0bc340bc03587047d68a88042779e64536..8cfc6b00329f252bbf452dba00f8ad56b480c707 100644
---- a/arch/arm/include/asm/arch-meson/gx.h
-+++ b/arch/arm/include/asm/arch-meson/gx.h
-@@ -41,4 +41,9 @@
- #define GX_GPIO_IN(n)		GX_PERIPHS_ADDR(_GX_GPIO_OFF(n) + 1)
- #define GX_GPIO_OUT(n)	GX_PERIPHS_ADDR(_GX_GPIO_OFF(n) + 2)
- 
-+/* Non-DM MMC init */
-+#if CONFIG_IS_ENABLED(MMC) && !CONFIG_IS_ENABLED(DM_MMC)
-+struct mmc *meson_mmc_init(int mmc_no);
-+#endif
-+
- #endif /* __GX_H__ */
 diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-index 5852b24c6d2a5a9d1b1e8a62f8c0ec325b339182..a4338f1e29c1da07acb0333be9b75a318cba1334 100644
+index a4338f1e29c1da07acb0333be9b75a318cba1334..d83a79fa0894fc6a32c40642e=
+bce5f845120efaf 100644
 --- a/drivers/mmc/meson_gx_mmc.c
 +++ b/drivers/mmc/meson_gx_mmc.c
-@@ -16,6 +16,7 @@
- #include <linux/log2.h>
- #include "meson_gx_mmc.h"
- 
-+#if CONFIG_IS_ENABLED(DM_MMC)
- bool meson_gx_mmc_is_compatible(struct udevice *dev,
- 				enum meson_gx_mmc_compatible family)
- {
-@@ -23,6 +24,7 @@ bool meson_gx_mmc_is_compatible(struct udevice *dev,
- 
- 	return compat == family;
- }
-+#endif
- 
- static inline void *get_regbase(const struct mmc *mmc)
- {
-@@ -67,7 +69,7 @@ static void meson_mmc_config_clock(struct mmc *mmc)
- 	 * Other SoCs use CLK_CO_PHASE_180 by default.
- 	 * It needs to find what is a proper value about each SoCs.
- 	 */
--	if (meson_gx_mmc_is_compatible(mmc->dev, MMC_COMPATIBLE_SM1))
-+	if (IS_ENABLED(CONFIG_MESON_SM))
- 		meson_mmc_clk |= CLK_CO_PHASE_270;
- 	else
- 		meson_mmc_clk |= CLK_CO_PHASE_180;
-@@ -82,9 +84,14 @@ static void meson_mmc_config_clock(struct mmc *mmc)
- 	meson_write(mmc, meson_mmc_clk, MESON_SD_EMMC_CLOCK);
- }
- 
-+#if CONFIG_IS_ENABLED(DM_MMC)
- static int meson_dm_mmc_set_ios(struct udevice *dev)
- {
- 	struct mmc *mmc = mmc_get_mmc_dev(dev);
-+#else
-+static int meson_legacy_mmc_set_ios(struct mmc *mmc)
-+{
-+#endif
- 	uint32_t meson_mmc_cfg;
- 
- 	meson_mmc_config_clock(mmc);
-@@ -193,10 +200,16 @@ static void meson_mmc_read_response(struct mmc *mmc, struct mmc_cmd *cmd)
- 	}
- }
- 
-+#if CONFIG_IS_ENABLED(DM_MMC)
- static int meson_dm_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
- 				 struct mmc_data *data)
- {
- 	struct mmc *mmc = mmc_get_mmc_dev(dev);
-+#else
-+static int meson_legacy_mmc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd,
-+				     struct mmc_data *data)
-+{
-+#endif
- 	struct meson_mmc_plat *pdata = mmc->priv;
- 	uint32_t status;
- 	ulong start;
-@@ -235,6 +248,59 @@ static int meson_dm_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
- 	return ret;
- }
- 
-+#if !CONFIG_IS_ENABLED(DM_MMC)
-+struct meson_mmc_plat mmc_plat[2];
-+
-+static int meson_legacy_mmc_init(struct mmc *mmc)
-+{
-+	/* reset all status bits */
-+	meson_write(mmc, STATUS_MASK, MESON_SD_EMMC_STATUS);
-+
-+	/* disable interrupts */
-+	meson_write(mmc, 0, MESON_SD_EMMC_IRQ_EN);
-+
-+	return 0;
-+}
-+
-+static const struct mmc_ops meson_mmc_ops = {
-+	.send_cmd	= meson_legacy_mmc_send_cmd,
-+	.set_ios	= meson_legacy_mmc_set_ios,
-+	.init		= meson_legacy_mmc_init,
-+};
-+
-+struct mmc *meson_mmc_init(int mmc_no)
-+{
-+	struct meson_mmc_plat *pdata = &mmc_plat[mmc_no];
-+	struct mmc_config *cfg = &pdata->cfg;
-+
-+	cfg->voltages = MMC_VDD_33_34 | MMC_VDD_32_33 |
-+			MMC_VDD_31_32 | MMC_VDD_165_195;
-+	cfg->host_caps = MMC_MODE_8BIT | MMC_MODE_4BIT;
-+	cfg->f_min = DIV_ROUND_UP(SD_EMMC_CLKSRC_24M, CLK_MAX_DIV);
-+	cfg->f_max = 6000000; /* 6 MHz */
-+	cfg->b_max = 127; /* max 128 - 1 block */
-+	cfg->name = "Meson SD/eMMC";
-+	cfg->ops = &meson_mmc_ops;
-+
-+	if (mmc_no == 0) /* MMC1: SD card */
-+		pdata->regbase = (void *)0xd0072000;
-+	else if (mmc_no == 1) /* MMC2: eMMC */
-+		pdata->regbase = (void *)0xd0074000;
-+
-+#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
-+	/* Enable power if needed */
-+	ret = mmc_pwrseq_get_power(dev, cfg);
-+	if (!ret) {
-+		ret = pwrseq_set_power(cfg->pwr_dev, true);
-+		if (ret)
-+			return ret;
-+	}
-+#endif
-+
-+	return mmc_create(cfg, pdata);
-+}
-+
-+#else
- static const struct dm_mmc_ops meson_dm_mmc_ops = {
- 	.send_cmd = meson_dm_mmc_send_cmd,
- 	.set_ios = meson_dm_mmc_set_ios,
-@@ -282,6 +348,12 @@ static int meson_mmc_probe(struct udevice *dev)
- 	cfg->b_max = 511; /* max 512 - 1 blocks */
- 	cfg->name = dev->name;
- 
-+	if (IS_ENABLED(CONFIG_SPL_BUILD)) {
-+		cfg->host_caps &= ~(MMC_MODE_HS_52MHz | MMC_MODE_HS);
-+		cfg->f_max = 6000000; /* 6 MHz */
-+		cfg->b_max = 127; /* max 128 - 1 block */
-+	}
-+
- 	mmc->priv = pdata;
- 	upriv->mmc = mmc;
- 
-@@ -336,3 +408,4 @@ U_BOOT_DRIVER(meson_mmc) = {
- 	.of_to_plat = meson_mmc_of_to_plat,
- 	.plat_auto	= sizeof(struct meson_mmc_plat),
- };
-+#endif
+@@ -332,11 +332,11 @@ static int meson_mmc_probe(struct udevice *dev)
+=20
+ 	/* Enable the clocks feeding the MMC controller */
+ 	ret =3D clk_get_bulk(dev, &clocks);
+-	if (ret)
++	if (ret && ret !=3D -ENOSYS)
+ 		return ret;
+=20
+ 	ret =3D clk_enable_bulk(&clocks);
+-	if (ret)
++	if (ret && ret !=3D -ENOSYS)
+ 		return ret;
+=20
+ 	cfg->voltages =3D MMC_VDD_33_34 | MMC_VDD_32_33 |
 
--- 
+--=20
 2.51.0
 
 
