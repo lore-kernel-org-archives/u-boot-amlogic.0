@@ -1,200 +1,143 @@
-Return-Path: <funderscore@postmarketos.org>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82873CA101F
-	for <webhook@archiver.kernel.org>; Sun,  7 Sep 2025 14:36:49 +0000 (UTC)
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
- by mx.groups.io with SMTP id smtpd.web10.19828.1757255801190788060
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB6FCA1013
+	for <webhook@archiver.kernel.org>; Mon,  8 Sep 2025 08:10:22 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.web10.7580.1757319017627314296
  for <u-boot-amlogic@groups.io>;
- Sun, 07 Sep 2025 07:36:41 -0700
+ Mon, 08 Sep 2025 01:10:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=Sv4UlMqy;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.185, mailfrom: funderscore@postmarketos.org)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1757255799;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3urdn0i2y0rveWx9927eteeRDQUocDp7ZIVvXuPHIEI=;
-	b=Sv4UlMqyKEu1i4XV9mznVwgTUq2st3szCGTX/kXMWPGyyFuKRkvAcJP2bggkwVVTHPhhvd
-	uLgLHWNk7oALdj9dVAk9cHzplKip97tpvQcLe9AWEZVqEiCv4UUOuNlUea07An9btLL0WR
-	DwF4oYM4yw5t2FFzGvsHiIVOS+6saVWlvAfzyTmuH+txj72giT1Ki6IeOoz/nj7auJJLrH
-	AY7aF96A1afm4PAXaRWn8mFXW7av2n8AfxpJ3NPr3zIFPF7boH+uMa7o/opj2jBPUB97Cb
-	VjQZf/vAduk5mJvnv+dn+iqjFO7nip0vnSaGMg/+5gdoGAirJT8PbEZRkR02Tg==
-From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Sun, 07 Sep 2025 14:36:15 +0000
-Subject: [PATCH RFC 9/9] doc: board: amlogic: add u-boot-spl documentation
+ dkim=pass header.i=@linaro.org header.s=google header.b=fa6mArdo;
+ spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45dd7b15a64so23834745e9.0
+        for <u-boot-amlogic@groups.io>; Mon, 08 Sep 2025 01:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757319016; x=1757923816; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2DyBnEDJm/cOK871iR7+touhMmlUnmvLtw8TC0gBp7c=;
+        b=fa6mArdohf8uAVJnYqdwo6t0o1n2lDPi6TCVtVBRg7bdWOI0M+m6z0oMlJsNyw3xxS
+         EGZaFR3NBz2Csk7vA2lPV63MDLaEVwwGUuYTfxLpHJtvDZIoypD/T3TBlUhC2lmQLvHL
+         Sy/CyO/gtpK89T/srljecuX/gpH8Ntvpvji4kLoTn0g21DE9zMege2XFL4FOuPhh9DZ/
+         VmS6JgsVYXGZ18gniOCTaecE0bMnwCqU0L3ahG31UjVziDDLj9SXkYIxNJaMVxhBm5J0
+         /6PbXu9958OJjgKhb6dZSxu0itvgLTtIob+WDs45Ub+hB9Y6wMrZfSHBGn8LR/vpX1r9
+         rBEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757319016; x=1757923816;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2DyBnEDJm/cOK871iR7+touhMmlUnmvLtw8TC0gBp7c=;
+        b=OvsaaEgbF/k3+AT4G8rzoHq9Yf4CPeTn9Rx3iheNA+5ieTDtyUBD55pOVUn7wY04/u
+         W/+mBB0dpN0ppEc7ZZdOCpf2A94w/WojpyeHcBAUsl954nMjuzEHOvTlQ+U/CnrJBuiP
+         u3f+It4On6jCvAlfzWgC5pLBj+pT0995QGnEO/QqYyI3Uo5oU3NZCRv0Yks3agHMBAy9
+         xzj6jRlBfcPz7JzSgk93HeWI1cnJybyfy0B54qsPnVAZIygEIIyzHA8Zl+y0CdQSCJ2+
+         LZxwDf+z7xrAbK24/NCqfZVkPPku1vDkhXN3G4jaxlAeeZN+4OqcS9urWknyijDm5FCf
+         jSYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFUCK5p2wAHbKFP3cquviFTEUIWzyLVaCJixbCuFXJs/NCejOfh38B9YpIbjWKxlMgd6e6e0TMrskIFcFfEw==@groups.io
+X-Gm-Message-State: AOJu0YzffmhRv+mekoxu/AivQ5iBbmo72572ewY+ARYSj5weEEMtZnO2
+	5VsMPf0iYcIXGCDRg4VRfXGo4njRr19fGb7mXtO4a7GaiEfZng+4h8EoEH2su8W/B48=
+X-Gm-Gg: ASbGnctSyRxn9k/M/LfbgWgX3FddSwGCLxbPrpv0i9++K6TENv0yhi0Fy+0WIXTafbF
+	sJ6ewVdQKB0lUCM9S0hcnYVFPopX8z4bm70URdzb9l72pXjPBZi/3zeax13MuLhGPgsvN4sXZeN
+	HoTf/vc8b7FPZjgp3o0jcoOIbppfupP0kxzC1vlL1OsgiZH9ApFlSLoacnU+SGjyuzggWnn7NHn
+	OnOwPJ6qswA4o0Er5DmLkMfzXSOH75EL94/NZJQHJtZKvFZGDdcb/pEH1B9mQkQU0ScxSEuFGfy
+	0cXwDXgr0HFhhyHjCBzClEupo5rNc81JodoAtqKSOQpcMOrFzMb6qTujuL8pf7z1LqRrlkaC+5V
+	6FMawd6j/3DT3NlXZWixWicyT8WeFBXs7Hi/Gbk9amCTf5UrJLobZGZyB1N3QXnTpGHcf5vkdqb
+	uiNIzBJUez1w==
+X-Google-Smtp-Source: AGHT+IHh7sZvWhs6RE3omVCSRw5onP4gN8+ySacRF1tTchMHgRPz735tdNkjcYaE7qV3DrILtcscaQ==
+X-Received: by 2002:a05:600c:1d22:b0:45d:d202:77f0 with SMTP id 5b1f17b1804b1-45dde1b14f0mr51278165e9.5.1757319015906;
+        Mon, 08 Sep 2025 01:10:15 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:61c1:5d31:4427:381b? ([2a01:e0a:3d9:2080:61c1:5d31:4427:381b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e8879cesm434452465e9.12.2025.09.08.01.10.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Sep 2025 01:10:15 -0700 (PDT)
+Message-ID: <7dd0f481-3e43-48f1-8549-49918d6facea@linaro.org>
+Date: Mon, 8 Sep 2025 10:10:14 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250907-spl-gx-v1-9-37395d9ff5af@postmarketos.org>
-References: <20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org>
-In-Reply-To: <20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org>
-To: Tom Rini <trini@konsulko.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Peng Fan <peng.fan@nxp.com>, 
- Jaehoon Chung <jh80.chung@samsung.com>, 
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH RFC 3/9] mmc: meson_gx_mmc: don't bail if there is no
+ clock driver
+To: Ferass El Hafidi <funderscore@postmarketos.org>,
+ Tom Rini <trini@konsulko.com>, Peng Fan <peng.fan@nxp.com>,
+ Jaehoon Chung <jh80.chung@samsung.com>,
  Beniamino Galvani <b.galvani@gmail.com>
-Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>, 
- u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4698;
- i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=yY8w0blQvMKQVxrsjqwk6dRs1Q0iqFA8ar5K2LLKvNU=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBovZhsbHw9Hartj3qQIpOqVEyLRROjT8Id+1558
- eG6PCfI6TWJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaL2YbAAKCRCEr8vQ14ma
- A9BWD/40RZoq3/1gAQi+PGTeQxS4JBuRzTPMvIJbrcbhU4ozOYXHlvXU152K8yVlHZ7bVzMmPae
- BXwolQevuB0B2O24VHV/owJ386D0k9Al+aXXocc4/+0xiTnVn6oav2H3mMxPl/dGXU9sVqlJh1e
- Wr7QAC73hBfAQm8AocAlCb75fE6cEzFz3ckhcPl549Awg1mmPZEy7NQWHI3dsbSNiY1WBzlMlNE
- MDLNwkx5WgEhbXAPpZUoHeypgf3HbnKSv/aMpILvHRGxaNlpM4OWfrRWM5AiC9lTZVZt6SgoEqJ
- Wpp2k6QNopofFL1MM8n0ZSB55G8FLUWu1d1zkTWoSAgJRFqX6JN9ASttZbhEMJEciZZeMw5L9AJ
- WYJFpYVDaNAa0vG8YQlKfVLs121KdKV0hU+LUgWQlcntDvl7KD5I29xJ3K5O7EvpJlsdFp6yMXl
- HYmA3Bi+lL1SVAy/TWEqtF22M3QQPH4fuWkn4OlV2xVuF+YAwjFSOYS4lnT/PZ+OwtG6UTiOS1H
- vRBFwbQ5rG+sbXrdv07p5CXm7jH9w03x3/sNMcbNIULvl4CHd6o1eT+gZEf3JPHJlqpCzNHIXly
- zs4J3ADuYnsGKBQHlGVgLGt+FCVrfJULziau3LuksrOVXCpFyVAd4rUFuQ2rCDsGs+Lq0Yrpicn
- eLkm9e/VlXdyiKw==
-X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
- fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
-X-Migadu-Flow: FLOW_OUT
+Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
+ u-boot@lists.denx.de, u-boot-amlogic@groups.io,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org>
+ <20250907-spl-gx-v1-3-37395d9ff5af@postmarketos.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250907-spl-gx-v1-3-37395d9ff5af@postmarketos.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Sun, 07 Sep 2025 14:36:49 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2752
+ <u-boot-amlogic@groups.io>; Mon, 08 Sep 2025 08:10:22 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2753
 
-Add building and usage instructions for SPL.
+On 07/09/2025 16:36, Ferass El Hafidi wrote:
+> The clock driver is too big for U-Boot SPL at the moment.  In the
+> meantime, continue mmc init even if it is not present.
+> 
+> Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
+> ---
+>   drivers/mmc/meson_gx_mmc.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
+> index a4338f1e29c1da07acb0333be9b75a318cba1334..d83a79fa0894fc6a32c40642ebce5f845120efaf 100644
+> --- a/drivers/mmc/meson_gx_mmc.c
+> +++ b/drivers/mmc/meson_gx_mmc.c
+> @@ -332,11 +332,11 @@ static int meson_mmc_probe(struct udevice *dev)
+>   
+>   	/* Enable the clocks feeding the MMC controller */
+>   	ret = clk_get_bulk(dev, &clocks);
+> -	if (ret)
+> +	if (ret && ret != -ENOSYS)
+>   		return ret;
+>   
+>   	ret = clk_enable_bulk(&clocks);
+> -	if (ret)
+> +	if (ret && ret != -ENOSYS)
+>   		return ret;
+>   
+>   	cfg->voltages = MMC_VDD_33_34 | MMC_VDD_32_33 |
+> 
 
-Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
----
- doc/board/amlogic/index.rst             |  1 +
- doc/board/amlogic/pre-generated-fip.rst |  9 ++++
- doc/board/amlogic/spl.rst               | 77 +++++++++++++++++++++++++++++++++
- 3 files changed, 87 insertions(+)
+Can you only not bail out in SPL ? I would like to keep the current behavior on non-SPL.
 
-diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
-index dcd935224ac0280a77455e3475a610fd81cfb80d..23380ac33f2b06efff7d4741ce2967d75671ca13 100644
---- a/doc/board/amlogic/index.rst
-+++ b/doc/board/amlogic/index.rst
-@@ -78,6 +78,7 @@ Boot Documentation
- 
-    boot-flow
-    pre-generated-fip
-+   spl
- 
- Board Documentation
- -------------------
-diff --git a/doc/board/amlogic/pre-generated-fip.rst b/doc/board/amlogic/pre-generated-fip.rst
-index 6a43d776d43f35cbffc7ba9e72bf05dd719f6387..d820bd09115952d4fca2b9e7d7b5a9e30bd11430 100644
---- a/doc/board/amlogic/pre-generated-fip.rst
-+++ b/doc/board/amlogic/pre-generated-fip.rst
-@@ -98,6 +98,13 @@ The repo also provides the following files used with GXBB boards:
- The repo also supports the open-source 'gxlimg' signing tool that can be used to sign
- U-Boot binaries for GXL/GXM/G12A/G12B/SM1 boards: https://github.com/repk/gxlimg
- 
-+The following binaries can be replaced with open-source implementations:
-+
-+- bl2.bin (GXBB and GXL only)
-+- bl31.img (GXBB, GXL, AXG and G12A only)
-+
-+Refer to `Experimental U-Boot SPL Support`_ if you wish to replace them.
-+
- Licensing
- ---------
- 
-@@ -129,3 +136,5 @@ clarified. The current Amlogic distribution licence is below:
-     // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-     // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-     // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+
-+.. _`Experimental U-Boot SPL Support`: spl.rst
-diff --git a/doc/board/amlogic/spl.rst b/doc/board/amlogic/spl.rst
-new file mode 100644
-index 0000000000000000000000000000000000000000..39d50e3da87d71f62cec1903c441c334bf7020e8
---- /dev/null
-+++ b/doc/board/amlogic/spl.rst
-@@ -0,0 +1,77 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
-+Experimental U-Boot SPL Support
-+===============================
-+
-+There's some experimental support for some Amlogic SoCs, in U-Boot SPL.  It
-+replaces the proprietary bl2.bin blob used for DRAM init.  Currently Meson GX
-+SoCs (GXBB, GXL) are supported.
-+
-+A subset of Amlogic boards have SPL enabled.  These boards have been tested and
-+known to work to an extent.
-+
-+
-+Building Arm Trusted Firmware (TF-A)
-+------------------------------------
-+
-+This U-Boot SPL port requires the BL31 stage of mainline Arm Trusted
-+Firmware-A firmware. It provides an open source implementation of secure
-+software for Armv8-A. Build it with:
-+
-+.. code-block:: bash
-+
-+    $ git clone https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git
-+    $ cd trusted-firmware-a
-+    $ make CROSS_COMPILE=aarch64-linux-gnu- PLAT=your_soc DEBUG=1
-+
-+Replace ``your_soc`` with the SoC target you wish to build for. For GXBB it's
-+``gxbb`` and for GXL it's ``gxl``.
-+
-+
-+Building a bl30_new.bin binary
-+------------------------------
-+
-+``bl30_new.bin`` has both ``bl30.bin`` and ``bl301.bin`` binary blobs
-+bundled. The former is the proper system control processor firmware and the
-+latter is a "plug-in" for board-specific DVFS/suspend-resume parameters. For
-+more info you may wish to read this page: `Pre-Generated FIP File Repo`_.
-+
-+To build using the FIP file repo, simply issue the following commands:
-+
-+.. code-block:: bash
-+
-+    $ cd amlogic-boot-fip/your_board
-+    $ make bl30_new.bin
-+
-+
-+.. _`Pre-Generated FIP File Repo`: pre-generated-fip.rst
-+
-+
-+U-Boot compilation
-+------------------
-+
-+U-Boot SPL is not enabled by default, instead there are config fragments that
-+can be used to enable it, with per-board configuration:
-+
-+- ``spl-libretech-cc-1gb.config``: 1 GB LePotato board
-+- ``spl-libretech-cc-2gb.config``: 2 GB LePotato board
-+- ``spl-odroid-c2.config``: ODROID-C2
-+- ``spl-videostrong-kii-pro.config``: Videostrong KII Pro
-+
-+Pick one of them then:
-+
-+.. code-block:: bash
-+
-+    $ export CROSS_COMPILE=aarch64-linux-gnu-
-+    $ export BL31=path/to/tf-a/bl31.bin                 # Upstream TF-A BL31 binary
-+    $ export SCP=path/to/bl30_new.bin                   # bl30_new.bin binary
-+    $ make <yourboardname>_defconfig spl-<yourboardname>.config
-+    $ make
-+
-+Write to SD:
-+
-+.. code-block:: bash
-+
-+    $ DEV=/dev/boot_device
-+    $ dd if=u-boot-meson-with-spl.bin of=$DEV conv=fsync,notrunc bs=512 seek=1
-+
-
--- 
-2.51.0
-
+Neil
 
