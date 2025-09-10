@@ -1,247 +1,250 @@
-Return-Path: <funderscore@postmarketos.org>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7587CAC581
-	for <webhook@archiver.kernel.org>; Mon,  8 Sep 2025 18:04:47 +0000 (UTC)
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
- by mx.groups.io with SMTP id smtpd.web11.1741.1757354684767826170
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8927BCA0FED
+	for <webhook@archiver.kernel.org>; Wed, 10 Sep 2025 07:02:18 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.11350.1757487736347245770
  for <u-boot-amlogic@groups.io>;
- Mon, 08 Sep 2025 11:04:45 -0700
+ Wed, 10 Sep 2025 00:02:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=ne+WGkrN;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.170, mailfrom: funderscore@postmarketos.org)
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1757354682;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1xiNM3VnV6D/E+QmcNisEYrhQvBPAjSm0U0VhVfSknY=;
-	b=ne+WGkrNSR76eqr+ct3utJpR33V5NnPeN3VJRzVqhYeUss4A9zyMJg03YibvZ/m3dkM2rb
-	sCiwcvlNr80lHw3FvQ33IErol8bIWBdnz73lfCdUI5nzXyax5x5fvblXnF7+NVAlaVqJJJ
-	+EvY1A8zOWeMtk9hffS7KvrXQwbWuD9wxKfC2f8jPiJKtKRYx7QjQdvmTH3/vARjPxMINO
-	XdBUekbquJmIHNaz71L9AYXDoRThqAXL6ZFBCJnlYJihedPvciDwD+XPnQ0mpa7al30v+w
-	/NSROvVolDUK2Or9wp9Cjv+tKzxC0U2zjDjNUeEygEMqO8YiMAv8M1HB6HCcCw==
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 08 Sep 2025 18:04:41 +0000
-Message-Id: <DCNM8RIX4GOC.2QL9I19VMJQXW@postmarketos.org>
-Subject: Re: [PATCH RFC 4/9] serial: serial_meson: add minimal non-DM driver
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ferass El Hafidi" <funderscore@postmarketos.org>
-To: <u-boot-amlogic@groups.io>, <neil.armstrong@linaro.org>
+ dkim=pass header.i=@linaro.org header.s=google header.b=G6VqF91t;
+ spf=pass (domain: linaro.org, ip: 209.85.221.53, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3e5190bca95so2491324f8f.0
+        for <u-boot-amlogic@groups.io>; Wed, 10 Sep 2025 00:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757487735; x=1758092535; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uXFQa/A4Z2njAqlDfQQqJbyo9i5R92JyPVXXf1NnNmY=;
+        b=G6VqF91t3jp0/AKKlJBiVImusKyPWAvga83Z/4dydNw3RUgOz9ruYnnPlnrfZ5iJQ6
+         DiTp2ZaI3C7w49ubxiHNujCZqYWXV6s83sfsv6w9Ttkz0REURC705IPzu6OnL6ntp7HO
+         lL+OcI8B4e8MvHG80k1Ia9tHyyTm0vFIO9QXqVAY08QIOPchjdfSCpHsDeHnWuWoph/h
+         RBa2y1N929imlU5XwlOnHAXYaL+/KrzE064/amuQgXW2CSGEaflbi507gKKRtCpA8hXj
+         ADsCGJGHvKu4Fa0HXJCfCtlhxYEV9EBzT7Xrfq0IxpzjgPk0QBwTfjVxuTLxLhwEjy2S
+         Zijg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757487735; x=1758092535;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uXFQa/A4Z2njAqlDfQQqJbyo9i5R92JyPVXXf1NnNmY=;
+        b=MyMvuZDiWcUgQEIiBzbSgWt/mqGUB0Makl/irWifjz+hD/krk+DkBvdAeRNaZK5TKJ
+         KqzbK6e+x7+Y//EngIr1Yq0POeAq91KO9a4fdJ/Sj6eHb8HnByPsuD720fR8W0qjwjg0
+         zlXTp7r+aOqESlgg4ZKNjLkbngFovVMviIfHl387IqEtuwlIzbkmfHHGnlDBiW7Eojf9
+         YHbW3AmmKePr3SQI9zghRStsNx38wqX4BdEPzA0LIaaS9iJqbFadUqE4tEMwynhTvDLq
+         gmiKjK3EAIWMLHRW8g0Nyf6kD7HIYX1oOhSzC/78LcSZ9HDcCA69sw+m957PzhHqGFNm
+         F+6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpKzlSdliKUtKSjzm1xT5+21Q1TNbBwoTou/fseIcTGB6YkH65Hf1LKfNNOjL2FvWCHs3l5H8XLVB5WQBdfQ==@groups.io
+X-Gm-Message-State: AOJu0YxQp8pVJzIcUTojgVTyJZb6DJ6+Trz96LXBP/X79CwLreY3czgh
+	QWU59gneTKS0z+/0Z1/NjOeqDc5F6XO4YYPrble/5eScktI9305UfmtYzXr1DqpUhqc=
+X-Gm-Gg: ASbGnctBvJWjDZjYIJn2WnRYkLZfpbd3Y0VrNq97eta5hhQGY+eRHiIWqBjYAoAOcCM
+	byPK7WnpDZBrlKZVgA5GTkbypKBHxWpA35Fmej4zbzJ103lP1EVGzfZ7qkbI02k0x5443E+Mr7P
+	ukgcvHPZnELBAAv94THhrcW03R18+nYPIInu61bft8uoM0+ep3PKkatszP9RKLoGFTrIqt+VLFU
+	YBHeyLx1e3eR/n5JSaBtqS12uxAuQFyvtAQJyiQVD83n1fypKSrj5xzD1xNJH+iGlG+3JGLrF76
+	8orZadVdwl/Uarmfg1qaMlbiuINXp5XVphMSl4GLSByyPu3m3PVqEdtsFwkuodA1UGCj351tGvz
+	gqeFuQ42KXR/jjIRSasXS4FQzqg0m+M4QuzK/zWnhftLxX6J1SB9WDqPE0lcyOC2+PbNmRJH+xH
+	8=
+X-Google-Smtp-Source: AGHT+IE9ZavL/ztBraMd1QoIIpu3iaoc10nfyD+No9Yd2V9KFFWzsT/zLBMjFTulOS0v/bH9zvoOtA==
+X-Received: by 2002:a5d:5f48:0:b0:3de:78c8:1223 with SMTP id ffacd0b85a97d-3e6440ef6cemr11833256f8f.31.1757487733841;
+        Wed, 10 Sep 2025 00:02:13 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:29d1:7c56:69a9:30b2? ([2a01:e0a:3d9:2080:29d1:7c56:69a9:30b2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7521bfdc6sm5544336f8f.8.2025.09.10.00.02.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Sep 2025 00:02:13 -0700 (PDT)
+Message-ID: <c1012805-6f06-4855-be4e-6167409c80a0@linaro.org>
+Date: Wed, 10 Sep 2025 09:02:12 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH RFC 5/9] arm: meson: initial u-boot SPL support for GX
+ SoCs
+To: Ferass El Hafidi <funderscore@postmarketos.org>,
+ u-boot-amlogic@groups.io, Tom Rini <trini@konsulko.com>,
+ Peng Fan <peng.fan@nxp.com>, Jaehoon Chung <jh80.chung@samsung.com>,
+ Beniamino Galvani <b.galvani@gmail.com>
+Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
+ u-boot@lists.denx.de, ~postmarketos/upstreaming@lists.sr.ht
 References: <20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org>
- <20250907-spl-gx-v1-4-37395d9ff5af@postmarketos.org>
- <199ecb7b-4c18-40fc-992a-af7535251112@linaro.org>
-In-Reply-To: <199ecb7b-4c18-40fc-992a-af7535251112@linaro.org>
-X-Migadu-Flow: FLOW_OUT
+ <20250907-spl-gx-v1-5-37395d9ff5af@postmarketos.org>
+ <b6d9c116-f37d-4793-ba53-f94ed95130dd@linaro.org>
+ <DCNKQM04PWE0.35QSN1T1Z5CEZ@postmarketos.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <DCNKQM04PWE0.35QSN1T1Z5CEZ@postmarketos.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 08 Sep 2025 18:04:47 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2760
+ <u-boot-amlogic@groups.io>; Wed, 10 Sep 2025 07:02:18 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2761
 
-On Mon Sep 8, 2025 at 8:11 AM UTC, Neil Armstrong via groups.io wrote:
-> On 07/09/2025 16:36, Ferass El Hafidi wrote:
->> It is very limited and minimal, only implements putc/puts.
->> This minimal driver is intended to be used in SPL, and other
->> size-constrained situations.
->>=20
->> Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
->> ---
->>   drivers/serial/serial.c       |   2 +
->>   drivers/serial/serial_meson.c | 112 ++++++++++++++++++++++++++++++++++=
-+++++++-
->>   2 files changed, 113 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/serial/serial.c b/drivers/serial/serial.c
->> index e10ca6eef768502ea32bf39a41ae2e3ccd168c66..c0b1eb3056181b95e1861f1c=
-e08fcd82ff81eb71 100644
->> --- a/drivers/serial/serial.c
->> +++ b/drivers/serial/serial.c
->> @@ -129,6 +129,7 @@ serial_initfunc(pxa_serial_initialize);
->>   serial_initfunc(smh_serial_initialize);
->>   serial_initfunc(sh_serial_initialize);
->>   serial_initfunc(mtk_serial_initialize);
->> +serial_initfunc(meson_serial_initialize);
->>  =20
->>   /**
->>    * serial_register() - Register serial driver with serial driver core
->> @@ -167,6 +168,7 @@ int serial_initialize(void)
->>   	smh_serial_initialize();
->>   	sh_serial_initialize();
->>   	mtk_serial_initialize();
->> +	meson_serial_initialize();
->>  =20
->>   	serial_assign(default_serial_console()->name);
->>  =20
->> diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson=
-.c
->> index bb79b9729579a661084425d6b3c5357da31dc3c0..981ea5e159062b7d13885325=
-e17b833145281158 100644
->> --- a/drivers/serial/serial_meson.c
->> +++ b/drivers/serial/serial_meson.c
->> @@ -3,9 +3,11 @@
->>    * (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
->>    */
->>  =20
->> +#if CONFIG_IS_ENABLED(DM_SERIAL)
->>   #include <dm.h>
->> -#include <errno.h>
->>   #include <fdtdec.h>
->> +#endif
->> +#include <errno.h>
->>   #include <linux/kernel.h>
->>   #include <linux/bitops.h>
->>   #include <linux/compiler.h>
->> @@ -51,6 +53,7 @@ struct meson_serial_plat {
->>   #define AML_UART_REG5_USE_NEW_BAUD	BIT(23) /* default 1 (use new baud =
-rate register) */
->>   #define AML_UART_REG5_BAUD_MASK		0x7fffff
->>  =20
->> +#if CONFIG_IS_ENABLED(DM_SERIAL)
->>   static u32 meson_calc_baud_divisor(ulong src_rate, u32 baud)
->>   {
->>   	/*
->> @@ -245,6 +248,113 @@ U_BOOT_DRIVER(serial_meson) =3D {
->>   	.plat_auto	=3D sizeof(struct meson_serial_plat),
->>   };
->>  =20
->> +DM_DRIVER_ALIAS(serial_meson, amlogic_meson_gx_uart);
->
-> Why is this needed ?
->
+On 08/09/2025 18:53, Ferass El Hafidi wrote:
+> On Mon Sep 8, 2025 at 8:24 AM UTC, Neil Armstrong via groups.io wrote:
+>> On 07/09/2025 16:36, Ferass El Hafidi wrote:
+>>> Add initial boilerplate for U-Boot SPL support on Amlogic.
+>>>
+>>> Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
+>>> ---
+>>>    arch/arm/include/asm/arch-meson/clock-gx.h |   1 +
+>>>    arch/arm/include/asm/arch-meson/gx.h       |  36 ++++
+>>>    arch/arm/mach-meson/Kconfig                |  42 ++++-
+>>>    arch/arm/mach-meson/Makefile               |   5 +
+>>>    arch/arm/mach-meson/board-common.c         |  11 ++
+>>>    arch/arm/mach-meson/spl-gx.c               | 278 +++++++++++++++++++++++++++++
+>>>    arch/arm/mach-meson/spl.c                  | 123 +++++++++++++
+>>>    7 files changed, 495 insertions(+), 1 deletion(-)
+>>>
+>> <...>
+>>> diff --git a/arch/arm/mach-meson/spl-gx.c b/arch/arm/mach-meson/spl-gx.c
+>>> new file mode 100644
+>>> index 0000000000000000000000000000000000000000..65b301bc9ed89b7ca2156b7fa672ed4ef3f8633b
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-meson/spl-gx.c
+>>> @@ -0,0 +1,278 @@
+>>> +// SPDX-License-Identifier: GPL-2.0+
+>>> +/*
+>>> + * Portions Copyright (C) 2015, Amlogic, Inc. All rights reserved.
+>>> + * Copyright (C) 2023, Ferass El Hafidi <funderscore@postmarketos.org>
+>>> + */
+>>> +#include <hang.h>
+>>> +#include <image.h>
+>>> +#include <spl.h>
+>>> +#include <vsprintf.h>
+>>> +#include <asm/io.h>
+>>> +#include <asm/arch/boot.h>
+>>> +#include <asm/arch/clock-gx.h>
+>>> +#include <asm/arch/gx.h>
+>>> +#include <linux/delay.h>
+>>> +
+>>> +/* Meson GX SPL code */
+>>> +
+>>> +#if CONFIG_IS_ENABLED(FIT_IMAGE_POST_PROCESS)
+>>> +#if defined(CONFIG_MESON_GXBB)
+>>
+>> I think you should indicate why it's only needed for GXBB
+>>
+> 
+> Sure!  I will also explain here to clarify.
+> Basically this is sending the SCP firmware (aka. bl30/bl301) to the SCP.
+> Historically (in GXBB) this was done by bl2.bin, but (to save space?) it
+> was moved to BL31 in GXL:
+> 
+> - https://git.trustedfirmware.org/plugins/gitiles/TF-A/trusted-firmware-a/+/refs/heads/master/plat/amlogic/gxl/gxl_bl31_setup.c#129
+> 
+> and BL2 would give image info for bl30/bl301 to BL31.  I patched this
+> upstream so we don't have to do that in SPL:
+> 
+> - https://git.trustedfirmware.org/plugins/gitiles/TF-A/trusted-firmware-a/+/refs/heads/master/plat/amlogic/gxl/gxl_bl31_setup.c#105
+> 
+> Whether we can move SCP fw loading to BL31 on GXBB is .. an interesting
+> thing that could be considered.  That way we could possibly also save
+> some space in U-Boot SPL.
+> 
 
-Hmm, probably leftover from some other thing I was trying to do.  I'll
-remove that for the next revision.
+Would be nice, but keep it as-is for now!
 
->> +
->> +#else
->> +
->> +static int meson_serial_init(void)
->> +{
->> +	struct meson_uart *const uart =3D (struct meson_uart *)CONFIG_VAL(DEBU=
-G_UART_BASE);
->> +	u32 val;
->> +
->> +	val =3D readl(&uart->control);
->> +	val |=3D (AML_UART_RX_RST | AML_UART_TX_RST | AML_UART_CLR_ERR);
->> +	writel(val, &uart->control);
->> +	val &=3D ~(AML_UART_RX_RST | AML_UART_TX_RST | AML_UART_CLR_ERR);
->> +	writel(val, &uart->control);
->> +	val |=3D (AML_UART_RX_EN | AML_UART_TX_EN);
->> +	writel(val, &uart->control);
->> +
->> +	return 0;
->> +}
->> +
->> +static int meson_serial_stop(void)
->> +{
->> +	return 0;
->> +}
->> +
->> +static void meson_serial_setbrg(void)
->> +{
->> +}
->> +
->> +static void meson_serial_putc(const char ch)
->> +{
->> +	struct meson_uart *uart =3D (struct meson_uart *)CONFIG_VAL(DEBUG_UART=
-_BASE);
->> +
->> +	/* On '\n' also do '\r' */
->> +	if (ch =3D=3D '\n')
->> +		meson_serial_putc('\r');
->> +
->> +	while (readl(&uart->status) & AML_UART_TX_FULL)
->> +		;
->> +
->> +	writel(ch, &uart->wfifo);
->> +}
->> +
->> +static void meson_serial_puts(const char *s)
->> +{
->> +	while (*s)
->> +		meson_serial_putc(*s++);
->> +}
->> +
->> +static int meson_serial_getc(void)
->> +{
->> +	struct meson_uart *const uart =3D (struct meson_uart *)CONFIG_VAL(DEBU=
-G_UART_BASE);
->> +	uint32_t status =3D readl(&uart->status);
->> +
->> +	if (status & AML_UART_RX_EMPTY)
->> +		return -EAGAIN;
->> +
->> +	if (status & AML_UART_ERR) {
->> +		u32 val =3D readl(&uart->control);
->> +
->> +		/* Clear error */
->> +		val |=3D AML_UART_CLR_ERR;
->> +		writel(val, &uart->control);
->> +		val &=3D ~AML_UART_CLR_ERR;
->> +		writel(val, &uart->control);
->> +
->> +		/* Remove spurious byte from fifo */
->> +		readl(&uart->rfifo);
->> +		return -EIO;
->> +	}
->> +
->> +	return readl(&uart->rfifo) & 0xff;
->> +}
->> +
->> +static int meson_serial_tstc(void)
->> +{
->> +	struct meson_uart *const uart =3D (struct meson_uart *)CONFIG_VAL(DEBU=
-G_UART_BASE);
->> +	uint32_t status =3D readl(&uart->status);
->> +
->> +	if (status & AML_UART_RX_EMPTY)
->> +		return 0;
->> +	return 1;
->> +}
->> +
->> +struct serial_device meson_serial_device =3D {
->> +	.name	=3D "meson_serial",
->> +	.start	=3D meson_serial_init,
->> +	.stop	=3D meson_serial_stop,
->> +	.setbrg	=3D meson_serial_setbrg,
->> +	.getc	=3D meson_serial_getc,
->> +	.tstc	=3D meson_serial_tstc,
->> +	.putc	=3D meson_serial_putc,
->> +	.puts	=3D meson_serial_puts,
->> +};
->> +
->> +void meson_serial_initialize(void)
->> +{
->> +	serial_register(&meson_serial_device);
->> +}
->> +
->> +__weak struct serial_device *default_serial_console(void)
->> +{
->> +	return &meson_serial_device;
->> +}
->> +
->> +#endif
->> +
->>   #ifdef CONFIG_DEBUG_UART_MESON
->>  =20
->>   #include <debug_uart.h>
->>=20
->
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Groups.io Links: You receive all messages sent to this group.
-> View/Reply Online (#2754): https://groups.io/g/u-boot-amlogic/message/275=
-4
-> Mute This Topic: https://groups.io/mt/115113901/8399868
-> Group Owner: u-boot-amlogic+owner@groups.io
-> Unsubscribe: https://groups.io/g/u-boot-amlogic/unsub [funderscore@postma=
-rketos.org]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>>> +void meson_power_init(void)
+>>> +{
+>>> +	/* TODO: Support more voltages */
+>>> +
+>>> +	/* Init PWM B */
+>>> +	clrsetbits_32(GX_PWM_MISC_REG_AB, 0x7f << 16, (1 << 23) | (1 << 1));
+>>> +
+>>> +	/* Set voltage */
+>>> +	if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1120MV))
+>>> +		writel(0x02001a, GX_PWM_PWM_B);
+>>> +	else if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1100MV))
+>>> +		writel(0x040018, GX_PWM_PWM_B);
+>>> +	else if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1000MV))
+>>> +		writel(0x0e000e, GX_PWM_PWM_B);
+>>> +
+>>> +	if (IS_ENABLED(CONFIG_MESON_GXBB)) {
+>>> +		clrbits_32(GX_PIN_MUX_REG7, 1 << 22);
+>>> +		clrsetbits_32(GX_PIN_MUX_REG3, 1 << 22, 1 << 21);
+>>> +	} else {
+>>> +		clrbits_32(GX_PIN_MUX_REG1, 1 << 10);
+>>> +		clrsetbits_32(GX_PIN_MUX_REG2, 1 << 5, 1 << 11);
+>>> +	}
+>>> +
+>>> +	/* Init PWM D */
+>>> +	clrsetbits_32(GX_PWM_MISC_REG_CD, 0x7f << 16, (1 << 23) | (1 << 1));
+>>> +
+>>> +	/* Set voltage */
+>>> +	if (CONFIG_IS_ENABLED(MESON_GX_VDDEE_1100MV))
+>>> +		writel(0x040018, GX_PWM_PWM_B);
+>>> +	else if (CONFIG_IS_ENABLED(MESON_GX_VDDEE_1000MV))
+>>> +		writel(0x0e000e, GX_PWM_PWM_B);
+>>> +
+>>> +	if (IS_ENABLED(CONFIG_MESON_GXBB)) {
+>>> +		clrbits_32(GX_PIN_MUX_REG7, 1 << 23);
+>>> +		setbits_32(GX_PIN_MUX_REG3, 1 << 20);
+>>> +	} else {
+>>> +		clrbits_32(GX_PIN_MUX_REG1, (1 << 9) | (1 << 11));
+>>> +		setbits_32(GX_PIN_MUX_REG2, 1 << 12);
+>>> +	}
+>>> +}
+>>
+>> Seems much of the code is duplicated between GXBB and GXL, so I wonder if it would'nt
+>> be cleaner to have spl-gxbb an spl-gxl ?
+>>
+> 
+> You mean separate power init functions (meson_power_init_gxbb/gxl)?  Should be doable.
+
+
+I mean even separate files, it would avoid any #ifdef stuff
+
+Neil
+
+> 
+>> <...>
+>>
+>> Anyway it's really clean !
+>>
+>> Thanks!
+>> Neil
+>>
+> 
+> Thank you!
+> 
+>>
+>> -=-=-=-=-=-=-=-=-=-=-=-
+>> Groups.io Links: You receive all messages sent to this group.
+>> View/Reply Online (#2757): https://groups.io/g/u-boot-amlogic/message/2757
+>> Mute This Topic: https://groups.io/mt/115113902/8399868
+>> Group Owner: u-boot-amlogic+owner@groups.io
+>> Unsubscribe: https://groups.io/g/u-boot-amlogic/unsub [funderscore@postmarketos.org]
+>> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
 
