@@ -2,35 +2,35 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6717FCA101F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671BFCAC58D
 	for <webhook@archiver.kernel.org>; Wed, 10 Sep 2025 18:13:53 +0000 (UTC)
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
- by mx.groups.io with SMTP id smtpd.web11.26236.1757528025201015921
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+ by mx.groups.io with SMTP id smtpd.web11.26231.1757528023289512580
  for <u-boot-amlogic@groups.io>;
- Wed, 10 Sep 2025 11:13:45 -0700
+ Wed, 10 Sep 2025 11:13:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=sF82jiZ6;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.180, mailfrom: funderscore@postmarketos.org)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=ai5GftRG;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.184, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1757528023;
+	s=key1; t=1757528021;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CcrMBf2I1JIKf4kXRgim8khe51Bzxdmj44MMOss98Ks=;
-	b=sF82jiZ6ctzRjNDyi0UGNyxMU6Tjb21C+FVSQ5TgFmuW6COcajSzu++71d7dtCIPVkYU2I
-	50nohWlibi6zBozoBB1r8YgPhdSPYm52pcfuCgZ/2M5GltrqevwzrmTT7HYqdxZky5hzbl
-	hVqywdOfEHcXYnK+IagUSsTGxDMor/lOBaGrk/gS9E3cL4RZVyJSgCzRa4NAWbAjO01IJ3
-	c+8I9xRL3SX+yR4EweArd8tzPtyKiLeXunqRzU+pazk7RETuu9coGFGqs9iMFnJiVIMsaB
-	EheXkqBaSSuP9PzLdjjeZ5IpXmwXan1l8+WQ/SluPDvcLLvheJCW3pc68/aEPQ==
+	bh=Ye2V5yd15aBBl9R6frDdcobaxDcsOJrykV7T0W7yLIU=;
+	b=ai5GftRG6xpYAnMdaQ396bZt+55cXyXD8RcDU1HRaoKDpxgUehAOxBGOhYpFf53wU3izaw
+	Oefw0avOP/EDFE/nlZdSJQDIwxS2fo0k1AHDBDnVEFNh+f+Gkxkp0PIoTMxNehCdEdwOc9
+	5X93dG6vEhcVBxFEnpf7RGYyMvx9N3UASenGZCozAzrDjNd1zLfFA/+rLsH8QrqJodFRfS
+	DCnbotOTIT6+R+QpNz77q8TnBd8QGPASXJlj2yGBZJFn4OapURBm4gJcO6ncYMt73UvJEn
+	AG5gZKfzcCeGe7JkMt20RK+MbJaSIVVkc9gOT2fRBy/rEsvbhviDyQPxUhTgEQ==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Wed, 10 Sep 2025 18:13:23 +0000
-Subject: [PATCH RFC v2 3/8] serial: serial_meson: add minimal non-DM driver
+Date: Wed, 10 Sep 2025 18:13:21 +0000
+Subject: [PATCH RFC v2 1/8] tools: mkimage: Add Amlogic Boot Image type
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250910-spl-gx-v2-3-8f52aac47e04@postmarketos.org>
+Message-Id: <20250910-spl-gx-v2-1-8f52aac47e04@postmarketos.org>
 References: <20250910-spl-gx-v2-0-8f52aac47e04@postmarketos.org>
 In-Reply-To: <20250910-spl-gx-v2-0-8f52aac47e04@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -41,21 +41,21 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4516;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10777;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=M+Xa8Ix6UmQljGDRUr1XCJ/dEvEFqyvz3xOcg7eX3LU=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBowb/RAiQSI6h+MnqiSJvhj/qwhBH+vj6elhJv8
- vCPR3TzbKOJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaMG/0QAKCRCEr8vQ14ma
- A9dCD/wJjNDvz8ZFvxkd0W3AHu0M1APgBvYFkWL0+t6XT0xUWvvlmzTM7NInjeY/5Hte53KuD0S
- x+WbkdfKuwhDbxQTJXPXHFDe8G1KbVBLRTax8fzmMXZFYxtvrq0iP9kkFEf6fT+cIt7kHZFOrO6
- XZDCe3w4uq6ARIK3EmkPtmSfLPp9N3YRxi0xPMtvCnjbFq5F8yO4piog51rARWuvp5iJ3LgiMRf
- UwrYF7M3iqrN7T9uj7g7DPRcnkXYersRVpiz0/HobI4eTi0rlPKkgxHaMPgw2mGYdkivy2AVV/v
- hRFKO60DAc7sh25rs7rofi7/gjGxEff4+2u34CKCHihBzkj2iHnNvt67Pj+4tNBsF6E+oUFpJkX
- 3VosFy5Il+C37qfsQdF7IlCLDFjs2cPrH8yts4ER4kkXOkSj658/4+rWHgGIf0+PA8zzl+nCIYg
- cguCHbKsOLMYPMH3Wu1841U6hRkDe2/A09n3wAB7rgngEkf8FE0JrfplWcEkWlki0EfLK+JIU8O
- ZoUkrblATJXglka2//dJBqkRpMFtKI9JfKUKv2cY7ea+5f0SRCXPKf9xqDjYKKfJGJ7joCj94w0
- uwf1RHXG5JzfPtX033BvUeMV7KTXqUTwXXMB3y8BC83PQMivclxZG+yqjkBVp0qm8v4KM1hzcy7
- kl908/H4b9RIayA==
+ bh=YVTXEpemAPSxPiO35n/4+hhIalfxA71UAFA6zvcsX4E=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBowb/Q/rn7aaIfLt3QgNgAzu2eMVUH/9rUXtVNH
+ MwExcPz3jGJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaMG/0AAKCRCEr8vQ14ma
+ AwKSD/9yAgpP0Wrxx9e1N1BGjULJS+6eVEE+G1AANVN8+w9Prwobq9jKqRfzsfWbRIohkcJ7h7A
+ QaKUAiDWV1ptw8dRPCjzPB8710QhD3oanZomEP7c+n2dj2Ky9a53+iXytxgIJiouEsoCHzTUpTl
+ Sg6gWaKud2ZDXg0zFfXs7lXtT1EIWZcD+BLzsFlQCmv5YmHKmCN6hhb3gYF1El2HzUcBxz7Nw6t
+ fH5e3enheiW7jmiuCEmaYTBTf6U3cMwwTdl6siOueSjs7cLa8TRlMCEBPZ7qOMhDotSo1CGLqGH
+ zVcrUCJDlGIToZ+ri2J2tpjy+VHxzUyxI0V4eFGL1SAnNPuC9QPfGWX+NamgrZn4hNybCpP89HK
+ vCq4yNjvZh6MLyaCdcjmXU2wcq/4Sbp8QZuzJtIzzF6Ma5mNtDGuZcoSnRKZfiJNsEOmnfB+bJ1
+ r3IkfKHItTu5C6qLgyJ6qRR+BPxuC4f7hAOjcVspKhvh9ZYN1MndAwJvAkz1fZHU96CLiLVdPtH
+ 31XpVHxahq3ORGMTFFQduDFhBXk1z7w2Koc+1oI95yqVecPkaYYN5vQGEeWfu/H7kTdtkMuKrPN
+ sPo1KarvbEPGdBpGmjzoClBj8zVIjxgLFa43x/Wbk+DIQvatBOHyAIvQd8BIEq2hRKsHIGJYbak
+ TDXBIP01X/ra2lw==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
@@ -63,175 +63,353 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 10 Sep 2025 18:13:53 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2767
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2765
 
-It is very limited and minimal, only implements putc/puts.
-This minimal driver is intended to be used in SPL, and other
-size-constrained situations.
+From: Jonas Karlman <jonas@kwiboo.se>
 
-Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
+Add support for creating an Amlogic Boot Image that pass CHK in BL1 on
+Amlogic AArch64 SoCs.
+
+Images can optionally be signed for secure boot scenario, however
+creation of signed images has not been implemented.
+
+Example of how to use it:
+  # Create an amlogic boot image
+  tools/mkimage -T amlimage -n gxbb -d u-boot-spl.bin u-boot-amlogic.bin
+
+  # List boot image header information
+  tools/mkimage -l u-boot-amlogic.bin
+
+  # Extract amlogic boot image payload
+  tools/dumpimage -T amlimage -o bl2-payload.bin u-boot-amlogic.bin
+
+Or with binman using something like:
+  binman {
+	u-boot-amlogic {
+		filename = "u-boot-amlogic.bin";
+		pad-byte = <0xff>;
+
+		mkimage {
+			filename = "bl2.bin";
+			args = "-n", "gxbb", "-T", "amlimage";
+
+			u-boot-spl {
+			};
+		};
+	};
+  };
+
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Acked-by: Ferass El Hafidi <funderscore@postmarketos.org>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/serial/serial.c       |   2 +
- drivers/serial/serial_meson.c | 110 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 111 insertions(+), 1 deletion(-)
+ MAINTAINERS      |   1 +
+ boot/image.c     |   1 +
+ include/image.h  |   1 +
+ tools/Makefile   |   1 +
+ tools/amlimage.c | 246 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 250 insertions(+)
 
-diff --git a/drivers/serial/serial.c b/drivers/serial/serial.c
-index e10ca6eef768502ea32bf39a41ae2e3ccd168c66..c0b1eb3056181b95e1861f1ce08fcd82ff81eb71 100644
---- a/drivers/serial/serial.c
-+++ b/drivers/serial/serial.c
-@@ -129,6 +129,7 @@ serial_initfunc(pxa_serial_initialize);
- serial_initfunc(smh_serial_initialize);
- serial_initfunc(sh_serial_initialize);
- serial_initfunc(mtk_serial_initialize);
-+serial_initfunc(meson_serial_initialize);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3fb163aa1db1dba249e60b40ab3e785db4fde5d3..8ab16ea7fed9bf15733d9d4eff78e4c8a9d22420 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -186,6 +186,7 @@ F:	drivers/video/meson/
+ F:	drivers/watchdog/meson_gxbb_wdt.c
+ F:	include/configs/meson64.h
+ F:	include/configs/meson64_android.h
++F:	tools/amlimage*
+ F:	doc/board/amlogic/
+ N:	meson
  
- /**
-  * serial_register() - Register serial driver with serial driver core
-@@ -167,6 +168,7 @@ int serial_initialize(void)
- 	smh_serial_initialize();
- 	sh_serial_initialize();
- 	mtk_serial_initialize();
-+	meson_serial_initialize();
- 
- 	serial_assign(default_serial_console()->name);
- 
-diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson.c
-index bb79b9729579a661084425d6b3c5357da31dc3c0..c728bc8f8347eeaa9c6c5e0c8f5905316e9cc077 100644
---- a/drivers/serial/serial_meson.c
-+++ b/drivers/serial/serial_meson.c
-@@ -3,9 +3,11 @@
-  * (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
-  */
- 
-+#if CONFIG_IS_ENABLED(DM_SERIAL)
- #include <dm.h>
--#include <errno.h>
- #include <fdtdec.h>
-+#endif
-+#include <errno.h>
- #include <linux/kernel.h>
- #include <linux/bitops.h>
- #include <linux/compiler.h>
-@@ -51,6 +53,7 @@ struct meson_serial_plat {
- #define AML_UART_REG5_USE_NEW_BAUD	BIT(23) /* default 1 (use new baud rate register) */
- #define AML_UART_REG5_BAUD_MASK		0x7fffff
- 
-+#if CONFIG_IS_ENABLED(DM_SERIAL)
- static u32 meson_calc_baud_divisor(ulong src_rate, u32 baud)
- {
- 	/*
-@@ -245,6 +248,111 @@ U_BOOT_DRIVER(serial_meson) = {
- 	.plat_auto	= sizeof(struct meson_serial_plat),
+diff --git a/boot/image.c b/boot/image.c
+index abac2c7034b22b8a638d93899aff1d5465f938f1..dd96f712b6fbe6ba9f0de8739b37b6868bc14a25 100644
+--- a/boot/image.c
++++ b/boot/image.c
+@@ -185,6 +185,7 @@ static const table_entry_t uimage_type[] = {
+ 	{	IH_TYPE_STARFIVE_SPL, "sfspl", "StarFive SPL Image" },
+ 	{	IH_TYPE_TFA_BL31, "tfa-bl31",  "TFA BL31 Image", },
+ 	{	IH_TYPE_STM32IMAGE_V2, "stm32imagev2", "STMicroelectronics STM32 Image V2.0" },
++	{	IH_TYPE_AMLIMAGE,   "amlimage",   "Amlogic Boot Image" },
+ 	{	-1,		    "",		  "",			},
  };
  
-+#else
+diff --git a/include/image.h b/include/image.h
+index b695cc39447b2ac86231f5eaf6ed20de3ced2543..be6356c93d6ec7b2daca226301546678c00faf4d 100644
+--- a/include/image.h
++++ b/include/image.h
+@@ -234,6 +234,7 @@ enum image_type_t {
+ 	IH_TYPE_STARFIVE_SPL,		/* StarFive SPL image */
+ 	IH_TYPE_TFA_BL31,		/* TFA BL31 image */
+ 	IH_TYPE_STM32IMAGE_V2,		/* STMicroelectronics STM32 Image V2.0 */
++	IH_TYPE_AMLIMAGE,		/* Amlogic Boot Image */
+ 
+ 	IH_TYPE_COUNT,			/* Number of image types */
+ };
+diff --git a/tools/Makefile b/tools/Makefile
+index 02297e8c93a3c8d00ad165639d5f070804e17ec2..59e1b2285fe3d8015ef0fd7d8b8597e7294233ab 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -110,6 +110,7 @@ ROCKCHIP_OBS = generated/lib/rc4.o rkcommon.o rkimage.o rksd.o rkspi.o
+ 
+ # common objs for dumpimage and mkimage
+ dumpimage-mkimage-objs := aisimage.o \
++			amlimage.o \
+ 			atmelimage.o \
+ 			$(FIT_OBJS-y) \
+ 			$(FIT_SIG_OBJS-y) \
+diff --git a/tools/amlimage.c b/tools/amlimage.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..9af795602e69bdd690db32ab3108cbde07f128a5
+--- /dev/null
++++ b/tools/amlimage.c
+@@ -0,0 +1,246 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// Copyright Contributors to the U-Boot project.
 +
-+static int meson_serial_init(void)
-+{
-+	struct meson_uart *const uart = (struct meson_uart *)CONFIG_VAL(DEBUG_UART_BASE);
-+	u32 val;
++#include "imagetool.h"
++#include <u-boot/sha256.h>
 +
-+	val = readl(&uart->control);
-+	val |= (AML_UART_RX_RST | AML_UART_TX_RST | AML_UART_CLR_ERR);
-+	writel(val, &uart->control);
-+	val &= ~(AML_UART_RX_RST | AML_UART_TX_RST | AML_UART_CLR_ERR);
-+	writel(val, &uart->control);
-+	val |= (AML_UART_RX_EN | AML_UART_TX_EN);
-+	writel(val, &uart->control);
++/*
++ * Image contain data in the following order:
++ *  Nonce	16 byte
++ *  Header	64 byte
++ *  Digest	32 byte
++ *  Padding	align up to 4K
++ *  Payload
++ */
 +
-+	return 0;
-+}
++#define HEADER_MAGIC		0x4c4d4140	/* @AML */
++#define HEADER_OFFSET		0x10		/* 16 */
++#define HEADER_SIZE		0x40		/* 64 */
++#define PAYLOAD_OFFSET		0x1000		/* 4096 */
 +
-+static int meson_serial_stop(void)
-+{
-+	return 0;
-+}
++struct amlimage_header {
++	uint32_t magic;
++	uint32_t total_size;
++	uint8_t header_size;
++	uint8_t root_key_index;
++	uint8_t version_major;
++	uint8_t version_minor;
++	uint32_t padding1;
++	uint32_t digest_type;
++	uint32_t digest_offset;
++	uint32_t digest_size;
++	uint32_t data_offset;
++	uint32_t key_type;
++	uint32_t key_offset;
++	uint32_t key_size;
++	uint32_t data_size;
++	uint32_t payload_type;
++	uint32_t payload_offset;
++	uint32_t payload_size;
++	uint32_t padding2;
++} __packed;
 +
-+static void meson_serial_setbrg(void)
-+{
-+}
-+
-+static void meson_serial_putc(const char ch)
-+{
-+	struct meson_uart *uart = (struct meson_uart *)CONFIG_VAL(DEBUG_UART_BASE);
-+
-+	/* On '\n' also do '\r' */
-+	if (ch == '\n')
-+		meson_serial_putc('\r');
-+
-+	while (readl(&uart->status) & AML_UART_TX_FULL)
-+		;
-+
-+	writel(ch, &uart->wfifo);
-+}
-+
-+static void meson_serial_puts(const char *s)
-+{
-+	while (*s)
-+		meson_serial_putc(*s++);
-+}
-+
-+static int meson_serial_getc(void)
-+{
-+	struct meson_uart *const uart = (struct meson_uart *)CONFIG_VAL(DEBUG_UART_BASE);
-+	uint32_t status = readl(&uart->status);
-+
-+	if (status & AML_UART_RX_EMPTY)
-+		return -EAGAIN;
-+
-+	if (status & AML_UART_ERR) {
-+		u32 val = readl(&uart->control);
-+
-+		/* Clear error */
-+		val |= AML_UART_CLR_ERR;
-+		writel(val, &uart->control);
-+		val &= ~AML_UART_CLR_ERR;
-+		writel(val, &uart->control);
-+
-+		/* Remove spurious byte from fifo */
-+		readl(&uart->rfifo);
-+		return -EIO;
-+	}
-+
-+	return readl(&uart->rfifo) & 0xff;
-+}
-+
-+static int meson_serial_tstc(void)
-+{
-+	struct meson_uart *const uart = (struct meson_uart *)CONFIG_VAL(DEBUG_UART_BASE);
-+	uint32_t status = readl(&uart->status);
-+
-+	if (status & AML_UART_RX_EMPTY)
-+		return 0;
-+	return 1;
-+}
-+
-+struct serial_device meson_serial_device = {
-+	.name	= "meson_serial",
-+	.start	= meson_serial_init,
-+	.stop	= meson_serial_stop,
-+	.setbrg	= meson_serial_setbrg,
-+	.getc	= meson_serial_getc,
-+	.tstc	= meson_serial_tstc,
-+	.putc	= meson_serial_putc,
-+	.puts	= meson_serial_puts,
++struct amlimage_variant {
++	const char *name;
++	const struct amlimage_header hdr;
 +};
 +
-+void meson_serial_initialize(void)
++#define VARIANT(name, major, minor, size)	\
++	{ name, { .magic = HEADER_MAGIC, .header_size = HEADER_SIZE, \
++		  .version_major = major, .version_minor = minor, \
++		  .payload_size = size, } }
++
++static const struct amlimage_variant variants[] = {
++	VARIANT("gxbb", 1, 0, 0xb000),
++	VARIANT("gxl",  1, 1, 0xb000),
++	VARIANT("gxm",  1, 1, 0xb000),
++	VARIANT("axg",  1, 1, 0xb000),
++	VARIANT("g12a", 1, 1, 0xf000),
++	VARIANT("g12b", 1, 1, 0xf000),
++	VARIANT("sm1",  1, 1, 0xf000),
++};
++
++static const struct amlimage_variant *amlimage_get_variant(const char *name)
 +{
-+	serial_register(&meson_serial_device);
++	if (!name)
++		return NULL;
++
++	for (int i = 0; i < ARRAY_SIZE(variants); i++)
++		if (!strcmp(name, variants[i].name))
++			return &variants[i];
++
++	return NULL;
 +}
 +
-+__weak struct serial_device *default_serial_console(void)
++static int amlimage_check_params(struct image_tool_params *params)
 +{
-+	return &meson_serial_device;
++	const struct amlimage_variant *variant =
++		amlimage_get_variant(params->imagename);
++	int datafile_size;
++
++	if (params->lflag || params->iflag)
++		return EXIT_SUCCESS;
++
++	if (!variant) {
++		fprintf(stderr, "%s: unsupported image name: %s\n",
++			params->cmdname, params->imagename);
++		exit(EXIT_FAILURE);
++	}
++
++	datafile_size = imagetool_get_filesize(params, params->datafile);
++	if (datafile_size < 0) {
++		exit(EXIT_FAILURE);
++	} else if (datafile_size > variant->hdr.payload_size) {
++		fprintf(stderr, "%s: datafile is too large (%#x > %#x)\n",
++			params->cmdname, datafile_size,
++			variant->hdr.payload_size);
++		exit(EXIT_FAILURE);
++	}
++
++	return EXIT_SUCCESS;
 +}
 +
-+#endif
++static int amlimage_verify_header(unsigned char *buf, int size,
++				  struct image_tool_params *params)
++{
++	const struct amlimage_header *hdr = (void *)buf + HEADER_OFFSET;
 +
- #ifdef CONFIG_DEBUG_UART_MESON
- 
- #include <debug_uart.h>
++	if (size >= HEADER_OFFSET + HEADER_SIZE + SHA256_SUM_LEN &&
++	    hdr->magic == HEADER_MAGIC && hdr->header_size == HEADER_SIZE)
++		return 0;
++
++	return -1;
++}
++
++static void amlimage_print_header(const void *buf,
++				  struct image_tool_params *params)
++{
++	const struct amlimage_header *hdr = buf + HEADER_OFFSET;
++	uint8_t digest[SHA256_SUM_LEN];
++	sha256_context ctx;
++	bool valid;
++
++	printf("Amlogic Boot Image %" PRIu8 ".%" PRIu8 "\n",
++	       hdr->version_major, hdr->version_minor);
++	printf("Total size: %" PRIu32 "\n", hdr->total_size);
++	printf("Digest %" PRIu32 ": %" PRIu32 " @ 0x%" PRIx32 "\n",
++	       hdr->digest_type, hdr->digest_size, hdr->digest_offset);
++	printf("Key %" PRIu32 ": %" PRIu32 " @ 0x%" PRIx32 "\n",
++	       hdr->key_type, hdr->key_size, hdr->key_offset);
++	printf("Payload %" PRIu32 ": %" PRIu32 " @ 0x%" PRIx32 "\n",
++	       hdr->payload_type, hdr->payload_size, hdr->payload_offset);
++
++	sha256_starts(&ctx);
++	/* Header and data is used as input for sha256 digest */
++	sha256_update(&ctx, (void *)hdr, hdr->header_size);
++	sha256_update(&ctx, (void *)hdr + hdr->data_offset, hdr->data_size);
++	sha256_finish(&ctx, digest);
++
++	valid = !memcmp((void *)hdr + hdr->digest_offset,
++			digest, SHA256_SUM_LEN);
++
++	printf("Data: %" PRIu32 " @ 0x%" PRIx32 " - %s\n",
++	       hdr->data_size, hdr->data_offset, valid ? "OK" : "BAD");
++}
++
++static void amlimage_set_header(void *buf, struct stat *sbuf, int ifd,
++				struct image_tool_params *params)
++{
++	struct amlimage_header *hdr = buf + HEADER_OFFSET;
++	sha256_context ctx;
++
++	/* Use header size as initial size */
++	hdr->total_size = hdr->header_size;
++
++	/* Use sha256 digest (normal boot) */
++	hdr->digest_type = 0;
++	/* The sha256 digest is stored directly following the header */
++	hdr->digest_offset = hdr->total_size;
++	/* Unknown if this is used as block size instead of digest size */
++	hdr->digest_size = 512;
++	hdr->total_size += hdr->digest_size;
++
++	/* Use key as padding so that payload ends up 4K aligned in TZRAM */
++	hdr->key_type = 0;
++	hdr->key_offset = hdr->total_size;
++	hdr->key_size = PAYLOAD_OFFSET - HEADER_OFFSET - hdr->key_offset;
++	hdr->total_size += hdr->key_size;
++
++	/* With padding above payload will have a 0x1000 offset in TZRAM */
++	hdr->payload_type = 0;
++	hdr->payload_offset = hdr->total_size;
++	/* Payload size has already been copied from the variant header */
++	hdr->total_size += hdr->payload_size;
++
++	/* Set the data range to be used as input for sha256 digest */
++	hdr->data_offset = hdr->digest_offset + SHA256_SUM_LEN;
++	hdr->data_size = hdr->total_size - hdr->data_offset;
++
++	sha256_starts(&ctx);
++	/* Header and data is used as input for sha256 digest */
++	sha256_update(&ctx, (void *)hdr, hdr->header_size);
++	sha256_update(&ctx, (void *)hdr + hdr->data_offset, hdr->data_size);
++	/* Write sha256 digest to the 32 bytes directly following the header */
++	sha256_finish(&ctx, (void *)hdr + hdr->digest_offset);
++}
++
++static int amlimage_extract_subimage(void *buf,
++				     struct image_tool_params *params)
++{
++	const struct amlimage_header *hdr = buf + HEADER_OFFSET;
++
++	/* Save payload as the subimage */
++	return imagetool_save_subimage(params->outfile,
++				       (ulong)hdr + hdr->payload_offset,
++				       hdr->payload_size);
++}
++
++static int amlimage_check_image_type(uint8_t type)
++{
++	if (type == IH_TYPE_AMLIMAGE)
++		return EXIT_SUCCESS;
++
++	return EXIT_FAILURE;
++}
++
++static int amlimage_vrec_header(struct image_tool_params *params,
++				struct image_type_params *tparams)
++{
++	const struct amlimage_variant *variant =
++		amlimage_get_variant(params->imagename);
++	const struct amlimage_header *hdr = &variant->hdr;
++
++	/* Use payload offset as header size, datafile will be appended */
++	tparams->header_size = PAYLOAD_OFFSET;
++
++	tparams->hdr = calloc(1, tparams->header_size);
++	if (!tparams->hdr) {
++		fprintf(stderr, "%s: Can't alloc header: %s\n",
++			params->cmdname, strerror(errno));
++		exit(EXIT_FAILURE);
++	}
++
++	/* Start with a copy of the variant header */
++	memcpy(tparams->hdr + HEADER_OFFSET, hdr, hdr->header_size);
++
++	/* Pad up to payload size of the variant header */
++	return hdr->payload_size - params->file_size;
++}
++
++/*
++ * amlimage parameters
++ */
++U_BOOT_IMAGE_TYPE(
++	amlimage,
++	"Amlogic Boot Image",
++	0,
++	NULL,
++	amlimage_check_params,
++	amlimage_verify_header,
++	amlimage_print_header,
++	amlimage_set_header,
++	amlimage_extract_subimage,
++	amlimage_check_image_type,
++	NULL,
++	amlimage_vrec_header
++);
 
 -- 
 2.51.0
