@@ -2,35 +2,34 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F721CAC58F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866B5CAC591
 	for <webhook@archiver.kernel.org>; Wed, 10 Sep 2025 18:13:53 +0000 (UTC)
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
- by mx.groups.io with SMTP id smtpd.web11.26239.1757528028640200641
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+ by mx.groups.io with SMTP id smtpd.web11.26240.1757528029668457924
  for <u-boot-amlogic@groups.io>;
  Wed, 10 Sep 2025 11:13:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=lqC8l7OW;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.174, mailfrom: funderscore@postmarketos.org)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=ofGe4W2p;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.189, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1757528026;
+	s=key1; t=1757528028;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2yJny4tvlIG5T7FzlmsIkwvxqVddMcEo3dOwIbStIwY=;
-	b=lqC8l7OWooPXrJ3UkOQKFzXLNIk23V6f+obg1xAKp1wYujI/R+l177SzGn0jp4uNOskx2r
-	FHutD/RoeAsIqECFFy4f+F1MBX+VZOcy2ewp0LgiIAo2295q0iqyN03EMvK0eew8r7tlio
-	MBhtkhxmbu2htKYR+/6yIPfialK5Nsa7QaWc9BDs6tCvm/SjU5mVKc76UyLPFKip3q2LCZ
-	6j7y7C6nCzVxlxxa1pD4QJbIB1/OhZ10gHP9KB6p+BWKmfDvmdWgQL1YeDuKOZBs5U7/Zs
-	2S0aIk6VahIXoJMtaRmln+xqrHpTP5RCRptYW5uaSBxVrbHG9WAl4P1689z1ng==
+	bh=p4HKzf41yblwb5ZEi3hIbNyvurngWxBH+txeqauhEWc=;
+	b=ofGe4W2pPUdohn4qlvl1r+lTeTob1xpmRCzyLXBNPYd8Pn3QBuCaeD0asgs83PTV0WelX9
+	Vwd9okgVb2NEts35iu+cnkd54XtZV/wFAwEAaVLSUj9UK/u5KtInL+Y/Tvty8KkUEmMk7A
+	Bl7WkaMQGuvZC1Nvm97K306fxvTHRkkBZuyVDF48A1p7g0cjbYPHuOBycNldSIIxCP4hlV
+	SgOBXnd3X1FZ7ZvMcOGvneipF1DJtr6XjouPBlKodcdECXdGY7SoOO/jIMuXXa/2BYvd2b
+	KF8df6PUPFhc06zdEsanZ9YPvYlII50aVmS8bS7IYnrWRahlEdbSO1YCM9osyg==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Wed, 10 Sep 2025 18:13:26 +0000
-Subject: [PATCH RFC v2 6/8] arm: dts: meson-gx-u-boot: add binman
- configuration for U-Boot SPL
+Date: Wed, 10 Sep 2025 18:13:27 +0000
+Subject: [PATCH RFC v2 7/8] board: amlogic: add kconfig fragments for SPL
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20250910-spl-gx-v2-6-8f52aac47e04@postmarketos.org>
+Message-Id: <20250910-spl-gx-v2-7-8f52aac47e04@postmarketos.org>
 References: <20250910-spl-gx-v2-0-8f52aac47e04@postmarketos.org>
 In-Reply-To: <20250910-spl-gx-v2-0-8f52aac47e04@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -41,21 +40,21 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3974;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5933;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=v8Gr4ZhPWSVTDlE8SX6DRPQu4fzbDLctblwM0JGaAa8=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBowb/SRWrfcgD7+SicnANFjSZ6Wln8Dr674GNBS
- rciaSozXCiJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaMG/0gAKCRCEr8vQ14ma
- A/LMD/9wNrrzZpHjtxpdNlnbrRnFH9wL2E1v+ftfWNKYgtZCzsIKaeCaXmLADUSt2TmIR42U/u7
- 0Z9NT2KxnvW+hMeD64QtLxazg0oMEItyutc1/Bnyhr00QFbbtLBvgVZhRLZiYo5Q9ruujP5iF39
- cOL316yX1XzKyHAll+n/hX5eG/4aKigK7Qbsln583uYBKsD8eNVkL6T4SwFsQTE2klUPdurllIe
- 6wSGrwpCP2kM/zE4hlh+SklGatLud5+JW294Vb+kDRbHftAiQFD/3h5GmkFLEGLzzgcjkgD3I3V
- 9uDtx4NTDpzi3C5IyIqghcWfu3R2lcY4nNhzA/VNvMrEpRPRvctSQcNF7tsHOhNh9g0cehfQYI9
- lG5auWf9EUxaZANqZzRES1QbsaIdBmwLgwm9Nq6mw8bUyJK9WIpW3TgdylG/n9i1wxA/rpzM45n
- iNoRg1jEkgMZ7G5G4uHFW5+pFeuN73FdZHiD7FuLvvF0i6Ml33ofwGL/WDbAXNy7wPCWMynYC9G
- y6oK/wXeWECAxvtOVDRp+ia5l1CjHpI+NsYSpIiviOhtteVt+NTIeguT68ysbawVBhbSmeXQGT5
- CdttUZtr39q5nO0ozHuhrrx7zLEUUbqZOCh/vRa968f+9gtBwVY/Q1jedKQab/FjiBHKO21+dsk
- mQgmkhPrirn4NzA==
+ bh=ZDCqaT1tKSS5vqVHVNkdoRL3WD8v9gNsgE+cMggnH4E=;
+ b=kA0DAAoBhK/L0NeJmgMByyZiAGjBv9KjIn34qvUT5Ja/irkeQ+myMm0xnr3VKH875pHJ3Y7Wq
+ 4kCMwQAAQoAHRYhBAMBvDf7VVys/XmL7oSvy9DXiZoDBQJowb/SAAoJEISvy9DXiZoDNsQP/i32
+ TBevWezByKn6WbLFQZ+d5P4b8LsW6IJIRpL9CwVNILSaFTeDp+hfeKmY8RkphmaNQxAnAt5HZnb
+ DB2ysrWDDfNi1l2mXvdnvW+BzdqS0knvWkcqn7TGiQPx9/HS4GUMb+PYwD1tscyb0VHZuuwW49d
+ iHoQiFdChlP1EdUCjugH+W5Z4HxGgVzy22vVY1sBrOXefprD4fkHfO1j/0RScDvQqAj2cf6uJ6l
+ iE8IPr/LUtXdNxnKav6vSnyLVQmKLHaSyPZaS7CBGtzhxwggjsoi27vF+1z9wWDUy5zAqa0i1ZS
+ zMObJTNRk648o5NYPZvh+kGmdBZ8yO8EeSAc4y1L//RVQlJvIcyqIvDe7PbFEpWVgHe43ILW4Di
+ XmfT25XJTZsDRxUxLT5AuWwpuFjqxJyVtIjnxlxHC+bZJoVYm4AnrYcKDUeMo5dFdDAR2GnQ305
+ lYUzETtu5+frc5o9baNuUibtDcT4t4tQg885NT1GRKMFb2lwxmxLztuiDR8aa2/bQtlLsC0JsHI
+ W1u795NRTU5N0zOfJhK+x/tp6jZRMQMU8HAVc6TwpEa1IIC12qMRJxLFsT9O68E1jc8wZw0J+GP
+ 7TXHrV3fy6Cwe8TU+0ApmJPFbawjQKRYvgTkvAQnPArqRI1OVqdnjNDyRfzJx1ufHNdCVx9IoKU
+ 73Su2
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
@@ -64,187 +63,207 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 10 Sep 2025 18:13:53 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2770
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2771
 
-Add binman configuration to meson-gx-u-boot.dtsi to automate building
-bootable images using amlimage.
+Add kconfig fragments for building SPL binaries for:
+ =C2=B7 ODROID-C2
+ =C2=B7 Videostrong KII Pro
+ =C2=B7 Libre Computer LePotato (1 GB and 2 GB variants)
 
-Signed-off-by: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
- arch/arm/dts/meson-gx-u-boot.dtsi | 142 ++++++++++++++++++++++++++++++++=
+ board/amlogic/p200/spl-odroid-c2.config           | 37 +++++++++++++++++=
++++++
+ board/amlogic/p200/spl-videostrong-kii-pro.config | 38 +++++++++++++++++=
 ++++++
- 1 file changed, 142 insertions(+)
+ board/amlogic/p212/spl-libretech-cc-1gb.config    | 36 +++++++++++++++++=
+++++
+ board/amlogic/p212/spl-libretech-cc-2gb.config    | 38 +++++++++++++++++=
+++++++
+ 4 files changed, 149 insertions(+)
 
-diff --git a/arch/arm/dts/meson-gx-u-boot.dtsi b/arch/arm/dts/meson-gx-u-=
-boot.dtsi
-index 9e0620f395e81048273690af4cee4b196ee7b0a7..d05f869c06ebefa08f5480327=
-e4a72bbaa9a5e94 100644
---- a/arch/arm/dts/meson-gx-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gx-u-boot.dtsi
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (c) 2019 BayLibre, SAS.
-  * Author: Maxime Jourdan <mjourdan@baylibre.com>
-+ * Copyright (c) 2023 Ferass El Hafidi <funderscore@postmarketos.org>
-  */
-=20
- / {
-@@ -15,6 +16,16 @@
- 	soc {
- 		bootph-all;
- 	};
+diff --git a/board/amlogic/p200/spl-odroid-c2.config b/board/amlogic/p200=
+/spl-odroid-c2.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..d5ea295bc6d281f3d7770cc84=
+1ccbae5aee468a4
+--- /dev/null
++++ b/board/amlogic/p200/spl-odroid-c2.config
+@@ -0,0 +1,37 @@
++#
++# U-Boot SPL fragment for odroid-c2
++#
 +
-+	chosen {
-+		stdout-path =3D "serial0:115200n8";
-+	};
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+#if defined(CONFIG_BINMAN)
-+	binman: binman {
-+		multiple-images;
-+	};
-+#endif
- };
-=20
- &vpu {
-@@ -30,3 +41,134 @@
- 	      <0x0 0xc883c000 0x0 0x1000>;
- 	reg-names =3D "hdmitx", "hhi";
- };
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+#if defined(CONFIG_MESON_GX) && defined(CONFIG_BINMAN)
-+/* binman configuration on GXBB and GXL */
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_SIZE=3D2048
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_TWO_IDENTICAL_RANKS=3Dy
+diff --git a/board/amlogic/p200/spl-videostrong-kii-pro.config b/board/am=
+logic/p200/spl-videostrong-kii-pro.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b3ba9d990840411ef3cef3db=
+3c6aa9d7085b3ef
+--- /dev/null
++++ b/board/amlogic/p200/spl-videostrong-kii-pro.config
+@@ -0,0 +1,38 @@
++#
++# U-Boot SPL fragment for videostrong-kii-pro
++#
 +
-+#if defined(CONFIG_MESON_GXBB)
-+#define BL31_ADDR 0x10100000
-+#else /* GXL */
-+#define BL31_ADDR 0x05100000
-+#endif
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+/*
-+ * On GXBB the base address of the SCP firmware doesn't matter as SPL wi=
-ll
-+ * send the firmware to the SCP anyway, and can get the base address fro=
-m the
-+ * FIT. On GXL it matters, as BL31 is supposed to send the firmware, so =
-set the
-+ * base address to what GXL BL2 would load the binary to.
-+ */
-+#define  SCP_ADDR 0x13c0000
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+&binman {
-+	u-boot-amlogic {
-+		filename =3D "u-boot-meson-with-spl.bin";
-+		pad-byte =3D <0xff>;
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_SIZE=3D2048
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_TWO_DIFF_RANKS=3Dy
 +
-+		mkimage {
-+			filename =3D "spl/u-boot-spl-signed.bin";
-+#if defined(CONFIG_MESON_GXBB)
-+			args =3D "-n", "gxbb", "-T", "amlimage";
-+#elif defined(CONFIG_MESON_GXL)
-+			args =3D "-n", "gxl", "-T", "amlimage";
-+#endif
+diff --git a/board/amlogic/p212/spl-libretech-cc-1gb.config b/board/amlog=
+ic/p212/spl-libretech-cc-1gb.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..f58bb69325980d582d2d826eb=
+bf28e4700965dfb
+--- /dev/null
++++ b/board/amlogic/p212/spl-libretech-cc-1gb.config
+@@ -0,0 +1,36 @@
++#
++# U-Boot SPL fragment for libretech-cc (1 GB variant)
++#
 +
-+			blob {
-+				size =3D <0xb000>; /* The BootROM loads 48K max (header is 4K) */
-+				filename =3D "spl/u-boot-spl.bin";
-+			};
-+		};
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+		fit: fit {
-+			description =3D "ATF and U-Boot images";
-+			#address-cells =3D <1>;
-+			fit,fdt-list =3D "of-list";
-+			fit,external-offset =3D <CONFIG_FIT_EXTERNAL_OFFSET>;
-+			fit,align =3D <512>;
-+			offset =3D <CONFIG_SPL_PAD_TO>;
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+			images {
-+				u-boot {
-+					description =3D "U-Boot";
-+					type =3D "standalone";
-+					os =3D "u-boot";
-+					arch =3D "arm64";
-+					compression =3D "none";
-+					load =3D <CONFIG_TEXT_BASE>;
-+					entry =3D <CONFIG_TEXT_BASE>;
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_DQS_CORR=3Dy
+diff --git a/board/amlogic/p212/spl-libretech-cc-2gb.config b/board/amlog=
+ic/p212/spl-libretech-cc-2gb.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..65d700558e65ca8d819f397a0=
+153be8bf07ae702
+--- /dev/null
++++ b/board/amlogic/p212/spl-libretech-cc-2gb.config
+@@ -0,0 +1,38 @@
++#
++# U-Boot SPL fragment for libretech-cc (2 GB variant)
++#
 +
-+					u-boot-nodtb {
-+					};
-+				};
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+				atf {
-+					description =3D "ARM Trusted Firmware";
-+					type =3D "firmware";
-+					os =3D "arm-trusted-firmware";
-+					arch =3D "arm64";
-+					compression =3D "none";
-+					load =3D <BL31_ADDR>;
-+					entry =3D <BL31_ADDR>;
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+					atf-bl31 {
-+						filename =3D "bl31.bin";
-+					};
-+					hash {
-+						algo =3D "sha256";
-+					};
-+				};
-+
-+				scp {
-+					description =3D "SCP firmware";
-+					type =3D "scp";
-+					arch =3D "arm"; /* The Cortex-M core is used as SCP */
-+					compression =3D "none";
-+					load =3D <SCP_ADDR>;
-+
-+					scp {
-+						filename =3D "scp.bin";
-+					};
-+					hash {
-+						/*
-+						 * The hash is used by the SCP and passed to it
-+						 * by U-Boot SPL.
-+						 */
-+						algo =3D "sha256";
-+					};
-+				};
-+
-+				@fdt-SEQ {
-+					description =3D "NAME";
-+					type =3D "flat_dt";
-+					compression =3D "none";
-+				};
-+
-+			};
-+			configurations {
-+				default =3D "@config-DEFAULT-SEQ";
-+				@config-SEQ {
-+					description =3D "NAME.dtb";
-+					fdt =3D "fdt-SEQ";
-+					firmware =3D "atf";
-+					loadables =3D "scp", "u-boot";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&vpu {
-+	/delete-property/ bootph-all;
-+};
-+
-+&apb {
-+	bootph-all;
-+};
-+
-+&sd_emmc_b {
-+	bootph-all;
-+};
-+
-+&sd_emmc_c {
-+	bootph-all;
-+};
-+#endif
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_SIZE=3D2048
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_DQS_CORR=3Dy
++CONFIG_DRAM_TWO_IDENTICAL_RANKS=3Dy
 
 --=20
 2.51.0
