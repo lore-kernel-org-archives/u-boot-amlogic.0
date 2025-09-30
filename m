@@ -2,149 +2,149 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566BECAC599
-	for <webhook@archiver.kernel.org>; Tue, 16 Sep 2025 07:17:32 +0000 (UTC)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
- by mx.groups.io with SMTP id smtpd.web11.1979.1757720827061701829
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D17CAC5B8
+	for <webhook@archiver.kernel.org>; Tue, 30 Sep 2025 18:37:19 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web11.1316.1759257430258944661
  for <u-boot-amlogic@groups.io>;
- Fri, 12 Sep 2025 16:47:07 -0700
+ Tue, 30 Sep 2025 11:37:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=howVF15O;
- spf=pass (domain: chromium.org, ip: 209.85.218.41, mailfrom: sjg@chromium.org)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b043a33b060so370770166b.1
-        for <u-boot-amlogic@groups.io>; Fri, 12 Sep 2025 16:47:06 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=mBU7WdmE;
+ spf=pass (domain: linaro.org, ip: 209.85.128.42, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-46e4ad36541so38850125e9.0
+        for <u-boot-amlogic@groups.io>; Tue, 30 Sep 2025 11:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1757720825; x=1758325625; darn=groups.io;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=79zWTKys9C37Th56GSgm3O4Sw5T87FkU4DpxQQvwWsI=;
-        b=howVF15OG3u+ru4MyEED+z5HOUDF2WGBW9HIH7+mCO11/m06h5yFCqcxM0O+g5PATN
-         37k7ZMmisjGzTOaN94xlu48k0aF1wqypIFE9sBVf/0hn0PFXMC1MZ5ZdjKMghxKlr8++
-         rrtILrlhLH7UBYHKzaFgPEHEjR7g2Jqh7+lOM=
+        d=linaro.org; s=google; t=1759257429; x=1759862229; darn=groups.io;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ONjENpCRmhqAi8gk6hWzUM8u623rvhaxpiHxoiPqHwY=;
+        b=mBU7WdmEEeKLF7y2i3I5u9BUiFRf5MW7CS5huyVWLyi7SAoSKwij7l9mwvMxdRgwfo
+         KBEv6C6GQJZacHlnjd86MliL/9cMJruwI25RBqT1TsiXBJ6wGcDIMc1yye0n2RbnD4gr
+         08UVKFnnEHIaKAwf154XpOVI5WjMb36SKQ2oT4LYcoM/MOqcZEIvTV+/gEGxLLppq5sB
+         nYAAMf2n9Vvlx2WYLFJK5HrhXC0ljSzWW9hTxzHkQxNIlNS+iAXer5hf8t+O8nv2Zn9+
+         Vhj7VKXBFdUwdukF6QwFlfDmOXsOa3/nBfCwod1xH286NdahVMg/EoOVgKyn9zLWuF22
+         6sJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757720825; x=1758325625;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=79zWTKys9C37Th56GSgm3O4Sw5T87FkU4DpxQQvwWsI=;
-        b=YerJSj8YHCPIoHmiuRW2J/1JYyx+iaXAmpIlIH6ZaXhtAHxmhSKsMVJ3/Cdt6ZXKaT
-         VAzlD9jFC2vX3Wpb/GMMioToKYlKEKJQCV4khEMETJPw6zifVhI+hxFvJ2e2Jv6rgIgV
-         sSuaUa1DjgqPO37JHEKN1rFqEDzMZ525DilvKEeB5j0c/zf286NH7gJ9+ZqtnIIysYxG
-         yiEQESa+3ySMH/8HtT53v8JbtXOZ/RnysOfyrFpKZKe40Xw1jBkQ9p2WtmHTMmPR6o4E
-         Cm8/Un1n7gItwNLD95paMoPmtoxzX92aq8WqU+JLJR6KhtYUr0UpUJkKvHIC0qpFqfut
-         SFOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkJcTE/WtSfEMYxi4EDIBDP89O7ZfhJjpsxMtvxePHs0Am+yjqYQlDPNcwNPHdfByVUCop/fG9317w/ypCeg==@groups.io
-X-Gm-Message-State: AOJu0Yx4FILjlFB89yUkVecCVEg0sPG2g51PJEV95PMw4VvNw3YXrEeY
-	7X1xli0+IMIcA+41eEo8/Ov/nbmbFxt3r0Ufph/WRroKp1kXcEYnBJJ8G0LkI2NrbI12gY4jlUq
-	+hSYtm8sQDOrftBhtxUZkMiGzBlfW/3LDGul0NXP7WR/zGWYSp48=
-X-Gm-Gg: ASbGncv/cxS4zB3/VxgYSnMgUgx5zTOB8IO+U/SjuxecPTQ4xb6X3I8du163ZZfMqPT
-	/H/9ZsClQfM8F3uwRoB6t0caqcEakZhkrAPnC/s6CkPpy1vRgG45P8LeWU6NmnLoUhJGz5y3tiQ
-	TrWHiThhTus0zR3a76F0xl67YLHH43U7jEUTB9PO836iGvdTkHyHfLml2fY2RqjaYa3VZLp7YMo
-	xpl590Ht1MH0lDy
-X-Google-Smtp-Source: AGHT+IHXO48+SKSHFsZpdO6xy0evtTY/Vr6qE+/XklBq73RrA1L6ndXzGZUAntriTBvuBugXajD8T5ON8xYJjvpoXEo=
-X-Received: by 2002:a17:907:3f94:b0:b04:854b:bced with SMTP id
- a640c23a62f3a-b07c3574f95mr437716166b.20.1757720482439; Fri, 12 Sep 2025
- 16:41:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759257429; x=1759862229;
+        h=content-transfer-encoding:organization:autocrypt:content-language
+         :cc:to:reply-to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONjENpCRmhqAi8gk6hWzUM8u623rvhaxpiHxoiPqHwY=;
+        b=o1IxKCOksuR1ypRy8TZ3if3eTghYeFDZRjeD9fXNU511HvfxgvqCHFkAXLmGo09zFO
+         hZCPaleGnJYP6+i6jde+WhbXU0J9KtmQVt0qr6O4lmq+Ro/5oxDOXagqU8uKP74kOPzM
+         q2M0dLjz3mTCt9eDvdB9U692+ZbSR2sMuW0a/E2wSgs0n7Yed1SV8dZa+5hr9Ip+Y/bD
+         bCb7DKfKAvtXQx/FqDW4lFYM+71U/jUgXyuUnI834B5aPLldT4sINKOS9kClufGJbhdd
+         3xu0cITuTrJNW3EB0+vk3bBYRYxiZXOlV0L7hOiD0HXA7Y+42Ebzm9LKfzgfflYiH4po
+         wE5g==
+X-Gm-Message-State: AOJu0YwAt45++nq7Y0vlgy9PjdvJxBormSKdKReqSISHwbjX7HZmwB3t
+	Ddp7SBk4VKkN+foWeaPANTVBvor6GWKbbQS965QAY2IRr/4cTSAQfpv9OxY2u123iYaP64+NF0b
+	RL+Zx
+X-Gm-Gg: ASbGnct9rjiH8lQ7JtctB85POPPDuTKhZNhYsqUDYHldNjqGP+JIz6mK6/Mwgbjo6/M
+	gIp2NjS5UAed4HMluoHCNhHiP8KxUXHH4/okybeneGCW930bT8IuBxxW1xEMxsUr2aGpo3CAETO
+	xBNuDiQyW7IiRWkU/lVApUG8/ISRnK78K50bAI8NSzX08IvEzjs7qME/3KINwjgEAnqN/0mst5q
+	qqeuI3ZBb93doIIP85Eax54mGXWk7Btf4SIbwUBhztu/IpxHz0fIN/hYHfTHlYfagiQocYRdtXI
+	atJs5RotIZ/XY8gCIPJVdwlu1X5qHFbAsxcv6VcAL4mSKGXLfvEZvh9eLTwxeKA6cVSW2IHGqA6
+	KWFw/qD85sf74FMBLmBAeWFbNpH1LfdO50unTCdwlgO1Mz0hzZzAiqIivlUFCYWTqF+XT1x+aCv
+	vtn5qBAux8dyssOhhozWwslBPJ8vTQd7Hp+A==
+X-Google-Smtp-Source: AGHT+IGWQlHfGrMuIA7R4JZCPoXvtDiDSv4tTOgiLMZjF0GHz3YeALSoEY6c5vPFJbiSNNPqVjtugQ==
+X-Received: by 2002:a05:600c:37cc:b0:46e:3cd9:e56f with SMTP id 5b1f17b1804b1-46e6126ae01mr7415875e9.6.1759257428379;
+        Tue, 30 Sep 2025 11:37:08 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:9459:14e0:525e:d859? ([2a01:e0a:3d9:2080:9459:14e0:525e:d859])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e619c3b75sm4430225e9.7.2025.09.30.11.37.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Sep 2025 11:37:08 -0700 (PDT)
+Message-ID: <e59bed17-8d4b-4a08-9091-e8805f7df1d8@linaro.org>
+Date: Tue, 30 Sep 2025 20:37:07 +0200
 MIME-Version: 1.0
-References: <20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org>
- <20250907-spl-gx-v1-4-37395d9ff5af@postmarketos.org> <829fe59a-10e5-4cd2-a032-d293d87f68d1@gmx.de>
- <DCPE9A29ADNG.5XDSJ73VEPCS@postmarketos.org> <3875c210-7d29-4bca-b535-0522dc615cc8@canonical.com>
- <DCQ2ZF3T8VMM.1JN4QJ324NFM2@postmarketos.org>
-In-Reply-To: <DCQ2ZF3T8VMM.1JN4QJ324NFM2@postmarketos.org>
-From: Simon Glass <sjg@chromium.org>
-Date: Fri, 12 Sep 2025 17:41:10 -0600
-X-Gm-Features: AS18NWBBJnqHfeUlWOJUyD3_RrGLN53jEh2Tweeeqg5LsClAv1lON7yp3AOgqlY
-Message-ID: <CAFLszTjxY6c0unXvdcjC36hhpB-BwxM_FcgpRdkXBa+V3GynvQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/9] serial: serial_meson: add minimal non-DM driver
-To: Ferass El Hafidi <funderscore@postmarketos.org>
-Cc: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
-	~postmarketos/upstreaming@lists.sr.ht, Tom Rini <trini@konsulko.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Peng Fan <peng.fan@nxp.com>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Beniamino Galvani <b.galvani@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-next-20250930
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 16 Sep 2025 07:17:32 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2784
+ <u-boot-amlogic@groups.io>; Tue, 30 Sep 2025 18:37:19 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2786
 
-Hi Ferass,
+Hi Tom,
 
-On Thu, 11 Sept 2025 at 09:37, Ferass El Hafidi
-<funderscore@postmarketos.org> wrote:
->
-> On Wed Sep 10, 2025 at 8:30 PM UTC, Heinrich Schuchardt wrote:
-> > On 9/10/25 22:14, Ferass El Hafidi wrote:
-> >> On Wed Sep 10, 2025 at 7:53 PM UTC, Heinrich Schuchardt wrote:
-> >>> <...>
-> >>>> +static int meson_serial_getc(void)
-> >>>> +{
-> >>>> +  struct meson_uart *const uart = (struct meson_uart *)CONFIG_VAL(DEBUG_UART_BASE);
-> >>>> +  uint32_t status = readl(&uart->status);
-> >>>> +
-> >>>> +  if (status & AML_UART_RX_EMPTY)
-> >>>> +          return -EAGAIN;
-> >>>> +
-> >>>> +  if (status & AML_UART_ERR) {
-> >>>> +          u32 val = readl(&uart->control);
-> >>>> +
-> >>>> +          /* Clear error */
-> >>>> +          val |= AML_UART_CLR_ERR;
-> >>>> +          writel(val, &uart->control);
-> >>>> +          val &= ~AML_UART_CLR_ERR;
-> >>>> +          writel(val, &uart->control);
-> >>>> +
-> >>>> +          /* Remove spurious byte from fifo */
-> >>>> +          readl(&uart->rfifo);
-> >>>> +          return -EIO;
-> >>>> +  }
-> >>>> +
-> >>>> +  return readl(&uart->rfifo) & 0xff;
-> >>>> +}
-> >>>> +
-> >>>> +static int meson_serial_tstc(void)
-> >>>> +{
-> >>>> +  struct meson_uart *const uart = (struct meson_uart *)CONFIG_VAL(DEBUG_UART_BASE);
-> >>>
-> >>> CONFIG_SPL_DEBUG_UART_BASE only exists for CONFIG_DEBUG_UART=y and
-> >>> CONFIG_SPL=y. Shall all configurations depend on CONFIG_DEBUG_UART=y?
-> >>>
-> >>> Creating this dependency does not look right to me.
-> >>>
-> >>
-> >> All Amlogic defconfigs have CONFIG_DEBUG_UART enabled, but I can remove
-> >> the dependency on CONFIG_DEBUG_UART_BASE if you think it doesn't look
-> >> right.
-> >
-> > We should avoid the possibility of build failures for changed configuration.
-> >
-> > Will CONFIG_MESON_SERIAL depend on CONFIG_DEBUG_UART
-> > or will CONFIG_ARCH_MESON select CONFIG_DEBUG_UART?
->
-> Then it might be best to not use DEBUG_UART_BASE.  I'll fix that for
-> next revision.  Thanks!
+Here's a small set of Amlogic changes for the next release.
 
-I've been thinking about doing something about a minimal UART (and
-i2c) for a while.
+Thanks,
+Neil
 
-Before driver model we just called serial_putc() and *the* serial
-driver would handle it. Can we do something similar here?
+The following changes since commit 9710d98e8942151fc0c62d54100d9d27e8263d04:
 
-My suggestion for an API:
+   Merge tag 'doc-next-2025-09-27' of https://source.denx.de/u-boot/custodians/u-boot-efi into next (2025-09-27 09:49:01 -0600)
 
-CONFIG_SERIAL_ONE to indicate that driver model is not used for serial
+are available in the Git repository at:
 
-Then in serial-uclass.c update serial_putc() to use that config and
-call serial_one_putc(int ch), with that function being defined in the
-only serial driver that is compiled in. Update serial_init() to call
-serial_one_init().
+   https://source.denx.de/u-boot/custodians/u-boot-amlogic.git tags/u-boot-amlogic-next-20250930
 
-That way we keep things compatible with driver model and avoid
-building on the old serial.c
+for you to fetch changes up to d521fa32cc692a44c7c11d4b2a86f371d614e727:
 
-This is similar to how the debug UART, but the debug UART is special.
+   ARM: amlogic: fix JetHub D1 eth mac fallback generation (2025-09-30 20:32:15 +0200)
 
-Regards,
-Simon
+----------------------------------------------------------------
+- set reversed bit when using internal phy on GXL SoCs
+- support gpio toggle command for amlogic gpio
+- fix saradc
+- remove unreachable in meson clk driver
+- Stop premature exit from for loop in meson pwm driver
+- fix JetHub D1 eth mac fallback generation
+
+----------------------------------------------------------------
+Andrew Goodbody (3):
+       adc: meson-saradc: uint cannot be less than zero
+       clk: meson: Remove unreachable code
+       pwm: meson: Stop premature exit from for loop
+
+Neil Armstrong (1):
+       net: mdio: mux-meson-gxl: set reversed bit when using internal phy
+
+Viacheslav Bocharov (1):
+       ARM: amlogic: fix JetHub D1 eth mac fallback generation
+
+Yang Xiwen (1):
+       pinctrl: meson: support gpio toggle command
+
+  board/amlogic/jethub-j100/jethub-j100.c | 22 +++++++++-------------
+  drivers/adc/meson-saradc.c              |  8 ++++----
+  drivers/clk/meson/g12a.c                |  2 --
+  drivers/net/mdio_mux_meson_gxl.c        |  3 ++-
+  drivers/pinctrl/meson/pinctrl-meson.c   | 20 +++++++++++++++++++-
+  drivers/pwm/pwm-meson.c                 |  3 ++-
+  6 files changed, 36 insertions(+), 22 deletions(-)
+
 
