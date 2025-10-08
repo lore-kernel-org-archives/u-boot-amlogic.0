@@ -2,34 +2,36 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3C4CCD18A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F12CCCD187
 	for <webhook@archiver.kernel.org>; Wed,  8 Oct 2025 10:01:04 +0000 (UTC)
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
- by mx.groups.io with SMTP id smtpd.web10.12151.1759917663986938721
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+ by mx.groups.io with SMTP id smtpd.web10.12147.1759917660347165156
  for <u-boot-amlogic@groups.io>;
- Wed, 08 Oct 2025 03:01:04 -0700
+ Wed, 08 Oct 2025 03:01:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=dcRY/PSK;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.178, mailfrom: funderscore@postmarketos.org)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=UdQnPeZH;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.179, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1759917662;
+	s=key1; t=1759917658;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=p4HKzf41yblwb5ZEi3hIbNyvurngWxBH+txeqauhEWc=;
-	b=dcRY/PSKF2A2jZ+CRVrTTJ2FqX6JgVIJ7HthewF7xQWrBAxlGBCMHvbL+vpKzWKkEGuQXs
-	UJu4blrFsLOvtf+5wJufGzRAcPXaHmh3NbgaIF8/rnAhi1byhZVtk1lI4VmOcR81BhtwJI
-	zjCVZG393SGU/txKXMoA6lDANPXwFo1qSW22PofXA18Pb8Qlhlcr3LDqH4hiz4M3TmdYBg
-	BOFRGCfhEHp8XdZEjvXVfcq/zPVAiq28Roun951g6fR04o6RxCkiXd34oVOSujMi96drtc
-	wpoNsqojspvNJvMvjqz9ZTjN9HcRdWl0rOqwUfNGBgcXv5Rp2xrDJeiR30GBZg==
+	bh=2T83UHonUH+eaX6WxTx2q2pyWWiar3PJRmfB/HZz0Xc=;
+	b=UdQnPeZHviwTyWLCsnQKILLQDmb3pwO3T9vFwnXqQN/8b9w2OnlVyUWLK6VOc7MVYqr4MA
+	kAMF3CZEN7rYzTOFNfhyCdLwhNDV4ppC3N+OJaLf++3s5CIzYp1oS7LcZjX4S041PrTP2u
+	3NrrHlyo6Nqmw5K5GKoUolU9ey0Mb0JbAfxHghBvoRi2stWIraEEKsPlEeGMMnqmHVDtD0
+	BaouAHDDIZtmG7QfNYDT+NN8HfinfyK3GPZ9s4rcSC2MLLjikKPddLo1OnslclUAPE7WCb
+	3yfLtkWOiN+ZH1ztbZW4H3+pl/io6ePuQyk6MtA5AwTgb6Z3AVYw3lQNt+Lgww==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Wed, 08 Oct 2025 10:00:43 +0000
-Subject: [PATCH RFC v3 7/8] board: amlogic: add kconfig fragments for SPL
+Date: Wed, 08 Oct 2025 10:00:40 +0000
+Subject: [PATCH RFC v3 4/8] arm: meson: initial u-boot SPL support for GX
+ SoCs
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20251008-spl-gx-v3-7-5999637df4b9@postmarketos.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251008-spl-gx-v3-4-5999637df4b9@postmarketos.org>
 References: <20251008-spl-gx-v3-0-5999637df4b9@postmarketos.org>
 In-Reply-To: <20251008-spl-gx-v3-0-5999637df4b9@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -40,232 +42,727 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5933;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=21407;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=ZDCqaT1tKSS5vqVHVNkdoRL3WD8v9gNsgE+cMggnH4E=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBo5jZU2Oo6C2ZAfnuNpOK2w2BiufMqObITxPOdp
- joA18uSJ2GJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaOY2VAAKCRCEr8vQ14ma
- A8wiD/4pct6GtOevU2XtrSJzUgK1qSHAu2QgLC6HvwbyL6+MKkg5KVs1x9VBhi12dqx8Pqjbdmw
- i4Fd4Cwvr1pi1GI8UI8En9RiZI/3vlbhAmsIBFYC8cL77LmQheWX4/aZnH8dClkY9D57jgRM9Bh
- u4Up3kvN7t77mZAG9cIqpF0vxcIYCI4kHoM4mNn1GOSI0rGtd0cvAvSGRw6lsDy3xysxRtJ3pNt
- WbwbtDHqk0UxmmI4EAj8Cii+XhpIOtfaJNea5eWL+oKiEvWwXTPnd1tv1U6PI4NHadYlo6cH+UY
- kLp9jvMwR2FaXbfN2UomBv7eK8/k0sQgCl0bsERQikmjQaoKCo1Q6kEC1ss+g2Tj3PWF3jR6mBK
- iuhT56feTxYBaOZ7vYYF8+eB1qeIzuSLngPSLBZH8fQgY1AVJOPPcfqfRKTx5Euu35a6waAyOB/
- DWJFRovHZetJJXXuKg+8jT6Tz5zmeLtIBWTwoC3J+f4IZMMEJBPiMQP2dio2PQAxeXlVtU5OhJ3
- el5K1PKo6/j3EG9XSgOJtlK33R5iVd1RWYPQL0pPgMqZDxPGg0MwmcprIrjv5555KYA0i3956mo
- jszh4BkuzhauhyyuQJC7wA6ZilEVmvEf/rw778NXqElCmvPxfmdUfiCiOonhZcZ3xvzSROFxKZz
- VImNdypeeRk7V4g==
+ bh=Yc8Qcuf1TuPM9FxLaw2dhNuNb8nEuG2OF7y1TDgomPA=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBo5jZThAY4kaZSc+lOx1fO+ciO5JYjxbJjYnrGf
+ IdIfpn8856JAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaOY2UwAKCRCEr8vQ14ma
+ A08cD/0WtSziHwfUwEWwzBkTXPGHBpJN0n5Lf2jkKT5Mu5dtL2Ggw+TUzabvhzddXP5RY79gAlt
+ DnUjnL2CkVudnrUivzCLaV9QC/oWaS+rDK29hJnaqHuTElWv4j8DU0rRsvILyr6ZpNAYeA3UF+a
+ /b23w+M3uHxXxzfF3aiirNZoN4Yw+Mo9r5FdIG6M7B+vI94DErGdkpOwz10QeyrECeKC9/Y7Nmw
+ tg/jBqkf6xAQR6Es7mi1K/C4tNc3gjVEregCq/58YRkZjLDdnnLhtYTdhr3BrtkEKPLDVXhkEEh
+ oNeApXxaGyNmkB10F7S45rzeLw0UlS3CQWpDCqx/W7Ucwa8V5MkT9mPxx5zSMabj16Nin6IugJS
+ QQhdIr5hbNK+1LgNeaH6MQpxRDbx1XpvoupATiXHmZPQj9cpOgMhj/2UABRC2RzG4v5XhDXa/nT
+ Qwwe0Aa/tyIGp7bgJm+9ibDXiUz9gNw5WneX1SJBxvkJxV+atIMfs/W+fjPIMq2nIWOZtNphD+e
+ wOC4WHpQZb9R70LYMTO5vEjtkBUxKVM/bQ2pnVQ5R/VbkiZUVXBtTWMRRC2JaQ6dwiSGoENsgxd
+ jZ89H78C0BEWOe6cMixmwfblmw7Q1X03UFG1L0h6trukfz7tFt5b1JnyF3bhXRXnhZ0QN9zbP4W
+ xEeh8B+nocCpg6w==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
-Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 08 Oct 2025 10:01:04 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2796
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2793
 
-Add kconfig fragments for building SPL binaries for:
- =C2=B7 ODROID-C2
- =C2=B7 Videostrong KII Pro
- =C2=B7 Libre Computer LePotato (1 GB and 2 GB variants)
+Add initial boilerplate for U-Boot SPL support on Amlogic.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
- board/amlogic/p200/spl-odroid-c2.config           | 37 +++++++++++++++++=
-+++++
- board/amlogic/p200/spl-videostrong-kii-pro.config | 38 +++++++++++++++++=
-++++++
- board/amlogic/p212/spl-libretech-cc-1gb.config    | 36 +++++++++++++++++=
-++++
- board/amlogic/p212/spl-libretech-cc-2gb.config    | 38 +++++++++++++++++=
-++++++
- 4 files changed, 149 insertions(+)
+ arch/arm/include/asm/arch-meson/clock-gx.h |  14 +++
+ arch/arm/include/asm/arch-meson/gx.h       |  36 +++++++
+ arch/arm/mach-meson/Kconfig                |  42 +++++++-
+ arch/arm/mach-meson/Makefile               |   7 ++
+ arch/arm/mach-meson/board-common.c         |  11 ++
+ arch/arm/mach-meson/spl-gx.c               | 168 +++++++++++++++++++++++++++++
+ arch/arm/mach-meson/spl-gxbb.c             | 113 +++++++++++++++++++
+ arch/arm/mach-meson/spl-gxl.c              |  39 +++++++
+ arch/arm/mach-meson/spl.c                  | 123 +++++++++++++++++++++
+ 9 files changed, 552 insertions(+), 1 deletion(-)
 
-diff --git a/board/amlogic/p200/spl-odroid-c2.config b/board/amlogic/p200=
-/spl-odroid-c2.config
+diff --git a/arch/arm/include/asm/arch-meson/clock-gx.h b/arch/arm/include/asm/arch-meson/clock-gx.h
+index 13a2e7688fc569d8a217b424306570514ab011f4..72e4bac7aad5bf2d7bdf6b1b0a83aefe1720bcf7 100644
+--- a/arch/arm/include/asm/arch-meson/clock-gx.h
++++ b/arch/arm/include/asm/arch-meson/clock-gx.h
+@@ -87,6 +87,7 @@
+ #define HHI_VDAC_CNTL0			0x2F4 /* 0xbd offset in data sheet */
+ #define HHI_VDAC_CNTL1			0x2F8 /* 0xbe offset in data sheet */
+ 
++#define HHI_SYS_PLL_CNTL1		0x2fc /* 0xbf offset in data sheet */
+ #define HHI_SYS_PLL_CNTL		0x300 /* 0xc0 offset in data sheet */
+ #define HHI_SYS_PLL_CNTL2		0x304 /* 0xc1 offset in data sheet */
+ #define HHI_SYS_PLL_CNTL3		0x308 /* 0xc2 offset in data sheet */
+@@ -114,4 +115,17 @@
+ 
+ ulong meson_measure_clk_rate(unsigned int clk);
+ 
++#if defined(CONFIG_SPL_BUILD)
++#define HHI_SCC_CNTL0_FINAL_MUX_SEL	BIT(11)
++#define HHI_SCC_CNTL0_FINAL_DYN_MUX_SEL	BIT(10)
++#define HHI_SCC_CNTL0_MUX0_DIVN_TCNT	(0x3f << 4)
++#define HHI_SCC_CNTL0_MUX1_DIVN_TCNT	(0x3f << 20)
++#define HHI_SCC_CNTL0_POSTMUX0	BIT(2)
++#define HHI_SCC_CNTL0_POSTMUX1	BIT(18)
++#define HHI_SCC_CNTL0_PREMUX0	3
++#define HHI_SCC_CNTL0_PREMUX1	(3 << 16)
++#define HHI_SCC_CNTL0_DYN_ENABLE	BIT(26)
++#define HHI_SCC_CNTL0_BUSY	BIT(28)
++#endif
++
+ #endif
+diff --git a/arch/arm/include/asm/arch-meson/gx.h b/arch/arm/include/asm/arch-meson/gx.h
+index 8cfc6b00329f252bbf452dba00f8ad56b480c707..b4cb2a5ddbc9cef5d9133339c12aaa5bb62b4721 100644
+--- a/arch/arm/include/asm/arch-meson/gx.h
++++ b/arch/arm/include/asm/arch-meson/gx.h
+@@ -12,7 +12,10 @@
+ 
+ #define GX_FIRMWARE_MEM_SIZE	0x1000000
+ 
++#define GX_MB_SRAM_BASE		0xd9013800
+ #define GX_AOBUS_BASE		0xc8100000
++#define GX_SEC_HIU_MB_BASE	0xda83c400
++#define GX_SEC_AOBUS_BASE	0xda100000
+ #define GX_PERIPHS_BASE	0xc8834400
+ #define GX_HIU_BASE		0xc883c000
+ #define GX_ETH_BASE		0xc9410000
+@@ -24,6 +27,10 @@
+ #define GX_AO_SEC_GP_CFG3	GX_AO_ADDR(0x93)
+ #define GX_AO_SEC_GP_CFG4	GX_AO_ADDR(0x94)
+ #define GX_AO_SEC_GP_CFG5	GX_AO_ADDR(0x95)
++#define GX_AO_SEC_SD_CFG15	GX_AO_ADDR(0x8f)
++
++#define GX_SEC_AO_ADDR(off)	(GX_SEC_AOBUS_BASE + ((off) << 2))
++#define GX_SEC_AO_SEC_GP_CFG0	GX_SEC_AO_ADDR(0x90)
+ 
+ #define GX_AO_BOOT_DEVICE	0xF
+ #define GX_AO_MEM_SIZE_MASK	0xFFFF0000
+@@ -41,9 +48,38 @@
+ #define GX_GPIO_IN(n)		GX_PERIPHS_ADDR(_GX_GPIO_OFF(n) + 1)
+ #define GX_GPIO_OUT(n)	GX_PERIPHS_ADDR(_GX_GPIO_OFF(n) + 2)
+ 
++/* Mailbox registers */
++#define GX_SEC_HIU_MB_ADDR(off)	(GX_SEC_HIU_MB_BASE + ((off) << 2))
++#define GX_SEC_HIU_MAILBOX_SET_0	GX_SEC_HIU_MB_ADDR(0x01)
++#define GX_SEC_HIU_MAILBOX_STAT_0	GX_SEC_HIU_MB_ADDR(0x02)
++#define GX_SEC_HIU_MAILBOX_CLR_0	GX_SEC_HIU_MB_ADDR(0x03)
++
++/* Mailbox commands */
++#define GX_MB_CMD_SHA	0xc0de0001
++#define GX_MB_CMD_DATA	0xc0dec0de
++#define GX_MB_CMD_END	0xe00de00d
++#define GX_MB_CMD_OP_SHA	0xc0de0002
++#define GX_MB_CMD_DATA_LEN	0xc0dec0d0
++
++/* PIN_MUX registers */
++#define GX_PIN_MUX_REG1		(0xda834400 + (0x2d << 2))
++#define GX_PIN_MUX_REG2		(0xda834400 + (0x2e << 2))
++#define GX_PIN_MUX_REG3		(0xda834400 + (0x2f << 2))
++#define GX_PIN_MUX_REG7		(0xda834400 + (0x33 << 2))
++
++/* PWM registers */
++#define GX_PWM_PWM_B	(0xc1100000 + (0x2155 << 2))
++#define GX_PWM_PWM_D	(0xc1100000 + (0x2195 << 2))
++#define GX_PWM_MISC_REG_CD	(0xc1100000 + (0x2196 << 2))
++#define GX_PWM_MISC_REG_AB	(0xc1100000 + (0x2156 << 2))
++
+ /* Non-DM MMC init */
+ #if CONFIG_IS_ENABLED(MMC) && !CONFIG_IS_ENABLED(DM_MMC)
+ struct mmc *meson_mmc_init(int mmc_no);
+ #endif
+ 
++#if !CONFIG_IS_ENABLED(WDT_MESON_GXBB) && defined(CONFIG_SPL_BUILD)
++#define GX_WDT_CTRL_REG		0xc11098d0
++#endif
++
+ #endif /* __GX_H__ */
+diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+index 7570f48e25fe477ce4dfb1eb608ed07b3a83d27f..8d1bf91e98b49822d036f10b5737a73247bc83c6 100644
+--- a/arch/arm/mach-meson/Kconfig
++++ b/arch/arm/mach-meson/Kconfig
+@@ -17,6 +17,8 @@ config MESON64_COMMON
+ config MESON_GX
+ 	bool
+ 	select MESON64_COMMON
++	select SUPPORT_SPL
++	select BINMAN if SPL
+ 
+ choice
+ 	prompt "Platform select"
+@@ -69,7 +71,7 @@ config SYS_SOC
+ 	default "meson"
+ 
+ config SYS_MALLOC_F_LEN
+-	default 0x1000
++	default 0x2000
+ 
+ config SYS_VENDOR
+ 	string "Vendor name"
+@@ -93,4 +95,42 @@ config SYS_BOARD
+ 	  Based on this option board/<CONFIG_SYS_VENDOR>/<CONFIG_SYS_BOARD> will
+ 	  be used.
+ 
++if MESON_GX && SPL
++config SPL_SYS_MALLOC_F_LEN
++	default 0x2000
++
++choice
++	prompt "Set VDDEE init voltage"
++	default SPL_MESON_GX_VDDEE_1000MV
++	help
++	  This option is used to set the VDDEE voltage on boot up.
++	  If unsure, leave it to the board default.
++
++config SPL_MESON_GX_VDDEE_1000MV
++	bool "Set VDDEE to 1000 mv"
++
++config SPL_MESON_GX_VDDEE_1100MV
++	bool "Set VDDEE to 1100 mv"
++
++endchoice
++
++choice
++	prompt "Set VCCK init voltage"
++	default SPL_MESON_GX_VCCK_1100MV
++	help
++	  This option is used to set the VCCK voltage on boot up.
++	  If unsure, leave it to the board default.
++
++config SPL_MESON_GX_VCCK_1000MV
++	bool "Set VCCK to 1000 mv"
++
++config SPL_MESON_GX_VCCK_1100MV
++	bool "Set VCCK to 1100 mv"
++
++config SPL_MESON_GX_VCCK_1120MV
++	bool "Set VCCK to 1120 mv"
++
++endchoice
++
++endif
+ endif
+diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
+index 535b0878b9105e7a83729bea65fa4cd70cd4beac..798b20df78ad42b306f8ebac57e0acae167b70ee 100644
+--- a/arch/arm/mach-meson/Makefile
++++ b/arch/arm/mach-meson/Makefile
+@@ -4,6 +4,13 @@
+ 
+ obj-y += board-common.o sm.o board-info.o
+ obj-$(CONFIG_MESON_GX) += board-gx.o
++ifeq ($(CONFIG_SPL_BUILD),y)
++obj-$(CONFIG_MESON_GXBB) += spl-gxbb.o
++obj-$(CONFIG_MESON_GXL) += spl-gxl.o
++obj-$(CONFIG_MESON_GX) += spl-gx.o
++obj-$(CONFIG_MESON_GX) += spl.o
++endif
++
+ obj-$(CONFIG_MESON_AXG) += board-axg.o
+ obj-$(CONFIG_MESON_G12A) += board-g12a.o
+ obj-$(CONFIG_MESON_A1) += board-a1.o
+diff --git a/arch/arm/mach-meson/board-common.c b/arch/arm/mach-meson/board-common.c
+index 39774c43049a40ed11578086603717571bedd23b..c243c46c0fc14e1f0910a50ed65ce46a36b8e9db 100644
+--- a/arch/arm/mach-meson/board-common.c
++++ b/arch/arm/mach-meson/board-common.c
+@@ -30,6 +30,7 @@ __weak int board_init(void)
+ 	return 0;
+ }
+ 
++#ifndef CONFIG_SPL_BUILD
+ int dram_init(void)
+ {
+ 	const fdt64_t *val;
+@@ -49,6 +50,7 @@ int dram_init(void)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ __weak int meson_ft_board_setup(void *blob, struct bd_info *bd)
+ {
+@@ -150,5 +152,14 @@ int board_late_init(void)
+ 
+ void reset_cpu(void)
+ {
++#if CONFIG_SPL_BUILD
++	/*
++	 * We do not have BL31 running yet, so no PSCI.
++	 * Instead, let the watchdog reset the board.
++	 */
++	for (;;)
++		;
++#else
+ 	psci_system_reset();
++#endif
+ }
+diff --git a/arch/arm/mach-meson/spl-gx.c b/arch/arm/mach-meson/spl-gx.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..d5ea295bc6d281f3d7770cc84=
-1ccbae5aee468a4
+index 0000000000000000000000000000000000000000..a7d2b672421c4363f29fc2c63b67588d3aa77fef
 --- /dev/null
-+++ b/board/amlogic/p200/spl-odroid-c2.config
-@@ -0,0 +1,37 @@
-+#
-+# U-Boot SPL fragment for odroid-c2
-+#
++++ b/arch/arm/mach-meson/spl-gx.c
+@@ -0,0 +1,168 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Portions Copyright (C) 2015, Amlogic, Inc. All rights reserved.
++ * Copyright (C) 2023, Ferass El Hafidi <funderscore@postmarketos.org>
++ */
++#include <hang.h>
++#include <image.h>
++#include <spl.h>
++#include <vsprintf.h>
++#include <asm/io.h>
++#include <asm/arch/boot.h>
++#include <asm/arch/clock-gx.h>
++#include <asm/arch/gx.h>
++#include <linux/delay.h>
 +
-+CONFIG_SPL=3Dy
-+CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
-+CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
-+CONFIG_SPL_TEXT_BASE=3D0xd9001000
-+CONFIG_SPL_STACK=3D0xd9013000
-+CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
-+CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
-+CONFIG_SPL_HAVE_INIT_STACK=3Dy
-+CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
-+CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
-+# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
-+# CONFIG_SPL_SERIAL_PRESENT is not set
-+# CONFIG_SPL_SHA1 is not set
++/* Meson GX SPL code */
 +
-+# Enable MMC and serial drivers
-+CONFIG_SPL_SERIAL=3Dy
-+CONFIG_SPL_DRIVERS_MISC=3Dy
-+CONFIG_SPL_MMC=3Dy
-+CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
-+CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
-+# CONFIG_SYS_MMCSD_FS_BOOT is not set
++inline void cpu_pll_switch_to(int mode)
++{
++	u32 reg;
 +
-+# Image things
-+CONFIG_SPL_LOAD_FIT=3Dy
-+CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
-+CONFIG_SPL_MAX_SIZE=3D0xb000
-+CONFIG_SPL_PAD_TO=3D0x1fe00
-+CONFIG_SPL_ATF=3Dy
-+CONFIG_SPL_OF_CONTROL=3Dy
-+# DRAM configuration
-+CONFIG_DRAM_SIZE=3D2048
-+CONFIG_DRAM_2T_MODE=3Dy
-+CONFIG_DRAM_TWO_IDENTICAL_RANKS=3Dy
-diff --git a/board/amlogic/p200/spl-videostrong-kii-pro.config b/board/am=
-logic/p200/spl-videostrong-kii-pro.config
++	reg = readl(GX_HIU_BASE + HHI_SYS_CPU_CLK_CNTL0);
++
++	while (reg & HHI_SCC_CNTL0_BUSY)
++		reg = readl(GX_HIU_BASE + HHI_SYS_CPU_CLK_CNTL0);
++
++	reg |= HHI_SCC_CNTL0_DYN_ENABLE;
++
++	if (mode == 1) {
++		/* Switch to System PLL */
++		reg |= HHI_SCC_CNTL0_FINAL_MUX_SEL;
++	} else {
++		if (reg & HHI_SCC_CNTL0_FINAL_DYN_MUX_SEL) {
++			reg = (reg & ~(HHI_SCC_CNTL0_FINAL_DYN_MUX_SEL |
++				HHI_SCC_CNTL0_MUX0_DIVN_TCNT |
++				HHI_SCC_CNTL0_POSTMUX0 | HHI_SCC_CNTL0_PREMUX0));
++		} else {
++			reg = (reg & ~(HHI_SCC_CNTL0_FINAL_DYN_MUX_SEL |
++				HHI_SCC_CNTL0_MUX1_DIVN_TCNT |
++				(HHI_SCC_CNTL0_POSTMUX1 | HHI_SCC_CNTL0_PREMUX1))) |
++				HHI_SCC_CNTL0_FINAL_DYN_MUX_SEL;
++		}
++		/* Select dynamic mux */
++		reg = reg & ~(HHI_SCC_CNTL0_FINAL_MUX_SEL) /*final_mux_sel*/;
++	}
++	writel(reg, GX_HIU_BASE + HHI_SYS_CPU_CLK_CNTL0);
++}
++
++int meson_pll_init(void)
++{
++	clrbits_32(GX_HIU_BASE + HHI_MPEG_CLK_CNTL, 1 << 8);
++	cpu_pll_switch_to(0);
++
++	setbits_32(GX_HIU_BASE + HHI_MPLL_CNTL6, 1 << 26);
++	udelay(100);
++
++	while (!((readl(GX_HIU_BASE + HHI_SYS_PLL_CNTL) >> 31) & 1)) {
++		if (IS_ENABLED(CONFIG_MESON_GXBB)) {
++			setbits_32(GX_HIU_BASE + HHI_SYS_PLL_CNTL, 1 << 29);
++			writel(0x5ac80000, GX_HIU_BASE + HHI_SYS_PLL_CNTL2);
++			writel(0x8e452015, GX_HIU_BASE + HHI_SYS_PLL_CNTL3);
++			writel(0x401d40c, GX_HIU_BASE + HHI_SYS_PLL_CNTL4);
++			writel(0x870, GX_HIU_BASE + HHI_SYS_PLL_CNTL5);
++			writel((1 << 30) | (1 << 29) |
++				((0 << 16) | (1 << 9) |
++				(1536 / 24)), /* 1.5 GHz */
++				GX_HIU_BASE + HHI_SYS_PLL_CNTL);
++			clrbits_32(GX_HIU_BASE + HHI_SYS_PLL_CNTL, 1 << 29);
++		} else if (IS_ENABLED(CONFIG_MESON_GXL)) {
++			writel(0xc4258100, GX_HIU_BASE + HHI_SYS_PLL_CNTL1);
++			writel(0xb7400000, GX_HIU_BASE + HHI_SYS_PLL_CNTL2);
++			writel(0xa59a288, GX_HIU_BASE + HHI_SYS_PLL_CNTL3);
++			writel(0x40002d, GX_HIU_BASE + HHI_SYS_PLL_CNTL4);
++			writel(0x7c700007, GX_HIU_BASE + HHI_SYS_PLL_CNTL5);
++			writel((1 << 30) | ((1 << 9) |
++				(1200 / 24)), /* 1.2 GHz */
++				GX_HIU_BASE + HHI_SYS_PLL_CNTL);
++		}
++		udelay(20);
++	}
++	cpu_pll_switch_to(1); /* Hook the CPU to the PLL divider output */
++
++	if (IS_ENABLED(CONFIG_MESON_GXBB))
++		writel(0x10007, GX_HIU_BASE + HHI_MPLL_CNTL4);
++	else if (IS_ENABLED(CONFIG_MESON_GXL))
++		writel(0x10006, GX_HIU_BASE + HHI_MPLL_CNTL4);
++
++	setbits_32(GX_HIU_BASE + HHI_MPLL_CNTL, 1 << 29);
++	udelay(200);
++
++	writel(0x59C80000, GX_HIU_BASE + HHI_MPLL_CNTL2);
++	writel(0xCA45B822, GX_HIU_BASE + HHI_MPLL_CNTL3);
++
++	if (IS_ENABLED(CONFIG_MESON_GXBB))
++		writel(0xB5500E1A, GX_HIU_BASE + HHI_MPLL_CNTL5);
++	else if (IS_ENABLED(CONFIG_MESON_GXL))
++		writel(0x95520E1A, GX_HIU_BASE + HHI_MPLL_CNTL5);
++
++	writel(0xFC454545, GX_HIU_BASE + HHI_MPLL_CNTL6);
++
++	if (IS_ENABLED(CONFIG_MESON_GXBB)) {
++		writel((1 << 30) | (1 << 29) | (3 << 9) | (250 << 0), GX_HIU_BASE + HHI_MPLL_CNTL);
++		clrbits_32(GX_HIU_BASE + HHI_MPLL_CNTL, 1 << 29);
++	} else if (IS_ENABLED(CONFIG_MESON_GXL)) {
++		writel((1 << 30) | (3 << 9) | (250 << 0), GX_HIU_BASE + HHI_MPLL_CNTL);
++	}
++	udelay(800);
++
++	setbits_32(GX_HIU_BASE + HHI_MPLL_CNTL4, 1 << 14);
++
++	while (!((readl(GX_HIU_BASE + HHI_MPLL_CNTL) >> 31) & 1)) {
++		if ((readl(GX_HIU_BASE + HHI_MPLL_CNTL) & (1 << 31)) != 0)
++			break;
++		setbits_32(GX_HIU_BASE + HHI_MPLL_CNTL, 1 << 29);
++		udelay(1000);
++		clrbits_32(GX_HIU_BASE + HHI_MPLL_CNTL, 1 << 29);
++		udelay(1000);
++	}
++
++	if (IS_ENABLED(CONFIG_MESON_GXBB)) {
++		writel(0xFFF << 16, GX_HIU_BASE + HHI_MPLL_CNTL10);
++		writel(((7 << 16) | (1 << 15) | (1 << 14) | (4681 << 0)),
++		       GX_HIU_BASE + HHI_MPLL_CNTL7);
++		writel(((readl(GX_HIU_BASE + HHI_MPEG_CLK_CNTL) & (~((0x7 << 12) | (1 << 7) |
++			(0x7F << 0)))) | ((5 << 12) | (1 << 7)	| (2 << 0))),
++			GX_HIU_BASE + HHI_MPEG_CLK_CNTL);
++		setbits_32(GX_HIU_BASE + HHI_MPEG_CLK_CNTL, 1 << 8);
++		writel(((5 << 16) | (1 << 15) | (1 << 14) | (12524 << 0)),
++		       GX_HIU_BASE + HHI_MPLL_CNTL8);
++	} else if (IS_ENABLED(CONFIG_MESON_GXL)) {
++		writel((1 << 12) | 3, GX_HIU_BASE + HHI_MPLL_CNTL10);
++		writel(0x5edb7, GX_HIU_BASE + HHI_MPLL_CNTL7);
++		clrbits_32(GX_HIU_BASE + HHI_MPEG_CLK_CNTL,
++			   (3 << 13) | (1 << 12) | (15 << 4) | 15);
++		setbits_32(GX_HIU_BASE + HHI_MPEG_CLK_CNTL,
++			   (1 << 14) | (1 << 12) | (1 << 8) | (2 << 6) | (1 << 1));
++		writel((4 << 16) | (7 << 13) | (1 << 8) | (5 << 4) | 10,
++		       GX_HIU_BASE + HHI_MPLL_CNTL8);
++	}
++
++	udelay(200);
++
++	/* TODO: Some error handling and timeouts... */
++	return 0;
++}
++
++#if CONFIG_IS_ENABLED(MMC) && !CONFIG_IS_ENABLED(DM_MMC)
++int board_mmc_init(struct bd_info *bis)
++{
++	int mmc_device;
++
++	switch (meson_get_boot_device()) {
++	case BOOT_DEVICE_SD:
++		mmc_device = 0;
++		break;
++	case BOOT_DEVICE_EMMC:
++		mmc_device = 1;
++		break;
++	default:
++		return -1;
++	}
++
++	if (!meson_mmc_init(mmc_device))
++		return -1;
++
++	return 0;
++}
++#endif
+diff --git a/arch/arm/mach-meson/spl-gxbb.c b/arch/arm/mach-meson/spl-gxbb.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..5b3ba9d990840411ef3cef3db=
-3c6aa9d7085b3ef
+index 0000000000000000000000000000000000000000..954254bd9ad6d6006e10617a5361fa60f40f1e74
 --- /dev/null
-+++ b/board/amlogic/p200/spl-videostrong-kii-pro.config
-@@ -0,0 +1,38 @@
-+#
-+# U-Boot SPL fragment for videostrong-kii-pro
-+#
++++ b/arch/arm/mach-meson/spl-gxbb.c
+@@ -0,0 +1,113 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Portions Copyright (C) 2015, Amlogic, Inc. All rights reserved.
++ * Copyright (C) 2023, Ferass El Hafidi <funderscore@postmarketos.org>
++ */
++#include <image.h>
++#include <spl.h>
++#include <asm/io.h>
++#include <asm/arch/gx.h>
++#include <linux/delay.h>
 +
-+CONFIG_SPL=3Dy
-+CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
-+CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
-+CONFIG_SPL_TEXT_BASE=3D0xd9001000
-+CONFIG_SPL_STACK=3D0xd9013000
-+CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
-+CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
-+CONFIG_SPL_HAVE_INIT_STACK=3Dy
-+CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
-+CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
-+# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
-+# CONFIG_SPL_SERIAL_PRESENT is not set
-+# CONFIG_SPL_SHA1 is not set
++#if CONFIG_IS_ENABLED(FIT_IMAGE_POST_PROCESS)
++/*
++ * This is only needed for GXBB because on GXL SCP firmware loading
++ * has been moved to BL31.
++ */
++inline void send_scp(void *addr, size_t size, const uint8_t *sha2,
++	uint32_t sha2_length)
++{
++	int i;
 +
-+# Enable MMC and serial drivers
-+CONFIG_SPL_SERIAL=3Dy
-+CONFIG_SPL_DRIVERS_MISC=3Dy
-+CONFIG_SPL_MMC=3Dy
-+CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
-+CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
-+# CONFIG_SYS_MMCSD_FS_BOOT is not set
++	puts("Trying to send the SCP firmware\n");
++	writel(size, GX_MB_SRAM_BASE);
 +
-+# Image things
-+CONFIG_SPL_LOAD_FIT=3Dy
-+CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
-+CONFIG_SPL_MAX_SIZE=3D0xb000
-+CONFIG_SPL_PAD_TO=3D0x1fe00
-+CONFIG_SPL_ATF=3Dy
-+CONFIG_SPL_OF_CONTROL=3Dy
-+# DRAM configuration
-+CONFIG_DRAM_SIZE=3D2048
-+CONFIG_DRAM_2T_MODE=3Dy
-+CONFIG_DRAM_TWO_DIFF_RANKS=3Dy
++	udelay(500);
 +
-diff --git a/board/amlogic/p212/spl-libretech-cc-1gb.config b/board/amlog=
-ic/p212/spl-libretech-cc-1gb.config
++	writel(GX_MB_CMD_DATA_LEN, GX_SEC_HIU_MAILBOX_SET_0 + 3 * 3 * 4);
++	while (readl(GX_SEC_HIU_MAILBOX_SET_0 + 3 * 3 * 4))
++		;
++	udelay(500);
++
++	memcpy((void *)GX_MB_SRAM_BASE, (const void *)sha2, sha2_length);
++	writel(GX_MB_CMD_SHA, GX_SEC_HIU_MAILBOX_SET_0 + 3 * 3 * 4);
++	while (readl(GX_SEC_HIU_MAILBOX_STAT_0 + 3 * 3 * 4))
++		;
++	udelay(500);
++
++	for (i = 0; i < size; i += 1024) {
++		if (size >= i + 1024)
++			memcpy((void *)GX_MB_SRAM_BASE,
++			       (const void *)(unsigned long)(addr + i), 1024);
++		else if (size > i)
++			memcpy((void *)GX_MB_SRAM_BASE,
++			       (const void *)(unsigned long)(addr + i), (size - i));
++
++		writel(GX_MB_CMD_DATA, GX_SEC_HIU_MAILBOX_SET_0 + 3 * 3 * 4);
++		while (readl(GX_SEC_HIU_MAILBOX_STAT_0 + 3 * 3 * 4))
++			;
++	}
++	writel(GX_MB_CMD_OP_SHA, GX_SEC_HIU_MAILBOX_SET_0 + 3 * 3 * 4);
++
++	while (readl(GX_SEC_HIU_MAILBOX_STAT_0 + 3 * 3 * 4))
++		;
++	udelay(500);
++
++	/* We transferred all of the SCP firmware. Running it */
++	writel(GX_MB_CMD_END, GX_SEC_HIU_MAILBOX_SET_0 + 3 * 3 * 4);
++}
++
++void board_fit_image_post_process(const void *fit, int node, void **image, size_t *size)
++{
++	const char *name = fit_get_name(fit, node, NULL);
++	int noffset = 0, value_len;
++	u8 *value;
++
++	if (strcmp("scp", name) && strcmp("bl301", name))
++		return;
++
++	fdt_for_each_subnode(noffset, fit, node) {
++		if (strncmp(fit_get_name(fit, noffset, NULL),
++			    FIT_HASH_NODENAME, strlen(FIT_HASH_NODENAME)))
++			continue;
++
++		if (fit_image_hash_get_value(fit, noffset, &value, &value_len))
++			continue;
++
++		/* Send the SCP firmware to the SCP */
++		send_scp(*image, *size, value, value_len);
++		break;
++	}
++}
++#endif
++
++void meson_power_init(void)
++{
++	/* TODO: Support more voltages */
++
++	/* Init PWM B */
++	clrsetbits_32(GX_PWM_MISC_REG_AB, 0x7f << 16, (1 << 23) | (1 << 1));
++
++	/* Set voltage */
++	if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1120MV))
++		writel(0x02001a, GX_PWM_PWM_B);
++	else if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1100MV))
++		writel(0x040018, GX_PWM_PWM_B);
++	else if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1000MV))
++		writel(0x0e000e, GX_PWM_PWM_B);
++
++	clrbits_32(GX_PIN_MUX_REG7, 1 << 22);
++	clrsetbits_32(GX_PIN_MUX_REG3, 1 << 22, 1 << 21);
++
++	/* Init PWM D */
++	clrsetbits_32(GX_PWM_MISC_REG_CD, 0x7f << 16, (1 << 23) | (1 << 1));
++
++	/* Set voltage */
++	if (CONFIG_IS_ENABLED(MESON_GX_VDDEE_1100MV))
++		writel(0x040018, GX_PWM_PWM_B);
++	else if (CONFIG_IS_ENABLED(MESON_GX_VDDEE_1000MV))
++		writel(0x0e000e, GX_PWM_PWM_B);
++
++	clrbits_32(GX_PIN_MUX_REG7, 1 << 23);
++	setbits_32(GX_PIN_MUX_REG3, 1 << 20);
++}
+diff --git a/arch/arm/mach-meson/spl-gxl.c b/arch/arm/mach-meson/spl-gxl.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..f58bb69325980d582d2d826eb=
-bf28e4700965dfb
+index 0000000000000000000000000000000000000000..07fff695be8db4f4717ea15ed44aebe9d9b48e58
 --- /dev/null
-+++ b/board/amlogic/p212/spl-libretech-cc-1gb.config
-@@ -0,0 +1,36 @@
-+#
-+# U-Boot SPL fragment for libretech-cc (1 GB variant)
-+#
++++ b/arch/arm/mach-meson/spl-gxl.c
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Portions Copyright (C) 2015, Amlogic, Inc. All rights reserved.
++ * Copyright (C) 2023, Ferass El Hafidi <funderscore@postmarketos.org>
++ */
++#include <spl.h>
++#include <asm/io.h>
++#include <asm/arch/gx.h>
 +
-+CONFIG_SPL=3Dy
-+CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
-+CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
-+CONFIG_SPL_TEXT_BASE=3D0xd9001000
-+CONFIG_SPL_STACK=3D0xd9013000
-+CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
-+CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
-+CONFIG_SPL_HAVE_INIT_STACK=3Dy
-+CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
-+CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
-+# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
-+# CONFIG_SPL_SERIAL_PRESENT is not set
-+# CONFIG_SPL_SHA1 is not set
++void meson_power_init_gxl(void)
++{
++	/* TODO: Support more voltages */
 +
-+# Enable MMC and serial drivers
-+CONFIG_SPL_SERIAL=3Dy
-+CONFIG_SPL_DRIVERS_MISC=3Dy
-+CONFIG_SPL_MMC=3Dy
-+CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
-+CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
-+# CONFIG_SYS_MMCSD_FS_BOOT is not set
++	/* Init PWM B */
++	clrsetbits_32(GX_PWM_MISC_REG_AB, 0x7f << 16, (1 << 23) | (1 << 1));
 +
-+# Image things
-+CONFIG_SPL_LOAD_FIT=3Dy
-+CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
-+CONFIG_SPL_MAX_SIZE=3D0xb000
-+CONFIG_SPL_PAD_TO=3D0x1fe00
-+CONFIG_SPL_ATF=3Dy
-+CONFIG_SPL_OF_CONTROL=3Dy
-+# DRAM configuration
-+CONFIG_DRAM_2T_MODE=3Dy
-+CONFIG_DRAM_DQS_CORR=3Dy
-diff --git a/board/amlogic/p212/spl-libretech-cc-2gb.config b/board/amlog=
-ic/p212/spl-libretech-cc-2gb.config
++	/* Set voltage */
++	if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1120MV))
++		writel(0x02001a, GX_PWM_PWM_B);
++	else if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1100MV))
++		writel(0x040018, GX_PWM_PWM_B);
++	else if (CONFIG_IS_ENABLED(MESON_GX_VCCK_1000MV))
++		writel(0x0e000e, GX_PWM_PWM_B);
++
++	clrbits_32(GX_PIN_MUX_REG1, 1 << 10);
++	clrsetbits_32(GX_PIN_MUX_REG2, 1 << 5, 1 << 11);
++
++	/* Init PWM D */
++	clrsetbits_32(GX_PWM_MISC_REG_CD, 0x7f << 16, (1 << 23) | (1 << 1));
++
++	/* Set voltage */
++	if (CONFIG_IS_ENABLED(MESON_GX_VDDEE_1100MV))
++		writel(0x040018, GX_PWM_PWM_B);
++	else if (CONFIG_IS_ENABLED(MESON_GX_VDDEE_1000MV))
++		writel(0x0e000e, GX_PWM_PWM_B);
++
++	clrbits_32(GX_PIN_MUX_REG1, (1 << 9) | (1 << 11));
++	setbits_32(GX_PIN_MUX_REG2, 1 << 12);
++}
+diff --git a/arch/arm/mach-meson/spl.c b/arch/arm/mach-meson/spl.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..65d700558e65ca8d819f397a0=
-153be8bf07ae702
+index 0000000000000000000000000000000000000000..b3565402972f81c3cfd5824ba49cd713c1329a9d
 --- /dev/null
-+++ b/board/amlogic/p212/spl-libretech-cc-2gb.config
-@@ -0,0 +1,38 @@
-+#
-+# U-Boot SPL fragment for libretech-cc (2 GB variant)
-+#
++++ b/arch/arm/mach-meson/spl.c
+@@ -0,0 +1,123 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Portions Copyright (C) 2015, Amlogic, Inc. All rights reserved.
++ * Copyright (C) 2023, Ferass El Hafidi <funderscore@postmarketos.org>
++ */
++#include <spl.h>
++#include <hang.h>
++#include <asm/io.h>
++#include <asm/spl.h>
++#include <asm/arch/boot.h>
++#include <vsprintf.h>
++#include <asm/ptrace.h>
++#include <asm/system.h>
++#include <atf_common.h>
++#include <image.h>
++#include <asm/arch/gx.h>
++#include <linux/delay.h>
++#include <asm/arch/clock-gx.h>
 +
-+CONFIG_SPL=3Dy
-+CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
-+CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
-+CONFIG_SPL_TEXT_BASE=3D0xd9001000
-+CONFIG_SPL_STACK=3D0xd9013000
-+CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
-+CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
-+CONFIG_SPL_HAVE_INIT_STACK=3Dy
-+CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
-+CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
-+# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
-+# CONFIG_SPL_SERIAL_PRESENT is not set
-+# CONFIG_SPL_SHA1 is not set
++u32 spl_boot_device(void)
++{
++	int boot_device = meson_get_boot_device();
 +
-+# Enable MMC and serial drivers
-+CONFIG_SPL_SERIAL=3Dy
-+CONFIG_SPL_DRIVERS_MISC=3Dy
-+CONFIG_SPL_MMC=3Dy
-+CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
-+CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
-+# CONFIG_SYS_MMCSD_FS_BOOT is not set
++	switch (boot_device) {
++	case BOOT_DEVICE_EMMC:
++		return BOOT_DEVICE_MMC2;
++	case BOOT_DEVICE_SD:
++		return BOOT_DEVICE_MMC1;
++	/*
++	 * TODO: Get USB DFU to work
++	 * Right now we just panic when booted from USB.
++	 */
++	case BOOT_DEVICE_USB:
++		if (CONFIG_IS_ENABLED(YMODEM))
++			return BOOT_DEVICE_UART;
++		else
++			return BOOT_DEVICE_DFU;
++	}
 +
-+# Image things
-+CONFIG_SPL_LOAD_FIT=3Dy
-+CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
-+CONFIG_SPL_MAX_SIZE=3D0xb000
-+CONFIG_SPL_PAD_TO=3D0x1fe00
-+CONFIG_SPL_ATF=3Dy
-+CONFIG_SPL_OF_CONTROL=3Dy
-+# DRAM configuration
-+CONFIG_DRAM_SIZE=3D2048
-+CONFIG_DRAM_2T_MODE=3Dy
-+CONFIG_DRAM_DQS_CORR=3Dy
-+CONFIG_DRAM_TWO_IDENTICAL_RANKS=3Dy
++	panic("Unknown device %d\n", boot_device);
++	return BOOT_DEVICE_NONE; /* Never reached */
++}
++
++__weak struct legacy_img_hdr *spl_get_load_buffer(ssize_t offset, size_t size)
++{
++	return (void *)CONFIG_TEXT_BASE + 0x4000000;
++}
++
++__weak void *board_spl_fit_buffer_addr(ulong fit_size, int sectors, int bl_len)
++{
++	/* HACK: use same fit load buffer address as for mmc raw */
++	return spl_get_load_buffer(0, fit_size);
++}
++
++__weak bool spl_load_simple_fit_skip_processing(void)
++{
++	return false;
++}
++
++/* To be defined in dram-${GENERATION}.c */
++__weak int dram_init(void)
++{
++	return 0;
++}
++
++/* Placeholder functions to be defined in SoC-specific spl-... file */
++__weak void meson_power_init(void)
++{
++}
++
++__weak int meson_pll_init(void)
++{
++	return 0;
++}
++
++void board_init_f(ulong dummy)
++{
++	int ret;
++
++	/* Restart execution at EL3 */
++	if (current_el() != 3) {
++		struct pt_regs regs = {0};
++		static struct entry_point_info spl_ep_info;
++
++		SET_PARAM_HEAD(&spl_ep_info, ATF_PARAM_BL31, ATF_VERSION_1, 0);
++		spl_ep_info.pc = CONFIG_SPL_TEXT_BASE;
++		spl_ep_info.spsr = SPSR_64(MODE_EL3, MODE_SP_ELX, DISABLE_ALL_EXECPTIONS);
++
++		regs.regs[0] = 0xc0000000;
++		regs.regs[1] = (unsigned long)&spl_ep_info;
++		smc_call(&regs);
++	}
++
++	meson_power_init();
++	ret = meson_pll_init();
++	if (ret) {
++		debug("meson_pll_init() failed: %d\n", ret);
++		return;
++	}
++
++	ret = dram_init();
++	if (ret) {
++		debug("dram_init() failed: %d\n", ret);
++		hang();
++	}
++
++	if (CONFIG_IS_ENABLED(OF_CONTROL)) {
++		ret = spl_early_init();
++		if (ret) {
++			debug("spl_early_init() failed: %d\n", ret);
++			hang();
++		}
++	}
++
++	spl_init();
++	icache_enable();
++	preloader_console_init();
++
++#if !CONFIG_IS_ENABLED(WDT_MESON_GXBB)
++	/* Disable watchdog */
++	clrbits_32(GX_WDT_CTRL_REG, (1 << 18) | (1 << 25));
++#endif
++}
 
---=20
+-- 
 2.51.0
 
 
