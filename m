@@ -2,35 +2,34 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2B7CCD186
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3C4CCD18A
 	for <webhook@archiver.kernel.org>; Wed,  8 Oct 2025 10:01:04 +0000 (UTC)
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
- by mx.groups.io with SMTP id smtpd.web11.12041.1759917659478735449
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+ by mx.groups.io with SMTP id smtpd.web10.12151.1759917663986938721
  for <u-boot-amlogic@groups.io>;
- Wed, 08 Oct 2025 03:00:59 -0700
+ Wed, 08 Oct 2025 03:01:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=Fm8WOIQ8;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.170, mailfrom: funderscore@postmarketos.org)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=dcRY/PSK;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.178, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1759917657;
+	s=key1; t=1759917662;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XNZk+gqVCpX+0OEHULwL+ruegHnupNFCVM6oMUyAZfw=;
-	b=Fm8WOIQ8r+RXquALf0xyYFcRV+4X43ETxO4c0wKsHovOdYDdHO0YkwvB4X3OmusDigh+p5
-	t+VyaAwRN9+q2m9PS6bZuH4Y+wG03hAU2e9XeObbr8l2ar/CoGaSJeuNljmGsUjzNizk0l
-	inYgXs3rzSk7aXOGapEKOp44BKLbXFdyG4ytxGbLZmNdIBqtL8cyT7KFbOwm64rdO5ipcU
-	QeQS/A705ww3Cp0b1+GGf35DLewcUyjOPj4yD6t1Et53YBvUuCexI4jfWhbuOtgqFCljNN
-	6ygASb3u43slyx9np6vKIzKohmakWnpRMj2WG+pXZ1uGIxOX21UTdlFeZ56VDA==
+	bh=p4HKzf41yblwb5ZEi3hIbNyvurngWxBH+txeqauhEWc=;
+	b=dcRY/PSKF2A2jZ+CRVrTTJ2FqX6JgVIJ7HthewF7xQWrBAxlGBCMHvbL+vpKzWKkEGuQXs
+	UJu4blrFsLOvtf+5wJufGzRAcPXaHmh3NbgaIF8/rnAhi1byhZVtk1lI4VmOcR81BhtwJI
+	zjCVZG393SGU/txKXMoA6lDANPXwFo1qSW22PofXA18Pb8Qlhlcr3LDqH4hiz4M3TmdYBg
+	BOFRGCfhEHp8XdZEjvXVfcq/zPVAiq28Roun951g6fR04o6RxCkiXd34oVOSujMi96drtc
+	wpoNsqojspvNJvMvjqz9ZTjN9HcRdWl0rOqwUfNGBgcXv5Rp2xrDJeiR30GBZg==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Wed, 08 Oct 2025 10:00:39 +0000
-Subject: [PATCH RFC v3 3/8] serial: serial_meson: add minimal non-DM driver
+Date: Wed, 08 Oct 2025 10:00:43 +0000
+Subject: [PATCH RFC v3 7/8] board: amlogic: add kconfig fragments for SPL
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251008-spl-gx-v3-3-5999637df4b9@postmarketos.org>
+Message-Id: <20251008-spl-gx-v3-7-5999637df4b9@postmarketos.org>
 References: <20251008-spl-gx-v3-0-5999637df4b9@postmarketos.org>
 In-Reply-To: <20251008-spl-gx-v3-0-5999637df4b9@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -41,215 +40,232 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4861;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5933;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=XF20V45WQmwjAJB6TnWBXXcWat9R+MUkrpX/lvBdfpE=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBo5jZTFCD53tpibH5nGqj1s4aGKWIlX6z40PiX2
- 5YD1XOrPvmJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaOY2UwAKCRCEr8vQ14ma
- AwMMEACTCKVtml8PjYT4PNpS2YJB9EFc5nSXVybF1WWCG+p7kfTwaFETud1+LlqiSWVl7/E4KJ/
- fp2/OI9qxUMymuhKMS0U8cZ1egxJAA9h5NJCxKtIBbYnEQUXWsAOaxMP+6cxx7IcGRjl1dyW7do
- EHG2qnZiu9dEsm2o4q5LzJWz+mGo2TR+cUqSpLSXwBDkj5qFBAft1HUdt3L0ABeh3E9DEebh6Ux
- Gxc0OmtMmnWDToLWApSuXZUNEVNg5g7Hm3RL7abHC3OJVTONLQA+d1lwhpZ8hMSFXwyBKyijWR7
- 4WHAFbNZRfB646K2qZP9h+KhMAHVsKcPdEiTdgpRgr+cPt/g2BYDlyeCf5fdNYmZGs0R+6el+V2
- Tlm56E4B7g5uxg2GIfxCMTuHM5xwBcI7GOT4WD0aRGfYs/KnJTd6TGlAB74flVzFtOlfso+42fE
- UglwGG+A4C4a5SBL6KBmAst/AUHjC22y1eqEgCyp+zQG8e7OF5Ggo9hFXVdOgYERFxgVdViggYg
- m1Q1q1OJI6cWw/dkOA/7UVHykCKzCBRSZKCzAF1X0iAG5nN5smIHqbwQpGZ/akr6CzqOhYfLxmi
- 3G0UrUuAMHe0SMTETKX3iPuaQmKDwgS9GEfbWC62NMhnZY6t8eyI3PPldUVjQ7aFZ0VdqP6rfwU
- XX3mvn8CkaF2mGA==
+ bh=ZDCqaT1tKSS5vqVHVNkdoRL3WD8v9gNsgE+cMggnH4E=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBo5jZU2Oo6C2ZAfnuNpOK2w2BiufMqObITxPOdp
+ joA18uSJ2GJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaOY2VAAKCRCEr8vQ14ma
+ A8wiD/4pct6GtOevU2XtrSJzUgK1qSHAu2QgLC6HvwbyL6+MKkg5KVs1x9VBhi12dqx8Pqjbdmw
+ i4Fd4Cwvr1pi1GI8UI8En9RiZI/3vlbhAmsIBFYC8cL77LmQheWX4/aZnH8dClkY9D57jgRM9Bh
+ u4Up3kvN7t77mZAG9cIqpF0vxcIYCI4kHoM4mNn1GOSI0rGtd0cvAvSGRw6lsDy3xysxRtJ3pNt
+ WbwbtDHqk0UxmmI4EAj8Cii+XhpIOtfaJNea5eWL+oKiEvWwXTPnd1tv1U6PI4NHadYlo6cH+UY
+ kLp9jvMwR2FaXbfN2UomBv7eK8/k0sQgCl0bsERQikmjQaoKCo1Q6kEC1ss+g2Tj3PWF3jR6mBK
+ iuhT56feTxYBaOZ7vYYF8+eB1qeIzuSLngPSLBZH8fQgY1AVJOPPcfqfRKTx5Euu35a6waAyOB/
+ DWJFRovHZetJJXXuKg+8jT6Tz5zmeLtIBWTwoC3J+f4IZMMEJBPiMQP2dio2PQAxeXlVtU5OhJ3
+ el5K1PKo6/j3EG9XSgOJtlK33R5iVd1RWYPQL0pPgMqZDxPGg0MwmcprIrjv5555KYA0i3956mo
+ jszh4BkuzhauhyyuQJC7wA6ZilEVmvEf/rw778NXqElCmvPxfmdUfiCiOonhZcZ3xvzSROFxKZz
+ VImNdypeeRk7V4g==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 08 Oct 2025 10:01:04 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2792
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2796
 
-It is very limited and minimal, only implements putc/puts.
-This minimal driver is intended to be used in SPL, and other
-size-constrained situations.
+Add kconfig fragments for building SPL binaries for:
+ =C2=B7 ODROID-C2
+ =C2=B7 Videostrong KII Pro
+ =C2=B7 Libre Computer LePotato (1 GB and 2 GB variants)
 
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
- drivers/serial/serial.c       |   2 +
- drivers/serial/serial_meson.c | 119 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 120 insertions(+), 1 deletion(-)
+ board/amlogic/p200/spl-odroid-c2.config           | 37 +++++++++++++++++=
++++++
+ board/amlogic/p200/spl-videostrong-kii-pro.config | 38 +++++++++++++++++=
+++++++
+ board/amlogic/p212/spl-libretech-cc-1gb.config    | 36 +++++++++++++++++=
+++++
+ board/amlogic/p212/spl-libretech-cc-2gb.config    | 38 +++++++++++++++++=
+++++++
+ 4 files changed, 149 insertions(+)
 
-diff --git a/drivers/serial/serial.c b/drivers/serial/serial.c
-index e10ca6eef768502ea32bf39a41ae2e3ccd168c66..c0b1eb3056181b95e1861f1ce08fcd82ff81eb71 100644
---- a/drivers/serial/serial.c
-+++ b/drivers/serial/serial.c
-@@ -129,6 +129,7 @@ serial_initfunc(pxa_serial_initialize);
- serial_initfunc(smh_serial_initialize);
- serial_initfunc(sh_serial_initialize);
- serial_initfunc(mtk_serial_initialize);
-+serial_initfunc(meson_serial_initialize);
- 
- /**
-  * serial_register() - Register serial driver with serial driver core
-@@ -167,6 +168,7 @@ int serial_initialize(void)
- 	smh_serial_initialize();
- 	sh_serial_initialize();
- 	mtk_serial_initialize();
-+	meson_serial_initialize();
- 
- 	serial_assign(default_serial_console()->name);
- 
-diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson.c
-index bb79b9729579a661084425d6b3c5357da31dc3c0..cc71381f87e1e2d192e5f4450f881c2a69511ca3 100644
---- a/drivers/serial/serial_meson.c
-+++ b/drivers/serial/serial_meson.c
-@@ -3,9 +3,11 @@
-  * (C) Copyright 2016 Beniamino Galvani <b.galvani@gmail.com>
-  */
- 
-+#if CONFIG_IS_ENABLED(DM_SERIAL)
- #include <dm.h>
--#include <errno.h>
- #include <fdtdec.h>
-+#endif
-+#include <errno.h>
- #include <linux/kernel.h>
- #include <linux/bitops.h>
- #include <linux/compiler.h>
-@@ -25,6 +27,15 @@ struct meson_serial_plat {
- 	struct meson_uart *reg;
- };
- 
-+#if !CONFIG_IS_ENABLED(DM_SERIAL)
-+/* UART base address */
-+#if defined(CONFIG_MESON_GX)
-+#define AML_UART_BASE	0xc81004c0
-+#else /* G12A, AXG, ... */
-+#define AML_UART_BASE	0xff803000
-+#endif
-+#endif
+diff --git a/board/amlogic/p200/spl-odroid-c2.config b/board/amlogic/p200=
+/spl-odroid-c2.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..d5ea295bc6d281f3d7770cc84=
+1ccbae5aee468a4
+--- /dev/null
++++ b/board/amlogic/p200/spl-odroid-c2.config
+@@ -0,0 +1,37 @@
++#
++# U-Boot SPL fragment for odroid-c2
++#
 +
- /* AML_UART_STATUS bits */
- #define AML_UART_PARITY_ERR		BIT(16)
- #define AML_UART_FRAME_ERR		BIT(17)
-@@ -51,6 +62,7 @@ struct meson_serial_plat {
- #define AML_UART_REG5_USE_NEW_BAUD	BIT(23) /* default 1 (use new baud rate register) */
- #define AML_UART_REG5_BAUD_MASK		0x7fffff
- 
-+#if CONFIG_IS_ENABLED(DM_SERIAL)
- static u32 meson_calc_baud_divisor(ulong src_rate, u32 baud)
- {
- 	/*
-@@ -245,6 +257,111 @@ U_BOOT_DRIVER(serial_meson) = {
- 	.plat_auto	= sizeof(struct meson_serial_plat),
- };
- 
-+#else
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+static int meson_serial_init(void)
-+{
-+	struct meson_uart *const uart = (struct meson_uart *)AML_UART_BASE;
-+	u32 val;
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+	val = readl(&uart->control);
-+	val |= (AML_UART_RX_RST | AML_UART_TX_RST | AML_UART_CLR_ERR);
-+	writel(val, &uart->control);
-+	val &= ~(AML_UART_RX_RST | AML_UART_TX_RST | AML_UART_CLR_ERR);
-+	writel(val, &uart->control);
-+	val |= (AML_UART_RX_EN | AML_UART_TX_EN);
-+	writel(val, &uart->control);
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_SIZE=3D2048
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_TWO_IDENTICAL_RANKS=3Dy
+diff --git a/board/amlogic/p200/spl-videostrong-kii-pro.config b/board/am=
+logic/p200/spl-videostrong-kii-pro.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b3ba9d990840411ef3cef3db=
+3c6aa9d7085b3ef
+--- /dev/null
++++ b/board/amlogic/p200/spl-videostrong-kii-pro.config
+@@ -0,0 +1,38 @@
++#
++# U-Boot SPL fragment for videostrong-kii-pro
++#
 +
-+	return 0;
-+}
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+static int meson_serial_stop(void)
-+{
-+	return 0;
-+}
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+static void meson_serial_setbrg(void)
-+{
-+}
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_SIZE=3D2048
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_TWO_DIFF_RANKS=3Dy
 +
-+static void meson_serial_putc(const char ch)
-+{
-+	struct meson_uart *uart = (struct meson_uart *)AML_UART_BASE;
+diff --git a/board/amlogic/p212/spl-libretech-cc-1gb.config b/board/amlog=
+ic/p212/spl-libretech-cc-1gb.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..f58bb69325980d582d2d826eb=
+bf28e4700965dfb
+--- /dev/null
++++ b/board/amlogic/p212/spl-libretech-cc-1gb.config
+@@ -0,0 +1,36 @@
++#
++# U-Boot SPL fragment for libretech-cc (1 GB variant)
++#
 +
-+	/* On '\n' also do '\r' */
-+	if (ch == '\n')
-+		meson_serial_putc('\r');
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+	while (readl(&uart->status) & AML_UART_TX_FULL)
-+		;
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+	writel(ch, &uart->wfifo);
-+}
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_DQS_CORR=3Dy
+diff --git a/board/amlogic/p212/spl-libretech-cc-2gb.config b/board/amlog=
+ic/p212/spl-libretech-cc-2gb.config
+new file mode 100644
+index 0000000000000000000000000000000000000000..65d700558e65ca8d819f397a0=
+153be8bf07ae702
+--- /dev/null
++++ b/board/amlogic/p212/spl-libretech-cc-2gb.config
+@@ -0,0 +1,38 @@
++#
++# U-Boot SPL fragment for libretech-cc (2 GB variant)
++#
 +
-+static void meson_serial_puts(const char *s)
-+{
-+	while (*s)
-+		meson_serial_putc(*s++);
-+}
++CONFIG_SPL=3Dy
++CONFIG_SPL_LIBCOMMON_SUPPORT=3Dy
++CONFIG_SPL_LIBGENERIC_SUPPORT=3Dy
++CONFIG_SPL_TEXT_BASE=3D0xd9001000
++CONFIG_SPL_STACK=3D0xd9013000
++CONFIG_SPL_HAS_BSS_LINKER_SECTION=3Dy
++CONFIG_SPL_BSS_START_ADDR=3D0xd900c000
++CONFIG_SPL_HAVE_INIT_STACK=3Dy
++CONFIG_SPL_BSS_MAX_SIZE=3D0x1000
++CONFIG_SPL_SYS_MALLOC_SIMPLE=3Dy
++# CONFIG_SPL_SHARES_INIT_SP_ADDR is not set
++# CONFIG_SPL_SERIAL_PRESENT is not set
++# CONFIG_SPL_SHA1 is not set
 +
-+static int meson_serial_getc(void)
-+{
-+	struct meson_uart *const uart = (struct meson_uart *)AML_UART_BASE;
-+	uint32_t status = readl(&uart->status);
++# Enable MMC and serial drivers
++CONFIG_SPL_SERIAL=3Dy
++CONFIG_SPL_DRIVERS_MISC=3Dy
++CONFIG_SPL_MMC=3Dy
++CONFIG_SPL_SYS_MMCSD_RAW_MODE=3Dy
++CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR=3D0x100
++# CONFIG_SYS_MMCSD_FS_BOOT is not set
 +
-+	if (status & AML_UART_RX_EMPTY)
-+		return -EAGAIN;
-+
-+	if (status & AML_UART_ERR) {
-+		u32 val = readl(&uart->control);
-+
-+		/* Clear error */
-+		val |= AML_UART_CLR_ERR;
-+		writel(val, &uart->control);
-+		val &= ~AML_UART_CLR_ERR;
-+		writel(val, &uart->control);
-+
-+		/* Remove spurious byte from fifo */
-+		readl(&uart->rfifo);
-+		return -EIO;
-+	}
-+
-+	return readl(&uart->rfifo) & 0xff;
-+}
-+
-+static int meson_serial_tstc(void)
-+{
-+	struct meson_uart *const uart = (struct meson_uart *)AML_UART_BASE;
-+	uint32_t status = readl(&uart->status);
-+
-+	if (status & AML_UART_RX_EMPTY)
-+		return 0;
-+	return 1;
-+}
-+
-+struct serial_device meson_serial_device = {
-+	.name	= "meson_serial",
-+	.start	= meson_serial_init,
-+	.stop	= meson_serial_stop,
-+	.setbrg	= meson_serial_setbrg,
-+	.getc	= meson_serial_getc,
-+	.tstc	= meson_serial_tstc,
-+	.putc	= meson_serial_putc,
-+	.puts	= meson_serial_puts,
-+};
-+
-+void meson_serial_initialize(void)
-+{
-+	serial_register(&meson_serial_device);
-+}
-+
-+__weak struct serial_device *default_serial_console(void)
-+{
-+	return &meson_serial_device;
-+}
-+
-+#endif
-+
- #ifdef CONFIG_DEBUG_UART_MESON
- 
- #include <debug_uart.h>
++# Image things
++CONFIG_SPL_LOAD_FIT=3Dy
++CONFIG_SPL_FIT_IMAGE_POST_PROCESS=3Dy
++CONFIG_SPL_MAX_SIZE=3D0xb000
++CONFIG_SPL_PAD_TO=3D0x1fe00
++CONFIG_SPL_ATF=3Dy
++CONFIG_SPL_OF_CONTROL=3Dy
++# DRAM configuration
++CONFIG_DRAM_SIZE=3D2048
++CONFIG_DRAM_2T_MODE=3Dy
++CONFIG_DRAM_DQS_CORR=3Dy
++CONFIG_DRAM_TWO_IDENTICAL_RANKS=3Dy
 
--- 
+--=20
 2.51.0
 
 
