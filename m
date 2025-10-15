@@ -2,63 +2,63 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7186CCD1B3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF10CCD1B7
 	for <webhook@archiver.kernel.org>; Mon, 20 Oct 2025 07:35:44 +0000 (UTC)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
- by mx.groups.io with SMTP id smtpd.web10.18641.1760539158526903128
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+ by mx.groups.io with SMTP id smtpd.web10.18642.1760539158531457235
  for <u-boot-amlogic@groups.io>;
  Wed, 15 Oct 2025 07:39:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=s86F6pem;
- spf=pass (domain: linaro.org, ip: 209.85.208.44, mailfrom: andrew.goodbody@linaro.org)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-63963066fb0so13832305a12.3
+ dkim=pass header.i=@linaro.org header.s=google header.b=EKinzBUi;
+ spf=pass (domain: linaro.org, ip: 209.85.208.46, mailfrom: andrew.goodbody@linaro.org)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-639102bba31so4682247a12.2
         for <u-boot-amlogic@groups.io>; Wed, 15 Oct 2025 07:39:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1760539157; x=1761143957; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=c2Ex94fmhlLv2i2Yx1QhQ917Ez/zRaZdOvJOV/zm02o=;
-        b=s86F6pemKj0Btp3yQG3W/LPq1X82zMjirsAbcaq3AXFAHUrCya5xCsB12XSKYr57PX
-         dLDI5mZ60UaXWHhZY1LRRs8Dvi2w/LCcQlDzU0S2NZoKq292sTiT6CsAbzgLE/OSiLV9
-         NuQnxbsHv3cUlqtnY4iNdjV0WPl+YnHnwCV9w0oH50NZfJEu+UYY/c24EIizw1F+374p
-         tlv+pIXWBRIBkK0+lvo93Oh4Ch0w4uQA69pvHE1P1CCdjbQ0wsTCzDjFNu9Gg1JCmLRU
-         zQiLjTOxcDSclnO7sjIGP6sq2CPAB6jF7RcszhBX7MSjfWSQGHWPS4dACxEg+qlDgnvP
-         1JfQ==
+        bh=TTbXf2v+6DOITANdOMYtay+m9aD8F7IEVVIpnQ+2pPc=;
+        b=EKinzBUinvO7n6hV37Z0lDltYdzV1X3htvfj1x+nccfW2TsyoPaLYGx+0miV3cTd6Y
+         +Mtt7CAvdAel+f+mtQY23sfUDnExzch5zgBFIee0gKFj6gYIYPvCnXolh/57HI1BBU5c
+         qSLMb8zJZzDXcacOH0HnuXV+i8piZY3pheGPMyiFF8GN9Zvpx8bV9zgKUL6SXQDIQ0et
+         d5fIOgYQyPuAtrlo3tF3vWIQ27OwpQO08F2Rt/bJPdUVJudlOfF24jcOyVvX6jCWRFw1
+         E1IzOeji8KlVR+2lEN5KYWwqhF+Ee4uht0SxVIPw76kKHTOHGVNTxpENkTLeWD8mMsUU
+         ia9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1760539157; x=1761143957;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c2Ex94fmhlLv2i2Yx1QhQ917Ez/zRaZdOvJOV/zm02o=;
-        b=WuqCgJ0DVf8g2h6jxBcv29X5JCUDhVWqWTAaRuW3DiaBO8EQjyoaox/c9vfXOnegGu
-         sa1VKfYkgWOf49HqqiAPnILCXpdGzD/hvQCiz7bRM92EnWhXJlwYr93qCrC6n70Aass2
-         zF9ei2MleJ3c4vcUD+WxWVytIUub0hNYN3qHQ9RvXupEv1duR/qTN78DJ0vpGiKYJiEl
-         rVOKYSJH+b9dGZQWi6BsmpJbmLWBOKj+cuXDhAohGmHyvDdfUMBboI4kAkT6b9fBkLzj
-         fM3JFNlYtl9+Gv+ebX9uuGmwGLSrbHBMUksSOpHoQYQ3xZJuhvzbqV189ul0HePVgrw9
-         W5KQ==
-X-Gm-Message-State: AOJu0Yx9g/6V3mRDo1Ijuq91KPkzDi22Vxrfay81RsbGp+jOPkxBt9YA
-	YjGccXpS1H82OuzZaMZV5az6JeoXSq41o2VYQ3uDcLxUR7SvE83UdAIcuIFwlOqBvGsKt/YRtlc
-	fCJ3AbHI=
-X-Gm-Gg: ASbGncuzI0PJ0pe/t/8RTgy7ZN8QYyRAfrcAbuxQ/b/qLIv9sHSe8xqfBh1jYsz4GOT
-	6kQTLYRR7Kn2+405s6pNRsHBFv6u1rJGVfnIAOD+K/x4Zoir3AzrNBl1yMXixdY3JtQvfXaQ4C+
-	IDJYJ/4h+Z6+u3erU7mAA10MrX3pBdWw1gNdVS/d1k9psoTE2l5Rm12Lra+NBr7tfGmDlaKbD41
-	dm3bl4R1cyVa7eKykR/Jue3aGTvNJNlEvxdXQLUJpeLZNpyuWxTBsXjRAg1nMROiMWp8EpcUjOZ
-	WRZqV4Qt01kwd8Cc7h1Zq+JuFnQ7601BbjOh5wRN9OMHhL2ruiKB5J8xWdO5Mhq1fpIDfI/PrsL
-	W5EZ0IrpCiEJbhAyrO5AJO7cbVDexxNh+Xg414VxGqNKItVbDNC/KDyC0eIWKH8s+KXSijhmP+9
-	Ym6bZkBk8V
-X-Google-Smtp-Source: AGHT+IFntIZgc8kpwywcm6Ac1YodmDRVT9uEaIFSPv2xMkytU2MPV98wALWC7FxueiIlE7bJN1OwyA==
-X-Received: by 2002:a5d:5d88:0:b0:425:7e38:419f with SMTP id ffacd0b85a97d-42666ab867amr19302858f8f.16.1760538771388;
-        Wed, 15 Oct 2025 07:32:51 -0700 (PDT)
+        bh=TTbXf2v+6DOITANdOMYtay+m9aD8F7IEVVIpnQ+2pPc=;
+        b=vGNHOYACQPFgkph3Zv9JLkI1g01LpmMIW7WINYE+qx3zbGXMqxvM2OgVRW1195Jqxj
+         5pA8pV5OcHpZoAlWOGSiBX/YKzlGtOFq3Ss3Z1/FDpiX772ABTpbusS7KBe9RsB7Uc8X
+         xTIe659fujP54z/pJmb4gxsBFXvdnBwuTn2VlUF5q7BEfLUHN7y8GjrIgXPsMaKvDaR2
+         PNMHqsf6fH6fugrs0AEpO3CszB1vrv6ze+190udAEisWSShwYg2oVTgLbJqP8Ibve95+
+         Vg08h4WVanxsuJY+fUI6oYKFrLcSWhmSrLecEUOYVuLhhN+gkcM6mI9fOHBqOLdtiE8N
+         oLUg==
+X-Gm-Message-State: AOJu0Yz+AmW/coUQ8g3J3Q9TkyhYQiuTQSKDQ8AglAVaRnsAsmDEt50d
+	XAHhg71/o5sfKLBIiSvdwORSdn93/DCXZ9lPbdeNfnFZkg0822siU/m8k3kNQThIwncQsVzS9EW
+	n87SuYI8=
+X-Gm-Gg: ASbGnctrDZ9f9cuFrbpjrNqQDOQrhZndQtlGvMrmwreGd+J7GUqx6CX+IF58xAjNIYJ
+	5PG8zEyz+iXScHeCFPuy8OnAERqKh0zpEvPxXywdqDAjg94ywrCrsTivw4vkvKWP5e1ncIZjp8g
+	g+SoIepRSNtB23WfpKAFLu2zxu0Ka7yn+5ZqFAEs4O6tqcB1T78fA22B54koHkWRGs1Ln/Kk82/
+	yWOMGiy5UTPJeYcS3cO05XPTk0jMRfvqXTGalIFEo5G6jyOaaWbE8wiISt74u5nDcSAqGIyg7si
+	94I6aaS79e2eD0UpFS2mm/ML5BSuh5qAj6WhOeWiB6cNniFLf4Ffd47oXKwyGzT52P2XE7jEBDX
+	AERCE2RTuD9e2esej1QJvsLfRH4a6wRr5s/2OHHnKpSjLulE+DObCl+wFHX6o+KNHKO+l2DOiog
+	==
+X-Google-Smtp-Source: AGHT+IH+rwZaZc5p0en/wUvb43r51I+4D/Ojes6xOI2/lEb1mRkkPQW7ty8WKdlM7v8kZME/V1yKwg==
+X-Received: by 2002:a05:600c:35cb:b0:471:9da:524c with SMTP id 5b1f17b1804b1-47109da5403mr1337285e9.12.1760538780882;
+        Wed, 15 Oct 2025 07:33:00 -0700 (PDT)
 Received: from artemis2.elfringham.co.uk ([2a0a:ef40:fed:4601:4b30:fdb5:8c7d:59b5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-470ff15ef28sm43185915e9.5.2025.10.15.07.32.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-470ff15ef28sm43185915e9.5.2025.10.15.07.32.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Oct 2025 07:32:50 -0700 (PDT)
+        Wed, 15 Oct 2025 07:33:00 -0700 (PDT)
 From: Andrew Goodbody <andrew.goodbody@linaro.org>
-Date: Wed, 15 Oct 2025 15:32:20 +0100
-Subject: [PATCH 15/24] clk: exynos: Remove negative error returns from clk_get_rate
+Date: Wed, 15 Oct 2025 15:32:25 +0100
+Subject: [PATCH 20/24] clk: tegra: Remove negative error returns from clk_get_rate
 MIME-Version: 1.0
-Message-Id: <20251015-clk_ops-v1-15-5f80f827407e@linaro.org>
+Message-Id: <20251015-clk_ops-v1-20-5f80f827407e@linaro.org>
 References: <20251015-clk_ops-v1-0-5f80f827407e@linaro.org>
 In-Reply-To: <20251015-clk_ops-v1-0-5f80f827407e@linaro.org>
 To: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
@@ -120,29 +120,43 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 20 Oct 2025 07:35:44 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2832
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2833
 
 clk_get_rate() returns a ulong so do not attempt to pass negative error
 codes through it.
 
 Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
 ---
- drivers/clk/exynos/clk-exynos7420.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/tegra/tegra-car-clk.c | 2 +-
+ drivers/clk/tegra/tegra186-clk.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/exynos/clk-exynos7420.c b/drivers/clk/exynos/clk-exynos7420.c
-index 7de4e688f036d47adfa22c841400770b1b1ed3b3..494f5623259945376475c53dcd8d5b5fbf635b0f 100644
---- a/drivers/clk/exynos/clk-exynos7420.c
-+++ b/drivers/clk/exynos/clk-exynos7420.c
-@@ -199,7 +199,7 @@ static ulong exynos7420_peric1_get_rate(struct clk *clk)
- 	case SCLK_UART2:
- 		ret = clk_get_by_index(clk->dev, 3, &in_clk);
- 		if (ret < 0)
--			return ret;
-+			return 0;
- 		freq = clk_get_rate(&in_clk);
- 		break;
+diff --git a/drivers/clk/tegra/tegra-car-clk.c b/drivers/clk/tegra/tegra-car-clk.c
+index 880dd4f6ece9fde3ef3dd9d457e717ce4c237e29..19ca5583a53427d05936cf65b6a32237d91df4ae 100644
+--- a/drivers/clk/tegra/tegra-car-clk.c
++++ b/drivers/clk/tegra/tegra-car-clk.c
+@@ -57,7 +57,7 @@ static ulong tegra_car_clk_get_rate(struct clk *clk)
+ 		return clock_get_periph_rate(clk->id, parent);
  	}
+ 
+-	return -1U;
++	return 0;
+ }
+ 
+ static ulong tegra_car_clk_set_rate(struct clk *clk, ulong rate)
+diff --git a/drivers/clk/tegra/tegra186-clk.c b/drivers/clk/tegra/tegra186-clk.c
+index ec52326c3b365eac9845e2fb98531ae0da2f486a..8c364e2dd3412d1298bd39178f19b3cb609aba5a 100644
+--- a/drivers/clk/tegra/tegra186-clk.c
++++ b/drivers/clk/tegra/tegra186-clk.c
+@@ -23,7 +23,7 @@ static ulong tegra186_clk_get_rate(struct clk *clk)
+ 	ret = misc_call(clk->dev->parent, MRQ_CLK, &req, sizeof(req), &resp,
+ 			sizeof(resp));
+ 	if (ret < 0)
+-		return ret;
++		return 0;
+ 
+ 	return resp.clk_get_rate.rate;
+ }
 
 -- 
 2.47.3
