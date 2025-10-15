@@ -2,35 +2,35 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9BCCCD19D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD1BCCD1A1
 	for <webhook@archiver.kernel.org>; Wed, 15 Oct 2025 16:26:24 +0000 (UTC)
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
- by mx.groups.io with SMTP id smtpd.web11.22371.1760545578311080802
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+ by mx.groups.io with SMTP id smtpd.web10.22424.1760545580319167866
  for <u-boot-amlogic@groups.io>;
- Wed, 15 Oct 2025 09:26:18 -0700
+ Wed, 15 Oct 2025 09:26:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=oZUQl/VT;
- spf=pass (domain: postmarketos.org, ip: 95.215.58.189, mailfrom: funderscore@postmarketos.org)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=q9V8enhc;
+ spf=pass (domain: postmarketos.org, ip: 95.215.58.186, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1760545576;
+	s=key1; t=1760545578;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G+uHqac9wEul3LhTgGJ2vWqNvcj+yB8zp18RXMLwONU=;
-	b=oZUQl/VTUrrApOwuN+QUoWtdAcoR/Qxu72fhEhIec0jj1iONZp6YP+Wp+Bu6NIRrHP+A1I
-	IwwFxs2q6dTHtaZv/FuaiOS+Uh9pISVbAAG5+AXmA73sAMZUIV0ESDi2U4DasOTE/OXmGp
-	mC/kcKQSYhdvd3l6f5QOMS7oXxpFEDPeQlKkn/wjrc7hpWltKDnFdF4smJwRiSoOERE5Af
-	nl3hKaIYgk2S4sfuJBFCw9n3JqBoi7CjCc1N2FGyXRWQyXyQVgt7Z5wckGph70q5xXmQzn
-	Pm2Ht8acWtiFXs4rI2cERaRRSPdVLrlv82JoB+UuoGDv4ucRtTcKCs/5vj6Zgg==
+	bh=cuJqrWKtu7VsE0URuDvhagUwHbmI9qkM01nIi7FYQ4U=;
+	b=q9V8enhcTqpBMAW1J5seXwEEEdTF1URyFEcekQQG1khsFH9GOuFs543VjIarBLY/l9CEC3
+	Aw3TI+8EDXPVrjrzUYeZk7pVJBQnFccsT7dnSNfvOtlqaL73w6HRdB6Bjs0nXBD00wLda9
+	NqcfVLjCNHPesAhEyptKYMKApxvt+srfmPqVajNb0TdZbG6ffG8IKpjAinIgXzeMbATSH7
+	jHSNjWs7lFWuPQO6b2Iz3CPxg57N9Hc9jFjIkOexzFdA4pbXDCSb2z5llfAB98FHmlTWMM
+	INxUudlSJI3RHB0kztQCoEmRD5nS6G2CNhedcqAvNFniNa//Yqn8ZkHWXmDJUw==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Wed, 15 Oct 2025 16:25:53 +0000
-Subject: [PATCH v4 6/8] arm: dts: meson-gx-u-boot: add binman configuration
- for U-Boot SPL
+Date: Wed, 15 Oct 2025 16:25:55 +0000
+Subject: [PATCH v4 8/8] doc: board: amlogic: add u-boot-spl documentation
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20251015-spl-gx-v4-6-f5d7fe03225b@postmarketos.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251015-spl-gx-v4-8-f5d7fe03225b@postmarketos.org>
 References: <20251015-spl-gx-v4-0-f5d7fe03225b@postmarketos.org>
 In-Reply-To: <20251015-spl-gx-v4-0-f5d7fe03225b@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -41,211 +41,161 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3916;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4585;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=MGDScDvr0ecHNMeVJtEMktgBY70YxwzIUIKzNaWNYMA=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBo78sf0BdtOhB+k6ovBMpudlZ/XUKlDuiUUbY/M
- hpNprYMHhyJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaO/LHwAKCRCEr8vQ14ma
- AwZKD/wK3WZAMzOxgRG/vqxGj59HfdE2VfqEZSokyfgEittZRfoFfgMoHlIIVN4CPO4it1se3rK
- kwTNrbxNRdJW6dGgioTzB8E21ZHtQ2ey+EbeQrhjscOmWiw6Gj25OycC4LGA2puJa6tDzUMIdBB
- rzcG7WsXXuE35LSYWfHbHM4sgtY8Fut63qwMalBbW3WKH+u/sjzbAUO0wWwy0uDY6oEiyOqhI5I
- 3Vj/8iaizGWmNKBG73/CLOoxcDDqGKJQeIEYxsPz4MOuTcQeDMPGDOoH4v4mWHe/0xdElixKtKs
- n+FJVXIZcVU44iwoQxlIYyd+sq+vb2rdYcPsQAxJBQKn3dczR6AETM0PRLmJ9jESUAkU8Do8InI
- jMMLBRIJmy9tPLFwL88R0qaEKEVod+r5HmeKsqt2aKbmRpSgyROikkD3w5JbGXYwXwAtsdYjpsF
- ohxQ/+M0XWTJWmfLA4e5oM4Z6TEDnIHvFBHib3dIpV1sqhWikjHSzpCRU4DiEFLZtSk1fKh6Eqw
- U4daLee3UGK95ZRsuI9XewleJkH+Q2Dt1QygoJlgpTA60VA3ZBEwzEyppB+Fbz6XQ/aGm+isRLO
- 8jUSnbBn6V9WflS4bQ09T/SDzz8Zx43demNXKovieyG3p4VVUafWOq1wKd24Hr1n7/nXlDM4NAo
- WNDUGSVgbyGku+Q==
+ bh=/VeS5u4ZbzPkuGtKCKD3nwCO7JAbRhgfDqmfzoien60=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBo78sgRrp71Bfq6GKaXBUU+biEemzPofr4NCH0K
+ r9P6fEl1PKJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaO/LIAAKCRCEr8vQ14ma
+ A4vDD/kB5dQLV6SdMRkMXRYMAWluL1Q0+JkBCHaHpzBk12gW2Ux0q8xfN7QoMtkTSND2KZjyhwI
+ duhj9MV+DH3DHtYRQ0fRiKsiCa50qC6VHvR0f3F6P5031ByeZwMKXdmS4Kj1WBH8LRusOKCFNai
+ XL9s3bFV6GhQDDVSmK1sATjajKx1NrmHtyP4N8nQaqSQ8GVCnOAm3y4J+JSkThlRX9O1RWAIRMF
+ ZsA5Bkg6Qsb0DyGzj1MrZF7szdxEfTXCHx3k9lwsEHlwHjFF0bT4bT500ld0pVov27cU6/fRaP5
+ aLPxo8rz0v7MT2XWYANKZ55d+WMsrqXLGfV7zZGm55LdqGI40wgttHFkiuab++Z5vnph9gdxqM1
+ kTD0PHpGNyEDGfV7WJK81p15R+aGZX9OaZFohqY+7AqaeQpF5t9o7HXLCdwL+oRGlQ5jPMk55Bo
+ xyddwCFflI+W3o70k0lH9HTUcdcmqI3E19sNWHTWv+TB8OUhfoE995io9ZHzZi8OjCnI+OT7hUZ
+ wtLLe/+xhEhKMNfsyuzJBgOiu2+n3lLkMc3/CPs8o8y1MoesMpXVC4I50TgVkeAFfPqi9hnKmSJ
+ nOUfNi+6bRJ/uK3LnQsK4ssxd1NoXZDBPkRfXsTmrtsIDiyBkXDYMYlzqT6PDYfmQA7fVQpA7vI
+ 2UAVV9xc9v0jtZw==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
-Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 15 Oct 2025 16:26:24 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2817
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2819
 
-Add binman configuration to meson-gx-u-boot.dtsi to automate building
-bootable images using amlimage.
+Add building and usage instructions for SPL.
 
-Signed-off-by: Ferass El=C2=A0Hafidi <funderscore@postmarketos.org>
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
- arch/arm/dts/meson-gx-u-boot.dtsi | 142 ++++++++++++++++++++++++++++++++=
-++++++
- 1 file changed, 142 insertions(+)
+ doc/board/amlogic/index.rst             |  1 +
+ doc/board/amlogic/pre-generated-fip.rst |  9 ++++
+ doc/board/amlogic/spl.rst               | 77 +++++++++++++++++++++++++++++++++
+ 3 files changed, 87 insertions(+)
 
-diff --git a/arch/arm/dts/meson-gx-u-boot.dtsi b/arch/arm/dts/meson-gx-u-=
-boot.dtsi
-index 9e0620f395e..d05f869c06e 100644
---- a/arch/arm/dts/meson-gx-u-boot.dtsi
-+++ b/arch/arm/dts/meson-gx-u-boot.dtsi
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (c) 2019 BayLibre, SAS.
-  * Author: Maxime Jourdan <mjourdan@baylibre.com>
-+ * Copyright (c) 2023 Ferass El Hafidi <funderscore@postmarketos.org>
-  */
-=20
- / {
-@@ -15,6 +16,16 @@
- 	soc {
- 		bootph-all;
- 	};
+diff --git a/doc/board/amlogic/index.rst b/doc/board/amlogic/index.rst
+index dcd935224ac..23380ac33f2 100644
+--- a/doc/board/amlogic/index.rst
++++ b/doc/board/amlogic/index.rst
+@@ -78,6 +78,7 @@ Boot Documentation
+ 
+    boot-flow
+    pre-generated-fip
++   spl
+ 
+ Board Documentation
+ -------------------
+diff --git a/doc/board/amlogic/pre-generated-fip.rst b/doc/board/amlogic/pre-generated-fip.rst
+index 6a43d776d43..d820bd09115 100644
+--- a/doc/board/amlogic/pre-generated-fip.rst
++++ b/doc/board/amlogic/pre-generated-fip.rst
+@@ -98,6 +98,13 @@ The repo also provides the following files used with GXBB boards:
+ The repo also supports the open-source 'gxlimg' signing tool that can be used to sign
+ U-Boot binaries for GXL/GXM/G12A/G12B/SM1 boards: https://github.com/repk/gxlimg
+ 
++The following binaries can be replaced with open-source implementations:
 +
-+	chosen {
-+		stdout-path =3D "serial0:115200n8";
-+	};
++- bl2.bin (GXBB and GXL only)
++- bl31.img (GXBB, GXL, AXG and G12A only)
 +
-+#if defined(CONFIG_BINMAN)
-+	binman: binman {
-+		multiple-images;
-+	};
-+#endif
- };
-=20
- &vpu {
-@@ -30,3 +41,134 @@
- 	      <0x0 0xc883c000 0x0 0x1000>;
- 	reg-names =3D "hdmitx", "hhi";
- };
++Refer to `Experimental U-Boot SPL Support`_ if you wish to replace them.
 +
-+#if defined(CONFIG_MESON_GX) && defined(CONFIG_BINMAN)
-+/* binman configuration on GXBB and GXL */
+ Licensing
+ ---------
+ 
+@@ -129,3 +136,5 @@ clarified. The current Amlogic distribution licence is below:
+     // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+     // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+     // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 +
-+#if defined(CONFIG_MESON_GXBB)
-+#define BL31_ADDR 0x10100000
-+#else /* GXL */
-+#define BL31_ADDR 0x05100000
-+#endif
++.. _`Experimental U-Boot SPL Support`: spl.rst
+diff --git a/doc/board/amlogic/spl.rst b/doc/board/amlogic/spl.rst
+new file mode 100644
+index 00000000000..d4223090fe9
+--- /dev/null
++++ b/doc/board/amlogic/spl.rst
+@@ -0,0 +1,77 @@
++.. SPDX-License-Identifier: GPL-2.0+
 +
-+/*
-+ * On GXBB the base address of the SCP firmware doesn't matter as SPL wi=
-ll
-+ * send the firmware to the SCP anyway, and can get the base address fro=
-m the
-+ * FIT. On GXL it matters, as BL31 is supposed to send the firmware, so =
-set the
-+ * base address to what GXL BL2 would load the binary to.
-+ */
-+#define  SCP_ADDR 0x13c0000
++Experimental U-Boot SPL Support
++===============================
 +
-+&binman {
-+	u-boot-amlogic {
-+		filename =3D "u-boot-meson-with-spl.bin";
-+		pad-byte =3D <0xff>;
++There's some experimental support for some Amlogic SoCs, in U-Boot SPL.  It
++replaces the proprietary bl2.bin blob used for DRAM init.  Currently Meson GX
++SoCs (GXBB, GXL) are supported.
 +
-+		mkimage {
-+			filename =3D "spl/u-boot-spl-signed.bin";
-+#if defined(CONFIG_MESON_GXBB)
-+			args =3D "-n", "gxbb", "-T", "amlimage";
-+#elif defined(CONFIG_MESON_GXL)
-+			args =3D "-n", "gxl", "-T", "amlimage";
-+#endif
++A subset of Amlogic boards have SPL enabled.  These boards have been tested and
++are known to work to an extent.
 +
-+			blob {
-+				size =3D <0xb000>; /* The BootROM loads 48K max (header is 4K) */
-+				filename =3D "spl/u-boot-spl.bin";
-+			};
-+		};
 +
-+		fit: fit {
-+			description =3D "ATF and U-Boot images";
-+			#address-cells =3D <1>;
-+			fit,fdt-list =3D "of-list";
-+			fit,external-offset =3D <CONFIG_FIT_EXTERNAL_OFFSET>;
-+			fit,align =3D <512>;
-+			offset =3D <CONFIG_SPL_PAD_TO>;
++Building Arm Trusted Firmware (TF-A)
++------------------------------------
 +
-+			images {
-+				u-boot {
-+					description =3D "U-Boot";
-+					type =3D "standalone";
-+					os =3D "u-boot";
-+					arch =3D "arm64";
-+					compression =3D "none";
-+					load =3D <CONFIG_TEXT_BASE>;
-+					entry =3D <CONFIG_TEXT_BASE>;
++This U-Boot SPL port requires the BL31 stage of mainline Arm Trusted
++Firmware-A firmware. It provides an open source implementation of secure
++software for Armv8-A. Build it with:
 +
-+					u-boot-nodtb {
-+					};
-+				};
++.. code-block:: bash
 +
-+				atf {
-+					description =3D "ARM Trusted Firmware";
-+					type =3D "firmware";
-+					os =3D "arm-trusted-firmware";
-+					arch =3D "arm64";
-+					compression =3D "none";
-+					load =3D <BL31_ADDR>;
-+					entry =3D <BL31_ADDR>;
++    $ git clone https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git
++    $ cd trusted-firmware-a
++    $ make CROSS_COMPILE=aarch64-linux-gnu- PLAT=your_soc DEBUG=1
 +
-+					atf-bl31 {
-+						filename =3D "bl31.bin";
-+					};
-+					hash {
-+						algo =3D "sha256";
-+					};
-+				};
++Replace ``your_soc`` with the SoC target you wish to build for. For GXBB it's
++``gxbb`` and for GXL it's ``gxl``.
 +
-+				scp {
-+					description =3D "SCP firmware";
-+					type =3D "scp";
-+					arch =3D "arm"; /* The Cortex-M core is used as SCP */
-+					compression =3D "none";
-+					load =3D <SCP_ADDR>;
 +
-+					scp {
-+						filename =3D "scp.bin";
-+					};
-+					hash {
-+						/*
-+						 * The hash is used by the SCP and passed to it
-+						 * by U-Boot SPL.
-+						 */
-+						algo =3D "sha256";
-+					};
-+				};
++Building a bl30_new.bin binary
++------------------------------
 +
-+				@fdt-SEQ {
-+					description =3D "NAME";
-+					type =3D "flat_dt";
-+					compression =3D "none";
-+				};
++``bl30_new.bin`` has both ``bl30.bin`` and ``bl301.bin`` binary blobs
++bundled. The former is the proper system control processor firmware and the
++latter is a "plug-in" for board-specific DVFS/suspend-resume parameters. For
++more info you may wish to read this page: `Pre-Generated FIP File Repo`_.
 +
-+			};
-+			configurations {
-+				default =3D "@config-DEFAULT-SEQ";
-+				@config-SEQ {
-+					description =3D "NAME.dtb";
-+					fdt =3D "fdt-SEQ";
-+					firmware =3D "atf";
-+					loadables =3D "scp", "u-boot";
-+				};
-+			};
-+		};
-+	};
-+};
++To build using the FIP file repo, simply issue the following commands:
 +
-+&vpu {
-+	/delete-property/ bootph-all;
-+};
++.. code-block:: bash
 +
-+&apb {
-+	bootph-all;
-+};
++    $ cd amlogic-boot-fip/your_board
++    $ make bl30_new.bin
 +
-+&sd_emmc_b {
-+	bootph-all;
-+};
 +
-+&sd_emmc_c {
-+	bootph-all;
-+};
-+#endif
++.. _`Pre-Generated FIP File Repo`: pre-generated-fip.rst
++
++
++U-Boot compilation
++------------------
++
++U-Boot SPL is not enabled by default, instead there are config fragments that
++can be used to enable it, with per-board configuration:
++
++- ``spl-libretech-cc-1gb.config``: 1 GB LePotato board
++- ``spl-libretech-cc-2gb.config``: 2 GB LePotato board
++- ``spl-odroid-c2.config``: ODROID-C2
++- ``spl-videostrong-kii-pro.config``: Videostrong KII Pro
++
++Pick one of them then:
++
++.. code-block:: bash
++
++    $ export CROSS_COMPILE=aarch64-linux-gnu-
++    $ export BL31=path/to/tf-a/bl31.bin                 # Upstream TF-A BL31 binary
++    $ export SCP=path/to/bl30_new.bin                   # bl30_new.bin binary
++    $ make <yourboardname>_defconfig spl-<yourboardname>.config
++    $ make
++
++Write to SD:
++
++.. code-block:: bash
++
++    $ DEV=/dev/boot_device
++    $ dd if=u-boot-meson-with-spl.bin of=$DEV conv=fsync,notrunc bs=512 seek=1
++
 
---=20
+-- 
 2.51.0
 
 
