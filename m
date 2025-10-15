@@ -2,64 +2,66 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9D6CCD1A4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994E8CCD1A7
 	for <webhook@archiver.kernel.org>; Mon, 20 Oct 2025 07:35:44 +0000 (UTC)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
- by mx.groups.io with SMTP id smtpd.web11.18618.1760539193370899738
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.18627.1760539146714728983
  for <u-boot-amlogic@groups.io>;
- Wed, 15 Oct 2025 07:39:53 -0700
+ Wed, 15 Oct 2025 07:39:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=roJ8h0pN;
- spf=pass (domain: linaro.org, ip: 209.85.218.52, mailfrom: andrew.goodbody@linaro.org)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b3d50882cc2so1240497466b.2
-        for <u-boot-amlogic@groups.io>; Wed, 15 Oct 2025 07:39:53 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=csdNiAlp;
+ spf=pass (domain: linaro.org, ip: 209.85.221.53, mailfrom: andrew.goodbody@linaro.org)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3ee1381b835so4444525f8f.1
+        for <u-boot-amlogic@groups.io>; Wed, 15 Oct 2025 07:39:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760539192; x=1761143992; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XIQysIx4KJugzMwhq25Do8V3rR1hN0bWenENxg6QWqg=;
-        b=roJ8h0pNZ4i3r0u5GvhbsgMcgsdOsHZBf6iKpZNJtrMQ9ETT2oY4oZCapO9qZB6IGp
-         o0NYJTGQ2u5vVWeB8OHBJBFbZLMO11Ipogh+e0VclYrrfNwpEb3NsnJryoOmo3f4bcBB
-         QZS/B+nTw6O7XXRX9P2d7SY7VB61KcmtpitaNMAro086WknIZRrwsh+/srCpB9x+W/aK
-         tFCfAnezZ0s5qlMeKmoFm7n3xtx0Z7BoHNSZUabI406rkrKj/GNPvZi2x+kfifJdD3m/
-         qE9m5O+gkdsq33VEr+C3PBWsQwYPabLWL//fg4YzQHaNIStg1SsXO3vum/qdiSA146S2
-         Xiyg==
+        d=linaro.org; s=google; t=1760539145; x=1761143945; darn=groups.io;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q5G/pzUDmAWP39RNeIkhwHh1OMLzLKAP5G+xfsbBMiU=;
+        b=csdNiAlphOEjbJIHAicmxj3F8KET+uVBubyakDRZpXoXw6Fj0vu6zDUXAY3ydwBE38
+         QBcnaHx13sd5ZcWr1c455jJZ8FHji8BsiAqm3ds9NuajqZG8qsI/Vzd2uPDmhBYRF+0N
+         dpk3vP/TPNtr1a5LM+1tdHSUuj6nEUr29HvhJ3wfo0vEoPdGHBPtTFhEI+DC2kdkcRI8
+         uNsOv+QsMVjknh0pXNqUdv6Db6jIwSRsA7lrOph3zxBVfCuD7tFc3F0ZrEKMaUbJOT9u
+         wMkk0wtbGD6mB/Yx+EGwGXgtpFW88dBKMGUkfBmpnCuSbxKzudNKxz0L2IWte6oGYIr+
+         c3fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760539192; x=1761143992;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XIQysIx4KJugzMwhq25Do8V3rR1hN0bWenENxg6QWqg=;
-        b=pCaxa3PdzZamhCpm8KyQF1BazOoKV1z/tC1mCNWqlQx3AyzNHHHTIC3Tfc2D48LTAb
-         rXYOvxBeVFCvCcBgu6oBbVvUVLi371O4vW9b+bo4unOREGTFfM3KKpeojgnuU9gN9+yN
-         Z4oBoUJek+rJrlhTb+b/J5SQeg8Mb/C3Rj/SvabbM9TKi28oggFrXMyQ/9VPbFm5E5JO
-         /ToZyOzl2BgA6mHfFzyyVbsjFBwoTjGHF8hqjdR9bgJHhhww8oaXfb6A9ju6cQVa4Y4Z
-         eFgJbwm8nrH0XinCDrwp7uWWT0wjphpCYGAakX6WldgfULG1tynlSVceY6ym5pRg5LGr
-         Bokg==
-X-Gm-Message-State: AOJu0Yyzu1tJj7lU6adRLekNxf2K1R0XgmiBb0o/fKTnrexFE2Xwg68t
-	wLKBbSR/FI8xV53/Iu+P3wqNtqPxLDUmqNSnSy6cy88QJhfWjDpOQ9R0oEjUQOo6Pu8=
-X-Gm-Gg: ASbGncv+E9Q8ozT8AabG5BsF7Nr+ohPDETCYncCJjF4cnxL6FOvIfMz6EOfkDOhOG/p
-	QTmxFRsBf6axkfI0qN+94Fp1hRDXQtoqz/0MYX4pWI1oWHnDFfLhgzkwIsCFnJzYQMsods19CeG
-	Znhn4Zz2VjepOUtDlErDjh/mnATawQZBFNYZ2wcHjcu2KgBExrBA5B1AFhVhRZdHHpePdMLrzOw
-	XuZrBXzm1eNkc3vD35wn+XUlIKbaf0nazbx4N/+bFwDEy0wK98GSgZ/73mUycnSvfk8eDc0Knzs
-	agaLTR6oXPUhwsCPu0iD3kLefKh1Sgbr9em1jamyYInt7JbpuHuh695JNBuTBl+DiUIVajD9KZ3
-	scpwCcSJ62kKfUiq4dPwH22DRwQG3xJW/hpvfKSe0UiciRmG+m43D1/rDPzTmbV8Kis3z/o6KYw
-	==
-X-Google-Smtp-Source: AGHT+IGf5GpcS+S5beWQTbh6N/+mYXSMKn3Cif7lbjfUlCZ5iEsIZ3P/e9T/0Yu9aiD1g4OPovrjJA==
-X-Received: by 2002:a05:600d:8110:b0:45f:2922:2aef with SMTP id 5b1f17b1804b1-46fa9b09233mr207794075e9.28.1760538750432;
-        Wed, 15 Oct 2025 07:32:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760539145; x=1761143945;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q5G/pzUDmAWP39RNeIkhwHh1OMLzLKAP5G+xfsbBMiU=;
+        b=HH92uh6niYCDXE9jDa9scs8D4oS/3Ezc06L2b2a6IorV5gZilNpXZd0S/2EY/KPrco
+         NJwgdx9pHgTbdOkK8L+nZSbBeNUhFFdAPEWiZE5qUO5mD5zkn3IdHB/vevw7pR4xic+y
+         aa3LnBT4Qgb2x2KpYbxrt6rY1ip8WC5pc/qVNdSmGCdBRzUS5dpHMzakOdL7IT9ITXsi
+         3oF4q/yKVtyLyez5Rz9uakJinTqgTxgVQYy54zzfCV+L/Mfkbv7x+KIpjR2KvOfcFymn
+         UkYCsp8pkDv4VaPtduncMOwuuxBmhpZ+XgRVt9NXJVJWvtcPHuKNDRQZFh7Nt874PGEn
+         O5Mg==
+X-Gm-Message-State: AOJu0YwKd2RebWunbEB84b/8hTxYfC76S5h8fz+nTAG6JfOGYoKUW0FW
+	uyg+9Nr48UGBqmzzSk61eLTOhrgopAZgHWMOFeFTSHZm+1UfLZNNphCfQNniUtwyGvUA/uqCv3Q
+	p/n6xCyo=
+X-Gm-Gg: ASbGncuSOllD7I5xkFCf29KHQiDhFJBZeRr+/9y7Ky5SrNClFBWrgp4ZZCNmvLASRj0
+	60PpPu88uQeoTE0LUNlPEgOO6QiQkGUtvXVH3G8OJeAhpx1pjkNz9Yhk7W8L1VBismFwSus95m7
+	5pDrguynOT+1IHpTSybw7gKtq3XMTJi9lh+j8WguM7wPKZIPZLC6RjUJe6YIGRiY1kZOSPTYymD
+	kvUKwW7/hz4nNKQ3nO50hk5lLc70dCZSP12lLIj34Q0GcytrdViTCrp3C91OwheOTJnMTQFvKlT
+	2SmAKBjL7TCoxCVYFYBPA3pdsdH81sc5hyXxtVN7NK2squNgVnuXvyxR6S51jQwCauAWPgZEfPt
+	LKLzOekldR+mcAPKu6PsGrYTV6KJrzi7qzhnZ/r8FaO6lfFydCeoiqWst+ji2kJMueaD5YgIZVJ
+	7fDNB+sdbg
+X-Google-Smtp-Source: AGHT+IGpoVfGLE6ayqDBinGSA8T0Qgz6rCdE95D3/d6SX1NXBSxgZaQBiBLkHjt9eoMpy6vxWPuThg==
+X-Received: by 2002:a05:600c:5490:b0:46e:4744:add7 with SMTP id 5b1f17b1804b1-46fae33db7amr213440255e9.7.1760538741374;
+        Wed, 15 Oct 2025 07:32:21 -0700 (PDT)
 Received: from artemis2.elfringham.co.uk ([2a0a:ef40:fed:4601:4b30:fdb5:8c7d:59b5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-470ff15ef28sm43185915e9.5.2025.10.15.07.32.28
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-470ff15ef28sm43185915e9.5.2025.10.15.07.32.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Oct 2025 07:32:29 -0700 (PDT)
+        Wed, 15 Oct 2025 07:32:20 -0700 (PDT)
 From: Andrew Goodbody <andrew.goodbody@linaro.org>
-Date: Wed, 15 Oct 2025 15:32:09 +0100
-Subject: [PATCH 04/24] clk: thead: th1520-ap: Remove negative error returns from clk_get_rate
+Subject: [PATCH 00/24] clk: Remove passing of negative errors through unsigned return
+Date: Wed, 15 Oct 2025 15:32:05 +0100
+Message-Id: <20251015-clk_ops-v1-0-5f80f827407e@linaro.org>
 MIME-Version: 1.0
-Message-Id: <20251015-clk_ops-v1-4-5f80f827407e@linaro.org>
-References: <20251015-clk_ops-v1-0-5f80f827407e@linaro.org>
-In-Reply-To: <20251015-clk_ops-v1-0-5f80f827407e@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAGWw72gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDA0MD3eSc7Pj8gmJd4yTz5GTL5OQUA3MDJaDqgqLUtMwKsEnRsbW1AEt
+ mhXtZAAAA
+X-Change-ID: 20251010-clk_ops-3b7cc9ccd070
 To: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
  Paul Barker <paul@pbarker.dev>, uboot-snps-arc@synopsys.com, 
  Dai Okamura <okamura.dai@socionext.com>, 
@@ -119,31 +121,116 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 20 Oct 2025 07:35:44 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2841
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2839
 
-clk_get_rate() returns a ulong so do not attempt to pass negative error
-codes through it.
+This series removes the passing of negative errors through the .get_rate
+function in the clk_ops struct. This function returns an unsigned long.
+The only value guaranteed to not be a valid clock rate is 0. This will
+also bring the drivers more in sync with Linux to allow for easier code
+porting and other maintenance in the future.
+Another series will address the calling of clk_get_rate and associated
+error handling.
 
 Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
 ---
- drivers/clk/thead/clk-th1520-ap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Andrew Goodbody (24):
+      clk: meson: Remove negative error returns from clk_get_rate
+      clk: sifive: Remove negative error returns from clk_get_rate
+      clk: armada-37xx: Remove negative error returns from clk_get_rate
+      clk: thead: th1520-ap: Remove negative error returns from clk_get_rate
+      clk: ccf: Remove negative error returns from clk_get_rate
+      clk: at91: Remove negative error returns from clk_get_rate
+      clk: renesas: Remove negative error returns from clk_get_rate
+      clk: rockchip: Remove negative error returns from clk_get_rate
+      clk: Remove negative error returns from clk_get_rate
+      clk: starfive: Remove negative error returns from clk_get_rate
+      clk: altera: Remove negative error returns from clk_get_rate
+      clk: uniphier: Remove negative error returns from clk_get_rate
+      clk: aspeed: Remove negative error returns from clk_get_rate
+      clk: nuvoton: Remove negative error returns from clk_get_rate
+      clk: exynos: Remove negative error returns from clk_get_rate
+      clk: imx: Remove negative error returns from clk_get_rate
+      clk: ti: Remove negative error returns from clk_get_rate
+      clk: mediatek: Remove negative error returns from clk_get_rate
+      clk: owl: Remove negative error returns from clk_get_rate
+      clk: tegra: Remove negative error returns from clk_get_rate
+      clk: adi: Remove negative error returns from clk_get_rate
+      clk: sophgo: Remove negative error returns from clk_get_rate
+      clk: stm32: Remove negative error returns from clk_get_rate
+      clk: x86: Remove negative error returns from clk_get_rate
 
-diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
-index 6899e1b595a7148a118d3a615d5dfea4b4fb5b96..e913621967eb131b534e8f5b928687967a02a30e 100644
---- a/drivers/clk/thead/clk-th1520-ap.c
-+++ b/drivers/clk/thead/clk-th1520-ap.c
-@@ -985,7 +985,7 @@ static ulong th1520_clk_get_rate(struct clk *clk)
- 
- 	ret = clk_get_by_id(clk->id, &c);
- 	if (ret)
--		return ret;
-+		return 0;
- 
- 	return clk_get_rate(c);
- }
+ drivers/clk/adi/clk-shared.c             |  2 +-
+ drivers/clk/altera/clk-agilex.c          |  2 +-
+ drivers/clk/altera/clk-agilex5.c         |  2 +-
+ drivers/clk/altera/clk-n5x.c             |  2 +-
+ drivers/clk/aspeed/clk_ast2500.c         |  2 +-
+ drivers/clk/aspeed/clk_ast2600.c         |  2 +-
+ drivers/clk/at91/compat.c                |  6 ++--
+ drivers/clk/clk-hsdk-cgu.c               |  2 +-
+ drivers/clk/clk-uclass.c                 |  4 +--
+ drivers/clk/clk.c                        |  2 +-
+ drivers/clk/clk_fixed_factor.c           |  4 +--
+ drivers/clk/clk_k210.c                   |  6 ++--
+ drivers/clk/clk_sandbox.c                |  4 +--
+ drivers/clk/clk_scmi.c                   |  4 +--
+ drivers/clk/clk_vexpress_osc.c           |  2 +-
+ drivers/clk/clk_zynq.c                   |  4 +--
+ drivers/clk/clk_zynqmp.c                 | 40 ++++++++++-----------
+ drivers/clk/exynos/clk-exynos7420.c      |  2 +-
+ drivers/clk/imx/clk-imx8qm.c             |  6 ++--
+ drivers/clk/imx/clk-imx8qxp.c            |  6 ++--
+ drivers/clk/imx/clk-imxrt1170.c          |  2 +-
+ drivers/clk/imx/clk-pllv3.c              |  2 +-
+ drivers/clk/intel/clk_intel.c            |  2 +-
+ drivers/clk/mediatek/clk-mtk.c           |  2 +-
+ drivers/clk/meson/a1.c                   | 10 +++---
+ drivers/clk/meson/axg.c                  | 10 +++---
+ drivers/clk/meson/g12a.c                 | 36 +++++++++----------
+ drivers/clk/meson/gxbb.c                 | 20 +++++------
+ drivers/clk/mvebu/armada-37xx-periph.c   |  2 +-
+ drivers/clk/mvebu/armada-37xx-tbg.c      |  2 +-
+ drivers/clk/nuvoton/clk_npcm.c           | 10 +++---
+ drivers/clk/owl/clk_owl.c                |  2 +-
+ drivers/clk/renesas/clk-rcar-gen2.c      |  8 ++---
+ drivers/clk/renesas/rzg2l-cpg.c          |  8 ++---
+ drivers/clk/rockchip/clk_px30.c          | 24 ++++++-------
+ drivers/clk/rockchip/clk_rk3036.c        |  2 +-
+ drivers/clk/rockchip/clk_rk3066.c        |  8 ++---
+ drivers/clk/rockchip/clk_rk3128.c        |  6 ++--
+ drivers/clk/rockchip/clk_rk3188.c        |  6 ++--
+ drivers/clk/rockchip/clk_rk322x.c        |  4 +--
+ drivers/clk/rockchip/clk_rk3288.c        |  6 ++--
+ drivers/clk/rockchip/clk_rk3308.c        | 26 +++++++-------
+ drivers/clk/rockchip/clk_rk3328.c        |  6 ++--
+ drivers/clk/rockchip/clk_rk3368.c        |  8 ++---
+ drivers/clk/rockchip/clk_rk3399.c        | 12 +++----
+ drivers/clk/rockchip/clk_rk3528.c        | 20 +++++------
+ drivers/clk/rockchip/clk_rk3568.c        | 62 ++++++++++++++++----------------
+ drivers/clk/rockchip/clk_rk3576.c        | 36 +++++++++----------
+ drivers/clk/rockchip/clk_rk3588.c        | 32 ++++++++---------
+ drivers/clk/rockchip/clk_rv1108.c        |  4 +--
+ drivers/clk/rockchip/clk_rv1126.c        | 52 +++++++++++++--------------
+ drivers/clk/sifive/sifive-prci.c         |  8 ++---
+ drivers/clk/sophgo/clk-cv1800b.c         |  2 +-
+ drivers/clk/starfive/clk-jh7110-pll.c    |  2 +-
+ drivers/clk/stm32/clk-stm32-core.c       |  4 +--
+ drivers/clk/stm32/clk-stm32f.c           |  6 ++--
+ drivers/clk/stm32/clk-stm32h7.c          |  4 +--
+ drivers/clk/tegra/tegra-car-clk.c        |  2 +-
+ drivers/clk/tegra/tegra186-clk.c         |  2 +-
+ drivers/clk/thead/clk-th1520-ap.c        |  2 +-
+ drivers/clk/ti/clk-am3-dpll-x2.c         |  4 +--
+ drivers/clk/ti/clk-divider.c             |  4 +--
+ drivers/clk/ti/clk-mux.c                 |  2 +-
+ drivers/clk/ti/clk-sci.c                 |  2 +-
+ drivers/clk/uniphier/clk-uniphier-core.c |  2 +-
+ 65 files changed, 290 insertions(+), 290 deletions(-)
+---
+base-commit: ecdc3872a767fb045be3296d4317ae978a14b022
+change-id: 20251010-clk_ops-3b7cc9ccd070
 
+Best regards,
 -- 
-2.47.3
+Andrew Goodbody <andrew.goodbody@linaro.org>
 
 
