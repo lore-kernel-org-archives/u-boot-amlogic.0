@@ -2,32 +2,32 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42380CCD199
-	for <webhook@archiver.kernel.org>; Wed, 15 Oct 2025 17:58:55 +0000 (UTC)
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
- by mx.groups.io with SMTP id smtpd.web10.24860.1760551130189125928
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E76CCD199
+	for <webhook@archiver.kernel.org>; Thu, 16 Oct 2025 15:26:28 +0000 (UTC)
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+ by mx.groups.io with SMTP id smtpd.web11.29.1760628380400772878
  for <u-boot-amlogic@groups.io>;
- Wed, 15 Oct 2025 10:58:51 -0700
+ Thu, 16 Oct 2025 08:26:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=rCtGu4pt;
- spf=pass (domain: postmarketos.org, ip: 95.215.58.178, mailfrom: funderscore@postmarketos.org)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=M+ddTd+F;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.183, mailfrom: funderscore@postmarketos.org)
 Mime-Version: 1.0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1760551127;
+	s=key1; t=1760628378;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pxf8UGTxgrhrQCFgr+BVBS1LlN7WyOfU6wrfL2utlJw=;
-	b=rCtGu4ptjdKCMs30eNyVS8sJTlWr1byq+fjTnTOFj6sygF21ph/XQhGe7uckZmvf+G2MCS
-	tJrm8EvG4xQXtMjiXX2azbZZDrqO2f0ISjkg1HpZviBCtir5dOwuzg0DgZ+mTqQBbdjLBa
-	dMK28/fLKGYikRPc4swTdbwNA4wTOUknHopSTRvL8TftgHQnQkpTlbX1IkRLZNzTCfwjTH
-	YEp+clUW4q6IKPI4rig1Wxb4I8S1Z7M1z6RxTgc0B6+AR73Y6E9tocxcjjsfsJZk+713LC
-	hnSnBkKdFfwk7Hdxpa0+ANqG+HTzEzleBbC56l1nJzYfodr29ZaMjnsgYvrQcA==
+	bh=xRAdyH80COzGvOaCUW3uw+c2RzqupLFmxszvF4CBqcg=;
+	b=M+ddTd+F+JoIC04Y0LPcdL/yhwSvDGDkx55ExzPdtLFKSZ1F90NbQCyGFw4FMBDFP/vEha
+	2XWlWiDlXdnagGoKdamhcMOkY4EScJ9arx/1kaXFJavAFlw55pI6DHk9iAShmz1zX28pRE
+	QshZy2uF0DwNWnONsxkdsBGJRk8BZYUsHwmTB8L+p2/Rkd7xrqxLqB7Ryf7+6sk6m2dRiM
+	enXL3YCJcX6n9pwXuZ9MRebrDUtyFLYGck1eqqx91alccxxabmx6ZP0nmMlEuqgyJfG2k8
+	mBCZJg+wHsbzPffiFmN5z/BgfW6QPXrrO4wcSLl2X+2ZkSGXmIFRg8x2rOxjnQ==
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 15 Oct 2025 17:58:45 +0000
-Message-Id: <DDJ3ADEZWAMW.27UXI62EV28ZZ@postmarketos.org>
+Date: Thu, 16 Oct 2025 15:26:15 +0000
+Message-Id: <DDJUO5KUY4O0.2ZL250CXB438@postmarketos.org>
 Cc: "Jonas Karlman" <jonas@kwiboo.se>, "Simon Glass" <sjg@chromium.org>,
  <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
  <~postmarketos/upstreaming@lists.sr.ht>
@@ -43,360 +43,190 @@ To: "Quentin Schulz" <quentin.schulz@cherry.de>, "Ferass El Hafidi"
 References: <20251015-spl-gx-v4-0-f5d7fe03225b@postmarketos.org>
  <20251015-spl-gx-v4-6-f5d7fe03225b@postmarketos.org>
  <fc4dbf76-cba2-495c-a4e6-e3f9fc770690@cherry.de>
-In-Reply-To: <fc4dbf76-cba2-495c-a4e6-e3f9fc770690@cherry.de>
+ <DDJ3ADEZWAMW.27UXI62EV28ZZ@postmarketos.org>
+ <88297023-efd7-47bd-bd4d-a03dff1c2e19@cherry.de>
+In-Reply-To: <88297023-efd7-47bd-bd4d-a03dff1c2e19@cherry.de>
 X-Migadu-Flow: FLOW_OUT
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 15 Oct 2025 17:58:55 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2820
+ <u-boot-amlogic@groups.io>; Thu, 16 Oct 2025 15:26:28 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2821
 
 Hi Quentin,
 
-On Wed Oct 15, 2025 at 5:11 PM UTC, Quentin Schulz wrote:
+On Thu Oct 16, 2025 at 9:21 AM UTC, Quentin Schulz wrote:
 > <...>
->> diff --git a/arch/arm/dts/meson-gx-u-boot.dtsi b/arch/arm/dts/meson-gx-u=
--boot.dtsi
->> index 9e0620f395e..d05f869c06e 100644
->> --- a/arch/arm/dts/meson-gx-u-boot.dtsi
->> +++ b/arch/arm/dts/meson-gx-u-boot.dtsi
->> @@ -2,6 +2,7 @@
->>   /*
->>    * Copyright (c) 2019 BayLibre, SAS.
->>    * Author: Maxime Jourdan <mjourdan@baylibre.com>
->> + * Copyright (c) 2023 Ferass El Hafidi <funderscore@postmarketos.org>
->>    */
->>  =20
->>   / {
->> @@ -15,6 +16,16 @@
->>   	soc {
->>   		bootph-all;
->>   	};
->> +
->> +	chosen {
->> +		stdout-path =3D "serial0:115200n8";
->> +	};
->> +
 >
-> I don't believe this is required for binman so please split into its own=
+> Yesterday me was convinced binman is generating the SPL binaries but it=
 =20
-> commit with justification.
+> isn't the case :) Sorry for the noise.
 >
 
-Sounds good to me, will do.
+No worries!
 
->> +#if defined(CONFIG_BINMAN)
->> +	binman: binman {
->> +		multiple-images;
->> +	};
->> +#endif
->>   };
->>  =20
->>   &vpu {
->> @@ -30,3 +41,134 @@
->>   	      <0x0 0xc883c000 0x0 0x1000>;
->>   	reg-names =3D "hdmitx", "hhi";
->>   };
->> +
->> +#if defined(CONFIG_MESON_GX) && defined(CONFIG_BINMAN)
->
-> Isn't MESON_GX implied since we are in meson-gx-u-boot.dtsi?
->
-
-Yeah, it is, so this is redundant.
-
->> +/* binman configuration on GXBB and GXL */
->> +
->> +#if defined(CONFIG_MESON_GXBB)
->> +#define BL31_ADDR 0x10100000
->> +#else /* GXL */
->> +#define BL31_ADDR 0x05100000
->> +#endif
->> +
->
-> First question is... can't this be derived from the binary already?
->
-> On Rockchip we do
->
-> fit,load;
-> fit,entry;
-> fit,data;
->
-> for OP-TEE OS and TF-A though we do split the binaries into multiple=20
-> nodes (see @atf-SEQ and @tee-SEQ). I'm not sure if those properties are=
-=20
-> applicable to only tee and atf nodes without a node for each segment, if=
-=20
-> it isn't...
->
-> I would highly recommend against doing this.
->
-> I would instead have a
->
-> arch/arm/dts/meson-gxbb-u-boot.dtsi with
->
-> &fit {
->      atf {
->          entry =3D <0x10100000>;
->          load =3D <0x10100000>;
->      };
-> };
->
-> and have the default entry and load be 0x05100000 if that really is a=20
-> sensible default (otherwise put none in meson-gx-u-boot.dtsi and declare=
-=20
-> it in each meson-gxXXX-u-boot.dtsi). Then your boards would include=20
-> meson-gxbb-u-boot.dtsi instead of meson-gx-u-boot.dtsi (and the former=20
-> DTSI would include the latter DTSI).
->
-
-Will do.
-
-> The benefit is that it makes it much clearer what would be required to=20
-> support a new family/SoC of the Meson GX family. Or what exactly could=20
-> differ between families. But also keeps the main -u-boot.dtsi readable=20
-> (which is not that easy to do, see our horrendous rockchip-u-boot.dtsi :(=
- )
->
-
-This patch series actually already adds support for all SoCs of the Meson G=
-X
-family.  Newer SoCs are too different from GX SoCs and need their own
--u-boot.dtsi (and init and all)...
-
->> +/*
->> + * On GXBB the base address of the SCP firmware doesn't matter as SPL w=
-ill
->> + * send the firmware to the SCP anyway, and can get the base address fr=
-om the
->> + * FIT. On GXL it matters, as BL31 is supposed to send the firmware, so=
- set the
->> + * base address to what GXL BL2 would load the binary to.
->> + */
->> +#define  SCP_ADDR 0x13c0000
->> +
->> +&binman {
->> +	u-boot-amlogic {
->> +		filename =3D "u-boot-meson-with-spl.bin";
->> +		pad-byte =3D <0xff>;
->> +
->> +		mkimage {
->> +			filename =3D "spl/u-boot-spl-signed.bin";
->> +#if defined(CONFIG_MESON_GXBB)
->> +			args =3D "-n", "gxbb", "-T", "amlimage";
->> +#elif defined(CONFIG_MESON_GXL)
->> +			args =3D "-n", "gxl", "-T", "amlimage";
->> +#endif
->
-> Same here as suggested for the load address of TF-A.
->
-> On Rockchip we use CONFIG_SYS_SOC but I don't think you can on Amlogic.
->
-> You could set SYS_SOC depending on MESON_GXBB/MESON_GXL/... in=20
-> arch/arm/mach-meson/Kconfig and be done with it, but there are some=20
-> side-effects (read SYS_SOC doc).
->
-> Another way is to add
->
-> &binman {
->      mkimage {
->          args =3D "-n", "gxbb", "-T", "amlimage";
->      };
-> };
->
-> to arch/arm/dts/meson-gxbb-u-boot.dtsi.
->
-
-I think this is what I'll go with. Thanks!
-
->> +
->> +			blob {
->> +				size =3D <0xb000>; /* The BootROM loads 48K max (header is 4K) */
->> +				filename =3D "spl/u-boot-spl.bin";
->> +			};
->
-> I'm not sure this actually works? It would rely on a binary located at=20
-> spl/u-boot-spl.bin, which binman doesn't seem to be generating? Either=20
-> we;re missing something to generate it with binman, or something=20
-> external to binman generates it?
->
-
-spl/u-boot-spl.bin is generated on build-time, it's the U-Boot SPL
-binary. And that does work according to my testing...
-
-> Typically it is generated with:
->
-> u-boot-spl {
-> };
->
-
-...but I think this is much cleaner, so I'll go with that.
-
-> ?
->
-> If you're trying to enforce a max size, then we have Kconfig symbols for=
-=20
-> those, probably SPL_MAX_SIZE and then I believe binman enforces those=20
-> one way or another. If it doesn't, then many boards and architecture=20
-> have a problem and we should fix that so you can rely on it.
->
-
-I did know of SPL_MAX_SIZE... Might have just overlooked it though.
-I think this should be the proper way to do this, yeah.
-
->> +		};
->> +
->> +		fit: fit {
->> +			description =3D "ATF and U-Boot images";
->> +			#address-cells =3D <1>;
->> +			fit,fdt-list =3D "of-list";
->> +			fit,external-offset =3D <CONFIG_FIT_EXTERNAL_OFFSET>;
->> +			fit,align =3D <512>;
->> +			offset =3D <CONFIG_SPL_PAD_TO>;
->> +
->> +			images {
->> +				u-boot {
->> +					description =3D "U-Boot";
->> +					type =3D "standalone";
->> +					os =3D "u-boot";
->> +					arch =3D "arm64";
->> +					compression =3D "none";
->> +					load =3D <CONFIG_TEXT_BASE>;
->> +					entry =3D <CONFIG_TEXT_BASE>;
->> +
->> +					u-boot-nodtb {
->> +					};
->
-> Why no hash for U-Boot?
->
->> +				};
->> +
->> +				atf {
->> +					description =3D "ARM Trusted Firmware";
->> +					type =3D "firmware";
->> +					os =3D "arm-trusted-firmware";
->> +					arch =3D "arm64";
->> +					compression =3D "none";
->> +					load =3D <BL31_ADDR>;
->> +					entry =3D <BL31_ADDR>;
->> +
->> +					atf-bl31 {
->> +						filename =3D "bl31.bin";
->
-> I believe this is already the case if you set BL31 environment variable=
-=20
-> to bl31.bin. I would simply remove it and let the user decide what's=20
-> best for them. For binman this comes from the -a atf-bl31-path=3D${BL31}=
-=20
-> argument.
->
-> The benefit is that you can now point to a BL31 outside of U-Boot's=20
-> tree, which is super convenient for debugging TF-A, or with build=20
-> systems like Yocto or Buildroot.
->
-
-You can already point to a BL31 outside U-Boot's tree, and this is what
-I've been always doing when testing.
-
-But I think having it check for a bl31.bin inside the tree when $BL31 is
-not set is a sane default IMO .. but correct me if I'm wrong and it's
-considered poor practise.
-
->> +					};
->> +					hash {
->> +						algo =3D "sha256";
->> +					};
->
-> This means your boards all need to have CONFIG_SPL_SHA256 if=20
-> CONFIG_SPL_FIT_SIGNATURE is provided otherwise the hash cannot be=20
-> verified. Please check if that is the case (enforced at the Kconfig=20
-> symbol-level would be best).
->
-
-ACK.
-
->> +				};
->> +
->> +				scp {
->> +					description =3D "SCP firmware";
->> +					type =3D "scp";
->> +					arch =3D "arm"; /* The Cortex-M core is used as SCP */
->> +					compression =3D "none";
->> +					load =3D <SCP_ADDR>;
->> +
->> +					scp {
->> +						filename =3D "scp.bin";
->> +					};
->
-> I would recommend to attempt mimicking what's been done for atf-bl31=20
-> (then you need to add a new argument to the lists of arguments for=20
-> binman in the root Makefile). See above for benefits.
->
-
-One can already `export SCP=3D../path/to/scp/firmware` and have binman use
-that.
-
->> +					hash {
->> +						/*
->> +						 * The hash is used by the SCP and passed to it
->> +						 * by U-Boot SPL.
->> +						 */
->> +						algo =3D "sha256";
->> +					};
->> +				};
->> +
->> +				@fdt-SEQ {
->> +					description =3D "NAME";
->> +					type =3D "flat_dt";
->> +					compression =3D "none";
->
-> why no hash for FDTs?
->
->> +				};
->> +
->> +			};
->> +			configurations {
->> +				default =3D "@config-DEFAULT-SEQ";
->> +				@config-SEQ {
->> +					description =3D "NAME.dtb";
->> +					fdt =3D "fdt-SEQ";
->> +					firmware =3D "atf";
->> +					loadables =3D "scp", "u-boot";
->> +				};
->> +			};
->> +		};
->> +	};
->> +};
->> +
->
-> Is the below really related to adding binman configuration???
->
-
-I'll split this to a new commit.
-
->> +&vpu {
->> +	/delete-property/ bootph-all;
->> +};
->> +
->> +&apb {
->> +	bootph-all;
->> +};
->> +
->> +&sd_emmc_b {
->> +	bootph-all;
->> +};
->> +
->> +&sd_emmc_c {
->> +	bootph-all;
->> +};
->> +#endif
+>>> Typically it is generated with:
+>>>
+>>> u-boot-spl {
+>>> };
+>>>
 >>=20
+>> ...but I think this is much cleaner, so I'll go with that.
+>>=20
+>
+> And this is essentially
+>
+> blob {
+>      filename =3D "spl/u-boot-spl.bin";
+> };
+>
+> Because tools/binman/etype/u_boot_spl.py is inheriting Entry_blob whose=
+=20
+> default "filename" property is "spl/u-boot-spl.bin".
+>
+> TIL :)
+>
+
+Yep, but I think maybe `u-boot-spl {};` might be cleaner than just
+`blob`..
+
+>>> ?
+>>>
+>>> If you're trying to enforce a max size, then we have Kconfig symbols fo=
+r
+>>> those, probably SPL_MAX_SIZE and then I believe binman enforces those
+>>> one way or another. If it doesn't, then many boards and architecture
+>>> have a problem and we should fix that so you can rely on it.
+>>>
+>>=20
+>> I did know of SPL_MAX_SIZE... Might have just overlooked it though.
+>> I think this should be the proper way to do this, yeah.
+>>=20
+>
+> If I were you I'd triple check though, because I'm not entirely sure it=
+=20
+> does what you want. I quickly checked on Rockchip and I think this is=20
+> rather enforced at the mkimage level in tools/rkcommon.c where we store=
+=20
+> the max size of the xPL (size of available SRAM to U-Boot (third member=
+=20
+> of spl_info struct)) and compare the size of the xPL (TPL if there's=20
+> one, SPL otherwise). See rkcommon_check_params().
+>
+> Though that tool predates our use of binman for generating the images on=
+=20
+> Rockchip, so maybe Binman checks properly. I vaguely remember having=20
+> binman shout at me that my xPL was too big (likely because it detected=20
+> an overlap with the offset at which U-Boot proper is expected). One way=
+=20
+> to be sure is to artificially increase the size of the binary and check=
+=20
+> if it fails when expected to.
+>
+> FYI, on Rockchip we went for a unique binary (u-boot-rockchip.bin) which=
+=20
+> contains both the xPL and U-Boot proper at the expected offset. Then you=
+=20
+> just need to tell users to flash the binary at the offset the BootROM is=
+=20
+> expecting to find the xPL header. It's rather convenient (but is a bit=20
+
+This is also how Amlogic works here. There's a single
+u-boot-meson-with-spl.bin binary which contains the @AML bootROM header,
+raw SPL binary, and the rest are fit images. The issue mainly lies in
+the bootROM only reading up to 0xc000 bytes, and with the header taking
+0x1000 bytes (there's padding, so that SPL gets loaded to 0xd9001000),
+this means we only have 0xb000 for the entire SPL image.
+
+> "bloated" by zeroes if U-Boot proper is much later in the storage medium=
+=20
+> compared to the end of the xPL, e.g. by default on Rockchip proper is=20
+> almost ~8MiB after the start of xPL) because regardless of the device or=
+=20
+> configuration, the flashing instructions are the same. We still expose=20
+> the xPL and proper files individually if you want to flash them by hand=
+=20
+> (which comes in handy when you want to use those 8MiB for storing e.g.=20
+> the U-Boot environment(s) and not erase it whenever you flash U-Boot).=20
+> Food for thoughts :)
+>
+> [...]
+>
+>>>> +				};
+>>>> +
+>>>> +				atf {
+>>>> +					description =3D "ARM Trusted Firmware";
+>>>> +					type =3D "firmware";
+>>>> +					os =3D "arm-trusted-firmware";
+>>>> +					arch =3D "arm64";
+>>>> +					compression =3D "none";
+>>>> +					load =3D <BL31_ADDR>;
+>>>> +					entry =3D <BL31_ADDR>;
+>>>> +
+>>>> +					atf-bl31 {
+>>>> +						filename =3D "bl31.bin";
+>>>
+>>> I believe this is already the case if you set BL31 environment variable
+>>> to bl31.bin. I would simply remove it and let the user decide what's
+>>> best for them. For binman this comes from the -a atf-bl31-path=3D${BL31=
+}
+>>> argument.
+>>>
+>>> The benefit is that you can now point to a BL31 outside of U-Boot's
+>>> tree, which is super convenient for debugging TF-A, or with build
+>>> systems like Yocto or Buildroot.
+>>>
+>>=20
+>> You can already point to a BL31 outside U-Boot's tree, and this is what
+>> I've been always doing when testing.
+>>=20
+>
+> Reading tools/binman/etype/atf_bl31.py and=20
+> tools/binman/etype/blob_named_by_arg.py, it seems if BL31 env variable=20
+> is set (and thus passed via -a atf-bl31-path to binman) then the=20
+> filename property of atf-bl31 node is replaced with BL31. So you're right=
+ :)
+>
+>> But I think having it check for a bl31.bin inside the tree when $BL31 is
+>> not set is a sane default IMO .. but correct me if I'm wrong and it's
+>> considered poor practise.
+>>=20
+>
+> No opinion on this.
+>
+> [...]
+>
+>>>> +				};
+>>>> +
+>>>> +				scp {
+>>>> +					description =3D "SCP firmware";
+>>>> +					type =3D "scp";
+>>>> +					arch =3D "arm"; /* The Cortex-M core is used as SCP */
+>>>> +					compression =3D "none";
+>>>> +					load =3D <SCP_ADDR>;
+>>>> +
+>>>> +					scp {
+>>>> +						filename =3D "scp.bin";
+>>>> +					};
+>>>
+>>> I would recommend to attempt mimicking what's been done for atf-bl31
+>>> (then you need to add a new argument to the lists of arguments for
+>>> binman in the root Makefile). See above for benefits.
+>>>
+>>=20
+>> One can already `export SCP=3D../path/to/scp/firmware` and have binman u=
+se
+>> that.
+>>=20
+>
+> Indeed, it is passed via -a scp-path to Binman. And this mimics what's=20
+> been done earlier in this patch for atf-bl31, so I guess this checks out=
+=20
+> :) Sorry for the noise.
 >
 > Cheers,
 > Quentin
 
-Thanks for the review!
-
-Best regards,
+Thanks,
 Ferass
 
