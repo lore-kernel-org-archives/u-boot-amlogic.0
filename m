@@ -1,232 +1,145 @@
-Return-Path: <funderscore@postmarketos.org>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E76CCD199
-	for <webhook@archiver.kernel.org>; Thu, 16 Oct 2025 15:26:28 +0000 (UTC)
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
- by mx.groups.io with SMTP id smtpd.web11.29.1760628380400772878
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DEFCCD199
+	for <webhook@archiver.kernel.org>; Mon, 20 Oct 2025 07:35:44 +0000 (UTC)
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+ by mx.groups.io with SMTP id smtpd.web10.8209.1760674307284398935
  for <u-boot-amlogic@groups.io>;
- Thu, 16 Oct 2025 08:26:21 -0700
+ Thu, 16 Oct 2025 21:11:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=M+ddTd+F;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.183, mailfrom: funderscore@postmarketos.org)
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1760628378;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xRAdyH80COzGvOaCUW3uw+c2RzqupLFmxszvF4CBqcg=;
-	b=M+ddTd+F+JoIC04Y0LPcdL/yhwSvDGDkx55ExzPdtLFKSZ1F90NbQCyGFw4FMBDFP/vEha
-	2XWlWiDlXdnagGoKdamhcMOkY4EScJ9arx/1kaXFJavAFlw55pI6DHk9iAShmz1zX28pRE
-	QshZy2uF0DwNWnONsxkdsBGJRk8BZYUsHwmTB8L+p2/Rkd7xrqxLqB7Ryf7+6sk6m2dRiM
-	enXL3YCJcX6n9pwXuZ9MRebrDUtyFLYGck1eqqx91alccxxabmx6ZP0nmMlEuqgyJfG2k8
-	mBCZJg+wHsbzPffiFmN5z/BgfW6QPXrrO4wcSLl2X+2ZkSGXmIFRg8x2rOxjnQ==
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=cwd0VPQT;
+ spf=pass (domain: gmail.com, ip: 209.85.210.175, mailfrom: malysagreg@gmail.com)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-782023ca359so1529835b3a.2
+        for <u-boot-amlogic@groups.io>; Thu, 16 Oct 2025 21:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760674307; x=1761279107; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I3IDJ+vLRLRjQM/X27foHFqyNmEo5T95YhlhbnJkmvE=;
+        b=cwd0VPQTfUBYeWGfw+u+qBsXIpqaN/W7Eg6Hoq+Esck4ySQ9RPXuPXxtSU1w7CTjwO
+         fWoPUx67J11jO8MxDImPsYW0ehtJWSr+xDdvMcR5pf+v9J5bNPbMI/rHmGrNY5jFBtRN
+         eWRyJrDRPjMNSwsll8n7Tnz9opQn0NwjpQ/xO3tou6RuNY8dvt6z7LH2JWx4N6XuDTvk
+         JBGdy28Hy5Q7F7QVpD3b1J4e1AGFktzFpmJ/X3gfrGPftaFL5ocaqz7curGLpB7mR3oo
+         0uZx9AWnzkHmb3Pu+xMzvqSeZ0Tt7K5e2iCLveaMHNcRlB0DZ9Otjyr0t10PxnKLFT2z
+         6Iqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760674307; x=1761279107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I3IDJ+vLRLRjQM/X27foHFqyNmEo5T95YhlhbnJkmvE=;
+        b=epobZDit05iPBT1igW8Jg8bxq6RuOA9A4dyYwFfk1UmfhUtW+ImAStcT6CTWtsfImv
+         drBaURmXL4h1O5MStOBTUpMsc7Z5kJF1Ac6SfSJm+pqRjtCGjePMYCRFCcQVI1m0N134
+         lRGnCYfIEMdZp7Uxo5RKRzae1GJvj45nsfqFZ5nwzOlrJhpp6/DX3GxgXPykCJ4QacFR
+         DLEW9txb6tdoPaNCALpGDReoEFVn/JnJ6teudPbCRN439oKP/+++CIuSDjW15oWQM+Zc
+         6bIfiYljfHXtPCCnkcy1ZtWDWxbdtNqIfm9QPHS1kuIenrQlM5MMqL1jOGC49wYfPM5/
+         UrNw==
+X-Gm-Message-State: AOJu0YzaPMqhqmEP2HNkli4b5umNu59mDQ1rGqJuz6JygVONl57p2Im0
+	o21GIsWd/jbon/XrHwoAYrmGhHEBahwcVa0RdVUDODcMaMBYwOnnXaRGTfeys2PuzWvTR9I7EJZ
+	Uvq3QZdoa7YpsjxHBVP9zUBTx03AtJU9KvYMG7g==
+X-Gm-Gg: ASbGncs0+lNT4qOER6VTeXeAMSCgaw1QhhpYEW9KaPc/9lHtqzcik6HhUe4o0JobCaE
+	ZSsVG8Y7jQ+TfpFnZKOYJ3Kj83ffeGhshxzgHz4E9Wqs4CXNiGjoMdUhclo0XF7nK7OLCIgyyM7
+	VpzjzTju6OV8v24s/xOSDPnmmNtJCIDubAJAEJeWxMw2889N62uI3zNLSw4wD2tpStPp8woAA8t
+	prBfeB8RZl3z/SL3H0B0pTQq/RfKxexKfrjhFIC5nI28DDf2PNwT3Vll2NMxAu/cAchQcXSEpco
+	1Q4WQt/ExBYO0q9w7QgmwCutsRc=
+X-Google-Smtp-Source: AGHT+IHmzB317oQkQHpHZys/FCDRniELEzvLa5cBeIzNljKywnu98WHQOROmEkt1+b0K86qlXFzZhCreAxtHUKqwOEE=
+X-Received: by 2002:a17:902:f541:b0:28d:1939:f9c8 with SMTP id
+ d9443c01a7336-290cb0803d5mr30672475ad.26.1760673863365; Thu, 16 Oct 2025
+ 21:04:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20251015-clk_ops-v1-0-5f80f827407e@linaro.org> <20251015-clk_ops-v1-21-5f80f827407e@linaro.org>
+In-Reply-To: <20251015-clk_ops-v1-21-5f80f827407e@linaro.org>
+From: Greg Malysa <malysagreg@gmail.com>
+Date: Fri, 17 Oct 2025 00:02:55 -0400
+X-Gm-Features: AS18NWDw-WCq3s6Td5-JQy4J-j4STU-cSY6siJRlDbWGdZZhreSlSr0RoZPk1VQ
+Message-ID: <CABdDSeVJnZfp86yDXw6sh4cioKTsYj3NcGy_sgVMdja0K_pApg@mail.gmail.com>
+Subject: Re: [PATCH 21/24] clk: adi: Remove negative error returns from clk_get_rate
+To: Andrew Goodbody <andrew.goodbody@linaro.org>
+Cc: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
+	Paul Barker <paul@pbarker.dev>, uboot-snps-arc@synopsys.com, 
+	Dai Okamura <okamura.dai@socionext.com>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, 
+	Joel Stanley <joel@jms.id.au>, 
+	GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, adsp-linux@analog.com, 
+	uboot-stm32@st-md-mailman.stormreply.com, Lukasz Majewski <lukma@denx.de>, 
+	Sean Anderson <seanga2@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Tom Rini <trini@konsulko.com>, Stefan Roese <stefan.roese@mailbox.org>, 
+	Yao Zi <ziyao@disroot.org>, Leo Yu-Chi Liang <ycliang@andestech.com>, 
+	Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+	Simon Glass <sjg@chromium.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+	Kever Yang <kever.yang@rock-chips.com>, Quentin Schulz <quentin.schulz@cherry.de>, 
+	Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Finley Xiao <finley.xiao@rock-chips.com>, Joseph Chen <chenjh@rock-chips.com>, 
+	Elaine Zhang <zhangqing@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Peng Fan <peng.fan@nxp.com>, 
+	Liviu Dudau <liviu.dudau@foss.arm.com>, Michal Simek <michal.simek@amd.com>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Patrick Delaunay <patrick.delaunay@foss.st.com>, Ye Li <ye.li@nxp.com>, 
+	Sam Protsenko <semen.protsenko@linaro.org>, Marek Vasut <marex@denx.de>, 
+	Alice Guo <alice.guo@nxp.com>, Valentin Caron <valentin.caron@foss.st.com>, 
+	Padmarao Begari <padmarao.begari@amd.com>, Minda Chen <minda.chen@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Sumit Garg <sumit.garg@kernel.org>, 
+	Tien Fong Chee <tien.fong.chee@altera.com>, 
+	Alif Zakuan Yuslaimi <alif.zakuan.yuslaimi@altera.com>, 
+	Naresh Kumar Ravulapalli <nareshkumar.ravulapalli@altera.com>, 
+	Muhammad Hazim Izzat Zamri <muhammad.hazim.izzat.zamri@altera.com>, 
+	Tingting Meng <tingting.meng@altera.com>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Ryan Chen <ryan_chen@aspeedtech.com>, 
+	Chia-Wei Wang <chiawei_wang@aspeedtech.com>, Minkyu Kang <mk7.kang@samsung.com>, 
+	Heiko Schocher <hs@nabladev.com>, Jonathan Currier <dullfire@yahoo.com>, Ryder Lee <ryder.lee@mediatek.com>, 
+	Weijie Gao <weijie.gao@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+	Sam Shih <sam.shih@mediatek.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Thierry Reding <treding@nvidia.com>, 
+	Svyatoslav Ryhel <clamor95@gmail.com>, Nathan Barrett-Morrison <nathan.morrison@timesys.com>, 
+	Ian Roberts <ian.roberts@timesys.com>, 
+	Vasileios Bimpikas <vasileios.bimpikas@analog.com>, Utsav Agarwal <utsav.agarwal@analog.com>, 
+	Arturs Artamonovs <arturs.artamonovs@analog.com>, 
+	Gabriel Fernandez <gabriel.fernandez@foss.st.com>, Marek Vasut <marek.vasut@mailbox.org>, 
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 16 Oct 2025 15:26:15 +0000
-Message-Id: <DDJUO5KUY4O0.2ZL250CXB438@postmarketos.org>
-Cc: "Jonas Karlman" <jonas@kwiboo.se>, "Simon Glass" <sjg@chromium.org>,
- <u-boot@lists.denx.de>, <u-boot-amlogic@groups.io>,
- <~postmarketos/upstreaming@lists.sr.ht>
-Subject: Re: [PATCH v4 6/8] arm: dts: meson-gx-u-boot: add binman
- configuration for U-Boot SPL
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ferass El Hafidi" <funderscore@postmarketos.org>
-To: "Quentin Schulz" <quentin.schulz@cherry.de>, "Ferass El Hafidi"
- <funderscore@postmarketos.org>, "Tom Rini" <trini@konsulko.com>, "Neil
- Armstrong" <neil.armstrong@linaro.org>, "Peng Fan" <peng.fan@nxp.com>,
- "Jaehoon Chung" <jh80.chung@samsung.com>, "Beniamino Galvani"
- <b.galvani@gmail.com>
-References: <20251015-spl-gx-v4-0-f5d7fe03225b@postmarketos.org>
- <20251015-spl-gx-v4-6-f5d7fe03225b@postmarketos.org>
- <fc4dbf76-cba2-495c-a4e6-e3f9fc770690@cherry.de>
- <DDJ3ADEZWAMW.27UXI62EV28ZZ@postmarketos.org>
- <88297023-efd7-47bd-bd4d-a03dff1c2e19@cherry.de>
-In-Reply-To: <88297023-efd7-47bd-bd4d-a03dff1c2e19@cherry.de>
-X-Migadu-Flow: FLOW_OUT
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 16 Oct 2025 15:26:28 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2821
+ <u-boot-amlogic@groups.io>; Mon, 20 Oct 2025 07:35:44 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2822
 
-Hi Quentin,
-
-On Thu Oct 16, 2025 at 9:21 AM UTC, Quentin Schulz wrote:
-> <...>
+On Wed, Oct 15, 2025 at 10:33=E2=80=AFAM Andrew Goodbody
+<andrew.goodbody@linaro.org> wrote:
 >
-> Yesterday me was convinced binman is generating the SPL binaries but it=
-=20
-> isn't the case :) Sorry for the noise.
+> clk_get_rate() returns a ulong so do not attempt to pass negative error
+> codes through it.
 >
-
-No worries!
-
->>> Typically it is generated with:
->>>
->>> u-boot-spl {
->>> };
->>>
->>=20
->> ...but I think this is much cleaner, so I'll go with that.
->>=20
+> Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
+> ---
+>  drivers/clk/adi/clk-shared.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> And this is essentially
+> diff --git a/drivers/clk/adi/clk-shared.c b/drivers/clk/adi/clk-shared.c
+> index dcadcafa9d236882af8c7b397eeeeb44461a23cb..600e22940e8cb60b1e510a74e=
+e8068ccf0c7848a 100644
+> --- a/drivers/clk/adi/clk-shared.c
+> +++ b/drivers/clk/adi/clk-shared.c
+> @@ -16,7 +16,7 @@ static ulong adi_get_rate(struct clk *clk)
 >
-> blob {
->      filename =3D "spl/u-boot-spl.bin";
-> };
+>         ret =3D clk_get_by_id(clk->id, &c);
+>         if (ret)
+> -               return ret;
+> +               return 0;
 >
-> Because tools/binman/etype/u_boot_spl.py is inheriting Entry_blob whose=
-=20
-> default "filename" property is "spl/u-boot-spl.bin".
+>         return clk_get_rate(c);
+>  }
 >
-> TIL :)
+> --
+> 2.47.3
 >
 
-Yep, but I think maybe `u-boot-spl {};` might be cleaner than just
-`blob`..
+Reviewed-by: Greg Malysa <malysagreg@gmail.com>
 
->>> ?
->>>
->>> If you're trying to enforce a max size, then we have Kconfig symbols fo=
-r
->>> those, probably SPL_MAX_SIZE and then I believe binman enforces those
->>> one way or another. If it doesn't, then many boards and architecture
->>> have a problem and we should fix that so you can rely on it.
->>>
->>=20
->> I did know of SPL_MAX_SIZE... Might have just overlooked it though.
->> I think this should be the proper way to do this, yeah.
->>=20
->
-> If I were you I'd triple check though, because I'm not entirely sure it=
-=20
-> does what you want. I quickly checked on Rockchip and I think this is=20
-> rather enforced at the mkimage level in tools/rkcommon.c where we store=
-=20
-> the max size of the xPL (size of available SRAM to U-Boot (third member=
-=20
-> of spl_info struct)) and compare the size of the xPL (TPL if there's=20
-> one, SPL otherwise). See rkcommon_check_params().
->
-> Though that tool predates our use of binman for generating the images on=
-=20
-> Rockchip, so maybe Binman checks properly. I vaguely remember having=20
-> binman shout at me that my xPL was too big (likely because it detected=20
-> an overlap with the offset at which U-Boot proper is expected). One way=
-=20
-> to be sure is to artificially increase the size of the binary and check=
-=20
-> if it fails when expected to.
->
-> FYI, on Rockchip we went for a unique binary (u-boot-rockchip.bin) which=
-=20
-> contains both the xPL and U-Boot proper at the expected offset. Then you=
-=20
-> just need to tell users to flash the binary at the offset the BootROM is=
-=20
-> expecting to find the xPL header. It's rather convenient (but is a bit=20
-
-This is also how Amlogic works here. There's a single
-u-boot-meson-with-spl.bin binary which contains the @AML bootROM header,
-raw SPL binary, and the rest are fit images. The issue mainly lies in
-the bootROM only reading up to 0xc000 bytes, and with the header taking
-0x1000 bytes (there's padding, so that SPL gets loaded to 0xd9001000),
-this means we only have 0xb000 for the entire SPL image.
-
-> "bloated" by zeroes if U-Boot proper is much later in the storage medium=
-=20
-> compared to the end of the xPL, e.g. by default on Rockchip proper is=20
-> almost ~8MiB after the start of xPL) because regardless of the device or=
-=20
-> configuration, the flashing instructions are the same. We still expose=20
-> the xPL and proper files individually if you want to flash them by hand=
-=20
-> (which comes in handy when you want to use those 8MiB for storing e.g.=20
-> the U-Boot environment(s) and not erase it whenever you flash U-Boot).=20
-> Food for thoughts :)
->
-> [...]
->
->>>> +				};
->>>> +
->>>> +				atf {
->>>> +					description =3D "ARM Trusted Firmware";
->>>> +					type =3D "firmware";
->>>> +					os =3D "arm-trusted-firmware";
->>>> +					arch =3D "arm64";
->>>> +					compression =3D "none";
->>>> +					load =3D <BL31_ADDR>;
->>>> +					entry =3D <BL31_ADDR>;
->>>> +
->>>> +					atf-bl31 {
->>>> +						filename =3D "bl31.bin";
->>>
->>> I believe this is already the case if you set BL31 environment variable
->>> to bl31.bin. I would simply remove it and let the user decide what's
->>> best for them. For binman this comes from the -a atf-bl31-path=3D${BL31=
-}
->>> argument.
->>>
->>> The benefit is that you can now point to a BL31 outside of U-Boot's
->>> tree, which is super convenient for debugging TF-A, or with build
->>> systems like Yocto or Buildroot.
->>>
->>=20
->> You can already point to a BL31 outside U-Boot's tree, and this is what
->> I've been always doing when testing.
->>=20
->
-> Reading tools/binman/etype/atf_bl31.py and=20
-> tools/binman/etype/blob_named_by_arg.py, it seems if BL31 env variable=20
-> is set (and thus passed via -a atf-bl31-path to binman) then the=20
-> filename property of atf-bl31 node is replaced with BL31. So you're right=
- :)
->
->> But I think having it check for a bl31.bin inside the tree when $BL31 is
->> not set is a sane default IMO .. but correct me if I'm wrong and it's
->> considered poor practise.
->>=20
->
-> No opinion on this.
->
-> [...]
->
->>>> +				};
->>>> +
->>>> +				scp {
->>>> +					description =3D "SCP firmware";
->>>> +					type =3D "scp";
->>>> +					arch =3D "arm"; /* The Cortex-M core is used as SCP */
->>>> +					compression =3D "none";
->>>> +					load =3D <SCP_ADDR>;
->>>> +
->>>> +					scp {
->>>> +						filename =3D "scp.bin";
->>>> +					};
->>>
->>> I would recommend to attempt mimicking what's been done for atf-bl31
->>> (then you need to add a new argument to the lists of arguments for
->>> binman in the root Makefile). See above for benefits.
->>>
->>=20
->> One can already `export SCP=3D../path/to/scp/firmware` and have binman u=
-se
->> that.
->>=20
->
-> Indeed, it is passed via -a scp-path to Binman. And this mimics what's=20
-> been done earlier in this patch for atf-bl31, so I guess this checks out=
-=20
-> :) Sorry for the noise.
->
-> Cheers,
-> Quentin
+Tested on my sc573 and sc598 boards, looks good.
 
 Thanks,
-Ferass
+Greg
 
