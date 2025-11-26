@@ -1,362 +1,230 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA44CCD1AF
-	for <webhook@archiver.kernel.org>; Mon, 20 Oct 2025 07:41:45 +0000 (UTC)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
- by mx.groups.io with SMTP id smtpd.web10.1644.1760898547778475235
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C767D10F25
+	for <webhook@archiver.kernel.org>; Wed, 26 Nov 2025 12:17:35 +0000 (UTC)
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11618.1764159453878712332
  for <u-boot-amlogic@groups.io>;
- Sun, 19 Oct 2025 11:29:08 -0700
+ Wed, 26 Nov 2025 04:17:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=PE6drlys;
- spf=pass (domain: chromium.org, ip: 209.85.208.49, mailfrom: sjg@chromium.org)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-63c09ff13aeso6592787a12.0
-        for <u-boot-amlogic@groups.io>; Sun, 19 Oct 2025 11:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1760898546; x=1761503346; darn=groups.io;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=slG1a2FV7BYhmLZLPqMhyiEapBPBgsoexHX4DXzGNoM=;
-        b=PE6drlys2XXWxfI/8YsPNbCb6d6HYQKaf2CCWJJ5bRrEGtNDWVpR0zasHwsLM4fZEr
-         sasnkQbgE02RExbGiMo67GGkX7iISf1uuIxJStdGVy0ZStZRP1joV14GZqKlKEKMh0Xb
-         SybGZIK50HA1QJQwLlVkQNayzsKDSeh/Q+d7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760898546; x=1761503346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=slG1a2FV7BYhmLZLPqMhyiEapBPBgsoexHX4DXzGNoM=;
-        b=oSbyR3U58/uyC0eoYlX71z/i/cJNCZaqPnOe3cc1G7ew+Hh1+52wYJIgV8uBIkqkrN
-         rRoLoeNcFipYvMuZ4X50NIx+Q6PAZfQkNmJ+W2bGcZttNWWkPXd0SE5BJKoxdVa3NKmS
-         zOzHARHdLAB5bGR07Dm7Kt6AZUMTZADHXGfYFRGAz6s7d+G9Yu+LD5CvgBX90JrPSlzf
-         +F4bssT9UElYz+FIAIWpPXl0keJ5WQ6iGmXzzXZLl7Dym20Gt9yPxRSl4eFJjVKqTmde
-         witcvPBIun4Yxj48DEFHrNbCw5zwjA4tg8wZwGn0kdmBk5NTgXqQWFIJX+EdpmbEnL37
-         LNoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWro8fbTIVVyJaYTx/aFyLxa2cJMRpElrHjZwFnlEk5a59wbVh6VSDlpNSJjOEUpg2iZ94e6diWD2EHncrFzg==@groups.io
-X-Gm-Message-State: AOJu0YxZPrDSlnGgnx0R42CUEbyeZBYsD6OXMO01CmCIepiiAcNXI3CA
-	eey+RHl+ofmVNUtdRHUdgRqZlWQExM1K9KgQELZpjynh78gzRB36e8OVu+cGMnMQOPqTFlXvcvs
-	8mcaXWdUYZcmi5EInqBaDBXyHt0FeWNJBvasnhVzC2ZSB3exjkHAJ9Uy9orA=
-X-Gm-Gg: ASbGncsuVUY1me21MrMY+Qs8YSwWGjEWpiAeGtDgH8rWcKmUsT1nydM5o16wwOy0MF8
-	AQ8ibAFzKcDLkZHUygW4r0qQZUWJfLa8MtwuoKJEiLH+QUdhPFfhd2WKWTUqm1YSoPlBSmaZGfD
-	QealwhEyM7KukwuIyYb5R/yEsA743kiO32HIOD5vVbEgDmgARXf2CoRHV6pNswVShSY/oSA+mPf
-	Q7KN28tWs+MoL+2PHvbf/7Io9FoDQjOk8v195rny9hxpSt9oK94KKATNw==
-X-Google-Smtp-Source: AGHT+IFwL+//y3KSYPT+eT5k0kOcjAQZT1Hk1Mwgsus+5H5K7X814GhlRwTuAkf+HvS1/+Np8q0MREP/Lany+i72QC0=
-X-Received: by 2002:a05:6402:3552:b0:63c:683c:f9d2 with SMTP id
- 4fb4d7f45d1cf-63c683d021cmr2881961a12.12.1760898545906; Sun, 19 Oct 2025
- 11:29:05 -0700 (PDT)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=OARmd+PQ;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.179, mailfrom: funderscore@postmarketos.org)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
+	s=key1; t=1764159451;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PnX7wWKRJkwcU2CNGUKoXiFgnMk4/qUMOWykPosJaIk=;
+	b=OARmd+PQHeSamN9CbyIHkYiA+kcxlRZEBnDKb+u0s2Abu+v2AeswTMVT/zinnGe+8oQn0p
+	pWzxFzNlxyIw5GvDq7apVRAAUOpniMPOAl5jyqqAIhNLxMOkb8FcujN3M3mcpHe5ooqWES
+	bXrtZb3iETNqn5gGgu9WIlfTAwrT+EgrFq3Nt7ie6VuZ60mG9zSEbp1jjSjzfIXr2HKDal
+	/dCmlFjSwoE/xJq+oYSnLk9HNcMGCyWO0xItS7N0gggL+xMAop8keqegyrjSgKcbYyQ74q
+	uqvuN34POnb26zocU5/aYEfA4x5OlH7dIl04mL9M0T82leSVQnydS1zgvUItmA==
+From: Ferass El Hafidi <funderscore@postmarketos.org>
+Subject: [PATCH v5 00/10] initial U-Boot SPL support on Amlogic GX SoCs
+Date: Wed, 26 Nov 2025 12:17:02 +0000
+Message-Id: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
 MIME-Version: 1.0
-References: <20251015-clk_ops-v1-0-5f80f827407e@linaro.org>
- <CAFLszTjnB5zji6JkCpKTHMRZYvcR9hS5rebxZ2_rHj77BWN2VQ@mail.gmail.com>
- <20251018140414.GN6688@bill-the-cat> <CAFLszTjE5Gi8-UEjzAciasnWrBwanqDdDW2xX57ykrsYqAGFyQ@mail.gmail.com>
- <CAPVz0n2seuNyeJzhYgintpj0OR9qzutYER8LxxLDkssPtQbevg@mail.gmail.com> <20251019162104.GP6688@bill-the-cat>
-In-Reply-To: <20251019162104.GP6688@bill-the-cat>
-From: Simon Glass <sjg@chromium.org>
-Date: Sun, 19 Oct 2025 19:28:52 +0100
-X-Gm-Features: AS18NWCMtdV3U__YT7N6Ejrf3zn6ZLGYSzEP5MCZ-f2c5ypFlhCc1wFDqjOK60U
-Message-ID: <CAFLszTi1Zx1i+5U-cGZ78t5vsDsuJX8acDNb6EemgT-L32CpBg@mail.gmail.com>
-Subject: Re: [PATCH 00/24] clk: Remove passing of negative errors through unsigned return
-To: Tom Rini <trini@konsulko.com>
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>, Andrew Goodbody <andrew.goodbody@linaro.org>, 
-	u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
-	Paul Barker <paul@pbarker.dev>, uboot-snps-arc@synopsys.com, 
-	Dai Okamura <okamura.dai@socionext.com>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, 
-	Joel Stanley <joel@jms.id.au>, 
-	GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, adsp-linux@analog.com, 
-	uboot-stm32@st-md-mailman.stormreply.com, Lukasz Majewski <lukma@denx.de>, 
-	Sean Anderson <seanga2@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Stefan Roese <stefan.roese@mailbox.org>, Yao Zi <ziyao@disroot.org>, 
-	Leo Yu-Chi Liang <ycliang@andestech.com>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, 
-	Marek Vasut <marek.vasut+renesas@mailbox.org>, 
-	Philipp Tomsich <philipp.tomsich@vrull.eu>, Kever Yang <kever.yang@rock-chips.com>, 
-	Quentin Schulz <quentin.schulz@cherry.de>, 
-	Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Finley Xiao <finley.xiao@rock-chips.com>, Joseph Chen <chenjh@rock-chips.com>, 
-	Elaine Zhang <zhangqing@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Peng Fan <peng.fan@nxp.com>, 
-	Liviu Dudau <liviu.dudau@foss.arm.com>, Michal Simek <michal.simek@amd.com>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Patrick Delaunay <patrick.delaunay@foss.st.com>, Ye Li <ye.li@nxp.com>, 
-	Sam Protsenko <semen.protsenko@linaro.org>, Marek Vasut <marex@denx.de>, 
-	Alice Guo <alice.guo@nxp.com>, Valentin Caron <valentin.caron@foss.st.com>, 
-	Padmarao Begari <padmarao.begari@amd.com>, Minda Chen <minda.chen@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, Sumit Garg <sumit.garg@kernel.org>, 
-	Tien Fong Chee <tien.fong.chee@altera.com>, 
-	Alif Zakuan Yuslaimi <alif.zakuan.yuslaimi@altera.com>, 
-	Naresh Kumar Ravulapalli <nareshkumar.ravulapalli@altera.com>, 
-	Muhammad Hazim Izzat Zamri <muhammad.hazim.izzat.zamri@altera.com>, 
-	Tingting Meng <tingting.meng@altera.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Ryan Chen <ryan_chen@aspeedtech.com>, 
-	Chia-Wei Wang <chiawei_wang@aspeedtech.com>, Minkyu Kang <mk7.kang@samsung.com>, 
-	Heiko Schocher <hs@nabladev.com>, Jonathan Currier <dullfire@yahoo.com>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Weijie Gao <weijie.gao@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, 
-	Sam Shih <sam.shih@mediatek.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Thierry Reding <treding@nvidia.com>, 
-	Nathan Barrett-Morrison <nathan.morrison@timesys.com>, Greg Malysa <malysagreg@gmail.com>, 
-	Ian Roberts <ian.roberts@timesys.com>, 
-	Vasileios Bimpikas <vasileios.bimpikas@analog.com>, Utsav Agarwal <utsav.agarwal@analog.com>, 
-	Arturs Artamonovs <arturs.artamonovs@analog.com>, 
-	Gabriel Fernandez <gabriel.fernandez@foss.st.com>, Marek Vasut <marek.vasut@mailbox.org>, 
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL7vJmkC/3XOzY7CIBSG4VsxrMUcfo6AK+/DzIIKVKKWBhrix
+ PTeB53YuNDld8LzhjspPkdfyG51J9nXWGIa2sD1ihxPdug9ja5twoEjaAG0jBfa3yhjUneonRM
+ dI+3xmH2It2fo8NP2KZYp5d9nt7LH9T9hQL0SlVGgQgmDzoSANuzHVKarzWc/pbJJuSePUuVvm
+ i0fqLxpHZBbe5TKg/yixaIZgF60aBqNMVuhXJCd+aLlm2a4aNl0QKeCB8E5dh/0PM9/yzu1/F0
+ BAAA=
+X-Change-ID: 20250830-spl-gx-1148b58dd3b1
+To: Tom Rini <trini@konsulko.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Peng Fan <peng.fan@nxp.com>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Beniamino Galvani <b.galvani@gmail.com>
+Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>, 
+ u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Ferass El Hafidi <funderscore@postmarketos.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7632;
+ i=funderscore@postmarketos.org; h=from:subject:message-id;
+ bh=BqWoiW8i4TOC5l10Cz2acVyJu8+vFQnzK645CgdXS8Y=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBpJu/RegU7ypE0QVX7O89XRE0qyRnxmXWpyHmd2
+ Lxu4X3tHziJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaSbv0QAKCRCEr8vQ14ma
+ A3luEACYFIlOz6B1S0BhcymmU6Gfy0m8S3+gnoKqBDaPbw3JZ+LxlWox4ndLI26DZil/dsabs7J
+ DUpUPgIZ3b2qB//TlCLH60hjaJoNEkG5GTMPThxId4N8Nx14TRU0jxbSlaF5EDhOvTXJ3F0k5pp
+ vhp7EyQbpfcpjQtBajFBZ4i5ISKim+zmmQlMUPtVt81vTqOMyz5in0ekcuL+Fv9CG8RJEHOI1wB
+ ElywpO2mpwg0CqcNOyQ1Nb8etnqmbaVRBnJnMTviPFGB0YqXKP1mjmlVV9u4sJ6q8rmWhqabnOM
+ kk2339bgyTnNvEDsdVByJptTBYsWoxVUFes0cyNFzC+uBqNPETol6y+IIn8NGI6UOHZB/MrjZEt
+ ftdisxqumKl02zam17sLQ4tZzu6LC43aEfYZhZb+nX3qSNMWd6O3KH5eW59WSpFvNrUdLpgNSCV
+ MOk1zwYjPGAEoezca2/wVFCi/St/3Vic51CoCcjll+hBNYB5C1q0SJD4E5p91NJU97ga6rw50un
+ GMWnxWq8Vfn0coKh/dwZq9rkhfoVPjh7u6wU+dund0/XV2UmKdMkFGa+4h5tnq/luHQaEQ0lRbG
+ 29lE50wgQmWJoUF6ppM9bup3vqt77JHKKGEcSZMAtivxq1Gf+FgdJGo3UZTAqzOmSQbrYJCKUon
+ dyIkyXALWHuxQWQ==
+X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
+ fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
+X-Migadu-Flow: FLOW_OUT
 List-Id: <u-boot-amlogic.groups.io>
-X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 20 Oct 2025 07:41:45 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2850
+ <u-boot-amlogic@groups.io>; Wed, 26 Nov 2025 12:17:35 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2851
 
-Hi Tom,
+This patch series adds support for U-Boot SPL booting on Amlogic GX SoCs,
+replacing the "bl2.bin" binary blob running as TF-A BL2 on these boards.
 
-On Sun, 19 Oct 2025 at 17:21, Tom Rini <trini@konsulko.com> wrote:
->
-> On Sun, Oct 19, 2025 at 04:45:24PM +0300, Svyatoslav Ryhel wrote:
-> > =D0=BD=D0=B4, 19 =D0=B6=D0=BE=D0=B2=D1=82. 2025=E2=80=AF=D1=80. =D0=BE =
-16:05 Simon Glass <sjg@chromium.org> =D0=BF=D0=B8=D1=88=D0=B5:
-> > >
-> > > Hi Tom, Andrew,
-> > >
-> > > On Sat, 18 Oct 2025 at 15:04, Tom Rini <trini@konsulko.com> wrote:
-> > > >
-> > > > On Sat, Oct 18, 2025 at 09:34:42AM +0100, Simon Glass wrote:
-> > > > > Hi Andrew,
-> > > > >
-> > > > > On Wed, 15 Oct 2025 at 15:32, Andrew Goodbody
-> > > > > <andrew.goodbody@linaro.org> wrote:
-> > > > > >
-> > > > > > This series removes the passing of negative errors through the =
-.get_rate
-> > > > > > function in the clk_ops struct. This function returns an unsign=
-ed long.
-> > > > > > The only value guaranteed to not be a valid clock rate is 0. Th=
-is will
-> > > > > > also bring the drivers more in sync with Linux to allow for eas=
-ier code
-> > > > > > porting and other maintenance in the future.
-> > > > > > Another series will address the calling of clk_get_rate and ass=
-ociated
-> > > > > > error handling.
-> > > > >
-> > > > > Some indication of the problem you ran into would be useful here.
-> > > >
-> > > > The problem statement is in the paragraph you're quoting. The numer=
-ical
-> > > > value of -ENOENT is a valid clock rate.
-> > >
-> > > No, I mean a problem with a board, or something like that. We are
-> > > talking here about not being able to return a valid clock rate betwee=
-n
-> > > 4294967040 and 4294967295, which is only even a theoretical problem o=
-n
-> > > 32-bit machines. So I think it is reasonable to include a motivation.
-> > >
-> > >
-> > > >
-> > > > > > Signed-off-by: Andrew Goodbody <andrew.goodbody@linaro.org>
-> > > > > > ---
-> > > > > > Andrew Goodbody (24):
-> > > > > >       clk: meson: Remove negative error returns from clk_get_ra=
-te
-> > > > > >       clk: sifive: Remove negative error returns from clk_get_r=
-ate
-> > > > > >       clk: armada-37xx: Remove negative error returns from clk_=
-get_rate
-> > > > > >       clk: thead: th1520-ap: Remove negative error returns from=
- clk_get_rate
-> > > > > >       clk: ccf: Remove negative error returns from clk_get_rate
-> > > > > >       clk: at91: Remove negative error returns from clk_get_rat=
-e
-> > > > > >       clk: renesas: Remove negative error returns from clk_get_=
-rate
-> > > > > >       clk: rockchip: Remove negative error returns from clk_get=
-_rate
-> > > > > >       clk: Remove negative error returns from clk_get_rate
-> > > > > >       clk: starfive: Remove negative error returns from clk_get=
-_rate
-> > > > > >       clk: altera: Remove negative error returns from clk_get_r=
-ate
-> > > > > >       clk: uniphier: Remove negative error returns from clk_get=
-_rate
-> > > > > >       clk: aspeed: Remove negative error returns from clk_get_r=
-ate
-> > > > > >       clk: nuvoton: Remove negative error returns from clk_get_=
-rate
-> > > > > >       clk: exynos: Remove negative error returns from clk_get_r=
-ate
-> > > > > >       clk: imx: Remove negative error returns from clk_get_rate
-> > > > > >       clk: ti: Remove negative error returns from clk_get_rate
-> > > > > >       clk: mediatek: Remove negative error returns from clk_get=
-_rate
-> > > > > >       clk: owl: Remove negative error returns from clk_get_rate
-> > > > > >       clk: tegra: Remove negative error returns from clk_get_ra=
-te
-> > > > > >       clk: adi: Remove negative error returns from clk_get_rate
-> > > > > >       clk: sophgo: Remove negative error returns from clk_get_r=
-ate
-> > > > > >       clk: stm32: Remove negative error returns from clk_get_ra=
-te
-> > > > > >       clk: x86: Remove negative error returns from clk_get_rate
-> > > > > >
-> > > > > >  drivers/clk/adi/clk-shared.c             |  2 +-
-> > > > > >  drivers/clk/altera/clk-agilex.c          |  2 +-
-> > > > > >  drivers/clk/altera/clk-agilex5.c         |  2 +-
-> > > > > >  drivers/clk/altera/clk-n5x.c             |  2 +-
-> > > > > >  drivers/clk/aspeed/clk_ast2500.c         |  2 +-
-> > > > > >  drivers/clk/aspeed/clk_ast2600.c         |  2 +-
-> > > > > >  drivers/clk/at91/compat.c                |  6 ++--
-> > > > > >  drivers/clk/clk-hsdk-cgu.c               |  2 +-
-> > > > > >  drivers/clk/clk-uclass.c                 |  4 +--
-> > > > > >  drivers/clk/clk.c                        |  2 +-
-> > > > > >  drivers/clk/clk_fixed_factor.c           |  4 +--
-> > > > > >  drivers/clk/clk_k210.c                   |  6 ++--
-> > > > > >  drivers/clk/clk_sandbox.c                |  4 +--
-> > > > > >  drivers/clk/clk_scmi.c                   |  4 +--
-> > > > > >  drivers/clk/clk_vexpress_osc.c           |  2 +-
-> > > > > >  drivers/clk/clk_zynq.c                   |  4 +--
-> > > > > >  drivers/clk/clk_zynqmp.c                 | 40 ++++++++++------=
------
-> > > > > >  drivers/clk/exynos/clk-exynos7420.c      |  2 +-
-> > > > > >  drivers/clk/imx/clk-imx8qm.c             |  6 ++--
-> > > > > >  drivers/clk/imx/clk-imx8qxp.c            |  6 ++--
-> > > > > >  drivers/clk/imx/clk-imxrt1170.c          |  2 +-
-> > > > > >  drivers/clk/imx/clk-pllv3.c              |  2 +-
-> > > > > >  drivers/clk/intel/clk_intel.c            |  2 +-
-> > > > > >  drivers/clk/mediatek/clk-mtk.c           |  2 +-
-> > > > > >  drivers/clk/meson/a1.c                   | 10 +++---
-> > > > > >  drivers/clk/meson/axg.c                  | 10 +++---
-> > > > > >  drivers/clk/meson/g12a.c                 | 36 +++++++++-------=
+Boards tested:
+ - Libre Computer LePotato (S905X, 1 GB)
+ - Videostrong KII Pro (S905)
+ - Xiaomi Mi TV Stick (S805Y) - downstream defconfig [1]
+ - ODROID-C2 (S905)
+
+Each of these boards were tested booting mainline u-boot and TF-A BL31,
+either from an SD card or using Ymodem, and then booting to Linux.
+
+More testing is, of course, very much welcome. In particular, further
+testing of other boards that could not be tested, of the ODROID-C2, and
+of the 2 GB LePotato would be appreciated.
+
+Currently known issues:
+ - LPDDR2/LPDDR3 support not implemented
+ - some DRAM rank modes are not supported
+ - eMMC booting is broken (pwrseq?)
+ - SPI boot is untested
+ - we are quite limited in space, so e.g. the clock driver does not fit
+
+Future work:
+ - add logic to automatically detect rank mode and DRAM size
+ - investigate using U-Boot TPL to free some space
+   - may fix eMMC booting as a side effect
+ - support more rank modes
+ - add support for Amlogic g12b/sm1 SoCs
+ - ...
+
+See doc/board/amlogic/spl.rst for building and installation instructions.
+
+This patch series depends on Jonas Karlman's amlimage work, which was
+sent in the mailing list [2]. It has been rebased for resending as part 
+of this patch series. Thanks Jonas!
+
+I would like to also thank Libre Computer and MNT Research for donating
+boards to me and the rest of the linux-amlogic community for the
+invaluable help.
+
+[1]: https://scm.dersco.re/amlogic/u-boot-kii-pro.git/commit/?h=wip/spl-aquaman-2025.08&id=d030951d0aaac04f1e2cc8a8eb01eb662a782f21
+[2]: https://lore.kernel.org/all/20250103215904.2590769-1-jonas@kwiboo.se/
+
+Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
-> > > > > >  drivers/clk/meson/gxbb.c                 | 20 +++++------
-> > > > > >  drivers/clk/mvebu/armada-37xx-periph.c   |  2 +-
-> > > > > >  drivers/clk/mvebu/armada-37xx-tbg.c      |  2 +-
-> > > > > >  drivers/clk/nuvoton/clk_npcm.c           | 10 +++---
-> > > > > >  drivers/clk/owl/clk_owl.c                |  2 +-
-> > > > > >  drivers/clk/renesas/clk-rcar-gen2.c      |  8 ++---
-> > > > > >  drivers/clk/renesas/rzg2l-cpg.c          |  8 ++---
-> > > > > >  drivers/clk/rockchip/clk_px30.c          | 24 ++++++-------
-> > > > > >  drivers/clk/rockchip/clk_rk3036.c        |  2 +-
-> > > > > >  drivers/clk/rockchip/clk_rk3066.c        |  8 ++---
-> > > > > >  drivers/clk/rockchip/clk_rk3128.c        |  6 ++--
-> > > > > >  drivers/clk/rockchip/clk_rk3188.c        |  6 ++--
-> > > > > >  drivers/clk/rockchip/clk_rk322x.c        |  4 +--
-> > > > > >  drivers/clk/rockchip/clk_rk3288.c        |  6 ++--
-> > > > > >  drivers/clk/rockchip/clk_rk3308.c        | 26 +++++++-------
-> > > > > >  drivers/clk/rockchip/clk_rk3328.c        |  6 ++--
-> > > > > >  drivers/clk/rockchip/clk_rk3368.c        |  8 ++---
-> > > > > >  drivers/clk/rockchip/clk_rk3399.c        | 12 +++----
-> > > > > >  drivers/clk/rockchip/clk_rk3528.c        | 20 +++++------
-> > > > > >  drivers/clk/rockchip/clk_rk3568.c        | 62 ++++++++++++++++=
-----------------
-> > > > > >  drivers/clk/rockchip/clk_rk3576.c        | 36 +++++++++-------=
+Changes in v5:
+ - Mention future work in cover letter
+ - Remove unrelated changes from binman patch
+ - Enforce SPL max size at build system level rather than at the mkimage
+   level
+ - Add meson-gxbb-u-boot.dtsi (similar to already existing
+   meson-gxl-u-boot.dtsi)
+ - DT: Drop a few #define's:
+   - BL31_ADDR => BL31 address now set in gxbb/gxl-u-boot DTSI
+   - SCP_ADDR
+   - Don't check CONFIG_MESON_GX (already implied)
+ - DT: SHA256 hash on all images
+   - Check CONFIG_SPL_FIT_SIGNATURE and CONFIG_SPL_SHA256 (except for
+     SCP image, not a dealbreaker if it cannot be verified in SPL, as it
+     is verified by the SCP bootROM anyway)
+ - DT: move mkimage args to gxbb/gxl-u-boot DTSI
+ - Mention AML_STDPARAMS=1 in TF-A building docs
+ - Fix typo in spl.c (s/YMODEM/YMODEM_SUPPORT/)
+ - Link to v4: https://lore.kernel.org/r/20251015-spl-gx-v4-0-f5d7fe03225b@postmarketos.org
+
+Changes in v4:
+ - Remove "RFC" prefix, no longer an RFC patch (but still testing
+   and feedback very much welcome)
+ - Continue using meson_gx_mmc_is_compatible in DM MMC driver
+ - Fix typo in amlimage secure boot info printf
+ - Drop FIT image post-processing on libretech-cc
+ - Add Neil's R-b tags for all the other patches except MMC patch
+ - Link to v3: https://lore.kernel.org/r/20251008-spl-gx-v3-0-5999637df4b9@postmarketos.org
+
+Changes in v3:
+ - Do not depend on DEBUG_UART_BASE in the non-DM UART driver
+ - Grammar fixes in documentation
+ - amlimage: check digest type in _print_header, version in _verify_image
+ - Link to v2: https://lore.kernel.org/r/20250910-spl-gx-v2-0-8f52aac47e04@postmarketos.org
+
+Changes in v2:
+ - Drop "mmc: meson_gx_mmc: don't bail if there is no clock driver",
+   given SPL does not use the DM MMC driver by default anyway
+ - Drop spurious DM_DRIVER_ALIAS from UART driver
+ - Document in send_scp() why it is only needed for GXBB
+ - Move GXBB/GXL-specific code to separate spl-gxbb/spl-gxl files
+ - Add a few defines for pll init
+ - Actually disable FIT image post-processing on GXL
+ - Add Neil's R-b tag (subset)
+ - Link to v1: https://lore.kernel.org/r/20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org
+
 ---
-> > > > > >  drivers/clk/rockchip/clk_rk3588.c        | 32 ++++++++--------=
--
-> > > > > >  drivers/clk/rockchip/clk_rv1108.c        |  4 +--
-> > > > > >  drivers/clk/rockchip/clk_rv1126.c        | 52 +++++++++++++---=
------------
-> > > > > >  drivers/clk/sifive/sifive-prci.c         |  8 ++---
-> > > > > >  drivers/clk/sophgo/clk-cv1800b.c         |  2 +-
-> > > > > >  drivers/clk/starfive/clk-jh7110-pll.c    |  2 +-
-> > > > > >  drivers/clk/stm32/clk-stm32-core.c       |  4 +--
-> > > > > >  drivers/clk/stm32/clk-stm32f.c           |  6 ++--
-> > > > > >  drivers/clk/stm32/clk-stm32h7.c          |  4 +--
-> > > > > >  drivers/clk/tegra/tegra-car-clk.c        |  2 +-
-> > > > > >  drivers/clk/tegra/tegra186-clk.c         |  2 +-
-> > > > > >  drivers/clk/thead/clk-th1520-ap.c        |  2 +-
-> > > > > >  drivers/clk/ti/clk-am3-dpll-x2.c         |  4 +--
-> > > > > >  drivers/clk/ti/clk-divider.c             |  4 +--
-> > > > > >  drivers/clk/ti/clk-mux.c                 |  2 +-
-> > > > > >  drivers/clk/ti/clk-sci.c                 |  2 +-
-> > > > > >  drivers/clk/uniphier/clk-uniphier-core.c |  2 +-
-> > > > > >  65 files changed, 290 insertions(+), 290 deletions(-)
-> > > > > > ---
-> > > > > > base-commit: ecdc3872a767fb045be3296d4317ae978a14b022
-> > > > > > change-id: 20251010-clk_ops-3b7cc9ccd070
-> > > > > >
-> > > > > > Best regards,
-> > > > > > --
-> > > > > > Andrew Goodbody <andrew.goodbody@linaro.org>
-> > > > > >
-> > > > >
-> > > > > If you don't return an error, we cannot tell if the operation
-> > > > > succeeded, or not. U-Boot needs to be deterministic and we need t=
-o be
-> > > > > able to debug errors and detect them at runtime.
-> > > > >
-> > > > > We use ulong for the return value as a bit of a compromise, since=
- it
-> > > > > is inefficient to use 64-bit on a 32-bit machine. Ideally it woul=
-d be
-> > > > > long, but some clock rates are 3GHz and it would be confusing to =
-cast
-> > > > > to ulong before using the value.
-> > > > >
-> > > > > An alternative we discussed was to return an integer error with t=
-he
-> > > > > clock rate returned in a parameter, but that seemed less efficien=
-t.
-> > > > >
-> > > > > With 64-bit machines, there really isn't a problem. Just checking=
- for
-> > > > > a negative value is good enough, since the clock rate isn't going=
- to
-> > > > > be 9 exahertz(?). Values between -CONFIG_ERR_PTR_OFFSET and 0 are
-> > > > > errors and are defined to be so.
-> > > > >
-> > > > > If you want clk_get_rate() to work like Linux (suppress / ignore
-> > > > > errors?), that's fine, but please create a clk_get_rate_err() (or
-> > > > > similar) which actually returns the correct error, and keep the e=
-rror
-> > > > > return on the uclass interface. It is not uncommon to have the uc=
-lass
-> > > > > do some processing on values passed to/from driver. This allows p=
-eople
-> > > > > who care to obtain the error.
-> > > >
-> > > > This is moving things in the right direction of having the error
-> > > > reporting and handling done where it can be done correctly. If ther=
-e's
-> > > > further parts of the Linux kernel-like API we need, we can take tho=
-se
-> > > > next.
-> > >
-> > > Here is part of the patch:
-> > >
-> > > --- a/drivers/clk/meson/a1.c
-> > > +++ b/drivers/clk/meson/a1.c
-> > > @@ -359,7 +359,7 @@ static ulong meson_div_get_rate(struct clk *clk,
-> > > unsigned long id)
-> > >
-> > >         info =3D meson_clk_get_info(clk, id, MESON_CLK_DIV);
-> > >         if (IS_ERR(info))
-> > > -               return PTR_ERR(info);
-> > > +               return 0;
-> > >
-> > > I don't see anything in that fragment other than just ignoring errors=
-.
-> > >
-> >
-> > I agree with Simon. This patchset may cause a lot of problems for all
-> > boards it changes in case clk ops fail, since it silences all error
-> > returns. Any clock error will be untrackable unless you know where and
-> > what to look specifically.
->
-> I think it's worth going back to the original thread:
-> https://lore.kernel.org/u-boot/f5c94319-8ef8-459d-88b2-836702779cfb@linar=
-o.org/
+Ferass El Hafidi (9):
+      mmc: meson_gx_mmc: add minimal non-DM driver
+      serial: serial_meson: add minimal non-DM driver
+      arm: meson: initial u-boot SPL support for GX SoCs
+      arm: meson: spl: add support for SPL DRAM init
+      arm: dts: meson: add meson-gxbb-u-boot.dtsi
+      arm: dts: meson-gx-u-boot: add binman configuration for U-Boot SPL
+      board: amlogic: add kconfig fragments for SPL
+      spl: meson: set SPL max size for GX SoCs
+      doc: board: amlogic: add u-boot-spl documentation
 
-Specifically Heinrich's response which seems to make sense to me -
-i.e. IS_ERR_VALUE(). A series that introduced that everywhere would
-get my vote :-)
+Jonas Karlman (1):
+      tools: mkimage: Add Amlogic Boot Image type
 
->
-> As part of the problem is that what we have today does not work. This is
-> why I'm think it's OK to first return 0, always, as the invalid clock
-> rate and then re-introduce error checking that can work.
+ MAINTAINERS                                        |   1 +
+ arch/arm/dts/meson-gx-u-boot.dtsi                  | 125 ++++++
+ arch/arm/dts/meson-gxbb-kii-pro-u-boot.dtsi        |   2 +-
+ arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi      |   2 +-
+ arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi       |   2 +-
+ arch/arm/dts/meson-gxbb-p200-u-boot.dtsi           |   2 +-
+ arch/arm/dts/meson-gxbb-p201-u-boot.dtsi           |   2 +-
+ arch/arm/dts/meson-gxbb-u-boot.dtsi                |  27 ++
+ arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi      |   2 +-
+ arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi    |   2 +-
+ arch/arm/dts/meson-gxl-u-boot.dtsi                 |  20 +
+ arch/arm/include/asm/arch-meson/clock-gx.h         |  14 +
+ arch/arm/include/asm/arch-meson/dram-gx.h          | 341 +++++++++++++++++
+ arch/arm/include/asm/arch-meson/dram-gxbb.h        | 168 +++++++++
+ arch/arm/include/asm/arch-meson/dram-gxl.h         | 193 ++++++++++
+ arch/arm/include/asm/arch-meson/dram-settings-gx.h | 296 +++++++++++++++
+ arch/arm/include/asm/arch-meson/dram-timings-gx.h  | 117 ++++++
+ arch/arm/include/asm/arch-meson/gx.h               |  41 ++
+ arch/arm/mach-meson/Kconfig                        | 112 +++++-
+ arch/arm/mach-meson/Makefile                       |  10 +
+ arch/arm/mach-meson/board-common.c                 |  11 +
+ arch/arm/mach-meson/dram-gx.c                      | 419 +++++++++++++++++++++
+ arch/arm/mach-meson/dram-gxbb.c                    | 174 +++++++++
+ arch/arm/mach-meson/dram-gxl.c                     | 167 ++++++++
+ arch/arm/mach-meson/spl-gx.c                       | 168 +++++++++
+ arch/arm/mach-meson/spl-gxbb.c                     | 113 ++++++
+ arch/arm/mach-meson/spl-gxl.c                      |  39 ++
+ arch/arm/mach-meson/spl.c                          | 123 ++++++
+ board/amlogic/p200/spl-odroid-c2.config            |  38 ++
+ board/amlogic/p200/spl-videostrong-kii-pro.config  |  39 ++
+ board/amlogic/p212/spl-libretech-cc-1gb.config     |  36 ++
+ board/amlogic/p212/spl-libretech-cc-2gb.config     |  38 ++
+ boot/image.c                                       |   1 +
+ common/spl/Kconfig                                 |   1 +
+ doc/board/amlogic/index.rst                        |   1 +
+ doc/board/amlogic/pre-generated-fip.rst            |   9 +
+ doc/board/amlogic/spl.rst                          |  77 ++++
+ drivers/mmc/meson_gx_mmc.c                         |  77 ++++
+ drivers/serial/serial.c                            |   2 +
+ drivers/serial/serial_meson.c                      | 119 +++++-
+ include/image.h                                    |   1 +
+ tools/Makefile                                     |   1 +
+ tools/amlimage.c                                   | 255 +++++++++++++
+ 43 files changed, 3379 insertions(+), 9 deletions(-)
+---
+base-commit: 072264c4b3406aee50dad08355588577a547ab48
+change-id: 20250830-spl-gx-1148b58dd3b1
 
-OK, but actually what doesn't work today? Which board is broken? Is
-the problem that no one checks the errors?
+Best regards,
+-- 
+Ferass El Hafidi <funderscore@postmarketos.org>
 
-- Simon
 
