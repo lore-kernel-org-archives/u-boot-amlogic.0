@@ -2,40 +2,37 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C767D10F25
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C62D10F2B
 	for <webhook@archiver.kernel.org>; Wed, 26 Nov 2025 12:17:35 +0000 (UTC)
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.11618.1764159453878712332
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.11787.1764159454409373709
  for <u-boot-amlogic@groups.io>;
  Wed, 26 Nov 2025 04:17:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=OARmd+PQ;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.179, mailfrom: funderscore@postmarketos.org)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=ICyXSQNp;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.174, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1764159451;
+	s=key1; t=1764159452;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PnX7wWKRJkwcU2CNGUKoXiFgnMk4/qUMOWykPosJaIk=;
-	b=OARmd+PQHeSamN9CbyIHkYiA+kcxlRZEBnDKb+u0s2Abu+v2AeswTMVT/zinnGe+8oQn0p
-	pWzxFzNlxyIw5GvDq7apVRAAUOpniMPOAl5jyqqAIhNLxMOkb8FcujN3M3mcpHe5ooqWES
-	bXrtZb3iETNqn5gGgu9WIlfTAwrT+EgrFq3Nt7ie6VuZ60mG9zSEbp1jjSjzfIXr2HKDal
-	/dCmlFjSwoE/xJq+oYSnLk9HNcMGCyWO0xItS7N0gggL+xMAop8keqegyrjSgKcbYyQ74q
-	uqvuN34POnb26zocU5/aYEfA4x5OlH7dIl04mL9M0T82leSVQnydS1zgvUItmA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jjPFurt9aC5LrBeAxQ+lkMylaL2ldGhOLCJtRYHf+JU=;
+	b=ICyXSQNpXbxnwzDtlaedG3Hcrf3D0naIitEZoDDnUp4Z3NdTRlOYM1g9gTmfSbHNayOcI0
+	qJxezTUQ4zbP1x6q/Ii6tOzxyNYuj60LefKQUmLxRYQM4ygvjGXOhPhiVPMYIPSZD6CDlJ
+	nrRlTXko0+fN7DNfMwqkpLZD8If/135giEudJumAJ95Ai8ZzmAaLvK+t41NGHGMSO+Gom1
+	/GLoPwtLmaqLuaZnlokNvfrBiIZXH2wXRoWiSkmVhqWinmdJSnh6GH0b32Gskk1NDngD/l
+	pAIDZknQt6vbvsohPB/zmyDAG62dKxYnZRGXfp9MiiMqAnrapcrYSGc7Y3Vemg==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Subject: [PATCH v5 00/10] initial U-Boot SPL support on Amlogic GX SoCs
-Date: Wed, 26 Nov 2025 12:17:02 +0000
-Message-Id: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
+Date: Wed, 26 Nov 2025 12:17:03 +0000
+Subject: [PATCH v5 01/10] tools: mkimage: Add Amlogic Boot Image type
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL7vJmkC/3XOzY7CIBSG4VsxrMUcfo6AK+/DzIIKVKKWBhrix
- PTeB53YuNDld8LzhjspPkdfyG51J9nXWGIa2sD1ihxPdug9ja5twoEjaAG0jBfa3yhjUneonRM
- dI+3xmH2It2fo8NP2KZYp5d9nt7LH9T9hQL0SlVGgQgmDzoSANuzHVKarzWc/pbJJuSePUuVvm
- i0fqLxpHZBbe5TKg/yixaIZgF60aBqNMVuhXJCd+aLlm2a4aNl0QKeCB8E5dh/0PM9/yzu1/F0
- BAAA=
-X-Change-ID: 20250830-spl-gx-1148b58dd3b1
+Message-Id: <20251126-spl-gx-v5-1-6cbffb2451ca@postmarketos.org>
+References: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
+In-Reply-To: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>, Peng Fan <peng.fan@nxp.com>, 
  Jaehoon Chung <jh80.chung@samsung.com>, 
@@ -44,21 +41,21 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7632;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10862;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=BqWoiW8i4TOC5l10Cz2acVyJu8+vFQnzK645CgdXS8Y=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBpJu/RegU7ypE0QVX7O89XRE0qyRnxmXWpyHmd2
- Lxu4X3tHziJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaSbv0QAKCRCEr8vQ14ma
- A3luEACYFIlOz6B1S0BhcymmU6Gfy0m8S3+gnoKqBDaPbw3JZ+LxlWox4ndLI26DZil/dsabs7J
- DUpUPgIZ3b2qB//TlCLH60hjaJoNEkG5GTMPThxId4N8Nx14TRU0jxbSlaF5EDhOvTXJ3F0k5pp
- vhp7EyQbpfcpjQtBajFBZ4i5ISKim+zmmQlMUPtVt81vTqOMyz5in0ekcuL+Fv9CG8RJEHOI1wB
- ElywpO2mpwg0CqcNOyQ1Nb8etnqmbaVRBnJnMTviPFGB0YqXKP1mjmlVV9u4sJ6q8rmWhqabnOM
- kk2339bgyTnNvEDsdVByJptTBYsWoxVUFes0cyNFzC+uBqNPETol6y+IIn8NGI6UOHZB/MrjZEt
- ftdisxqumKl02zam17sLQ4tZzu6LC43aEfYZhZb+nX3qSNMWd6O3KH5eW59WSpFvNrUdLpgNSCV
- MOk1zwYjPGAEoezca2/wVFCi/St/3Vic51CoCcjll+hBNYB5C1q0SJD4E5p91NJU97ga6rw50un
- GMWnxWq8Vfn0coKh/dwZq9rkhfoVPjh7u6wU+dund0/XV2UmKdMkFGa+4h5tnq/luHQaEQ0lRbG
- 29lE50wgQmWJoUF6ppM9bup3vqt77JHKKGEcSZMAtivxq1Gf+FgdJGo3UZTAqzOmSQbrYJCKUon
- dyIkyXALWHuxQWQ==
+ bh=hZrWdM79bo4HjPZFXTbYzAYo56KhwLMWVRp25wTk6Xk=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBpJu/W0uLdbgNGFOaIvAYP2Xmbr1U0Qe+wnrEmt
+ 1ACgQS2qd+JAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaSbv1gAKCRCEr8vQ14ma
+ A6IwEACbIEIZRnv7qaISAjktxaZCqf/oLwLiWr2PAfeThkN3ICE0wTaSFCxc740ac+BD6ZRZNIU
+ N1MeOJ6QUxkRXBeYxvq9xXShjlldIyvGzMEI9w9TxHw8E0NabqSAAp0Ad6+y9rhVFQ6Zo9zB7RV
+ Ti8TVQl3Q/ueijj19qflFazm7PbHn6MfC3bZ/zF9CJSb5IGplZkdBqGiMM0q+nw1yTEMTI9VTxu
+ nzx91/5XOG4eq/pWtDPNCRWhaAZkUch5DjuYlpibfYyf6XRpL/jwcN8KDZ9QeGeH7XVIJQUye39
+ +EhMRH6j77dU/UWHMOGfueyyjqADyzOjH4AD6Bvtdu2xQO+nUwBnrQErZThSurgreVmzV8Zr297
+ hh3ybtUT/7bdrWJa4r62KbJvkwSRTtYSi9eqgLd7ecRQLKI5zvL5Yb71S2Pr8sUjn55YetWfBTi
+ UHUwL8lJ1rUMf7TFK7YEhS6ygYVUrgulgYzfSSLkTb5EevGYp23MGTohqYvaCB87KNIYNGe9jhG
+ BCIRWBy69iSr7e4pzXChvpi+/2udlaD3SkxUfT6T/gEPiM8Fjh+3aGfUzufIVV5NH2nWJqy58/6
+ JteF/c01pna1BP0yuBJ9tl4iZQyw9P56FqlLcioUzQcidOMhqlFVqVH4fkfjfLJXuz4PXTdE7l9
+ uV04foJKyS18DSA==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
@@ -66,165 +63,365 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 26 Nov 2025 12:17:35 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2851
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2852
 
-This patch series adds support for U-Boot SPL booting on Amlogic GX SoCs,
-replacing the "bl2.bin" binary blob running as TF-A BL2 on these boards.
+From: Jonas Karlman <jonas@kwiboo.se>
 
-Boards tested:
- - Libre Computer LePotato (S905X, 1 GB)
- - Videostrong KII Pro (S905)
- - Xiaomi Mi TV Stick (S805Y) - downstream defconfig [1]
- - ODROID-C2 (S905)
+Add support for creating an Amlogic Boot Image that pass CHK in BL1 on
+Amlogic AArch64 SoCs.
 
-Each of these boards were tested booting mainline u-boot and TF-A BL31,
-either from an SD card or using Ymodem, and then booting to Linux.
+Images can optionally be signed for secure boot scenario, however
+creation of signed images has not been implemented.
 
-More testing is, of course, very much welcome. In particular, further
-testing of other boards that could not be tested, of the ODROID-C2, and
-of the 2 GB LePotato would be appreciated.
+Example of how to use it:
+  # Create an amlogic boot image
+  tools/mkimage -T amlimage -n gxbb -d u-boot-spl.bin u-boot-amlogic.bin
 
-Currently known issues:
- - LPDDR2/LPDDR3 support not implemented
- - some DRAM rank modes are not supported
- - eMMC booting is broken (pwrseq?)
- - SPI boot is untested
- - we are quite limited in space, so e.g. the clock driver does not fit
+  # List boot image header information
+  tools/mkimage -l u-boot-amlogic.bin
 
-Future work:
- - add logic to automatically detect rank mode and DRAM size
- - investigate using U-Boot TPL to free some space
-   - may fix eMMC booting as a side effect
- - support more rank modes
- - add support for Amlogic g12b/sm1 SoCs
- - ...
+  # Extract amlogic boot image payload
+  tools/dumpimage -T amlimage -o bl2-payload.bin u-boot-amlogic.bin
 
-See doc/board/amlogic/spl.rst for building and installation instructions.
+Or with binman using something like:
+  binman {
+	u-boot-amlogic {
+		filename = "u-boot-amlogic.bin";
+		pad-byte = <0xff>;
 
-This patch series depends on Jonas Karlman's amlimage work, which was
-sent in the mailing list [2]. It has been rebased for resending as part 
-of this patch series. Thanks Jonas!
+		mkimage {
+			filename = "bl2.bin";
+			args = "-n", "gxbb", "-T", "amlimage";
 
-I would like to also thank Libre Computer and MNT Research for donating
-boards to me and the rest of the linux-amlogic community for the
-invaluable help.
+			u-boot-spl {
+			};
+		};
+	};
+  };
 
-[1]: https://scm.dersco.re/amlogic/u-boot-kii-pro.git/commit/?h=wip/spl-aquaman-2025.08&id=d030951d0aaac04f1e2cc8a8eb01eb662a782f21
-[2]: https://lore.kernel.org/all/20250103215904.2590769-1-jonas@kwiboo.se/
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+[Ferass: check digest type in _print_header, version in _verify_image]
 Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
-Changes in v5:
- - Mention future work in cover letter
- - Remove unrelated changes from binman patch
- - Enforce SPL max size at build system level rather than at the mkimage
-   level
- - Add meson-gxbb-u-boot.dtsi (similar to already existing
-   meson-gxl-u-boot.dtsi)
- - DT: Drop a few #define's:
-   - BL31_ADDR => BL31 address now set in gxbb/gxl-u-boot DTSI
-   - SCP_ADDR
-   - Don't check CONFIG_MESON_GX (already implied)
- - DT: SHA256 hash on all images
-   - Check CONFIG_SPL_FIT_SIGNATURE and CONFIG_SPL_SHA256 (except for
-     SCP image, not a dealbreaker if it cannot be verified in SPL, as it
-     is verified by the SCP bootROM anyway)
- - DT: move mkimage args to gxbb/gxl-u-boot DTSI
- - Mention AML_STDPARAMS=1 in TF-A building docs
- - Fix typo in spl.c (s/YMODEM/YMODEM_SUPPORT/)
- - Link to v4: https://lore.kernel.org/r/20251015-spl-gx-v4-0-f5d7fe03225b@postmarketos.org
+ MAINTAINERS      |   1 +
+ boot/image.c     |   1 +
+ include/image.h  |   1 +
+ tools/Makefile   |   1 +
+ tools/amlimage.c | 255 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 259 insertions(+)
 
-Changes in v4:
- - Remove "RFC" prefix, no longer an RFC patch (but still testing
-   and feedback very much welcome)
- - Continue using meson_gx_mmc_is_compatible in DM MMC driver
- - Fix typo in amlimage secure boot info printf
- - Drop FIT image post-processing on libretech-cc
- - Add Neil's R-b tags for all the other patches except MMC patch
- - Link to v3: https://lore.kernel.org/r/20251008-spl-gx-v3-0-5999637df4b9@postmarketos.org
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1db1070d5f8..e6c42bf1c7d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -186,6 +186,7 @@ F:	drivers/video/meson/
+ F:	drivers/watchdog/meson_gxbb_wdt.c
+ F:	include/configs/meson64.h
+ F:	include/configs/meson64_android.h
++F:	tools/amlimage*
+ F:	doc/board/amlogic/
+ N:	meson
+ 
+diff --git a/boot/image.c b/boot/image.c
+index abac2c7034b..dd96f712b6f 100644
+--- a/boot/image.c
++++ b/boot/image.c
+@@ -185,6 +185,7 @@ static const table_entry_t uimage_type[] = {
+ 	{	IH_TYPE_STARFIVE_SPL, "sfspl", "StarFive SPL Image" },
+ 	{	IH_TYPE_TFA_BL31, "tfa-bl31",  "TFA BL31 Image", },
+ 	{	IH_TYPE_STM32IMAGE_V2, "stm32imagev2", "STMicroelectronics STM32 Image V2.0" },
++	{	IH_TYPE_AMLIMAGE,   "amlimage",   "Amlogic Boot Image" },
+ 	{	-1,		    "",		  "",			},
+ };
+ 
+diff --git a/include/image.h b/include/image.h
+index b695cc39447..be6356c93d6 100644
+--- a/include/image.h
++++ b/include/image.h
+@@ -234,6 +234,7 @@ enum image_type_t {
+ 	IH_TYPE_STARFIVE_SPL,		/* StarFive SPL image */
+ 	IH_TYPE_TFA_BL31,		/* TFA BL31 image */
+ 	IH_TYPE_STM32IMAGE_V2,		/* STMicroelectronics STM32 Image V2.0 */
++	IH_TYPE_AMLIMAGE,		/* Amlogic Boot Image */
+ 
+ 	IH_TYPE_COUNT,			/* Number of image types */
+ };
+diff --git a/tools/Makefile b/tools/Makefile
+index 02297e8c93a..59e1b2285fe 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -110,6 +110,7 @@ ROCKCHIP_OBS = generated/lib/rc4.o rkcommon.o rkimage.o rksd.o rkspi.o
+ 
+ # common objs for dumpimage and mkimage
+ dumpimage-mkimage-objs := aisimage.o \
++			amlimage.o \
+ 			atmelimage.o \
+ 			$(FIT_OBJS-y) \
+ 			$(FIT_SIG_OBJS-y) \
+diff --git a/tools/amlimage.c b/tools/amlimage.c
+new file mode 100644
+index 00000000000..ecb06bc535b
+--- /dev/null
++++ b/tools/amlimage.c
+@@ -0,0 +1,255 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// Copyright Contributors to the U-Boot project.
++
++#include "imagetool.h"
++#include <u-boot/sha256.h>
++
++/*
++ * Image contain data in the following order:
++ *  Nonce	16 byte
++ *  Header	64 byte
++ *  Digest	32 byte
++ *  Padding	align up to 4K
++ *  Payload
++ */
++
++#define HEADER_MAGIC		0x4c4d4140	/* @AML */
++#define HEADER_OFFSET		0x10		/* 16 */
++#define HEADER_SIZE		0x40		/* 64 */
++#define PAYLOAD_OFFSET		0x1000		/* 4096 */
++
++struct amlimage_header {
++	uint32_t magic;
++	uint32_t total_size;
++	uint8_t header_size;
++	uint8_t root_key_index;
++	uint8_t version_major;
++	uint8_t version_minor;
++	uint32_t padding1;
++	uint32_t digest_type;
++	uint32_t digest_offset;
++	uint32_t digest_size;
++	uint32_t data_offset;
++	uint32_t key_type;
++	uint32_t key_offset;
++	uint32_t key_size;
++	uint32_t data_size;
++	uint32_t payload_type;
++	uint32_t payload_offset;
++	uint32_t payload_size;
++	uint32_t padding2;
++} __packed;
++
++struct amlimage_variant {
++	const char *name;
++	const struct amlimage_header hdr;
++};
++
++#define VARIANT(name, major, minor, size)	\
++	{ name, { .magic = HEADER_MAGIC, .header_size = HEADER_SIZE, \
++		  .version_major = major, .version_minor = minor, \
++		  .payload_size = size, } }
++
++static const struct amlimage_variant variants[] = {
++	VARIANT("gxbb", 1, 0, 0xb000),
++	VARIANT("gxl",  1, 1, 0xb000),
++	VARIANT("gxm",  1, 1, 0xb000),
++	VARIANT("axg",  1, 1, 0xb000),
++	VARIANT("g12a", 1, 1, 0xf000),
++	VARIANT("g12b", 1, 1, 0xf000),
++	VARIANT("sm1",  1, 1, 0xf000),
++};
++
++static const struct amlimage_variant *amlimage_get_variant(const char *name)
++{
++	if (!name)
++		return NULL;
++
++	for (int i = 0; i < ARRAY_SIZE(variants); i++)
++		if (!strcmp(name, variants[i].name))
++			return &variants[i];
++
++	return NULL;
++}
++
++static int amlimage_check_params(struct image_tool_params *params)
++{
++	const struct amlimage_variant *variant =
++		amlimage_get_variant(params->imagename);
++	int datafile_size;
++
++	if (params->lflag || params->iflag)
++		return EXIT_SUCCESS;
++
++	if (!variant) {
++		fprintf(stderr, "%s: unsupported image name: %s\n",
++			params->cmdname, params->imagename);
++		exit(EXIT_FAILURE);
++	}
++
++	datafile_size = imagetool_get_filesize(params, params->datafile);
++	if (datafile_size < 0) {
++		exit(EXIT_FAILURE);
++	} else if (datafile_size > variant->hdr.payload_size) {
++		fprintf(stderr, "%s: datafile is too large (%#x > %#x)\n",
++			params->cmdname, datafile_size,
++			variant->hdr.payload_size);
++		exit(EXIT_FAILURE);
++	}
++
++	return EXIT_SUCCESS;
++}
++
++static int amlimage_verify_header(unsigned char *buf, int size,
++				  struct image_tool_params *params)
++{
++	const struct amlimage_header *hdr = (void *)buf + HEADER_OFFSET;
++
++	if (size >= HEADER_OFFSET + HEADER_SIZE + SHA256_SUM_LEN &&
++	    hdr->magic == HEADER_MAGIC && hdr->header_size == HEADER_SIZE &&
++	    hdr->version_major == 1 && hdr->version_minor <= 1)
++		return 0;
++
++	return -1;
++}
++
++static void amlimage_print_header(const void *buf,
++				  struct image_tool_params *params)
++{
++	const struct amlimage_header *hdr = buf + HEADER_OFFSET;
++	uint8_t digest[SHA256_SUM_LEN];
++	sha256_context ctx;
++	bool valid;
++
++	printf("Amlogic Boot Image %" PRIu8 ".%" PRIu8 "\n",
++	       hdr->version_major, hdr->version_minor);
++	printf("Total size: %" PRIu32 "\n", hdr->total_size);
++	printf("Digest %" PRIu32 ": %" PRIu32 " @ 0x%" PRIx32 "\n",
++	       hdr->digest_type, hdr->digest_size, hdr->digest_offset);
++	printf("Key %" PRIu32 ": %" PRIu32 " @ 0x%" PRIx32 "\n",
++	       hdr->key_type, hdr->key_size, hdr->key_offset);
++	printf("Payload %" PRIu32 ": %" PRIu32 " @ 0x%" PRIx32 "\n",
++	       hdr->payload_type, hdr->payload_size, hdr->payload_offset);
++
++	if (hdr->digest_type == 0) {
++		/* sha256 digest (normal boot) */
++		sha256_starts(&ctx);
++
++		/* Header and data is used as input for sha256 digest */
++		sha256_update(&ctx, (void *)hdr, hdr->header_size);
++		sha256_update(&ctx, (void *)hdr + hdr->data_offset, hdr->data_size);
++		sha256_finish(&ctx, digest);
++
++		valid = !memcmp((void *)hdr + hdr->digest_offset,
++				digest, SHA256_SUM_LEN);
++
++		printf("Data: %" PRIu32 " @ 0x%" PRIx32 " - %s\n",
++		       hdr->data_size, hdr->data_offset, valid ? "OK" : "BAD");
++	} else {
++		/* RSA (secure boot) */
++		printf("Data: %" PRIu32 " @ 0x%" PRIx32 " - Secure Boot\n",
++		       hdr->data_size, hdr->data_offset);
++	}
++}
++
++static void amlimage_set_header(void *buf, struct stat *sbuf, int ifd,
++				struct image_tool_params *params)
++{
++	struct amlimage_header *hdr = buf + HEADER_OFFSET;
++	sha256_context ctx;
++
++	/* Use header size as initial size */
++	hdr->total_size = hdr->header_size;
++
++	/* Use sha256 digest (normal boot) */
++	hdr->digest_type = 0;
++	/* The sha256 digest is stored directly following the header */
++	hdr->digest_offset = hdr->total_size;
++	/* Unknown if this is used as block size instead of digest size */
++	hdr->digest_size = 512;
++	hdr->total_size += hdr->digest_size;
++
++	/* Use key as padding so that payload ends up 4K aligned in TZRAM */
++	hdr->key_type = 0;
++	hdr->key_offset = hdr->total_size;
++	hdr->key_size = PAYLOAD_OFFSET - HEADER_OFFSET - hdr->key_offset;
++	hdr->total_size += hdr->key_size;
++
++	/* With padding above payload will have a 0x1000 offset in TZRAM */
++	hdr->payload_type = 0;
++	hdr->payload_offset = hdr->total_size;
++	/* Payload size has already been copied from the variant header */
++	hdr->total_size += hdr->payload_size;
++
++	/* Set the data range to be used as input for sha256 digest */
++	hdr->data_offset = hdr->digest_offset + SHA256_SUM_LEN;
++	hdr->data_size = hdr->total_size - hdr->data_offset;
++
++	sha256_starts(&ctx);
++	/* Header and data is used as input for sha256 digest */
++	sha256_update(&ctx, (void *)hdr, hdr->header_size);
++	sha256_update(&ctx, (void *)hdr + hdr->data_offset, hdr->data_size);
++	/* Write sha256 digest to the 32 bytes directly following the header */
++	sha256_finish(&ctx, (void *)hdr + hdr->digest_offset);
++}
++
++static int amlimage_extract_subimage(void *buf,
++				     struct image_tool_params *params)
++{
++	const struct amlimage_header *hdr = buf + HEADER_OFFSET;
++
++	/* Save payload as the subimage */
++	return imagetool_save_subimage(params->outfile,
++				       (ulong)hdr + hdr->payload_offset,
++				       hdr->payload_size);
++}
++
++static int amlimage_check_image_type(uint8_t type)
++{
++	if (type == IH_TYPE_AMLIMAGE)
++		return EXIT_SUCCESS;
++
++	return EXIT_FAILURE;
++}
++
++static int amlimage_vrec_header(struct image_tool_params *params,
++				struct image_type_params *tparams)
++{
++	const struct amlimage_variant *variant =
++		amlimage_get_variant(params->imagename);
++	const struct amlimage_header *hdr = &variant->hdr;
++
++	/* Use payload offset as header size, datafile will be appended */
++	tparams->header_size = PAYLOAD_OFFSET;
++
++	tparams->hdr = calloc(1, tparams->header_size);
++	if (!tparams->hdr) {
++		fprintf(stderr, "%s: Can't alloc header: %s\n",
++			params->cmdname, strerror(errno));
++		exit(EXIT_FAILURE);
++	}
++
++	/* Start with a copy of the variant header */
++	memcpy(tparams->hdr + HEADER_OFFSET, hdr, hdr->header_size);
++
++	/* Pad up to payload size of the variant header */
++	return hdr->payload_size - params->file_size;
++}
++
++/*
++ * amlimage parameters
++ */
++U_BOOT_IMAGE_TYPE(
++	amlimage,
++	"Amlogic Boot Image",
++	0,
++	NULL,
++	amlimage_check_params,
++	amlimage_verify_header,
++	amlimage_print_header,
++	amlimage_set_header,
++	amlimage_extract_subimage,
++	amlimage_check_image_type,
++	NULL,
++	amlimage_vrec_header
++);
 
-Changes in v3:
- - Do not depend on DEBUG_UART_BASE in the non-DM UART driver
- - Grammar fixes in documentation
- - amlimage: check digest type in _print_header, version in _verify_image
- - Link to v2: https://lore.kernel.org/r/20250910-spl-gx-v2-0-8f52aac47e04@postmarketos.org
-
-Changes in v2:
- - Drop "mmc: meson_gx_mmc: don't bail if there is no clock driver",
-   given SPL does not use the DM MMC driver by default anyway
- - Drop spurious DM_DRIVER_ALIAS from UART driver
- - Document in send_scp() why it is only needed for GXBB
- - Move GXBB/GXL-specific code to separate spl-gxbb/spl-gxl files
- - Add a few defines for pll init
- - Actually disable FIT image post-processing on GXL
- - Add Neil's R-b tag (subset)
- - Link to v1: https://lore.kernel.org/r/20250907-spl-gx-v1-0-37395d9ff5af@postmarketos.org
-
----
-Ferass El Hafidi (9):
-      mmc: meson_gx_mmc: add minimal non-DM driver
-      serial: serial_meson: add minimal non-DM driver
-      arm: meson: initial u-boot SPL support for GX SoCs
-      arm: meson: spl: add support for SPL DRAM init
-      arm: dts: meson: add meson-gxbb-u-boot.dtsi
-      arm: dts: meson-gx-u-boot: add binman configuration for U-Boot SPL
-      board: amlogic: add kconfig fragments for SPL
-      spl: meson: set SPL max size for GX SoCs
-      doc: board: amlogic: add u-boot-spl documentation
-
-Jonas Karlman (1):
-      tools: mkimage: Add Amlogic Boot Image type
-
- MAINTAINERS                                        |   1 +
- arch/arm/dts/meson-gx-u-boot.dtsi                  | 125 ++++++
- arch/arm/dts/meson-gxbb-kii-pro-u-boot.dtsi        |   2 +-
- arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi      |   2 +-
- arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi       |   2 +-
- arch/arm/dts/meson-gxbb-p200-u-boot.dtsi           |   2 +-
- arch/arm/dts/meson-gxbb-p201-u-boot.dtsi           |   2 +-
- arch/arm/dts/meson-gxbb-u-boot.dtsi                |  27 ++
- arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi      |   2 +-
- arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi    |   2 +-
- arch/arm/dts/meson-gxl-u-boot.dtsi                 |  20 +
- arch/arm/include/asm/arch-meson/clock-gx.h         |  14 +
- arch/arm/include/asm/arch-meson/dram-gx.h          | 341 +++++++++++++++++
- arch/arm/include/asm/arch-meson/dram-gxbb.h        | 168 +++++++++
- arch/arm/include/asm/arch-meson/dram-gxl.h         | 193 ++++++++++
- arch/arm/include/asm/arch-meson/dram-settings-gx.h | 296 +++++++++++++++
- arch/arm/include/asm/arch-meson/dram-timings-gx.h  | 117 ++++++
- arch/arm/include/asm/arch-meson/gx.h               |  41 ++
- arch/arm/mach-meson/Kconfig                        | 112 +++++-
- arch/arm/mach-meson/Makefile                       |  10 +
- arch/arm/mach-meson/board-common.c                 |  11 +
- arch/arm/mach-meson/dram-gx.c                      | 419 +++++++++++++++++++++
- arch/arm/mach-meson/dram-gxbb.c                    | 174 +++++++++
- arch/arm/mach-meson/dram-gxl.c                     | 167 ++++++++
- arch/arm/mach-meson/spl-gx.c                       | 168 +++++++++
- arch/arm/mach-meson/spl-gxbb.c                     | 113 ++++++
- arch/arm/mach-meson/spl-gxl.c                      |  39 ++
- arch/arm/mach-meson/spl.c                          | 123 ++++++
- board/amlogic/p200/spl-odroid-c2.config            |  38 ++
- board/amlogic/p200/spl-videostrong-kii-pro.config  |  39 ++
- board/amlogic/p212/spl-libretech-cc-1gb.config     |  36 ++
- board/amlogic/p212/spl-libretech-cc-2gb.config     |  38 ++
- boot/image.c                                       |   1 +
- common/spl/Kconfig                                 |   1 +
- doc/board/amlogic/index.rst                        |   1 +
- doc/board/amlogic/pre-generated-fip.rst            |   9 +
- doc/board/amlogic/spl.rst                          |  77 ++++
- drivers/mmc/meson_gx_mmc.c                         |  77 ++++
- drivers/serial/serial.c                            |   2 +
- drivers/serial/serial_meson.c                      | 119 +++++-
- include/image.h                                    |   1 +
- tools/Makefile                                     |   1 +
- tools/amlimage.c                                   | 255 +++++++++++++
- 43 files changed, 3379 insertions(+), 9 deletions(-)
----
-base-commit: 072264c4b3406aee50dad08355588577a547ab48
-change-id: 20250830-spl-gx-1148b58dd3b1
-
-Best regards,
 -- 
-Ferass El Hafidi <funderscore@postmarketos.org>
+2.51.2
 
 
