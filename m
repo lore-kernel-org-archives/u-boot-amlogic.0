@@ -2,35 +2,35 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67834D10F2D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782F5D10F32
 	for <webhook@archiver.kernel.org>; Wed, 26 Nov 2025 12:17:45 +0000 (UTC)
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.11619.1764159455429795610
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11622.1764159460533779660
  for <u-boot-amlogic@groups.io>;
- Wed, 26 Nov 2025 04:17:35 -0800
+ Wed, 26 Nov 2025 04:17:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=VD3Od9lL;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.177, mailfrom: funderscore@postmarketos.org)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=GfIdbLcV;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.188, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1764159453;
+	s=key1; t=1764159458;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jW1X3O57eL0OGMC/Q2brwt90jXZW9zX3F8YNB+SjacQ=;
-	b=VD3Od9lLmoDLZ478NUKYXBEeWQALVV+sL8J5ASPKkjNciQW4LKkfEbNYbbALiWNdG4aLaK
-	nhhC51+3zVOwi4/AAQaZnmwigMsRE9ywNMbI3weuh50TuDVkheyMRXa1JtxBMfkJtEMBhE
-	Brz+rIdKlVzbyOGrusGH/YH/JzYSMySLJ4tHAkAGpmpjoKa0CZbCXhk1/PVYNctYqISvQ4
-	7vqAPa4SgVfeHo0ZaG403MZUQRTWaDI1paCrm+qfyXOT/Ozf53cABSTE71+u/ucSwT0U9w
-	27SAe8vJmPY+bXVLdJlVa4zkKYFBARgMK51UQbwnEE6nLF7Jy8LEFOsT3smqsQ==
+	bh=W8aXFaUKIvMuOO1Dwwvmh1aNLKqrD3RskAzRCdE1C4o=;
+	b=GfIdbLcVZZbDozQytYj+w0tsQXKQkqMU7PTu9c2m1uLwhec40nzeP8fpf3c8rlCwv5u/UE
+	P0Eo2duMbTSabSupsDw30/QQE5VALL1im17QL2OtB/7KApV8d9C7IJYZ20Fj7V4R8H1Jrn
+	QcEqoOHKtDgjnwh2NnzY1bunbY0vDDtjzyldzKA721BGIbZ64qmk1/aMdPDMJvCm9soHeC
+	J8kS8Kh0zCjccja1N76pBixyGX6gYGG8D3PLgyWIo7DzkU546mYSRlPnV3Xz4NkceckNTv
+	CYYml3gYgmdtz+qrEaeiDZW+BTDx1C83voPWsR2Fh1lNHBYF0vhnk2xl2yQcIg==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Wed, 26 Nov 2025 12:17:04 +0000
-Subject: [PATCH v5 02/10] mmc: meson_gx_mmc: add minimal non-DM driver
+Date: Wed, 26 Nov 2025 12:17:08 +0000
+Subject: [PATCH v5 06/10] arm: dts: meson: add meson-gxbb-u-boot.dtsi
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251126-spl-gx-v5-2-6cbffb2451ca@postmarketos.org>
+Message-Id: <20251126-spl-gx-v5-6-6cbffb2451ca@postmarketos.org>
 References: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
 In-Reply-To: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
 To: Tom Rini <trini@konsulko.com>, 
@@ -41,21 +41,21 @@ Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>,
  u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5216;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4134;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=8uAezbqRh6Q7yRl/CRqaA01f1FVq+nrbDdJQ9c+m6uQ=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBpJu/XJtAAsr7zu1rlsVcYiEPgQEmmfJtQLQZPD
- vOAa+Tyw5SJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaSbv1wAKCRCEr8vQ14ma
- A5o8D/4xKaWH3LzQyEzKIlxEdHuCPtCW88soZxx1eCaUy2EMiygCJPD5aO5A7IhHZJrpbDP9xFx
- uP6sum5YrU0Mp3rC0pHDs58g6/NJxgNpXxGnqZcMx8l2KFeaFtf6Jo2iX0IYG3mtDpzwDD5w40b
- rRxy9nBlY8ZT14cBfE5+XKOzbd2NewgU6JcrNqKP0b1NAjmJSCXN93/kZDJdExaR+nAQpKiwoGv
- i0P6I0jBeMfeV4UTTc5NleoshJGtjv/UcXNsYS64PQ/95jfl0Va3+M7GZPw5H7wIlJCv7W+YhOJ
- j2Ho9H5Wa1px1N8EFIqyvnB5FxxLuFGXrfEegMIvymrRsGVRWvF3dPSVfwdXo6PyxCf5F6iNFYI
- g5dzAfm+Xq0Q4q4YnBFPv9BQlaWTeDT3x5HhgxMfwBzur/c0xAiPb7RxBTJlGTE9pWtbPU8eAfL
- MsWbOVbpnnMcDzWFCoLq3dZRcDYuXay3v0lce/sIsoEbMLS/4jn11It80jtt+v9JmUTymyqBHqM
- 8kxsbpo7JemjDpcmhYEcKkOnrXQkezoAMeyWH6x6C+TOgtnQD1KG5QCgTUDnIRjypaOMp7qHxEC
- iMNbS652F6cg6UwgglT5NiUenZ7YrQjx7WkVrhd8fjyDUc8Cd4m3LwlVIu/iwYavwTn1EDuFT5Q
- czvSe62sVtmdfLw==
+ bh=vi4TTr1wv1tNC9Hsm0/7a1YhPJqvY3kp8HVjOfiWWUg=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBpJu/Yq+o3AZn+63Z0p4s1Aerq1cl6qJdwx5FOU
+ F2sM9j5RPaJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaSbv2AAKCRCEr8vQ14ma
+ A60UD/9+eTtf3TPczI9Itg19R08WKWGYUIPLAPHSu9b8VPj+E09NylvkNlFVV/s1r/ndlP5WWxy
+ n0GklwdpnYtXgSpe2HqNUeKlxO+tst81pOiS6wlaPhHfrK/P7UkUoX3OKYnNBB91UUwLxlvqZ4b
+ LQl855SnbJHPa40ts7CU685WtaXpEekIjFv9g3gNzAyz4/pyRJsw0YO/M/lTRsbmBsdATHRvzHm
+ 6Q8TaZjjaS7k+EuvjKejsKm5RqoN9hNFJly7GxD0dZVj0sfb6MzrLxDIlRetZ+XwdLsP5ctfgB2
+ r/pu8OTaP2mjeeqCOy04w3vK3IfQSAjiTwCFGmHMSiZPT9YTK4Ml8dMP4HGUCaZzj1AC3vIq8YX
+ 5XlA+YyqyWhKOs37Up8xt/FdfQ8ogA/PpX1eH9DmRdORAnPIaYgzlvFVRi0WjCzZoKuM4uQzqYH
+ wt6Fsq1mkg2aK9lxN/sS+uuD0lINVXIV2YaXICFBp3bnZNXtuNm3g4LXdn71kGD9D75Re/TBkrj
+ G8/uddIPv08k+CfjleXpPtd1hCYOw3oO2MUqo6WqNYJc38Ep1HRB9uId/D3yF8GV0Hp440ci5IC
+ LRbiMNwRLanovgjRH80D3bY5oZwTxR8WxueVDcXVZTJHNMvwfYue3mq1IF7pTLbJhcAmUNN5lcK
+ oQ53Gb+EwNw0VHg==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
@@ -63,176 +63,121 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 26 Nov 2025 12:17:45 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2853
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2857
 
-Add a minimal non-DM MMC driver for use in size-constrained
-environments.
+Add a common GXBB DTSI, similar to the meson-gxl-u-boot.dtsi file,
+which GXBB devicetrees can include.
 
 Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
- arch/arm/include/asm/arch-meson/gx.h |  5 +++
- drivers/mmc/meson_gx_mmc.c           | 77 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 82 insertions(+)
+ arch/arm/dts/meson-gxbb-kii-pro-u-boot.dtsi     | 2 +-
+ arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi   | 2 +-
+ arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi    | 2 +-
+ arch/arm/dts/meson-gxbb-p200-u-boot.dtsi        | 2 +-
+ arch/arm/dts/meson-gxbb-p201-u-boot.dtsi        | 2 +-
+ arch/arm/dts/meson-gxbb-u-boot.dtsi             | 7 +++++++
+ arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi   | 2 +-
+ arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi | 2 +-
+ 8 files changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/include/asm/arch-meson/gx.h b/arch/arm/include/asm/arch-meson/gx.h
-index 26ec5d0bc34..8cfc6b00329 100644
---- a/arch/arm/include/asm/arch-meson/gx.h
-+++ b/arch/arm/include/asm/arch-meson/gx.h
-@@ -41,4 +41,9 @@
- #define GX_GPIO_IN(n)		GX_PERIPHS_ADDR(_GX_GPIO_OFF(n) + 1)
- #define GX_GPIO_OUT(n)	GX_PERIPHS_ADDR(_GX_GPIO_OFF(n) + 2)
+diff --git a/arch/arm/dts/meson-gxbb-kii-pro-u-boot.dtsi b/arch/arm/dts/meson-gxbb-kii-pro-u-boot.dtsi
+index 191c5192c68..4a027b9022b 100644
+--- a/arch/arm/dts/meson-gxbb-kii-pro-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxbb-kii-pro-u-boot.dtsi
+@@ -4,7 +4,7 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
  
-+/* Non-DM MMC init */
-+#if CONFIG_IS_ENABLED(MMC) && !CONFIG_IS_ENABLED(DM_MMC)
-+struct mmc *meson_mmc_init(int mmc_no);
-+#endif
-+
- #endif /* __GX_H__ */
-diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-index 5852b24c6d2..d1558ebe3a2 100644
---- a/drivers/mmc/meson_gx_mmc.c
-+++ b/drivers/mmc/meson_gx_mmc.c
-@@ -16,6 +16,7 @@
- #include <linux/log2.h>
- #include "meson_gx_mmc.h"
+-#include "meson-gx-u-boot.dtsi"
++#include "meson-gxbb-u-boot.dtsi"
  
-+#if CONFIG_IS_ENABLED(DM_MMC)
- bool meson_gx_mmc_is_compatible(struct udevice *dev,
- 				enum meson_gx_mmc_compatible family)
- {
-@@ -23,6 +24,7 @@ bool meson_gx_mmc_is_compatible(struct udevice *dev,
+ &ethmac {
+ 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+diff --git a/arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi b/arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi
+index 2a245bbe7f2..53d5c0113fc 100644
+--- a/arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxbb-nanopi-k2-u-boot.dtsi
+@@ -4,7 +4,7 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
  
- 	return compat == family;
- }
-+#endif
+-#include "meson-gx-u-boot.dtsi"
++#include "meson-gxbb-u-boot.dtsi"
  
- static inline void *get_regbase(const struct mmc *mmc)
- {
-@@ -67,10 +69,14 @@ static void meson_mmc_config_clock(struct mmc *mmc)
- 	 * Other SoCs use CLK_CO_PHASE_180 by default.
- 	 * It needs to find what is a proper value about each SoCs.
- 	 */
-+#if CONFIG_IS_ENABLED(DM_MMC)
- 	if (meson_gx_mmc_is_compatible(mmc->dev, MMC_COMPATIBLE_SM1))
- 		meson_mmc_clk |= CLK_CO_PHASE_270;
- 	else
- 		meson_mmc_clk |= CLK_CO_PHASE_180;
-+#else /* U-Boot SPL on GX SoCs */
-+	meson_mmc_clk |= CLK_CO_PHASE_180;
-+#endif
+ &ethmac {
+ 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+diff --git a/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi b/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
+index 5a2be8171e1..1bd000eaa86 100644
+--- a/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxbb-odroidc2-u-boot.dtsi
+@@ -4,7 +4,7 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
  
- 	/* 180 phase tx clock */
- 	meson_mmc_clk |= CLK_TX_PHASE_000;
-@@ -82,9 +88,14 @@ static void meson_mmc_config_clock(struct mmc *mmc)
- 	meson_write(mmc, meson_mmc_clk, MESON_SD_EMMC_CLOCK);
- }
+-#include "meson-gx-u-boot.dtsi"
++#include "meson-gxbb-u-boot.dtsi"
  
-+#if CONFIG_IS_ENABLED(DM_MMC)
- static int meson_dm_mmc_set_ios(struct udevice *dev)
- {
- 	struct mmc *mmc = mmc_get_mmc_dev(dev);
-+#else /* U-Boot SPL */
-+static int meson_legacy_mmc_set_ios(struct mmc *mmc)
-+{
-+#endif
- 	uint32_t meson_mmc_cfg;
+ / {
+ 	smbios {
+diff --git a/arch/arm/dts/meson-gxbb-p200-u-boot.dtsi b/arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
+index c35158d7e9e..1bef64dc01d 100644
+--- a/arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxbb-p200-u-boot.dtsi
+@@ -4,4 +4,4 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
  
- 	meson_mmc_config_clock(mmc);
-@@ -193,10 +204,16 @@ static void meson_mmc_read_response(struct mmc *mmc, struct mmc_cmd *cmd)
- 	}
- }
+-#include "meson-gx-u-boot.dtsi"
++#include "meson-gxbb-u-boot.dtsi"
+diff --git a/arch/arm/dts/meson-gxbb-p201-u-boot.dtsi b/arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
+index c35158d7e9e..1bef64dc01d 100644
+--- a/arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxbb-p201-u-boot.dtsi
+@@ -4,4 +4,4 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
  
-+#if CONFIG_IS_ENABLED(DM_MMC)
- static int meson_dm_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
- 				 struct mmc_data *data)
- {
- 	struct mmc *mmc = mmc_get_mmc_dev(dev);
-+#else /* U-Boot SPL */
-+static int meson_legacy_mmc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd,
-+				     struct mmc_data *data)
-+{
-+#endif
- 	struct meson_mmc_plat *pdata = mmc->priv;
- 	uint32_t status;
- 	ulong start;
-@@ -235,6 +252,59 @@ static int meson_dm_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
- 	return ret;
- }
+-#include "meson-gx-u-boot.dtsi"
++#include "meson-gxbb-u-boot.dtsi"
+diff --git a/arch/arm/dts/meson-gxbb-u-boot.dtsi b/arch/arm/dts/meson-gxbb-u-boot.dtsi
+new file mode 100644
+index 00000000000..c35158d7e9e
+--- /dev/null
++++ b/arch/arm/dts/meson-gxbb-u-boot.dtsi
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#include "meson-gx-u-boot.dtsi"
+diff --git a/arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi
+index 3743053eb9c..cd2e9b5099e 100644
+--- a/arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxbb-wetek-hub-u-boot.dtsi
+@@ -4,7 +4,7 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
  
-+#if !CONFIG_IS_ENABLED(DM_MMC) /* Non-DM MMC driver for use in U-Boot SPL */
-+struct meson_mmc_plat mmc_plat[2];
-+
-+static int meson_legacy_mmc_init(struct mmc *mmc)
-+{
-+	/* reset all status bits */
-+	meson_write(mmc, STATUS_MASK, MESON_SD_EMMC_STATUS);
-+
-+	/* disable interrupts */
-+	meson_write(mmc, 0, MESON_SD_EMMC_IRQ_EN);
-+
-+	return 0;
-+}
-+
-+static const struct mmc_ops meson_mmc_ops = {
-+	.send_cmd	= meson_legacy_mmc_send_cmd,
-+	.set_ios	= meson_legacy_mmc_set_ios,
-+	.init		= meson_legacy_mmc_init,
-+};
-+
-+struct mmc *meson_mmc_init(int mmc_no)
-+{
-+	struct meson_mmc_plat *pdata = &mmc_plat[mmc_no];
-+	struct mmc_config *cfg = &pdata->cfg;
-+
-+	cfg->voltages = MMC_VDD_33_34 | MMC_VDD_32_33 |
-+			MMC_VDD_31_32 | MMC_VDD_165_195;
-+	cfg->host_caps = MMC_MODE_8BIT | MMC_MODE_4BIT;
-+	cfg->f_min = DIV_ROUND_UP(SD_EMMC_CLKSRC_24M, CLK_MAX_DIV);
-+	cfg->f_max = 6000000; /* 6 MHz */
-+	cfg->b_max = 127; /* max 128 - 1 block */
-+	cfg->name = "Meson SD/eMMC";
-+	cfg->ops = &meson_mmc_ops;
-+
-+	if (mmc_no == 0) /* MMC1: SD card */
-+		pdata->regbase = (void *)0xd0072000;
-+	else if (mmc_no == 1) /* MMC2: eMMC */
-+		pdata->regbase = (void *)0xd0074000;
-+
-+#if CONFIG_IS_ENABLED(MMC_PWRSEQ)
-+	/* Enable power if needed */
-+	ret = mmc_pwrseq_get_power(dev, cfg);
-+	if (!ret) {
-+		ret = pwrseq_set_power(cfg->pwr_dev, true);
-+		if (ret)
-+			return ret;
-+	}
-+#endif
-+
-+	return mmc_create(cfg, pdata);
-+}
-+
-+#else /* DM-based driver for use in U-Boot proper */
- static const struct dm_mmc_ops meson_dm_mmc_ops = {
- 	.send_cmd = meson_dm_mmc_send_cmd,
- 	.set_ios = meson_dm_mmc_set_ios,
-@@ -282,6 +352,12 @@ static int meson_mmc_probe(struct udevice *dev)
- 	cfg->b_max = 511; /* max 512 - 1 blocks */
- 	cfg->name = dev->name;
+-#include "meson-gx-u-boot.dtsi"
++#include "meson-gxbb-u-boot.dtsi"
  
-+	if (IS_ENABLED(CONFIG_SPL_BUILD)) {
-+		cfg->host_caps &= ~(MMC_MODE_HS_52MHz | MMC_MODE_HS);
-+		cfg->f_max = 6000000; /* 6 MHz */
-+		cfg->b_max = 127; /* max 128 - 1 block */
-+	}
-+
- 	mmc->priv = pdata;
- 	upriv->mmc = mmc;
+ &ethmac {
+ 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+diff --git a/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi b/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
+index 3743053eb9c..cd2e9b5099e 100644
+--- a/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
++++ b/arch/arm/dts/meson-gxbb-wetek-play2-u-boot.dtsi
+@@ -4,7 +4,7 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
  
-@@ -336,3 +412,4 @@ U_BOOT_DRIVER(meson_mmc) = {
- 	.of_to_plat = meson_mmc_of_to_plat,
- 	.plat_auto	= sizeof(struct meson_mmc_plat),
- };
-+#endif /* CONFIG_IS_ENABLED(DM_MMC) */
+-#include "meson-gx-u-boot.dtsi"
++#include "meson-gxbb-u-boot.dtsi"
+ 
+ &ethmac {
+ 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
 
 -- 
 2.51.2
