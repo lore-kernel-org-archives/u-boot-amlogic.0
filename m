@@ -2,37 +2,39 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A13D41D5B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C20D41D5F
 	for <webhook@archiver.kernel.org>; Thu, 11 Dec 2025 15:31:03 +0000 (UTC)
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.12030.1765467056881356165
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.12027.1765467055255601177
  for <u-boot-amlogic@groups.io>;
- Thu, 11 Dec 2025 07:30:57 -0800
+ Thu, 11 Dec 2025 07:30:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=m4Khfdiv;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.174, mailfrom: funderscore@postmarketos.org)
+ dkim=pass header.i=@postmarketos.org header.s=key1 header.b=UyLcgXJL;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.184, mailfrom: funderscore@postmarketos.org)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1765467055;
+	s=key1; t=1765467052;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dfXX3HaCsDLeyCs/ZwvGCesFs3v3RrvHpA739HZZZEk=;
-	b=m4KhfdivWUXCnrMCIDYE9pAfjM4K6VRyUrBLI3GajGhzZEjkgJ6j+FC/WUUCNeYVxhHV+9
-	95rw3E5o8OzaAwcVT2r4VBPoYQPSpfBbr3HOZyLFiKX5+Myb9ioCVDqZCjQc+qp6bfiQaL
-	O1ehgxlP3U7P1Ga9mNOSCIsaIfpvLAh5+fZZhU/mNgK8EPx6D4q2zbj2tx4dCsDTzv8o5W
-	V4XvTbdvgcP2frtsx5GgyBI8ZMK3O11mVg5P/e1ol7PA0hUl5Ij9AgvSKToq6mQEcdFp5y
-	A/5HVz8eRqEZsp+FxvK119oaGsbTebGSoU3oY2HYi/e2Rbae78gyp09rEC3+PQ==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=d8Syjthhi6f4g+ZUqaQk6KvJXVdBOtGoRJrcxPqoc1k=;
+	b=UyLcgXJLaBUxEJrcTU96k9/aiWbRzf7FQRYcPSSJ1O3BzvamXrViLUjAvrGYOvJhpKAXh7
+	R2wMF/keSmkqO13F02CrpagRzFHoVzrixsXsxfDWj9BAjkRS5CYszNfpYWdaWfWHqaowrS
+	OVZQ55nKKjXd973wGRUYMUZMIRJf8KnZgVga41agH4/Za5qM7Zdm5fB2fUEGHR3+brjF8b
+	/Ly9qdxeax4HTa/HJC4D1lE9gpUIrLoBT/VFgAXU1//02hA4oZiEJWypvaOeUvQffSunFN
+	RPeTC9ODayzzBi9aVStljoJX95KiwI+uau323v7ZowwKXVvqJYUycWo8X2zM9g==
 From: Ferass El Hafidi <funderscore@postmarketos.org>
-Date: Thu, 11 Dec 2025 15:30:41 +0000
-Subject: [PATCH v3 1/2] arm: meson: add support for EFI capsule updates
+Subject: [PATCH v3 0/2] Support EFI capsule updates across Amlogic boards
+Date: Thu, 11 Dec 2025 15:30:40 +0000
+Message-Id: <20251211-meson-capsule-v3-0-1cf15a2d2498@postmarketos.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251211-meson-capsule-v3-1-1cf15a2d2498@postmarketos.org>
-References: <20251211-meson-capsule-v3-0-1cf15a2d2498@postmarketos.org>
-In-Reply-To: <20251211-meson-capsule-v3-0-1cf15a2d2498@postmarketos.org>
+X-B4-Tracking: v=1; b=H4sIAKDjOmkC/3XMQQ6CMBCF4auQrq3pFArWlfcwLkodoFEo6WCjI
+ dzdwsoYXf4ved/MCINDYsdsZgGjI+eHFPkuY7YzQ4vcXVMzKaQCISreI/mBWzPS447cgFa5RmF
+ UgSx9xoCNe27e+ZK6czT58Nr4COv6T4rAgZdQqaaqC9toPI2ept6EG06e9j60bAWj/EAAvhGZE
+ JWbQ42l0sr+QpZleQMOxq4h9gAAAA==
+X-Change-ID: 20251007-meson-capsule-a19539e0a54e
 To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
 Cc: Tom Rini <trini@konsulko.com>, 
  Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -42,21 +44,21 @@ Cc: Tom Rini <trini@konsulko.com>,
  Ferass El Hafidi <funderscore@tauchgang.dev>, 
  ~postmarketos/upstreaming@lists.sr.ht, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4965;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1975;
  i=funderscore@postmarketos.org; h=from:subject:message-id;
- bh=R3/j5mwQ35bOujgm7R7yKQqif0z7oiKuBOgLb5KDLRk=;
- b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBpOuOqdtEAwVjyaXQXdZNlSXpDyqCZZmGyiE7w8
- D7tWAS4ShSJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaTrjqgAKCRCEr8vQ14ma
- AzrZD/wIX5FpoizvP68oDirkCVE3qet3zORxGV2uNXLXPmq9hTn5cPdwwNMYNKJpfNreJKxCfXs
- uazHke/lRv6eRth6oE/cbaacFk0YAiUnQcjOtTWyLLvJ/qkTP8+ZClpduqjlH5vgrKby4sXaXsY
- d5IDpz3lwXc99ul7hOlGsFJ5+OPiejogkoPOzl9jg494ZleuwhaatCoYnyGgn85GBfyh9jcE4ZR
- /b37iWz2TExfPOCDpN/uBXtMH25H5nY7myZkUvoaVKC5NpHKysrCK4NUZqEP3+xyIQFIsUrWUnN
- 6j5t7iZLibmj5pmRgYa8X4oIyZ8yhRqeZr9SSSqJ9/BrEpR0tti4K5DaoYgIMUeiSx076+yUuFl
- DYWYO1W0myj3inXWaFtYr+VU1bMBU3p2qPSW7oKmXqW2igeAbQXoCojSIEqYTrwbqdSo/zs+HBU
- /5Y4f5b+61xqL5+rQEk72WOvv9RrRwvhXVtOnTP9GXp0Nz1iOUGL9Kknge27BccfCptzVmf9ovN
- ay/FalU982CNUKsybMTAN9fJW+wWCapmCW4RDxVJUaZ1ro3JiLZyNSj+bE/YzaMtWSyL+C432DI
- F8rPSroYFjL2M/ds8QYuZ5Nq4nve344mp5JLDuaelHI9dvtxhAXhY9u5onUMeG6V/HxUGt0tqCl
- FaT+0hJfhQac6jQ==
+ bh=sPlCRoXdB7zx+wHiXJ8/Q1cHN5lYdxSCXJx7QlHZTQk=;
+ b=owEBbQKS/ZANAwAKAYSvy9DXiZoDAcsmYgBpOuOkkQ4LAPSB47hKx5sMUOfqfDUdt37HCBYAe
+ T1ArqgDQ4OJAjMEAAEKAB0WIQQDAbw3+1VcrP15i+6Er8vQ14maAwUCaTrjpAAKCRCEr8vQ14ma
+ A31PD/4mdwTiTj73jfnHmVPTO+7WPQ+QdSDWCkMRmoB1Y2WFGQ3c9r8dOvHDscNVUtfToeYvHkk
+ zdnMLLuuJPHjxNKFXEg/j4JFXb+NDN0w6EVXGd/vUJsKAfrZsaChVtJJ/poseyj7VOqvSsRIpkF
+ WkMHAuVYw8m6cVYg2h4oIUQfqVkha1bsAO0j593ZJtbnzDETSV1dzL+3HapYxAFZpQE4/9bx1KO
+ o+9wPg6Gq0pSrFlTvo7GBqyKywnT/SYRSIRYOt613Ro1SGPbhzt+PSmbNbStwu30DROp2PCevy8
+ POHhq7DEpwYvJoyLi+dF2x0yLQtEX0YtwccUYxnqMXXMJZUq61TqGVUv6Qn5TONn4IA//baF0aY
+ jObqJMu0+T7hH5Ium/wMqQ3hgfCDR6rubFrXpQHscFRCuAj8GekZeoD5KivSjalbcJnq2KStGrA
+ YdFCF+KIB1lVz8TsGZB5W2+HBBOHU/V1ZlNTmttnG+UYywNmcjEa1008c/4kAX0LJV5MBB7SGxr
+ LLvB5z7TEtGGuu7dW4ayUvMefltZx4/tppwaXXgVL76+sNWlOxwhPugs7GVpCkAyTMs40oyQ6/7
+ 0Lheyj9oDHBrRI+Vdp2eMoP5BLRwVBvBe5t3WBBZ6CHBXZZz1Y1hLzqASMmrqqviano8HZwYEXo
+ YbsGhDj8wOaj+9Q==
 X-Developer-Key: i=funderscore@postmarketos.org; a=openpgp;
  fpr=0301BC37FB555CACFD798BEE84AFCBD0D7899A03
 X-Migadu-Flow: FLOW_OUT
@@ -64,155 +66,58 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 11 Dec 2025 15:31:03 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2870
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2869
 
-Previously, few Amlogic devices supported EFI capsule updates.
-Generally only the Libre Computer ones with SPI flash supported it,
-thanks to board-specific code.
+Currently EFI capsule updates are only supported on the following
+Amlogic-based boards:
 
-This commit commonises capsule update support across supported
-Amlogic boards.  Similar to Qualcomm's support for it, the dfu string
-and firmware name is automatically generated at runtime depending on
-which device we are booted from.  Right now this supports flashing to
-the eMMC/SD and SPI flash.
+ - Libre Computer AML-S805X-AC
+ - Libre Computer AML-A311D-CC
+ - Libre Computer AML-S905D3-CC
 
-As usual, the capsule UUID is automatically generated.  You can get it
-by enabling CONFIG_CMD_EFIDEBUG and running:
+This is done with board-specific configuration in board/libre-computer/.
 
-	=> efidebug capsule esrt
-	========================================
-	ESRT: fw_resource_count=1
-	ESRT: fw_resource_count_max=1
-	ESRT: fw_resource_version=1
-	[entry 0]==============================
-	ESRT: fw_class=796180D4-AAB2-50F1-B16A-53DFF9CA89B2
-	ESRT: fw_type=unknown
-	ESRT: fw_version=0
-	ESRT: lowest_supported_fw_version=0
-	ESRT: capsule_flags=0
-	ESRT: last_attempt_version=0
-	ESRT: last_attempt_status=success
-	========================================
+With this patch, EFI capsule updates can now work on most of the other
+Amlogic boards supported by u-boot, such as the Libre Computer
+AML-S905X-CC, without the need for board-specific configuration
+beforehand.
+
+Please note that flashing to the eMMC bootX partitions is not yet
+supported.
 
 Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 ---
- arch/arm/include/asm/arch-meson/boot.h |  2 ++
- arch/arm/mach-meson/Makefile           |  2 +-
- arch/arm/mach-meson/board-common.c     |  5 +++
- arch/arm/mach-meson/capsule.c          | 61 ++++++++++++++++++++++++++++++++++
- 4 files changed, 69 insertions(+), 1 deletion(-)
+Changes in v3:
+ - Remove board-specific Libre Computer EFI capsule support and use the
+   common EFI capsule support code
+ - Link to v2: https://lore.kernel.org/r/20251011-meson-capsule-v2-1-53a8be6595ce@postmarketos.org
 
-diff --git a/arch/arm/include/asm/arch-meson/boot.h b/arch/arm/include/asm/arch-meson/boot.h
-index a11dfde719e..e66b45983fe 100644
---- a/arch/arm/include/asm/arch-meson/boot.h
-+++ b/arch/arm/include/asm/arch-meson/boot.h
-@@ -21,6 +21,8 @@ int meson_get_boot_device(void);
- 
- int meson_get_soc_rev(char *buff, size_t buff_len);
- 
-+void meson_setup_capsule(void);
-+
- /**
-  * meson_get_socinfo - retrieve cpu_id of the Amlogic SoC
-  *
-diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
-index 535b0878b91..640921e2b8e 100644
---- a/arch/arm/mach-meson/Makefile
-+++ b/arch/arm/mach-meson/Makefile
-@@ -2,7 +2,7 @@
- #
- # Copyright (c) 2016 Beniamino Galvani <b.galvani@gmail.com>
- 
--obj-y += board-common.o sm.o board-info.o
-+obj-y += board-common.o sm.o board-info.o capsule.o
- obj-$(CONFIG_MESON_GX) += board-gx.o
- obj-$(CONFIG_MESON_AXG) += board-axg.o
- obj-$(CONFIG_MESON_G12A) += board-g12a.o
-diff --git a/arch/arm/mach-meson/board-common.c b/arch/arm/mach-meson/board-common.c
-index 39774c43049..e8012604c33 100644
---- a/arch/arm/mach-meson/board-common.c
-+++ b/arch/arm/mach-meson/board-common.c
-@@ -145,6 +145,11 @@ int board_late_init(void)
- {
- 	meson_set_boot_source();
- 
-+	if (CONFIG_IS_ENABLED(DFU) && CONFIG_IS_ENABLED(EFI_LOADER)) {
-+		/* Generate dfu_string for EFI capsule updates */
-+		meson_setup_capsule();
-+	}
-+
- 	return meson_board_late_init();
- }
- 
-diff --git a/arch/arm/mach-meson/capsule.c b/arch/arm/mach-meson/capsule.c
-new file mode 100644
-index 00000000000..6e968a59c2c
---- /dev/null
-+++ b/arch/arm/mach-meson/capsule.c
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (c) 2025, Ferass El Hafidi <funderscore@postmarketos.org>
-+ */
-+
-+#include <asm/arch/boot.h>
-+#include <dm.h>
-+#include <efi_loader.h>
-+#include <mmc.h>
-+
-+/*
-+ * To be able to support multiple devices and flash to the correct one we need
-+ * to automatically generate the dfu_string and fw_name to match the device we
-+ * are booted from. This is done by meson_setup_capsule() which is then called
-+ * in board_late_init(). Right now we support EFI capsule updates on SPI flash,
-+ * eMMC and SD cards.
-+ */
-+struct efi_fw_image fw_images[] = {
-+	{
-+		.image_index = 1,
-+	},
-+};
-+
-+struct efi_capsule_update_info update_info = {
-+	.dfu_string = NULL, /* to be set in meson_capsule_setup */
-+	.num_images = ARRAY_SIZE(fw_images),
-+	.images = fw_images,
-+};
-+
-+/*
-+ * TODO: Support usecase e.g. FIT image on eMMC + SPL on SD.
-+ */
-+void meson_setup_capsule(void)
-+{
-+	static char dfu_string[32] = { 0 };
-+	int mmc_devnum = 0; /* mmc0 => SD card */
-+	u32 max_size = 0x2000; /* 4 MB (MMC sectors are 512 bytes each) */
-+	u32 offset = 0x1; /* offset for flashing to eMMC/SD */
-+	int boot_device = meson_get_boot_device();
-+
-+	switch (boot_device) {
-+	case BOOT_DEVICE_EMMC:
-+		mmc_devnum = 1; /* mmc1 is always eMMC */
-+		fallthrough;
-+	case BOOT_DEVICE_SD:
-+		snprintf(dfu_string, 32, "mmc %d=u-boot.bin raw %d %d", mmc_devnum, offset, max_size);
-+		fw_images[0].fw_name = u"U_BOOT_MESON_MMC";
-+		break;
-+	case BOOT_DEVICE_SPI:
-+		/* We assume there's only one SPI flash */
-+		fw_images[0].fw_name = u"U_BOOT_MESON_SPI";
-+		snprintf(dfu_string, 32, "sf 0:0=u-boot.bin raw 0 %d", max_size);
-+		break;
-+	default:
-+		debug("setup_capsule: Boot device %d unsupported\n", boot_device);
-+		return;
-+	}
-+	debug("EFI Capsule DFU string: %s", dfu_string);
-+
-+	update_info.dfu_string = dfu_string;
-+}
+Changes in v2:
+ - Don't run meson_setup_capsule unless CONFIG_DFU and CONFIG_EFI_LOADER
+   are enabled
+ - Coding style fixes
+ - Return when boot device is unsupported
+ - Link to v1: https://lore.kernel.org/r/20251007-meson-capsule-v1-1-6175f7b4cf9e@postmarketos.org
 
+---
+Ferass El Hafidi (2):
+      arm: meson: add support for EFI capsule updates
+      board: libre-computer: use common Amlogic EFI capsule support
+
+ arch/arm/include/asm/arch-meson/boot.h             |  2 +
+ arch/arm/mach-meson/Makefile                       |  2 +-
+ arch/arm/mach-meson/board-common.c                 |  5 ++
+ arch/arm/mach-meson/capsule.c                      | 61 ++++++++++++++++++++++
+ board/libre-computer/aml-a311d-cc/aml-a311d-cc.c   | 14 -----
+ board/libre-computer/aml-s805x-ac/aml-s805x-ac.c   | 13 -----
+ board/libre-computer/aml-s905d3-cc/aml-s905d3-cc.c | 14 -----
+ 7 files changed, 69 insertions(+), 42 deletions(-)
+---
+base-commit: 072264c4b3406aee50dad08355588577a547ab48
+change-id: 20251007-meson-capsule-a19539e0a54e
+
+Best regards,
 -- 
-2.51.2
+Ferass El Hafidi <funderscore@postmarketos.org>
 
 
