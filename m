@@ -2,98 +2,119 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2DFD3B7EA
-	for <webhook@archiver.kernel.org>; Tue,  9 Dec 2025 09:26:30 +0000 (UTC)
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1013.1765260188272251883
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B1FD41C1E
+	for <webhook@archiver.kernel.org>; Thu, 11 Dec 2025 10:46:22 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6652.1765449981197103491
  for <u-boot-amlogic@groups.io>;
- Mon, 08 Dec 2025 22:03:08 -0800
+ Thu, 11 Dec 2025 02:46:21 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=d55vNQEE;
- spf=pass (domain: gmail.com, ip: 209.85.214.171, mailfrom: xieqinick@gmail.com)
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-29808a9a96aso56597215ad.1
-        for <u-boot-amlogic@groups.io>; Mon, 08 Dec 2025 22:03:08 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=hStttYPT;
+ spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-477a2ab455fso8253405e9.3
+        for <u-boot-amlogic@groups.io>; Thu, 11 Dec 2025 02:46:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765260188; x=1765864988; darn=groups.io;
-        h=message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ipWTaBkO9NRhYB73xbdcKlhmMD4pf98Ty0k/P5ljLEI=;
-        b=d55vNQEEvhZ5NSqaHn2Xt8oqq4sPkoE5MGZ3TivBElII/cYuiAqiBHmP3Zf5x6jVes
-         MRWEtX9j/Iffj4yIVq+pkmYkyKFQfVaUgjFieM1y0Ivk9QXUjd9mxx8vtf0Izyj7LQZ3
-         GSSxFWb0qwNK14OBJ24aniuMVxXE0ABJVL1elcgZ1N6ZypRyocYCKrwZQ6T09manvMuz
-         Z29sFQEDdO3b8FE4dFXfzsW2CMMVp9RJO5TZ2O4QRexRseSPWD7U2DdQFRaHbOTyygm2
-         M3TwMr5dTPZt9Op0UbN8iASiFFNYXlUaFCcZ0VSE92Jk7EGVRCFMUiFISyN9gq85YtFQ
-         UqzQ==
+        d=linaro.org; s=google; t=1765449979; x=1766054779; darn=groups.io;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d/87YDKiYcZLzVS3pkKiOBEkpdlzdNDZH+w+dUxdDFo=;
+        b=hStttYPTvQ0fV+z7GU5MTBTBff74mB+QdTioghgJO8eYTs7DXLJABWtU4scqpiM1Sb
+         CQk/UEABNPA/mEuNoWZtGYLZFzkAagePjIxjGc1skcRKVLc8zWRNhF/276Jr9aH9giN+
+         Qi7kSKP13l2QHJHZUaeJYUK3duQILbDpIMIyVeC8t240KnLSIdC5HO73seTtA+NCz7uY
+         7+dJp/yHRppNvb1by5l+5YwewgNSetNXcsLCL5uJvvoIZ9SmH8sbutBbuksHSQAY8fUj
+         gULSLSGllKfSciyr3Ae5y1HPazMtYXd2AfLvqKoV8b6uFm7yPC+203r5WdLHubelw1HU
+         +M8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765260188; x=1765864988;
-        h=message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ipWTaBkO9NRhYB73xbdcKlhmMD4pf98Ty0k/P5ljLEI=;
-        b=kf2iOljbk5AG+4GIOSGA5BYzzD5uYmxIyGQ26RGo6JIPBAoV/JED8xQuCE3qAwiVyK
-         mg+WHr6P/UZdwWlbpZM5GYsIUHKymtah+gQ9MI96tfi5XaE9Etwm+LOnf0p2APMNC+ww
-         Jcp+ZYX+P273ZoiTIPfcUyaJpbxLNzvx4JlCF//L6//5Qv4YZy4++WTebl08UMgPm1Jk
-         1UYAE0P3E/iCSACamsrQmA6+VCGB29S6kHquG9YHD0/w4IVO99gQy9b8h2DJv7inLK97
-         jSpgWPxN0rWn+w5cpTILtwC08FcbXW1OEXdQTpe8F8/6Lefp906ew8fsG3YiKkSZlftX
-         QGrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRER9DHrmlZiDjeILaM+WFv3mXONYIRJcwd9+OsyNYpupzeIzqrKazFGRJ0XXPvcN3O4ItP3gaH5sc8MYDpQ==@groups.io
-X-Gm-Message-State: AOJu0Ywqu28KSOIEvQHQIj1U2irjGy7X83kMMcdhdhvTJzaJtY5zGMbN
-	w4U1vIlRn0canhAF0yE9RNMEIv9PCeIFWqMLukel9hmV9FQYdLdNlDsc+mfQKyV+ghU=
-X-Gm-Gg: ASbGncumWxd4sraahs7z7xM8tn9Nov8elRsI6bTWC1iRaWw4ukyrh9kXOLidBR1B+OX
-	Jz/p9BOg7LRjjwMxffmWW/+HGYHddHd87IlzTeDkQ0LyYJxe3hYB8dkxmxb0fPWHdby7P051Zs3
-	Juax6Fpe0Kgh9zU2YQIHIoUaPnFg/7BBWXUJReum6xqV2TADET0PcWH6/w9tELq6cQCCnI7FVnJ
-	l1r/rqgoaGvpWY+O131kK5ivGWsdr2wo7DzkQ5D0hY7e/c/tW8iaS3eCFABXJC6LbPwWWbbvJGL
-	z+kHPvaZyRI8FQhm9XpTuFj3OLuU3qWKLmnULruOdp2evpPgAzPEb8ftFKgCHIKTpy3dgfJBVhU
-	VSUQh+wmtxngaI02oSJM+74onyjvwAOnsjBxxqHai0jbqM/MCBTlSeMJS1tnaQd/2S0oYh1Z7DU
-	GI2w3+91xviHc=
-X-Google-Smtp-Source: AGHT+IE/lqap8UwMWERcs2fpnkS2PSs5SUmVJWPpsA3Tjw9p6waFsQQNR548elxCHuT5vN3qoe6z7g==
-X-Received: by 2002:a17:90b:2fc3:b0:32e:749d:fcb7 with SMTP id 98e67ed59e1d1-349a2518c46mr7733097a91.13.1765259885775;
-        Mon, 08 Dec 2025 21:58:05 -0800 (PST)
-Received: from localhost.localdomain ([124.156.134.75])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34a4a7f55dcsm555593a91.4.2025.12.08.21.58.04
+        d=1e100.net; s=20230601; t=1765449979; x=1766054779;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=d/87YDKiYcZLzVS3pkKiOBEkpdlzdNDZH+w+dUxdDFo=;
+        b=lwD6MnKa5Mexg3xl0nWrr3vbqAqpEH3T26AuKq/w9RHWNJuaUOA46WwDYQ3PK7VgUy
+         AQ0BtEWAGPqgdFnuBjc4ADVo/Y8BMk31I6YTDfOWpFX/0SaMUsaKgZiR+SIJF5NKNLna
+         Ljai6b2FdMq8X7lxQvcrmpNBkiRLaliqvz2Dr3l5UJ//M0/Uhb916BmC3Tq2PiEG7dS7
+         inKWjfhFWQ+8BbcGW3Gf1bPcM4+/tWU51mEH9o94aYczd3sjpQTseGkAH3l05wfbp28I
+         4l8hYWHE2Qb+wchBaPxlUZji3KOZ29F0o6txiHiCNyPD3Qd8FIEa65PjsSku/PYgrA0j
+         PYJg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3x4KpYzB9WX0o40jtQDf+fo7jsFeOWkccr1FUkaxsr/yzMNntOZykkjqcO5/MwedFtE1V+85H1pE3b+8G/Q==@groups.io
+X-Gm-Message-State: AOJu0YzC3wSCO6ANT971PegpS6sbhoUDC7Sdb41ah1aKLGZ0Rz9/jN1t
+	8hK0cSlV88/KTjMYPOvmD1uj3Z7D1YyuwPpm8YCk9o6S0wuqXITjEXVio6Hs0YCBiLg=
+X-Gm-Gg: AY/fxX4JPAVUNkXEYYNZ2eovy8DpYPIg3C1UBzVWD7ZpSOnMZm9NLNbAeswJvGzJhC4
+	xiX2ITicU47vbc8c47wh1Ubae+qOL3eOizEpmdWl0gnh8i7C2g26KMl5YEneQnt7930mm4YnlFF
+	pMU80v930upJR8tp1NKghkUmewdgekM+OtOc2azFrV9FvFkeiXeniY0Tb3SmELNTTdUZZCsQGDc
+	0UV33B1ASUIIP7E5OWvOK2lZ6vjq95jEYTJtj8UqmBOOwveGykcSZ7i2nRPO5SdQuKHGq8RFaRl
+	EEfUSX8hVUisQ6PL3pkvAQMNYczIWw07JQaWnZ2OE7JGXO5JIm19PI+QNDhiwWcGj3cusYHHRGg
+	ThNI0ZQiUy7ymflwUxaLZngZb9uKAuHfPtNW1eYAvfvdkzqf1cxp96gRy3VYrovv1m03j4avOQJ
+	a3Mw77qbZ/cp8Zqg6TA6J5bxBpQUWA5lE=
+X-Google-Smtp-Source: AGHT+IF2R0OcWaBdtvvIkWRs/nyPiCdnUkGAyED17wHYfWERLWeKkDaSwO3vyu+LHaEDK0r+QfbQHA==
+X-Received: by 2002:a05:600c:3b13:b0:475:dae5:d972 with SMTP id 5b1f17b1804b1-47a837925e3mr48878695e9.23.1765449979352;
+        Thu, 11 Dec 2025 02:46:19 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a89dac074sm27548245e9.8.2025.12.11.02.46.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Dec 2025 21:58:05 -0800 (PST)
-From: Nick Xie <xieqinick@gmail.com>
-X-Google-Original-From: Nick Xie <nick@khadas.com>
-To: nick@khadas.com,
-	neil.armstrong@linaro.org,
-	peng.fan@nxp.com,
-	jh80.chung@samsung.com,
-	trini@konsulko.com,
-	u-boot-amlogic@groups.io,
-	u-boot@lists.denx.de
-Subject: [PATCH] mmc: meson_gx_mmc: reduce maximum frequency
-Date: Tue,  9 Dec 2025 13:57:50 +0800
-Message-Id: <20251209055750.43594-1-nick@khadas.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 11 Dec 2025 02:46:19 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Tom Rini <trini@konsulko.com>, Peng Fan <peng.fan@nxp.com>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Beniamino Galvani <b.galvani@gmail.com>, 
+ Ferass El Hafidi <funderscore@postmarketos.org>
+Cc: Jonas Karlman <jonas@kwiboo.se>, Simon Glass <sjg@chromium.org>, 
+ u-boot@lists.denx.de, u-boot-amlogic@groups.io, 
+ ~postmarketos/upstreaming@lists.sr.ht
+In-Reply-To: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
+References: <20251126-spl-gx-v5-0-6cbffb2451ca@postmarketos.org>
+Subject: Re: [PATCH v5 00/10] initial U-Boot SPL support on Amlogic GX SoCs
+Message-Id: <176544997866.2550755.6380353806583614603.b4-ty@linaro.org>
+Date: Thu, 11 Dec 2025 11:46:18 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 09 Dec 2025 09:26:30 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2865
+ <u-boot-amlogic@groups.io>; Thu, 11 Dec 2025 10:46:22 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2866
 
-Reduce the maximum frequency to 40MHz to be compatible with
-more eMMC. And the Amlogic vendor U-Boot also use the maximum
-frequency of 40MHz.
+Hi,
 
-Signed-off-by: Nick Xie <nick@khadas.com>
----
- drivers/mmc/meson_gx_mmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, 26 Nov 2025 12:17:02 +0000, Ferass El Hafidi wrote:
+> This patch series adds support for U-Boot SPL booting on Amlogic GX SoCs,
+> replacing the "bl2.bin" binary blob running as TF-A BL2 on these boards.
+> 
+> Boards tested:
+>  - Libre Computer LePotato (S905X, 1 GB)
+>  - Videostrong KII Pro (S905)
+>  - Xiaomi Mi TV Stick (S805Y) - downstream defconfig [1]
+>  - ODROID-C2 (S905)
+> 
+> [...]
 
-diff --git a/drivers/mmc/meson_gx_mmc.c b/drivers/mmc/meson_gx_mmc.c
-index 5852b24c6d2..87c5f04da0f 100644
---- a/drivers/mmc/meson_gx_mmc.c
-+++ b/drivers/mmc/meson_gx_mmc.c
-@@ -278,7 +278,7 @@ static int meson_mmc_probe(struct udevice *dev)
- 	cfg->host_caps = MMC_MODE_8BIT | MMC_MODE_4BIT |
- 			MMC_MODE_HS_52MHz | MMC_MODE_HS;
- 	cfg->f_min = DIV_ROUND_UP(SD_EMMC_CLKSRC_24M, CLK_MAX_DIV);
--	cfg->f_max = 100000000; /* 100 MHz */
-+	cfg->f_max = 40000000; /* 40 MHz */
- 	cfg->b_max = 511; /* max 512 - 1 blocks */
- 	cfg->name = dev->name;
- 
+Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic)
+
+[01/10] tools: mkimage: Add Amlogic Boot Image type
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/18c1654567dca70d848a4da1af93ea86632a45ba
+[02/10] mmc: meson_gx_mmc: add minimal non-DM driver
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/3eee9c1f61fc4ec0b7823477fbdac31d136fc729
+[03/10] serial: serial_meson: add minimal non-DM driver
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/ec958be7cc76b4f305fd78d55a20502d7c8b35b3
+[04/10] arm: meson: initial u-boot SPL support for GX SoCs
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/f39f6eeaa8c19053405788479b61a1e3b17ec150
+[05/10] arm: meson: spl: add support for SPL DRAM init
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/17d80a3b326ea94cab687236cfeac5fc7c2bca2e
+[06/10] arm: dts: meson: add meson-gxbb-u-boot.dtsi
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/3d0a06aaecc7b380e2588072bf6cfc3bf1ae8832
+[07/10] arm: dts: meson-gx-u-boot: add binman configuration for U-Boot SPL
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/236e4b1cc4eb491dea31e112cf4e880ebcce05f5
+[08/10] board: amlogic: add kconfig fragments for SPL
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/773aaf8f8cc94a882a89373920f7986a9669f0e7
+[09/10] spl: meson: set SPL max size for GX SoCs
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/dcf8a2738b0e00a7caaf193a6cc69d3cf0ec3999
+[10/10] doc: board: amlogic: add u-boot-spl documentation
+        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/8f2169faf6e4ae1d0506779c6630104dfff7feea
+
 -- 
-2.17.1
+Neil
 
 
