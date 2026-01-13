@@ -2,157 +2,96 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98899D30CF7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9204ED31A3C
 	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 10:15:23 +0000 (UTC)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.61693.1768317972261644897
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.184])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.57662.1768306916090665492
  for <u-boot-amlogic@groups.io>;
- Tue, 13 Jan 2026 07:26:12 -0800
+ Tue, 13 Jan 2026 04:21:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kernel.org header.s=k20201202 header.b=mj+Iv4iQ;
- spf=pass (domain: kernel.org, ip: 172.105.4.254, mailfrom: devnull+forbidden405.outlook.com@kernel.org)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id A9B0B60018;
-	Tue, 13 Jan 2026 15:16:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6204FC19424;
-	Tue, 13 Jan 2026 15:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768317381;
-	bh=6wQLBs9u1frm7O3caxLRa9fFSO7sLAT87sXHgMb4LiU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mj+Iv4iQUbanfpE71NcSMiRsR5Mt7pCHCNJTEFZ246qwGbS3UlF/EavZsjxiGjmBB
-	 rS3BfwfuFMos7TnGxaPyyzzFi2bH9l11RlZx7J01kL0Z/lSKjV8gUtVnJNurs9Z8Ti
-	 62lTScJYyGh+fDeR+JBAcgy8whWtGMPJX5KfcOIKLaO+ebUJvQYzV/K2rACGKfpC/I
-	 3DBvvy570YbYJ2LoaJ1lyJwzCo7wleLs0Q8FHRfdojGM1Jy8B1mwkSdA5tZw52XjU/
-	 +AubKuDKZqRrOPsgy0K4eCuDXUu45Q2elzETwIw7kbnDNO0C5cKMtZUqtMP/2kabMI
-	 Kq8Hj276P25pw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566EFD2F327;
-	Tue, 13 Jan 2026 15:16:21 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Tue, 13 Jan 2026 23:16:16 +0800
-Subject: [PATCH RFC 2/2] net: dwmac_meson8b: Fix incorrect clock divider setting
-MIME-Version: 1.0
-Message-Id: <20260113-aml_eth-v1-2-3dd74db37c4f@outlook.com>
-References: <20260113-aml_eth-v1-0-3dd74db37c4f@outlook.com>
-In-Reply-To: <20260113-aml_eth-v1-0-3dd74db37c4f@outlook.com>
-To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Cc: Joe Hershberger <joe.hershberger@ni.com>, 
- Ramon Fried <rfried.dev@gmail.com>, Jerome Forissier <jerome@forissier.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>, 
- Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768317381; l=4015;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=N54o61iT+QMkRPDSfAfYCMn3c7ohOQtF54kAkKdLB7A=;
- b=533nhsA9QPpoM1+GR3lsAA5fVXmcxKJUrgqQVQKDj8cBEj82qL2QXcyn6jUK7H3Y0lrO6Fov5
- 0KX9ppxGjw7CmS24E8WBt//kVEycjWlk38Wg8Vmgu3AHpqjthD+VD+Y
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received: by B4 Relay for forbidden405@outlook.com/20230724 with
- auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: forbidden405@outlook.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+ dkim=pass header.i=@xs4all.nl header.s=xs4all01 header.b=PzOu9Ge3;
+ spf=pass (domain: xs4all.nl, ip: 195.121.94.184, mailfrom: mark.kettenis@xs4all.nl)
+X-KPN-MessageId: e6bbda80-f078-11f0-af3f-005056994fde
+Received: from smtp.kpnmail.nl (unknown [10.31.155.5])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id e6bbda80-f078-11f0-af3f-005056994fde;
+	Tue, 13 Jan 2026 13:10:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xs4all.nl; s=xs4all01;
+	h=content-type:mime-version:subject:to:from:message-id:date;
+	bh=63KWQmxdUzKy1KsEcpKOanno/wD/xixyE2ZLTrBPLSU=;
+	b=PzOu9Ge3aiuZPs2kkpM0uIEMEhH/btao2nY7mL8eKPM4Xc2RhaUuY8YjeUUxnVO/AxOkAjVzd9iue
+	 HODdm2Ht+DTswmuMGubixUpoe9i0ijB5CZixfkbfsstBQDI15ULAV5RHSJWeELL+AyfxmmnXmpleZA
+	 UsYone0gKBp5V3RYhjBKWQVg1hCK4Q8fi7tO05D/UhTN1lHo+bk+0/Po9HLVkUIhG34WItEcyq6oqO
+	 tlakT3GBhispU4oYVCzCLQ5tGAAfypmruY+rdhznFQ4si0IOZguz5TO+XLDyHsil9TMwZ4fHJd2YWx
+	 p9khIMaxwHYvqpatIEqaJpG97VNju/w==
+X-KPN-MID: 33|UR7220K2SuXH7wbqrrxEEofgrKiiKJi3RsM/zsCZufZ4KADUyNZnFnIUIVT0Jif
+ rChQz6gB+NJZisWRWXy/8It32BtLeu2fUP+zfgbOb8zk=
+X-KPN-VerifiedSender: Yes
+X-CMASSUN: 33|9Q2xw47jkEPjW7CX2lo7c9Df4DT084ewGx21A5pvssE04nzlO0rXd0g8uJOUFgR
+ mSfYjMBAMvTBPcEgoQmzZvQ==
+X-Originating-IP: 80.61.163.207
+Received: from bloch.sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
+	by smtp.xs4all.nl (Halon) with ESMTPSA
+	id e52b1b1e-f078-11f0-8d40-00505699b758;
+	Tue, 13 Jan 2026 13:10:48 +0100 (CET)
+Date: Tue, 13 Jan 2026 13:10:47 +0100
+Message-Id: <87cy3d90hk.fsf@bloch.sibelius.xs4all.nl>
+From: Mark Kettenis <mark.kettenis@xs4all.nl>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: neil.armstrong@linaro.org, trini@konsulko.com, jonas@kwiboo.se,
+	funderscore@postmarketos.org, u-boot-amlogic@groups.io,
+	u-boot@lists.denx.de, luka.perkov@sartura.hr,
+	robert.marko@sartura.hr
+In-Reply-To: <20260113110806.648534-1-robert.marko@sartura.hr> (message from
+	Robert Marko on Tue, 13 Jan 2026 12:07:38 +0100)
+Subject: Re: [PATCH] tools: amlimage: include <inttypes.h>
+References: <20260113110806.648534-1-robert.marko@sartura.hr>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 14 Jan 2026 10:15:23 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2886
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2885
 
-From: Yang Xiwen <forbidden405@outlook.com>
+> From: Robert Marko <robert.marko@sartura.hr>
+> Date: Tue, 13 Jan 2026 12:07:38 +0100
+> 
+> PRIuN, PRIxN, etc macros are defined in <inttypes.h>, without it being
+> included errors like:
+> tools/amlimage.c:124:38: error: expected ‘)’ before ‘PRIu8’
+> tools/amlimage.c:126:31: error: expected ‘)’ before ‘PRIu32’
+> 
+> Can be hit depending on the host compiler and HOSTCFLAGS.
+> 
+> Fixes: 18c1654567dc ("tools: mkimage: Add Amlogic Boot Image type")
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+>  tools/amlimage.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-The original code sets divisor to 4, which seems incorrect as per the
-datasheet[1] and Linux driver code[2]. See explanation below:
+Hit this myself the other day on one of my systems (and then couldn't
+reproduce it on another system probably because the header was pulled
+in through some othet dependency).
 
-                                                   crystal (24MHz)
-                                                           |
-                                                 Fixed DPLL (2550MHz)
-                                                           |
-                                            -----------------------------
-                                            |                           |
-                                   FCLK_DIV2 (1275MHz)            MPLL2 (500MHz)
-                                            |---------------------------|
-                                                           |
-                                                        M250_MUX (Usually MPLL2)
-                                                           |
-                                                        M250_DIV  (500 / 2 = 250MHz)
-                                                           |
-                                                       FIXED_DIV2 (250 / 2 = 125MHz)
-                                                           |
-                                                       RGMII_TX_EN (Gate)
-                                                           |
-                                                       RGMII_TX_CLK (125MHz)
+Reviewed-by: Mark Kettenis <kettenis@openbsd.org>
 
-Note:
-1. It doesn't work to switch M250_MUX to FCLK_DIV2 because it's unable
-   to generate 125MHz rgmii clock (1275/125=10.2);
-2. There is a fixed 2x divider before rgmii tx clock;
-3. MPLL2 is configurable, theoretically. In practice it's always 500MHz.
-
-Because of all these reasons, M250_DIV should be set to 0b010, which
-divides input 500MHz clock to 250MHz output, to generate the 125MHz
-rgmii clock.
-
-In vendor U-Boot, the value read out from 0xc1108140 is 0x7531 (bit7-9
-is 0b010), which also verify this.
-
-This patch is tested on a board with S805.
-
-[1]: https://dn.odroid.com/S905/DataSheet/S905_Public_Datasheet_V1.1.4.pdf P304
-[2]: https://elixir.bootlin.com/linux/v6.18.4/source/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c#L143
-
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
-
-------------
----
- drivers/net/dwmac_meson8b.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
-index b1a3946ce684..34f55a4d42ea 100644
---- a/drivers/net/dwmac_meson8b.c
-+++ b/drivers/net/dwmac_meson8b.c
-@@ -67,7 +67,7 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
- 				AXG_ETH_REG_0_TX_PHASE_MASK | AXG_ETH_REG_0_TX_RATIO_MASK,
- 				AXG_ETH_REG_0_PHY_INTF_RGMII |
- 				AXG_ETH_REG_0_TX_PHASE(1) |
--				AXG_ETH_REG_0_TX_RATIO(4) |
-+				AXG_ETH_REG_0_TX_RATIO(2) |
- 				AXG_ETH_REG_0_PHY_CLK_EN |
- 				AXG_ETH_REG_0_CLK_EN);
- 		break;
-@@ -78,7 +78,7 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
- 		clrsetbits_le32(plat->regs + ETH_REG_0,
- 				AXG_ETH_REG_0_TX_PHASE_MASK | AXG_ETH_REG_0_TX_RATIO_MASK,
- 				AXG_ETH_REG_0_PHY_INTF_RGMII |
--				AXG_ETH_REG_0_TX_RATIO(4) |
-+				AXG_ETH_REG_0_TX_RATIO(2) |
- 				AXG_ETH_REG_0_PHY_CLK_EN |
- 				AXG_ETH_REG_0_CLK_EN);
- 		break;
-@@ -109,7 +109,7 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
- 				GX_ETH_REG_0_TX_PHASE_MASK | GX_ETH_REG_0_TX_RATIO_MASK,
- 				GX_ETH_REG_0_PHY_INTF |
- 				GX_ETH_REG_0_TX_PHASE(1) |
--				GX_ETH_REG_0_TX_RATIO(4) |
-+				GX_ETH_REG_0_TX_RATIO(2) |
- 				GX_ETH_REG_0_PHY_CLK_EN |
- 				GX_ETH_REG_0_CLK_EN);
- 
-@@ -121,7 +121,7 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
- 		clrsetbits_le32(plat->regs + ETH_REG_0,
- 				GX_ETH_REG_0_TX_PHASE_MASK | GX_ETH_REG_0_TX_RATIO_MASK,
- 				GX_ETH_REG_0_PHY_INTF |
--				GX_ETH_REG_0_TX_RATIO(4) |
-+				GX_ETH_REG_0_TX_RATIO(2) |
- 				GX_ETH_REG_0_PHY_CLK_EN |
- 				GX_ETH_REG_0_CLK_EN);
- 
-
--- 
-2.43.0
-
-
+> diff --git a/tools/amlimage.c b/tools/amlimage.c
+> index ecb06bc535b..bc6e19b9c24 100644
+> --- a/tools/amlimage.c
+> +++ b/tools/amlimage.c
+> @@ -2,6 +2,7 @@
+>  // Copyright Contributors to the U-Boot project.
+>  
+>  #include "imagetool.h"
+> +#include <inttypes.h>
+>  #include <u-boot/sha256.h>
+>  
+>  /*
+> -- 
+> 2.52.0
+> 
+> 
 
