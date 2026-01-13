@@ -2,107 +2,174 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8B5D29DC6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6A1D29DC5
 	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 10:15:23 +0000 (UTC)
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.56751.1768302998737419730
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.61692.1768317972261509384
  for <u-boot-amlogic@groups.io>;
- Tue, 13 Jan 2026 03:16:38 -0800
+ Tue, 13 Jan 2026 07:26:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sartura.hr header.s=sartura header.b=VyjqQBM+;
- spf=pass (domain: sartura.hr, ip: 209.85.222.170, mailfrom: robert.marko@sartura.hr)
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8c0f15e8247so1043759085a.3
-        for <u-boot-amlogic@groups.io>; Tue, 13 Jan 2026 03:16:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1768302998; x=1768907798; darn=groups.io;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1+aJCPuXSARm5Mh5CL6rklHNlCFqVgOR2Vf2wAEcas=;
-        b=VyjqQBM+d0FcfOJpkaakVM81v9DqF6EcqcthyAQh7J62ULqZu5tmp+sZYjuWbpES+5
-         eonP9nKPuIp3ubDQBRr66DFl2zd6c5/AkmAB4OjwCgiFN6sWyQkpemEXh/rt0Yd9Ys8e
-         X6wV/0l08k8OsN/vDcOhntcIOLjJi7YGmE9MymuGgtegus4PCvyXtRT0HOUA+j0m4aj1
-         snHqsxuF+MZv2XcFUnNlXdHgNiRW21i6yg8dAl0m4UmvWQDWL76YxynGjcJCfcjwOXc6
-         4b4bRiWjZesmEDbPVdzJ6iL/QuMDZZoJ10yCzIZgMEDXEJSt6BxT1kDmKBUivGNUop+Q
-         E57A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768302998; x=1768907798;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d1+aJCPuXSARm5Mh5CL6rklHNlCFqVgOR2Vf2wAEcas=;
-        b=Dpei3W7VU6kNUQSjYDfPmUxaxtWEaPp52LvaxxTkWF/us9kFjZoxU+E5lT5bExvowt
-         O8I3DlmUkF3omBqts+12u2Ut+Dzr6XwnUykO48kUEeQMQ+Ddw3VySPaIEAsWOszM9Shk
-         ymEBub7qzEy7lBZA0P0QFiyyuFq42cXVUpFxfgIVqeVCLmL683GQqyimkqEkEMapdDG1
-         YoR2+bVnVu42szgqxHohqIgLt1zpu/ci1Y3ippZvsaT4FOK/wpo1r34ERP6jN1inmulp
-         Dhy1uJyAjddxW3JxYZMk3nWcZ0pcg6mkuIjqPQIRGn6iqPlooGhmUA2TymtuwUAXKzvU
-         APNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnwsT9UNocs5mpGWmOeQ53jZAAhrvzAcCgK63eTxjvvVR9CqI/LeNm1DoYyr3cl16zO+1k/+AXQh8lFqsoqQ==@groups.io
-X-Gm-Message-State: AOJu0YwyjCSJ6Vp8fI9oHON2GZC658rY4QDEb2xE6jrl1lqIgkG8uuig
-	nespjq0offV5UywrO/YLPlItt+woj2fUXLRgNgEOk/BEeMF2p3q90lCbqvhA/VKRmG85KGhvJ/i
-	GNoD0tq0=
-X-Gm-Gg: AY/fxX60pVyiqAhUTMNUnQYh3ajDhPsTw24vsapL7fWNbWqmqWsov7KstX+9Pe76GMz
-	HAneYkiJUJY6cmPqcOMlflqmGkHFZcJnhjCLhYWqCYbPszjf2D7QtPtogKq0v0pVLtlhA++kr1h
-	ImJIXd0XQAK9TskMoSnXINOFQOdtg1jHpeh8Jfcx2rceqqS5U8UynsoCMmrxe6X55S6s7Iby5nj
-	ZiDw5pbN8yfBua88qaZ3Hejktr6gDH4oWKbCCzZqpLp6YcYqFPaBYNJ/PZP32X7+gZyPwXk/uKf
-	xCCUzVdfOqUSGtFFwZZKQuXg2mZf95tMiJ43f3GQqk36mZx/F4VVMwm98TUm19Ad8x6X8pD24Dc
-	Nr7rqeg0qJPk/lttOsNQqOz2eKujPrImFMr/LUz4uDy0WHAr+xGYVb9B/xwfM7zbGS8oGjUwklm
-	YTlHI85LhWct+/0XiPfIFK9DnbZRsy01vCs5OKCwd6r2Gm3dVclhdxe5rU8acDmTz5+vxM9cbog
-	UogVXI0
-X-Google-Smtp-Source: AGHT+IHJz1hqs9cI25sRZLj+kvJC4uHAmA8Rz6cKLi3I0t1Wkr3+TQ4q6+DsvAHQeylTDrulhTZJWg==
-X-Received: by 2002:a05:7301:4301:b0:2ab:ca55:89ab with SMTP id 5a478bee46e88-2b17d357488mr15099511eec.42.1768302498222;
-        Tue, 13 Jan 2026 03:08:18 -0800 (PST)
-Received: from fedora (dh207-14-52.xnet.hr. [88.207.14.52])
-        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-2b1706c503csm20934863eec.15.2026.01.13.03.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 03:08:17 -0800 (PST)
-From: Robert Marko <robert.marko@sartura.hr>
-To: neil.armstrong@linaro.org,
-	trini@konsulko.com,
-	jonas@kwiboo.se,
-	funderscore@postmarketos.org,
-	u-boot-amlogic@groups.io,
-	u-boot@lists.denx.de
-Cc: luka.perkov@sartura.hr,
-	Robert Marko <robert.marko@sartura.hr>
-Subject: [PATCH] tools: amlimage: include <inttypes.h>
-Date: Tue, 13 Jan 2026 12:07:38 +0100
-Message-ID: <20260113110806.648534-1-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.52.0
+ dkim=pass header.i=@kernel.org header.s=k20201202 header.b=BoSk4yiC;
+ spf=pass (domain: kernel.org, ip: 172.105.4.254, mailfrom: devnull+forbidden405.outlook.com@kernel.org)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id A2ACF60017;
+	Tue, 13 Jan 2026 15:16:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 592BAC19421;
+	Tue, 13 Jan 2026 15:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768317381;
+	bh=tYZ5hj1B9DhuygI/o/PSZw/9AcGv0jZ0XhuOsUi0Voo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=BoSk4yiCbYyTskK6GMLZYQFp6h6iyRYiSj42TCtLSzn9kSbixMj8IQpjKykRv+ZPT
+	 6LlEOBY7oGeESWomXsaXUymfZQD6GT2uwoOK/6MkSZYTbcHG1TdR6hGcG5bitB8Fc8
+	 CLBxRn9FcPSdzRWpXcAxvUngKf3oKnmfETlkLYfpt2NckraOnbqUT4QDmTzFwUBcT3
+	 TaQK4BW7zbC/mFDm6eDxMgPp0BTZQcPRoqGH1RQ1/IkfDF1CcPh3JrmITuWlNYjuBq
+	 o15RYuwONi0uVJVtGn0h2R2JMx0Gwf/vRYH7KFKHd+Qe91wFWX+x0cf5+2s/Yt3/kZ
+	 TfFoyEjUraxsw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49774D2F32A;
+	Tue, 13 Jan 2026 15:16:21 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Tue, 13 Jan 2026 23:16:15 +0800
+Subject: [PATCH RFC 1/2] net: dwmac_meson8b: replace setbits() with clrsetbits()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <20260113-aml_eth-v1-1-3dd74db37c4f@outlook.com>
+References: <20260113-aml_eth-v1-0-3dd74db37c4f@outlook.com>
+In-Reply-To: <20260113-aml_eth-v1-0-3dd74db37c4f@outlook.com>
+To: u-boot-amlogic@groups.io, u-boot@lists.denx.de
+Cc: Joe Hershberger <joe.hershberger@ni.com>, 
+ Ramon Fried <rfried.dev@gmail.com>, Jerome Forissier <jerome@forissier.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>, 
+ Yang Xiwen <forbidden405@outlook.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768317381; l=4115;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=gHhFLguZETRuvn1ptF4TGpP8+u1e6lfmwRCpP93Z7sU=;
+ b=980RnZ7CyrCH2deXDg8iIIzoAuuA/6hPhbZE/nxprH8ZzUpfbMT3gs1Mgh8HGZyaUkDb/OfHo
+ T+a+jwISnqcDTONbTjd/FOw49/E9W3c9Cd3fyOMwMLB60HKuSSmwlnn
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received: by B4 Relay for forbidden405@outlook.com/20230724 with
+ auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: forbidden405@outlook.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 14 Jan 2026 10:15:23 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2883
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2884
 
-PRIuN, PRIxN, etc macros are defined in <inttypes.h>, without it being
-included errors like:
-tools/amlimage.c:124:38: error: expected ‘)’ before ‘PRIu8’
-tools/amlimage.c:126:31: error: expected ‘)’ before ‘PRIu32’
+From: Yang Xiwen <forbidden405@outlook.com>
 
-Can be hit depending on the host compiler and HOSTCFLAGS.
+setbits() only sets the specified bits and leave other bits untouched.
+This is incorrect for ETH_REG_0_TX_PHASE and ETH_REG_0_TX_RATIO fields
+assignment. They contain multiple bits and should be cleared before
+setting new bits. Otherwize the old value is OR'ed with the new value.
+(e.g. 0x2 | 0x4 becomes 0x6)
 
-Fixes: 18c1654567dc ("tools: mkimage: Add Amlogic Boot Image type")
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- tools/amlimage.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dwmac_meson8b.c | 48 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 30 insertions(+), 18 deletions(-)
 
-diff --git a/tools/amlimage.c b/tools/amlimage.c
-index ecb06bc535b..bc6e19b9c24 100644
---- a/tools/amlimage.c
-+++ b/tools/amlimage.c
-@@ -2,6 +2,7 @@
- // Copyright Contributors to the U-Boot project.
+diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
+index fde4aabbacec..b1a3946ce684 100644
+--- a/drivers/net/dwmac_meson8b.c
++++ b/drivers/net/dwmac_meson8b.c
+@@ -16,7 +16,9 @@
+ #define ETH_REG_3		0x1c
  
- #include "imagetool.h"
-+#include <inttypes.h>
- #include <u-boot/sha256.h>
+ #define GX_ETH_REG_0_PHY_INTF		BIT(0)
++#define GX_ETH_REG_0_TX_PHASE_MASK	GENMASK(6, 5)
+ #define GX_ETH_REG_0_TX_PHASE(x)	(((x) & 3) << 5)
++#define GX_ETH_REG_0_TX_RATIO_MASK	GENMASK(9, 7)
+ #define GX_ETH_REG_0_TX_RATIO(x)	(((x) & 7) << 7)
+ #define GX_ETH_REG_0_PHY_CLK_EN	BIT(10)
+ #define GX_ETH_REG_0_INVERT_RMII_CLK	BIT(11)
+@@ -24,7 +26,9 @@
  
- /*
+ #define AXG_ETH_REG_0_PHY_INTF_RGMII	BIT(0)
+ #define AXG_ETH_REG_0_PHY_INTF_RMII	BIT(2)
++#define AXG_ETH_REG_0_TX_PHASE_MASK	GENMASK(6, 5)
+ #define AXG_ETH_REG_0_TX_PHASE(x)	(((x) & 3) << 5)
++#define AXG_ETH_REG_0_TX_RATIO_MASK	GENMASK(9, 7)
+ #define AXG_ETH_REG_0_TX_RATIO(x)	(((x) & 7) << 7)
+ #define AXG_ETH_REG_0_PHY_CLK_EN	BIT(10)
+ #define AXG_ETH_REG_0_INVERT_RMII_CLK	BIT(11)
+@@ -59,20 +63,24 @@ static int dwmac_setup_axg(struct udevice *dev, struct eth_pdata *edata)
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+ 		/* Set RGMII mode */
+-		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
+-						     AXG_ETH_REG_0_TX_PHASE(1) |
+-						     AXG_ETH_REG_0_TX_RATIO(4) |
+-						     AXG_ETH_REG_0_PHY_CLK_EN |
+-						     AXG_ETH_REG_0_CLK_EN);
++		clrsetbits_le32(plat->regs + ETH_REG_0,
++				AXG_ETH_REG_0_TX_PHASE_MASK | AXG_ETH_REG_0_TX_RATIO_MASK,
++				AXG_ETH_REG_0_PHY_INTF_RGMII |
++				AXG_ETH_REG_0_TX_PHASE(1) |
++				AXG_ETH_REG_0_TX_RATIO(4) |
++				AXG_ETH_REG_0_PHY_CLK_EN |
++				AXG_ETH_REG_0_CLK_EN);
+ 		break;
+ 
+ 	case PHY_INTERFACE_MODE_RGMII_RXID:
+ 	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		/* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
+-		setbits_le32(plat->regs + ETH_REG_0, AXG_ETH_REG_0_PHY_INTF_RGMII |
+-						     AXG_ETH_REG_0_TX_RATIO(4) |
+-						     AXG_ETH_REG_0_PHY_CLK_EN |
+-						     AXG_ETH_REG_0_CLK_EN);
++		clrsetbits_le32(plat->regs + ETH_REG_0,
++				AXG_ETH_REG_0_TX_PHASE_MASK | AXG_ETH_REG_0_TX_RATIO_MASK,
++				AXG_ETH_REG_0_PHY_INTF_RGMII |
++				AXG_ETH_REG_0_TX_RATIO(4) |
++				AXG_ETH_REG_0_PHY_CLK_EN |
++				AXG_ETH_REG_0_CLK_EN);
+ 		break;
+ 
+ 	case PHY_INTERFACE_MODE_RMII:
+@@ -97,21 +105,25 @@ static int dwmac_setup_gx(struct udevice *dev, struct eth_pdata *edata)
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+ 		/* Set RGMII mode */
+-		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
+-						     GX_ETH_REG_0_TX_PHASE(1) |
+-						     GX_ETH_REG_0_TX_RATIO(4) |
+-						     GX_ETH_REG_0_PHY_CLK_EN |
+-						     GX_ETH_REG_0_CLK_EN);
++		clrsetbits_le32(plat->regs + ETH_REG_0,
++				GX_ETH_REG_0_TX_PHASE_MASK | GX_ETH_REG_0_TX_RATIO_MASK,
++				GX_ETH_REG_0_PHY_INTF |
++				GX_ETH_REG_0_TX_PHASE(1) |
++				GX_ETH_REG_0_TX_RATIO(4) |
++				GX_ETH_REG_0_PHY_CLK_EN |
++				GX_ETH_REG_0_CLK_EN);
+ 
+ 		break;
+ 
+ 	case PHY_INTERFACE_MODE_RGMII_RXID:
+ 	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		/* TOFIX: handle amlogic,tx-delay-ns & rx-internal-delay-ps from DT */
+-		setbits_le32(plat->regs + ETH_REG_0, GX_ETH_REG_0_PHY_INTF |
+-						     GX_ETH_REG_0_TX_RATIO(4) |
+-						     GX_ETH_REG_0_PHY_CLK_EN |
+-						     GX_ETH_REG_0_CLK_EN);
++		clrsetbits_le32(plat->regs + ETH_REG_0,
++				GX_ETH_REG_0_TX_PHASE_MASK | GX_ETH_REG_0_TX_RATIO_MASK,
++				GX_ETH_REG_0_PHY_INTF |
++				GX_ETH_REG_0_TX_RATIO(4) |
++				GX_ETH_REG_0_PHY_CLK_EN |
++				GX_ETH_REG_0_CLK_EN);
+ 
+ 		break;
+ 
+
 -- 
-2.52.0
+2.43.0
+
 
 
