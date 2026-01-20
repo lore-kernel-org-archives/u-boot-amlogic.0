@@ -2,63 +2,78 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9204ED31A3C
-	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 10:15:23 +0000 (UTC)
-Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.184])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.57662.1768306916090665492
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512DEC44522
+	for <webhook@archiver.kernel.org>; Wed, 21 Jan 2026 12:15:21 +0000 (UTC)
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.7762.1768919767737717320
  for <u-boot-amlogic@groups.io>;
- Tue, 13 Jan 2026 04:21:56 -0800
+ Tue, 20 Jan 2026 06:36:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@xs4all.nl header.s=xs4all01 header.b=PzOu9Ge3;
- spf=pass (domain: xs4all.nl, ip: 195.121.94.184, mailfrom: mark.kettenis@xs4all.nl)
-X-KPN-MessageId: e6bbda80-f078-11f0-af3f-005056994fde
-Received: from smtp.kpnmail.nl (unknown [10.31.155.5])
-	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
-	id e6bbda80-f078-11f0-af3f-005056994fde;
-	Tue, 13 Jan 2026 13:10:50 +0100 (CET)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=q22luf+h;
+ spf=pass (domain: konsulko.com, ip: 209.85.210.171, mailfrom: trini@konsulko.com)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-81f3fba4a11so5264178b3a.1
+        for <u-boot-amlogic@groups.io>; Tue, 20 Jan 2026 06:36:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=xs4all.nl; s=xs4all01;
-	h=content-type:mime-version:subject:to:from:message-id:date;
-	bh=63KWQmxdUzKy1KsEcpKOanno/wD/xixyE2ZLTrBPLSU=;
-	b=PzOu9Ge3aiuZPs2kkpM0uIEMEhH/btao2nY7mL8eKPM4Xc2RhaUuY8YjeUUxnVO/AxOkAjVzd9iue
-	 HODdm2Ht+DTswmuMGubixUpoe9i0ijB5CZixfkbfsstBQDI15ULAV5RHSJWeELL+AyfxmmnXmpleZA
-	 UsYone0gKBp5V3RYhjBKWQVg1hCK4Q8fi7tO05D/UhTN1lHo+bk+0/Po9HLVkUIhG34WItEcyq6oqO
-	 tlakT3GBhispU4oYVCzCLQ5tGAAfypmruY+rdhznFQ4si0IOZguz5TO+XLDyHsil9TMwZ4fHJd2YWx
-	 p9khIMaxwHYvqpatIEqaJpG97VNju/w==
-X-KPN-MID: 33|UR7220K2SuXH7wbqrrxEEofgrKiiKJi3RsM/zsCZufZ4KADUyNZnFnIUIVT0Jif
- rChQz6gB+NJZisWRWXy/8It32BtLeu2fUP+zfgbOb8zk=
-X-KPN-VerifiedSender: Yes
-X-CMASSUN: 33|9Q2xw47jkEPjW7CX2lo7c9Df4DT084ewGx21A5pvssE04nzlO0rXd0g8uJOUFgR
- mSfYjMBAMvTBPcEgoQmzZvQ==
-X-Originating-IP: 80.61.163.207
-Received: from bloch.sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
-	by smtp.xs4all.nl (Halon) with ESMTPSA
-	id e52b1b1e-f078-11f0-8d40-00505699b758;
-	Tue, 13 Jan 2026 13:10:48 +0100 (CET)
-Date: Tue, 13 Jan 2026 13:10:47 +0100
-Message-Id: <87cy3d90hk.fsf@bloch.sibelius.xs4all.nl>
-From: Mark Kettenis <mark.kettenis@xs4all.nl>
-To: Robert Marko <robert.marko@sartura.hr>
-Cc: neil.armstrong@linaro.org, trini@konsulko.com, jonas@kwiboo.se,
-	funderscore@postmarketos.org, u-boot-amlogic@groups.io,
-	u-boot@lists.denx.de, luka.perkov@sartura.hr,
-	robert.marko@sartura.hr
-In-Reply-To: <20260113110806.648534-1-robert.marko@sartura.hr> (message from
-	Robert Marko on Tue, 13 Jan 2026 12:07:38 +0100)
-Subject: Re: [PATCH] tools: amlimage: include <inttypes.h>
+        d=konsulko.com; s=google; t=1768919767; x=1769524567; darn=groups.io;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8EhlILxjoZhxMoQUOj6XvHJ777HVzpZlsyUcG5/tdTo=;
+        b=q22luf+hCWBMpo4SwLkEML/VmQsG+iiFBMS2niNZpwjwveNmcTtcGwQ39JhOei9GL0
+         vjLuVeMnBaUqCqk80C9D9i/W6deAAI2SIZ8iHLF3PEA3YfmcGnz7Vf4VTIq60X0m+miy
+         tpTc1cpvXdAJ2yxAysIqUEEFgOnID7Bv5fuVc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768919767; x=1769524567;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8EhlILxjoZhxMoQUOj6XvHJ777HVzpZlsyUcG5/tdTo=;
+        b=NnjrgNUdxwnKAuX9GL8fiZIvZTrBEcYR1DqVwTeT2MNuxB7qkqdBCxJZoQo2K2O6P/
+         UeA1TFwDoXFveNKC8T1uWO10DGAUXHWet8JrXoBzQ6s0SC91gmYO2YtboVrA0fzRPgDD
+         qGu0Pa+vs3jA/1mNtjossJ1iYQEzW3b9/tPtwsMuIBJqr4S3pF0udZu8uc5zWW7nurc1
+         lwTwVvRtQGsgKGIfgw9tWJ5lXnMkB7JiyDo+s4MrDyTt6Y+jvBH20L3Ik8xtaR6yA03O
+         K1t65nJzP446fBpCuUGPktzydom7IKmKVcwF/jgD9oCLcgcfSMZAFSRHaa2OaOLbRDLJ
+         ff7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWrAqTrL6vNirUzT4e6hUipuaA1lmdiIEgki3SOxSpEi2g4JMI3jNaFMrFaOzdipgpFQXrABoHvvovAO8Mdlg==@groups.io
+X-Gm-Message-State: AOJu0YwDqJqzUsiYFXXJFunqlY/V/q/KjRrezBH0NhCOzw7w24z+vHHZ
+	PFJVsLE5VNfwgu5wdKd1GXOnRPqwhrEVzoQbd4t716te3N4OPx9lIpmQijmW2HOZR36XCjqlp+f
+	uVQ8IC+c=
+X-Gm-Gg: AY/fxX53fu6/0yvh2j4QPj7NAFBFEtrj3y8Cqu7nx45dk20qcnsNJz9B9zdaFXISuf+
+	ziPQ+Bpw41ObzrnaIXFzkXjh+JB6c2RTi/wWH53qDP0xaSKwOUJ9GAYlxEYHE2Npdihf0C+bN/y
+	4TMua7pkfzEkPEcCKMBlBT9+UyELLi1KA/B/iEOJYKIUtpOTdyQ8EHeSossMmH8pUEKf4epdv00
+	rjB066CMEGFkif05k5g9z7wvDtkctaxRd+mofBKzMEb0mJ+E1LczFYVvB3o0OtftQ3k4zrNW9M+
+	Xeai/56BR0oG2GqAxMYo68VBGOJNRTJNXdtSEunscJslbn1z39ZibXXH/ECYbzCltHF28XbeyMx
+	yomc4y02yLtrAxteq9VWxmd21uglTdG+YREnA+TKnEN+RaIdmzpuE+/s/e88kv4MIcSG/CFH99S
+	91lDTEQkvvInd9g6Mdm+tnS1CXgqSQiyEfyREuk7lEkEQwlancZA7bNa6A9lKn39o67KBrcNr3x
+	ZuA+2HrTYHo9wmfHkTQBltSTpKtqJIV86yqZWhbiWFhd3JI
+X-Received: by 2002:a05:6820:16ac:b0:661:1ad6:1073 with SMTP id 006d021491bc7-662b00641ffmr687664eaf.52.1768919460968;
+        Tue, 20 Jan 2026 06:31:00 -0800 (PST)
+Received: from [127.0.1.1] (fixed-189-203-103-235.totalplay.net. [189.203.103.235])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4044baf38ffsm8657418fac.5.2026.01.20.06.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 06:31:00 -0800 (PST)
+From: Tom Rini <trini@konsulko.com>
+To: neil.armstrong@linaro.org, jonas@kwiboo.se, 
+ funderscore@postmarketos.org, u-boot-amlogic@groups.io, 
+ u-boot@lists.denx.de, Robert Marko <robert.marko@sartura.hr>
+Cc: luka.perkov@sartura.hr
+In-Reply-To: <20260113110806.648534-1-robert.marko@sartura.hr>
 References: <20260113110806.648534-1-robert.marko@sartura.hr>
-MIME-version: 1.0
-Content-type: text/plain; charset=utf-8
+Subject: Re: [PATCH] tools: amlimage: include <inttypes.h>
+Message-Id: <176891946008.379251.4344949458921511050.b4-ty@konsulko.com>
+Date: Tue, 20 Jan 2026 08:31:00 -0600
+MIME-Version: 1.0
+X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 14 Jan 2026 10:15:23 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2885
+ <u-boot-amlogic@groups.io>; Wed, 21 Jan 2026 12:15:21 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2888
 
-> From: Robert Marko <robert.marko@sartura.hr>
-> Date: Tue, 13 Jan 2026 12:07:38 +0100
-> 
+On Tue, 13 Jan 2026 12:07:38 +0100, Robert Marko wrote:
+
 > PRIuN, PRIxN, etc macros are defined in <inttypes.h>, without it being
 > included errors like:
 > tools/amlimage.c:124:38: error: expected ‘)’ before ‘PRIu8’
@@ -66,32 +81,14 @@ X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2885
 > 
 > Can be hit depending on the host compiler and HOSTCFLAGS.
 > 
-> Fixes: 18c1654567dc ("tools: mkimage: Add Amlogic Boot Image type")
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> ---
->  tools/amlimage.c | 1 +
->  1 file changed, 1 insertion(+)
+> [...]
 
-Hit this myself the other day on one of my systems (and then couldn't
-reproduce it on another system probably because the header was pulled
-in through some othet dependency).
+Applied to u-boot/master, thanks!
 
-Reviewed-by: Mark Kettenis <kettenis@openbsd.org>
+[1/1] tools: amlimage: include <inttypes.h>
+      commit: 6f42057c67fad2ad66ed73b9c13347ac7881876f
+-- 
+Tom
 
-> diff --git a/tools/amlimage.c b/tools/amlimage.c
-> index ecb06bc535b..bc6e19b9c24 100644
-> --- a/tools/amlimage.c
-> +++ b/tools/amlimage.c
-> @@ -2,6 +2,7 @@
->  // Copyright Contributors to the U-Boot project.
->  
->  #include "imagetool.h"
-> +#include <inttypes.h>
->  #include <u-boot/sha256.h>
->  
->  /*
-> -- 
-> 2.52.0
-> 
-> 
+
 
