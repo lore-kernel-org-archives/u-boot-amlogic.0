@@ -2,63 +2,64 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD41109319C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BFC109319D
 	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 09:16:26 +0000 (UTC)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.6392.1773954159928690571
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6474.1773954231163946108
  for <u-boot-amlogic@groups.io>;
- Thu, 19 Mar 2026 14:02:40 -0700
+ Thu, 19 Mar 2026 14:03:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=k29X1bCu;
- spf=pass (domain: linaro.org, ip: 209.85.208.170, mailfrom: casey.connolly@linaro.org)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-38a76ba6a78so7783551fa.0
-        for <u-boot-amlogic@groups.io>; Thu, 19 Mar 2026 14:02:39 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=bmLIGal5;
+ spf=pass (domain: linaro.org, ip: 209.85.208.48, mailfrom: casey.connolly@linaro.org)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-668d9dba217so300274a12.3
+        for <u-boot-amlogic@groups.io>; Thu, 19 Mar 2026 14:03:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1773954158; x=1774558958; darn=groups.io;
+        d=linaro.org; s=google; t=1773954229; x=1774559029; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4ySESJfourxrh2m62qey3M/YF6AEV8fxCE1YjUIBwGs=;
-        b=k29X1bCu6t/6V8oxyuWWvQQ4oyQp51fFLut4j33aWcUXnmeVAQUaX+SVruUCkfJdUR
-         Te1SlHfg8HQayvIqJeB6NHPsWHvD8F8Hi2AJkueuWtBkZ4E8KcbHwBCdYumeW2T6kURQ
-         fSo2M3kV5qAMhpicE+Hb35uMrRCV9BJpgxRajh6scrPgFXlUrE3Rjx3+18auVdICZJ+F
-         JJL1qix/IySAcDLsMmtZTCzpinYbHCViUJViRt1yde5x2Gtuuj9h6JrrrN8Hf2AApjQ9
-         qDcbkB3r4ZKyegC4svjYnCbok48L4hmLvzlduvlpzbSWblMGTJ+3KyNxnbGRO3VsVwoW
-         mRNA==
+        bh=ta7Tj8NqXyER4Q7mkz0A0OEdacbDVtJaec0R0jQ3J34=;
+        b=bmLIGal5WEYEcrW6L11TYGs8MiG0YnkQzoWHLj019oX1lHhK8hrXoe396YN+7XKJdd
+         n1Z3av0mwCJlPQmmRNklWl1pyUuA0fuWyGq7QrhzFpfsnY0kCLtQ9XXdTbDRmRsDgflv
+         5+d0dYG6pn4RyVGDx2PTlM37rnAbzyWEc0ouYQKOVstUW2ovYdRaBugbejDb/GRde0OI
+         GfdBzQb95xmZXQcrB8m+vnD2HVb1ENhO6xt9IXgpFfvrLaMzic/2HrxaRM3a69QRMsZL
+         RmE7W5YLM0CbhSerAANs8WnIPqM0SFVdG6QErH9Bw9PPEtal1cWoUP1hv4tkiMzChQrc
+         XjiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773954158; x=1774558958;
+        d=1e100.net; s=20251104; t=1773954229; x=1774559029;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=4ySESJfourxrh2m62qey3M/YF6AEV8fxCE1YjUIBwGs=;
-        b=Gi8CgyO+btv+fMZrCzS8RfbfQmkPEvJrvqn3EDfy0BOuovBgZmFSW2t5h6L+z5JLVx
-         1uaG51deYcY0aB2hm6JI6g0DKvrwPBgGrTnnQWCDkmkdIzrMhC0aiU/XJr/PWjH3OKNn
-         yco3LqSytF1d5k5FJ074pALeEMUIFtmdLtLxtR9argr759HQCAzc6O+WCtjdKBFB5teS
-         qx01K7+SLC5KFFtCCrzAGRG7yhw/Mm5vGIQEgH9iFDqzPnjZ6yqcpUugzY1ziQERFnHB
-         NG94noalTinS0T6ipofXm+xlTfnlXfAkj621ya4yUpFn1y/T497FysTZq8uS2mHbJZv0
-         1y1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVU3dJn/j5U/QXFl5IgvleMAiivf8jVZ+adr6NdCipEYGyQ97uYnKnadgD36giYN3c9DAgTrqtkwVC4YWFZLA==@groups.io
-X-Gm-Message-State: AOJu0YzsiDHGvyczhW7Xra8JPlVCWJTUtIKDLFuUN5IRToKJDLuHLiE3
-	UgnXgXv8rMM7Bn/S78D+ojAh+sFt5rD2MDRH5k0Gny4dFJZLTSudR5+oW83RgBcboX4zO3Y1og4
-	O4vCkj6I=
-X-Gm-Gg: ATEYQzyVTdErWAueE+ZUxDQS3e8qp7zcyt/LtJ/6BWf1U/g3i7A3mVjUOvXYgmqvFbz
-	WQkMLB9g8/t82o5AvIv9SRYVi91M8YZ2qQqWmk77HR3jAwtaez9plWgN+4Iflu8ssuNA+ChGOh4
-	LAJXn7NG2OnZjOjIhZyiheJC4mPVD/YPZ6mScj0mkU6Xgz+daY27q0HeBVJ/GZ8eCpwVfQYjyFI
-	8Rkl9WXbbvzRKqBTY1UzGTDzATgZqV4Zip0NGtBKTemY9qiGmCngNopZQTdX2cKZLGR9/dWh3DJ
-	q3yPq+jgRd1yDCa9ipjLuXhWtq59tYQ1hW0Tg96RL4KVjiJgMW323GWX/2TvMFAn6bB3tgUBkjb
-	e6aTCN1W+xRgfirHTP3bhZ11vTo9LDejSAcpemXYZVYLbq4JqEbp7aCMKOpTtkQyMkdATxjHnpa
-	IBr+uLDsj9ABPFfKRBDLVfZb/Pj/tvYz2Mt+5nmJFwJqBFDMzUbz6GZyg4jPT9ZL0bZoI=
-X-Received: by 2002:a05:6000:4203:b0:439:d750:42e3 with SMTP id ffacd0b85a97d-43b6427576fmr1301743f8f.25.1773953817871;
-        Thu, 19 Mar 2026 13:56:57 -0700 (PDT)
+        bh=ta7Tj8NqXyER4Q7mkz0A0OEdacbDVtJaec0R0jQ3J34=;
+        b=DzxpzGKO7ZJ7LDo32TTXsPQff0EMs9ApZS3IXAwPPR3fGlrjXU/1vwlQ5OUaSIMwKD
+         GY+FjpSKn2KV2n7aTKmud51l2/31VjsYdMhKX1rwxrp+rNchhb71LtOki8OLVBNG78XR
+         o66E44EDQBjwWtHPfUbH0cppwMRRHunTWWIWzcjfIwQrTHa4umA9YkbGdNehNZv4/Tyu
+         8hswO7HD3WilH8IV4mdHvK2zIdfPlgUM3oHWyxNdNLWUUivXef7EaoYCpn9yN2xH9FaD
+         iXcrPTPknTQZOLSWaA6Fp3rLjVc+BOFey1u2PvJnjzr5QG7368L5bQADww5j3pd/EpN6
+         O1sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOM0O4rSqKJooSeDoNvwjwAjNVn8y34qzShyzESW1i8JjfETk43LknsBhIbC/8zPY6et5cSED/bNA/BIgT0g==@groups.io
+X-Gm-Message-State: AOJu0YxJhK2wbSvYncHljU1T58/pxKFvOv7N9x/4oXFsx19zd6kf/lPM
+	ObcWpKoxoQ/sDPUJ9pcPIDpj34pUl9K3ZRWk9QqyQjMRf5S7ONDFyTgvkjRO324kSfdIxOxEX+4
+	apLokQhk=
+X-Gm-Gg: ATEYQzweHlr5IDPdIfGmLO1T+SZxPQH1g/9EHP+3qmW4RZS6iHA6gSdK8ZmXYHipZPp
+	3Y2looZT3dLwWy2vBVKFxub2PrQrB+7YQ6YiXnvJBSbz/h4NSAl+ji4QjMCC/IBgPZMyChbhEWw
+	cfIiCmdN396sCs0Yyoz35kanDzhvZNxqnMhyslg4uhKJeRsa+uUkw4TwaCHNfifW84M4zOmxzh8
+	wL7wJQ8fRpKheEv8sAvzuZ9klCnJqxGeLHZaVSsS8uUPUujm/B6VmL5y6D0vBTLyJBYyCrOkzGQ
+	73d7pP6bIZrnuUVJD8ld1rWMFaOof3NfD4kXTqOc+rpObNDTae1CSmCH+QcAyFmU9xgijuFS2Vv
+	SM4JXnLd2SMRlic7Mt/4Y6z7MALbBLaIb8khdAom+TUchfZ8oJeDI3DAvoVSPd0mln1h8JIGte9
+	XcFMg5aybLdKzC0lh7BheCXcYgE5qrWd+Js5UhBXFyeQWGj+bglBbknL+Cut83fWBL8vZbj4RnL
+	gK+1g==
+X-Received: by 2002:a05:600c:1d15:b0:485:2ce2:4c75 with SMTP id 5b1f17b1804b1-486febbc648mr7851015e9.1.1773953853998;
+        Thu, 19 Mar 2026 13:57:33 -0700 (PDT)
 Received: from lion.localdomain (p4fc3dd39.dip0.t-ipconnect.de. [79.195.221.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b64714e2esm1191396f8f.32.2026.03.19.13.56.54
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b64714e2esm1191396f8f.32.2026.03.19.13.57.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 13:56:57 -0700 (PDT)
+        Thu, 19 Mar 2026 13:57:33 -0700 (PDT)
 From: Casey Connolly <casey.connolly@linaro.org>
-Date: Thu, 19 Mar 2026 21:56:23 +0100
-Subject: [PATCH RFC 01/40] vsprintf: add %pOF
+Date: Thu, 19 Mar 2026 21:56:32 +0100
+Subject: [PATCH RFC 10/40] compat: add linux/regmap.h symlink
 MIME-Version: 1.0
-Message-Id: <20260319-casey-ccf-upstream-v1-1-4df2ee2226da@linaro.org>
+Message-Id: <20260319-casey-ccf-upstream-v1-10-4df2ee2226da@linaro.org>
 References: <20260319-casey-ccf-upstream-v1-0-4df2ee2226da@linaro.org>
 In-Reply-To: <20260319-casey-ccf-upstream-v1-0-4df2ee2226da@linaro.org>
 To: u-boot@lists.denx.de, Lukasz Majewski <lukma@denx.de>, 
@@ -143,13 +144,13 @@ Cc: Tom Rini <trini@konsulko.com>,
  Dinesh Maniyam <dinesh.maniyam@altera.com>, 
  Paul Sajna <sajattack@postmarketos.org>, Marek Vasut <marex@denx.de>
 X-Mailer: b4 0.15-dev-47773
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2375;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=517;
  i=casey.connolly@linaro.org; h=from:subject:message-id;
- bh=rEJNtXZP5+H5gwqn8qXTXflA9ZA9fkONh6/nGZHH35Y=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhsw9ybyf+o9MPLX7qcBkkZqeKOVH5zuNuUVy7mxfkCHLq
- aksqLK/o5SFQZCDQVZMkUX8xDLLprWX7TW2L7gAM4eVCWQIAxenAEzknB4jw/pH62KlVzw72OBy
- ppHzpZKQaNukswwLpt48M6vh7cfX+T6MDHPYNuwR1ZOyjLJ5dp656cTlRyziG/ffnVTI8J+9yGK
- fvwwA
+ bh=NdKEp6PPPnqzQwS5HXhBfSnvR7crR5H9OW0VElgSIaM=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhsw9yXzROgpafHf79v4zv5Bw8Z/S98/5VzOC7rQUPXAvL
+ tp+6te0jlIWBkEOBlkxRRbxE8ssm9ZettfYvuACzBxWJpAhDFycAjCR0w8YGToquDZ/PDqRe45c
+ AKvO4XWncx7y55c7eKxw/XLu2TPus/wM/2M2SzBK1mvPUpByT2089qHwyc2WT2s05rTJMzNrF/+
+ 9FQ0A
 X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -158,83 +159,25 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 20 Mar 2026 09:16:26 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2929
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2926
 
-This prints a full ofnode path.
+Add a symlink to the Linux regmap.h path so that drivers ported from
+Linux don't all need additional changes to include the U-Boot specific
+path.
 
 Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
 ---
- lib/vsprintf.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ include/linux/regmap.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index c7340a047b2e..49dc9c38c652 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -25,8 +25,13 @@
- #include <linux/err.h>
- #include <linux/types.h>
- #include <linux/string.h>
- 
-+/* For %pOF */
-+#if CONFIG_IS_ENABLED(OF_CONTROL)
-+#include <dm/ofnode.h>
-+#endif
-+
- /* we use this so that we can do without the ctype library */
- #define is_digit(c)	((c) >= '0' && (c) <= '9')
- 
- static int skip_atoi(const char **s)
-@@ -437,8 +442,32 @@ static char *uuid_string(char *buf, char *end, u8 *addr, int field_width,
- 	return string(buf, end, uuid, field_width, precision, flags);
- }
- #endif
- 
-+#if CONFIG_IS_ENABLED(OF_CONTROL) && !defined(API_BUILD)
-+static char *ofnode_string(char *buf, char *end, ofnode *dp, int field_width,
-+				int precision, int flags)
-+{
-+#define NP_PATH_MAX 64
-+	char str[NP_PATH_MAX] = { 0 };
-+	const char *err = "...";
-+
-+	/* If dp == NULL output the string '<NULL>' */
-+	if (!dp || !ofnode_valid(*dp))
-+		return string(buf, end, NULL, field_width, precision, flags);
-+
-+	/* Get the path and indicate if it got cut off */
-+	if (ofnode_get_path(*dp, str, NP_PATH_MAX)) {
-+		str[NP_PATH_MAX - 1] = '\0';
-+		char *p = str + min((NP_PATH_MAX - 2) - strlen(err), strlen(str));
-+		memcpy(p, err, strlen(err) + 1);
-+	}
-+
-+	return string(buf, end, str, field_width, precision, flags);
-+#undef NP_PATH_MAX
-+}
-+#endif
-+
- /*
-  * Show a '%p' thing.  A kernel extension is that the '%p' is followed
-  * by an extra set of alphanumeric characters that are extended format
-  * specifiers.
-@@ -472,8 +501,16 @@ static char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- #if CONFIG_IS_ENABLED(EFI_DEVICE_PATH_TO_TEXT) && !defined(API_BUILD)
- 	case 'D':
- 		return device_path_string(buf, end, ptr, field_width,
- 					  precision, flags);
-+#endif
-+/* Device paths only exist in the EFI context. */
-+#if CONFIG_IS_ENABLED(OF_CONTROL) && !defined(API_BUILD)
-+	case 'O':
-+		if (fmt[1] == 'F')
-+			return ofnode_string(buf, end, ptr, field_width,
-+					  precision, flags);
-+		break;
- #endif
- 	case 'a':
- 		flags |= SPECIAL | ZEROPAD;
- 
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+new file mode 120000
+index 000000000000..8a3780b5cebd
+--- /dev/null
++++ b/include/linux/regmap.h
+@@ -0,0 +1 @@
++../regmap.h
+\ No newline at end of file
 
 -- 
 2.51.0
