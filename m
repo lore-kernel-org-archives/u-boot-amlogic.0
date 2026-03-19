@@ -2,64 +2,63 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE62D1088E6E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F88109319A
 	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 09:16:26 +0000 (UTC)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.6478.1773954232712834832
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6472.1773954222477590883
  for <u-boot-amlogic@groups.io>;
- Thu, 19 Mar 2026 14:03:53 -0700
+ Thu, 19 Mar 2026 14:03:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=bQNTcPkv;
- spf=pass (domain: linaro.org, ip: 209.85.208.43, mailfrom: casey.connolly@linaro.org)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-666f646f5cfso3886664a12.1
-        for <u-boot-amlogic@groups.io>; Thu, 19 Mar 2026 14:03:52 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=zhI8s2tm;
+ spf=pass (domain: linaro.org, ip: 209.85.167.50, mailfrom: casey.connolly@linaro.org)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a27dddecb0so1933824e87.2
+        for <u-boot-amlogic@groups.io>; Thu, 19 Mar 2026 14:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1773954231; x=1774559031; darn=groups.io;
+        d=linaro.org; s=google; t=1773954221; x=1774559021; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IPZTkPmihzuAvcfZWVkcBaG4BgUinpIqzcMgHogzs9Y=;
-        b=bQNTcPkvl06mZjkUqn6ZB5rD98hbVasAQhCbTDQUM4vFKzBnhQCLB7s6C3N4QA2YB6
-         GuBWtM5+yww8SSHFt7Hi1u3srSxA5f4nbWvqF0VZrbiA3CDFUENVSlZUWprtRZPuNbft
-         KV2r0AF5BzUOnaKKehG9+qxS91TFOTh9QTleE88GNkSYK15Y7vB7DQ+yfUAnw3/8Xqy7
-         YnaT8xrEQ8b/GR7OPXUcA2CzewMSrFFnSS4sZmLivgsgJWT9pudv1XnH31tw2afzFjlL
-         GRLrQb5XWNJnxQYk/6hetOmrz1OmXET+qxWqLOx5iA6c1DJdZ8tGpvgzRZ5uv6aTnZvF
-         xL5A==
+        bh=OCnS3ZlhvvW3XbeEgO9yZIoCnqN7iRGngRVh2eKOPzw=;
+        b=zhI8s2tmmlNOFCmheXO/j78s+QQ1s9S3t25tfd/CvGuAMZqTqEUsmiqMEjFndLmHmR
+         HcZWKQFyvoiph892tcqpiqQIHXP13QmcRIqQwi5YiAaVjQeKPW0grWkknQkWVHA0hJ3L
+         dAZrXnhqC+L2qiF69HM8fRsHg1OfChzHAgqq94Sax5+PTNc0Su9XPjxKaiJFDU6X/Su/
+         HWLWuj11FGoPnQ2oOIC4yYk/zGrje62+7JPgDQ8Y8wYE63D72zttwRY+ny1qb9urbaZj
+         binZm9483NpeXCWkZ4MvHzlDbdn9DktMjddlYK/4ZllrQr4HxZwRBkAC0IzqqZW8iKZa
+         cGyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773954231; x=1774559031;
+        d=1e100.net; s=20251104; t=1773954221; x=1774559021;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=IPZTkPmihzuAvcfZWVkcBaG4BgUinpIqzcMgHogzs9Y=;
-        b=WAH64MNPCGz3ZlCtweC1upWyJ+eGr1A/o7fHgvxsLWST0naRQo4RNQmUYhv+Vg+dMa
-         hTu3vvmUVR6FWSg29kCqvuKQCl/oiVrnarPbtM3D+hyaxxwnHtdu4ejhw/yL5jLTZl0Y
-         k1tx8Dp3FqVNmK22OtSv0/EKgJ/iOB0D2odQMVJzSsHeMVhG7197v8Z6ClefP7BWYveu
-         6BPkganIQr6DijPUoISD/OWnM239yp8b/Q/TprDyeDxh6JottGEyt0gvZIA3AxXzUSYK
-         G0xZQOBhiV8JHMuGHud1YyPkSWc9c5Eenbe1x5FTecTkSt9oIw7NvFvLkCffFbTJfEBj
-         TXhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXr77CfG0MBj7kLP5xQsqknLHfrX8e9HMEx9OzdBg9IBPq6UREtg821h8NKsbZYPc4waZwAXeRt3dBE1ZVVqA==@groups.io
-X-Gm-Message-State: AOJu0YzOgtdN9LBxEObrgNtdymNOkYphlETN9FLaP+YV4bVbLaIGOxMp
-	EgzxKb5awRwWdCPM9ahPnshr1l+eoHutxcrNmRS5UaJ98pqmW5YaENf2JZJxSu78eqLUY18gT+c
-	IGtPMtd4=
-X-Gm-Gg: ATEYQzycp6deV2r2c1m/csl6SoFAnLwKtR+CSm0t7C3aBMZdGmMNpjeLjsniMLLIxq8
-	0xBNkFB05WplRMaI2KVB3QLP1rRUhx9+6xURFnitqJ8rzVd9Do1j/zXrvqiglODcSYchReoQ9ZB
-	/ALT+MjwSmhZf5sTJm5HWQwLsXVUK1Rj588Bsl7Y/f6cU0BvYy5T6S/MgHX1V4Llmg/AflUq5Av
-	2aXTm+AySJocfgGIA1Bj3Af80v7HTYlT18cOIXoxx5RAjrZw4BvBYR0rxxNL/ygKnwUFCHmFE1H
-	c1m1XQaeXL+Jb0y3Q5yWB+WmSHtiQgUa1KHGGjC5cwpzE/ciz6Fyi6OGvoqwzjHfiyDV85VHrS5
-	i87Z4Z1nPHQVdUW93DLLd0MEJ2mdjrGL4MtOOArt2s80U9rqrSkAVdp/sRG02y1TO5w3awJBQa/
-	3ckByyvf2HhB7FYfoxA2Q/JB+36/PIf7zXqqwY0w0XYsChjJWFOZ814VmwfCtgiX1uoBkQMpGNl
-	qpdJw==
-X-Received: by 2002:a05:6000:2409:b0:439:c078:9a57 with SMTP id ffacd0b85a97d-43b6428769cmr1505763f8f.25.1773953858002;
-        Thu, 19 Mar 2026 13:57:38 -0700 (PDT)
+        bh=OCnS3ZlhvvW3XbeEgO9yZIoCnqN7iRGngRVh2eKOPzw=;
+        b=VdiIfGTR+o7Po3jev49LTf12g1xBk+QHn9dnRbwr0egeDtimqPEObQ0Av2sW5n3OUz
+         KEZaP51Kr2IA2Sz7OZ1rz2JlL77yMvrpCZOkdAJq22+PcF+XikIP0btBhP2VFteJR/nc
+         YJkNdzvXZjo1LrlnXkaEU7sJpV7IiyI4RVRq9Lql++lEAHWh3YJFfsqebBlnBD0W5RxJ
+         OJFrfjIt+4FMiKJFpvXRuR6IAr/7dt3qXXDxV8+dtnnBsTE0rcZLhtAFZi3uiD4jxSDe
+         oc74vBsERXsw+Iok23Vbj5V0T0/QxFE2DgGsK4C/eimpSjnk94EYWaa+KetivNG5MvVU
+         vzfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXnb2VHnG3b4S7FoXK7P7IVW/0uzfvrmXVhOOwMyBkGGs6GOQW2okfqWEoevfYCOQik8iadg1sH5uC902eyiA==@groups.io
+X-Gm-Message-State: AOJu0YyD0FJ4/Zlri2WlW8HKA6I0rM4Q5MO4AHwmz1DwfMmONmi8ij4I
+	W1iUnEhLmAtw7ZxgYTTdRAiqkKuH+pFOXnYhPzjGl8QEwaMDFGFQoppFyFPyhC+3ZsH07CX+Y2d
+	eSJxX3Rc=
+X-Gm-Gg: ATEYQzxrhHOV0Ipcq4cgCqKQlmCQH4b6bV+LBua8tgFkjgiudt3dEOg1BEadq8onu7X
+	5ak6p8sHwBuyCS4dE75KnYMGQm/Us1DfB7eTCkQkQSsPHC53/lcwZn7lLACeMmzke9TQFsLvfMg
+	rU0GE5jweYgHLFO6FSzd5i+HRwspcyLUX+rpwFGJNBNu17T5JhE+nSZPyMqEzeQp+HCoYYcTyJk
+	5wkdIXMa28JulVcP/vk1Ku7Y0yS0Xtyvyn5rK4XRHO0lE3vODNAowMz4QpwjcZ+WDf903T885vT
+	bYFoN9GTheq/tH7N+BV/PKTMBBfXGEgOIM83rR6LF8Ie/sNx49C0DeBef0bJS8QqLZmmXxV48h4
+	pm3VSDHsGSl+LklajjDsYJoFq7hZL1bPCnI5kYWJ7PQkG3JzlsWijiiAOsPy2Nbhfn9arsllQWh
+	37fZZjgRwFMsA2rdKYBdZKMbAhdxlTRH63EYOr8UcvTHNIKLlQHlbizQBPPYcvcLnNO5Y=
+X-Received: by 2002:a5d:5d13:0:b0:43b:3bed:f3b with SMTP id ffacd0b85a97d-43b64277fafmr1203947f8f.34.1773953877871;
+        Thu, 19 Mar 2026 13:57:57 -0700 (PDT)
 Received: from lion.localdomain (p4fc3dd39.dip0.t-ipconnect.de. [79.195.221.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b64714e2esm1191396f8f.32.2026.03.19.13.57.34
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b64714e2esm1191396f8f.32.2026.03.19.13.57.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 13:57:37 -0700 (PDT)
+        Thu, 19 Mar 2026 13:57:56 -0700 (PDT)
 From: Casey Connolly <casey.connolly@linaro.org>
-Date: Thu, 19 Mar 2026 21:56:33 +0100
-Subject: [PATCH RFC 11/40] devres: add devm_krealloc
+Date: Thu, 19 Mar 2026 21:56:38 +0100
+Subject: [PATCH RFC 16/40] clk: move U-Boot CCF to clk/uccf
 MIME-Version: 1.0
-Message-Id: <20260319-casey-ccf-upstream-v1-11-4df2ee2226da@linaro.org>
+Message-Id: <20260319-casey-ccf-upstream-v1-16-4df2ee2226da@linaro.org>
 References: <20260319-casey-ccf-upstream-v1-0-4df2ee2226da@linaro.org>
 In-Reply-To: <20260319-casey-ccf-upstream-v1-0-4df2ee2226da@linaro.org>
 To: u-boot@lists.denx.de, Lukasz Majewski <lukma@denx.de>, 
@@ -144,13 +143,13 @@ Cc: Tom Rini <trini@konsulko.com>,
  Dinesh Maniyam <dinesh.maniyam@altera.com>, 
  Paul Sajna <sajattack@postmarketos.org>, Marek Vasut <marex@denx.de>
 X-Mailer: b4 0.15-dev-47773
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5758;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9240;
  i=casey.connolly@linaro.org; h=from:subject:message-id;
- bh=0b2jzjydfkPAun+KPQliO692FtVj2RfqfyBqbUj4Fxw=;
- b=owGbwMvMwCFYaeA6f6eBkTjjabUkhsw9yXwen+ZN4K7YuPvskmBOs37ptUcvOZ87um/WobB9D
- D/CfdxbO0pZGAQ5GGTFFFnETyyzbFp72V5j+4ILMHNYmUCGMHBxCsBElvow/JUT0tG7f3+lYNfT
- nq4auRUfO174lGbeSDpwKevBWaXCzYkM/7SMeGs37pq5cRN37IXe+423/6XmfAz/t9Tkpp2aUu6
- PqfUA
+ bh=/RAbNGoLPbHbhn8quS6iAUljDwLpWmzJA+HtFCQI1Qk=;
+ b=owGbwMvMwCFYaeA6f6eBkTjjabUkhsw9yfyZVdPqjzFeKtZ8mTDnwHx7Z6XTvTMnHtj3IueMe
+ +we5ckHOkpZGAQ5GGTFFFnETyyzbFp72V5j+4ILMHNYmUCGMHBxCsBETrEz/HdbJnz0g/15OyUN
+ od6cNzMZXlwrM7SV3vos7GfQr97sCzKMDJNcO6I3lwU9tX/o22d0c8WeuDOuvH4/oys1fVls6hz
+ 4JgIA
 X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -159,187 +158,247 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 20 Mar 2026 09:16:26 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2933
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2930
 
-Loosely based on the Linux version, this makes it possible to krealloc()
-devm managed memory. Currently it depends on tracking the allocation
-size in struct devres even when DEBUG_DEVRES is disabled, but it's a
-relatively small tradeoff for the additional functionality.
+Prepare for the introduction of full CCF support by moving the existing
+U-Boot CCF support to a uccf subdirectory.
+
+Due to a number of incompatibilities it won't be possible to support
+existing U-Boot CCF clocks with the full CCF, this allows us to support
+both. While it may make sense to remove U-Boot CCF in the future, it may
+be necessary to continue supporting it to meet space/memory requirements
+in SPL for some platforms.
 
 Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
 ---
- drivers/core/devres.c | 83 ++++++++++++++++++++++++++++++++++++++++++++-------
- include/dm/devres.h   | 10 +++++++
- 2 files changed, 83 insertions(+), 10 deletions(-)
+ drivers/clk/Kconfig                                | 51 +++++++---------------
+ drivers/clk/Makefile                               |  7 ++-
+ drivers/clk/uccf/Kconfig                           | 22 ++++++++++
+ drivers/clk/uccf/Makefile                          | 11 +++++
+ drivers/clk/{ => uccf}/clk-composite.c             |  0
+ drivers/clk/{ => uccf}/clk-divider.c               |  0
+ drivers/clk/{ => uccf}/clk-fixed-factor.c          |  0
+ drivers/clk/{ => uccf}/clk-gate.c                  |  0
+ drivers/clk/{ => uccf}/clk-mux.c                   |  0
+ drivers/clk/{ => uccf}/clk.c                       |  0
+ .../{clk_sandbox_ccf.c => uccf/clk_sandbox_uccf.c} |  2 +-
+ include/sandbox-clk.h                              |  2 +-
+ 12 files changed, 54 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/core/devres.c b/drivers/core/devres.c
-index 8df08b91021c..88f7c832f43e 100644
---- a/drivers/core/devres.c
-+++ b/drivers/core/devres.c
-@@ -45,18 +45,17 @@ struct devres {
- 	dr_release_t			release;
- 	enum devres_phase		phase;
- #ifdef CONFIG_DEBUG_DEVRES
- 	const char			*name;
--	size_t				size;
- #endif
-+	size_t				size;
- 	unsigned long long		data[];
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index c88931c8ec4d..5cc76cd55cc8 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -10,8 +10,24 @@ config CLK
+ 	  a particular clock rate and check on available clocks. Clocks can
+ 	  feed into other clocks in a tree structure, with multiplexers to
+ 	  choose the source for each clock.
+ 
++source "drivers/clk/uccf/Kconfig"
++
++config SANDBOX_CLK_CCF
++	bool "Sandbox U-Boot Common Clock Framework [uCCF] support"
++	depends on SANDBOX && (CLK_CCF || CLK_CCF_FULL)
++	help
++	  Enable this option if you want to test the Linux kernel's Common
++	  Clock Framework [CCF] code in U-Boot's Sandbox clock driver.
++
++config CLK_COMPOSITE_CCF
++	bool "Common Clock Framework [CCF] composite clk support"
++	depends on CLK_CCF || CLK_CCF_FULL
++	help
++	  Enable this option if you want to (re-)use the Linux kernel's Common
++	  Clock Framework [CCF] composite code in U-Boot's clock driver.
++
+ config CLK_AUTO_ID
+ 	bool "Enable support of an unique clock id with several provider"
+ 	depends on CLK
+ 	help
+@@ -66,35 +82,8 @@ config CLK_BOSTON
+ 	select SYSCON
+ 	help
+ 	  Enable this to support the clocks
+ 
+-config SPL_CLK_CCF
+-	bool "SPL Common Clock Framework [CCF] support"
+-	depends on SPL
+-	help
+-	  Enable this option if you want to (re-)use the Linux kernel's Common
+-	  Clock Framework [CCF] code in U-Boot's SPL.
+-
+-config SPL_CLK_COMPOSITE_CCF
+-	bool "SPL Common Clock Framework [CCF] composite clk support"
+-	depends on SPL_CLK_CCF
+-	help
+-	  Enable this option if you want to (re-)use the Linux kernel's Common
+-	  Clock Framework [CCF] composite code in U-Boot's SPL.
+-
+-config CLK_CCF
+-	bool "Common Clock Framework [CCF] support"
+-	help
+-	  Enable this option if you want to (re-)use the Linux kernel's Common
+-	  Clock Framework [CCF] code in U-Boot's clock driver.
+-
+-config CLK_COMPOSITE_CCF
+-	bool "Common Clock Framework [CCF] composite clk support"
+-	depends on CLK_CCF
+-	help
+-	  Enable this option if you want to (re-)use the Linux kernel's Common
+-	  Clock Framework [CCF] composite code in U-Boot's clock driver.
+-
+ config CLK_GPIO
+ 	bool "GPIO-controlled clock gate driver"
+ 	depends on CLK
+ 	help
+@@ -180,16 +169,8 @@ config CLK_OCTEON
+ 	default y
+ 	help
+ 	  Enable this to support the clocks on Octeon MIPS platforms.
+ 
+-config SANDBOX_CLK_CCF
+-	bool "Sandbox Common Clock Framework [CCF] support"
+-	depends on SANDBOX
+-	select CLK_CCF
+-	help
+-	  Enable this option if you want to test the Linux kernel's Common
+-	  Clock Framework [CCF] code in U-Boot's Sandbox clock driver.
+-
+ config CLK_SCMI
+ 	bool "Enable SCMI clock driver"
+ 	depends on CLK
+ 	depends on SCMI_FIRMWARE
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index f96d57a3223a..30991e9f55d7 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -6,14 +6,14 @@
+ 
+ obj-$(CONFIG_$(PHASE_)CLK) += clk-uclass.o
+ obj-$(CONFIG_$(PHASE_)CLK) += clk_fixed_rate.o
+ obj-$(CONFIG_$(PHASE_)CLK) += clk_fixed_factor.o
+-obj-$(CONFIG_$(PHASE_)CLK_CCF) += clk.o clk-divider.o clk-mux.o clk-gate.o
+-obj-$(CONFIG_$(PHASE_)CLK_CCF) += clk-fixed-factor.o
+-obj-$(CONFIG_$(PHASE_)CLK_COMPOSITE_CCF) += clk-composite.o
+ obj-$(CONFIG_$(PHASE_)CLK_GPIO) += clk-gpio.o
+ obj-$(CONFIG_$(PHASE_)CLK_STUB) += clk-stub.o
+ 
++# U-Boot/IMX "micro" CCF port
++obj-$(CONFIG_$(PHASE_)CLK_CCF) += uccf/
++
+ obj-y += adi/
+ obj-y += airoha/
+ obj-y += analogbits/
+ obj-$(CONFIG_$(PHASE_)MACH_IMX) += imx/
+@@ -57,7 +57,6 @@ obj-$(CONFIG_CLK_XLNX_CLKWZRD) += clk-xlnx-clock-wizard.o
+ obj-$(CONFIG_CLK_ZYNQ) += clk_zynq.o
+ obj-$(CONFIG_CLK_ZYNQMP) += clk_zynqmp.o
+ obj-$(CONFIG_CLK_ICS8N3QV01) += ics8n3qv01.o
+ obj-$(CONFIG_MACH_PIC32) += clk_pic32.o
+-obj-$(CONFIG_SANDBOX_CLK_CCF) += clk_sandbox_ccf.o
+ obj-$(CONFIG_SANDBOX) += clk_sandbox.o
+ obj-$(CONFIG_SANDBOX) += clk_sandbox_test.o
+diff --git a/drivers/clk/uccf/Kconfig b/drivers/clk/uccf/Kconfig
+new file mode 100644
+index 000000000000..bf4a634a403f
+--- /dev/null
++++ b/drivers/clk/uccf/Kconfig
+@@ -0,0 +1,22 @@
++
++
++config SPL_CLK_CCF
++	bool "SPL U-Boot Common Clock Framework [uCCF] support"
++	depends on SPL
++	help
++	  Enable this option if you want to (re-)use the Linux kernel's Common
++	  Clock Framework [CCF] code in U-Boot's SPL.
++
++config SPL_CLK_COMPOSITE_CCF
++	bool "SPL U-Boot Common Clock Framework [uCCF] composite clk support"
++	depends on SPL_CLK_CCF
++	help
++	  Enable this option if you want to (re-)use the Linux kernel's Common
++	  Clock Framework [CCF] composite code in U-Boot's SPL.
++
++config CLK_CCF
++	bool "U-Boot Common Clock Framework [uCCF] support"
++	help
++	  Enable this option if you want to (re-)use the Linux kernel's Common
++	  Clock Framework [CCF] code in U-Boot's clock driver.
++
+diff --git a/drivers/clk/uccf/Makefile b/drivers/clk/uccf/Makefile
+new file mode 100644
+index 000000000000..02440b5e322c
+--- /dev/null
++++ b/drivers/clk/uccf/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Copyright (c) 2015 Google, Inc
++# Wolfgang Denk, DENX Software Engineering, wd@denx.de.
++#
++
++obj-$(CONFIG_$(PHASE_)CLK_CCF) += clk.o clk-divider.o clk-mux.o clk-gate.o
++obj-$(CONFIG_$(PHASE_)CLK_CCF) += clk-fixed-factor.o
++obj-$(CONFIG_$(PHASE_)CLK_COMPOSITE_CCF) += clk-composite.o
++
++obj-$(CONFIG_SANDBOX_CLK_CCF) += clk_sandbox_uccf.o
+diff --git a/drivers/clk/clk-composite.c b/drivers/clk/uccf/clk-composite.c
+similarity index 100%
+rename from drivers/clk/clk-composite.c
+rename to drivers/clk/uccf/clk-composite.c
+diff --git a/drivers/clk/clk-divider.c b/drivers/clk/uccf/clk-divider.c
+similarity index 100%
+rename from drivers/clk/clk-divider.c
+rename to drivers/clk/uccf/clk-divider.c
+diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/uccf/clk-fixed-factor.c
+similarity index 100%
+rename from drivers/clk/clk-fixed-factor.c
+rename to drivers/clk/uccf/clk-fixed-factor.c
+diff --git a/drivers/clk/clk-gate.c b/drivers/clk/uccf/clk-gate.c
+similarity index 100%
+rename from drivers/clk/clk-gate.c
+rename to drivers/clk/uccf/clk-gate.c
+diff --git a/drivers/clk/clk-mux.c b/drivers/clk/uccf/clk-mux.c
+similarity index 100%
+rename from drivers/clk/clk-mux.c
+rename to drivers/clk/uccf/clk-mux.c
+diff --git a/drivers/clk/clk.c b/drivers/clk/uccf/clk.c
+similarity index 100%
+rename from drivers/clk/clk.c
+rename to drivers/clk/uccf/clk.c
+diff --git a/drivers/clk/clk_sandbox_ccf.c b/drivers/clk/uccf/clk_sandbox_uccf.c
+similarity index 98%
+rename from drivers/clk/clk_sandbox_ccf.c
+rename to drivers/clk/uccf/clk_sandbox_uccf.c
+index 9b8036d41aac..9c74ed940acd 100644
+--- a/drivers/clk/clk_sandbox_ccf.c
++++ b/drivers/clk/uccf/clk_sandbox_uccf.c
+@@ -112,9 +112,9 @@ static const struct clk_ops clk_gate2_ops = {
+ 	.disable = clk_gate2_disable,
+ 	.get_rate = clk_generic_get_rate,
  };
  
- #ifdef CONFIG_DEBUG_DEVRES
--static void set_node_dbginfo(struct devres *dr, const char *name, size_t size)
-+static void set_node_dbginfo(struct devres *dr, const char *name)
- {
- 	dr->name = name;
--	dr->size = size;
+-struct clk *sandbox_clk_register_gate2(struct device *dev, const char *name,
++struct clk *sandbox_clk_register_gate2(struct udevice *dev, const char *name,
+ 				       const char *parent_name,
+ 				       unsigned long flags, void __iomem *reg,
+ 				       u8 bit_idx, u8 cgr_val,
+ 				       u8 clk_gate2_flags)
+diff --git a/include/sandbox-clk.h b/include/sandbox-clk.h
+index c2616c27a44a..eb02a474c741 100644
+--- a/include/sandbox-clk.h
++++ b/include/sandbox-clk.h
+@@ -57,9 +57,9 @@ static inline struct clk *sandbox_clk_gate(const char *name, const char *parent,
+ 	return clk_register_gate(NULL, name, parent, CLK_SET_RATE_PARENT,
+ 				 reg, bit_idx, clk_gate_flags, NULL);
  }
  
- static void devres_log(struct udevice *dev, struct devres *dr,
- 		       const char *op)
-@@ -64,9 +63,9 @@ static void devres_log(struct udevice *dev, struct devres *dr,
- 	log_debug("%s: DEVRES %3s %p %s (%lu bytes)\n", dev->name, op, dr,
- 		  dr->name, (unsigned long)dr->size);
- }
- #else /* CONFIG_DEBUG_DEVRES */
--#define set_node_dbginfo(dr, n, s)	do {} while (0)
-+#define set_node_dbginfo(dr, n)	do {} while (0)
- #define devres_log(dev, dr, op)		do {} while (0)
- #endif
- 
- #if CONFIG_DEBUG_DEVRES
-@@ -84,9 +83,10 @@ void *_devres_alloc(dr_release_t release, size_t size, gfp_t gfp)
- 		return NULL;
- 
- 	INIT_LIST_HEAD(&dr->entry);
- 	dr->release = release;
--	set_node_dbginfo(dr, name, size);
-+	dr->size = size;
-+	set_node_dbginfo(dr, name);
- 
- 	return dr->data;
- }
- 
-@@ -99,23 +99,35 @@ void devres_free(void *res)
- 		kfree(dr);
- 	}
- }
- 
--void devres_add(struct udevice *dev, void *res)
-+static void devres_set_phase(struct udevice *dev, struct devres *dr)
- {
--	struct devres *dr = container_of(res, struct devres, data);
--
--	devres_log(dev, dr, "ADD");
--	assert_noisy(list_empty(&dr->entry));
- 	if (dev_get_flags(dev) & DM_FLAG_PLATDATA_VALID)
- 		dr->phase = DEVRES_PHASE_PROBE;
- 	else if (dev_get_flags(dev) & DM_FLAG_BOUND)
- 		dr->phase = DEVRES_PHASE_OFDATA;
- 	else
- 		dr->phase = DEVRES_PHASE_BIND;
-+}
-+
-+void devres_add(struct udevice *dev, void *res)
-+{
-+	struct devres *dr = container_of(res, struct devres, data);
-+
-+	devres_log(dev, dr, "ADD");
-+	assert_noisy(list_empty(&dr->entry));
-+	devres_set_phase(dev, dr);
- 	list_add_tail(&dr->entry, &dev->devres_head);
- }
- 
-+static void devres_replace(struct udevice *dev, struct devres *old, struct devres *new)
-+{
-+	devres_log(dev, old, "REPLACE");
-+	devres_set_phase(dev, new);
-+	list_replace(&old->entry, &new->entry);
-+}
-+
- void *devres_find(struct udevice *dev, dr_release_t release,
- 		  dr_match_t match, void *match_data)
- {
- 	struct devres *dr;
-@@ -290,4 +302,55 @@ void devm_kfree(struct udevice *dev, void *p)
- 
- 	rc = devres_destroy(dev, devm_kmalloc_release, devm_kmalloc_match, p);
- 	assert_noisy(!rc);
- }
-+
-+/**
-+ * devm_krealloc - Resource-managed krealloc()
-+ * @dev: Device to re-allocate memory for
-+ * @ptr: Pointer to the memory chunk to re-allocate
-+ * @new_size: New allocation size
-+ * @gfp: Allocation gfp flags
-+ *
-+ * Managed krealloc(). Resizes the memory chunk allocated with devm_kmalloc().
-+ * Behaves similarly to regular krealloc(): if @ptr is NULL or ZERO_SIZE_PTR,
-+ * it's the equivalent of devm_kmalloc(). If new_size is zero, it frees the
-+ * previously allocated memory and returns ZERO_SIZE_PTR. This function doesn't
-+ * change the order in which the release callback for the re-alloc'ed devres
-+ * will be called (except when falling back to devm_kmalloc() or when freeing
-+ * resources when new_size is zero). The contents of the memory are preserved
-+ * up to the lesser of new and old sizes.
-+ */
-+void *devm_krealloc(struct udevice *dev, void *ptr, size_t new_size, gfp_t gfp)
-+{
-+	struct devres *old_dr, *new_dr;
-+
-+	if (unlikely(!new_size)) {
-+		devm_kfree(dev, ptr);
-+		return NULL;
-+	}
-+
-+	if (unlikely(!ptr))
-+		return devm_kmalloc(dev, new_size, gfp);
-+
-+	old_dr = devres_find(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
-+	if (!old_dr) {
-+		printf("Devres realloc failed, memory chunk not managed or managed by a different device\n");
-+		return NULL;
-+	}
-+
-+	/* No need to realloc to shrink */
-+	if (old_dr->size < new_size)
-+		return old_dr->data;
-+
-+	new_dr = _devres_alloc(devm_kmalloc_release, new_size, gfp);
-+	if (!new_dr)
-+		return NULL;
-+
-+	devres_replace(dev, old_dr, new_dr);
-+	memcpy(new_dr->data, old_dr->data,
-+	       old_dr->size);
-+
-+	devres_free(old_dr->data);
-+
-+	return new_dr->data;
-+}
-diff --git a/include/dm/devres.h b/include/dm/devres.h
-index 406d18686f4d..13d7d0eec43a 100644
---- a/include/dm/devres.h
-+++ b/include/dm/devres.h
-@@ -194,8 +194,18 @@ static inline void *devm_kcalloc(struct udevice *dev,
- {
- 	return devm_kmalloc_array(dev, n, size, flags | __GFP_ZERO);
- }
- 
-+void *devm_krealloc(struct udevice *dev, void *ptr, size_t new_size, gfp_t gfp);
-+
-+static inline void *devm_krealloc_array(struct udevice *dev, void *p, size_t new_n, size_t new_size, gfp_t flags)
-+{
-+	if (new_size != 0 && new_n > SIZE_MAX / new_size)
-+		return NULL;
-+
-+	return devm_krealloc(dev, p, new_n * new_size, flags);
-+}
-+
- /**
-  * devm_kfree() - Resource-managed kfree
-  * @dev: Device this memory belongs to
-  * @ptr: Memory to free
+-struct clk *sandbox_clk_register_gate2(struct device *dev, const char *name,
++struct clk *sandbox_clk_register_gate2(struct udevice *dev, const char *name,
+ 				       const char *parent_name,
+ 				       unsigned long flags,
+ 				       void __iomem *reg, u8 bit_idx,
+ 				       u8 cgr_val, u8 clk_gate_flags);
 
 -- 
 2.51.0
