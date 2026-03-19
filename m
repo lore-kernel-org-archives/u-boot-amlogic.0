@@ -2,36 +2,37 @@ Return-Path: <funderscore@postmarketos.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395EE1091928
-	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 21:30:39 +0000 (UTC)
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7009.1773955829521819020
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C37C1091927
+	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 21:33:59 +0000 (UTC)
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.7082.1773956037397551990
  for <u-boot-amlogic@groups.io>;
- Thu, 19 Mar 2026 14:30:30 -0700
+ Thu, 19 Mar 2026 14:33:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=ZIzfDroT;
- spf=pass (domain: postmarketos.org, ip: 91.218.175.179, mailfrom: funderscore@postmarketos.org)
-Date: Thu, 19 Mar 2026 21:25:14 +0000
+ dkim=fail reason="dkim: body hash did not verify" header.i=@postmarketos.org header.s=key1 header.b=gQxKCp57;
+ spf=pass (domain: postmarketos.org, ip: 91.218.175.185, mailfrom: funderscore@postmarketos.org)
+Date: Thu, 19 Mar 2026 21:30:36 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1773955825;
+	s=key1; t=1773956034;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8gsU8+14tCdDaf1sLrt3CPQIm6pFdSHpcqyO8iv77JI=;
-	b=ZIzfDroT7vwNskZzudrKJWgnD34kUGUDK44RZFkmSeVhVU5hPfjfF8tNBixOVcOgwMnzHU
-	ogX1fGKuObRmZHjchIRGM50Tc9xfgGd0fI+T71QrbrWfJd3u6MzI0P5B34DmvEWi4aejLH
-	DMk8hh3JOb+Jzs0IoCn9lYHq7ox//fOJPX6lQMuxOK9zjef00yCNz48M8nyBsQcNWCmiMP
-	5yFN7ZynxzqK7sNDdclrqjizQWrBHrPwBonKYn7kzKeUkdjIENa6BKS/C5c9CBiRVMfgNc
-	m0n1o1fv+nY4UyrUQ7gti7aDdo605jIi7ZjBtqV1W+9NbeLDh5mac2bgY+gCDg==
+	bh=A8NIwjUKQtcXq7NUx5Qtp+sx2LMNQUWDJhkj54mLwEs=;
+	b=gQxKCp570z5fbGqqoURMKniXq072iFXWEko+AaI39lGN6nWFL8Us27mIhcxEYiX9H/te1r
+	Q0VHtliF3re0R95h/gFPO3y08x5dnEHZLA//tgh80jzUrfBjGDJ8rf6QQX/UCa4xfvYX5W
+	ykzRyWXEaKBdCYuixNcVFiqDyZovLRtLFp350+GRvGxIQX8feFDXEqOa3rRL13PyG3upoZ
+	lkbA2PpOkuW7RoPM7QYcv4UW40YVbVLd1BhF6u++Uo60V0hbgQ2qGCMw/blQUlPL0p8xgw
+	2SGc/Ls8mDjWs82I54j2nVFMbpEzPtYl5tuPaIl6WNKhDTFgalri5RkfQUQ89g==
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Ferass El Hafidi <funderscore@postmarketos.org>
 To: u-boot-qcom@groups.io, u-boot@lists.denx.de, Lukasz Majewski <lukma@denx.de>, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>, GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, Paul Barker <paul@pbarker.dev>, Dai Okamura <okamura.dai@socionext.com>, linux@analog.com, uboot-snps-arc@synopsys.com, u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com, Sumit Garg <sumit.garg@kernel.org>
-Cc: Tom Rini <trini@konsulko.com>, Casey Connolly <casey.connolly@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, Andrew Goodbody <andrew.goodbody@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Simon Glass <sjg@chromium.org>, Paul Sajna <sajattack@postmarketos.org>, Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH RFC 15/40] clk: restrict clk/imx to MACH_IMX
-References: <20260319-casey-ccf-upstream-v1-0-4df2ee2226da@linaro.org> <20260319-casey-ccf-upstream-v1-15-4df2ee2226da@linaro.org>
-In-Reply-To: <20260319-casey-ccf-upstream-v1-15-4df2ee2226da@linaro.org>
-Message-ID: <tc612f.1958x6s93grqj@postmarketos.org>
+Cc: Tom Rini <trini@konsulko.com>, Casey Connolly <casey.connolly@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, Andrew Goodbody <andrew.goodbody@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Simon Glass <sjg@chromium.org>, Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Patrice Chotard <patrice.chotard@foss.st.com>, Peng Fan <peng.fan@nxp.com>, Yao Zi <me@ziyao.cc>, Leo Yu-Chi Liang <ycliang@andestech.com>, Patrick Delaunay <patrick.delaunay@foss.st.com>, Michal Simek <michal.simek@amd.com>, Manikandan Muralidharan <manikandan.m@microchip.com>, Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>, Luca Weiss <luca.weiss@fairphone.com>, Jens Reidel <adrian@mainlining.org>, David Wronek <david.wronek@mainlining.org>, Naman Trivedi <naman.trivedimanojbhai@amd.com>, Venkatesh Yadav Abbarapu <venkatesh.abbarapu@amd.com>, Conor Dooley <conor.dooley@microchip.com>, Stephan Gerhold <stephan.gerhold@linaro.org>, Varadarajan 
+ Narayanan <quic_varada@quicinc.com>, Paul Sajna <sajattack@postmarketos.org>, Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH RFC 00/40] clk: port full Linux Common Clock Framework to U-Boot
+References: <20260319-casey-ccf-upstream-v1-0-4df2ee2226da@linaro.org>
+In-Reply-To: <20260319-casey-ccf-upstream-v1-0-4df2ee2226da@linaro.org>
+Message-ID: <tc6181.3ppuo0c75vwxp@postmarketos.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 X-Migadu-Flow: FLOW_OUT
@@ -39,58 +40,69 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 19 Mar 2026 21:30:39 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2922
+ <u-boot-amlogic@groups.io>; Thu, 19 Mar 2026 21:33:59 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2923
+
+Hi,
 
 On Thu, 19 Mar 2026 20:56, "Casey Connolly via groups.io" <casey.connolly=
 =3Dlinaro.org@groups.io> wrote:
->Only build IMX clocks when MACH_IMX is enabled, otherwise IMX clock
->drivers get compiled for all platforms with CLK_CCF enabled.
->
->Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
->---
-> drivers/clk/Makefile | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->index 5f0c0d8a5c28..f96d57a3223a 100644
->--- a/drivers/clk/Makefile
->+++ b/drivers/clk/Makefile
->@@ -15,9 +15,9 @@ obj-$(CONFIG_$(PHASE_)CLK_STUB) +=3D clk-stub.o
->=20
-> obj-y +=3D adi/
-> obj-y +=3D airoha/
-> obj-y +=3D analogbits/
->-obj-y +=3D imx/
->+obj-$(CONFIG_$(PHASE_)MACH_IMX) +=3D imx/
 
-I think this is not necessary. drivers/clk/imx/Makefile already requires
-that imx config options be enabled for the driver to be compiled in.
+>    This RFC provides a proof of concept for using the full Linux CCF in
+>    U-Boot and consequently porting full Linux clock drivers with extrem=
+ely
+>    minimal changes.
+>
+>    [...]
+>
+>    =3D=3D=3D Memory/perf overhead =3D=3D=3D
+>
+>    The memory and size overhead of CCF is undoubtably bigger than uCCF,
+>    although I suspect the difference is less than it might seem at
+>    first glance. In particular: clk_core is only ~50 bytes larger than
+>    struct udevice on ARM64, and an additional 120 bytes is saved for ea=
+ch
+>    U_BOOT_DRIVER used by uCCF.
+>
+>    On the other hand, the CPU overhead is probably more significant,
+>    but not an unreasonable cost to ensure correctness and propagate rat=
+e
+>    changes across the clock tree.
+>
+>    Just comparing the binary size of sandbox64_defconfig with uCCF vs
+>    CCF_FULL, CCF_FULL results in a 135k size increase in the binary. I
+>    haven't done any more detailed analysis here (still haven't got buil=
+dman
+>    to play nice...).
+>
+>    =3D=3D=3D SPL =3D=3D=3D
+>
+>    This RFC doesn't have any SPL specific support, I think this role is
+>    better fulfilled by UCLASS_CLK.
+
+It is worth noting that not a lot of boards actually use the existing
+CCF port under SPL.
+
+	configs$ git grep "CONFIG_SPL=3Dy" | wc -l
+	550
+	configs$ git grep "CONFIG_SPL_CLK=3Dy" | wc -l
+	179
+	configs$ git grep "CONFIG_SPL_CLK_CCF=3Dy" | wc -l
+	25
+
+As far as I know, this is most likely because that existing CCF is
+already quite huge for such a small environment like SPL (SPL_CLK is
+already quite big, especially with its dependency on driver model, which
+is fine but some devices are so restricted when SPL runs that even
+DM is too big to fit). So I wouldn't bother trying to support SPL with
+this.
+
+Just wanted to share this, FYI.
 
 Best regards,
 Ferass
 
-[PS: had to remove a few people from CC, because my email provider does
-     not let me CC that many people, sorry!]
-
-> obj-$(CONFIG_CLK_JH7110) +=3D starfive/
-> obj-y +=3D tegra/
-> obj-y +=3D ti/
-> obj-$(CONFIG_CLK_THEAD) +=3D thead/
->
->--=20
->2.51.0
->
->
->
->-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->Groups.io Links: You receive all messages sent to this group.
->View/Reply Online (#2906): https://groups.io/g/u-boot-qcom/message/2906
->Mute This Topic: https://groups.io/mt/118408050/8399868
->Group Owner: u-boot-qcom+owner@groups.io
->Unsubscribe: https://groups.io/g/u-boot-qcom/leave/13198341/8399868/7974=
-98721/xyzzy [funderscore@postmarketos.org]
->-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+[PS: had to remove some people from CC, because my email provider does
+     not let me CC that many people. Also sorry for those who got this
+     email twice]
 
