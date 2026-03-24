@@ -2,138 +2,148 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FB410F285B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A30610F2858
 	for <webhook@archiver.kernel.org>; Fri, 27 Mar 2026 16:57:38 +0000 (UTC)
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.21830.1774364354836932290
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.3404.1774374426738556778
  for <u-boot-amlogic@groups.io>;
- Tue, 24 Mar 2026 07:59:14 -0700
+ Tue, 24 Mar 2026 10:47:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=Wwa4eLNY;
- spf=pass (domain: konsulko.com, ip: 209.85.210.47, mailfrom: trini@konsulko.com)
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7d91f82d819so1150234a34.1
-        for <u-boot-amlogic@groups.io>; Tue, 24 Mar 2026 07:59:14 -0700 (PDT)
+ dkim=pass header.i=@chromium.org header.s=google header.b=mE82+j8+;
+ spf=pass (domain: chromium.org, ip: 209.85.208.51, mailfrom: sjg@chromium.org)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-66970715adbso5513940a12.3
+        for <u-boot-amlogic@groups.io>; Tue, 24 Mar 2026 10:47:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774374425; cv=none;
+        d=google.com; s=arc-20240605;
+        b=kWG77oOrkY6O/8KzyElnKQw9EYSggOOmL+S9HbAGEeLhMxsAWmWgpF4iXz+M/Nvlj/
+         56qSnmARDrLthplFG9RsDqeiHicVccZ1KmP1JGv0w6ZV8BOVqIwXIk5Vdhfyc/u3Lucb
+         Pii02UkoOHgVgS2LZecRSAAq9KIE459EnrkWR+a5wnzntvKhg52WCXtcVDMBsGY4PGQ7
+         PqEdiDF2iYKktA2H74PA5oAp0hg1jJd5uvyzTq1grjf3M4bR2dV7UBv/P3ny54mKxmh8
+         OvpS4qDEB9ihi0s4QjNdFOIOjXlH7SJFsIUSyULZsqC6sHaZMujemrW74wBymE5RDGM6
+         159Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=f1ottSAtczohD1NRXdvebbjd0FdcbbwAYgrYaA1gVbo=;
+        fh=+GktbOm2xXTxFg9xs4qoGri+T49GRymllviqfAhD54g=;
+        b=f5/PAodPkxFfTgw+0Ob5gwClOz2TpAItBn629WxIuIgjEgDma7pLWfeYKrG0LYUmSF
+         5+PW7EUYp+iRMYido/X/MBKqHW7cp0VymT+U5GM55A3tntWFpvOfzsLPvpUPLdTzYQzk
+         rVQC9QBdVvCEp/znoY8CItCgSdT3lShjJMrPesBgHuC9qEXFxBQmigvb8uHquk+wVT+o
+         U28lXFo4RREbyet6LHAtFe9LNt0ryH6J7OCoC5kz8n0dcQDm1/9Gploh+hJkqv4vrmc7
+         ymU06w2Dfc6hem3zFeoyPqxt66Eitn7LGHbl2nkhBBr6xWB6lh4U/xOlkw3xOHHru6aK
+         1L6g==;
+        darn=groups.io
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1774364354; x=1774969154; darn=groups.io;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kltq/UHaD/wPopTvCXbE3VL6aLVmgprbNTi1kf4pPUw=;
-        b=Wwa4eLNYgMLC94woRJZ7QCVYVL3beI2Mlf+TFTA5MaQ84C+FFp72HbBpd4nGTX2mYl
-         /Y37YMWajv3OI6D5uZ0tYJA37FL/qD3sE56SKXBC33tYyVOzaWx1kKlqZVnBg0kB6DfI
-         WnYOqsL8B5vpalcd/40kioGw9ONCA5Ti0rVUM=
+        d=chromium.org; s=google; t=1774374425; x=1774979225; darn=groups.io;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=f1ottSAtczohD1NRXdvebbjd0FdcbbwAYgrYaA1gVbo=;
+        b=mE82+j8+y/GZXOyO3wXLxLEwWBgHZiLbvWLBdTRFoY9t3a9/V/AFezSzslDDnBWQDf
+         BnP5KAnwuik2+aIH6Axd1z2A+9m/Z7gGdGGcWjaQmBTXyANKa8t8jszMVXaFeFRfgkgb
+         imQyb0cUaeJIc6XOlvbjmyPNvingYqHYaIA2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774364354; x=1774969154;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kltq/UHaD/wPopTvCXbE3VL6aLVmgprbNTi1kf4pPUw=;
-        b=qISI4xCmotlguRl0IIszTKdvijN5fjavkz9qYWMwxALFg72hbTGrSDEDtYD3XZjEv/
-         VicsxUjSDkosz1MvQRrGU+/JqemB1JooJ2+NEn2bA0y5hCaSQhGCDyW/E6585uk+2wwO
-         Dx7esdsH4TI33on/9rsuQ8exLXvWniwJ0z7hO/lhSADNcVev2J1pOD17zdG0GuDttlTn
-         ARGv+jHBhpvcLlY7Ml0kWudAyc6EZWMlhLCIzOT2aCHylTPrBv6Yp7yvCw/g8S3AyizW
-         HbMxczrm8CeWAuMTeLz+hmSFQA5LvtlvvOCEQLT6udQKPRuev9jO1RF1h8SXnoYLwCC3
-         wxLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZvuofJGqHTfjBOXcYXHrazhRQco8qnHsbm7M6rOuOLMjGwq0I7Yf5S3XiiseJKRt/YqLD0UVxuh18pJM1dA==@groups.io
-X-Gm-Message-State: AOJu0YzWMBIiHV9g5ONExHZo/svxSGbfxfaoRa5FIRbS1SBkzyRuPHbL
-	EJyjIIK4lhgd4aOp6XRgOv1kSpXc4GIXCF0/WPOIWguVShACArK9JpWmcbeveWiWMFM=
-X-Gm-Gg: ATEYQzyew8y/lcwUoEakOJVbWINB1IBHItpSeF2JnxVWB/O75G0IUDatLDRTTs1SXO+
-	kYc9N6WTj8WHjdjYaL0Nh/Reo9TzycFJ/KdU5SVxCkMKFLZfpMVujtUw6L1EkQJ6LpJNBdQzAyO
-	4/bH5DkZD7fJDWIOtXtzYIlY4fj5NfilCUqeBzTvOyW1sfKys0DLLsXaoABs94vVdsyNRkJpyIt
-	J2NAD8Y46rrCI6L8e3FDV7F/9DtIaIsg0pC2DLfhYnipYYxu4Ym+qxd+aMqrdUiLkHwL/9D9VuR
-	drh0QPzSfQfhbWf1ySEotE7I/7E0a7W48YeOP0alkcpuy1goadhCkq2he1vgS1LRJL0cIE1CLlz
-	YuZ0v2k3wa23Nhwq1Mb2Me6BzO08xz6xQtF48FSPh1ObfwkbkP1tobkGsM7Cf+8NVXFFyungvC4
-	spPgYiV3G+OI2fhSH/7JE/oqFT9FPLTTJVr+OP8mEN4egTz3AzG4aR6YKcJTjSx7Wclr8E/ZGzl
-	7NypVz1+/z5k5mjW91V3se2UtcdEI0StYi+Z+AWpTU/Rhz2
-X-Received: by 2002:a05:6830:f97:b0:7d9:c783:5cc0 with SMTP id 46e09a7af769-7d9c7835cfemr1947958a34.33.1774364354030;
-        Tue, 24 Mar 2026 07:59:14 -0700 (PDT)
-Received: from bill-the-cat (fixed-189-203-97-235.totalplay.net. [189.203.97.235])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d7eadd17d9sm13368818a34.14.2026.03.24.07.59.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2026 07:59:13 -0700 (PDT)
-Date: Tue, 24 Mar 2026 08:59:10 -0600
-From: Tom Rini <trini@konsulko.com>
-To: Marek Vasut <marek.vasut@mailbox.org>
-Cc: u-boot@lists.denx.de, Anatolij Gustschin <ag.dev.uboot@gmail.com>,
-	Bin Meng <bmeng.cn@gmail.com>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Heiko Schocher <hs@nabladev.com>,
-	Jaehoon Chung <jh80.chung@samsung.com>,
-	Jerome Forissier <jerome.forissier@arm.com>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	=?utf-8?Q?=C5=81ukasz?= Majewski <lukma@nabladev.com>,
-	Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Masahisa Kojima <kojima.masahisa@socionext.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Patrick Delaunay <patrick.delaunay@foss.st.com>,
-	Peng Fan <peng.fan@nxp.com>, Peter Robinson <pbrobinson@gmail.com>,
-	Philipp Tomsich <philipp.tomsich@vrull.eu>,
-	Simon Glass <sjg@chromium.org>,
-	Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>,
-	Stefan Roese <stefan.roese@mailbox.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Tien Fong Chee <tien.fong.chee@altera.com>,
-	u-boot-amlogic@groups.io, uboot-stm32@st-md-mailman.stormreply.com,
-	u-boot-qcom@groups.io, linux@analog.com
-Subject: Re: [PATCH] global: Correct duplicate U_BOOT_DRIVER entry names
-Message-ID: <20260324145910.GP502704@bill-the-cat>
-References: <20260323225537.896180-1-trini@konsulko.com>
- <ef7c8db3-0df8-4d32-983f-4b2dd81b298e@mailbox.org>
+        d=1e100.net; s=20251104; t=1774374425; x=1774979225;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f1ottSAtczohD1NRXdvebbjd0FdcbbwAYgrYaA1gVbo=;
+        b=YiIyy1VgxxtnMjpxMZw4LTmetZbzfmFdQX/yzqynGfHY2Yw/aIkAvWNHM2Mqxv0kKD
+         j6oYzSkmmU2hu8fCL8sKBW0lgm0wXTx9UqKBP8WnyNreV4nXPGj766N/AaMMRT/ehUB1
+         9mAbNT5y01ZtphuPrXlCiK56mQ7jweDinhZp4uAzmX8Bkpf/0nvwJQST1HyUUettGOJP
+         svvU1wJygypnrGWxda/W4DFVkLOO+YiW0edajueJRT1mS7qYD0SfCxOFHjS2CqCHa5CX
+         rNH7SS6wFxJpY3oh8/t9uCxeB/yawknxEu3QqKASUTCrRDTPYcYoxBwOcUlxZiNLBOGN
+         IGcw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7kvH49GVBbFtb3mw9VzZoN6wZMadYX2YdaGPkUri3Jneyut1GLTEzJgq83OWJv/ea/9Uob7szzQn1BLfDpg==@groups.io
+X-Gm-Message-State: AOJu0YxCGIfpYjv9Gv6eI7YyGOJ1Ni+xCvyio4jk4JjQY0ytI35FIWlN
+	iROaNDxTTuBYz8YRbMJr7AXNuiY0Rm6zICKxy7Fdh1n+IuHDTZJBPiHCBMDxeh2ZxMwIlYPjoLZ
+	+gUDdbwJxEMFI/kUjBW4gbudOWPA7H4bUBXMcwRBgfyQTA7V7Zs5Ftw==
+X-Gm-Gg: ATEYQzxYh6M/ZFPkWaLxro+R/AnbgoJvxBIuRjYKq6t1gmB/UhtrpcpRe9gvOuU7655
+	9sCiOLS+Sj8QEKLCY+/ASpkCCUSDI8TTCWwYkec0FFz4tPS3ajN1c21LHPQr0JYPgQ2vd7U6GjQ
+	GGQ4QrP8JLlxaEDYF2OdZQ0YCaua6Oa29Cytg5ZskQZauR2PJVSMpBRMvK48xgNiuysTqhRZJi5
+	A0pBxwhMqYc4n9aSeN/lQEcnc3gP1hHwoDZkl4CAGdsROtePIdn9/R1wytNwUko3G0z0mua6YQl
+	Jfh/kQs=
+X-Received: by 2002:a17:907:e11c:b0:b99:7697:76dc with SMTP id
+ a640c23a62f3a-b9a3f1663d8mr18984566b.4.1774374100786; Tue, 24 Mar 2026
+ 10:41:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ef7c8db3-0df8-4d32-983f-4b2dd81b298e@mailbox.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: multipart/mixed; boundary="Groupsio=e3yQP50mWARQvZG1XNcz"
+References: <20260323225537.896180-1-trini@konsulko.com>
+In-Reply-To: <20260323225537.896180-1-trini@konsulko.com>
+From: Simon Glass <sjg@chromium.org>
+Date: Tue, 24 Mar 2026 11:41:30 -0600
+X-Gm-Features: AQROBzDoBbiLnL-H8z3_ppKXN1rO1G4g0-_SU87GunPz7GS7SCrV8NIEQMmqpLQ
+Message-ID: <CAFLszTjN7ZSkc0vfT_KmN9um+v=--RRyV5OzJSWVirOT2fZWMA@mail.gmail.com>
+Subject: Re: [PATCH] global: Correct duplicate U_BOOT_DRIVER entry names
+To: Tom Rini <trini@konsulko.com>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Anatolij Gustschin <ag.dev.uboot@gmail.com>, 
+	Bin Meng <bmeng.cn@gmail.com>, Casey Connolly <casey.connolly@linaro.org>, 
+	Heiko Schocher <hs@nabladev.com>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Jerome Forissier <jerome.forissier@arm.com>, Kever Yang <kever.yang@rock-chips.com>, 
+	=?UTF-8?Q?=C5=81ukasz_Majewski?= <lukma@nabladev.com>, 
+	Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+	Masahisa Kojima <kojima.masahisa@socionext.com>, Matthias Brugger <mbrugger@suse.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Patrice Chotard <patrice.chotard@foss.st.com>, 
+	Patrick Delaunay <patrick.delaunay@foss.st.com>, Peng Fan <peng.fan@nxp.com>, 
+	Peter Robinson <pbrobinson@gmail.com>, Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+	Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Stefan Roese <stefan.roese@mailbox.org>, 
+	Svyatoslav Ryhel <clamor95@gmail.com>, Thierry Reding <treding@nvidia.com>, 
+	Tien Fong Chee <tien.fong.chee@altera.com>, u-boot-amlogic@groups.io, 
+	U-Boot STM32 <uboot-stm32@st-md-mailman.stormreply.com>, u-boot-qcom@groups.io, 
+	linux@analog.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 27 Mar 2026 16:57:38 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2941
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2938
 
---Groupsio=e3yQP50mWARQvZG1XNcz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, 23 Mar 2026 at 16:55, Tom Rini <trini@konsulko.com> wrote:
+>
+> The U_BOOT_DRIVER macro creates a list of drivers used at link time, and
+> all entries here must be unique. This in turn means that all entries in
+> the code should also be unique in order to not lead to build failures
+> later with unexpected build combinations. Typically, the problem we have
+> here is when a driver is obviously based on another driver and didn't
+> update this particular field and so while the name field reflects
+> something unique the linker entry itself is not. In a few places this
+> provides a more suitable string name as well, however.
+>
+> Signed-off-by: Tom Rini <trini@konsulko.com>
+> ---
+> Cc: Anatolij Gustschin <ag.dev.uboot@gmail.com>
+> Cc: Bin Meng <bmeng.cn@gmail.com>
+> Cc: Casey Connolly <casey.connolly@linaro.org>
+> Cc: Heiko Schocher <hs@nabladev.com>
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Jerome Forissier <jerome.forissier@arm.com>
+> Cc: Kever Yang <kever.yang@rock-chips.com>
+> Cc: =C5=81ukasz Majewski <lukma@nabladev.com>
+> Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> Cc: Masahisa Kojima <kojima.masahisa@socionext.com>
+> Cc: Matthias Brugger <mbrugger@suse.com>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Patrice Chotard <patrice.chotard@foss.st.com>
+> Cc: Patrick Delaunay <patrick.delaunay@foss.st.com>
+> Cc: Peng Fan <peng.fan@nxp.com>
+> Cc: Peter Robinson <pbrobinson@gmail.com>
+> Cc: Philipp Tomsich <philipp.tomsich@vrull.eu>
+> Cc: Simon Glass <sjg@chromium.org>
+> Cc: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+> Cc: Stefan Roese <stefan.roese@mailbox.org>
+> Cc: Svyatoslav Ryhel <clamor95@gmail.com>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Tien Fong Chee <tien.fong.chee@altera.com>
+> Cc: u-boot-amlogic@groups.io
+> Cc: uboot-stm32@st-md-mailman.stormreply.com
+> Cc: u-boot-qcom@groups.io
+> Cc: linux@analog.com
+> ---
+>  arch/x86/cpu/broadwell/sdram.c             | 2 +-
+>  arch/x86/cpu/ivybridge/early_me.c          | 2 +-
+[..]
 
-On Tue, Mar 24, 2026 at 12:28:13AM +0100, Marek Vasut wrote:
->=20
-> [...]
->=20
-> > diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3=
--meson-g12a.c
-> > index 41d15996e5b2..49e9c3fa0e99 100644
-> > --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-> > +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> > @@ -533,7 +533,7 @@ static const struct udevice_id dwc3_meson_g12a_ids[=
-] =3D {
-> >   	{ }
-> >   };
-> > -U_BOOT_DRIVER(dwc3_generic_wrapper) =3D {
-> > +U_BOOT_DRIVER(dwc3_meson_g12a) =3D {
->=20
-> Could you please add usb_ as a prefix in front those usb drivers ?
+For x86:
 
-As we talked about on IRC a bit, globally we're not consistent with
-prefix or suffix or nothing. Your suggestion of a new macro that takes
-the uclass name and rest of the driver name and constructs U_BOOT_DRIVER
-from that sounds great and would be a good general improvement. If you
-can file an issue about it please I'll try and find some time to look in
-to doing that.
-
---=20
-Tom
-
---Groupsio=e3yQP50mWARQvZG1XNcz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTzzqh0PWDgGS+bTHor4qD1Cr/kCgUCacKmugAKCRAr4qD1Cr/k
-CmpyAQCuN4p26T/REii2QoFiw0+VYKRzKAkpxhJdroMVZggDdAEA6sQoSKo9eVVD
-YEQJqehffXAcWEV/EoPeILkWOYavEgU=
-=m20y
------END PGP SIGNATURE-----
-
---Groupsio=e3yQP50mWARQvZG1XNcz--
+Reviewed-by: Simon Glass <sjg@chromium.org>
 
