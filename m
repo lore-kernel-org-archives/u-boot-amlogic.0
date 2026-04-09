@@ -2,74 +2,75 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE60E9DE62
-	for <webhook@archiver.kernel.org>; Thu,  9 Apr 2026 08:01:03 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.127152.1775721655068578355
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E518E9DE63
+	for <webhook@archiver.kernel.org>; Thu,  9 Apr 2026 08:01:13 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.127522.1775721669847164043
  for <u-boot-amlogic@groups.io>;
- Thu, 09 Apr 2026 01:00:55 -0700
+ Thu, 09 Apr 2026 01:01:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=DJqP2qpi;
- spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-43cfd832155so324214f8f.1
-        for <u-boot-amlogic@groups.io>; Thu, 09 Apr 2026 01:00:54 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=OOsKmXMO;
+ spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-488a041eae5so3986785e9.1
+        for <u-boot-amlogic@groups.io>; Thu, 09 Apr 2026 01:01:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1775721653; x=1776326453; darn=groups.io;
+        d=linaro.org; s=google; t=1775721668; x=1776326468; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=b0pkEPfVJHYQa0fWxiLYSX8oYgr1zh/pt7pLDfKBF7Q=;
-        b=DJqP2qpim4qPfAvgV78iKywIQWFCIrcxLwf3SOKVS+kW6ZSyFFb+sLPUOVGHXVdXpZ
-         g1vEmyLOeh8TsGQ7Jn58UhHSZKu5K7mULfiQ/F+yOkeghmzWABhXCbyZNdfQC5sDYO07
-         VZzrugnp/zjBHUzoUVr4iEIQcFFvEfudlk4+BFWzz6rXYS6UluW6J2PyZ0T7x3L/cwKO
-         UDaI5Vhe7/OY9mjV9jOVxzXoEn6jYDfoCR9e3dQQtrM7SfhweuSeymxVFiCzM3Zk2MCe
-         ZKhNN8R4G5VJmhxTMnsZlVc73qowhMJ1Vp8kP9n/LoE/PvGlXbMtm+ulomPCz+PJslpa
-         ZJmg==
+        bh=aW2gugJkyZ22WphGeCYCMqovQKZmR9g7NH0G6lciFP0=;
+        b=OOsKmXMOUiLHLZirVEmPOx2FBZMeVwC9YF2gMJ5MUvJNttorsEKhle+J/XbIKMI3Rk
+         xZvFDvJE6i8jc93D0v4pSXgm9VBZ0WBk1Ign7Iqy0V0K/m7heSO7KEq0kwstOT/TAlaV
+         K65IALnpVk+SPwEcM90Vizy4H2IjzYcpCP3T+Mo4yeBE+NCiADeyCUpDvb3o4q0wPe2c
+         4IMH7vSePZyS4d6XHK8Q4jeFfCXxgU1x0+yi21WZ16G7GldtXBGdfKkXZbFnDgfZrYJc
+         52ZUE+JL3wLn3duJNXWBWMy8mB9J/31lHztXSL24+XiA725RtO8f+GyRIgJsGCFLRHG9
+         DQ8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775721653; x=1776326453;
+        d=1e100.net; s=20251104; t=1775721668; x=1776326468;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b0pkEPfVJHYQa0fWxiLYSX8oYgr1zh/pt7pLDfKBF7Q=;
-        b=HYGTw0pqBdJdizQLosgTaBDoYXoJyrowlb+SgAgR6JU7ezs+ddCCy4ITFl56Y3CM0A
-         X1N1MDinyn6G+q9WUL037HXkdTje8ZAfjZ3iYpFuan644l6MTnXitG8KN9BhXE8709e8
-         uYABqqgXY6PwmCBH6tsT6atuIVLniJ9h/qhxRq2EIJ5EVKMRnjnPf1ahNiBwFfW7ejZc
-         p5D+7wCh8gjuuQ5BznC8x6ZUB8B8lrTGoB71w8+QpT7K8nH4oOhwPGcdDJkfBVDrWoeb
-         lsepYuqsONV3De5s0PUwrGSXbXcL3+Txc3nNd9Ivovs4DuB0BbaQcXDaV6IkBZxnyGYV
-         O7Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVL0PBPxNAV9sE+hF0B2TkTptWWvkeosdv6CouF50mLm4xL9A6OY0CpYRG7u7vnh7a0B7TJ8ctbD1jziYAFQA==@groups.io
-X-Gm-Message-State: AOJu0Yyxyp5lP+n7C1DEeN2eXVU0Zcyn0sFlVj8WxwD5ghSDw6laUpsr
-	KgZw7o4snQBlMPk+vnptpHwEg+8CsYxdrQSKUYredEaLCCLO2KW8AB07cSmRrzK5zJ0=
-X-Gm-Gg: AeBDieuSeao1pARxrrS4X2ouC5rNMMuCJTTzk+IfX9xYhZLIW5hgRITam2iJPdAh7Hr
-	TmxH5uruIvNfoqxNCnx4PY+MV6VzVht+STW0LIxVtrViep07szi6xfF1jPX5uUTCryJqv8HLcM5
-	tcGEaUYTHQ+sL4HwFaOOpp6mNeUuAkkpF6LQCHejntq9BW0J8mYJHaN2LVX9FDP5Ceqz5W9o+Kp
-	4AA67oYg3+i3irYr92WGcFV/o07YiSN3OjRfw7KiV9dLvFWIEP2NNvNNDXYg4ePztAQ3alUGYWQ
-	EuL0itRpwJmqX6pFq6uGu4s8AsVnW11THfL3gVaMA97hIMRX5jxupL/6VrBZB77XEPjsu3oQIrR
-	fOXsG97AxcZax/Z223AnK84N3eujjIavbuEV6t2eX+8ulpbp8xYzOen8mgMNH3wQNzunGsLxSq6
-	pghAH+1yzdJLBhgzxwZF5Ze2oAYEmnQpzBxu+EmgkiuCa8BVo+sOV3ziLaR7YLlgAHrKbcREc5/
-	auS4kM=
-X-Received: by 2002:a05:6000:4313:b0:439:c040:cc8a with SMTP id ffacd0b85a97d-43d292e43d7mr36776743f8f.32.1775721653242;
-        Thu, 09 Apr 2026 01:00:53 -0700 (PDT)
+        bh=aW2gugJkyZ22WphGeCYCMqovQKZmR9g7NH0G6lciFP0=;
+        b=W4EvcHpL3jkY6+YHo/ABC9W7i/P1hJB1Ie7iNU7dwyCjxKfszyfhubEAnmTvGp7dCJ
+         66wdAdztolBrwWD+0Wv7ZekT6dkLXVSw/Me1DtCPYYEM46Xfr4th1qnyE4W3DejH30Fb
+         KDmluvDgM+QBZ2uBoGJN+DV9al2sIbBp4k+qH/M7R9Fevjz+NO4z2yVDTWjTKgZYFz5B
+         KqbKcikF1u5KVePXBgBE0W19pU+QfFnyYeZZXOer8Fz/udHkVLPWbmPPXxo5RSzg7NAM
+         0cqX31RE1lK/NdQEG263cIpzXuhVsTK78GE3QEuS8+nMvZTjOENxEipbvH7j3R0vqYZU
+         XvEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6yBO4ZjunlAcg0HqNo0m4pV5UNZqeGCtoa95fhFurOSdwkw/Ohe1XQo4S0zi+xEzTxtUVto2GH134g2+yEA==@groups.io
+X-Gm-Message-State: AOJu0Yw3w7Y/XdniZy5hitb5tcxigeyHEDy9+J8UfVP5GrEygBbi4ogW
+	zsC9brQ6HEUpNzKjI/NwM2BqQmVkkiLbmE8yq9c+bYuml2HIN2/eUQVJ2TqiaZgqu2E=
+X-Gm-Gg: AeBDiesWK4dnGnTIgBWrlyP8D9PiVEXgjOCBqplhG2i1tUiHEI+w1KhItFQDSRfWL61
+	YHNiNVD+ixTkQ3OxDsKxY8WKSYY1lZ8w5gx0fJra0ok58Y67bThrk8RTCOcpOd980/zdpKFjPpx
+	GkYc8d5qMzNMcS0MElqRlF9rGHi/Z5CMyLZ8iaSltilXAmOLOuhLL0RGiQNPBUDeVIdQFdTBZeY
+	lJURv5WD0u06ReIkZoA3NK2X5q38t1lbAnUZQsO+12jKxSx1IAlwwNOsP0bclceP6lPCzeA32Hu
+	5eZnjJxjjVfRt6IQhfUEF68vra/g6cHKzIjPtmSCRJB+++nXJQC2tvwW7PJLr2UviLGUsw01tz0
+	e7y5RZm4UO2OrWscHUbjG8bQMUZIxafeaYUex4oQ6cCWTHPFfsiU4rib2QS0GdSgSgS5GpW55rw
+	OftHYDOTC8HbnqhYeDrCWsFWCZdtiMqTmJOVk2KIbXxWzLYlSfJVBG42d4fxAQp6vB3i3ZuyP9W
+	myeBAg=
+X-Received: by 2002:a05:600c:8012:b0:485:3f72:323f with SMTP id 5b1f17b1804b1-4889974a416mr339869645e9.11.1775721668044;
+        Thu, 09 Apr 2026 01:01:08 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:106d:1080:70d5:8219:5bd4:e213? ([2a01:e0a:106d:1080:70d5:8219:5bd4:e213])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e2c5253sm58880667f8f.9.2026.04.09.01.00.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cf9f350asm36818435e9.8.2026.04.09.01.01.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2026 01:00:52 -0700 (PDT)
-Message-ID: <14d1214a-f787-44eb-b66e-2f6d26deba42@linaro.org>
-Date: Thu, 9 Apr 2026 10:00:52 +0200
+        Thu, 09 Apr 2026 01:01:07 -0700 (PDT)
+Message-ID: <aea62a67-6634-4ca5-bd41-5a5de7c639be@linaro.org>
+Date: Thu, 9 Apr 2026 10:01:06 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 2/4] arm: meson: enable SYSRESET_PSCI
+Subject: Re: [PATCH 3/4] configs: libretech-ac_defconfig: enable EFI Capsule
+ on Disk
 To: Ferass El Hafidi <funderscore@postmarketos.org>,
  u-boot-amlogic@groups.io, u-boot@lists.denx.de
 Cc: Tom Rini <trini@konsulko.com>,
  Evgeny Bachinin <EABachinin@salutedevices.com>,
  Marek Vasut <marek.vasut+renesas@mailbox.org>
 References: <20260408-b4-amlogic-sysreset-capsules-v1-0-6f3386eb5124@postmarketos.org>
- <20260408-b4-amlogic-sysreset-capsules-v1-2-6f3386eb5124@postmarketos.org>
+ <20260408-b4-amlogic-sysreset-capsules-v1-3-6f3386eb5124@postmarketos.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -96,42 +97,37 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20260408-b4-amlogic-sysreset-capsules-v1-2-6f3386eb5124@postmarketos.org>
+In-Reply-To: <20260408-b4-amlogic-sysreset-capsules-v1-3-6f3386eb5124@postmarketos.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 09 Apr 2026 08:01:03 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2958
+ <u-boot-amlogic@groups.io>; Thu, 09 Apr 2026 08:01:13 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2959
 
 On 4/8/26 22:30, Ferass El Hafidi wrote:
-> Previously, Amlogic SoCs defined their own reset_cpu() implementation
-> that essentially just did what the sysreset PSCI driver already
-> supports. To reduce duplication (and allow for EFI Capsule on Disk
-> support), make use of it instead of a board-specific reset_cpu.
-> 
-> This does not affect SPL, as in that stage we do not actually have PSCI
-> (BL31 is not loaded yet at that point).
+> Everything is already in place for EFI capsule updates, so enabling
+> Capsule on Disk is fairly trivial. This allows updating U-Boot on SPI
+> flash from Linux using fwupd's Capsule support.
 > 
 > Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
 > ---
->   arch/arm/mach-meson/Kconfig | 2 ++
->   1 file changed, 2 insertions(+)
+>   configs/libretech-ac_defconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-> index ef86129b535..a615d871095 100644
-> --- a/arch/arm/mach-meson/Kconfig
-> +++ b/arch/arm/mach-meson/Kconfig
-> @@ -7,6 +7,8 @@ config MESON64_COMMON
->   	select DM
->   	select DM_SERIAL
->   	select SYSCON
-> +	select SYSRESET
-> +	select SYSRESET_PSCI
->   	select REGMAP
->   	select PWRSEQ
->   	select MMC_PWRSEQ
+> diff --git a/configs/libretech-ac_defconfig b/configs/libretech-ac_defconfig
+> index 1a67ca734b8..17d54655017 100644
+> --- a/configs/libretech-ac_defconfig
+> +++ b/configs/libretech-ac_defconfig
+> @@ -23,6 +23,7 @@ CONFIG_DEBUG_UART=y
+>   CONFIG_REMAKE_ELF=y
+>   CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
+>   CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
+> +CONFIG_EFI_CAPSULE_ON_DISK=y
+>   CONFIG_FIT=y
+>   CONFIG_FIT_SIGNATURE=y
+>   CONFIG_FIT_VERBOSE=y
 > 
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
