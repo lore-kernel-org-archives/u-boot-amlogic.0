@@ -1,149 +1,210 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <linux.amoon@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4B1E9DE64
-	for <webhook@archiver.kernel.org>; Thu,  9 Apr 2026 08:01:33 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.127531.1775721688254085488
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F81E99078
+	for <webhook@archiver.kernel.org>; Fri, 10 Apr 2026 10:11:11 +0000 (UTC)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.152868.1775815868550625934
  for <u-boot-amlogic@groups.io>;
- Thu, 09 Apr 2026 01:01:28 -0700
+ Fri, 10 Apr 2026 03:11:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=oq+yKHrm;
- spf=pass (domain: linaro.org, ip: 209.85.128.51, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-488971db0fdso5757625e9.0
-        for <u-boot-amlogic@groups.io>; Thu, 09 Apr 2026 01:01:28 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=fMGFN/le;
+ spf=pass (domain: gmail.com, ip: 209.85.218.41, mailfrom: linux.amoon@gmail.com)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b886fc047d5so288520666b.3
+        for <u-boot-amlogic@groups.io>; Fri, 10 Apr 2026 03:11:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775815866; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ijY8U2t6buN7nwmzMNrxbuYQumWTF0FB06HlMZsttN8Yi1SesYf5m7zQdgrRCghGIa
+         ezela8d3JDIJlvWyH8Z/db08Dgd3cxgZufk0l1HJr+XTPgw73vGQ4YHOs9s3VqaXd7lW
+         AqTOybaoWbC6ApeMyHaJy72FEF8CDXlUrKdun56QFCVxNhefUqRghMh0hntDMsf7zRtu
+         Qory+7jLAgcB4dmgE2GYgDREBfVSpeIJvCjMDuDfJSKw+krNvq9s7UDPk+V0TIPWfwmF
+         +nLDUf1Cu+VHXyARK+A0WVL4iYwj970AztAZdnvKBTHUp6XLeHRGODyze5CRjSTSxDY9
+         qMKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=JI9MPqZe/XsUWHnvAdpwMk+syRqJB2KyqIeJUkQFlWE=;
+        fh=l7yysKdAExrxCUqLzFmRAfJ42xeBPQbhTaYcoW2dpPk=;
+        b=fI9o0xiIFKXVkf5OyuInEVlYWvJmhnQwesfWHnSVc/W3ppZElLgRW0cWayfxLQSs4K
+         Ct/taJ/YciFGDUweIEqo68v5ZXytlexi6JCGMKRGrQcFWoxjxVtpx/zXwNQOQGyMvHbA
+         431tpoTrehVlxWlX7kc2+PTuVKVBmdCD+V8NO8oPLmrbT5TrCt6YDznMewq+TpGTaNUV
+         aA9fGRDgz+MdOTizleaxUb5EPAb9buP/fR0B6EWrwgNCgIuK1+7znWgOQV5aRADT+lHR
+         1khYfIL4Ujy7HZB+7P3+1o0wzzjOYq0rDF6aFhXKI7bwgOAOhKkQDT+mQQew4/cKVVsv
+         84Jg==;
+        darn=groups.io
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1775721687; x=1776326487; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WovDVeh3PfdLfhBuKK3xsVS9Ihwbt34LuFpYycxeOsw=;
-        b=oq+yKHrmzAuad/uegSmyWgLeqjlB7I8pn0oMEWTMB3S4rK+Q1OJO05sSb6BygZylOe
-         3rAMhWM/nJ05fMmNYjS59aQXEa7EtobU90lhkAY6vIcK9bp2SDKByxlfbG1ZWzWzmx/f
-         ywLSZ4Tk2X/mu3I6+KF71UT31qQW5+fHETPphGh+45X8gtQkSzDnkbcBlHCKNEhtBLNS
-         MxPc5jejCERBWylBarVSPxFgf+sPoBS8mGHgZCYAg2X04HqGATsNtRMaArh/sozc2Zqb
-         oxeju3VTKSm/Eoz0TbSaJvI1LsOizZKhrsdAUYk+KH5zFDxhEmPy2Zy/pe/6sOO9I0fS
-         Uxng==
+        d=gmail.com; s=20251104; t=1775815866; x=1776420666; darn=groups.io;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JI9MPqZe/XsUWHnvAdpwMk+syRqJB2KyqIeJUkQFlWE=;
+        b=fMGFN/leD+xq6KkSdImny9k5DwR75h9uR8o1BqGtLtj5M1KViPq9xMkUQqMEQbOqnW
+         SV9Up0k0eXiBR8dhYxGM3dT8/tCjDg9egGH7Fn6Iz8wq+iH9gd8PaFbpZujtZdfgc24Q
+         mE+1pR4B+OypMROAfdmNgD7Z+9TCSE69sxz3UH3iyKTA/diKu0rJcxiYoXnyanBPrNHv
+         e9n6hv2dyjMDyt8+n6CrbybkOsLNSdCRmj8SxqFLY3Y9PIzqfZCe9GPpXV+FrSOCvQfi
+         IogZUsLr3WRtu0yAjnkpvRV5VINKhIJ+S1vxYYIKTgzr06rjCQ+6U0lZtMffr2V9fcsX
+         TdtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775721687; x=1776326487;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WovDVeh3PfdLfhBuKK3xsVS9Ihwbt34LuFpYycxeOsw=;
-        b=tEWc6I6dXVnySxgNAynupbSlYD/DM93c+xyfJ73lvlJ2H3RGi9AmLslgJuXP1NLieN
-         y7qlmdAkfvGqTGwUBrfSEevX578pK3FwcxBvN75Wo0kQiHELyOF/F3CsjaRmr3xf/V4J
-         ws6ZGlOLRu8MSRZsHyCYti1kJZkjPX9PBumQC2h8iPUkmg0JTe/BXLRr5AKroCeyQOy3
-         t84czDBnujxpoJsWcUn4cRvVZ+MPek6oit+RvpIlbSCmqNDrYtahVpexuq7u3eWMneIV
-         +EXO0esmnZGGR7vc1dvA2KlKuxauOh5pRMqBQlMc+BxLvhtT8a5lZAmdlGj8ud4AFB7j
-         +2rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsaFN/WGttGrMN8VUaG+Ha8YFGKYl5KA5ZWFHip5rXHFFgZ5rrV5soQQa57H8mPKVIZezxFmYiSsYxbksgxw==@groups.io
-X-Gm-Message-State: AOJu0YwCCwMmVPScW0AnmEWbbhe+jUiko6PXtS4P7ZvbxotaXjFbscYE
-	Mqrf0GVlEe7unKrz7FV9QMdU5Jw/67njrvSCEanCMAeGbqp4PWInE9q6LaxDYzwPr88=
-X-Gm-Gg: AeBDieskjYQJzuHOoGwkK08IjNnjanVTpUsMgN2RFPR6ViY5cz6RCq0HraBP06y0V5q
-	gWhJZqegyc63ajJ6iQuL8RnZRVHNY/ZfMvDkzcdJt0UgVH6VFPtRtpAkEsV+vp49M4uZanDnv5B
-	81ROyQ1k8Wms1e0pIxeOCK7buRMP8SDtuQ9d6On+pk6Jov/5vIWKvOgU7tK4hd5LQ3uTr+6ursG
-	bzr6r4CsiNadVpIDmuR/rMRgy1+VnjU7aUkuK1FYA9WPLdSQ8fDQc3ydkidCKjtJy8HlvdjDYZ6
-	QoxpKlTKz4nCIULtxTmaXf/RLspAGZhzG7k8PqexWy5XJ4qielLRFHOZV81xT9kDGMtwyT9uIcf
-	7/IjPNM/08uYKBFrtx6ICNLR1odGXtxOegrWajgHMKEwPrS6wFyqx8tG1nEbIHUobVJJj3+z09q
-	bWSIMeNlaqp7rF3zlgPT0KARpl4i+TDOLnJMhkIXpHklSfn2VRW+10BfM+gFTFY2Dp4xjril9Z4
-	mWTfm8=
-X-Received: by 2002:a05:600c:1e0f:b0:488:b1c7:b432 with SMTP id 5b1f17b1804b1-488cd059947mr34737285e9.24.1775721686450;
-        Thu, 09 Apr 2026 01:01:26 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:106d:1080:70d5:8219:5bd4:e213? ([2a01:e0a:106d:1080:70d5:8219:5bd4:e213])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488cd19ea6fsm53527035e9.2.2026.04.09.01.01.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2026 01:01:25 -0700 (PDT)
-Message-ID: <65597f02-0d66-4bef-9cd1-05c0ff227eb9@linaro.org>
-Date: Thu, 9 Apr 2026 10:01:24 +0200
+        d=1e100.net; s=20251104; t=1775815866; x=1776420666;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JI9MPqZe/XsUWHnvAdpwMk+syRqJB2KyqIeJUkQFlWE=;
+        b=VQ/qZhDIx36cdDg2GtFpmgPqoNVY3e08ZbX0HRd4zJFKpgBYqihg17nzof5Z6Hrl9g
+         bqofgU//XYptC4XROJyFlrMVbU40YPKHrFBl50Kfo+XDYMFpRy2BZCaHix6cYCbiXRan
+         r736FwclXVVzx630YYuMAuzQaEnrxNOuzCeYO5cucjVpdLpsZDzg4OPETPYiWnUbwgCY
+         /u7l5G8uJLppClXyt6N1kK4oWTwLbKFC/PDoaeDWzaytSuIBw6Yxqn6eWntSg6/GjcPT
+         +SHdA1EFU/8zjldew5DHTGE8wd6IhPE7Iq1qJWh4yRKHHeYxJolUKykvsyFSGTBf4nnl
+         ws1Q==
+X-Gm-Message-State: AOJu0YyqvPeCk704ctJAq+kJ5vCGDXONbddCuOxROucRC/CyLS6BWQlZ
+	RupUDKWnwoVwgJ0391RRhFnKOjRFc0EyTAg8vKC9UkzdoAPcgiS6Y8sMgtIbxYv1aybmlujfBuI
+	ZLxTvrSd4Zhu9ydmtyQYDGaXlAaKpVE8Pe773
+X-Gm-Gg: AeBDietJybeGEUQ7J/5zOgOuw99CRZ5MYVYrWdfxydOYM1dh+meFV0wQOw5NlaH8S7L
+	nIuBnO0daOufIeZe64BvaTA/hc0hnGtQbdrfbOQMCGHq84yS73zYH2l1YvN22H3cwYbmxooLMHN
+	UiaURa4SmMijWdM9EYa6m+FNUPe0nU/JGYfLehAxhdUlhMJmM9MTQMBUDrDXaYFRMncaOP/hPtE
+	UhDwdflNCxpHwRY/WVTmatuKI7MeSSNzMbJ+yTB5bhLFbx7AI812vV1IXVBRQ9L8y6mq/1/CKcb
+	GJPg5Q==
+X-Received: by 2002:a17:907:2d89:b0:b9d:8697:73ad with SMTP id
+ a640c23a62f3a-b9d86977702mr92740166b.26.1775815865367; Fri, 10 Apr 2026
+ 03:11:05 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 4/4] configs: libretech-cc_defconfig: enable EFI Capsule
- on Disk
-To: Ferass El Hafidi <funderscore@postmarketos.org>,
- u-boot-amlogic@groups.io, u-boot@lists.denx.de
-Cc: Tom Rini <trini@konsulko.com>,
- Evgeny Bachinin <EABachinin@salutedevices.com>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>
 References: <20260408-b4-amlogic-sysreset-capsules-v1-0-6f3386eb5124@postmarketos.org>
- <20260408-b4-amlogic-sysreset-capsules-v1-4-6f3386eb5124@postmarketos.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20260408-b4-amlogic-sysreset-capsules-v1-4-6f3386eb5124@postmarketos.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20260408-b4-amlogic-sysreset-capsules-v1-0-6f3386eb5124@postmarketos.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Fri, 10 Apr 2026 15:40:48 +0530
+X-Gm-Features: AQROBzBMFysIRYGQff-xMaTKxZCOgrIUq-ZXogZbNmvViQGIf9QVzVRuppW4pQ0
+Message-ID: <CANAwSgT33unjY1FXmKmC2A1draM=PE5mG1sdPy+iszdGxoLmNA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Enable EFI Capsule on Disk on Libre Computer LePotato
+ & LaFrite
+To: u-boot-amlogic@groups.io, funderscore@postmarketos.org
+Cc: u-boot@lists.denx.de, Tom Rini <trini@konsulko.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Evgeny Bachinin <EABachinin@salutedevices.com>, 
+	Marek Vasut <marek.vasut+renesas@mailbox.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 09 Apr 2026 08:01:33 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2960
+ <u-boot-amlogic@groups.io>; Fri, 10 Apr 2026 10:11:11 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2961
 
-On 4/8/26 22:30, Ferass El Hafidi wrote:
-> Everything is in place to allow this board to support EFI Capsule updates.
-> Enable everything needed to support Capsule updates, as well as Capsule
-> on Disk. All this allows updating U-Boot on eMMC directly from linux using
-> fwupd. Also enable DFU_MMC, which is a requirement for EFI Capsule flashing
-> to eMMC/SD to work.
-> 
+Hi  Ferass,
+
+On Thu, 9 Apr 2026 at 02:00, Ferass El Hafidi via groups.io
+<funderscore=3Dpostmarketos.org@groups.io> wrote:
+>
+> Mostly everything is already in place to enable EFI capsules and in parti=
+cular
+> EFI capsule on disk.
+>
+> First, switch all Amlogic boards to use SYSRESET. EFI Capsule on Disk
+> functionality expects sysreset to be present. As the current reset_cpu()
+> function in board-common.c is basically only doing PSCI reset on U-Boot
+> proper, we can replace it with sysreset's PSCI support, which works just
+> fine for that purpose provided BL31 is running (SPL stays on an
+> SoC-specific reset_cpu() which does for(;;);, as the overhead for
+> sysreset is too high and we don't have PSCI yet at that point).
+>
+> Then we can enable capsule on disk. LaFrite has Capsule updates enabled
+> already, so it is simply a matter of enabling CoD. LePotato does not
+> have Capsule updates enabled by default, however it can be easily enabled
+> and setup to update u-boot on eMMC/SD.
+>
+> With Capsule on Disk setup, it becomes possible to update U-Boot directly
+> from Linux, without having to worry about manually using `flashprog`
+> (for SPI flash) or `dd` (for eMMC/SD). Instead, thanks to CoD, updates
+> can be handled by `fwupd` and applied upon next EFI boot.
+>
+> To test:
+>
+>  * build U-Boot as usual
+>
+>  * in that running U-Boot, run: `efidebug capsule esrt` to get the GUID
+>    -OR-
+>    run the following in your tree:
+>         tools/mkeficapsule guidgen path_to_devicetree_here U_BOOT_MESON_M=
+MC
+>                                            (or U_BOOT_MESON_SPI on LaFrit=
+e)
+>
+>  * proceed with the following guide to create a capsule file:
+>    https://docs.u-boot.org/en/latest/develop/uefi/uefi.html#enabling-uefi=
+-capsule-update-feature
+>
+>  * generate a .cab file suitable for fwupd using `mkcab`:
+>    https://gitlab.postmarketos.org/tauchgang/tauchgang-ci/-/tree/main/mkc=
+ab
+>         mkcab u-boot-libretech-cc.capsule GUID-GOES-HERE libretech-cc "Le=
+Potato" 2026.04
+>    (as of writing, the README.md suggests this is for Qualcomm only. It
+>     actually does nothing that is Qualcomm-specific, and works on any
+>     board that supports Capsule on Disk and fwupd)
+>
+>  * on the board itself, boot to Linux via EFI, install fwupd, copy the re=
+sulting
+>    .cab file, and run as root:
+>         fwupdtool --force install u-boot-libretech-cc.cab
+>
+>  * reboot, make sure you boot over EFI, else the capsule update will not
+>    start
+>
 > Signed-off-by: Ferass El Hafidi <funderscore@postmarketos.org>
+Thanks for your work.
+
+I haven't tested the EFI portion yet, but I have a few questions regarding
+the previous commit 17d80a3b326e ("arm: meson: spl: add support for
+SPL DRAM init").
+Could you please clarify how you generated the Meson DRAM timing parameters=
+?
+
+I=E2=80=99m curious about the boot flow since we can apparently boot U-Boot=
+ without
+the Amlogic-signed BL1 firmware.
+
+I just wanted to understand how to upstream U-Boot for the Meson8b (Odroid =
+C1+)
+platform, as it=E2=80=99s currently stuck on a very old version (v2011). It=
+'s
+ARM 32-bit.
+
+Thanks
+-Anand
+
+
 > ---
->   configs/libretech-cc_defconfig | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-> index d5878bdc431..622922e97ee 100644
-> --- a/configs/libretech-cc_defconfig
-> +++ b/configs/libretech-cc_defconfig
-> @@ -16,6 +16,9 @@ CONFIG_DEBUG_UART_CLOCK=24000000
->   CONFIG_IDENT_STRING=" libretech-cc"
->   CONFIG_DEBUG_UART=y
->   CONFIG_REMAKE_ELF=y
-> +CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
-> +CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
-> +CONFIG_EFI_CAPSULE_ON_DISK=y
->   CONFIG_FIT=y
->   CONFIG_FIT_SIGNATURE=y
->   CONFIG_FIT_VERBOSE=y
-> @@ -38,6 +41,7 @@ CONFIG_OF_CONTROL=y
->   CONFIG_ENV_RELOC_GD_ENV_ADDR=y
->   CONFIG_SARADC_MESON=y
->   CONFIG_DFU_RAM=y
-> +CONFIG_DFU_MMC=y
->   CONFIG_MMC_MESON_GX=y
->   CONFIG_PHY_MESON_GXL=y
->   CONFIG_DM_MDIO=y
-> 
-
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-
-Thanks,
-Neil
+> Ferass El Hafidi (4):
+>       arm: mach-meson: move reset_cpu to spl only
+>       arm: meson: enable SYSRESET_PSCI
+>       configs: libretech-ac_defconfig: enable EFI Capsule on Disk
+>       configs: libretech-cc_defconfig: enable EFI Capsule on Disk
+>
+>  arch/arm/mach-meson/Kconfig        |  2 ++
+>  arch/arm/mach-meson/board-common.c | 14 --------------
+>  arch/arm/mach-meson/spl.c          | 10 ++++++++++
+>  configs/libretech-ac_defconfig     |  1 +
+>  configs/libretech-cc_defconfig     |  4 ++++
+>  5 files changed, 17 insertions(+), 14 deletions(-)
+> ---
+> base-commit: 4dc4080805fac1b1ed7606ce3bc8fb44a6d59d5e
+> change-id: 20260408-b4-amlogic-sysreset-capsules-8f5962defafb
+>
+> Best regards,
+> --
+> Ferass El Hafidi <funderscore@postmarketos.org>
+>
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Groups.io Links: You receive all messages sent to this group.
+> View/Reply Online (#2952): https://groups.io/g/u-boot-amlogic/message/295=
+2
+> Mute This Topic: https://groups.io/mt/118732104/6056667
+> Group Owner: u-boot-amlogic+owner@groups.io
+> Unsubscribe: https://groups.io/g/u-boot-amlogic/unsub [linux.amoon@gmail.=
+com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
 
