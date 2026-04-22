@@ -2,71 +2,69 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2D9FA1FD6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC47EFA1FD5
 	for <webhook@archiver.kernel.org>; Wed, 22 Apr 2026 16:28:43 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.86974.1776875315106270023
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.86916.1776875315837641914
  for <u-boot-amlogic@groups.io>;
- Wed, 22 Apr 2026 09:28:35 -0700
+ Wed, 22 Apr 2026 09:28:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=q+KAW+kp;
- spf=pass (domain: linaro.org, ip: 209.85.128.49, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so92774865e9.2
-        for <u-boot-amlogic@groups.io>; Wed, 22 Apr 2026 09:28:34 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=G4J/WkUg;
+ spf=pass (domain: linaro.org, ip: 209.85.128.43, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4890098abbaso40895065e9.0
+        for <u-boot-amlogic@groups.io>; Wed, 22 Apr 2026 09:28:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1776875313; x=1777480113; darn=groups.io;
+        d=linaro.org; s=google; t=1776875314; x=1777480114; darn=groups.io;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ubqinD/2ACj1c16EbA9jpCKhig8Vombkyn1m3I98TvY=;
-        b=q+KAW+kpWg/e25+lMdM83i6TA7eJqyJEpnzmh/cgnz6C71r2Gq17+FTaQ96ILo5+yW
-         6Qd5mJk2RIQbEMO87x2ur3HPkiwR9Iz769InCh7kSiGwFAOIvQwcVUY1tXwWk6x1H9Kq
-         UQQUh7JwjUkY48gHYtHGOKUUbMVyCQEyOEwKD5uubfi+jsKCDjGmzk6YnDZNTAx67hUK
-         /V630NsKC3h3r9BKSKPNpD74Oh6QlSNb+GmeeVOHA0xj/l+YxcEqaq1CLQVBQY7etrQP
-         v/wyGuFYeFdFluwNAplCGLG27b5XU6PVCWcgNqPvXTyQAB4RNrplwaElsNNwsEzM1aR9
-         HbJw==
+        bh=GVXoYJszoYYeDIeEdirdEdZ0DE/tVE4lV1r3uPvG3L4=;
+        b=G4J/WkUgsLK5lU7e71MCdh+M4GnYREcxnmvVnQFTGo5DaCjP7kcuUrE720EAWpTSOh
+         2Xpewo5a0o80/WzQYw2980gFJVdCNusuSPvYDpQNbsvZIvYgEpk8LljgVwiVB1lhT8RJ
+         GA88HI7PiH4vE62D/A3tu0VGKRolvQOymXvffTvsVb/G27QWeA7WzlRwSJxgWZuryEyx
+         ca0y5EuYm2BQ7BN+M0IKKadZmvmRBf+j33W/aJW1OpObbYVh5Y8iDQQY8qTXa+F+j6bH
+         o6+cUeqjP5ptQ1rh5u6xBBeR22sXCqegllgTcfbaAAHdk8oHEKeZAeEXvBMrn/HUcmzB
+         mjvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776875313; x=1777480113;
+        d=1e100.net; s=20251104; t=1776875314; x=1777480114;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ubqinD/2ACj1c16EbA9jpCKhig8Vombkyn1m3I98TvY=;
-        b=SNw3JwvyrWfX+RLJFJmAzYg63DszZObkOORjDfpRmNMm8t2198J79R5mpDsgSL5mN1
-         BFNFDtacCULxTKdfvKDT8xfrzENls7Bk6ZOAb+78bRla+9dPbOX2Xje2w5LoToWCk+t5
-         C5Us1cO0NfpoQHsrilOzyrJ27iTGaHuZpAkdKpoNSfbADcBkbaqb68ELFL3mnBzBxjXC
-         rRQSGGxqVMLoWqqYq8xup7iowPm6sPQk3Y+Poov/ffO2INt9Jo5EN0mXw+ZVgcAa713M
-         BbeCvuugDuBDiiPHA1pzW+TWb4wGMWak0/SSZ6uw7r19LTC+3X70TokCDTfyApp+690F
-         iA3A==
-X-Gm-Message-State: AOJu0YyvJo20h0vk4SvcGzDROzFBgacDPn2fw5hY7/+VOVYZV3xIpigF
-	Bj95S4CeIj79oZWJYQ9SNybojdJgDKy4/RSUt4Bf78owMZG41aminIvSzl3pxRUK/VtUlLbT8Ro
-	DtAE7REo=
-X-Gm-Gg: AeBDieu3vpffTRMmVQr1bxEqyEiBmzzVXNzLliXDC35ncfn9sd7xGTKCLwMSU47Cott
-	28DMqjpbmcC3TvFDXwhyjuC7gezCOKn3uv8yGmM4vOYer0nreQx1Wglmz034OEOC6F4GmIwfKCl
-	ya5SsQ68xf3PpY2JMkRyvBBmHr17cwFdmz+PQ8aOXfYW/7291x6z80oW4zzkRkkcyI6GbwUTwXO
-	x7F/y6VhKLiNN2I4u+IWjjG/Bn53KVorE94SlGIwXbUM/WWWU8C+kOowhMXttXXowfChaLZ5R4E
-	IjLtbIWCfx5Hg02BwbUsQcSs1aDhAQZc/G0VJstBEBC67+kqPtY+OafV+lB/X9XAkXPOJ93gMfK
-	bcWteadxuelPzRbIUDPUte+HRe7J4w5cVzKKR8kdbqGc8inj3LSLsuTSvZuzWlVV1EkBE7+TLUN
-	LQLyWicIeJRTYFNK5YTwt1MHu7HiFVVxWgH2dJ7vwV0qStqVOnhhWJfg0=
-X-Received: by 2002:a05:600c:8b38:b0:488:b14f:b8ed with SMTP id 5b1f17b1804b1-488fb6e815amr345108445e9.0.1776875313425;
-        Wed, 22 Apr 2026 09:28:33 -0700 (PDT)
+        bh=GVXoYJszoYYeDIeEdirdEdZ0DE/tVE4lV1r3uPvG3L4=;
+        b=s4XFiSBcaXsiQJTUdTdHjQRbZqhg/HXLk1/m4dwtftbnGft/iF/TBpQzyhUhXy4FAJ
+         2VOmViNRVXbfn225eHSo5uVAWJdeUGsaM8EUjKBcxJc4Mj8Z/x/exomzcIgVzwEWvkiH
+         wi4Sk6Uw2NOW8yCMgWG2enSv4PhkMJ6PtIabQ2xCOezsD+z4vqKC/3s5ZYG3dd3ZSqQj
+         3wdrZQ+Lfmbzk6i/fa7nQTiolQCnj+aEOai7k0I5dsDYgo/lHqgEepbtQnmtMsACeR1Q
+         Y71GzPkMrIBMHZ/YRVhqDvWF8P2phFJprktQ1WdAzo1JwdFb/24B40e8fQtCqkgEF3hM
+         7T2w==
+X-Gm-Message-State: AOJu0YzX13bpDtLWRCiY/MgOOOni2aeFCGK678PSNPs7Y/iLwYes/NrL
+	EzBQ+l8YUOgGeW4TfZ9jIfSny9NvRzT8smFonirsq2rdqB2VSTXqByepef02xW6xr9itaWDxz7v
+	FJE3VV6M=
+X-Gm-Gg: AeBDiesMhz3kzFU9mGX4Li/egFvbqJY/aN+onf6UG4VIk7oifbh1KXD+JdELDGxBBRq
+	qIXqc6TIcS1dPtVIBq0YszvkqrPrjWwy6T7l/FwaMjqGqfk1VzWOFRNiB7AeZAbpS+HagG6Zz7g
+	BnjiEhvivXpZjDmMVBULH06Oc71NRmhbloZcCV1e/cAskK8sAuRDuEr/98t9FM96tvNqvZAQBgh
+	6iOZpV9J8r5LIpug7Z6EFc8HtH29VahHx+M6Sws+kRtMSk1GEukPOYsM/xfwXSyVvlBTGbXqJDR
+	XPccI+wvrswNPURCKae2wMBmxcOGct80rhlpw/Vs9aXSxYjEfmCnH3PIGXtjVlvVKqCV12AI4ou
+	8lSs7+S2ufmuM+n1zqHMtJsk3CDGJnrmukoITHSizO853mnYa5mymRfNH8Yev2GO3woj4z49kPg
+	zuzNuzRBTJDa5OTl5RsLvZ5MV2KEiEOHJ6wlt/Kz2saY7EtqfAjRG2TDQ=
+X-Received: by 2002:a05:600c:a30b:b0:487:4eb:d125 with SMTP id 5b1f17b1804b1-488fb74dff1mr231656565e9.9.1776875314158;
+        Wed, 22 Apr 2026 09:28:34 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:106d:1080:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fb7c0eacsm144898075e9.35.2026.04.22.09.28.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fb7c0eacsm144898075e9.35.2026.04.22.09.28.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 22 Apr 2026 09:28:33 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
 To: u-boot-amlogic@groups.io, u-boot@lists.denx.de, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Lukasz Majewski <lukma@denx.de>, Tom Rini <trini@konsulko.com>, 
- Andrew Goodbody <andrew.goodbody@linaro.org>, 
- Marek Vasut <marek.vasut+usb@mailbox.org>, 
- Peter Robinson <pbrobinson@gmail.com>, 
- Svyatoslav Ryhel <clamor95@gmail.com>, Simon Glass <sjg@chromium.org>, 
  Ferass El Hafidi <funderscore@postmarketos.org>
-In-Reply-To: <20260422-u-boot-amlogic-test-v1-1-b5790d3c04e0@linaro.org>
-References: <20260422-u-boot-amlogic-test-v1-1-b5790d3c04e0@linaro.org>
-Subject: Re: [PATCH] clk: meson: do not fail when setting SD_EMMC_x_CLK0
-Message-Id: <177687531266.2025915.11674452554926179447.b4-ty@b4>
-Date: Wed, 22 Apr 2026 18:28:32 +0200
+Cc: Tom Rini <trini@konsulko.com>, 
+ Evgeny Bachinin <EABachinin@salutedevices.com>, 
+ Marek Vasut <marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20260422-b4-amlogic-sysreset-capsules-v3-0-07b5ccc8f552@postmarketos.org>
+References: <20260422-b4-amlogic-sysreset-capsules-v3-0-07b5ccc8f552@postmarketos.org>
+Subject: Re: [PATCH v3 0/4] Enable EFI Capsule on Disk on Libre Computer
+ LePotato & LaFrite
+Message-Id: <177687531359.2025915.13597925861310436957.b4-ty@b4>
+Date: Wed, 22 Apr 2026 18:28:33 +0200
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -75,24 +73,34 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 22 Apr 2026 16:28:43 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2980
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2981
 
 Hi,
 
-On Wed, 22 Apr 2026 10:48:58 +0200, Neil Armstrong wrote:
-> Since Linux v7.0, the MMC controllers has the following properties:
->   assigned-clocks = <&clkc CLKID_SD_EMMC_x_CLK0>;
->   assigned-clock-rates = <24000000>;
-> Which causes mmc controllers to fail in probe.
+On Wed, 22 Apr 2026 15:43:22 +0000, Ferass El Hafidi wrote:
+> Mostly everything is already in place to enable EFI capsules and in particular
+> EFI capsule on disk.
 > 
-> Make sure we do not fail until we properly implement rate setup.
+> First, switch all Amlogic boards to use SYSRESET. EFI Capsule on Disk
+> functionality expects sysreset to be present. As the current reset_cpu()
+> function in board-common.c is basically only doing PSCI reset on U-Boot
+> proper, we can replace it with sysreset's PSCI support, which works just
+> fine for that purpose provided BL31 is running (SPL stays on an
+> SoC-specific reset_cpu() which does for(;;);, as the overhead for
+> sysreset is too high and we don't have PSCI yet at that point).
 > 
 > [...]
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
 
-[1/1] clk: meson: do not fail when setting SD_EMMC_x_CLK0
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/723f14c946cbc8c09c3acf7bb7b7da65a4eeecd0
+[1/4] arm: mach-meson: provide reset_cpu only when SYSRESET is disabled
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/93c13379a4446ea38f85c4e393d187b8de2159ab
+[2/4] arm: meson: enable SYSRESET_PSCI
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/63a0b3e9abba4df4e6d560f317be2712862c6141
+[3/4] configs: libretech-ac_defconfig: enable EFI Capsule on Disk
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/94deb742654ae2f8996e9db17158834261b8c05e
+[4/4] configs: libretech-cc_defconfig: enable EFI Capsule on Disk
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/e07cc9e7fdcc35780f539ee1d452ffd3da0fbd1f
 
 -- 
 Neil
