@@ -2,64 +2,64 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B5CCD6E4A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87447CD6E78
 	for <webhook@archiver.kernel.org>; Thu,  4 Jun 2026 15:43:25 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13576.1780584956879477761
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.13745.1780585340421009690
  for <u-boot-amlogic@groups.io>;
- Thu, 04 Jun 2026 07:55:57 -0700
+ Thu, 04 Jun 2026 08:02:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=AK0IoVs1;
- spf=pass (domain: linaro.org, ip: 209.85.221.41, mailfrom: casey.connolly@linaro.org)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-45eee266c6cso669017f8f.1
-        for <u-boot-amlogic@groups.io>; Thu, 04 Jun 2026 07:55:56 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=XEBbakKt;
+ spf=pass (domain: linaro.org, ip: 209.85.221.51, mailfrom: casey.connolly@linaro.org)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-45fd461e4a5so636652f8f.0
+        for <u-boot-amlogic@groups.io>; Thu, 04 Jun 2026 08:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780584955; x=1781189755; darn=groups.io;
+        d=linaro.org; s=google; t=1780585339; x=1781190139; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KpSoUgCTGlEAVR4p19MOr0Uyd/9zz07UqLGzvS/SaDs=;
-        b=AK0IoVs1h/ZDQrGQYK4WFchxQiD1nS7S7I6vDkhjLpSGDCxzPiUZ9rSb2WAMrvB/R3
-         8Yroaw4G0VB5XCleTioebF3Bz40Mkh/SK8f7rygy+F9zcSUCsaGgOT4iaFzD4Ow629Sk
-         IY2H+lLIEcxjGhMxUfabIirof1LhYJ2iraTgWOzODRaLi1JSG4w34JUu/VUgnIzikWCf
-         LKHKTC1enCxx6IMSTcvnXNPXKaInF3YT9yf0uciQh7QcKEDfJh6DTFzVCVhX7YK7OAlD
-         vGwoKjrZ4snwsxdsH6PT/csQ10isxXiFhyXtIK+JBg934puVGSfSq2ETjGCCpUK7Q80Z
-         2Nvg==
+        bh=Err73DfSZ+PX9FWDl+8+Mp8IRLdKqf6Q0Lqb2301kXk=;
+        b=XEBbakKtKU5fgcOsdy6MHUh0zONc5C1aWvDBwMEqFLB2YGANPucPnpPgq0niAQ5+59
+         rNC4rqJ/yaN/BsJrJPaN90FqlFuhle5XOyTgHZY/UsXmnquZo8kzD1KviE3yS5+r/Hve
+         XhtDy5uBjzdXhdCz9HiNDEuD5xSU7WiCXaOMXfPvvT63qppaVAbjS7674LK10c1WIDus
+         2xC63bspwrJF2H9xSNEvM6PIekYvfN79JWhx7a8QdlZXrYqrt/v0bBXa7mDsf0Y5P78s
+         o9/1WBY6CoHUJFNcOQ5Dler9wK5xOz/Fy7qYDBNrUtcSJ+cVtfFfzODncHvxg+L4jI+v
+         tXjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780584955; x=1781189755;
+        d=1e100.net; s=20251104; t=1780585339; x=1781190139;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KpSoUgCTGlEAVR4p19MOr0Uyd/9zz07UqLGzvS/SaDs=;
-        b=bwRH07RdHZREeSkyDMlNBBpEZeMUozU52F4OyIbzye5qCl++24veFIDXJHzbMuUr4f
-         gqefL5rQxQilW75SPA13NMTxC+pSTaUrgIktffnfW0DXlI3HXn+SVVMRALb3oUSjZpwR
-         a/dHfX6HgOBNh3uCMYmfKWjLm75ovBjV6z0OGSJmZqkeghYer6/FU6n3XGvQSJrVXT7L
-         zBNEPeakCJoOsJS0blPOs+xMzt/3haYPCVg4XuZLBrTMJBfUkbLs8XabTSeSHHopP0Y5
-         TrRLCh2KtDMC78F2A7qnLci5wFoXm23xOGqi89jXEgcd/GH/2zM1Tliba2aKm+OFrs6k
-         jRlw==
-X-Forwarded-Encrypted: i=1; AFNElJ9+E5lsGzotR14T5cdW+cSafnKOX5fZFxIFi0AsstfeOUAy0AHsdRqYxThmKZnrDnbs7fDjoxKK9mQCIWGi9Q==@groups.io
-X-Gm-Message-State: AOJu0YykAHPmgay/sTT7YOGpHxfHCL/AkGpPxTQ1fB04ObCMdepvyLxc
-	614+HMe0WXI2aSqOkr7fb0zyC9iaDGsDJN5vZ/cUAtCzhlg3NtFzS1j94WjC2wuRy0o=
-X-Gm-Gg: Acq92OFUlMMWG5BFI6qib4QGZyzphXZOeWGw2U0ba5llb1QXPqJJRksarld+YR6WufJ
-	/7BoIGYVbT4CJLpI945K8xgcic8sPuE52jcgRlQg6KLVzQryEGvgwNiSgVU9DSZTt/ZwldAsMb5
-	V79jnzGZnpbmcYhUNW873bgyhIITWie+Hk0yy6JEfGvXy0wfpChIZh+eQxkJy5dRUoGnkI4qhXg
-	0uZiyf90pnddAKZBJVGDA+U7aOs7Ls6fnD9syUspNwu+EGSwh6GD2QB8uEgQzrdq0ybwlD1SO2w
-	TPKT26VmYl0xHsSZEX5wIA+6ATSRPneTx0/Dogr8CpW+qhoIRCUrfNekWg+FP/ahD75iW+eC4Ly
-	kkOHsujRQUgv8S+fs4fnQ1A3nGc8tAyJH22tBuCrwjTNwc+akvovNHjKSlOpGx+H8W7rTXhcE0p
-	cq0c0lCgQk9ixbT7rlPpeCoCY9+AdQXBKZhvt+q5mtOMQ88XPR9ygMiLN5/UrgH0AXQhAIsIwUJ
-	fT/lQYEpQ==
-X-Received: by 2002:a05:6000:1f09:b0:45e:f266:f4cb with SMTP id ffacd0b85a97d-4602193871amr9144318f8f.22.1780584955258;
-        Thu, 04 Jun 2026 07:55:55 -0700 (PDT)
+        bh=Err73DfSZ+PX9FWDl+8+Mp8IRLdKqf6Q0Lqb2301kXk=;
+        b=ioY5TLyqCH0oAJGEsYemPbNrlDMNeUjSnztYBsptUy5O/b3Jw+ggCrZMZ99yeJdqUZ
+         u8wX2Gt5BqPClwmtaREDyj6mulTtxO+q7ntSIqfasWFexCjAAas4SQQt0VJRjNxw64op
+         bfWUpwgNc9Dhxg0hBa1V9bbTAttQ+jdys7fKSI4THiCPg8N3CAyXzeXj8cYiUD3fvbRi
+         zDK9Kn94i1AMSdK3iMrIzGetA2Wx4poNkDFqoHtKjYBQyUM3RanB9O6BM6TSGm6F4eF/
+         NJUX5tu7krT8QEtZMelfybPKZlYNd7sGx4SiQ1T4+l9r10MPzVBseHubg1jolVpZhJhN
+         BXhA==
+X-Forwarded-Encrypted: i=1; AFNElJ+Xne0xXPqTRXAd64hr6BXmfQPWZZr49x09CXq2lnNv3W0LMlv3SoYJzAZMJwWNPe/ZkC3RRmPwQDGUfbZSRw==@groups.io
+X-Gm-Message-State: AOJu0YySmnMg2fELOuvOpG3ofiNQkTwuWEx7a7vF6J0a3jUnvxuLiRCY
+	7jVsg3HyCQJtXiQoOW4iUu1dW8butGqNY4NY2D/2d8cAGgm+EgeQhKjEvbMyLwkZeEk=
+X-Gm-Gg: Acq92OEkR/QA/evE6xCwRMkfjAXme27QJmN3B93eQNpVwbweTxPwu55c1TtUsXwouZu
+	gfnuVCzJUfAIU3KvBLoK8kLrsmgvm1pywEc5xpEvpUH+t0Yisim/enyQUeYdU0Dvb12WuZLxH/Q
+	iULauQpiQ1/glOrM+3+exP2Ha1Cw+oH6a20Cz7nFmO0IZZupSVi8hxsczB52iIFnl3ZESG5xWOq
+	PUvrpCegE07RdaUS2H/P998VgF3jiAZVGxydXJ+noUWfzn18IQt8HUFzByWTBa9oFNepT0uwiNR
+	AREzItp6UbXXPnCD/HwlRE3z1hNe4EFYuw6C48f9GeXcHuEjIeMrDQsGj5F7RKAJBieQQxN1pPM
+	kWWOdcWerwQa4i6w09OIo70Fp1u6JmLu84M4rCJyQxPu61iB7yku1S/8Ep02oPuG0MtAz8BAieo
+	IbYMZmzpHOxZH5pQkkwOAa9y95HzSusgQJ/6Io5Oi4DjsOM+U0M/fF1MTO3vpH3VJbSSJUOC8Z1
+	ldRN46lsg==
+X-Received: by 2002:adf:fd48:0:b0:45f:f142:d55f with SMTP id ffacd0b85a97d-460216db965mr10949386f8f.15.1780585338649;
+        Thu, 04 Jun 2026 08:02:18 -0700 (PDT)
 Received: from ?IPV6:2a0e:c5c1:0:100:34f5:5b48:6fc0:9fd1? ([2a0e:c5c1:0:100:34f5:5b48:6fc0:9fd1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f345209sm16612714f8f.17.2026.06.04.07.55.53
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2e4b18sm12854726f8f.10.2026.06.04.08.02.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 07:55:54 -0700 (PDT)
-Message-ID: <a9531a9b-7a10-4804-9f00-199f8c50d051@linaro.org>
-Date: Thu, 4 Jun 2026 16:55:52 +0200
+        Thu, 04 Jun 2026 08:02:18 -0700 (PDT)
+Message-ID: <16ac86c9-e5e3-463c-ba3f-2ba6cbdff9f3@linaro.org>
+Date: Thu, 4 Jun 2026 17:02:16 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/11] power: regulator: qcom-rpmh: convert ofnode API to dev_read API
+Subject: Re: [PATCH 02/11] mmc: msm_sdhci: convert ofnode API to dev_read API
 To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
  "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, u-boot@lists.denx.de,
  Sumit Garg <sumit.garg@kernel.org>, u-boot-qcom@groups.io,
@@ -82,9 +82,9 @@ Cc: Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>,
  Aswin Murugan <aswin.murugan@oss.qualcomm.com>,
  Peter Robinson <pbrobinson@gmail.com>, Peng Fan <peng.fan@nxp.com>
 References: <20260604-devapi-v1-0-961aded05ff4@nxp.com>
- <20260604-devapi-v1-10-961aded05ff4@nxp.com>
+ <20260604-devapi-v1-2-961aded05ff4@nxp.com>
 From: Casey Connolly <casey.connolly@linaro.org>
-In-Reply-To: <20260604-devapi-v1-10-961aded05ff4@nxp.com>
+In-Reply-To: <20260604-devapi-v1-2-961aded05ff4@nxp.com>
 Content-Language: en-US, en-GB
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -92,17 +92,17 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Thu, 04 Jun 2026 15:43:25 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/2999
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3001
 
 
 
 On 6/4/26 14:20, Peng Fan (OSS) wrote:
 > From: Peng Fan <peng.fan@nxp.com>
 > 
-> Replace ofnode_read_u32(dev_ofnode(dev), ...) with
-> dev_read_u32(dev, ...), ofnode_read_string(dev_ofnode(dev), ...) with
-> dev_read_string(dev, ...), and ofnode_for_each_subnode(node,
-> dev_ofnode(dev)) with dev_for_each_subnode(node, dev).
+> Replace ofnode_read_u32(), ofnode_get_property() and
+> ofnode_read_string_index() with their dev_read_*() equivalents in
+> msm_sdc_clk_init(). Remove the intermediate 'ofnode node' local
+> variable.
 > 
 > No functional change.
 > 
@@ -111,48 +111,47 @@ On 6/4/26 14:20, Peng Fan (OSS) wrote:
 Reviewed-by: Casey Connolly <casey.connolly@linaro.org>
 
 > ---
->   drivers/power/regulator/qcom-rpmh-regulator.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
+>   drivers/mmc/msm_sdhci.c | 7 +++----
+>   1 file changed, 3 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/power/regulator/qcom-rpmh-regulator.c b/drivers/power/regulator/qcom-rpmh-regulator.c
-> index 4d65aae1690..f1de660c3a0 100644
-> --- a/drivers/power/regulator/qcom-rpmh-regulator.c
-> +++ b/drivers/power/regulator/qcom-rpmh-regulator.c
-> @@ -5,6 +5,7 @@
->   #define pr_fmt(fmt) "%s: " fmt, __func__
+> diff --git a/drivers/mmc/msm_sdhci.c b/drivers/mmc/msm_sdhci.c
+> index aaa87923604..7bdb02142a2 100644
+> --- a/drivers/mmc/msm_sdhci.c
+> +++ b/drivers/mmc/msm_sdhci.c
+> @@ -64,14 +64,13 @@ static int msm_sdc_clk_init(struct udevice *dev)
+>   {
+>   	struct msm_sdhc *prv = dev_get_priv(dev);
+>   	const struct msm_sdhc_variant_info *var_info;
+> -	ofnode node = dev_ofnode(dev);
+>   	ulong clk_rate;
+>   	int ret, i = 0, n_clks;
+>   	const char *clk_name;
 >   
->   #include <linux/err.h>
-> +#include <dm.h>
->   #include <dm/device_compat.h>
->   #include <dm/device.h>
->   #include <dm/devres.h>
-> @@ -882,7 +883,7 @@ static int rpmh_regulator_probe(struct udevice *dev)
->   	priv->hw_data = init_data->hw_data;
->   	priv->enabled = -EINVAL;
->   	priv->uv = -ENOTRECOVERABLE;
-> -	if (ofnode_read_u32(dev_ofnode(dev), "regulator-initial-mode", &priv->mode))
-> +	if (dev_read_u32(dev, "regulator-initial-mode", &priv->mode))
->   		priv->mode = -EINVAL;
+>   	var_info = (void *)dev_get_driver_data(dev);
 >   
->   	plat_data->mode = priv->hw_data->pmic_mode_map;
-> @@ -933,7 +934,7 @@ static int rpmh_regulators_bind(struct udevice *dev)
->   		return -ENODEV;
+> -	if (ofnode_read_u32(node, "max-frequency", (uint *)(&clk_rate)))
+> +	if (dev_read_u32(dev, "max-frequency", (uint *)(&clk_rate)))
+>   		clk_rate = 201500000;
+>   
+>   	ret = clk_get_bulk(dev, &prv->clks);
+> @@ -87,7 +86,7 @@ static int msm_sdc_clk_init(struct udevice *dev)
 >   	}
 >   
-> -	pmic_id = ofnode_read_string(dev_ofnode(dev), "qcom,pmic-id");
-> +	pmic_id = dev_read_string(dev, "qcom,pmic-id");
->   	if (!pmic_id) {
->   		dev_err(dev, "No PMIC ID\n");
->   		return -ENODEV;
-> @@ -941,7 +942,7 @@ static int rpmh_regulators_bind(struct udevice *dev)
+>   	/* If clock-names is unspecified, then the first clock is the core clock */
+> -	if (!ofnode_get_property(node, "clock-names", &n_clks)) {
+> +	if (!dev_read_prop(dev, "clock-names", &n_clks)) {
+>   		if (!clk_set_rate(&prv->clks.clks[0], clk_rate)) {
+>   			log_warning("Couldn't set core clock rate: %d\n", ret);
+>   			return -EINVAL;
+> @@ -96,7 +95,7 @@ static int msm_sdc_clk_init(struct udevice *dev)
 >   
->   	drv = lists_driver_lookup_name("rpmh_regulator_drm");
->   
-> -	ofnode_for_each_subnode(node, dev_ofnode(dev)) {
-> +	dev_for_each_subnode(node, dev) {
->   		data = vreg_get_init_data(init_data, node);
->   		if (!data)
->   			continue;
+>   	/* Find the index of the "core" clock */
+>   	while (i < n_clks) {
+> -		ofnode_read_string_index(node, "clock-names", i, &clk_name);
+> +		dev_read_string_index(dev, "clock-names", i, &clk_name);
+>   		if (!strcmp(clk_name, "core"))
+>   			break;
+>   		i++;
 > 
 
 
