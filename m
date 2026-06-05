@@ -2,93 +2,75 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B07CD6E79
-	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 13:09:08 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7836.1780664939006997784
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FBBCD6E74
+	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 13:09:18 +0000 (UTC)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.7655.1780664949188743406
  for <u-boot-amlogic@groups.io>;
- Fri, 05 Jun 2026 06:08:59 -0700
+ Fri, 05 Jun 2026 06:09:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=BGU7cGGf;
- spf=pass (domain: linaro.org, ip: 209.85.128.49, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490b3e03939so16024285e9.1
-        for <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 06:08:58 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=tRU7JThO;
+ spf=pass (domain: linaro.org, ip: 209.85.221.54, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-45eea68dd6fso1013888f8f.2
+        for <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 06:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780664937; x=1781269737; darn=groups.io;
+        d=linaro.org; s=google; t=1780664947; x=1781269747; darn=groups.io;
         h=content-transfer-encoding:organization:autocrypt:in-reply-to
          :content-language:references:cc:to:reply-to:subject:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=36nYAO9JGrWT+6/ChfZFx5kVmLgAWZsFX51Vlvaz46I=;
-        b=BGU7cGGfy32F40MJtK266vx3zK0WloZK1blckh4z50jQuVWqC4DilupKNUX4C5j0bY
-         MsSDmWzj6N1XfxizfuAt68UhF4SEw9nrOS+tTNzUCw26DZc2taKicXmo1G6fQTQD8HYy
-         ESanooNYT+wVm6V/2l7vgGM5wjuTxFmPyNCwl7TOF7YFsql+CTg2yjdzySxZ383Q8E1d
-         c060R6Z38gHpY9p0Avp0bVakzj4SmiCwEqMQUuARfJQ4NPogPjumIvXaqPijqaq82Qk2
-         h2QxyTAQe5wKQLL3cvtcmT2nDH1Z1L667cy6WJS2fAx7G7Odz0tYC2ypQABRqk4S0nvC
-         iRXw==
+        bh=RvZYXD9rPkBpjc/aJT5ht0N9UM5B0t9y9qPRvHjiQ80=;
+        b=tRU7JThONWuOrKgIsVE6JDuOAQWIlWLn8rmo8UHrSAJ2u1bMOUi6SNsWGm9x5ACiUJ
+         XXgfHaj4LkJmqUWQDvDM8o5qVTM1k+eadiHhkOVPZN3KBD6jV0g9eeHF8g6/Dau/rsmv
+         5UE1vuX0TzupZdWv45drde8pxLqWQr/j6ATbs0UklQ1gE1AQvJrHjCmIMqEETKQeIKWe
+         PAyrkVwu+V/lqcj5MO/2eTHIdvfzzqfkU+2lVmiY3O/JW1Wi6lA1l6Xh0AmqekMEJmFH
+         7BfnJkPefQ1umTN1F+ecagE3grOGOz6xOIFnCTZNU5uMwcyVsRiXCj4g3C77mPPsp426
+         si2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780664937; x=1781269737;
+        d=1e100.net; s=20251104; t=1780664947; x=1781269747;
         h=content-transfer-encoding:organization:autocrypt:in-reply-to
          :content-language:references:cc:to:reply-to:subject:from:user-agent
          :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=36nYAO9JGrWT+6/ChfZFx5kVmLgAWZsFX51Vlvaz46I=;
-        b=FyLvpXTLS2J32IlvMp9YCN814S3+BKtU02FYH2o1JmExeU2b+394YbByHefTpNNDqK
-         LXD7UhSh3OaeIotwIbn0p7XvD9+m4qlB9oCbHr92CqN0hY0HdTDAFaps3NtGik+FfZsK
-         +0B92LA9sJqsPUOsZHX2nx6ZtK6Ec2Fj6VQfj/lbljLVYN+D58jVavNnvyht5FZWbQ5k
-         ISpBr+ykqTAptsvUigq6Ze9yN30f8CC0VKyxj8iYS4zrz5RTBCLbg1mF7LAhIIq1Jo2U
-         LmwZYxmR27IglVvDEedeCEFyhDpR+nrNxraQ3961kWfP5sAm3jtqo18oiLHzhPafZT3q
-         1nJg==
-X-Forwarded-Encrypted: i=1; AFNElJ9hPvlVVZGSLF9GgRaz+D0G84twqTadcsA/rxqY8W8TS27OAGVimfsLWn43PE2A8VRwrZ+Qz3hdvFdnv1TJoA==@groups.io
-X-Gm-Message-State: AOJu0Yx6/kC1xIbzPm0QQZRUIiz2f103LBB+d7Inn3RjXdGVB8fUzUV5
-	SVB7KrfkjDD36Cxx2hljtLPaP1hPk1Nvhy4Y233qsIyZVVQJRf9KV9yTOzlxzeIkMks=
-X-Gm-Gg: Acq92OHhkOrpeV8NJBQXRrznqzTZ50hBEyWztUEImtRVx2mzzBEKj4yHWMS1cpqpkw9
-	0jcS8a0tknh9QiZmnwgupcVJCMimCBfjrsfGQzFMUZou5gbbCiZxBV/JOhrqAJ9vTCe6yGPkbTz
-	V+ZWOE1ugYBsKlJ8sAQJBQVRpWhtOvAkZ5p7srGqsAo8ixxRv9JBFxLneoSb3ZIH0PtDN2/UjUi
-	q7o+0ZJfgwIcTB6di72t5AxX+2noCsVIbnX8OBNpHFBjdLSuDnayw9++Y8d4d0Rk7xt8waa5KZ2
-	LGJq5C8JowuvkRmSLgQHlUZyJdbCmrDqY+rFACJdywahyYzLlg+j4sU1+9xwqqbOAS5xRLLdG/h
-	Mjl7XYNW0rOd6j94iVPfuyTJRuQ9pVshPctxOT0pypSeEoVakLKOP7mT4dRA2kIIC33AWbKyLOS
-	Uk7O7SxdhOFycBJ3diRdsVlJKNcB/2RsBd+tp6exTVdAeXgPn224yo8ARAY2CJeoTHm70PHJsjk
-	SZ+kDmdyZzceP4enw==
-X-Received: by 2002:a05:600c:8010:b0:490:b4a8:e031 with SMTP id 5b1f17b1804b1-490c2cba8e7mr36702965e9.4.1780664937021;
-        Fri, 05 Jun 2026 06:08:57 -0700 (PDT)
+        bh=RvZYXD9rPkBpjc/aJT5ht0N9UM5B0t9y9qPRvHjiQ80=;
+        b=WPv0wHS8z/KX5cs68RKrYTA05QEJB10hRPxn9fH7JRqC4G/EffnfTbpBTE+tmm1+zr
+         alDahnBfzHjq0cKK2x2C4Tsna3nPtjFEuAq3rOSDZyXn1f6xDYxLoXffVZif2MZQ3a/t
+         U7b2aNjwqcDDdhtm8hBUz2IbV8mcC0YwqM6Fxe0V636vgWj5ia0j54Z3aOwu4a0bqP/K
+         urXEimRO4XXCg092Nt+7wzz/l7h/M1U67qmRVsjf+7cGuYk+Odx0twKIx9yjFgM1O2L6
+         xrcXvkd0QwRJwEyobYArYLeNMnS/uJ7XES0at88UlJBJahClMmViz+mER22CwcrkHCNr
+         Lpwg==
+X-Forwarded-Encrypted: i=1; AFNElJ+l+H6XWHylbXmQgbDUjpZsZ/J2zYSjES/kCVTWwLvHMWLgVjLgDOJC9CwN3XBCj9gv3Nz2y7SSoqILvYxj4Q==@groups.io
+X-Gm-Message-State: AOJu0Yxi05eIMO3Xz/qZN6XsgqKwjS2fyXh6njChKSWJ+OBsqsDCjU3h
+	xIHu5ezIVP2UP3zoXAOTDMKKpVTdkZ38VrJcc+Hi3gnutwnxR9SNMdiqKHAozJnv4EM=
+X-Gm-Gg: Acq92OEbCgFRfB0RA9osG5WauvBkv9ZxL9p19y2X92BP+aJJbvlBlaHqdJ/3d1hUFnJ
+	AOkd9tjW8FxUyKZ7/4PCsAGGPuvHhgWmO/wl1mBmNWXQwqmMgEmxKGyqATPe28zwlEZpQHjmjvr
+	pQLLFOqvUWRLawkZGbMvO/ME4/kLMvRdmjSajs7ZEBd9vZnXkEs7N9P/nbGFynlkKy5lVip+6XY
+	Z5bgBHKzrrqBFEge1e1xbSExP3ua9W1ATcS1CF+dcKfnqCk69MHrxRClqq7HcnHDAFi/n88G3QY
+	8+9nGKwB1Yi0U47uGtLiCDC0tB4mLyTMnFZ3wahroz9uqruxOdps/aVkXrxMViFAYwZuYwzEpPE
+	3kUvQgdTB2pQjT/Wa276Bv5x15NaDDoIJXmlnYbwT5ug9bgAFTnCBKRLPecMUqX4rLWjFZ+3uQp
+	+THrZN2XwUD+UhS4q+TO9LFe08dp7RpsqykLwmGVBOL5/0eceuxCElTW3X6QHdWHdUBbxOPJi1/
+	xw8wbMsQmohb4XZOA==
+X-Received: by 2002:a05:6000:46c7:b0:460:e0f:8d19 with SMTP id ffacd0b85a97d-460302e3193mr3876807f8f.9.1780664947398;
+        Fri, 05 Jun 2026 06:09:07 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:106d:1080:b06c:5480:fdc5:c668? ([2a01:e0a:106d:1080:b06c:5480:fdc5:c668])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3918fcsm172766705e9.3.2026.06.05.06.08.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2dcbe3sm24799532f8f.8.2026.06.05.06.09.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2026 06:08:56 -0700 (PDT)
-Message-ID: <c0966d58-7364-4cd1-b914-a3421f537e8f@linaro.org>
-Date: Fri, 5 Jun 2026 15:08:55 +0200
+        Fri, 05 Jun 2026 06:09:07 -0700 (PDT)
+Message-ID: <3ffc6bff-1732-466f-9e8a-0a57606c39dc@linaro.org>
+Date: Fri, 5 Jun 2026 15:09:06 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 04/11] power: domain: meson-ee-pwrc: use
- dev_read_phandle_with_args for ao-sysctrl
+Subject: Re: [PATCH 07/14] power: domain: meson-ee-pwrc: Staticize and
+ constify driver ops
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
- "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, u-boot@lists.denx.de,
- Sumit Garg <sumit.garg@kernel.org>, u-boot-qcom@groups.io,
- u-boot-amlogic@groups.io
-Cc: Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>,
- Jaehoon Chung <jh80.chung@samsung.com>, Tom Rini <trini@konsulko.com>,
- Marek Vasut <marek.vasut+usb@mailbox.org>, Simon Glass <sjg@chromium.org>,
- Kory Maincent <kory.maincent@bootlin.com>,
- Andrew Goodbody <andrew.goodbody@linaro.org>,
- Heiko Schocher <hs@nabladev.com>, Casey Connolly
- <casey.connolly@linaro.org>, Loic Poulain <loic.poulain@oss.qualcomm.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- Varadarajan Narayanan <varadarajan.narayanan@oss.qualcomm.com>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>,
- Frieder Schrempf <frieder.schrempf@kontron.de>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Paul Geurts <paul.geurts@prodrive-technologies.com>,
- Primoz Fiser <primoz.fiser@norik.com>, Yao Zi <me@ziyao.cc>,
- Luca Weiss <luca.weiss@fairphone.com>,
- Aswin Murugan <aswin.murugan@oss.qualcomm.com>,
- Peter Robinson <pbrobinson@gmail.com>, Peng Fan <peng.fan@nxp.com>
-References: <20260604-devapi-v1-0-961aded05ff4@nxp.com>
- <20260604-devapi-v1-4-961aded05ff4@nxp.com>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>, u-boot@lists.denx.de
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Peng Fan <peng.fan@nxp.com>,
+ Tom Rini <trini@konsulko.com>, u-boot-amlogic@groups.io
+References: <20260508122247.512862-1-marek.vasut+renesas@mailbox.org>
+ <20260508122247.512862-7-marek.vasut+renesas@mailbox.org>
 Content-Language: en-US, fr
-In-Reply-To: <20260604-devapi-v1-4-961aded05ff4@nxp.com>
+In-Reply-To: <20260508122247.512862-7-marek.vasut+renesas@mailbox.org>
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
  GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
@@ -119,59 +101,38 @@ Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 13:09:08 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3005
+ <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 13:09:18 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3006
 
-On 6/4/26 14:20, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 5/8/26 14:22, Marek Vasut wrote:
+> Set the ops structure as static const. The structure is not accessible
+> from outside of this driver and is not going to be modified at runtime.
 > 
-> Replace the manual ofnode_read_u32() + ofnode_get_by_phandle() sequence
-> with a single dev_read_phandle_with_args() call to resolve the
-> amlogic,ao-sysctrl phandle. This is cleaner and avoids the intermediate
-> phandle value and ofnode_valid() check.
-> 
-> No functional change.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 > ---
->   drivers/power/domain/meson-ee-pwrc.c | 13 ++++---------
->   1 file changed, 4 insertions(+), 9 deletions(-)
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Peng Fan <peng.fan@nxp.com>
+> Cc: Tom Rini <trini@konsulko.com>
+> Cc: u-boot-amlogic@groups.io
+> Cc: u-boot@lists.denx.de
+> ---
+>   drivers/power/domain/meson-ee-pwrc.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/power/domain/meson-ee-pwrc.c b/drivers/power/domain/meson-ee-pwrc.c
-> index 6361f3a6c59..882238f2937 100644
+> index 4d9f3bba644..6361f3a6c59 100644
 > --- a/drivers/power/domain/meson-ee-pwrc.c
 > +++ b/drivers/power/domain/meson-ee-pwrc.c
-> @@ -435,8 +435,7 @@ static const struct udevice_id meson_ee_pwrc_ids[] = {
->   static int meson_ee_pwrc_probe(struct udevice *dev)
->   {
->   	struct meson_ee_pwrc_priv *priv = dev_get_priv(dev);
-> -	u32 ao_phandle;
-> -	ofnode ao_node;
-> +	struct ofnode_phandle_args args;
->   	int ret;
+> @@ -386,7 +386,7 @@ static int meson_ee_pwrc_of_xlate(struct power_domain *power_domain,
+>   	return 0;
+>   }
 >   
->   	priv->data = (void *)dev_get_driver_data(dev);
-> @@ -447,16 +446,12 @@ static int meson_ee_pwrc_probe(struct udevice *dev)
->   	if (IS_ERR(priv->regmap_hhi))
->   		return PTR_ERR(priv->regmap_hhi);
->   
-> -	ret = ofnode_read_u32(dev_ofnode(dev), "amlogic,ao-sysctrl",
-> -			      &ao_phandle);
-> +	ret = dev_read_phandle_with_args(dev, "amlogic,ao-sysctrl", NULL, 0, 0,
-> +					 &args);
->   	if (ret)
->   		return ret;
->   
-> -	ao_node = ofnode_get_by_phandle(ao_phandle);
-> -	if (!ofnode_valid(ao_node))
-> -		return -EINVAL;
-> -
-> -	priv->regmap_ao = syscon_node_to_regmap(ao_node);
-> +	priv->regmap_ao = syscon_node_to_regmap(args.node);
->   	if (IS_ERR(priv->regmap_ao))
->   		return PTR_ERR(priv->regmap_ao);
->   
-> 
+> -struct power_domain_ops meson_ee_pwrc_ops = {
+> +static const struct power_domain_ops meson_ee_pwrc_ops = {
+>   	.off = meson_ee_pwrc_off,
+>   	.on = meson_ee_pwrc_on,
+>   	.of_xlate = meson_ee_pwrc_of_xlate,
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
