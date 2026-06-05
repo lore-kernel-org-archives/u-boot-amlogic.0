@@ -2,130 +2,255 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85632CD6E77
-	for <webhook@archiver.kernel.org>; Thu,  4 Jun 2026 15:43:25 +0000 (UTC)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.13636.1780585107874068522
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF0CD6E6B
+	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 08:05:11 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.3523.1780646709791906246
  for <u-boot-amlogic@groups.io>;
- Thu, 04 Jun 2026 07:58:28 -0700
+ Fri, 05 Jun 2026 01:05:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=i8P/k4Xm;
- spf=pass (domain: linaro.org, ip: 209.85.218.47, mailfrom: casey.connolly@linaro.org)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-befee9e5ef7so68164666b.0
-        for <u-boot-amlogic@groups.io>; Thu, 04 Jun 2026 07:58:27 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=rSDvlrSw;
+ spf=pass (domain: linaro.org, ip: 209.85.221.49, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-45eedc94d37so820253f8f.3
+        for <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 01:05:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780585106; x=1781189906; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HidTd4zfsVEmGU+IWMMZTIKZtcqJUScKG3FdfDG+R2E=;
-        b=i8P/k4XmXuI+vmJq6DB4GHAG8dU8mqsAqpbT0nOiWdES4DrAJK2QECFHrqBkWL8SoS
-         G837ZrO400z20wzV0dw5Ufg9tJNdukWpuiwFfKNMls+CYWcZ1zTLSbNPpzIVyqXOsbGC
-         DolTTah6bD7jf/RrBsdgWSzm+FaHmmSxYjua+POKQ1ZA/gkGiHqcBDTXoKOFAyT9r48z
-         UObfCAM2O+NNSTpoimK4wDkrfGZotHhLE2bDrj8nQCCHVaJYLJuC+HyG9rYYedvIwRF7
-         ENpnr4wIJ5yYimHBqidF+PrpULpwF/Xvob7/eOC43sr/lMAiN6dmrvExhAV6GoIMux1B
-         oUZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780585106; x=1781189906;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1780646708; x=1781251508; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
+         :content-language:from:references:to:subject:reply-to:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HidTd4zfsVEmGU+IWMMZTIKZtcqJUScKG3FdfDG+R2E=;
-        b=DmiTQ7bADjPOIHFD4isrEl96MtUA+iF+Z4I5OSWcrk56GGDi1pY3UWWayPfQxfu9CO
-         mrH1lMQfq+ng8uzwNG1gkQUGXzos13KoXbBzHoh7r32g2KCRd6N8AJvFqm2/noV+Gx3O
-         BIjW14fiXKGI6VbZ3YaoQsCsmv5ZtH80bIwa0WX7zi9+gu6pzJOiDOtKncvBAEVln1Lz
-         O8rVm+VNbyYm9Bs69BzghYWT2IAs3PeqrwD7TSVRo9PHLPq516kaSfLzjcXK/y8eEd1Q
-         rkZ0g6leWUlFluYjOIxRK/rIrPjj3bfpfpb/mdtaVdB4EXP+PJZ7MLHBuIY79yV6U5qD
-         qw5Q==
-X-Forwarded-Encrypted: i=1; AFNElJ/cBt4At/0jSqNtGEcz+xzz/tkekQFrpIrBN2jBr+FqtzM5vGJ4yXjRjujbJQZTIUohZcSuHb+hKHAGuTbNCQ==@groups.io
-X-Gm-Message-State: AOJu0Yy1tTULOB/zX17l/0Nbyw3reylI0gSygizz/xmKh5e1/Cw0tDqT
-	imWoM8iknDvkQdZcOoCA+cJhUMtFOzhRHA8cdLa00h8XwBXuahHq44dSI2l9tckDtRlN9kjSEeB
-	QLEmdj+g=
-X-Gm-Gg: Acq92OGbHDynBWB/1BvqEetCyWKTe5ZCdoSrsCXoO5iR1YGoEJN7jEh00Vlg6BnbHHf
-	CvQZDkb3jUuTKm5WHnoY2jCNDhWn6Jhgtha8ZKSy/2ZUkl6v9vEMVVJa5/O1FZG/Uk3kVfHGvaJ
-	dt3PaF6FVgpp+vZ/ux1s7QtR+AzBndtk7Sya8eoMSdD/Qb3OBk5nHdowg0sXV8IV0RcIZltST1c
-	YWdXPKKOElG2CETY23ZnGrzLFbPwuZfohmbJfQA1tAJcXskMTgFJnRMpCgXD5/ydgZcOJMTi55y
-	T3vCos1FSjCY2UezvdIOT+g5c4eJGfMnBn3Fu8LyJaoWKd/e7nJ2ExXlIzc/nQj8yWOMiczHKw6
-	rQYNdGmPw05Qs/bVJCtNQ+bXyfL+GHrO0iaM4EHs9TjH2cjm7NusFLrQkk/Zdc5x0czpy+BvWbZ
-	6XdhReObOhzSXoABu9GOBPYdIf4tNyXucuB5sEjnyUsKuJCyG1FjRAloa9si0gSXbsXGx1hUi1s
-	LdKBQEEZ34zvrZL4cDk
-X-Received: by 2002:a05:600c:a49:b0:490:b3e7:4614 with SMTP id 5b1f17b1804b1-490b5e64ac8mr141790525e9.25.1780584793138;
-        Thu, 04 Jun 2026 07:53:13 -0700 (PDT)
-Received: from ?IPV6:2a0e:c5c1:0:100:34f5:5b48:6fc0:9fd1? ([2a0e:c5c1:0:100:34f5:5b48:6fc0:9fd1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f35133csm17082506f8f.25.2026.06.04.07.53.11
+        bh=JR2bitoz0QCc1Yap2SKEioLTtT6EY9vPpNJiIckdNts=;
+        b=rSDvlrSwt2qxLyYF6RY7vFZH8rAUppgzcHXNke0D4par+MC2pL4YRBfqjRIosabdEd
+         SHhmD4i1gHqPYV+gGYfF0bub+an1/t3IawoyubSqaTlhkA5+nMfKuhsiapdhPNZ/jkDL
+         Dn3JmcoD1OZMWsxKelRw7zRBq4DWdligbqw/l1RjzuQQLs9YFY7ZO9c4ilJ1NsyLqUdW
+         nYCA3zvezDPgfGdv8nUeL1VfLuS8PvvvIe3HpjK+hVPDUQ5+NpoNO7e2gN86rdXASo7P
+         zvbVEB8WkVDQhEYlCvNwnDFvwTpiLJAmblye1xWEDwYutFSzrX7JyVMTBDMjSRP533aK
+         ahCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780646708; x=1781251508;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
+         :content-language:from:references:to:subject:reply-to:user-agent
+         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JR2bitoz0QCc1Yap2SKEioLTtT6EY9vPpNJiIckdNts=;
+        b=H9O9xqv3jvJaguStCjNsblUjYpxQLBVW31IrEpEDKFoAW95Y91oIyFW+f24JG3xqYD
+         QUtKo6SYu/YEGuGJMx9mWHPQ4onqDoAuaeBtqZEcd3X9j9JquZrVcm2gDDxLvgc1WB4F
+         Fl6OY3zgPAjEFMTwByHiHJsR1X0sWUZUdcV9Od2GdUUMLA+HiQKnA+Tw7/FSvLO/cHNP
+         YqXDsOukqmp8USfpAajYi3AI3sjXEeL/7O9pPkOP5mi91gHThOwZV66bVjX5K4iIbK03
+         hh6ezxmRL/+xXSowqX/VODoXZUQZG/2Qic04FmQlxy+ij8d4sBpfbIK6Z64WovZEKKuL
+         yqDQ==
+X-Gm-Message-State: AOJu0YzylkW5tp8EsvRWiJ5v0vX4Ke/JOApZbJ42AA0hvV6GMQSzUVBO
+	+xp99eUvE8x/51h6l/yKn4WXAzHijrbXXqoVQZLfxt+Yd3V7kUHFNGgL6lwfozFbQSw=
+X-Gm-Gg: Acq92OHlwTP62CrcZ9dcYDgkI9rlbesyjz9rgo2JGTATUj+qzo49gDroNhhlSl4SRmL
+	e/bss9/RmRWJWkZWOgGCItl1aGRjWTh37dF/pYeUfaM+UqLM91iFsmHE3YWLtQf9eT3Y1D35/Au
+	aB7bUB13ofzcAYfbafBEF2AW9Na2Dm51f16oSYQs/ffiozdxC4QlNOCW/29UE99VHLtThESlSJ3
+	L3F4tPzO2Sk5Sda2n6FJLmWYXlePAZdFw5evUkcMw6O5xspgfEE5OiGvT5KtILzJvTWzaf/j1lI
+	/gS3Wc9qp8R09RMwd44d888oJgTF/p+oNp2pl9r1iNzIljjgC4rV/oUv2NF/FOHogOlWsNK/nGT
+	wMENRgBgljvKEA3u7859+jCCIjXhxHUJovB7jzkQj0xGAO71XiWiO+1gUtkQjYcJrLemzxRObWp
+	ym5kuTGonpl/fxKpcim9e+faTFVrFLtsvZwoBSUVdvZxTpg87ECJgc4XVha9d979+j9sHAfwfJp
+	a30auUOVvRqd/M09Q==
+X-Received: by 2002:a05:600c:5252:b0:490:5191:6e26 with SMTP id 5b1f17b1804b1-490c260566emr36659065e9.18.1780646707805;
+        Fri, 05 Jun 2026 01:05:07 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:b06c:5480:fdc5:c668? ([2a01:e0a:106d:1080:b06c:5480:fdc5:c668])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2f2710sm18345458f8f.14.2026.06.05.01.05.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 07:53:12 -0700 (PDT)
-Message-ID: <9508151e-3603-46ca-a3a2-212e8ba4bca5@linaro.org>
-Date: Thu, 4 Jun 2026 16:53:10 +0200
+        Fri, 05 Jun 2026 01:05:07 -0700 (PDT)
+Message-ID: <34926d1e-89ab-4da6-9975-cb54997712ab@linaro.org>
+Date: Fri, 5 Jun 2026 10:05:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/11] power: pmic: qcom: convert ofnode API to dev_read API
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
- "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, u-boot@lists.denx.de,
- Sumit Garg <sumit.garg@kernel.org>, u-boot-qcom@groups.io,
- u-boot-amlogic@groups.io
-Cc: Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>,
- Jaehoon Chung <jh80.chung@samsung.com>, Tom Rini <trini@konsulko.com>,
- Marek Vasut <marek.vasut+usb@mailbox.org>, Simon Glass <sjg@chromium.org>,
- Kory Maincent <kory.maincent@bootlin.com>,
- Andrew Goodbody <andrew.goodbody@linaro.org>,
- Heiko Schocher <hs@nabladev.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Loic Poulain <loic.poulain@oss.qualcomm.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- Varadarajan Narayanan <varadarajan.narayanan@oss.qualcomm.com>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>,
- Frieder Schrempf <frieder.schrempf@kontron.de>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Paul Geurts <paul.geurts@prodrive-technologies.com>,
- Primoz Fiser <primoz.fiser@norik.com>, Yao Zi <me@ziyao.cc>,
- Luca Weiss <luca.weiss@fairphone.com>,
- Aswin Murugan <aswin.murugan@oss.qualcomm.com>,
- Peter Robinson <pbrobinson@gmail.com>, Peng Fan <peng.fan@nxp.com>
-References: <20260604-devapi-v1-0-961aded05ff4@nxp.com>
- <20260604-devapi-v1-8-961aded05ff4@nxp.com>
-From: Casey Connolly <casey.connolly@linaro.org>
-In-Reply-To: <20260604-devapi-v1-8-961aded05ff4@nxp.com>
-Content-Language: en-US, en-GB
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] doc: boards: amlogic: update documentation for Beelink
+ GT1 Ultimate
+To: Karl Chan <exxxxkc@getgoogleoff.me>, u-boot@lists.denx.de
+References: <20260605075617.6690-1-exxxxkc@getgoogleoff.me>
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Content-Language: en-US, fr
+Cc: "u-boot-amlogic@groups.io" <u-boot-amlogic@groups.io>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20260605075617.6690-1-exxxxkc@getgoogleoff.me>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 04 Jun 2026 15:43:25 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3000
+ <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 08:05:11 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3003
 
+Hi,
 
+On 6/5/26 09:56, Karl Chan wrote:
+> fix formating
 
-On 6/4/26 14:20, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+Missing u-boot-amlogic@groups.io and myself in recipient, and please make a little more effort in the commit message...
+
+Thanks,
+Neil
+
 > 
-> Replace ofnode_read_u32_index(dev_ofnode(dev), ...) with
-> dev_read_u32_index(dev, ...).
-> 
-> No functional change.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-Reviewed-by: Casey Connolly <casey.connolly@linaro.org>
-
+> Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
 > ---
->   drivers/power/pmic/pmic_qcom.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   doc/board/amlogic/beelink-gt1-ultimate.rst | 104 ++++++++++-----------
+>   1 file changed, 52 insertions(+), 52 deletions(-)
 > 
-> diff --git a/drivers/power/pmic/pmic_qcom.c b/drivers/power/pmic/pmic_qcom.c
-> index 92d0a95859b..4b8dcc6104c 100644
-> --- a/drivers/power/pmic/pmic_qcom.c
-> +++ b/drivers/power/pmic/pmic_qcom.c
-> @@ -72,7 +72,7 @@ static int pmic_qcom_probe(struct udevice *dev)
->   	 * contains two discrete values, not a single 64-bit address.
->   	 * The address is the first value.
->   	 */
-> -	ret = ofnode_read_u32_index(dev_ofnode(dev), "reg", 0, &priv->usid);
-> +	ret = dev_read_u32_index(dev, "reg", 0, &priv->usid);
->   	if (ret < 0)
->   		return -EINVAL;
+> diff --git a/doc/board/amlogic/beelink-gt1-ultimate.rst b/doc/board/amlogic/beelink-gt1-ultimate.rst
+> index a78a1a2ff25..22afae0ed40 100644
+> --- a/doc/board/amlogic/beelink-gt1-ultimate.rst
+> +++ b/doc/board/amlogic/beelink-gt1-ultimate.rst
+> @@ -30,19 +30,19 @@ U-Boot Compilation
 >   
-> 
+>   .. code-block:: bash
+>   
+> -    $ export CROSS_COMPILE=aarch64-none-elf-
+> -    $ make beelink-gt1-ultimate_defconfig
+> -    $ make
+> +    $ export CROSS_COMPILE=aarch64-none-elf-
+> +    $ make beelink-gt1-ultimate_defconfig
+> +    $ make
+>   
+>   U-Boot Signing with Pre-Built FIP repo
+>   --------------------------------------
+>   
+>   .. code-block:: bash
+>   
+> -    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
+> -    $ cd amlogic-boot-fip
+> -    $ mkdir my-output-dir
+> -    $ ./build-fip.sh beelink-gt1 /path/to/u-boot/u-boot.bin my-output-dir
+> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
+> +    $ cd amlogic-boot-fip
+> +    $ mkdir my-output-dir
+> +    $ ./build-fip.sh beelink-gt1 /path/to/u-boot/u-boot.bin my-output-dir
+>   
+>   U-Boot Manual Signing
+>   ---------------------
+> @@ -53,58 +53,58 @@ for signing. However you can download them from the amlogic-fip-repo.
+>   
+>   .. code-block:: bash
+>   
+> -    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
+> -    $ cd amlogic-boot-fip/beelink-gt1
+> -    $ export FIPDIR=$PWD
+> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
+> +    $ cd amlogic-boot-fip/beelink-gt1
+> +    $ export FIPDIR=$PWD
+>   
+>   Go back to the mainline U-Boot source tree then:
+>   
+>   .. code-block:: bash
+>   
+> -    $ mkdir fip
+> -    $ cp $FIPDIR/bl2.bin fip/
+> -    $ cp $FIPDIR/acs.bin fip/
+> -    $ cp $FIPDIR/bl21.bin fip/
+> -    $ cp $FIPDIR/bl30.bin fip/
+> -    $ cp $FIPDIR/bl301.bin fip/
+> -    $ cp $FIPDIR/bl31.img fip/
+> -    $ cp u-boot.bin fip/bl33.bin
+> -
+> -    $ $FIPDIR/blx_fix.sh \
+> -              fip/bl30.bin \
+> -              fip/zero_tmp \
+> -              fip/bl30_zero.bin \
+> -              fip/bl301.bin \
+> -              fip/bl301_zero.bin \
+> -              fip/bl30_new.bin \
+> -              bl30
+> -
+> -    $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
+> -
+> -    $ $FIPDIR/blx_fix.sh \
+> -              fip/bl2_acs.bin \
+> -              fip/zero_tmp \
+> -              fip/bl2_zero.bin \
+> -              fip/bl21.bin \
+> -              fip/bl21_zero.bin \
+> -              fip/bl2_new.bin \
+> -              bl2
+> -
+> -    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
+> -    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl31.img
+> -    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
+> -    $ $FIPDIR/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
+> -    $ $FIPDIR/aml_encrypt_gxl --bootmk \
+> -                              --output fip/u-boot.bin \
+> -                              --bl2 fip/bl2.n.bin.sig \
+> -                              --bl30 fip/bl30_new.bin.enc \
+> -                              --bl31 fip/bl31.img.enc \
+> -                              --bl33 fip/bl33.bin.enc
+> +    $ mkdir fip
+> +    $ cp $FIPDIR/bl2.bin fip/
+> +    $ cp $FIPDIR/acs.bin fip/
+> +    $ cp $FIPDIR/bl21.bin fip/
+> +    $ cp $FIPDIR/bl30.bin fip/
+> +    $ cp $FIPDIR/bl301.bin fip/
+> +    $ cp $FIPDIR/bl31.img fip/
+> +    $ cp u-boot.bin fip/bl33.bin
+> +
+> +    $ $FIPDIR/blx_fix.sh \
+> +              fip/bl30.bin \
+> +              fip/zero_tmp \
+> +              fip/bl30_zero.bin \
+> +              fip/bl301.bin \
+> +              fip/bl301_zero.bin \
+> +              fip/bl30_new.bin \
+> +              bl30
+> +
+> +    $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
+> +
+> +    $ $FIPDIR/blx_fix.sh \
+> +              fip/bl2_acs.bin \
+> +              fip/zero_tmp \
+> +              fip/bl2_zero.bin \
+> +              fip/bl21.bin \
+> +              fip/bl21_zero.bin \
+> +              fip/bl2_new.bin \
+> +              bl2
+> +
+> +    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
+> +    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl31.img
+> +    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
+> +    $ $FIPDIR/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
+> +    $ $FIPDIR/aml_encrypt_gxl --bootmk \
+> +                              --output fip/u-boot.bin \
+> +                              --bl2 fip/bl2.n.bin.sig \
+> +                              --bl30 fip/bl30_new.bin.enc \
+> +                              --bl31 fip/bl31.img.enc \
+> +                              --bl33 fip/bl33.bin.enc
+>   
+>   Then write U-Boot to SD or eMMC with:
+>   
+>   .. code-block:: bash
+>   
+> -    $ DEV=/dev/boot_device
+> -    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+> -    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
+> +    $ DEV=/dev/boot_device
+> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
 
 
