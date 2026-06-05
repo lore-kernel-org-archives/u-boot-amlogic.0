@@ -2,71 +2,92 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE2ACD6E74
-	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 08:05:11 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.3522.1780646708847213812
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99F8CD6E6B
+	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 08:06:21 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.3536.1780646777465761435
  for <u-boot-amlogic@groups.io>;
- Fri, 05 Jun 2026 01:05:09 -0700
+ Fri, 05 Jun 2026 01:06:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Zbl/g2lw;
- spf=pass (domain: linaro.org, ip: 209.85.128.53, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490acbb0f89so10406035e9.0
-        for <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 01:05:08 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=sPoLKhTv;
+ spf=pass (domain: linaro.org, ip: 209.85.128.41, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-490b4a8e28bso13371485e9.1
+        for <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 01:06:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780646707; x=1781251507; darn=groups.io;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
-         :content-language:from:references:to:subject:reply-to:user-agent
+        d=linaro.org; s=google; t=1780646776; x=1781251576; darn=groups.io;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JR2bitoz0QCc1Yap2SKEioLTtT6EY9vPpNJiIckdNts=;
-        b=Zbl/g2lw/SfE5Ulm6SWJ06G9oLo9g2giaKCkxM/jR2PcSWOU2PlktKQ7nbIvn11/Je
-         10qOvtpVNhi5c+KlKZq3psbo6+JeSW1bMrl0TegFP59TnYNtgW0heJlakowrZC0nH2fJ
-         peppPbDQ9GAZu4AyIoVichwV7V9bKLLVJxQiuCel0BgNIpmKx54fe9DJU/Dx5HvSwa/o
-         LW9X8AqPyayT7VnkJk3hdYN81xUQVujguWZlcibJILLruNWap1snUV6pT5nhF4+EWi35
-         U20oc4lGg8KmpAtHio8a1maKYlDktOXTepD0/HzK1LZ5F6OIeC0p/20lV1CD8uxGftgl
-         PWoQ==
+        bh=mgcEqEEATw1N8v+XXVmdeOJ1VjVWW/kOYIpBQijdx3Q=;
+        b=sPoLKhTvuRmP3vvkli5/2t3I4c4y5UyPNPWixhQTpV6ebCpOdAI9sTJ0R3U/f+ep++
+         sOPzP9/lb/S7xUpsQSTniBvS3tvYNGTLpCqE97lH1ufZtjPZX8236wE+FjMHp2VPzh2J
+         iZBpv93pG1q22JniSa3XwFL4zG/bvUbt3GJQqTvkRaQ6JC7CpXjIijzrAqiYaDFSaKir
+         wbcXXYpVKIaUQovbXeGe+bLIKX1aJpvh0SmUP/xlO/sbAlzsWlUs/0MGhv+XW57z5zMw
+         x27MW3SQetZWp6RBl6eDjR8lPTyg7DP0DV91NK6mlF6hQPF68dn3JdnN1vFwwNU34g/t
+         zbww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780646707; x=1781251507;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
-         :content-language:from:references:to:subject:reply-to:user-agent
+        d=1e100.net; s=20251104; t=1780646776; x=1781251576;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JR2bitoz0QCc1Yap2SKEioLTtT6EY9vPpNJiIckdNts=;
-        b=FJk6VdZvA/aC5wrWmJyNCrgVmU8EM4MARiodPgPDFVVybWbZE72kR/pjsyZcrSyUFE
-         EPFV8raRIh4ftOlKruKRcOia/8XX2ToHF9rWSphjTrV4YPIx/9G3QGi0P0r3j+z+3Pyr
-         UIiI35b5blviZgOgR9HilW0txGSeY5YAU/x1sGdhojMX3/CfzC4444gtbTw2OOOSE8/k
-         9ZhYtzDaR5tZRCFIEc8u0zNl12+sMFvb1hgyMVfAmS3kA/swjqoEn8Dncu7d0vQVxdj+
-         YaM3Zf0gIOzEk3zyf6NZYImho4LN1ajmjaVyhxoBL/gHLSklRYbpfFN24LpVvc49WszF
-         5acw==
-X-Gm-Message-State: AOJu0YwRHcJOvPvYzGcCHCVFXgiy6xSujsmVWT3JT9V+6zheV6m3wN4s
-	ODxgrO69LLwcJ6MSV+gvj1GbM2WRbzN/idvKT+cFXDIczxBin+c0DktTuM0Mt+jt5GI=
-X-Gm-Gg: Acq92OH4wMOkS5qxoCtZI+6WEWDyU3UHkI30bMH5y8uNnWK83opKfsow1ejeKIabIye
-	S8XApCetwLPhNvThGxJgn8/tBGwDkhE1WOKETo7ztrjwPS62yIekVBX8XBtNdg3P1Bl6UxOF4oc
-	1PYoWvYL+TuZxAipoEEnbK2STTi6pa36nMtUwlCdl+wQHoDqX8Tw0imjmyr4sx8HLZ2eDUKV/Bq
-	hMWTeCgd79WuaOwo+Ic0yvVsAYvObwn41qKgan7mySXKFCwltKRzX6XorjKpfH2raQa7p5cs3dK
-	M2uY/LYyfqIAVMDTXkOXJ0FzMa6XUEIe7NyVbFp001XMjso3iWbQF2tJQzKDp+38aZznY2rMlVR
-	t3rwHrpSXtD58Xu5VerA9cPhTXNmbwVtiEv4Fb8LzwHtOj8bX/0UZaXh5qXLGVPcvPVZttoi6zk
-	mLVrkGvz5qePm0Cw7qwiUEQ+RkcHFlkLhX1chhNqYI3zKkqiSF37cb4vEBKaoxvkDCZvN3nrpBI
-	1xIwfrC4lXNj3aGlA==
-X-Received: by 2002:a05:600c:37c9:b0:490:a296:fdad with SMTP id 5b1f17b1804b1-490c2600e5amr33841165e9.24.1780646706887;
-        Fri, 05 Jun 2026 01:05:06 -0700 (PDT)
+        bh=mgcEqEEATw1N8v+XXVmdeOJ1VjVWW/kOYIpBQijdx3Q=;
+        b=D+9iMW7M4uHLw+O7FPDWyFCiRn3lDj/sm2OBDWsRXTI1C9cYtyvL3MVPKyuP7GX3Re
+         6Z+++NhHyhHO1xifntqS5uGsfOrQRgSZtm+FDEWrGOqQYaXoCm3XWB5qHjo95Y9wRcQ9
+         2wX6zPR2trrnZXYw0wWUA7LiexMbXntOCpei3VyObM/cL6FyElFyDX4jPurdE671oWj0
+         gveEznq+MJitdeY+VsE8UAytBShmRRmL1Idw+PUer23hCYpAqkHaagdgb0VOykdQp/Ve
+         v6/cPP1IigwC7qGrT7vgt2QnGte21/zQZ97gFjtejGQIwvRHtXYLE5j6EbGXO8jf6Lpt
+         cjFQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8HPO2G0TMNErecWEpgH0ODHShGgWt0GoNss6/KHjFL4X+pKai3tuOGS5OzWIm0HOfGoe5WEy9NkBFn+1c5AA==@groups.io
+X-Gm-Message-State: AOJu0Yy41lWJCxeml4G1XlylV5IgWGKrb98RGA8HOAalvz/xwsnqiI5t
+	1pSEst4ASkrLTmC3khoSIyyXaCZ/uYjf6yzl90LWDrDUgOCqltJ5xvAADZziri2nTaA=
+X-Gm-Gg: Acq92OFfx+lJY7AhtIQe72ZgrEq5oMxnB+MDr83Gf14CFTXnfOYWESgzODbSM8PmoYL
+	F6GHxiJiOHEhz2aiGsuEu4vBIbyB4jMRPxP7TLVIFYHaSYJGSnqaZ59zk5IRJNzCS3ECPMa7EVY
+	rPt3xSF6XuPH1WvcS6Yz86hfaeXBuPU/IBMoF9tiFs7w5Fv6+IqAPkDk73+hQ/q76OxGqqIOEVM
+	ZYAk5nOpCd6PQXfwqI0sWcvlj+CHGgPRhBvBQm5OXva/fKA02aWpU2vIJgaLkM8OVS5pEwGs7BK
+	pva+RqL1+/1P4MEJ0arpQf1SKrS1E1Eg66FVsWHkyTC66JDr03hc+vJCZiDnjfQGUcdbiiKJDUu
+	KgOotL9LO7UpDzYoKvTPO6oArXOOnJoI5TAfyj+eswRytyP86Weo2V3ceebhvC/MX1OiBhVFlUG
+	1K0uGL++5GljDJ40sb8s5Hy2XIdBG53oSX9O+lvMmksDCUnSisee8eYas+l2lqBWX5ShnjhFpz9
+	QhGMEIUZ/kyTQNhSA==
+X-Received: by 2002:a05:600c:45c6:b0:490:b1ab:e41a with SMTP id 5b1f17b1804b1-490c260d1f2mr34958175e9.32.1780646774903;
+        Fri, 05 Jun 2026 01:06:14 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:106d:1080:b06c:5480:fdc5:c668? ([2a01:e0a:106d:1080:b06c:5480:fdc5:c668])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2f2710sm18345458f8f.14.2026.06.05.01.05.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3a87dasm122973565e9.7.2026.06.05.01.06.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2026 01:05:06 -0700 (PDT)
-Message-ID: <a79659e0-d2be-48bc-8a82-8b74847490b7@linaro.org>
-Date: Fri, 5 Jun 2026 10:05:05 +0200
+        Fri, 05 Jun 2026 01:06:14 -0700 (PDT)
+Message-ID: <4c060578-ab4e-40ba-9f92-5d85fb11e818@linaro.org>
+Date: Fri, 5 Jun 2026 10:06:13 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] doc: boards: amlogic: update documentation for Beelink
- GT1 Ultimate
-To: Karl Chan <exxxxkc@getgoogleoff.me>, u-boot@lists.denx.de
-References: <20260605075617.6690-1-exxxxkc@getgoogleoff.me>
 From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH 05/11] power: domain: meson-gx-pwrc-vpu: use
+ dev_read_phandle_with_args for hhi-sysctrl
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+ "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, u-boot@lists.denx.de,
+ Sumit Garg <sumit.garg@kernel.org>, u-boot-qcom@groups.io,
+ u-boot-amlogic@groups.io
+Cc: Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>,
+ Jaehoon Chung <jh80.chung@samsung.com>, Tom Rini <trini@konsulko.com>,
+ Marek Vasut <marek.vasut+usb@mailbox.org>, Simon Glass <sjg@chromium.org>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Andrew Goodbody <andrew.goodbody@linaro.org>,
+ Heiko Schocher <hs@nabladev.com>, Casey Connolly
+ <casey.connolly@linaro.org>, Loic Poulain <loic.poulain@oss.qualcomm.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Varadarajan Narayanan <varadarajan.narayanan@oss.qualcomm.com>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>,
+ Frieder Schrempf <frieder.schrempf@kontron.de>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Paul Geurts <paul.geurts@prodrive-technologies.com>,
+ Primoz Fiser <primoz.fiser@norik.com>, Yao Zi <me@ziyao.cc>,
+ Luca Weiss <luca.weiss@fairphone.com>,
+ Aswin Murugan <aswin.murugan@oss.qualcomm.com>,
+ Peter Robinson <pbrobinson@gmail.com>, Peng Fan <peng.fan@nxp.com>
+References: <20260604-devapi-v1-0-961aded05ff4@nxp.com>
+ <20260604-devapi-v1-5-961aded05ff4@nxp.com>
 Content-Language: en-US, fr
-Cc: "u-boot-amlogic@groups.io" <u-boot-amlogic@groups.io>
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
  GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
@@ -92,165 +113,67 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20260605075617.6690-1-exxxxkc@getgoogleoff.me>
+In-Reply-To: <20260604-devapi-v1-5-961aded05ff4@nxp.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 08:05:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3002
+ <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 08:06:21 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3004
 
-Hi,
+On 6/4/26 14:20, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Replace the manual ofnode_read_u32() + ofnode_get_by_phandle() sequence
+> with a single dev_read_phandle_with_args() call to resolve the
+> amlogic,hhi-sysctrl phandle. This is cleaner and avoids the intermediate
+> phandle value and ofnode_valid() check.
+> 
+> No functional change.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>   drivers/power/domain/meson-gx-pwrc-vpu.c | 13 ++++---------
+>   1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/power/domain/meson-gx-pwrc-vpu.c b/drivers/power/domain/meson-gx-pwrc-vpu.c
+> index 325296b0dd7..e08c0fac49a 100644
+> --- a/drivers/power/domain/meson-gx-pwrc-vpu.c
+> +++ b/drivers/power/domain/meson-gx-pwrc-vpu.c
+> @@ -283,24 +283,19 @@ static const struct udevice_id meson_gx_pwrc_vpu_ids[] = {
+>   static int meson_gx_pwrc_vpu_probe(struct udevice *dev)
+>   {
+>   	struct meson_gx_pwrc_vpu_priv *priv = dev_get_priv(dev);
+> -	u32 hhi_phandle;
+> -	ofnode hhi_node;
+> +	struct ofnode_phandle_args args;
+>   	int ret;
+>   
+>   	priv->regmap_ao = syscon_node_to_regmap(dev_ofnode(dev_get_parent(dev)));
+>   	if (IS_ERR(priv->regmap_ao))
+>   		return PTR_ERR(priv->regmap_ao);
+>   
+> -	ret = ofnode_read_u32(dev_ofnode(dev), "amlogic,hhi-sysctrl",
+> -			      &hhi_phandle);
+> +	ret = dev_read_phandle_with_args(dev, "amlogic,hhi-sysctrl", NULL, 0, 0,
+> +					 &args);
+>   	if (ret)
+>   		return ret;
+>   
+> -	hhi_node = ofnode_get_by_phandle(hhi_phandle);
+> -	if (!ofnode_valid(hhi_node))
+> -		return -EINVAL;
+> -
+> -	priv->regmap_hhi = syscon_node_to_regmap(hhi_node);
+> +	priv->regmap_hhi = syscon_node_to_regmap(args.node);
+>   	if (IS_ERR(priv->regmap_hhi))
+>   		return PTR_ERR(priv->regmap_hhi);
+>   
+> 
 
-On 6/5/26 09:56, Karl Chan wrote:
-> fix formating
-
-Missing u-boot-amlogic@groups.io and myself in recipient, and please make a little more effort in the commit message...
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
 Thanks,
 Neil
-
-> 
-> Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
-> ---
->   doc/board/amlogic/beelink-gt1-ultimate.rst | 104 ++++++++++-----------
->   1 file changed, 52 insertions(+), 52 deletions(-)
-> 
-> diff --git a/doc/board/amlogic/beelink-gt1-ultimate.rst b/doc/board/amlogic/beelink-gt1-ultimate.rst
-> index a78a1a2ff25..22afae0ed40 100644
-> --- a/doc/board/amlogic/beelink-gt1-ultimate.rst
-> +++ b/doc/board/amlogic/beelink-gt1-ultimate.rst
-> @@ -30,19 +30,19 @@ U-Boot Compilation
->   
->   .. code-block:: bash
->   
-> -    $ export CROSS_COMPILE=aarch64-none-elf-
-> -    $ make beelink-gt1-ultimate_defconfig
-> -    $ make
-> +    $ export CROSS_COMPILE=aarch64-none-elf-
-> +    $ make beelink-gt1-ultimate_defconfig
-> +    $ make
->   
->   U-Boot Signing with Pre-Built FIP repo
->   --------------------------------------
->   
->   .. code-block:: bash
->   
-> -    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-> -    $ cd amlogic-boot-fip
-> -    $ mkdir my-output-dir
-> -    $ ./build-fip.sh beelink-gt1 /path/to/u-boot/u-boot.bin my-output-dir
-> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-> +    $ cd amlogic-boot-fip
-> +    $ mkdir my-output-dir
-> +    $ ./build-fip.sh beelink-gt1 /path/to/u-boot/u-boot.bin my-output-dir
->   
->   U-Boot Manual Signing
->   ---------------------
-> @@ -53,58 +53,58 @@ for signing. However you can download them from the amlogic-fip-repo.
->   
->   .. code-block:: bash
->   
-> -    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-> -    $ cd amlogic-boot-fip/beelink-gt1
-> -    $ export FIPDIR=$PWD
-> +    $ git clone https://github.com/LibreELEC/amlogic-boot-fip --depth=1
-> +    $ cd amlogic-boot-fip/beelink-gt1
-> +    $ export FIPDIR=$PWD
->   
->   Go back to the mainline U-Boot source tree then:
->   
->   .. code-block:: bash
->   
-> -    $ mkdir fip
-> -    $ cp $FIPDIR/bl2.bin fip/
-> -    $ cp $FIPDIR/acs.bin fip/
-> -    $ cp $FIPDIR/bl21.bin fip/
-> -    $ cp $FIPDIR/bl30.bin fip/
-> -    $ cp $FIPDIR/bl301.bin fip/
-> -    $ cp $FIPDIR/bl31.img fip/
-> -    $ cp u-boot.bin fip/bl33.bin
-> -
-> -    $ $FIPDIR/blx_fix.sh \
-> -              fip/bl30.bin \
-> -              fip/zero_tmp \
-> -              fip/bl30_zero.bin \
-> -              fip/bl301.bin \
-> -              fip/bl301_zero.bin \
-> -              fip/bl30_new.bin \
-> -              bl30
-> -
-> -    $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
-> -
-> -    $ $FIPDIR/blx_fix.sh \
-> -              fip/bl2_acs.bin \
-> -              fip/zero_tmp \
-> -              fip/bl2_zero.bin \
-> -              fip/bl21.bin \
-> -              fip/bl21_zero.bin \
-> -              fip/bl2_new.bin \
-> -              bl2
-> -
-> -    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
-> -    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl31.img
-> -    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
-> -    $ $FIPDIR/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
-> -    $ $FIPDIR/aml_encrypt_gxl --bootmk \
-> -                              --output fip/u-boot.bin \
-> -                              --bl2 fip/bl2.n.bin.sig \
-> -                              --bl30 fip/bl30_new.bin.enc \
-> -                              --bl31 fip/bl31.img.enc \
-> -                              --bl33 fip/bl33.bin.enc
-> +    $ mkdir fip
-> +    $ cp $FIPDIR/bl2.bin fip/
-> +    $ cp $FIPDIR/acs.bin fip/
-> +    $ cp $FIPDIR/bl21.bin fip/
-> +    $ cp $FIPDIR/bl30.bin fip/
-> +    $ cp $FIPDIR/bl301.bin fip/
-> +    $ cp $FIPDIR/bl31.img fip/
-> +    $ cp u-boot.bin fip/bl33.bin
-> +
-> +    $ $FIPDIR/blx_fix.sh \
-> +              fip/bl30.bin \
-> +              fip/zero_tmp \
-> +              fip/bl30_zero.bin \
-> +              fip/bl301.bin \
-> +              fip/bl301_zero.bin \
-> +              fip/bl30_new.bin \
-> +              bl30
-> +
-> +    $ python $FIPDIR/acs_tool.pyc fip/bl2.bin fip/bl2_acs.bin fip/acs.bin 0
-> +
-> +    $ $FIPDIR/blx_fix.sh \
-> +              fip/bl2_acs.bin \
-> +              fip/zero_tmp \
-> +              fip/bl2_zero.bin \
-> +              fip/bl21.bin \
-> +              fip/bl21_zero.bin \
-> +              fip/bl2_new.bin \
-> +              bl2
-> +
-> +    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl30_new.bin
-> +    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl31.img
-> +    $ $FIPDIR/aml_encrypt_gxl --bl3enc --input fip/bl33.bin
-> +    $ $FIPDIR/aml_encrypt_gxl --bl2sig --input fip/bl2_new.bin --output fip/bl2.n.bin.sig
-> +    $ $FIPDIR/aml_encrypt_gxl --bootmk \
-> +                              --output fip/u-boot.bin \
-> +                              --bl2 fip/bl2.n.bin.sig \
-> +                              --bl30 fip/bl30_new.bin.enc \
-> +                              --bl31 fip/bl31.img.enc \
-> +                              --bl33 fip/bl33.bin.enc
->   
->   Then write U-Boot to SD or eMMC with:
->   
->   .. code-block:: bash
->   
-> -    $ DEV=/dev/boot_device
-> -    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-> -    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
-> +    $ DEV=/dev/boot_device
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
-> +    $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
-
 
