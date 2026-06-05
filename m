@@ -2,60 +2,60 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF0CD6E6B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE2ACD6E74
 	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 08:05:11 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.3523.1780646709791906246
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.3522.1780646708847213812
  for <u-boot-amlogic@groups.io>;
- Fri, 05 Jun 2026 01:05:10 -0700
+ Fri, 05 Jun 2026 01:05:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=rSDvlrSw;
- spf=pass (domain: linaro.org, ip: 209.85.221.49, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-45eedc94d37so820253f8f.3
-        for <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 01:05:09 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Zbl/g2lw;
+ spf=pass (domain: linaro.org, ip: 209.85.128.53, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490acbb0f89so10406035e9.0
+        for <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 01:05:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780646708; x=1781251508; darn=groups.io;
+        d=linaro.org; s=google; t=1780646707; x=1781251507; darn=groups.io;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
          :content-language:from:references:to:subject:reply-to:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
         bh=JR2bitoz0QCc1Yap2SKEioLTtT6EY9vPpNJiIckdNts=;
-        b=rSDvlrSwt2qxLyYF6RY7vFZH8rAUppgzcHXNke0D4par+MC2pL4YRBfqjRIosabdEd
-         SHhmD4i1gHqPYV+gGYfF0bub+an1/t3IawoyubSqaTlhkA5+nMfKuhsiapdhPNZ/jkDL
-         Dn3JmcoD1OZMWsxKelRw7zRBq4DWdligbqw/l1RjzuQQLs9YFY7ZO9c4ilJ1NsyLqUdW
-         nYCA3zvezDPgfGdv8nUeL1VfLuS8PvvvIe3HpjK+hVPDUQ5+NpoNO7e2gN86rdXASo7P
-         zvbVEB8WkVDQhEYlCvNwnDFvwTpiLJAmblye1xWEDwYutFSzrX7JyVMTBDMjSRP533aK
-         ahCg==
+        b=Zbl/g2lw/SfE5Ulm6SWJ06G9oLo9g2giaKCkxM/jR2PcSWOU2PlktKQ7nbIvn11/Je
+         10qOvtpVNhi5c+KlKZq3psbo6+JeSW1bMrl0TegFP59TnYNtgW0heJlakowrZC0nH2fJ
+         peppPbDQ9GAZu4AyIoVichwV7V9bKLLVJxQiuCel0BgNIpmKx54fe9DJU/Dx5HvSwa/o
+         LW9X8AqPyayT7VnkJk3hdYN81xUQVujguWZlcibJILLruNWap1snUV6pT5nhF4+EWi35
+         U20oc4lGg8KmpAtHio8a1maKYlDktOXTepD0/HzK1LZ5F6OIeC0p/20lV1CD8uxGftgl
+         PWoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780646708; x=1781251508;
+        d=1e100.net; s=20251104; t=1780646707; x=1781251507;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:cc
          :content-language:from:references:to:subject:reply-to:user-agent
          :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
         bh=JR2bitoz0QCc1Yap2SKEioLTtT6EY9vPpNJiIckdNts=;
-        b=H9O9xqv3jvJaguStCjNsblUjYpxQLBVW31IrEpEDKFoAW95Y91oIyFW+f24JG3xqYD
-         QUtKo6SYu/YEGuGJMx9mWHPQ4onqDoAuaeBtqZEcd3X9j9JquZrVcm2gDDxLvgc1WB4F
-         Fl6OY3zgPAjEFMTwByHiHJsR1X0sWUZUdcV9Od2GdUUMLA+HiQKnA+Tw7/FSvLO/cHNP
-         YqXDsOukqmp8USfpAajYi3AI3sjXEeL/7O9pPkOP5mi91gHThOwZV66bVjX5K4iIbK03
-         hh6ezxmRL/+xXSowqX/VODoXZUQZG/2Qic04FmQlxy+ij8d4sBpfbIK6Z64WovZEKKuL
-         yqDQ==
-X-Gm-Message-State: AOJu0YzylkW5tp8EsvRWiJ5v0vX4Ke/JOApZbJ42AA0hvV6GMQSzUVBO
-	+xp99eUvE8x/51h6l/yKn4WXAzHijrbXXqoVQZLfxt+Yd3V7kUHFNGgL6lwfozFbQSw=
-X-Gm-Gg: Acq92OHlwTP62CrcZ9dcYDgkI9rlbesyjz9rgo2JGTATUj+qzo49gDroNhhlSl4SRmL
-	e/bss9/RmRWJWkZWOgGCItl1aGRjWTh37dF/pYeUfaM+UqLM91iFsmHE3YWLtQf9eT3Y1D35/Au
-	aB7bUB13ofzcAYfbafBEF2AW9Na2Dm51f16oSYQs/ffiozdxC4QlNOCW/29UE99VHLtThESlSJ3
-	L3F4tPzO2Sk5Sda2n6FJLmWYXlePAZdFw5evUkcMw6O5xspgfEE5OiGvT5KtILzJvTWzaf/j1lI
-	/gS3Wc9qp8R09RMwd44d888oJgTF/p+oNp2pl9r1iNzIljjgC4rV/oUv2NF/FOHogOlWsNK/nGT
-	wMENRgBgljvKEA3u7859+jCCIjXhxHUJovB7jzkQj0xGAO71XiWiO+1gUtkQjYcJrLemzxRObWp
-	ym5kuTGonpl/fxKpcim9e+faTFVrFLtsvZwoBSUVdvZxTpg87ECJgc4XVha9d979+j9sHAfwfJp
-	a30auUOVvRqd/M09Q==
-X-Received: by 2002:a05:600c:5252:b0:490:5191:6e26 with SMTP id 5b1f17b1804b1-490c260566emr36659065e9.18.1780646707805;
-        Fri, 05 Jun 2026 01:05:07 -0700 (PDT)
+        b=FJk6VdZvA/aC5wrWmJyNCrgVmU8EM4MARiodPgPDFVVybWbZE72kR/pjsyZcrSyUFE
+         EPFV8raRIh4ftOlKruKRcOia/8XX2ToHF9rWSphjTrV4YPIx/9G3QGi0P0r3j+z+3Pyr
+         UIiI35b5blviZgOgR9HilW0txGSeY5YAU/x1sGdhojMX3/CfzC4444gtbTw2OOOSE8/k
+         9ZhYtzDaR5tZRCFIEc8u0zNl12+sMFvb1hgyMVfAmS3kA/swjqoEn8Dncu7d0vQVxdj+
+         YaM3Zf0gIOzEk3zyf6NZYImho4LN1ajmjaVyhxoBL/gHLSklRYbpfFN24LpVvc49WszF
+         5acw==
+X-Gm-Message-State: AOJu0YwRHcJOvPvYzGcCHCVFXgiy6xSujsmVWT3JT9V+6zheV6m3wN4s
+	ODxgrO69LLwcJ6MSV+gvj1GbM2WRbzN/idvKT+cFXDIczxBin+c0DktTuM0Mt+jt5GI=
+X-Gm-Gg: Acq92OH4wMOkS5qxoCtZI+6WEWDyU3UHkI30bMH5y8uNnWK83opKfsow1ejeKIabIye
+	S8XApCetwLPhNvThGxJgn8/tBGwDkhE1WOKETo7ztrjwPS62yIekVBX8XBtNdg3P1Bl6UxOF4oc
+	1PYoWvYL+TuZxAipoEEnbK2STTi6pa36nMtUwlCdl+wQHoDqX8Tw0imjmyr4sx8HLZ2eDUKV/Bq
+	hMWTeCgd79WuaOwo+Ic0yvVsAYvObwn41qKgan7mySXKFCwltKRzX6XorjKpfH2raQa7p5cs3dK
+	M2uY/LYyfqIAVMDTXkOXJ0FzMa6XUEIe7NyVbFp001XMjso3iWbQF2tJQzKDp+38aZznY2rMlVR
+	t3rwHrpSXtD58Xu5VerA9cPhTXNmbwVtiEv4Fb8LzwHtOj8bX/0UZaXh5qXLGVPcvPVZttoi6zk
+	mLVrkGvz5qePm0Cw7qwiUEQ+RkcHFlkLhX1chhNqYI3zKkqiSF37cb4vEBKaoxvkDCZvN3nrpBI
+	1xIwfrC4lXNj3aGlA==
+X-Received: by 2002:a05:600c:37c9:b0:490:a296:fdad with SMTP id 5b1f17b1804b1-490c2600e5amr33841165e9.24.1780646706887;
+        Fri, 05 Jun 2026 01:05:06 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:106d:1080:b06c:5480:fdc5:c668? ([2a01:e0a:106d:1080:b06c:5480:fdc5:c668])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2f2710sm18345458f8f.14.2026.06.05.01.05.07
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2f2710sm18345458f8f.14.2026.06.05.01.05.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2026 01:05:07 -0700 (PDT)
-Message-ID: <34926d1e-89ab-4da6-9975-cb54997712ab@linaro.org>
+        Fri, 05 Jun 2026 01:05:06 -0700 (PDT)
+Message-ID: <a79659e0-d2be-48bc-8a82-8b74847490b7@linaro.org>
 Date: Fri, 5 Jun 2026 10:05:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
@@ -99,7 +99,7 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Fri, 05 Jun 2026 08:05:11 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3003
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3002
 
 Hi,
 
