@@ -2,64 +2,64 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6337C44529
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0ABC4452D
 	for <webhook@archiver.kernel.org>; Tue, 21 Jul 2026 07:30:19 +0000 (UTC)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1994.1784566006872910436
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1993.1784566001939394234
  for <u-boot-amlogic@groups.io>;
- Mon, 20 Jul 2026 09:46:47 -0700
+ Mon, 20 Jul 2026 09:46:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Ikn2bFaY;
- spf=pass (domain: linaro.org, ip: 209.85.208.48, mailfrom: casey.connolly@linaro.org)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-69c5f6f7a40so9691940a12.0
-        for <u-boot-amlogic@groups.io>; Mon, 20 Jul 2026 09:46:46 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=LfiBYgx8;
+ spf=pass (domain: linaro.org, ip: 209.85.208.178, mailfrom: casey.connolly@linaro.org)
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-39b3931e259so91418591fa.2
+        for <u-boot-amlogic@groups.io>; Mon, 20 Jul 2026 09:46:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1784566005; x=1785170805; darn=groups.io;
+        d=linaro.org; s=google; t=1784566000; x=1785170800; darn=groups.io;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=+ZY1FTxpVrvNq4gYpxEoHVOK8/N9rY8aftVbpNZWDA4=;
-        b=Ikn2bFaYWsrEu9e4MWS97yhbSUn/DS9066YbUMbZX078bwEz50sMZq+tO7ZmSYo9s/
-         q2drZMmxexmcN1+MDIORGuCW99JLQtfVesuQCe1qLX4Ov0c8hrilzmmeysBqAhtlVb88
-         82ZibNdi+45YukQ4fdep8xz29hZsL9R2MBlsAstVnnVvmUEv3RnJW83VgFdjuBlQoUGk
-         OwWTymUHJgBGxqbFIwp7svYUZxkwPfwF8Q355VyeQmwKmLB0ZO6GQE8r46dKOPSmS8X8
-         cFi1PbudHRKg0NuS2bWkMxVKgUMD35BAc6W9uwG/bmmELkv+oPX8oQl4+PGJIWfywMJg
-         al2w==
+        bh=wl4g7BrgLn4DNmJGJsLTxAS44KXOlbjUKvUSIsJE7Yw=;
+        b=LfiBYgx8Yl1gr35nS54jTQlugUkxyIEVZ4SPyjwtncBFW6Im/XwBy5C3MmMejozXyD
+         sWKdO9ryzKGbHCTmrGnDJ5mYDEzqFTf4+sernWud3bHUEfne/2bSucyI/APLF6snYE45
+         DfK1aiwJT3hFacGWeMkhvprra8gi/cT7iMY9z/PUiPbwUksPevQNzx7BmGZxrZPoa92f
+         wid4g1nLhVx2ii+Z/AaG7uvdUIKuFNRqP4hzTlvmNYXXUAWKF0ExqoM9QhgKy1wYnMLN
+         osBopc72AK0wCGBliC7suoTddRA7cqj5H5QVimDQnyj1i45RcHu/8gpH+2VCo6JDIQRz
+         4+Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784566005; x=1785170805;
+        d=1e100.net; s=20251104; t=1784566000; x=1785170800;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+ZY1FTxpVrvNq4gYpxEoHVOK8/N9rY8aftVbpNZWDA4=;
-        b=Ov6xfKbsffs3xOMIj/4UQ6s2hzhxqj5W3cyStL01uSu8V54nYvCSNp8m4aH1cIEvmz
-         W0Dz9vfmAc5zZ5rR2d3MWGUKf88P49vifJ4RvLfhtZgHoF3d4Wyy7hWLT1TUM1aE6ShW
-         BfrFue3JXBm75v/ZmTMfSAOyXL213fkL3Oq8bLuk/UMnBB145SbtRJFuLiDHSIbIl7ux
-         Ul1f5I8QPsXESL5l86pVfcY6sJWk+xS1b+J2rcoNGaKzmEmjewK/oTs72FrNK/bxif9K
-         rfEjBfHwAq1hCRjJu6okyhWAc7zgguKg76cXg0Vwu9gy9HUEsT23m7SCrKMjS+xuXcp5
-         zXYw==
-X-Forwarded-Encrypted: i=1; AHgh+Rq0wJDcVigf868puf2bp+OQX3A5a7FburfStYu1MqD8ov8RYc3wW8XML79x1wvdvMrqzRrblvNbrLR6kZXyWg==@groups.io
-X-Gm-Message-State: AOJu0YyFpdMhLLNKLJyLCsnIZqfKIBooHD7I7wMXDAl+3TdhlToL3JZx
-	C/A6cOAeH4svy76W5gJONP7vsUvD7t1KBe/HFEvlLN/hZhKQCVyFeY6M50l3KFsj1eJKo566F1j
-	GtWIIBIU=
-X-Gm-Gg: AfdE7clQB9B15BDzEU6S4Y3L59Fa+7OSg9zyxMRXsrkS6Td91J2FmTNJZLivO0Q7gX3
-	gVHlVw4lW2NHkSbFwmVYdQMJHg9WLVENOBgP1kGYSg7Wtu/7R1SNK+rPx4kervTAG0NGZ6SxOJm
-	kgd2VSwzExU7XWJINHsvomCGLPon15Yann2+3mg2A1lfdLPWD52bND4+VpC3ieXOuBgpihTDn3T
-	c0F1V7cEpMzUummoo4YqeL1MvrDV000bQdErPsiBx6kfpEPAtSxARb3E5GVy5peiMNLMUUn8mCS
-	pORyu1uXsMgXgK/nKQIYgifM6oPL9688momcgWsmxCAW/p1lr/ttP5W5Ro1qwtGBWuF3h44/YzB
-	7k+iROHCRVKwLd5oJyzoLnfx9io9IAm6Tn3zvNX7rMC25KXkRo6wg1gi039xPGBImIv1Riiu9Cg
-	euEVm+rFsnKs3VXY54t8kT998xnpqJ46bZa+2IfN47
-X-Received: by 2002:a05:600c:4fc2:b0:495:5b02:23b0 with SMTP id 5b1f17b1804b1-4955b0224c7mr83270925e9.26.1784565647438;
-        Mon, 20 Jul 2026 09:40:47 -0700 (PDT)
+        bh=wl4g7BrgLn4DNmJGJsLTxAS44KXOlbjUKvUSIsJE7Yw=;
+        b=GvV6JcPBrXfMljkE0bCK6f6sTnzmp7canSYHz5zoyPLiN70fxRxn1WLTgGeI1Dre8h
+         UkwMGORGsXlrABxiGMq5lQiMR2oUH7EAG6Q30zDWqLUy5o0m7AqaPwm4REagkeeskBYT
+         8O53xXNjM9FnTxPHDnc7dMDrr2tBXaupfsFtaKcUVsTyspXJORwXdgLQj/tF2ECgNcQ9
+         5zYxI3je0KVDkklo0KuSXQ3Tu5Zgd70chuKORJ1rFeBhYv/BUQE6DlFeNOX5OmIL7J6c
+         WiAjhlFLx98VnKQX/I9+rQom0yEm1J82Ljpqe04wWgyJA7BqRITFBG6zydEFjBQiuaSV
+         kg7w==
+X-Forwarded-Encrypted: i=1; AHgh+RqBHmnl7F5yWBd9UKqOdWpFFlHWP6Ibt0D00npeHp+7MneMeJN+VHYrKq99uEmGXrRGVdj/a1Lh3Ho6OC8evw==@groups.io
+X-Gm-Message-State: AOJu0YxXl5yQrbtZSAhj8FsXP/jX0MxkNOnWMNcO3dG3lMN/MkJ5kGt1
+	PAaLqVaFjrN6qcvdbq/bQMw+4Kvxngi9Uj4J1wx2+nGKdQ4jkBotsa5xdqv2tkkLJzYGqyxot2O
+	dTj8minI=
+X-Gm-Gg: AR+sD1045td8tec4W+HgrY0vOQr2B66hMLmnRybQWFuJQql9uovGlvxRLmAyaECOieN
+	AFJbCMA42dfZzojJDdpAVUv5yVvcbBKCU/QQAnsAbEZwwsrwBScD698UgwfQNxFihnD/ow5iqD9
+	swG4ErvUYXina9FJC6RxGXQFIWt+Icl4A9fkyN5vB0LBRgzv3oLbiYUZLeWfXEHaUIoTte0ApU4
+	MC3DDmvmBxUbRiZ2lVhp12NvjhY8N7Hk7exMHq7J6fo+cwOcr1vSujHWbO4/wQE0ozwYqZSkgKF
+	Pl5IJeG+ZAB0XU7BXmil0H+ZmlRG6lpMabPXsQFQuwmVe6HD+P1rIR910tNIS4sScCK+Y82xI40
+	TOZz7o5yq+xLG5ZztwoRQJOcmyxsXRnXFE4MOTRWOcwHw4sQZTzxCtyvgPfz5KXBVmnald/Y4wU
+	CeRmQt1r0FcMzQXIbXa5f9WZ3HGa4o34us9AW5IdkI
+X-Received: by 2002:a05:600c:1549:b0:495:4a27:483f with SMTP id 5b1f17b1804b1-4954a50baa5mr151059475e9.29.1784565663975;
+        Mon, 20 Jul 2026 09:41:03 -0700 (PDT)
 Received: from toyger.tail248178.ts.net ([2a0a:ef40:1d11:1101:a3b4:4010:a727:b812])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4956536870esm2755665e9.3.2026.07.20.09.40.44
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4956536870esm2755665e9.3.2026.07.20.09.41.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 09:40:46 -0700 (PDT)
+        Mon, 20 Jul 2026 09:41:02 -0700 (PDT)
 From: Casey Connolly <casey.connolly@linaro.org>
-Date: Mon, 20 Jul 2026 17:40:29 +0100
-Subject: [PATCH 02/36] clk: rename clk_ops to clk_ops_uboot
+Date: Mon, 20 Jul 2026 17:40:35 +0100
+Subject: [PATCH 08/36] clk: import full CCF from Linux
 MIME-Version: 1.0
-Message-Id: <20260720-casey-ccf-upstream-july-v1-2-8fece1b0333d@linaro.org>
+Message-Id: <20260720-casey-ccf-upstream-july-v1-8-8fece1b0333d@linaro.org>
 References: <20260720-casey-ccf-upstream-july-v1-0-8fece1b0333d@linaro.org>
 In-Reply-To: <20260720-casey-ccf-upstream-july-v1-0-8fece1b0333d@linaro.org>
 To: u-boot@lists.denx.de, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, 
@@ -108,21 +108,21 @@ Cc: Tom Rini <trini@konsulko.com>, Lukasz Majewski <lukma@denx.de>,
  Bhupesh Sharma <bhupesh.linux@gmail.com>, 
  Neha Malcom Francis <n-francis@ti.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=131992;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=317982;
  i=casey.connolly@linaro.org; h=from:subject:message-id;
- bh=LvIniE7cs3YClHDzttqwWiF64uS0YZrpEIrbQalQl04=;
- b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBqXk9/ULfQUG5kOotnVy2bxlpw5b//1p3YenbD5
- onA9SKuHRyJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCal5PfwAKCRAFgzErGV9k
- tpFJD/9EptxFfNeaorq+F+d9PWUGGaGdByzS7/OC85OypqKrVLB9m+wH8ixUxTWEz3y+ne/w09d
- I+19z6IusTKynALxQ6E3NCyBAFXfwMpDgIv/qlmnEhWXbpZ3jvy92SxrvVB7POMJY0/7A2zosOD
- 1Zm6lBNHvJH70bk7Mtk7ddZ5mu9V6mEc00CJkPqlVJyJVQwBB3d87JrLjVig2cGYw4+Hap+LChI
- AY/XO7Mw1YqYFfFlXMAxeVo3ojX/nzSC4BK/RrgMhE5vX1wxq/usYkBS0053jieIDxsLIpfsPGV
- AbH6X84WEsT9GLKckEONRsLTUtfdNQQT8r0nvS9/AzQhhs89w4LzCjfpVaovfEyBe6XqTfc6Ees
- 1TjInud68OWHfWfXKKAEpXi+zVRvmt8cFlMFLzQERFxbg0ZAhq9wCSoWFwjA2uVnQHwBKdjHdJ6
- ztfuH0H5Qu4PVPWuIWU65sAUhXhzWIFDOvno08wg2bWLfchUleZVD+CruDMjbZOlxQU7g1DaSo5
- 7pdYC7DbUnIA9cfiqSpQJPqgaz93V74C9OmsvmN4dH1xGCNpsUPksTz+q142CYy7eHiY6I57TTm
- 6S/APXJJg8O2KxUYLkzfOUP84Vq+dRf+GRpy0sD9B4/ac4CBot72xZaEvvAoN1vO8r70fgUD1z1
- FbjdBAXXo9eQMRg==
+ bh=Q/ORoSwTT7YgK+zB93ntBU5yveRIng25ThxJBpSAqyw=;
+ b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBqXk+CmU1u62o+rCdo/7KVI2Y8+oOr8RwF/4Kj0
+ M7krUgHcxSJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCal5PggAKCRAFgzErGV9k
+ tpEuD/9SxExqW4Ano/HKP3Yo9/eYHGlSZvNfXdkPSMDBLDPf5e3PZuBChqR5s/omGJWZNaOVn0B
+ yYvrURNiiqNtWfsmSBlgczlEMkaHegKQJfVe6UDvnPXXo2k4EdD9LoHe6AvnHNTSJsu5hvMIotg
+ juuNDomMyAFW3Jvdjtu452Ttn2LHCE65NFz+YHhjzJttGphMKTr/VU7KAAz05WDlodZWqPpU2TS
+ uf/XQdia/yBI3a5pm4EYeMsIWukl36m74/IiYYvNWkPHybe/qky184M5tmo4dijtpUnV8CczQIh
+ prp3fGSfoqMMCi/eXkwgcxhmiWPAphWj+AxHPsDbHiEGJtiydMpet28oQxYIb29jtVwkDxkBUJ8
+ dlth5wWci1mllKBzYZba49yOrnMMOZrsShFrMPNnBOlBaQ4ucaUthOoA+ZoykBD/LBgcNjXEVGC
+ E4Y6GQ4vIImkCwUMjSVfKcxqNNLQl7duLdWHG10kCU2xndkyE1GlnDoq1igLJ6IghqCQjxSASv+
+ PVkeURIzCMSGalkZiIn+XL/mzzy44jNthmAIBIEg5WEt0GvADhif5ssg5W9b7XeoLfMF84QXsFp
+ 1iTTdrjhGvrqhSTb+1GdRGp0l9zck5jp7A2F/6l1SVCkEmjrRRZEYEPCFsy0EVRx3U2wooMlceI
+ FzAptjOCanRvf6Q==
 X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
  fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 Content-Type: text/plain; charset="utf-8"
@@ -131,3724 +131,10462 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 21 Jul 2026 07:30:19 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3010
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3011
 
-In preparation for supporting full CCF, rename U-Boot's clk_ops
-to clk_ops_uboot, these ops are specific to UCLASS_CLK and are too
-incompatible with full CCF.
+This is a plain copy/paste with no modifications from Linux 6.19.0, it
+will be adapted for U-Boot in future commits.
+
+To continue supporting U-Boot CCF, clk-provider.h becomes a wrapper that
+imports either the uccf or ccf_full variant based on the config, since
+these are mutually exclusive.
 
 Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
 ---
- arch/arm/cpu/armv7/bcm281xx/clk-core.c        |  8 ++++----
- arch/arm/cpu/armv7/bcm281xx/clk-core.h        | 14 +++++++-------
- cmd/clk.c                                     |  2 +-
- drivers/clk/adi/clk-adi-pll.c                 |  2 +-
- drivers/clk/adi/clk-shared.c                  |  2 +-
- drivers/clk/adi/clk.h                         |  2 +-
- drivers/clk/airoha/clk-airoha.c               |  2 +-
- drivers/clk/altera/clk-agilex.c               |  2 +-
- drivers/clk/altera/clk-agilex5.c              |  2 +-
- drivers/clk/altera/clk-arria10.c              |  2 +-
- drivers/clk/altera/clk-mem-n5x.c              |  2 +-
- drivers/clk/altera/clk-n5x.c                  |  2 +-
- drivers/clk/aspeed/clk_ast2500.c              |  2 +-
- drivers/clk/aspeed/clk_ast2600.c              |  2 +-
- drivers/clk/aspeed/clk_ast2700.c              |  4 ++--
- drivers/clk/at91/clk-generic.c                |  2 +-
- drivers/clk/at91/clk-main.c                   |  8 ++++----
- drivers/clk/at91/clk-master.c                 |  6 +++---
- drivers/clk/at91/clk-peripheral.c             |  4 ++--
- drivers/clk/at91/clk-programmable.c           |  2 +-
- drivers/clk/at91/clk-sam9x60-pll.c            |  6 +++---
- drivers/clk/at91/clk-sam9x60-usb.c            |  2 +-
- drivers/clk/at91/clk-system.c                 |  2 +-
- drivers/clk/at91/clk-utmi.c                   |  4 ++--
- drivers/clk/at91/compat.c                     | 22 +++++++++++-----------
- drivers/clk/at91/pmc.c                        |  2 +-
- drivers/clk/at91/pmc.h                        |  2 +-
- drivers/clk/at91/sckc.c                       |  4 ++--
- drivers/clk/clk-cdce9xx.c                     |  2 +-
- drivers/clk/clk-gpio.c                        |  2 +-
- drivers/clk/clk-hsdk-cgu.c                    |  2 +-
- drivers/clk/clk-stub.c                        |  2 +-
- drivers/clk/clk-uclass.c                      | 22 +++++++++++-----------
- drivers/clk/clk-xlnx-clock-wizard.c           |  2 +-
- drivers/clk/clk_bcm6345.c                     |  2 +-
- drivers/clk/clk_boston.c                      |  2 +-
- drivers/clk/clk_fixed_factor.c                |  2 +-
- drivers/clk/clk_fixed_rate.c                  |  4 ++--
- drivers/clk/clk_k210.c                        |  2 +-
- drivers/clk/clk_octeon.c                      |  2 +-
- drivers/clk/clk_pic32.c                       |  2 +-
- drivers/clk/clk_sandbox.c                     |  2 +-
- drivers/clk/clk_scmi.c                        |  2 +-
- drivers/clk/clk_versaclock.c                  | 14 +++++++-------
- drivers/clk/clk_versal.c                      |  2 +-
- drivers/clk/clk_vexpress_osc.c                |  2 +-
- drivers/clk/clk_zynq.c                        |  2 +-
- drivers/clk/clk_zynqmp.c                      |  2 +-
- drivers/clk/exynos/clk-exynos7420.c           |  6 +++---
- drivers/clk/exynos/clk-pll.c                  |  4 ++--
- drivers/clk/exynos/clk.h                      |  2 +-
- drivers/clk/ics8n3qv01.c                      |  2 +-
- drivers/clk/imx/clk-composite-8m.c            |  4 ++--
- drivers/clk/imx/clk-composite-93.c            |  2 +-
- drivers/clk/imx/clk-fracn-gppll.c             |  2 +-
- drivers/clk/imx/clk-gate-93.c                 |  2 +-
- drivers/clk/imx/clk-gate2.c                   |  2 +-
- drivers/clk/imx/clk-imx6q.c                   |  2 +-
- drivers/clk/imx/clk-imx6ul.c                  |  2 +-
- drivers/clk/imx/clk-imx8.c                    |  2 +-
- drivers/clk/imx/clk-imxrt1020.c               |  2 +-
- drivers/clk/imx/clk-imxrt1170.c               |  2 +-
- drivers/clk/imx/clk-pfd.c                     |  2 +-
- drivers/clk/imx/clk-pll14xx.c                 |  4 ++--
- drivers/clk/imx/clk-pllv3.c                   | 10 +++++-----
- drivers/clk/intel/clk_intel.c                 |  2 +-
- drivers/clk/mediatek/clk-mtk.c                | 12 ++++++------
- drivers/clk/mediatek/clk-mtk.h                | 10 +++++-----
- drivers/clk/meson/a1.c                        |  2 +-
- drivers/clk/meson/axg-ao.c                    |  2 +-
- drivers/clk/meson/axg.c                       |  2 +-
- drivers/clk/meson/clk-measure.c               |  2 +-
- drivers/clk/meson/g12a-ao.c                   |  2 +-
- drivers/clk/meson/g12a.c                      |  2 +-
- drivers/clk/meson/gxbb.c                      |  2 +-
- drivers/clk/microchip/mpfs_clk_cfg.c          |  2 +-
- drivers/clk/microchip/mpfs_clk_msspll.c       |  2 +-
- drivers/clk/microchip/mpfs_clk_periph.c       |  2 +-
- drivers/clk/mpc83xx_clk.c                     |  2 +-
- drivers/clk/mtmips/clk-mt7620.c               |  2 +-
- drivers/clk/mtmips/clk-mt7621.c               |  2 +-
- drivers/clk/mtmips/clk-mt7628.c               |  2 +-
- drivers/clk/mvebu/armada-37xx-periph.c        |  2 +-
- drivers/clk/mvebu/armada-37xx-tbg.c           |  2 +-
- drivers/clk/nuvoton/clk_npcm.c                |  2 +-
- drivers/clk/nuvoton/clk_npcm.h                |  2 +-
- drivers/clk/owl/clk_owl.c                     |  2 +-
- drivers/clk/qcom/clock-milos.c                |  2 +-
- drivers/clk/qcom/clock-qcom.c                 |  2 +-
- drivers/clk/qcom/clock-sm8550.c               |  2 +-
- drivers/clk/qcom/clock-sm8650.c               |  2 +-
- drivers/clk/qcom/clock-x1e80100.c             |  2 +-
- drivers/clk/renesas/clk-rcar-gen2.c           |  2 +-
- drivers/clk/renesas/clk-rcar-gen3.c           |  2 +-
- drivers/clk/renesas/compound-clock.c          |  2 +-
- drivers/clk/renesas/r8a78000-cpg.c            |  4 ++--
- drivers/clk/renesas/r9a06g032-clocks.c        |  2 +-
- drivers/clk/renesas/rcar-gen2-cpg.h           |  2 +-
- drivers/clk/renesas/rcar-gen3-cpg.h           |  2 +-
- drivers/clk/renesas/rzg2l-cpg.c               |  2 +-
- drivers/clk/rockchip/clk_px30.c               |  4 ++--
- drivers/clk/rockchip/clk_rk3036.c             |  2 +-
- drivers/clk/rockchip/clk_rk3066.c             |  2 +-
- drivers/clk/rockchip/clk_rk3128.c             |  2 +-
- drivers/clk/rockchip/clk_rk3188.c             |  2 +-
- drivers/clk/rockchip/clk_rk322x.c             |  2 +-
- drivers/clk/rockchip/clk_rk3288.c             |  2 +-
- drivers/clk/rockchip/clk_rk3308.c             |  2 +-
- drivers/clk/rockchip/clk_rk3328.c             |  2 +-
- drivers/clk/rockchip/clk_rk3368.c             |  2 +-
- drivers/clk/rockchip/clk_rk3399.c             |  4 ++--
- drivers/clk/rockchip/clk_rk3506.c             |  4 ++--
- drivers/clk/rockchip/clk_rk3528.c             |  2 +-
- drivers/clk/rockchip/clk_rk3568.c             |  4 ++--
- drivers/clk/rockchip/clk_rk3576.c             |  2 +-
- drivers/clk/rockchip/clk_rk3588.c             |  4 ++--
- drivers/clk/rockchip/clk_rv1108.c             |  2 +-
- drivers/clk/rockchip/clk_rv1126.c             |  4 ++--
- drivers/clk/sifive/sifive-prci.c              |  2 +-
- drivers/clk/sophgo/clk-cv1800b.c              |  2 +-
- drivers/clk/sophgo/clk-ip.c                   | 18 +++++++++---------
- drivers/clk/sophgo/clk-ip.h                   | 18 +++++++++---------
- drivers/clk/sophgo/clk-pll.c                  |  4 ++--
- drivers/clk/sophgo/clk-pll.h                  |  4 ++--
- drivers/clk/starfive/clk-jh7110-pll.c         |  2 +-
- drivers/clk/starfive/clk.h                    |  2 +-
- drivers/clk/stm32/clk-stm32-core.c            | 20 ++++++++++----------
- drivers/clk/stm32/clk-stm32-core.h            |  2 +-
- drivers/clk/stm32/clk-stm32f.c                |  2 +-
- drivers/clk/stm32/clk-stm32h7.c               |  2 +-
- drivers/clk/stm32/clk-stm32mp1.c              |  2 +-
- drivers/clk/sunxi/clk_sun6i_rtc.c             |  2 +-
- drivers/clk/sunxi/clk_sunxi.c                 |  2 +-
- drivers/clk/tegra/tegra-car-clk.c             |  2 +-
- drivers/clk/tegra/tegra186-clk.c              |  2 +-
- drivers/clk/thead/clk-th1520-ap.c             |  6 +++---
- drivers/clk/ti/clk-am3-dpll-x2.c              |  2 +-
- drivers/clk/ti/clk-am3-dpll.c                 |  2 +-
- drivers/clk/ti/clk-ctrl.c                     |  2 +-
- drivers/clk/ti/clk-divider.c                  |  2 +-
- drivers/clk/ti/clk-gate.c                     |  2 +-
- drivers/clk/ti/clk-k3-pll.c                   |  2 +-
- drivers/clk/ti/clk-k3.c                       |  4 ++--
- drivers/clk/ti/clk-mux.c                      |  2 +-
- drivers/clk/ti/clk-sci.c                      |  2 +-
- drivers/clk/uccf/clk-composite.c              | 18 +++++++++---------
- drivers/clk/uccf/clk-divider.c                |  2 +-
- drivers/clk/uccf/clk-fixed-factor.c           |  2 +-
- drivers/clk/uccf/clk-gate.c                   |  2 +-
- drivers/clk/uccf/clk-mux.c                    |  2 +-
- drivers/clk/uccf/clk.c                        |  2 +-
- drivers/clk/uccf/clk_sandbox_uccf.c           |  6 +++---
- drivers/clk/uniphier/clk-uniphier-core.c      |  2 +-
- drivers/phy/cadence/phy-cadence-sierra.c      |  2 +-
- drivers/phy/cadence/phy-cadence-torrent.c     |  2 +-
- drivers/phy/phy-stm32-usbphyc.c               |  2 +-
- drivers/phy/phy-ti-am654.c                    |  2 +-
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c |  2 +-
- drivers/phy/ti/phy-j721e-wiz.c                |  6 +++---
- drivers/power/domain/imx8mp-hsiomix.c         |  2 +-
- include/clk-uclass.h                          |  4 ++--
- include/linux/clk-provider.h                  | 24 ++++++++++++------------
- 162 files changed, 288 insertions(+), 288 deletions(-)
+ drivers/clk/Kconfig                   |    1 +
+ drivers/clk/Makefile                  |    7 +-
+ drivers/clk/ccf/Kconfig               |    8 +
+ drivers/clk/ccf/Makefile              |   17 +
+ drivers/clk/ccf/clk-composite.c       |  492 +++
+ drivers/clk/ccf/clk-conf.c            |  183 ++
+ drivers/clk/ccf/clk-divider.c         |  674 ++++
+ drivers/clk/ccf/clk-fixed-factor.c    |  424 +++
+ drivers/clk/ccf/clk-fixed-rate.c      |  238 ++
+ drivers/clk/ccf/clk-gate.c            |  259 ++
+ drivers/clk/ccf/clk-mux.c             |  285 ++
+ drivers/clk/ccf/clk.c                 | 5595 +++++++++++++++++++++++++++++++++
+ drivers/clk/ccf/clk.h                 |   38 +
+ include/linux/clk-provider-ccf_full.h | 1502 +++++++++
+ include/linux/clk-provider-uccf.h     |  280 ++
+ include/linux/clk-provider.h          |  270 +-
+ include/linux/clk/clk-conf.h          |   24 +
+ 17 files changed, 10031 insertions(+), 266 deletions(-)
 
-diff --git a/arch/arm/cpu/armv7/bcm281xx/clk-core.c b/arch/arm/cpu/armv7/bcm281xx/clk-core.c
-index 71b3a9277b17..6d82fe603dd2 100644
---- a/arch/arm/cpu/armv7/bcm281xx/clk-core.c
-+++ b/arch/arm/cpu/armv7/bcm281xx/clk-core.c
-@@ -245,9 +245,9 @@ static unsigned long peri_clk_get_rate(struct clk *c)
- 	return c->rate;
- }
- 
- /* Peripheral clock operations */
--struct clk_ops peri_clk_ops = {
-+struct clk_ops_uboot peri_clk_ops = {
- 	.enable = peri_clk_enable,
- 	.set_rate = peri_clk_set_rate,
- 	.get_rate = peri_clk_get_rate,
- };
-@@ -324,9 +324,9 @@ static unsigned long ccu_clk_get_rate(struct clk *c)
- 	return c->rate;
- }
- 
- /* CCU clock operations */
--struct clk_ops ccu_clk_ops = {
-+struct clk_ops_uboot ccu_clk_ops = {
- 	.enable = ccu_clk_enable,
- 	.get_rate = ccu_clk_get_rate,
- };
- 
-@@ -384,9 +384,9 @@ static unsigned long bus_clk_get_rate(struct clk *c)
- 	return c->rate;
- }
- 
- /* Bus clock operations */
--struct clk_ops bus_clk_ops = {
-+struct clk_ops_uboot bus_clk_ops = {
- 	.enable = bus_clk_enable,
- 	.get_rate = bus_clk_get_rate,
- };
- 
-@@ -397,9 +397,9 @@ static int ref_clk_enable(struct clk *c, int enable)
- 	return 0;
- }
- 
- /* Reference clock operations */
--struct clk_ops ref_clk_ops = {
-+struct clk_ops_uboot ref_clk_ops = {
- 	.enable = ref_clk_enable,
- };
- 
- /*
-diff --git a/arch/arm/cpu/armv7/bcm281xx/clk-core.h b/arch/arm/cpu/armv7/bcm281xx/clk-core.h
-index f0fbff081d02..0a583bf495a4 100644
---- a/arch/arm/cpu/armv7/bcm281xx/clk-core.h
-+++ b/arch/arm/cpu/armv7/bcm281xx/clk-core.h
-@@ -34,9 +34,9 @@ struct clk_lookup {
- extern struct clk_lookup arch_clk_tbl[];
- extern unsigned int arch_clk_tbl_array_size;
- 
- /**
-- * struct clk_ops - standard clock operations
-+ * struct clk_ops_uboot - standard clock operations
-  * @enable: enable/disable clock, see clk_enable() and clk_disable()
-  * @set_rate: set the clock rate, see clk_set_rate().
-  * @get_rate: get the clock rate, see clk_get_rate().
-  * @round_rate: round a given clock rate, see clk_round_rate().
-@@ -46,9 +46,9 @@ extern unsigned int arch_clk_tbl_array_size;
-  * don't have to keep setting the same fiels again. We leave
-  * enable in struct clk.
-  *
-  */
--struct clk_ops {
-+struct clk_ops_uboot {
- 	int (*enable) (struct clk *c, int enable);
- 	int (*set_rate) (struct clk *c, unsigned long rate);
- 	unsigned long (*get_rate) (struct clk *c);
- 	unsigned long (*round_rate) (struct clk *c, unsigned long rate);
-@@ -64,9 +64,9 @@ struct clk {
- 	/* programmable divider. 0 means fixed ratio to parent clock */
- 	unsigned long div;
- 
- 	struct clk_src *src;
--	struct clk_ops *ops;
-+	struct clk_ops_uboot *ops;
- 
- 	unsigned long ccu_clk_mgr_base;
- 	int sel;
- };
-@@ -482,10 +482,10 @@ static inline struct ref_clock *to_ref_clk(struct clk *clock)
- {
- 	return container_of(clock, struct ref_clock, clk);
- }
- 
--extern struct clk_ops peri_clk_ops;
--extern struct clk_ops ccu_clk_ops;
--extern struct clk_ops bus_clk_ops;
--extern struct clk_ops ref_clk_ops;
-+extern struct clk_ops_uboot peri_clk_ops;
-+extern struct clk_ops_uboot ccu_clk_ops;
-+extern struct clk_ops_uboot bus_clk_ops;
-+extern struct clk_ops_uboot ref_clk_ops;
- 
- extern int clk_get_and_enable(char *clkstr);
-diff --git a/cmd/clk.c b/cmd/clk.c
-index 2fc834e5549c..1210a84ca2aa 100644
---- a/cmd/clk.c
-+++ b/cmd/clk.c
-@@ -57,9 +57,9 @@ static void show_clks(struct udevice *dev, int depth, int last_flag)
- 
- static int soc_clk_dump(void)
- {
- 	struct udevice *dev;
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 
- 	printf(" Rate               Usecnt      Name\n");
- 	printf("------------------------------------------\n");
- 
-diff --git a/drivers/clk/adi/clk-adi-pll.c b/drivers/clk/adi/clk-adi-pll.c
-index 34818cb1af00..44fc8842e758 100644
---- a/drivers/clk/adi/clk-adi-pll.c
-+++ b/drivers/clk/adi/clk-adi-pll.c
-@@ -48,9 +48,9 @@ static unsigned long sc5xx_cgu_pll_get_rate(struct clk *clk)
- 		return parent_rate * m * 2;
- 	return parent_rate * m;
- }
- 
--static const struct clk_ops clk_sc5xx_cgu_pll_ops = {
-+static const struct clk_ops_uboot clk_sc5xx_cgu_pll_ops = {
- 	.get_rate = sc5xx_cgu_pll_get_rate,
- };
- 
- struct clk *sc5xx_cgu_pll(const char *name, const char *parent_name,
-diff --git a/drivers/clk/adi/clk-shared.c b/drivers/clk/adi/clk-shared.c
-index afd5f46c8456..5d0b7eb34655 100644
---- a/drivers/clk/adi/clk-shared.c
-+++ b/drivers/clk/adi/clk-shared.c
-@@ -38,9 +38,9 @@ static int adi_disable(struct clk *clk)
- 	//Not yet implemented
- 	return 0;
- }
- 
--const struct clk_ops adi_clk_ops = {
-+const struct clk_ops_uboot adi_clk_ops = {
- 	.set_rate = adi_set_rate,
- 	.get_rate = adi_get_rate,
- 	.enable = adi_enable,
- 	.disable = adi_disable,
-diff --git a/drivers/clk/adi/clk.h b/drivers/clk/adi/clk.h
-index acd4e384746c..01e600b76a30 100644
---- a/drivers/clk/adi/clk.h
-+++ b/drivers/clk/adi/clk.h
-@@ -64,9 +64,9 @@
- #define CDU_MUX_SHIFT 1
- #define CDU_MUX_WIDTH 2
- #define CDU_EN_BIT 0
- 
--extern const struct clk_ops adi_clk_ops;
-+extern const struct clk_ops_uboot adi_clk_ops;
- 
- struct clk *sc5xx_cgu_pll(const char *name, const char *parent_name,
- 			  void __iomem *base, u8 shift, u8 width, u32 m_offset, bool half_m);
- 
-diff --git a/drivers/clk/airoha/clk-airoha.c b/drivers/clk/airoha/clk-airoha.c
-index 49dbca821355..200324a4fffd 100644
---- a/drivers/clk/airoha/clk-airoha.c
-+++ b/drivers/clk/airoha/clk-airoha.c
-@@ -496,9 +496,9 @@ apply:
- 
- 	return rate;
- }
- 
--const struct clk_ops airoha_clk_ops = {
-+const struct clk_ops_uboot airoha_clk_ops = {
- 	.enable = airoha_clk_enable,
- 	.disable = airoha_clk_disable,
- 	.get_rate = airoha_clk_get_rate,
- 	.set_rate = airoha_clk_set_rate,
-diff --git a/drivers/clk/altera/clk-agilex.c b/drivers/clk/altera/clk-agilex.c
-index b793dbf6a424..82a0e5192ae4 100644
---- a/drivers/clk/altera/clk-agilex.c
-+++ b/drivers/clk/altera/clk-agilex.c
-@@ -792,9 +792,9 @@ static int socfpga_clk_of_to_plat(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops socfpga_clk_ops = {
-+static struct clk_ops_uboot socfpga_clk_ops = {
- 	.enable		= socfpga_clk_enable,
- 	.disable	= socfpga_clk_disable,
- 	.get_rate	= socfpga_clk_get_rate,
- };
-diff --git a/drivers/clk/altera/clk-agilex5.c b/drivers/clk/altera/clk-agilex5.c
-index 92b91a9dfc8d..0bd7b2586f98 100644
---- a/drivers/clk/altera/clk-agilex5.c
-+++ b/drivers/clk/altera/clk-agilex5.c
-@@ -732,9 +732,9 @@ static int socfpga_clk_of_to_plat(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops socfpga_clk_ops = {
-+static struct clk_ops_uboot socfpga_clk_ops = {
- 	.enable		= socfpga_clk_enable,
- 	.get_rate	= socfpga_clk_get_rate,
- };
- 
-diff --git a/drivers/clk/altera/clk-arria10.c b/drivers/clk/altera/clk-arria10.c
-index 1840f73beeec..f1ee995670cb 100644
---- a/drivers/clk/altera/clk-arria10.c
-+++ b/drivers/clk/altera/clk-arria10.c
-@@ -169,9 +169,9 @@ static ulong socfpga_a10_clk_get_rate(struct clk *clk)
- 
- 	return rate;
- }
- 
--static struct clk_ops socfpga_a10_clk_ops = {
-+static struct clk_ops_uboot socfpga_a10_clk_ops = {
- 	.enable		= socfpga_a10_clk_enable,
- 	.disable	= socfpga_a10_clk_disable,
- 	.get_rate	= socfpga_a10_clk_get_rate,
- };
-diff --git a/drivers/clk/altera/clk-mem-n5x.c b/drivers/clk/altera/clk-mem-n5x.c
-index 149e3016dd3b..209778b2b2d3 100644
---- a/drivers/clk/altera/clk-mem-n5x.c
-+++ b/drivers/clk/altera/clk-mem-n5x.c
-@@ -113,9 +113,9 @@ static int socfpga_mem_clk_of_to_plat(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops socfpga_mem_clk_ops = {
-+static struct clk_ops_uboot socfpga_mem_clk_ops = {
- 	.enable		= socfpga_mem_clk_enable
- };
- 
- static const struct udevice_id socfpga_mem_clk_match[] = {
-diff --git a/drivers/clk/altera/clk-n5x.c b/drivers/clk/altera/clk-n5x.c
-index 0a3bae38589b..02d4422fb346 100644
---- a/drivers/clk/altera/clk-n5x.c
-+++ b/drivers/clk/altera/clk-n5x.c
-@@ -463,9 +463,9 @@ static int socfpga_clk_of_to_plat(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops socfpga_clk_ops = {
-+static struct clk_ops_uboot socfpga_clk_ops = {
- 	.enable		= socfpga_clk_enable,
- 	.get_rate	= socfpga_clk_get_rate,
- };
- 
-diff --git a/drivers/clk/aspeed/clk_ast2500.c b/drivers/clk/aspeed/clk_ast2500.c
-index 94c7f6623198..dbd588e17bb3 100644
---- a/drivers/clk/aspeed/clk_ast2500.c
-+++ b/drivers/clk/aspeed/clk_ast2500.c
-@@ -533,9 +533,9 @@ static int ast2500_clk_enable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops ast2500_clk_ops = {
-+static const struct clk_ops_uboot ast2500_clk_ops = {
- 	.get_rate = ast2500_clk_get_rate,
- 	.set_rate = ast2500_clk_set_rate,
- 	.enable = ast2500_clk_enable,
- };
-diff --git a/drivers/clk/aspeed/clk_ast2600.c b/drivers/clk/aspeed/clk_ast2600.c
-index 74209e947ed9..e5a521a8b59d 100644
---- a/drivers/clk/aspeed/clk_ast2600.c
-+++ b/drivers/clk/aspeed/clk_ast2600.c
-@@ -1160,9 +1160,9 @@ static void ast2600_clk_dump(struct udevice *dev)
- 	return 0;
- }
- #endif
- 
--static const struct clk_ops ast2600_clk_ops = {
-+static const struct clk_ops_uboot ast2600_clk_ops = {
- 	.get_rate = ast2600_clk_get_rate,
- 	.set_rate = ast2600_clk_set_rate,
- 	.enable = ast2600_clk_enable,
- #if IS_ENABLED(CONFIG_CMD_CLK)
-diff --git a/drivers/clk/aspeed/clk_ast2700.c b/drivers/clk/aspeed/clk_ast2700.c
-index ca76abef48f4..556dc81b8ca8 100644
---- a/drivers/clk/aspeed/clk_ast2700.c
-+++ b/drivers/clk/aspeed/clk_ast2700.c
-@@ -306,9 +306,9 @@ static int ast2700_soc1_clk_enable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops ast2700_soc1_clk_ops = {
-+static const struct clk_ops_uboot ast2700_soc1_clk_ops = {
- 	.get_rate = ast2700_soc1_clk_get_rate,
- 	.enable = ast2700_soc1_clk_enable,
- };
- 
-@@ -721,9 +721,9 @@ static int ast2700_soc0_clk_enable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops ast2700_soc0_clk_ops = {
-+static const struct clk_ops_uboot ast2700_soc0_clk_ops = {
- 	.get_rate = ast2700_soc0_clk_get_rate,
- 	.enable = ast2700_soc0_clk_enable,
- };
- 
-diff --git a/drivers/clk/at91/clk-generic.c b/drivers/clk/at91/clk-generic.c
-index c410cd2b5052..0424fb1b6f4e 100644
---- a/drivers/clk/at91/clk-generic.c
-+++ b/drivers/clk/at91/clk-generic.c
-@@ -128,9 +128,9 @@ static ulong clk_gck_get_rate(struct clk *clk)
- 
- 	return parent_rate / (div + 1);
- }
- 
--static const struct clk_ops gck_ops = {
-+static const struct clk_ops_uboot gck_ops = {
- 	.enable = clk_gck_enable,
- 	.disable = clk_gck_disable,
- 	.set_parent = clk_gck_set_parent,
- 	.set_rate = clk_gck_set_rate,
-diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-index 0542b0667883..5b802cdbdaba 100644
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -96,9 +96,9 @@ static int main_rc_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops main_rc_clk_ops = {
-+static const struct clk_ops_uboot main_rc_clk_ops = {
- 	.enable = main_rc_enable,
- 	.disable = main_rc_disable,
- 	.get_rate = clk_generic_get_rate,
- };
-@@ -182,9 +182,9 @@ static int clk_main_osc_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops main_osc_clk_ops = {
-+static const struct clk_ops_uboot main_osc_clk_ops = {
- 	.enable = clk_main_osc_enable,
- 	.disable = clk_main_osc_disable,
- 	.get_rate = clk_generic_get_rate,
- };
-@@ -250,9 +250,9 @@ static int clk_rm9200_main_enable(struct clk *clk)
- 
- 	return clk_main_probe_frequency(main->reg);
- }
- 
--static const struct clk_ops rm9200_main_clk_ops = {
-+static const struct clk_ops_uboot rm9200_main_clk_ops = {
- 	.enable = clk_rm9200_main_enable,
- };
- 
- struct clk *at91_clk_rm9200_main(void __iomem *reg, const char *name,
-@@ -337,9 +337,9 @@ static int clk_sam9x5_main_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return 0;
- }
- 
--static const struct clk_ops sam9x5_main_clk_ops = {
-+static const struct clk_ops_uboot sam9x5_main_clk_ops = {
- 	.enable = clk_sam9x5_main_enable,
- 	.set_parent = clk_sam9x5_main_set_parent,
- 	.get_rate = clk_generic_get_rate,
- };
-diff --git a/drivers/clk/at91/clk-master.c b/drivers/clk/at91/clk-master.c
-index 530205b8c6be..53652efc5740 100644
---- a/drivers/clk/at91/clk-master.c
-+++ b/drivers/clk/at91/clk-master.c
-@@ -99,9 +99,9 @@ static ulong clk_master_pres_get_rate(struct clk *clk)
- 
- 	return DIV_ROUND_CLOSEST_ULL(rate, pres);
- }
- 
--static const struct clk_ops master_pres_ops = {
-+static const struct clk_ops_uboot master_pres_ops = {
- 	.enable = clk_master_enable,
- 	.get_rate = clk_master_pres_get_rate,
- };
- 
-@@ -175,9 +175,9 @@ static ulong clk_master_div_get_rate(struct clk *clk)
- 
- 	return rate;
- }
- 
--static const struct clk_ops master_div_ops = {
-+static const struct clk_ops_uboot master_div_ops = {
- 	.enable = clk_master_enable,
- 	.get_rate = clk_master_div_get_rate,
- };
- 
-@@ -319,9 +319,9 @@ static ulong clk_sama7g5_master_get_rate(struct clk *clk)
- 
- 	return DIV_ROUND_CLOSEST(parent_rate, div);
- }
- 
--static const struct clk_ops sama7g5_master_ops = {
-+static const struct clk_ops_uboot sama7g5_master_ops = {
- 	.enable = clk_sama7g5_master_enable,
- 	.disable = clk_sama7g5_master_disable,
- 	.set_rate = clk_sama7g5_master_set_rate,
- 	.get_rate = clk_sama7g5_master_get_rate,
-diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
-index 08d7e7dddc9e..8f0c7524e4cc 100644
---- a/drivers/clk/at91/clk-peripheral.c
-+++ b/drivers/clk/at91/clk-peripheral.c
-@@ -76,9 +76,9 @@ static int clk_peripheral_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops peripheral_ops = {
-+static const struct clk_ops_uboot peripheral_ops = {
- 	.enable = clk_peripheral_enable,
- 	.disable = clk_peripheral_disable,
- 	.get_rate = clk_generic_get_rate,
- };
-@@ -203,9 +203,9 @@ static ulong clk_sam9x5_peripheral_set_rate(struct clk *clk, ulong rate)
- 
- 	return parent_rate >> shift;
- }
- 
--static const struct clk_ops sam9x5_peripheral_ops = {
-+static const struct clk_ops_uboot sam9x5_peripheral_ops = {
- 	.enable = clk_sam9x5_peripheral_enable,
- 	.disable = clk_sam9x5_peripheral_disable,
- 	.get_rate = clk_sam9x5_peripheral_get_rate,
- 	.set_rate = clk_sam9x5_peripheral_set_rate,
-diff --git a/drivers/clk/at91/clk-programmable.c b/drivers/clk/at91/clk-programmable.c
-index d0b14656c4d6..9cf8e38af08c 100644
---- a/drivers/clk/at91/clk-programmable.c
-+++ b/drivers/clk/at91/clk-programmable.c
-@@ -119,9 +119,9 @@ static ulong clk_programmable_set_rate(struct clk *clk, ulong rate)
- 
- 	return parent_rate >> shift;
- }
- 
--static const struct clk_ops programmable_ops = {
-+static const struct clk_ops_uboot programmable_ops = {
- 	.get_rate = clk_programmable_get_rate,
- 	.set_parent = clk_programmable_set_parent,
- 	.set_rate = clk_programmable_set_rate,
- };
-diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
-index 66f014727390..b896be5fe238 100644
---- a/drivers/clk/at91/clk-sam9x60-pll.c
-+++ b/drivers/clk/at91/clk-sam9x60-pll.c
-@@ -244,9 +244,9 @@ static int sam9x60_frac_pll_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops sam9x60_frac_pll_ops = {
-+static const struct clk_ops_uboot sam9x60_frac_pll_ops = {
- 	.enable = sam9x60_frac_pll_enable,
- 	.disable = sam9x60_frac_pll_disable,
- 	.set_rate = sam9x60_frac_pll_set_rate,
- 	.get_rate = sam9x60_frac_pll_get_rate,
-@@ -371,16 +371,16 @@ static ulong sam9x60_fixed_div_pll_get_rate(struct clk *clk)
- 
- 	return parent_rate >> 1;
- }
- 
--static const struct clk_ops sam9x60_div_pll_ops = {
-+static const struct clk_ops_uboot sam9x60_div_pll_ops = {
- 	.enable = sam9x60_div_pll_enable,
- 	.disable = sam9x60_div_pll_disable,
- 	.set_rate = sam9x60_div_pll_set_rate,
- 	.get_rate = sam9x60_div_pll_get_rate,
- };
- 
--static const struct clk_ops sam9x60_fixed_div_pll_ops = {
-+static const struct clk_ops_uboot sam9x60_fixed_div_pll_ops = {
- 	.enable = sam9x60_div_pll_enable,
- 	.disable = sam9x60_div_pll_disable,
- 	.get_rate = sam9x60_fixed_div_pll_get_rate,
- };
-diff --git a/drivers/clk/at91/clk-sam9x60-usb.c b/drivers/clk/at91/clk-sam9x60-usb.c
-index 798fa9eb3cca..92bfd45f5353 100644
---- a/drivers/clk/at91/clk-sam9x60-usb.c
-+++ b/drivers/clk/at91/clk-sam9x60-usb.c
-@@ -88,9 +88,9 @@ static ulong sam9x60_usb_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return parent_rate / usbdiv;
- }
- 
--static const struct clk_ops sam9x60_usb_ops = {
-+static const struct clk_ops_uboot sam9x60_usb_ops = {
- 	.set_parent = sam9x60_usb_clk_set_parent,
- 	.set_rate = sam9x60_usb_clk_set_rate,
- 	.get_rate = sam9x60_usb_clk_get_rate,
- };
-diff --git a/drivers/clk/at91/clk-system.c b/drivers/clk/at91/clk-system.c
-index 3545b0b24bd7..faa3ddba5d57 100644
---- a/drivers/clk/at91/clk-system.c
-+++ b/drivers/clk/at91/clk-system.c
-@@ -68,9 +68,9 @@ static int clk_system_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops system_ops = {
-+static const struct clk_ops_uboot system_ops = {
- 	.enable = clk_system_enable,
- 	.disable = clk_system_disable,
- 	.get_rate = clk_generic_get_rate,
- };
-diff --git a/drivers/clk/at91/clk-utmi.c b/drivers/clk/at91/clk-utmi.c
-index 84784ae41ce8..db3d7d69f2cf 100644
---- a/drivers/clk/at91/clk-utmi.c
-+++ b/drivers/clk/at91/clk-utmi.c
-@@ -112,9 +112,9 @@ static ulong clk_utmi_get_rate(struct clk *clk)
- 	/* UTMI clk rate is fixed. */
- 	return UTMI_RATE;
- }
- 
--static const struct clk_ops utmi_ops = {
-+static const struct clk_ops_uboot utmi_ops = {
- 	.enable = clk_utmi_enable,
- 	.disable = clk_utmi_disable,
- 	.get_rate = clk_utmi_get_rate,
- };
-@@ -192,9 +192,9 @@ static int clk_utmi_sama7g5_enable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops sama7g5_utmi_ops = {
-+static const struct clk_ops_uboot sama7g5_utmi_ops = {
- 	.enable = clk_utmi_sama7g5_enable,
- 	.get_rate = clk_utmi_get_rate,
- };
- 
-diff --git a/drivers/clk/at91/compat.c b/drivers/clk/at91/compat.c
-index 2449ac9fae6e..c3be9f93fa97 100644
---- a/drivers/clk/at91/compat.c
-+++ b/drivers/clk/at91/compat.c
-@@ -152,9 +152,9 @@ static ulong at91_slow_clk_get_rate(struct clk *clk)
- {
- 	return CFG_SYS_AT91_SLOW_CLOCK;
- }
- 
--static struct clk_ops at91_slow_clk_ops = {
-+static struct clk_ops_uboot at91_slow_clk_ops = {
- 	.enable = at91_slow_clk_enable,
- 	.get_rate = at91_slow_clk_get_rate,
- };
- 
-@@ -175,9 +175,9 @@ static ulong at91_master_clk_get_rate(struct clk *clk)
- {
- 	return gd->arch.mck_rate_hz;
- }
- 
--static struct clk_ops at91_master_clk_ops = {
-+static struct clk_ops_uboot at91_master_clk_ops = {
- 	.get_rate = at91_master_clk_get_rate,
- };
- 
- static const struct udevice_id at91_master_clk_match[] = {
-@@ -209,9 +209,9 @@ static ulong main_osc_clk_get_rate(struct clk *clk)
- {
- 	return gd->arch.main_clk_rate_hz;
- }
- 
--static struct clk_ops main_osc_clk_ops = {
-+static struct clk_ops_uboot main_osc_clk_ops = {
- 	.enable = main_osc_clk_enable,
- 	.get_rate = main_osc_clk_get_rate,
- };
- 
-@@ -250,9 +250,9 @@ static ulong plla_clk_get_rate(struct clk *clk)
- {
- 	return gd->arch.plla_rate_hz;
- }
- 
--static struct clk_ops plla_clk_ops = {
-+static struct clk_ops_uboot plla_clk_ops = {
- 	.enable = plla_clk_enable,
- 	.get_rate = plla_clk_get_rate,
- };
- 
-@@ -323,9 +323,9 @@ static ulong at91_plladiv_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return 0;
- }
- 
--static struct clk_ops at91_plladiv_clk_ops = {
-+static struct clk_ops_uboot at91_plladiv_clk_ops = {
- 	.enable = at91_plladiv_clk_enable,
- 	.get_rate = at91_plladiv_clk_get_rate,
- 	.set_rate = at91_plladiv_clk_set_rate,
- };
-@@ -430,9 +430,9 @@ static int system_clk_enable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops system_clk_ops = {
-+static struct clk_ops_uboot system_clk_ops = {
- 	.of_xlate = at91_clk_of_xlate,
- 	.get_rate = system_clk_get_rate,
- 	.set_rate = system_clk_set_rate,
- 	.enable = system_clk_enable,
-@@ -526,9 +526,9 @@ static ulong periph_get_rate(struct clk *clk)
- 
- 	return clk_get_rate(&clk_dev);
- }
- 
--static struct clk_ops periph_clk_ops = {
-+static struct clk_ops_uboot periph_clk_ops = {
- 	.of_xlate = at91_clk_of_xlate,
- 	.enable = periph_clk_enable,
- 	.get_rate = periph_get_rate,
- };
-@@ -632,9 +632,9 @@ static ulong utmi_clk_get_rate(struct clk *clk)
- 	/* UTMI clk rate is fixed. */
- 	return UTMI_RATE;
- }
- 
--static struct clk_ops utmi_clk_ops = {
-+static struct clk_ops_uboot utmi_clk_ops = {
- 	.enable = utmi_clk_enable,
- 	.get_rate = utmi_clk_get_rate,
- };
- 
-@@ -693,9 +693,9 @@ static ulong sama5d4_h32mx_clk_get_rate(struct clk *clk)
- 
- 	return rate;
- }
- 
--static struct clk_ops sama5d4_h32mx_clk_ops = {
-+static struct clk_ops_uboot sama5d4_h32mx_clk_ops = {
- 	.get_rate = sama5d4_h32mx_clk_get_rate,
- };
- 
- static int sama5d4_h32mx_clk_probe(struct udevice *dev)
-@@ -841,9 +841,9 @@ static ulong generic_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return 0;
- }
- 
--static struct clk_ops generic_clk_ops = {
-+static struct clk_ops_uboot generic_clk_ops = {
- 	.of_xlate = at91_clk_of_xlate,
- 	.get_rate = generic_clk_get_rate,
- 	.set_rate = generic_clk_set_rate,
- };
-@@ -966,9 +966,9 @@ static ulong at91_usb_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return 0;
- }
- 
--static struct clk_ops at91_usb_clk_ops = {
-+static struct clk_ops_uboot at91_usb_clk_ops = {
- 	.get_rate = at91_usb_clk_get_rate,
- 	.set_rate = at91_usb_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index aa4bc8fa47ad..2a7de0bf6ff1 100644
---- a/drivers/clk/at91/pmc.c
-+++ b/drivers/clk/at91/pmc.c
-@@ -20,9 +20,9 @@ static int at91_clk_of_xlate(struct clk *clk, struct ofnode_phandle_args *args)
- 
- 	return 0;
- }
- 
--const struct clk_ops at91_clk_ops = {
-+const struct clk_ops_uboot at91_clk_ops = {
- 	.of_xlate	= at91_clk_of_xlate,
- 	.set_rate	= ccf_clk_set_rate,
- 	.get_rate	= ccf_clk_get_rate,
- 	.enable		= ccf_clk_enable,
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index f38868d16655..638c9b769ceb 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -97,9 +97,9 @@ struct pmc_clk_setup {
- extern const struct clk_programmable_layout at91rm9200_programmable_layout;
- extern const struct clk_programmable_layout at91sam9g45_programmable_layout;
- extern const struct clk_programmable_layout at91sam9x5_programmable_layout;
- 
--extern const struct clk_ops at91_clk_ops;
-+extern const struct clk_ops_uboot at91_clk_ops;
- 
- struct clk *at91_clk_main_rc(void __iomem *reg, const char *name,
- 			const char *parent_name);
- struct clk *at91_clk_main_osc(void __iomem *reg, const char *name,
-diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-index 410bc0882489..a5b3e1fc6b95 100644
---- a/drivers/clk/at91/sckc.c
-+++ b/drivers/clk/at91/sckc.c
-@@ -41,9 +41,9 @@ static int sam9x60_sckc_of_xlate(struct clk *clk,
- 
- 	return 0;
- }
- 
--static const struct clk_ops sam9x60_sckc_ops = {
-+static const struct clk_ops_uboot sam9x60_sckc_ops = {
- 	.of_xlate = sam9x60_sckc_of_xlate,
- 	.get_rate = clk_generic_get_rate,
- };
- 
-@@ -63,9 +63,9 @@ static int sam9x60_td_slck_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return 0;
- }
- 
--static const struct clk_ops sam9x60_td_slck_ops = {
-+static const struct clk_ops_uboot sam9x60_td_slck_ops = {
- 	.get_rate = clk_generic_get_rate,
- 	.set_parent = sam9x60_td_slck_set_parent,
- };
- 
-diff --git a/drivers/clk/clk-cdce9xx.c b/drivers/clk/clk-cdce9xx.c
-index 996cc30683ea..9689283cec48 100644
---- a/drivers/clk/clk-cdce9xx.c
-+++ b/drivers/clk/clk-cdce9xx.c
-@@ -231,9 +231,9 @@ static const struct udevice_id cdce9xx_clk_of_match[] = {
- 	{ .compatible = "ti,cdce949", .data = (u32)&cdce949_chip_info },
- 	{ /* sentinel */ },
- };
- 
--static const struct clk_ops cdce9xx_clk_ops = {
-+static const struct clk_ops_uboot cdce9xx_clk_ops = {
- 	.request = cdce9xx_clk_request,
- 	.get_rate = cdce9xx_clk_get_rate,
- 	.set_rate = cdce9xx_clk_set_rate,
- };
-diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-index 4ed143065754..6c2bc91c6a77 100644
---- a/drivers/clk/clk-gpio.c
-+++ b/drivers/clk/clk-gpio.c
-@@ -41,9 +41,9 @@ static ulong clk_gpio_get_rate(struct clk *clk)
- 
- 	return clk_get_rate(priv->clk);
- }
- 
--const struct clk_ops clk_gpio_ops = {
-+const struct clk_ops_uboot clk_gpio_ops = {
- 	.enable		= clk_gpio_enable,
- 	.disable	= clk_gpio_disable,
- 	.get_rate	= clk_gpio_get_rate,
- };
-diff --git a/drivers/clk/clk-hsdk-cgu.c b/drivers/clk/clk-hsdk-cgu.c
-index dbc926a4391a..aa526e00e655 100644
---- a/drivers/clk/clk-hsdk-cgu.c
-+++ b/drivers/clk/clk-hsdk-cgu.c
-@@ -733,9 +733,9 @@ static int hsdk_cgu_disable(struct clk *sclk)
- 
- 	return -EINVAL;
- }
- 
--static const struct clk_ops hsdk_cgu_ops = {
-+static const struct clk_ops_uboot hsdk_cgu_ops = {
- 	.set_rate = hsdk_cgu_set_rate,
- 	.get_rate = hsdk_cgu_get_rate,
- 	.disable = hsdk_cgu_disable,
- };
-diff --git a/drivers/clk/clk-stub.c b/drivers/clk/clk-stub.c
-index 4a6c71016da2..8482e1fec805 100644
---- a/drivers/clk/clk-stub.c
-+++ b/drivers/clk/clk-stub.c
-@@ -40,9 +40,9 @@ static int stub_clk_nop(struct clk *clk)
- {
- 	return 0;
- }
- 
--static struct clk_ops stub_clk_ops = {
-+static struct clk_ops_uboot stub_clk_ops = {
- 	.set_rate = stub_clk_set_rate,
- 	.get_rate = stub_clk_get_rate,
- 	.enable = stub_clk_nop,
- 	.disable = stub_clk_nop,
-diff --git a/drivers/clk/clk-uclass.c b/drivers/clk/clk-uclass.c
-index c33f415917e9..8a7033386a74 100644
---- a/drivers/clk/clk-uclass.c
-+++ b/drivers/clk/clk-uclass.c
-@@ -23,11 +23,11 @@
- #include <linux/bug.h>
- #include <linux/clk-provider.h>
- #include <linux/err.h>
- 
--static inline const struct clk_ops *clk_dev_ops(struct udevice *dev)
-+static inline const struct clk_ops_uboot *clk_dev_ops(struct udevice *dev)
- {
--	return (const struct clk_ops *)dev->driver->ops;
-+	return (const struct clk_ops_uboot *)dev->driver->ops;
- }
- 
- struct clk *dev_get_clk_ptr(struct udevice *dev)
- {
-@@ -80,9 +80,9 @@ static int clk_get_by_index_tail(int ret, ofnode node,
- 				 const char *list_name, int index,
- 				 struct clk *clk)
- {
- 	struct udevice *dev_clk;
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 
- 	assert(clk);
- 	clk->dev = NULL;
- 	if (ret)
-@@ -465,9 +465,9 @@ int clk_release_all(struct clk *clk, unsigned int count)
- }
- 
- int clk_request(struct udevice *dev, struct clk *clk)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 
- 	debug("%s(dev=%s, clk=%p)\n", __func__, dev_read_name(dev), clk);
- 	if (!clk)
- 		return 0;
-@@ -482,9 +482,9 @@ int clk_request(struct udevice *dev, struct clk *clk)
- }
- 
- ulong clk_get_rate(struct clk *clk)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 
- 	debug("%s(clk=%p)\n", __func__, clk);
- 	if (!clk_valid(clk))
- 		return 0;
-@@ -516,9 +516,9 @@ struct clk *clk_get_parent(struct clk *clk)
- }
- 
- ulong clk_get_parent_rate(struct clk *clk)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	struct clk *pclk;
- 
- 	debug("%s(clk=%p)\n", __func__, clk);
- 	if (!clk_valid(clk))
-@@ -540,9 +540,9 @@ ulong clk_get_parent_rate(struct clk *clk)
- }
- 
- ulong clk_round_rate(struct clk *clk, ulong rate)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 
- 	debug("%s(clk=%p, rate=%lu)\n", __func__, clk, rate);
- 	if (!clk_valid(clk))
- 		return 0;
-@@ -587,9 +587,9 @@ static void clk_clean_rate_cache(struct clk *clk)
- }
- 
- ulong clk_set_rate(struct clk *clk, ulong rate)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	struct clk *clkp;
- 
- 	debug("%s(clk=%p, rate=%lu)\n", __func__, clk, rate);
- 	if (!clk_valid(clk))
-@@ -620,9 +620,9 @@ ulong clk_set_rate(struct clk *clk, ulong rate)
- }
- 
- int clk_set_parent(struct clk *clk, struct clk *parent)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	int ret;
- 
- 	debug("%s(clk=%p, parent=%p)\n", __func__, clk, parent);
- 	if (!clk_valid(clk))
-@@ -658,9 +658,9 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
- }
- 
- int clk_enable(struct clk *clk)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	struct clk *clkp = NULL;
- 	int ret;
- 
- 	debug("%s(clk=%p name=%s)\n", __func__, clk, clk ? clk->dev->name : "NULL");
-@@ -719,9 +719,9 @@ int clk_enable_bulk(struct clk_bulk *bulk)
- }
- 
- int clk_disable(struct clk *clk)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	struct clk *clkp = NULL;
- 	int ret;
- 
- 	debug("%s(clk=%p name=%s)\n", __func__, clk, clk ? clk->dev->name : "NULL");
-diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-clock-wizard.c
-index 4a3f50c638b1..18c5ae43789a 100644
---- a/drivers/clk/clk-xlnx-clock-wizard.c
-+++ b/drivers/clk/clk-xlnx-clock-wizard.c
-@@ -104,9 +104,9 @@ static unsigned long clk_wzrd_set_rate(struct clk *clk, ulong rate)
- 
- 	return 0;
- }
- 
--static struct clk_ops clk_wzrd_ops = {
-+static struct clk_ops_uboot clk_wzrd_ops = {
- 	.enable = clk_wzrd_enable,
- 	.set_rate = clk_wzrd_set_rate,
- };
- 
-diff --git a/drivers/clk/clk_bcm6345.c b/drivers/clk/clk_bcm6345.c
-index 0b41872b7192..ae72957bbda7 100644
---- a/drivers/clk/clk_bcm6345.c
-+++ b/drivers/clk/clk_bcm6345.c
-@@ -41,9 +41,9 @@ static int bcm6345_clk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops bcm6345_clk_ops = {
-+static struct clk_ops_uboot bcm6345_clk_ops = {
- 	.disable = bcm6345_clk_disable,
- 	.enable = bcm6345_clk_enable,
- };
- 
-diff --git a/drivers/clk/clk_boston.c b/drivers/clk/clk_boston.c
-index 71e030f463e1..e7b346ea18e0 100644
---- a/drivers/clk/clk_boston.c
-+++ b/drivers/clk/clk_boston.c
-@@ -53,9 +53,9 @@ static ulong clk_boston_get_rate(struct clk *clk)
- 
- 	return (in_rate * mul * 1000000) / div;
- }
- 
--const struct clk_ops clk_boston_ops = {
-+const struct clk_ops_uboot clk_boston_ops = {
- 	.get_rate = clk_boston_get_rate,
- };
- 
- static int clk_boston_probe(struct udevice *dev)
-diff --git a/drivers/clk/clk_fixed_factor.c b/drivers/clk/clk_fixed_factor.c
-index 1d740cf49f62..536639912f1f 100644
---- a/drivers/clk/clk_fixed_factor.c
-+++ b/drivers/clk/clk_fixed_factor.c
-@@ -35,9 +35,9 @@ static ulong clk_fixed_factor_get_rate(struct clk *clk)
- 
- 	return rate * ff->mult;
- }
- 
--const struct clk_ops clk_fixed_factor_ops = {
-+const struct clk_ops_uboot clk_fixed_factor_ops = {
- 	.get_rate = clk_fixed_factor_get_rate,
- };
- 
- static int clk_fixed_factor_of_to_plat(struct udevice *dev)
-diff --git a/drivers/clk/clk_fixed_rate.c b/drivers/clk/clk_fixed_rate.c
-index 681bd3db20ed..ee10cdc21613 100644
---- a/drivers/clk/clk_fixed_rate.c
-+++ b/drivers/clk/clk_fixed_rate.c
-@@ -24,9 +24,9 @@ static int dummy_enable(struct clk *clk)
- {
- 	return 0;
- }
- 
--const struct clk_ops clk_fixed_rate_ops = {
-+const struct clk_ops_uboot clk_fixed_rate_ops = {
- 	.get_rate = clk_fixed_rate_get_rate,
- 	.enable = dummy_enable,
- 	.disable = dummy_enable,
- };
-@@ -52,9 +52,9 @@ static ulong clk_fixed_rate_raw_get_rate(struct clk *clk)
- {
- 	return container_of(clk, struct clk_fixed_rate, clk)->fixed_rate;
- }
- 
--const struct clk_ops clk_fixed_rate_raw_ops = {
-+const struct clk_ops_uboot clk_fixed_rate_raw_ops = {
- 	.get_rate = clk_fixed_rate_raw_get_rate,
- };
- 
- static int clk_fixed_rate_of_to_plat(struct udevice *dev)
-diff --git a/drivers/clk/clk_k210.c b/drivers/clk/clk_k210.c
-index d1a6cde8f0f8..329fc5bffd18 100644
---- a/drivers/clk/clk_k210.c
-+++ b/drivers/clk/clk_k210.c
-@@ -1289,9 +1289,9 @@ static void k210_clk_dump(struct udevice *dev)
- 	show_clks(priv, K210_CLK_IN0, 1);
- }
- #endif
- 
--static const struct clk_ops k210_clk_ops = {
-+static const struct clk_ops_uboot k210_clk_ops = {
- 	.request = k210_clk_request,
- 	.set_rate = k210_clk_set_rate,
- 	.get_rate = k210_clk_get_rate,
- 	.set_parent = k210_clk_set_parent,
-diff --git a/drivers/clk/clk_octeon.c b/drivers/clk/clk_octeon.c
-index fa50265184f0..b2e6221b5bc7 100644
---- a/drivers/clk/clk_octeon.c
-+++ b/drivers/clk/clk_octeon.c
-@@ -38,9 +38,9 @@ static ulong octeon_clk_get_rate(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops octeon_clk_ops = {
-+static struct clk_ops_uboot octeon_clk_ops = {
- 	.enable = octeon_clk_enable,
- 	.get_rate = octeon_clk_get_rate,
- };
- 
-diff --git a/drivers/clk/clk_pic32.c b/drivers/clk/clk_pic32.c
-index 885aa8345165..0b8e2f7ad8ec 100644
---- a/drivers/clk/clk_pic32.c
-+++ b/drivers/clk/clk_pic32.c
-@@ -417,9 +417,9 @@ static void pic32_dump(struct udevice *dev)
- 	}
- }
- #endif
- 
--static struct clk_ops pic32_pic32_clk_ops = {
-+static struct clk_ops_uboot pic32_pic32_clk_ops = {
- 	.set_rate = pic32_set_rate,
- 	.get_rate = pic32_get_rate,
- #if IS_ENABLED(CONFIG_CMD_CLK)
- 	.dump = pic32_dump,
-diff --git a/drivers/clk/clk_sandbox.c b/drivers/clk/clk_sandbox.c
-index c8c5a88c52d9..dceba88852ab 100644
---- a/drivers/clk/clk_sandbox.c
-+++ b/drivers/clk/clk_sandbox.c
-@@ -105,9 +105,9 @@ static int sandbox_clk_request(struct clk *clk)
- 	priv->requested[id] = true;
- 	return 0;
- }
- 
--static struct clk_ops sandbox_clk_ops = {
-+static struct clk_ops_uboot sandbox_clk_ops = {
- 	.round_rate	= sandbox_clk_round_rate,
- 	.get_rate	= sandbox_clk_get_rate,
- 	.set_rate	= sandbox_clk_set_rate,
- 	.enable		= sandbox_clk_enable,
-diff --git a/drivers/clk/clk_scmi.c b/drivers/clk/clk_scmi.c
-index 12c7b1e82542..fe361d699cc7 100644
---- a/drivers/clk/clk_scmi.c
-+++ b/drivers/clk/clk_scmi.c
-@@ -419,9 +419,9 @@ static int scmi_clk_set_parent(struct clk *clk, struct clk *parent)
- 		"%s: SCMI CLOCK: the clock's parent cannot be changed by the agent.\n", __func__);
- 	return 0;
- }
- 
--static const struct clk_ops scmi_clk_ops = {
-+static const struct clk_ops_uboot scmi_clk_ops = {
- 	.enable = scmi_clk_enable,
- 	.disable = scmi_clk_disable,
- 	.get_rate = scmi_clk_get_rate,
- 	.set_rate = scmi_clk_set_rate,
-diff --git a/drivers/clk/clk_versaclock.c b/drivers/clk/clk_versaclock.c
-index 19a787eaf0c5..35f7ded0137b 100644
---- a/drivers/clk/clk_versaclock.c
-+++ b/drivers/clk/clk_versaclock.c
-@@ -276,9 +276,9 @@ static int vc5_mux_set_parent(struct clk *hw, unsigned char index)
- 
- 	return vc5_update_bits(vc5->i2c, VC5_PRIM_SRC_SHDN, mask, src);
- }
- 
--static const struct clk_ops vc5_mux_ops = {
-+static const struct clk_ops_uboot vc5_mux_ops = {
- 	.get_rate	= vc5_mux_get_rate,
- };
- 
- static unsigned long vc5_pfd_round_rate(struct clk *hw, unsigned long rate)
-@@ -357,9 +357,9 @@ static unsigned long vc5_pfd_set_rate(struct clk *hw, unsigned long rate)
- 
- 	return 0;
- }
- 
--static const struct clk_ops vc5_pfd_ops = {
-+static const struct clk_ops_uboot vc5_pfd_ops = {
- 	.round_rate	= vc5_pfd_round_rate,
- 	.get_rate	= vc5_pfd_recalc_rate,
- 	.set_rate	= vc5_pfd_set_rate,
- };
-@@ -428,9 +428,9 @@ static unsigned long vc5_pll_set_rate(struct clk *hw, unsigned long rate)
- 
- 	return dm_i2c_write(vc5->i2c, VC5_FEEDBACK_INT_DIV, fb, 5);
- }
- 
--static const struct clk_ops vc5_pll_ops = {
-+static const struct clk_ops_uboot vc5_pll_ops = {
- 	.round_rate	= vc5_pll_round_rate,
- 	.get_rate	= vc5_pll_recalc_rate,
- 	.set_rate	= vc5_pll_set_rate,
- };
-@@ -529,9 +529,9 @@ static unsigned long vc5_fod_set_rate(struct clk *hw, unsigned long rate)
- 
- 	return 0;
- }
- 
--static const struct clk_ops vc5_fod_ops = {
-+static const struct clk_ops_uboot vc5_fod_ops = {
- 	.round_rate	= vc5_fod_round_rate,
- 	.get_rate	= vc5_fod_recalc_rate,
- 	.set_rate	= vc5_fod_set_rate,
- };
-@@ -635,22 +635,22 @@ static unsigned long vc5_clk_out_get_rate(struct clk *hw)
- {
- 	return clk_get_parent_rate(hw);
- }
- 
--static const struct clk_ops vc5_clk_out_ops = {
-+static const struct clk_ops_uboot vc5_clk_out_ops = {
- 	.enable	= vc5_clk_out_prepare,
- 	.disable	= vc5_clk_out_unprepare,
- 	.set_rate	= vc5_clk_out_set_rate,
- 	.get_rate	= vc5_clk_out_get_rate,
- };
- 
--static const struct clk_ops vc5_clk_out_sel_ops = {
-+static const struct clk_ops_uboot vc5_clk_out_sel_ops = {
- 	.enable	= vc5_clk_out_prepare,
- 	.disable	= vc5_clk_out_unprepare,
- 	.get_rate	= vc5_clk_out_get_rate,
- };
- 
--static const struct clk_ops vc5_clk_ops = {
-+static const struct clk_ops_uboot vc5_clk_ops = {
- 	.enable	= vc5_clk_out_prepare,
- 	.disable	= vc5_clk_out_unprepare,
- 	.set_rate	= vc5_clk_out_set_rate,
- 	.get_rate	= vc5_clk_out_get_rate,
-diff --git a/drivers/clk/clk_versal.c b/drivers/clk/clk_versal.c
-index 2e0c382ef300..d882b1955b91 100644
---- a/drivers/clk/clk_versal.c
-+++ b/drivers/clk/clk_versal.c
-@@ -802,9 +802,9 @@ static int versal_clk_enable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops versal_clk_ops = {
-+static struct clk_ops_uboot versal_clk_ops = {
- 	.set_rate = versal_clk_set_rate,
- 	.get_rate = versal_clk_get_rate,
- 	.enable = versal_clk_enable,
- #if IS_ENABLED(CONFIG_CMD_CLK)
-diff --git a/drivers/clk/clk_vexpress_osc.c b/drivers/clk/clk_vexpress_osc.c
-index 85ac92c908a7..a6f0ba595a23 100644
---- a/drivers/clk/clk_vexpress_osc.c
-+++ b/drivers/clk/clk_vexpress_osc.c
-@@ -61,9 +61,9 @@ static ulong vexpress_osc_clk_set_rate(struct clk *clk, ulong rate)
- 	return rate;
- }
- #endif
- 
--static struct clk_ops vexpress_osc_clk_ops = {
-+static struct clk_ops_uboot vexpress_osc_clk_ops = {
- 	.get_rate = vexpress_osc_clk_get_rate,
- #ifndef CONFIG_XPL_BUILD
- 	.set_rate = vexpress_osc_clk_set_rate,
- #endif
-diff --git a/drivers/clk/clk_zynq.c b/drivers/clk/clk_zynq.c
-index a8505f62bbad..229972fb505d 100644
---- a/drivers/clk/clk_zynq.c
-+++ b/drivers/clk/clk_zynq.c
-@@ -499,9 +499,9 @@ static void zynq_clk_dump(struct udevice *dev)
- 	}
- }
- #endif
- 
--static struct clk_ops zynq_clk_ops = {
-+static struct clk_ops_uboot zynq_clk_ops = {
- 	.get_rate = zynq_clk_get_rate,
- #ifndef CONFIG_XPL_BUILD
- 	.set_rate = zynq_clk_set_rate,
- #endif
-diff --git a/drivers/clk/clk_zynqmp.c b/drivers/clk/clk_zynqmp.c
-index 765cae92241d..1f23b06553bf 100644
---- a/drivers/clk/clk_zynqmp.c
-+++ b/drivers/clk/clk_zynqmp.c
-@@ -883,9 +883,9 @@ static int zynqmp_clk_enable(struct clk *clk)
- 
- 	return ret;
- }
- 
--static const struct clk_ops zynqmp_clk_ops = {
-+static const struct clk_ops_uboot zynqmp_clk_ops = {
- 	.set_rate = zynqmp_clk_set_rate,
- 	.get_rate = zynqmp_clk_get_rate,
- 	.enable = zynqmp_clk_enable,
- #if IS_ENABLED(CONFIG_CMD_CLK)
-diff --git a/drivers/clk/exynos/clk-exynos7420.c b/drivers/clk/exynos/clk-exynos7420.c
-index 7de4e688f036..8c8d2ce0d069 100644
---- a/drivers/clk/exynos/clk-exynos7420.c
-+++ b/drivers/clk/exynos/clk-exynos7420.c
-@@ -103,9 +103,9 @@ static ulong exynos7420_topc_get_rate(struct clk *clk)
- 		return 0;
- 	}
- }
- 
--static struct clk_ops exynos7420_clk_topc_ops = {
-+static struct clk_ops_uboot exynos7420_clk_topc_ops = {
- 	.get_rate	= exynos7420_topc_get_rate,
- };
- 
- static int exynos7420_clk_topc_probe(struct udevice *dev)
-@@ -154,9 +154,9 @@ static ulong exynos7420_top0_get_rate(struct clk *clk)
- 		return 0;
- 	}
- }
- 
--static struct clk_ops exynos7420_clk_top0_ops = {
-+static struct clk_ops_uboot exynos7420_clk_top0_ops = {
- 	.get_rate	= exynos7420_top0_get_rate,
- };
- 
- static int exynos7420_clk_top0_probe(struct udevice *dev)
-@@ -206,9 +206,9 @@ static ulong exynos7420_peric1_get_rate(struct clk *clk)
- 
- 	return freq;
- }
- 
--static struct clk_ops exynos7420_clk_peric1_ops = {
-+static struct clk_ops_uboot exynos7420_clk_peric1_ops = {
- 	.get_rate	= exynos7420_peric1_get_rate,
- };
- 
- static const struct udevice_id exynos7420_clk_topc_compat[] = {
-diff --git a/drivers/clk/exynos/clk-pll.c b/drivers/clk/exynos/clk-pll.c
-index 4b67591af109..ec0f4511ebf9 100644
---- a/drivers/clk/exynos/clk-pll.c
-+++ b/drivers/clk/exynos/clk-pll.c
-@@ -55,9 +55,9 @@ static unsigned long samsung_pll0822x_recalc_rate(struct clk *clk)
- 	do_div(fvco, (pdiv << sdiv));
- 	return (unsigned long)fvco;
- }
- 
--static const struct clk_ops samsung_pll0822x_clk_min_ops = {
-+static const struct clk_ops_uboot samsung_pll0822x_clk_min_ops = {
- 	.get_rate = samsung_pll0822x_recalc_rate,
- };
- 
- /*
-@@ -93,9 +93,9 @@ static unsigned long samsung_pll0831x_recalc_rate(struct clk *clk)
- 
- 	return (unsigned long)fvco;
- }
- 
--static const struct clk_ops samsung_pll0831x_clk_min_ops = {
-+static const struct clk_ops_uboot samsung_pll0831x_clk_min_ops = {
- 	.get_rate = samsung_pll0831x_recalc_rate,
- };
- 
- static struct clk *_samsung_clk_register_pll(void __iomem *base,
-diff --git a/drivers/clk/exynos/clk.h b/drivers/clk/exynos/clk.h
-index c25b7cb59d4f..c8d5d61991ee 100644
---- a/drivers/clk/exynos/clk.h
-+++ b/drivers/clk/exynos/clk.h
-@@ -32,9 +32,9 @@ static int _name##_of_xlate(struct clk *clk,				\
- 									\
- 	return 0;							\
- }									\
- 									\
--static const struct clk_ops _name##_clk_ops = {				\
-+static const struct clk_ops_uboot _name##_clk_ops = {				\
- 	.set_rate = ccf_clk_set_rate,					\
- 	.get_rate = ccf_clk_get_rate,					\
- 	.set_parent = ccf_clk_set_parent,				\
- 	.enable = ccf_clk_enable,					\
-diff --git a/drivers/clk/ics8n3qv01.c b/drivers/clk/ics8n3qv01.c
-index 9c61a84ea61f..04e6a349436a 100644
---- a/drivers/clk/ics8n3qv01.c
-+++ b/drivers/clk/ics8n3qv01.c
-@@ -195,9 +195,9 @@ static int ics8n3qv01_disable(struct clk *clk)
- {
- 	return 0;
- }
- 
--static const struct clk_ops ics8n3qv01_ops = {
-+static const struct clk_ops_uboot ics8n3qv01_ops = {
- 	.get_rate = ics8n3qv01_get_rate,
- 	.set_rate = ics8n3qv01_set_rate,
- 	.enable = ics8n3qv01_enable,
- 	.disable = ics8n3qv01_disable,
-diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-composite-8m.c
-index e1a3c0af308b..848c7b9d3fb1 100644
---- a/drivers/clk/imx/clk-composite-8m.c
-+++ b/drivers/clk/imx/clk-composite-8m.c
-@@ -110,9 +110,9 @@ static ulong imx8m_clk_composite_divider_set_rate(struct clk *clk,
- 
- 	return clk_get_rate(&composite->clk);
- }
- 
--static const struct clk_ops imx8m_clk_composite_divider_ops = {
-+static const struct clk_ops_uboot imx8m_clk_composite_divider_ops = {
- 	.get_rate = imx8m_clk_composite_divider_recalc_rate,
- 	.set_rate = imx8m_clk_composite_divider_set_rate,
- };
- 
-@@ -173,9 +173,9 @@ static int imx8m_clk_mux_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return 0;
- }
- 
--const struct clk_ops imx8m_clk_mux_ops = {
-+const struct clk_ops_uboot imx8m_clk_mux_ops = {
- 	.get_rate = clk_generic_get_rate,
- 	.set_parent = imx8m_clk_mux_set_parent,
- };
- 
-diff --git a/drivers/clk/imx/clk-composite-93.c b/drivers/clk/imx/clk-composite-93.c
-index 61692d34f926..b591db04c249 100644
---- a/drivers/clk/imx/clk-composite-93.c
-+++ b/drivers/clk/imx/clk-composite-93.c
-@@ -77,9 +77,9 @@ static int imx93_clk_composite_gate_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops imx93_clk_composite_gate_ops = {
-+static const struct clk_ops_uboot imx93_clk_composite_gate_ops = {
- 	.enable = imx93_clk_composite_gate_enable,
- 	.disable = imx93_clk_composite_gate_disable,
- };
- 
-diff --git a/drivers/clk/imx/clk-fracn-gppll.c b/drivers/clk/imx/clk-fracn-gppll.c
-index b3926564a226..b885c4bc01d4 100644
---- a/drivers/clk/imx/clk-fracn-gppll.c
-+++ b/drivers/clk/imx/clk-fracn-gppll.c
-@@ -324,9 +324,9 @@ static int clk_fracn_gppll_unprepare(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops clk_fracn_gppll_ops = {
-+static const struct clk_ops_uboot clk_fracn_gppll_ops = {
- 	.enable		= clk_fracn_gppll_prepare,
- 	.disable	= clk_fracn_gppll_unprepare,
- 	.get_rate	= clk_fracn_gppll_recalc_rate,
- 	.set_rate	= clk_fracn_gppll_set_rate,
-diff --git a/drivers/clk/imx/clk-gate-93.c b/drivers/clk/imx/clk-gate-93.c
-index d7f2640fbb7c..ff3ae5b57d36 100644
---- a/drivers/clk/imx/clk-gate-93.c
-+++ b/drivers/clk/imx/clk-gate-93.c
-@@ -102,9 +102,9 @@ static ulong imx93_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return -ENODEV;
- }
- 
--static const struct clk_ops imx93_clk_gate_ops = {
-+static const struct clk_ops_uboot imx93_clk_gate_ops = {
- 	.enable = imx93_clk_gate_enable,
- 	.disable = imx93_clk_gate_disable,
- 	.get_rate = clk_generic_get_rate,
- 	.set_rate = imx93_clk_set_rate,
-diff --git a/drivers/clk/imx/clk-gate2.c b/drivers/clk/imx/clk-gate2.c
-index fa07b13249b6..b5cd1b31036e 100644
---- a/drivers/clk/imx/clk-gate2.c
-+++ b/drivers/clk/imx/clk-gate2.c
-@@ -82,9 +82,9 @@ static ulong clk_gate2_set_rate(struct clk *clk, ulong rate)
- 
- 	return -ENODEV;
- }
- 
--static const struct clk_ops clk_gate2_ops = {
-+static const struct clk_ops_uboot clk_gate2_ops = {
- 	.set_rate = clk_gate2_set_rate,
- 	.enable = clk_gate2_enable,
- 	.disable = clk_gate2_disable,
- 	.get_rate = clk_generic_get_rate,
-diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-index 846b8011f5c5..8d0888c13fb6 100644
---- a/drivers/clk/imx/clk-imx6q.c
-+++ b/drivers/clk/imx/clk-imx6q.c
-@@ -38,9 +38,9 @@ static int imx6q_clk_request(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops imx6q_clk_ops = {
-+static struct clk_ops_uboot imx6q_clk_ops = {
- 	.request = imx6q_clk_request,
- 	.set_rate = ccf_clk_set_rate,
- 	.get_rate = ccf_clk_get_rate,
- 	.enable = ccf_clk_enable,
-diff --git a/drivers/clk/imx/clk-imx6ul.c b/drivers/clk/imx/clk-imx6ul.c
-index 32fb949ffbcc..541e63e8717b 100644
---- a/drivers/clk/imx/clk-imx6ul.c
-+++ b/drivers/clk/imx/clk-imx6ul.c
-@@ -24,9 +24,9 @@ static int imx6ul_clk_request(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops imx6ul_clk_ops = {
-+static struct clk_ops_uboot imx6ul_clk_ops = {
- 	.request = imx6ul_clk_request,
- 	.set_rate = ccf_clk_set_rate,
- 	.get_rate = ccf_clk_get_rate,
- 	.enable = ccf_clk_enable,
-diff --git a/drivers/clk/imx/clk-imx8.c b/drivers/clk/imx/clk-imx8.c
-index 96cf5fece75f..423b052cc5b6 100644
---- a/drivers/clk/imx/clk-imx8.c
-+++ b/drivers/clk/imx/clk-imx8.c
-@@ -77,9 +77,9 @@ static void imx8_clk_dump(struct udevice *dev)
- 	}
- }
- #endif
- 
--static struct clk_ops imx8_clk_ops = {
-+static struct clk_ops_uboot imx8_clk_ops = {
- 	.set_rate = imx8_clk_set_rate,
- 	.get_rate = imx8_clk_get_rate,
- 	.enable = imx8_clk_enable,
- 	.disable = imx8_clk_disable,
-diff --git a/drivers/clk/imx/clk-imxrt1020.c b/drivers/clk/imx/clk-imxrt1020.c
-index c14afdaf2364..c2797237a002 100644
---- a/drivers/clk/imx/clk-imxrt1020.c
-+++ b/drivers/clk/imx/clk-imxrt1020.c
-@@ -12,9 +12,9 @@
- #include <dt-bindings/clock/imxrt1020-clock.h>
- 
- #include "clk.h"
- 
--static struct clk_ops imxrt1020_clk_ops = {
-+static struct clk_ops_uboot imxrt1020_clk_ops = {
- 	.set_rate = ccf_clk_set_rate,
- 	.get_rate = ccf_clk_get_rate,
- 	.enable = ccf_clk_enable,
- 	.disable = ccf_clk_disable,
-diff --git a/drivers/clk/imx/clk-imxrt1170.c b/drivers/clk/imx/clk-imxrt1170.c
-index bfd5dd6c4644..ed31cb2d09ef 100644
---- a/drivers/clk/imx/clk-imxrt1170.c
-+++ b/drivers/clk/imx/clk-imxrt1170.c
-@@ -88,9 +88,9 @@ static int imxrt1170_clk_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return clk_set_parent(c, cp);
- }
- 
--static struct clk_ops imxrt1170_clk_ops = {
-+static struct clk_ops_uboot imxrt1170_clk_ops = {
- 	.set_rate = imxrt1170_clk_set_rate,
- 	.get_rate = imxrt1170_clk_get_rate,
- 	.enable = imxrt1170_clk_enable,
- 	.disable = imxrt1170_clk_disable,
-diff --git a/drivers/clk/imx/clk-pfd.c b/drivers/clk/imx/clk-pfd.c
-index 378cdff072fe..de26b1e3f83d 100644
---- a/drivers/clk/imx/clk-pfd.c
-+++ b/drivers/clk/imx/clk-pfd.c
-@@ -73,9 +73,9 @@ static unsigned long clk_pfd_set_rate(struct clk *clk, unsigned long rate)
- 
- 	return 0;
- }
- 
--static const struct clk_ops clk_pfd_ops = {
-+static const struct clk_ops_uboot clk_pfd_ops = {
- 	.get_rate	= clk_pfd_recalc_rate,
- 	.set_rate	= clk_pfd_set_rate,
- };
- 
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index f9fcec18f9f8..0bb4d2c7e28c 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -371,16 +371,16 @@ static int clk_pll14xx_unprepare(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops clk_pll1416x_ops = {
-+static const struct clk_ops_uboot clk_pll1416x_ops = {
- 	.enable		= clk_pll14xx_prepare,
- 	.disable	= clk_pll14xx_unprepare,
- 	.set_rate	= clk_pll1416x_set_rate,
- 	.get_rate	= clk_pll1416x_recalc_rate,
- };
- 
--static const struct clk_ops clk_pll1443x_ops = {
-+static const struct clk_ops_uboot clk_pll1443x_ops = {
- 	.enable		= clk_pll14xx_prepare,
- 	.disable	= clk_pll14xx_unprepare,
- 	.set_rate	= clk_pll1443x_set_rate,
- 	.get_rate	= clk_pll1443x_recalc_rate,
-diff --git a/drivers/clk/imx/clk-pllv3.c b/drivers/clk/imx/clk-pllv3.c
-index 85b6a9809e8d..e907fd378c6d 100644
---- a/drivers/clk/imx/clk-pllv3.c
-+++ b/drivers/clk/imx/clk-pllv3.c
-@@ -139,16 +139,16 @@ static int clk_pllv3_generic_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops clk_pllv3_generic_ops = {
-+static const struct clk_ops_uboot clk_pllv3_generic_ops = {
- 	.get_rate	= clk_pllv3_generic_get_rate,
- 	.enable		= clk_pllv3_generic_enable,
- 	.disable	= clk_pllv3_generic_disable,
- 	.set_rate	= clk_pllv3_generic_set_rate,
- };
- 
--static const struct clk_ops clk_pllv3_genericv2_ops = {
-+static const struct clk_ops_uboot clk_pllv3_genericv2_ops = {
- 	.get_rate	= clk_pllv3_genericv2_get_rate,
- 	.enable		= clk_pllv3_generic_enable,
- 	.disable	= clk_pllv3_generic_disable,
- 	.set_rate	= clk_pllv3_genericv2_set_rate,
-@@ -192,9 +192,9 @@ static ulong clk_pllv3_sys_set_rate(struct clk *clk, ulong rate)
- 
- 	return 0;
- }
- 
--static const struct clk_ops clk_pllv3_sys_ops = {
-+static const struct clk_ops_uboot clk_pllv3_sys_ops = {
- 	.enable		= clk_pllv3_generic_enable,
- 	.disable	= clk_pllv3_generic_disable,
- 	.get_rate	= clk_pllv3_sys_get_rate,
- 	.set_rate	= clk_pllv3_sys_set_rate,
-@@ -260,9 +260,9 @@ static ulong clk_pllv3_av_set_rate(struct clk *clk, ulong rate)
- 
- 	return 0;
- }
- 
--static const struct clk_ops clk_pllv3_av_ops = {
-+static const struct clk_ops_uboot clk_pllv3_av_ops = {
- 	.enable		= clk_pllv3_generic_enable,
- 	.disable	= clk_pllv3_generic_disable,
- 	.get_rate	= clk_pllv3_av_get_rate,
- 	.set_rate	= clk_pllv3_av_set_rate,
-@@ -274,9 +274,9 @@ static ulong clk_pllv3_enet_get_rate(struct clk *clk)
- 
- 	return pll->ref_clock;
- }
- 
--static const struct clk_ops clk_pllv3_enet_ops = {
-+static const struct clk_ops_uboot clk_pllv3_enet_ops = {
- 	.enable	= clk_pllv3_generic_enable,
- 	.disable	= clk_pllv3_generic_disable,
- 	.get_rate	= clk_pllv3_enet_get_rate,
- };
-diff --git a/drivers/clk/intel/clk_intel.c b/drivers/clk/intel/clk_intel.c
-index a677a7caac7c..1d473ebb4d90 100644
---- a/drivers/clk/intel/clk_intel.c
-+++ b/drivers/clk/intel/clk_intel.c
-@@ -18,9 +18,9 @@ static ulong intel_clk_get_rate(struct clk *clk)
- 		return -ENODEV;
- 	}
- }
- 
--static struct clk_ops intel_clk_ops = {
-+static struct clk_ops_uboot intel_clk_ops = {
- 	.get_rate	= intel_clk_get_rate,
- };
- 
- static const struct udevice_id intel_clk_ids[] = {
-diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
-index 9d0a6cd79cf7..d9289e3ced90 100644
---- a/drivers/clk/mediatek/clk-mtk.c
-+++ b/drivers/clk/mediatek/clk-mtk.c
-@@ -196,9 +196,9 @@ static ulong mtk_clk_find_parent_rate(struct clk *clk, int id,
- 	else
- 		parent.dev = clk->dev;
- 
- 	args.node = dev_ofnode(parent.dev);
--	ret = ((struct clk_ops *)parent.dev->driver->ops)->of_xlate(&parent, &args);
-+	ret = ((struct clk_ops_uboot *)parent.dev->driver->ops)->of_xlate(&parent, &args);
- 	if (ret)
- 		return ret;
- 
- 	return clk_get_rate(&parent);
-@@ -1128,9 +1128,9 @@ static void mtk_clk_gate_dump(struct udevice *dev)
- 	}
- }
- #endif
- 
--const struct clk_ops mtk_clk_apmixedsys_ops = {
-+const struct clk_ops_uboot mtk_clk_apmixedsys_ops = {
- 	.of_xlate = mtk_apmixedsys_of_xlate,
- 	.enable = mtk_apmixedsys_enable,
- 	.disable = mtk_apmixedsys_disable,
- 	.set_rate = mtk_apmixedsys_set_rate,
-@@ -1139,9 +1139,9 @@ const struct clk_ops mtk_clk_apmixedsys_ops = {
- 	.dump = mtk_apmixedsys_dump,
- #endif
- };
- 
--const struct clk_ops mtk_clk_fixed_pll_ops = {
-+const struct clk_ops_uboot mtk_clk_fixed_pll_ops = {
- 	.of_xlate = mtk_topckgen_of_xlate,
- 	.enable = mtk_dummy_enable,
- 	.disable = mtk_dummy_enable,
- 	.get_rate = mtk_topckgen_get_rate,
-@@ -1149,9 +1149,9 @@ const struct clk_ops mtk_clk_fixed_pll_ops = {
- 	.dump = mtk_topckgen_dump,
- #endif
- };
- 
--const struct clk_ops mtk_clk_topckgen_ops = {
-+const struct clk_ops_uboot mtk_clk_topckgen_ops = {
- 	.of_xlate = mtk_topckgen_of_xlate,
- 	.enable = mtk_topckgen_enable,
- 	.disable = mtk_topckgen_disable,
- 	.get_rate = mtk_topckgen_get_rate,
-@@ -1160,9 +1160,9 @@ const struct clk_ops mtk_clk_topckgen_ops = {
- 	.dump = mtk_topckgen_dump,
- #endif
- };
- 
--const struct clk_ops mtk_clk_infrasys_ops = {
-+const struct clk_ops_uboot mtk_clk_infrasys_ops = {
- 	.of_xlate = mtk_infrasys_of_xlate,
- 	.enable = mtk_clk_infrasys_enable,
- 	.disable = mtk_clk_infrasys_disable,
- 	.get_rate = mtk_infrasys_get_rate,
-@@ -1171,9 +1171,9 @@ const struct clk_ops mtk_clk_infrasys_ops = {
- 	.dump = mtk_infrasys_dump,
- #endif
- };
- 
--const struct clk_ops mtk_clk_gate_ops = {
-+const struct clk_ops_uboot mtk_clk_gate_ops = {
- 	.of_xlate = mtk_clk_gate_of_xlate,
- 	.enable = mtk_clk_gate_enable,
- 	.disable = mtk_clk_gate_disable,
- 	.get_rate = mtk_clk_gate_get_rate,
-diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-index b39a62edc433..8f5dc51b6bd9 100644
---- a/drivers/clk/mediatek/clk-mtk.h
-+++ b/drivers/clk/mediatek/clk-mtk.h
-@@ -277,13 +277,13 @@ struct mtk_cg_priv {
- 	int num_gates;
- 	int gates_offs;
- };
- 
--extern const struct clk_ops mtk_clk_apmixedsys_ops;
--extern const struct clk_ops mtk_clk_fixed_pll_ops;
--extern const struct clk_ops mtk_clk_topckgen_ops;
--extern const struct clk_ops mtk_clk_infrasys_ops;
--extern const struct clk_ops mtk_clk_gate_ops;
-+extern const struct clk_ops_uboot mtk_clk_apmixedsys_ops;
-+extern const struct clk_ops_uboot mtk_clk_fixed_pll_ops;
-+extern const struct clk_ops_uboot mtk_clk_topckgen_ops;
-+extern const struct clk_ops_uboot mtk_clk_infrasys_ops;
-+extern const struct clk_ops_uboot mtk_clk_gate_ops;
- 
- int mtk_common_clk_init(struct udevice *dev,
- 			const struct mtk_clk_tree *tree);
- int mtk_common_clk_infrasys_init(struct udevice *dev,
-diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
-index 669247a9a09c..fdbc6b77ef80 100644
---- a/drivers/clk/meson/a1.c
-+++ b/drivers/clk/meson/a1.c
-@@ -700,9 +700,9 @@ static void meson_clk_dump(struct udevice *dev)
- 	}
- }
- #endif
- 
--static struct clk_ops meson_clk_ops = {
-+static struct clk_ops_uboot meson_clk_ops = {
- 	.disable	= meson_clk_disable,
- 	.enable		= meson_clk_enable,
- 	.get_rate	= meson_clk_get_rate,
- 	.set_rate	= meson_clk_set_rate,
-diff --git a/drivers/clk/meson/axg-ao.c b/drivers/clk/meson/axg-ao.c
-index 6ccf52127b02..e105b8512c20 100644
---- a/drivers/clk/meson/axg-ao.c
-+++ b/drivers/clk/meson/axg-ao.c
-@@ -63,9 +63,9 @@ static int meson_clk_request(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops meson_clk_ops = {
-+static struct clk_ops_uboot meson_clk_ops = {
- 	.disable	= meson_clk_disable,
- 	.enable		= meson_clk_enable,
- 	.request	= meson_clk_request,
- };
-diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
-index c421a622a587..6ec9c4586ca2 100644
---- a/drivers/clk/meson/axg.c
-+++ b/drivers/clk/meson/axg.c
-@@ -303,9 +303,9 @@ static int meson_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops meson_clk_ops = {
-+static struct clk_ops_uboot meson_clk_ops = {
- 	.disable	= meson_clk_disable,
- 	.enable		= meson_clk_enable,
- 	.get_rate	= meson_clk_get_rate,
- };
-diff --git a/drivers/clk/meson/clk-measure.c b/drivers/clk/meson/clk-measure.c
-index f653fc635527..a89721638bcb 100644
---- a/drivers/clk/meson/clk-measure.c
-+++ b/drivers/clk/meson/clk-measure.c
-@@ -590,9 +590,9 @@ static int meson_clk_msr_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops meson_clk_msr_ops = {
-+static struct clk_ops_uboot meson_clk_msr_ops = {
- 	.of_xlate = meson_clk_msr_xlate,
- 	.dump = meson_clk_msr_dump,
- };
- 
-diff --git a/drivers/clk/meson/g12a-ao.c b/drivers/clk/meson/g12a-ao.c
-index 61d489c6e1c8..1f00744abacc 100644
---- a/drivers/clk/meson/g12a-ao.c
-+++ b/drivers/clk/meson/g12a-ao.c
-@@ -63,9 +63,9 @@ static int meson_clk_request(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops meson_clk_ops = {
-+static struct clk_ops_uboot meson_clk_ops = {
- 	.disable	= meson_clk_disable,
- 	.enable		= meson_clk_enable,
- 	.request	= meson_clk_request,
- };
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index f33938e1419f..a2e5f38ca3ce 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -998,9 +998,9 @@ static int meson_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops meson_clk_ops = {
-+static struct clk_ops_uboot meson_clk_ops = {
- 	.disable	= meson_clk_disable,
- 	.enable		= meson_clk_enable,
- 	.get_rate	= meson_clk_get_rate,
- 	.set_parent	= meson_clk_set_parent,
-diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-index bf46f4d50bc5..201c03fc8054 100644
---- a/drivers/clk/meson/gxbb.c
-+++ b/drivers/clk/meson/gxbb.c
-@@ -952,9 +952,9 @@ static int meson_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops meson_clk_ops = {
-+static struct clk_ops_uboot meson_clk_ops = {
- 	.disable	= meson_clk_disable,
- 	.enable		= meson_clk_enable,
- 	.get_rate	= meson_clk_get_rate,
- 	.set_parent	= meson_clk_set_parent,
-diff --git a/drivers/clk/microchip/mpfs_clk_cfg.c b/drivers/clk/microchip/mpfs_clk_cfg.c
-index b64fb6b71931..294ee0f5cc0d 100644
---- a/drivers/clk/microchip/mpfs_clk_cfg.c
-+++ b/drivers/clk/microchip/mpfs_clk_cfg.c
-@@ -137,9 +137,9 @@ int mpfs_clk_register_cfgs(struct clk *parent, struct regmap *regmap)
- 	}
- 	return 0;
- }
- 
--const struct clk_ops mpfs_cfg_clk_ops = {
-+const struct clk_ops_uboot mpfs_cfg_clk_ops = {
- 	.set_rate = mpfs_cfg_clk_set_rate,
- 	.get_rate = mpfs_cfg_clk_recalc_rate,
- };
- 
-diff --git a/drivers/clk/microchip/mpfs_clk_msspll.c b/drivers/clk/microchip/mpfs_clk_msspll.c
-index 02b4a3444671..489f6cc67d4b 100644
---- a/drivers/clk/microchip/mpfs_clk_msspll.c
-+++ b/drivers/clk/microchip/mpfs_clk_msspll.c
-@@ -105,9 +105,9 @@ int mpfs_clk_register_msspll(void __iomem *base, struct clk *parent)
- 
- 	return 0;
- }
- 
--const struct clk_ops mpfs_msspll_clk_ops = {
-+const struct clk_ops_uboot mpfs_msspll_clk_ops = {
- 	.get_rate = mpfs_clk_msspll_recalc_rate,
- };
- 
- U_BOOT_DRIVER(mpfs_msspll_clock) = {
-diff --git a/drivers/clk/microchip/mpfs_clk_periph.c b/drivers/clk/microchip/mpfs_clk_periph.c
-index 706d6841ee49..ecdfa9c36359 100644
---- a/drivers/clk/microchip/mpfs_clk_periph.c
-+++ b/drivers/clk/microchip/mpfs_clk_periph.c
-@@ -183,9 +183,9 @@ int mpfs_clk_register_periphs(struct udevice *dev, struct regmap *regmap)
- 
- 	return 0;
- }
- 
--const struct clk_ops mpfs_periph_clk_ops = {
-+const struct clk_ops_uboot mpfs_periph_clk_ops = {
- 	.enable = mpfs_periph_clk_enable,
- 	.disable = mpfs_periph_clk_disable,
- 	.get_rate = mpfs_periph_clk_recalc_rate,
- };
-diff --git a/drivers/clk/mpc83xx_clk.c b/drivers/clk/mpc83xx_clk.c
-index a43fff2e7ed9..e163959a7b75 100644
---- a/drivers/clk/mpc83xx_clk.c
-+++ b/drivers/clk/mpc83xx_clk.c
-@@ -311,9 +311,9 @@ int get_serial_clock(void)
- 
- 	return priv->speed[MPC83XX_CLK_CSB];
- }
- 
--const struct clk_ops mpc83xx_clk_ops = {
-+const struct clk_ops_uboot mpc83xx_clk_ops = {
- 	.request = mpc83xx_clk_request,
- 	.get_rate = mpc83xx_clk_get_rate,
- 	.enable = mpc83xx_clk_enable,
- };
-diff --git a/drivers/clk/mtmips/clk-mt7620.c b/drivers/clk/mtmips/clk-mt7620.c
-index 57d2e2f04c64..812e7bb5a570 100644
---- a/drivers/clk/mtmips/clk-mt7620.c
-+++ b/drivers/clk/mtmips/clk-mt7620.c
-@@ -104,9 +104,9 @@ static int mt7620_clk_disable(struct clk *clk)
- 
- 	return mt7620_clkcfg1_rmw(priv, BIT(clk->id), 0);
- }
- 
--const struct clk_ops mt7620_clk_ops = {
-+const struct clk_ops_uboot mt7620_clk_ops = {
- 	.enable = mt7620_clk_enable,
- 	.disable = mt7620_clk_disable,
- 	.get_rate = mt7620_clk_get_rate,
- };
-diff --git a/drivers/clk/mtmips/clk-mt7621.c b/drivers/clk/mtmips/clk-mt7621.c
-index 03363b70d74e..6e780b7c9c45 100644
---- a/drivers/clk/mtmips/clk-mt7621.c
-+++ b/drivers/clk/mtmips/clk-mt7621.c
-@@ -180,9 +180,9 @@ static int mt7621_clk_request(struct clk *clk)
- 		return -EINVAL;
- 	return 0;
- }
- 
--const struct clk_ops mt7621_clk_ops = {
-+const struct clk_ops_uboot mt7621_clk_ops = {
- 	.request = mt7621_clk_request,
- 	.enable = mt7621_clk_enable,
- 	.disable = mt7621_clk_disable,
- 	.get_rate = mt7621_clk_get_rate,
-diff --git a/drivers/clk/mtmips/clk-mt7628.c b/drivers/clk/mtmips/clk-mt7628.c
-index 2e263fb2cd28..a8cb5f7ae100 100644
---- a/drivers/clk/mtmips/clk-mt7628.c
-+++ b/drivers/clk/mtmips/clk-mt7628.c
-@@ -100,9 +100,9 @@ static int mt7628_clk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--const struct clk_ops mt7628_clk_ops = {
-+const struct clk_ops_uboot mt7628_clk_ops = {
- 	.enable = mt7628_clk_enable,
- 	.disable = mt7628_clk_disable,
- 	.get_rate = mt7628_clk_get_rate,
- };
-diff --git a/drivers/clk/mvebu/armada-37xx-periph.c b/drivers/clk/mvebu/armada-37xx-periph.c
-index 30330393f760..b25b3df3b666 100644
---- a/drivers/clk/mvebu/armada-37xx-periph.c
-+++ b/drivers/clk/mvebu/armada-37xx-periph.c
-@@ -598,9 +598,9 @@ static int armada_37xx_periph_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static const struct clk_ops armada_37xx_periph_clk_ops = {
-+static const struct clk_ops_uboot armada_37xx_periph_clk_ops = {
- 	.get_rate = armada_37xx_periph_clk_get_rate,
- 	.set_rate = armada_37xx_periph_clk_set_rate,
- 	.set_parent = armada_37xx_periph_clk_set_parent,
- 	.enable = armada_37xx_periph_clk_enable,
-diff --git a/drivers/clk/mvebu/armada-37xx-tbg.c b/drivers/clk/mvebu/armada-37xx-tbg.c
-index c1bab84c070e..598604f10c47 100644
---- a/drivers/clk/mvebu/armada-37xx-tbg.c
-+++ b/drivers/clk/mvebu/armada-37xx-tbg.c
-@@ -134,9 +134,9 @@ static int armada_37xx_tbg_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static const struct clk_ops armada_37xx_tbg_clk_ops = {
-+static const struct clk_ops_uboot armada_37xx_tbg_clk_ops = {
- 	.get_rate = armada_37xx_tbg_clk_get_rate,
- };
- 
- static const struct udevice_id armada_37xx_tbg_clk_ids[] = {
-diff --git a/drivers/clk/nuvoton/clk_npcm.c b/drivers/clk/nuvoton/clk_npcm.c
-index 18cb9cddbf38..ecb23431ecbd 100644
---- a/drivers/clk/nuvoton/clk_npcm.c
-+++ b/drivers/clk/nuvoton/clk_npcm.c
-@@ -299,9 +299,9 @@ static int npcm_clk_request(struct clk *clk)
- 
- 	return 0;
- }
- 
--const struct clk_ops npcm_clk_ops = {
-+const struct clk_ops_uboot npcm_clk_ops = {
- 	.get_rate = npcm_clk_get_rate,
- 	.set_rate = npcm_clk_set_rate,
- 	.set_parent = npcm_clk_set_parent,
- 	.request = npcm_clk_request,
-diff --git a/drivers/clk/nuvoton/clk_npcm.h b/drivers/clk/nuvoton/clk_npcm.h
-index b4726d8381ea..0e5b1ba8b432 100644
---- a/drivers/clk/nuvoton/clk_npcm.h
-+++ b/drivers/clk/nuvoton/clk_npcm.h
-@@ -100,7 +100,7 @@ struct npcm_clk_priv {
- 	struct npcm_clk_data *clk_data;
- 	int num_clks;
- };
- 
--extern const struct clk_ops npcm_clk_ops;
-+extern const struct clk_ops_uboot npcm_clk_ops;
- 
- #endif
-diff --git a/drivers/clk/owl/clk_owl.c b/drivers/clk/owl/clk_owl.c
-index 513112c1146c..832177b8547f 100644
---- a/drivers/clk/owl/clk_owl.c
-+++ b/drivers/clk/owl/clk_owl.c
-@@ -237,9 +237,9 @@ static int owl_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static const struct clk_ops owl_clk_ops = {
-+static const struct clk_ops_uboot owl_clk_ops = {
- 	.enable = owl_clk_enable,
- 	.disable = owl_clk_disable,
- 	.get_rate = owl_clk_get_rate,
- 	.set_rate = owl_clk_set_rate,
-diff --git a/drivers/clk/qcom/clock-milos.c b/drivers/clk/qcom/clock-milos.c
-index afe591085596..0a598f361637 100644
---- a/drivers/clk/qcom/clock-milos.c
-+++ b/drivers/clk/qcom/clock-milos.c
-@@ -174,9 +174,9 @@ static int milos_rpmh_clk_nop(struct clk *clk)
- {
- 	return 0;
- }
- 
--static struct clk_ops milos_rpmh_clk_ops = {
-+static struct clk_ops_uboot milos_rpmh_clk_ops = {
- 	.set_rate = milos_rpmh_clk_set_rate,
- 	.get_rate = milos_rpmh_clk_get_rate,
- 	.enable = milos_rpmh_clk_nop,
- 	.disable = milos_rpmh_clk_nop,
-diff --git a/drivers/clk/qcom/clock-qcom.c b/drivers/clk/qcom/clock-qcom.c
-index 6b46d9db744b..6df8285cb301 100644
---- a/drivers/clk/qcom/clock-qcom.c
-+++ b/drivers/clk/qcom/clock-qcom.c
-@@ -376,9 +376,9 @@ static void __maybe_unused msm_dump_clks(struct udevice *dev)
- 	dump_gplls(dev, priv->base);
- 	dump_rcgs(dev);
- }
- 
--static struct clk_ops msm_clk_ops = {
-+static struct clk_ops_uboot msm_clk_ops = {
- 	.set_rate = msm_clk_set_rate,
- 	.enable = msm_clk_enable,
- #if IS_ENABLED(CONFIG_CMD_CLK)
- 	.dump = msm_dump_clks,
-diff --git a/drivers/clk/qcom/clock-sm8550.c b/drivers/clk/qcom/clock-sm8550.c
-index 7c06489b9c4d..02d6e8d77345 100644
---- a/drivers/clk/qcom/clock-sm8550.c
-+++ b/drivers/clk/qcom/clock-sm8550.c
-@@ -344,9 +344,9 @@ static int tcsrcc_sm8550_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops tcsrcc_sm8550_clk_ops = {
-+static struct clk_ops_uboot tcsrcc_sm8550_clk_ops = {
- 	.enable = tcsrcc_sm8550_clk_enable,
- 	.get_rate = tcsrcc_sm8550_clk_get_rate,
- };
- 
-diff --git a/drivers/clk/qcom/clock-sm8650.c b/drivers/clk/qcom/clock-sm8650.c
-index 7c49e99c005c..fbd1a186d1ba 100644
---- a/drivers/clk/qcom/clock-sm8650.c
-+++ b/drivers/clk/qcom/clock-sm8650.c
-@@ -342,9 +342,9 @@ static int tcsrcc_sm8650_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops tcsrcc_sm8650_clk_ops = {
-+static struct clk_ops_uboot tcsrcc_sm8650_clk_ops = {
- 	.enable = tcsrcc_sm8650_clk_enable,
- 	.get_rate = tcsrcc_sm8650_clk_get_rate,
- };
- 
-diff --git a/drivers/clk/qcom/clock-x1e80100.c b/drivers/clk/qcom/clock-x1e80100.c
-index 542d6248d658..ee57a02564a3 100644
---- a/drivers/clk/qcom/clock-x1e80100.c
-+++ b/drivers/clk/qcom/clock-x1e80100.c
-@@ -375,9 +375,9 @@ static int tcsrcc_x1e80100_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops tcsrcc_x1e80100_clk_ops = {
-+static struct clk_ops_uboot tcsrcc_x1e80100_clk_ops = {
- 	.enable = tcsrcc_x1e80100_clk_enable,
- 	.get_rate = tcsrcc_x1e80100_clk_get_rate,
- };
- 
-diff --git a/drivers/clk/renesas/clk-rcar-gen2.c b/drivers/clk/renesas/clk-rcar-gen2.c
-index 9b6fce4675c0..e659ad39da7d 100644
---- a/drivers/clk/renesas/clk-rcar-gen2.c
-+++ b/drivers/clk/renesas/clk-rcar-gen2.c
-@@ -259,9 +259,9 @@ static int gen2_clk_of_xlate(struct clk *clk, struct ofnode_phandle_args *args)
- 
- 	return 0;
- }
- 
--const struct clk_ops gen2_clk_ops = {
-+const struct clk_ops_uboot gen2_clk_ops = {
- 	.enable		= gen2_clk_enable,
- 	.disable	= gen2_clk_disable,
- 	.get_rate	= gen2_clk_get_rate,
- 	.set_rate	= gen2_clk_set_rate,
-diff --git a/drivers/clk/renesas/clk-rcar-gen3.c b/drivers/clk/renesas/clk-rcar-gen3.c
-index 5745acf4023c..ae21f2a663f8 100644
---- a/drivers/clk/renesas/clk-rcar-gen3.c
-+++ b/drivers/clk/renesas/clk-rcar-gen3.c
-@@ -451,9 +451,9 @@ static int gen3_clk_of_xlate(struct clk *clk, struct ofnode_phandle_args *args)
- 
- 	return 0;
- }
- 
--const struct clk_ops gen3_clk_ops = {
-+const struct clk_ops_uboot gen3_clk_ops = {
- 	.enable		= gen3_clk_enable,
- 	.disable	= gen3_clk_disable,
- 	.get_rate	= gen3_clk_get_rate,
- 	.set_rate	= gen3_clk_set_rate,
-diff --git a/drivers/clk/renesas/compound-clock.c b/drivers/clk/renesas/compound-clock.c
-index 499a2598833c..2dc3e2e0deea 100644
---- a/drivers/clk/renesas/compound-clock.c
-+++ b/drivers/clk/renesas/compound-clock.c
-@@ -47,9 +47,9 @@ static ulong clk_compound_rate_set_rate(struct clk *clk, ulong rate)
- {
- 	return 0;	/* Set rate is not forwarded to SCP */
- }
- 
--const struct clk_ops clk_compound_rate_ops = {
-+const struct clk_ops_uboot clk_compound_rate_ops = {
- 	.enable		= clk_compound_rate_enable,
- 	.disable	= clk_compound_rate_disable,
- 	.get_rate	= clk_compound_rate_get_rate,
- 	.set_rate	= clk_compound_rate_set_rate,
-diff --git a/drivers/clk/renesas/r8a78000-cpg.c b/drivers/clk/renesas/r8a78000-cpg.c
-index e9ca06476f67..f47ca3e8413a 100644
---- a/drivers/clk/renesas/r8a78000-cpg.c
-+++ b/drivers/clk/renesas/r8a78000-cpg.c
-@@ -207,9 +207,9 @@ static int gen5_clk_of_xlate(struct clk *clk, struct ofnode_phandle_args *args)
- 
- 	return 0;
- }
- 
--static const struct clk_ops gen5_clk_ops = {
-+static const struct clk_ops_uboot gen5_clk_ops = {
- 	.round_rate	= gen5_clk_round_rate,
- 	.get_rate	= gen5_clk_get_rate,
- 	.set_rate	= gen5_clk_set_rate,
- 	.set_parent	= gen5_clk_set_parent,
-@@ -258,9 +258,9 @@ static int gen5_clk_of_xlate(struct clk *clk, struct ofnode_phandle_args *args)
- 
- 	return 0;
- }
- 
--static const struct clk_ops gen5_clk_ops = {
-+static const struct clk_ops_uboot gen5_clk_ops = {
- 	.enable		= gen5_clk_enable,
- 	.disable	= gen5_clk_disable,
- 	.of_xlate	= gen5_clk_of_xlate,
- };
-diff --git a/drivers/clk/renesas/r9a06g032-clocks.c b/drivers/clk/renesas/r9a06g032-clocks.c
-index d207bf615cee..3ef98237ba15 100644
---- a/drivers/clk/renesas/r9a06g032-clocks.c
-+++ b/drivers/clk/renesas/r9a06g032-clocks.c
-@@ -1048,9 +1048,9 @@ static int r9a06g032_clk_of_xlate(struct clk *clk, struct ofnode_phandle_args *a
- 
- 	return 0;
- }
- 
--static const struct clk_ops r9a06g032_clk_ops = {
-+static const struct clk_ops_uboot r9a06g032_clk_ops = {
- 	.enable		= r9a06g032_clk_enable,
- 	.disable	= r9a06g032_clk_disable,
- 	.get_rate	= r9a06g032_clk_get_rate,
- 	.set_rate	= r9a06g032_clk_set_rate,
-diff --git a/drivers/clk/renesas/rcar-gen2-cpg.h b/drivers/clk/renesas/rcar-gen2-cpg.h
-index ca7c3ed6b544..e1f075b03597 100644
---- a/drivers/clk/renesas/rcar-gen2-cpg.h
-+++ b/drivers/clk/renesas/rcar-gen2-cpg.h
-@@ -42,7 +42,7 @@ struct gen2_clk_priv {
- 
- int gen2_clk_probe(struct udevice *dev);
- int gen2_clk_remove(struct udevice *dev);
- 
--extern const struct clk_ops gen2_clk_ops;
-+extern const struct clk_ops_uboot gen2_clk_ops;
- 
- #endif
-diff --git a/drivers/clk/renesas/rcar-gen3-cpg.h b/drivers/clk/renesas/rcar-gen3-cpg.h
-index 4efb9b6ceefd..318fa9a3c741 100644
---- a/drivers/clk/renesas/rcar-gen3-cpg.h
-+++ b/drivers/clk/renesas/rcar-gen3-cpg.h
-@@ -165,7 +165,7 @@ struct gen3_clk_priv {
- };
- 
- int gen3_cpg_bind(struct udevice *parent);
- 
--extern const struct clk_ops gen3_clk_ops;
-+extern const struct clk_ops_uboot gen3_clk_ops;
- 
- #endif
-diff --git a/drivers/clk/renesas/rzg2l-cpg.c b/drivers/clk/renesas/rzg2l-cpg.c
-index 7fce1f70d138..03cb4f26d474 100644
---- a/drivers/clk/renesas/rzg2l-cpg.c
-+++ b/drivers/clk/renesas/rzg2l-cpg.c
-@@ -396,9 +396,9 @@ static ulong rzg2l_cpg_clk_set_rate(struct clk *clk, ulong rate)
- {
- 	return rzg2l_cpg_clk_set_rate_by_id(clk->dev, clk->id, rate);
- }
- 
--static const struct clk_ops rzg2l_cpg_clk_ops = {
-+static const struct clk_ops_uboot rzg2l_cpg_clk_ops = {
- 	.enable		= rzg2l_cpg_clk_enable,
- 	.disable	= rzg2l_cpg_clk_disable,
- 	.of_xlate	= rzg2l_cpg_clk_of_xlate,
- 	.get_rate	= rzg2l_cpg_clk_get_rate,
-diff --git a/drivers/clk/rockchip/clk_px30.c b/drivers/clk/rockchip/clk_px30.c
-index d143a6b85ee6..9fb2c47060af 100644
---- a/drivers/clk/rockchip/clk_px30.c
-+++ b/drivers/clk/rockchip/clk_px30.c
-@@ -1421,9 +1421,9 @@ static int px30_clk_enable(struct clk *clk)
- 	debug("%s: unsupported clk %ld\n", __func__, clk->id);
- 	return -ENOENT;
- }
- 
--static struct clk_ops px30_clk_ops = {
-+static struct clk_ops_uboot px30_clk_ops = {
- 	.get_rate = px30_clk_get_rate,
- 	.set_rate = px30_clk_set_rate,
- #if CONFIG_IS_ENABLED(OF_REAL)
- 	.set_parent = px30_clk_set_parent,
-@@ -1735,9 +1735,9 @@ static ulong px30_pmuclk_set_rate(struct clk *clk, ulong rate)
- 
- 	return ret;
- }
- 
--static struct clk_ops px30_pmuclk_ops = {
-+static struct clk_ops_uboot px30_pmuclk_ops = {
- 	.get_rate = px30_pmuclk_get_rate,
- 	.set_rate = px30_pmuclk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rk3036.c b/drivers/clk/rockchip/clk_rk3036.c
-index 274428f2b4bd..e575143341d9 100644
---- a/drivers/clk/rockchip/clk_rk3036.c
-+++ b/drivers/clk/rockchip/clk_rk3036.c
-@@ -311,9 +311,9 @@ static ulong rk3036_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return new_rate;
- }
- 
--static struct clk_ops rk3036_clk_ops = {
-+static struct clk_ops_uboot rk3036_clk_ops = {
- 	.get_rate	= rk3036_clk_get_rate,
- 	.set_rate	= rk3036_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rk3066.c b/drivers/clk/rockchip/clk_rk3066.c
-index f7dea7859f74..9b6f7a2b6b00 100644
---- a/drivers/clk/rockchip/clk_rk3066.c
-+++ b/drivers/clk/rockchip/clk_rk3066.c
-@@ -624,9 +624,9 @@ static int rk3066_clk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops rk3066_clk_ops = {
-+static struct clk_ops_uboot rk3066_clk_ops = {
- 	.disable	= rk3066_clk_disable,
- 	.enable	= rk3066_clk_enable,
- 	.get_rate	= rk3066_clk_get_rate,
- 	.set_rate	= rk3066_clk_set_rate,
-diff --git a/drivers/clk/rockchip/clk_rk3128.c b/drivers/clk/rockchip/clk_rk3128.c
-index a07285593b55..4665f0d31152 100644
---- a/drivers/clk/rockchip/clk_rk3128.c
-+++ b/drivers/clk/rockchip/clk_rk3128.c
-@@ -539,9 +539,9 @@ static ulong rk3128_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return new_rate;
- }
- 
--static struct clk_ops rk3128_clk_ops = {
-+static struct clk_ops_uboot rk3128_clk_ops = {
- 	.get_rate	= rk3128_clk_get_rate,
- 	.set_rate	= rk3128_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rk3188.c b/drivers/clk/rockchip/clk_rk3188.c
-index d8b03e1d7ab3..1c75c2d9bf5b 100644
---- a/drivers/clk/rockchip/clk_rk3188.c
-+++ b/drivers/clk/rockchip/clk_rk3188.c
-@@ -530,9 +530,9 @@ static ulong rk3188_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return new_rate;
- }
- 
--static struct clk_ops rk3188_clk_ops = {
-+static struct clk_ops_uboot rk3188_clk_ops = {
- 	.get_rate	= rk3188_clk_get_rate,
- 	.set_rate	= rk3188_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rk322x.c b/drivers/clk/rockchip/clk_rk322x.c
-index 9b71fd863bad..f40fe68de45b 100644
---- a/drivers/clk/rockchip/clk_rk322x.c
-+++ b/drivers/clk/rockchip/clk_rk322x.c
-@@ -467,9 +467,9 @@ static int rk322x_clk_set_parent(struct clk *clk, struct clk *parent)
- 	debug("%s: unsupported clk %ld\n", __func__, clk->id);
- 	return -ENOENT;
- }
- 
--static struct clk_ops rk322x_clk_ops = {
-+static struct clk_ops_uboot rk322x_clk_ops = {
- 	.get_rate	= rk322x_clk_get_rate,
- 	.set_rate	= rk322x_clk_set_rate,
- 	.set_parent	= rk322x_clk_set_parent,
- };
-diff --git a/drivers/clk/rockchip/clk_rk3288.c b/drivers/clk/rockchip/clk_rk3288.c
-index a4ff1c41abb8..b672e728fb0a 100644
---- a/drivers/clk/rockchip/clk_rk3288.c
-+++ b/drivers/clk/rockchip/clk_rk3288.c
-@@ -945,9 +945,9 @@ static int __maybe_unused rk3288_clk_set_parent(struct clk *clk, struct clk *par
- 	debug("%s: unsupported clk %ld\n", __func__, clk->id);
- 	return -ENOENT;
- }
- 
--static struct clk_ops rk3288_clk_ops = {
-+static struct clk_ops_uboot rk3288_clk_ops = {
- 	.get_rate	= rk3288_clk_get_rate,
- 	.set_rate	= rk3288_clk_set_rate,
- #if CONFIG_IS_ENABLED(OF_REAL)
- 	.set_parent	= rk3288_clk_set_parent,
-diff --git a/drivers/clk/rockchip/clk_rk3308.c b/drivers/clk/rockchip/clk_rk3308.c
-index 97043b8693c0..9c7d5acc6d1c 100644
---- a/drivers/clk/rockchip/clk_rk3308.c
-+++ b/drivers/clk/rockchip/clk_rk3308.c
-@@ -1125,9 +1125,9 @@ static int __maybe_unused rk3308_clk_set_parent(struct clk *clk, struct clk *par
- 	return -ENOENT;
- }
- #endif
- 
--static struct clk_ops rk3308_clk_ops = {
-+static struct clk_ops_uboot rk3308_clk_ops = {
- 	.get_rate = rk3308_clk_get_rate,
- 	.set_rate = rk3308_clk_set_rate,
- #if CONFIG_IS_ENABLED(OF_REAL)
- 	.set_parent = rk3308_clk_set_parent,
-diff --git a/drivers/clk/rockchip/clk_rk3328.c b/drivers/clk/rockchip/clk_rk3328.c
-index 7701a9734ee0..cb5df70bfaa0 100644
---- a/drivers/clk/rockchip/clk_rk3328.c
-+++ b/drivers/clk/rockchip/clk_rk3328.c
-@@ -886,9 +886,9 @@ static int rk3328_clk_set_parent(struct clk *clk, struct clk *parent)
- 	debug("%s: unsupported clk %ld\n", __func__, clk->id);
- 	return -ENOENT;
- }
- 
--static struct clk_ops rk3328_clk_ops = {
-+static struct clk_ops_uboot rk3328_clk_ops = {
- 	.get_rate = rk3328_clk_get_rate,
- 	.set_rate = rk3328_clk_set_rate,
- 	.set_parent = rk3328_clk_set_parent,
- };
-diff --git a/drivers/clk/rockchip/clk_rk3368.c b/drivers/clk/rockchip/clk_rk3368.c
-index 630253fbb1df..9949ebaf23fe 100644
---- a/drivers/clk/rockchip/clk_rk3368.c
-+++ b/drivers/clk/rockchip/clk_rk3368.c
-@@ -569,9 +569,9 @@ static int __maybe_unused rk3368_clk_set_parent(struct clk *clk, struct clk *par
- 	debug("%s: unsupported clk %ld\n", __func__, clk->id);
- 	return -ENOENT;
- }
- 
--static struct clk_ops rk3368_clk_ops = {
-+static struct clk_ops_uboot rk3368_clk_ops = {
- 	.get_rate = rk3368_clk_get_rate,
- 	.set_rate = rk3368_clk_set_rate,
- #if CONFIG_IS_ENABLED(OF_REAL)
- 	.set_parent = rk3368_clk_set_parent,
-diff --git a/drivers/clk/rockchip/clk_rk3399.c b/drivers/clk/rockchip/clk_rk3399.c
-index 6e87db18be07..976afc57f0b7 100644
---- a/drivers/clk/rockchip/clk_rk3399.c
-+++ b/drivers/clk/rockchip/clk_rk3399.c
-@@ -1363,9 +1363,9 @@ static int rk3399_clk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops rk3399_clk_ops = {
-+static struct clk_ops_uboot rk3399_clk_ops = {
- 	.get_rate = rk3399_clk_get_rate,
- 	.set_rate = rk3399_clk_set_rate,
- #if CONFIG_IS_ENABLED(OF_REAL)
- 	.set_parent = rk3399_clk_set_parent,
-@@ -1651,9 +1651,9 @@ static ulong rk3399_pmuclk_set_rate(struct clk *clk, ulong rate)
- 
- 	return ret;
- }
- 
--static struct clk_ops rk3399_pmuclk_ops = {
-+static struct clk_ops_uboot rk3399_pmuclk_ops = {
- 	.get_rate = rk3399_pmuclk_get_rate,
- 	.set_rate = rk3399_pmuclk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rk3506.c b/drivers/clk/rockchip/clk_rk3506.c
-index 38066c5c3e3c..5f8c4c7dbee5 100644
---- a/drivers/clk/rockchip/clk_rk3506.c
-+++ b/drivers/clk/rockchip/clk_rk3506.c
-@@ -972,9 +972,9 @@ static ulong rk3506_clk_get_rate(struct clk *clk)
- 
- 	return rate;
- };
- 
--static ulong rk3506_clk_set_rate(struct clk *clk, ulong rate)
-+static long rk3506_clk_set_rate(struct clk *clk, ulong rate)
- {
- 	struct rk3506_clk_priv *priv = dev_get_priv(clk->dev);
- 	ulong ret = 0;
- 
-@@ -1045,9 +1045,9 @@ static ulong rk3506_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return ret;
- };
- 
--static struct clk_ops rk3506_clk_ops = {
-+static struct clk_ops_uboot rk3506_clk_ops = {
- 	.get_rate = rk3506_clk_get_rate,
- 	.set_rate = rk3506_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rk3528.c b/drivers/clk/rockchip/clk_rk3528.c
-index cf8c3a623495..3df16a0165e0 100644
---- a/drivers/clk/rockchip/clk_rk3528.c
-+++ b/drivers/clk/rockchip/clk_rk3528.c
-@@ -1545,9 +1545,9 @@ static ulong rk3528_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return ret;
- };
- 
--static struct clk_ops rk3528_clk_ops = {
-+static struct clk_ops_uboot rk3528_clk_ops = {
- 	.get_rate = rk3528_clk_get_rate,
- 	.set_rate = rk3528_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rk3568.c b/drivers/clk/rockchip/clk_rk3568.c
-index bb49af358e60..dfd7661e9fb7 100644
---- a/drivers/clk/rockchip/clk_rk3568.c
-+++ b/drivers/clk/rockchip/clk_rk3568.c
-@@ -456,9 +456,9 @@ static int rk3568_pmuclk_set_parent(struct clk *clk, struct clk *parent)
- 		return -ENOENT;
- 	}
- }
- 
--static struct clk_ops rk3568_pmuclk_ops = {
-+static struct clk_ops_uboot rk3568_pmuclk_ops = {
- 	.get_rate = rk3568_pmuclk_get_rate,
- 	.set_rate = rk3568_pmuclk_set_rate,
- 	.set_parent = rk3568_pmuclk_set_parent,
- };
-@@ -2853,9 +2853,9 @@ static int rk3568_clk_set_parent(struct clk *clk, struct clk *parent)
- 	return 0;
- }
- #endif
- 
--static struct clk_ops rk3568_clk_ops = {
-+static struct clk_ops_uboot rk3568_clk_ops = {
- 	.get_rate = rk3568_clk_get_rate,
- 	.set_rate = rk3568_clk_set_rate,
- #if (CONFIG_IS_ENABLED(OF_CONTROL)) || (!CONFIG_IS_ENABLED(OF_PLATDATA))
- 	.set_parent = rk3568_clk_set_parent,
-diff --git a/drivers/clk/rockchip/clk_rk3576.c b/drivers/clk/rockchip/clk_rk3576.c
-index db8ce25852fd..2ed8b5954b8c 100644
---- a/drivers/clk/rockchip/clk_rk3576.c
-+++ b/drivers/clk/rockchip/clk_rk3576.c
-@@ -2407,9 +2407,9 @@ static int rk3576_clk_set_parent(struct clk *clk, struct clk *parent)
- 	return 0;
- }
- #endif
- 
--static struct clk_ops rk3576_clk_ops = {
-+static struct clk_ops_uboot rk3576_clk_ops = {
- 	.get_rate = rk3576_clk_get_rate,
- 	.set_rate = rk3576_clk_set_rate,
- #if (IS_ENABLED(OF_CONTROL)) || (!IS_ENABLED(OF_PLATDATA))
- 	.set_parent = rk3576_clk_set_parent,
-diff --git a/drivers/clk/rockchip/clk_rk3588.c b/drivers/clk/rockchip/clk_rk3588.c
-index be401a9faeec..6e214a59494e 100644
---- a/drivers/clk/rockchip/clk_rk3588.c
-+++ b/drivers/clk/rockchip/clk_rk3588.c
-@@ -1909,9 +1909,9 @@ static int rk3588_clk_set_parent(struct clk *clk, struct clk *parent)
- 	return 0;
- }
- #endif
- 
--static struct clk_ops rk3588_clk_ops = {
-+static struct clk_ops_uboot rk3588_clk_ops = {
- 	.get_rate = rk3588_clk_get_rate,
- 	.set_rate = rk3588_clk_set_rate,
- #if (CONFIG_IS_ENABLED(OF_CONTROL)) || (!CONFIG_IS_ENABLED(OF_PLATDATA))
- 	.set_parent = rk3588_clk_set_parent,
-@@ -2137,9 +2137,9 @@ static int rk3588_scru_clk_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static const struct clk_ops rk3588_scru_clk_ops = {
-+static const struct clk_ops_uboot rk3588_scru_clk_ops = {
- 	.get_rate = rk3588_scru_clk_get_rate,
- 	.set_rate = rk3588_scru_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rv1108.c b/drivers/clk/rockchip/clk_rv1108.c
-index e1b9ccf1236a..bbc443a91755 100644
---- a/drivers/clk/rockchip/clk_rv1108.c
-+++ b/drivers/clk/rockchip/clk_rv1108.c
-@@ -621,9 +621,9 @@ static ulong rv1108_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return new_rate;
- }
- 
--static const struct clk_ops rv1108_clk_ops = {
-+static const struct clk_ops_uboot rv1108_clk_ops = {
- 	.get_rate	= rv1108_clk_get_rate,
- 	.set_rate	= rv1108_clk_set_rate,
- };
- 
-diff --git a/drivers/clk/rockchip/clk_rv1126.c b/drivers/clk/rockchip/clk_rv1126.c
-index 39920d34b75a..f6b0b74f2db2 100644
---- a/drivers/clk/rockchip/clk_rv1126.c
-+++ b/drivers/clk/rockchip/clk_rv1126.c
-@@ -468,9 +468,9 @@ static int rv1126_pmuclk_set_parent(struct clk *clk, struct clk *parent)
- 		return -ENOENT;
- 	}
- }
- 
--static struct clk_ops rv1126_pmuclk_ops = {
-+static struct clk_ops_uboot rv1126_pmuclk_ops = {
- 	.get_rate = rv1126_pmuclk_get_rate,
- 	.set_rate = rv1126_pmuclk_set_rate,
- 	.set_parent = rv1126_pmuclk_set_parent,
- };
-@@ -1697,9 +1697,9 @@ static int rv1126_clk_set_parent(struct clk *clk, struct clk *parent)
- 	return 0;
- }
- #endif
- 
--static struct clk_ops rv1126_clk_ops = {
-+static struct clk_ops_uboot rv1126_clk_ops = {
- 	.get_rate = rv1126_clk_get_rate,
- 	.set_rate = rv1126_clk_set_rate,
- #if CONFIG_IS_ENABLED(OF_CONTROL) && !CONFIG_IS_ENABLED(OF_PLATDATA)
- 	.set_parent = rv1126_clk_set_parent,
-diff --git a/drivers/clk/sifive/sifive-prci.c b/drivers/clk/sifive/sifive-prci.c
-index de55504b5c90..dc84d4b6386d 100644
---- a/drivers/clk/sifive/sifive-prci.c
-+++ b/drivers/clk/sifive/sifive-prci.c
-@@ -701,9 +701,9 @@ static int sifive_prci_probe(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops sifive_prci_ops = {
-+static struct clk_ops_uboot sifive_prci_ops = {
- 	.set_rate = sifive_prci_set_rate,
- 	.get_rate = sifive_prci_get_rate,
- 	.enable = sifive_prci_enable,
- 	.disable = sifive_prci_disable,
-diff --git a/drivers/clk/sophgo/clk-cv1800b.c b/drivers/clk/sophgo/clk-cv1800b.c
-index 248a69321fc1..0e0c82895ff2 100644
---- a/drivers/clk/sophgo/clk-cv1800b.c
-+++ b/drivers/clk/sophgo/clk-cv1800b.c
-@@ -733,9 +733,9 @@ static int cv1800b_clk_set_parent(struct clk *clk, struct clk *parent)
- 		return err;
- 	return clk_set_parent(c, p);
- }
- 
--const struct clk_ops cv1800b_clk_ops = {
-+const struct clk_ops_uboot cv1800b_clk_ops = {
- 	.enable = cv1800b_clk_enable,
- 	.disable = cv1800b_clk_disable,
- 	.get_rate = cv1800b_clk_get_rate,
- 	.set_rate = cv1800b_clk_set_rate,
-diff --git a/drivers/clk/sophgo/clk-ip.c b/drivers/clk/sophgo/clk-ip.c
-index d571fa671b08..7ac631126721 100644
---- a/drivers/clk/sophgo/clk-ip.c
-+++ b/drivers/clk/sophgo/clk-ip.c
-@@ -47,9 +47,9 @@ static ulong gate_get_rate(struct clk *clk)
- {
- 	return clk_get_parent_rate(clk);
- }
- 
--const struct clk_ops cv1800b_clk_gate_ops = {
-+const struct clk_ops_uboot cv1800b_clk_gate_ops = {
- 	.disable = gate_disable,
- 	.enable = gate_enable,
- 	.get_rate = gate_get_rate,
- };
-@@ -109,9 +109,9 @@ static ulong div_set_rate(struct clk *clk, ulong rate)
- 
- 	return DIV_ROUND_UP_ULL(parent_rate, val);
- }
- 
--const struct clk_ops cv1800b_clk_div_ops = {
-+const struct clk_ops_uboot cv1800b_clk_div_ops = {
- 	.disable = div_disable,
- 	.enable = div_enable,
- 	.get_rate = div_get_rate,
- 	.set_rate = div_set_rate,
-@@ -162,9 +162,9 @@ static int bypass_div_set_parent(struct clk *clk, struct clk *pclk)
- 	cv1800b_clk_clrbit(div->div.base, &div->bypass);
- 	return 0;
- }
- 
--const struct clk_ops cv1800b_clk_bypass_div_ops = {
-+const struct clk_ops_uboot cv1800b_clk_bypass_div_ops = {
- 	.disable = div_disable,
- 	.enable = div_enable,
- 	.get_rate = bypass_div_get_rate,
- 	.set_rate = bypass_div_set_rate,
-@@ -202,9 +202,9 @@ static ulong fixed_div_get_rate(struct clk *clk)
- 
- 	return DIV_ROUND_UP_ULL(clk_get_parent_rate(clk), div->div);
- }
- 
--const struct clk_ops cv1800b_clk_fixed_div_ops = {
-+const struct clk_ops_uboot cv1800b_clk_fixed_div_ops = {
- 	.disable = fixed_div_disable,
- 	.enable = fixed_div_enable,
- 	.get_rate = fixed_div_get_rate,
- };
-@@ -246,9 +246,9 @@ static int bypass_fixed_div_set_parent(struct clk *clk, struct clk *pclk)
- 	cv1800b_clk_clrbit(div->div.base, &div->bypass);
- 	return 0;
- }
- 
--const struct clk_ops cv1800b_clk_bypass_fixed_div_ops = {
-+const struct clk_ops_uboot cv1800b_clk_bypass_fixed_div_ops = {
- 	.disable = fixed_div_disable,
- 	.enable = fixed_div_enable,
- 	.get_rate = bypass_fixed_div_get_rate,
- 	.set_parent = bypass_fixed_div_set_parent,
-@@ -319,9 +319,9 @@ static int mux_set_parent(struct clk *clk, struct clk *pclk)
- 	cv1800b_clk_setfield(mux->base, &mux->mux, index);
- 	return 0;
- }
- 
--const struct clk_ops cv1800b_clk_mux_ops = {
-+const struct clk_ops_uboot cv1800b_clk_mux_ops = {
- 	.disable = mux_disable,
- 	.enable = mux_enable,
- 	.get_rate = mux_get_rate,
- 	.set_rate = mux_set_rate,
-@@ -377,9 +377,9 @@ static int bypass_mux_set_parent(struct clk *clk, struct clk *pclk)
- 	cv1800b_clk_setfield(mux->mux.base, &mux->mux.mux, index);
- 	return 0;
- }
- 
--const struct clk_ops cv1800b_clk_bypass_mux_ops = {
-+const struct clk_ops_uboot cv1800b_clk_bypass_mux_ops = {
- 	.disable = mux_disable,
- 	.enable = mux_enable,
- 	.get_rate = bypass_mux_get_rate,
- 	.set_rate = bypass_mux_set_rate,
-@@ -488,9 +488,9 @@ static int mmux_set_parent(struct clk *clk, struct clk *pclk)
- 	cv1800b_clk_setfield(mmux->base, &mmux->mux[clk_sel], index);
- 	return 0;
- }
- 
--const struct clk_ops cv1800b_clk_mmux_ops = {
-+const struct clk_ops_uboot cv1800b_clk_mmux_ops = {
- 	.disable = mmux_disable,
- 	.enable = mmux_enable,
- 	.get_rate = mmux_get_rate,
- 	.set_rate = mmux_set_rate,
-@@ -578,9 +578,9 @@ static ulong aclk_set_rate(struct clk *clk, ulong rate)
- 
- 	return DIV_ROUND_UP_ULL(parent_rate * n, m * 2);
- }
- 
--const struct clk_ops cv1800b_clk_audio_ops = {
-+const struct clk_ops_uboot cv1800b_clk_audio_ops = {
- 	.disable = aclk_disable,
- 	.enable = aclk_enable,
- 	.get_rate = aclk_get_rate,
- 	.set_rate = aclk_set_rate,
-diff --git a/drivers/clk/sophgo/clk-ip.h b/drivers/clk/sophgo/clk-ip.h
-index 09d15d86dc9a..b2ad044523c8 100644
---- a/drivers/clk/sophgo/clk-ip.h
-+++ b/drivers/clk/sophgo/clk-ip.h
-@@ -274,15 +274,15 @@ struct cv1800b_clk_audio {
- 		.n = CV1800B_CLK_REGFIELD(_n_offset, _n_shift,		\
- 					  _n_width),			\
- 	}
- 
--extern const struct clk_ops cv1800b_clk_gate_ops;
--extern const struct clk_ops cv1800b_clk_div_ops;
--extern const struct clk_ops cv1800b_clk_bypass_div_ops;
--extern const struct clk_ops cv1800b_clk_fixed_div_ops;
--extern const struct clk_ops cv1800b_clk_bypass_fixed_div_ops;
--extern const struct clk_ops cv1800b_clk_mux_ops;
--extern const struct clk_ops cv1800b_clk_bypass_mux_ops;
--extern const struct clk_ops cv1800b_clk_mmux_ops;
--extern const struct clk_ops cv1800b_clk_audio_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_gate_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_div_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_bypass_div_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_fixed_div_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_bypass_fixed_div_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_mux_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_bypass_mux_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_mmux_ops;
-+extern const struct clk_ops_uboot cv1800b_clk_audio_ops;
- 
- #endif /* __CLK_SOPHGO_IP_H__ */
-diff --git a/drivers/clk/sophgo/clk-pll.c b/drivers/clk/sophgo/clk-pll.c
-index c99aa0b4e440..6ef50f00171d 100644
---- a/drivers/clk/sophgo/clk-pll.c
-+++ b/drivers/clk/sophgo/clk-pll.c
-@@ -111,9 +111,9 @@ static ulong cv1800b_ipll_set_rate(struct clk *clk, ulong rate)
- 
- 	return -EINVAL;
- }
- 
--const struct clk_ops cv1800b_ipll_ops = {
-+const struct clk_ops_uboot cv1800b_ipll_ops = {
- 	.enable = cv1800b_ipll_enable,
- 	.disable = cv1800b_ipll_disable,
- 	.get_rate = cv1800b_ipll_get_rate,
- 	.set_rate = cv1800b_ipll_set_rate,
-@@ -258,9 +258,9 @@ static int cv1800b_fpll_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return 0;
- }
- 
--const struct clk_ops cv1800b_fpll_ops = {
-+const struct clk_ops_uboot cv1800b_fpll_ops = {
- 	.enable = cv1800b_ipll_enable,
- 	.disable = cv1800b_ipll_disable,
- 	.get_rate = cv1800b_fpll_get_rate,
- 	.set_rate = cv1800b_fpll_set_rate,
-diff --git a/drivers/clk/sophgo/clk-pll.h b/drivers/clk/sophgo/clk-pll.h
-index bea9bd8a4370..382209fd0e2e 100644
---- a/drivers/clk/sophgo/clk-pll.h
-+++ b/drivers/clk/sophgo/clk-pll.h
-@@ -67,8 +67,8 @@ struct cv1800b_clk_fpll {
- 			.set = _syn_set_offset,					\
- 		},								\
- 	}
- 
--extern const struct clk_ops cv1800b_ipll_ops;
--extern const struct clk_ops cv1800b_fpll_ops;
-+extern const struct clk_ops_uboot cv1800b_ipll_ops;
-+extern const struct clk_ops_uboot cv1800b_fpll_ops;
- 
- #endif /* __clk_SOPHGO_PLL_H__ */
-diff --git a/drivers/clk/starfive/clk-jh7110-pll.c b/drivers/clk/starfive/clk-jh7110-pll.c
-index f8af17227c50..d12dec9a1f86 100644
---- a/drivers/clk/starfive/clk-jh7110-pll.c
-+++ b/drivers/clk/starfive/clk-jh7110-pll.c
-@@ -313,9 +313,9 @@ static ulong jh7110_pllx_set_rate(struct clk *clk, ulong drate)
- 
- 	return jh7110_pllx_recalc_rate(clk);
- }
- 
--static const struct clk_ops jh7110_clk_pllx_ops = {
-+static const struct clk_ops_uboot jh7110_clk_pllx_ops = {
- 	.set_rate	= jh7110_pllx_set_rate,
- 	.get_rate	= jh7110_pllx_recalc_rate,
- };
- 
-diff --git a/drivers/clk/starfive/clk.h b/drivers/clk/starfive/clk.h
-index 9d20ed0bbaba..c0bb740f5e13 100644
---- a/drivers/clk/starfive/clk.h
-+++ b/drivers/clk/starfive/clk.h
-@@ -10,9 +10,9 @@
- /* the number of fixed clocks in DTS */
- #define JH7110_EXTCLK_END	12
- 
- #define _JH7110_CLK_OPS(_name)					\
--static const struct clk_ops jh7110_##_name##_clk_ops = {	\
-+static const struct clk_ops_uboot jh7110_##_name##_clk_ops = {	\
- 	.set_rate = ccf_clk_set_rate,				\
- 	.get_rate = ccf_clk_get_rate,				\
- 	.set_parent = ccf_clk_set_parent,			\
- 	.enable = ccf_clk_enable,				\
-diff --git a/drivers/clk/stm32/clk-stm32-core.c b/drivers/clk/stm32/clk-stm32-core.c
-index cd6bdee5412f..834f0d8379e3 100644
---- a/drivers/clk/stm32/clk-stm32-core.c
-+++ b/drivers/clk/stm32/clk-stm32-core.c
-@@ -120,16 +120,16 @@ ulong clk_stm32_get_rate_by_index(struct udevice *dev, int index)
- 
- 	return 0;
- }
- 
--static const struct clk_ops *clk_dev_ops(struct udevice *dev)
-+static const struct clk_ops_uboot *clk_dev_ops(struct udevice *dev)
- {
--	return (const struct clk_ops *)dev->driver->ops;
-+	return (const struct clk_ops_uboot *)dev->driver->ops;
- }
- 
- static int stm32_clk_endisable(struct clk *clk, bool enable)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	struct clk *c = NULL;
- 
- 	if (!clk->id || clk_get_by_id(clk->id, &c))
- 		return -ENOENT;
-@@ -152,9 +152,9 @@ static int stm32_clk_disable(struct clk *clk)
- }
- 
- static ulong stm32_clk_get_rate(struct clk *clk)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	struct clk *c = NULL;
- 
- 	if (!clk->id || clk_get_by_id(clk->id, &c))
- 		return -ENOENT;
-@@ -167,9 +167,9 @@ static ulong stm32_clk_get_rate(struct clk *clk)
- }
- 
- static ulong stm32_clk_set_rate(struct clk *clk, unsigned long clk_rate)
- {
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	struct clk *c = NULL;
- 
- 	if (!clk->id || clk_get_by_id(clk->id, &c))
- 		return -ENOENT;
-@@ -180,9 +180,9 @@ static ulong stm32_clk_set_rate(struct clk *clk, unsigned long clk_rate)
- 
- 	return ops->set_rate(c, clk_rate);
- }
- 
--const struct clk_ops stm32_clk_ops = {
-+const struct clk_ops_uboot stm32_clk_ops = {
- 	.enable = stm32_clk_enable,
- 	.disable = stm32_clk_disable,
- 	.get_rate = stm32_clk_get_rate,
- 	.set_rate = stm32_clk_set_rate,
-@@ -238,9 +238,9 @@ static int clk_stm32_gate_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops clk_stm32_gate_ops = {
-+static const struct clk_ops_uboot clk_stm32_gate_ops = {
- 	.enable = clk_stm32_gate_enable,
- 	.disable = clk_stm32_gate_disable,
- 	.get_rate = clk_generic_get_rate,
- };
-@@ -303,13 +303,13 @@ clk_stm32_register_composite(struct udevice *dev,
- 	struct clk_mux *mux = NULL;
- 	struct clk_stm32_gate *gate = NULL;
- 	struct clk_divider *div = NULL;
- 	struct clk *mux_clk = NULL;
--	const struct clk_ops *mux_ops = NULL;
-+	const struct clk_ops_uboot *mux_ops = NULL;
- 	struct clk *gate_clk = NULL;
--	const struct clk_ops *gate_ops = NULL;
-+	const struct clk_ops_uboot *gate_ops = NULL;
- 	struct clk *div_clk = NULL;
--	const struct clk_ops *div_ops = NULL;
-+	const struct clk_ops_uboot *div_ops = NULL;
- 	struct stm32mp_rcc_priv *priv = dev_get_priv(dev);
- 	const struct clk_stm32_clock_data *data = priv->clock_data;
- 	int i, ret;
- 
-diff --git a/drivers/clk/stm32/clk-stm32-core.h b/drivers/clk/stm32/clk-stm32-core.h
-index 3134e33aa6c3..789420d7844c 100644
---- a/drivers/clk/stm32/clk-stm32-core.h
-+++ b/drivers/clk/stm32/clk-stm32-core.h
-@@ -287,7 +287,7 @@ struct stm32_clk_composite_cfg {
- 	}, \
- 	.setup		= clk_stm32_register_composite, \
- }
- 
--extern const struct clk_ops stm32_clk_ops;
-+extern const struct clk_ops_uboot stm32_clk_ops;
- 
- ulong clk_stm32_get_rate_by_index(struct udevice *dev, int index);
-diff --git a/drivers/clk/stm32/clk-stm32f.c b/drivers/clk/stm32/clk-stm32f.c
-index fceb3c44b94e..6c3a369797d9 100644
---- a/drivers/clk/stm32/clk-stm32f.c
-+++ b/drivers/clk/stm32/clk-stm32f.c
-@@ -716,9 +716,9 @@ static int stm32_clk_of_xlate(struct clk *clk, struct ofnode_phandle_args *args)
- 
- 	return 0;
- }
- 
--static struct clk_ops stm32_clk_ops = {
-+static struct clk_ops_uboot stm32_clk_ops = {
- 	.of_xlate	= stm32_clk_of_xlate,
- 	.enable		= stm32_clk_enable,
- 	.get_rate	= stm32_clk_get_rate,
- 	.set_rate	= stm32_set_rate,
-diff --git a/drivers/clk/stm32/clk-stm32h7.c b/drivers/clk/stm32/clk-stm32h7.c
-index df82db69738a..611c7e4fb4af 100644
---- a/drivers/clk/stm32/clk-stm32h7.c
-+++ b/drivers/clk/stm32/clk-stm32h7.c
-@@ -869,9 +869,9 @@ static int stm32_clk_of_xlate(struct clk *clk,
- 
- 	return 0;
- }
- 
--static struct clk_ops stm32_clk_ops = {
-+static struct clk_ops_uboot stm32_clk_ops = {
- 	.of_xlate	= stm32_clk_of_xlate,
- 	.enable		= stm32_clk_enable,
- 	.get_rate	= stm32_clk_get_rate,
- };
-diff --git a/drivers/clk/stm32/clk-stm32mp1.c b/drivers/clk/stm32/clk-stm32mp1.c
-index 823ce132d0b0..a7d0b55e060b 100644
---- a/drivers/clk/stm32/clk-stm32mp1.c
-+++ b/drivers/clk/stm32/clk-stm32mp1.c
-@@ -2309,9 +2309,9 @@ static int stm32mp1_clk_probe(struct udevice *dev)
- 
- 	return result;
- }
- 
--static const struct clk_ops stm32mp1_clk_ops = {
-+static const struct clk_ops_uboot stm32mp1_clk_ops = {
- 	.enable = stm32mp1_clk_enable,
- 	.disable = stm32mp1_clk_disable,
- 	.get_rate = stm32mp1_clk_get_rate,
- 	.set_rate = stm32mp1_clk_set_rate,
-diff --git a/drivers/clk/sunxi/clk_sun6i_rtc.c b/drivers/clk/sunxi/clk_sun6i_rtc.c
-index 697b187a8235..a60e88500413 100644
---- a/drivers/clk/sunxi/clk_sun6i_rtc.c
-+++ b/drivers/clk/sunxi/clk_sun6i_rtc.c
-@@ -11,9 +11,9 @@ static int clk_sun6i_rtc_enable(struct clk *clk)
- {
- 	return 0;
- }
- 
--static const struct clk_ops clk_sun6i_rtc_ops = {
-+static const struct clk_ops_uboot clk_sun6i_rtc_ops = {
- 	.enable = clk_sun6i_rtc_enable,
- };
- 
- static const struct udevice_id sun6i_rtc_ids[] = {
-diff --git a/drivers/clk/sunxi/clk_sunxi.c b/drivers/clk/sunxi/clk_sunxi.c
-index 046d5d1605a1..6d644d4c2ece 100644
---- a/drivers/clk/sunxi/clk_sunxi.c
-+++ b/drivers/clk/sunxi/clk_sunxi.c
-@@ -63,9 +63,9 @@ static int sunxi_clk_disable(struct clk *clk)
- {
- 	return sunxi_set_gate(clk, false);
- }
- 
--static const struct clk_ops sunxi_clk_ops = {
-+static const struct clk_ops_uboot sunxi_clk_ops = {
- 	.enable = sunxi_clk_enable,
- 	.disable = sunxi_clk_disable,
- };
- 
-diff --git a/drivers/clk/tegra/tegra-car-clk.c b/drivers/clk/tegra/tegra-car-clk.c
-index 880dd4f6ece9..6e315f502aa5 100644
---- a/drivers/clk/tegra/tegra-car-clk.c
-+++ b/drivers/clk/tegra/tegra-car-clk.c
-@@ -99,9 +99,9 @@ static int tegra_car_clk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops tegra_car_clk_ops = {
-+static struct clk_ops_uboot tegra_car_clk_ops = {
- 	.request = tegra_car_clk_request,
- 	.get_rate = tegra_car_clk_get_rate,
- 	.set_rate = tegra_car_clk_set_rate,
- 	.enable = tegra_car_clk_enable,
-diff --git a/drivers/clk/tegra/tegra186-clk.c b/drivers/clk/tegra/tegra186-clk.c
-index ec52326c3b36..99e0a9f28d9c 100644
---- a/drivers/clk/tegra/tegra186-clk.c
-+++ b/drivers/clk/tegra/tegra186-clk.c
-@@ -80,9 +80,9 @@ static int tegra186_clk_disable(struct clk *clk)
- 
- 	return tegra186_clk_en_dis(clk, CMD_CLK_DISABLE);
- }
- 
--static struct clk_ops tegra186_clk_ops = {
-+static struct clk_ops_uboot tegra186_clk_ops = {
- 	.get_rate = tegra186_clk_get_rate,
- 	.set_rate = tegra186_clk_set_rate,
- 	.enable = tegra186_clk_enable,
- 	.disable = tegra186_clk_disable,
-diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
-index 6899e1b595a7..16188d56f73a 100644
---- a/drivers/clk/thead/clk-th1520-ap.c
-+++ b/drivers/clk/thead/clk-th1520-ap.c
-@@ -223,9 +223,9 @@ static int ccu_div_enable(struct clk *clk)
- 
- 	return ccu_enable_helper(&cd->common, cd->enable);
- }
- 
--static const struct clk_ops ccu_div_ops = {
-+static const struct clk_ops_uboot ccu_div_ops = {
- 	.disable	= ccu_div_disable,
- 	.enable		= ccu_div_enable,
- 	.set_parent	= ccu_div_set_parent,
- 	.get_rate	= ccu_div_get_rate,
-@@ -294,9 +294,9 @@ static unsigned long ccu_pll_get_rate(struct clk *clk)
- 
- 	return rate;
- }
- 
--static const struct clk_ops clk_pll_ops = {
-+static const struct clk_ops_uboot clk_pll_ops = {
- 	.get_rate	= ccu_pll_get_rate,
- };
- 
- U_BOOT_DRIVER(th1520_clk_pll) = {
-@@ -1017,9 +1017,9 @@ static int th1520_clk_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return clk_set_parent(c, p);
- }
- 
--static const struct clk_ops th1520_clk_ops = {
-+static const struct clk_ops_uboot th1520_clk_ops = {
- 	.enable		= th1520_clk_enable,
- 	.disable	= th1520_clk_disable,
- 	.get_rate	= th1520_clk_get_rate,
- 	.set_rate	= th1520_clk_set_rate,
-diff --git a/drivers/clk/ti/clk-am3-dpll-x2.c b/drivers/clk/ti/clk-am3-dpll-x2.c
-index 1b0b9818cdd4..cd864c47f004 100644
---- a/drivers/clk/ti/clk-am3-dpll-x2.c
-+++ b/drivers/clk/ti/clk-am3-dpll-x2.c
-@@ -29,9 +29,9 @@ static ulong clk_ti_am3_dpll_x2_get_rate(struct clk *clk)
- 	dev_dbg(clk->dev, "rate=%ld\n", rate);
- 	return rate;
- }
- 
--const struct clk_ops clk_ti_am3_dpll_x2_ops = {
-+const struct clk_ops_uboot clk_ti_am3_dpll_x2_ops = {
- 	.get_rate = clk_ti_am3_dpll_x2_get_rate,
- };
- 
- static int clk_ti_am3_dpll_x2_remove(struct udevice *dev)
-diff --git a/drivers/clk/ti/clk-am3-dpll.c b/drivers/clk/ti/clk-am3-dpll.c
-index 21ec01f8dd9a..1726233df173 100644
---- a/drivers/clk/ti/clk-am3-dpll.c
-+++ b/drivers/clk/ti/clk-am3-dpll.c
-@@ -274,9 +274,9 @@ static ulong clk_ti_am3_dpll_get_rate(struct clk *clk)
- 	dev_dbg(clk->dev, "rate=%lld\n", rate);
- 	return rate;
- }
- 
--const struct clk_ops clk_ti_am3_dpll_ops = {
-+const struct clk_ops_uboot clk_ti_am3_dpll_ops = {
- 	.round_rate = clk_ti_am3_dpll_round_rate,
- 	.get_rate = clk_ti_am3_dpll_get_rate,
- 	.set_rate = clk_ti_am3_dpll_set_rate,
- };
-diff --git a/drivers/clk/ti/clk-ctrl.c b/drivers/clk/ti/clk-ctrl.c
-index 08f7410edce8..0bbbc1da27f6 100644
---- a/drivers/clk/ti/clk-ctrl.c
-+++ b/drivers/clk/ti/clk-ctrl.c
-@@ -157,9 +157,9 @@ static int clk_ti_ctrl_of_to_plat(struct udevice *dev)
- 
- 	return 0;
- }
- 
--static struct clk_ops clk_ti_ctrl_ops = {
-+static struct clk_ops_uboot clk_ti_ctrl_ops = {
- 	.of_xlate = clk_ti_ctrl_of_xlate,
- 	.enable = clk_ti_ctrl_enable,
- 	.disable = clk_ti_ctrl_disable,
- 	.get_rate = clk_ti_ctrl_get_rate,
-diff --git a/drivers/clk/ti/clk-divider.c b/drivers/clk/ti/clk-divider.c
-index 40a742d7fdc4..f959b5633d64 100644
---- a/drivers/clk/ti/clk-divider.c
-+++ b/drivers/clk/ti/clk-divider.c
-@@ -242,9 +242,9 @@ static int clk_ti_divider_request(struct clk *clk)
- 	clk->flags = priv->flags;
- 	return 0;
- }
- 
--const struct clk_ops clk_ti_divider_ops = {
-+const struct clk_ops_uboot clk_ti_divider_ops = {
- 	.request = clk_ti_divider_request,
- 	.round_rate = clk_ti_divider_round_rate,
- 	.get_rate = clk_ti_divider_get_rate,
- 	.set_rate = clk_ti_divider_set_rate
-diff --git a/drivers/clk/ti/clk-gate.c b/drivers/clk/ti/clk-gate.c
-index 873ceb8a2ab7..fb0ccf480dee 100644
---- a/drivers/clk/ti/clk-gate.c
-+++ b/drivers/clk/ti/clk-gate.c
-@@ -72,9 +72,9 @@ static int clk_ti_gate_of_to_plat(struct udevice *dev)
- 	priv->invert_enable = dev_read_bool(dev, "ti,set-bit-to-disable");
- 	return 0;
- }
- 
--static struct clk_ops clk_ti_gate_ops = {
-+static struct clk_ops_uboot clk_ti_gate_ops = {
- 	.enable = clk_ti_gate_enable,
- 	.disable = clk_ti_gate_disable,
- };
- 
-diff --git a/drivers/clk/ti/clk-k3-pll.c b/drivers/clk/ti/clk-k3-pll.c
-index b775bd55faab..9766f50a2e4d 100644
---- a/drivers/clk/ti/clk-k3-pll.c
-+++ b/drivers/clk/ti/clk-k3-pll.c
-@@ -498,9 +498,9 @@ static ulong ti_pll_clk_set_rate(struct clk *clk, ulong rate)
- }
- 
- 
- 
--static const struct clk_ops ti_pll_clk_ops = {
-+static const struct clk_ops_uboot ti_pll_clk_ops = {
- 	.get_rate = ti_pll_clk_get_rate,
- 	.set_rate = ti_pll_clk_set_rate,
- 	.enable = ti_pll_clk_enable,
- 	.disable = ti_pll_clk_disable,
-diff --git a/drivers/clk/ti/clk-k3.c b/drivers/clk/ti/clk-k3.c
-index b38e559e45a6..cb7e016c637a 100644
---- a/drivers/clk/ti/clk-k3.c
-+++ b/drivers/clk/ti/clk-k3.c
-@@ -263,9 +263,9 @@ static ulong ti_clk_set_rate(struct clk *clk, ulong rate)
- 	struct ti_clk_data *data = dev_get_priv(clk->dev);
- 	struct clk *clkp = data->map[clk->id].clk;
- 	int div = 1;
- 	ulong child_rate;
--	const struct clk_ops *ops;
-+	const struct clk_ops_uboot *ops;
- 	ulong new_rate, rem;
- 	ulong diff, new_diff;
- 	int freq_scale_up = rate >= ti_clk_get_rate(clk) ? 1 : 0;
- 
-@@ -404,9 +404,9 @@ static const struct udevice_id ti_clk_of_match[] = {
- 	{ .compatible = "ti,k2g-sci-clk" },
- 	{ /* sentinel */ },
- };
- 
--static const struct clk_ops ti_clk_ops = {
-+static const struct clk_ops_uboot ti_clk_ops = {
- 	.of_xlate = ti_clk_of_xlate,
- 	.set_rate = ti_clk_set_rate,
- 	.get_rate = ti_clk_get_rate,
- 	.enable = ti_clk_enable,
-diff --git a/drivers/clk/ti/clk-mux.c b/drivers/clk/ti/clk-mux.c
-index db5393414318..60bdde35e510 100644
---- a/drivers/clk/ti/clk-mux.c
-+++ b/drivers/clk/ti/clk-mux.c
-@@ -170,9 +170,9 @@ static int clk_ti_mux_request(struct clk *clk)
- 
- 	return clk_ti_mux_set_parent(clk, parent);
- }
- 
--static struct clk_ops clk_ti_mux_ops = {
-+static struct clk_ops_uboot clk_ti_mux_ops = {
- 	.request = clk_ti_mux_request,
- 	.round_rate = clk_ti_mux_round_rate,
- 	.get_rate = clk_ti_mux_get_rate,
- 	.set_rate = clk_ti_mux_set_rate,
-diff --git a/drivers/clk/ti/clk-sci.c b/drivers/clk/ti/clk-sci.c
-index e374bd3bcc20..fdf49a759983 100644
---- a/drivers/clk/ti/clk-sci.c
-+++ b/drivers/clk/ti/clk-sci.c
-@@ -195,9 +195,9 @@ static const struct udevice_id ti_sci_clk_of_match[] = {
- 	{ .compatible = "ti,k2g-sci-clk" },
- 	{ /* sentinel */ },
- };
- 
--static struct clk_ops ti_sci_clk_ops = {
-+static struct clk_ops_uboot ti_sci_clk_ops = {
- 	.of_xlate = ti_sci_clk_of_xlate,
- 	.get_rate = ti_sci_clk_get_rate,
- 	.set_rate = ti_sci_clk_set_rate,
- 	.set_parent = ti_sci_clk_set_parent,
-diff --git a/drivers/clk/uccf/clk-composite.c b/drivers/clk/uccf/clk-composite.c
-index 207224b13208..0fdc8c2e6fec 100644
---- a/drivers/clk/uccf/clk-composite.c
-+++ b/drivers/clk/uccf/clk-composite.c
-@@ -35,9 +35,9 @@ static u8 clk_composite_get_parent(struct clk *clk)
- static int clk_composite_set_parent(struct clk *clk, struct clk *parent)
- {
- 	struct clk_composite *composite = to_clk_composite(clk_dev_binded(clk) ?
- 		(struct clk *)dev_get_clk_ptr(clk->dev) : clk);
--	const struct clk_ops *mux_ops = composite->mux_ops;
-+	const struct clk_ops_uboot *mux_ops = composite->mux_ops;
- 	struct clk *mux = composite->mux;
- 
- 	if (!mux || !mux_ops)
- 		return -ENOSYS;
-@@ -48,9 +48,9 @@ static int clk_composite_set_parent(struct clk *clk, struct clk *parent)
- static unsigned long clk_composite_recalc_rate(struct clk *clk)
- {
- 	struct clk_composite *composite = to_clk_composite(clk_dev_binded(clk) ?
- 		(struct clk *)dev_get_clk_ptr(clk->dev) : clk);
--	const struct clk_ops *rate_ops = composite->rate_ops;
-+	const struct clk_ops_uboot *rate_ops = composite->rate_ops;
- 	struct clk *rate = composite->rate;
- 
- 	if (rate && rate_ops)
- 		return rate_ops->get_rate(rate);
-@@ -61,9 +61,9 @@ static unsigned long clk_composite_recalc_rate(struct clk *clk)
- static ulong clk_composite_set_rate(struct clk *clk, unsigned long rate)
- {
- 	struct clk_composite *composite = to_clk_composite(clk_dev_binded(clk) ?
- 		(struct clk *)dev_get_clk_ptr(clk->dev) : clk);
--	const struct clk_ops *rate_ops = composite->rate_ops;
-+	const struct clk_ops_uboot *rate_ops = composite->rate_ops;
- 	struct clk *clk_rate = composite->rate;
- 
- 	if (rate && rate_ops && rate_ops->set_rate)
- 		return rate_ops->set_rate(clk_rate, rate);
-@@ -74,9 +74,9 @@ static ulong clk_composite_set_rate(struct clk *clk, unsigned long rate)
- static int clk_composite_enable(struct clk *clk)
- {
- 	struct clk_composite *composite = to_clk_composite(clk_dev_binded(clk) ?
- 		(struct clk *)dev_get_clk_ptr(clk->dev) : clk);
--	const struct clk_ops *gate_ops = composite->gate_ops;
-+	const struct clk_ops_uboot *gate_ops = composite->gate_ops;
- 	struct clk *gate = composite->gate;
- 
- 	if (gate && gate_ops)
- 		return gate_ops->enable(gate);
-@@ -87,9 +87,9 @@ static int clk_composite_enable(struct clk *clk)
- static int clk_composite_disable(struct clk *clk)
- {
- 	struct clk_composite *composite = to_clk_composite(clk_dev_binded(clk) ?
- 		(struct clk *)dev_get_clk_ptr(clk->dev) : clk);
--	const struct clk_ops *gate_ops = composite->gate_ops;
-+	const struct clk_ops_uboot *gate_ops = composite->gate_ops;
- 	struct clk *gate = composite->gate;
- 
- 	if (gate && gate_ops)
- 		return gate_ops->disable(gate);
-@@ -99,13 +99,13 @@ static int clk_composite_disable(struct clk *clk)
- 
- struct clk *clk_register_composite(struct udevice *dev, const char *name,
- 				   const char * const *parent_names,
- 				   int num_parents, struct clk *mux,
--				   const struct clk_ops *mux_ops,
-+				   const struct clk_ops_uboot *mux_ops,
- 				   struct clk *rate,
--				   const struct clk_ops *rate_ops,
-+				   const struct clk_ops_uboot *rate_ops,
- 				   struct clk *gate,
--				   const struct clk_ops *gate_ops,
-+				   const struct clk_ops_uboot *gate_ops,
- 				   unsigned long flags)
- {
- 	struct clk *clk;
- 	struct clk_composite *composite;
-@@ -170,9 +170,9 @@ err:
- 	kfree(composite);
- 	return clk;
- }
- 
--static const struct clk_ops clk_composite_ops = {
-+static const struct clk_ops_uboot clk_composite_ops = {
- 	.set_parent = clk_composite_set_parent,
- 	.get_rate = clk_composite_recalc_rate,
- 	.set_rate = clk_composite_set_rate,
- 	.enable = clk_composite_enable,
-diff --git a/drivers/clk/uccf/clk-divider.c b/drivers/clk/uccf/clk-divider.c
-index d30786a9e6c2..857c72ee59f1 100644
---- a/drivers/clk/uccf/clk-divider.c
-+++ b/drivers/clk/uccf/clk-divider.c
-@@ -177,9 +177,9 @@ static ulong clk_divider_set_rate(struct clk *clk, unsigned long rate)
- 
- 	return clk_get_rate(clk);
- }
- 
--const struct clk_ops clk_divider_ops = {
-+const struct clk_ops_uboot clk_divider_ops = {
- 	.get_rate = clk_divider_recalc_rate,
- 	.set_rate = clk_divider_set_rate,
- };
- 
-diff --git a/drivers/clk/uccf/clk-fixed-factor.c b/drivers/clk/uccf/clk-fixed-factor.c
-index 4eb8be728e65..0fdfcdf2f90a 100644
---- a/drivers/clk/uccf/clk-fixed-factor.c
-+++ b/drivers/clk/uccf/clk-fixed-factor.c
-@@ -32,9 +32,9 @@ static ulong clk_factor_recalc_rate(struct clk *clk)
- 	do_div(rate, fix->div);
- 	return (ulong)rate;
- }
- 
--const struct clk_ops ccf_clk_fixed_factor_ops = {
-+const struct clk_ops_uboot ccf_clk_fixed_factor_ops = {
- 	.get_rate = clk_factor_recalc_rate,
- };
- 
- struct clk *clk_hw_register_fixed_factor(struct udevice *dev,
-diff --git a/drivers/clk/uccf/clk-gate.c b/drivers/clk/uccf/clk-gate.c
-index 256ff1089917..e5883aec2474 100644
---- a/drivers/clk/uccf/clk-gate.c
-+++ b/drivers/clk/uccf/clk-gate.c
-@@ -110,9 +110,9 @@ int clk_gate_is_enabled(struct clk *clk)
- 
- 	return reg ? 1 : 0;
- }
- 
--const struct clk_ops clk_gate_ops = {
-+const struct clk_ops_uboot clk_gate_ops = {
- 	.enable = clk_gate_enable,
- 	.disable = clk_gate_disable,
- 	.get_rate = clk_generic_get_rate,
- };
-diff --git a/drivers/clk/uccf/clk-mux.c b/drivers/clk/uccf/clk-mux.c
-index d7411f8f2822..06836369be1d 100644
---- a/drivers/clk/uccf/clk-mux.c
-+++ b/drivers/clk/uccf/clk-mux.c
-@@ -158,9 +158,9 @@ static int clk_mux_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return 0;
- }
- 
--const struct clk_ops clk_mux_ops = {
-+const struct clk_ops_uboot clk_mux_ops = {
- 	.get_rate = clk_generic_get_rate,
- 	.set_parent = clk_mux_set_parent,
- };
- 
-diff --git a/drivers/clk/uccf/clk.c b/drivers/clk/uccf/clk.c
-index b8c2e8d531b9..f04b3b23dbd1 100644
---- a/drivers/clk/uccf/clk.c
-+++ b/drivers/clk/uccf/clk.c
-@@ -132,9 +132,9 @@ int ccf_clk_disable(struct clk *clk)
- {
- 	return ccf_clk_endisable(clk, false);
- }
- 
--const struct clk_ops ccf_clk_ops = {
-+const struct clk_ops_uboot ccf_clk_ops = {
- 	.set_rate = ccf_clk_set_rate,
- 	.get_rate = ccf_clk_get_rate,
- 	.set_parent = ccf_clk_set_parent,
- 	.enable = ccf_clk_enable,
-diff --git a/drivers/clk/uccf/clk_sandbox_uccf.c b/drivers/clk/uccf/clk_sandbox_uccf.c
-index 9c74ed940acd..9c7dc5007134 100644
---- a/drivers/clk/uccf/clk_sandbox_uccf.c
-+++ b/drivers/clk/uccf/clk_sandbox_uccf.c
-@@ -46,9 +46,9 @@ static ulong clk_pllv3_get_rate(struct clk *clk)
- 
- 	return parent_rate * 24;
- }
- 
--static const struct clk_ops clk_pllv3_generic_ops = {
-+static const struct clk_ops_uboot clk_pllv3_generic_ops = {
- 	.get_rate       = clk_pllv3_get_rate,
- };
- 
- struct clk *sandbox_clk_pllv3(enum sandbox_pllv3_type type, const char *name,
-@@ -106,9 +106,9 @@ static int clk_gate2_disable(struct clk *clk)
- 	gate->state = 0;
- 	return 0;
- }
- 
--static const struct clk_ops clk_gate2_ops = {
-+static const struct clk_ops_uboot clk_gate2_ops = {
- 	.enable = clk_gate2_enable,
- 	.disable = clk_gate2_disable,
- 	.get_rate = clk_generic_get_rate,
- };
-@@ -160,9 +160,9 @@ static unsigned long sandbox_clk_composite_divider_recalc_rate(struct clk *clk)
- 	return divider_recalc_rate(clk, parent_rate, val, divider->table,
- 				   divider->flags, divider->width);
- }
- 
--static const struct clk_ops sandbox_clk_composite_divider_ops = {
-+static const struct clk_ops_uboot sandbox_clk_composite_divider_ops = {
- 	.get_rate = sandbox_clk_composite_divider_recalc_rate,
- };
- 
- struct clk *sandbox_clk_composite(const char *name,
-diff --git a/drivers/clk/uniphier/clk-uniphier-core.c b/drivers/clk/uniphier/clk-uniphier-core.c
-index 33369c93916b..3a4c9f6687f7 100644
---- a/drivers/clk/uniphier/clk-uniphier-core.c
-+++ b/drivers/clk/uniphier/clk-uniphier-core.c
-@@ -240,9 +240,9 @@ static unsigned long uniphier_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return __uniphier_clk_set_rate(priv, data, rate, true);
- }
- 
--static const struct clk_ops uniphier_clk_ops = {
-+static const struct clk_ops_uboot uniphier_clk_ops = {
- 	.enable = uniphier_clk_enable,
- 	.get_rate = uniphier_clk_get_rate,
- 	.set_rate = uniphier_clk_set_rate,
- };
-diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index 9f8a6d8d43d0..214f6662d54e 100644
---- a/drivers/phy/cadence/phy-cadence-sierra.c
-+++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -554,9 +554,9 @@ static int cdns_sierra_pll_mux_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return ret;
- }
- 
--static const struct clk_ops cdns_sierra_pll_mux_ops = {
-+static const struct clk_ops_uboot cdns_sierra_pll_mux_ops = {
- 	.set_parent = cdns_sierra_pll_mux_set_parent,
- };
- 
- static int cdns_sierra_pll_mux_probe(struct udevice *dev)
-diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
-index 814aff15070a..87a414ad2cf9 100644
---- a/drivers/phy/cadence/phy-cadence-torrent.c
-+++ b/drivers/phy/cadence/phy-cadence-torrent.c
-@@ -668,9 +668,9 @@ static int cdns_torrent_derived_refclk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops cdns_torrent_derived_refclk_ops = {
-+static const struct clk_ops_uboot cdns_torrent_derived_refclk_ops = {
- 	.of_xlate = cdns_torrent_derived_refclk_of_xlate,
- 	.enable = cdns_torrent_derived_refclk_enable,
- 	.disable = cdns_torrent_derived_refclk_disable,
- };
-diff --git a/drivers/phy/phy-stm32-usbphyc.c b/drivers/phy/phy-stm32-usbphyc.c
-index fcf8617ee9b3..d511b7c4285d 100644
---- a/drivers/phy/phy-stm32-usbphyc.c
-+++ b/drivers/phy/phy-stm32-usbphyc.c
-@@ -683,9 +683,9 @@ static int stm32_usbphyc_clk48_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--const struct clk_ops usbphyc_clk48_ops = {
-+const struct clk_ops_uboot usbphyc_clk48_ops = {
- 	.get_rate = stm32_usbphyc_clk48_get_rate,
- 	.enable = stm32_usbphyc_clk48_enable,
- 	.disable = stm32_usbphyc_clk48_disable,
- };
-diff --git a/drivers/phy/phy-ti-am654.c b/drivers/phy/phy-ti-am654.c
-index c3d9972397aa..98362c59ac59 100644
---- a/drivers/phy/phy-ti-am654.c
-+++ b/drivers/phy/phy-ti-am654.c
-@@ -176,9 +176,9 @@ static int serdes_am654_mux_clk_set_parent(struct clk *clk, struct clk *parent)
- 
- 	return 0;
- }
- 
--static struct clk_ops serdes_am654_mux_clk_ops = {
-+static struct clk_ops_uboot serdes_am654_mux_clk_ops = {
- 	.set_parent = serdes_am654_mux_clk_set_parent,
- };
- 
- U_BOOT_DRIVER(serdes_am654_mux_clk) = {
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-index f80b2789333d..cfbd6bc36afc 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-@@ -246,9 +246,9 @@ int rockchip_usb2phy_clk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static struct clk_ops rockchip_usb2phy_clk_ops = {
-+static struct clk_ops_uboot rockchip_usb2phy_clk_ops = {
- 	.enable = rockchip_usb2phy_clk_enable,
- 	.disable = rockchip_usb2phy_clk_disable,
- 	.round_rate = rockchip_usb2phy_clk_round_rate
- };
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index 466e2a5d0b50..fb158072da0a 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -400,9 +400,9 @@ static ulong wiz_div_clk_set_rate(struct clk *clk, ulong rate)
- 
- 	return parent_rate >> div;
- }
- 
--const struct clk_ops wiz_div_clk_ops = {
-+const struct clk_ops_uboot wiz_div_clk_ops = {
- 	.get_rate = wiz_div_clk_get_rate,
- 	.set_rate = wiz_div_clk_set_rate,
- };
- 
-@@ -459,9 +459,9 @@ static int wiz_clk_xlate(struct clk *clk, struct ofnode_phandle_args *args)
- 
- 	return 0;
- }
- 
--static const struct clk_ops wiz_clk_mux_ops = {
-+static const struct clk_ops_uboot wiz_clk_mux_ops = {
- 	.set_parent = wiz_clk_mux_set_parent,
- 	.of_xlate = wiz_clk_xlate,
- };
- 
-@@ -566,9 +566,9 @@ static int wiz_phy_en_refclk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops wiz_clk_ops = {
-+static const struct clk_ops_uboot wiz_clk_ops = {
- 	.set_parent = wiz_clk_set_parent,
- 	.of_xlate = wiz_clk_of_xlate,
- 	.enable = wiz_phy_en_refclk_enable,
- 	.disable = wiz_phy_en_refclk_disable,
-diff --git a/drivers/power/domain/imx8mp-hsiomix.c b/drivers/power/domain/imx8mp-hsiomix.c
-index 1ca43880ef56..145e98d122e7 100644
---- a/drivers/power/domain/imx8mp-hsiomix.c
-+++ b/drivers/power/domain/imx8mp-hsiomix.c
-@@ -173,9 +173,9 @@ static int hsio_pll_clk_disable(struct clk *clk)
- 
- 	return 0;
- }
- 
--static const struct clk_ops hsio_pll_clk_ops = {
-+static const struct clk_ops_uboot hsio_pll_clk_ops = {
- 	.enable = hsio_pll_clk_enable,
- 	.disable = hsio_pll_clk_disable,
- };
- 
-diff --git a/include/clk-uclass.h b/include/clk-uclass.h
-index 8c07e723cff6..a26603bf2f0a 100644
---- a/include/clk-uclass.h
-+++ b/include/clk-uclass.h
-@@ -14,9 +14,9 @@
- 
- struct ofnode_phandle_args;
- 
- /**
-- * struct clk_ops - The functions that a clock driver must implement.
-+ * struct clk_ops_uboot - The functions that a clock driver must implement.
-  * @of_xlate: Translate a client's device-tree (OF) clock specifier.
-  * @request: Request a translated clock.
-  * @round_rate: Adjust a rate to the exact rate a clock can provide.
-  * @get_rate: Get current clock rate.
-@@ -27,9 +27,9 @@ struct ofnode_phandle_args;
-  * @dump: Print clock information.
-  *
-  * The individual methods are described more fully below.
-  */
--struct clk_ops {
-+struct clk_ops_uboot {
- 	int (*of_xlate)(struct clk *clock,
- 			struct ofnode_phandle_args *args);
- 	int (*request)(struct clk *clock);
- 	ulong (*round_rate)(struct clk *clk, ulong rate);
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 366f2d968a33..9b2f75eabf7e 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -78,9 +78,9 @@ struct clk_mux {
- 
- };
- 
- #define to_clk_mux(_clk) container_of(_clk, struct clk_mux, clk)
--extern const struct clk_ops clk_mux_ops;
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 52b30493f058..a53e471471f0 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -11,8 +11,9 @@ config CLK
+ 	  feed into other clocks in a tree structure, with multiplexers to
+ 	  choose the source for each clock.
+ 
+ source "drivers/clk/uccf/Kconfig"
++source "drivers/clk/ccf/Kconfig"
+ 
+ config SANDBOX_CLK_CCF
+ 	bool "Sandbox U-Boot Common Clock Framework [uCCF] support"
+ 	depends on SANDBOX && (CLK_CCF || CLK_CCF_FULL)
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 35a5f81202e1..dd71d005aada 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -7,15 +7,18 @@
+ obj-$(CONFIG_$(PHASE_)CLK) += clk-uclass.o
+ obj-$(CONFIG_$(PHASE_)CLK_GPIO) += clk-gpio.o
+ obj-$(CONFIG_$(PHASE_)CLK_STUB) += clk-stub.o
+ 
+-# U-Boot/IMX "micro" CCF port
+-obj-$(CONFIG_$(PHASE_)CLK_CCF) += uccf/
++# Full Linux CCF support
++obj-$(CONFIG_$(PHASE_)CLK_CCF_FULL) += ccf/
+ 
+ # U-Boot basic fixed clocks, full CCF has a
+ # different and incompatible implementation
+ ifndef CONFIG_CLK_CCF_FULL
+ obj-y += basic/
++
++# U-Boot/IMX "micro" CCF port
++obj-$(CONFIG_$(PHASE_)CLK_CCF) += uccf/
+ endif
+ 
+ obj-y += adi/
+ obj-y += airoha/
+diff --git a/drivers/clk/ccf/Kconfig b/drivers/clk/ccf/Kconfig
+new file mode 100644
+index 000000000000..ec5d2d91b870
+--- /dev/null
++++ b/drivers/clk/ccf/Kconfig
+@@ -0,0 +1,8 @@
++config CLK_CCF_FULL
++	bool "Full Common Clock Framework [CCF] support"
++	depends on CLK && !CLK_CCF
++	help
++	  Enable this option if you want to use the full Linux kernel's Common
++	  Clock Framework [CCF] code in U-Boot. This is a full API compatible
++	  port as opposed to U-Boot "uCCF", drivers must register clocks at
++	  runtime and should not use UCLASS_CLK.
+diff --git a/drivers/clk/ccf/Makefile b/drivers/clk/ccf/Makefile
+new file mode 100644
+index 000000000000..a337b9f29d7a
+--- /dev/null
++++ b/drivers/clk/ccf/Makefile
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Copyright (c) 2026 Linaro Ltd.
++#
++# Full Linux CCF support
++#
++
++obj-y += clk.o \
++	clk-conf.o \
++	clk-divider.o \
++	clk-gate.o \
++	clk-mux.o \
++	clk-fixed-factor.o \
++	clk-fixed-rate.o
++
++obj-$(CONFIG_CLK_COMPOSITE_CCF) += clk-composite.o
++
+diff --git a/drivers/clk/ccf/clk-composite.c b/drivers/clk/ccf/clk-composite.c
+new file mode 100644
+index 000000000000..66759fe28fad
+--- /dev/null
++++ b/drivers/clk/ccf/clk-composite.c
+@@ -0,0 +1,492 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2013 NVIDIA CORPORATION.  All rights reserved.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/slab.h>
++
++static u8 clk_composite_get_parent(struct clk_hw *hw)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *mux_ops = composite->mux_ops;
++	struct clk_hw *mux_hw = composite->mux_hw;
++
++	__clk_hw_set_clk(mux_hw, hw);
++
++	return mux_ops->get_parent(mux_hw);
++}
++
++static int clk_composite_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *mux_ops = composite->mux_ops;
++	struct clk_hw *mux_hw = composite->mux_hw;
++
++	__clk_hw_set_clk(mux_hw, hw);
++
++	return mux_ops->set_parent(mux_hw, index);
++}
++
++static unsigned long clk_composite_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *rate_ops = composite->rate_ops;
++	struct clk_hw *rate_hw = composite->rate_hw;
++
++	__clk_hw_set_clk(rate_hw, hw);
++
++	return rate_ops->recalc_rate(rate_hw, parent_rate);
++}
++
++static int clk_composite_determine_rate_for_parent(struct clk_hw *rate_hw,
++						   struct clk_rate_request *req,
++						   struct clk_hw *parent_hw,
++						   const struct clk_ops *rate_ops)
++{
++	long rate;
++
++	req->best_parent_hw = parent_hw;
++	req->best_parent_rate = clk_hw_get_rate(parent_hw);
++
++	if (rate_ops->determine_rate)
++		return rate_ops->determine_rate(rate_hw, req);
++
++	rate = rate_ops->round_rate(rate_hw, req->rate,
++				    &req->best_parent_rate);
++	if (rate < 0)
++		return rate;
++
++	req->rate = rate;
++
++	return 0;
++}
++
++static int clk_composite_determine_rate(struct clk_hw *hw,
++					struct clk_rate_request *req)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *rate_ops = composite->rate_ops;
++	const struct clk_ops *mux_ops = composite->mux_ops;
++	struct clk_hw *rate_hw = composite->rate_hw;
++	struct clk_hw *mux_hw = composite->mux_hw;
++	struct clk_hw *parent;
++	unsigned long rate_diff;
++	unsigned long best_rate_diff = ULONG_MAX;
++	unsigned long best_rate = 0;
++	int i, ret;
++
++	if (rate_hw && rate_ops &&
++	    (rate_ops->determine_rate || rate_ops->round_rate) &&
++	    mux_hw && mux_ops && mux_ops->set_parent) {
++		req->best_parent_hw = NULL;
++
++		if (clk_hw_get_flags(hw) & CLK_SET_RATE_NO_REPARENT) {
++			struct clk_rate_request tmp_req;
++
++			parent = clk_hw_get_parent(mux_hw);
++
++			clk_hw_forward_rate_request(hw, req, parent, &tmp_req, req->rate);
++			ret = clk_composite_determine_rate_for_parent(rate_hw,
++								      &tmp_req,
++								      parent,
++								      rate_ops);
++			if (ret)
++				return ret;
++
++			req->rate = tmp_req.rate;
++			req->best_parent_hw = tmp_req.best_parent_hw;
++			req->best_parent_rate = tmp_req.best_parent_rate;
++
++			return 0;
++		}
++
++		for (i = 0; i < clk_hw_get_num_parents(mux_hw); i++) {
++			struct clk_rate_request tmp_req;
++
++			parent = clk_hw_get_parent_by_index(mux_hw, i);
++			if (!parent)
++				continue;
++
++			clk_hw_forward_rate_request(hw, req, parent, &tmp_req, req->rate);
++			ret = clk_composite_determine_rate_for_parent(rate_hw,
++								      &tmp_req,
++								      parent,
++								      rate_ops);
++			if (ret)
++				continue;
++
++			if (req->rate >= tmp_req.rate)
++				rate_diff = req->rate - tmp_req.rate;
++			else
++				rate_diff = tmp_req.rate - req->rate;
++
++			if (!rate_diff || !req->best_parent_hw
++				       || best_rate_diff > rate_diff) {
++				req->best_parent_hw = parent;
++				req->best_parent_rate = tmp_req.best_parent_rate;
++				best_rate_diff = rate_diff;
++				best_rate = tmp_req.rate;
++			}
++
++			if (!rate_diff)
++				return 0;
++		}
++
++		req->rate = best_rate;
++		return 0;
++	} else if (rate_hw && rate_ops && rate_ops->determine_rate) {
++		__clk_hw_set_clk(rate_hw, hw);
++		return rate_ops->determine_rate(rate_hw, req);
++	} else if (mux_hw && mux_ops && mux_ops->determine_rate) {
++		__clk_hw_set_clk(mux_hw, hw);
++		return mux_ops->determine_rate(mux_hw, req);
++	} else {
++		pr_err("clk: clk_composite_determine_rate function called, but no mux or rate callback set!\n");
++		return -EINVAL;
++	}
++}
++
++static long clk_composite_round_rate(struct clk_hw *hw, unsigned long rate,
++				  unsigned long *prate)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *rate_ops = composite->rate_ops;
++	struct clk_hw *rate_hw = composite->rate_hw;
++
++	__clk_hw_set_clk(rate_hw, hw);
++
++	return rate_ops->round_rate(rate_hw, rate, prate);
++}
++
++static int clk_composite_set_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long parent_rate)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *rate_ops = composite->rate_ops;
++	struct clk_hw *rate_hw = composite->rate_hw;
++
++	__clk_hw_set_clk(rate_hw, hw);
++
++	return rate_ops->set_rate(rate_hw, rate, parent_rate);
++}
++
++static int clk_composite_set_rate_and_parent(struct clk_hw *hw,
++					     unsigned long rate,
++					     unsigned long parent_rate,
++					     u8 index)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *rate_ops = composite->rate_ops;
++	const struct clk_ops *mux_ops = composite->mux_ops;
++	struct clk_hw *rate_hw = composite->rate_hw;
++	struct clk_hw *mux_hw = composite->mux_hw;
++	unsigned long temp_rate;
++
++	__clk_hw_set_clk(rate_hw, hw);
++	__clk_hw_set_clk(mux_hw, hw);
++
++	temp_rate = rate_ops->recalc_rate(rate_hw, parent_rate);
++	if (temp_rate > rate) {
++		rate_ops->set_rate(rate_hw, rate, parent_rate);
++		mux_ops->set_parent(mux_hw, index);
++	} else {
++		mux_ops->set_parent(mux_hw, index);
++		rate_ops->set_rate(rate_hw, rate, parent_rate);
++	}
++
++	return 0;
++}
++
++static int clk_composite_is_enabled(struct clk_hw *hw)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *gate_ops = composite->gate_ops;
++	struct clk_hw *gate_hw = composite->gate_hw;
++
++	__clk_hw_set_clk(gate_hw, hw);
++
++	return gate_ops->is_enabled(gate_hw);
++}
++
++static int clk_composite_enable(struct clk_hw *hw)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *gate_ops = composite->gate_ops;
++	struct clk_hw *gate_hw = composite->gate_hw;
++
++	__clk_hw_set_clk(gate_hw, hw);
++
++	return gate_ops->enable(gate_hw);
++}
++
++static void clk_composite_disable(struct clk_hw *hw)
++{
++	struct clk_composite *composite = to_clk_composite(hw);
++	const struct clk_ops *gate_ops = composite->gate_ops;
++	struct clk_hw *gate_hw = composite->gate_hw;
++
++	__clk_hw_set_clk(gate_hw, hw);
++
++	gate_ops->disable(gate_hw);
++}
++
++static struct clk_hw *__clk_hw_register_composite(struct device *dev,
++			const char *name, const char * const *parent_names,
++			const struct clk_parent_data *pdata, int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	struct clk_hw *hw;
++	struct clk_init_data init = {};
++	struct clk_composite *composite;
++	struct clk_ops *clk_composite_ops;
++	int ret;
++
++	composite = kzalloc(sizeof(*composite), GFP_KERNEL);
++	if (!composite)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.flags = flags;
++	if (parent_names)
++		init.parent_names = parent_names;
++	else
++		init.parent_data = pdata;
++	init.num_parents = num_parents;
++	hw = &composite->hw;
++
++	clk_composite_ops = &composite->ops;
++
++	if (mux_hw && mux_ops) {
++		if (!mux_ops->get_parent) {
++			hw = ERR_PTR(-EINVAL);
++			goto err;
++		}
++
++		composite->mux_hw = mux_hw;
++		composite->mux_ops = mux_ops;
++		clk_composite_ops->get_parent = clk_composite_get_parent;
++		if (mux_ops->set_parent)
++			clk_composite_ops->set_parent = clk_composite_set_parent;
++		if (mux_ops->determine_rate)
++			clk_composite_ops->determine_rate = clk_composite_determine_rate;
++	}
++
++	if (rate_hw && rate_ops) {
++		if (!rate_ops->recalc_rate) {
++			hw = ERR_PTR(-EINVAL);
++			goto err;
++		}
++		clk_composite_ops->recalc_rate = clk_composite_recalc_rate;
++
++		if (rate_ops->determine_rate)
++			clk_composite_ops->determine_rate =
++				clk_composite_determine_rate;
++		else if (rate_ops->round_rate)
++			clk_composite_ops->round_rate =
++				clk_composite_round_rate;
++
++		/* .set_rate requires either .round_rate or .determine_rate */
++		if (rate_ops->set_rate) {
++			if (rate_ops->determine_rate || rate_ops->round_rate)
++				clk_composite_ops->set_rate =
++						clk_composite_set_rate;
++			else
++				WARN(1, "%s: missing round_rate op is required\n",
++						__func__);
++		}
++
++		composite->rate_hw = rate_hw;
++		composite->rate_ops = rate_ops;
++	}
++
++	if (mux_hw && mux_ops && rate_hw && rate_ops) {
++		if (mux_ops->set_parent && rate_ops->set_rate)
++			clk_composite_ops->set_rate_and_parent =
++			clk_composite_set_rate_and_parent;
++	}
++
++	if (gate_hw && gate_ops) {
++		if (!gate_ops->is_enabled || !gate_ops->enable ||
++		    !gate_ops->disable) {
++			hw = ERR_PTR(-EINVAL);
++			goto err;
++		}
++
++		composite->gate_hw = gate_hw;
++		composite->gate_ops = gate_ops;
++		clk_composite_ops->is_enabled = clk_composite_is_enabled;
++		clk_composite_ops->enable = clk_composite_enable;
++		clk_composite_ops->disable = clk_composite_disable;
++	}
++
++	init.ops = clk_composite_ops;
++	composite->hw.init = &init;
++
++	ret = clk_hw_register(dev, hw);
++	if (ret) {
++		hw = ERR_PTR(ret);
++		goto err;
++	}
++
++	if (composite->mux_hw)
++		composite->mux_hw->clk = hw->clk;
++
++	if (composite->rate_hw)
++		composite->rate_hw->clk = hw->clk;
++
++	if (composite->gate_hw)
++		composite->gate_hw->clk = hw->clk;
++
++	return hw;
++
++err:
++	kfree(composite);
++	return hw;
++}
++
++struct clk_hw *clk_hw_register_composite(struct device *dev, const char *name,
++			const char * const *parent_names, int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	return __clk_hw_register_composite(dev, name, parent_names, NULL,
++					   num_parents, mux_hw, mux_ops,
++					   rate_hw, rate_ops, gate_hw,
++					   gate_ops, flags);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_composite);
++
++struct clk_hw *clk_hw_register_composite_pdata(struct device *dev,
++			const char *name,
++			const struct clk_parent_data *parent_data,
++			int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	return __clk_hw_register_composite(dev, name, NULL, parent_data,
++					   num_parents, mux_hw, mux_ops,
++					   rate_hw, rate_ops, gate_hw,
++					   gate_ops, flags);
++}
++
++struct clk *clk_register_composite(struct device *dev, const char *name,
++			const char * const *parent_names, int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	struct clk_hw *hw;
++
++	hw = clk_hw_register_composite(dev, name, parent_names, num_parents,
++			mux_hw, mux_ops, rate_hw, rate_ops, gate_hw, gate_ops,
++			flags);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++EXPORT_SYMBOL_GPL(clk_register_composite);
++
++struct clk *clk_register_composite_pdata(struct device *dev, const char *name,
++			const struct clk_parent_data *parent_data,
++			int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	struct clk_hw *hw;
++
++	hw = clk_hw_register_composite_pdata(dev, name, parent_data,
++			num_parents, mux_hw, mux_ops, rate_hw, rate_ops,
++			gate_hw, gate_ops, flags);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++
++void clk_unregister_composite(struct clk *clk)
++{
++	struct clk_composite *composite;
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	composite = to_clk_composite(hw);
++
++	clk_unregister(clk);
++	kfree(composite);
++}
++
++void clk_hw_unregister_composite(struct clk_hw *hw)
++{
++	struct clk_composite *composite;
++
++	composite = to_clk_composite(hw);
++
++	clk_hw_unregister(hw);
++	kfree(composite);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_composite);
++
++static void devm_clk_hw_release_composite(struct device *dev, void *res)
++{
++	clk_hw_unregister_composite(*(struct clk_hw **)res);
++}
++
++static struct clk_hw *__devm_clk_hw_register_composite(struct device *dev,
++			const char *name, const char * const *parent_names,
++			const struct clk_parent_data *pdata, int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	struct clk_hw **ptr, *hw;
++
++	ptr = devres_alloc(devm_clk_hw_release_composite, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	hw = __clk_hw_register_composite(dev, name, parent_names, pdata,
++					 num_parents, mux_hw, mux_ops, rate_hw,
++					 rate_ops, gate_hw, gate_ops, flags);
++
++	if (!IS_ERR(hw)) {
++		*ptr = hw;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return hw;
++}
++
++struct clk_hw *devm_clk_hw_register_composite_pdata(struct device *dev,
++			const char *name,
++			const struct clk_parent_data *parent_data,
++			int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	return __devm_clk_hw_register_composite(dev, name, NULL, parent_data,
++						num_parents, mux_hw, mux_ops,
++						rate_hw, rate_ops, gate_hw,
++						gate_ops, flags);
++}
+diff --git a/drivers/clk/ccf/clk-conf.c b/drivers/clk/ccf/clk-conf.c
+new file mode 100644
+index 000000000000..303a0bb26e54
+--- /dev/null
++++ b/drivers/clk/ccf/clk-conf.c
+@@ -0,0 +1,183 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2014 Samsung Electronics Co., Ltd.
++ * Sylwester Nawrocki <s.nawrocki@samsung.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/clk/clk-conf.h>
++#include <linux/device.h>
++#include <linux/of.h>
++#include <linux/printk.h>
++#include <linux/slab.h>
++
++static int __set_clk_parents(struct device_node *node, bool clk_supplier)
++{
++	struct of_phandle_args clkspec;
++	int index, rc, num_parents;
++	struct clk *clk, *pclk;
++
++	num_parents = of_count_phandle_with_args(node, "assigned-clock-parents",
++						 "#clock-cells");
++	if (num_parents == -EINVAL)
++		pr_err("clk: invalid value of clock-parents property at %pOF\n",
++		       node);
++
++	for (index = 0; index < num_parents; index++) {
++		rc = of_parse_phandle_with_args(node, "assigned-clock-parents",
++					"#clock-cells",	index, &clkspec);
++		if (rc < 0) {
++			/* skip empty (null) phandles */
++			if (rc == -ENOENT)
++				continue;
++			else
++				return rc;
++		}
++		if (clkspec.np == node && !clk_supplier) {
++			of_node_put(clkspec.np);
++			return 0;
++		}
++		pclk = of_clk_get_from_provider(&clkspec);
++		of_node_put(clkspec.np);
++		if (IS_ERR(pclk)) {
++			if (PTR_ERR(pclk) != -EPROBE_DEFER)
++				pr_warn("clk: couldn't get parent clock %d for %pOF\n",
++					index, node);
++			return PTR_ERR(pclk);
++		}
++
++		rc = of_parse_phandle_with_args(node, "assigned-clocks",
++					"#clock-cells", index, &clkspec);
++		if (rc < 0)
++			goto err;
++		if (clkspec.np == node && !clk_supplier) {
++			of_node_put(clkspec.np);
++			rc = 0;
++			goto err;
++		}
++		clk = of_clk_get_from_provider(&clkspec);
++		of_node_put(clkspec.np);
++		if (IS_ERR(clk)) {
++			if (PTR_ERR(clk) != -EPROBE_DEFER)
++				pr_warn("clk: couldn't get assigned clock %d for %pOF\n",
++					index, node);
++			rc = PTR_ERR(clk);
++			goto err;
++		}
++
++		rc = clk_set_parent(clk, pclk);
++		if (rc < 0)
++			pr_err("clk: failed to reparent %s to %s: %d\n",
++			       __clk_get_name(clk), __clk_get_name(pclk), rc);
++		clk_put(clk);
++		clk_put(pclk);
++	}
++	return 0;
++err:
++	clk_put(pclk);
++	return rc;
++}
++
++static int __set_clk_rates(struct device_node *node, bool clk_supplier)
++{
++	struct of_phandle_args clkspec;
++	int rc, count, count_64, index;
++	struct clk *clk;
++	u64 *rates_64 __free(kfree) = NULL;
++	u32 *rates __free(kfree) = NULL;
++
++	count = of_property_count_u32_elems(node, "assigned-clock-rates");
++	count_64 = of_property_count_u64_elems(node, "assigned-clock-rates-u64");
++	if (count_64 > 0) {
++		count = count_64;
++		rates_64 = kcalloc(count, sizeof(*rates_64), GFP_KERNEL);
++		if (!rates_64)
++			return -ENOMEM;
++
++		rc = of_property_read_u64_array(node,
++						"assigned-clock-rates-u64",
++						rates_64, count);
++	} else if (count > 0) {
++		rates = kcalloc(count, sizeof(*rates), GFP_KERNEL);
++		if (!rates)
++			return -ENOMEM;
++
++		rc = of_property_read_u32_array(node, "assigned-clock-rates",
++						rates, count);
++	} else {
++		return 0;
++	}
++
++	if (rc)
++		return rc;
++
++	for (index = 0; index < count; index++) {
++		unsigned long rate;
++
++		if (rates_64)
++			rate = rates_64[index];
++		else
++			rate = rates[index];
++
++		if (rate) {
++			rc = of_parse_phandle_with_args(node, "assigned-clocks",
++					"#clock-cells",	index, &clkspec);
++			if (rc < 0) {
++				/* skip empty (null) phandles */
++				if (rc == -ENOENT)
++					continue;
++				else
++					return rc;
++			}
++			if (clkspec.np == node && !clk_supplier) {
++				of_node_put(clkspec.np);
++				return 0;
++			}
++
++			clk = of_clk_get_from_provider(&clkspec);
++			of_node_put(clkspec.np);
++			if (IS_ERR(clk)) {
++				if (PTR_ERR(clk) != -EPROBE_DEFER)
++					pr_warn("clk: couldn't get clock %d for %pOF\n",
++						index, node);
++				return PTR_ERR(clk);
++			}
++
++			rc = clk_set_rate(clk, rate);
++			if (rc < 0)
++				pr_err("clk: couldn't set %s clk rate to %lu (%d), current rate: %lu\n",
++				       __clk_get_name(clk), rate, rc,
++				       clk_get_rate(clk));
++			clk_put(clk);
++		}
++	}
++	return 0;
++}
++
++/**
++ * of_clk_set_defaults() - parse and set assigned clocks configuration
++ * @node: device node to apply clock settings for
++ * @clk_supplier: true if clocks supplied by @node should also be considered
++ *
++ * This function parses 'assigned-{clocks/clock-parents/clock-rates}' properties
++ * and sets any specified clock parents and rates. The @clk_supplier argument
++ * should be set to true if @node may be also a clock supplier of any clock
++ * listed in its 'assigned-clocks' or 'assigned-clock-parents' properties.
++ * If @clk_supplier is false the function exits returning 0 as soon as it
++ * determines the @node is also a supplier of any of the clocks.
++ */
++int of_clk_set_defaults(struct device_node *node, bool clk_supplier)
++{
++	int rc;
++
++	if (!node)
++		return 0;
++
++	rc = __set_clk_parents(node, clk_supplier);
++	if (rc < 0)
++		return rc;
++
++	return __set_clk_rates(node, clk_supplier);
++}
++EXPORT_SYMBOL_GPL(of_clk_set_defaults);
+diff --git a/drivers/clk/ccf/clk-divider.c b/drivers/clk/ccf/clk-divider.c
+new file mode 100644
+index 000000000000..2601b6155afb
+--- /dev/null
++++ b/drivers/clk/ccf/clk-divider.c
+@@ -0,0 +1,674 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
++ * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
++ * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
++ *
++ * Adjustable divider clock implementation
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/io.h>
++#include <linux/err.h>
++#include <linux/string.h>
++#include <linux/log2.h>
++
++/*
++ * DOC: basic adjustable divider clock that cannot gate
++ *
++ * Traits of this clock:
++ * prepare - clk_prepare only ensures that parents are prepared
++ * enable - clk_enable only ensures that parents are enabled
++ * rate - rate is adjustable.  clk->rate = ceiling(parent->rate / divisor)
++ * parent - fixed parent.  No clk_set_parent support
++ */
++
++static inline u32 clk_div_readl(struct clk_divider *divider)
++{
++	if (divider->flags & CLK_DIVIDER_BIG_ENDIAN)
++		return ioread32be(divider->reg);
++
++	return readl(divider->reg);
++}
++
++static inline void clk_div_writel(struct clk_divider *divider, u32 val)
++{
++	if (divider->flags & CLK_DIVIDER_BIG_ENDIAN)
++		iowrite32be(val, divider->reg);
++	else
++		writel(val, divider->reg);
++}
++
++static unsigned int _get_table_maxdiv(const struct clk_div_table *table,
++				      u8 width)
++{
++	unsigned int maxdiv = 0, mask = clk_div_mask(width);
++	const struct clk_div_table *clkt;
++
++	for (clkt = table; clkt->div; clkt++)
++		if (clkt->div > maxdiv && clkt->val <= mask)
++			maxdiv = clkt->div;
++	return maxdiv;
++}
++
++static unsigned int _get_table_mindiv(const struct clk_div_table *table)
++{
++	unsigned int mindiv = UINT_MAX;
++	const struct clk_div_table *clkt;
++
++	for (clkt = table; clkt->div; clkt++)
++		if (clkt->div < mindiv)
++			mindiv = clkt->div;
++	return mindiv;
++}
++
++static unsigned int _get_maxdiv(const struct clk_div_table *table, u8 width,
++				unsigned long flags)
++{
++	if (flags & CLK_DIVIDER_ONE_BASED)
++		return clk_div_mask(width);
++	if (flags & CLK_DIVIDER_POWER_OF_TWO)
++		return 1 << clk_div_mask(width);
++	if (flags & CLK_DIVIDER_EVEN_INTEGERS)
++		return 2 * (clk_div_mask(width) + 1);
++	if (table)
++		return _get_table_maxdiv(table, width);
++	return clk_div_mask(width) + 1;
++}
++
++static unsigned int _get_table_div(const struct clk_div_table *table,
++							unsigned int val)
++{
++	const struct clk_div_table *clkt;
++
++	for (clkt = table; clkt->div; clkt++)
++		if (clkt->val == val)
++			return clkt->div;
++	return 0;
++}
++
++static unsigned int _get_div(const struct clk_div_table *table,
++			     unsigned int val, unsigned long flags, u8 width)
++{
++	if (flags & CLK_DIVIDER_ONE_BASED)
++		return val;
++	if (flags & CLK_DIVIDER_POWER_OF_TWO)
++		return 1 << val;
++	if (flags & CLK_DIVIDER_MAX_AT_ZERO)
++		return val ? val : clk_div_mask(width) + 1;
++	if (flags & CLK_DIVIDER_EVEN_INTEGERS)
++		return 2 * (val + 1);
++	if (table)
++		return _get_table_div(table, val);
++	return val + 1;
++}
++
++static unsigned int _get_table_val(const struct clk_div_table *table,
++							unsigned int div)
++{
++	const struct clk_div_table *clkt;
++
++	for (clkt = table; clkt->div; clkt++)
++		if (clkt->div == div)
++			return clkt->val;
++	return 0;
++}
++
++static unsigned int _get_val(const struct clk_div_table *table,
++			     unsigned int div, unsigned long flags, u8 width)
++{
++	if (flags & CLK_DIVIDER_ONE_BASED)
++		return div;
++	if (flags & CLK_DIVIDER_POWER_OF_TWO)
++		return __ffs(div);
++	if (flags & CLK_DIVIDER_MAX_AT_ZERO)
++		return (div == clk_div_mask(width) + 1) ? 0 : div;
++	if (flags & CLK_DIVIDER_EVEN_INTEGERS)
++		return (div >> 1) - 1;
++	if (table)
++		return  _get_table_val(table, div);
++	return div - 1;
++}
++
++unsigned long divider_recalc_rate(struct clk_hw *hw, unsigned long parent_rate,
++				  unsigned int val,
++				  const struct clk_div_table *table,
++				  unsigned long flags, unsigned long width)
++{
++	unsigned int div;
++
++	div = _get_div(table, val, flags, width);
++	if (!div) {
++		WARN(!(flags & CLK_DIVIDER_ALLOW_ZERO),
++			"%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set\n",
++			clk_hw_get_name(hw));
++		return parent_rate;
++	}
++
++	return DIV_ROUND_UP_ULL((u64)parent_rate, div);
++}
++EXPORT_SYMBOL_GPL(divider_recalc_rate);
++
++static unsigned long clk_divider_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct clk_divider *divider = to_clk_divider(hw);
++	unsigned int val;
++
++	val = clk_div_readl(divider) >> divider->shift;
++	val &= clk_div_mask(divider->width);
++
++	return divider_recalc_rate(hw, parent_rate, val, divider->table,
++				   divider->flags, divider->width);
++}
++
++static bool _is_valid_table_div(const struct clk_div_table *table,
++							 unsigned int div)
++{
++	const struct clk_div_table *clkt;
++
++	for (clkt = table; clkt->div; clkt++)
++		if (clkt->div == div)
++			return true;
++	return false;
++}
++
++static bool _is_valid_div(const struct clk_div_table *table, unsigned int div,
++			  unsigned long flags)
++{
++	if (flags & CLK_DIVIDER_POWER_OF_TWO)
++		return is_power_of_2(div);
++	if (table)
++		return _is_valid_table_div(table, div);
++	return true;
++}
++
++static int _round_up_table(const struct clk_div_table *table, int div)
++{
++	const struct clk_div_table *clkt;
++	int up = INT_MAX;
++
++	for (clkt = table; clkt->div; clkt++) {
++		if (clkt->div == div)
++			return clkt->div;
++		else if (clkt->div < div)
++			continue;
++
++		if ((clkt->div - div) < (up - div))
++			up = clkt->div;
++	}
++
++	return up;
++}
++
++static int _round_down_table(const struct clk_div_table *table, int div)
++{
++	const struct clk_div_table *clkt;
++	int down = _get_table_mindiv(table);
++
++	for (clkt = table; clkt->div; clkt++) {
++		if (clkt->div == div)
++			return clkt->div;
++		else if (clkt->div > div)
++			continue;
++
++		if ((div - clkt->div) < (div - down))
++			down = clkt->div;
++	}
++
++	return down;
++}
++
++static int _div_round_up(const struct clk_div_table *table,
++			 unsigned long parent_rate, unsigned long rate,
++			 unsigned long flags)
++{
++	int div = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
++
++	if (flags & CLK_DIVIDER_POWER_OF_TWO)
++		div = __roundup_pow_of_two(div);
++	if (table)
++		div = _round_up_table(table, div);
++
++	return div;
++}
++
++static int _div_round_closest(const struct clk_div_table *table,
++			      unsigned long parent_rate, unsigned long rate,
++			      unsigned long flags)
++{
++	int up, down;
++	unsigned long up_rate, down_rate;
++
++	up = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
++	down = parent_rate / rate;
++
++	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
++		up = __roundup_pow_of_two(up);
++		down = __rounddown_pow_of_two(down);
++	} else if (table) {
++		up = _round_up_table(table, up);
++		down = _round_down_table(table, down);
++	}
++
++	up_rate = DIV_ROUND_UP_ULL((u64)parent_rate, up);
++	down_rate = DIV_ROUND_UP_ULL((u64)parent_rate, down);
++
++	return (rate - up_rate) <= (down_rate - rate) ? up : down;
++}
++
++static int _div_round(const struct clk_div_table *table,
++		      unsigned long parent_rate, unsigned long rate,
++		      unsigned long flags)
++{
++	if (flags & CLK_DIVIDER_ROUND_CLOSEST)
++		return _div_round_closest(table, parent_rate, rate, flags);
++
++	return _div_round_up(table, parent_rate, rate, flags);
++}
++
++static bool _is_best_div(unsigned long rate, unsigned long now,
++			 unsigned long best, unsigned long flags)
++{
++	if (flags & CLK_DIVIDER_ROUND_CLOSEST)
++		return abs(rate - now) < abs(rate - best);
++
++	return now <= rate && now > best;
++}
++
++static int _next_div(const struct clk_div_table *table, int div,
++		     unsigned long flags)
++{
++	div++;
++
++	if (flags & CLK_DIVIDER_POWER_OF_TWO)
++		return __roundup_pow_of_two(div);
++	if (table)
++		return _round_up_table(table, div);
++
++	return div;
++}
++
++static int clk_divider_bestdiv(struct clk_hw *hw, struct clk_hw *parent,
++			       unsigned long rate,
++			       unsigned long *best_parent_rate,
++			       const struct clk_div_table *table, u8 width,
++			       unsigned long flags)
++{
++	int i, bestdiv = 0;
++	unsigned long parent_rate, best = 0, now, maxdiv;
++	unsigned long parent_rate_saved = *best_parent_rate;
++
++	if (!rate)
++		rate = 1;
++
++	maxdiv = _get_maxdiv(table, width, flags);
++
++	if (!(clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
++		parent_rate = *best_parent_rate;
++		bestdiv = _div_round(table, parent_rate, rate, flags);
++		bestdiv = bestdiv == 0 ? 1 : bestdiv;
++		bestdiv = bestdiv > maxdiv ? maxdiv : bestdiv;
++		return bestdiv;
++	}
++
++	/*
++	 * The maximum divider we can use without overflowing
++	 * unsigned long in rate * i below
++	 */
++	maxdiv = min(ULONG_MAX / rate, maxdiv);
++
++	for (i = _next_div(table, 0, flags); i <= maxdiv;
++					     i = _next_div(table, i, flags)) {
++		if (rate * i == parent_rate_saved) {
++			/*
++			 * It's the most ideal case if the requested rate can be
++			 * divided from parent clock without needing to change
++			 * parent rate, so return the divider immediately.
++			 */
++			*best_parent_rate = parent_rate_saved;
++			return i;
++		}
++		parent_rate = clk_hw_round_rate(parent, rate * i);
++		now = DIV_ROUND_UP_ULL((u64)parent_rate, i);
++		if (_is_best_div(rate, now, best, flags)) {
++			bestdiv = i;
++			best = now;
++			*best_parent_rate = parent_rate;
++		}
++	}
++
++	if (!bestdiv) {
++		bestdiv = _get_maxdiv(table, width, flags);
++		*best_parent_rate = clk_hw_round_rate(parent, 1);
++	}
++
++	return bestdiv;
++}
++
++int divider_determine_rate(struct clk_hw *hw, struct clk_rate_request *req,
++			   const struct clk_div_table *table, u8 width,
++			   unsigned long flags)
++{
++	int div;
++
++	div = clk_divider_bestdiv(hw, req->best_parent_hw, req->rate,
++				  &req->best_parent_rate, table, width, flags);
++
++	req->rate = DIV_ROUND_UP_ULL((u64)req->best_parent_rate, div);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(divider_determine_rate);
++
++int divider_ro_determine_rate(struct clk_hw *hw, struct clk_rate_request *req,
++			      const struct clk_div_table *table, u8 width,
++			      unsigned long flags, unsigned int val)
++{
++	int div;
++
++	div = _get_div(table, val, flags, width);
++
++	/* Even a read-only clock can propagate a rate change */
++	if (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) {
++		if (!req->best_parent_hw)
++			return -EINVAL;
++
++		req->best_parent_rate = clk_hw_round_rate(req->best_parent_hw,
++							  req->rate * div);
++	}
++
++	req->rate = DIV_ROUND_UP_ULL((u64)req->best_parent_rate, div);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(divider_ro_determine_rate);
++
++long divider_round_rate_parent(struct clk_hw *hw, struct clk_hw *parent,
++			       unsigned long rate, unsigned long *prate,
++			       const struct clk_div_table *table,
++			       u8 width, unsigned long flags)
++{
++	struct clk_rate_request req;
++	int ret;
++
++	clk_hw_init_rate_request(hw, &req, rate);
++	req.best_parent_rate = *prate;
++	req.best_parent_hw = parent;
++
++	ret = divider_determine_rate(hw, &req, table, width, flags);
++	if (ret)
++		return ret;
++
++	*prate = req.best_parent_rate;
++
++	return req.rate;
++}
++EXPORT_SYMBOL_GPL(divider_round_rate_parent);
++
++long divider_ro_round_rate_parent(struct clk_hw *hw, struct clk_hw *parent,
++				  unsigned long rate, unsigned long *prate,
++				  const struct clk_div_table *table, u8 width,
++				  unsigned long flags, unsigned int val)
++{
++	struct clk_rate_request req;
++	int ret;
++
++	clk_hw_init_rate_request(hw, &req, rate);
++	req.best_parent_rate = *prate;
++	req.best_parent_hw = parent;
++
++	ret = divider_ro_determine_rate(hw, &req, table, width, flags, val);
++	if (ret)
++		return ret;
++
++	*prate = req.best_parent_rate;
++
++	return req.rate;
++}
++EXPORT_SYMBOL_GPL(divider_ro_round_rate_parent);
++
++static int clk_divider_determine_rate(struct clk_hw *hw,
++				      struct clk_rate_request *req)
++{
++	struct clk_divider *divider = to_clk_divider(hw);
++
++	/* if read only, just return current value */
++	if (divider->flags & CLK_DIVIDER_READ_ONLY) {
++		u32 val;
++
++		val = clk_div_readl(divider) >> divider->shift;
++		val &= clk_div_mask(divider->width);
++
++		return divider_ro_determine_rate(hw, req, divider->table,
++						 divider->width,
++						 divider->flags, val);
++	}
++
++	return divider_determine_rate(hw, req, divider->table, divider->width,
++				      divider->flags);
++}
++
++int divider_get_val(unsigned long rate, unsigned long parent_rate,
++		    const struct clk_div_table *table, u8 width,
++		    unsigned long flags)
++{
++	unsigned int div, value;
++
++	div = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
++
++	if (!_is_valid_div(table, div, flags))
++		return -EINVAL;
++
++	value = _get_val(table, div, flags, width);
++
++	return min_t(unsigned int, value, clk_div_mask(width));
++}
++EXPORT_SYMBOL_GPL(divider_get_val);
++
++static int clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long parent_rate)
++{
++	struct clk_divider *divider = to_clk_divider(hw);
++	int value;
++	unsigned long flags = 0;
++	u32 val;
++
++	value = divider_get_val(rate, parent_rate, divider->table,
++				divider->width, divider->flags);
++	if (value < 0)
++		return value;
++
++	if (divider->lock)
++		spin_lock_irqsave(divider->lock, flags);
++	else
++		__acquire(divider->lock);
++
++	if (divider->flags & CLK_DIVIDER_HIWORD_MASK) {
++		val = clk_div_mask(divider->width) << (divider->shift + 16);
++	} else {
++		val = clk_div_readl(divider);
++		val &= ~(clk_div_mask(divider->width) << divider->shift);
++	}
++	val |= (u32)value << divider->shift;
++	clk_div_writel(divider, val);
++
++	if (divider->lock)
++		spin_unlock_irqrestore(divider->lock, flags);
++	else
++		__release(divider->lock);
++
++	return 0;
++}
++
++const struct clk_ops clk_divider_ops = {
++	.recalc_rate = clk_divider_recalc_rate,
++	.determine_rate = clk_divider_determine_rate,
++	.set_rate = clk_divider_set_rate,
++};
++EXPORT_SYMBOL_GPL(clk_divider_ops);
++
++const struct clk_ops clk_divider_ro_ops = {
++	.recalc_rate = clk_divider_recalc_rate,
++	.determine_rate = clk_divider_determine_rate,
++};
++EXPORT_SYMBOL_GPL(clk_divider_ro_ops);
++
++struct clk_hw *__clk_hw_register_divider(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		unsigned long clk_divider_flags,
++		const struct clk_div_table *table, spinlock_t *lock)
++{
++	struct clk_divider *div;
++	struct clk_hw *hw;
++	struct clk_init_data init = {};
++	int ret;
++
++	if (clk_divider_flags & CLK_DIVIDER_HIWORD_MASK) {
++		if (width + shift > 16) {
++			pr_warn("divider value exceeds LOWORD field\n");
++			return ERR_PTR(-EINVAL);
++		}
++	}
++
++	/* allocate the divider */
++	div = kzalloc(sizeof(*div), GFP_KERNEL);
++	if (!div)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	if (clk_divider_flags & CLK_DIVIDER_READ_ONLY)
++		init.ops = &clk_divider_ro_ops;
++	else
++		init.ops = &clk_divider_ops;
++	init.flags = flags;
++	init.parent_names = parent_name ? &parent_name : NULL;
++	init.parent_hws = parent_hw ? &parent_hw : NULL;
++	init.parent_data = parent_data;
++	if (parent_name || parent_hw || parent_data)
++		init.num_parents = 1;
++	else
++		init.num_parents = 0;
++
++	/* struct clk_divider assignments */
++	div->reg = reg;
++	div->shift = shift;
++	div->width = width;
++	div->flags = clk_divider_flags;
++	div->lock = lock;
++	div->hw.init = &init;
++	div->table = table;
++
++	/* register the clock */
++	hw = &div->hw;
++	ret = clk_hw_register(dev, hw);
++	if (ret) {
++		kfree(div);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++}
++EXPORT_SYMBOL_GPL(__clk_hw_register_divider);
++
++/**
++ * clk_register_divider_table - register a table based divider clock with
++ * the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @table: array of divider/value pairs ending with a div set to 0
++ * @lock: shared register lock for this clock
++ */
++struct clk *clk_register_divider_table(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		unsigned long clk_divider_flags,
++		const struct clk_div_table *table, spinlock_t *lock)
++{
++	struct clk_hw *hw;
++
++	hw =  __clk_hw_register_divider(dev, NULL, name, parent_name, NULL,
++			NULL, flags, reg, shift, width, clk_divider_flags,
++			table, lock);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++EXPORT_SYMBOL_GPL(clk_register_divider_table);
++
++void clk_unregister_divider(struct clk *clk)
++{
++	struct clk_divider *div;
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	div = to_clk_divider(hw);
++
++	clk_unregister(clk);
++	kfree(div);
++}
++EXPORT_SYMBOL_GPL(clk_unregister_divider);
++
++/**
++ * clk_hw_unregister_divider - unregister a clk divider
++ * @hw: hardware-specific clock data to unregister
++ */
++void clk_hw_unregister_divider(struct clk_hw *hw)
++{
++	struct clk_divider *div;
++
++	div = to_clk_divider(hw);
++
++	clk_hw_unregister(hw);
++	kfree(div);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_divider);
++
++static void devm_clk_hw_release_divider(struct device *dev, void *res)
++{
++	clk_hw_unregister_divider(*(struct clk_hw **)res);
++}
++
++struct clk_hw *__devm_clk_hw_register_divider(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		unsigned long clk_divider_flags,
++		const struct clk_div_table *table, spinlock_t *lock)
++{
++	struct clk_hw **ptr, *hw;
++
++	ptr = devres_alloc(devm_clk_hw_release_divider, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	hw = __clk_hw_register_divider(dev, np, name, parent_name, parent_hw,
++				       parent_data, flags, reg, shift, width,
++				       clk_divider_flags, table, lock);
++
++	if (!IS_ERR(hw)) {
++		*ptr = hw;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return hw;
++}
++EXPORT_SYMBOL_GPL(__devm_clk_hw_register_divider);
+diff --git a/drivers/clk/ccf/clk-fixed-factor.c b/drivers/clk/ccf/clk-fixed-factor.c
+new file mode 100644
+index 000000000000..de658c9e4c53
+--- /dev/null
++++ b/drivers/clk/ccf/clk-fixed-factor.c
+@@ -0,0 +1,424 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
++ */
++#include <linux/module.h>
++#include <linux/clk-provider.h>
++#include <linux/slab.h>
++#include <linux/err.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++/*
++ * DOC: basic fixed multiplier and divider clock that cannot gate
++ *
++ * Traits of this clock:
++ * prepare - clk_prepare only ensures that parents are prepared
++ * enable - clk_enable only ensures that parents are enabled
++ * rate - rate is fixed.  clk->rate = parent->rate / div * mult
++ * parent - fixed parent.  No clk_set_parent support
++ */
++
++static unsigned long clk_factor_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct clk_fixed_factor *fix = to_clk_fixed_factor(hw);
++	unsigned long long int rate;
++
++	rate = (unsigned long long int)parent_rate * fix->mult;
++	do_div(rate, fix->div);
++	return (unsigned long)rate;
++}
++
++static int clk_factor_determine_rate(struct clk_hw *hw,
++				     struct clk_rate_request *req)
++{
++	struct clk_fixed_factor *fix = to_clk_fixed_factor(hw);
++
++	if (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) {
++		unsigned long best_parent;
++
++		best_parent = (req->rate / fix->mult) * fix->div;
++		req->best_parent_rate = clk_hw_round_rate(clk_hw_get_parent(hw), best_parent);
++	}
++
++	req->rate = (req->best_parent_rate / fix->div) * fix->mult;
++
++	return 0;
++}
++
++static int clk_factor_set_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long parent_rate)
++{
++	/*
++	 * We must report success but we can do so unconditionally because
++	 * clk_factor_determine_rate returns values that ensure this call is a
++	 * nop.
++	 */
++
++	return 0;
++}
++
++static unsigned long clk_factor_recalc_accuracy(struct clk_hw *hw,
++						unsigned long parent_accuracy)
++{
++	struct clk_fixed_factor *fix = to_clk_fixed_factor(hw);
++
++	if (fix->flags & CLK_FIXED_FACTOR_FIXED_ACCURACY)
++		return fix->acc;
++
++	return parent_accuracy;
++}
++
++const struct clk_ops clk_fixed_factor_ops = {
++	.determine_rate = clk_factor_determine_rate,
++	.set_rate = clk_factor_set_rate,
++	.recalc_rate = clk_factor_recalc_rate,
++	.recalc_accuracy = clk_factor_recalc_accuracy,
++};
++EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
++
++static void devm_clk_hw_register_fixed_factor_release(struct device *dev, void *res)
++{
++	struct clk_fixed_factor *fix = res;
++
++	/*
++	 * We can not use clk_hw_unregister_fixed_factor, since it will kfree()
++	 * the hw, resulting in double free. Just unregister the hw and let
++	 * devres code kfree() it.
++	 */
++	clk_hw_unregister(&fix->hw);
++}
++
++static struct clk_hw *
++__clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
++		const char *name, const char *parent_name,
++		const struct clk_hw *parent_hw, const struct clk_parent_data *pdata,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc, unsigned int fixflags, bool devm)
++{
++	struct clk_fixed_factor *fix;
++	struct clk_init_data init = { };
++	struct clk_hw *hw;
++	int ret;
++
++	/* You can't use devm without a dev */
++	if (devm && !dev)
++		return ERR_PTR(-EINVAL);
++
++	if (devm)
++		fix = devres_alloc(devm_clk_hw_register_fixed_factor_release,
++				sizeof(*fix), GFP_KERNEL);
++	else
++		fix = kmalloc(sizeof(*fix), GFP_KERNEL);
++	if (!fix)
++		return ERR_PTR(-ENOMEM);
++
++	/* struct clk_fixed_factor assignments */
++	fix->mult = mult;
++	fix->div = div;
++	fix->hw.init = &init;
++	fix->acc = acc;
++	fix->flags = fixflags;
++
++	init.name = name;
++	init.ops = &clk_fixed_factor_ops;
++	init.flags = flags;
++	if (parent_name)
++		init.parent_names = &parent_name;
++	else if (parent_hw)
++		init.parent_hws = &parent_hw;
++	else
++		init.parent_data = pdata;
++	init.num_parents = 1;
++
++	hw = &fix->hw;
++	if (dev)
++		ret = clk_hw_register(dev, hw);
++	else
++		ret = of_clk_hw_register(np, hw);
++	if (ret) {
++		if (devm)
++			devres_free(fix);
++		else
++			kfree(fix);
++		hw = ERR_PTR(ret);
++	} else if (devm)
++		devres_add(dev, fix);
++
++	return hw;
++}
++
++/**
++ * devm_clk_hw_register_fixed_factor_index - Register a fixed factor clock with
++ * parent from DT index
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @index: index of phandle in @dev 'clocks' property
++ * @flags: fixed factor flags
++ * @mult: multiplier
++ * @div: divider
++ *
++ * Return: Pointer to fixed factor clk_hw structure that was registered or
++ * an error pointer.
++ */
++struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
++		const char *name, unsigned int index, unsigned long flags,
++		unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = index };
++
++	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, &pdata,
++					      flags, mult, div, 0, 0, true);
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_index);
++
++/**
++ * devm_clk_hw_register_fixed_factor_parent_hw - Register a fixed factor clock with
++ * pointer to parent clock
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: fixed factor flags
++ * @mult: multiplier
++ * @div: divider
++ *
++ * Return: Pointer to fixed factor clk_hw structure that was registered or
++ * an error pointer.
++ */
++struct clk_hw *devm_clk_hw_register_fixed_factor_parent_hw(struct device *dev,
++		const char *name, const struct clk_hw *parent_hw,
++		unsigned long flags, unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1 };
++
++	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
++					      &pdata, flags, mult, div, 0, 0, true);
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_parent_hw);
++
++struct clk_hw *clk_hw_register_fixed_factor_parent_hw(struct device *dev,
++		const char *name, const struct clk_hw *parent_hw,
++		unsigned long flags, unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1 };
++
++	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
++					      &pdata, flags, mult, div, 0, 0, false);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_parent_hw);
++
++struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1 };
++
++	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL,
++					      &pdata, flags, mult, div, 0, 0, false);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
++
++struct clk_hw *clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
++
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, 0, 0, false);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_fwname);
++
++struct clk_hw *clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
++
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, acc,
++			CLK_FIXED_FACTOR_FIXED_ACCURACY, false);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_with_accuracy_fwname);
++
++struct clk_hw *clk_hw_register_fixed_factor_index(struct device *dev,
++		const char *name, unsigned int index, unsigned long flags,
++		unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = index };
++
++	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, &pdata,
++					      flags, mult, div, 0, 0, false);
++}
++EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_index);
++
++struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div)
++{
++	struct clk_hw *hw;
++
++	hw = clk_hw_register_fixed_factor(dev, name, parent_name, flags, mult,
++					  div);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++EXPORT_SYMBOL_GPL(clk_register_fixed_factor);
++
++void clk_unregister_fixed_factor(struct clk *clk)
++{
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	clk_unregister(clk);
++	kfree(to_clk_fixed_factor(hw));
++}
++EXPORT_SYMBOL_GPL(clk_unregister_fixed_factor);
++
++void clk_hw_unregister_fixed_factor(struct clk_hw *hw)
++{
++	struct clk_fixed_factor *fix;
++
++	fix = to_clk_fixed_factor(hw);
++
++	clk_hw_unregister(hw);
++	kfree(fix);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_fixed_factor);
++
++struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1 };
++
++	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL,
++			&pdata, flags, mult, div, 0, 0, true);
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor);
++
++struct clk_hw *devm_clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
++
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, 0, 0, true);
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_fwname);
++
++struct clk_hw *devm_clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc)
++{
++	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
++
++	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
++			&pdata, flags, mult, div, acc,
++			CLK_FIXED_FACTOR_FIXED_ACCURACY, true);
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_with_accuracy_fwname);
++
++#ifdef CONFIG_OF
++static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
++{
++	struct clk_hw *hw;
++	const char *clk_name = node->name;
++	const struct clk_parent_data pdata = { .index = 0 };
++	u32 div, mult;
++	int ret;
++
++	if (of_property_read_u32(node, "clock-div", &div)) {
++		pr_err("%s Fixed factor clock <%pOFn> must have a clock-div property\n",
++			__func__, node);
++		return ERR_PTR(-EIO);
++	}
++
++	if (of_property_read_u32(node, "clock-mult", &mult)) {
++		pr_err("%s Fixed factor clock <%pOFn> must have a clock-mult property\n",
++			__func__, node);
++		return ERR_PTR(-EIO);
++	}
++
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, NULL,
++					    &pdata, 0, mult, div, 0, 0, false);
++	if (IS_ERR(hw)) {
++		/*
++		 * Clear OF_POPULATED flag so that clock registration can be
++		 * attempted again from probe function.
++		 */
++		of_node_clear_flag(node, OF_POPULATED);
++		return ERR_CAST(hw);
++	}
++
++	ret = of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
++	if (ret) {
++		clk_hw_unregister_fixed_factor(hw);
++		return ERR_PTR(ret);
++	}
++
++	return hw;
++}
++
++/**
++ * of_fixed_factor_clk_setup() - Setup function for simple fixed factor clock
++ * @node:	device node for the clock
++ */
++void __init of_fixed_factor_clk_setup(struct device_node *node)
++{
++	_of_fixed_factor_clk_setup(node);
++}
++CLK_OF_DECLARE(fixed_factor_clk, "fixed-factor-clock",
++		of_fixed_factor_clk_setup);
++
++static void of_fixed_factor_clk_remove(struct platform_device *pdev)
++{
++	struct clk_hw *clk = platform_get_drvdata(pdev);
++
++	of_clk_del_provider(pdev->dev.of_node);
++	clk_hw_unregister_fixed_factor(clk);
++}
++
++static int of_fixed_factor_clk_probe(struct platform_device *pdev)
++{
++	struct clk_hw *clk;
++
++	/*
++	 * This function is not executed when of_fixed_factor_clk_setup
++	 * succeeded.
++	 */
++	clk = _of_fixed_factor_clk_setup(pdev->dev.of_node);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	platform_set_drvdata(pdev, clk);
++
++	return 0;
++}
++
++static const struct of_device_id of_fixed_factor_clk_ids[] = {
++	{ .compatible = "fixed-factor-clock" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, of_fixed_factor_clk_ids);
++
++static struct platform_driver of_fixed_factor_clk_driver = {
++	.driver = {
++		.name = "of_fixed_factor_clk",
++		.of_match_table = of_fixed_factor_clk_ids,
++	},
++	.probe = of_fixed_factor_clk_probe,
++	.remove = of_fixed_factor_clk_remove,
++};
++builtin_platform_driver(of_fixed_factor_clk_driver);
++#endif
+diff --git a/drivers/clk/ccf/clk-fixed-rate.c b/drivers/clk/ccf/clk-fixed-rate.c
+new file mode 100644
+index 000000000000..6b4f76b9c4da
+--- /dev/null
++++ b/drivers/clk/ccf/clk-fixed-rate.c
+@@ -0,0 +1,238 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2010-2011 Canonical Ltd <jeremy.kerr@canonical.com>
++ * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
++ *
++ * Fixed rate clock implementation
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/io.h>
++#include <linux/err.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++/*
++ * DOC: basic fixed-rate clock that cannot gate
++ *
++ * Traits of this clock:
++ * prepare - clk_(un)prepare only ensures parents are prepared
++ * enable - clk_enable only ensures parents are enabled
++ * rate - rate is always a fixed value.  No clk_set_rate support
++ * parent - fixed parent.  No clk_set_parent support
++ */
++
++#define to_clk_fixed_rate(_hw) container_of(_hw, struct clk_fixed_rate, hw)
++
++static unsigned long clk_fixed_rate_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	return to_clk_fixed_rate(hw)->fixed_rate;
++}
++
++static unsigned long clk_fixed_rate_recalc_accuracy(struct clk_hw *hw,
++		unsigned long parent_accuracy)
++{
++	struct clk_fixed_rate *fixed = to_clk_fixed_rate(hw);
++
++	if (fixed->flags & CLK_FIXED_RATE_PARENT_ACCURACY)
++		return parent_accuracy;
++
++	return fixed->fixed_accuracy;
++}
++
++const struct clk_ops clk_fixed_rate_ops = {
++	.recalc_rate = clk_fixed_rate_recalc_rate,
++	.recalc_accuracy = clk_fixed_rate_recalc_accuracy,
++};
++EXPORT_SYMBOL_GPL(clk_fixed_rate_ops);
++
++static void devm_clk_hw_register_fixed_rate_release(struct device *dev, void *res)
++{
++	struct clk_fixed_rate *fix = res;
++
++	/*
++	 * We can not use clk_hw_unregister_fixed_rate, since it will kfree()
++	 * the hw, resulting in double free. Just unregister the hw and let
++	 * devres code kfree() it.
++	 */
++	clk_hw_unregister(&fix->hw);
++}
++
++struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data, unsigned long flags,
++		unsigned long fixed_rate, unsigned long fixed_accuracy,
++		unsigned long clk_fixed_flags, bool devm)
++{
++	struct clk_fixed_rate *fixed;
++	struct clk_hw *hw;
++	struct clk_init_data init = {};
++	int ret = -EINVAL;
++
++	/* allocate fixed-rate clock */
++	if (devm)
++		fixed = devres_alloc(devm_clk_hw_register_fixed_rate_release,
++				     sizeof(*fixed), GFP_KERNEL);
++	else
++		fixed = kzalloc(sizeof(*fixed), GFP_KERNEL);
++	if (!fixed)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &clk_fixed_rate_ops;
++	init.flags = flags;
++	init.parent_names = parent_name ? &parent_name : NULL;
++	init.parent_hws = parent_hw ? &parent_hw : NULL;
++	init.parent_data = parent_data;
++	if (parent_name || parent_hw || parent_data)
++		init.num_parents = 1;
++	else
++		init.num_parents = 0;
++
++	/* struct clk_fixed_rate assignments */
++	fixed->flags = clk_fixed_flags;
++	fixed->fixed_rate = fixed_rate;
++	fixed->fixed_accuracy = fixed_accuracy;
++	fixed->hw.init = &init;
++
++	/* register the clock */
++	hw = &fixed->hw;
++	if (dev || !np)
++		ret = clk_hw_register(dev, hw);
++	else
++		ret = of_clk_hw_register(np, hw);
++	if (ret) {
++		if (devm)
++			devres_free(fixed);
++		else
++			kfree(fixed);
++		hw = ERR_PTR(ret);
++	} else if (devm)
++		devres_add(dev, fixed);
++
++	return hw;
++}
++EXPORT_SYMBOL_GPL(__clk_hw_register_fixed_rate);
++
++struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		unsigned long fixed_rate)
++{
++	struct clk_hw *hw;
++
++	hw = clk_hw_register_fixed_rate_with_accuracy(dev, name, parent_name,
++						      flags, fixed_rate, 0);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++EXPORT_SYMBOL_GPL(clk_register_fixed_rate);
++
++void clk_unregister_fixed_rate(struct clk *clk)
++{
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	clk_unregister(clk);
++	kfree(to_clk_fixed_rate(hw));
++}
++EXPORT_SYMBOL_GPL(clk_unregister_fixed_rate);
++
++void clk_hw_unregister_fixed_rate(struct clk_hw *hw)
++{
++	struct clk_fixed_rate *fixed;
++
++	fixed = to_clk_fixed_rate(hw);
++
++	clk_hw_unregister(hw);
++	kfree(fixed);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_fixed_rate);
++
++#ifdef CONFIG_OF
++static struct clk_hw *_of_fixed_clk_setup(struct device_node *node)
++{
++	struct clk_hw *hw;
++	const char *clk_name = node->name;
++	u32 rate;
++	u32 accuracy = 0;
++	int ret;
++
++	if (of_property_read_u32(node, "clock-frequency", &rate))
++		return ERR_PTR(-EIO);
++
++	of_property_read_u32(node, "clock-accuracy", &accuracy);
++
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	hw = clk_hw_register_fixed_rate_with_accuracy(NULL, clk_name, NULL,
++						    0, rate, accuracy);
++	if (IS_ERR(hw))
++		return hw;
++
++	ret = of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
++	if (ret) {
++		clk_hw_unregister_fixed_rate(hw);
++		return ERR_PTR(ret);
++	}
++
++	return hw;
++}
++
++/**
++ * of_fixed_clk_setup() - Setup function for simple fixed rate clock
++ * @node:	device node for the clock
++ */
++void __init of_fixed_clk_setup(struct device_node *node)
++{
++	_of_fixed_clk_setup(node);
++}
++CLK_OF_DECLARE(fixed_clk, "fixed-clock", of_fixed_clk_setup);
++
++static void of_fixed_clk_remove(struct platform_device *pdev)
++{
++	struct clk_hw *hw = platform_get_drvdata(pdev);
++
++	of_clk_del_provider(pdev->dev.of_node);
++	clk_hw_unregister_fixed_rate(hw);
++}
++
++static int of_fixed_clk_probe(struct platform_device *pdev)
++{
++	struct clk_hw *hw;
++
++	/*
++	 * This function is not executed when of_fixed_clk_setup
++	 * succeeded.
++	 */
++	hw = _of_fixed_clk_setup(pdev->dev.of_node);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	platform_set_drvdata(pdev, hw);
++
++	return 0;
++}
++
++static const struct of_device_id of_fixed_clk_ids[] = {
++	{ .compatible = "fixed-clock" },
++	{ }
++};
++
++static struct platform_driver of_fixed_clk_driver = {
++	.driver = {
++		.name = "of_fixed_clk",
++		.of_match_table = of_fixed_clk_ids,
++	},
++	.probe = of_fixed_clk_probe,
++	.remove = of_fixed_clk_remove,
++};
++builtin_platform_driver(of_fixed_clk_driver);
++#endif
+diff --git a/drivers/clk/ccf/clk-gate.c b/drivers/clk/ccf/clk-gate.c
+new file mode 100644
+index 000000000000..4746f8219132
+--- /dev/null
++++ b/drivers/clk/ccf/clk-gate.c
+@@ -0,0 +1,259 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2010-2011 Canonical Ltd <jeremy.kerr@canonical.com>
++ * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
++ *
++ * Gated clock implementation
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/io.h>
++#include <linux/err.h>
++#include <linux/string.h>
++
++/**
++ * DOC: basic gateable clock which can gate and ungate its output
++ *
++ * Traits of this clock:
++ * prepare - clk_(un)prepare only ensures parent is (un)prepared
++ * enable - clk_enable and clk_disable are functional & control gating
++ * rate - inherits rate from parent.  No clk_set_rate support
++ * parent - fixed parent.  No clk_set_parent support
++ */
++
++static inline u32 clk_gate_readl(struct clk_gate *gate)
++{
++	if (gate->flags & CLK_GATE_BIG_ENDIAN)
++		return ioread32be(gate->reg);
++
++	return readl(gate->reg);
++}
++
++static inline void clk_gate_writel(struct clk_gate *gate, u32 val)
++{
++	if (gate->flags & CLK_GATE_BIG_ENDIAN)
++		iowrite32be(val, gate->reg);
++	else
++		writel(val, gate->reg);
++}
++
++/*
++ * It works on following logic:
++ *
++ * For enabling clock, enable = 1
++ *	set2dis = 1	-> clear bit	-> set = 0
++ *	set2dis = 0	-> set bit	-> set = 1
++ *
++ * For disabling clock, enable = 0
++ *	set2dis = 1	-> set bit	-> set = 1
++ *	set2dis = 0	-> clear bit	-> set = 0
++ *
++ * So, result is always: enable xor set2dis.
++ */
++static void clk_gate_endisable(struct clk_hw *hw, int enable)
++{
++	struct clk_gate *gate = to_clk_gate(hw);
++	int set = gate->flags & CLK_GATE_SET_TO_DISABLE ? 1 : 0;
++	unsigned long flags;
++	u32 reg;
++
++	set ^= enable;
++
++	if (gate->lock)
++		spin_lock_irqsave(gate->lock, flags);
++	else
++		__acquire(gate->lock);
++
++	if (gate->flags & CLK_GATE_HIWORD_MASK) {
++		reg = BIT(gate->bit_idx + 16);
++		if (set)
++			reg |= BIT(gate->bit_idx);
++	} else {
++		reg = clk_gate_readl(gate);
++
++		if (set)
++			reg |= BIT(gate->bit_idx);
++		else
++			reg &= ~BIT(gate->bit_idx);
++	}
++
++	clk_gate_writel(gate, reg);
++
++	if (gate->lock)
++		spin_unlock_irqrestore(gate->lock, flags);
++	else
++		__release(gate->lock);
++}
++
++static int clk_gate_enable(struct clk_hw *hw)
++{
++	clk_gate_endisable(hw, 1);
++
++	return 0;
++}
++
++static void clk_gate_disable(struct clk_hw *hw)
++{
++	clk_gate_endisable(hw, 0);
++}
++
++int clk_gate_is_enabled(struct clk_hw *hw)
++{
++	u32 reg;
++	struct clk_gate *gate = to_clk_gate(hw);
++
++	reg = clk_gate_readl(gate);
++
++	/* if a set bit disables this clk, flip it before masking */
++	if (gate->flags & CLK_GATE_SET_TO_DISABLE)
++		reg ^= BIT(gate->bit_idx);
++
++	reg &= BIT(gate->bit_idx);
++
++	return reg ? 1 : 0;
++}
++EXPORT_SYMBOL_GPL(clk_gate_is_enabled);
++
++const struct clk_ops clk_gate_ops = {
++	.enable = clk_gate_enable,
++	.disable = clk_gate_disable,
++	.is_enabled = clk_gate_is_enabled,
++};
++EXPORT_SYMBOL_GPL(clk_gate_ops);
++
++struct clk_hw *__clk_hw_register_gate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags,
++		void __iomem *reg, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock)
++{
++	struct clk_gate *gate;
++	struct clk_hw *hw;
++	struct clk_init_data init = {};
++	int ret = -EINVAL;
++
++	if (clk_gate_flags & CLK_GATE_HIWORD_MASK) {
++		if (bit_idx > 15) {
++			pr_err("gate bit exceeds LOWORD field\n");
++			return ERR_PTR(-EINVAL);
++		}
++	}
++
++	/* allocate the gate */
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &clk_gate_ops;
++	init.flags = flags;
++	init.parent_names = parent_name ? &parent_name : NULL;
++	init.parent_hws = parent_hw ? &parent_hw : NULL;
++	init.parent_data = parent_data;
++	if (parent_name || parent_hw || parent_data)
++		init.num_parents = 1;
++	else
++		init.num_parents = 0;
++
++	/* struct clk_gate assignments */
++	gate->reg = reg;
++	gate->bit_idx = bit_idx;
++	gate->flags = clk_gate_flags;
++	gate->lock = lock;
++	gate->hw.init = &init;
++
++	hw = &gate->hw;
++	if (dev || !np)
++		ret = clk_hw_register(dev, hw);
++	else if (np)
++		ret = of_clk_hw_register(np, hw);
++	if (ret) {
++		kfree(gate);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++
++}
++EXPORT_SYMBOL_GPL(__clk_hw_register_gate);
++
++struct clk *clk_register_gate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock)
++{
++	struct clk_hw *hw;
++
++	hw = clk_hw_register_gate(dev, name, parent_name, flags, reg,
++				  bit_idx, clk_gate_flags, lock);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++EXPORT_SYMBOL_GPL(clk_register_gate);
++
++void clk_unregister_gate(struct clk *clk)
++{
++	struct clk_gate *gate;
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	gate = to_clk_gate(hw);
++
++	clk_unregister(clk);
++	kfree(gate);
++}
++EXPORT_SYMBOL_GPL(clk_unregister_gate);
++
++void clk_hw_unregister_gate(struct clk_hw *hw)
++{
++	struct clk_gate *gate;
++
++	gate = to_clk_gate(hw);
++
++	clk_hw_unregister(hw);
++	kfree(gate);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_gate);
++
++static void devm_clk_hw_release_gate(struct device *dev, void *res)
++{
++	clk_hw_unregister_gate(*(struct clk_hw **)res);
++}
++
++struct clk_hw *__devm_clk_hw_register_gate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags,
++		void __iomem *reg, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock)
++{
++	struct clk_hw **ptr, *hw;
++
++	ptr = devres_alloc(devm_clk_hw_release_gate, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	hw = __clk_hw_register_gate(dev, np, name, parent_name, parent_hw,
++				    parent_data, flags, reg, bit_idx,
++				    clk_gate_flags, lock);
++
++	if (!IS_ERR(hw)) {
++		*ptr = hw;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return hw;
++}
++EXPORT_SYMBOL_GPL(__devm_clk_hw_register_gate);
+diff --git a/drivers/clk/ccf/clk-mux.c b/drivers/clk/ccf/clk-mux.c
+new file mode 100644
+index 000000000000..fa817c317c2a
+--- /dev/null
++++ b/drivers/clk/ccf/clk-mux.c
+@@ -0,0 +1,285 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
++ * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
++ * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
++ *
++ * Simple multiplexer clock implementation
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/io.h>
++#include <linux/err.h>
++
++/*
++ * DOC: basic adjustable multiplexer clock that cannot gate
++ *
++ * Traits of this clock:
++ * prepare - clk_prepare only ensures that parents are prepared
++ * enable - clk_enable only ensures that parents are enabled
++ * rate - rate is only affected by parent switching.  No clk_set_rate support
++ * parent - parent is adjustable through clk_set_parent
++ */
++
++static inline u32 clk_mux_readl(struct clk_mux *mux)
++{
++	if (mux->flags & CLK_MUX_BIG_ENDIAN)
++		return ioread32be(mux->reg);
++
++	return readl(mux->reg);
++}
++
++static inline void clk_mux_writel(struct clk_mux *mux, u32 val)
++{
++	if (mux->flags & CLK_MUX_BIG_ENDIAN)
++		iowrite32be(val, mux->reg);
++	else
++		writel(val, mux->reg);
++}
++
++int clk_mux_val_to_index(struct clk_hw *hw, const u32 *table, unsigned int flags,
++			 unsigned int val)
++{
++	int num_parents = clk_hw_get_num_parents(hw);
++
++	if (table) {
++		int i;
++
++		for (i = 0; i < num_parents; i++)
++			if (table[i] == val)
++				return i;
++		return -EINVAL;
++	}
++
++	if (val && (flags & CLK_MUX_INDEX_BIT))
++		val = ffs(val) - 1;
++
++	if (val && (flags & CLK_MUX_INDEX_ONE))
++		val--;
++
++	if (val >= num_parents)
++		return -EINVAL;
++
++	return val;
++}
++EXPORT_SYMBOL_GPL(clk_mux_val_to_index);
++
++unsigned int clk_mux_index_to_val(const u32 *table, unsigned int flags, u8 index)
++{
++	unsigned int val = index;
++
++	if (table) {
++		val = table[index];
++	} else {
++		if (flags & CLK_MUX_INDEX_BIT)
++			val = 1 << index;
++
++		if (flags & CLK_MUX_INDEX_ONE)
++			val++;
++	}
++
++	return val;
++}
++EXPORT_SYMBOL_GPL(clk_mux_index_to_val);
++
++static u8 clk_mux_get_parent(struct clk_hw *hw)
++{
++	struct clk_mux *mux = to_clk_mux(hw);
++	u32 val;
++
++	val = clk_mux_readl(mux) >> mux->shift;
++	val &= mux->mask;
++
++	return clk_mux_val_to_index(hw, mux->table, mux->flags, val);
++}
++
++static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct clk_mux *mux = to_clk_mux(hw);
++	u32 val = clk_mux_index_to_val(mux->table, mux->flags, index);
++	unsigned long flags = 0;
++	u32 reg;
++
++	if (mux->lock)
++		spin_lock_irqsave(mux->lock, flags);
++	else
++		__acquire(mux->lock);
++
++	if (mux->flags & CLK_MUX_HIWORD_MASK) {
++		reg = mux->mask << (mux->shift + 16);
++	} else {
++		reg = clk_mux_readl(mux);
++		reg &= ~(mux->mask << mux->shift);
++	}
++	val = val << mux->shift;
++	reg |= val;
++	clk_mux_writel(mux, reg);
++
++	if (mux->lock)
++		spin_unlock_irqrestore(mux->lock, flags);
++	else
++		__release(mux->lock);
++
++	return 0;
++}
++
++static int clk_mux_determine_rate(struct clk_hw *hw,
++				  struct clk_rate_request *req)
++{
++	struct clk_mux *mux = to_clk_mux(hw);
++
++	return clk_mux_determine_rate_flags(hw, req, mux->flags);
++}
++
++const struct clk_ops clk_mux_ops = {
++	.get_parent = clk_mux_get_parent,
++	.set_parent = clk_mux_set_parent,
++	.determine_rate = clk_mux_determine_rate,
++};
++EXPORT_SYMBOL_GPL(clk_mux_ops);
++
++const struct clk_ops clk_mux_ro_ops = {
++	.get_parent = clk_mux_get_parent,
++};
++EXPORT_SYMBOL_GPL(clk_mux_ro_ops);
++
++struct clk_hw *__clk_hw_register_mux(struct device *dev, struct device_node *np,
++		const char *name, u8 num_parents,
++		const char * const *parent_names,
++		const struct clk_hw **parent_hws,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_mux_flags, const u32 *table, spinlock_t *lock)
++{
++	struct clk_mux *mux;
++	struct clk_hw *hw;
++	struct clk_init_data init = {};
++	int ret = -EINVAL;
++
++	if (clk_mux_flags & CLK_MUX_HIWORD_MASK) {
++		u8 width = fls(mask) - ffs(mask) + 1;
++
++		if (width + shift > 16) {
++			pr_err("mux value exceeds LOWORD field\n");
++			return ERR_PTR(-EINVAL);
++		}
++	}
++
++	/* allocate the mux */
++	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
++	if (!mux)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	if (clk_mux_flags & CLK_MUX_READ_ONLY)
++		init.ops = &clk_mux_ro_ops;
++	else
++		init.ops = &clk_mux_ops;
++	init.flags = flags;
++	init.parent_names = parent_names;
++	init.parent_data = parent_data;
++	init.parent_hws = parent_hws;
++	init.num_parents = num_parents;
++
++	/* struct clk_mux assignments */
++	mux->reg = reg;
++	mux->shift = shift;
++	mux->mask = mask;
++	mux->flags = clk_mux_flags;
++	mux->lock = lock;
++	mux->table = table;
++	mux->hw.init = &init;
++
++	hw = &mux->hw;
++	if (dev || !np)
++		ret = clk_hw_register(dev, hw);
++	else if (np)
++		ret = of_clk_hw_register(np, hw);
++	if (ret) {
++		kfree(mux);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++}
++EXPORT_SYMBOL_GPL(__clk_hw_register_mux);
++
++static void devm_clk_hw_release_mux(struct device *dev, void *res)
++{
++	clk_hw_unregister_mux(*(struct clk_hw **)res);
++}
++
++struct clk_hw *__devm_clk_hw_register_mux(struct device *dev, struct device_node *np,
++		const char *name, u8 num_parents,
++		const char * const *parent_names,
++		const struct clk_hw **parent_hws,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_mux_flags, const u32 *table, spinlock_t *lock)
++{
++	struct clk_hw **ptr, *hw;
++
++	ptr = devres_alloc(devm_clk_hw_release_mux, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	hw = __clk_hw_register_mux(dev, np, name, num_parents, parent_names, parent_hws,
++				       parent_data, flags, reg, shift, mask,
++				       clk_mux_flags, table, lock);
++
++	if (!IS_ERR(hw)) {
++		*ptr = hw;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return hw;
++}
++EXPORT_SYMBOL_GPL(__devm_clk_hw_register_mux);
++
++struct clk *clk_register_mux_table(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_mux_flags, const u32 *table, spinlock_t *lock)
++{
++	struct clk_hw *hw;
++
++	hw = clk_hw_register_mux_table(dev, name, parent_names,
++				       num_parents, flags, reg, shift, mask,
++				       clk_mux_flags, table, lock);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++EXPORT_SYMBOL_GPL(clk_register_mux_table);
++
++void clk_unregister_mux(struct clk *clk)
++{
++	struct clk_mux *mux;
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	mux = to_clk_mux(hw);
++
++	clk_unregister(clk);
++	kfree(mux);
++}
++EXPORT_SYMBOL_GPL(clk_unregister_mux);
++
++void clk_hw_unregister_mux(struct clk_hw *hw)
++{
++	struct clk_mux *mux;
++
++	mux = to_clk_mux(hw);
++
++	clk_hw_unregister(hw);
++	kfree(mux);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_mux);
+diff --git a/drivers/clk/ccf/clk.c b/drivers/clk/ccf/clk.c
+new file mode 100644
+index 000000000000..73aaa96b3d0e
+--- /dev/null
++++ b/drivers/clk/ccf/clk.c
+@@ -0,0 +1,5595 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2010-2011 Canonical Ltd <jeremy.kerr@canonical.com>
++ * Copyright (C) 2011-2012 Linaro Ltd <mturquette@linaro.org>
++ *
++ * Standard functionality for the common clock API.  See Documentation/driver-api/clk.rst
++ */
++
++#include <linux/clk/clk-conf.h>
++#include <linux/clkdev.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/hashtable.h>
++#include <linux/init.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/pm_runtime.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/string.h>
++#include <linux/stringhash.h>
++
++static DEFINE_SPINLOCK(enable_lock);
++static DEFINE_MUTEX(prepare_lock);
++
++static struct task_struct *prepare_owner;
++static struct task_struct *enable_owner;
++
++static int prepare_refcnt;
++static int enable_refcnt;
++
++#define CLK_HASH_BITS 9
++static DEFINE_HASHTABLE(clk_hashtable, CLK_HASH_BITS);
++
++static HLIST_HEAD(clk_root_list);
++static HLIST_HEAD(clk_orphan_list);
++static LIST_HEAD(clk_notifier_list);
++
++/* List of registered clks that use runtime PM */
++static HLIST_HEAD(clk_rpm_list);
++static DEFINE_MUTEX(clk_rpm_list_lock);
++
++static const struct hlist_head *all_lists[] = {
++	&clk_root_list,
++	&clk_orphan_list,
++	NULL,
++};
++
++/***    private data structures    ***/
++
++struct clk_parent_map {
++	const struct clk_hw	*hw;
++	struct clk_core		*core;
++	const char		*fw_name;
++	const char		*name;
++	int			index;
++};
++
++struct clk_core {
++	const char		*name;
++	const struct clk_ops	*ops;
++	struct clk_hw		*hw;
++	struct module		*owner;
++	struct device		*dev;
++	struct hlist_node	rpm_node;
++	struct device_node	*of_node;
++	struct clk_core		*parent;
++	struct clk_parent_map	*parents;
++	u8			num_parents;
++	u8			new_parent_index;
++	unsigned long		rate;
++	unsigned long		req_rate;
++	unsigned long		new_rate;
++	struct clk_core		*new_parent;
++	struct clk_core		*new_child;
++	unsigned long		flags;
++	bool			orphan;
++	bool			rpm_enabled;
++	unsigned int		enable_count;
++	unsigned int		prepare_count;
++	unsigned int		protect_count;
++	unsigned long		min_rate;
++	unsigned long		max_rate;
++	unsigned long		accuracy;
++	int			phase;
++	struct clk_duty		duty;
++	struct hlist_head	children;
++	struct hlist_node	child_node;
++	struct hlist_node	hashtable_node;
++	struct hlist_head	clks;
++	unsigned int		notifier_count;
++#ifdef CONFIG_DEBUG_FS
++	struct dentry		*dentry;
++	struct hlist_node	debug_node;
++#endif
++	struct kref		ref;
++};
++
++#define CREATE_TRACE_POINTS
++#include <trace/events/clk.h>
++
++struct clk {
++	struct clk_core	*core;
++	struct device *dev;
++	const char *dev_id;
++	const char *con_id;
++	unsigned long min_rate;
++	unsigned long max_rate;
++	unsigned int exclusive_count;
++	struct hlist_node clks_node;
++};
++
++/***           runtime pm          ***/
++static int clk_pm_runtime_get(struct clk_core *core)
++{
++	if (!core->rpm_enabled)
++		return 0;
++
++	return pm_runtime_resume_and_get(core->dev);
++}
++
++static void clk_pm_runtime_put(struct clk_core *core)
++{
++	if (!core->rpm_enabled)
++		return;
++
++	pm_runtime_put_sync(core->dev);
++}
++
++/**
++ * clk_pm_runtime_get_all() - Runtime "get" all clk provider devices
++ *
++ * Call clk_pm_runtime_get() on all runtime PM enabled clks in the clk tree so
++ * that disabling unused clks avoids a deadlock where a device is runtime PM
++ * resuming/suspending and the runtime PM callback is trying to grab the
++ * prepare_lock for something like clk_prepare_enable() while
++ * clk_disable_unused_subtree() holds the prepare_lock and is trying to runtime
++ * PM resume/suspend the device as well.
++ *
++ * Context: Acquires the 'clk_rpm_list_lock' and returns with the lock held on
++ * success. Otherwise the lock is released on failure.
++ *
++ * Return: 0 on success, negative errno otherwise.
++ */
++static int clk_pm_runtime_get_all(void)
++{
++	int ret;
++	struct clk_core *core, *failed;
++
++	/*
++	 * Grab the list lock to prevent any new clks from being registered
++	 * or unregistered until clk_pm_runtime_put_all().
++	 */
++	mutex_lock(&clk_rpm_list_lock);
++
++	/*
++	 * Runtime PM "get" all the devices that are needed for the clks
++	 * currently registered. Do this without holding the prepare_lock, to
++	 * avoid the deadlock.
++	 */
++	hlist_for_each_entry(core, &clk_rpm_list, rpm_node) {
++		ret = clk_pm_runtime_get(core);
++		if (ret) {
++			failed = core;
++			pr_err("clk: Failed to runtime PM get '%s' for clk '%s'\n",
++			       dev_name(failed->dev), failed->name);
++			goto err;
++		}
++	}
++
++	return 0;
++
++err:
++	hlist_for_each_entry(core, &clk_rpm_list, rpm_node) {
++		if (core == failed)
++			break;
++
++		clk_pm_runtime_put(core);
++	}
++	mutex_unlock(&clk_rpm_list_lock);
++
++	return ret;
++}
++
++/**
++ * clk_pm_runtime_put_all() - Runtime "put" all clk provider devices
++ *
++ * Put the runtime PM references taken in clk_pm_runtime_get_all() and release
++ * the 'clk_rpm_list_lock'.
++ */
++static void clk_pm_runtime_put_all(void)
++{
++	struct clk_core *core;
++
++	hlist_for_each_entry(core, &clk_rpm_list, rpm_node)
++		clk_pm_runtime_put(core);
++	mutex_unlock(&clk_rpm_list_lock);
++}
++
++static void clk_pm_runtime_init(struct clk_core *core)
++{
++	struct device *dev = core->dev;
++
++	if (dev && pm_runtime_enabled(dev)) {
++		core->rpm_enabled = true;
++
++		mutex_lock(&clk_rpm_list_lock);
++		hlist_add_head(&core->rpm_node, &clk_rpm_list);
++		mutex_unlock(&clk_rpm_list_lock);
++	}
++}
++
++/***           locking             ***/
++static void clk_prepare_lock(void)
++{
++	if (!mutex_trylock(&prepare_lock)) {
++		if (prepare_owner == current) {
++			prepare_refcnt++;
++			return;
++		}
++		mutex_lock(&prepare_lock);
++	}
++	WARN_ON_ONCE(prepare_owner != NULL);
++	WARN_ON_ONCE(prepare_refcnt != 0);
++	prepare_owner = current;
++	prepare_refcnt = 1;
++}
++
++static void clk_prepare_unlock(void)
++{
++	WARN_ON_ONCE(prepare_owner != current);
++	WARN_ON_ONCE(prepare_refcnt == 0);
++
++	if (--prepare_refcnt)
++		return;
++	prepare_owner = NULL;
++	mutex_unlock(&prepare_lock);
++}
++
++static unsigned long clk_enable_lock(void)
++	__acquires(enable_lock)
++{
++	unsigned long flags;
++
++	/*
++	 * On UP systems, spin_trylock_irqsave() always returns true, even if
++	 * we already hold the lock. So, in that case, we rely only on
++	 * reference counting.
++	 */
++	if (!IS_ENABLED(CONFIG_SMP) ||
++	    !spin_trylock_irqsave(&enable_lock, flags)) {
++		if (enable_owner == current) {
++			enable_refcnt++;
++			__acquire(enable_lock);
++			if (!IS_ENABLED(CONFIG_SMP))
++				local_save_flags(flags);
++			return flags;
++		}
++		spin_lock_irqsave(&enable_lock, flags);
++	}
++	WARN_ON_ONCE(enable_owner != NULL);
++	WARN_ON_ONCE(enable_refcnt != 0);
++	enable_owner = current;
++	enable_refcnt = 1;
++	return flags;
++}
++
++static void clk_enable_unlock(unsigned long flags)
++	__releases(enable_lock)
++{
++	WARN_ON_ONCE(enable_owner != current);
++	WARN_ON_ONCE(enable_refcnt == 0);
++
++	if (--enable_refcnt) {
++		__release(enable_lock);
++		return;
++	}
++	enable_owner = NULL;
++	spin_unlock_irqrestore(&enable_lock, flags);
++}
++
++static bool clk_core_rate_is_protected(struct clk_core *core)
++{
++	return core->protect_count;
++}
++
++static bool clk_core_is_prepared(struct clk_core *core)
++{
++	bool ret = false;
++
++	/*
++	 * .is_prepared is optional for clocks that can prepare
++	 * fall back to software usage counter if it is missing
++	 */
++	if (!core->ops->is_prepared)
++		return core->prepare_count;
++
++	if (!clk_pm_runtime_get(core)) {
++		ret = core->ops->is_prepared(core->hw);
++		clk_pm_runtime_put(core);
++	}
++
++	return ret;
++}
++
++static bool clk_core_is_enabled(struct clk_core *core)
++{
++	bool ret = false;
++
++	/*
++	 * .is_enabled is only mandatory for clocks that gate
++	 * fall back to software usage counter if .is_enabled is missing
++	 */
++	if (!core->ops->is_enabled)
++		return core->enable_count;
++
++	/*
++	 * Check if clock controller's device is runtime active before
++	 * calling .is_enabled callback. If not, assume that clock is
++	 * disabled, because we might be called from atomic context, from
++	 * which pm_runtime_get() is not allowed.
++	 * This function is called mainly from clk_disable_unused_subtree,
++	 * which ensures proper runtime pm activation of controller before
++	 * taking enable spinlock, but the below check is needed if one tries
++	 * to call it from other places.
++	 */
++	if (core->rpm_enabled) {
++		pm_runtime_get_noresume(core->dev);
++		if (!pm_runtime_active(core->dev)) {
++			ret = false;
++			goto done;
++		}
++	}
++
++	/*
++	 * This could be called with the enable lock held, or from atomic
++	 * context. If the parent isn't enabled already, we can't do
++	 * anything here. We can also assume this clock isn't enabled.
++	 */
++	if ((core->flags & CLK_OPS_PARENT_ENABLE) && core->parent)
++		if (!clk_core_is_enabled(core->parent)) {
++			ret = false;
++			goto done;
++		}
++
++	ret = core->ops->is_enabled(core->hw);
++done:
++	if (core->rpm_enabled)
++		pm_runtime_put(core->dev);
++
++	return ret;
++}
++
++/***    helper functions   ***/
++
++const char *__clk_get_name(const struct clk *clk)
++{
++	return !clk ? NULL : clk->core->name;
++}
++EXPORT_SYMBOL_GPL(__clk_get_name);
++
++const char *clk_hw_get_name(const struct clk_hw *hw)
++{
++	return hw->core->name;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_name);
++
++struct device *clk_hw_get_dev(const struct clk_hw *hw)
++{
++	return hw->core->dev;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_dev);
++
++struct device_node *clk_hw_get_of_node(const struct clk_hw *hw)
++{
++	return hw->core->of_node;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_of_node);
++
++struct clk_hw *__clk_get_hw(struct clk *clk)
++{
++	return !clk ? NULL : clk->core->hw;
++}
++EXPORT_SYMBOL_GPL(__clk_get_hw);
++
++unsigned int clk_hw_get_num_parents(const struct clk_hw *hw)
++{
++	return hw->core->num_parents;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_num_parents);
++
++struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw)
++{
++	return hw->core->parent ? hw->core->parent->hw : NULL;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_parent);
++
++static struct clk_core *clk_core_lookup(const char *name)
++{
++	struct clk_core *core;
++	u32 hash;
++
++	if (!name)
++		return NULL;
++
++	hash = full_name_hash(NULL, name, strlen(name));
++
++	/* search the hashtable */
++	hash_for_each_possible(clk_hashtable, core, hashtable_node, hash)
++		if (!strcmp(core->name, name))
++			return core;
++
++	return NULL;
++}
++
++#ifdef CONFIG_OF
++static int of_parse_clkspec(const struct device_node *np, int index,
++			    const char *name, struct of_phandle_args *out_args);
++static struct clk_hw *
++of_clk_get_hw_from_clkspec(struct of_phandle_args *clkspec);
++#else
++static inline int of_parse_clkspec(const struct device_node *np, int index,
++				   const char *name,
++				   struct of_phandle_args *out_args)
++{
++	return -ENOENT;
++}
++static inline struct clk_hw *
++of_clk_get_hw_from_clkspec(struct of_phandle_args *clkspec)
++{
++	return ERR_PTR(-ENOENT);
++}
++#endif
++
++/**
++ * clk_core_get - Find the clk_core parent of a clk
++ * @core: clk to find parent of
++ * @p_index: parent index to search for
++ *
++ * This is the preferred method for clk providers to find the parent of a
++ * clk when that parent is external to the clk controller. The parent_names
++ * array is indexed and treated as a local name matching a string in the device
++ * node's 'clock-names' property or as the 'con_id' matching the device's
++ * dev_name() in a clk_lookup. This allows clk providers to use their own
++ * namespace instead of looking for a globally unique parent string.
++ *
++ * For example the following DT snippet would allow a clock registered by the
++ * clock-controller@c001 that has a clk_init_data::parent_data array
++ * with 'xtal' in the 'name' member to find the clock provided by the
++ * clock-controller@f00abcd without needing to get the globally unique name of
++ * the xtal clk.
++ *
++ *      parent: clock-controller@f00abcd {
++ *              reg = <0xf00abcd 0xabcd>;
++ *              #clock-cells = <0>;
++ *      };
++ *
++ *      clock-controller@c001 {
++ *              reg = <0xc001 0xf00d>;
++ *              clocks = <&parent>;
++ *              clock-names = "xtal";
++ *              #clock-cells = <1>;
++ *      };
++ *
++ * Returns: -ENOENT when the provider can't be found or the clk doesn't
++ * exist in the provider or the name can't be found in the DT node or
++ * in a clkdev lookup. NULL when the provider knows about the clk but it
++ * isn't provided on this system.
++ * A valid clk_core pointer when the clk can be found in the provider.
++ */
++static struct clk_core *clk_core_get(struct clk_core *core, u8 p_index)
++{
++	const char *name = core->parents[p_index].fw_name;
++	int index = core->parents[p_index].index;
++	struct clk_hw *hw = ERR_PTR(-ENOENT);
++	struct device *dev = core->dev;
++	const char *dev_id = dev ? dev_name(dev) : NULL;
++	struct device_node *np = core->of_node;
++	struct of_phandle_args clkspec;
++
++	if (np && (name || index >= 0) &&
++	    !of_parse_clkspec(np, index, name, &clkspec)) {
++		hw = of_clk_get_hw_from_clkspec(&clkspec);
++		of_node_put(clkspec.np);
++	} else if (name) {
++		/*
++		 * If the DT search above couldn't find the provider fallback to
++		 * looking up via clkdev based clk_lookups.
++		 */
++		hw = clk_find_hw(dev_id, name);
++	}
++
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++
++	if (!hw)
++		return NULL;
++
++	return hw->core;
++}
++
++static void clk_core_fill_parent_index(struct clk_core *core, u8 index)
++{
++	struct clk_parent_map *entry = &core->parents[index];
++	struct clk_core *parent;
++
++	if (entry->hw) {
++		parent = entry->hw->core;
++	} else {
++		parent = clk_core_get(core, index);
++		if (PTR_ERR(parent) == -ENOENT && entry->name)
++			parent = clk_core_lookup(entry->name);
++	}
++
++	/*
++	 * We have a direct reference but it isn't registered yet?
++	 * Orphan it and let clk_reparent() update the orphan status
++	 * when the parent is registered.
++	 */
++	if (!parent)
++		parent = ERR_PTR(-EPROBE_DEFER);
++
++	/* Only cache it if it's not an error */
++	if (!IS_ERR(parent))
++		entry->core = parent;
++}
++
++static struct clk_core *clk_core_get_parent_by_index(struct clk_core *core,
++							 u8 index)
++{
++	if (!core || index >= core->num_parents || !core->parents)
++		return NULL;
++
++	if (!core->parents[index].core)
++		clk_core_fill_parent_index(core, index);
++
++	return core->parents[index].core;
++}
++
++struct clk_hw *
++clk_hw_get_parent_by_index(const struct clk_hw *hw, unsigned int index)
++{
++	struct clk_core *parent;
++
++	parent = clk_core_get_parent_by_index(hw->core, index);
++
++	return !parent ? NULL : parent->hw;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_parent_by_index);
++
++unsigned int __clk_get_enable_count(struct clk *clk)
++{
++	return !clk ? 0 : clk->core->enable_count;
++}
++
++static unsigned long clk_core_get_rate_nolock(struct clk_core *core)
++{
++	if (!core)
++		return 0;
++
++	if (!core->num_parents || core->parent)
++		return core->rate;
++
++	/*
++	 * Clk must have a parent because num_parents > 0 but the parent isn't
++	 * known yet. Best to return 0 as the rate of this clk until we can
++	 * properly recalc the rate based on the parent's rate.
++	 */
++	return 0;
++}
++
++unsigned long clk_hw_get_rate(const struct clk_hw *hw)
++{
++	return clk_core_get_rate_nolock(hw->core);
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_rate);
++
++static unsigned long clk_core_get_accuracy_no_lock(struct clk_core *core)
++{
++	if (!core)
++		return 0;
++
++	return core->accuracy;
++}
++
++unsigned long clk_hw_get_flags(const struct clk_hw *hw)
++{
++	return hw->core->flags;
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_flags);
++
++bool clk_hw_is_prepared(const struct clk_hw *hw)
++{
++	return clk_core_is_prepared(hw->core);
++}
++EXPORT_SYMBOL_GPL(clk_hw_is_prepared);
++
++bool clk_hw_is_enabled(const struct clk_hw *hw)
++{
++	return clk_core_is_enabled(hw->core);
++}
++EXPORT_SYMBOL_GPL(clk_hw_is_enabled);
++
++bool __clk_is_enabled(struct clk *clk)
++{
++	if (!clk)
++		return false;
++
++	return clk_core_is_enabled(clk->core);
++}
++EXPORT_SYMBOL_GPL(__clk_is_enabled);
++
++static bool mux_is_better_rate(unsigned long rate, unsigned long now,
++			   unsigned long best, unsigned long flags)
++{
++	if (flags & CLK_MUX_ROUND_CLOSEST)
++		return abs(now - rate) < abs(best - rate);
++
++	return now <= rate && now > best;
++}
++
++static void clk_core_init_rate_req(struct clk_core * const core,
++				   struct clk_rate_request *req,
++				   unsigned long rate);
++
++static int clk_core_round_rate_nolock(struct clk_core *core,
++				      struct clk_rate_request *req);
++
++static bool clk_core_has_parent(struct clk_core *core, const struct clk_core *parent)
++{
++	struct clk_core *tmp;
++	unsigned int i;
++
++	/* Optimize for the case where the parent is already the parent. */
++	if (core->parent == parent)
++		return true;
++
++	for (i = 0; i < core->num_parents; i++) {
++		tmp = clk_core_get_parent_by_index(core, i);
++		if (!tmp)
++			continue;
++
++		if (tmp == parent)
++			return true;
++	}
++
++	return false;
++}
++
++static void
++clk_core_forward_rate_req(struct clk_core *core,
++			  const struct clk_rate_request *old_req,
++			  struct clk_core *parent,
++			  struct clk_rate_request *req,
++			  unsigned long parent_rate)
++{
++	if (WARN_ON(!clk_core_has_parent(core, parent)))
++		return;
++
++	clk_core_init_rate_req(parent, req, parent_rate);
++
++	if (req->min_rate < old_req->min_rate)
++		req->min_rate = old_req->min_rate;
++
++	if (req->max_rate > old_req->max_rate)
++		req->max_rate = old_req->max_rate;
++}
++
++static int
++clk_core_determine_rate_no_reparent(struct clk_hw *hw,
++				    struct clk_rate_request *req)
++{
++	struct clk_core *core = hw->core;
++	struct clk_core *parent = core->parent;
++	unsigned long best;
++	int ret;
++
++	if (core->flags & CLK_SET_RATE_PARENT) {
++		struct clk_rate_request parent_req;
++
++		if (!parent) {
++			req->rate = 0;
++			return 0;
++		}
++
++		clk_core_forward_rate_req(core, req, parent, &parent_req,
++					  req->rate);
++
++		trace_clk_rate_request_start(&parent_req);
++
++		ret = clk_core_round_rate_nolock(parent, &parent_req);
++		if (ret)
++			return ret;
++
++		trace_clk_rate_request_done(&parent_req);
++
++		best = parent_req.rate;
++	} else if (parent) {
++		best = clk_core_get_rate_nolock(parent);
++	} else {
++		best = clk_core_get_rate_nolock(core);
++	}
++
++	req->best_parent_rate = best;
++	req->rate = best;
++
++	return 0;
++}
++
++int clk_mux_determine_rate_flags(struct clk_hw *hw,
++				 struct clk_rate_request *req,
++				 unsigned long flags)
++{
++	struct clk_core *core = hw->core, *parent, *best_parent = NULL;
++	int i, num_parents, ret;
++	unsigned long best = 0;
++
++	/* if NO_REPARENT flag set, pass through to current parent */
++	if (core->flags & CLK_SET_RATE_NO_REPARENT)
++		return clk_core_determine_rate_no_reparent(hw, req);
++
++	/* find the parent that can provide the fastest rate <= rate */
++	num_parents = core->num_parents;
++	for (i = 0; i < num_parents; i++) {
++		unsigned long parent_rate;
++
++		parent = clk_core_get_parent_by_index(core, i);
++		if (!parent)
++			continue;
++
++		if (core->flags & CLK_SET_RATE_PARENT) {
++			struct clk_rate_request parent_req;
++
++			clk_core_forward_rate_req(core, req, parent, &parent_req, req->rate);
++
++			trace_clk_rate_request_start(&parent_req);
++
++			ret = clk_core_round_rate_nolock(parent, &parent_req);
++			if (ret)
++				continue;
++
++			trace_clk_rate_request_done(&parent_req);
++
++			parent_rate = parent_req.rate;
++		} else {
++			parent_rate = clk_core_get_rate_nolock(parent);
++		}
++
++		if (mux_is_better_rate(req->rate, parent_rate,
++				       best, flags)) {
++			best_parent = parent;
++			best = parent_rate;
++		}
++	}
++
++	if (!best_parent)
++		return -EINVAL;
++
++	req->best_parent_hw = best_parent->hw;
++	req->best_parent_rate = best;
++	req->rate = best;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(clk_mux_determine_rate_flags);
++
++struct clk *__clk_lookup(const char *name)
++{
++	struct clk_core *core = clk_core_lookup(name);
++
++	return !core ? NULL : core->hw->clk;
++}
++
++static void clk_core_get_boundaries(struct clk_core *core,
++				    unsigned long *min_rate,
++				    unsigned long *max_rate)
++{
++	struct clk *clk_user;
++
++	lockdep_assert_held(&prepare_lock);
++
++	*min_rate = core->min_rate;
++	*max_rate = core->max_rate;
++
++	hlist_for_each_entry(clk_user, &core->clks, clks_node)
++		*min_rate = max(*min_rate, clk_user->min_rate);
++
++	hlist_for_each_entry(clk_user, &core->clks, clks_node)
++		*max_rate = min(*max_rate, clk_user->max_rate);
++}
++
++/*
++ * clk_hw_get_rate_range() - returns the clock rate range for a hw clk
++ * @hw: the hw clk we want to get the range from
++ * @min_rate: pointer to the variable that will hold the minimum
++ * @max_rate: pointer to the variable that will hold the maximum
++ *
++ * Fills the @min_rate and @max_rate variables with the minimum and
++ * maximum that clock can reach.
++ */
++void clk_hw_get_rate_range(struct clk_hw *hw, unsigned long *min_rate,
++			   unsigned long *max_rate)
++{
++	clk_core_get_boundaries(hw->core, min_rate, max_rate);
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_rate_range);
++
++static bool clk_core_check_boundaries(struct clk_core *core,
++				      unsigned long min_rate,
++				      unsigned long max_rate)
++{
++	struct clk *user;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (min_rate > core->max_rate || max_rate < core->min_rate)
++		return false;
++
++	hlist_for_each_entry(user, &core->clks, clks_node)
++		if (min_rate > user->max_rate || max_rate < user->min_rate)
++			return false;
++
++	return true;
++}
++
++void clk_hw_set_rate_range(struct clk_hw *hw, unsigned long min_rate,
++			   unsigned long max_rate)
++{
++	hw->core->min_rate = min_rate;
++	hw->core->max_rate = max_rate;
++}
++EXPORT_SYMBOL_GPL(clk_hw_set_rate_range);
++
++/*
++ * __clk_mux_determine_rate - clk_ops::determine_rate implementation for a mux type clk
++ * @hw: mux type clk to determine rate on
++ * @req: rate request, also used to return preferred parent and frequencies
++ *
++ * Helper for finding best parent to provide a given frequency. This can be used
++ * directly as a determine_rate callback (e.g. for a mux), or from a more
++ * complex clock that may combine a mux with other operations.
++ *
++ * Returns: 0 on success, -EERROR value on error
++ */
++int __clk_mux_determine_rate(struct clk_hw *hw,
++			     struct clk_rate_request *req)
++{
++	return clk_mux_determine_rate_flags(hw, req, 0);
++}
++EXPORT_SYMBOL_GPL(__clk_mux_determine_rate);
++
++int __clk_mux_determine_rate_closest(struct clk_hw *hw,
++				     struct clk_rate_request *req)
++{
++	return clk_mux_determine_rate_flags(hw, req, CLK_MUX_ROUND_CLOSEST);
++}
++EXPORT_SYMBOL_GPL(__clk_mux_determine_rate_closest);
++
++/*
++ * clk_hw_determine_rate_no_reparent - clk_ops::determine_rate implementation for a clk that doesn't reparent
++ * @hw: mux type clk to determine rate on
++ * @req: rate request, also used to return preferred frequency
++ *
++ * Helper for finding best parent rate to provide a given frequency.
++ * This can be used directly as a determine_rate callback (e.g. for a
++ * mux), or from a more complex clock that may combine a mux with other
++ * operations.
++ *
++ * Returns: 0 on success, -EERROR value on error
++ */
++int clk_hw_determine_rate_no_reparent(struct clk_hw *hw,
++				      struct clk_rate_request *req)
++{
++	return clk_core_determine_rate_no_reparent(hw, req);
++}
++EXPORT_SYMBOL_GPL(clk_hw_determine_rate_no_reparent);
++
++/***        clk api        ***/
++
++static void clk_core_rate_unprotect(struct clk_core *core)
++{
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return;
++
++	if (WARN(core->protect_count == 0,
++	    "%s already unprotected\n", core->name))
++		return;
++
++	if (--core->protect_count > 0)
++		return;
++
++	clk_core_rate_unprotect(core->parent);
++}
++
++static int clk_core_rate_nuke_protect(struct clk_core *core)
++{
++	int ret;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return -EINVAL;
++
++	if (core->protect_count == 0)
++		return 0;
++
++	ret = core->protect_count;
++	core->protect_count = 1;
++	clk_core_rate_unprotect(core);
++
++	return ret;
++}
++
++/**
++ * clk_rate_exclusive_put - release exclusivity over clock rate control
++ * @clk: the clk over which the exclusivity is released
++ *
++ * clk_rate_exclusive_put() completes a critical section during which a clock
++ * consumer cannot tolerate any other consumer making any operation on the
++ * clock which could result in a rate change or rate glitch. Exclusive clocks
++ * cannot have their rate changed, either directly or indirectly due to changes
++ * further up the parent chain of clocks. As a result, clocks up parent chain
++ * also get under exclusive control of the calling consumer.
++ *
++ * If exlusivity is claimed more than once on clock, even by the same consumer,
++ * the rate effectively gets locked as exclusivity can't be preempted.
++ *
++ * Calls to clk_rate_exclusive_put() must be balanced with calls to
++ * clk_rate_exclusive_get(). Calls to this function may sleep, and do not return
++ * error status.
++ */
++void clk_rate_exclusive_put(struct clk *clk)
++{
++	if (!clk)
++		return;
++
++	clk_prepare_lock();
++
++	/*
++	 * if there is something wrong with this consumer protect count, stop
++	 * here before messing with the provider
++	 */
++	if (WARN_ON(clk->exclusive_count <= 0))
++		goto out;
++
++	clk_core_rate_unprotect(clk->core);
++	clk->exclusive_count--;
++out:
++	clk_prepare_unlock();
++}
++EXPORT_SYMBOL_GPL(clk_rate_exclusive_put);
++
++static void clk_core_rate_protect(struct clk_core *core)
++{
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return;
++
++	if (core->protect_count == 0)
++		clk_core_rate_protect(core->parent);
++
++	core->protect_count++;
++}
++
++static void clk_core_rate_restore_protect(struct clk_core *core, int count)
++{
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return;
++
++	if (count == 0)
++		return;
++
++	clk_core_rate_protect(core);
++	core->protect_count = count;
++}
++
++/**
++ * clk_rate_exclusive_get - get exclusivity over the clk rate control
++ * @clk: the clk over which the exclusity of rate control is requested
++ *
++ * clk_rate_exclusive_get() begins a critical section during which a clock
++ * consumer cannot tolerate any other consumer making any operation on the
++ * clock which could result in a rate change or rate glitch. Exclusive clocks
++ * cannot have their rate changed, either directly or indirectly due to changes
++ * further up the parent chain of clocks. As a result, clocks up parent chain
++ * also get under exclusive control of the calling consumer.
++ *
++ * If exlusivity is claimed more than once on clock, even by the same consumer,
++ * the rate effectively gets locked as exclusivity can't be preempted.
++ *
++ * Calls to clk_rate_exclusive_get() should be balanced with calls to
++ * clk_rate_exclusive_put(). Calls to this function may sleep.
++ * Returns 0 on success, -EERROR otherwise
++ */
++int clk_rate_exclusive_get(struct clk *clk)
++{
++	if (!clk)
++		return 0;
++
++	clk_prepare_lock();
++	clk_core_rate_protect(clk->core);
++	clk->exclusive_count++;
++	clk_prepare_unlock();
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(clk_rate_exclusive_get);
++
++static void devm_clk_rate_exclusive_put(void *data)
++{
++	struct clk *clk = data;
++
++	clk_rate_exclusive_put(clk);
++}
++
++int devm_clk_rate_exclusive_get(struct device *dev, struct clk *clk)
++{
++	int ret;
++
++	ret = clk_rate_exclusive_get(clk);
++	if (ret)
++		return ret;
++
++	return devm_add_action_or_reset(dev, devm_clk_rate_exclusive_put, clk);
++}
++EXPORT_SYMBOL_GPL(devm_clk_rate_exclusive_get);
++
++static void clk_core_unprepare(struct clk_core *core)
++{
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return;
++
++	if (WARN(core->prepare_count == 0,
++	    "%s already unprepared\n", core->name))
++		return;
++
++	if (WARN(core->prepare_count == 1 && core->flags & CLK_IS_CRITICAL,
++	    "Unpreparing critical %s\n", core->name))
++		return;
++
++	if (core->flags & CLK_SET_RATE_GATE)
++		clk_core_rate_unprotect(core);
++
++	if (--core->prepare_count > 0)
++		return;
++
++	WARN(core->enable_count > 0, "Unpreparing enabled %s\n", core->name);
++
++	trace_clk_unprepare(core);
++
++	if (core->ops->unprepare)
++		core->ops->unprepare(core->hw);
++
++	trace_clk_unprepare_complete(core);
++	clk_core_unprepare(core->parent);
++	clk_pm_runtime_put(core);
++}
++
++static void clk_core_unprepare_lock(struct clk_core *core)
++{
++	clk_prepare_lock();
++	clk_core_unprepare(core);
++	clk_prepare_unlock();
++}
++
++/**
++ * clk_unprepare - undo preparation of a clock source
++ * @clk: the clk being unprepared
++ *
++ * clk_unprepare may sleep, which differentiates it from clk_disable.  In a
++ * simple case, clk_unprepare can be used instead of clk_disable to gate a clk
++ * if the operation may sleep.  One example is a clk which is accessed over
++ * I2c.  In the complex case a clk gate operation may require a fast and a slow
++ * part.  It is this reason that clk_unprepare and clk_disable are not mutually
++ * exclusive.  In fact clk_disable must be called before clk_unprepare.
++ */
++void clk_unprepare(struct clk *clk)
++{
++	if (IS_ERR_OR_NULL(clk))
++		return;
++
++	clk_core_unprepare_lock(clk->core);
++}
++EXPORT_SYMBOL_GPL(clk_unprepare);
++
++static int clk_core_prepare(struct clk_core *core)
++{
++	int ret = 0;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return 0;
++
++	if (core->prepare_count == 0) {
++		ret = clk_pm_runtime_get(core);
++		if (ret)
++			return ret;
++
++		ret = clk_core_prepare(core->parent);
++		if (ret)
++			goto runtime_put;
++
++		trace_clk_prepare(core);
++
++		if (core->ops->prepare)
++			ret = core->ops->prepare(core->hw);
++
++		trace_clk_prepare_complete(core);
++
++		if (ret)
++			goto unprepare;
++	}
++
++	core->prepare_count++;
++
++	/*
++	 * CLK_SET_RATE_GATE is a special case of clock protection
++	 * Instead of a consumer claiming exclusive rate control, it is
++	 * actually the provider which prevents any consumer from making any
++	 * operation which could result in a rate change or rate glitch while
++	 * the clock is prepared.
++	 */
++	if (core->flags & CLK_SET_RATE_GATE)
++		clk_core_rate_protect(core);
++
++	return 0;
++unprepare:
++	clk_core_unprepare(core->parent);
++runtime_put:
++	clk_pm_runtime_put(core);
++	return ret;
++}
++
++static int clk_core_prepare_lock(struct clk_core *core)
++{
++	int ret;
++
++	clk_prepare_lock();
++	ret = clk_core_prepare(core);
++	clk_prepare_unlock();
++
++	return ret;
++}
++
++/**
++ * clk_prepare - prepare a clock source
++ * @clk: the clk being prepared
++ *
++ * clk_prepare may sleep, which differentiates it from clk_enable.  In a simple
++ * case, clk_prepare can be used instead of clk_enable to ungate a clk if the
++ * operation may sleep.  One example is a clk which is accessed over I2c.  In
++ * the complex case a clk ungate operation may require a fast and a slow part.
++ * It is this reason that clk_prepare and clk_enable are not mutually
++ * exclusive.  In fact clk_prepare must be called before clk_enable.
++ * Returns 0 on success, -EERROR otherwise.
++ */
++int clk_prepare(struct clk *clk)
++{
++	if (!clk)
++		return 0;
++
++	return clk_core_prepare_lock(clk->core);
++}
++EXPORT_SYMBOL_GPL(clk_prepare);
++
++static void clk_core_disable(struct clk_core *core)
++{
++	lockdep_assert_held(&enable_lock);
++
++	if (!core)
++		return;
++
++	if (WARN(core->enable_count == 0, "%s already disabled\n", core->name))
++		return;
++
++	if (WARN(core->enable_count == 1 && core->flags & CLK_IS_CRITICAL,
++	    "Disabling critical %s\n", core->name))
++		return;
++
++	if (--core->enable_count > 0)
++		return;
++
++	trace_clk_disable(core);
++
++	if (core->ops->disable)
++		core->ops->disable(core->hw);
++
++	trace_clk_disable_complete(core);
++
++	clk_core_disable(core->parent);
++}
++
++static void clk_core_disable_lock(struct clk_core *core)
++{
++	unsigned long flags;
++
++	flags = clk_enable_lock();
++	clk_core_disable(core);
++	clk_enable_unlock(flags);
++}
++
++/**
++ * clk_disable - gate a clock
++ * @clk: the clk being gated
++ *
++ * clk_disable must not sleep, which differentiates it from clk_unprepare.  In
++ * a simple case, clk_disable can be used instead of clk_unprepare to gate a
++ * clk if the operation is fast and will never sleep.  One example is a
++ * SoC-internal clk which is controlled via simple register writes.  In the
++ * complex case a clk gate operation may require a fast and a slow part.  It is
++ * this reason that clk_unprepare and clk_disable are not mutually exclusive.
++ * In fact clk_disable must be called before clk_unprepare.
++ */
++void clk_disable(struct clk *clk)
++{
++	if (IS_ERR_OR_NULL(clk))
++		return;
++
++	clk_core_disable_lock(clk->core);
++}
++EXPORT_SYMBOL_GPL(clk_disable);
++
++static int clk_core_enable(struct clk_core *core)
++{
++	int ret = 0;
++
++	lockdep_assert_held(&enable_lock);
++
++	if (!core)
++		return 0;
++
++	if (WARN(core->prepare_count == 0,
++	    "Enabling unprepared %s\n", core->name))
++		return -ESHUTDOWN;
++
++	if (core->enable_count == 0) {
++		ret = clk_core_enable(core->parent);
++
++		if (ret)
++			return ret;
++
++		trace_clk_enable(core);
++
++		if (core->ops->enable)
++			ret = core->ops->enable(core->hw);
++
++		trace_clk_enable_complete(core);
++
++		if (ret) {
++			clk_core_disable(core->parent);
++			return ret;
++		}
++	}
++
++	core->enable_count++;
++	return 0;
++}
++
++static int clk_core_enable_lock(struct clk_core *core)
++{
++	unsigned long flags;
++	int ret;
++
++	flags = clk_enable_lock();
++	ret = clk_core_enable(core);
++	clk_enable_unlock(flags);
++
++	return ret;
++}
++
++/**
++ * clk_gate_restore_context - restore context for poweroff
++ * @hw: the clk_hw pointer of clock whose state is to be restored
++ *
++ * The clock gate restore context function enables or disables
++ * the gate clocks based on the enable_count. This is done in cases
++ * where the clock context is lost and based on the enable_count
++ * the clock either needs to be enabled/disabled. This
++ * helps restore the state of gate clocks.
++ */
++void clk_gate_restore_context(struct clk_hw *hw)
++{
++	struct clk_core *core = hw->core;
++
++	if (core->enable_count)
++		core->ops->enable(hw);
++	else
++		core->ops->disable(hw);
++}
++EXPORT_SYMBOL_GPL(clk_gate_restore_context);
++
++static int clk_core_save_context(struct clk_core *core)
++{
++	struct clk_core *child;
++	int ret = 0;
++
++	hlist_for_each_entry(child, &core->children, child_node) {
++		ret = clk_core_save_context(child);
++		if (ret < 0)
++			return ret;
++	}
++
++	if (core->ops && core->ops->save_context)
++		ret = core->ops->save_context(core->hw);
++
++	return ret;
++}
++
++static void clk_core_restore_context(struct clk_core *core)
++{
++	struct clk_core *child;
++
++	if (core->ops && core->ops->restore_context)
++		core->ops->restore_context(core->hw);
++
++	hlist_for_each_entry(child, &core->children, child_node)
++		clk_core_restore_context(child);
++}
++
++/**
++ * clk_save_context - save clock context for poweroff
++ *
++ * Saves the context of the clock register for powerstates in which the
++ * contents of the registers will be lost. Occurs deep within the suspend
++ * code.  Returns 0 on success.
++ */
++int clk_save_context(void)
++{
++	struct clk_core *clk;
++	int ret;
++
++	hlist_for_each_entry(clk, &clk_root_list, child_node) {
++		ret = clk_core_save_context(clk);
++		if (ret < 0)
++			return ret;
++	}
++
++	hlist_for_each_entry(clk, &clk_orphan_list, child_node) {
++		ret = clk_core_save_context(clk);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(clk_save_context);
++
++/**
++ * clk_restore_context - restore clock context after poweroff
++ *
++ * Restore the saved clock context upon resume.
++ *
++ */
++void clk_restore_context(void)
++{
++	struct clk_core *core;
++
++	hlist_for_each_entry(core, &clk_root_list, child_node)
++		clk_core_restore_context(core);
++
++	hlist_for_each_entry(core, &clk_orphan_list, child_node)
++		clk_core_restore_context(core);
++}
++EXPORT_SYMBOL_GPL(clk_restore_context);
++
++/**
++ * clk_enable - ungate a clock
++ * @clk: the clk being ungated
++ *
++ * clk_enable must not sleep, which differentiates it from clk_prepare.  In a
++ * simple case, clk_enable can be used instead of clk_prepare to ungate a clk
++ * if the operation will never sleep.  One example is a SoC-internal clk which
++ * is controlled via simple register writes.  In the complex case a clk ungate
++ * operation may require a fast and a slow part.  It is this reason that
++ * clk_enable and clk_prepare are not mutually exclusive.  In fact clk_prepare
++ * must be called before clk_enable.  Returns 0 on success, -EERROR
++ * otherwise.
++ */
++int clk_enable(struct clk *clk)
++{
++	if (!clk)
++		return 0;
++
++	return clk_core_enable_lock(clk->core);
++}
++EXPORT_SYMBOL_GPL(clk_enable);
++
++/**
++ * clk_is_enabled_when_prepared - indicate if preparing a clock also enables it.
++ * @clk: clock source
++ *
++ * Returns true if clk_prepare() implicitly enables the clock, effectively
++ * making clk_enable()/clk_disable() no-ops, false otherwise.
++ *
++ * This is of interest mainly to power management code where actually
++ * disabling the clock also requires unpreparing it to have any material
++ * effect.
++ *
++ * Regardless of the value returned here, the caller must always invoke
++ * clk_enable() or clk_prepare_enable()  and counterparts for usage counts
++ * to be right.
++ */
++bool clk_is_enabled_when_prepared(struct clk *clk)
++{
++	return clk && !(clk->core->ops->enable && clk->core->ops->disable);
++}
++EXPORT_SYMBOL_GPL(clk_is_enabled_when_prepared);
++
++static int clk_core_prepare_enable(struct clk_core *core)
++{
++	int ret;
++
++	ret = clk_core_prepare_lock(core);
++	if (ret)
++		return ret;
++
++	ret = clk_core_enable_lock(core);
++	if (ret)
++		clk_core_unprepare_lock(core);
++
++	return ret;
++}
++
++static void clk_core_disable_unprepare(struct clk_core *core)
++{
++	clk_core_disable_lock(core);
++	clk_core_unprepare_lock(core);
++}
++
++static void __init clk_unprepare_unused_subtree(struct clk_core *core)
++{
++	struct clk_core *child;
++
++	lockdep_assert_held(&prepare_lock);
++
++	hlist_for_each_entry(child, &core->children, child_node)
++		clk_unprepare_unused_subtree(child);
++
++	if (core->prepare_count)
++		return;
++
++	if (core->flags & CLK_IGNORE_UNUSED)
++		return;
++
++	if (clk_core_is_prepared(core)) {
++		trace_clk_unprepare(core);
++		if (core->ops->unprepare_unused)
++			core->ops->unprepare_unused(core->hw);
++		else if (core->ops->unprepare)
++			core->ops->unprepare(core->hw);
++		trace_clk_unprepare_complete(core);
++	}
++}
++
++static void __init clk_disable_unused_subtree(struct clk_core *core)
++{
++	struct clk_core *child;
++	unsigned long flags;
++
++	lockdep_assert_held(&prepare_lock);
++
++	hlist_for_each_entry(child, &core->children, child_node)
++		clk_disable_unused_subtree(child);
++
++	if (core->flags & CLK_OPS_PARENT_ENABLE)
++		clk_core_prepare_enable(core->parent);
++
++	flags = clk_enable_lock();
++
++	if (core->enable_count)
++		goto unlock_out;
++
++	if (core->flags & CLK_IGNORE_UNUSED)
++		goto unlock_out;
++
++	/*
++	 * some gate clocks have special needs during the disable-unused
++	 * sequence.  call .disable_unused if available, otherwise fall
++	 * back to .disable
++	 */
++	if (clk_core_is_enabled(core)) {
++		trace_clk_disable(core);
++		if (core->ops->disable_unused)
++			core->ops->disable_unused(core->hw);
++		else if (core->ops->disable)
++			core->ops->disable(core->hw);
++		trace_clk_disable_complete(core);
++	}
++
++unlock_out:
++	clk_enable_unlock(flags);
++	if (core->flags & CLK_OPS_PARENT_ENABLE)
++		clk_core_disable_unprepare(core->parent);
++}
++
++static bool clk_ignore_unused __initdata;
++static int __init clk_ignore_unused_setup(char *__unused)
++{
++	clk_ignore_unused = true;
++	return 1;
++}
++__setup("clk_ignore_unused", clk_ignore_unused_setup);
++
++static int __init clk_disable_unused(void)
++{
++	struct clk_core *core;
++	int ret;
++
++	if (clk_ignore_unused) {
++		pr_warn("clk: Not disabling unused clocks\n");
++		return 0;
++	}
++
++	pr_info("clk: Disabling unused clocks\n");
++
++	ret = clk_pm_runtime_get_all();
++	if (ret)
++		return ret;
++	/*
++	 * Grab the prepare lock to keep the clk topology stable while iterating
++	 * over clks.
++	 */
++	clk_prepare_lock();
++
++	hlist_for_each_entry(core, &clk_root_list, child_node)
++		clk_disable_unused_subtree(core);
++
++	hlist_for_each_entry(core, &clk_orphan_list, child_node)
++		clk_disable_unused_subtree(core);
++
++	hlist_for_each_entry(core, &clk_root_list, child_node)
++		clk_unprepare_unused_subtree(core);
++
++	hlist_for_each_entry(core, &clk_orphan_list, child_node)
++		clk_unprepare_unused_subtree(core);
++
++	clk_prepare_unlock();
++
++	clk_pm_runtime_put_all();
++
++	return 0;
++}
++late_initcall_sync(clk_disable_unused);
++
++static int clk_core_determine_round_nolock(struct clk_core *core,
++					   struct clk_rate_request *req)
++{
++	long rate;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return 0;
++
++	/*
++	 * Some clock providers hand-craft their clk_rate_requests and
++	 * might not fill min_rate and max_rate.
++	 *
++	 * If it's the case, clamping the rate is equivalent to setting
++	 * the rate to 0 which is bad. Skip the clamping but complain so
++	 * that it gets fixed, hopefully.
++	 */
++	if (!req->min_rate && !req->max_rate)
++		pr_warn("%s: %s: clk_rate_request has initialized min or max rate.\n",
++			__func__, core->name);
++	else
++		req->rate = clamp(req->rate, req->min_rate, req->max_rate);
++
++	/*
++	 * At this point, core protection will be disabled
++	 * - if the provider is not protected at all
++	 * - if the calling consumer is the only one which has exclusivity
++	 *   over the provider
++	 */
++	if (clk_core_rate_is_protected(core)) {
++		req->rate = core->rate;
++	} else if (core->ops->determine_rate) {
++		return core->ops->determine_rate(core->hw, req);
++	} else if (core->ops->round_rate) {
++		rate = core->ops->round_rate(core->hw, req->rate,
++					     &req->best_parent_rate);
++		if (rate < 0)
++			return rate;
++
++		req->rate = rate;
++	} else {
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static void clk_core_init_rate_req(struct clk_core * const core,
++				   struct clk_rate_request *req,
++				   unsigned long rate)
++{
++	struct clk_core *parent;
++
++	if (WARN_ON(!req))
++		return;
++
++	memset(req, 0, sizeof(*req));
++	req->max_rate = ULONG_MAX;
++
++	if (!core)
++		return;
++
++	req->core = core;
++	req->rate = rate;
++	clk_core_get_boundaries(core, &req->min_rate, &req->max_rate);
++
++	parent = core->parent;
++	if (parent) {
++		req->best_parent_hw = parent->hw;
++		req->best_parent_rate = parent->rate;
++	} else {
++		req->best_parent_hw = NULL;
++		req->best_parent_rate = 0;
++	}
++}
++
++/**
++ * clk_hw_init_rate_request - Initializes a clk_rate_request
++ * @hw: the clk for which we want to submit a rate request
++ * @req: the clk_rate_request structure we want to initialise
++ * @rate: the rate which is to be requested
++ *
++ * Initializes a clk_rate_request structure to submit to
++ * __clk_determine_rate() or similar functions.
++ */
++void clk_hw_init_rate_request(const struct clk_hw *hw,
++			      struct clk_rate_request *req,
++			      unsigned long rate)
++{
++	if (WARN_ON(!hw || !req))
++		return;
++
++	clk_core_init_rate_req(hw->core, req, rate);
++}
++EXPORT_SYMBOL_GPL(clk_hw_init_rate_request);
++
++/**
++ * clk_hw_forward_rate_request - Forwards a clk_rate_request to a clock's parent
++ * @hw: the original clock that got the rate request
++ * @old_req: the original clk_rate_request structure we want to forward
++ * @parent: the clk we want to forward @old_req to
++ * @req: the clk_rate_request structure we want to initialise
++ * @parent_rate: The rate which is to be requested to @parent
++ *
++ * Initializes a clk_rate_request structure to submit to a clock parent
++ * in __clk_determine_rate() or similar functions.
++ */
++void clk_hw_forward_rate_request(const struct clk_hw *hw,
++				 const struct clk_rate_request *old_req,
++				 const struct clk_hw *parent,
++				 struct clk_rate_request *req,
++				 unsigned long parent_rate)
++{
++	if (WARN_ON(!hw || !old_req || !parent || !req))
++		return;
++
++	clk_core_forward_rate_req(hw->core, old_req,
++				  parent->core, req,
++				  parent_rate);
++}
++EXPORT_SYMBOL_GPL(clk_hw_forward_rate_request);
++
++static bool clk_core_can_round(struct clk_core * const core)
++{
++	return core->ops->determine_rate || core->ops->round_rate;
++}
++
++static int clk_core_round_rate_nolock(struct clk_core *core,
++				      struct clk_rate_request *req)
++{
++	int ret;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core) {
++		req->rate = 0;
++		return 0;
++	}
++
++	if (clk_core_can_round(core))
++		return clk_core_determine_round_nolock(core, req);
++
++	if (core->flags & CLK_SET_RATE_PARENT) {
++		struct clk_rate_request parent_req;
++
++		clk_core_forward_rate_req(core, req, core->parent, &parent_req, req->rate);
++
++		trace_clk_rate_request_start(&parent_req);
++
++		ret = clk_core_round_rate_nolock(core->parent, &parent_req);
++		if (ret)
++			return ret;
++
++		trace_clk_rate_request_done(&parent_req);
++
++		req->best_parent_rate = parent_req.rate;
++		req->rate = parent_req.rate;
++
++		return 0;
++	}
++
++	req->rate = core->rate;
++	return 0;
++}
++
++/**
++ * __clk_determine_rate - get the closest rate actually supported by a clock
++ * @hw: determine the rate of this clock
++ * @req: target rate request
++ *
++ * Useful for clk_ops such as .set_rate and .determine_rate.
++ */
++int __clk_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
++{
++	if (!hw) {
++		req->rate = 0;
++		return 0;
++	}
++
++	return clk_core_round_rate_nolock(hw->core, req);
++}
++EXPORT_SYMBOL_GPL(__clk_determine_rate);
++
++/**
++ * clk_hw_round_rate() - round the given rate for a hw clk
++ * @hw: the hw clk for which we are rounding a rate
++ * @rate: the rate which is to be rounded
++ *
++ * Takes in a rate as input and rounds it to a rate that the clk can actually
++ * use.
++ *
++ * Context: prepare_lock must be held.
++ *          For clk providers to call from within clk_ops such as .round_rate,
++ *          .determine_rate.
++ *
++ * Return: returns rounded rate of hw clk if clk supports round_rate operation
++ *         else returns the parent rate.
++ */
++unsigned long clk_hw_round_rate(struct clk_hw *hw, unsigned long rate)
++{
++	int ret;
++	struct clk_rate_request req;
++
++	clk_core_init_rate_req(hw->core, &req, rate);
++
++	trace_clk_rate_request_start(&req);
++
++	ret = clk_core_round_rate_nolock(hw->core, &req);
++	if (ret)
++		return 0;
++
++	trace_clk_rate_request_done(&req);
++
++	return req.rate;
++}
++EXPORT_SYMBOL_GPL(clk_hw_round_rate);
++
++/**
++ * clk_round_rate - round the given rate for a clk
++ * @clk: the clk for which we are rounding a rate
++ * @rate: the rate which is to be rounded
++ *
++ * Takes in a rate as input and rounds it to a rate that the clk can actually
++ * use which is then returned.  If clk doesn't support round_rate operation
++ * then the parent rate is returned.
++ */
++long clk_round_rate(struct clk *clk, unsigned long rate)
++{
++	struct clk_rate_request req;
++	int ret;
++
++	if (!clk)
++		return 0;
++
++	clk_prepare_lock();
++
++	if (clk->exclusive_count)
++		clk_core_rate_unprotect(clk->core);
++
++	clk_core_init_rate_req(clk->core, &req, rate);
++
++	trace_clk_rate_request_start(&req);
++
++	ret = clk_core_round_rate_nolock(clk->core, &req);
++
++	trace_clk_rate_request_done(&req);
++
++	if (clk->exclusive_count)
++		clk_core_rate_protect(clk->core);
++
++	clk_prepare_unlock();
++
++	if (ret)
++		return ret;
++
++	return req.rate;
++}
++EXPORT_SYMBOL_GPL(clk_round_rate);
++
++/**
++ * __clk_notify - call clk notifier chain
++ * @core: clk that is changing rate
++ * @msg: clk notifier type (see include/linux/clk.h)
++ * @old_rate: old clk rate
++ * @new_rate: new clk rate
++ *
++ * Triggers a notifier call chain on the clk rate-change notification
++ * for 'clk'.  Passes a pointer to the struct clk and the previous
++ * and current rates to the notifier callback.  Intended to be called by
++ * internal clock code only.  Returns NOTIFY_DONE from the last driver
++ * called if all went well, or NOTIFY_STOP or NOTIFY_BAD immediately if
++ * a driver returns that.
++ */
++static int __clk_notify(struct clk_core *core, unsigned long msg,
++		unsigned long old_rate, unsigned long new_rate)
++{
++	struct clk_notifier *cn;
++	struct clk_notifier_data cnd;
++	int ret = NOTIFY_DONE;
++
++	cnd.old_rate = old_rate;
++	cnd.new_rate = new_rate;
++
++	list_for_each_entry(cn, &clk_notifier_list, node) {
++		if (cn->clk->core == core) {
++			cnd.clk = cn->clk;
++			ret = srcu_notifier_call_chain(&cn->notifier_head, msg,
++					&cnd);
++			if (ret & NOTIFY_STOP_MASK)
++				return ret;
++		}
++	}
++
++	return ret;
++}
++
++/**
++ * __clk_recalc_accuracies
++ * @core: first clk in the subtree
++ *
++ * Walks the subtree of clks starting with clk and recalculates accuracies as
++ * it goes.  Note that if a clk does not implement the .recalc_accuracy
++ * callback then it is assumed that the clock will take on the accuracy of its
++ * parent.
++ */
++static void __clk_recalc_accuracies(struct clk_core *core)
++{
++	unsigned long parent_accuracy = 0;
++	struct clk_core *child;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (core->parent)
++		parent_accuracy = core->parent->accuracy;
++
++	if (core->ops->recalc_accuracy)
++		core->accuracy = core->ops->recalc_accuracy(core->hw,
++							  parent_accuracy);
++	else
++		core->accuracy = parent_accuracy;
++
++	hlist_for_each_entry(child, &core->children, child_node)
++		__clk_recalc_accuracies(child);
++}
++
++static long clk_core_get_accuracy_recalc(struct clk_core *core)
++{
++	if (core && (core->flags & CLK_GET_ACCURACY_NOCACHE))
++		__clk_recalc_accuracies(core);
++
++	return clk_core_get_accuracy_no_lock(core);
++}
++
++/**
++ * clk_get_accuracy - return the accuracy of clk
++ * @clk: the clk whose accuracy is being returned
++ *
++ * Simply returns the cached accuracy of the clk, unless
++ * CLK_GET_ACCURACY_NOCACHE flag is set, which means a recalc_rate will be
++ * issued.
++ * If clk is NULL then returns 0.
++ */
++long clk_get_accuracy(struct clk *clk)
++{
++	long accuracy;
++
++	if (!clk)
++		return 0;
++
++	clk_prepare_lock();
++	accuracy = clk_core_get_accuracy_recalc(clk->core);
++	clk_prepare_unlock();
++
++	return accuracy;
++}
++EXPORT_SYMBOL_GPL(clk_get_accuracy);
++
++static unsigned long clk_recalc(struct clk_core *core,
++				unsigned long parent_rate)
++{
++	unsigned long rate = parent_rate;
++
++	if (core->ops->recalc_rate && !clk_pm_runtime_get(core)) {
++		rate = core->ops->recalc_rate(core->hw, parent_rate);
++		clk_pm_runtime_put(core);
++	}
++	return rate;
++}
++
++/**
++ * __clk_recalc_rates
++ * @core: first clk in the subtree
++ * @update_req: Whether req_rate should be updated with the new rate
++ * @msg: notification type (see include/linux/clk.h)
++ *
++ * Walks the subtree of clks starting with clk and recalculates rates as it
++ * goes.  Note that if a clk does not implement the .recalc_rate callback then
++ * it is assumed that the clock will take on the rate of its parent.
++ *
++ * clk_recalc_rates also propagates the POST_RATE_CHANGE notification,
++ * if necessary.
++ */
++static void __clk_recalc_rates(struct clk_core *core, bool update_req,
++			       unsigned long msg)
++{
++	unsigned long old_rate;
++	unsigned long parent_rate = 0;
++	struct clk_core *child;
++
++	lockdep_assert_held(&prepare_lock);
++
++	old_rate = core->rate;
++
++	if (core->parent)
++		parent_rate = core->parent->rate;
++
++	core->rate = clk_recalc(core, parent_rate);
++	if (update_req)
++		core->req_rate = core->rate;
++
++	/*
++	 * ignore NOTIFY_STOP and NOTIFY_BAD return values for POST_RATE_CHANGE
++	 * & ABORT_RATE_CHANGE notifiers
++	 */
++	if (core->notifier_count && msg)
++		__clk_notify(core, msg, old_rate, core->rate);
++
++	hlist_for_each_entry(child, &core->children, child_node)
++		__clk_recalc_rates(child, update_req, msg);
++}
++
++static unsigned long clk_core_get_rate_recalc(struct clk_core *core)
++{
++	if (core && (core->flags & CLK_GET_RATE_NOCACHE))
++		__clk_recalc_rates(core, false, 0);
++
++	return clk_core_get_rate_nolock(core);
++}
++
++/**
++ * clk_get_rate - return the rate of clk
++ * @clk: the clk whose rate is being returned
++ *
++ * Simply returns the cached rate of the clk, unless CLK_GET_RATE_NOCACHE flag
++ * is set, which means a recalc_rate will be issued. Can be called regardless of
++ * the clock enabledness. If clk is NULL, or if an error occurred, then returns
++ * 0.
++ */
++unsigned long clk_get_rate(struct clk *clk)
++{
++	unsigned long rate;
++
++	if (!clk)
++		return 0;
++
++	clk_prepare_lock();
++	rate = clk_core_get_rate_recalc(clk->core);
++	clk_prepare_unlock();
++
++	return rate;
++}
++EXPORT_SYMBOL_GPL(clk_get_rate);
++
++static int clk_fetch_parent_index(struct clk_core *core,
++				  struct clk_core *parent)
++{
++	int i;
++
++	if (!parent)
++		return -EINVAL;
++
++	for (i = 0; i < core->num_parents; i++) {
++		/* Found it first try! */
++		if (core->parents[i].core == parent)
++			return i;
++
++		/* Something else is here, so keep looking */
++		if (core->parents[i].core)
++			continue;
++
++		/* Maybe core hasn't been cached but the hw is all we know? */
++		if (core->parents[i].hw) {
++			if (core->parents[i].hw == parent->hw)
++				break;
++
++			/* Didn't match, but we're expecting a clk_hw */
++			continue;
++		}
++
++		/* Maybe it hasn't been cached (clk_set_parent() path) */
++		if (parent == clk_core_get(core, i))
++			break;
++
++		/* Fallback to comparing globally unique names */
++		if (core->parents[i].name &&
++		    !strcmp(parent->name, core->parents[i].name))
++			break;
++	}
++
++	if (i == core->num_parents)
++		return -EINVAL;
++
++	core->parents[i].core = parent;
++	return i;
++}
++
++/**
++ * clk_hw_get_parent_index - return the index of the parent clock
++ * @hw: clk_hw associated with the clk being consumed
++ *
++ * Fetches and returns the index of parent clock. Returns -EINVAL if the given
++ * clock does not have a current parent.
++ */
++int clk_hw_get_parent_index(struct clk_hw *hw)
++{
++	struct clk_hw *parent = clk_hw_get_parent(hw);
++
++	if (WARN_ON(parent == NULL))
++		return -EINVAL;
++
++	return clk_fetch_parent_index(hw->core, parent->core);
++}
++EXPORT_SYMBOL_GPL(clk_hw_get_parent_index);
++
++/*
++ * Update the orphan status of @core and all its children.
++ */
++static void clk_core_update_orphan_status(struct clk_core *core, bool is_orphan)
++{
++	struct clk_core *child;
++
++	core->orphan = is_orphan;
++
++	hlist_for_each_entry(child, &core->children, child_node)
++		clk_core_update_orphan_status(child, is_orphan);
++}
++
++static void clk_reparent(struct clk_core *core, struct clk_core *new_parent)
++{
++	bool was_orphan = core->orphan;
++
++	hlist_del(&core->child_node);
++
++	if (new_parent) {
++		bool becomes_orphan = new_parent->orphan;
++
++		/* avoid duplicate POST_RATE_CHANGE notifications */
++		if (new_parent->new_child == core)
++			new_parent->new_child = NULL;
++
++		hlist_add_head(&core->child_node, &new_parent->children);
++
++		if (was_orphan != becomes_orphan)
++			clk_core_update_orphan_status(core, becomes_orphan);
++	} else {
++		hlist_add_head(&core->child_node, &clk_orphan_list);
++		if (!was_orphan)
++			clk_core_update_orphan_status(core, true);
++	}
++
++	core->parent = new_parent;
++}
++
++static struct clk_core *__clk_set_parent_before(struct clk_core *core,
++					   struct clk_core *parent)
++{
++	unsigned long flags;
++	struct clk_core *old_parent = core->parent;
++
++	/*
++	 * 1. enable parents for CLK_OPS_PARENT_ENABLE clock
++	 *
++	 * 2. Migrate prepare state between parents and prevent race with
++	 * clk_enable().
++	 *
++	 * If the clock is not prepared, then a race with
++	 * clk_enable/disable() is impossible since we already have the
++	 * prepare lock (future calls to clk_enable() need to be preceded by
++	 * a clk_prepare()).
++	 *
++	 * If the clock is prepared, migrate the prepared state to the new
++	 * parent and also protect against a race with clk_enable() by
++	 * forcing the clock and the new parent on.  This ensures that all
++	 * future calls to clk_enable() are practically NOPs with respect to
++	 * hardware and software states.
++	 *
++	 * See also: Comment for clk_set_parent() below.
++	 */
++
++	/* enable old_parent & parent if CLK_OPS_PARENT_ENABLE is set */
++	if (core->flags & CLK_OPS_PARENT_ENABLE) {
++		clk_core_prepare_enable(old_parent);
++		clk_core_prepare_enable(parent);
++	}
++
++	/* migrate prepare count if > 0 */
++	if (core->prepare_count) {
++		clk_core_prepare_enable(parent);
++		clk_core_enable_lock(core);
++	}
++
++	/* update the clk tree topology */
++	flags = clk_enable_lock();
++	clk_reparent(core, parent);
++	clk_enable_unlock(flags);
++
++	return old_parent;
++}
++
++static void __clk_set_parent_after(struct clk_core *core,
++				   struct clk_core *parent,
++				   struct clk_core *old_parent)
++{
++	/*
++	 * Finish the migration of prepare state and undo the changes done
++	 * for preventing a race with clk_enable().
++	 */
++	if (core->prepare_count) {
++		clk_core_disable_lock(core);
++		clk_core_disable_unprepare(old_parent);
++	}
++
++	/* re-balance ref counting if CLK_OPS_PARENT_ENABLE is set */
++	if (core->flags & CLK_OPS_PARENT_ENABLE) {
++		clk_core_disable_unprepare(parent);
++		clk_core_disable_unprepare(old_parent);
++	}
++}
++
++static int __clk_set_parent(struct clk_core *core, struct clk_core *parent,
++			    u8 p_index)
++{
++	unsigned long flags;
++	int ret = 0;
++	struct clk_core *old_parent;
++
++	old_parent = __clk_set_parent_before(core, parent);
++
++	trace_clk_set_parent(core, parent);
++
++	/* change clock input source */
++	if (parent && core->ops->set_parent)
++		ret = core->ops->set_parent(core->hw, p_index);
++
++	trace_clk_set_parent_complete(core, parent);
++
++	if (ret) {
++		flags = clk_enable_lock();
++		clk_reparent(core, old_parent);
++		clk_enable_unlock(flags);
++
++		__clk_set_parent_after(core, old_parent, parent);
++
++		return ret;
++	}
++
++	__clk_set_parent_after(core, parent, old_parent);
++
++	return 0;
++}
++
++/**
++ * __clk_speculate_rates
++ * @core: first clk in the subtree
++ * @parent_rate: the "future" rate of clk's parent
++ *
++ * Walks the subtree of clks starting with clk, speculating rates as it
++ * goes and firing off PRE_RATE_CHANGE notifications as necessary.
++ *
++ * Unlike clk_recalc_rates, clk_speculate_rates exists only for sending
++ * pre-rate change notifications and returns early if no clks in the
++ * subtree have subscribed to the notifications.  Note that if a clk does not
++ * implement the .recalc_rate callback then it is assumed that the clock will
++ * take on the rate of its parent.
++ */
++static int __clk_speculate_rates(struct clk_core *core,
++				 unsigned long parent_rate)
++{
++	struct clk_core *child;
++	unsigned long new_rate;
++	int ret = NOTIFY_DONE;
++
++	lockdep_assert_held(&prepare_lock);
++
++	new_rate = clk_recalc(core, parent_rate);
++
++	/* abort rate change if a driver returns NOTIFY_BAD or NOTIFY_STOP */
++	if (core->notifier_count)
++		ret = __clk_notify(core, PRE_RATE_CHANGE, core->rate, new_rate);
++
++	if (ret & NOTIFY_STOP_MASK) {
++		pr_debug("%s: clk notifier callback for clock %s aborted with error %d\n",
++				__func__, core->name, ret);
++		goto out;
++	}
++
++	hlist_for_each_entry(child, &core->children, child_node) {
++		ret = __clk_speculate_rates(child, new_rate);
++		if (ret & NOTIFY_STOP_MASK)
++			break;
++	}
++
++out:
++	return ret;
++}
++
++static void clk_calc_subtree(struct clk_core *core, unsigned long new_rate,
++			     struct clk_core *new_parent, u8 p_index)
++{
++	struct clk_core *child;
++
++	core->new_rate = new_rate;
++	core->new_parent = new_parent;
++	core->new_parent_index = p_index;
++	/* include clk in new parent's PRE_RATE_CHANGE notifications */
++	core->new_child = NULL;
++	if (new_parent && new_parent != core->parent)
++		new_parent->new_child = core;
++
++	hlist_for_each_entry(child, &core->children, child_node) {
++		child->new_rate = clk_recalc(child, new_rate);
++		clk_calc_subtree(child, child->new_rate, NULL, 0);
++	}
++}
++
++/*
++ * calculate the new rates returning the topmost clock that has to be
++ * changed.
++ */
++static struct clk_core *clk_calc_new_rates(struct clk_core *core,
++					   unsigned long rate)
++{
++	struct clk_core *top = core;
++	struct clk_core *old_parent, *parent;
++	unsigned long best_parent_rate = 0;
++	unsigned long new_rate;
++	unsigned long min_rate;
++	unsigned long max_rate;
++	int p_index = 0;
++	int ret;
++
++	/* sanity */
++	if (IS_ERR_OR_NULL(core))
++		return NULL;
++
++	/* save parent rate, if it exists */
++	parent = old_parent = core->parent;
++	if (parent)
++		best_parent_rate = parent->rate;
++
++	clk_core_get_boundaries(core, &min_rate, &max_rate);
++
++	/* find the closest rate and parent clk/rate */
++	if (clk_core_can_round(core)) {
++		struct clk_rate_request req;
++
++		clk_core_init_rate_req(core, &req, rate);
++
++		trace_clk_rate_request_start(&req);
++
++		ret = clk_core_determine_round_nolock(core, &req);
++		if (ret < 0)
++			return NULL;
++
++		trace_clk_rate_request_done(&req);
++
++		best_parent_rate = req.best_parent_rate;
++		new_rate = req.rate;
++		parent = req.best_parent_hw ? req.best_parent_hw->core : NULL;
++
++		if (new_rate < min_rate || new_rate > max_rate)
++			return NULL;
++	} else if (!parent || !(core->flags & CLK_SET_RATE_PARENT)) {
++		/* pass-through clock without adjustable parent */
++		core->new_rate = core->rate;
++		return NULL;
++	} else {
++		/* pass-through clock with adjustable parent */
++		top = clk_calc_new_rates(parent, rate);
++		new_rate = parent->new_rate;
++		goto out;
++	}
++
++	/* some clocks must be gated to change parent */
++	if (parent != old_parent &&
++	    (core->flags & CLK_SET_PARENT_GATE) && core->prepare_count) {
++		pr_debug("%s: %s not gated but wants to reparent\n",
++			 __func__, core->name);
++		return NULL;
++	}
++
++	/* try finding the new parent index */
++	if (parent && core->num_parents > 1) {
++		p_index = clk_fetch_parent_index(core, parent);
++		if (p_index < 0) {
++			pr_debug("%s: clk %s can not be parent of clk %s\n",
++				 __func__, parent->name, core->name);
++			return NULL;
++		}
++	}
++
++	if ((core->flags & CLK_SET_RATE_PARENT) && parent &&
++	    best_parent_rate != parent->rate)
++		top = clk_calc_new_rates(parent, best_parent_rate);
++
++out:
++	clk_calc_subtree(core, new_rate, parent, p_index);
++
++	return top;
++}
++
++/*
++ * Notify about rate changes in a subtree. Always walk down the whole tree
++ * so that in case of an error we can walk down the whole tree again and
++ * abort the change.
++ */
++static struct clk_core *clk_propagate_rate_change(struct clk_core *core,
++						  unsigned long event)
++{
++	struct clk_core *child, *tmp_clk, *fail_clk = NULL;
++	int ret = NOTIFY_DONE;
++
++	if (core->rate == core->new_rate)
++		return NULL;
++
++	if (core->notifier_count) {
++		ret = __clk_notify(core, event, core->rate, core->new_rate);
++		if (ret & NOTIFY_STOP_MASK)
++			fail_clk = core;
++	}
++
++	hlist_for_each_entry(child, &core->children, child_node) {
++		/* Skip children who will be reparented to another clock */
++		if (child->new_parent && child->new_parent != core)
++			continue;
++		tmp_clk = clk_propagate_rate_change(child, event);
++		if (tmp_clk)
++			fail_clk = tmp_clk;
++	}
++
++	/* handle the new child who might not be in core->children yet */
++	if (core->new_child) {
++		tmp_clk = clk_propagate_rate_change(core->new_child, event);
++		if (tmp_clk)
++			fail_clk = tmp_clk;
++	}
++
++	return fail_clk;
++}
++
++/*
++ * walk down a subtree and set the new rates notifying the rate
++ * change on the way
++ */
++static void clk_change_rate(struct clk_core *core)
++{
++	struct clk_core *child;
++	struct hlist_node *tmp;
++	unsigned long old_rate;
++	unsigned long best_parent_rate = 0;
++	bool skip_set_rate = false;
++	struct clk_core *old_parent;
++	struct clk_core *parent = NULL;
++
++	old_rate = core->rate;
++
++	if (core->new_parent) {
++		parent = core->new_parent;
++		best_parent_rate = core->new_parent->rate;
++	} else if (core->parent) {
++		parent = core->parent;
++		best_parent_rate = core->parent->rate;
++	}
++
++	if (clk_pm_runtime_get(core))
++		return;
++
++	if (core->flags & CLK_SET_RATE_UNGATE) {
++		clk_core_prepare(core);
++		clk_core_enable_lock(core);
++	}
++
++	if (core->new_parent && core->new_parent != core->parent) {
++		old_parent = __clk_set_parent_before(core, core->new_parent);
++		trace_clk_set_parent(core, core->new_parent);
++
++		if (core->ops->set_rate_and_parent) {
++			skip_set_rate = true;
++			core->ops->set_rate_and_parent(core->hw, core->new_rate,
++					best_parent_rate,
++					core->new_parent_index);
++		} else if (core->ops->set_parent) {
++			core->ops->set_parent(core->hw, core->new_parent_index);
++		}
++
++		trace_clk_set_parent_complete(core, core->new_parent);
++		__clk_set_parent_after(core, core->new_parent, old_parent);
++	}
++
++	if (core->flags & CLK_OPS_PARENT_ENABLE)
++		clk_core_prepare_enable(parent);
++
++	trace_clk_set_rate(core, core->new_rate);
++
++	if (!skip_set_rate && core->ops->set_rate)
++		core->ops->set_rate(core->hw, core->new_rate, best_parent_rate);
++
++	trace_clk_set_rate_complete(core, core->new_rate);
++
++	core->rate = clk_recalc(core, best_parent_rate);
++
++	if (core->flags & CLK_SET_RATE_UNGATE) {
++		clk_core_disable_lock(core);
++		clk_core_unprepare(core);
++	}
++
++	if (core->flags & CLK_OPS_PARENT_ENABLE)
++		clk_core_disable_unprepare(parent);
++
++	if (core->notifier_count && old_rate != core->rate)
++		__clk_notify(core, POST_RATE_CHANGE, old_rate, core->rate);
++
++	if (core->flags & CLK_RECALC_NEW_RATES)
++		(void)clk_calc_new_rates(core, core->new_rate);
++
++	/*
++	 * Use safe iteration, as change_rate can actually swap parents
++	 * for certain clock types.
++	 */
++	hlist_for_each_entry_safe(child, tmp, &core->children, child_node) {
++		/* Skip children who will be reparented to another clock */
++		if (child->new_parent && child->new_parent != core)
++			continue;
++		clk_change_rate(child);
++	}
++
++	/* handle the new child who might not be in core->children yet */
++	if (core->new_child)
++		clk_change_rate(core->new_child);
++
++	clk_pm_runtime_put(core);
++}
++
++static unsigned long clk_core_req_round_rate_nolock(struct clk_core *core,
++						     unsigned long req_rate)
++{
++	int ret, cnt;
++	struct clk_rate_request req;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return 0;
++
++	/* simulate what the rate would be if it could be freely set */
++	cnt = clk_core_rate_nuke_protect(core);
++	if (cnt < 0)
++		return cnt;
++
++	clk_core_init_rate_req(core, &req, req_rate);
++
++	trace_clk_rate_request_start(&req);
++
++	ret = clk_core_round_rate_nolock(core, &req);
++
++	trace_clk_rate_request_done(&req);
++
++	/* restore the protection */
++	clk_core_rate_restore_protect(core, cnt);
++
++	return ret ? 0 : req.rate;
++}
++
++static int clk_core_set_rate_nolock(struct clk_core *core,
++				    unsigned long req_rate)
++{
++	struct clk_core *top, *fail_clk;
++	unsigned long rate;
++	int ret;
++
++	if (!core)
++		return 0;
++
++	rate = clk_core_req_round_rate_nolock(core, req_rate);
++
++	/* bail early if nothing to do */
++	if (rate == clk_core_get_rate_nolock(core))
++		return 0;
++
++	/* fail on a direct rate set of a protected provider */
++	if (clk_core_rate_is_protected(core))
++		return -EBUSY;
++
++	/* calculate new rates and get the topmost changed clock */
++	top = clk_calc_new_rates(core, req_rate);
++	if (!top)
++		return -EINVAL;
++
++	ret = clk_pm_runtime_get(core);
++	if (ret)
++		return ret;
++
++	/* notify that we are about to change rates */
++	fail_clk = clk_propagate_rate_change(top, PRE_RATE_CHANGE);
++	if (fail_clk) {
++		pr_debug("%s: failed to set %s rate\n", __func__,
++				fail_clk->name);
++		clk_propagate_rate_change(top, ABORT_RATE_CHANGE);
++		ret = -EBUSY;
++		goto err;
++	}
++
++	/* change the rates */
++	clk_change_rate(top);
++
++	core->req_rate = req_rate;
++err:
++	clk_pm_runtime_put(core);
++
++	return ret;
++}
++
++/**
++ * clk_set_rate - specify a new rate for clk
++ * @clk: the clk whose rate is being changed
++ * @rate: the new rate for clk
++ *
++ * In the simplest case clk_set_rate will only adjust the rate of clk.
++ *
++ * Setting the CLK_SET_RATE_PARENT flag allows the rate change operation to
++ * propagate up to clk's parent; whether or not this happens depends on the
++ * outcome of clk's .round_rate implementation.  If *parent_rate is unchanged
++ * after calling .round_rate then upstream parent propagation is ignored.  If
++ * *parent_rate comes back with a new rate for clk's parent then we propagate
++ * up to clk's parent and set its rate.  Upward propagation will continue
++ * until either a clk does not support the CLK_SET_RATE_PARENT flag or
++ * .round_rate stops requesting changes to clk's parent_rate.
++ *
++ * Rate changes are accomplished via tree traversal that also recalculates the
++ * rates for the clocks and fires off POST_RATE_CHANGE notifiers.
++ *
++ * Returns 0 on success, -EERROR otherwise.
++ */
++int clk_set_rate(struct clk *clk, unsigned long rate)
++{
++	int ret;
++
++	if (!clk)
++		return 0;
++
++	/* prevent racing with updates to the clock topology */
++	clk_prepare_lock();
++
++	if (clk->exclusive_count)
++		clk_core_rate_unprotect(clk->core);
++
++	ret = clk_core_set_rate_nolock(clk->core, rate);
++
++	if (clk->exclusive_count)
++		clk_core_rate_protect(clk->core);
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_set_rate);
++
++/**
++ * clk_set_rate_exclusive - specify a new rate and get exclusive control
++ * @clk: the clk whose rate is being changed
++ * @rate: the new rate for clk
++ *
++ * This is a combination of clk_set_rate() and clk_rate_exclusive_get()
++ * within a critical section
++ *
++ * This can be used initially to ensure that at least 1 consumer is
++ * satisfied when several consumers are competing for exclusivity over the
++ * same clock provider.
++ *
++ * The exclusivity is not applied if setting the rate failed.
++ *
++ * Calls to clk_rate_exclusive_get() should be balanced with calls to
++ * clk_rate_exclusive_put().
++ *
++ * Returns 0 on success, -EERROR otherwise.
++ */
++int clk_set_rate_exclusive(struct clk *clk, unsigned long rate)
++{
++	int ret;
++
++	if (!clk)
++		return 0;
++
++	/* prevent racing with updates to the clock topology */
++	clk_prepare_lock();
++
++	/*
++	 * The temporary protection removal is not here, on purpose
++	 * This function is meant to be used instead of clk_rate_protect,
++	 * so before the consumer code path protect the clock provider
++	 */
++
++	ret = clk_core_set_rate_nolock(clk->core, rate);
++	if (!ret) {
++		clk_core_rate_protect(clk->core);
++		clk->exclusive_count++;
++	}
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_set_rate_exclusive);
++
++static int clk_set_rate_range_nolock(struct clk *clk,
++				     unsigned long min,
++				     unsigned long max)
++{
++	int ret = 0;
++	unsigned long old_min, old_max, rate;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!clk)
++		return 0;
++
++	trace_clk_set_rate_range(clk->core, min, max);
++
++	if (min > max) {
++		pr_err("%s: clk %s dev %s con %s: invalid range [%lu, %lu]\n",
++		       __func__, clk->core->name, clk->dev_id, clk->con_id,
++		       min, max);
++		return -EINVAL;
++	}
++
++	if (clk->exclusive_count)
++		clk_core_rate_unprotect(clk->core);
++
++	/* Save the current values in case we need to rollback the change */
++	old_min = clk->min_rate;
++	old_max = clk->max_rate;
++	clk->min_rate = min;
++	clk->max_rate = max;
++
++	if (!clk_core_check_boundaries(clk->core, min, max)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	rate = clk->core->req_rate;
++	if (clk->core->flags & CLK_GET_RATE_NOCACHE)
++		rate = clk_core_get_rate_recalc(clk->core);
++
++	/*
++	 * Since the boundaries have been changed, let's give the
++	 * opportunity to the provider to adjust the clock rate based on
++	 * the new boundaries.
++	 *
++	 * We also need to handle the case where the clock is currently
++	 * outside of the boundaries. Clamping the last requested rate
++	 * to the current minimum and maximum will also handle this.
++	 *
++	 * FIXME:
++	 * There is a catch. It may fail for the usual reason (clock
++	 * broken, clock protected, etc) but also because:
++	 * - round_rate() was not favorable and fell on the wrong
++	 *   side of the boundary
++	 * - the determine_rate() callback does not really check for
++	 *   this corner case when determining the rate
++	 */
++	rate = clamp(rate, min, max);
++	ret = clk_core_set_rate_nolock(clk->core, rate);
++	if (ret) {
++		/* rollback the changes */
++		clk->min_rate = old_min;
++		clk->max_rate = old_max;
++	}
++
++out:
++	if (clk->exclusive_count)
++		clk_core_rate_protect(clk->core);
++
++	return ret;
++}
++
++/**
++ * clk_set_rate_range - set a rate range for a clock source
++ * @clk: clock source
++ * @min: desired minimum clock rate in Hz, inclusive
++ * @max: desired maximum clock rate in Hz, inclusive
++ *
++ * Return: 0 for success or negative errno on failure.
++ */
++int clk_set_rate_range(struct clk *clk, unsigned long min, unsigned long max)
++{
++	int ret;
++
++	if (!clk)
++		return 0;
++
++	clk_prepare_lock();
++
++	ret = clk_set_rate_range_nolock(clk, min, max);
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_set_rate_range);
++
++/**
++ * clk_set_min_rate - set a minimum clock rate for a clock source
++ * @clk: clock source
++ * @rate: desired minimum clock rate in Hz, inclusive
++ *
++ * Returns success (0) or negative errno.
++ */
++int clk_set_min_rate(struct clk *clk, unsigned long rate)
++{
++	if (!clk)
++		return 0;
++
++	trace_clk_set_min_rate(clk->core, rate);
++
++	return clk_set_rate_range(clk, rate, clk->max_rate);
++}
++EXPORT_SYMBOL_GPL(clk_set_min_rate);
++
++/**
++ * clk_set_max_rate - set a maximum clock rate for a clock source
++ * @clk: clock source
++ * @rate: desired maximum clock rate in Hz, inclusive
++ *
++ * Returns success (0) or negative errno.
++ */
++int clk_set_max_rate(struct clk *clk, unsigned long rate)
++{
++	if (!clk)
++		return 0;
++
++	trace_clk_set_max_rate(clk->core, rate);
++
++	return clk_set_rate_range(clk, clk->min_rate, rate);
++}
++EXPORT_SYMBOL_GPL(clk_set_max_rate);
++
++/**
++ * clk_get_parent - return the parent of a clk
++ * @clk: the clk whose parent gets returned
++ *
++ * Simply returns clk->parent.  Returns NULL if clk is NULL.
++ */
++struct clk *clk_get_parent(struct clk *clk)
++{
++	struct clk *parent;
++
++	if (!clk)
++		return NULL;
++
++	clk_prepare_lock();
++	/* TODO: Create a per-user clk and change callers to call clk_put */
++	parent = !clk->core->parent ? NULL : clk->core->parent->hw->clk;
++	clk_prepare_unlock();
++
++	return parent;
++}
++EXPORT_SYMBOL_GPL(clk_get_parent);
++
++static struct clk_core *__clk_init_parent(struct clk_core *core)
++{
++	u8 index = 0;
++
++	if (core->num_parents > 1 && core->ops->get_parent)
++		index = core->ops->get_parent(core->hw);
++
++	return clk_core_get_parent_by_index(core, index);
++}
++
++static void clk_core_reparent(struct clk_core *core,
++				  struct clk_core *new_parent)
++{
++	clk_reparent(core, new_parent);
++	__clk_recalc_accuracies(core);
++	__clk_recalc_rates(core, true, POST_RATE_CHANGE);
++}
++
++void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
++{
++	if (!hw)
++		return;
++
++	clk_core_reparent(hw->core, !new_parent ? NULL : new_parent->core);
++}
++
++/**
++ * clk_has_parent - check if a clock is a possible parent for another
++ * @clk: clock source
++ * @parent: parent clock source
++ *
++ * This function can be used in drivers that need to check that a clock can be
++ * the parent of another without actually changing the parent.
++ *
++ * Returns true if @parent is a possible parent for @clk, false otherwise.
++ */
++bool clk_has_parent(const struct clk *clk, const struct clk *parent)
++{
++	/* NULL clocks should be nops, so return success if either is NULL. */
++	if (!clk || !parent)
++		return true;
++
++	return clk_core_has_parent(clk->core, parent->core);
++}
++EXPORT_SYMBOL_GPL(clk_has_parent);
++
++static int clk_core_set_parent_nolock(struct clk_core *core,
++				      struct clk_core *parent)
++{
++	int ret = 0;
++	int p_index = 0;
++	unsigned long p_rate = 0;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return 0;
++
++	if (core->parent == parent)
++		return 0;
++
++	/* verify ops for multi-parent clks */
++	if (core->num_parents > 1 && !core->ops->set_parent)
++		return -EPERM;
++
++	/* check that we are allowed to re-parent if the clock is in use */
++	if ((core->flags & CLK_SET_PARENT_GATE) && core->prepare_count)
++		return -EBUSY;
++
++	if (clk_core_rate_is_protected(core))
++		return -EBUSY;
++
++	/* try finding the new parent index */
++	if (parent) {
++		p_index = clk_fetch_parent_index(core, parent);
++		if (p_index < 0) {
++			pr_debug("%s: clk %s can not be parent of clk %s\n",
++					__func__, parent->name, core->name);
++			return p_index;
++		}
++		p_rate = parent->rate;
++	}
++
++	ret = clk_pm_runtime_get(core);
++	if (ret)
++		return ret;
++
++	/* propagate PRE_RATE_CHANGE notifications */
++	ret = __clk_speculate_rates(core, p_rate);
++
++	/* abort if a driver objects */
++	if (ret & NOTIFY_STOP_MASK)
++		goto runtime_put;
++
++	/* do the re-parent */
++	ret = __clk_set_parent(core, parent, p_index);
++
++	/* propagate rate an accuracy recalculation accordingly */
++	if (ret) {
++		__clk_recalc_rates(core, true, ABORT_RATE_CHANGE);
++	} else {
++		__clk_recalc_rates(core, true, POST_RATE_CHANGE);
++		__clk_recalc_accuracies(core);
++	}
++
++runtime_put:
++	clk_pm_runtime_put(core);
++
++	return ret;
++}
++
++int clk_hw_set_parent(struct clk_hw *hw, struct clk_hw *parent)
++{
++	return clk_core_set_parent_nolock(hw->core, parent->core);
++}
++EXPORT_SYMBOL_GPL(clk_hw_set_parent);
++
++/**
++ * clk_set_parent - switch the parent of a mux clk
++ * @clk: the mux clk whose input we are switching
++ * @parent: the new input to clk
++ *
++ * Re-parent clk to use parent as its new input source.  If clk is in
++ * prepared state, the clk will get enabled for the duration of this call. If
++ * that's not acceptable for a specific clk (Eg: the consumer can't handle
++ * that, the reparenting is glitchy in hardware, etc), use the
++ * CLK_SET_PARENT_GATE flag to allow reparenting only when clk is unprepared.
++ *
++ * After successfully changing clk's parent clk_set_parent will update the
++ * clk topology, sysfs topology and propagate rate recalculation via
++ * __clk_recalc_rates.
++ *
++ * Returns 0 on success, -EERROR otherwise.
++ */
++int clk_set_parent(struct clk *clk, struct clk *parent)
++{
++	int ret;
++
++	if (!clk)
++		return 0;
++
++	clk_prepare_lock();
++
++	if (clk->exclusive_count)
++		clk_core_rate_unprotect(clk->core);
++
++	ret = clk_core_set_parent_nolock(clk->core,
++					 parent ? parent->core : NULL);
++
++	if (clk->exclusive_count)
++		clk_core_rate_protect(clk->core);
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_set_parent);
++
++static int clk_core_set_phase_nolock(struct clk_core *core, int degrees)
++{
++	int ret = -EINVAL;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (!core)
++		return 0;
++
++	if (clk_core_rate_is_protected(core))
++		return -EBUSY;
++
++	trace_clk_set_phase(core, degrees);
++
++	if (core->ops->set_phase) {
++		ret = core->ops->set_phase(core->hw, degrees);
++		if (!ret)
++			core->phase = degrees;
++	}
++
++	trace_clk_set_phase_complete(core, degrees);
++
++	return ret;
++}
++
++/**
++ * clk_set_phase - adjust the phase shift of a clock signal
++ * @clk: clock signal source
++ * @degrees: number of degrees the signal is shifted
++ *
++ * Shifts the phase of a clock signal by the specified
++ * degrees. Returns 0 on success, -EERROR otherwise.
++ *
++ * This function makes no distinction about the input or reference
++ * signal that we adjust the clock signal phase against. For example
++ * phase locked-loop clock signal generators we may shift phase with
++ * respect to feedback clock signal input, but for other cases the
++ * clock phase may be shifted with respect to some other, unspecified
++ * signal.
++ *
++ * Additionally the concept of phase shift does not propagate through
++ * the clock tree hierarchy, which sets it apart from clock rates and
++ * clock accuracy. A parent clock phase attribute does not have an
++ * impact on the phase attribute of a child clock.
++ */
++int clk_set_phase(struct clk *clk, int degrees)
++{
++	int ret;
++
++	if (!clk)
++		return 0;
++
++	/* sanity check degrees */
++	degrees %= 360;
++	if (degrees < 0)
++		degrees += 360;
++
++	clk_prepare_lock();
++
++	if (clk->exclusive_count)
++		clk_core_rate_unprotect(clk->core);
++
++	ret = clk_core_set_phase_nolock(clk->core, degrees);
++
++	if (clk->exclusive_count)
++		clk_core_rate_protect(clk->core);
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_set_phase);
++
++static int clk_core_get_phase(struct clk_core *core)
++{
++	int ret;
++
++	lockdep_assert_held(&prepare_lock);
++	if (!core->ops->get_phase)
++		return 0;
++
++	/* Always try to update cached phase if possible */
++	ret = core->ops->get_phase(core->hw);
++	if (ret >= 0)
++		core->phase = ret;
++
++	return ret;
++}
++
++/**
++ * clk_get_phase - return the phase shift of a clock signal
++ * @clk: clock signal source
++ *
++ * Returns the phase shift of a clock node in degrees, otherwise returns
++ * -EERROR.
++ */
++int clk_get_phase(struct clk *clk)
++{
++	int ret;
++
++	if (!clk)
++		return 0;
++
++	clk_prepare_lock();
++	ret = clk_core_get_phase(clk->core);
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_get_phase);
++
++static void clk_core_reset_duty_cycle_nolock(struct clk_core *core)
++{
++	/* Assume a default value of 50% */
++	core->duty.num = 1;
++	core->duty.den = 2;
++}
++
++static int clk_core_update_duty_cycle_parent_nolock(struct clk_core *core);
++
++static int clk_core_update_duty_cycle_nolock(struct clk_core *core)
++{
++	struct clk_duty *duty = &core->duty;
++	int ret = 0;
++
++	if (!core->ops->get_duty_cycle)
++		return clk_core_update_duty_cycle_parent_nolock(core);
++
++	ret = core->ops->get_duty_cycle(core->hw, duty);
++	if (ret)
++		goto reset;
++
++	/* Don't trust the clock provider too much */
++	if (duty->den == 0 || duty->num > duty->den) {
++		ret = -EINVAL;
++		goto reset;
++	}
++
++	return 0;
++
++reset:
++	clk_core_reset_duty_cycle_nolock(core);
++	return ret;
++}
++
++static int clk_core_update_duty_cycle_parent_nolock(struct clk_core *core)
++{
++	int ret = 0;
++
++	if (core->parent &&
++	    core->flags & CLK_DUTY_CYCLE_PARENT) {
++		ret = clk_core_update_duty_cycle_nolock(core->parent);
++		memcpy(&core->duty, &core->parent->duty, sizeof(core->duty));
++	} else {
++		clk_core_reset_duty_cycle_nolock(core);
++	}
++
++	return ret;
++}
++
++static int clk_core_set_duty_cycle_parent_nolock(struct clk_core *core,
++						 struct clk_duty *duty);
++
++static int clk_core_set_duty_cycle_nolock(struct clk_core *core,
++					  struct clk_duty *duty)
++{
++	int ret;
++
++	lockdep_assert_held(&prepare_lock);
++
++	if (clk_core_rate_is_protected(core))
++		return -EBUSY;
++
++	trace_clk_set_duty_cycle(core, duty);
++
++	if (!core->ops->set_duty_cycle)
++		return clk_core_set_duty_cycle_parent_nolock(core, duty);
++
++	ret = core->ops->set_duty_cycle(core->hw, duty);
++	if (!ret)
++		memcpy(&core->duty, duty, sizeof(*duty));
++
++	trace_clk_set_duty_cycle_complete(core, duty);
++
++	return ret;
++}
++
++static int clk_core_set_duty_cycle_parent_nolock(struct clk_core *core,
++						 struct clk_duty *duty)
++{
++	int ret = 0;
++
++	if (core->parent &&
++	    core->flags & (CLK_DUTY_CYCLE_PARENT | CLK_SET_RATE_PARENT)) {
++		ret = clk_core_set_duty_cycle_nolock(core->parent, duty);
++		memcpy(&core->duty, &core->parent->duty, sizeof(core->duty));
++	}
++
++	return ret;
++}
++
++/**
++ * clk_set_duty_cycle - adjust the duty cycle ratio of a clock signal
++ * @clk: clock signal source
++ * @num: numerator of the duty cycle ratio to be applied
++ * @den: denominator of the duty cycle ratio to be applied
++ *
++ * Apply the duty cycle ratio if the ratio is valid and the clock can
++ * perform this operation
++ *
++ * Returns (0) on success, a negative errno otherwise.
++ */
++int clk_set_duty_cycle(struct clk *clk, unsigned int num, unsigned int den)
++{
++	int ret;
++	struct clk_duty duty;
++
++	if (!clk)
++		return 0;
++
++	/* sanity check the ratio */
++	if (den == 0 || num > den)
++		return -EINVAL;
++
++	duty.num = num;
++	duty.den = den;
++
++	clk_prepare_lock();
++
++	if (clk->exclusive_count)
++		clk_core_rate_unprotect(clk->core);
++
++	ret = clk_core_set_duty_cycle_nolock(clk->core, &duty);
++
++	if (clk->exclusive_count)
++		clk_core_rate_protect(clk->core);
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_set_duty_cycle);
++
++static int clk_core_get_scaled_duty_cycle(struct clk_core *core,
++					  unsigned int scale)
++{
++	struct clk_duty *duty = &core->duty;
++	int ret;
++
++	clk_prepare_lock();
++
++	ret = clk_core_update_duty_cycle_nolock(core);
++	if (!ret)
++		ret = mult_frac(scale, duty->num, duty->den);
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++
++/**
++ * clk_get_scaled_duty_cycle - return the duty cycle ratio of a clock signal
++ * @clk: clock signal source
++ * @scale: scaling factor to be applied to represent the ratio as an integer
++ *
++ * Returns the duty cycle ratio of a clock node multiplied by the provided
++ * scaling factor, or negative errno on error.
++ */
++int clk_get_scaled_duty_cycle(struct clk *clk, unsigned int scale)
++{
++	if (!clk)
++		return 0;
++
++	return clk_core_get_scaled_duty_cycle(clk->core, scale);
++}
++EXPORT_SYMBOL_GPL(clk_get_scaled_duty_cycle);
++
++/**
++ * clk_is_match - check if two clk's point to the same hardware clock
++ * @p: clk compared against q
++ * @q: clk compared against p
++ *
++ * Returns true if the two struct clk pointers both point to the same hardware
++ * clock node. Put differently, returns true if struct clk *p and struct clk *q
++ * share the same struct clk_core object.
++ *
++ * Returns false otherwise. Note that two NULL clks are treated as matching.
++ */
++bool clk_is_match(const struct clk *p, const struct clk *q)
++{
++	/* trivial case: identical struct clk's or both NULL */
++	if (p == q)
++		return true;
++
++	/* true if clk->core pointers match. Avoid dereferencing garbage */
++	if (!IS_ERR_OR_NULL(p) && !IS_ERR_OR_NULL(q))
++		if (p->core == q->core)
++			return true;
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(clk_is_match);
++
++/***        debugfs support        ***/
++
++#ifdef CONFIG_DEBUG_FS
++#include <linux/debugfs.h>
++
++static struct dentry *rootdir;
++static int inited = 0;
++static DEFINE_MUTEX(clk_debug_lock);
++static HLIST_HEAD(clk_debug_list);
++
++static struct hlist_head *orphan_list[] = {
++	&clk_orphan_list,
++	NULL,
++};
++
++static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
++				 int level)
++{
++	int phase;
++	struct clk *clk_user;
++	int multi_node = 0;
++
++	seq_printf(s, "%*s%-*s %-7d %-8d %-8d %-11lu %-10lu ",
++		   level * 3 + 1, "",
++		   35 - level * 3, c->name,
++		   c->enable_count, c->prepare_count, c->protect_count,
++		   clk_core_get_rate_recalc(c),
++		   clk_core_get_accuracy_recalc(c));
++
++	phase = clk_core_get_phase(c);
++	if (phase >= 0)
++		seq_printf(s, "%-5d", phase);
++	else
++		seq_puts(s, "-----");
++
++	seq_printf(s, " %-6d", clk_core_get_scaled_duty_cycle(c, 100000));
++
++	if (c->ops->is_enabled)
++		seq_printf(s, " %5c ", clk_core_is_enabled(c) ? 'Y' : 'N');
++	else if (!c->ops->enable)
++		seq_printf(s, " %5c ", 'Y');
++	else
++		seq_printf(s, " %5c ", '?');
++
++	hlist_for_each_entry(clk_user, &c->clks, clks_node) {
++		seq_printf(s, "%*s%-*s  %-25s\n",
++			   level * 3 + 2 + 105 * multi_node, "",
++			   30,
++			   clk_user->dev_id ? clk_user->dev_id : "deviceless",
++			   clk_user->con_id ? clk_user->con_id : "no_connection_id");
++
++		multi_node = 1;
++	}
++
++}
++
++static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
++				     int level)
++{
++	struct clk_core *child;
++
++	clk_summary_show_one(s, c, level);
++
++	hlist_for_each_entry(child, &c->children, child_node)
++		clk_summary_show_subtree(s, child, level + 1);
++}
++
++static int clk_summary_show(struct seq_file *s, void *data)
++{
++	struct clk_core *c;
++	struct hlist_head **lists = s->private;
++	int ret;
++
++	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
++	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
++	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
++
++	ret = clk_pm_runtime_get_all();
++	if (ret)
++		return ret;
++
++	clk_prepare_lock();
++
++	for (; *lists; lists++)
++		hlist_for_each_entry(c, *lists, child_node)
++			clk_summary_show_subtree(s, c, 0);
++
++	clk_prepare_unlock();
++	clk_pm_runtime_put_all();
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(clk_summary);
++
++static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
++{
++	int phase;
++	unsigned long min_rate, max_rate;
++
++	clk_core_get_boundaries(c, &min_rate, &max_rate);
++
++	/* This should be JSON format, i.e. elements separated with a comma */
++	seq_printf(s, "\"%s\": { ", c->name);
++	seq_printf(s, "\"enable_count\": %d,", c->enable_count);
++	seq_printf(s, "\"prepare_count\": %d,", c->prepare_count);
++	seq_printf(s, "\"protect_count\": %d,", c->protect_count);
++	seq_printf(s, "\"rate\": %lu,", clk_core_get_rate_recalc(c));
++	seq_printf(s, "\"min_rate\": %lu,", min_rate);
++	seq_printf(s, "\"max_rate\": %lu,", max_rate);
++	seq_printf(s, "\"accuracy\": %lu,", clk_core_get_accuracy_recalc(c));
++	phase = clk_core_get_phase(c);
++	if (phase >= 0)
++		seq_printf(s, "\"phase\": %d,", phase);
++	seq_printf(s, "\"duty_cycle\": %u",
++		   clk_core_get_scaled_duty_cycle(c, 100000));
++}
++
++static void clk_dump_subtree(struct seq_file *s, struct clk_core *c, int level)
++{
++	struct clk_core *child;
++
++	clk_dump_one(s, c, level);
++
++	hlist_for_each_entry(child, &c->children, child_node) {
++		seq_putc(s, ',');
++		clk_dump_subtree(s, child, level + 1);
++	}
++
++	seq_putc(s, '}');
++}
++
++static int clk_dump_show(struct seq_file *s, void *data)
++{
++	struct clk_core *c;
++	bool first_node = true;
++	struct hlist_head **lists = s->private;
++	int ret;
++
++	ret = clk_pm_runtime_get_all();
++	if (ret)
++		return ret;
++
++	seq_putc(s, '{');
++
++	clk_prepare_lock();
++
++	for (; *lists; lists++) {
++		hlist_for_each_entry(c, *lists, child_node) {
++			if (!first_node)
++				seq_putc(s, ',');
++			first_node = false;
++			clk_dump_subtree(s, c, 0);
++		}
++	}
++
++	clk_prepare_unlock();
++	clk_pm_runtime_put_all();
++
++	seq_puts(s, "}\n");
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(clk_dump);
++
++#undef CLOCK_ALLOW_WRITE_DEBUGFS
++#ifdef CLOCK_ALLOW_WRITE_DEBUGFS
++/*
++ * This can be dangerous, therefore don't provide any real compile time
++ * configuration option for this feature.
++ * People who want to use this will need to modify the source code directly.
++ */
++static int clk_rate_set(void *data, u64 val)
++{
++	struct clk_core *core = data;
++	int ret;
++
++	clk_prepare_lock();
++	ret = clk_core_set_rate_nolock(core, val);
++	clk_prepare_unlock();
++
++	return ret;
++}
++
++#define clk_rate_mode	0644
++
++static int clk_phase_set(void *data, u64 val)
++{
++	struct clk_core *core = data;
++	int degrees = do_div(val, 360);
++	int ret;
++
++	clk_prepare_lock();
++	ret = clk_core_set_phase_nolock(core, degrees);
++	clk_prepare_unlock();
++
++	return ret;
++}
++
++#define clk_phase_mode	0644
++
++static int clk_prepare_enable_set(void *data, u64 val)
++{
++	struct clk_core *core = data;
++	int ret = 0;
++
++	if (val)
++		ret = clk_prepare_enable(core->hw->clk);
++	else
++		clk_disable_unprepare(core->hw->clk);
++
++	return ret;
++}
++
++static int clk_prepare_enable_get(void *data, u64 *val)
++{
++	struct clk_core *core = data;
++
++	*val = core->enable_count && core->prepare_count;
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(clk_prepare_enable_fops, clk_prepare_enable_get,
++			 clk_prepare_enable_set, "%llu\n");
++
++#else
++#define clk_rate_set	NULL
++#define clk_rate_mode	0444
++
++#define clk_phase_set	NULL
++#define clk_phase_mode	0644
++#endif
++
++static int clk_rate_get(void *data, u64 *val)
++{
++	struct clk_core *core = data;
++
++	clk_prepare_lock();
++	*val = clk_core_get_rate_recalc(core);
++	clk_prepare_unlock();
++
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(clk_rate_fops, clk_rate_get, clk_rate_set, "%llu\n");
++
++static int clk_phase_get(void *data, u64 *val)
++{
++	struct clk_core *core = data;
++
++	*val = core->phase;
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(clk_phase_fops, clk_phase_get, clk_phase_set, "%llu\n");
++
++static const struct {
++	unsigned long flag;
++	const char *name;
++} clk_flags[] = {
++#define ENTRY(f) { f, #f }
++	ENTRY(CLK_SET_RATE_GATE),
++	ENTRY(CLK_SET_PARENT_GATE),
++	ENTRY(CLK_SET_RATE_PARENT),
++	ENTRY(CLK_IGNORE_UNUSED),
++	ENTRY(CLK_GET_RATE_NOCACHE),
++	ENTRY(CLK_SET_RATE_NO_REPARENT),
++	ENTRY(CLK_GET_ACCURACY_NOCACHE),
++	ENTRY(CLK_RECALC_NEW_RATES),
++	ENTRY(CLK_SET_RATE_UNGATE),
++	ENTRY(CLK_IS_CRITICAL),
++	ENTRY(CLK_OPS_PARENT_ENABLE),
++	ENTRY(CLK_DUTY_CYCLE_PARENT),
++#undef ENTRY
++};
++
++static int clk_flags_show(struct seq_file *s, void *data)
++{
++	struct clk_core *core = s->private;
++	unsigned long flags = core->flags;
++	unsigned int i;
++
++	for (i = 0; flags && i < ARRAY_SIZE(clk_flags); i++) {
++		if (flags & clk_flags[i].flag) {
++			seq_printf(s, "%s\n", clk_flags[i].name);
++			flags &= ~clk_flags[i].flag;
++		}
++	}
++	if (flags) {
++		/* Unknown flags */
++		seq_printf(s, "0x%lx\n", flags);
++	}
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(clk_flags);
++
++static void possible_parent_show(struct seq_file *s, struct clk_core *core,
++				 unsigned int i, char terminator)
++{
++	struct clk_core *parent;
++	const char *name = NULL;
++
++	/*
++	 * Go through the following options to fetch a parent's name.
++	 *
++	 * 1. Fetch the registered parent clock and use its name
++	 * 2. Use the global (fallback) name if specified
++	 * 3. Use the local fw_name if provided
++	 * 4. Fetch parent clock's clock-output-name if DT index was set
++	 *
++	 * This may still fail in some cases, such as when the parent is
++	 * specified directly via a struct clk_hw pointer, but it isn't
++	 * registered (yet).
++	 */
++	parent = clk_core_get_parent_by_index(core, i);
++	if (parent) {
++		seq_puts(s, parent->name);
++	} else if (core->parents[i].name) {
++		seq_puts(s, core->parents[i].name);
++	} else if (core->parents[i].fw_name) {
++		seq_printf(s, "<%s>(fw)", core->parents[i].fw_name);
++	} else {
++		if (core->parents[i].index >= 0)
++			name = of_clk_get_parent_name(core->of_node, core->parents[i].index);
++		if (!name)
++			name = "(missing)";
++
++		seq_puts(s, name);
++	}
++
++	seq_putc(s, terminator);
++}
++
++static int possible_parents_show(struct seq_file *s, void *data)
++{
++	struct clk_core *core = s->private;
++	int i;
++
++	for (i = 0; i < core->num_parents - 1; i++)
++		possible_parent_show(s, core, i, ' ');
++
++	possible_parent_show(s, core, i, '\n');
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(possible_parents);
++
++static int current_parent_show(struct seq_file *s, void *data)
++{
++	struct clk_core *core = s->private;
++
++	if (core->parent)
++		seq_printf(s, "%s\n", core->parent->name);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(current_parent);
++
++#ifdef CLOCK_ALLOW_WRITE_DEBUGFS
++static ssize_t current_parent_write(struct file *file, const char __user *ubuf,
++				    size_t count, loff_t *ppos)
++{
++	struct seq_file *s = file->private_data;
++	struct clk_core *core = s->private;
++	struct clk_core *parent;
++	u8 idx;
++	int err;
++
++	err = kstrtou8_from_user(ubuf, count, 0, &idx);
++	if (err < 0)
++		return err;
++
++	parent = clk_core_get_parent_by_index(core, idx);
++	if (!parent)
++		return -ENOENT;
++
++	clk_prepare_lock();
++	err = clk_core_set_parent_nolock(core, parent);
++	clk_prepare_unlock();
++	if (err)
++		return err;
++
++	return count;
++}
++
++static const struct file_operations current_parent_rw_fops = {
++	.open		= current_parent_open,
++	.write		= current_parent_write,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
++};
++#endif
++
++static int clk_duty_cycle_show(struct seq_file *s, void *data)
++{
++	struct clk_core *core = s->private;
++	struct clk_duty *duty = &core->duty;
++
++	seq_printf(s, "%u/%u\n", duty->num, duty->den);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(clk_duty_cycle);
++
++static int clk_min_rate_show(struct seq_file *s, void *data)
++{
++	struct clk_core *core = s->private;
++	unsigned long min_rate, max_rate;
++
++	clk_prepare_lock();
++	clk_core_get_boundaries(core, &min_rate, &max_rate);
++	clk_prepare_unlock();
++	seq_printf(s, "%lu\n", min_rate);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(clk_min_rate);
++
++static int clk_max_rate_show(struct seq_file *s, void *data)
++{
++	struct clk_core *core = s->private;
++	unsigned long min_rate, max_rate;
++
++	clk_prepare_lock();
++	clk_core_get_boundaries(core, &min_rate, &max_rate);
++	clk_prepare_unlock();
++	seq_printf(s, "%lu\n", max_rate);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(clk_max_rate);
++
++static void clk_debug_create_one(struct clk_core *core, struct dentry *pdentry)
++{
++	struct dentry *root;
++
++	if (!core || !pdentry)
++		return;
++
++	root = debugfs_create_dir(core->name, pdentry);
++	core->dentry = root;
++
++	debugfs_create_file("clk_rate", clk_rate_mode, root, core,
++			    &clk_rate_fops);
++	debugfs_create_file("clk_min_rate", 0444, root, core, &clk_min_rate_fops);
++	debugfs_create_file("clk_max_rate", 0444, root, core, &clk_max_rate_fops);
++	debugfs_create_ulong("clk_accuracy", 0444, root, &core->accuracy);
++	debugfs_create_file("clk_phase", clk_phase_mode, root, core,
++			    &clk_phase_fops);
++	debugfs_create_file("clk_flags", 0444, root, core, &clk_flags_fops);
++	debugfs_create_u32("clk_prepare_count", 0444, root, &core->prepare_count);
++	debugfs_create_u32("clk_enable_count", 0444, root, &core->enable_count);
++	debugfs_create_u32("clk_protect_count", 0444, root, &core->protect_count);
++	debugfs_create_u32("clk_notifier_count", 0444, root, &core->notifier_count);
++	debugfs_create_file("clk_duty_cycle", 0444, root, core,
++			    &clk_duty_cycle_fops);
++#ifdef CLOCK_ALLOW_WRITE_DEBUGFS
++	debugfs_create_file("clk_prepare_enable", 0644, root, core,
++			    &clk_prepare_enable_fops);
++
++	if (core->num_parents > 1)
++		debugfs_create_file("clk_parent", 0644, root, core,
++				    &current_parent_rw_fops);
++	else
++#endif
++	if (core->num_parents > 0)
++		debugfs_create_file("clk_parent", 0444, root, core,
++				    &current_parent_fops);
++
++	if (core->num_parents > 1)
++		debugfs_create_file("clk_possible_parents", 0444, root, core,
++				    &possible_parents_fops);
++
++	if (core->ops->debug_init)
++		core->ops->debug_init(core->hw, core->dentry);
++}
++
++/**
++ * clk_debug_register - add a clk node to the debugfs clk directory
++ * @core: the clk being added to the debugfs clk directory
++ *
++ * Dynamically adds a clk to the debugfs clk directory if debugfs has been
++ * initialized.  Otherwise it bails out early since the debugfs clk directory
++ * will be created lazily by clk_debug_init as part of a late_initcall.
++ */
++static void clk_debug_register(struct clk_core *core)
++{
++	mutex_lock(&clk_debug_lock);
++	hlist_add_head(&core->debug_node, &clk_debug_list);
++	if (inited)
++		clk_debug_create_one(core, rootdir);
++	mutex_unlock(&clk_debug_lock);
++}
++
++ /**
++ * clk_debug_unregister - remove a clk node from the debugfs clk directory
++ * @core: the clk being removed from the debugfs clk directory
++ *
++ * Dynamically removes a clk and all its child nodes from the
++ * debugfs clk directory if clk->dentry points to debugfs created by
++ * clk_debug_register in __clk_core_init.
++ */
++static void clk_debug_unregister(struct clk_core *core)
++{
++	mutex_lock(&clk_debug_lock);
++	hlist_del_init(&core->debug_node);
++	debugfs_remove_recursive(core->dentry);
++	core->dentry = NULL;
++	mutex_unlock(&clk_debug_lock);
++}
++
++/**
++ * clk_debug_init - lazily populate the debugfs clk directory
++ *
++ * clks are often initialized very early during boot before memory can be
++ * dynamically allocated and well before debugfs is setup. This function
++ * populates the debugfs clk directory once at boot-time when we know that
++ * debugfs is setup. It should only be called once at boot-time, all other clks
++ * added dynamically will be done so with clk_debug_register.
++ */
++static int __init clk_debug_init(void)
++{
++	struct clk_core *core;
++
++#ifdef CLOCK_ALLOW_WRITE_DEBUGFS
++	pr_warn("\n");
++	pr_warn("********************************************************************\n");
++	pr_warn("**     NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE           **\n");
++	pr_warn("**                                                                **\n");
++	pr_warn("**  WRITEABLE clk DebugFS SUPPORT HAS BEEN ENABLED IN THIS KERNEL **\n");
++	pr_warn("**                                                                **\n");
++	pr_warn("** This means that this kernel is built to expose clk operations  **\n");
++	pr_warn("** such as parent or rate setting, enabling, disabling, etc.      **\n");
++	pr_warn("** to userspace, which may compromise security on your system.    **\n");
++	pr_warn("**                                                                **\n");
++	pr_warn("** If you see this message and you are not debugging the          **\n");
++	pr_warn("** kernel, report this immediately to your vendor!                **\n");
++	pr_warn("**                                                                **\n");
++	pr_warn("**     NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE           **\n");
++	pr_warn("********************************************************************\n");
++#endif
++
++	rootdir = debugfs_create_dir("clk", NULL);
++
++	debugfs_create_file("clk_summary", 0444, rootdir, &all_lists,
++			    &clk_summary_fops);
++	debugfs_create_file("clk_dump", 0444, rootdir, &all_lists,
++			    &clk_dump_fops);
++	debugfs_create_file("clk_orphan_summary", 0444, rootdir, &orphan_list,
++			    &clk_summary_fops);
++	debugfs_create_file("clk_orphan_dump", 0444, rootdir, &orphan_list,
++			    &clk_dump_fops);
++
++	mutex_lock(&clk_debug_lock);
++	hlist_for_each_entry(core, &clk_debug_list, debug_node)
++		clk_debug_create_one(core, rootdir);
++
++	inited = 1;
++	mutex_unlock(&clk_debug_lock);
++
++	return 0;
++}
++late_initcall(clk_debug_init);
++#else
++static inline void clk_debug_register(struct clk_core *core) { }
++static inline void clk_debug_unregister(struct clk_core *core)
++{
++}
++#endif
++
++static void clk_core_reparent_orphans_nolock(void)
++{
++	struct clk_core *orphan;
++	struct hlist_node *tmp2;
++
++	/*
++	 * walk the list of orphan clocks and reparent any that newly finds a
++	 * parent.
++	 */
++	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
++		struct clk_core *parent = __clk_init_parent(orphan);
++
++		/*
++		 * We need to use __clk_set_parent_before() and _after() to
++		 * properly migrate any prepare/enable count of the orphan
++		 * clock. This is important for CLK_IS_CRITICAL clocks, which
++		 * are enabled during init but might not have a parent yet.
++		 */
++		if (parent) {
++			/* update the clk tree topology */
++			__clk_set_parent_before(orphan, parent);
++			__clk_set_parent_after(orphan, parent, NULL);
++			__clk_recalc_accuracies(orphan);
++			__clk_recalc_rates(orphan, true, 0);
++
++			/*
++			 * __clk_init_parent() will set the initial req_rate to
++			 * 0 if the clock doesn't have clk_ops::recalc_rate and
++			 * is an orphan when it's registered.
++			 *
++			 * 'req_rate' is used by clk_set_rate_range() and
++			 * clk_put() to trigger a clk_set_rate() call whenever
++			 * the boundaries are modified. Let's make sure
++			 * 'req_rate' is set to something non-zero so that
++			 * clk_set_rate_range() doesn't drop the frequency.
++			 */
++			orphan->req_rate = orphan->rate;
++		}
++	}
++}
++
++/**
++ * __clk_core_init - initialize the data structures in a struct clk_core
++ * @core:	clk_core being initialized
++ *
++ * Initializes the lists in struct clk_core, queries the hardware for the
++ * parent and rate and sets them both.
++ */
++static int __clk_core_init(struct clk_core *core)
++{
++	int ret;
++	struct clk_core *parent;
++	unsigned long rate;
++	int phase;
++
++	clk_prepare_lock();
++
++	/*
++	 * Set hw->core after grabbing the prepare_lock to synchronize with
++	 * callers of clk_core_fill_parent_index() where we treat hw->core
++	 * being NULL as the clk not being registered yet. This is crucial so
++	 * that clks aren't parented until their parent is fully registered.
++	 */
++	core->hw->core = core;
++
++	ret = clk_pm_runtime_get(core);
++	if (ret)
++		goto unlock;
++
++	/* check to see if a clock with this name is already registered */
++	if (clk_core_lookup(core->name)) {
++		pr_debug("%s: clk %s already initialized\n",
++				__func__, core->name);
++		ret = -EEXIST;
++		goto out;
++	}
++
++	/* check that clk_ops are sane.  See Documentation/driver-api/clk.rst */
++	if (core->ops->set_rate &&
++	    !((core->ops->round_rate || core->ops->determine_rate) &&
++	      core->ops->recalc_rate)) {
++		pr_err("%s: %s must implement .round_rate or .determine_rate in addition to .recalc_rate\n",
++		       __func__, core->name);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (core->ops->set_parent && !core->ops->get_parent) {
++		pr_err("%s: %s must implement .get_parent & .set_parent\n",
++		       __func__, core->name);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (core->ops->set_parent && !core->ops->determine_rate) {
++		pr_err("%s: %s must implement .set_parent & .determine_rate\n",
++			__func__, core->name);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (core->num_parents > 1 && !core->ops->get_parent) {
++		pr_err("%s: %s must implement .get_parent as it has multi parents\n",
++		       __func__, core->name);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (core->ops->set_rate_and_parent &&
++			!(core->ops->set_parent && core->ops->set_rate)) {
++		pr_err("%s: %s must implement .set_parent & .set_rate\n",
++				__func__, core->name);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/*
++	 * optional platform-specific magic
++	 *
++	 * The .init callback is not used by any of the basic clock types, but
++	 * exists for weird hardware that must perform initialization magic for
++	 * CCF to get an accurate view of clock for any other callbacks. It may
++	 * also be used needs to perform dynamic allocations. Such allocation
++	 * must be freed in the terminate() callback.
++	 * This callback shall not be used to initialize the parameters state,
++	 * such as rate, parent, etc ...
++	 *
++	 * If it exist, this callback should called before any other callback of
++	 * the clock
++	 */
++	if (core->ops->init) {
++		ret = core->ops->init(core->hw);
++		if (ret)
++			goto out;
++	}
++
++	parent = core->parent = __clk_init_parent(core);
++
++	/*
++	 * Populate core->parent if parent has already been clk_core_init'd. If
++	 * parent has not yet been clk_core_init'd then place clk in the orphan
++	 * list.  If clk doesn't have any parents then place it in the root
++	 * clk list.
++	 *
++	 * Every time a new clk is clk_init'd then we walk the list of orphan
++	 * clocks and re-parent any that are children of the clock currently
++	 * being clk_init'd.
++	 */
++	if (parent) {
++		hlist_add_head(&core->child_node, &parent->children);
++		core->orphan = parent->orphan;
++	} else if (!core->num_parents) {
++		hlist_add_head(&core->child_node, &clk_root_list);
++		core->orphan = false;
++	} else {
++		hlist_add_head(&core->child_node, &clk_orphan_list);
++		core->orphan = true;
++	}
++	hash_add(clk_hashtable, &core->hashtable_node,
++		 full_name_hash(NULL, core->name, strlen(core->name)));
++
++	/*
++	 * Set clk's accuracy.  The preferred method is to use
++	 * .recalc_accuracy. For simple clocks and lazy developers the default
++	 * fallback is to use the parent's accuracy.  If a clock doesn't have a
++	 * parent (or is orphaned) then accuracy is set to zero (perfect
++	 * clock).
++	 */
++	if (core->ops->recalc_accuracy)
++		core->accuracy = core->ops->recalc_accuracy(core->hw,
++					clk_core_get_accuracy_no_lock(parent));
++	else if (parent)
++		core->accuracy = parent->accuracy;
++	else
++		core->accuracy = 0;
++
++	/*
++	 * Set clk's phase by clk_core_get_phase() caching the phase.
++	 * Since a phase is by definition relative to its parent, just
++	 * query the current clock phase, or just assume it's in phase.
++	 */
++	phase = clk_core_get_phase(core);
++	if (phase < 0) {
++		ret = phase;
++		pr_warn("%s: Failed to get phase for clk '%s'\n", __func__,
++			core->name);
++		goto out;
++	}
++
++	/*
++	 * Set clk's duty cycle.
++	 */
++	clk_core_update_duty_cycle_nolock(core);
++
++	/*
++	 * Set clk's rate.  The preferred method is to use .recalc_rate.  For
++	 * simple clocks and lazy developers the default fallback is to use the
++	 * parent's rate.  If a clock doesn't have a parent (or is orphaned)
++	 * then rate is set to zero.
++	 */
++	if (core->ops->recalc_rate)
++		rate = core->ops->recalc_rate(core->hw,
++				clk_core_get_rate_nolock(parent));
++	else if (parent)
++		rate = parent->rate;
++	else
++		rate = 0;
++	core->rate = core->req_rate = rate;
++
++	/*
++	 * Enable CLK_IS_CRITICAL clocks so newly added critical clocks
++	 * don't get accidentally disabled when walking the orphan tree and
++	 * reparenting clocks
++	 */
++	if (core->flags & CLK_IS_CRITICAL) {
++		ret = clk_core_prepare(core);
++		if (ret) {
++			pr_warn("%s: critical clk '%s' failed to prepare\n",
++			       __func__, core->name);
++			goto out;
++		}
++
++		ret = clk_core_enable_lock(core);
++		if (ret) {
++			pr_warn("%s: critical clk '%s' failed to enable\n",
++			       __func__, core->name);
++			clk_core_unprepare(core);
++			goto out;
++		}
++	}
++
++	clk_core_reparent_orphans_nolock();
++out:
++	clk_pm_runtime_put(core);
++unlock:
++	if (ret) {
++		hash_del(&core->hashtable_node);
++		hlist_del_init(&core->child_node);
++		core->hw->core = NULL;
++	}
++
++	clk_prepare_unlock();
++
++	if (!ret)
++		clk_debug_register(core);
++
++	return ret;
++}
++
++/**
++ * clk_core_link_consumer - Add a clk consumer to the list of consumers in a clk_core
++ * @core: clk to add consumer to
++ * @clk: consumer to link to a clk
++ */
++static void clk_core_link_consumer(struct clk_core *core, struct clk *clk)
++{
++	clk_prepare_lock();
++	hlist_add_head(&clk->clks_node, &core->clks);
++	clk_prepare_unlock();
++}
++
++/**
++ * clk_core_unlink_consumer - Remove a clk consumer from the list of consumers in a clk_core
++ * @clk: consumer to unlink
++ */
++static void clk_core_unlink_consumer(struct clk *clk)
++{
++	lockdep_assert_held(&prepare_lock);
++	hlist_del(&clk->clks_node);
++}
++
++/**
++ * alloc_clk - Allocate a clk consumer, but leave it unlinked to the clk_core
++ * @core: clk to allocate a consumer for
++ * @dev_id: string describing device name
++ * @con_id: connection ID string on device
++ *
++ * Returns: clk consumer left unlinked from the consumer list
++ */
++static struct clk *alloc_clk(struct clk_core *core, const char *dev_id,
++			     const char *con_id)
++{
++	struct clk *clk;
++
++	clk = kzalloc(sizeof(*clk), GFP_KERNEL);
++	if (!clk)
++		return ERR_PTR(-ENOMEM);
++
++	clk->core = core;
++	clk->dev_id = dev_id;
++	clk->con_id = kstrdup_const(con_id, GFP_KERNEL);
++	clk->max_rate = ULONG_MAX;
++
++	return clk;
++}
++
++/**
++ * free_clk - Free a clk consumer
++ * @clk: clk consumer to free
++ *
++ * Note, this assumes the clk has been unlinked from the clk_core consumer
++ * list.
++ */
++static void free_clk(struct clk *clk)
++{
++	kfree_const(clk->con_id);
++	kfree(clk);
++}
++
++/**
++ * clk_hw_create_clk: Allocate and link a clk consumer to a clk_core given
++ * a clk_hw
++ * @dev: clk consumer device
++ * @hw: clk_hw associated with the clk being consumed
++ * @dev_id: string describing device name
++ * @con_id: connection ID string on device
++ *
++ * This is the main function used to create a clk pointer for use by clk
++ * consumers. It connects a consumer to the clk_core and clk_hw structures
++ * used by the framework and clk provider respectively.
++ */
++struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
++			      const char *dev_id, const char *con_id)
++{
++	struct clk *clk;
++	struct clk_core *core;
++
++	/* This is to allow this function to be chained to others */
++	if (IS_ERR_OR_NULL(hw))
++		return ERR_CAST(hw);
++
++	core = hw->core;
++	clk = alloc_clk(core, dev_id, con_id);
++	if (IS_ERR(clk))
++		return clk;
++	clk->dev = dev;
++
++	if (!try_module_get(core->owner)) {
++		free_clk(clk);
++		return ERR_PTR(-ENOENT);
++	}
++
++	kref_get(&core->ref);
++	clk_core_link_consumer(core, clk);
++
++	return clk;
++}
++
++/**
++ * clk_hw_get_clk - get clk consumer given an clk_hw
++ * @hw: clk_hw associated with the clk being consumed
++ * @con_id: connection ID string on device
++ *
++ * Returns: new clk consumer
++ * This is the function to be used by providers which need
++ * to get a consumer clk and act on the clock element
++ * Calls to this function must be balanced with calls clk_put()
++ */
++struct clk *clk_hw_get_clk(struct clk_hw *hw, const char *con_id)
++{
++	struct device *dev = hw->core->dev;
++	const char *name = dev ? dev_name(dev) : NULL;
++
++	return clk_hw_create_clk(dev, hw, name, con_id);
++}
++EXPORT_SYMBOL(clk_hw_get_clk);
++
++static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
++{
++	const char *dst;
++
++	if (!src) {
++		if (must_exist)
++			return -EINVAL;
++		return 0;
++	}
++
++	*dst_p = dst = kstrdup_const(src, GFP_KERNEL);
++	if (!dst)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static int clk_core_populate_parent_map(struct clk_core *core,
++					const struct clk_init_data *init)
++{
++	u8 num_parents = init->num_parents;
++	const char * const *parent_names = init->parent_names;
++	const struct clk_hw **parent_hws = init->parent_hws;
++	const struct clk_parent_data *parent_data = init->parent_data;
++	int i, ret = 0;
++	struct clk_parent_map *parents, *parent;
++
++	if (!num_parents)
++		return 0;
++
++	/*
++	 * Avoid unnecessary string look-ups of clk_core's possible parents by
++	 * having a cache of names/clk_hw pointers to clk_core pointers.
++	 */
++	parents = kcalloc(num_parents, sizeof(*parents), GFP_KERNEL);
++	core->parents = parents;
++	if (!parents)
++		return -ENOMEM;
++
++	/* Copy everything over because it might be __initdata */
++	for (i = 0, parent = parents; i < num_parents; i++, parent++) {
++		parent->index = -1;
++		if (parent_names) {
++			/* throw a WARN if any entries are NULL */
++			WARN(!parent_names[i],
++				"%s: invalid NULL in %s's .parent_names\n",
++				__func__, core->name);
++			ret = clk_cpy_name(&parent->name, parent_names[i],
++					   true);
++		} else if (parent_data) {
++			parent->hw = parent_data[i].hw;
++			parent->index = parent_data[i].index;
++			ret = clk_cpy_name(&parent->fw_name,
++					   parent_data[i].fw_name, false);
++			if (!ret)
++				ret = clk_cpy_name(&parent->name,
++						   parent_data[i].name,
++						   false);
++		} else if (parent_hws) {
++			parent->hw = parent_hws[i];
++		} else {
++			ret = -EINVAL;
++			WARN(1, "Must specify parents if num_parents > 0\n");
++		}
++
++		if (ret) {
++			do {
++				kfree_const(parents[i].name);
++				kfree_const(parents[i].fw_name);
++			} while (--i >= 0);
++			kfree(parents);
++
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static void clk_core_free_parent_map(struct clk_core *core)
++{
++	int i = core->num_parents;
++
++	if (!core->num_parents)
++		return;
++
++	while (--i >= 0) {
++		kfree_const(core->parents[i].name);
++		kfree_const(core->parents[i].fw_name);
++	}
++
++	kfree(core->parents);
++}
++
++/* Free memory allocated for a struct clk_core */
++static void __clk_release(struct kref *ref)
++{
++	struct clk_core *core = container_of(ref, struct clk_core, ref);
++
++	if (core->rpm_enabled) {
++		mutex_lock(&clk_rpm_list_lock);
++		hlist_del(&core->rpm_node);
++		mutex_unlock(&clk_rpm_list_lock);
++	}
++
++	clk_core_free_parent_map(core);
++	kfree_const(core->name);
++	kfree(core);
++}
++
++static struct clk *
++__clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
++{
++	int ret;
++	struct clk_core *core;
++	const struct clk_init_data *init = hw->init;
++
++	/*
++	 * The init data is not supposed to be used outside of registration path.
++	 * Set it to NULL so that provider drivers can't use it either and so that
++	 * we catch use of hw->init early on in the core.
++	 */
++	hw->init = NULL;
++
++	core = kzalloc(sizeof(*core), GFP_KERNEL);
++	if (!core) {
++		ret = -ENOMEM;
++		goto fail_out;
++	}
++
++	kref_init(&core->ref);
++
++	core->name = kstrdup_const(init->name, GFP_KERNEL);
++	if (!core->name) {
++		ret = -ENOMEM;
++		goto fail_name;
++	}
++
++	if (WARN_ON(!init->ops)) {
++		ret = -EINVAL;
++		goto fail_ops;
++	}
++	core->ops = init->ops;
++
++	core->dev = dev;
++	clk_pm_runtime_init(core);
++	core->of_node = np;
++	if (dev && dev->driver)
++		core->owner = dev->driver->owner;
++	core->hw = hw;
++	core->flags = init->flags;
++	core->num_parents = init->num_parents;
++	core->min_rate = 0;
++	core->max_rate = ULONG_MAX;
++
++	ret = clk_core_populate_parent_map(core, init);
++	if (ret)
++		goto fail_parents;
++
++	INIT_HLIST_HEAD(&core->clks);
++
++	/*
++	 * Don't call clk_hw_create_clk() here because that would pin the
++	 * provider module to itself and prevent it from ever being removed.
++	 */
++	hw->clk = alloc_clk(core, NULL, NULL);
++	if (IS_ERR(hw->clk)) {
++		ret = PTR_ERR(hw->clk);
++		goto fail_create_clk;
++	}
++
++	clk_core_link_consumer(core, hw->clk);
++
++	ret = __clk_core_init(core);
++	if (!ret)
++		return hw->clk;
++
++	clk_prepare_lock();
++	clk_core_unlink_consumer(hw->clk);
++	clk_prepare_unlock();
++
++	free_clk(hw->clk);
++	hw->clk = NULL;
++
++fail_create_clk:
++fail_parents:
++fail_ops:
++fail_name:
++	kref_put(&core->ref, __clk_release);
++fail_out:
++	if (dev) {
++		dev_err_probe(dev, ret, "failed to register clk '%s' (%pS)\n",
++			      init->name, hw);
++	} else {
++		pr_err("%pOF: error %pe: failed to register clk '%s' (%pS)\n",
++		       np, ERR_PTR(ret), init->name, hw);
++	}
++	return ERR_PTR(ret);
++}
++
++/**
++ * dev_or_parent_of_node() - Get device node of @dev or @dev's parent
++ * @dev: Device to get device node of
++ *
++ * Return: device node pointer of @dev, or the device node pointer of
++ * @dev->parent if dev doesn't have a device node, or NULL if neither
++ * @dev or @dev->parent have a device node.
++ */
++static struct device_node *dev_or_parent_of_node(struct device *dev)
++{
++	struct device_node *np;
++
++	if (!dev)
++		return NULL;
++
++	np = dev_of_node(dev);
++	if (!np)
++		np = dev_of_node(dev->parent);
++
++	return np;
++}
++
++/**
++ * clk_register - allocate a new clock, register it and return an opaque cookie
++ * @dev: device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * clk_register is the *deprecated* interface for populating the clock tree with
++ * new clock nodes. Use clk_hw_register() instead.
++ *
++ * Returns: a pointer to the newly allocated struct clk which
++ * cannot be dereferenced by driver code but may be used in conjunction with the
++ * rest of the clock API.  In the event of an error clk_register will return an
++ * error code; drivers must test for an error code after calling clk_register.
++ */
++struct clk *clk_register(struct device *dev, struct clk_hw *hw)
++{
++	return __clk_register(dev, dev_or_parent_of_node(dev), hw);
++}
++EXPORT_SYMBOL_GPL(clk_register);
++
++/**
++ * clk_hw_register - register a clk_hw and return an error code
++ * @dev: device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * clk_hw_register is the primary interface for populating the clock tree with
++ * new clock nodes. It returns an integer equal to zero indicating success or
++ * less than zero indicating failure. Drivers must test for an error code after
++ * calling clk_hw_register().
++ */
++int clk_hw_register(struct device *dev, struct clk_hw *hw)
++{
++	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_or_parent_of_node(dev),
++			       hw));
++}
++EXPORT_SYMBOL_GPL(clk_hw_register);
++
++/*
++ * of_clk_hw_register - register a clk_hw and return an error code
++ * @node: device_node of device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * of_clk_hw_register() is the primary interface for populating the clock tree
++ * with new clock nodes when a struct device is not available, but a struct
++ * device_node is. It returns an integer equal to zero indicating success or
++ * less than zero indicating failure. Drivers must test for an error code after
++ * calling of_clk_hw_register().
++ */
++int of_clk_hw_register(struct device_node *node, struct clk_hw *hw)
++{
++	return PTR_ERR_OR_ZERO(__clk_register(NULL, node, hw));
++}
++EXPORT_SYMBOL_GPL(of_clk_hw_register);
++
++/*
++ * Empty clk_ops for unregistered clocks. These are used temporarily
++ * after clk_unregister() was called on a clock and until last clock
++ * consumer calls clk_put() and the struct clk object is freed.
++ */
++static int clk_nodrv_prepare_enable(struct clk_hw *hw)
++{
++	return -ENXIO;
++}
++
++static void clk_nodrv_disable_unprepare(struct clk_hw *hw)
++{
++	WARN_ON_ONCE(1);
++}
++
++static int clk_nodrv_set_rate(struct clk_hw *hw, unsigned long rate,
++					unsigned long parent_rate)
++{
++	return -ENXIO;
++}
++
++static int clk_nodrv_set_parent(struct clk_hw *hw, u8 index)
++{
++	return -ENXIO;
++}
++
++static int clk_nodrv_determine_rate(struct clk_hw *hw,
++				    struct clk_rate_request *req)
++{
++	return -ENXIO;
++}
++
++static const struct clk_ops clk_nodrv_ops = {
++	.enable		= clk_nodrv_prepare_enable,
++	.disable	= clk_nodrv_disable_unprepare,
++	.prepare	= clk_nodrv_prepare_enable,
++	.unprepare	= clk_nodrv_disable_unprepare,
++	.determine_rate	= clk_nodrv_determine_rate,
++	.set_rate	= clk_nodrv_set_rate,
++	.set_parent	= clk_nodrv_set_parent,
++};
++
++static void clk_core_evict_parent_cache_subtree(struct clk_core *root,
++						const struct clk_core *target)
++{
++	int i;
++	struct clk_core *child;
++
++	for (i = 0; i < root->num_parents; i++)
++		if (root->parents[i].core == target)
++			root->parents[i].core = NULL;
++
++	hlist_for_each_entry(child, &root->children, child_node)
++		clk_core_evict_parent_cache_subtree(child, target);
++}
++
++/* Remove this clk from all parent caches */
++static void clk_core_evict_parent_cache(struct clk_core *core)
++{
++	const struct hlist_head **lists;
++	struct clk_core *root;
++
++	lockdep_assert_held(&prepare_lock);
++
++	for (lists = all_lists; *lists; lists++)
++		hlist_for_each_entry(root, *lists, child_node)
++			clk_core_evict_parent_cache_subtree(root, core);
++
++}
++
++/**
++ * clk_unregister - unregister a currently registered clock
++ * @clk: clock to unregister
++ */
++void clk_unregister(struct clk *clk)
++{
++	unsigned long flags;
++	const struct clk_ops *ops;
++
++	if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
++		return;
++
++	clk_debug_unregister(clk->core);
++
++	clk_prepare_lock();
++
++	ops = clk->core->ops;
++	if (ops == &clk_nodrv_ops) {
++		pr_err("%s: unregistered clock: %s\n", __func__,
++		       clk->core->name);
++		clk_prepare_unlock();
++		return;
++	}
++	/*
++	 * Assign empty clock ops for consumers that might still hold
++	 * a reference to this clock.
++	 */
++	flags = clk_enable_lock();
++	clk->core->ops = &clk_nodrv_ops;
++	clk_enable_unlock(flags);
++
++	if (ops->terminate)
++		ops->terminate(clk->core->hw);
++
++	if (!hlist_empty(&clk->core->children)) {
++		struct clk_core *child;
++		struct hlist_node *t;
++
++		/* Reparent all children to the orphan list. */
++		hlist_for_each_entry_safe(child, t, &clk->core->children,
++					  child_node)
++			clk_core_set_parent_nolock(child, NULL);
++	}
++
++	clk_core_evict_parent_cache(clk->core);
++
++	hash_del(&clk->core->hashtable_node);
++	hlist_del_init(&clk->core->child_node);
++
++	if (clk->core->prepare_count)
++		pr_warn("%s: unregistering prepared clock: %s\n",
++					__func__, clk->core->name);
++
++	if (clk->core->protect_count)
++		pr_warn("%s: unregistering protected clock: %s\n",
++					__func__, clk->core->name);
++	clk_prepare_unlock();
++
++	kref_put(&clk->core->ref, __clk_release);
++	free_clk(clk);
++}
++EXPORT_SYMBOL_GPL(clk_unregister);
++
++/**
++ * clk_hw_unregister - unregister a currently registered clk_hw
++ * @hw: hardware-specific clock data to unregister
++ */
++void clk_hw_unregister(struct clk_hw *hw)
++{
++	clk_unregister(hw->clk);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister);
++
++static void devm_clk_unregister_cb(struct device *dev, void *res)
++{
++	clk_unregister(*(struct clk **)res);
++}
++
++static void devm_clk_hw_unregister_cb(struct device *dev, void *res)
++{
++	clk_hw_unregister(*(struct clk_hw **)res);
++}
++
++/**
++ * devm_clk_register - resource managed clk_register()
++ * @dev: device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * Managed clk_register(). This function is *deprecated*, use devm_clk_hw_register() instead.
++ *
++ * Clocks returned from this function are automatically clk_unregister()ed on
++ * driver detach. See clk_register() for more information.
++ */
++struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw)
++{
++	struct clk *clk;
++	struct clk **clkp;
++
++	clkp = devres_alloc(devm_clk_unregister_cb, sizeof(*clkp), GFP_KERNEL);
++	if (!clkp)
++		return ERR_PTR(-ENOMEM);
++
++	clk = clk_register(dev, hw);
++	if (!IS_ERR(clk)) {
++		*clkp = clk;
++		devres_add(dev, clkp);
++	} else {
++		devres_free(clkp);
++	}
++
++	return clk;
++}
++EXPORT_SYMBOL_GPL(devm_clk_register);
++
++/**
++ * devm_clk_hw_register - resource managed clk_hw_register()
++ * @dev: device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * Managed clk_hw_register(). Clocks registered by this function are
++ * automatically clk_hw_unregister()ed on driver detach. See clk_hw_register()
++ * for more information.
++ */
++int devm_clk_hw_register(struct device *dev, struct clk_hw *hw)
++{
++	struct clk_hw **hwp;
++	int ret;
++
++	hwp = devres_alloc(devm_clk_hw_unregister_cb, sizeof(*hwp), GFP_KERNEL);
++	if (!hwp)
++		return -ENOMEM;
++
++	ret = clk_hw_register(dev, hw);
++	if (!ret) {
++		*hwp = hw;
++		devres_add(dev, hwp);
++	} else {
++		devres_free(hwp);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_register);
++
++static void devm_clk_release(struct device *dev, void *res)
++{
++	clk_put(*(struct clk **)res);
++}
++
++/**
++ * devm_clk_hw_get_clk - resource managed clk_hw_get_clk()
++ * @dev: device that is registering this clock
++ * @hw: clk_hw associated with the clk being consumed
++ * @con_id: connection ID string on device
++ *
++ * Managed clk_hw_get_clk(). Clocks got with this function are
++ * automatically clk_put() on driver detach. See clk_put()
++ * for more information.
++ */
++struct clk *devm_clk_hw_get_clk(struct device *dev, struct clk_hw *hw,
++				const char *con_id)
++{
++	struct clk *clk;
++	struct clk **clkp;
++
++	/* This should not happen because it would mean we have drivers
++	 * passing around clk_hw pointers instead of having the caller use
++	 * proper clk_get() style APIs
++	 */
++	WARN_ON_ONCE(dev != hw->core->dev);
++
++	clkp = devres_alloc(devm_clk_release, sizeof(*clkp), GFP_KERNEL);
++	if (!clkp)
++		return ERR_PTR(-ENOMEM);
++
++	clk = clk_hw_get_clk(hw, con_id);
++	if (!IS_ERR(clk)) {
++		*clkp = clk;
++		devres_add(dev, clkp);
++	} else {
++		devres_free(clkp);
++	}
++
++	return clk;
++}
++EXPORT_SYMBOL_GPL(devm_clk_hw_get_clk);
++
++/*
++ * clkdev helpers
++ */
++
++void __clk_put(struct clk *clk)
++{
++	struct module *owner;
++
++	if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
++		return;
++
++	clk_prepare_lock();
++
++	/*
++	 * Before calling clk_put, all calls to clk_rate_exclusive_get() from a
++	 * given user should be balanced with calls to clk_rate_exclusive_put()
++	 * and by that same consumer
++	 */
++	if (WARN_ON(clk->exclusive_count)) {
++		/* We voiced our concern, let's sanitize the situation */
++		clk->core->protect_count -= (clk->exclusive_count - 1);
++		clk_core_rate_unprotect(clk->core);
++		clk->exclusive_count = 0;
++	}
++
++	clk_core_unlink_consumer(clk);
++
++	/* If we had any boundaries on that clock, let's drop them. */
++	if (clk->min_rate > 0 || clk->max_rate < ULONG_MAX)
++		clk_set_rate_range_nolock(clk, 0, ULONG_MAX);
++
++	clk_prepare_unlock();
++
++	owner = clk->core->owner;
++	kref_put(&clk->core->ref, __clk_release);
++	module_put(owner);
++	free_clk(clk);
++}
++
++/***        clk rate change notifiers        ***/
++
++/**
++ * clk_notifier_register - add a clk rate change notifier
++ * @clk: struct clk * to watch
++ * @nb: struct notifier_block * with callback info
++ *
++ * Request notification when clk's rate changes.  This uses an SRCU
++ * notifier because we want it to block and notifier unregistrations are
++ * uncommon.  The callbacks associated with the notifier must not
++ * re-enter into the clk framework by calling any top-level clk APIs;
++ * this will cause a nested prepare_lock mutex.
++ *
++ * In all notification cases (pre, post and abort rate change) the original
++ * clock rate is passed to the callback via struct clk_notifier_data.old_rate
++ * and the new frequency is passed via struct clk_notifier_data.new_rate.
++ *
++ * clk_notifier_register() must be called from non-atomic context.
++ * Returns -EINVAL if called with null arguments, -ENOMEM upon
++ * allocation failure; otherwise, passes along the return value of
++ * srcu_notifier_chain_register().
++ */
++int clk_notifier_register(struct clk *clk, struct notifier_block *nb)
++{
++	struct clk_notifier *cn;
++	int ret = -ENOMEM;
++
++	if (!clk || !nb)
++		return -EINVAL;
++
++	clk_prepare_lock();
++
++	/* search the list of notifiers for this clk */
++	list_for_each_entry(cn, &clk_notifier_list, node)
++		if (cn->clk == clk)
++			goto found;
++
++	/* if clk wasn't in the notifier list, allocate new clk_notifier */
++	cn = kzalloc(sizeof(*cn), GFP_KERNEL);
++	if (!cn)
++		goto out;
++
++	cn->clk = clk;
++	srcu_init_notifier_head(&cn->notifier_head);
++
++	list_add(&cn->node, &clk_notifier_list);
++
++found:
++	ret = srcu_notifier_chain_register(&cn->notifier_head, nb);
++
++	clk->core->notifier_count++;
++
++out:
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_notifier_register);
++
++/**
++ * clk_notifier_unregister - remove a clk rate change notifier
++ * @clk: struct clk *
++ * @nb: struct notifier_block * with callback info
++ *
++ * Request no further notification for changes to 'clk' and frees memory
++ * allocated in clk_notifier_register.
++ *
++ * Returns -EINVAL if called with null arguments; otherwise, passes
++ * along the return value of srcu_notifier_chain_unregister().
++ */
++int clk_notifier_unregister(struct clk *clk, struct notifier_block *nb)
++{
++	struct clk_notifier *cn;
++	int ret = -ENOENT;
++
++	if (!clk || !nb)
++		return -EINVAL;
++
++	clk_prepare_lock();
++
++	list_for_each_entry(cn, &clk_notifier_list, node) {
++		if (cn->clk == clk) {
++			ret = srcu_notifier_chain_unregister(&cn->notifier_head, nb);
++
++			clk->core->notifier_count--;
++
++			/* XXX the notifier code should handle this better */
++			if (!cn->notifier_head.head) {
++				srcu_cleanup_notifier_head(&cn->notifier_head);
++				list_del(&cn->node);
++				kfree(cn);
++			}
++			break;
++		}
++	}
++
++	clk_prepare_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(clk_notifier_unregister);
++
++struct clk_notifier_devres {
++	struct clk *clk;
++	struct notifier_block *nb;
++};
++
++static void devm_clk_notifier_release(struct device *dev, void *res)
++{
++	struct clk_notifier_devres *devres = res;
++
++	clk_notifier_unregister(devres->clk, devres->nb);
++}
++
++int devm_clk_notifier_register(struct device *dev, struct clk *clk,
++			       struct notifier_block *nb)
++{
++	struct clk_notifier_devres *devres;
++	int ret;
++
++	devres = devres_alloc(devm_clk_notifier_release,
++			      sizeof(*devres), GFP_KERNEL);
++
++	if (!devres)
++		return -ENOMEM;
++
++	ret = clk_notifier_register(clk, nb);
++	if (!ret) {
++		devres->clk = clk;
++		devres->nb = nb;
++		devres_add(dev, devres);
++	} else {
++		devres_free(devres);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_clk_notifier_register);
++
++static void clk_core_reparent_orphans(void)
++{
++	clk_prepare_lock();
++	clk_core_reparent_orphans_nolock();
++	clk_prepare_unlock();
++}
++
++/**
++ * struct of_clk_provider - Clock provider registration structure
++ * @link: Entry in global list of clock providers
++ * @node: Pointer to device tree node of clock provider
++ * @get: Get clock callback.  Returns NULL or a struct clk for the
++ *       given clock specifier
++ * @get_hw: Get clk_hw callback.  Returns NULL, ERR_PTR or a
++ *       struct clk_hw for the given clock specifier
++ * @data: context pointer to be passed into @get callback
++ */
++struct of_clk_provider {
++	struct list_head link;
++
++	struct device_node *node;
++	struct clk *(*get)(struct of_phandle_args *clkspec, void *data);
++	struct clk_hw *(*get_hw)(struct of_phandle_args *clkspec, void *data);
++	void *data;
++};
++
++extern struct of_device_id __clk_of_table;
++static const struct of_device_id __clk_of_table_sentinel
++	__used __section("__clk_of_table_end");
++
++static LIST_HEAD(of_clk_providers);
++static DEFINE_MUTEX(of_clk_mutex);
++
++struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
++				     void *data)
++{
++	return data;
++}
++EXPORT_SYMBOL_GPL(of_clk_src_simple_get);
++
++struct clk_hw *of_clk_hw_simple_get(struct of_phandle_args *clkspec, void *data)
++{
++	return data;
++}
++EXPORT_SYMBOL_GPL(of_clk_hw_simple_get);
++
++struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct clk_onecell_data *clk_data = data;
++	unsigned int idx = clkspec->args[0];
++
++	if (idx >= clk_data->clk_num) {
++		pr_err("%s: invalid clock index %u\n", __func__, idx);
++		return ERR_PTR(-EINVAL);
++	}
++
++	return clk_data->clks[idx];
++}
++EXPORT_SYMBOL_GPL(of_clk_src_onecell_get);
++
++struct clk_hw *
++of_clk_hw_onecell_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct clk_hw_onecell_data *hw_data = data;
++	unsigned int idx = clkspec->args[0];
++
++	if (idx >= hw_data->num) {
++		pr_err("%s: invalid index %u\n", __func__, idx);
++		return ERR_PTR(-EINVAL);
++	}
++
++	return hw_data->hws[idx];
++}
++EXPORT_SYMBOL_GPL(of_clk_hw_onecell_get);
++
++/**
++ * of_clk_add_provider() - Register a clock provider for a node
++ * @np: Device node pointer associated with clock provider
++ * @clk_src_get: callback for decoding clock
++ * @data: context pointer for @clk_src_get callback.
++ *
++ * This function is *deprecated*. Use of_clk_add_hw_provider() instead.
++ */
++int of_clk_add_provider(struct device_node *np,
++			struct clk *(*clk_src_get)(struct of_phandle_args *clkspec,
++						   void *data),
++			void *data)
++{
++	struct of_clk_provider *cp;
++	int ret;
++
++	if (!np)
++		return 0;
++
++	cp = kzalloc(sizeof(*cp), GFP_KERNEL);
++	if (!cp)
++		return -ENOMEM;
++
++	cp->node = of_node_get(np);
++	cp->data = data;
++	cp->get = clk_src_get;
++
++	mutex_lock(&of_clk_mutex);
++	list_add(&cp->link, &of_clk_providers);
++	mutex_unlock(&of_clk_mutex);
++	pr_debug("Added clock from %pOF\n", np);
++
++	clk_core_reparent_orphans();
++
++	ret = of_clk_set_defaults(np, true);
++	if (ret < 0)
++		of_clk_del_provider(np);
++
++	fwnode_dev_initialized(&np->fwnode, true);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_clk_add_provider);
++
++/**
++ * of_clk_add_hw_provider() - Register a clock provider for a node
++ * @np: Device node pointer associated with clock provider
++ * @get: callback for decoding clk_hw
++ * @data: context pointer for @get callback.
++ */
++int of_clk_add_hw_provider(struct device_node *np,
++			   struct clk_hw *(*get)(struct of_phandle_args *clkspec,
++						 void *data),
++			   void *data)
++{
++	struct of_clk_provider *cp;
++	int ret;
++
++	if (!np)
++		return 0;
++
++	cp = kzalloc(sizeof(*cp), GFP_KERNEL);
++	if (!cp)
++		return -ENOMEM;
++
++	cp->node = of_node_get(np);
++	cp->data = data;
++	cp->get_hw = get;
++
++	mutex_lock(&of_clk_mutex);
++	list_add(&cp->link, &of_clk_providers);
++	mutex_unlock(&of_clk_mutex);
++	pr_debug("Added clk_hw provider from %pOF\n", np);
++
++	clk_core_reparent_orphans();
++
++	ret = of_clk_set_defaults(np, true);
++	if (ret < 0)
++		of_clk_del_provider(np);
++
++	fwnode_dev_initialized(&np->fwnode, true);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_clk_add_hw_provider);
++
++static void devm_of_clk_release_provider(struct device *dev, void *res)
++{
++	of_clk_del_provider(*(struct device_node **)res);
++}
++
++/*
++ * We allow a child device to use its parent device as the clock provider node
++ * for cases like MFD sub-devices where the child device driver wants to use
++ * devm_*() APIs but not list the device in DT as a sub-node.
++ */
++static struct device_node *get_clk_provider_node(struct device *dev)
++{
++	struct device_node *np, *parent_np;
++
++	np = dev->of_node;
++	parent_np = dev->parent ? dev->parent->of_node : NULL;
++
++	if (!of_property_present(np, "#clock-cells"))
++		if (of_property_present(parent_np, "#clock-cells"))
++			np = parent_np;
++
++	return np;
++}
++
++/**
++ * devm_of_clk_add_hw_provider() - Managed clk provider node registration
++ * @dev: Device acting as the clock provider (used for DT node and lifetime)
++ * @get: callback for decoding clk_hw
++ * @data: context pointer for @get callback
++ *
++ * Registers clock provider for given device's node. If the device has no DT
++ * node or if the device node lacks of clock provider information (#clock-cells)
++ * then the parent device's node is scanned for this information. If parent node
++ * has the #clock-cells then it is used in registration. Provider is
++ * automatically released at device exit.
++ *
++ * Return: 0 on success or an errno on failure.
++ */
++int devm_of_clk_add_hw_provider(struct device *dev,
++			struct clk_hw *(*get)(struct of_phandle_args *clkspec,
++					      void *data),
++			void *data)
++{
++	struct device_node **ptr, *np;
++	int ret;
++
++	ptr = devres_alloc(devm_of_clk_release_provider, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return -ENOMEM;
++
++	np = get_clk_provider_node(dev);
++	ret = of_clk_add_hw_provider(np, get, data);
++	if (!ret) {
++		*ptr = np;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_of_clk_add_hw_provider);
++
++/**
++ * of_clk_del_provider() - Remove a previously registered clock provider
++ * @np: Device node pointer associated with clock provider
++ */
++void of_clk_del_provider(struct device_node *np)
++{
++	struct of_clk_provider *cp;
++
++	if (!np)
++		return;
++
++	mutex_lock(&of_clk_mutex);
++	list_for_each_entry(cp, &of_clk_providers, link) {
++		if (cp->node == np) {
++			list_del(&cp->link);
++			fwnode_dev_initialized(&np->fwnode, false);
++			of_node_put(cp->node);
++			kfree(cp);
++			break;
++		}
++	}
++	mutex_unlock(&of_clk_mutex);
++}
++EXPORT_SYMBOL_GPL(of_clk_del_provider);
++
++/**
++ * of_parse_clkspec() - Parse a DT clock specifier for a given device node
++ * @np: device node to parse clock specifier from
++ * @index: index of phandle to parse clock out of. If index < 0, @name is used
++ * @name: clock name to find and parse. If name is NULL, the index is used
++ * @out_args: Result of parsing the clock specifier
++ *
++ * Parses a device node's "clocks" and "clock-names" properties to find the
++ * phandle and cells for the index or name that is desired. The resulting clock
++ * specifier is placed into @out_args, or an errno is returned when there's a
++ * parsing error. The @index argument is ignored if @name is non-NULL.
++ *
++ * Example:
++ *
++ * phandle1: clock-controller@1 {
++ *	#clock-cells = <2>;
++ * }
++ *
++ * phandle2: clock-controller@2 {
++ *	#clock-cells = <1>;
++ * }
++ *
++ * clock-consumer@3 {
++ *	clocks = <&phandle1 1 2 &phandle2 3>;
++ *	clock-names = "name1", "name2";
++ * }
++ *
++ * To get a device_node for `clock-controller@2' node you may call this
++ * function a few different ways:
++ *
++ *   of_parse_clkspec(clock-consumer@3, -1, "name2", &args);
++ *   of_parse_clkspec(clock-consumer@3, 1, NULL, &args);
++ *   of_parse_clkspec(clock-consumer@3, 1, "name2", &args);
++ *
++ * Return: 0 upon successfully parsing the clock specifier. Otherwise, -ENOENT
++ * if @name is NULL or -EINVAL if @name is non-NULL and it can't be found in
++ * the "clock-names" property of @np.
++ */
++static int of_parse_clkspec(const struct device_node *np, int index,
++			    const char *name, struct of_phandle_args *out_args)
++{
++	int ret = -ENOENT;
++
++	/* Walk up the tree of devices looking for a clock property that matches */
++	while (np) {
++		/*
++		 * For named clocks, first look up the name in the
++		 * "clock-names" property.  If it cannot be found, then index
++		 * will be an error code and of_parse_phandle_with_args() will
++		 * return -EINVAL.
++		 */
++		if (name)
++			index = of_property_match_string(np, "clock-names", name);
++		ret = of_parse_phandle_with_args(np, "clocks", "#clock-cells",
++						 index, out_args);
++		if (!ret)
++			break;
++		if (name && index >= 0)
++			break;
++
++		/*
++		 * No matching clock found on this node.  If the parent node
++		 * has a "clock-ranges" property, then we can try one of its
++		 * clocks.
++		 */
++		np = np->parent;
++		if (np && !of_property_present(np, "clock-ranges"))
++			break;
++		index = 0;
++	}
++
++	return ret;
++}
++
++static struct clk_hw *
++__of_clk_get_hw_from_provider(struct of_clk_provider *provider,
++			      struct of_phandle_args *clkspec)
++{
++	struct clk *clk;
++
++	if (provider->get_hw)
++		return provider->get_hw(clkspec, provider->data);
++
++	clk = provider->get(clkspec, provider->data);
++	if (IS_ERR(clk))
++		return ERR_CAST(clk);
++	return __clk_get_hw(clk);
++}
++
++static struct clk_hw *
++of_clk_get_hw_from_clkspec(struct of_phandle_args *clkspec)
++{
++	struct of_clk_provider *provider;
++	struct clk_hw *hw = ERR_PTR(-EPROBE_DEFER);
++
++	if (!clkspec)
++		return ERR_PTR(-EINVAL);
++
++	/* Check if node in clkspec is in disabled/fail state */
++	if (!of_device_is_available(clkspec->np))
++		return ERR_PTR(-ENOENT);
++
++	mutex_lock(&of_clk_mutex);
++	list_for_each_entry(provider, &of_clk_providers, link) {
++		if (provider->node == clkspec->np) {
++			hw = __of_clk_get_hw_from_provider(provider, clkspec);
++			if (!IS_ERR(hw))
++				break;
++		}
++	}
++	mutex_unlock(&of_clk_mutex);
++
++	return hw;
++}
++
++/**
++ * of_clk_get_from_provider() - Lookup a clock from a clock provider
++ * @clkspec: pointer to a clock specifier data structure
++ *
++ * This function looks up a struct clk from the registered list of clock
++ * providers, an input is a clock specifier data structure as returned
++ * from the of_parse_phandle_with_args() function call.
++ */
++struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
++{
++	struct clk_hw *hw = of_clk_get_hw_from_clkspec(clkspec);
++
++	return clk_hw_create_clk(NULL, hw, NULL, __func__);
++}
++EXPORT_SYMBOL_GPL(of_clk_get_from_provider);
++
++struct clk_hw *of_clk_get_hw(struct device_node *np, int index,
++			     const char *con_id)
++{
++	int ret;
++	struct clk_hw *hw;
++	struct of_phandle_args clkspec;
++
++	ret = of_parse_clkspec(np, index, con_id, &clkspec);
++	if (ret)
++		return ERR_PTR(ret);
++
++	hw = of_clk_get_hw_from_clkspec(&clkspec);
++	of_node_put(clkspec.np);
++
++	return hw;
++}
++
++static struct clk *__of_clk_get(struct device_node *np,
++				int index, const char *dev_id,
++				const char *con_id)
++{
++	struct clk_hw *hw = of_clk_get_hw(np, index, con_id);
++
++	return clk_hw_create_clk(NULL, hw, dev_id, con_id);
++}
++
++struct clk *of_clk_get(struct device_node *np, int index)
++{
++	return __of_clk_get(np, index, np->full_name, NULL);
++}
++EXPORT_SYMBOL(of_clk_get);
++
++/**
++ * of_clk_get_by_name() - Parse and lookup a clock referenced by a device node
++ * @np: pointer to clock consumer node
++ * @name: name of consumer's clock input, or NULL for the first clock reference
++ *
++ * This function parses the clocks and clock-names properties,
++ * and uses them to look up the struct clk from the registered list of clock
++ * providers.
++ */
++struct clk *of_clk_get_by_name(struct device_node *np, const char *name)
++{
++	if (!np)
++		return ERR_PTR(-ENOENT);
++
++	return __of_clk_get(np, 0, np->full_name, name);
++}
++EXPORT_SYMBOL(of_clk_get_by_name);
++
++/**
++ * of_clk_get_parent_count() - Count the number of clocks a device node has
++ * @np: device node to count
++ *
++ * Returns: The number of clocks that are possible parents of this node
++ */
++unsigned int of_clk_get_parent_count(const struct device_node *np)
++{
++	int count;
++
++	count = of_count_phandle_with_args(np, "clocks", "#clock-cells");
++	if (count < 0)
++		return 0;
++
++	return count;
++}
++EXPORT_SYMBOL_GPL(of_clk_get_parent_count);
++
++const char *of_clk_get_parent_name(const struct device_node *np, int index)
++{
++	struct of_phandle_args clkspec;
++	const char *clk_name;
++	bool found = false;
++	u32 pv;
++	int rc;
++	int count;
++	struct clk *clk;
++
++	rc = of_parse_phandle_with_args(np, "clocks", "#clock-cells", index,
++					&clkspec);
++	if (rc)
++		return NULL;
++
++	index = clkspec.args_count ? clkspec.args[0] : 0;
++	count = 0;
++
++	/* if there is an indices property, use it to transfer the index
++	 * specified into an array offset for the clock-output-names property.
++	 */
++	of_property_for_each_u32(clkspec.np, "clock-indices", pv) {
++		if (index == pv) {
++			index = count;
++			found = true;
++			break;
++		}
++		count++;
++	}
++	/* We went off the end of 'clock-indices' without finding it */
++	if (of_property_present(clkspec.np, "clock-indices") && !found) {
++		of_node_put(clkspec.np);
++		return NULL;
++	}
++
++	if (of_property_read_string_index(clkspec.np, "clock-output-names",
++					  index,
++					  &clk_name) < 0) {
++		/*
++		 * Best effort to get the name if the clock has been
++		 * registered with the framework. If the clock isn't
++		 * registered, we return the node name as the name of
++		 * the clock as long as #clock-cells = 0.
++		 */
++		clk = of_clk_get_from_provider(&clkspec);
++		if (IS_ERR(clk)) {
++			if (clkspec.args_count == 0)
++				clk_name = clkspec.np->name;
++			else
++				clk_name = NULL;
++		} else {
++			clk_name = __clk_get_name(clk);
++			clk_put(clk);
++		}
++	}
++
++
++	of_node_put(clkspec.np);
++	return clk_name;
++}
++EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
++
++/**
++ * of_clk_parent_fill() - Fill @parents with names of @np's parents and return
++ * number of parents
++ * @np: Device node pointer associated with clock provider
++ * @parents: pointer to char array that hold the parents' names
++ * @size: size of the @parents array
++ *
++ * Return: number of parents for the clock node.
++ */
++int of_clk_parent_fill(struct device_node *np, const char **parents,
++		       unsigned int size)
++{
++	unsigned int i = 0;
++
++	while (i < size && (parents[i] = of_clk_get_parent_name(np, i)) != NULL)
++		i++;
++
++	return i;
++}
++EXPORT_SYMBOL_GPL(of_clk_parent_fill);
++
++struct clock_provider {
++	void (*clk_init_cb)(struct device_node *);
++	struct device_node *np;
++	struct list_head node;
++};
++
++/*
++ * This function looks for a parent clock. If there is one, then it
++ * checks that the provider for this parent clock was initialized, in
++ * this case the parent clock will be ready.
++ */
++static int parent_ready(struct device_node *np)
++{
++	int i = 0;
++
++	while (true) {
++		struct clk *clk = of_clk_get(np, i);
++
++		/* this parent is ready we can check the next one */
++		if (!IS_ERR(clk)) {
++			clk_put(clk);
++			i++;
++			continue;
++		}
++
++		/* at least one parent is not ready, we exit now */
++		if (PTR_ERR(clk) == -EPROBE_DEFER)
++			return 0;
++
++		/*
++		 * Here we make assumption that the device tree is
++		 * written correctly. So an error means that there is
++		 * no more parent. As we didn't exit yet, then the
++		 * previous parent are ready. If there is no clock
++		 * parent, no need to wait for them, then we can
++		 * consider their absence as being ready
++		 */
++		return 1;
++	}
++}
++
++/**
++ * of_clk_detect_critical() - set CLK_IS_CRITICAL flag from Device Tree
++ * @np: Device node pointer associated with clock provider
++ * @index: clock index
++ * @flags: pointer to top-level framework flags
++ *
++ * Detects if the clock-critical property exists and, if so, sets the
++ * corresponding CLK_IS_CRITICAL flag.
++ *
++ * Do not use this function. It exists only for legacy Device Tree
++ * bindings, such as the one-clock-per-node style that are outdated.
++ * Those bindings typically put all clock data into .dts and the Linux
++ * driver has no clock data, thus making it impossible to set this flag
++ * correctly from the driver. Only those drivers may call
++ * of_clk_detect_critical from their setup functions.
++ *
++ * Return: error code or zero on success
++ */
++int of_clk_detect_critical(struct device_node *np, int index,
++			   unsigned long *flags)
++{
++	uint32_t idx;
++
++	if (!np || !flags)
++		return -EINVAL;
++
++	of_property_for_each_u32(np, "clock-critical", idx)
++		if (index == idx)
++			*flags |= CLK_IS_CRITICAL;
++
++	return 0;
++}
++
++/**
++ * of_clk_init() - Scan and init clock providers from the DT
++ * @matches: array of compatible values and init functions for providers.
++ *
++ * This function scans the device tree for matching clock providers
++ * and calls their initialization functions. It also does it by trying
++ * to follow the dependencies.
++ */
++void __init of_clk_init(const struct of_device_id *matches)
++{
++	const struct of_device_id *match;
++	struct device_node *np;
++	struct clock_provider *clk_provider, *next;
++	bool is_init_done;
++	bool force = false;
++	LIST_HEAD(clk_provider_list);
++
++	if (!matches)
++		matches = &__clk_of_table;
++
++	/* First prepare the list of the clocks providers */
++	for_each_matching_node_and_match(np, matches, &match) {
++		struct clock_provider *parent;
++
++		if (!of_device_is_available(np))
++			continue;
++
++		parent = kzalloc(sizeof(*parent), GFP_KERNEL);
++		if (!parent) {
++			list_for_each_entry_safe(clk_provider, next,
++						 &clk_provider_list, node) {
++				list_del(&clk_provider->node);
++				of_node_put(clk_provider->np);
++				kfree(clk_provider);
++			}
++			of_node_put(np);
++			return;
++		}
++
++		parent->clk_init_cb = match->data;
++		parent->np = of_node_get(np);
++		list_add_tail(&parent->node, &clk_provider_list);
++	}
++
++	while (!list_empty(&clk_provider_list)) {
++		is_init_done = false;
++		list_for_each_entry_safe(clk_provider, next,
++					&clk_provider_list, node) {
++			if (force || parent_ready(clk_provider->np)) {
++
++				/* Don't populate platform devices */
++				of_node_set_flag(clk_provider->np,
++						 OF_POPULATED);
++
++				clk_provider->clk_init_cb(clk_provider->np);
++				of_clk_set_defaults(clk_provider->np, true);
++
++				list_del(&clk_provider->node);
++				of_node_put(clk_provider->np);
++				kfree(clk_provider);
++				is_init_done = true;
++			}
++		}
++
++		/*
++		 * We didn't manage to initialize any of the
++		 * remaining providers during the last loop, so now we
++		 * initialize all the remaining ones unconditionally
++		 * in case the clock parent was not mandatory
++		 */
++		if (!is_init_done)
++			force = true;
++	}
++}
++
+diff --git a/drivers/clk/ccf/clk.h b/drivers/clk/ccf/clk.h
+new file mode 100644
+index 000000000000..2d801900cad5
+--- /dev/null
++++ b/drivers/clk/ccf/clk.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Sylwester Nawrocki <s.nawrocki@samsung.com>
++ */
++
++struct clk_hw;
++struct device;
++struct of_phandle_args;
++
++#if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
++struct clk_hw *of_clk_get_hw(struct device_node *np,
++				    int index, const char *con_id);
++#else /* !CONFIG_COMMON_CLK || !CONFIG_OF */
++static inline struct clk_hw *of_clk_get_hw(struct device_node *np,
++				    int index, const char *con_id)
++{
++	return ERR_PTR(-ENOENT);
++}
++#endif
++
++struct clk_hw *clk_find_hw(const char *dev_id, const char *con_id);
++
++#ifdef CONFIG_COMMON_CLK
++struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
++			      const char *dev_id, const char *con_id);
++void __clk_put(struct clk *clk);
++#else
++/* All these casts to avoid ifdefs in clkdev... */
++static inline struct clk *
++clk_hw_create_clk(struct device *dev, struct clk_hw *hw, const char *dev_id,
++		  const char *con_id)
++{
++	return (struct clk *)hw;
++}
++static inline void __clk_put(struct clk *clk) { }
++
++#endif
+diff --git a/include/linux/clk-provider-ccf_full.h b/include/linux/clk-provider-ccf_full.h
+new file mode 100644
+index 000000000000..dfc2049feee5
+--- /dev/null
++++ b/include/linux/clk-provider-ccf_full.h
+@@ -0,0 +1,1502 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Copyright (c) 2010-2011 Jeremy Kerr <jeremy.kerr@canonical.com>
++ *  Copyright (C) 2011-2012 Linaro Ltd <mturquette@linaro.org>
++ */
++#ifndef __LINUX_CLK_PROVIDER_CCF_FULL_H
++#define __LINUX_CLK_PROVIDER_CCF_FULL_H
++
++#include <linux/bitops.h>
++#include <linux/err.h>
++#include <clk-uclass.h>
++
++/*
++ * flags used across common struct clk.  these flags should only affect the
++ * top-level framework.  custom flags for dealing with hardware specifics
++ * belong in struct clk_foo
++ *
++ * Please update clk_flags[] in drivers/clk/clk.c when making changes here!
++ */
++#define CLK_SET_RATE_GATE	BIT(0) /* must be gated across rate change */
++#define CLK_SET_PARENT_GATE	BIT(1) /* must be gated across re-parent */
++#define CLK_SET_RATE_PARENT	BIT(2) /* propagate rate change up one level */
++#define CLK_IGNORE_UNUSED	BIT(3) /* do not gate even if unused */
++				/* unused */
++				/* unused */
++#define CLK_GET_RATE_NOCACHE	BIT(6) /* do not use the cached clk rate */
++#define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change */
++#define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accuracy */
++#define CLK_RECALC_NEW_RATES	BIT(9) /* recalc rates after notifications */
++#define CLK_SET_RATE_UNGATE	BIT(10) /* clock needs to run to set rate */
++#define CLK_IS_CRITICAL		BIT(11) /* do not gate, ever */
++/* parents need enable during gate/ungate, set rate and re-parent */
++#define CLK_OPS_PARENT_ENABLE	BIT(12)
++/* duty cycle call may be forwarded to the parent clock */
++#define CLK_DUTY_CYCLE_PARENT	BIT(13)
++
++struct clk;
++struct clk_hw;
++struct clk_core;
++struct dentry;
++
++/**
++ * struct clk_rate_request - Structure encoding the clk constraints that
++ * a clock user might require.
++ *
++ * Should be initialized by calling clk_hw_init_rate_request().
++ *
++ * @core: 		Pointer to the struct clk_core affected by this request
++ * @rate:		Requested clock rate. This field will be adjusted by
++ *			clock drivers according to hardware capabilities.
++ * @min_rate:		Minimum rate imposed by clk users.
++ * @max_rate:		Maximum rate imposed by clk users.
++ * @best_parent_rate:	The best parent rate a parent can provide to fulfill the
++ *			requested constraints.
++ * @best_parent_hw:	The most appropriate parent clock that fulfills the
++ *			requested constraints.
++ *
++ */
++struct clk_rate_request {
++	struct clk_core *core;
++	unsigned long rate;
++	unsigned long min_rate;
++	unsigned long max_rate;
++	unsigned long best_parent_rate;
++	struct clk_hw *best_parent_hw;
++};
++
++void clk_hw_init_rate_request(const struct clk_hw *hw,
++			      struct clk_rate_request *req,
++			      unsigned long rate);
++void clk_hw_forward_rate_request(const struct clk_hw *core,
++				 const struct clk_rate_request *old_req,
++				 const struct clk_hw *parent,
++				 struct clk_rate_request *req,
++				 unsigned long parent_rate);
++
++/**
++ * struct clk_duty - Structure encoding the duty cycle ratio of a clock
++ *
++ * @num:	Numerator of the duty cycle ratio
++ * @den:	Denominator of the duty cycle ratio
++ */
++struct clk_duty {
++	unsigned int num;
++	unsigned int den;
++};
++
++/**
++ * struct clk_ops -  Callback operations for hardware clocks; these are to
++ * be provided by the clock implementation, and will be called by drivers
++ * through the clk_* api.
++ *
++ * @prepare:	Prepare the clock for enabling. This must not return until
++ *		the clock is fully prepared, and it's safe to call clk_enable.
++ *		This callback is intended to allow clock implementations to
++ *		do any initialisation that may sleep. Called with
++ *		prepare_lock held.
++ *
++ * @unprepare:	Release the clock from its prepared state. This will typically
++ *		undo any work done in the @prepare callback. Called with
++ *		prepare_lock held.
++ *
++ * @is_prepared: Queries the hardware to determine if the clock is prepared.
++ *		This function is allowed to sleep. Optional, if this op is not
++ *		set then the prepare count will be used.
++ *
++ * @unprepare_unused: Unprepare the clock atomically.  Only called from
++ *		clk_disable_unused for prepare clocks with special needs.
++ *		Called with prepare mutex held. This function may sleep.
++ *
++ * @enable:	Enable the clock atomically. This must not return until the
++ *		clock is generating a valid clock signal, usable by consumer
++ *		devices. Called with enable_lock held. This function must not
++ *		sleep.
++ *
++ * @disable:	Disable the clock atomically. Called with enable_lock held.
++ *		This function must not sleep.
++ *
++ * @is_enabled:	Queries the hardware to determine if the clock is enabled.
++ *		This function must not sleep. Optional, if this op is not
++ *		set then the enable count will be used.
++ *
++ * @disable_unused: Disable the clock atomically.  Only called from
++ *		clk_disable_unused for gate clocks with special needs.
++ *		Called with enable_lock held.  This function must not
++ *		sleep.
++ *
++ * @save_context: Save the context of the clock in prepration for poweroff.
++ *
++ * @restore_context: Restore the context of the clock after a restoration
++ *		of power.
++ *
++ * @recalc_rate: Recalculate the rate of this clock, by querying hardware. The
++ *		parent rate is an input parameter.  It is up to the caller to
++ *		ensure that the prepare_mutex is held across this call. If the
++ *		driver cannot figure out a rate for this clock, it must return
++ *		0. Returns the calculated rate. Optional, but recommended - if
++ *		this op is not set then clock rate will be initialized to 0.
++ *
++ * @round_rate:	Given a target rate as input, returns the closest rate actually
++ *		supported by the clock. The parent rate is an input/output
++ *		parameter.
++ *
++ * @determine_rate: Given a target rate as input, returns the closest rate
++ *		actually supported by the clock, and optionally the parent clock
++ *		that should be used to provide the clock rate.
++ *
++ * @set_parent:	Change the input source of this clock; for clocks with multiple
++ *		possible parents specify a new parent by passing in the index
++ *		as a u8 corresponding to the parent in either the .parent_names
++ *		or .parents arrays.  This function in affect translates an
++ *		array index into the value programmed into the hardware.
++ *		Returns 0 on success, -EERROR otherwise.
++ *
++ * @get_parent:	Queries the hardware to determine the parent of a clock.  The
++ *		return value is a u8 which specifies the index corresponding to
++ *		the parent clock.  This index can be applied to either the
++ *		.parent_names or .parents arrays.  In short, this function
++ *		translates the parent value read from hardware into an array
++ *		index.  Currently only called when the clock is initialized by
++ *		__clk_init.  This callback is mandatory for clocks with
++ *		multiple parents.  It is optional (and unnecessary) for clocks
++ *		with 0 or 1 parents.
++ *
++ * @set_rate:	Change the rate of this clock. The requested rate is specified
++ *		by the second argument, which should typically be the return
++ *		of .round_rate call.  The third argument gives the parent rate
++ *		which is likely helpful for most .set_rate implementation.
++ *		Returns 0 on success, -EERROR otherwise.
++ *
++ * @set_rate_and_parent: Change the rate and the parent of this clock. The
++ *		requested rate is specified by the second argument, which
++ *		should typically be the return of .round_rate call.  The
++ *		third argument gives the parent rate which is likely helpful
++ *		for most .set_rate_and_parent implementation. The fourth
++ *		argument gives the parent index. This callback is optional (and
++ *		unnecessary) for clocks with 0 or 1 parents as well as
++ *		for clocks that can tolerate switching the rate and the parent
++ *		separately via calls to .set_parent and .set_rate.
++ *		Returns 0 on success, -EERROR otherwise.
++ *
++ * @recalc_accuracy: Recalculate the accuracy of this clock. The clock accuracy
++ *		is expressed in ppb (parts per billion). The parent accuracy is
++ *		an input parameter.
++ *		Returns the calculated accuracy.  Optional - if	this op is not
++ *		set then clock accuracy will be initialized to parent accuracy
++ *		or 0 (perfect clock) if clock has no parent.
++ *
++ * @get_phase:	Queries the hardware to get the current phase of a clock.
++ *		Returned values are 0-359 degrees on success, negative
++ *		error codes on failure.
++ *
++ * @set_phase:	Shift the phase this clock signal in degrees specified
++ *		by the second argument. Valid values for degrees are
++ *		0-359. Return 0 on success, otherwise -EERROR.
++ *
++ * @get_duty_cycle: Queries the hardware to get the current duty cycle ratio
++ *              of a clock. Returned values denominator cannot be 0 and must be
++ *              superior or equal to the numerator.
++ *
++ * @set_duty_cycle: Apply the duty cycle ratio to this clock signal specified by
++ *              the numerator (2nd argurment) and denominator (3rd  argument).
++ *              Argument must be a valid ratio (denominator > 0
++ *              and >= numerator) Return 0 on success, otherwise -EERROR.
++ *
++ * @init:	Perform platform-specific initialization magic.
++ *		This is not used by any of the basic clock types.
++ *		This callback exist for HW which needs to perform some
++ *		initialisation magic for CCF to get an accurate view of the
++ *		clock. It may also be used dynamic resource allocation is
++ *		required. It shall not used to deal with clock parameters,
++ *		such as rate or parents.
++ *		Returns 0 on success, -EERROR otherwise.
++ *
++ * @terminate:  Free any resource allocated by init.
++ *
++ * @debug_init:	Set up type-specific debugfs entries for this clock.  This
++ *		is called once, after the debugfs directory entry for this
++ *		clock has been created.  The dentry pointer representing that
++ *		directory is provided as an argument.  Called with
++ *		prepare_lock held.  Returns 0 on success, -EERROR otherwise.
++ *
++ *
++ * The clk_enable/clk_disable and clk_prepare/clk_unprepare pairs allow
++ * implementations to split any work between atomic (enable) and sleepable
++ * (prepare) contexts.  If enabling a clock requires code that might sleep,
++ * this must be done in clk_prepare.  Clock enable code that will never be
++ * called in a sleepable context may be implemented in clk_enable.
++ *
++ * Typically, drivers will call clk_prepare when a clock may be needed later
++ * (eg. when a device is opened), and clk_enable when the clock is actually
++ * required (eg. from an interrupt). Note that clk_prepare MUST have been
++ * called before clk_enable.
++ */
++struct clk_ops {
++	int		(*prepare)(struct clk_hw *hw);
++	void		(*unprepare)(struct clk_hw *hw);
++	int		(*is_prepared)(struct clk_hw *hw);
++	void		(*unprepare_unused)(struct clk_hw *hw);
++	int		(*enable)(struct clk_hw *hw);
++	void		(*disable)(struct clk_hw *hw);
++	int		(*is_enabled)(struct clk_hw *hw);
++	void		(*disable_unused)(struct clk_hw *hw);
++	int		(*save_context)(struct clk_hw *hw);
++	void		(*restore_context)(struct clk_hw *hw);
++	unsigned long	(*recalc_rate)(struct clk_hw *hw,
++					unsigned long parent_rate);
++	long		(*round_rate)(struct clk_hw *hw, unsigned long rate,
++					unsigned long *parent_rate);
++	int		(*determine_rate)(struct clk_hw *hw,
++					  struct clk_rate_request *req);
++	int		(*set_parent)(struct clk_hw *hw, u8 index);
++	u8		(*get_parent)(struct clk_hw *hw);
++	int		(*set_rate)(struct clk_hw *hw, unsigned long rate,
++				    unsigned long parent_rate);
++	int		(*set_rate_and_parent)(struct clk_hw *hw,
++				    unsigned long rate,
++				    unsigned long parent_rate, u8 index);
++	unsigned long	(*recalc_accuracy)(struct clk_hw *hw,
++					   unsigned long parent_accuracy);
++	int		(*get_phase)(struct clk_hw *hw);
++	int		(*set_phase)(struct clk_hw *hw, int degrees);
++	int		(*get_duty_cycle)(struct clk_hw *hw,
++					  struct clk_duty *duty);
++	int		(*set_duty_cycle)(struct clk_hw *hw,
++					  struct clk_duty *duty);
++	int		(*init)(struct clk_hw *hw);
++	void		(*terminate)(struct clk_hw *hw);
++	void		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
++};
++
++/**
++ * struct clk_parent_data - clk parent information
++ * @hw: parent clk_hw pointer (used for clk providers with internal clks)
++ * @fw_name: parent name local to provider registering clk
++ * @name: globally unique parent name (used as a fallback)
++ * @index: parent index local to provider registering clk (if @fw_name absent)
++ */
++struct clk_parent_data {
++	const struct clk_hw	*hw;
++	const char		*fw_name;
++	const char		*name;
++	int			index;
++};
++
++/**
++ * struct clk_init_data - holds init data that's common to all clocks and is
++ * shared between the clock provider and the common clock framework.
++ *
++ * @name: clock name
++ * @ops: operations this clock supports
++ * @parent_names: array of string names for all possible parents
++ * @parent_data: array of parent data for all possible parents (when some
++ *               parents are external to the clk controller)
++ * @parent_hws: array of pointers to all possible parents (when all parents
++ *              are internal to the clk controller)
++ * @num_parents: number of possible parents
++ * @flags: framework-level hints and quirks
++ */
++struct clk_init_data {
++	const char		*name;
++	const struct clk_ops	*ops;
++	/* Only one of the following three should be assigned */
++	const char		* const *parent_names;
++	const struct clk_parent_data	*parent_data;
++	const struct clk_hw		**parent_hws;
++	u8			num_parents;
++	unsigned long		flags;
++};
++
++/**
++ * struct clk_hw - handle for traversing from a struct clk to its corresponding
++ * hardware-specific structure.  struct clk_hw should be declared within struct
++ * clk_foo and then referenced by the struct clk instance that uses struct
++ * clk_foo's clk_ops
++ *
++ * @core: pointer to the struct clk_core instance that points back to this
++ * struct clk_hw instance
++ *
++ * @clk: pointer to the per-user struct clk instance that can be used to call
++ * into the clk API
++ *
++ * @init: pointer to struct clk_init_data that contains the init data shared
++ * with the common clock framework. This pointer will be set to NULL once
++ * a clk_register() variant is called on this clk_hw pointer.
++ */
++struct clk_hw {
++	struct clk_core *core;
++	struct clk *clk;
++	const struct clk_init_data *init;
++};
++
++/*
++ * DOC: Basic clock implementations common to many platforms
++ *
++ * Each basic clock hardware type is comprised of a structure describing the
++ * clock hardware, implementations of the relevant callbacks in struct clk_ops,
++ * unique flags for that hardware type, a registration function and an
++ * alternative macro for static initialization
++ */
++
++/**
++ * struct clk_fixed_rate - fixed-rate clock
++ * @hw:		handle between common and hardware-specific interfaces
++ * @fixed_rate:	constant frequency of clock
++ * @fixed_accuracy: constant accuracy of clock in ppb (parts per billion)
++ * @flags:	hardware specific flags
++ *
++ * Flags:
++ * * CLK_FIXED_RATE_PARENT_ACCURACY - Use the accuracy of the parent clk
++ *                                    instead of what's set in @fixed_accuracy.
++ */
++struct clk_fixed_rate {
++	struct		clk_hw hw;
++	unsigned long	fixed_rate;
++	unsigned long	fixed_accuracy;
++	unsigned long	flags;
++};
++
++#define CLK_FIXED_RATE_PARENT_ACCURACY	BIT(0)
++
++extern const struct clk_ops clk_fixed_rate_ops;
++struct clk_hw *__clk_hw_register_fixed_rate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data, unsigned long flags,
++		unsigned long fixed_rate, unsigned long fixed_accuracy,
++		unsigned long clk_fixed_flags, bool devm);
++struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		unsigned long fixed_rate);
++/**
++ * clk_hw_register_fixed_rate - register fixed-rate clock with the clock
++ * framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ */
++#define clk_hw_register_fixed_rate(dev, name, parent_name, flags, fixed_rate)  \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), (parent_name), NULL, \
++				     NULL, (flags), (fixed_rate), 0, 0, false)
++
++/**
++ * devm_clk_hw_register_fixed_rate - register fixed-rate clock with the clock
++ * framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ */
++#define devm_clk_hw_register_fixed_rate(dev, name, parent_name, flags, fixed_rate)  \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), (parent_name), NULL, \
++				     NULL, (flags), (fixed_rate), 0, 0, true)
++/**
++ * devm_clk_hw_register_fixed_rate_parent_data - register fixed-rate clock with
++ * the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_data: parent clk data
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ */
++#define devm_clk_hw_register_fixed_rate_parent_data(dev, name, parent_data, flags, \
++						    fixed_rate)			   \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL,		   \
++				     (parent_data), (flags), (fixed_rate), 0,	   \
++				     0, true)
++/**
++ * clk_hw_register_fixed_rate_parent_hw - register fixed-rate clock with
++ * the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ */
++#define clk_hw_register_fixed_rate_parent_hw(dev, name, parent_hw, flags,     \
++					     fixed_rate)		      \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, (parent_hw),  \
++				     NULL, (flags), (fixed_rate), 0, 0, false)
++/**
++ * clk_hw_register_fixed_rate_parent_data - register fixed-rate clock with
++ * the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_data: parent clk data
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ */
++#define clk_hw_register_fixed_rate_parent_data(dev, name, parent_data, flags, \
++					     fixed_rate)		      \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL,	      \
++				     (parent_data), (flags), (fixed_rate), 0, \
++				     0, false)
++/**
++ * clk_hw_register_fixed_rate_with_accuracy - register fixed-rate clock with
++ * the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ * @fixed_accuracy: non-adjustable clock accuracy
++ */
++#define clk_hw_register_fixed_rate_with_accuracy(dev, name, parent_name,      \
++						 flags, fixed_rate,	      \
++						 fixed_accuracy)	      \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), (parent_name),      \
++				     NULL, NULL, (flags), (fixed_rate),       \
++				     (fixed_accuracy), 0, false)
++/**
++ * clk_hw_register_fixed_rate_with_accuracy_parent_hw - register fixed-rate
++ * clock with the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ * @fixed_accuracy: non-adjustable clock accuracy
++ */
++#define clk_hw_register_fixed_rate_with_accuracy_parent_hw(dev, name,	      \
++		parent_hw, flags, fixed_rate, fixed_accuracy)		      \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, (parent_hw),  \
++				     NULL, (flags), (fixed_rate),	      \
++				     (fixed_accuracy), 0, false)
++/**
++ * clk_hw_register_fixed_rate_with_accuracy_parent_data - register fixed-rate
++ * clock with the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_data: name of clock's parent
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ * @fixed_accuracy: non-adjustable clock accuracy
++ */
++#define clk_hw_register_fixed_rate_with_accuracy_parent_data(dev, name,	      \
++		parent_data, flags, fixed_rate, fixed_accuracy)		      \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL,	      \
++				     (parent_data), NULL, (flags),	      \
++				     (fixed_rate), (fixed_accuracy), 0, false)
++/**
++ * clk_hw_register_fixed_rate_parent_accuracy - register fixed-rate clock with
++ * the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_data: name of clock's parent
++ * @flags: framework-specific flags
++ * @fixed_rate: non-adjustable clock rate
++ */
++#define clk_hw_register_fixed_rate_parent_accuracy(dev, name, parent_data,    \
++						   flags, fixed_rate)	      \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL,      \
++				     (parent_data), (flags), (fixed_rate), 0,    \
++				     CLK_FIXED_RATE_PARENT_ACCURACY, false)
++
++void clk_unregister_fixed_rate(struct clk *clk);
++void clk_hw_unregister_fixed_rate(struct clk_hw *hw);
++
++void of_fixed_clk_setup(struct device_node *np);
++
++/**
++ * struct clk_gate - gating clock
++ *
++ * @hw:		handle between common and hardware-specific interfaces
++ * @reg:	register controlling gate
++ * @bit_idx:	single bit controlling gate
++ * @flags:	hardware-specific flags
++ * @lock:	register lock
++ *
++ * Clock which can gate its output.  Implements .enable & .disable
++ *
++ * Flags:
++ * CLK_GATE_SET_TO_DISABLE - by default this clock sets the bit at bit_idx to
++ *	enable the clock.  Setting this flag does the opposite: setting the bit
++ *	disable the clock and clearing it enables the clock
++ * CLK_GATE_HIWORD_MASK - The gate settings are only in lower 16-bit
++ *	of this register, and mask of gate bits are in higher 16-bit of this
++ *	register.  While setting the gate bits, higher 16-bit should also be
++ *	updated to indicate changing gate bits.
++ * CLK_GATE_BIG_ENDIAN - by default little endian register accesses are used for
++ *	the gate register.  Setting this flag makes the register accesses big
++ *	endian.
++ */
++struct clk_gate {
++	struct clk_hw hw;
++	void __iomem	*reg;
++	u8		bit_idx;
++	u8		flags;
++	spinlock_t	*lock;
++};
++
++#define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
++
++#define CLK_GATE_SET_TO_DISABLE		BIT(0)
++#define CLK_GATE_HIWORD_MASK		BIT(1)
++#define CLK_GATE_BIG_ENDIAN		BIT(2)
++
++extern const struct clk_ops clk_gate_ops;
++struct clk_hw *__clk_hw_register_gate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags,
++		void __iomem *reg, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock);
++struct clk_hw *__devm_clk_hw_register_gate(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags,
++		void __iomem *reg, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock);
++struct clk *clk_register_gate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 bit_idx,
++		u8 clk_gate_flags, spinlock_t *lock);
++/**
++ * clk_hw_register_gate - register a gate clock with the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_name: name of this clock's parent
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_gate(dev, name, parent_name, flags, reg, bit_idx,     \
++			     clk_gate_flags, lock)			      \
++	__clk_hw_register_gate((dev), NULL, (name), (parent_name), NULL,      \
++			       NULL, (flags), (reg), (bit_idx),		      \
++			       (clk_gate_flags), (lock))
++/**
++ * clk_hw_register_gate_parent_hw - register a gate clock with the clock
++ * framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_gate_parent_hw(dev, name, parent_hw, flags, reg,      \
++				       bit_idx, clk_gate_flags, lock)	      \
++	__clk_hw_register_gate((dev), NULL, (name), NULL, (parent_hw),        \
++			       NULL, (flags), (reg), (bit_idx),		      \
++			       (clk_gate_flags), (lock))
++/**
++ * clk_hw_register_gate_parent_data - register a gate clock with the clock
++ * framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_data: parent clk data
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_gate_parent_data(dev, name, parent_data, flags, reg,  \
++				       bit_idx, clk_gate_flags, lock)	      \
++	__clk_hw_register_gate((dev), NULL, (name), NULL, NULL, (parent_data), \
++			       (flags), (reg), (bit_idx),		      \
++			       (clk_gate_flags), (lock))
++/**
++ * devm_clk_hw_register_gate - register a gate clock with the clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_name: name of this clock's parent
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define devm_clk_hw_register_gate(dev, name, parent_name, flags, reg, bit_idx,\
++				  clk_gate_flags, lock)			      \
++	__devm_clk_hw_register_gate((dev), NULL, (name), (parent_name), NULL, \
++			       NULL, (flags), (reg), (bit_idx),		      \
++			       (clk_gate_flags), (lock))
++/**
++ * devm_clk_hw_register_gate_parent_hw - register a gate clock with the clock
++ * framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define devm_clk_hw_register_gate_parent_hw(dev, name, parent_hw, flags,      \
++					    reg, bit_idx, clk_gate_flags,     \
++					    lock)			      \
++	__devm_clk_hw_register_gate((dev), NULL, (name), NULL, (parent_hw),   \
++				    NULL, (flags), (reg), (bit_idx),	      \
++				    (clk_gate_flags), (lock))
++/**
++ * devm_clk_hw_register_gate_parent_data - register a gate clock with the
++ * clock framework
++ * @dev: device that is registering this clock
++ * @name: name of this clock
++ * @parent_data: parent clk data
++ * @flags: framework-specific flags for this clock
++ * @reg: register address to control gating of this clock
++ * @bit_idx: which bit in the register controls gating of this clock
++ * @clk_gate_flags: gate-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define devm_clk_hw_register_gate_parent_data(dev, name, parent_data, flags,  \
++					      reg, bit_idx, clk_gate_flags,   \
++					      lock)			      \
++	__devm_clk_hw_register_gate((dev), NULL, (name), NULL, NULL,	      \
++				    (parent_data), (flags), (reg), (bit_idx), \
++				    (clk_gate_flags), (lock))
++
++void clk_unregister_gate(struct clk *clk);
++void clk_hw_unregister_gate(struct clk_hw *hw);
++int clk_gate_is_enabled(struct clk_hw *hw);
++
++struct clk_div_table {
++	unsigned int	val;
++	unsigned int	div;
++};
++
++/**
++ * struct clk_divider - adjustable divider clock
++ *
++ * @hw:		handle between common and hardware-specific interfaces
++ * @reg:	register containing the divider
++ * @shift:	shift to the divider bit field
++ * @width:	width of the divider bit field
++ * @table:	array of value/divider pairs, last entry should have div = 0
++ * @lock:	register lock
++ *
++ * Clock with an adjustable divider affecting its output frequency.  Implements
++ * .recalc_rate, .set_rate and .round_rate
++ *
++ * @flags:
++ * CLK_DIVIDER_ONE_BASED - by default the divisor is the value read from the
++ *	register plus one.  If CLK_DIVIDER_ONE_BASED is set then the divider is
++ *	the raw value read from the register, with the value of zero considered
++ *	invalid, unless CLK_DIVIDER_ALLOW_ZERO is set.
++ * CLK_DIVIDER_POWER_OF_TWO - clock divisor is 2 raised to the value read from
++ *	the hardware register
++ * CLK_DIVIDER_ALLOW_ZERO - Allow zero divisors.  For dividers which have
++ *	CLK_DIVIDER_ONE_BASED set, it is possible to end up with a zero divisor.
++ *	Some hardware implementations gracefully handle this case and allow a
++ *	zero divisor by not modifying their input clock
++ *	(divide by one / bypass).
++ * CLK_DIVIDER_HIWORD_MASK - The divider settings are only in lower 16-bit
++ *	of this register, and mask of divider bits are in higher 16-bit of this
++ *	register.  While setting the divider bits, higher 16-bit should also be
++ *	updated to indicate changing divider bits.
++ * CLK_DIVIDER_ROUND_CLOSEST - Makes the best calculated divider to be rounded
++ *	to the closest integer instead of the up one.
++ * CLK_DIVIDER_READ_ONLY - The divider settings are preconfigured and should
++ *	not be changed by the clock framework.
++ * CLK_DIVIDER_MAX_AT_ZERO - For dividers which are like CLK_DIVIDER_ONE_BASED
++ *	except when the value read from the register is zero, the divisor is
++ *	2^width of the field.
++ * CLK_DIVIDER_BIG_ENDIAN - By default little endian register accesses are used
++ *	for the divider register.  Setting this flag makes the register accesses
++ *	big endian.
++ * CLK_DIVIDER_EVEN_INTEGERS - clock divisor is 2, 4, 6, 8, 10, etc.
++ *	Formula is 2 * (value read from hardware + 1).
++ */
++struct clk_divider {
++	struct clk_hw	hw;
++	void __iomem	*reg;
++	u8		shift;
++	u8		width;
++	u16		flags;
++	const struct clk_div_table	*table;
++	spinlock_t	*lock;
++};
++
++#define clk_div_mask(width)	((1 << (width)) - 1)
++#define to_clk_divider(_hw) container_of(_hw, struct clk_divider, hw)
++
++#define CLK_DIVIDER_ONE_BASED		BIT(0)
++#define CLK_DIVIDER_POWER_OF_TWO	BIT(1)
++#define CLK_DIVIDER_ALLOW_ZERO		BIT(2)
++#define CLK_DIVIDER_HIWORD_MASK		BIT(3)
++#define CLK_DIVIDER_ROUND_CLOSEST	BIT(4)
++#define CLK_DIVIDER_READ_ONLY		BIT(5)
++#define CLK_DIVIDER_MAX_AT_ZERO		BIT(6)
++#define CLK_DIVIDER_BIG_ENDIAN		BIT(7)
++#define CLK_DIVIDER_EVEN_INTEGERS	BIT(8)
++
++extern const struct clk_ops clk_divider_ops;
++extern const struct clk_ops clk_divider_ro_ops;
++
++unsigned long divider_recalc_rate(struct clk_hw *hw, unsigned long parent_rate,
++		unsigned int val, const struct clk_div_table *table,
++		unsigned long flags, unsigned long width);
++long divider_round_rate_parent(struct clk_hw *hw, struct clk_hw *parent,
++			       unsigned long rate, unsigned long *prate,
++			       const struct clk_div_table *table,
++			       u8 width, unsigned long flags);
++long divider_ro_round_rate_parent(struct clk_hw *hw, struct clk_hw *parent,
++				  unsigned long rate, unsigned long *prate,
++				  const struct clk_div_table *table, u8 width,
++				  unsigned long flags, unsigned int val);
++int divider_determine_rate(struct clk_hw *hw, struct clk_rate_request *req,
++			   const struct clk_div_table *table, u8 width,
++			   unsigned long flags);
++int divider_ro_determine_rate(struct clk_hw *hw, struct clk_rate_request *req,
++			      const struct clk_div_table *table, u8 width,
++			      unsigned long flags, unsigned int val);
++int divider_get_val(unsigned long rate, unsigned long parent_rate,
++		const struct clk_div_table *table, u8 width,
++		unsigned long flags);
++
++struct clk_hw *__clk_hw_register_divider(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		unsigned long clk_divider_flags,
++		const struct clk_div_table *table, spinlock_t *lock);
++struct clk_hw *__devm_clk_hw_register_divider(struct device *dev,
++		struct device_node *np, const char *name,
++		const char *parent_name, const struct clk_hw *parent_hw,
++		const struct clk_parent_data *parent_data, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		unsigned long clk_divider_flags,
++		const struct clk_div_table *table, spinlock_t *lock);
++struct clk *clk_register_divider_table(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		unsigned long clk_divider_flags,
++		const struct clk_div_table *table, spinlock_t *lock);
++/**
++ * clk_register_divider - register a divider clock with the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_register_divider(dev, name, parent_name, flags, reg, shift, width, \
++			     clk_divider_flags, lock)			       \
++	clk_register_divider_table((dev), (name), (parent_name), (flags),      \
++				   (reg), (shift), (width),		       \
++				   (clk_divider_flags), NULL, (lock))
++/**
++ * clk_hw_register_divider - register a divider clock with the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_divider(dev, name, parent_name, flags, reg, shift,    \
++				width, clk_divider_flags, lock)		      \
++	__clk_hw_register_divider((dev), NULL, (name), (parent_name), NULL,   \
++				  NULL, (flags), (reg), (shift), (width),     \
++				  (clk_divider_flags), NULL, (lock))
++/**
++ * clk_hw_register_divider_parent_hw - register a divider clock with the clock
++ * framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_divider_parent_hw(dev, name, parent_hw, flags, reg,   \
++					  shift, width, clk_divider_flags,    \
++					  lock)				      \
++	__clk_hw_register_divider((dev), NULL, (name), NULL, (parent_hw),     \
++				  NULL, (flags), (reg), (shift), (width),     \
++				  (clk_divider_flags), NULL, (lock))
++/**
++ * clk_hw_register_divider_parent_data - register a divider clock with the clock
++ * framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_data: parent clk data
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_divider_parent_data(dev, name, parent_data, flags,    \
++					    reg, shift, width,		      \
++					    clk_divider_flags, lock)	      \
++	__clk_hw_register_divider((dev), NULL, (name), NULL, NULL,	      \
++				  (parent_data), (flags), (reg), (shift),     \
++				  (width), (clk_divider_flags), NULL, (lock))
++/**
++ * clk_hw_register_divider_table - register a table based divider clock with
++ * the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @table: array of divider/value pairs ending with a div set to 0
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_divider_table(dev, name, parent_name, flags, reg,     \
++				      shift, width, clk_divider_flags, table, \
++				      lock)				      \
++	__clk_hw_register_divider((dev), NULL, (name), (parent_name), NULL,   \
++				  NULL, (flags), (reg), (shift), (width),     \
++				  (clk_divider_flags), (table), (lock))
++/**
++ * clk_hw_register_divider_table_parent_hw - register a table based divider
++ * clock with the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @table: array of divider/value pairs ending with a div set to 0
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_divider_table_parent_hw(dev, name, parent_hw, flags,  \
++						reg, shift, width,	      \
++						clk_divider_flags, table,     \
++						lock)			      \
++	__clk_hw_register_divider((dev), NULL, (name), NULL, (parent_hw),     \
++				  NULL, (flags), (reg), (shift), (width),     \
++				  (clk_divider_flags), (table), (lock))
++/**
++ * clk_hw_register_divider_table_parent_data - register a table based divider
++ * clock with the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_data: parent clk data
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @table: array of divider/value pairs ending with a div set to 0
++ * @lock: shared register lock for this clock
++ */
++#define clk_hw_register_divider_table_parent_data(dev, name, parent_data,     \
++						  flags, reg, shift, width,   \
++						  clk_divider_flags, table,   \
++						  lock)			      \
++	__clk_hw_register_divider((dev), NULL, (name), NULL, NULL,	      \
++				  (parent_data), (flags), (reg), (shift),     \
++				  (width), (clk_divider_flags), (table),      \
++				  (lock))
++/**
++ * devm_clk_hw_register_divider - register a divider clock with the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define devm_clk_hw_register_divider(dev, name, parent_name, flags, reg, shift,    \
++				width, clk_divider_flags, lock)		      \
++	__devm_clk_hw_register_divider((dev), NULL, (name), (parent_name), NULL,   \
++				  NULL, (flags), (reg), (shift), (width),     \
++				  (clk_divider_flags), NULL, (lock))
++/**
++ * devm_clk_hw_register_divider_parent_hw - register a divider clock with the clock framework
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_hw: pointer to parent clk
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @lock: shared register lock for this clock
++ */
++#define devm_clk_hw_register_divider_parent_hw(dev, name, parent_hw, flags,   \
++					       reg, shift, width,	      \
++					       clk_divider_flags, lock)       \
++	__devm_clk_hw_register_divider((dev), NULL, (name), NULL,	      \
++				       (parent_hw), NULL, (flags), (reg),     \
++				       (shift), (width), (clk_divider_flags), \
++				       NULL, (lock))
++/**
++ * devm_clk_hw_register_divider_table - register a table based divider clock
++ * with the clock framework (devres variant)
++ * @dev: device registering this clock
++ * @name: name of this clock
++ * @parent_name: name of clock's parent
++ * @flags: framework-specific flags
++ * @reg: register address to adjust divider
++ * @shift: number of bits to shift the bitfield
++ * @width: width of the bitfield
++ * @clk_divider_flags: divider-specific flags for this clock
++ * @table: array of divider/value pairs ending with a div set to 0
++ * @lock: shared register lock for this clock
++ */
++#define devm_clk_hw_register_divider_table(dev, name, parent_name, flags,     \
++					   reg, shift, width,		      \
++					   clk_divider_flags, table, lock)    \
++	__devm_clk_hw_register_divider((dev), NULL, (name), (parent_name),    \
++				       NULL, NULL, (flags), (reg), (shift),   \
++				       (width), (clk_divider_flags), (table), \
++				       (lock))
++
++void clk_unregister_divider(struct clk *clk);
++void clk_hw_unregister_divider(struct clk_hw *hw);
++
++/**
++ * struct clk_mux - multiplexer clock
++ *
++ * @hw:		handle between common and hardware-specific interfaces
++ * @reg:	register controlling multiplexer
++ * @table:	array of register values corresponding to the parent index
++ * @shift:	shift to multiplexer bit field
++ * @mask:	mask of mutliplexer bit field
++ * @flags:	hardware-specific flags
++ * @lock:	register lock
++ *
++ * Clock with multiple selectable parents.  Implements .get_parent, .set_parent
++ * and .recalc_rate
++ *
++ * Flags:
++ * CLK_MUX_INDEX_ONE - register index starts at 1, not 0
++ * CLK_MUX_INDEX_BIT - register index is a single bit (power of two)
++ * CLK_MUX_HIWORD_MASK - The mux settings are only in lower 16-bit of this
++ *	register, and mask of mux bits are in higher 16-bit of this register.
++ *	While setting the mux bits, higher 16-bit should also be updated to
++ *	indicate changing mux bits.
++ * CLK_MUX_READ_ONLY - The mux registers can't be written, only read in the
++ * 	.get_parent clk_op.
++ * CLK_MUX_ROUND_CLOSEST - Use the parent rate that is closest to the desired
++ *	frequency.
++ * CLK_MUX_BIG_ENDIAN - By default little endian register accesses are used for
++ *	the mux register.  Setting this flag makes the register accesses big
++ *	endian.
++ */
++struct clk_mux {
++	struct clk_hw	hw;
++	void __iomem	*reg;
++	const u32	*table;
++	u32		mask;
++	u8		shift;
++	u8		flags;
++	spinlock_t	*lock;
++};
++
++#define to_clk_mux(_hw) container_of(_hw, struct clk_mux, hw)
++
++#define CLK_MUX_INDEX_ONE		BIT(0)
++#define CLK_MUX_INDEX_BIT		BIT(1)
++#define CLK_MUX_HIWORD_MASK		BIT(2)
++#define CLK_MUX_READ_ONLY		BIT(3) /* mux can't be changed */
++#define CLK_MUX_ROUND_CLOSEST		BIT(4)
++#define CLK_MUX_BIG_ENDIAN		BIT(5)
++
++extern const struct clk_ops clk_mux_ops;
++extern const struct clk_ops clk_mux_ro_ops;
++
++struct clk_hw *__clk_hw_register_mux(struct device *dev, struct device_node *np,
++		const char *name, u8 num_parents,
++		const char * const *parent_names,
++		const struct clk_hw **parent_hws,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_mux_flags, const u32 *table, spinlock_t *lock);
++struct clk_hw *__devm_clk_hw_register_mux(struct device *dev, struct device_node *np,
++		const char *name, u8 num_parents,
++		const char * const *parent_names,
++		const struct clk_hw **parent_hws,
++		const struct clk_parent_data *parent_data,
++		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_mux_flags, const u32 *table, spinlock_t *lock);
++struct clk *clk_register_mux_table(struct device *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, void __iomem *reg, u8 shift, u32 mask,
++		u8 clk_mux_flags, const u32 *table, spinlock_t *lock);
++
++#define clk_register_mux(dev, name, parent_names, num_parents, flags, reg,    \
++			 shift, width, clk_mux_flags, lock)		      \
++	clk_register_mux_table((dev), (name), (parent_names), (num_parents),  \
++			       (flags), (reg), (shift), BIT((width)) - 1,     \
++			       (clk_mux_flags), NULL, (lock))
++#define clk_hw_register_mux_table(dev, name, parent_names, num_parents,	      \
++				  flags, reg, shift, mask, clk_mux_flags,     \
++				  table, lock)				      \
++	__clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
++			      (parent_names), NULL, NULL, (flags), (reg),     \
++			      (shift), (mask), (clk_mux_flags), (table),      \
++			      (lock))
++#define clk_hw_register_mux_table_parent_data(dev, name, parent_data,	      \
++				  num_parents, flags, reg, shift, mask,	      \
++				  clk_mux_flags, table, lock)		      \
++	__clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
++			      NULL, NULL, (parent_data), (flags), (reg),      \
++			      (shift), (mask), (clk_mux_flags), (table),      \
++			      (lock))
++#define clk_hw_register_mux(dev, name, parent_names, num_parents, flags, reg, \
++			    shift, width, clk_mux_flags, lock)		      \
++	__clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
++			      (parent_names), NULL, NULL, (flags), (reg),     \
++			      (shift), BIT((width)) - 1, (clk_mux_flags),     \
++			      NULL, (lock))
++#define clk_hw_register_mux_hws(dev, name, parent_hws, num_parents, flags,    \
++				reg, shift, width, clk_mux_flags, lock)	      \
++	__clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL,	      \
++			      (parent_hws), NULL, (flags), (reg), (shift),    \
++			      BIT((width)) - 1, (clk_mux_flags), NULL, (lock))
++#define clk_hw_register_mux_parent_data(dev, name, parent_data, num_parents,  \
++					flags, reg, shift, width,	      \
++					clk_mux_flags, lock)		      \
++	__clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL, NULL, \
++			      (parent_data), (flags), (reg), (shift),	      \
++			      BIT((width)) - 1, (clk_mux_flags), NULL, (lock))
++#define clk_hw_register_mux_parent_data_table(dev, name, parent_data,	      \
++					      num_parents, flags, reg, shift, \
++					      width, clk_mux_flags, table,    \
++					      lock)			      \
++	__clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL, NULL, \
++			      (parent_data), (flags), (reg), (shift),	      \
++			      BIT((width)) - 1, (clk_mux_flags), table, (lock))
++#define devm_clk_hw_register_mux(dev, name, parent_names, num_parents, flags, reg, \
++			    shift, width, clk_mux_flags, lock)		      \
++	__devm_clk_hw_register_mux((dev), NULL, (name), (num_parents),	      \
++			      (parent_names), NULL, NULL, (flags), (reg),     \
++			      (shift), BIT((width)) - 1, (clk_mux_flags),     \
++			      NULL, (lock))
++#define devm_clk_hw_register_mux_parent_hws(dev, name, parent_hws,	      \
++					    num_parents, flags, reg, shift,   \
++					    width, clk_mux_flags, lock)       \
++	__devm_clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL,  \
++				   (parent_hws), NULL, (flags), (reg),        \
++				   (shift), BIT((width)) - 1,		      \
++				   (clk_mux_flags), NULL, (lock))
++#define devm_clk_hw_register_mux_parent_data_table(dev, name, parent_data,    \
++					      num_parents, flags, reg, shift, \
++					      width, clk_mux_flags, table,    \
++					      lock)			      \
++	__devm_clk_hw_register_mux((dev), NULL, (name), (num_parents), NULL,  \
++			      NULL, (parent_data), (flags), (reg), (shift),   \
++			      BIT((width)) - 1, (clk_mux_flags), table, (lock))
++
++int clk_mux_val_to_index(struct clk_hw *hw, const u32 *table, unsigned int flags,
++			 unsigned int val);
++unsigned int clk_mux_index_to_val(const u32 *table, unsigned int flags, u8 index);
++
++void clk_unregister_mux(struct clk *clk);
++void clk_hw_unregister_mux(struct clk_hw *hw);
++
++void of_fixed_factor_clk_setup(struct device_node *node);
++
++/**
++ * struct clk_fixed_factor - fixed multiplier and divider clock
++ *
++ * @hw:		handle between common and hardware-specific interfaces
++ * @mult:	multiplier
++ * @div:	divider
++ * @acc:	fixed accuracy in ppb
++ * @flags:	behavior modifying flags
++ *
++ * Clock with a fixed multiplier and divider. The output frequency is the
++ * parent clock rate divided by div and multiplied by mult.
++ * Implements .recalc_rate, .set_rate, .round_rate and .recalc_accuracy
++ *
++ * Flags:
++ * * CLK_FIXED_FACTOR_FIXED_ACCURACY - Use the value in @acc instead of the
++ *                                     parent clk accuracy.
++ */
++
++struct clk_fixed_factor {
++	struct clk_hw	hw;
++	unsigned int	mult;
++	unsigned int	div;
++	unsigned long	acc;
++	unsigned int	flags;
++};
++
++#define CLK_FIXED_FACTOR_FIXED_ACCURACY	BIT(0)
++
++#define to_clk_fixed_factor(_hw) container_of(_hw, struct clk_fixed_factor, hw)
++
++extern const struct clk_ops clk_fixed_factor_ops;
++struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div);
++void clk_unregister_fixed_factor(struct clk *clk);
++struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div);
++struct clk_hw *clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div);
++struct clk_hw *clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc);
++struct clk_hw *clk_hw_register_fixed_factor_index(struct device *dev,
++		const char *name, unsigned int index, unsigned long flags,
++		unsigned int mult, unsigned int div);
++void clk_hw_unregister_fixed_factor(struct clk_hw *hw);
++struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div);
++struct clk_hw *devm_clk_hw_register_fixed_factor_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div);
++struct clk_hw *devm_clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
++		struct device_node *np, const char *name, const char *fw_name,
++		unsigned long flags, unsigned int mult, unsigned int div,
++		unsigned long acc);
++struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
++		const char *name, unsigned int index, unsigned long flags,
++		unsigned int mult, unsigned int div);
++
++struct clk_hw *devm_clk_hw_register_fixed_factor_parent_hw(struct device *dev,
++		const char *name, const struct clk_hw *parent_hw,
++		unsigned long flags, unsigned int mult, unsigned int div);
++
++struct clk_hw *clk_hw_register_fixed_factor_parent_hw(struct device *dev,
++		const char *name, const struct clk_hw *parent_hw,
++		unsigned long flags, unsigned int mult, unsigned int div);
++/**
++ * struct clk_fractional_divider - adjustable fractional divider clock
++ *
++ * @hw:		handle between common and hardware-specific interfaces
++ * @reg:	register containing the divider
++ * @mshift:	shift to the numerator bit field
++ * @mwidth:	width of the numerator bit field
++ * @nshift:	shift to the denominator bit field
++ * @nwidth:	width of the denominator bit field
++ * @approximation: clk driver's callback for calculating the divider clock
++ * @lock:	register lock
++ *
++ * Clock with adjustable fractional divider affecting its output frequency.
++ *
++ * @flags:
++ * CLK_FRAC_DIVIDER_ZERO_BASED - by default the numerator and denominator
++ *	is the value read from the register. If CLK_FRAC_DIVIDER_ZERO_BASED
++ *	is set then the numerator and denominator are both the value read
++ *	plus one.
++ * CLK_FRAC_DIVIDER_BIG_ENDIAN - By default little endian register accesses are
++ *	used for the divider register.  Setting this flag makes the register
++ *	accesses big endian.
++ * CLK_FRAC_DIVIDER_POWER_OF_TWO_PS - By default the resulting fraction might
++ *	be saturated and the caller will get quite far from the good enough
++ *	approximation. Instead the caller may require, by setting this flag,
++ *	to shift left by a few bits in case, when the asked one is quite small
++ *	to satisfy the desired range of denominator. It assumes that on the
++ *	caller's side the power-of-two capable prescaler exists.
++ */
++struct clk_fractional_divider {
++	struct clk_hw	hw;
++	void __iomem	*reg;
++	u8		mshift;
++	u8		mwidth;
++	u8		nshift;
++	u8		nwidth;
++	u8		flags;
++	void		(*approximation)(struct clk_hw *hw,
++				unsigned long rate, unsigned long *parent_rate,
++				unsigned long *m, unsigned long *n);
++	spinlock_t	*lock;
++};
++
++#define to_clk_fd(_hw) container_of(_hw, struct clk_fractional_divider, hw)
++
++#define CLK_FRAC_DIVIDER_ZERO_BASED		BIT(0)
++#define CLK_FRAC_DIVIDER_BIG_ENDIAN		BIT(1)
++#define CLK_FRAC_DIVIDER_POWER_OF_TWO_PS	BIT(2)
++
++struct clk *clk_register_fractional_divider(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 mshift, u8 mwidth, u8 nshift, u8 nwidth,
++		u8 clk_divider_flags, spinlock_t *lock);
++struct clk_hw *clk_hw_register_fractional_divider(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 mshift, u8 mwidth, u8 nshift, u8 nwidth,
++		u8 clk_divider_flags, spinlock_t *lock);
++void clk_hw_unregister_fractional_divider(struct clk_hw *hw);
++
++/**
++ * struct clk_multiplier - adjustable multiplier clock
++ *
++ * @hw:		handle between common and hardware-specific interfaces
++ * @reg:	register containing the multiplier
++ * @shift:	shift to the multiplier bit field
++ * @width:	width of the multiplier bit field
++ * @lock:	register lock
++ *
++ * Clock with an adjustable multiplier affecting its output frequency.
++ * Implements .recalc_rate, .set_rate and .round_rate
++ *
++ * @flags:
++ * CLK_MULTIPLIER_ZERO_BYPASS - By default, the multiplier is the value read
++ *	from the register, with 0 being a valid value effectively
++ *	zeroing the output clock rate. If CLK_MULTIPLIER_ZERO_BYPASS is
++ *	set, then a null multiplier will be considered as a bypass,
++ *	leaving the parent rate unmodified.
++ * CLK_MULTIPLIER_ROUND_CLOSEST - Makes the best calculated divider to be
++ *	rounded to the closest integer instead of the down one.
++ * CLK_MULTIPLIER_BIG_ENDIAN - By default little endian register accesses are
++ *	used for the multiplier register.  Setting this flag makes the register
++ *	accesses big endian.
++ */
++struct clk_multiplier {
++	struct clk_hw	hw;
++	void __iomem	*reg;
++	u8		shift;
++	u8		width;
++	u8		flags;
++	spinlock_t	*lock;
++};
++
++#define to_clk_multiplier(_hw) container_of(_hw, struct clk_multiplier, hw)
++
++#define CLK_MULTIPLIER_ZERO_BYPASS	BIT(0)
++#define CLK_MULTIPLIER_ROUND_CLOSEST	BIT(1)
++#define CLK_MULTIPLIER_BIG_ENDIAN	BIT(2)
++
++extern const struct clk_ops clk_multiplier_ops;
++
++/***
++ * struct clk_composite - aggregate clock of mux, divider and gate clocks
++ *
++ * @hw:		handle between common and hardware-specific interfaces
++ * @mux_hw:	handle between composite and hardware-specific mux clock
++ * @rate_hw:	handle between composite and hardware-specific rate clock
++ * @gate_hw:	handle between composite and hardware-specific gate clock
++ * @mux_ops:	clock ops for mux
++ * @rate_ops:	clock ops for rate
++ * @gate_ops:	clock ops for gate
++ */
++struct clk_composite {
++	struct clk_hw	hw;
++	struct clk_ops	ops;
++
++	struct clk_hw	*mux_hw;
++	struct clk_hw	*rate_hw;
++	struct clk_hw	*gate_hw;
++
++	const struct clk_ops	*mux_ops;
++	const struct clk_ops	*rate_ops;
++	const struct clk_ops	*gate_ops;
++};
++
++#define to_clk_composite(_hw) container_of(_hw, struct clk_composite, hw)
++
++struct clk *clk_register_composite(struct device *dev, const char *name,
++		const char * const *parent_names, int num_parents,
++		struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++		struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++		unsigned long flags);
++struct clk *clk_register_composite_pdata(struct device *dev, const char *name,
++		const struct clk_parent_data *parent_data, int num_parents,
++		struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++		struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++		unsigned long flags);
++void clk_unregister_composite(struct clk *clk);
++struct clk_hw *clk_hw_register_composite(struct device *dev, const char *name,
++		const char * const *parent_names, int num_parents,
++		struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++		struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++		unsigned long flags);
++struct clk_hw *clk_hw_register_composite_pdata(struct device *dev,
++		const char *name,
++		const struct clk_parent_data *parent_data, int num_parents,
++		struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++		struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++		unsigned long flags);
++struct clk_hw *devm_clk_hw_register_composite_pdata(struct device *dev,
++		const char *name, const struct clk_parent_data *parent_data,
++		int num_parents,
++		struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++		struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
++		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++		unsigned long flags);
++void clk_hw_unregister_composite(struct clk_hw *hw);
++
++struct clk *clk_register(struct device *dev, struct clk_hw *hw);
++struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw);
++
++int __must_check clk_hw_register(struct device *dev, struct clk_hw *hw);
++int __must_check devm_clk_hw_register(struct device *dev, struct clk_hw *hw);
++int __must_check of_clk_hw_register(struct device_node *node, struct clk_hw *hw);
++
++void clk_unregister(struct clk *clk);
++
++void clk_hw_unregister(struct clk_hw *hw);
++
++/* helper functions */
++const char *__clk_get_name(const struct clk *clk);
++const char *clk_hw_get_name(const struct clk_hw *hw);
++
++/**
++ * clk_hw_get_dev() - get device from an hardware clock.
++ * @hw: the clk_hw pointer to get the struct device from
++ *
++ * This is a helper to get the struct device associated with a hardware
++ * clock. Some clock controllers, such as the one registered with
++ * CLK_OF_DECLARE(), may have not provided a device pointer while
++ * registering the clock.
++ *
++ * Return: the struct device associated with the clock, or NULL if there
++ * is none.
++ */
++struct device *clk_hw_get_dev(const struct clk_hw *hw);
++
++/**
++ * clk_hw_get_of_node() - get device_node from a hardware clock.
++ * @hw: the clk_hw pointer to get the struct device_node from
++ *
++ * This is a helper to get the struct device_node associated with a
++ * hardware clock.
++ *
++ * Return: the struct device_node associated with the clock, or NULL
++ * if there is none.
++ */
++struct device_node *clk_hw_get_of_node(const struct clk_hw *hw);
++#ifdef CONFIG_COMMON_CLK
++struct clk_hw *__clk_get_hw(struct clk *clk);
++#else
++static inline struct clk_hw *__clk_get_hw(struct clk *clk)
++{
++	return (struct clk_hw *)clk;
++}
++#endif
++
++struct clk *clk_hw_get_clk(struct clk_hw *hw, const char *con_id);
++struct clk *devm_clk_hw_get_clk(struct device *dev, struct clk_hw *hw,
++				const char *con_id);
++
++unsigned int clk_hw_get_num_parents(const struct clk_hw *hw);
++struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw);
++struct clk_hw *clk_hw_get_parent_by_index(const struct clk_hw *hw,
++					  unsigned int index);
++int clk_hw_get_parent_index(struct clk_hw *hw);
++int clk_hw_set_parent(struct clk_hw *hw, struct clk_hw *new_parent);
++unsigned int __clk_get_enable_count(struct clk *clk);
++unsigned long clk_hw_get_rate(const struct clk_hw *hw);
++unsigned long clk_hw_get_flags(const struct clk_hw *hw);
++#define clk_hw_can_set_rate_parent(hw) \
++	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
++
++bool clk_hw_is_prepared(const struct clk_hw *hw);
++bool clk_hw_is_enabled(const struct clk_hw *hw);
++bool __clk_is_enabled(struct clk *clk);
++struct clk *__clk_lookup(const char *name);
++int __clk_mux_determine_rate(struct clk_hw *hw,
++			     struct clk_rate_request *req);
++int __clk_determine_rate(struct clk_hw *core, struct clk_rate_request *req);
++int __clk_mux_determine_rate_closest(struct clk_hw *hw,
++				     struct clk_rate_request *req);
++int clk_mux_determine_rate_flags(struct clk_hw *hw,
++				 struct clk_rate_request *req,
++				 unsigned long flags);
++int clk_hw_determine_rate_no_reparent(struct clk_hw *hw,
++				      struct clk_rate_request *req);
++void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent);
++void clk_hw_get_rate_range(struct clk_hw *hw, unsigned long *min_rate,
++			   unsigned long *max_rate);
++void clk_hw_set_rate_range(struct clk_hw *hw, unsigned long min_rate,
++			   unsigned long max_rate);
++
++static inline void __clk_hw_set_clk(struct clk_hw *dst, struct clk_hw *src)
++{
++	dst->clk = src->clk;
++	dst->core = src->core;
++}
++
++static inline long divider_round_rate(struct clk_hw *hw, unsigned long rate,
++				      unsigned long *prate,
++				      const struct clk_div_table *table,
++				      u8 width, unsigned long flags)
++{
++	return divider_round_rate_parent(hw, clk_hw_get_parent(hw),
++					 rate, prate, table, width, flags);
++}
++
++static inline long divider_ro_round_rate(struct clk_hw *hw, unsigned long rate,
++					 unsigned long *prate,
++					 const struct clk_div_table *table,
++					 u8 width, unsigned long flags,
++					 unsigned int val)
++{
++	return divider_ro_round_rate_parent(hw, clk_hw_get_parent(hw),
++					    rate, prate, table, width, flags,
++					    val);
++}
++
++/*
++ * FIXME clock api without lock protection
++ */
++unsigned long clk_hw_round_rate(struct clk_hw *hw, unsigned long rate);
++
++struct clk_onecell_data {
++	struct clk **clks;
++	unsigned int clk_num;
++};
++
++struct clk_hw_onecell_data {
++	unsigned int num;
++	struct clk_hw *hws[] __counted_by(num);
++};
++
++int of_clk_add_provider(struct device_node *np,
++			struct clk *(*clk_src_get)(struct of_phandle_args *args,
++						   void *data),
++			void *data);
++int of_clk_add_hw_provider(struct device_node *np,
++			   struct clk_hw *(*get)(struct of_phandle_args *clkspec,
++						 void *data),
++			   void *data);
++int devm_of_clk_add_hw_provider(struct device *dev,
++			   struct clk_hw *(*get)(struct of_phandle_args *clkspec,
++						 void *data),
++			   void *data);
++void of_clk_del_provider(struct device_node *np);
++
++struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
++				  void *data);
++struct clk_hw *of_clk_hw_simple_get(struct of_phandle_args *clkspec,
++				    void *data);
++struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data);
++struct clk_hw *of_clk_hw_onecell_get(struct of_phandle_args *clkspec,
++				     void *data);
++int of_clk_parent_fill(struct device_node *np, const char **parents,
++		       unsigned int size);
++int of_clk_detect_critical(struct device_node *np, int index,
++			    unsigned long *flags);
++
++#endif /* __LINUX_CLK_PROVIDER_CCF_FULL_H */
+diff --git a/include/linux/clk-provider-uccf.h b/include/linux/clk-provider-uccf.h
+new file mode 100644
+index 000000000000..2380245b70a9
+--- /dev/null
++++ b/include/linux/clk-provider-uccf.h
+@@ -0,0 +1,280 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright (C) 2019 DENX Software Engineering
++ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
++ *
++ * Copyright (c) 2010-2011 Jeremy Kerr <jeremy.kerr@canonical.com>
++ * Copyright (C) 2011-2012 Linaro Ltd <mturquette@linaro.org>
++ */
++#ifndef __LINUX_CLK_PROVIDER_UCCF_H
++#define __LINUX_CLK_PROVIDER_UCCF_H
++
++#include <linux/bitops.h>
++#include <linux/err.h>
++#include <clk-uclass.h>
++
++struct udevice;
++
++/* update clock ID for the dev = clock provider, compatible with CLK_AUTO_ID */
++static inline void dev_clk_dm(const struct udevice *dev, ulong id, struct clk *clk)
++{
++	if (!IS_ERR(clk))
++		clk->id = CLK_ID(dev, id);
++}
++
++static inline void clk_dm(ulong id, struct clk *clk)
++{
++	if (!IS_ERR(clk))
++		clk->id = CLK_ID(clk->dev, id);
++}
++
++/*
++ * flags used across common struct clk.  these flags should only affect the
++ * top-level framework.  custom flags for dealing with hardware specifics
++ * belong in struct clk_foo
++ *
++ * Please update clk_flags[] in drivers/clk/clk.c when making changes here!
++ */
++#define CLK_SET_RATE_GATE	BIT(0) /* must be gated across rate change */
++#define CLK_SET_PARENT_GATE	BIT(1) /* must be gated across re-parent */
++#define CLK_SET_RATE_PARENT	BIT(2) /* propagate rate change up one level */
++#define CLK_IGNORE_UNUSED	BIT(3) /* do not gate even if unused */
++				/* unused */
++#define CLK_IS_BASIC		BIT(5) /* Basic clk, can't do a to_clk_foo() */
++#define CLK_GET_RATE_NOCACHE	BIT(6) /* do not use the cached clk rate */
++#define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change */
++#define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accuracy */
++#define CLK_RECALC_NEW_RATES	BIT(9) /* recalc rates after notifications */
++#define CLK_SET_RATE_UNGATE	BIT(10) /* clock needs to run to set rate */
++#define CLK_IS_CRITICAL		BIT(11) /* do not gate, ever */
++/* parents need enable during gate/ungate, set rate and re-parent */
++#define CLK_OPS_PARENT_ENABLE	BIT(12)
++/* duty cycle call may be forwarded to the parent clock */
++#define CLK_DUTY_CYCLE_PARENT	BIT(13)
++
++#define CLK_MUX_INDEX_ONE		BIT(0)
++#define CLK_MUX_INDEX_BIT		BIT(1)
++#define CLK_MUX_HIWORD_MASK		BIT(2)
++#define CLK_MUX_READ_ONLY		BIT(3) /* mux can't be changed */
++#define CLK_MUX_ROUND_CLOSEST		BIT(4)
++
++struct clk_mux {
++	struct clk	clk;
++	void __iomem	*reg;
++	u32		*table;
++	u32		mask;
++	u8		shift;
++	u8		flags;
++
++	/*
++	 * Fields from struct clk_init_data - this struct has been
++	 * omitted to avoid too deep level of CCF for bootloader
++	 */
++	const char	* const *parent_names;
++	u8		num_parents;
++#if IS_ENABLED(CONFIG_SANDBOX_CLK_CCF)
++	u32             io_mux_val;
++#endif
++
++};
++
++#define to_clk_mux(_clk) container_of(_clk, struct clk_mux, clk)
 +extern const struct clk_ops_uboot clk_mux_ops;
- u8 clk_mux_get_parent(struct clk *clk);
- int clk_mux_fetch_parent_index(struct clk *clk, struct clk *parent);
- 
- /**
-@@ -110,9 +110,9 @@ struct clk_gate {
- 
- #define CLK_GATE_SET_TO_DISABLE		BIT(0)
- #define CLK_GATE_HIWORD_MASK		BIT(1)
- 
--extern const struct clk_ops clk_gate_ops;
++u8 clk_mux_get_parent(struct clk *clk);
++int clk_mux_fetch_parent_index(struct clk *clk, struct clk *parent);
++
++/**
++ * clk_mux_index_to_val() - Convert the parent index to the register value
++ *
++ * It returns the value to write in the hardware register to output the selected
++ * input clock parent.
++ *
++ * @table: array of register values corresponding to the parent index (optional)
++ * @flags: hardware-specific flags
++ * @index: parent clock index
++ * Return: the register value
++ */
++unsigned int clk_mux_index_to_val(u32 *table, unsigned int flags, u8 index);
++
++struct clk_gate {
++	struct clk	clk;
++	void __iomem	*reg;
++	u8		bit_idx;
++	u8		flags;
++#if IS_ENABLED(CONFIG_SANDBOX_CLK_CCF)
++	u32		io_gate_val;
++#endif
++};
++
++#define to_clk_gate(_clk) container_of(_clk, struct clk_gate, clk)
++
++#define CLK_GATE_SET_TO_DISABLE		BIT(0)
++#define CLK_GATE_HIWORD_MASK		BIT(1)
++
 +extern const struct clk_ops_uboot clk_gate_ops;
- struct clk *clk_register_gate(struct udevice *dev, const char *name,
- 			      const char *parent_name, unsigned long flags,
- 			      void __iomem *reg, u8 bit_idx,
- 			      u8 clk_gate_flags, spinlock_t *lock);
-@@ -143,9 +143,9 @@ struct clk_divider {
- #define CLK_DIVIDER_HIWORD_MASK		BIT(3)
- #define CLK_DIVIDER_ROUND_CLOSEST	BIT(4)
- #define CLK_DIVIDER_READ_ONLY		BIT(5)
- #define CLK_DIVIDER_MAX_AT_ZERO		BIT(6)
--extern const struct clk_ops clk_divider_ops;
++struct clk *clk_register_gate(struct udevice *dev, const char *name,
++			      const char *parent_name, unsigned long flags,
++			      void __iomem *reg, u8 bit_idx,
++			      u8 clk_gate_flags, spinlock_t *lock);
++
++struct clk_div_table {
++	unsigned int	val;
++	unsigned int	div;
++};
++
++struct clk_divider {
++	struct clk	clk;
++	void __iomem	*reg;
++	u8		shift;
++	u8		width;
++	u8		flags;
++	const struct clk_div_table	*table;
++#if IS_ENABLED(CONFIG_SANDBOX_CLK_CCF)
++	u32             io_divider_val;
++#endif
++};
++
++#define clk_div_mask(width)	((1 << (width)) - 1)
++#define to_clk_divider(_clk) container_of(_clk, struct clk_divider, clk)
++
++#define CLK_DIVIDER_ONE_BASED		BIT(0)
++#define CLK_DIVIDER_POWER_OF_TWO	BIT(1)
++#define CLK_DIVIDER_ALLOW_ZERO		BIT(2)
++#define CLK_DIVIDER_HIWORD_MASK		BIT(3)
++#define CLK_DIVIDER_ROUND_CLOSEST	BIT(4)
++#define CLK_DIVIDER_READ_ONLY		BIT(5)
++#define CLK_DIVIDER_MAX_AT_ZERO		BIT(6)
 +extern const struct clk_ops_uboot clk_divider_ops;
- 
- /**
-  * clk_divider_get_table_div() - convert the register value to the divider
-  *
-@@ -199,9 +199,9 @@ struct clk_fixed_factor {
- 	unsigned int	mult;
- 	unsigned int	div;
- };
- 
--extern const struct clk_ops clk_fixed_rate_ops;
++
++/**
++ * clk_divider_get_table_div() - convert the register value to the divider
++ *
++ * @table:  array of register values corresponding to valid dividers
++ * @val: value to convert
++ * Return: the divider
++ */
++unsigned int clk_divider_get_table_div(const struct clk_div_table *table,
++				       unsigned int val);
++
++/**
++ * clk_divider_get_table_val() - convert the divider to the register value
++ *
++ * It returns the value to write in the hardware register to divide the input
++ * clock rate by @div.
++ *
++ * @table: array of register values corresponding to valid dividers
++ * @div: requested divider
++ * Return: the register value
++ */
++unsigned int clk_divider_get_table_val(const struct clk_div_table *table,
++				       unsigned int div);
++
++/**
++ * clk_divider_is_valid_div() - check if the divider is valid
++ *
++ * @table: array of valid dividers (optional)
++ * @div: divider to check
++ * @flags: hardware-specific flags
++ * Return: true if the divider is valid, false otherwise
++ */
++bool clk_divider_is_valid_div(const struct clk_div_table *table,
++			      unsigned int div, unsigned long flags);
++
++/**
++ * clk_divider_is_valid_table_div - check if the divider is in the @table array
++ *
++ * @table: array of valid dividers
++ * @div: divider to check
++ * Return: true if the divider is found in the @table array, false otherwise
++ */
++bool clk_divider_is_valid_table_div(const struct clk_div_table *table,
++				    unsigned int div);
++unsigned long divider_recalc_rate(struct clk *hw, unsigned long parent_rate,
++				  unsigned int val,
++				  const struct clk_div_table *table,
++				  unsigned long flags, unsigned long width);
++
++struct clk_fixed_factor {
++	struct clk	clk;
++	unsigned int	mult;
++	unsigned int	div;
++};
++
 +extern const struct clk_ops_uboot clk_fixed_rate_ops;
- 
- #define to_clk_fixed_factor(_clk) container_of(_clk, struct clk_fixed_factor,\
- 					       clk)
- 
-@@ -216,28 +216,28 @@ void clk_fixed_rate_ofdata_to_plat_(struct udevice *dev,
- 				    struct clk_fixed_rate *plat);
- 
- struct clk_composite {
- 	struct clk	clk;
--	struct clk_ops	ops;
++
++#define to_clk_fixed_factor(_clk) container_of(_clk, struct clk_fixed_factor,\
++					       clk)
++
++struct clk_fixed_rate {
++	struct clk clk;
++	unsigned long fixed_rate;
++};
++
++#define to_clk_fixed_rate(dev)	((struct clk_fixed_rate *)dev_get_plat(dev))
++
++void clk_fixed_rate_ofdata_to_plat_(struct udevice *dev,
++				    struct clk_fixed_rate *plat);
++
++struct clk_composite {
++	struct clk	clk;
 +	struct clk_ops_uboot	ops;
- 
- 	struct clk	*mux;
- 	struct clk	*rate;
- 	struct clk	*gate;
- 
--	const struct clk_ops	*mux_ops;
--	const struct clk_ops	*rate_ops;
--	const struct clk_ops	*gate_ops;
++
++	struct clk	*mux;
++	struct clk	*rate;
++	struct clk	*gate;
++
 +	const struct clk_ops_uboot	*mux_ops;
 +	const struct clk_ops_uboot	*rate_ops;
 +	const struct clk_ops_uboot	*gate_ops;
- 
- 	struct udevice *dev;
- };
- 
- #define to_clk_composite(_clk) container_of(_clk, struct clk_composite, clk)
- 
- struct clk *clk_register_composite(struct udevice *dev, const char *name,
- 		const char * const *parent_names, int num_parents,
--		struct clk *mux_clk, const struct clk_ops *mux_ops,
--		struct clk *rate_clk, const struct clk_ops *rate_ops,
--		struct clk *gate_clk, const struct clk_ops *gate_ops,
++
++	struct udevice *dev;
++};
++
++#define to_clk_composite(_clk) container_of(_clk, struct clk_composite, clk)
++
++struct clk *clk_register_composite(struct udevice *dev, const char *name,
++		const char * const *parent_names, int num_parents,
 +		struct clk *mux_clk, const struct clk_ops_uboot *mux_ops,
 +		struct clk *rate_clk, const struct clk_ops_uboot *rate_ops,
 +		struct clk *gate_clk, const struct clk_ops_uboot *gate_ops,
- 		unsigned long flags);
- 
- int clk_register(struct clk *clk, const char *drv_name, const char *name,
- 		 const char *parent_name);
-@@ -274,7 +274,7 @@ ulong ccf_clk_get_rate(struct clk *clk);
- ulong ccf_clk_set_rate(struct clk *clk, unsigned long rate);
- int ccf_clk_set_parent(struct clk *clk, struct clk *parent);
- int ccf_clk_enable(struct clk *clk);
- int ccf_clk_disable(struct clk *clk);
--extern const struct clk_ops ccf_clk_ops;
++		unsigned long flags);
++
++int clk_register(struct clk *clk, const char *drv_name, const char *name,
++		 const char *parent_name);
++
++struct clk *clk_register_fixed_factor(struct udevice *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div);
++
++struct clk *clk_register_divider_table(struct udevice *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		u8 clk_divider_flags, const struct clk_div_table *table);
++
++struct clk *clk_register_divider(struct udevice *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		u8 clk_divider_flags);
++
++struct clk *clk_register_mux(struct udevice *dev, const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		u8 clk_mux_flags);
++
++struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
++				    ulong rate);
++
++const char *clk_hw_get_name(const struct clk *hw);
++ulong clk_generic_get_rate(struct clk *clk);
++
++struct clk *dev_get_clk_ptr(struct udevice *dev);
++
++long ccf_clk_get_rate(struct clk *clk);
++long ccf_clk_set_rate(struct clk *clk, unsigned long rate);
++int ccf_clk_set_parent(struct clk *clk, struct clk *parent);
++int ccf_clk_enable(struct clk *clk);
++int ccf_clk_disable(struct clk *clk);
 +extern const struct clk_ops_uboot ccf_clk_ops;
++
++#endif /* __LINUX_CLK_PROVIDER_UCCF_H */
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 9b2f75eabf7e..1140c2b10ac2 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -8,273 +8,15 @@
+  */
+ #ifndef __LINUX_CLK_PROVIDER_H
+ #define __LINUX_CLK_PROVIDER_H
  
+-#include <linux/bitops.h>
+-#include <linux/err.h>
+-#include <clk-uclass.h>
+-
+-struct udevice;
+-
+-/* update clock ID for the dev = clock provider, compatible with CLK_AUTO_ID */
+-static inline void dev_clk_dm(const struct udevice *dev, ulong id, struct clk *clk)
+-{
+-	if (!IS_ERR(clk))
+-		clk->id = CLK_ID(dev, id);
+-}
+-
+-static inline void clk_dm(ulong id, struct clk *clk)
+-{
+-	if (!IS_ERR(clk))
+-		clk->id = CLK_ID(clk->dev, id);
+-}
+-
+ /*
+- * flags used across common struct clk.  these flags should only affect the
+- * top-level framework.  custom flags for dealing with hardware specifics
+- * belong in struct clk_foo
+- *
+- * Please update clk_flags[] in drivers/clk/clk.c when making changes here!
++ * U-Boot: for compatibility include the correct clk-provider.h
++ * for either uccf (U-Boot CCF) or ccf_full (Linux CCF)
+  */
+-#define CLK_SET_RATE_GATE	BIT(0) /* must be gated across rate change */
+-#define CLK_SET_PARENT_GATE	BIT(1) /* must be gated across re-parent */
+-#define CLK_SET_RATE_PARENT	BIT(2) /* propagate rate change up one level */
+-#define CLK_IGNORE_UNUSED	BIT(3) /* do not gate even if unused */
+-				/* unused */
+-#define CLK_IS_BASIC		BIT(5) /* Basic clk, can't do a to_clk_foo() */
+-#define CLK_GET_RATE_NOCACHE	BIT(6) /* do not use the cached clk rate */
+-#define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change */
+-#define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accuracy */
+-#define CLK_RECALC_NEW_RATES	BIT(9) /* recalc rates after notifications */
+-#define CLK_SET_RATE_UNGATE	BIT(10) /* clock needs to run to set rate */
+-#define CLK_IS_CRITICAL		BIT(11) /* do not gate, ever */
+-/* parents need enable during gate/ungate, set rate and re-parent */
+-#define CLK_OPS_PARENT_ENABLE	BIT(12)
+-/* duty cycle call may be forwarded to the parent clock */
+-#define CLK_DUTY_CYCLE_PARENT	BIT(13)
+-
+-#define CLK_MUX_INDEX_ONE		BIT(0)
+-#define CLK_MUX_INDEX_BIT		BIT(1)
+-#define CLK_MUX_HIWORD_MASK		BIT(2)
+-#define CLK_MUX_READ_ONLY		BIT(3) /* mux can't be changed */
+-#define CLK_MUX_ROUND_CLOSEST		BIT(4)
+-
+-struct clk_mux {
+-	struct clk	clk;
+-	void __iomem	*reg;
+-	u32		*table;
+-	u32		mask;
+-	u8		shift;
+-	u8		flags;
+-
+-	/*
+-	 * Fields from struct clk_init_data - this struct has been
+-	 * omitted to avoid too deep level of CCF for bootloader
+-	 */
+-	const char	* const *parent_names;
+-	u8		num_parents;
+-#if IS_ENABLED(CONFIG_SANDBOX_CLK_CCF)
+-	u32             io_mux_val;
++#if CONFIG_IS_ENABLED(CLK_CCF_FULL)
++#include "clk-provider-ccf_full.h"
++#else
++#include "clk-provider-uccf.h"
+ #endif
+ 
+-};
+-
+-#define to_clk_mux(_clk) container_of(_clk, struct clk_mux, clk)
+-extern const struct clk_ops_uboot clk_mux_ops;
+-u8 clk_mux_get_parent(struct clk *clk);
+-int clk_mux_fetch_parent_index(struct clk *clk, struct clk *parent);
+-
+-/**
+- * clk_mux_index_to_val() - Convert the parent index to the register value
+- *
+- * It returns the value to write in the hardware register to output the selected
+- * input clock parent.
+- *
+- * @table: array of register values corresponding to the parent index (optional)
+- * @flags: hardware-specific flags
+- * @index: parent clock index
+- * Return: the register value
+- */
+-unsigned int clk_mux_index_to_val(u32 *table, unsigned int flags, u8 index);
+-
+-struct clk_gate {
+-	struct clk	clk;
+-	void __iomem	*reg;
+-	u8		bit_idx;
+-	u8		flags;
+-#if IS_ENABLED(CONFIG_SANDBOX_CLK_CCF)
+-	u32		io_gate_val;
+-#endif
+-};
+-
+-#define to_clk_gate(_clk) container_of(_clk, struct clk_gate, clk)
+-
+-#define CLK_GATE_SET_TO_DISABLE		BIT(0)
+-#define CLK_GATE_HIWORD_MASK		BIT(1)
+-
+-extern const struct clk_ops_uboot clk_gate_ops;
+-struct clk *clk_register_gate(struct udevice *dev, const char *name,
+-			      const char *parent_name, unsigned long flags,
+-			      void __iomem *reg, u8 bit_idx,
+-			      u8 clk_gate_flags, spinlock_t *lock);
+-
+-struct clk_div_table {
+-	unsigned int	val;
+-	unsigned int	div;
+-};
+-
+-struct clk_divider {
+-	struct clk	clk;
+-	void __iomem	*reg;
+-	u8		shift;
+-	u8		width;
+-	u8		flags;
+-	const struct clk_div_table	*table;
+-#if IS_ENABLED(CONFIG_SANDBOX_CLK_CCF)
+-	u32             io_divider_val;
+-#endif
+-};
+-
+-#define clk_div_mask(width)	((1 << (width)) - 1)
+-#define to_clk_divider(_clk) container_of(_clk, struct clk_divider, clk)
+-
+-#define CLK_DIVIDER_ONE_BASED		BIT(0)
+-#define CLK_DIVIDER_POWER_OF_TWO	BIT(1)
+-#define CLK_DIVIDER_ALLOW_ZERO		BIT(2)
+-#define CLK_DIVIDER_HIWORD_MASK		BIT(3)
+-#define CLK_DIVIDER_ROUND_CLOSEST	BIT(4)
+-#define CLK_DIVIDER_READ_ONLY		BIT(5)
+-#define CLK_DIVIDER_MAX_AT_ZERO		BIT(6)
+-extern const struct clk_ops_uboot clk_divider_ops;
+-
+-/**
+- * clk_divider_get_table_div() - convert the register value to the divider
+- *
+- * @table:  array of register values corresponding to valid dividers
+- * @val: value to convert
+- * Return: the divider
+- */
+-unsigned int clk_divider_get_table_div(const struct clk_div_table *table,
+-				       unsigned int val);
+-
+-/**
+- * clk_divider_get_table_val() - convert the divider to the register value
+- *
+- * It returns the value to write in the hardware register to divide the input
+- * clock rate by @div.
+- *
+- * @table: array of register values corresponding to valid dividers
+- * @div: requested divider
+- * Return: the register value
+- */
+-unsigned int clk_divider_get_table_val(const struct clk_div_table *table,
+-				       unsigned int div);
+-
+-/**
+- * clk_divider_is_valid_div() - check if the divider is valid
+- *
+- * @table: array of valid dividers (optional)
+- * @div: divider to check
+- * @flags: hardware-specific flags
+- * Return: true if the divider is valid, false otherwise
+- */
+-bool clk_divider_is_valid_div(const struct clk_div_table *table,
+-			      unsigned int div, unsigned long flags);
+-
+-/**
+- * clk_divider_is_valid_table_div - check if the divider is in the @table array
+- *
+- * @table: array of valid dividers
+- * @div: divider to check
+- * Return: true if the divider is found in the @table array, false otherwise
+- */
+-bool clk_divider_is_valid_table_div(const struct clk_div_table *table,
+-				    unsigned int div);
+-unsigned long divider_recalc_rate(struct clk *hw, unsigned long parent_rate,
+-				  unsigned int val,
+-				  const struct clk_div_table *table,
+-				  unsigned long flags, unsigned long width);
+-
+-struct clk_fixed_factor {
+-	struct clk	clk;
+-	unsigned int	mult;
+-	unsigned int	div;
+-};
+-
+-extern const struct clk_ops_uboot clk_fixed_rate_ops;
+-
+-#define to_clk_fixed_factor(_clk) container_of(_clk, struct clk_fixed_factor,\
+-					       clk)
+-
+-struct clk_fixed_rate {
+-	struct clk clk;
+-	unsigned long fixed_rate;
+-};
+-
+-#define to_clk_fixed_rate(dev)	((struct clk_fixed_rate *)dev_get_plat(dev))
+-
+-void clk_fixed_rate_ofdata_to_plat_(struct udevice *dev,
+-				    struct clk_fixed_rate *plat);
+-
+-struct clk_composite {
+-	struct clk	clk;
+-	struct clk_ops_uboot	ops;
+-
+-	struct clk	*mux;
+-	struct clk	*rate;
+-	struct clk	*gate;
+-
+-	const struct clk_ops_uboot	*mux_ops;
+-	const struct clk_ops_uboot	*rate_ops;
+-	const struct clk_ops_uboot	*gate_ops;
+-
+-	struct udevice *dev;
+-};
+-
+-#define to_clk_composite(_clk) container_of(_clk, struct clk_composite, clk)
+-
+-struct clk *clk_register_composite(struct udevice *dev, const char *name,
+-		const char * const *parent_names, int num_parents,
+-		struct clk *mux_clk, const struct clk_ops_uboot *mux_ops,
+-		struct clk *rate_clk, const struct clk_ops_uboot *rate_ops,
+-		struct clk *gate_clk, const struct clk_ops_uboot *gate_ops,
+-		unsigned long flags);
+-
+-int clk_register(struct clk *clk, const char *drv_name, const char *name,
+-		 const char *parent_name);
+-
+-struct clk *clk_register_fixed_factor(struct udevice *dev, const char *name,
+-		const char *parent_name, unsigned long flags,
+-		unsigned int mult, unsigned int div);
+-
+-struct clk *clk_register_divider_table(struct udevice *dev, const char *name,
+-		const char *parent_name, unsigned long flags,
+-		void __iomem *reg, u8 shift, u8 width,
+-		u8 clk_divider_flags, const struct clk_div_table *table);
+-
+-struct clk *clk_register_divider(struct udevice *dev, const char *name,
+-		const char *parent_name, unsigned long flags,
+-		void __iomem *reg, u8 shift, u8 width,
+-		u8 clk_divider_flags);
+-
+-struct clk *clk_register_mux(struct udevice *dev, const char *name,
+-		const char * const *parent_names, u8 num_parents,
+-		unsigned long flags,
+-		void __iomem *reg, u8 shift, u8 width,
+-		u8 clk_mux_flags);
+-
+-struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
+-				    ulong rate);
+-
+-const char *clk_hw_get_name(const struct clk *hw);
+-ulong clk_generic_get_rate(struct clk *clk);
+-
+-struct clk *dev_get_clk_ptr(struct udevice *dev);
+-
+-ulong ccf_clk_get_rate(struct clk *clk);
+-ulong ccf_clk_set_rate(struct clk *clk, unsigned long rate);
+-int ccf_clk_set_parent(struct clk *clk, struct clk *parent);
+-int ccf_clk_enable(struct clk *clk);
+-int ccf_clk_disable(struct clk *clk);
+-extern const struct clk_ops_uboot ccf_clk_ops;
+-
  #endif /* __LINUX_CLK_PROVIDER_H */
+diff --git a/include/linux/clk/clk-conf.h b/include/linux/clk/clk-conf.h
+new file mode 100644
+index 000000000000..eae9652c70cd
+--- /dev/null
++++ b/include/linux/clk/clk-conf.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2014 Samsung Electronics Co., Ltd.
++ * Sylwester Nawrocki <s.nawrocki@samsung.com>
++ */
++
++#ifndef __CLK_CONF_H
++#define __CLK_CONF_H
++
++#include <linux/types.h>
++
++struct device_node;
++
++#if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
++int of_clk_set_defaults(struct device_node *node, bool clk_supplier);
++#else
++static inline int of_clk_set_defaults(struct device_node *node,
++				      bool clk_supplier)
++{
++	return 0;
++}
++#endif
++
++#endif /* __CLK_CONF_H */
 
 -- 
 2.55.0
