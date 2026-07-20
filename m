@@ -2,175 +2,178 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB4DC44529
-	for <webhook@archiver.kernel.org>; Tue, 21 Jul 2026 07:26:59 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.17353.1784618813549412943
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FB8C4451C
+	for <webhook@archiver.kernel.org>; Tue, 21 Jul 2026 07:30:19 +0000 (UTC)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1998.1784566018773391990
  for <u-boot-amlogic@groups.io>;
- Tue, 21 Jul 2026 00:26:53 -0700
+ Mon, 20 Jul 2026 09:46:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=QS97ILF/;
- spf=pass (domain: linaro.org, ip: 209.85.128.49, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-49553515a8bso29992075e9.1
-        for <u-boot-amlogic@groups.io>; Tue, 21 Jul 2026 00:26:53 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Oj8jS0st;
+ spf=pass (domain: linaro.org, ip: 209.85.218.46, mailfrom: casey.connolly@linaro.org)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c1670dad7a8so1051936866b.3
+        for <u-boot-amlogic@groups.io>; Mon, 20 Jul 2026 09:46:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1784618812; x=1785223612; darn=groups.io;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1784566017; x=1785170817; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Tg4Iqh6ufJjBPsRpeCIxF1O34hDY5WDd38VtPOQlljw=;
-        b=QS97ILF/odthA8VSCYJ4SWmvOPyl/0jufULXBhmj68frkt78M8FbqIaX94FSLXbSdy
-         O/QmY2ks4LxmV0nvQhYuG4XKYk6wZruLfFOgGePG8Me5a1MGmI6eq4yo2i0YJN0yylpN
-         AU7OnHHpNbikNT2J5nCk/Q/F4ksdXcKx7J3ensTi5OAem7PIuDPZGW8to7BkK6Evs2kn
-         1WSo9b8XWJkETUSUsHlSsrs9hUOwfYdN87SEPTK6PFhdN7O6gUkawzyK+xiUzL4axgfY
-         uaI+tCuK+71NTJCXDYzBlxTgLlq3Zv9UNXXVTAy9LZuLmnghwTPZuunJmMM0dSELFTlR
-         g65w==
+        bh=Y25x447Guht5ADrFC/WcBLjjXlhddC1R3nrVIl22w6o=;
+        b=Oj8jS0st79MVsmqHN6BjGO38TZR7kRGk6r4OV8w/4u3fqF7Z/HJ8+Somy4mzFu6I9X
+         7iJdACGlLViKFSPeuVfIJTDFfofLXUAdtH2wSkq7CHccz5+ik+11AZRF1DW6wZaiJHZR
+         vSkDf3NdHz+DS7XEjiB/jKZZT1ppj3Hy/WjUyu4gAD4bVpI8U7r78LlURmvGhfq/aX1z
+         WgI8qCUnQHrFoDUBYwX9+Gaq/vPgo9lbTQJEu7vMdRzGkVQwulg6+qTqJ4giiHnyJBhc
+         S6V6BdLYMLIlOhn4A8Ho1zfNtknq77IKRCYfqzRYzNF4Gg06/KWCtOj8Pmas0sszFub2
+         tbrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784618812; x=1785223612;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Tg4Iqh6ufJjBPsRpeCIxF1O34hDY5WDd38VtPOQlljw=;
-        b=J5XqGdcC15w+EGaICRZ3V55NY35w3zV4H7CPFbgVOPB/QLU7J9fqgMv0JhIQMNRZ1I
-         /5wJPaBmFI5ugwc+MgXRUJv/W0j8U/ANNijUl8kvnrzH844BZf7hS9vHCpkIUBsvTwmY
-         0kEiy2nldfRtwf2ojzVzhfb30SlfeTpSiNVnoQo1mA37hWyr4xzp3Pb/PtDm/MNk1ykY
-         YVn1fXF67AE1st5RBCy+DB7fbk7QJ0zUCGhFqOxJuh9Zl2G/QS9SSeKBlLtkWjEmkIp7
-         qi2FoneMvWt5/JnNxZcJeSSH6gD18ttOwXQtkR2YtJIVenfgiwoXjjpJTSbXBGp7DgvP
-         Ah1w==
-X-Forwarded-Encrypted: i=1; AHgh+Rpq5AgoRPc1wlbU8I0Qx2+aJ4kmxtba76kgq+w2l7QFPU/wbjMxuH9fbt7gtOpiZYArIZiJfIz268dMLBKtjw==@groups.io
-X-Gm-Message-State: AOJu0YyL4e4L3U3whaKyAgxxUcMYAuu4cMXsokhJGwM6Jlu6QMz0Jbi3
-	22z+JZOismEhmgOwWAjvKlMQkEE78ceS3stxRA7e7WKDfQyRisv4EXgfUoBXWpBKyNg=
-X-Gm-Gg: AfdE7clV2cFxvxvehVR2lUrOAijM+/AsPu0XXoffNRtBpoGcZBa/RKemsea52VCZJBl
-	qFYbA2vzLjPmUua+aPwvcclPszrINu6BVM6sH/zLsDZinLTYVvtVlXcMddHEw8GlTVs6pk9aANE
-	Fo8abrvA5cdsc8olfYDcpSIJ9CETRc9Oekr0/KlXthMPfrli67LIleAt9udQxIJPRBGd+jKqow3
-	9gqdxL+5znppex8AUCRtDJnrpOcxyYkW5lTymjWQ1qFlEHXfXTTAa3aOsGXLaRfxH+z/nM0EkZ8
-	Eb4i4OAye59Ddi4xlecVI1hYjA+4z9ysRna/HZbeaZQmuptvZgahZmnGCu0jYiDe7OC/WDUBmBK
-	g20GrsUgRwJ8cVjYiggcG4YaPlJ+sEcFvJl3b+NIluY/afB3bYbIlm+m+Q8XyjpxeD/Rz2i+jMr
-	GmhrRTvtBm7O765d8Csj/VlX5HjlqSHvrkn9CuigQwc/gmhBCdYZz15XkzaJLMigc7XgDV
-X-Received: by 2002:a05:600c:4f54:b0:495:4815:2c54 with SMTP id 5b1f17b1804b1-4954a41303amr193263685e9.34.1784618811576;
-        Tue, 21 Jul 2026 00:26:51 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:106d:1080:77c9:2d2d:bb1f:99c1? ([2a01:e0a:106d:1080:77c9:2d2d:bb1f:99c1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49564011868sm63244485e9.3.2026.07.21.00.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2026 00:26:51 -0700 (PDT)
-Message-ID: <b0bcf3b3-83b7-4a01-9fae-5e135f2dfc66@linaro.org>
-Date: Tue, 21 Jul 2026 09:26:49 +0200
+        d=1e100.net; s=20251104; t=1784566017; x=1785170817;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Y25x447Guht5ADrFC/WcBLjjXlhddC1R3nrVIl22w6o=;
+        b=IQzByacc4BP/BK/yjcoi9p2kkDuoOowAPk2cesC8XHj5npy713sJaLjZ8eX7GSHCP7
+         ZipQIzWLSwxpGBR6ZxfF+d+3JOEuWVisprRh9ieqkE4jOOhvK96A9M/olE/vkh+/wZHS
+         XwXC49A34irC+obyVQ90A+vLObtpg5uxwST8rqUp/ZdOT/ypqOhvuOZuON2UCzmwQVXv
+         7YFZxnxzs91OJyZrZr5rlGhKRuoidk7+W8h5TgzWkuxFAqfH+89TSKZGzolKSfyiw2ap
+         +ammctNh1EPeI8G33bUP07eEgxCzubSnTgfFQLjGiNJYpoTHq0STeYfdi2d5JUbT8ClC
+         GsEw==
+X-Forwarded-Encrypted: i=1; AHgh+RqRAlwGw5FYSBM8cqsYHh5eViD421y+rfd5AC+hP530r2iy2ObQtXSdnaK8YJr1vIEPILurp7yR5F2uy9O5KQ==@groups.io
+X-Gm-Message-State: AOJu0Yzow8XULLuV2KbPXZcBbfuWv7qYQDIQVkR2HtkO3825guYZcKSS
+	WhieK287l1wjpfJx2c+OKWbgaRviS5DmiO0L18b8a/lJP0V8+wiAUzsKlNR+6fqP5BFqjwoLlOr
+	YN4A7ROo=
+X-Gm-Gg: AfdE7ckslROjq41gaBh8PU6DF95P7i44GEkF4peJmr8bRsCPq8eNMIzGxRzdeg0KPK2
+	pnukpRf5CeKgpIJgkmeSpXEDTLpAckAZiZ5ukOY4US9uhc8d4ut7FcP5WUvukLJt46JSzLQlwiz
+	28gKv8pq66yYdfilX3vjj0ghWtTwP8UrIzlWPnGPz9YXCEg15GIBNLvligrUEvPK3CGjROXDgaR
+	AqmitQ353Y3SUhKerB67yaqWIOpuRdyiKIdsvGm3cTelA9r5LMew7swGhi2zbeVtqJj6qua5pC1
+	MVZjdvTfjZrHvAsHEJFPTA1vcq03zh9duNyUgzF6Cz8Gu6a64np+eyhluanEFNkruYn0QWAR7P3
+	cHEJ3XC8xw0HzwAtp/S7bG8IWZW2xPNmWxnRUPcYpbuFhT8+cBn1nLoPhvF9Ao9uXc9a3ImoB1t
+	P74dxI+qp0aW4CBvazj1Wuu/mT5YZOZA==
+X-Received: by 2002:a05:600c:1554:b0:495:3de8:33a6 with SMTP id 5b1f17b1804b1-4954a3dc7bcmr184999985e9.16.1784565660734;
+        Mon, 20 Jul 2026 09:41:00 -0700 (PDT)
+Received: from toyger.tail248178.ts.net ([2a0a:ef40:1d11:1101:a3b4:4010:a727:b812])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4956536870esm2755665e9.3.2026.07.20.09.40.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2026 09:41:00 -0700 (PDT)
+From: Casey Connolly <casey.connolly@linaro.org>
+Date: Mon, 20 Jul 2026 17:40:34 +0100
+Subject: [PATCH 07/36] dm: ofnode: fix parse_phandle_with_args API
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 34/36] ufs: qcom: use clk_prepare_enable_bulk()
-To: Casey Connolly <casey.connolly@linaro.org>, u-boot@lists.denx.de,
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
- "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>,
- GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>,
- Sumit Garg <sumit.garg@kernel.org>, Paul Barker <paul@pbarker.dev>,
- Dai Okamura <okamura.dai@socionext.com>, linux@analog.com,
- uboot-snps-arc@synopsys.com, u-boot-amlogic@groups.io,
- u-boot-qcom@groups.io, uboot-stm32@st-md-mailman.stormreply.com
-Cc: Tom Rini <trini@konsulko.com>, Lukasz Majewski <lukma@denx.de>,
- Simon Glass <sjg@chromium.org>, Greg Malysa <malysagreg@gmail.com>,
- Vasileios Bimpikas <vasileios.bimpikas@analog.com>,
- Arturs Artamonovs <arturs.artamonovs@analog.com>,
- Christian Marangi <ansuelsmth@gmail.com>,
- Ryan Chen <ryan_chen@aspeedtech.com>,
- Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
- Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
- Sean Anderson <seanga2@gmail.com>, Peng Fan <peng.fan@nxp.com>,
- Michal Simek <michal.simek@amd.com>, Liviu Dudau <liviu.dudau@foss.arm.com>,
- Sam Protsenko <semen.protsenko@linaro.org>,
- Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>,
- Ryder Lee <ryder.lee@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>,
- Chunfeng Yun <chunfeng.yun@mediatek.com>,
- Igor Belwon <igor.belwon@mentallysanemainliners.org>,
- David Lechner <dlechner@baylibre.com>, Julien Stephan
- <jstephan@baylibre.com>, Mario Six <mario.six@gdsys.cc>,
- Stefan Roese <stefan.roese@mailbox.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>,
- Philipp Tomsich <philipp.tomsich@vrull.eu>,
- Kever Yang <kever.yang@rock-chips.com>,
- Minda Chen <minda.chen@starfivetech.com>,
- Hal Feng <hal.feng@starfivetech.com>,
- Patrick Delaunay <patrick.delaunay@foss.st.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- Andre Przywara <andre.przywara@arm.com>, Thierry Reding
- <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>,
- Yao Zi <me@ziyao.cc>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- Jaehoon Chung <jh80.chung@samsung.com>,
- Robert Marko <robert.marko@sartura.hr>,
- Aswin Murugan <aswin.murugan@oss.qualcomm.com>,
- Balaji Selvanathan <balaji.selvanathan@oss.qualcomm.com>,
- Bhupesh Sharma <bhupesh.linux@gmail.com>,
- Neha Malcom Francis <n-francis@ti.com>
+Message-Id: <20260720-casey-ccf-upstream-july-v1-7-8fece1b0333d@linaro.org>
 References: <20260720-casey-ccf-upstream-july-v1-0-8fece1b0333d@linaro.org>
- <20260720-casey-ccf-upstream-july-v1-34-8fece1b0333d@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20260720-casey-ccf-upstream-july-v1-34-8fece1b0333d@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20260720-casey-ccf-upstream-july-v1-0-8fece1b0333d@linaro.org>
+To: u-boot@lists.denx.de, Aspeed BMC SW team <BMC-SW@aspeedtech.com>, 
+ Joel Stanley <joel@jms.id.au>, "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, 
+ GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>, 
+ Sumit Garg <sumit.garg@kernel.org>, Paul Barker <paul@pbarker.dev>, 
+ Dai Okamura <okamura.dai@socionext.com>, linux@analog.com, 
+ uboot-snps-arc@synopsys.com, u-boot-amlogic@groups.io, 
+ u-boot-qcom@groups.io, uboot-stm32@st-md-mailman.stormreply.com
+Cc: Tom Rini <trini@konsulko.com>, Lukasz Majewski <lukma@denx.de>, 
+ Simon Glass <sjg@chromium.org>, Greg Malysa <malysagreg@gmail.com>, 
+ Vasileios Bimpikas <vasileios.bimpikas@analog.com>, 
+ Arturs Artamonovs <arturs.artamonovs@analog.com>, 
+ Christian Marangi <ansuelsmth@gmail.com>, 
+ Ryan Chen <ryan_chen@aspeedtech.com>, 
+ Chia-Wei Wang <chiawei_wang@aspeedtech.com>, 
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
+ Sean Anderson <seanga2@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
+ Michal Simek <michal.simek@amd.com>, Liviu Dudau <liviu.dudau@foss.arm.com>, 
+ Sam Protsenko <semen.protsenko@linaro.org>, 
+ Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>, 
+ Ryder Lee <ryder.lee@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, 
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+ Igor Belwon <igor.belwon@mentallysanemainliners.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ Julien Stephan <jstephan@baylibre.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Mario Six <mario.six@gdsys.cc>, 
+ Stefan Roese <stefan.roese@mailbox.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Casey Connolly <casey.connolly@linaro.org>, 
+ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, 
+ Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+ Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+ Kever Yang <kever.yang@rock-chips.com>, 
+ Minda Chen <minda.chen@starfivetech.com>, 
+ Hal Feng <hal.feng@starfivetech.com>, 
+ Patrick Delaunay <patrick.delaunay@foss.st.com>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Andre Przywara <andre.przywara@arm.com>, 
+ Thierry Reding <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>, 
+ Yao Zi <me@ziyao.cc>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Robert Marko <robert.marko@sartura.hr>, 
+ Aswin Murugan <aswin.murugan@oss.qualcomm.com>, 
+ Balaji Selvanathan <balaji.selvanathan@oss.qualcomm.com>, 
+ Bhupesh Sharma <bhupesh.linux@gmail.com>, 
+ Neha Malcom Francis <n-francis@ti.com>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1465;
+ i=casey.connolly@linaro.org; h=from:subject:message-id;
+ bh=VkqFoCA+I49phw4ZN9BG/jLRlqnUHdmYjTVV5RWV5c0=;
+ b=owEBbQKS/ZANAwAKAQWDMSsZX2S2AcsmYgBqXk+AmUZ+xt+bfbv5CNqttCYh3sbJcI+HehBYo
+ v2Xw9jvYqmJAjMEAAEKAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCal5PgAAKCRAFgzErGV9k
+ trg4D/9rZG2bvRA1/1gdHsB6lSgv2RMGnFZd7U/oc37uNL0dZWPVEZ5fu/XHzsNOF8gHeDqhRcl
+ kDE/Zx6tStNoBnilbUHplEkWTcCtbGRrtBThTkgkyY2Q6+6pqAklGiRVlZEsNeQAmb4jIvcBp7x
+ RZitkeh6Lm/qmO/SAhKUlHHHnaysrbIARGJv3TZSUNaL2zr/hFbkAeeFxerRCx/cSmRlAcg20HX
+ FD2BeLpDv5pdJWhUdSOHeglRA6iUF9oEkLz8IVbM3xkzE/y0NJcj4Ii2u71xxVT/9auINkWO1d9
+ DN8+LLeFct4j5P22Wo0MizCoSjFgwjtmtdB7G3nAorLhuJxTbEVxLen0X8HuYdgCRvTHbtFoZPD
+ jvkPjMutNgkdT4gfLexWUWrabHT1d7f0SDpVT1HddTFGT/x4mauCAuRxk3S/AQZXfx5TGLz+yb3
+ QVqz4KEoj2DEtD1qN3MIK01xGMVhCKHXo2xYu0iDzcMTGcorUScTsOtcOnebQxHot/wcqK3OUYr
+ Xwxl6wgQakbxDNf+w/hB+0Bi9TxEuuMpaRzpzuqH1/0M7L+dA7Dp2KB1UYmMl68r/iTZP2rR3xI
+ dY6O1yFMzQU98FbOI4O8kTzd3/TUyAGFrH4QgCV5DSLquCskJLQDkXsWh+GSIccPKBFtQRZx2dw
+ YV2ZIwChQ8d9IlQ==
+X-Developer-Key: i=casey.connolly@linaro.org; a=openpgp;
+ fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 21 Jul 2026 07:26:59 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3009
+ <u-boot-amlogic@groups.io>; Tue, 21 Jul 2026 07:30:19 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3012
 
-On 7/20/26 18:41, Casey Connolly wrote:
-> With CCF the clocks have to be prepared before enabling. The CCF core
-> will do this for us but it's much better to be explicit.
-> 
-> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> ---
->   drivers/ufs/ufs-qcom.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ufs/ufs-qcom.c b/drivers/ufs/ufs-qcom.c
-> index f5f5a6eb110c..3656c3861cb5 100644
-> --- a/drivers/ufs/ufs-qcom.c
-> +++ b/drivers/ufs/ufs-qcom.c
-> @@ -38,9 +38,9 @@ static int ufs_qcom_enable_clks(struct ufs_qcom_priv *priv)
->   
->   	if (priv->is_clks_enabled)
->   		return 0;
->   
-> -	err = clk_enable_bulk(&priv->clks);
-> +	err = clk_prepare_enable_bulk(&priv->clks);
->   	if (err)
->   		return err;
->   
->   	priv->is_clks_enabled = true;
-> 
+When not using livetree, fdtdec_parse_phandle_with_args() is used both
+to parse as well as to count the number of arguments. This means it
+returns a positive integer in some cased (based on the index) which is
+NOT valid for ofnode_parse_phandle_with_args().
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Fix this by ignoring positive return value since it still indicates that
+the phandle was parsed correctly.
 
-Thanks,
-Neil
+Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+---
+ drivers/core/ofnode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/core/ofnode.c b/drivers/core/ofnode.c
+index 1388b4810317..b82d48232ec3 100644
+--- a/drivers/core/ofnode.c
++++ b/drivers/core/ofnode.c
+@@ -1069,9 +1069,9 @@ int ofnode_parse_phandle_with_args(ofnode node, const char *list_name,
+ 		ret = fdtdec_parse_phandle_with_args(ofnode_to_fdt(node),
+ 						     ofnode_to_offset(node),
+ 						     list_name, cells_name,
+ 						     cell_count, index, &args);
+-		if (ret)
++		if (ret < 0)
+ 			return ret;
+ 		ofnode_from_fdtdec_phandle_args(node, &args, out_args);
+ 	}
+ 
+@@ -1102,9 +1102,9 @@ int oftree_parse_phandle_with_args(oftree tree, ofnode node, const char *list_na
+ 		ret = fdtdec_parse_phandle_with_args(tree.fdt,
+ 						     ofnode_to_offset(node),
+ 						     list_name, cells_name,
+ 						     cell_count, index, &args);
+-		if (ret)
++		if (ret < 0)
+ 			return ret;
+ 		ofnode_from_fdtdec_phandle_args(node, &args, out_args);
+ 	}
+ 
+
+-- 
+2.55.0
+
 
