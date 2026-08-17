@@ -1,97 +1,117 @@
-Return-Path: <funderscore@postmarketos.org>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEC1C5DF6D
-	for <webhook@archiver.kernel.org>; Sun, 16 Aug 2026 17:41:20 +0000 (UTC)
-Received: from mta1.migadu.com (mta1.migadu.com [95.215.58.148])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.14065.1786902079226606107
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD50C5DF81
+	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 12:53:24 +0000 (UTC)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.34687.1786984568957422596
  for <u-boot-amlogic@groups.io>;
- Sun, 16 Aug 2026 10:41:19 -0700
+ Mon, 17 Aug 2026 09:36:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@postmarketos.org header.s=key1 header.b=MzGEOej9;
- spf=pass (domain: postmarketos.org, ip: 95.215.58.148, mailfrom: funderscore@postmarketos.org)
-X-Envelope-To: u-boot-amlogic@groups.io
-DKIM-Signature: a=rsa-sha256; bh=OouZnqtWLN392ZXy0dWjGUa0Y71HitU+N6QOpi8QraE=;
- c=simple/simple; d=postmarketos.org;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786902077; v=1; x=1787506877;
- b=MzGEOej9ortdJD8GruzCHMmLcSkABtCvoNvKo0Ugahk0EttMowBUF4lNU9qSJRTEC71gRyyx
- Vg7JyXQdvZ+h1NbI/BCrpR3QNjzQnJSZU1Adu8AzS5Qdj43+qwA77A286CLxD7LXhh/wRtk3n2C
- r9+KmNziLK6hMnuCJjy1t2zjZb7EHjwBRaEkcbcX6dgzf2zYp40kSv7cimRiCSsdoqRy0ifUdvM
- QUO+20Y9foRsN26o/pKhBbWsoJlTep5TSBdT+RzxkoAHklpELjiGdOxH/PZZsfhU3CqxNvs3OwA
- +GmDT81Hd9usB16NmttTR8rE/O1u3NAI2YJV9OwUahCuw==
-X-Envelope-To: u-boot-amlogic@groups.io
-Received: from webmail.migadu.com (2001:41d0:303:fc7a::)
-	by smtp.migadu.com with ESMTPS id 04c5a10196b62a0a;
-	Sun, 16 Aug 2026 17:41:17 +0000
-X-Migadu-Flow: FLOW_OUT
+ dkim=pass header.i=@brivo.com header.s=google header.b=25iEnPYw;
+ spf=pass (domain: brivo.com, ip: 209.85.222.180, mailfrom: sanderson@brivo.com)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-92ed19f4d60so6415385a.0
+        for <u-boot-amlogic@groups.io>; Mon, 17 Aug 2026 09:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brivo.com; s=google; t=1786984568; x=1787589368; darn=groups.io;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=gBe8CcsQxm8wIR39y8TD1tkkfesQbMZhbUDiCeLvjls=;
+        b=25iEnPYwjjd7Ja28jeAILomhPx0BRmUfVn9xd4gB2IY3tpfsyEISEDsJYHbVkh+q+4
+         at9Us8d+ZkwdKiEOn05iIrw/7eQyQfKFwM9oNBBXQ1PjcNU03xzGlbNTz6inBnJuqYvU
+         6jV7Bvd2ZWLxrAAWEa+XapwGl/EWwltdaVarz6Z3L6i5JXREGFSHbDCn8bxrDecKH4lN
+         17Gjgg8wSDrQZTyKYsVeztiOpC+iuHGKhqZWJFGfLXCgXxeix1BwwS83mXhOhCiUR7mK
+         1xHmvlM6emYoOU5x2vSBu5ezOQqxQOpEsaxqhj1rKsor8XmVG7crUT25qwiB1e3BkYmp
+         vKJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786984568; x=1787589368;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=gBe8CcsQxm8wIR39y8TD1tkkfesQbMZhbUDiCeLvjls=;
+        b=lXJV3rvweeTK4BUZL4yqQONyox1qlla7cB7jmCR+OSHY8VXhE8e6oEOSrtLo81F4O5
+         YcZGcyZM1KHXm4SKV3QhSbYMYjoq+MUKbXQwLJf0R7lYQB0BNNf1dU/UGGpgoIPtona6
+         00mxbGfhDvm09an743392BuecHmIMMQZ58brwK5mrvZzGCFuJjHpWsl2YlCxbTk1yTuD
+         NIdwxayyzd4fxNdBp2HgNFJzygmKvebkr7mfWYPjkx/vUdR+FQpNwafw6bXjKwTfQUVR
+         xYNPmxEwyQfT7HbV+IrxROkCdRsIRm6YdqdPoENmTq1nVuun3yL9kP2D3NIrObH2kcFA
+         77rg==
+X-Gm-Message-State: AOJu0YzwbCkJCnzwPu95Q2eEFJVUNM0yxKMPOgtGPwaf20Ggyhjol87v
+	nX386FMCtClz9VGAUefVeJ2ydi309X57A/KKWys872AUmJhaSI8nYWYoPZJqo19ZfRmabU8mnZo
+	XupOUjrEbAlgMDFVYHr0AGZhhaB1ctG0m2mqjtjyBQb7Khc4ddqoEKA==
+X-Gm-Gg: AR+sD12iQvReYuULpifw3VUi1D+eag2Fi82MOB5/C8gIrjvviTJNW0+dbHtY57Wk9r1
+	fQy1goFWfx9W7tuRZL5lkoZvk94g02V4xKxzNVuvqqObf2LfqlK2OvMjQES0TJY/wNfP4k+jMZc
+	svnvqIvn67xwgSHuDggC+ejbpXsOBEHKQZj821uKYUM+1wRelLI7+euGXD4vVLll6wzh0DRpryt
+	QTwuWwlfMVHoH2U1CEjsDGt1tdjl8BstfSbm5lCTOpfqb1Y0smCPelUUyLHtHKpML3nN5ZDuQh2
+	j2zPGig0r9UXTxawKkpWOZoPQqn5hFma2RNJS2urC/jpK3908SIk/7D2d0yzgojtf4sjHXc8VEn
+	/6HdIOAzp/hnKmETtf5sD5WOh7WV9GqAVHHdBwZGlXfY6f1NDmM1L2d6CGwCNZZGeBEwKw0PQ6U
+	Ifs6G/AfndmAB6AlBLCEmlDzOA5xoD+jlPoNzTWvgSVCO5bJK1xRaXnJrj66q2qSSHnjqeggAkk
+	VlQLV1nwxLU2iiT0tjWS13LdAY=
+X-Received: by 2002:a05:620a:284c:b0:936:ce17:7792 with SMTP id af79cd13be357-9370657a3bdmr50009285a.8.1786984567702;
+        Mon, 17 Aug 2026 09:36:07 -0700 (PDT)
+Received: from strozzi (ec2-54-236-161-35.compute-1.amazonaws.com. [54.236.161.35])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-937010c3785sm122431685a.2.2026.08.17.09.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2026 09:36:07 -0700 (PDT)
+From: Sean Anderson <sanderson@brivo.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	u-boot@lists.u-boot-project.org
+Cc: u-boot-amlogic@groups.io,
+	Tom Rini <trini@konsulko.com>,
+	Sean Anderson <sanderson@brivo.com>
+Subject: [PATCH] reset: meson: Add s4 support
+Date: Mon, 17 Aug 2026 12:35:56 -0400
+Message-ID: <20260817163604.1893382-1-sanderson@brivo.com>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
-Date: Sun, 16 Aug 2026 17:41:16 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-From: "Ferass El Hafidi" <funderscore@postmarketos.org>
-Message-ID: <d7a85b8f6f65f7caabb45ebaff5380335030bb2f@postmarketos.org>
-TLS-Required: No
-Subject: Re: [PATCH 1/4] serial: meson: add Amlogic S4 UART support
-To: "Lucas Tanure" <tanure@linux.com>, u-boot-amlogic@groups.io,
- u-boot@lists.u-boot-project.org
-Cc: neil.armstrong@linaro.org, trini@konsulko.com,
- ilias.apalodimas@linaro.org
-In-Reply-To: <e8d19994-1236-4984-be2a-058cc317d10b@linux.com>
-References: <20260806101809.72526-1-tanure@linux.com>
- <20260806101809.72526-2-tanure@linux.com>
- <tjk4ry.249pxi1g19ygb@postmarketos.org>
- <e8d19994-1236-4984-be2a-058cc317d10b@linux.com>
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Sun, 16 Aug 2026 17:41:20 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3024
+ <u-boot-amlogic@groups.io>; Mon, 24 Aug 2026 12:53:24 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3028
 
-(didn't mean for this to be off-list sorry about that)
+Add s4 support. There are no new features, so just define the layout
+info.
 
-On Sun, 16 Aug 2026 10:42, Lucas Tanure <tanure@linux.com mailto:tanure@l=
-=3D
-inux.com > wrote:
->On 10/08/2026 15:01, Ferass El Hafidi wrote:
->> On Thu, 06 Aug 2026 10:18, "Lucas Tanure via groups.io"=3DC2=3DA0
->> <tanure=3D3Dlinux.com@groups.io mailto:linux.com@groups.io > wrote:
->>> The S4-generation UART (S4, T7, ...) derives its baud rate from the
->>> 24 MHz crystal divided by 2, selected via the XTAL_DIV2 bit in the
->>> baud rate register, while older SoCs divide the crystal by 3. Add the
->>> "amlogic,meson-s4-uart" compatible with driver data selecting the
->>> div-by-2 scheme, matching the Linux driver (meson_s4_uart_data) and
->>> the configuration the vendor BL2 programs on T7 hardware.
->>>
->>> Older SoCs keep the existing div-by-3 behaviour: Linux also uses
->>> div-by-2 on G12A, but both modes work there and switching would risk
->>> regressing boards that have shipped with div-by-3 for years.
->>>
->>> Also drain the transmitter before changing the baud rate so in-flight
->>> characters are not garbled, as the Linux driver does.
->>>
->>> Assisted-by: Claude:claude-fable-5
->>=3DC2=3DA0
->> As I understand it, LLM-assisted patches are not welcome in U-Boot rig=
-=3D
-ht
->> now: https://lore.kernel.org/u-boot/20260515220758.GM1858239@bill-the-=
-=3D
-cat/
->>=3DC2=3DA0
->> AFAIK there isn't an official AI policy yet, but it seems the concensu=
-=3D
-s
->> on that matter is currently "please don't". Sorry.
->
->Ok, I will drop this line.
->
+Signed-off-by: Sean Anderson <sanderson@brivo.com>
+---
 
-Please do not drop this line. I appreciate the transparency towards your
-use of AI. I would wait for someone more knowlegable about AI use
-discussions to reply.
+ drivers/reset/reset-meson.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Best regards,
-Ferass
+diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
+index 8c27563ce23..16d2dc19898 100644
+--- a/drivers/reset/reset-meson.c
++++ b/drivers/reset/reset-meson.c
+@@ -82,6 +82,11 @@ static const struct meson_reset_drvdata meson_a1_data = {
+ 	.level_offset = 0x40,
+ };
+ 
++static const struct meson_reset_drvdata meson_s4_data = {
++	.reg_count = 6,
++	.level_offset = 0x40,
++};
++
+ static const struct udevice_id meson_reset_ids[] = {
+ 	{
+ 		.compatible = "amlogic,meson-gxbb-reset",
+@@ -95,6 +100,10 @@ static const struct udevice_id meson_reset_ids[] = {
+ 		.compatible = "amlogic,meson-a1-reset",
+ 		.data = (ulong)&meson_a1_data,
+ 	},
++	{
++		.compatible = "amlogic,meson-s4-reset",
++		.data = (ulong)&meson_s4_data,
++	},
+ 	{ }
+ };
+ 
+---
+base-commit: d3e8597e46b635ec556a057bc42f0b0859654bdf
+branch: s4_reset
+
+-- 
+2.53.0
+
 
