@@ -2,112 +2,133 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1784AC61DB6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287CAC61DB9
 	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 12:53:35 +0000 (UTC)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.65.1786986989640803393
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.65.1786986987303774265
  for <u-boot-amlogic@groups.io>;
- Mon, 17 Aug 2026 10:16:29 -0700
+ Mon, 17 Aug 2026 10:16:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@brivo.com header.s=google header.b=nMVtkqxp;
- spf=pass (domain: brivo.com, ip: 209.85.219.51, mailfrom: sanderson@brivo.com)
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-90a6b298887so17975566d6.2
-        for <u-boot-amlogic@groups.io>; Mon, 17 Aug 2026 10:16:29 -0700 (PDT)
+ dkim=pass header.i=@brivo.com header.s=google header.b=v2yyN5an;
+ spf=pass (domain: brivo.com, ip: 209.85.219.45, mailfrom: sanderson@brivo.com)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-902fc790cd5so22147526d6.1
+        for <u-boot-amlogic@groups.io>; Mon, 17 Aug 2026 10:16:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brivo.com; s=google; t=1786986988; x=1787591788; darn=groups.io;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=gIJC71MvXoGSMHM+hoGJCWybiSoBjCDRZKN0lFU7bCI=;
-        b=nMVtkqxpScnNcdzGxUSFcR2O8k2egWNXN994mJBDKkJZWCp6rj8esqIygQucRQv/S4
-         zWouFliyxRp5K8CjjEUnaKQtFYIJ9prfpPMhxYweOM2kk1Ru7iPiDyZ+Ak42IEjlwwBC
-         m2GA1J1BccZ6jwImkw4uAA8ZDL+dtlutHhSDyZ1uEElZmB2YxHr6fM4JfR9SQlu+VAu3
-         C1C0iddNrArsdZLzp4yKaySMVdbjtH6TuM4kYh0zKbCYdorDR2/EeAID+XrJAp5w+kow
-         z9dbbJhFRORYNEJDZt6zWcyeKGZ7cXb3C+QWvXe+J8jIO87ktDFzXsk0zElvnSVoWPcf
-         Z3Og==
+        d=brivo.com; s=google; t=1786986986; x=1787591786; darn=groups.io;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mTPbFoyA3t3S6oeZhs0Xhv7J45/3gq46lhnRwUHXSbk=;
+        b=v2yyN5anOUdaOZwVKt7XLtw+Dw3Qli9ybXtEjittLQZopxsPnqhyI5q2sLKU6wITv/
+         WV5K4R9ImnI7evC+B8BpUA/AnXS5AWc7uWBzTLU58xE1Gmt2O6MlcyyRpXUBPM+mnE5w
+         MVzM8LGg+QqPy2bXKJkEEhkYSmAiQA/2EIwSpW7upsz+MpiCQ1Hv6+HQkJbW4bsAKPgZ
+         +ZUjPK13BssaTa8Ee0l5Zfct5194XpIUY6GzIQt5IluVuATXS1fbDTBVMcQvmEooC6K3
+         nWot0NPAbz7287o995a4yNWq2ltTTZo/Kpu+8KYeTTNGsYCR/pvXgsJkqvt8lLAQ/A10
+         REdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786986988; x=1787591788;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gIJC71MvXoGSMHM+hoGJCWybiSoBjCDRZKN0lFU7bCI=;
-        b=BJckWzYN7qVBIDqXlszLa8L3YCY+A8lyH0cnCdOr9g3EywW54j4RpKvSQLyTJeF9kH
-         p1kI4ZVRFQNpZKaklibEicn+8FlXv5g8c7jwH41oeXwUFqepyuGkcCiZDa+I9PEe28PI
-         F2qbnKMmnu19ktxBNN4fGiVr9DflRTfLq6LceRTeF/hmLL4izrBv+QLWfeNPj7d1TEqt
-         t9HQAy5kOtc4hFdF1zcwtz1bzQflckP3XOE161y2gTR6+S+6f2QDudi+hQibZmHbk+zt
-         eEAbv7ij+xWvHH8Xo7qr9TvVcf718YPg08/m+5bYSo3KrUZkZMxTDqqvE1RcTagAdPMz
-         qQRg==
-X-Gm-Message-State: AOJu0Yw1M3wB+ZU6bb+silGkhmHU43yel0U7MwBwvPTWy/5H06oG1VjO
-	ubVIkqeFcc2kQ1O2NdMDGLOhWkc/KcWkgNnJ5FnqUXI6ujzm+8+MfiAZeYw7cTZPx83uUmwSSjd
-	8rZv23QCo16x+XbmIKHiaXFFPPSGw422l3Sp4WzkUaLaRKR1P/XZKcqv4kWFydRHWWwBKxw==
-X-Gm-Gg: AR+sD10MoVue/nwmCrUy0kvtqM2qb6jWQcLJ3D1wrQ4Vt22HiOaG8bCTxyeRjHVM6vA
-	zXa9jXSXi0FK1dHW7/YALYk+R7C4g4Vi0yYii1+xn/Gkf1GC9VNwhnz/0UnrAUg3aIOXKoLg63p
-	qTO53D38FOJ4ET+qsxFlFwliTRyb9kzCaKGMt3JATri/rlUay4jf6Bu/u1rXLO3L6QN5NzRJyqq
-	+n/AtslWVcFKH6Kx5S3ftN60w8go2IbUTBSLGNoUdZ22TgRc7KDJSuBlKfg0PHTQhYdNo/g7/+i
-	EapdHlKseWw/WD/W/BfRiXim+YEGwG+Vq368ruABsxB0TVwkDeDROHuajIqlIDP2YIwzWJAwLff
-	L3FS1CrtLzEv+iUM4mHEDikWcZt4qFqydoESq2Cjw00pVKS2bW1aXx+WoIIS3L2eQWHRuqOp1BL
-	kX7FhSrwyrdKsD6wvKrL4Iea3MYnuAN45cHedzWxw4rFggm//xsAkTMEKcJzdIZokUrDqp7k7NL
-	4RLlfK4gtOm2aIqpIxNkvG9qyU=
-X-Received: by 2002:a05:6214:e89:b0:8cc:d066:54d with SMTP id 6a1803df08f44-90a91d8c3f2mr297402926d6.24.1786986988248;
-        Mon, 17 Aug 2026 10:16:28 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1786986986; x=1787591786;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mTPbFoyA3t3S6oeZhs0Xhv7J45/3gq46lhnRwUHXSbk=;
+        b=WNeuW096iau1kY9GqiGdCGNwRREsC/dzt1jdQe1kVqVIZOb5yKJhrzFyOQlrtyLsQ3
+         cmIeT2ZIBFga4ftXazYF8l/nsWmCHm9cxGExx78/nc1bc97IuR/MEnVnWxlOZtSZHElf
+         p7vS2qAyaGs4KA/zgNEpQUDa/Tl1uQT0mgTuDNXR2ZVggd6w0Jn0qZZFxJksyUwWeMRF
+         8D1GWe5vI6nHstHmd0n8FBW7Kgc9Gwido54XQ6pxkm6ZdQRAwooMF9uuIa8RNgI6RkXd
+         sSG582+8hW1mBd7eUu/l0ClycHemFTUm45oVUFU4nA3Jhv0Pudaw0BOZTx3KSwOx9Myh
+         vY7Q==
+X-Gm-Message-State: AOJu0YzeFse6SK9dNQ9ugUOlung3LMxVnlLbr6ONGJkZe1P6TIFQKXVN
+	BVIeoz5qa0Z6y8r9jdfL3795Mk5k/rk2dbun5PQU++qzTGttBuLXop5Vl9/IQ4TZzwla11U6KBQ
+	BTvcPF605Eu4Q/hqhpvsjMqw5TvO3RqfM2IzkL2Y1CVjQJY6oDzgbsA==
+X-Gm-Gg: AR+sD13wcLN4Pnpysbv405iKLrR+WyfB8KXYkyrlLei8CcZ8FmxmpwZRu7PVezw4AkY
+	ykTgXSMeIbUeKyFQZ3R1N0906C5nlFeAKaUeSZK0CqGqXVXfW1m/t7aAwcBM2TK5VS86W2pUGx4
+	FURCUeLZUx3DW6p646aZhN0hwzndjqmq6YyJ+lEpWKBKUYJAQFAsHUN38D8wvoYLRsxnyR9CuZ/
+	xcOFtR7UkiNn1jTLJMhsglfhCDQQeS6h42gQwWTD8id7yOPlgXjN0Cj5XqbjJGHX+oM88NuYq4h
+	bI02cWTxhG6Sw4whydHHP7OpneujWco/B3nvVD2b93AXifX7Op4omPRR2H8TTzHNxkYBia3ZjbB
+	DT4H3AchclZWoiiQTUKZIuUzAjW7FTVq0Q2hRPpgOF7JWj9TniNs7BA1kl66yQFiNYVmbjSJZOJ
+	7V6hIleZh8RkXxmZvoPokAsaE4BAhXjYUWMtBz7hbN9cDhFv1dABBBtrq+qGR/bEsnVruaBKU9Q
+	qJn6tXla3AfGYCUequ1V6nZVdI=
+X-Received: by 2002:a05:6214:3f8f:b0:8df:1814:3a1d with SMTP id 6a1803df08f44-90c4b3ded05mr25865496d6.22.1786986985957;
+        Mon, 17 Aug 2026 10:16:25 -0700 (PDT)
 Received: from strozzi (ec2-54-236-161-35.compute-1.amazonaws.com. [54.236.161.35])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c459783a9sm13637976d6.43.2026.08.17.10.16.27
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c459783a9sm13637976d6.43.2026.08.17.10.16.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 10:16:28 -0700 (PDT)
+        Mon, 17 Aug 2026 10:16:25 -0700 (PDT)
 From: Sean Anderson <sanderson@brivo.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>,
 	u-boot@lists.u-boot-project.org
 Cc: u-boot-amlogic@groups.io,
 	Tom Rini <trini@konsulko.com>,
 	Sean Anderson <sanderson@brivo.com>,
+	Christian Hewitt <christianshewitt@gmail.com>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
 	Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH 3/9] clk: meson: a1: Use clk_set_rate from meson_mux_set_rate
-Date: Mon, 17 Aug 2026 13:15:14 -0400
-Message-ID: <20260817171623.1943847-4-sanderson@brivo.com>
+Subject: [PATCH 0/9] arm64: meson: Add s4 support
+Date: Mon, 17 Aug 2026 13:15:11 -0400
+Message-ID: <20260817171623.1943847-1-sanderson@brivo.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260817171623.1943847-1-sanderson@brivo.com>
-References: <20260817171623.1943847-1-sanderson@brivo.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 24 Aug 2026 12:53:35 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3038
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3036
 
-This function is useful for other drivers, but it's tied to the a1's
-meson_mux_set_rate implementation. Convert it to use clk_set_rate so
-the drivers's set_rate implementation will be used (no matter what it
-is).
+This series (along with several patches submitted separately) adds basic
+support for the amlogic s4 SoCs (S805X2/S905W2/S905Y4). My tree with all
+patches on it is at [1].
 
-Signed-off-by: Sean Anderson <sanderson@brivo.com>
+I developed this for a custom board, but I believe a better candidate
+for a defconfig would be the publicly-available Khadas VIM1S [2].
+Unfortunately, I don't own any VIM1S boards, but I have included a
+sample defconfig in the last patch. If anyone has a VIM1S, please test
+that patch. You will need to use AMLogic's FIP [3], as I have not yet
+gotten around to submitting a PR to LibreELEC's FIP.
+
+[1] https://github.com/brivolabs/u-boot/tree/meson_s4
+[2] https://www.khadas.com/vim1s
+[3] https://github.com/khadas/u-boot-fip-yocto
+
+
+Sean Anderson (9):
+  arm64: meson: Add s4 SoC support
+  clk: meson: a1: Eliminate separate id parameter
+  clk: meson: a1: Use clk_set_rate from meson_mux_set_rate
+  clk: meson: Use soc-specific naming for common functions
+  clk: meson: Export a1 functions to common file
+  clk: meson: Support fractional fixed-factor clocks
+  clk: meson: Support power-of-two dividers
+  clk: meson: Add s4 clock driver
+  [RFT] meson: Add Khadas VIM1S support
+
+ arch/arm/include/asm/arch-meson/boot0.h |  14 +
+ arch/arm/mach-meson/Kconfig             |   7 +
+ arch/arm/mach-meson/Makefile            |   1 +
+ arch/arm/mach-meson/board-s4.c          |  50 ++
+ board/amlogic/q200/MAINTAINERS          |   1 +
+ configs/khadas-vim1s_defconfig          |  80 ++++
+ drivers/clk/meson/Kconfig               |   8 +
+ drivers/clk/meson/Makefile              |   2 +
+ drivers/clk/meson/a1.c                  | 495 +-------------------
+ drivers/clk/meson/axg-ao.c              |  12 +-
+ drivers/clk/meson/axg.c                 |  16 +-
+ drivers/clk/meson/clk_meson.c           | 376 +++++++++++++++
+ drivers/clk/meson/clk_meson.h           | 149 ++++++
+ drivers/clk/meson/g12a-ao.c             |  12 +-
+ drivers/clk/meson/g12a.c                |  24 +-
+ drivers/clk/meson/gxbb.c                |  24 +-
+ drivers/clk/meson/s4.c                  | 587 ++++++++++++++++++++++++
+ 17 files changed, 1318 insertions(+), 540 deletions(-)
+ create mode 100644 arch/arm/include/asm/arch-meson/boot0.h
+ create mode 100644 arch/arm/mach-meson/board-s4.c
+ create mode 100644 configs/khadas-vim1s_defconfig
+ create mode 100644 drivers/clk/meson/clk_meson.c
+ create mode 100644 drivers/clk/meson/s4.c
+
 ---
+base-commit: d3e8597e46b635ec556a057bc42f0b0859654bdf
+branch: s4_clk
 
- drivers/clk/meson/a1.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
-index d0376663069..422cdf5f4d1 100644
---- a/drivers/clk/meson/a1.c
-+++ b/drivers/clk/meson/a1.c
-@@ -523,8 +523,6 @@ static ulong meson_composite_set_rate(struct clk *clk, ulong rate)
- 	return 0;
- }
- 
--static ulong meson_clk_set_rate(struct clk *clk, ulong rate);
--
- static ulong meson_mux_set_rate(struct clk *clk, ulong rate)
- {
- 	int i;
-@@ -542,7 +540,7 @@ static ulong meson_mux_set_rate(struct clk *clk, ulong rate)
- 			.id = info->parents[i],
- 		};
- 
--		ret = meson_clk_set_rate(&parent, rate);
-+		ret = clk_set_rate(&parent, rate);
- 		if (!ret) {
- 			SET_PARM_VALUE(priv, info->parm, i);
- 			break;
 -- 
 2.53.0
 
