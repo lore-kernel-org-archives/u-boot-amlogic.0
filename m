@@ -2,71 +2,71 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883B1C5DF9C
-	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 12:59:45 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16119.1787576382935101232
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895ACC5DF94
+	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 12:59:55 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15926.1787576393831500272
  for <u-boot-amlogic@groups.io>;
- Mon, 24 Aug 2026 05:59:43 -0700
+ Mon, 24 Aug 2026 05:59:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=uRobFnj9;
- spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-482938466a7so2512156f8f.1
-        for <u-boot-amlogic@groups.io>; Mon, 24 Aug 2026 05:59:42 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=QieHpdwX;
+ spf=pass (domain: linaro.org, ip: 209.85.221.44, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-4799b3f7c83so2364185f8f.2
+        for <u-boot-amlogic@groups.io>; Mon, 24 Aug 2026 05:59:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1787576381; x=1788181181; darn=groups.io;
+        d=linaro.org; s=google; t=1787576392; x=1788181192; darn=groups.io;
         h=content-transfer-encoding:content-type:in-reply-to:organization
          :autocrypt:content-language:references:cc:to:subject:reply-to:from
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=OqhocBqwzfKdgepumpLVo9xZbFiI+hYcuMic5h4V7zU=;
-        b=uRobFnj9Mf6CC+S7duY/MJ8WxqcOgg/OmBewSKNP7/CgGN4QnzgpR37CR6HG741l2i
-         MUOIdEpbiMYmGUAVEJ8n1JWcb3jDQg49BTKZR6uJigqJxnhuutsR8Ph00Ul6KcH3sexT
-         mPaCZZk5yPcCCspI9znJIfQiDI4zQzoXhGEMZxAwq0k6hM8JS/D5yFwmTz6O0zHHuirS
-         2JWZ/Z7FceD5UyCojAlXSKdFGyQTr67sb0JPLocwhIX5cOSRk+Og8TOZvrlTKqnbjT/u
-         eXK2nhjintHktQNsQPwUiz+Ise598FNuj6OctJgnsL/iB4UNadxWTVvK//ZFWJvGoSRR
-         k3Pg==
+        bh=9lhzdL+a1BKnrrBERY/UHGCc8CRG9V/A8/xlr7D0+ds=;
+        b=QieHpdwXXWGfDxvhBp06E2jZYAsCkCqOyIigiSyjBUMo+g41xHvJ6wVdHEotcOdpY6
+         qb6GVO0pBnaU1bS+paWqYjvGXDo+sdbvtPShYtiEhsns/7e/uGl6sdRHy97YS98sBNw2
+         VF+TgtKgzJi+i0UKjLy8Dk9KXOZU/2w/FmDdJgegDljwC3MQddhOewFsFz0tau2zoHlh
+         q/ZdyhoylR07jkfGV1LXyEheA4t6b1v1+BGoi559hFcd7o/6gqszc9Z1be+p8cVtG7dM
+         0RwwjdV/wiNG7gzQYMa1lMco4abAL9Xs0BcUVYqrIjhCxa0HOggj9lGKXScbwMjyPFaK
+         TDKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787576381; x=1788181181;
+        d=1e100.net; s=20251104; t=1787576392; x=1788181192;
         h=content-transfer-encoding:content-type:in-reply-to:organization
          :autocrypt:content-language:references:cc:to:subject:reply-to:from
          :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=OqhocBqwzfKdgepumpLVo9xZbFiI+hYcuMic5h4V7zU=;
-        b=bdy2zy8BDTXUZGlF7OP4mZV5Ul/Pj+VkuMsuEGD/O4zcaLJBOx8Bk60sWSEyD22QQP
-         K9s1mARiR74Iya3oqparUqMnxPnxXTlYkpY/zL1X6T5L8AZSGYkHnaEj33LC8O3BBdov
-         dukNpFsAjfGXxBIYmtvoRYpQs1Y5sRAhgCVO9gtx1EmooI4cnQ/mFllUchfBzwFn1xK4
-         Mg8z9XP2okBH6n+E/p4FnQUiFB/6L0Gd+w3s6xHWbOydxavilxbkVLwBah5BGFfi8lhz
-         8nPvQTXlq6LsmH0LkOi42JU+qYERhcfBJlQUiWwj+Vu1rXI7RN5iDAQEZVMTz36L7fja
-         MdiQ==
-X-Gm-Message-State: AFuF++khREPuUv/YQnBmcWHNpJWpYXQ2WB/s0trymAByLSZdV70JrOHk
-	pJldW7m5hpu63GYn8NRr247KL+kbLrZNMWdBL41rgQNd8UDuPep5kyitO0KEnWbzYry3JwUw23/
-	GAQb3
-X-Gm-Gg: AR+sD13ckVSUtnG7PBNEwdX8MWtCI2cRsmZWOIjX+232Uh774bKHIqSi8ooAwnGx1Nb
-	jL6nCo5HM532xKMvAg0dAeYgPNj7tFzsRtXTdxoc05cWGSpSVU1i1XgcOAE7POoVYdqToAjy5e2
-	3ZKDvo68qOGtyTqJFEHolI+yFW5/U1UYs6SIoI/0GtAq+WI3Bz1GZY6llS9++cWDE8m6gNpN7IZ
-	YlNtm+hBvxAW7ZqzQ46yueCMYhImYQTd3YGatv3zKLHQLZGj88bE73zCKREpUJzRYeXc0w51i0v
-	449BmTXOTSoDpN6emf2ntt5sgrltgo4bseXI2qdN5DWE8/ztBQR2b3fo/8Ws7QuE5ZqfSG+Rd3D
-	nucdKUXnwVtQnzWYg7M2Ha0nxUuuU2cmAYnqmzlp4WLdoFCNBlkfb+cPL0kxjhDcTSft1OrszQD
-	MyEF/PkWDMiXXupaW1R6opFJQpf5Nps6oi501pE5xa5xykMc2pzFZbyL0FFxdBbbFLBWNmJhbid
-	bCNASDZjk4qINDEoDWSKKkOabRuNdw/qClEuPrdkg==
-X-Received: by 2002:a05:6000:2212:b0:47f:81c4:36a5 with SMTP id ffacd0b85a97d-482c0ba3389mr33399727f8f.15.1787576380945;
-        Mon, 24 Aug 2026 05:59:40 -0700 (PDT)
+        bh=9lhzdL+a1BKnrrBERY/UHGCc8CRG9V/A8/xlr7D0+ds=;
+        b=QEgLB2gjYpVrrVdadSIwIKIKvfPnmrmtOnPslXknTk14eZBbvaf63ff9xJx+bvIxIp
+         ukdFft5gk8mMffRC42Yq+MvdpZiJP92jhbJGK5wHjkwEsiwkLSor6dDQyJ+gdyM7WJq4
+         PCDF5VdIbgX7ZyuM7F5FkAUbvhIKhT3rsRsfsFk2VyiCnBRDFGwPuZAHTxQ099H8GU0G
+         UGUY2kDwCZCZWlxWWxybMivxGPNH9+uW007/UiUuVwoJLnzHx8AQGvCoQoHjp9pdtFxQ
+         iJvErksBduy+PKix3de7QEjxQLXUf4l+T4yW17ZCEzUoYQ8tU/B/mk+s3aCZvgPoGZbZ
+         5SrA==
+X-Gm-Message-State: AFuF++n7mlVBbmTeQjtyqmNYqq8ECbr9iuld2QLRNP1F0hmFdC2vz+0Q
+	KmDHXGlEUdwugWX8tSaO1Lqa2nhQ4WLW3idnvhG9HkeMbuVyFQ3JEtd0jhVjOWF1CD6AGKb18IW
+	JwLaT
+X-Gm-Gg: AR+sD12cMrozkKDUZI9O9WW0Dt4brJLJoGHRXWHsw5l/8rVcD2mi5co9VYrpat2vvxP
+	2Oudp2qhUuAcuVHeXpOA0DAeumgwfMVx4OgYGjmMsyYXxYSEVZFOqc114MOWK4jPrtQPCGCjw4N
+	eWHWaxWqa3lC/pmtCYEijzmnpIVV4zVCl/DJ0RMFWkz5xy35CuZ/HS57I3oqW2I7bib2OrtJa5w
+	SH9racHXlq6c6XHuiT1gKvMW6TQVpmJJ1lmxiNkgGvUMeQt+1fvq7wReSqEHFwSvujxkBG4JIH5
+	Vr7iWqiwLGpEXSfJsjpF1SaRbiao4QXaTwRucHuTzPpqyakjdF64chKJ2EHHGXfMUG3vOjWHzax
+	GjNuaO36rpsRhTLLrYcFNOigHLkWy8yiaBXZBMyqgKV1gT3NSqmMqc2a+6XUasSdmiIX2i+Vub4
+	jUpxz7mQj4tSTfAG1GM9Jcb5XM77dLoDKKMuEPMLFGa6hcb8Vuuh6gm8aayPso63AhtwYgceaHC
+	YeDyw4SH+mogV59msgLXsmlMr5ybaLA0tg4+VtJkSM=
+X-Received: by 2002:a5d:5f93:0:b0:47f:5ec2:d54 with SMTP id ffacd0b85a97d-482c816c126mr19222602f8f.5.1787576391949;
+        Mon, 24 Aug 2026 05:59:51 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:106d:1080:a2ce:e3d3:a5a2:273? ([2a01:e0a:106d:1080:a2ce:e3d3:a5a2:273])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482c9b69a49sm8106788f8f.7.2026.08.24.05.59.40
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482c9c0bef5sm8339351f8f.31.2026.08.24.05.59.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2026 05:59:40 -0700 (PDT)
-Message-ID: <a5c38878-4233-4df3-871d-09ad511c7260@linaro.org>
-Date: Mon, 24 Aug 2026 14:59:39 +0200
+        Mon, 24 Aug 2026 05:59:51 -0700 (PDT)
+Message-ID: <2aa0d5e3-e0e2-4f82-b620-39f4c3a220e6@linaro.org>
+Date: Mon, 24 Aug 2026 14:59:51 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] reset: meson: Add s4 support
+Subject: Re: [PATCH] serial: meson: Add s4 support
 To: u-boot-amlogic@groups.io, sanderson@brivo.com,
  u-boot@lists.u-boot-project.org
 Cc: Tom Rini <trini@konsulko.com>
-References: <20260817163604.1893382-1-sanderson@brivo.com>
+References: <20260817163438.1893025-1-sanderson@brivo.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -93,55 +93,39 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20260817163604.1893382-1-sanderson@brivo.com>
+In-Reply-To: <20260817163438.1893025-1-sanderson@brivo.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 24 Aug 2026 12:59:45 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3057
+ <u-boot-amlogic@groups.io>; Mon, 24 Aug 2026 12:59:55 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3058
 
 On 8/24/26 14:53, Sean Anderson via groups.io wrote:
-> Add s4 support. There are no new features, so just define the layout
-> info.
+> No new features, just a different compatible.
 > 
 > Signed-off-by: Sean Anderson <sanderson@brivo.com>
 > ---
 > 
->   drivers/reset/reset-meson.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
+>   drivers/serial/serial_meson.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
-> index 8c27563ce23..16d2dc19898 100644
-> --- a/drivers/reset/reset-meson.c
-> +++ b/drivers/reset/reset-meson.c
-> @@ -82,6 +82,11 @@ static const struct meson_reset_drvdata meson_a1_data = {
->   	.level_offset = 0x40,
->   };
->   
-> +static const struct meson_reset_drvdata meson_s4_data = {
-> +	.reg_count = 6,
-> +	.level_offset = 0x40,
-> +};
-> +
->   static const struct udevice_id meson_reset_ids[] = {
->   	{
->   		.compatible = "amlogic,meson-gxbb-reset",
-> @@ -95,6 +100,10 @@ static const struct udevice_id meson_reset_ids[] = {
->   		.compatible = "amlogic,meson-a1-reset",
->   		.data = (ulong)&meson_a1_data,
->   	},
-> +	{
-> +		.compatible = "amlogic,meson-s4-reset",
-> +		.data = (ulong)&meson_s4_data,
-> +	},
+> diff --git a/drivers/serial/serial_meson.c b/drivers/serial/serial_meson.c
+> index cc71381f87e..336ca552ead 100644
+> --- a/drivers/serial/serial_meson.c
+> +++ b/drivers/serial/serial_meson.c
+> @@ -244,6 +244,7 @@ static const struct udevice_id meson_serial_ids[] = {
+>   	{ .compatible = "amlogic,meson-uart" },
+>   	{ .compatible = "amlogic,meson-gx-uart" },
+>   	{ .compatible = "amlogic,meson-a1-uart" },
+> +	{ .compatible = "amlogic,meson-s4-uart" },
 >   	{ }
 >   };
 >   
 > ---
 > base-commit: d3e8597e46b635ec556a057bc42f0b0859654bdf
-> branch: s4_reset
+> branch: s4_serial
 > 
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
