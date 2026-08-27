@@ -2,73 +2,73 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F2DC61DC4
-	for <webhook@archiver.kernel.org>; Thu, 27 Aug 2026 15:37:46 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.171.1787845064572010712
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A979C61DC4
+	for <webhook@archiver.kernel.org>; Thu, 27 Aug 2026 15:38:06 +0000 (UTC)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.172.1787845082214091330
  for <u-boot-amlogic@groups.io>;
- Thu, 27 Aug 2026 08:37:44 -0700
+ Thu, 27 Aug 2026 08:38:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=YGORFfke;
- spf=pass (domain: linaro.org, ip: 209.85.128.41, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-49b8ce9b733so6453095e9.1
-        for <u-boot-amlogic@groups.io>; Thu, 27 Aug 2026 08:37:44 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=rlxj+ejq;
+ spf=pass (domain: linaro.org, ip: 209.85.221.54, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-47fecbb7000so1120065f8f.2
+        for <u-boot-amlogic@groups.io>; Thu, 27 Aug 2026 08:38:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1787845063; x=1788449863; darn=groups.io;
+        d=linaro.org; s=google; t=1787845080; x=1788449880; darn=groups.io;
         h=content-transfer-encoding:content-type:in-reply-to:organization
          :autocrypt:content-language:references:cc:to:subject:reply-to:from
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=dh4OCjO04g0TKiHtMQq2+efsrwXqSSPP04CluYs+f+A=;
-        b=YGORFfkeP8+/Can6RWRF12M2FkDGhvWyP4eXuKMm1CnU+mhWIYlEAf5+CuGHBYaDJo
-         SJrgwJRgg9GlSTuJncAA7yyQ/IwaW8FGcFZeT2qr9FabTOttaqzX+UfpLyRS70P++MTF
-         MdHFVdqJcVsJSotZJiAjlTfQHpD0F9nWvgnsEaU1GPSBsT6bo/Tp4wdzDL3bzxBKMiA3
-         LKT4E8zBniRdVWhzcNhf/vmsQL3U7Kn7W955HhjDXLJ8vPSBrpUcXdhOtGac1d3dRSEd
-         0EWsAN3k/L4NhansVDbt0DkWkXFSvFxAIhi62MdWiGvAY7obHmLi/Qs5Cm4bI0HDsLsu
-         ewPw==
+        bh=K5qoEqPvqec5Ad6mEHbkA2yhpsPUw/R11eOmhq+5F+8=;
+        b=rlxj+ejqnmuEuQYYyp1ZOwvyA5g2QzS/NJPqr7BBzCgOxSf6UouCd0KrlJnzKjjCRL
+         oUwX96jQrp+dsC6jHCz9DbdUK4NW79y5hQ2c2hQ7c7aNrOr7kmR/Uah0PMPa3I4Kq6bo
+         iXDLa9zySXf8Wht7LyRGe1Aqf2f+g1oS7O8fsG2bsxBFk+CkPBDLQFo7S6ktK+a7RWV+
+         j+xAyaYNbptR8q60e8tjboo9llI++0/vQUytROf+hu4qj7uOuq6Eg2/nLNhkJgtcmlnD
+         uyi/SXIwwxUGpbZa69kYBZJcoD/2/yFdbB1uBLXTSKB5RFTUE7s/SasZLK0lZBZzRVsM
+         bJuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787845063; x=1788449863;
+        d=1e100.net; s=20251104; t=1787845080; x=1788449880;
         h=content-transfer-encoding:content-type:in-reply-to:organization
          :autocrypt:content-language:references:cc:to:subject:reply-to:from
          :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=dh4OCjO04g0TKiHtMQq2+efsrwXqSSPP04CluYs+f+A=;
-        b=jLXQCT2+ArrCyvwxaaG4QH1Mhzf7hXkQ1vVOftGWpIuZRcPMp9I9PjvUauHlaN1X8n
-         ywN5xYltz0jZZ5mT+9EvTtd8H0dyHCG3nNTIK+rHLjVRSkGhfWrnILnhCKV9kwhjIPvv
-         Sri01dLdVnuQtegGI9jVjvoC7colKRIX6FAuFr1Lm9haRqgG1Vr3U7q6vFIbALXLkqV+
-         kY36IuvT5ZvPGuMkdFggDG9BbuTmqBujn70hVyfQTUP9LqQrjaN2FbCej4zuIEo2AKoH
-         49zhWlm3TAHpWIxcDInwLwgYcwqpsrq4h9/rEILV9XTRFdMNtVN9f3EHweHYtYEPctUX
-         Tcng==
-X-Gm-Message-State: AFuF++kINsajhG4O4ijvMyKSirXfDLnhwRXZmNihGf9U8wLxnfO16lXg
-	gYUYt0CcG+R9Nom5wOLhmFx7/ea/cWV03Uwp9YEya5kFtMK1KroMclSopR8Cvx4FHDvHhSKNTOf
-	1tqFAyBI=
-X-Gm-Gg: AR+sD10zlGZCKJKNPYpLA7DCBGHf67WW+fsreuI6vV9m5Ilh/AaYv6pWC3gdrjF9i5f
-	MJOtua0LbQlH66jUNV0urbcdGlFKa47isNGr+y2vsYNxE+6JRJMY9QY5wTF0ZwwOh+cOi+5Pfp3
-	kbLF+3HMi9ANlBw/sUstsIn07qTfbchoWiNg4+t655MuhjTfaBZXY3h4NpRz+TYqN5wOzUDnn9U
-	kDXmYOk15v1jkLeuGY7Maw7wEdbbbz6hvyfCDxJRlsxsY7fi8YF6/+MXt4fRkWvjY/HMJa3gi5H
-	jt6eI9LS2jCtNfYr5KnWMzCNXgE8sJ7OcPz3NXDXUoXUm7JyJsacp4GmjCierwJocpfp0W7oU/r
-	Ppb+4El9Os3v+1hwNiso5JDe9Nl/OHXAlDf8Vd+1jBbORDnk9yz7OXt9Xypt2zpyFFw/ckpj6Zs
-	zc40wIWzBZ3vp6B4laZNC30StZabK53AMlamPEH610HGLQTp6Y+Wl1gs039uvSFGV3ojtXfV3Xw
-	hrrwOZP9yAPFPc+RcNod5sQZdJ4UyVkcG1Z8YoGZe3c0g==
-X-Received: by 2002:a05:600d:6413:10b0:49b:c8e:a211 with SMTP id 5b1f17b1804b1-49b0c8ea368mr109647145e9.5.1787845062725;
-        Thu, 27 Aug 2026 08:37:42 -0700 (PDT)
+        bh=K5qoEqPvqec5Ad6mEHbkA2yhpsPUw/R11eOmhq+5F+8=;
+        b=fJVa+dzBdmrSNimRlWFqGPi9WBsLW4SHjM/X7jxeP2+x0Cidts1uL7Ahxse0VwN373
+         shtcTem8HX1AciLvaPMq0mHFoiwZ2cFNqmCu6ReANR46lI3dzfN2u8GjewFrzxK/5AEQ
+         WUdVtU/bglHtzoMosaCvhrvjdP+7vtWJu8s/6UfJsY9SbyC0FWsmUueOEzF5AI86fN3t
+         DY8r5kKReI31KqNM8YkPA/QUrdoPHIPhiguVRouAK+opsn8FMEHFEQB4yGGMbFKN3XdG
+         4YH7FTmCPjDOMsEqCZey/xlFt5wIWlaRnX9bHLwCNqFWB+6M5DToXBQki1f0ca940aiW
+         BWJg==
+X-Gm-Message-State: AFuF++kPWhovx1eFdfjrF1CJMTORLzSeAGOjoaP5l4HtXGWN2B+4Sh+j
+	ISfFCQDzFJ+24xzYxwuOdHSA4ku2jZDHZdTGhGnu3lmHxxU9bYHjHBwgp0uV2mq3D5oXNHLOqIc
+	EJT0Qk+w=
+X-Gm-Gg: AR+sD13OPh8B5mw0dIsAL2j0C8dssRid7tbm3uTePpMcZx+tnlXu2lR4BAlJI8UgVbg
+	CMzgadxJM6TLiLl/ettM5nWZwbJoukrXW7Oi81L2tHZd3ttLFEUJp4u15wDewu7oDsUzARHs11L
+	gDWrLm3JSK/B/nsKxcRTmhb8Y89SVB2zbOMgk4o7vB6vyU1pmMpoIDWJloCh+7JRTrXMGkhdL5Y
+	auT+5JpVH7cuzCW3zr6IUaiaCwTabctdCQ+BqNV7S1AIZhNP3sjqlZ4VPEJIP5f78DKmVEktXrf
+	U6oNURcilpuw460aU/JV2pqdqgJRxlNOqPi4KgZjmTNp7bf4oZo0+5/PKUcNsj9VtkEQovh9oZr
+	/+FYU1RzX52kupRq5NzCxjHCUZfrSApg+JYfPVQHT1WDYyIg6arG2vPy29yTcBzOEoja3ziFiy7
+	aeMlw/lAjk4WotQuHWaRc6ge5lh/yUeLnKnI484JwDkoGW6luB2izDTEmLZSZRhLn3aBWivHAzV
+	ru92Q2GV58dJFCaJJDT8/cUIbdA/j6Wv3fzHHxpdaKazg==
+X-Received: by 2002:a05:600c:c4ab:b0:499:a8bd:1930 with SMTP id 5b1f17b1804b1-499dc6ef59dmr176721805e9.5.1787845080211;
+        Thu, 27 Aug 2026 08:38:00 -0700 (PDT)
 Received: from ?IPV6:2a0d:e487:122f:5669:ed69:66c3:c4c3:2b18? ([2a0d:e487:122f:5669:ed69:66c3:c4c3:2b18])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b4942366asm57217395e9.3.2026.08.27.08.37.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b49610170sm131134735e9.6.2026.08.27.08.37.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2026 08:37:42 -0700 (PDT)
-Message-ID: <b0d1453b-3039-4cfd-a648-8263810e2443@linaro.org>
-Date: Thu, 27 Aug 2026 17:37:37 +0200
+        Thu, 27 Aug 2026 08:37:59 -0700 (PDT)
+Message-ID: <7c78ba1a-f191-4e13-b741-24ba3166dcb2@linaro.org>
+Date: Thu, 27 Aug 2026 17:37:55 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 3/9] clk: meson: a1: Use clk_set_rate from
- meson_mux_set_rate
+Subject: Re: [PATCH 4/9] clk: meson: Use soc-specific naming for common
+ functions
 To: Sean Anderson <sanderson@brivo.com>, u-boot@lists.u-boot-project.org
 Cc: u-boot-amlogic@groups.io, Tom Rini <trini@konsulko.com>,
  Lukasz Majewski <lukma@denx.de>
 References: <20260817171623.1943847-1-sanderson@brivo.com>
- <20260817171623.1943847-4-sanderson@brivo.com>
+ <20260817171623.1943847-5-sanderson@brivo.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -95,49 +95,254 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20260817171623.1943847-4-sanderson@brivo.com>
+In-Reply-To: <20260817171623.1943847-5-sanderson@brivo.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 27 Aug 2026 15:37:46 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3075
+ <u-boot-amlogic@groups.io>; Thu, 27 Aug 2026 15:38:06 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3076
 
 On 8/17/26 19:15, Sean Anderson wrote:
-> This function is useful for other drivers, but it's tied to the a1's
-> meson_mux_set_rate implementation. Convert it to use clk_set_rate so
-> the drivers's set_rate implementation will be used (no matter what it
-> is).
+> In preparation for moving a1 versions of several common functions into a
+> shared file, rename all the conflicting functions to have a soc-specific
+> component.
 > 
 > Signed-off-by: Sean Anderson <sanderson@brivo.com>
 > ---
 > 
->   drivers/clk/meson/a1.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
+>   drivers/clk/meson/axg-ao.c  |  8 ++++----
+>   drivers/clk/meson/axg.c     | 12 ++++++------
+>   drivers/clk/meson/g12a-ao.c |  8 ++++----
+>   drivers/clk/meson/g12a.c    | 20 ++++++++++----------
+>   drivers/clk/meson/gxbb.c    | 20 ++++++++++----------
+>   5 files changed, 34 insertions(+), 34 deletions(-)
 > 
-> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
-> index d0376663069..422cdf5f4d1 100644
-> --- a/drivers/clk/meson/a1.c
-> +++ b/drivers/clk/meson/a1.c
-> @@ -523,8 +523,6 @@ static ulong meson_composite_set_rate(struct clk *clk, ulong rate)
+> diff --git a/drivers/clk/meson/axg-ao.c b/drivers/clk/meson/axg-ao.c
+> index 6ccf52127b0..3215391006e 100644
+> --- a/drivers/clk/meson/axg-ao.c
+> +++ b/drivers/clk/meson/axg-ao.c
+> @@ -35,12 +35,12 @@ static int meson_set_gate(struct clk *clk, bool on)
 >   	return 0;
 >   }
 >   
-> -static ulong meson_clk_set_rate(struct clk *clk, ulong rate);
-> -
->   static ulong meson_mux_set_rate(struct clk *clk, ulong rate)
+> -static int meson_clk_enable(struct clk *clk)
+> +static int meson_axg_ao_clk_enable(struct clk *clk)
 >   {
->   	int i;
-> @@ -542,7 +540,7 @@ static ulong meson_mux_set_rate(struct clk *clk, ulong rate)
->   			.id = info->parents[i],
->   		};
+>   	return meson_set_gate(clk, true);
+>   }
 >   
-> -		ret = meson_clk_set_rate(&parent, rate);
-> +		ret = clk_set_rate(&parent, rate);
->   		if (!ret) {
->   			SET_PARM_VALUE(priv, info->parm, i);
->   			break;
+> -static int meson_clk_disable(struct clk *clk)
+> +static int meson_axg_ao_clk_disable(struct clk *clk)
+>   {
+>   	return meson_set_gate(clk, false);
+>   }
+> @@ -65,8 +65,8 @@ static int meson_clk_request(struct clk *clk)
+>   }
+>   
+>   static struct clk_ops meson_clk_ops = {
+> -	.disable	= meson_clk_disable,
+> -	.enable		= meson_clk_enable,
+> +	.disable	= meson_axg_ao_clk_disable,
+> +	.enable		= meson_axg_ao_clk_enable,
+>   	.request	= meson_clk_request,
+>   };
+>   
+> diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
+> index c421a622a58..e20d3feaade 100644
+> --- a/drivers/clk/meson/axg.c
+> +++ b/drivers/clk/meson/axg.c
+> @@ -69,12 +69,12 @@ static int meson_set_gate(struct clk *clk, bool on)
+>   	return 0;
+>   }
+>   
+> -static int meson_clk_enable(struct clk *clk)
+> +static int meson_axg_clk_enable(struct clk *clk)
+>   {
+>   	return meson_set_gate(clk, true);
+>   }
+>   
+> -static int meson_clk_disable(struct clk *clk)
+> +static int meson_axg_clk_disable(struct clk *clk)
+>   {
+>   	return meson_set_gate(clk, false);
+>   }
+> @@ -279,7 +279,7 @@ static ulong meson_clk_get_rate_by_id(struct clk *clk, unsigned long id)
+>   	return rate;
+>   }
+>   
+> -static ulong meson_clk_get_rate(struct clk *clk)
+> +static ulong meson_axg_clk_get_rate(struct clk *clk)
+>   {
+>   	return meson_clk_get_rate_by_id(clk, clk->id);
+>   }
+> @@ -305,9 +305,9 @@ static int meson_clk_probe(struct udevice *dev)
+>   }
+>   
+>   static struct clk_ops meson_clk_ops = {
+> -	.disable	= meson_clk_disable,
+> -	.enable		= meson_clk_enable,
+> -	.get_rate	= meson_clk_get_rate,
+> +	.disable	= meson_axg_clk_disable,
+> +	.enable		= meson_axg_clk_enable,
+> +	.get_rate	= meson_axg_clk_get_rate,
+>   };
+>   
+>   static const struct udevice_id meson_clk_ids[] = {
+> diff --git a/drivers/clk/meson/g12a-ao.c b/drivers/clk/meson/g12a-ao.c
+> index 61d489c6e1c..e89638d65b5 100644
+> --- a/drivers/clk/meson/g12a-ao.c
+> +++ b/drivers/clk/meson/g12a-ao.c
+> @@ -35,12 +35,12 @@ static int meson_set_gate(struct clk *clk, bool on)
+>   	return 0;
+>   }
+>   
+> -static int meson_clk_enable(struct clk *clk)
+> +static int meson_g12a_ao_clk_enable(struct clk *clk)
+>   {
+>   	return meson_set_gate(clk, true);
+>   }
+>   
+> -static int meson_clk_disable(struct clk *clk)
+> +static int meson_g12a_ao_clk_disable(struct clk *clk)
+>   {
+>   	return meson_set_gate(clk, false);
+>   }
+> @@ -65,8 +65,8 @@ static int meson_clk_request(struct clk *clk)
+>   }
+>   
+>   static struct clk_ops meson_clk_ops = {
+> -	.disable	= meson_clk_disable,
+> -	.enable		= meson_clk_enable,
+> +	.disable	= meson_g12a_ao_clk_disable,
+> +	.enable		= meson_g12a_ao_clk_enable,
+>   	.request	= meson_clk_request,
+>   };
+>   
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index f33938e1419..cc7bfe9e2a2 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -194,12 +194,12 @@ static int meson_set_gate_by_id(struct clk *clk, unsigned long id, bool on)
+>   	return 0;
+>   }
+>   
+> -static int meson_clk_enable(struct clk *clk)
+> +static int meson_g12a_clk_enable(struct clk *clk)
+>   {
+>   	return meson_set_gate_by_id(clk, clk->id, true);
+>   }
+>   
+> -static int meson_clk_disable(struct clk *clk)
+> +static int meson_g12a_clk_disable(struct clk *clk)
+>   {
+>   	return meson_set_gate_by_id(clk, clk->id, false);
+>   }
+> @@ -858,7 +858,7 @@ static ulong meson_clk_get_rate_by_id(struct clk *clk, unsigned long id)
+>   	return rate;
+>   }
+>   
+> -static ulong meson_clk_get_rate(struct clk *clk)
+> +static ulong meson_g12a_clk_get_rate(struct clk *clk)
+>   {
+>   	return meson_clk_get_rate_by_id(clk, clk->id);
+>   }
+> @@ -888,7 +888,7 @@ static ulong meson_pcie_pll_set_rate(struct clk *clk, ulong rate)
+>   	return 100000000;
+>   }
+>   
+> -static int meson_clk_set_parent(struct clk *clk, struct clk *parent)
+> +static int meson_g12a_clk_set_parent(struct clk *clk, struct clk *parent)
+>   {
+>   	return meson_mux_set_parent(clk, clk->id, parent->id);
+>   }
+> @@ -958,7 +958,7 @@ static ulong meson_clk_set_rate_by_id(struct clk *clk, unsigned long id,
+>   	return -EINVAL;
+>   }
+>   
+> -static ulong meson_clk_set_rate(struct clk *clk, ulong rate)
+> +static ulong meson_g12a_clk_set_rate(struct clk *clk, ulong rate)
+>   {
+>   	ulong current_rate = meson_clk_get_rate_by_id(clk, clk->id);
+>   	int ret;
+> @@ -1000,11 +1000,11 @@ static int meson_clk_probe(struct udevice *dev)
+>   }
+>   
+>   static struct clk_ops meson_clk_ops = {
+> -	.disable	= meson_clk_disable,
+> -	.enable		= meson_clk_enable,
+> -	.get_rate	= meson_clk_get_rate,
+> -	.set_parent	= meson_clk_set_parent,
+> -	.set_rate	= meson_clk_set_rate,
+> +	.disable	= meson_g12a_clk_disable,
+> +	.enable		= meson_g12a_clk_enable,
+> +	.get_rate	= meson_g12a_clk_get_rate,
+> +	.set_parent	= meson_g12a_clk_set_parent,
+> +	.set_rate	= meson_g12a_clk_set_rate,
+>   };
+>   
+>   static const struct udevice_id meson_clk_ids[] = {
+> diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+> index bf46f4d50bc..24b5f9b5d40 100644
+> --- a/drivers/clk/meson/gxbb.c
+> +++ b/drivers/clk/meson/gxbb.c
+> @@ -236,12 +236,12 @@ static int meson_set_gate_by_id(struct clk *clk, unsigned long id, bool on)
+>   	return 0;
+>   }
+>   
+> -static int meson_clk_enable(struct clk *clk)
+> +static int meson_gxbb_clk_enable(struct clk *clk)
+>   {
+>   	return meson_set_gate_by_id(clk, clk->id, true);
+>   }
+>   
+> -static int meson_clk_disable(struct clk *clk)
+> +static int meson_gxbb_clk_disable(struct clk *clk)
+>   {
+>   	return meson_set_gate_by_id(clk, clk->id, false);
+>   }
+> @@ -840,12 +840,12 @@ static ulong meson_clk_get_rate_by_id(struct clk *clk, unsigned long id)
+>   	return rate;
+>   }
+>   
+> -static ulong meson_clk_get_rate(struct clk *clk)
+> +static ulong meson_gxbb_clk_get_rate(struct clk *clk)
+>   {
+>   	return meson_clk_get_rate_by_id(clk, clk->id);
+>   }
+>   
+> -static int meson_clk_set_parent(struct clk *clk, struct clk *parent)
+> +static int meson_gxbb_clk_set_parent(struct clk *clk, struct clk *parent)
+>   {
+>   	return meson_mux_set_parent(clk, clk->id, parent->id);
+>   }
+> @@ -912,7 +912,7 @@ static ulong meson_clk_set_rate_by_id(struct clk *clk, unsigned long id,
+>   	return -EINVAL;
+>   }
+>   
+> -static ulong meson_clk_set_rate(struct clk *clk, ulong rate)
+> +static ulong meson_gxbb_clk_set_rate(struct clk *clk, ulong rate)
+>   {
+>   	ulong current_rate = meson_clk_get_rate_by_id(clk, clk->id);
+>   	int ret;
+> @@ -954,11 +954,11 @@ static int meson_clk_probe(struct udevice *dev)
+>   }
+>   
+>   static struct clk_ops meson_clk_ops = {
+> -	.disable	= meson_clk_disable,
+> -	.enable		= meson_clk_enable,
+> -	.get_rate	= meson_clk_get_rate,
+> -	.set_parent	= meson_clk_set_parent,
+> -	.set_rate	= meson_clk_set_rate,
+> +	.disable	= meson_gxbb_clk_disable,
+> +	.enable		= meson_gxbb_clk_enable,
+> +	.get_rate	= meson_gxbb_clk_get_rate,
+> +	.set_parent	= meson_gxbb_clk_set_parent,
+> +	.set_rate	= meson_gxbb_clk_set_rate,
+>   };
+>   
+>   static const struct udevice_id meson_clk_ids[] = {
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
