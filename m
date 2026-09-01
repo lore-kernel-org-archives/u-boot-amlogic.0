@@ -2,190 +2,212 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBBCC61DBD
-	for <webhook@archiver.kernel.org>; Fri, 28 Aug 2026 13:20:33 +0000 (UTC)
-Received: from AM0PR02CU008.outbound.protection.outlook.com (AM0PR02CU008.outbound.protection.outlook.com [52.101.72.32])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.3715.1787861720940106278
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D26C624D3
+	for <webhook@archiver.kernel.org>; Tue,  1 Sep 2026 16:36:00 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.696.1788280556057234564
  for <u-boot-amlogic@groups.io>;
- Thu, 27 Aug 2026 13:15:21 -0700
+ Tue, 01 Sep 2026 09:35:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherry.de header.s=selector1 header.b=cu/irDdN;
- spf=pass (domain: cherry.de, ip: 52.101.72.32, mailfrom: quentin.schulz@cherry.de)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TuD0BmrE/bHHIkibIC1hCMSgTMlEUuSIUnTf9aZRKC3wrSiPo120h6HdF3PaJ3go6t11WwB+11wB+zY7tR1L52nuBxUVAVOS5EbE7G2uvMb/fHEz1YDA5nT7ECiMWNSR/OSOKXllZVfbWufAMg2wIS26wHaCz2UobS6ALr8Xw3ZmuGMDILkiC/Ug/n9mOtvd7P5sjmD9kUt8P+Trelgrl4tljHiQ3UgtQuRDWk3DS3jGzYGYKgDTx3IgEoEITS+T+zpUnhuY5gok5cVnoK234gK9mi5NTgI57lSZOX95vMl1sLizHiOhu5dnwsQVocbjK1popQG/4/P+rDQX0AS0gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DuQkdLGHWiH56wM1mZiNHtIFlZsLafqsS0F0iSs4jRA=;
- b=gRwuxhhFvMFpeyW02luHhucKsFqkRPaTUUSbrAoI0us9V+zLfPqOWQkDIFYyn5nqsWPLpUnuLWla1bFeCzLTT2NanJjaBx0iLiosb2S0SF9jz31g0Wzqles08ZYdIoRH1DBLbxKsWmhelWnM7Nz7d2yp1Lt4mZPEdXs9O1FjLuOdkGb6NsW5Nt9lzyY6B2ANRFFkHAOytWXl8COD9xuzCP6NwM3usqkfc9uyIMEc5xhNXBeC1YH6ZK8RYLEldjmqhm6OOkvER4L953Z03i2sug3JmpbP3I+OiRn+9wYj6UHQHG5gdc0iv+eIFyisG2Qqm4buJE+sCm0uN8oen4HvdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DuQkdLGHWiH56wM1mZiNHtIFlZsLafqsS0F0iSs4jRA=;
- b=cu/irDdNpnW4iWvH54AdaU5yXFthCjtiWASUWUzr6NfLZMWob1cY2wd58X7CRIJ6KDQ6IMo1/dOmNhhcKTVL9xC6ht/SC4dOYG3/5+892/AizsMVFAL5E91fd7URyApGkqLUq64X4iNvcvavjl16OXNn3fkkJcLb6KvAnlDdya0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from PA3PR04MB11153.eurprd04.prod.outlook.com (2603:10a6:102:4ab::7)
- by MMZPR04MB345699.eurprd04.prod.outlook.com (2603:10a6:190:51::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Thu, 27 Aug
- 2026 19:59:17 +0000
-Received: from PA3PR04MB11153.eurprd04.prod.outlook.com
- ([fe80::6b02:c0eb:95a4:3c3d]) by PA3PR04MB11153.eurprd04.prod.outlook.com
- ([fe80::6b02:c0eb:95a4:3c3d%4]) with mapi id 15.21.0360.008; Thu, 27 Aug 2026
- 19:59:16 +0000
-Message-ID: <81241329-290d-4c4e-80b4-c3bbdaa26cf8@cherry.de>
-Date: Thu, 27 Aug 2026 21:59:13 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next 00/45] doc: fix some issues reported by linkcheck
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>,
- Quentin Schulz <foss+uboot@0leil.net>
-Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Viacheslav Bocharov <adeep@lexina.in>, Stefano Babic <sbabic@nabladev.com>,
- Fabio Estevam <festevam@gmail.com>, Soeren Moch <smoch@web.de>,
- Alper Nebi Yasak <alpernebiyasak@gmail.com>, Le Jin <le.jin@siemens.com>,
- Jan Kiszka <jan.kiszka@siemens.com>, Nobuhiro Iwamatsu
- <iwamatsu@nigauri.org>, Peter Robinson <pbrobinson@gmail.com>,
- Sean Anderson <seanga2@gmail.com>, Bin Meng <bmeng.cn@gmail.com>,
- Lukasz Majewski <lukma@denx.de>,
- Mattijs Korpershoek <mkorpershoek@kernel.org>,
- u-boot@lists.u-boot-project.org, u-boot-amlogic@groups.io,
- "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>
-References: <20260825-linkcheck-v1-0-ee7573fe3a4a@cherry.de>
- <a2b54c83-97a2-4b81-9c6c-6be32f127985@gmx.de>
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <a2b54c83-97a2-4b81-9c6c-6be32f127985@gmx.de>
-X-ClientProxiedBy: VIUP296CA0138.AUTP296.PROD.OUTLOOK.COM
- (2603:10a6:800:34a::13) To PA3PR04MB11153.eurprd04.prod.outlook.com
- (2603:10a6:102:4ab::7)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ca3qwXNj;
+ spf=pass (domain: linaro.org, ip: 209.85.221.41, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-48444ec4fe2so65500f8f.0
+        for <u-boot-amlogic@groups.io>; Tue, 01 Sep 2026 09:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1788280554; x=1788885354; darn=groups.io;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=hvyNiMWS4QyDaAZzf0SqqbYnm0Hecypi/7pNVDxGqfE=;
+        b=ca3qwXNjQqHMmO1RaEQ+YKNN3/ccHycv0/Ay+F2/cGg/tUfE293X+05pxJAqcdXb5e
+         g8oQQ0ryHdSWRN/xVi5HOAxMq5V4/ohw/cnay5DnDcPozsePsqw58HnXIdcl5kkWWoIi
+         tLGWS5VojO0dFJeBz2vrx86fdk2C1P9OPt7L4JoDf21TLgvSs3cix9kyXLeeEvy854Bz
+         AKOqrdswjgzFxGyfi8BF1RHGLN210RUwZrKpI0Xp+ySPLvAMIT1ZrLBtuyLf+TqOxFPx
+         WVnqef135s5/q4mRAN5F49l/juIBcYG/QGhrh9otW0XajgchsqR2em286b6E8sFdEJTA
+         N2XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788280554; x=1788885354;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=hvyNiMWS4QyDaAZzf0SqqbYnm0Hecypi/7pNVDxGqfE=;
+        b=IG9a7ZaYsBfYdIxDDBHKdmlKnSed0dbk84aKWZ/17jTkVeOlBz70PtUTGNwG+ufTY0
+         r63XeKVQft3sV4s6z95K5onLztBwCdemS6ZWawomV9uCPZLkyFWSRMZsHYxnJdhgdnLT
+         9Cm2h84XQ5QBlA8dh4icse1fFi34+YUyFoEqRLZuBubF84yIIu4q6bfCEEwSdFMtYVpT
+         D9xo6gm4YqmonThjaINdmVPt1MLqwlBp1a/Fs5uGCtw33eY0rcMcHfb1Ny7kUSHHSwqr
+         fgeuD5JZyJACyj82xd5AKiEJLLmYlGF1KrbN/qaUGKXchaHwyy+yHSzGGXxrBGvMgx/A
+         kLAg==
+X-Forwarded-Encrypted: i=1; AHgh+RrHm5Zlbd28A2kn7aeFxnii7aR9lxsznFiVIIOYmYpQHpScKTH0ZXkWfMVORt6Sm9dpGOkba5aoIVPVN+fpoQ==@groups.io
+X-Gm-Message-State: AFuF++nxi8T4zDv+ghw6bMgczHBi9OmLgAX8aY9vcG0rdFOFOyxbL0QY
+	HPzDaXWkQuP4rUAUEKrrCe3l97W8qiF7DD5LKHnQA8fuJxZJOk4Xg/xCQ8K91W4H+yfwFC+CpxP
+	B2JFChMk=
+X-Gm-Gg: AR+sD11eDFQV1PVFglU5C4IqqtZSQ/273meeYukXGYbfwqxxQj0NafVs2oj74GMy2Zt
+	yyg4aL6XMTMdLg2mDaShJLCKca0VC+Ldb5Of/hhpALoYn59woJxohSkaj0Ymax5g+jZSs4d2iMC
+	JANPDZoXy//aVbibAmTyCzvn57W76FFWX2+6vOmcv2MX+4mzdN442DJOCGHBDxCXHkykQEzTHiS
+	HAPGakdSP7BAcpZToEkpu2uIkfKL3J0IvM/QXCVmgDAKww5lNdSDunuWWPQhnWdTsSbPgqYLOWq
+	Qrh6PFw6sGz4f+0ECunO8ANM3WBreJstLtvOfcQDAhmXRfMHDy3k9rYu49jCjbqbT6y60+joXdX
+	K6G231wQ+jJOaUl5ipNtSH6LmKmeLvgyeY5BxiiVZLCMJ74amt96w8/7C3qRzZ3Wei/GQEqPr75
+	fd+bMBsINBDQZ6uptnHPESXF1Oo6tqzoaD+e7kDDWsV9Wy20W7aQTVPZDFl5FiRQFjHByhQ9uA0
+	KdzJk06FP6hobkl+A7wzhT4LjoiuuGF9+WzQQxtJ0Q0GEJNTL5C/g==
+X-Received: by 2002:a05:600c:a00d:b0:49a:252d:52f5 with SMTP id 5b1f17b1804b1-49cdc45253dmr187165335e9.11.1788280521515;
+        Tue, 01 Sep 2026 09:35:21 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:3b72:e9ec:2552:5b90? ([2a01:e0a:106d:1080:3b72:e9ec:2552:5b90])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b9266be71sm793470805e9.2.2026.09.01.09.35.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2026 09:35:21 -0700 (PDT)
+Message-ID: <afe6836f-5366-4177-ab57-7563380e8b74@linaro.org>
+Date: Tue, 1 Sep 2026 18:35:20 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA3PR04MB11153:EE_|MMZPR04MB345699:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0f6c756-4612-4447-7ee1-08df0475ac89
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|10070799003|23010399003|376014|7416014|1800799024|10067099003|6133799003|4133799003|3023799007|22082099003|18002099003|4143699003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info: 
-	l7x2R+vElhlZF57PwhUvH5fcvJWtsZhq3cK2nO2u0NYt5r/7tTZSqvIuFKg66ZWlezeKCtpZUoXylneGIxzOiw2kRQeFic6Rgkp6Cra9LQIoSG5Zkhx+dRB8AEmGLRFu0DhX7RAJXEM++HHna6yBrfRRQEq1XKg4tlsMuxh77bjQ9vzmss21O+wAQBXdpw6vXLe+Sr151po+Tmn4+gPSMJ1tYk8OPcUM1wkfVnxDFE/JckEe5bptwtgXoB5uwtXZ7arwkYNyfDrOiKeh3n0ksO+HlV4Q9ZeceB87XkJcO1t/AxxkM3nAr7VrJG3Ua32KiX84txSZRv4B3iYqNp9988V/X0Hma7gVdvuNbA6Lgojbh7T0ulpuuzRuC74B5u7FXbzJvyIjy0duEjor4KS8eEmSBiZd4nFj/O/LSNbCV0DJ2767kPQCGCA6KpDAFV679TTbVfJnisGCZhSZvnlQK+lqugKn2wKvSdEmvqrlrJd8oqZu8S4oT04vbXWQh73G8vELGmLNkK6+CZ06DGpgo14u5hPM49Q2ohzivymVUQWiWVvrhPEPd8Shh2bfyaisEngdHZT28DcnbYi4ktTPmLAp82MW4AuOYd6yEbNFsWk=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA3PR04MB11153.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(23010399003)(376014)(7416014)(1800799024)(10067099003)(6133799003)(4133799003)(3023799007)(22082099003)(18002099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?NUprTUUvdkFXSko4MkNvbmlHMXFBV1VEZmtVSkRTc0tOWDJuMmRvWkN2NFVh?=
- =?utf-8?B?UWljcWdzeWIweC9DM3paeE5JV2hOVG85dEVQUjN2RHR5YkJTdElvb1hGS0kv?=
- =?utf-8?B?VkpRWmdWM1grRW1HdngwaVRTb3U5b0ZLbmhyZm5kOUFTcWRNdHpzMXlxRWM2?=
- =?utf-8?B?K0ExNkkyaFozbDhzUWtoWjl5aFhwV0l3dFZ2U3paUkgzL0laZmNKYVV0WDNl?=
- =?utf-8?B?a3VxK28xL3U1eXlmYm9Gdm1tSTVpN3E0dFJmODV0WTdaeVlFdTg4Nk9MZnh4?=
- =?utf-8?B?MHJuWmRrb1QxdjRGNUROcThPdkJOTFNtc1YxMzhCdSt1bmdJVWFoaUZmZGhq?=
- =?utf-8?B?SWkzK0Y4c2NDTmZpU3k1VGpKeXFZcEx5bzNYai9RNU5yYVF1aGgzRGhoRW1V?=
- =?utf-8?B?NklyeEIyTmh0cVAyVTA3YXZCMW1mNm42TUpYSHVVb0J6aEpQcUNwYmtZeEc4?=
- =?utf-8?B?ZXBkemZDNUZaMjVyVml2eW55K0JSbWtXZ0tvWm9Qb2ZGQXhhdUxxdHRSREVk?=
- =?utf-8?B?bHJMNXJTeWR2c2RSTU42NTgrRkh5dEJGY1JwM2ZDdThrSkx0eHFNNlp4ZkFy?=
- =?utf-8?B?ZlV2b2dLL3FLVkw2aDBnMHFncU9KdWdRcitNakxYNWl0cUVnYzhMTHcvc2ox?=
- =?utf-8?B?ZjA3Rldya1YySi9RNytzNDVvNkoybjl6Y29WVStyelpYQnFBazZURGtydXJN?=
- =?utf-8?B?a2hIdHpNZm5xT2lsWm1ybDJGaDlYUkNBZldzYy9zY1RLMVNieFdYcFhOR3Fx?=
- =?utf-8?B?S2pva0o1UmV6U1JiMkVUSU1lVTRLczZLYVJlNW9tT1hER1lXSEVOaGRmd3Bz?=
- =?utf-8?B?VWxmUkNMYmRuaE1hYjBSRVZyUE4rdVFpQ2V3ZThPSFVXLy9IajJVNVhpeExw?=
- =?utf-8?B?bjM5cjg5QmRrSDBZMkhwZUlhS01Zb3Q0cUNEYUhPbEJFM0JxY2x2M3NXdmpo?=
- =?utf-8?B?Nm5IU21ZSS96TU1zT051MXhOOVpNdDRoQy9yNTZJSUZCMFY1c0ZWaXEvUUlv?=
- =?utf-8?B?QnBXZkZHa1QvNlZ2SmJ4WU1pamw5M3lxWHNacUhwR0VBdjFDWHg0TG9ONTZ6?=
- =?utf-8?B?dTZjSkRlZGhMZTlyRkVIWG1yS3I1ODJvWlVzQWpldzhNMnQrZVdOR0VYeFFw?=
- =?utf-8?B?R205cVpLS3NVaXBPZW1LdVRvcmpDM01qS0Zzck55RjdVV2tHZ21HdUJES1VH?=
- =?utf-8?B?WWcyRHNyMll5dGVQcHpGU3dQK3VIQ1pWUXVLNllQVVY1V2NaMVhjY3ZHYTFD?=
- =?utf-8?B?RjZDbFFlazE2d2RMdFkySkVCQjE4TlgzNFdqY0JBWGlsVUZOZ0JtREFTNmZl?=
- =?utf-8?B?ZlJyMk1hd2REL2dydmRwYmhNTWlzMmwzRHIxS1VkK25jZ2xieGY3RjYzRm5S?=
- =?utf-8?B?Z2E3Tk9XVnd4N2kyRk16ZzJqeTZBQmNQdzJLWVB2VEJNSEhYR1BkK3QyZjJl?=
- =?utf-8?B?aFBpUG05QkcyV095UnYvcE11Sjc4eTNHbGVlalBSTlgrSG9NMXdjWVV0UENH?=
- =?utf-8?B?NU9YZ2pqdE1lRzFEN09JSFAyRGoxeTlIWlNYRjgrYkw3VnFPR1RuM2FUQ3gv?=
- =?utf-8?B?QVYrMlh1RmdFZWVRYzdMTHBkZDEyRTdFOHlJVE0rcTQ0T1BYeTZIZStnV2ZP?=
- =?utf-8?B?K2R5RjhYa1JmVGh6S0JSbEtjS0ZXRDdKWnJ1MnVWOVpaSTc5Z2ZrbVVHNFVY?=
- =?utf-8?B?aHNqa2trd0phN013RHMrSkF1WExoL3JIM3BMclRQRDVtR2hqOUFKSWNjWjVS?=
- =?utf-8?B?T1ZlNVp6SVcrMU9wbmVlOGtXVDZqeDhFZnIyUGJIUVdYVHJJdm5heElzVjhL?=
- =?utf-8?B?U2NaWTVBS1hMMDV1dnJoTWM0NDRPUEttemt0K3BJeGswcGdSQjVBNlN0QUV0?=
- =?utf-8?B?ZWJGNkJBeWJ2TitYSFhPSEZmRjJldmJjKzZOQlZvc2h4VUN1QjhQVDNTRmxk?=
- =?utf-8?B?anIrUEY4K0RncEpCNVF3dmgxaGJmNHpvVFNKMHRrZFBVRndiMUpWUGtyQmZ6?=
- =?utf-8?B?Y1hjNDMwV21VKzRGb25jRmxjZVYxRkZ2QkpzeHNGRzV0UHV5a2hVVzYrSDVJ?=
- =?utf-8?B?STQ1UFloWGxHRWVtV0FBeTVDc2xTd29MR1BaZlpTeEZsaFFKL0VKT1N3Nm8z?=
- =?utf-8?B?M2RmNE10dzR5MDFLWU5jelNubGR4SS85V0xIak1nWkVRUENpVVZLSzFaajg1?=
- =?utf-8?B?MnJETllWSUwxYllQOW9RS00yZldvTU5tU0tQa01mWUdLdk51cTJhZURkbjVj?=
- =?utf-8?B?V3hwZ2RJU1p6eGZUTHI4ZUszQ0UvWlE5UUxoUWlXYW1xWEdsK0Y1d2IzWnVi?=
- =?utf-8?B?cUcyMUF3cStIOXl0QzBDcSsvQmhaOGtib0ZkTmx4VjNyNVNGNEVYQjBCTldT?=
- =?utf-8?Q?okeZVspwiTd4OnqumaWuaW7O+jugmQmzNf/T5lCFb8kmd?=
-X-MS-Exchange-AntiSpam-MessageData-1: PDiEkkDnxtFXIppONe9xqcHN8F+Oro8mqPw=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0f6c756-4612-4447-7ee1-08df0475ac89
-X-MS-Exchange-CrossTenant-AuthSource: PA3PR04MB11153.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 19:59:16.5469
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZgKftiEPHSjFSz3brYpzeT/8GpLAEmIqUl98ZqfdfITaPECLjWD05ZKWs2wxOrRkXLeJjgqOYnmNUnuq7zl5RUxY0jp7o5k7mGSPJTj/GnA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MMZPR04MB345699
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] spl: rename DISABLE_ALL_EXECPTIONS
+To: =?UTF-8?Q?Vincent_Stehl=C3=A9?= <vincent.stehle@arm.com>,
+ u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org
+Cc: Tom Rini <trini@konsulko.com>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Daniel Golle <daniel@makrotopia.org>
+References: <20260901-typo-v1-1-89ea773a9a05@arm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20260901-typo-v1-1-89ea773a9a05@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Fri, 28 Aug 2026 13:20:33 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3084
+ <u-boot-amlogic@groups.io>; Tue, 01 Sep 2026 16:36:00 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3085
 
-Hi Heinrich,
-
-On 8/27/26 1:03 PM, Heinrich Schuchardt wrote:
-> On 8/25/26 18:49, Quentin Schulz wrote:
->> Saw a dead link and made the mistake of running `make linkcheckdocs`.
->> Now I'm knee-deep in it and cannot ignore all the dead and redirected
->> links. A day later, I've had enough so this is what I managed to fix in
->> that time. There are many URLs still redirecting (could be fine, but
->> needs to be individually checked as some big companies have a tendencies
->> to redirect to generic pages instead of issuing 404s...) or returning
->> 4xx. The issue is that those 4xx also need to be individually checked
->> because since the AIpocalypse has started many websites now have web
->> crawler protection in place and linkcheck will trigger those and be
->> denied access (or be heavily rate limited).
->>
->> Please be mindful and only run this script once, save its output and
->> work on fixing individual errors without rerunning the script, otherwise
->> we would only participate in hammering websites even more (linkcheck
->> runs multiple workers in parallel and retries when rate-limited).
->>
->> Note that linkcheck doesn't check for links in code-blocks so our
->> instructions may point at dead links also.
->>
->> At an attempt to avoid tens of people running linkcheck at the same
->> time, here's the output sorted and filtered on !ok status:
+On 9/1/26 18:20, Vincent Stehlé wrote:
+> The DISABLE_ALL_EXECPTIONS define has a typo; fix all occurrences using the
+> following command:
 > 
-> Hello Quentin,
+>    find '(' -type d -name .git -prune ')' -o -type f -print |\
+>      xargs sed -i 's/DISABLE_ALL_EXECPTIONS/DISABLE_ALL_EXCEPTIONS/g'
 > 
-> in patchwork.ozlabs.org, lore.kernel.org/u-boot, and https:// 
-> eur02.safelinks.protection.outlook.com/?url=https%3A%2F%2Flists.u-boot- 
-> project.org%2F&data=05%7C02%7Cquentin.schulz%40cherry.de%7C3c09d2cdb28041d4b5cc08df042aede7%7C5e0e1b5221b54e7b83bb514ec460677e%7C0%7C0%7C639234254572323528%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=EVMJd%2FfRl5KHcaDFXZvcck%2F38e8nTUtVCJ61A8CT1Cg%3D&reserved=0 only patches 1 - 21 arrived.
+> This can be verified by pre-processing, for example with the following
+> commands:
+> 
+>    make libretech-cc_v2_defconfig
+>    make spl/arch/arm/mach-meson/spl.i spl/common/spl/spl_atf.i
+> 
+> (Adjust as needed for cross-compilation.)
+> 
+> Signed-off-by: Vincent Stehlé <vincent.stehle@arm.com>
+> Cc: Tom Rini <trini@konsulko.com>
+> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>   arch/arm/mach-meson/spl.c | 2 +-
+>   common/spl/spl_atf.c      | 8 ++++----
+>   include/atf_common.h      | 2 +-
+>   3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/mach-meson/spl.c b/arch/arm/mach-meson/spl.c
+> index 28a63f39d36..73445064e4d 100644
+> --- a/arch/arm/mach-meson/spl.c
+> +++ b/arch/arm/mach-meson/spl.c
+> @@ -84,7 +84,7 @@ void board_init_f(ulong dummy)
+>   
+>   		SET_PARAM_HEAD(&spl_ep_info, ATF_PARAM_BL31, ATF_VERSION_1, 0);
+>   		spl_ep_info.pc = CONFIG_SPL_TEXT_BASE;
+> -		spl_ep_info.spsr = SPSR_64(MODE_EL3, MODE_SP_ELX, DISABLE_ALL_EXECPTIONS);
+> +		spl_ep_info.spsr = SPSR_64(MODE_EL3, MODE_SP_ELX, DISABLE_ALL_EXCEPTIONS);
+>   
+>   		regs.regs[0] = 0xc0000000;
+>   		regs.regs[1] = (unsigned long)&spl_ep_info;
+> diff --git a/common/spl/spl_atf.c b/common/spl/spl_atf.c
+> index 17acd3665df..cb0604ce034 100644
+> --- a/common/spl/spl_atf.c
+> +++ b/common/spl/spl_atf.c
+> @@ -75,7 +75,7 @@ struct bl31_params *bl2_plat_get_bl31_params_default(ulong bl32_entry,
+>   	bl32_ep_info->args.arg3 = fdt_addr;
+>   	bl32_ep_info->pc = bl32_entry ? bl32_entry : 0;
+>   	bl32_ep_info->spsr = SPSR_64(MODE_EL1, MODE_SP_ELX,
+> -				     DISABLE_ALL_EXECPTIONS);
+> +				     DISABLE_ALL_EXCEPTIONS);
+>   
+>   	bl2_to_bl31_params->bl32_image_info = &bl31_params_mem.bl32_image_info;
+>   	SET_PARAM_HEAD(bl2_to_bl31_params->bl32_image_info,
+> @@ -91,7 +91,7 @@ struct bl31_params *bl2_plat_get_bl31_params_default(ulong bl32_entry,
+>   	bl33_ep_info->args.arg0 = 0xffff & read_mpidr();
+>   	bl33_ep_info->pc = bl33_entry;
+>   	bl33_ep_info->spsr = SPSR_64(MODE_EL2, MODE_SP_ELX,
+> -				     DISABLE_ALL_EXECPTIONS);
+> +				     DISABLE_ALL_EXCEPTIONS);
+>   
+>   	bl2_to_bl31_params->bl33_image_info = &bl31_params_mem.bl33_image_info;
+>   	SET_PARAM_HEAD(bl2_to_bl31_params->bl33_image_info,
+> @@ -149,7 +149,7 @@ struct bl_params *bl2_plat_get_bl31_params_v2_default(ulong bl32_entry,
+>   	bl_params_node->ep_info->args.arg3 = fdt_addr;
+>   	bl_params_node->ep_info->pc = bl32_entry ? bl32_entry : 0;
+>   	bl_params_node->ep_info->spsr = SPSR_64(MODE_EL1, MODE_SP_ELX,
+> -						DISABLE_ALL_EXECPTIONS);
+> +						DISABLE_ALL_EXCEPTIONS);
+>   	SET_PARAM_HEAD(bl_params_node->image_info, ATF_PARAM_IMAGE_BINARY,
+>   		       ATF_VERSION_2, 0);
+>   
+> @@ -166,7 +166,7 @@ struct bl_params *bl2_plat_get_bl31_params_v2_default(ulong bl32_entry,
+>   	bl_params_node->ep_info->args.arg0 = 0xffff & read_mpidr();
+>   	bl_params_node->ep_info->pc = bl33_entry;
+>   	bl_params_node->ep_info->spsr = SPSR_64(MODE_EL2, MODE_SP_ELX,
+> -						DISABLE_ALL_EXECPTIONS);
+> +						DISABLE_ALL_EXCEPTIONS);
+>   	SET_PARAM_HEAD(bl_params_node->image_info, ATF_PARAM_IMAGE_BINARY,
+>   		       ATF_VERSION_2, 0);
+>   
+> diff --git a/include/atf_common.h b/include/atf_common.h
+> index 03cfcc69cd7..9ef1ef186e1 100644
+> --- a/include/atf_common.h
+> +++ b/include/atf_common.h
+> @@ -69,7 +69,7 @@
+>   #define DAIF_IRQ_BIT (1<<1)
+>   #define DAIF_ABT_BIT (1<<2)
+>   #define DAIF_DBG_BIT (1<<3)
+> -#define DISABLE_ALL_EXECPTIONS	\
+> +#define DISABLE_ALL_EXCEPTIONS	\
+>   	(DAIF_FIQ_BIT | DAIF_IRQ_BIT | DAIF_ABT_BIT | DAIF_DBG_BIT)
+>   
+>   #ifndef __ASSEMBLY__
+> 
+> ---
+> base-commit: 3f19667468fb93bcb5702d23aa057b72639e3ac8
+> change-id: 20260901-typo-465ee352485c
+> 
+> Best regards,
+> --
+> Vincent.
 > 
 
-I know, 
-https://lists.u-boot-project.org/pipermail/u-boot/2026-August/629812.html 
-(for some reason it didn't make it to lore.kernel.org...).
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-I once again got rate limited for 24h, so the last three patches will 
-have to wait for this weekend. I'll likely need to split this in two or 
-three for a v2 so I don't get rate-limited in the middle of a series.
-
-> Please, send the rest of the series using
-> 
-> --in-reply-to=20260825-linkcheck-v1-0-ee7573fe3a4a@cherry.de
-> 
-
-Thanks, was wondering how to do that!
-
-Cheers,
-Quentin
+Thanks,
+Neil
 
