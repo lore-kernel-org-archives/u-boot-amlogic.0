@@ -1,230 +1,191 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <glaroque@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B12C79FB9
-	for <webhook@archiver.kernel.org>; Thu, 10 Sep 2026 13:09:04 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13542.1789045738063325821
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B56C88E40
+	for <webhook@archiver.kernel.org>; Thu, 10 Sep 2026 14:04:45 +0000 (UTC)
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.15015.1789049077740575347
  for <u-boot-amlogic@groups.io>;
- Thu, 10 Sep 2026 06:08:58 -0700
+ Thu, 10 Sep 2026 07:04:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=xA3fON5+;
- spf=pass (domain: linaro.org, ip: 209.85.221.47, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-485888b3c3dso7091972f8f.2
-        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 06:08:57 -0700 (PDT)
+ dkim=pass header.i=@baylibre.com header.s=google header.b=eWr2ubcL;
+ spf=pass (domain: baylibre.com, ip: 74.125.225.140, mailfrom: glaroque@baylibre.com)
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd5462b69so14639335e9.1
+        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 07:04:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1789045736; x=1789650536; darn=groups.io;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=baylibre.com; s=google; t=1789049076; x=1789653876; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=GgBRwr9klUJKxnZ6OzU3HU+Tf1smNtxwyie49GbKteE=;
-        b=xA3fON5+FmErORncRwI25Badz6EyPhoIKZvGkyBYSSvnoEBDzJZqL99/JhI0AuQKuA
-         k5kJ2a9+6ueJi5PZMomtznp5KfM2tEB1p2Hhvv1ztZOhuBJ6kAXjxb+DFXqOnTro1L2q
-         rCg7D5jzkX/Sb4pHxbYYkED7m3Y5Sxs92hylgePz8IOoDoEMfXeeVcIEFekzcHNeFFhg
-         M9aYXCTHVzO5ZDhNpRB/uupxQLhmkgwC2cW3weSluizDXlyHjLZp9/KhfUPM4QEDjAD8
-         TNlL1h12cPujJjHPKW7dqQIZB7v6Vz+qn0M7E34m9r7co7DIOyVS7NA3CdeiawcJtdVa
-         m3Zw==
+        bh=QgqLAMnM0QnMkdx8jYMYTz3x06MbZ4R0X0M4NhMO5Ok=;
+        b=eWr2ubcL1oQchdwKcwGktSCtHWX0UzMvG2HZYzxcmKvX1zS7nbevBWTPgaaFq1ESaY
+         txxGVnHiKaiZVq8lcjIloeHVjWD+gYmFXVykIecgxRDbm/4t/I9LqY7IDoXSqxSdpho+
+         qLTOYo//qrQn3ikwDKamg9LvjN7fl6PQMuZzE2DTi6DnMzS8evn2Oot4mYCPxVg5cvp4
+         UoS7Oy43C0dYTE6ExYoirVdR0GGoHB5RbFwp2f2ShEGaIFAUZF1jOXe0fRCDyEVOj9sE
+         d05mqPojAR1BpF8A2w/0kz9rjsdPT608pMxPEPeJRreWVX0RuoXk3VP0LfHwwRZYXepx
+         vnOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789045736; x=1789650536;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=GgBRwr9klUJKxnZ6OzU3HU+Tf1smNtxwyie49GbKteE=;
-        b=g0COUQ5HY2wb8FU+ALMyGl9Nwefc/cBP9dkE06WbWmDBDkjMup7OFgP+xONvIUTImp
-         06VMpD88M7JL+OCoFz5SjUAM9ynkbuM3u6CWYNoRl0pF9ELV71JuEU2mNQtl1VHyuxwe
-         VVXexNQLNL8C0ndPGr1jlJZRnw/mDTZlOIhIptTAsHQ0LxXwM1Oe76s9bLY+9voS4NVr
-         bwdjXGHajYVXQGY7+F3AOJ1QaMnMNLBLglwqtUOFaeR2lBzzLVCZfoB+nyHWe0BpFVNs
-         x6tPqnmqQdBunw++2z6ylCJ2Y0d4C0A0+hOtAHDmIkxgohWk7uKU9NN68VMJioeW3S/W
-         tDRA==
-X-Forwarded-Encrypted: i=1; AKwUvBwDxOg30JXsSBaH4dQMDO0RfeigfTY0t5bboD2nytjQTyBlo+aIlNv1qwwKphSBF+Njrp2GWDzT+7/yyYIGxQ==@groups.io
-X-Gm-Message-State: AFuF++kagV+bitR/eexzT+VoTz7zdREhP+G62NW2/u50V/Gy4qe+TQrN
-	9LFz2MXKKtj4VD/G62WR+NFN4zC5X8mxSl0LOvzxO1HPiri6Kkpj47SwYM6B2XZjHdE=
-X-Gm-Gg: AYBFou0lHAq6Qf2Ynr3sdXejyd6nu6JY00vY+VGQ+muZU9zR017+JsMoauAR876cHEA
-	I/cITujERRIX60pHZOyRTx0Mzv6d8VuPt3ujHpF55l35B3u9aYxT6xv9IqVxl4eagvWf+P5tjUL
-	LEHSOvdCOMcCSHnI3GkZZNKfcp9pMyz/RAUJNT33yikpB8f4NSv3WCeVhO0BgwOxZJOCKsYt64k
-	kQ7dywkKfHAFnIm12MDNuGUJo11/6rXxjrTLi6LaTdc26RgNh/Hmlgu7INoKnm/OPpakZtDpcBH
-	XZqPhOnupo9frO3lObkopd7vTTixc3cDbPBmxY0fc/MX1ShzEaDg5wVvrxbwcxWbAizeIQbOzaB
-	+ZYw/PFxjQ2l3ZyJ2FhEfjV9eB2sIIs5v5ZhJ74KD7Sx0RFd9MZmKaKYhYpUhFVdWvLKUAdhsKe
-	hHbjUY9bOfDW2axhgQ02mU5jDs9A3u8PgyGAHkvJ+RYoRJjsHdMr1D96Oit4HUYKm/wTGchv0X5
-	0NXOQ/fnxjo/a5zyZkr0jtu4md/y1nErtZZn07HVHyxeZW4IGIdxA==
-X-Received: by 2002:a05:6000:240e:b0:485:8f9c:2879 with SMTP id ffacd0b85a97d-4858f9c29e1mr35059633f8f.6.1789045736086;
-        Thu, 10 Sep 2026 06:08:56 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:106d:1080:edd1:1b07:ea07:35f2? ([2a01:e0a:106d:1080:edd1:1b07:ea07:35f2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485883c5bc5sm54150633f8f.24.2026.09.10.06.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2026 06:08:54 -0700 (PDT)
-Message-ID: <72cb8528-93ec-4788-a510-9d09e276ebdc@linaro.org>
-Date: Thu, 10 Sep 2026 15:08:51 +0200
+        d=1e100.net; s=20251104; t=1789049076; x=1789653876;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=QgqLAMnM0QnMkdx8jYMYTz3x06MbZ4R0X0M4NhMO5Ok=;
+        b=ofHD6VlaUrq/sqG5n7w8FX2nVyEPBB+S2QXJaT4PytjP+eMRpYWHOcZwzh48d0GgLK
+         Hj5cQfSHzkgCGq16vsWGNHbqst8Pa7XiN790DQq94GrnlrnXXQgNwnNCxzy8zzErP5XW
+         rHCITmOWHJYuI09ZHoVskmqPEFWc0E4obgRa77bIXy81mYXw2btiXFaLOhQeXjBN/i8h
+         cC4lPlhOWs732DrnSQ3mKSihOXfeFAwP8SFlF805Qnt6b1KZF6dWiKUveS0VFtLm+juu
+         zVBCTs2wr4Dio5tHd0NlXruLV5npglCmfCpvKGtxmvuTCW4vH5sg7wRd0lsrO3fR+BrQ
+         hn0g==
+X-Gm-Message-State: AFuF++nEbUoDte1r0SZVR+kyBWUeoOIjglhp+OcOFr0W1KymkVTnDlqi
+	HWH6jNFGVD+QRh4B8YJ6lny1xXZe6zGSSvV7zsLLFqm5xHXUDjcZcPqjWxspbJnKjfk=
+X-Gm-Gg: AYBFou3xWnpC2wGpHdSOYQb3KYFYofMA9t6klNQjDKuq6TCvUUiFfet0f2CunsoykWr
+	jHNZiXjjC7m6PWTi9TVdTa5ZSZrUCWh7/YKIYjDmWREtbLD5B5mCMMte8p841pmuAJgpl+mOKzy
+	PEvPSZUADUNiPjpLSvD+2o03Yk/+Kb/fjUzRtKsNF7zVw0y9U1VGxgwfw5EwlqnO4TSeHOx791J
+	6+EyL6I3069h7CgOOpFFAC5H5Vj34iBWpyFdDQkuEMDZhiGSLNyANQypYz1hLhRisr5pO+BtU42
+	STCoACettCpcxZgvewGuULmE+YIKZqNA7o/5xDeimEa+YsXkhtMdpALszOokOGzvMcj7CZGyXQb
+	vILPABA65lZQTKWBU19A5SxSDCom8CZT6oFgDgy3K/giegujbQooh8pZJKz9ISkdrxG2PXrRwhe
+	K/TilXl5T5ZVs5Mu/tZCjPDOOu5dmKHxprNvdk1jLpiwIN7JEfrzDo1YO2T8bTTtaf92deUM0=
+X-Received: by 2002:a05:600c:4f4b:b0:49c:ee20:e787 with SMTP id 5b1f17b1804b1-49d1f21afcdmr231341375e9.1.1789049075852;
+        Thu, 10 Sep 2026 07:04:35 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:e0a:e50:3860::642d:5bda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d20db6e76sm147660745e9.3.2026.09.10.07.04.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2026 07:04:35 -0700 (PDT)
+From: Guillaume La Roque <glaroque@baylibre.com>
+Date: Thu, 10 Sep 2026 16:04:22 +0200
+Subject: [PATCH 1/3] configs: sei510: drop Android support
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 36/36] ufs: qcom: fix core clk max rate setting
-To: Casey Connolly <casey.connolly@linaro.org>, u-boot@lists.denx.de,
- Aspeed BMC SW team <BMC-SW@aspeedtech.com>, Joel Stanley <joel@jms.id.au>,
- "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>,
- GSS_MTK_Uboot_upstream <GSS_MTK_Uboot_upstream@mediatek.com>,
- Sumit Garg <sumit.garg@kernel.org>, Paul Barker <paul@pbarker.dev>,
- Dai Okamura <okamura.dai@socionext.com>, linux@analog.com,
- uboot-snps-arc@synopsys.com, u-boot-amlogic@groups.io,
- u-boot-qcom@groups.io, uboot-stm32@st-md-mailman.stormreply.com
-Cc: Tom Rini <trini@konsulko.com>, Lukasz Majewski <lukma@denx.de>,
- Simon Glass <sjg@chromium.org>, Greg Malysa <malysagreg@gmail.com>,
- Vasileios Bimpikas <vasileios.bimpikas@analog.com>,
- Arturs Artamonovs <arturs.artamonovs@analog.com>,
- Christian Marangi <ansuelsmth@gmail.com>,
- Ryan Chen <ryan_chen@aspeedtech.com>,
- Chia-Wei Wang <chiawei_wang@aspeedtech.com>,
- Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
- Sean Anderson <seanga2@gmail.com>, Peng Fan <peng.fan@nxp.com>,
- Michal Simek <michal.simek@amd.com>, Liviu Dudau <liviu.dudau@foss.arm.com>,
- Sam Protsenko <semen.protsenko@linaro.org>,
- Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>,
- Ryder Lee <ryder.lee@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>,
- Chunfeng Yun <chunfeng.yun@mediatek.com>,
- Igor Belwon <igor.belwon@mentallysanemainliners.org>,
- David Lechner <dlechner@baylibre.com>, Julien Stephan
- <jstephan@baylibre.com>, Mario Six <mario.six@gdsys.cc>,
- Stefan Roese <stefan.roese@mailbox.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>,
- Philipp Tomsich <philipp.tomsich@vrull.eu>,
- Kever Yang <kever.yang@rock-chips.com>,
- Minda Chen <minda.chen@starfivetech.com>,
- Hal Feng <hal.feng@starfivetech.com>,
- Patrick Delaunay <patrick.delaunay@foss.st.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- Andre Przywara <andre.przywara@arm.com>, Thierry Reding
- <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>,
- Yao Zi <me@ziyao.cc>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- Jaehoon Chung <jh80.chung@samsung.com>,
- Robert Marko <robert.marko@sartura.hr>,
- Aswin Murugan <aswin.murugan@oss.qualcomm.com>,
- Balaji Selvanathan <balaji.selvanathan@oss.qualcomm.com>,
- Bhupesh Sharma <bhupesh.linux@gmail.com>,
- Neha Malcom Francis <n-francis@ti.com>
-References: <20260720-casey-ccf-upstream-july-v1-0-8fece1b0333d@linaro.org>
- <20260720-casey-ccf-upstream-july-v1-36-8fece1b0333d@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20260720-casey-ccf-upstream-july-v1-36-8fece1b0333d@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260910-remove_sei_android-v1-1-b7bcbcef3834@baylibre.com>
+References: <20260910-remove_sei_android-v1-0-b7bcbcef3834@baylibre.com>
+In-Reply-To: <20260910-remove_sei_android-v1-0-b7bcbcef3834@baylibre.com>
+To: u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Tom Rini <trini@konsulko.com>, Quentin Schulz <quentin.schulz@cherry.de>, 
+ Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+ Guillaume La Roque <glaroque@baylibre.com>
+X-Mailer: b4 0.16.0
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 13:09:04 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3087
+ <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 14:04:45 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3089
 
-On 7/20/26 18:41, Casey Connolly wrote:
-> The unipro core clock rates are described in an OPP table, but we were
-> not reading this correctly at all. Fix this and actually get the max
-> rate and call clk_set_rate(). This fixes UFS init with CCF.
-> 
-> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> ---
->   drivers/ufs/ufs-qcom.c | 29 ++++++++++++++---------------
->   1 file changed, 14 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/ufs/ufs-qcom.c b/drivers/ufs/ufs-qcom.c
-> index 3656c3861cb5..f514b32afc6d 100644
-> --- a/drivers/ufs/ufs-qcom.c
-> +++ b/drivers/ufs/ufs-qcom.c
-> @@ -315,9 +315,9 @@ static u32 ufs_qcom_get_core_clk_unipro_max_freq(struct ufs_hba *hba)
->   	if (pos < 0)
->   		goto fallback;
->   
->   	/* Try parsing the opps */
-> -	if (!ofnode_parse_phandle_with_args(node, "required-opps",
-> +	if (!ofnode_parse_phandle_with_args(node, "operating-points-v2",
->   					    NULL, 0, 0, &opp_table) &&
->   	    ofnode_device_is_compatible(opp_table.node, "operating-points-v2")) {
->   		ofnode opp_node;
->   
-> @@ -547,9 +547,8 @@ static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_hba *hba, bool enable)
->   static int ufs_qcom_init(struct ufs_hba *hba)
->   {
->   	struct ufs_qcom_priv *priv = dev_get_priv(hba->dev);
->   	struct udevice *dev = hba->dev;
-> -	struct clk clk;
->   	u32 max_freq;
->   	long rate;
->   	int err;
->   
-> @@ -557,28 +556,28 @@ static int ufs_qcom_init(struct ufs_hba *hba)
->   
->   	/* Get maximum frequency for core_clk_unipro from device tree */
->   	max_freq = ufs_qcom_get_core_clk_unipro_max_freq(hba);
->   
-> -	/* Get and configure core_clk_unipro */
-> -	err = clk_get_by_name(dev, "core_clk_unipro", &clk);
-> -	if (err) {
-> -		dev_err(dev, "Failed to get core_clk_unipro: %d\n", err);
-> -		return err;
-> -	}
-> -
-> -	rate = clk_set_rate(&clk, max_freq);
-> -	if (rate < 0) {
-> -		dev_err(dev, "Failed to set core_clk_unipro rate to %u Hz: %ld\n",
-> -			max_freq, rate);
-> -	}
-> -
->   	/* Get all clocks */
->   	err = clk_get_bulk(dev, &priv->clks);
->   	if (err) {
->   		dev_err(dev, "clk_get_bulk failed: %d\n", err);
->   		return err;
->   	}
->   
-> +	int unipro_idx = ofnode_stringlist_search(dev_ofnode(dev), "clock-names", "core_clk_unipro");
-> +	if (unipro_idx < 0) {
-> +		dev_err(dev, "Failed to get core_clk_unipro: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	rate = clk_set_rate(&priv->clks.clks[unipro_idx], max_freq);
-> +	if (rate < 0) {
-> +		dev_err(dev, "Failed to set core_clk_unipro rate to %u Hz: %ld\n",
-> +			max_freq, rate);
-> +	}
-> +	dev_info(dev, "Set core_clk_unipro rate to %u Hz\n", max_freq);
-> +
->   	/* Enable clocks */
->   	err = ufs_qcom_enable_clks(priv);
->   	if (err) {
->   		dev_err(dev, "failed to enable clocks: %d\n", err);
-> 
+Android is no longer supported on SEI510. Remove its Android
+configuration and use meson64.h for generic board support.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Drop "fastboot oem format" as well, since it depends on the removed
+Android partition layout.
 
-Thanks,
-Neil
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+ board/amlogic/sei510/MAINTAINERS |  1 -
+ configs/sei510_defconfig         | 10 ----------
+ include/configs/sei510.h         | 30 ------------------------------
+ 3 files changed, 41 deletions(-)
+
+diff --git a/board/amlogic/sei510/MAINTAINERS b/board/amlogic/sei510/MAINTAINERS
+index c6039bc82e2..ea27e800983 100644
+--- a/board/amlogic/sei510/MAINTAINERS
++++ b/board/amlogic/sei510/MAINTAINERS
+@@ -4,5 +4,4 @@ S:	Maintained
+ L:	u-boot-amlogic@groups.io
+ F:	board/amlogic/sei510/
+ F:	configs/sei510_defconfig
+-F:	include/configs/sei510.h
+ F:	doc/board/amlogic/sei510.rst
+diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
+index 689c12e388f..0ef6343098a 100644
+--- a/configs/sei510_defconfig
++++ b/configs/sei510_defconfig
+@@ -1,6 +1,5 @@
+ CONFIG_ARM=y
+ CONFIG_SYS_BOARD="sei510"
+-CONFIG_SYS_CONFIG_NAME="sei510"
+ CONFIG_ARCH_MESON=y
+ CONFIG_TEXT_BASE=0x01000000
+ CONFIG_SYS_MALLOC_LEN=0x8000000
+@@ -25,18 +24,12 @@ CONFIG_FIT=y
+ CONFIG_FIT_SIGNATURE=y
+ CONFIG_FIT_VERBOSE=y
+ CONFIG_OF_BOARD_SETUP=y
+-CONFIG_USE_PREBOOT=y
+-CONFIG_PREBOOT="run load_logo"
+ # CONFIG_CONSOLE_MUX is not set
+ # CONFIG_DISPLAY_CPUINFO is not set
+ CONFIG_MISC_INIT_R=y
+-CONFIG_AVB_VERIFY=y
+ CONFIG_SYS_MAXARGS=32
+ # CONFIG_CMD_BDI is not set
+-CONFIG_CMD_ADTIMG=y
+-CONFIG_CMD_ABOOTIMG=y
+ # CONFIG_CMD_IMI is not set
+-CONFIG_CMD_BCB=y
+ CONFIG_CMD_DFU=y
+ CONFIG_CMD_GPIO=y
+ CONFIG_CMD_GPT=y
+@@ -47,7 +40,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+ # CONFIG_CMD_SETEXPR is not set
+ CONFIG_CMD_BMP=y
+ CONFIG_CMD_REGULATOR=y
+-CONFIG_CMD_AVB=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_ENV_RELOC_GD_ENV_ADDR=y
+@@ -58,7 +50,6 @@ CONFIG_USB_FUNCTION_FASTBOOT=y
+ CONFIG_FASTBOOT_BUF_ADDR=0x6000000
+ CONFIG_FASTBOOT_FLASH=y
+ CONFIG_FASTBOOT_FLASH_MMC_DEV=2
+-CONFIG_FASTBOOT_CMD_OEM_FORMAT=y
+ # CONFIG_INPUT is not set
+ CONFIG_MMC_MESON_GX=y
+ CONFIG_DM_MDIO=y
+@@ -99,4 +90,3 @@ CONFIG_VIDEO_BMP_RLE8=y
+ CONFIG_BMP_16BPP=y
+ CONFIG_BMP_24BPP=y
+ CONFIG_BMP_32BPP=y
+-CONFIG_LIBAVB=y
+diff --git a/include/configs/sei510.h b/include/configs/sei510.h
+deleted file mode 100644
+index 0f8070b8d31..00000000000
+--- a/include/configs/sei510.h
++++ /dev/null
+@@ -1,30 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Configuration for the SEI510
+- *
+- * Copyright (C) 2019 Baylibre, SAS
+- * Author: Jerome Brunet <jbrunet@baylibre.com>
+- */
+-
+-#ifndef __CONFIG_H
+-#define __CONFIG_H
+-
+-#define LOGO_UUID "43a3305d-150f-4cc9-bd3b-38fca8693846;"
+-#define ROOT_UUID "ddb8c3f6-d94d-4394-b633-3134139cc2e0;"
+-
+-#define PARTS_DEFAULT \
+-	"uuid_disk=${uuid_gpt_disk};" \
+-	"name=logo,size=2M,uuid=" LOGO_UUID \
+-	"name=misc,size=128K,uuid=${uuid_gpt_misc};" \
+-	"name=dtbo,size=8M,uuid=${uuid_gpt_dtbo};" \
+-	"name=vbmeta,size=64K,uuid=${uuid_gpt_vbmeta};" \
+-	"name=boot,size=32M,bootable,uuid=${uuid_gpt_boot};" \
+-	"name=recovery,size=32M,uuid=${uuid_gpt_recovery};" \
+-	"name=cache,size=256M,uuid=${uuid_gpt_cache};" \
+-	"name=super,size=2304M,uuid=${uuid_gpt_super};" \
+-	"name=userdata,size=4820M,uuid=${uuid_gpt_userdata};" \
+-	"name=rootfs,size=-,uuid=" ROOT_UUID
+-
+-#include <configs/meson64_android.h>
+-
+-#endif /* __CONFIG_H */
+
+-- 
+2.34.1
+
 
