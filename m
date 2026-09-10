@@ -1,387 +1,146 @@
-Return-Path: <glaroque@baylibre.com>
+Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EDBC79FB9
-	for <webhook@archiver.kernel.org>; Thu, 10 Sep 2026 14:04:45 +0000 (UTC)
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15014.1789049079217030968
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA9C88E40
+	for <webhook@archiver.kernel.org>; Thu, 10 Sep 2026 14:06:25 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.15079.1789049183999329199
  for <u-boot-amlogic@groups.io>;
- Thu, 10 Sep 2026 07:04:39 -0700
+ Thu, 10 Sep 2026 07:06:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre.com header.s=google header.b=G6MPx4DQ;
- spf=pass (domain: baylibre.com, ip: 74.125.225.76, mailfrom: glaroque@baylibre.com)
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f6356256so1408068f8f.1
-        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 07:04:39 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=yQ532e0h;
+ spf=pass (domain: linaro.org, ip: 209.85.128.53, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49b0d8bc2aaso86636115e9.0
+        for <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 07:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1789049077; x=1789653877; darn=groups.io;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1789049182; x=1789653982; darn=groups.io;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=DaLoOW2uu/h4cUSSoUngVkh+ttTGZgP7da2caOc16R8=;
-        b=G6MPx4DQYJr1KScW5itzxppXnYiWnHGjrNkSJSLezO+Zna05j7ZdvOruw69l0m6o7K
-         AThPsKaPGjG0P+vExK6VDozAOAE0xmM+EVgS24lM9H9R+zjIPQ2EG50fnB7agdB2cMVH
-         JFJmoVZOyD9VEJG4M5/5q7wWalNx3GHPcgVnuNSWxtq6Qd3ALGMalXUf98Tx88VpCQ4r
-         GUr8aIcrAVFZybdTDTjjq/mopF2BINfx7rIvTzn3KyMO3fiChYA9JXAFJRewsAj1oX8b
-         AorFjSDTl8gxazASEjf5xNP1sH0ePbIBS2vKK4Es8jOfrqJUUvkE8c/5dzxrZk9C3QbU
-         iv2A==
+        bh=jGoMU+1qnIVIB1yfUUqQNP6GRKbZsieKJk/qc5M7A+A=;
+        b=yQ532e0h2gJB+LLy6AX76qvXiPWTy61AVF+6WMblunuWvoALDNEE7xkAhCLfrrZTak
+         EOvrtS7rtZ1iJ5RGjZSu6P3w0//g8ljLHzZfpqD+bYdH/WBX9Vgv5TtSutDd1W+779tX
+         Vdw2+x+IsPrjRGhVCuphPXyiNDfqS7K9VpyeYwqlgQot8WkCC/DdLXK6TZQiCd3Zq+Gz
+         5Jg+1+KGtcJjTY25g/sDy6FwHyOQbtr5v1yIGFdW1S2TnA23rdLRA5ie8oy7PWNVOeXK
+         BFpdK1DFyUqaTgT0RcQv3bcInKj0cqj8RCASKo8lg37LZEUJMxLVjpb0hVwVMHTPOlLn
+         9F3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789049077; x=1789653877;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DaLoOW2uu/h4cUSSoUngVkh+ttTGZgP7da2caOc16R8=;
-        b=C1k67NBvMpAsLG86aMuHUtfaupKNeZBfu+5cQKtKP48wRthC7BUpL/pvgxi7JzEV+W
-         2GuhPoWSF+xEGFs4pDjgBPgJ4ffbvlBctkE5wOtAg6cq2N37cX0HrGcJcIkbq+3wRt2h
-         OhO1Qe5AzPlKNTJUTznaMeg85x/oqykL8ShX/Bqx2cxy2PugqnK6jyyxt8E3j1ZxTP4o
-         LI/vfS8ZVQYMBYXH3o647aCK5MaAWwPYlRQTC/ptIFOLe85xpOc4YKyzwVx6GSS8tL3B
-         YBadnyWBxy8xeVPbxFP0Z66iwNZ54aiQNsu4sZdBZpSUYOXQAT5E7Ol0OTvogcIKcQXA
-         y2zw==
-X-Gm-Message-State: AFuF++mcBaD5PrfWU2xFfOAjlLOQajDYJVsfUr1pTOzQ0y6cfRBEGKiu
-	N/c88LZhEl3v4KDIbt+GLNw+C52S/I1RQ7rTCswt/+pFJDY04oOOEdIkYanP7g1DSR0=
-X-Gm-Gg: AYBFou3pRDGSIRPdT5zxUKJ460oIbkzbMvNWnYSJXkn5tFqTpThSuGQdZ7gTk8sOFRL
-	8yagnO5aAO8cBKHPfBztDjG7pha1QrqMSoGRDcf4gCyvNBv2IyT5yOrJVq26he9yVfrds8tABJ3
-	VUisZm9dd4iiTMHeVVzppKgqWqmlZZzPklWdMdzXPa0cg3/eT5UBUccdkv1aWH+JvqUpd2+xL+O
-	fUH3oT2BWO18NYME0gqHzMhzhiLfDJlp1rc9C3lzZ7ukmm+8jcXVUuTpLU9SQO+Ic4ACRhUV1QN
-	Fw2ywXDMboiQX7xhmx0BkQE/PWj5bE00DrLJiI6evfzG9+bBIfrL3788v4tEQi7VQG349JzPMRh
-	otgeitNzvV/m7nZ9Ge3xN2TaH4+SdwtEq878rJHw5Iif/+g2zoFePsVjmmQ1xTozci6bBeMepq6
-	xevLOJDeV8Tb+ALcItVA03orCnEYu38hfXB/YDwhBL/Q0SJVe1mqD5vaGZGQxMWld7sABypcg=
-X-Received: by 2002:a05:600c:548f:b0:49d:2936:8ad1 with SMTP id 5b1f17b1804b1-49d29368cc2mr40579975e9.1.1789049077348;
-        Thu, 10 Sep 2026 07:04:37 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:e0a:e50:3860::642d:5bda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d20db6e76sm147660745e9.3.2026.09.10.07.04.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2026 07:04:36 -0700 (PDT)
-From: Guillaume La Roque <glaroque@baylibre.com>
-Date: Thu, 10 Sep 2026 16:04:24 +0200
-Subject: [PATCH 3/3] configs: remove unused meson64_android.h
+        d=1e100.net; s=20251104; t=1789049182; x=1789653982;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=jGoMU+1qnIVIB1yfUUqQNP6GRKbZsieKJk/qc5M7A+A=;
+        b=DhBHdZOivBHQiA53dEJ39bf9XBOaGdQd2es/buv0LjcoVYCqiWrOIVZp2AVQrdxQRi
+         9AwXA/rpIS0lq7UmPFgjHm4y/hxFXhLORnmZv+jXi3qRnrwV2dIkU7PYE4EEpQabHDLO
+         d/5tCElXrAEtsHcsW6aKv62mEPL6gMtoNfapeE8f27wrcINr7ql2K8nMI5K672p+KB/Z
+         GNHqFRTnU0x1Eh/3ZO9xeZTGDudHwP41cVnNoq+q0GdaDRZB2f5PEqZCBXv1nWWdODnj
+         gf5c4UscDXc1hjelZP/H7rKT96egQo68ESyThIRVwX6T6rNkuwF/QUJlUSEyZeOgkFYk
+         VN+g==
+X-Forwarded-Encrypted: i=1; AKwUvBwEYqcBOV0SBDtlNRHl0voVb0AiTro5dfrhMLDfvviP6a5yM7efrftBlZtCZuDKPgOdC9fhIl380+vtbmJROA==@groups.io
+X-Gm-Message-State: AFuF++lEyzp/tHEtKn5/z3/QmrF3D6ubp8ewY59rTApDBRxRdGCbu8aU
+	llHyR2cfettG57Q4UhMkW37THfrznSc0FSaBT8Dd2WNziqxewGqKLHreoCmYyBzi81w=
+X-Gm-Gg: AYBFou1nvkirczD0g2QEBEQzRUMiUpTyB1mXsAP3dNmD2gOGy8sjXK+9pBypd+qFiHB
+	OVc41Hgce4Kn5OLGse9TJklQglKN9uehoCneoSrnkyvYsuhQgCJQVn8E6DD1tuE3QewtF8yxNWL
+	qIP941ctR5+qEDNQwA+tPKZxoKQ8ODQfatSG03mTaNTpinb7AINea3c8V4YcqgGurABOgNACm6d
+	lfoEIIN6jCtSq2Nznp1nquzpTMQJr0tB5Ekp/CNGj/oPpYxP9pDH7TtaNQCAQZLqawonqQIzudX
+	PzSexBhIDb67zIHH0aGqyDe9scNjmZFbgP2hLkHPgRYHMBZcdKU+Uf7n86y2GO/FKueNUYjcP/3
+	LMd2yhY2cOX5BKnym/AhWvkL67sRk4izLRUzkzZ8YQm7jhkXLphcZhbbqvlCO4hhBS/SUSP1KE2
+	yZ8mKFF7Kn2LOsRqWZGSqC5bdNidPrq5EaIy7SabqPwxvbTAwjjDznoFGBNK1Tt7phRcVr2Dnxb
+	xt6JizpvyreEwfTCo7ZkBO6/dl4mIriDvVH99GUlcLHl3+vonzHVQ==
+X-Received: by 2002:a05:600d:849b:20b0:499:900c:9c69 with SMTP id 5b1f17b1804b1-49cf825d8c0mr305721045e9.9.1789049182127;
+        Thu, 10 Sep 2026 07:06:22 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:edd1:1b07:ea07:35f2? ([2a01:e0a:106d:1080:edd1:1b07:ea07:35f2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d26c39086sm68083635e9.10.2026.09.10.07.06.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2026 07:06:21 -0700 (PDT)
+Message-ID: <56c6372a-667f-481d-b36b-970fc89d600c@linaro.org>
+Date: Thu, 10 Sep 2026 16:06:19 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260910-remove_sei_android-v1-3-b7bcbcef3834@baylibre.com>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH 0/3] configs: sei510/sei610: drop Android support
+To: Guillaume La Roque <glaroque@baylibre.com>, u-boot-amlogic@groups.io,
+ u-boot@lists.u-boot-project.org
+Cc: Tom Rini <trini@konsulko.com>, Quentin Schulz <quentin.schulz@cherry.de>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>
 References: <20260910-remove_sei_android-v1-0-b7bcbcef3834@baylibre.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
 In-Reply-To: <20260910-remove_sei_android-v1-0-b7bcbcef3834@baylibre.com>
-To: u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
- Tom Rini <trini@konsulko.com>, Quentin Schulz <quentin.schulz@cherry.de>, 
- Marek Vasut <marek.vasut+renesas@mailbox.org>, 
- Guillaume La Roque <glaroque@baylibre.com>
-X-Mailer: b4 0.16.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 14:04:45 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3091
+ <u-boot-amlogic@groups.io>; Thu, 10 Sep 2026 14:06:25 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3092
 
-SEI510 and SEI610 were the last users of meson64_android.h. Remove
-this unused header now that both boards use meson64.h.
+On 9/10/26 16:04, Guillaume La Roque wrote:
+> Remove Android support from SEI510 and SEI610 while retaining generic
+> board support. Both boards switch to meson64.h, leaving the shared
+> meson64_android.h header unused, so remove it too.
+> 
+> Fastboot remains enabled, but "oem format" is removed along with the
+> Android partition layout.
+> 
+> Build-tested sei510, sei610 and the four Khadas VIM3/VIM3L Android
+> defconfigs. Both SEI defconfigs are unchanged by savedefconfig.
+> 
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+> Guillaume La Roque (3):
+>        configs: sei510: drop Android support
+>        configs: sei610: drop Android support
+>        configs: remove unused meson64_android.h
+> 
+>   MAINTAINERS                       |   1 -
+>   board/amlogic/sei510/MAINTAINERS  |   1 -
+>   board/amlogic/sei610/MAINTAINERS  |   1 -
+>   configs/sei510_defconfig          |  10 --
+>   configs/sei610_defconfig          |  10 --
+>   include/configs/meson64_android.h | 279 --------------------------------------
+>   include/configs/sei510.h          |  30 ----
+>   include/configs/sei610.h          |  30 ----
+>   8 files changed, 362 deletions(-)
+> ---
+> base-commit: d4152edb50356338af994d1c0483f65b717b4c15
+> change-id: 20260909-remove_sei_android-44993a3f3353
+> 
+> Best regards,
+> --
+> Guillaume La Roque <glaroque@baylibre.com>
+> 
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- MAINTAINERS                       |   1 -
- include/configs/meson64_android.h | 279 --------------------------------------
- 2 files changed, 280 deletions(-)
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4e9ccca5ca4..e5bf89afdec 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -198,7 +198,6 @@ F:	drivers/power/domain/meson-gx-pwrc-vpu.c
- F:	drivers/video/meson/
- F:	drivers/watchdog/meson_gxbb_wdt.c
- F:	include/configs/meson64.h
--F:	include/configs/meson64_android.h
- F:	tools/amlimage*
- F:	doc/board/amlogic/
- N:	meson
-diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-deleted file mode 100644
-index d6ef0a83a68..00000000000
---- a/include/configs/meson64_android.h
-+++ /dev/null
-@@ -1,279 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
--/*
-- * Configuration for Android Amlogic Meson 64bits SoCs
-- *
-- * Copyright (C) 2019 Baylibre, SAS
-- * Author: Jerome Brunet <jbrunet@baylibre.com>
-- */
--
--#ifndef __MESON64_ANDROID_CONFIG_H
--#define __MESON64_ANDROID_CONFIG_H
--
--#include <linux/sizes.h>
--
--#ifndef BOOT_PARTITION
--#define BOOT_PARTITION "boot"
--#endif
--
--#ifndef LOGO_PARTITION
--#define LOGO_PARTITION "logo"
--#endif
--
--#ifndef CONTROL_PARTITION
--#define CONTROL_PARTITION "misc"
--#endif
--
--#ifndef EXTRA_ANDROID_ENV_SETTINGS
--#define EXTRA_ANDROID_ENV_SETTINGS ""
--#endif
--
--#if defined(CONFIG_CMD_AVB)
--#define AVB_VERIFY_CHECK \
--	"if test \"${force_avb}\" -eq 1; then " \
--		"if run avb_verify; then " \
--			"echo AVB verification OK.;" \
--			"setenv bootargs \"$bootargs $avb_bootargs\";" \
--		"else " \
--			"echo AVB verification failed.;" \
--		"exit; fi;" \
--	"else " \
--		"setenv bootargs \"$bootargs androidboot.verifiedbootstate=orange\";" \
--		"echo Running without AVB...; "\
--	"fi;"
--
--#define AVB_VERIFY_CMD "avb_verify=avb init ${mmcdev}; avb verify $slot_suffix;\0"
--#else
--#define AVB_VERIFY_CHECK ""
--#define AVB_VERIFY_CMD ""
--#endif
--
--#if defined(CONFIG_CMD_BCB) && defined(CONFIG_ANDROID_AB)
--#define ANDROIDBOOT_GET_CURRENT_SLOT_CMD "get_current_slot=" \
--	"if part number mmc ${mmcdev} " CONTROL_PARTITION " control_part_number; " \
--	"then " \
--		"echo " CONTROL_PARTITION \
--			" partition number:${control_part_number};" \
--		"bcb ab_select current_slot mmc ${mmcdev}:${control_part_number};" \
--	"else " \
--		"echo " CONTROL_PARTITION " partition not found;" \
--	"fi;\0"
--
--#define AB_SELECT_SLOT \
--	"run get_current_slot; " \
--	"if test -e \"${current_slot}\"; " \
--	"then " \
--		"setenv slot_suffix _${current_slot}; " \
--	"else " \
--		"echo current_slot not found;" \
--		"exit;" \
--	"fi;"
--
--#define AB_SELECT_ARGS \
--	"setenv bootargs_ab androidboot.slot_suffix=${slot_suffix}; " \
--	"echo A/B cmdline addition: ${bootargs_ab};" \
--	"setenv bootargs ${bootargs} ${bootargs_ab};"
--
--#define AB_BOOTARGS " androidboot.force_normal_boot=1"
--#define RECOVERY_PARTITION "boot"
--#else
--#define AB_SELECT_SLOT ""
--#define AB_SELECT_ARGS " "
--#define ANDROIDBOOT_GET_CURRENT_SLOT_CMD ""
--#define AB_BOOTARGS " "
--#define RECOVERY_PARTITION "recovery"
--#endif
--
--#if defined(CONFIG_CMD_ABOOTIMG)
--/*
-- * Prepares complete device tree blob for current board (for Android boot).
-- *
-- * Boot image or recovery image should be loaded into $loadaddr prior to running
-- * these commands. The logic of these commnads is next:
-- *
-- *   1. Read correct DTB for current SoC/board from boot image in $loadaddr
-- *      to $fdtaddr
-- *   2. Merge all needed DTBO for current board from 'dtbo' partition into read
-- *      DTB
-- *   3. User should provide $fdtaddr as 3rd argument to 'bootm'
-- */
--#define PREPARE_FDT \
--	"echo Preparing FDT...; " \
--	"if test $board_name = sei510; then " \
--		"echo \"  Reading DTB for sei510...\"; " \
--		"setenv dtb_index 0;" \
--	"elif test $board_name = sei610; then " \
--		"echo \"  Reading DTB for sei610...\"; " \
--		"setenv dtb_index 1;" \
--	"else " \
--		"echo Error: Android boot is not supported for $board_name; " \
--		"exit; " \
--	"fi; " \
--	"abootimg get dtb --index=$dtb_index dtb_start dtb_size; " \
--	"cp.b $dtb_start $fdt_addr_r $dtb_size; " \
--	"fdt addr $fdt_addr_r  0x80000; "
--
--#define BOOT_CMD "bootm ${loadaddr} ${loadaddr} ${fdt_addr_r};"
--
--#else
--#define PREPARE_FDT " "
--#define BOOT_CMD "bootm ${loadaddr};"
--#endif
--
--#define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
--	"bootcmd_fastboot=" \
--		"setenv run_fastboot 0;" \
--		"if test \"${boot_source}\" = \"usb\"; then " \
--			"echo Fastboot forced by usb rom boot;" \
--			"setenv run_fastboot 1;" \
--		"fi;" \
--		"if test \"${run_fastboot}\" -eq 0; then " \
--			"if gpt verify mmc ${mmcdev} ${partitions}; then; " \
--			"else " \
--				"echo Broken MMC partition scheme;" \
--				"setenv run_fastboot 1;" \
--			"fi; " \
--		"fi;" \
--		"if test \"${run_fastboot}\" -eq 0; then " \
--			"if bcb load " __stringify(CONFIG_FASTBOOT_FLASH_MMC_DEV) " " \
--			CONTROL_PARTITION "; then " \
--				"if bcb test command = bootonce-bootloader; then " \
--					"echo BCB: Bootloader boot...; " \
--					"bcb clear command; bcb store; " \
--					"setenv run_fastboot 1;" \
--				"elif bcb test command = boot-fastboot; then " \
--					"echo BCB: fastboot userspace boot...; " \
--					"setenv force_recovery 1;" \
--				"fi; " \
--			"else " \
--				"echo Warning: BCB is corrupted or does not exist; " \
--			"fi;" \
--		"fi;" \
--		"if test \"${run_fastboot}\" -eq 1; then " \
--			"echo Running Fastboot...;" \
--			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
--		"fi\0"
--
--#define BOOTENV_DEV_NAME_FASTBOOT(devtypeu, devtypel, instance)	\
--		"fastboot "
--
--#define BOOTENV_DEV_RECOVERY(devtypeu, devtypel, instance) \
--	"bootcmd_recovery=" \
--		"pinmux dev pinctrl@14;" \
--		"pinmux dev pinctrl@40;" \
--		"setenv run_recovery 0;" \
--		"if run check_button; then " \
--			"echo Recovery button is pressed;" \
--			"setenv run_recovery 1;" \
--		"fi; " \
--		"if bcb load " __stringify(CONFIG_FASTBOOT_FLASH_MMC_DEV) " " \
--		CONTROL_PARTITION "; then " \
--			"if bcb test command = boot-recovery; then " \
--				"echo BCB: Recovery boot...; " \
--				"setenv run_recovery 1;" \
--			"fi;" \
--		"else " \
--			"echo Warning: BCB is corrupted or does not exist; " \
--		"fi;" \
--		"if test \"${skip_recovery}\" -eq 1; then " \
--			"echo Recovery skipped by environment;" \
--			"setenv run_recovery 0;" \
--		"fi;" \
--		"if test \"${force_recovery}\" -eq 1; then " \
--			"echo Recovery forced by environment;" \
--			"setenv run_recovery 1;" \
--		"fi;" \
--		"if test \"${run_recovery}\" -eq 1; then " \
--			"echo Running Recovery...;" \
--			"mmc dev ${mmcdev};" \
--			"setenv bootargs \"${bootargs} androidboot.serialno=${serial#}\";" \
--			AB_SELECT_SLOT \
--			AB_SELECT_ARGS \
--			AVB_VERIFY_CHECK \
--			"part start mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_start;" \
--			"part size mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_size;" \
--			"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
--				PREPARE_FDT \
--				"echo Running Android Recovery...;" \
--				BOOT_CMD \
--			"fi;" \
--			"echo Failed to boot Android...;" \
--			"reset;" \
--		"fi\0"
--
--#define BOOTENV_DEV_NAME_RECOVERY(devtypeu, devtypel, instance)	\
--		"recovery "
--
--#define BOOTENV_DEV_SYSTEM(devtypeu, devtypel, instance) \
--	"bootcmd_system=" \
--		"echo Loading Android " BOOT_PARTITION " partition...;" \
--		"mmc dev ${mmcdev};" \
--		"setenv bootargs ${bootargs} androidboot.serialno=${serial#};" \
--		AB_SELECT_SLOT \
--		AB_SELECT_ARGS \
--		AVB_VERIFY_CHECK \
--		"part start mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_start;" \
--		"part size mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_size;" \
--		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
--			PREPARE_FDT \
--			"setenv bootargs \"${bootargs} " AB_BOOTARGS "\"  ; " \
--			"echo Running Android...;" \
--			BOOT_CMD \
--		"fi;" \
--		"echo Failed to boot Android...;\0"
--
--#define BOOTENV_DEV_NAME_SYSTEM(devtypeu, devtypel, instance)	\
--		"system "
--
--#define BOOTENV_DEV_PANIC(devtypeu, devtypel, instance) \
--	"bootcmd_panic=" \
--		"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
--		"reset\0"
--
--#define BOOTENV_DEV_NAME_PANIC(devtypeu, devtypel, instance)	\
--		"panic "
--
--#define BOOT_TARGET_DEVICES(func) \
--	func(FASTBOOT, fastboot, na) \
--	func(RECOVERY, recovery, na) \
--	func(SYSTEM, system, na) \
--	func(PANIC, panic, na) \
--
--#define PREBOOT_LOAD_LOGO \
--	"if test \"${boot_source}\" != \"usb\" && " \
--		"gpt verify mmc ${mmcdev} ${partitions}; then; " \
--		"mmc dev ${mmcdev};" \
--		"part start mmc ${mmcdev} " LOGO_PARTITION " boot_start;" \
--		"part size mmc ${mmcdev} " LOGO_PARTITION " boot_size;" \
--		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
--			"bmp display ${loadaddr} m m;" \
--		"fi;" \
--	"fi;"
--
--#define CFG_EXTRA_ENV_SETTINGS                                     \
--	EXTRA_ANDROID_ENV_SETTINGS                                    \
--	"partitions=" PARTS_DEFAULT "\0"                              \
--	"mmcdev=2\0"                                                  \
--	"fastboot_raw_partition_bootloader=0x1 0xfff mmcpart 1\0"     \
--	"fastboot_raw_partition_bootenv=0x0 0xfff mmcpart 2\0"        \
--	ANDROIDBOOT_GET_CURRENT_SLOT_CMD                              \
--	AVB_VERIFY_CMD                                                \
--	"force_avb=0\0"                                               \
--	"gpio_recovery=88\0"                                          \
--	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
--	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
--	"stdin=" STDIN_CFG "\0"                                       \
--	"stdout=" STDOUT_CFG "\0"                                     \
--	"stderr=" STDOUT_CFG "\0"                                     \
--	"dtboaddr=0x08200000\0"                                       \
--	"loadaddr=0x01080000\0"                                       \
--	"fdt_addr_r=0x01000000\0"                                     \
--	"scriptaddr=0x08000000\0"                                     \
--	"kernel_addr_r=0x01080000\0"                                  \
--	"pxefile_addr_r=0x01080000\0"                                 \
--	"ramdisk_addr_r=0x13000000\0"                                 \
--	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0"        \
--	BOOTENV
--
--#include <configs/meson64.h>
--
--#endif /* __MESON64_ANDROID_CONFIG_H */
-
--- 
-2.34.1
-
+Thanks,
+Neil
 
