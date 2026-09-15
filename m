@@ -2,108 +2,97 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6E5C88E75
-	for <webhook@archiver.kernel.org>; Tue, 15 Sep 2026 07:43:38 +0000 (UTC)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.37786.1789127539984888548
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEADC88E77
+	for <webhook@archiver.kernel.org>; Wed, 16 Sep 2026 09:56:25 +0000 (UTC)
+Received: from mail-qk2-f34.google.com (mail-qk2-f34.google.com [74.125.230.226])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.138.1789504842984937774
  for <u-boot-amlogic@groups.io>;
- Fri, 11 Sep 2026 04:52:20 -0700
+ Tue, 15 Sep 2026 13:40:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@chromium.org header.s=google header.b=ij/q1SAr;
- spf=pass (domain: chromium.org, ip: 209.85.167.45, mailfrom: sjg@chromium.org)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5b2b92065ffso886697e87.1
-        for <u-boot-amlogic@groups.io>; Fri, 11 Sep 2026 04:52:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789127538; cv=none;
-        d=google.com; s=arc-20260327;
-        b=BT3YkhHzoCUlbmAHFrun6ChdLbqM263flSAUeiReU7DytLFyQNU5CvjjlRS6ef3BZ8
-         glf7DQ+TMxCgSa8jElMC12WWWhostGKuSBKmt/a4/fSNh7AFPBcDPJ+DEPhuGxMI1Irg
-         l8icoIHthrNozR000mQ4lmAOlXYnMtuUHWyIbAoFhgbDK7JQdZcZmp9kkd5QKQ9c1w2f
-         xnEKxOYwrpSj5iQuEAbtbRRmCjzDKYS0ah9mKfle8SwcoA/h/dwcnLAoS7Elzg90v1/q
-         ZxkDS7iswQqR5IeyeoeChOGpo+lWQO2Bd/psVNGTBuE5X4s5hgPHUFJwvKeJTYXKbMGk
-         bBAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=8NvTMGofefYPzvnYIFv4vxrX4CzLZhL9aXdqHE6onxw=;
-        fh=bPGGFCR2bPl1s9lxWC+GgBxK6s1ZPirx7TH1EJq+Vkc=;
-        b=fp8W92EcoCUgubH99ULe9TTRBiKV3HCJyPr2GcGBWfhxJkWmXFd8/0XsM4gsnsegqI
-         76Z+iJMNXecePWdHCCOJA8Zk9ySM9f+vCMEW3Tvoxfeh/B9AsX17CcxSY4r+PHggAqkV
-         cVvrUEaA5ccKjOWkYnVC/9wnNLHax8pnZUaK16NKuxe8emPraOZGI/NN8fb1eQtxAtq5
-         kSN/qdIm4jGWPdcZU2nju2zp+6pvrbDqDjuMKcfCzFGXD26KihZvux6B4FCrzW1M/4Xh
-         fSjpCURXSd6G6h+bbhVT/oCqQkYKXvK/zkBQNFH6hh1UvODW9oRbvfMc7+b7lNrzh7jg
-         hqhA==;
-        darn=groups.io
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@konsulko.com header.s=google header.b=eMeDuiGT;
+ spf=pass (domain: konsulko.com, ip: 74.125.230.226, mailfrom: trini@konsulko.com)
+Received: by mail-qk2-f34.google.com with SMTP id af79cd13be357-939109f067eso18674585a.0
+        for <u-boot-amlogic@groups.io>; Tue, 15 Sep 2026 13:40:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1789127538; x=1789732338; darn=groups.io;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8NvTMGofefYPzvnYIFv4vxrX4CzLZhL9aXdqHE6onxw=;
-        b=ij/q1SArX0frAaw2oVkZqQu77b8F3bXhSUoeKU3oVm72LPJX4FF0NVWM4CgAJUrvWo
-         sWNvN60nVDz94byxDsd8uYZSquSvCvYiRzKToGs/Nb/2yKwZrWLX9PEyPksV1t1nCHe9
-         0049HdyqzPI3PzkEfA3XN1j2jBQGYbMbqsU0s=
+        d=konsulko.com; s=google; t=1789504842; x=1790109642; darn=groups.io;
+        h=content-transfer-encoding:content-type:mime-version:date:message-id
+         :subject:references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=tNnwJqwyZiST9wDiV8LU7V2n7a1RxjuSIKCqe22UqVQ=;
+        b=eMeDuiGTCVTldtmAFtYztascbqFC6Z5YT/+aXdK+5lnJmxkic1Wk6I98c0CGZb6ZXo
+         SOYknhxZpRkJmofDLM8bbhcL0tXqOeh1UTslGae2l6RmR8PdUjTu4RKb82Yt7DEzTaUk
+         YnkreGNvRDj0axH/7HG27dKi6y3S1JoR12pMY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789127538; x=1789732338;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=8NvTMGofefYPzvnYIFv4vxrX4CzLZhL9aXdqHE6onxw=;
-        b=oUKLW7qr+GW8bDP6U+n7MhMVc5+7GFLKTJVXiv5wBZDqw6P4rtWBjuaOehQmY7nO+1
-         GvZyTGnUHT0rmNiUDcIZxjoTmVYru8FS16bT+qT+A+XXeg6rY0TXarnu8zFAO4WQLxAQ
-         jWIyvtpKj/rAKjGm6GDBH7fL5FFcEtlyftPZUzdg9DVIG/jM74xgw1kH6jjh+jWjZgKo
-         VWWxvpR0bGOxVONsz/h/F+V24NkycBW58r3a+XSJL+dNavhyrW/bWu96vQWWxvlwYrZE
-         TIjzsnlI6Tj+yzoblFeSqF7a3WCRoNc3g4ghQ8vO4XytaMxYOFULgeH8rqIZGU7tEP9c
-         1IjA==
-X-Forwarded-Encrypted: i=1; AKwUvBzM5J0ACmIlJHgu1VMfdi4/FmtYreXpwcIfUgKRxJSEYCnR7R1p8PmNBLLFGJI9HP37mNdpaP9ZauTM4jBflg==@groups.io
-X-Gm-Message-State: AFuF++kaR4mcxD72oi5ae82PcyE7pEHBHOxRTzCzDvFlO/OqZ8yhCKu/
-	K88y38xdx2u03wWtvG5N18nFW9JQrNi5U78X77P2HYOuq+2J9zZaSAbCNGQftA0NQnoENMN2W4C
-	S4HkhEFbBprFbUnI/ukt4P5Vsyi4GoBbETiBUjvwrBZ/v4wf5dCrZ3pht
-X-Gm-Gg: AYBFou0maWG7L7DmWvC5BTaFVESYIeRRmdjv83onv1iCCH5zK2qg3JeFIbH38CJpTDd
-	A8PDz89BQS5b1q5rNFdaPgJjnc7JIBWt6K42oHFpfXXn0SViKJFSfi86/4/5OqCvf+eya/LWrWs
-	BTACjKxOvsTjjpoW3qlwe1J6DYq4sba9VWTYvaWEUjeV0KW51DIaJfquQvFgWz7FYpPUXs44+TO
-	vG86GjIrwk6h8hV2FYFMagSKq1paeZ51JewTa4J5NvyARkmxlxfT4BJAlWb3U0ISMF7G2n8K1tR
-	+KDw9AO9WhY7Vyr5k48u1kCvRWyjY9zik6MWimdlBpvh8/hCxw+4PhE=
-X-Received: by 2002:a05:6402:3259:b0:6a9:9833:2ecf with SMTP id
- 4fb4d7f45d1cf-6a9b561d545mr1323232a12.10.1789127086438; Fri, 11 Sep 2026
- 04:44:46 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1789504842; x=1790109642;
+        h=content-transfer-encoding:content-type:mime-version:date:message-id
+         :subject:references:in-reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tNnwJqwyZiST9wDiV8LU7V2n7a1RxjuSIKCqe22UqVQ=;
+        b=jqy/ktnA1hcu8HBjgbrOcgL8CWCLBhKeknXqetdFFMdpvDRnUkFxLXPXjIeyN82hc/
+         VZuj54nF+YWbXFcbEDpX/laGRul/hu+GqHz29kiA+fkRwp2KmeqZWobOFUtZ0MJ3Y/sO
+         hgdPRtJrVSik7d7mG2kzeXonSeZc4yZkt89pnccRRSaNT+11SI8dIrN/5tCgg0oFkJf8
+         AzCpxvt34sRtFNOusmEZV8ctvLVIXtJ5/lfv86HTFcBApfPTenISRDWQFETJpK9cKVvC
+         F28w7SMXo525vnVHwuJXvq5eJ3dbrIbbzJjWrUII8rUzdjBGMba9UMgyc4mBighdyAle
+         NKMg==
+X-Gm-Message-State: AFuF++nL7fdZFcAk5elRwfcwFEFumwImzpd2jbQ8Cjs4DeVKmZlXsEMF
+	MDZyEIIVK/JL/pPiruEG1BISYeLS0dMIoY5tnRm6UczsKIDWl8PJ66Rt1MY96TvemIJq64fe91a
+	2J41a0xItqJ0x
+X-Gm-Gg: AYBFou0om+BPPxPxxU7hV7ilYQQ+XPztQv7ba0UDhenYnyhjrC1doh05boHFi+Ih/Sh
+	ehM4kMiiTrrRH6Mj4r3Xma9Mqd1RnQaAtVq2E0muz64WrLdvoKg2I/lGmGYsASMT3tun2RTS1LU
+	QC6Pms1xAOqPfrL/NnDol5ptfnSdRcD+P99jpq0uiGZGCwhJ21+RdyMTOSX+pv4rJ7O7gcjOQOs
+	/UKfeDWHWEZt2WX7S/flAfEF/AuKZm+aAHwAZlUUW5VpdHtLqIe0KlGdoMHAj2e37mU0I5H9MkU
+	a9R5DmNWAfuE/8HQoQDA543hqleuYYSxyEqDK2GDNaI1/50vJrEQplg9k1CdKagMJmYXe9Vvr84
+	I9ffR73NymPe3qYNx6s9Hk0vNhpOOPu3JcEy3WRP9iaoYCj61IZcOTFl2pGn6vd1hHzThGQqyjF
+	E2gZEcgpL3+/w9sEDt9KHftZ2+NbX8ZqyeFjA+dqXjZV+7hwiS8NHbZRR/djIg0W+3ZQEqk19gX
+	Toh0G+ax6yf95534OIvP/epHbp3EGZf92oNzeHa9MhviEmzWGL7DaHS6bwQZW5/3AgujOPFjrJe
+	hXfdGb+fsIaVFQ2QB7TWRdd1VAdV/g==
+X-Received: by 2002:a05:6808:1706:b0:4c1:2512:ee84 with SMTP id 5614622812f47-4ca4be66e81mr40054b6e.23.1789504528641;
+        Tue, 15 Sep 2026 13:35:28 -0700 (PDT)
+Received: from [127.0.1.1] (fixed-189-203-100-56.totalplay.net. [189.203.100.56])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4ca20e54317sm486511b6e.2.2026.09.15.13.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Sep 2026 13:35:28 -0700 (PDT)
+From: Tom Rini <trini@konsulko.com>
+To: u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org, 
+ =?utf-8?q?Vincent_Stehl=C3=A9?= <vincent.stehle@arm.com>
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Daniel Golle <daniel@makrotopia.org>
+In-Reply-To: <20260901-typo-v1-1-89ea773a9a05@arm.com>
+References: <20260901-typo-v1-1-89ea773a9a05@arm.com>
+Subject: Re: [PATCH] spl: rename DISABLE_ALL_EXECPTIONS
+Message-Id: <178950452760.931545.2900926416498852770.b4-ty@konsulko.com>
+Date: Tue, 15 Sep 2026 14:35:27 -0600
 MIME-Version: 1.0
-References: <20260825-linkcheck-v1-0-ee7573fe3a4a@cherry.de> <20260828210003.823954-2-foss+uboot@0leil.net>
-In-Reply-To: <20260828210003.823954-2-foss+uboot@0leil.net>
-From: Simon Glass <sjg@chromium.org>
-Date: Fri, 11 Sep 2026 05:42:55 -0600
-X-Gm-Features: AcwNN1WSqFAXmuRG4hpTxN_El2LNXTd9Hv8INRA_V0L5wmIWZ78w_gDf1PUfTRo
-Message-ID: <CAFLszThBsKoFcFyGgetiJR-0X0r97P9xwdRv77JEFWDF_vj2Mw@mail.gmail.com>
-Subject: Re: [PATCH next 45/45] binman: gbb: update link
-To: foss+uboot@0leil.net
-Cc: u-boot@lists.u-boot-project.org, u-boot-amlogic@groups.io, 
-	uboot-imx@nxp.com, trini@konsulko.com, sjg@chromium.org, 
-	neil.armstrong@linaro.org, marek.vasut+renesas@mailbox.org, 
-	xypron.glpk@gmx.de, ilias.apalodimas@linaro.org, adeep@lexina.in, 
-	sbabic@nabladev.com, festevam@gmail.com, smoch@web.de, 
-	alpernebiyasak@gmail.com, le.jin@siemens.com, jan.kiszka@siemens.com, 
-	iwamatsu@nigauri.org, pbrobinson@gmail.com, seanga2@gmail.com, 
-	bmeng.cn@gmail.com, lukma@denx.de, mkorpershoek@kernel.org, 
-	Quentin Schulz <quentin.schulz@cherry.de>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 15 Sep 2026 07:43:38 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3093
+ <u-boot-amlogic@groups.io>; Wed, 16 Sep 2026 09:56:25 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3094
 
-On 2026-08-25T16:49:42, Quentin Schulz <foss+uboot@0leil.net> wrote:
-> binman: gbb: update link
->
-> The current link results in a 404. Looking at the Wayback Machine[1], I
-> found a similar page currently being served. It's probably very outdated
-> by now but at least it's not a 404 anymore.
->
-> [1] https://web.archive.org/web/20230520044331/https://www.chromium.org/chromium-os/firmware-porting-guide/
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
->
-> tools/binman/etype/gbb.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, 01 Sep 2026 18:20:44 +0200, Vincent Stehlé wrote:
 
-Reviewed-by: Simon Glass <sjg@chromium.org>
+> The DISABLE_ALL_EXECPTIONS define has a typo; fix all occurrences using the
+> following command:
+> 
+>   find '(' -type d -name .git -prune ')' -o -type f -print |\
+>     xargs sed -i 's/DISABLE_ALL_EXECPTIONS/DISABLE_ALL_EXCEPTIONS/g'
+> 
+> This can be verified by pre-processing, for example with the following
+> commands:
+> 
+> [...]
+
+Applied to u-boot/next, thanks!
+
+[1/1] spl: rename DISABLE_ALL_EXECPTIONS
+      commit: a12ef680c0f19662090f2e28ed8e2a89bb17d947
+-- 
+Tom
+
+
 
