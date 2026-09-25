@@ -1,98 +1,114 @@
-Return-Path: <neil.armstrong@linaro.org>
+Return-Path: <glaroque@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEADC88E77
-	for <webhook@archiver.kernel.org>; Wed, 16 Sep 2026 09:56:25 +0000 (UTC)
-Received: from mail-qk2-f34.google.com (mail-qk2-f34.google.com [74.125.230.226])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.138.1789504842984937774
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E814C98328
+	for <webhook@archiver.kernel.org>; Fri, 25 Sep 2026 13:42:38 +0000 (UTC)
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8497.1790343753044117278
  for <u-boot-amlogic@groups.io>;
- Tue, 15 Sep 2026 13:40:43 -0700
+ Fri, 25 Sep 2026 06:42:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=eMeDuiGT;
- spf=pass (domain: konsulko.com, ip: 74.125.230.226, mailfrom: trini@konsulko.com)
-Received: by mail-qk2-f34.google.com with SMTP id af79cd13be357-939109f067eso18674585a.0
-        for <u-boot-amlogic@groups.io>; Tue, 15 Sep 2026 13:40:42 -0700 (PDT)
+ dkim=pass header.i=@baylibre.com header.s=google header.b=ZqbmBJOy;
+ spf=pass (domain: baylibre.com, ip: 74.125.225.141, mailfrom: glaroque@baylibre.com)
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e6598dd44so5655045e9.1
+        for <u-boot-amlogic@groups.io>; Fri, 25 Sep 2026 06:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1789504842; x=1790109642; darn=groups.io;
-        h=content-transfer-encoding:content-type:mime-version:date:message-id
-         :subject:references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=baylibre.com; s=google; t=1790343751; x=1790948551; darn=groups.io;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=tNnwJqwyZiST9wDiV8LU7V2n7a1RxjuSIKCqe22UqVQ=;
-        b=eMeDuiGTCVTldtmAFtYztascbqFC6Z5YT/+aXdK+5lnJmxkic1Wk6I98c0CGZb6ZXo
-         SOYknhxZpRkJmofDLM8bbhcL0tXqOeh1UTslGae2l6RmR8PdUjTu4RKb82Yt7DEzTaUk
-         YnkreGNvRDj0axH/7HG27dKi6y3S1JoR12pMY=
+        bh=sCycwxWCKUWrlTXAQFP8/HCsPLcRxsC7FGA4ECLrMM8=;
+        b=ZqbmBJOy3uj5jIxSMa+Yz/+EJY82Ox4xJOt646DoS0xuD7rPUctPye0a27nnQ1TLAA
+         pNvtfVsUQ3d0UHAO2H+UFKbUy8a0WVKtyZ+yg2Bu/kxB0/cr/ia0EwbYdn5++qPNBIGu
+         df4Oix5Xiqxe40t7MfKE2c+k9T6q4me8i77kKS69xVnImr13ORVZngVW4j12IbVrYA0M
+         sstM68Bz1R2tSbBPKc/UW+jbs6OSl1D8jA5I2/LpENczF8PGK2YxgT67Fbfr+Fpw/xQl
+         F75V16o8TTV/DNRMJ7GAPwK30KfgGHvQWTt9aXGx4N2XBfoRx95U2v5S2dJx7jaTf3hS
+         FxlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789504842; x=1790109642;
-        h=content-transfer-encoding:content-type:mime-version:date:message-id
-         :subject:references:in-reply-to:cc:to:from:x-gm-gg
+        d=1e100.net; s=20260707; t=1790343751; x=1790948551;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=tNnwJqwyZiST9wDiV8LU7V2n7a1RxjuSIKCqe22UqVQ=;
-        b=jqy/ktnA1hcu8HBjgbrOcgL8CWCLBhKeknXqetdFFMdpvDRnUkFxLXPXjIeyN82hc/
-         VZuj54nF+YWbXFcbEDpX/laGRul/hu+GqHz29kiA+fkRwp2KmeqZWobOFUtZ0MJ3Y/sO
-         hgdPRtJrVSik7d7mG2kzeXonSeZc4yZkt89pnccRRSaNT+11SI8dIrN/5tCgg0oFkJf8
-         AzCpxvt34sRtFNOusmEZV8ctvLVIXtJ5/lfv86HTFcBApfPTenISRDWQFETJpK9cKVvC
-         F28w7SMXo525vnVHwuJXvq5eJ3dbrIbbzJjWrUII8rUzdjBGMba9UMgyc4mBighdyAle
-         NKMg==
-X-Gm-Message-State: AFuF++nL7fdZFcAk5elRwfcwFEFumwImzpd2jbQ8Cjs4DeVKmZlXsEMF
-	MDZyEIIVK/JL/pPiruEG1BISYeLS0dMIoY5tnRm6UczsKIDWl8PJ66Rt1MY96TvemIJq64fe91a
-	2J41a0xItqJ0x
-X-Gm-Gg: AYBFou0om+BPPxPxxU7hV7ilYQQ+XPztQv7ba0UDhenYnyhjrC1doh05boHFi+Ih/Sh
-	ehM4kMiiTrrRH6Mj4r3Xma9Mqd1RnQaAtVq2E0muz64WrLdvoKg2I/lGmGYsASMT3tun2RTS1LU
-	QC6Pms1xAOqPfrL/NnDol5ptfnSdRcD+P99jpq0uiGZGCwhJ21+RdyMTOSX+pv4rJ7O7gcjOQOs
-	/UKfeDWHWEZt2WX7S/flAfEF/AuKZm+aAHwAZlUUW5VpdHtLqIe0KlGdoMHAj2e37mU0I5H9MkU
-	a9R5DmNWAfuE/8HQoQDA543hqleuYYSxyEqDK2GDNaI1/50vJrEQplg9k1CdKagMJmYXe9Vvr84
-	I9ffR73NymPe3qYNx6s9Hk0vNhpOOPu3JcEy3WRP9iaoYCj61IZcOTFl2pGn6vd1hHzThGQqyjF
-	E2gZEcgpL3+/w9sEDt9KHftZ2+NbX8ZqyeFjA+dqXjZV+7hwiS8NHbZRR/djIg0W+3ZQEqk19gX
-	Toh0G+ax6yf95534OIvP/epHbp3EGZf92oNzeHa9MhviEmzWGL7DaHS6bwQZW5/3AgujOPFjrJe
-	hXfdGb+fsIaVFQ2QB7TWRdd1VAdV/g==
-X-Received: by 2002:a05:6808:1706:b0:4c1:2512:ee84 with SMTP id 5614622812f47-4ca4be66e81mr40054b6e.23.1789504528641;
-        Tue, 15 Sep 2026 13:35:28 -0700 (PDT)
-Received: from [127.0.1.1] (fixed-189-203-100-56.totalplay.net. [189.203.100.56])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4ca20e54317sm486511b6e.2.2026.09.15.13.35.27
+        bh=sCycwxWCKUWrlTXAQFP8/HCsPLcRxsC7FGA4ECLrMM8=;
+        b=P7t4QopnFqhS8x8UwEWKT3lDqGsSRgESPCp6ZaQPeK3Hxj60f9OoaZRzT/RtuqGrxg
+         SJVNSNxOXVrObOBioFjxh2eoxS4v0UWOTcFaBTlhpbwrioU39aGMDCsYFrv+zaFQDZMP
+         2VCgQerH0Tu3tInC0IfubUITuKXGsV4WIlRuN1Tp9TMFUVcTNiMmud9VaNWVg92UOnBa
+         iOCtek5yDoIV+1vfVrsaemxVM5W5FpGg/eiNTUUP2HKMzOZ2O51ExlfXejp7yKW+QN9O
+         l4xZrFXAM4Yn5hOSye+AnLn6WPwbFSEZqHNuqywoMsvayUYno3cMD9/8Yke1SgjfUyrh
+         cKKA==
+X-Gm-Message-State: AFuF++msUlTpKsyYjcuGQRwOpgy/khBL41XKEGhDVIOovAb2Qpk+D8K9
+	DO3TxsbGL+2gNr8t0pXrLEGkrh3ebOWVJq02bkIbnA56uBCD6LXT7QqWPYged3Q+Vjh5f2f7KQs
+	Jd95mc3k=
+X-Gm-Gg: AYBFou0IzEazJR0Wg8nS7b/zFSc/75Z+85v1/QDVgeHxy/S5KfekDg0MmcCYYmJMiJz
+	mm3RMMdS0DV0ahKnV96m4O4ZUpN/YoWWgXxfWWeJEyv2Ymj7H2KJaui5u+deVQm64vvORtCvSIl
+	hGP0bGtyLOX098UGqNELDimanvQnD8/jO60kRjyIWwKl7dxJo6xwYI/rIV/6deFNtaiDjcPDq5b
+	blKGxsmFUc8rU5cun38e/m+JkB1wjbuAAjMv/lagxRee4HqhD/uk5JNcqFG03bqZ6fLFBcEqxMO
+	4ZcQkPzquYgArU4WFqAoIrXtOufpZk63rrxtpB7c3TUXrM2jf4tsS4qDUs7+w3wH/iqGt/tDkK6
+	GkwXXvqiFLRmJBpf/9tcOSUXGUROKnvS7jm4WO2cpwphySaF5RRDhlbESlztazoe0vlkJF3lF2Z
+	B5U7Qo05a0X1ZMaWHuvLdDloFKmyNxSTXNhJxoauLAfYw7Fc4u4FXF7uDY0IOZg6QTs+Wc3aWP
+X-Received: by 2002:a05:600c:a4c:b0:49c:fa20:cc08 with SMTP id 5b1f17b1804b1-49fe67060cemr101189575e9.31.1790343751341;
+        Fri, 25 Sep 2026 06:42:31 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:e0a:e50:3860::642d:5bda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ff42b7074sm34738125e9.6.2026.09.25.06.42.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 13:35:28 -0700 (PDT)
-From: Tom Rini <trini@konsulko.com>
-To: u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org, 
- =?utf-8?q?Vincent_Stehl=C3=A9?= <vincent.stehle@arm.com>
-Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Daniel Golle <daniel@makrotopia.org>
-In-Reply-To: <20260901-typo-v1-1-89ea773a9a05@arm.com>
-References: <20260901-typo-v1-1-89ea773a9a05@arm.com>
-Subject: Re: [PATCH] spl: rename DISABLE_ALL_EXECPTIONS
-Message-Id: <178950452760.931545.2900926416498852770.b4-ty@konsulko.com>
-Date: Tue, 15 Sep 2026 14:35:27 -0600
+        Fri, 25 Sep 2026 06:42:31 -0700 (PDT)
+From: Guillaume La Roque <glaroque@baylibre.com>
+Date: Fri, 25 Sep 2026 15:42:25 +0200
+Subject: [PATCH 2/4] configs: khadas-vim3: enlarge the fastboot buffer
 MIME-Version: 1.0
-X-Mailer: b4 0.14.3
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260925-update_vim-v1-2-fddf7ba4dc34@baylibre.com>
+References: <20260925-update_vim-v1-0-fddf7ba4dc34@baylibre.com>
+In-Reply-To: <20260925-update_vim-v1-0-fddf7ba4dc34@baylibre.com>
+To: u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Tom Rini <trini@konsulko.com>, Guillaume La Roque <glaroque@baylibre.com>
+X-Mailer: b4 0.16.0
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 16 Sep 2026 09:56:25 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3094
+ <u-boot-amlogic@groups.io>; Fri, 25 Sep 2026 13:42:38 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3097
 
-On Tue, 01 Sep 2026 18:20:44 +0200, Vincent Stehlé wrote:
+Increase the fastboot buffer from 112 MiB to 512 MiB on VIM3 and
+VIM3L to allow larger downloads when flashing Android images.
+The buffer fits within the RAM available on both boards.
 
-> The DISABLE_ALL_EXECPTIONS define has a typo; fix all occurrences using the
-> following command:
-> 
->   find '(' -type d -name .git -prune ')' -o -type f -print |\
->     xargs sed -i 's/DISABLE_ALL_EXECPTIONS/DISABLE_ALL_EXCEPTIONS/g'
-> 
-> This can be verified by pre-processing, for example with the following
-> commands:
-> 
-> [...]
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+ configs/khadas-vim3_android_ab_defconfig  | 1 +
+ configs/khadas-vim3l_android_ab_defconfig | 1 +
+ 2 files changed, 2 insertions(+)
 
-Applied to u-boot/next, thanks!
+diff --git a/configs/khadas-vim3_android_ab_defconfig b/configs/khadas-vim3_android_ab_defconfig
+index 463dc31cb7f..9022587d5a7 100644
+--- a/configs/khadas-vim3_android_ab_defconfig
++++ b/configs/khadas-vim3_android_ab_defconfig
+@@ -63,6 +63,7 @@ CONFIG_BUTTON=y
+ CONFIG_BUTTON_ADC=y
+ CONFIG_USB_FUNCTION_FASTBOOT=y
+ CONFIG_FASTBOOT_BUF_ADDR=0x6000000
++CONFIG_FASTBOOT_BUF_SIZE=0x20000000
+ CONFIG_FASTBOOT_FLASH=y
+ CONFIG_FASTBOOT_FLASH_MMC_DEV=2
+ CONFIG_FASTBOOT_CMD_OEM_FORMAT=y
+diff --git a/configs/khadas-vim3l_android_ab_defconfig b/configs/khadas-vim3l_android_ab_defconfig
+index d0cf7d39482..6488211e9e4 100644
+--- a/configs/khadas-vim3l_android_ab_defconfig
++++ b/configs/khadas-vim3l_android_ab_defconfig
+@@ -63,6 +63,7 @@ CONFIG_BUTTON=y
+ CONFIG_BUTTON_ADC=y
+ CONFIG_USB_FUNCTION_FASTBOOT=y
+ CONFIG_FASTBOOT_BUF_ADDR=0x6000000
++CONFIG_FASTBOOT_BUF_SIZE=0x20000000
+ CONFIG_FASTBOOT_FLASH=y
+ CONFIG_FASTBOOT_FLASH_MMC_DEV=2
+ CONFIG_FASTBOOT_CMD_OEM_FORMAT=y
 
-[1/1] spl: rename DISABLE_ALL_EXECPTIONS
-      commit: a12ef680c0f19662090f2e28ed8e2a89bb17d947
 -- 
-Tom
-
+2.34.1
 
 
