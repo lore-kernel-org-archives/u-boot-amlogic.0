@@ -2,268 +2,218 @@ Return-Path: <sanderson@brivo.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4868CA5FAC
-	for <webhook@archiver.kernel.org>; Tue, 29 Sep 2026 18:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F04CCA5FA5
+	for <webhook@archiver.kernel.org>; Tue, 29 Sep 2026 18:07:25 +0000 (UTC)
 Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2749.1790704859950092553
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2885.1790705244752530913
  for <u-boot-amlogic@groups.io>;
- Tue, 29 Sep 2026 11:01:00 -0700
+ Tue, 29 Sep 2026 11:07:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@brivo.com header.s=google header.b=3NCQGMex;
+ dkim=pass header.i=@brivo.com header.s=google header.b=GrqQD44B;
  spf=pass (domain: brivo.com, ip: 74.125.230.204, mailfrom: sanderson@brivo.com)
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530e28a62abso67459301cf.1
-        for <u-boot-amlogic@groups.io>; Tue, 29 Sep 2026 11:00:59 -0700 (PDT)
+Received: by mail-qk2-f12.google.com with SMTP id af79cd13be357-93a2dea320fso453300685a.2
+        for <u-boot-amlogic@groups.io>; Tue, 29 Sep 2026 11:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brivo.com; s=google; t=1790704859; x=1791309659; darn=groups.io;
+        d=brivo.com; s=google; t=1790705244; x=1791310044; darn=groups.io;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=YPIKFqFNfAsJh2si3aegTlSdSHRw2sKEWB5DaHLmFa0=;
-        b=3NCQGMex0vz+durrVyoNE58rWWG8x/XF9Kc1Wl8311lqhyauIGbcJfyaf5IXRb3JSn
-         2+U8/Ttfg5ESpsKzeN58mdXefsqN4SL6yd3Vgyfhy0yqW6/SgCidNMwLwlRabzYAjZ2/
-         KyiLAJWmoxLbD2YwcnBqgD2lrW/b0bSPzBm/95Yp/bxWsuIzjATXHH+2stpGnyjjvdt0
-         42J5JWLygOs11uULS150vB9kHUOJxukxa2ss4vGT7ZrR5ckJnrUBkcs0aBvo+H20EKJ6
-         LBL19Wv7BGNHzqRZx4p15QKhro0kuje5A2TT6iF3WQTqFD7o8/pGZoP4X2ANf0DI4ISB
-         ++/w==
+        bh=TBZmtfpV5NapNTjQVYNLYgTNXg38/j+JDNHjnLI5C6Q=;
+        b=GrqQD44BAqT8NFFksPzUTPOfYcU/qQnvSQIkqMvlawyyZzGNbdQO9CEsZ+WiLtgTfl
+         Jwlkh9c7pJqafCgpg2eNsgljDydwfE52xvNg5cSpv3o6dIbqqa7EgZkXOu2popriCKKy
+         2uu5frOw3eM7bgSC19TTTB3/rBKLiyX0toGxNXZ0K0QrBTm4nYG2OCWgGhIxh7e6oC8g
+         ObYeX5fZA/tebph+WYukxkeCZPyblqRr5sJmzekhzMMM782Gt4AhQ9NNY9CpJMXe7sCN
+         HY3pr2RlNdu5era2DkqwaePudqdRcN0hklKTg9BeFzRrzubnqaSOHWm2chD5ylpkPjIy
+         HMdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790704859; x=1791309659;
+        d=1e100.net; s=20260707; t=1790705244; x=1791310044;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=YPIKFqFNfAsJh2si3aegTlSdSHRw2sKEWB5DaHLmFa0=;
-        b=kcKq+hvpmcsFZzNJITC/JJn3aGOp5I44stI+VjDXqsFVav5Dpj10MaUw2VCkH+4R14
-         /eCYRij8kNyWfJqhrsPEFEJkKymt4U0wWeRpIuez48y+9plhSqKNrVLZ8X/ZTFAttrAv
-         6RywIhZZ9Vbman2EiEZGVhB8YBAy5++3fTNOEeMq0DLEeU4eIV1R35lBcZ4gZ4EyrmnO
-         1TXargoddOt0mWeen84mlJuxiAl3by0EtVGiZ3alglFhLZ6h65pqzcgaHANtOp+jrDo/
-         B0axfu37FGxjE+HKxyQLQwWN3IrAT+6mNaEicX5R7MOSlHwCpr/XhR6+UI+b0qLK9q4C
-         gLWw==
-X-Gm-Message-State: AFuF++n2rnjVcEijY7hpS4bzUGrNLWdbG5FHeEqaVPBWhXvQ0/kEhnLV
-	54j5lKQtQ4rUD1dJSTXg1SgzgX+SE/d/kayowyDkA6k4NnVhA+T5MybKqEXKBaaqPOesQu2OlH+
-	iuDN6J2hl6F+qxeeV6UHbe0aXVeBV72jZhUghbMHf0VPXHxfltB6hZQ==
-X-Gm-Gg: AYBFou3FCH/m2G/sRBx7aW2gSUOa6ecL1eEdAQc/xRgcBF6YYmVe6iKb4n5WbgTW+T/
-	1Y/V6yr75QE63LckUEN/PwTgfQMvB7o/qKoJCRRldT4VHMsX1lxS1A/Zj0W2a9PaufubLi2Gqr+
-	SvXkWYxaRVvndnmoEz0u+rRc+GHOAt69VWP913YFQllatkgrCTjU2HeuDmbE/yrMlmafi+MEyD7
-	AUxKtqbgLRkq5TsnDh+jjzmXcuD2lE3nVNB0WcdCw3dqFe3gtyVx/1T8Kvesva8NIYF+06v9pt2
-	cNugcUDhzezmKlAgzuL8isZWC26g0CIv8Ezi72BEO0kVWTT7sCws90cRaosE0S9PASOzfKiDKaO
-	37E8wO9mnVLiwrQ9O84et8Inm66JWCGcwdvcXX9JncTLUSyCejXT3G9jEqr9KsKoYBkwg7GP1PN
-	TCqN8vBbMfMqaamJ6zCnWvIEjrintgEDLaG+rzoXvu6sxWZXLYRgyalvTz0zTotHg4
-X-Received: by 2002:a05:622a:1816:b0:531:2243:436a with SMTP id d75a77b69052e-5336a5eba19mr159311cf.55.1790704858503;
-        Tue, 29 Sep 2026 11:00:58 -0700 (PDT)
+        bh=TBZmtfpV5NapNTjQVYNLYgTNXg38/j+JDNHjnLI5C6Q=;
+        b=FhrIWeYQUZDlYyea6lwV3v4oSilbGUPdboI+hMdK0aUAloKz7l53wyPSyVzoYTckoK
+         qqzdq4yYVlaTDHMZUdOkdUB0UpCk+lAqGKooR7B2jmQ627AGTgYZn2ByQonNfo3oNXAl
+         huVibU1rShl8hA+XRY7vv715vRepxpR9P54Ojd5NPSpDN+HD6hBdUAAD9eqDORaxAYnV
+         9/+JxNud3pkcToM0Po0z+Whil9EU7YMZC4NYk5hzobIMaHIMRnXkDU8occo4MHpKphyd
+         lpSFohxZNu0Amt3bjvqT0jcul3aTp0NxzpINpWggrRYiKK18H3f7Wi4+ii0qMR8BLpct
+         x+Ug==
+X-Gm-Message-State: AFuF++lD5w3X2/ZPSArBM/vpSdSachyIOSrPNrAOPpH2xiSepGSkkXyT
+	5Ap7eZCb0IgqSAjRfe8S0sX/wk587p/2/sJp5GK/ynv9gTkrMnVXVYjCSuf7G/rTMq98AN7DFXm
+	a0siAg2Hp9AZptTKE9u/UO93EwaY/U4Gg2Z3jnlG6gxUWB2Rx+un+IQ==
+X-Gm-Gg: AYBFou1LxgiRHtdqkZcUQN4YVxPse2q1QgvqG1balutXWHIJuAj1t1JJemT3P5Lgc8r
+	4ps8uMrPCWyhONyS0CkxIcgh8o1A+7aExjYdn0lk1H26ag7sh5nZapSN/enCRm2y8JWNHk/NhWq
+	UhcHRtt0VRsL/42IcrCX8ubDsXZtTK0qw9VYu/bjEQkNknVQAVPydlGHHbP2Y/Vy01v2G1KDKeY
+	7nz+E4f6j6I/FolJua5iVXT8Bs/T22nZQaRmV/ifK/Afq+rtlMUaIZHDijUirqPp7mXKfB3RkrR
+	iULtOtPo7p2pWriBL30jAs2lJ5vBqawv8j2aX86S/0xfbhVg5rTWURBAW5KLBs/7W/+YmsTVAJM
+	E8eMNE6BuVmx/G0tb6lcUGiybx5Ix6trfdQndPAvtuzgn/Sf2qcDpQk0yji9KkJVF+F81PBXgqw
+	T3IQNBR61ed6YYs4bzOi9RdHppb0dmABjxACoZfQTOjpJ1auBcdHOcAY5N6iddwhJ1rg==
+X-Received: by 2002:a05:620a:370d:b0:93c:17db:d91f with SMTP id af79cd13be357-93c9fb59e46mr57265385a.39.1790705243208;
+        Tue, 29 Sep 2026 11:07:23 -0700 (PDT)
 Received: from strozzi ([71.163.254.246])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-53369c4dfe3sm895901cf.31.2026.09.29.11.00.57
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c9f462b0esm28802785a.9.2026.09.29.11.07.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 11:00:57 -0700 (PDT)
+        Tue, 29 Sep 2026 11:07:22 -0700 (PDT)
 From: Sean Anderson <sanderson@brivo.com>
-To: Jerome Forissier <jerome.forissier@arm.com>,
+To: Neil Armstrong <neil.armstrong@linaro.org>,
 	u-boot@lists.u-boot-project.org
 Cc: u-boot-amlogic@groups.io,
-	Ramon Fried <rfried.dev@gmail.com>,
 	Tom Rini <trini@konsulko.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
 	Sean Anderson <sanderson@brivo.com>,
-	Joe Hershberger <joe.hershberger@ni.com>
-Subject: [PATCH] net: designware: Fix MDIO bus getting bound multiple times
-Date: Tue, 29 Sep 2026 14:00:53 -0400
-Message-ID: <20260929180055.3439132-1-sanderson@brivo.com>
+	Christian Hewitt <christianshewitt@gmail.com>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Lukasz Majewski <lukma@denx.de>,
+	Nick Xie <nick@khadas.com>
+Subject: [PATCH v2 0/9] arm64: meson: Add s4 support
+Date: Tue, 29 Sep 2026 14:06:22 -0400
+Message-ID: <20260929180721.3440839-1-sanderson@brivo.com>
 X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Tue, 29 Sep 2026 18:01:05 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3102
+ <u-boot-amlogic@groups.io>; Tue, 29 Sep 2026 18:07:25 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3103
 
-designware_eth_probe may be called multiple times for a given device.
-such as if the first probe (or post_probe) fails for whatever reason.
-When this happens, subsequent probes still try to bind the MDIO bus,
-creating several duplicate copies of the bus (all possibly sharing the
-same of_node). This can cause an infinite loop in dm_mdio_probe_devices
-if we have been probed at least once already:
+This series (along with several patches submitted separately) adds basic
+support for the amlogic s4 SoCs (S805X2/S905W2/S905Y4). My tree with all
+patches on it is at [1].
 
-dm_mdio_probe_devices()
- device_probe(dwmac.mac0)
-  device_probe(dwmac)
-   designware_eth_probe()
-    device_bind_driver_to_node(dwmac.mac1)
-    return -EFOO
- device_probe(dwmac.mac1)
-  ...
+I developed this for a custom board, but I believe a better candidate
+for a defconfig is the publically-available Khadas VIM1S [2]. Khadas
+has kindly sent me a VIM1S so I was able to add some more features and
+fix a few bugs.
 
-Prevent this by binding the MDIO bus in designware_eth_bind instead of
-designware_eth_probe.
+Creating a bootable image currently requires modifying AMLogic's
+FIP [3]. Unfortunately, that software has a proprietary license and I
+have already reviewed it in order to make the necessary modifications.
+Therefore, I am wary about submitting patches to [4] (or binman). If
+anyone would like to do so, I can try writing up a specification for you
+to implement so we can avoid any copyright issues.
 
-Fixes: 5160b4567c71 ("net: designware: add DM_MDIO support")
-Signed-off-by: Sean Anderson <sanderson@brivo.com>
----
+Linux boots but can't read either the eMMC or SD card (mmc0/mmc1):
 
- drivers/net/designware.c    | 35 ++++++++++++++++++-----------------
- drivers/net/designware.h    |  1 +
- drivers/net/dwmac_meson8b.c |  3 +++
- drivers/net/dwmac_s700.c    |  3 +++
- drivers/net/dwmac_socfpga.c |  3 +++
- drivers/net/dwmac_thead.c   |  3 +++
- drivers/net/gmac_rockchip.c |  3 +++
- 7 files changed, 34 insertions(+), 17 deletions(-)
+[    1.537445] Run /init as init process
+[    1.573054] mmc1: new SDHC card at address 0001
+[    1.573722] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    1.578302]  mmcblk1: p1 p2
+[    1.594234] mmc0: new HS200 MMC card at address 0001
+[    1.595881] mmcblk0: mmc0:0001 AJTD4R 14.6 GiB
+[    1.598333] mmcblk0boot0: mmc0:0001 AJTD4R 4.00 MiB
+[    1.600596] mmcblk0boot1: mmc0:0001 AJTD4R 4.00 MiB
+[    1.602689] mmcblk0rpmb: mmc0:0001 AJTD4R 4.00 MiB, chardev (239:0)
+Starting systemd-udevd version 255.21^
+[    1.681013] mmc2: new UHS-I speed SDR104 SDIO card at address 0001
+[    1.758610] usb 1-1: new high-speed USB device number 2 using xhci-hcd
+[    1.884396] mmc1: card 0001 removed
+[    1.902656] hub 1-1:1.0: USB hub found
+[    1.902829] hub 1-1:1.0: 4 ports detected
+Waiting for /dev/mmcblk0p2 to show up...
+[    2.083595] mmc1: new SDHC card at address 0001
+[    2.084253] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    2.086749]  mmcblk1: p1 p2
+[    3.102764] mmc1: card 0001 removed
+[    3.247600] mmc1: new SDHC card at address 0001
+[    3.248274] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    3.250416]  mmcblk1: p1 p2
+[    4.254738] mmc1: card 0001 removed
+[    4.399589] mmc1: new SDHC card at address 0001
+[    4.400230] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    4.402721]  mmcblk1: p1 p2
+[    5.406737] mmc1: card 0001 removed
+[    6.604775] mmc1: new SDHC card at address 0001
+[    6.605518] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    6.607752]  mmcblk1: p1 p2
+[    6.774076] mmc1: tried to HW reset card, got error -95
+[    6.774133] mmcblk1: recovery failed!
+[    6.774594] I/O error, dev mmcblk1, sector 61066752 op 0x0:(READ) flags 0x80700 phys_seg 5 prio class 2
+[    6.780963] I/O error, dev mmcblk1, sector 61067016 op 0x0:(READ) flags 0x80700 phys_seg 2 prio class 2
+[    6.781018] mmc1: card 0001 removed
+[    6.927580] mmc1: new SDHC card at address 0001
+[    6.928252] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    6.930422]  mmcblk1: p1 p2
+[    7.934738] mmc1: card 0001 removed
+[    8.003206] meson-gx-mmc fe08a000.mmc: card claims to support voltages below defined range
+[    8.003576] meson-gx-mmc fe08a000.mmc: no support for card's volts
+[    8.004334] mmc1: error -22 whilst initialising SDIO card
+[    8.032146] mmc1: error -95 whilst initialising SD card
+[    9.163594] mmc1: new SDHC card at address 0001
+[    9.164282] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    9.166825]  mmcblk1: p1 p2
+[    9.334084] mmc1: tried to HW reset card, got error -95
+[    9.334140] mmcblk1: recovery failed!
+[    9.334605] I/O error, dev mmcblk1, sector 61067016 op 0x0:(READ) flags 0x80700 phys_seg 14 prio class 2
+[    9.340984] I/O error, dev mmcblk1, sector 61067208 op 0x0:(READ) flags 0x80700 phys_seg 5 prio class 2
+[    9.341040] mmc1: card 0001 removed
+[    9.491572] mmc1: new SDHC card at address 0001
+[    9.492239] mmcblk1: mmc1:0001 032GB 29.1 GiB
+[    9.494407]  mmcblk1: p1 p2
+[   10.526746] mmc1: card 0001 removed
 
-diff --git a/drivers/net/designware.c b/drivers/net/designware.c
-index 6ed9c6d538a..256e474a565 100644
---- a/drivers/net/designware.c
-+++ b/drivers/net/designware.c
-@@ -209,15 +209,14 @@ static int dw_mdio_init(const char *name, void *priv)
- }
- 
- #if IS_ENABLED(CONFIG_DM_MDIO)
--static int dw_dm_mdio_init(const char *name, void *priv)
-+int dw_dm_mdio_bind(struct udevice *dev)
- {
--	struct udevice *dev = priv;
-+	struct udevice *mdiodev;
- 	ofnode node;
- 	int ret;
- 
- 	ofnode_for_each_subnode(node, dev_ofnode(dev)) {
- 		const char *subnode_name = ofnode_get_name(node);
--		struct udevice *mdiodev;
- 
- 		if (strcmp(subnode_name, "mdio"))
- 			continue;
-@@ -231,8 +230,10 @@ static int dw_dm_mdio_init(const char *name, void *priv)
- 	}
- 
- 	printf("%s: mdio node is missing, registering legacy mdio bus", __func__);
--
--	return dw_mdio_init(name, priv);
-+	ret = device_bind_driver(dev, "eth_designware_mdio", dev->name, &mdiodev);
-+	if (ret)
-+		debug("%s: not able to create mdio bus\n", __func__);
-+	return ret;
- }
- #endif
- 
-@@ -855,6 +856,9 @@ static int designware_eth_bind(struct udevice *dev)
- 		}
- 	}
- 
-+#if IS_ENABLED(CONFIG_DM_MDIO)
-+	return dw_dm_mdio_bind(dev);
-+#endif
- 	return 0;
- }
- 
-@@ -961,19 +965,16 @@ int designware_eth_probe(struct udevice *dev)
- 		}
- 	} else
- #endif
--	{
--#if IS_ENABLED(CONFIG_DM_MDIO)
--		ret = dw_dm_mdio_init(dev->name, dev);
--#else
--		ret = dw_mdio_init(dev->name, dev);
--#endif
--		if (ret) {
--			err = ret;
--			goto mdio_err;
--		}
--		priv->bus = miiphy_get_dev_by_name(dev->name);
--		priv->dev = dev;
-+
-+	priv->dev = dev;
-+#if !IS_ENABLED(CONFIG_DM_MDIO)
-+	ret = dw_mdio_init(dev->name, dev);
-+	if (ret) {
-+		err = ret;
-+		goto mdio_err;
- 	}
-+	priv->bus = miiphy_get_dev_by_name(dev->name);
-+#endif
- 
- 	ret = dw_phy_init(priv, dev);
- 	debug("%s, ret=%d\n", __func__, ret);
-diff --git a/drivers/net/designware.h b/drivers/net/designware.h
-index cccf9d54e02..3618300f4c5 100644
---- a/drivers/net/designware.h
-+++ b/drivers/net/designware.h
-@@ -249,6 +249,7 @@ struct dw_eth_dev {
- 	struct mii_dev *bus;
- };
- 
-+int dw_dm_mdio_bind(struct udevice *dev);
- int designware_eth_of_to_plat(struct udevice *dev);
- int designware_eth_probe(struct udevice *dev);
- extern const struct eth_ops designware_eth_ops;
-diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
-index fde4aabbace..cb9de81a819 100644
---- a/drivers/net/dwmac_meson8b.c
-+++ b/drivers/net/dwmac_meson8b.c
-@@ -157,6 +157,9 @@ U_BOOT_DRIVER(dwmac_meson8b) = {
- 	.id		= UCLASS_ETH,
- 	.of_match	= dwmac_meson8b_ids,
- 	.of_to_plat = dwmac_meson8b_of_to_plat,
-+#if IS_ENABLED(CONFIG_DM_MDIO)
-+	.bind		= dw_dm_mdio_bind,
-+#endif
- 	.probe		= dwmac_meson8b_probe,
- 	.ops		= &designware_eth_ops,
- 	.priv_auto	= sizeof(struct dw_eth_dev),
-diff --git a/drivers/net/dwmac_s700.c b/drivers/net/dwmac_s700.c
-index 76daab961c0..d95f2111a5b 100644
---- a/drivers/net/dwmac_s700.c
-+++ b/drivers/net/dwmac_s700.c
-@@ -56,6 +56,9 @@ U_BOOT_DRIVER(dwmac_s700) = {
- 	.id     = UCLASS_ETH,
- 	.of_match = dwmac_s700_ids,
- 	.of_to_plat = dwmac_s700_of_to_plat,
-+#if IS_ENABLED(CONFIG_DM_MDIO)
-+	.bind		= dw_dm_mdio_bind,
-+#endif
- 	.probe  = dwmac_s700_probe,
- 	.ops    = &designware_eth_ops,
- 	.priv_auto	= sizeof(struct dw_eth_dev),
-diff --git a/drivers/net/dwmac_socfpga.c b/drivers/net/dwmac_socfpga.c
-index a55f3e29f9f..64bb2dbfbe3 100644
---- a/drivers/net/dwmac_socfpga.c
-+++ b/drivers/net/dwmac_socfpga.c
-@@ -143,6 +143,9 @@ U_BOOT_DRIVER(dwmac_socfpga) = {
- 	.id		= UCLASS_ETH,
- 	.of_match	= dwmac_socfpga_ids,
- 	.of_to_plat = dwmac_socfpga_of_to_plat,
-+#if IS_ENABLED(CONFIG_DM_MDIO)
-+	.bind		= dw_dm_mdio_bind,
-+#endif
- 	.probe		= dwmac_socfpga_probe,
- 	.ops		= &designware_eth_ops,
- 	.priv_auto	= sizeof(struct dw_eth_dev),
-diff --git a/drivers/net/dwmac_thead.c b/drivers/net/dwmac_thead.c
-index 138d71a6202..5843bed49cb 100644
---- a/drivers/net/dwmac_thead.c
-+++ b/drivers/net/dwmac_thead.c
-@@ -280,6 +280,9 @@ U_BOOT_DRIVER(dwmac_thead) = {
- 	.id		= UCLASS_ETH,
- 	.of_match	= dwmac_thead_match,
- 	.of_to_plat	= dwmac_thead_of_to_plat,
-+#if IS_ENABLED(CONFIG_DM_MDIO)
-+	.bind		= dw_dm_mdio_bind,
-+#endif
- 	.probe		= dwmac_thead_probe,
- 	.ops		= &dwmac_thead_eth_ops,
- 	.priv_auto	= sizeof(struct dw_eth_dev),
-diff --git a/drivers/net/gmac_rockchip.c b/drivers/net/gmac_rockchip.c
-index 2b6080dd9ee..1d21cb2606d 100644
---- a/drivers/net/gmac_rockchip.c
-+++ b/drivers/net/gmac_rockchip.c
-@@ -790,6 +790,9 @@ U_BOOT_DRIVER(eth_gmac_rockchip) = {
- 	.id	= UCLASS_ETH,
- 	.of_match = rockchip_gmac_ids,
- 	.of_to_plat = gmac_rockchip_of_to_plat,
-+#if IS_ENABLED(CONFIG_DM_MDIO)
-+	.bind		= dw_dm_mdio_bind,
-+#endif
- 	.probe	= gmac_rockchip_probe,
- 	.ops	= &gmac_rockchip_eth_ops,
- 	.priv_auto	= sizeof(struct dw_eth_dev),
+Not sure what's going on. Maybe the drive strength needs to be adjusted?
+
+[1] https://github.com/brivolabs/u-boot/tree/meson_s4
+[2] https://www.khadas.com/vim1s
+[3] https://github.com/khadas/u-boot-fip-yocto
+[4] https://github.com/LibreELEC/amlogic-boot-fip
+
+Changes in v2:
+- Add S4 to meson board info
+- Add DEBUG_UART defaults
+- Extend initial padding to 4096 to match what Amlogic does
+- Add ADC clocks
+- Use our own board instead of reusing q200
+- Enable more peripherals (buttons, LEDs, etc.)
+- Use defaults where possible (commands, distro boot, etc.)
+- Set mac address the same way Khadas does
+- Set config/stdout-path so we can find the serial
+
+Sean Anderson (9):
+  arm64: meson: Add s4 SoC support
+  clk: meson: a1: Eliminate separate id parameter
+  clk: meson: a1: Use clk_set_rate from meson_mux_set_rate
+  clk: meson: Use soc-specific naming for common functions
+  clk: meson: Export a1 functions to common file
+  clk: meson: Support fractional fixed-factor clocks
+  clk: meson: Support power-of-two dividers
+  clk: meson: Add s4 clock driver
+  meson: Add Khadas VIM1S support
+
+ .../meson-s4-s905y4-khadas-vim1s-u-boot.dtsi  |   5 +
+ arch/arm/include/asm/arch-meson/boot0.h       |  12 +
+ arch/arm/mach-meson/Kconfig                   |   7 +
+ arch/arm/mach-meson/Makefile                  |   1 +
+ arch/arm/mach-meson/board-info.c              |   2 +
+ arch/arm/mach-meson/board-s4.c                |  50 ++
+ board/amlogic/vim1s/MAINTAINERS               |   7 +
+ board/amlogic/vim1s/Makefile                  |   1 +
+ board/amlogic/vim1s/vim1s.c                   |  26 +
+ configs/khadas-vim1s_defconfig                |  66 ++
+ drivers/clk/meson/Kconfig                     |   8 +
+ drivers/clk/meson/Makefile                    |   2 +
+ drivers/clk/meson/a1.c                        | 495 +--------------
+ drivers/clk/meson/axg-ao.c                    |  12 +-
+ drivers/clk/meson/axg.c                       |  16 +-
+ drivers/clk/meson/clk_meson.c                 | 376 +++++++++++
+ drivers/clk/meson/clk_meson.h                 | 149 +++++
+ drivers/clk/meson/g12a-ao.c                   |  12 +-
+ drivers/clk/meson/g12a.c                      |  24 +-
+ drivers/clk/meson/gxbb.c                      |  24 +-
+ drivers/clk/meson/s4.c                        | 601 ++++++++++++++++++
+ drivers/serial/Kconfig                        |   2 +
+ 22 files changed, 1358 insertions(+), 540 deletions(-)
+ create mode 100644 arch/arm/dts/meson-s4-s905y4-khadas-vim1s-u-boot.dtsi
+ create mode 100644 arch/arm/include/asm/arch-meson/boot0.h
+ create mode 100644 arch/arm/mach-meson/board-s4.c
+ create mode 100644 board/amlogic/vim1s/MAINTAINERS
+ create mode 100644 board/amlogic/vim1s/Makefile
+ create mode 100644 board/amlogic/vim1s/vim1s.c
+ create mode 100644 configs/khadas-vim1s_defconfig
+ create mode 100644 drivers/clk/meson/clk_meson.c
+ create mode 100644 drivers/clk/meson/s4.c
+
 ---
 base-commit: 2b8902913c19eb581fb0d567201c09b8fa46ac74
-branch: dw_mdio_bind
+branch: s4_clk
 
 -- 
 2.53.0
