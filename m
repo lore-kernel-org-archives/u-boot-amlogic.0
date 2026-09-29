@@ -2,55 +2,56 @@ Return-Path: <sanderson@brivo.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6605ACA5FA5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6899ECA5FAD
 	for <webhook@archiver.kernel.org>; Tue, 29 Sep 2026 18:07:35 +0000 (UTC)
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2907.1790705245621180671
+Received: from mail-qk2-f43.google.com (mail-qk2-f43.google.com [74.125.230.235])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2886.1790705246676737376
  for <u-boot-amlogic@groups.io>;
- Tue, 29 Sep 2026 11:07:25 -0700
+ Tue, 29 Sep 2026 11:07:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@brivo.com header.s=google header.b=X/W6LHHL;
- spf=pass (domain: brivo.com, ip: 209.85.222.182, mailfrom: sanderson@brivo.com)
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-93c64decd21so81164085a.1
-        for <u-boot-amlogic@groups.io>; Tue, 29 Sep 2026 11:07:25 -0700 (PDT)
+ dkim=pass header.i=@brivo.com header.s=google header.b=Hfz8Ld8V;
+ spf=pass (domain: brivo.com, ip: 74.125.230.235, mailfrom: sanderson@brivo.com)
+Received: by mail-qk2-f43.google.com with SMTP id af79cd13be357-93910c9ff1cso405625385a.3
+        for <u-boot-amlogic@groups.io>; Tue, 29 Sep 2026 11:07:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brivo.com; s=google; t=1790705244; x=1791310044; darn=groups.io;
+        d=brivo.com; s=google; t=1790705245; x=1791310045; darn=groups.io;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=BgpZpsCumAAayqcYCfhHwv/BHePfOwBj0whUkaLwwUk=;
-        b=X/W6LHHLwZGZhUgG9GAPnVjaNYNQvwjYeDDbZwo+dz+eCZ0INLUyq8BgL6GMFksewQ
-         ooFesH7M9rE0blk28I/eQO7RDJqHAmLWVawT4RVeYE+oul+dwYiOuHVH8Fgl/GViTISJ
-         /lJB/92kaP6sjJBhanPIwKV4JC3a/Om3GQ3kVy4QfLkYtGYAYtNk155Zul58+D8Mq1zt
-         uEpHMgwbl+Q/c4/RsWUONgbz/i1mHZ4QK51Am3xE7/Du6i4vvaHOksEvmYQ3S1wGNC8r
-         HPC73uauhc+gYyOtnZH9ChPkJx/GOqKub0/RjQOGr28G49STgF75tmLkv0cYcDbgNlmG
-         P3Ow==
+        bh=1EuYUFZ2n6coR/6vwHaUSVPjIGS8hMMuUnGoOXDjBrI=;
+        b=Hfz8Ld8VtsPuUp3gFM8XnIxh3bSkfwKaIgc7QcLGhhcyWF2wtXLkzsyyzXNSkQGa0w
+         0GfAnyrlWqG6R9Ogc1OJ9a5uu0ZJ7Dz+zQnxQrEB+AMxIzZa2stMmZrOn96tBFI3PQhI
+         amzyF9cAvBwBYc4uvcQgdaJAEcQnvNNEYXTLeXqyHdaYiEPm71oe/ZDH0PTIMjzxvCYv
+         Zt4OwR+Xh3kFsK5ws7IOOGtaVQJVkq7+3wdsMi515jgOVGxfRcWVD3tEKSchgtE/HXsq
+         NP6exlbKObYG8+uJYYlgxCdfxHto1maK24XS6aVqSiC5BEfN4+jwTIl8icQQEyaowW8n
+         xwYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790705244; x=1791310044;
+        d=1e100.net; s=20260707; t=1790705245; x=1791310045;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=BgpZpsCumAAayqcYCfhHwv/BHePfOwBj0whUkaLwwUk=;
-        b=A2Wvrbc6ahPLxao0enFak4eZmc4PXVG9S2vYovzi0nPahJhB5Zil3d03uM8QWB8hPp
-         cj8hfaj87E4EuWBB5GZzhGUKqtYjdnWRUr6G9U8CL7uQhWkcr/kVFq8B5BfwYI8/MTLZ
-         g1Mu4R2e+HEc93oVuMBnZd7NDjBXwuUluHjBOBt0vDYjaThEorxyIj8WcnNcus/EThkY
-         R61YztMe/aIon8cNkdQOWS92qCL8hcMDXq1/0Wo+TpAhrrohbnQ3uY1asQd/bhpZPxnT
-         0s+XFjbe+TZ5W/i38Ceou1D3tl1KcOmm6KKXXL8ZNmaeOy9nPTos7gXttaRQGIFXGEie
-         7igw==
-X-Gm-Message-State: AFuF++lotA1RKySjhNWNGzPumQTYpQWTjyBmp8Ran5DLyOT2sQ+TfRVm
-	U+ooxHslDPDtThh01Go5IIyNkm3q5knYPhXucp/pvTiG0/VDwoREzkNxnMssMN7hIQ3m5CrPDDw
-	2/SIlZG8Nw5WIA/ObRb+OcUPbUP7gbL4S9ZbqAHBBGHlXB3KQAgLNLA==
-X-Gm-Gg: AYBFou0Na8ex6V1znKTE+oqhZhI01tbR2To8jC+mUToD8gCa0ET6g3ElZCbd2sUIhCo
-	minkjsHmH3kzHwPlqW0omOpsnQ/PjqjAUmkiA0ccRAa4H71k7U9Q/casB9vhq9nESStbm7n4p1Y
-	nonG0fVikWN7nrvv6j8ZCeO8VeQ8OmjjDQkLCuQ65GHdd/PIsx92SZj49ukee0tP2DOv9WVMoYO
-	3telyc7j1/i/79TjsfbyDjzJbuFlOK2p+DsrC6aZgXk0bwVzbb46RyL2QOx/23f9/+xgzrLxR+F
-	2IrXIGMiZuPSClwPZNTIoqCNnFbEIH4W54Lt0Z2MCUKTSQdbn9WHxPloxEx4N/GPQWZDQ4G3Vg/
-	/+2G19bm+C2sRtYLbG58Xv5NmgARUzqIXKD3P/MyM2pwmL7GHrRvsAUhcQTUrxKR7jz8etTalLd
-	ee9UgzSTInVY0KdsW3w7igD4XGHH+WQTr1Bpz7LBKxeQ628Npjakpp0iBtkkmedITv
-X-Received: by 2002:a05:620a:2b42:b0:93c:7bc2:2599 with SMTP id af79cd13be357-93c8bf63a01mr670440685a.27.1790705244255;
-        Tue, 29 Sep 2026 11:07:24 -0700 (PDT)
+        bh=1EuYUFZ2n6coR/6vwHaUSVPjIGS8hMMuUnGoOXDjBrI=;
+        b=suMPQA6sFAX0VlCCvqiOuUjST1QoKYQ4BLKbNdnIxe9EXHJX2UpG7ESJI4NYXX3DDV
+         +OYoAF+KAbf2+4EVScuegb0DKoPaso8upj7R7Nun57WKNMAbe8+YmvmzvuCgIJva5b03
+         TxWsOpCAr1bbXL1RuQxqub3+s3AbGu2+hA03HsDQ4v5HzOLspHRnhudrn3uooaRIdeXH
+         ZeFzCUU8voZFjIuzjR1uI4IR5lJxa7cub6+tWfLNDb1dSV0bKe0BjrMj6WeLZTGHcsoB
+         b6g0ECvNpjHzgEMIEfaQSf1n/N6mahjF0HHPgpEHP0XJMWDPdAUcSdUCFKV+apDiSJnD
+         ao3w==
+X-Gm-Message-State: AFuF++ntbHYUO0BtNIkv/k7YS0Jr4A0+Pmt4EdFycOYgOqH9OesqqESB
+	UnfDWH8ehJWVOa1Q69vKI2HH75hCA/CxUgb4fM6sfFyiwURRVvq7KY5CbzYkWEke9pvhdW6z4BN
+	Ga04MgxE2m4+ia89PQScmNjfzwGfKNRpJ1t08PDsI4+fPu4FMp0Zp3jNAjfOK5Hom/6qI5g==
+X-Gm-Gg: AYBFou0hGSeNxsEnCSp7P8BqdnVfLbLEuwgRUu/4LXzzJ1bRMlYSvo8V/S5HoxCpmZ6
+	cUZ0tiVHN+Wnn8YfQ4ZINElc2vCXyGGMIlPxxbxBsS/ONGRKH9009us6blsITRbYxtQcxNAtK/R
+	17qkazmqOE/Hy31MleFUaeCV0/1BaQIh3FDNCpM6hiM4QX4sVABKTGX9XeJFY8/4kdRSuO9m9zD
+	cT0PjsCvytiRlBTkSniGD17oXJOlcRccEDLlZhLjgV6FWtVOftkhnf7QvsI2X7+rIu/3j6htjiG
+	TLOA/d1taJkndqKAweOkGgVFwGwb9mQSm8XadH+kQJaMV7RBtgaJHUsV788QDLY4wcbUNfrwl6X
+	IThd4xWhVpcVzMGX7iy9JauCJv+wxUACesww8EFTi5IOjzdsldG0RW93t+eblnQBgZ3WlCh4pUt
+	xcOxbl/qI9qO6ElqFy5+vHMSKmuiCrzAiXP/VmC6O5eJRIkD+SGNEtw0wVMwmtaTvlOtAoSC+kl
+	4Q=
+X-Received: by 2002:a05:620a:808c:b0:939:6dea:4f1a with SMTP id af79cd13be357-93c9fa9f5dcmr67532485a.48.1790705245388;
+        Tue, 29 Sep 2026 11:07:25 -0700 (PDT)
 Received: from strozzi ([71.163.254.246])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c9f462b0esm28802785a.9.2026.09.29.11.07.23
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c9f462b0esm28802785a.9.2026.09.29.11.07.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 29 Sep 2026 11:07:24 -0700 (PDT)
 From: Sean Anderson <sanderson@brivo.com>
@@ -59,10 +60,10 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
 Cc: u-boot-amlogic@groups.io,
 	Tom Rini <trini@konsulko.com>,
 	Sean Anderson <sanderson@brivo.com>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: [PATCH v2 1/9] arm64: meson: Add s4 SoC support
-Date: Tue, 29 Sep 2026 14:06:23 -0400
-Message-ID: <20260929180721.3440839-2-sanderson@brivo.com>
+	Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v2 2/9] clk: meson: a1: Eliminate separate id parameter
+Date: Tue, 29 Sep 2026 14:06:24 -0400
+Message-ID: <20260929180721.3440839-3-sanderson@brivo.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260929180721.3440839-1-sanderson@brivo.com>
 References: <20260929180721.3440839-1-sanderson@brivo.com>
@@ -72,172 +73,395 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Tue, 29 Sep 2026 18:07:35 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3104
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3105
 
-Add support for amlogic s4 (S805X2/S905W2/S905Y4) SoCs. These are very
-similar to other recent SoCs, with the exception of a workaround for
-some BL2 (mis)behavior. Memory for ATF/TEE is expected to be reserved in
-the board devicetree, so we don't reserve it in board-s4.c.
+Instead of passing a struct clk (containing the device and an unrelated
+id) and a separate id parameter to most functions, just pass a single
+struct clk with the correct id. This is in preparation for converting
+some instances of meson_clk_* functions to clk_* functions to allow for
+greater extensibility.
+
+In general, this transformation requires constructing a synthetic
+struct clk wherever we used to call a function with an id different from
+clk->id. We don't bother to call clk_request since we don't implement it
+ourselves.
 
 Signed-off-by: Sean Anderson <sanderson@brivo.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
 
-Changes in v2:
-- Add S4 to meson board info
-- Add DEBUG_UART defaults
-- Extend initial padding to 4096 to match what Amlogic does
+(no changes since v1)
 
- arch/arm/include/asm/arch-meson/boot0.h | 12 ++++++
- arch/arm/mach-meson/Kconfig             |  7 ++++
- arch/arm/mach-meson/Makefile            |  1 +
- arch/arm/mach-meson/board-info.c        |  2 +
- arch/arm/mach-meson/board-s4.c          | 50 +++++++++++++++++++++++++
- drivers/serial/Kconfig                  |  2 +
- 6 files changed, 74 insertions(+)
- create mode 100644 arch/arm/include/asm/arch-meson/boot0.h
- create mode 100644 arch/arm/mach-meson/board-s4.c
+ drivers/clk/meson/a1.c | 150 ++++++++++++++++++++---------------------
+ 1 file changed, 74 insertions(+), 76 deletions(-)
 
-diff --git a/arch/arm/include/asm/arch-meson/boot0.h b/arch/arm/include/asm/arch-meson/boot0.h
-new file mode 100644
-index 00000000000..d098786e5f1
---- /dev/null
-+++ b/arch/arm/include/asm/arch-meson/boot0.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright (C) 2026 Brivo Systems LLC
-+ */
-+b reset
-+/*
-+ * BL2 copies some keys to the start of DRAM, clobbering anything in the first
-+ * 4k aside from the initial instruction. I measured the actual data clobbered
-+ * as 1076 bytes, but I suspect the amount depends on the configuration, so
-+ * just go with what amlogic does.
-+ */
-+.skip 4096
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index c687ef822a2..91d1e8342e0 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -67,6 +67,13 @@ config MESON_A1
- 	help
- 	  Select this if your SoC is an A113L
- 
-+config MESON_S4
-+	bool "S4"
-+	select MESON64_COMMON
-+	select ENABLE_ARM_SOC_BOOT0_HOOK
-+	help
-+	  Select this if your SoC is an S905Y4/S905W2/S805X2
-+
- endchoice
- 
- config SYS_SOC
-diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
-index 08a24d4b24f..2157c35c2d5 100644
---- a/arch/arm/mach-meson/Makefile
-+++ b/arch/arm/mach-meson/Makefile
-@@ -17,3 +17,4 @@ endif
- obj-$(CONFIG_MESON_AXG) += board-axg.o
- obj-$(CONFIG_MESON_G12A) += board-g12a.o
- obj-$(CONFIG_MESON_A1) += board-a1.o
-+obj-$(CONFIG_MESON_S4) += board-s4.o
-diff --git a/arch/arm/mach-meson/board-info.c b/arch/arm/mach-meson/board-info.c
-index d3807dc787d..379f6a42c22 100644
---- a/arch/arm/mach-meson/board-info.c
-+++ b/arch/arm/mach-meson/board-info.c
-@@ -40,6 +40,7 @@ static const struct meson_gx_soc_id {
- 	{ "G12B",   0x29 },
- 	{ "SM1",    0x2b },
- 	{ "A1",	    0x2c },
-+	{ "S4",     0x37 },
+diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+index 669247a9a09..d0376663069 100644
+--- a/drivers/clk/meson/a1.c
++++ b/drivers/clk/meson/a1.c
+@@ -302,17 +302,16 @@ static const struct meson_clk_info *meson_pll_clocks[] = {
+ 	),
  };
  
- static const struct meson_gx_package_id {
-@@ -73,6 +74,7 @@ static const struct meson_gx_package_id {
- 	{ "S905X3", 0x2b, 0x10, 0x3f },
- 	{ "S905D3", 0x2b, 0x30, 0x3f },
- 	{ "A113L", 0x2c, 0x0, 0xf8 },
-+	{ "S905Y4", 0x37, 0x03, 0xff },
+-static const struct meson_clk_info *meson_clk_get_info(struct clk *clk, ulong id,
++static const struct meson_clk_info *meson_clk_get_info(struct clk *clk,
+ 						       enum meson_clk_type type)
+ {
+-	struct meson_clk_data *data;
++	struct meson_clk_data *data = (void *)dev_get_driver_data(clk->dev);
+ 	const struct meson_clk_info *info;
+ 
+-	data = (struct meson_clk_data *)dev_get_driver_data(clk->dev);
+-	if (id >= data->num_clocks)
++	if (clk->id >= data->num_clocks)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	info = data->clocks[id];
++	info = data->clocks[clk->id];
+ 	if (!info)
+ 		return ERR_PTR(-ENOENT);
+ 
+@@ -322,7 +321,7 @@ static const struct meson_clk_info *meson_clk_get_info(struct clk *clk, ulong id
+ 	return info;
+ }
+ 
+-static ulong meson_clk_get_rate_by_id(struct clk *clk, unsigned long id);
++static ulong meson_clk_get_rate(struct clk *clk);
+ 
+ static int meson_set_gate(struct clk *clk, bool on)
+ {
+@@ -331,7 +330,7 @@ static int meson_set_gate(struct clk *clk, bool on)
+ 
+ 	debug("%s: %sabling %lu\n", __func__, on ? "en" : "dis", clk->id);
+ 
+-	info = meson_clk_get_info(clk, clk->id, MESON_CLK_ANY);
++	info = meson_clk_get_info(clk, MESON_CLK_ANY);
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+@@ -350,32 +349,35 @@ static int meson_clk_disable(struct clk *clk)
+ 	return meson_set_gate(clk, false);
+ }
+ 
+-static ulong meson_div_get_rate(struct clk *clk, unsigned long id)
++static ulong meson_div_get_rate(struct clk *clk)
+ {
+ 	struct meson_clk *priv = dev_get_priv(clk->dev);
+ 	u16 n;
+ 	ulong rate;
+ 	const struct meson_clk_info *info;
++	struct clk parent;
+ 
+-	info = meson_clk_get_info(clk, id, MESON_CLK_DIV);
++	info = meson_clk_get_info(clk, MESON_CLK_DIV);
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+ 	/* Actual divider value is (field value + 1), hence the increment */
+ 	n = GET_PARM_VALUE(priv, info->parm) + 1;
+ 
+-	rate = meson_clk_get_rate_by_id(clk, info->parents[0]);
++	parent.dev = clk->dev;
++	parent.id = info->parents[0];
++	rate = meson_clk_get_rate(&parent);
+ 
+ 	return rate / n;
+ }
+ 
+-static int meson_clk_get_parent(struct clk *clk, unsigned long id)
++static int meson_clk_get_parent(struct clk *clk)
+ {
+ 	uint reg = 0;
+ 	struct meson_clk *priv = dev_get_priv(clk->dev);
+ 	const struct meson_clk_info *info;
+ 
+-	info = meson_clk_get_info(clk, id, MESON_CLK_ANY);
++	info = meson_clk_get_info(clk, MESON_CLK_ANY);
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+@@ -391,16 +393,16 @@ static int meson_clk_get_parent(struct clk *clk, unsigned long id)
+ 	return info->parents[reg];
+ }
+ 
+-static ulong meson_pll_get_rate(struct clk *clk, unsigned long id)
++static ulong meson_pll_get_rate(struct clk *clk)
+ {
+ 	struct meson_clk *priv = dev_get_priv(clk->dev);
+ 	const struct meson_clk_info *info;
+ 	const struct parm *pm, *pn;
+ 	ulong parent_rate_mhz;
+-	unsigned int parent;
++	struct clk parent;
+ 	u16 n, m;
+ 
+-	info = meson_clk_get_info(clk, id, MESON_CLK_ANY);
++	info = meson_clk_get_info(clk, MESON_CLK_ANY);
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+@@ -413,40 +415,39 @@ static ulong meson_pll_get_rate(struct clk *clk, unsigned long id)
+ 	if (n == 0)
+ 		return -EINVAL;
+ 
+-	parent = info->parents[0];
+-	parent_rate_mhz = meson_clk_get_rate_by_id(clk, parent) / 1000000;
++	parent.dev = clk->dev;
++	parent.id = info->parents[0];
++	parent_rate_mhz = meson_clk_get_rate(&parent) / 1000000;
+ 
+ 	return parent_rate_mhz * m / n * 1000000;
+ }
+ 
+-static ulong meson_clk_get_rate_by_id(struct clk *clk, unsigned long id)
++static ulong meson_clk_get_rate(struct clk *clk)
+ {
+-	ulong rate, parent;
++	struct clk parent;
+ 	const struct meson_clk_info *info;
+ 
+-	if (IS_ERR_VALUE(id))
+-		return id;
++	if (IS_ERR_VALUE(clk->id))
++		return clk->id;
+ 
+-	info = meson_clk_get_info(clk, id, MESON_CLK_ANY);
++	info = meson_clk_get_info(clk, MESON_CLK_ANY);
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+ 	switch (info->type) {
+ 	case MESON_CLK_PLL:
+-		rate = meson_pll_get_rate(clk, id);
+-		break;
++		return meson_pll_get_rate(clk);
+ 	case MESON_CLK_GATE:
+ 	case MESON_CLK_MUX:
+-		parent = meson_clk_get_parent(clk, id);
+-		rate = meson_clk_get_rate_by_id(clk, parent);
+-		break;
++		parent.dev = clk->dev;
++		parent.id = meson_clk_get_parent(clk);
++		return meson_clk_get_rate(&parent);
+ 	case MESON_CLK_DIV:
+-		rate = meson_div_get_rate(clk, id);
+-		break;
++		return meson_div_get_rate(clk);
+ 	case MESON_CLK_FIXED_DIV:
+-		parent = meson_clk_get_parent(clk, id);
+-		rate = meson_clk_get_rate_by_id(clk, parent) / info->div;
+-		break;
++		parent.dev = clk->dev;
++		parent.id = meson_clk_get_parent(clk);
++		return meson_clk_get_rate(&parent) / info->div;
+ 	case MESON_CLK_EXTERNAL: {
+ 		int ret;
+ 		struct clk external_clk;
+@@ -455,20 +456,11 @@ static ulong meson_clk_get_rate_by_id(struct clk *clk, unsigned long id)
+ 		if (ret)
+ 			return ret;
+ 
+-		rate = clk_get_rate(&external_clk);
+-		break;
++		return clk_get_rate(&external_clk);
+ 	}
+ 	default:
+-		rate = -EINVAL;
+-		break;
++		return -EINVAL;
+ 	}
+-
+-	return rate;
+-}
+-
+-static ulong meson_clk_get_rate(struct clk *clk)
+-{
+-	return meson_clk_get_rate_by_id(clk, clk->id);
+ }
+ 
+ /* This implements rate propagation for dividers placed after multiplexer:
+@@ -476,19 +468,22 @@ static ulong meson_clk_get_rate(struct clk *clk)
+  *     ..... | |---DIV--
+  *  ---------|/
+  */
+-static ulong meson_composite_set_rate(struct clk *clk, ulong id, ulong rate)
++static ulong meson_composite_set_rate(struct clk *clk, ulong rate)
+ {
+ 	unsigned int i, best_div_val;
+ 	unsigned long best_delta, best_parent;
+ 	const struct meson_clk_info *div;
+ 	const struct meson_clk_info *mux;
+ 	struct meson_clk *priv = dev_get_priv(clk->dev);
++	struct clk mux_clk;
+ 
+-	div = meson_clk_get_info(clk, id, MESON_CLK_DIV);
++	div = meson_clk_get_info(clk, MESON_CLK_DIV);
+ 	if (IS_ERR(div))
+ 		return PTR_ERR(div);
+ 
+-	mux = meson_clk_get_info(clk, div->parents[0], MESON_CLK_MUX);
++	mux_clk.dev = clk->dev;
++	mux_clk.id = div->parents[0];
++	mux = meson_clk_get_info(&mux_clk, MESON_CLK_MUX);
+ 	if (IS_ERR(mux))
+ 		return PTR_ERR(mux);
+ 
+@@ -497,8 +492,12 @@ static ulong meson_composite_set_rate(struct clk *clk, ulong id, ulong rate)
+ 	for (i = 0; i < (1 << mux->parm->width); i++) {
+ 		unsigned long parent_rate, delta;
+ 		unsigned int div_val;
++		struct clk parent = {
++			.dev = clk->dev,
++			.id =  mux->parents[i],
++		};
+ 
+-		parent_rate = meson_clk_get_rate_by_id(clk, mux->parents[i]);
++		parent_rate = meson_clk_get_rate(&parent);
+ 		if (IS_ERR_VALUE(parent_rate))
+ 			continue;
+ 
+@@ -524,21 +523,26 @@ static ulong meson_composite_set_rate(struct clk *clk, ulong id, ulong rate)
+ 	return 0;
+ }
+ 
+-static ulong meson_clk_set_rate_by_id(struct clk *clk, unsigned int id, ulong rate);
++static ulong meson_clk_set_rate(struct clk *clk, ulong rate);
+ 
+-static ulong meson_mux_set_rate(struct clk *clk, unsigned long id, ulong rate)
++static ulong meson_mux_set_rate(struct clk *clk, ulong rate)
+ {
+ 	int i;
+ 	ulong ret = -EINVAL;
+ 	struct meson_clk *priv = dev_get_priv(clk->dev);
+ 	const struct meson_clk_info *info;
+ 
+-	info = meson_clk_get_info(clk, id, MESON_CLK_MUX);
++	info = meson_clk_get_info(clk, MESON_CLK_MUX);
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+ 	for (i = 0; i < (1 << info->parm->width); i++) {
+-		ret = meson_clk_set_rate_by_id(clk, info->parents[i], rate);
++		struct clk parent = {
++			.dev = clk->dev,
++			.id = info->parents[i],
++		};
++
++		ret = meson_clk_set_rate(&parent, rate);
+ 		if (!ret) {
+ 			SET_PARM_VALUE(priv, info->parm, i);
+ 			break;
+@@ -551,43 +555,41 @@ static ulong meson_mux_set_rate(struct clk *clk, unsigned long id, ulong rate)
+ /* Rate propagation is implemented for a subcection of a clock tree, that is
+  * required at boot stage.
+  */
+-static ulong meson_clk_set_rate_by_id(struct clk *clk, unsigned int id, ulong rate)
++static ulong meson_clk_set_rate(struct clk *clk, ulong rate)
+ {
+-	switch (id) {
++	switch (clk->id) {
+ 	case CLKID_SPIFC_DIV:
+ 	case CLKID_USB_BUS_DIV:
+-		return meson_composite_set_rate(clk, id, rate);
++		return meson_composite_set_rate(clk, rate);
+ 	case CLKID_SPIFC:
+ 	case CLKID_USB_BUS: {
+-		unsigned long parent = meson_clk_get_parent(clk, id);
++		struct clk parent = {
++			.dev = clk->dev,
++			.id = meson_clk_get_parent(clk),
++		};
+ 
+-		return meson_clk_set_rate_by_id(clk, parent, rate);
++		return meson_clk_set_rate(&parent, rate);
+ 	}
+ 	case CLKID_SPIFC_SEL2:
+-		return meson_mux_set_rate(clk, id, rate);
++		return meson_mux_set_rate(clk, rate);
+ 	}
+ 
+ 	return -EINVAL;
+ }
+ 
+-static ulong meson_clk_set_rate(struct clk *clk, ulong rate)
+-{
+-	return meson_clk_set_rate_by_id(clk, clk->id, rate);
+-}
+-
+-static int meson_mux_set_parent_by_id(struct clk *clk, unsigned int parent_id)
++static int meson_clk_set_parent(struct clk *clk, struct clk *parent)
+ {
+ 	unsigned int i, parent_index;
+ 	struct meson_clk *priv = dev_get_priv(clk->dev);
+ 	const struct meson_clk_info *info;
+ 
+-	info = meson_clk_get_info(clk, clk->id, MESON_CLK_MUX);
++	info = meson_clk_get_info(clk, MESON_CLK_MUX);
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+ 	parent_index = -EINVAL;
+ 	for (i = 0; i < (1 << info->parm->width); i++) {
+-		if (parent_id == info->parents[i]) {
++		if (parent->id == info->parents[i]) {
+ 			parent_index = i;
+ 			break;
+ 		}
+@@ -601,11 +603,6 @@ static int meson_mux_set_parent_by_id(struct clk *clk, unsigned int parent_id)
+ 	return 0;
+ }
+ 
+-static int meson_clk_set_parent(struct clk *clk, struct clk *parent_clk)
+-{
+-	return meson_mux_set_parent_by_id(clk, parent_clk->id);
+-}
+-
+ static int meson_clk_probe(struct udevice *dev)
+ {
+ 	struct meson_clk *priv = dev_get_priv(dev);
+@@ -636,11 +633,11 @@ static const struct udevice_id meson_clk_ids[] = {
  };
  
- DECLARE_GLOBAL_DATA_PTR;
-diff --git a/arch/arm/mach-meson/board-s4.c b/arch/arm/mach-meson/board-s4.c
-new file mode 100644
-index 00000000000..7d0bea9924f
---- /dev/null
-+++ b/arch/arm/mach-meson/board-s4.c
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * (C) Copyright 2023 SberDevices, Inc.
-+ */
-+
-+#include <asm/armv8/mmu.h>
-+#include <asm/io.h>
-+#include <linux/compiler.h>
-+#include <linux/errno.h>
-+
-+void meson_init_reserved_memory(__maybe_unused void *fdt)
-+{
-+}
-+
-+int meson_get_boot_device(void)
-+{
-+	return -ENOSYS;
-+}
-+
-+static struct mm_region s4_mem_map[] = {
-+	{
-+		.virt = 0x00000000UL,
-+		.phys = 0x00000000UL,
-+		.size = 0x80000000UL,
-+		.attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
-+			PTE_BLOCK_INNER_SHARE
-+	}, {
-+		.virt = 0x80000000UL,
-+		.phys = 0x80000000UL,
-+		.size = 0x7FE00000UL,
-+		.attrs = PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-+			PTE_BLOCK_NON_SHARE |
-+			PTE_BLOCK_PXN | PTE_BLOCK_UXN
-+	}, {
-+		/*
-+		 * This mem region contains in/out shared memory with bl31,
-+		 * hence it's marked as NORMAL memory type
-+		 */
-+		.virt = 0xFFE00000UL,
-+		.phys = 0xFFE00000UL,
-+		.size = 0x00200000UL,
-+		.attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
-+			PTE_BLOCK_INNER_SHARE
-+	}, {
-+		/* List terminator */
-+		0,
-+	}
-+};
-+
-+struct mm_region *mem_map = s4_mem_map;
-diff --git a/drivers/serial/Kconfig b/drivers/serial/Kconfig
-index ffc58d663ff..909e5e4c5f5 100644
---- a/drivers/serial/Kconfig
-+++ b/drivers/serial/Kconfig
-@@ -537,6 +537,7 @@ config DEBUG_UART_BASE
- 	default 0xe0000000 if DEBUG_UART_ZYNQ && ARCH_ZYNQ
- 	default 0xff000000 if DEBUG_UART_PL011 && ARCH_VERSAL
- 	default 0xf1920000 if DEBUG_UART_PL011 && (ARCH_VERSAL_NET || ARCH_VERSAL2)
-+	default 0xfe07a000 if DEBUG_UART_MESON && MESON_S4
- 	help
- 	  This is the base address of your UART for memory-mapped UARTs.
+ #if IS_ENABLED(CONFIG_CMD_CLK)
+-static const char *meson_clk_get_name(struct clk *clk, int id)
++static const char *meson_clk_get_name(struct clk *clk)
+ {
+ 	const struct meson_clk_info *info;
  
-@@ -573,6 +574,7 @@ config DEBUG_UART_CLOCK
- 	default 100000000 if DEBUG_UART_ZYNQ && ARCH_ZYNQMP
- 	default 50000000 if DEBUG_UART_ZYNQ && ARCH_ZYNQ
- 	default 100000000 if DEBUG_UART_PL011 && (ARCH_VERSAL || ARCH_VERSAL_NET || ARCH_VERSAL2)
-+	default 24000000 if DEBUG_UART_MESON && MESON_S4
- 	help
- 	  The UART input clock determines the speed of the internal UART
- 	  circuitry. The baud rate is derived from this by dividing the input
+-	info = meson_clk_get_info(clk, id, MESON_CLK_ANY);
++	info = meson_clk_get_info(clk, MESON_CLK_ANY);
+ 
+ 	return IS_ERR(info) ? "unknown" : info->name;
+ }
+@@ -651,11 +648,11 @@ static int meson_clk_dump_single(struct clk *clk)
+ 	struct meson_clk *priv;
+ 	unsigned long rate;
+ 	char *state, frequency[80];
+-	int parent;
++	struct clk parent;
+ 
+ 	priv = dev_get_priv(clk->dev);
+ 
+-	info = meson_clk_get_info(clk, clk->id, MESON_CLK_ANY);
++	info = meson_clk_get_info(clk, MESON_CLK_ANY);
+ 	if (IS_ERR(info) || !info->name)
+ 		return -EINVAL;
+ 
+@@ -670,11 +667,12 @@ static int meson_clk_dump_single(struct clk *clk)
+ 	else
+ 		state = "N/A";
+ 
+-	parent = meson_clk_get_parent(clk, clk->id);
++	parent.dev = clk->dev;
++	parent.id = meson_clk_get_parent(clk);
+ 	printf("%15s%20s%20s%15s\n",
+ 	       info->name,
+ 	       frequency,
+-	       meson_clk_get_name(clk, parent),
++	       meson_clk_get_name(&parent),
+ 	       state);
+ 
+ 	return 0;
 -- 
 2.53.0
 
