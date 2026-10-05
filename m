@@ -2,58 +2,58 @@ Return-Path: <sanderson@brivo.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC8CCA5FFE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9C1CA5FCE
 	for <webhook@archiver.kernel.org>; Mon,  5 Oct 2026 13:54:14 +0000 (UTC)
-Received: from mail-yx2-f41.google.com (mail-yx2-f41.google.com [74.125.224.169])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.20630.1791208450562651126
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.20616.1791208451430951743
  for <u-boot-amlogic@groups.io>;
- Mon, 05 Oct 2026 06:54:10 -0700
+ Mon, 05 Oct 2026 06:54:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@brivo.com header.s=google header.b=uQWhIEpw;
- spf=pass (domain: brivo.com, ip: 74.125.224.169, mailfrom: sanderson@brivo.com)
-Received: by mail-yx2-f41.google.com with SMTP id 00721157ae682-8ab748519f0so14096917b3.1
-        for <u-boot-amlogic@groups.io>; Mon, 05 Oct 2026 06:54:10 -0700 (PDT)
+ dkim=pass header.i=@brivo.com header.s=google header.b=O32TxxMu;
+ spf=pass (domain: brivo.com, ip: 209.85.128.177, mailfrom: sanderson@brivo.com)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-8ab43af5e97so11343377b3.1
+        for <u-boot-amlogic@groups.io>; Mon, 05 Oct 2026 06:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brivo.com; s=google; t=1791208449; x=1791813249; darn=groups.io;
+        d=brivo.com; s=google; t=1791208450; x=1791813250; darn=groups.io;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=8ITs71KRgsgmpgc9LjGcs5P8uwwsWBif4lD4OtkhNr4=;
-        b=uQWhIEpwIYg163A//Mi9eS1OssKj0GpTaKgrffegUMVC/b5mB+EPdVy7PTluK0UeOz
-         kIdM3WyFbaEi/FBCQz+/Klfav7FMrkvEt4S+nHxLOKNGLYT8rwTwBlOeEPUf8B9WEqYf
-         wPsWsS8pWbqMCCpawRybTK56ZlzRy+YYQMlEuYHtx9YijOGrrnavldJtswsPPgIl7aZi
-         0QHYMCxnZDTEdUb0VuweaYQ/R48hAw1xp7aE3i31RsT2rIa6soMbKt7TavxmEZN23x5X
-         mkJkrzHmiAH7mepKPVTJRJGE7YEZyhjo1N5Cx4v6SETuaLemBfDsAOFAc448TslqIxqD
-         vrBw==
+        bh=/U+PnyT2iWh9/WvOCXsxIjB6wGFmSPn+xfP4fP8k/tA=;
+        b=O32TxxMuW5omHV79VYgJMoSsjo+DzinYjaUFm2CsLh/NzORy2mhAIHnbj3tJMCOCNe
+         pRk7WOJNRhBD1HPapNlLuVOd02VBqCCg/N45Ni8uLBA33rKnkUGIp4HS5oGzypzsyV5c
+         MhobTXgDNMUOnbHGIbLEHgU6dH66nzCGVMvH7LhHV+fB7unstkD6V48AxGI6jBktR1CT
+         JZvEy7wWvH0SbAAboQ4gRnGlMCjnvBkoHCCwoxQMO+BChhePESCyZ6EU4T5gPvMYo0jz
+         jsnm8S6GsRKF5BqUiq1phyiQUis9Xe/ky874EF6DIMo8GjaFOKzrHyIFZRdjJxPaQJFc
+         mv7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791208449; x=1791813249;
+        d=1e100.net; s=20260707; t=1791208450; x=1791813250;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=8ITs71KRgsgmpgc9LjGcs5P8uwwsWBif4lD4OtkhNr4=;
-        b=lQUvK5K46VG/mMfnL6cfwHq6GYyjG2rBtmuOLw0zfRoL50V5+ZkjP2GaKMyVZJb92T
-         6PXlH6PAs5Dh4SCVNj8zFUS7zKgKrWa+jGPjdx3WJsZXBg3OrsiWec2cvv18M8lkfICv
-         EgYkDx3K93HruUEiWKXecmBhZogRdPB+zn3UfcTY6AuqiysyOcQACg7YtgsLv+kCLQ1m
-         zXrsk86rBnP2sapehw30h8JDdNLoX3tsO/wY/8Qa5HA0S/n8NN9JxB6sQHQ8ZfS3RKdP
-         SwMjsMx4ufwAHP5f9LZLLF0fH2mNFwxDhCruhdfLe5irBsVSF8OUq+/LbuI7ZTpsQYW/
-         6E8w==
-X-Forwarded-Encrypted: i=1; AKwUvBwhInkgetplglxHyGgoyTCKfhIaDJhB3c99L4WzlXjFzb9M5M8kAKN8bNDl9DUo4RN2p4yCpUjGCHOAsPEOhQ==@groups.io
-X-Gm-Message-State: AFq9FYIb8KZawfmAE2VS15rEeRXaVu0tbCK22vWHhE998DImSP7ZQpmB
-	gBCDVA56nRtsvdFXVyXCO5IkESg27Do7Oq0hylO51flTY0TbKQ3QIG1fn5dBzcby6vbFE36eWnt
-	+qrfXl/w7ZKtZz1HGzYKMu1etkAIrs1HNBFgxrblHbJFvzKSL0Uh5YA==
-X-Gm-Gg: AYBFou0c1sc+jJypLTp/2+RIHkRiw0fABGGz4c1wZCnuDaLZ+AxVUbpofUb57XRmFuJ
-	xbLVYEKw2Gxdn7kDyI6qOAVhheqF2AC5gLstM/wBzmyrJrAW/WCC3jWQGWy1+YCvedpJumOSstD
-	geCA3rqFrRDi2xbE+53RQgVey3KgzZ74KPclQJBNwdrbIUzodbYW5Rj9R/XzxqurWvS6kK3XWo7
-	ak16q+tl+VQgcz2B2lltZ5yelgu+/MN2g+aOcc5SWt8JC37mKqL/5xUtHVI0do/8xsTVGh+ZZkD
-	KPiPMiZNotLLibEyqc5ySvN8/NqJD/3emTCOLhC9rue3m7XUmnn9kbyiEo2dFZ7r61xHx+T6MKT
-	pg5vnwP2o0F64/VCsNEX3PnGtAQD5qqs3gC+2K/+I6DuQgrRbMPg9BUIhesIiubXDRckWeKCm/6
-	Ig38jtvqVX/iuWRXUZrBPEuZc+0A0g324EWeT+Uc8Zd/5U8katy2q1v8QEYszcNvA=
-X-Received: by 2002:a05:690c:6d83:b0:879:44a6:1076 with SMTP id 00721157ae682-8ae397b974bmr41470347b3.32.1791208449366;
-        Mon, 05 Oct 2026 06:54:09 -0700 (PDT)
+        bh=/U+PnyT2iWh9/WvOCXsxIjB6wGFmSPn+xfP4fP8k/tA=;
+        b=WShWS1HlTiC5SweaiBPKw7qrFkDKxLCGkIuYyoF8+HHJ1GnsCq+ISxmhaabxMLQfYg
+         M4iEfui2Q6WrTcfb3AOj/yEgWYj09CDN3z4NT3QosoWWadfGzpgxvpzmCgoF2aTn5c3o
+         FwD9uZl+uEEvTi7R6LrTHGS1PQeIHBcoECzcNi9Xz/kWDc6a8ApIGYaB4GQ69t5nqdwD
+         Kw1uvlUxokrtr2VkRTpEhK5/MFtw6V+JXoHIEoaO9EZFRzoB+UOoXZRuSoYarRhmDjrN
+         SEw2jVO3qoJM7vZftWYX73F9Jq/691VUSr9A4b8cOr1dmsnsO4col/tM3J2CdEcpk6cS
+         xuPA==
+X-Forwarded-Encrypted: i=1; AKwUvBzQjmp57PROaq43BYCas26eGJ52gxvGxRjRXCOIh0sI3UvaIp0ZpBfqn7F/tmNpVPyx6ojQ71WQQi913iPzsg==@groups.io
+X-Gm-Message-State: AFuF++kerM4WLhdfcu1zazWBZNoi+RbYjTjAFMTf3TZkcRSe2Wg6xnvk
+	F17cEX4157MUorRHvjD7VQuFiC73po8JK4NfYLCr57k3edHQLBuTvrsobrEzom65Uc0qrx/4KdW
+	565Czu/uI36cCcHA4VOE2QAoAkOJeIDIh739DqsWaznFSsVaTBL1uzA==
+X-Gm-Gg: AYBFou3NbY/l9uRefbw1ZwZtGB+TNGPGQ61xB9spGPj7J9LsAjWCs5BsPMLSOGluW+c
+	ED0CSmAAIMynBNfAjyB8dC0aixxnOjsEFmvGs+p9tZt7lR1BE6zkhgQmoXg+eYPHFI/4pAmJvmt
+	oAUC3YlWEftKhJfqbk2HRldRBFe+icES8QiHWAHbTrj4gASJdvqNajvGeT2HzRgJxCA73iPeHCO
+	hWIDSMYO4dtIV4W/GLtkRNJd5/KfljSOJr2e0xYAqiCCgGTvsCPwEmoYoiB2T3RgIiyjTV0aadf
+	/e9R0qLY56e9aUy6kZSarVIEkR7KcR3Nzj1oarUv0oRU5UJteEUk+RNIrxlB77GBte2s4DUQuPp
+	gPP/x25dhjN47hcCV0i4LD4Kp+h1kNqB7ZWM54yVIGDrpFNma0MVk3SRcTXPr8cvwah9xOaSYJ1
+	PPERVspKlrTWVUsKFJpCO+x7Xem6B39Zydha4D0G918UO6APjDK8aUx5mgAcmvS7IQ
+X-Received: by 2002:a05:690c:95:b0:873:5c7b:c132 with SMTP id 00721157ae682-8acdaf00b28mr62547427b3.26.1791208450288;
+        Mon, 05 Oct 2026 06:54:10 -0700 (PDT)
 Received: from strozzi ([66.193.28.125])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8ae30120b8csm38852867b3.4.2026.10.05.06.54.08
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8ae30120b8csm38852867b3.4.2026.10.05.06.54.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2026 06:54:09 -0700 (PDT)
+        Mon, 05 Oct 2026 06:54:10 -0700 (PDT)
 From: Sean Anderson <sanderson@brivo.com>
 To: Jerome Forissier <jerome.forissier@arm.com>,
 	u-boot@lists.u-boot-project.org
@@ -63,9 +63,9 @@ Cc: Ramon Fried <rfried.dev@gmail.com>,
 	u-boot-amlogic@groups.io,
 	Sean Anderson <sanderson@brivo.com>,
 	Joe Hershberger <joe.hershberger@ni.com>
-Subject: [PATCH v2 1/2] net: designware: Use if instead of #if for DM_MDIO
-Date: Mon,  5 Oct 2026 09:54:02 -0400
-Message-ID: <20261005135406.509901-2-sanderson@brivo.com>
+Subject: [PATCH v2 2/2] net: designware: Fix MDIO bus getting bound multiple times
+Date: Mon,  5 Oct 2026 09:54:03 -0400
+Message-ID: <20261005135406.509901-3-sanderson@brivo.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261005135406.509901-1-sanderson@brivo.com>
 References: <20261005135406.509901-1-sanderson@brivo.com>
@@ -75,139 +75,195 @@ List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 05 Oct 2026 13:54:14 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3115
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3116
 
-Where possible, convert ifdefs on DM_MDIO into ifs.
+designware_eth_probe may be called multiple times for a given device.
+such as if the first probe (or post_probe) fails for whatever reason.
+When this happens, subsequent probes still try to bind the MDIO bus,
+creating several duplicate copies of the bus (all possibly sharing the
+same of_node). This can cause an infinite loop in dm_mdio_probe_devices
+if we have been probed at least once already:
 
+dm_mdio_probe_devices()
+ device_probe(dwmac.mac0)
+  device_probe(dwmac)
+   designware_eth_probe()
+    device_bind_driver_to_node(dwmac.mac1)
+    return -EFOO
+ device_probe(dwmac.mac1)
+  ...
+
+Prevent this by binding the MDIO bus in designware_eth_bind instead of
+designware_eth_probe.
+
+Fixes: 5160b4567c71 ("net: designware: add DM_MDIO support")
 Signed-off-by: Sean Anderson <sanderson@brivo.com>
 ---
 
 Changes in v2:
-- New
+- Fix warnings about mdio_err and dw_mdio_init not being used
+- Fix missing else clause when bitbang MDIO is enabled
 
- drivers/net/designware.c | 49 ++++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 25 deletions(-)
+ drivers/net/designware.c    | 30 ++++++++++++++++--------------
+ drivers/net/designware.h    |  1 +
+ drivers/net/dwmac_meson8b.c |  3 +++
+ drivers/net/dwmac_s700.c    |  3 +++
+ drivers/net/dwmac_socfpga.c |  3 +++
+ drivers/net/dwmac_thead.c   |  3 +++
+ drivers/net/gmac_rockchip.c |  3 +++
+ 7 files changed, 32 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/designware.c b/drivers/net/designware.c
-index 6ed9c6d538a..ff7294ab4f4 100644
+index ff7294ab4f4..2ca21c373db 100644
 --- a/drivers/net/designware.c
 +++ b/drivers/net/designware.c
-@@ -137,15 +137,16 @@ static int dw_bb_mdio_reset(struct mii_dev *bus)
- 
- #endif
- 
--#if IS_ENABLED(CONFIG_DM_MDIO)
--int designware_eth_mdio_read(struct udevice *mdio_dev, int addr, int devad, int reg)
-+static int designware_eth_mdio_read(struct udevice *mdio_dev, int addr,
-+				    int devad, int reg)
- {
- 	struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
- 
- 	return dw_mdio_read(pdata->mii_bus, addr, devad, reg);
- }
- 
--int designware_eth_mdio_write(struct udevice *mdio_dev, int addr, int devad, int reg, u16 val)
-+static int designware_eth_mdio_write(struct udevice *mdio_dev, int addr,
-+				     int devad, int reg, u16 val)
- {
- 	struct mdio_perdev_priv *pdata = dev_get_uclass_priv(mdio_dev);
- 
-@@ -162,7 +163,7 @@ int designware_eth_mdio_reset(struct udevice *mdio_dev)
- }
- #endif
- 
--static const struct mdio_ops designware_eth_mdio_ops = {
-+static __maybe_unused const struct mdio_ops designware_eth_mdio_ops = {
- 	.read = designware_eth_mdio_read,
- 	.write = designware_eth_mdio_write,
- #if CONFIG_IS_ENABLED(DM_GPIO)
-@@ -170,7 +171,7 @@ static const struct mdio_ops designware_eth_mdio_ops = {
- #endif
- };
- 
--static int designware_eth_mdio_probe(struct udevice *dev)
-+static __maybe_unused int designware_eth_mdio_probe(struct udevice *dev)
- {
- 	/* Use the priv data of parent */
- 	dev_set_priv(dev, dev_get_priv(dev->parent));
-@@ -178,6 +179,7 @@ static int designware_eth_mdio_probe(struct udevice *dev)
- 	return 0;
- }
- 
-+#if CONFIG_IS_ENABLED(DM_MDIO)
- U_BOOT_DRIVER(designware_eth_mdio) = {
- 	.name = "eth_designware_mdio",
- 	.id = UCLASS_MDIO,
-@@ -208,7 +210,6 @@ static int dw_mdio_init(const char *name, void *priv)
+@@ -210,15 +210,14 @@ static int dw_mdio_init(const char *name, void *priv)
  	return mdio_register(bus);
  }
  
--#if IS_ENABLED(CONFIG_DM_MDIO)
- static int dw_dm_mdio_init(const char *name, void *priv)
+-static int dw_dm_mdio_init(const char *name, void *priv)
++int dw_dm_mdio_bind(struct udevice *dev)
  {
- 	struct udevice *dev = priv;
-@@ -234,7 +235,6 @@ static int dw_dm_mdio_init(const char *name, void *priv)
+-	struct udevice *dev = priv;
++	struct udevice *mdiodev;
+ 	ofnode node;
+ 	int ret;
  
- 	return dw_mdio_init(name, priv);
+ 	ofnode_for_each_subnode(node, dev_ofnode(dev)) {
+ 		const char *subnode_name = ofnode_get_name(node);
+-		struct udevice *mdiodev;
+ 
+ 		if (strcmp(subnode_name, "mdio"))
+ 			continue;
+@@ -232,8 +231,10 @@ static int dw_dm_mdio_init(const char *name, void *priv)
+ 	}
+ 
+ 	printf("%s: mdio node is missing, registering legacy mdio bus", __func__);
+-
+-	return dw_mdio_init(name, priv);
++	ret = device_bind_driver(dev, "eth_designware_mdio", dev->name, &mdiodev);
++	if (ret)
++		debug("%s: not able to create mdio bus\n", __func__);
++	return ret;
  }
--#endif
  
  #if IS_ENABLED(CONFIG_BITBANGMII) && IS_ENABLED(CONFIG_DM_GPIO)
- static int dw_eth_bb_mdio_active(struct mii_dev *miidev)
-@@ -757,24 +757,24 @@ static int dw_phy_init(struct dw_eth_dev *priv, void *dev)
- 	if (IS_ENABLED(CONFIG_DM_ETH_PHY))
- 		eth_phy_set_mdio_bus(dev, NULL);
+@@ -855,6 +856,8 @@ static int designware_eth_bind(struct udevice *dev)
+ 		}
+ 	}
  
--#if IS_ENABLED(CONFIG_DM_MDIO)
--	phydev = dm_eth_phy_connect(dev);
--	if (!phydev)
--		return -ENODEV;
--#else
--	int phy_addr = -1;
-+	if (IS_ENABLED(CONFIG_DM_MDIO)) {
-+		phydev = dm_eth_phy_connect(dev);
-+		if (!phydev)
-+			return -ENODEV;
-+	} else {
-+		int phy_addr = -1;
++	if (IS_ENABLED(CONFIG_DM_MDIO))
++		return dw_dm_mdio_bind(dev);
+ 	return 0;
+ }
  
--	if (IS_ENABLED(CONFIG_DM_ETH_PHY))
--		phy_addr = eth_phy_get_addr(dev);
-+		if (IS_ENABLED(CONFIG_DM_ETH_PHY))
-+			phy_addr = eth_phy_get_addr(dev);
- 
- #ifdef CONFIG_PHY_ADDR
--	phy_addr = CONFIG_PHY_ADDR;
-+		phy_addr = CONFIG_PHY_ADDR;
- #endif
- 
--	phydev = phy_connect(priv->bus, phy_addr, dev, priv->interface);
--	if (!phydev)
--		return -ENODEV;
--#endif
-+		phydev = phy_connect(priv->bus, phy_addr, dev, priv->interface);
-+		if (!phydev)
-+			return -ENODEV;
-+	}
- 
- 	phydev->supported &= PHY_GBIT_FEATURES;
- 	if (priv->max_speed) {
-@@ -962,11 +962,10 @@ int designware_eth_probe(struct udevice *dev)
+@@ -962,16 +965,15 @@ int designware_eth_probe(struct udevice *dev)
  	} else
  #endif
  	{
--#if IS_ENABLED(CONFIG_DM_MDIO)
--		ret = dw_dm_mdio_init(dev->name, dev);
--#else
--		ret = dw_mdio_init(dev->name, dev);
--#endif
-+		if (IS_ENABLED(CONFIG_DM_MDIO))
-+			ret = dw_dm_mdio_init(dev->name, dev);
-+		else
+-		if (IS_ENABLED(CONFIG_DM_MDIO))
+-			ret = dw_dm_mdio_init(dev->name, dev);
+-		else
+-			ret = dw_mdio_init(dev->name, dev);
+-		if (ret) {
+-			err = ret;
+-			goto mdio_err;
+-		}
+-		priv->bus = miiphy_get_dev_by_name(dev->name);
+ 		priv->dev = dev;
++		if (!IS_ENABLED(CONFIG_DM_MDIO)) {
 +			ret = dw_mdio_init(dev->name, dev);
- 		if (ret) {
- 			err = ret;
- 			goto mdio_err;
++			if (ret) {
++				err = ret;
++				goto mdio_err;
++			}
++			priv->bus = miiphy_get_dev_by_name(dev->name);
++		}
+ 	}
+ 
+ 	ret = dw_phy_init(priv, dev);
+diff --git a/drivers/net/designware.h b/drivers/net/designware.h
+index cccf9d54e02..3618300f4c5 100644
+--- a/drivers/net/designware.h
++++ b/drivers/net/designware.h
+@@ -249,6 +249,7 @@ struct dw_eth_dev {
+ 	struct mii_dev *bus;
+ };
+ 
++int dw_dm_mdio_bind(struct udevice *dev);
+ int designware_eth_of_to_plat(struct udevice *dev);
+ int designware_eth_probe(struct udevice *dev);
+ extern const struct eth_ops designware_eth_ops;
+diff --git a/drivers/net/dwmac_meson8b.c b/drivers/net/dwmac_meson8b.c
+index fde4aabbace..cb9de81a819 100644
+--- a/drivers/net/dwmac_meson8b.c
++++ b/drivers/net/dwmac_meson8b.c
+@@ -157,6 +157,9 @@ U_BOOT_DRIVER(dwmac_meson8b) = {
+ 	.id		= UCLASS_ETH,
+ 	.of_match	= dwmac_meson8b_ids,
+ 	.of_to_plat = dwmac_meson8b_of_to_plat,
++#if IS_ENABLED(CONFIG_DM_MDIO)
++	.bind		= dw_dm_mdio_bind,
++#endif
+ 	.probe		= dwmac_meson8b_probe,
+ 	.ops		= &designware_eth_ops,
+ 	.priv_auto	= sizeof(struct dw_eth_dev),
+diff --git a/drivers/net/dwmac_s700.c b/drivers/net/dwmac_s700.c
+index 76daab961c0..d95f2111a5b 100644
+--- a/drivers/net/dwmac_s700.c
++++ b/drivers/net/dwmac_s700.c
+@@ -56,6 +56,9 @@ U_BOOT_DRIVER(dwmac_s700) = {
+ 	.id     = UCLASS_ETH,
+ 	.of_match = dwmac_s700_ids,
+ 	.of_to_plat = dwmac_s700_of_to_plat,
++#if IS_ENABLED(CONFIG_DM_MDIO)
++	.bind		= dw_dm_mdio_bind,
++#endif
+ 	.probe  = dwmac_s700_probe,
+ 	.ops    = &designware_eth_ops,
+ 	.priv_auto	= sizeof(struct dw_eth_dev),
+diff --git a/drivers/net/dwmac_socfpga.c b/drivers/net/dwmac_socfpga.c
+index a55f3e29f9f..64bb2dbfbe3 100644
+--- a/drivers/net/dwmac_socfpga.c
++++ b/drivers/net/dwmac_socfpga.c
+@@ -143,6 +143,9 @@ U_BOOT_DRIVER(dwmac_socfpga) = {
+ 	.id		= UCLASS_ETH,
+ 	.of_match	= dwmac_socfpga_ids,
+ 	.of_to_plat = dwmac_socfpga_of_to_plat,
++#if IS_ENABLED(CONFIG_DM_MDIO)
++	.bind		= dw_dm_mdio_bind,
++#endif
+ 	.probe		= dwmac_socfpga_probe,
+ 	.ops		= &designware_eth_ops,
+ 	.priv_auto	= sizeof(struct dw_eth_dev),
+diff --git a/drivers/net/dwmac_thead.c b/drivers/net/dwmac_thead.c
+index 138d71a6202..5843bed49cb 100644
+--- a/drivers/net/dwmac_thead.c
++++ b/drivers/net/dwmac_thead.c
+@@ -280,6 +280,9 @@ U_BOOT_DRIVER(dwmac_thead) = {
+ 	.id		= UCLASS_ETH,
+ 	.of_match	= dwmac_thead_match,
+ 	.of_to_plat	= dwmac_thead_of_to_plat,
++#if IS_ENABLED(CONFIG_DM_MDIO)
++	.bind		= dw_dm_mdio_bind,
++#endif
+ 	.probe		= dwmac_thead_probe,
+ 	.ops		= &dwmac_thead_eth_ops,
+ 	.priv_auto	= sizeof(struct dw_eth_dev),
+diff --git a/drivers/net/gmac_rockchip.c b/drivers/net/gmac_rockchip.c
+index 2b6080dd9ee..1d21cb2606d 100644
+--- a/drivers/net/gmac_rockchip.c
++++ b/drivers/net/gmac_rockchip.c
+@@ -790,6 +790,9 @@ U_BOOT_DRIVER(eth_gmac_rockchip) = {
+ 	.id	= UCLASS_ETH,
+ 	.of_match = rockchip_gmac_ids,
+ 	.of_to_plat = gmac_rockchip_of_to_plat,
++#if IS_ENABLED(CONFIG_DM_MDIO)
++	.bind		= dw_dm_mdio_bind,
++#endif
+ 	.probe	= gmac_rockchip_probe,
+ 	.ops	= &gmac_rockchip_eth_ops,
+ 	.priv_auto	= sizeof(struct dw_eth_dev),
 -- 
 2.53.0
 
