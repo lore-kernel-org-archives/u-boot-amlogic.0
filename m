@@ -2,66 +2,69 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5FDCA6015
-	for <webhook@archiver.kernel.org>; Thu,  8 Oct 2026 12:46:20 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.14492.1791463574548546638
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D74CA600C
+	for <webhook@archiver.kernel.org>; Thu,  8 Oct 2026 12:46:30 +0000 (UTC)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.14497.1791463582918438461
  for <u-boot-amlogic@groups.io>;
- Thu, 08 Oct 2026 05:46:14 -0700
+ Thu, 08 Oct 2026 05:46:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=pGrZ8LPZ;
- spf=pass (domain: linaro.org, ip: 209.85.221.47, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-48c02782159so1938752f8f.0
-        for <u-boot-amlogic@groups.io>; Thu, 08 Oct 2026 05:46:14 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=xL5KDuTt;
+ spf=pass (domain: linaro.org, ip: 209.85.221.46, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-48c4d870d54so1956008f8f.2
+        for <u-boot-amlogic@groups.io>; Thu, 08 Oct 2026 05:46:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1791463573; x=1792068373; darn=groups.io;
+        d=linaro.org; s=google; t=1791463581; x=1792068381; darn=groups.io;
         h=content-transfer-encoding:content-type:mime-version:date:message-id
          :subject:references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=XBTS/Yew51B1t/ABTG19pLNt9RRmu3ZhQpoaK55Evv4=;
-        b=pGrZ8LPZjaqRi9Thx0bMZfAZE5FeAL+YSQjRG2buD9L114J+O7MRu4e3q0OD7rnUI+
-         gdomqPuvBsmBlPUDY1/GyaEXLUWQskcESa6LOtrW9LuqmUZ+G5ydp1ga6XaGuXcbJI4I
-         mTb6GWQNoKY6wBslIDrQ//ajt6VHC0YAex9/3PsGCQg3id3OonzKnJUXWbQSi9Rg5WjP
-         vKKmgwm6+0P1+CEBdal+FNiHyVOIBpmBjSk0P2ZAcgK6oUtIfrJbamyf9+dxsDkCLGbV
-         IeqU+IApXGCSCr3ivEpINLcZc8JIEUOSbCUGWeFbmu09o70wa/VzpEKkr5ihZhZLoSF+
-         +0fw==
+        bh=b2xWNSnsD7YZxVOcTN0Q+u8HqWAgP4ZlEBy8ABCtr6Q=;
+        b=xL5KDuTtIXfkwMnKbWiDzqsTZHrYqmHEqcmz5BQ1c7/PzvZozO2LKA8TgHfDotnKil
+         Fth4EE9Y/2kdeE3KXgIAD+qjbXKOQaJu/UdXykDa9hQnfB15wv6Kvoy7sMX0sSe/0pfF
+         asGypv8K6A3E1Q/xsFYTgVJqGK8uOb9WoNZA4cN505Je+scwNEe7dr69Tb7ID/9RYrBc
+         oeBrKxm59oeiaGYlJdaQGV2ARsPPblHRDbAGtL4u4PhbIEsiaMGxZkYIP1w+N8C5T7Ct
+         r/mQTWMgkJBEziiQduLIgl257+Tnc7D5XNVHwZMSITluo54q3O8QO/9s+wENP7sVI6bJ
+         LWog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791463573; x=1792068373;
+        d=1e100.net; s=20260707; t=1791463581; x=1792068381;
         h=content-transfer-encoding:content-type:mime-version:date:message-id
          :subject:references:in-reply-to:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=XBTS/Yew51B1t/ABTG19pLNt9RRmu3ZhQpoaK55Evv4=;
-        b=z6WgGP9FgVJ0XbpqkXwmSfZOvAlCIoeAlrtT/h/wm3Wh1ZHa/kL7jIRU7nWP8fwUiI
-         MvIwnCtKiXrmYwEvDefPohCH68B742op5jANUnYCYXvDPyB3QFn1dicGyhTReb/YT6om
-         v1Cv24hDsQoyqpuD6BJfbVgDPHdmYBpCskmi+C4gGQQXb1Echz/DIWwmqAUqHTQ2LMB+
-         XohUAEPjjvhMvXTEogoT/TibA2AJwa9yXT40pET40M6CWRVNqJN0irTwp0lKzKiK25Dx
-         XyrFTsgs5FWq2BshPMeszrQTt6+9odVIaHTpYu8mJM8mMiJKggY9d9znt+xmyFtOgzkQ
-         A2uQ==
-X-Gm-Message-State: AFq9FYIEBKvNXKU/fyG27d3hm7mBtk0tmAOSUI1rF+BsFGgz00SZjH/H
-	tHuga0efP2U3SSsSIcYV9dzuhzGdFGQcFWIOKvb6bKbvWpstxJcqTqSqmY5jmHSeuHU=
-X-Gm-Gg: AYBFou07wzk3m0jESLEb1n5ZPa9raOcBCO/vEtHKLoZ1puTLF4Hy9ggffTDNCcseOuw
-	Tl8ZEEoN7+uTyq3HtVsZDGYTggfXO6G3WF1jlG714OWDfR50fVqiLHMa5refqHDqKWgKXJ36+Wx
-	jsOnFxJUSnTDtefVPnKKl3kRCfLmCcAFAZuy095xQfr7YwrxPAnJItvLxYz1oMAFm+60sqTytAR
-	zfSXgyeIkPQElANF0RyY7FxWpSfcIYJIO4gsvAcaiC+UVVuNPdAeHE9UUtkT6fuXMS45QKUy0kS
-	DNANc5eFYbugReYqk/2tNojXDSQXvmbiOApI8PXXg6BhQiw6T9uXLy7h6SrNQBAtsKILKr/+FWW
-	lc06fPgWYkbB/9q+9396r9912ebKvOFbgok50wiBCs60ORMYTxpukIDHOuR4cZmFqFaJb7u/mjA
-	9hw+TqPmO14za+9TDx+k0Dz3jC2/yRi8eAKpH80ZvJLteWzMNsTvZ8Bsr/UPH3oB6/b/YBNc2Sx
-	ihW/fVqaKLduE6e8Pt1
-X-Received: by 2002:a5d:6092:0:b0:487:91e:d8ed with SMTP id ffacd0b85a97d-48c72707e41mr7981719f8f.2.1791463571972;
-        Thu, 08 Oct 2026 05:46:11 -0700 (PDT)
+        bh=b2xWNSnsD7YZxVOcTN0Q+u8HqWAgP4ZlEBy8ABCtr6Q=;
+        b=rIChpEpODYvRChYAVsC3zXsj566VdzCQRTxYB1sJ0O+aAfR1DUK9XVgL0bPRPmvpKg
+         zPM3MhgXKnp+n9OFITi9or/ZXCvjBRoim5zYkF61TJazBB86RbdbMM07YTGPvQpznqX1
+         wKs+iszbS6rTLlU0eXrCu3sjv+MSFwiEk1RWCKsC/R4AD8hq4XJDSgVYE+D/6tM88VKL
+         gpGUEkdGQaZKMMMTBLUj0+y3H8Ob8uK8SAMX/ADQImhKA6L+BYWYKtKXRfR7ptQsiNuX
+         yM0/NfAMOK+qOdEYmbyYl1Co61h6T5Uf/4lkyclP95IQ0hiVyV6Fd1NCVjRXgQNGCSIZ
+         zUXw==
+X-Gm-Message-State: AFq9FYLDUi5LAhvryRohuSQep9HyomXlqLhxiEmQtUWif322bNalEurl
+	vFg/pa7OMjRqD4obVc9UWgliRT9wsMItRaVd1kZ4o1Zt8zyFEYB8CZj57bVww9P2LzI=
+X-Gm-Gg: AYBFou2FDvhE9iiOQRWGViMSdtUJmzT9Z2aX9POyaj1713rJXU1GZXSdpgmPmpZlHWV
+	toIVhrMwLrY9k4ZAvjqGnV2K33pds+gtKOJFSUlR4+6wx5DfIuSE8h7R/uhYeXMS0e3nWpPfNOc
+	rKD91OYP9opUvy0j6edfUWRcTWVLx3qYTQQIwyO/krA1xK+6+98xG2IljZSG0TTU8HB0ymb/dMA
+	ydAAg0TL5mmIgh1U6XowoJ1RxVs6wd+50SPRaRjObqOIUfNkdY3l2Q922+qArLxrIh3ZFjw/O1j
+	co7eR6tYfnaTgWZ/Vra4wmt/RlTXzP+hZXnftDERF6QdyiwgE51Ex/pteNT4VFax1X2qRK+7ixQ
+	qc9Vwj2W+amkh2kW1eLeu+5iI9SNLHgiufEaBltAiXBcD6XT8KfugwUT1EjHSdGz7YElEzpjEDd
+	qThE6SJUM8e1MgFp+yBS3DacajO1UuXCFju5laMnMmTpCnpHcvZ+XgEjn4SUm4xRTsX3khotATO
+	DtBjOLYV/iISIBuhdcRqmPCynmMS+g=
+X-Received: by 2002:adf:f704:0:b0:48b:26b:7f8b with SMTP id ffacd0b85a97d-48c7288ad00mr8740599f8f.57.1791463579587;
+        Thu, 08 Oct 2026 05:46:19 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:106d:1080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48c71d04c0fsm11015183f8f.10.2026.10.08.05.46.11
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48c71d04c0fsm11015183f8f.10.2026.10.08.05.46.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2026 05:46:11 -0700 (PDT)
+        Thu, 08 Oct 2026 05:46:19 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
 To: u-boot@lists.u-boot-project.org, Sean Anderson <sanderson@brivo.com>
-Cc: u-boot-amlogic@groups.io, Tom Rini <trini@konsulko.com>
-In-Reply-To: <20260817163438.1893025-1-sanderson@brivo.com>
-References: <20260817163438.1893025-1-sanderson@brivo.com>
-Subject: Re: [PATCH] serial: meson: Add s4 support
-Message-Id: <179146357137.183177.8701598122673179908.b4-ty@b4>
-Date: Thu, 08 Oct 2026 14:46:11 +0200
+Cc: u-boot-amlogic@groups.io, Tom Rini <trini@konsulko.com>, 
+ Christian Hewitt <christianshewitt@gmail.com>, 
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, Nick Xie <nick@khadas.com>, 
+ Lukasz Majewski <lukma@nabladev.com>
+In-Reply-To: <20260929180721.3440839-1-sanderson@brivo.com>
+References: <20260929180721.3440839-1-sanderson@brivo.com>
+Subject: Re: [PATCH v2 0/9] arm64: meson: Add s4 support
+Message-Id: <179146357877.183177.5146930302645374090.b4-ty@b4>
+Date: Thu, 08 Oct 2026 14:46:18 +0200
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -69,18 +72,43 @@ X-Mailer: b4 0.15.2
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Thu, 08 Oct 2026 12:46:20 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3119
+ <u-boot-amlogic@groups.io>; Thu, 08 Oct 2026 12:46:30 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3124
 
 Hi,
 
-On Mon, 17 Aug 2026 12:34:36 -0400, Sean Anderson wrote:
-> No new features, just a different compatible.
+On Tue, 29 Sep 2026 14:06:22 -0400, Sean Anderson wrote:
+> This series (along with several patches submitted separately) adds basic
+> support for the amlogic s4 SoCs (S805X2/S905W2/S905Y4). My tree with all
+> patches on it is at [1].
+> 
+> I developed this for a custom board, but I believe a better candidate
+> for a defconfig is the publically-available Khadas VIM1S [2]. Khadas
+> has kindly sent me a VIM1S so I was able to add some more features and
+> fix a few bugs.
+> 
+> [...]
 
 Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
 
-[1/1] serial: meson: Add s4 support
-      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/5bbec48b820f79c79c82fcaf1d7c3a25f080abb2
+[1/9] arm64: meson: Add s4 SoC support
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/a0f6e4a9f1b3ba2314c58bcd66a61a8941508b58
+[2/9] clk: meson: a1: Eliminate separate id parameter
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/81b3945a2096fba2ba8421641dbdabb5ad73740b
+[3/9] clk: meson: a1: Use clk_set_rate from meson_mux_set_rate
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/99bd1d3f515842e8801d6c8cfd556077b9ba219b
+[4/9] clk: meson: Use soc-specific naming for common functions
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/1f615257213246dc741416b3e92a4e9e76d76d5f
+[5/9] clk: meson: Export a1 functions to common file
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/5dadc8a09b07f2bfa9bbf0d151b660c0beb92a90
+[6/9] clk: meson: Support fractional fixed-factor clocks
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/538d95ef9ed6413dbd735ca799dfad2fe8c6e001
+[7/9] clk: meson: Support power-of-two dividers
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/10176b815d013d8825fd243ae20892cae35c249f
+[8/9] clk: meson: Add s4 clock driver
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/5363c69e08d0f96834f4d80dcf23e11d64cfd80a
+[9/9] meson: Add Khadas VIM1S support
+      https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/9c048da44bed99311355450d70840bb0795e21f8
 
 -- 
 Neil
