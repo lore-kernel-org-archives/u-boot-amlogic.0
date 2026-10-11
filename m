@@ -2,164 +2,174 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D64CA9ED2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A52CA9ED0
 	for <webhook@archiver.kernel.org>; Mon, 12 Oct 2026 09:35:17 +0000 (UTC)
-Received: from OSPPR02CU001.outbound.protection.outlook.com (OSPPR02CU001.outbound.protection.outlook.com [40.107.159.26])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1024.1791566387163200673
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.3119.1791762148000299527
  for <u-boot-amlogic@groups.io>;
- Fri, 09 Oct 2026 10:19:47 -0700
+ Sun, 11 Oct 2026 16:42:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=eE09xTjE;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=eE09xTjE;
- spf=pass (domain: arm.com, ip: 40.107.159.26, mailfrom: jerome.forissier@arm.com)
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=lDk45PeI/I1BA718NSO7eA/WEr0q3PUMy6gabhKh7xhFZAmr7fx/8s+L7uRMFzBRTN057ZN6QMttk5uN8y8ly8UNrdCuOTFeYtZUw0+3TxyerRPVVh+KF8LNWZbuwrd8nV0n+0gdy2xcBWGJiackABF/rwlYr6a9P6OZk7F5lpEOR4zfH5GMqJuhUJMIc2K6I+Hl4IqSu5wSAJhFbCc7tJ8b7W5xsVLyObLeo/d/DScjnDvelAvrilImCfKXDLfGrrMAy1nEZWWL0k71ubG5ITxE2uLwmJCDXsucQ1XddNExGOKI2az9jYNiYqDT1l0gc9pPsGJIOlRnWcODMjkD0A==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qdsI7+40lrXLm8wOp5F1G+rkK04U1a5qE8MPJBPhFtk=;
- b=I0d3275aCUeo0zFdnNZK6b2gk3TtJ1UfRN1m3RBoE5B1JzFQYSskVdNbVzIVUeXbN2/XM81Cc+UioFF6CIljBb3aAfXdgoC5xUNN2L1wk30TjADFZ728lJPohmKRXscJOar1hJjVeUtX12HT3PfxUibmf8k70DFnsZIpoHrbR+6pJm23eTSHoIxDmakPwEkP74eWxA5uFRyaxjm4IFBm4s6NZz++Zphc8EV/owLr3do3QMWAEXLOPV4pp7ElwNqPVOzad8aNJoDrHsZ85u+JscafSpqPF06Tap5X5qcpI+S5Z6bHp2JVohnWBxw44jbqZiYEy0JYOoA+8xgnT4FO4A==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=lists.u-boot-project.org
- smtp.mailfrom=arm.com; dmarc=pass (p=none sp=none pct=100) action=none
- header.from=arm.com; dkim=pass (signature was verified) header.d=arm.com;
- arc=pass (0 oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com]
- dkim=[1,1,header.d=arm.com] dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qdsI7+40lrXLm8wOp5F1G+rkK04U1a5qE8MPJBPhFtk=;
- b=eE09xTjEwJQibAIPJCZ6hnX/HQZnRQdWxcNcruEvLMnN1a/B4b0MNXpVyAyG6EkCyfsGOA++zefMg9JPRtm1qFMGSm+nqeV4KQvAFlTSlUH/5iZ4KhQhX+olhS1ShM3np6ySy3ZwF0OdRHml5nSznBD3PrgO+CNqdj6nxGbb7Uw=
-Received: from DU2PR04CA0169.eurprd04.prod.outlook.com (2603:10a6:10:2b0::24)
- by PA4PR08MB6319.eurprd08.prod.outlook.com (2603:10a6:102:e8::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.15; Fri, 9 Oct
- 2026 17:05:25 +0000
-Received: from MAD0EPF000008AD.eurprd04.prod.outlook.com
- (2603:10a6:10:2b0:cafe::89) by DU2PR04CA0169.outlook.office365.com
- (2603:10a6:10:2b0::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.496.5 via Frontend Transport; Fri, 9
- Oct 2026 17:05:24 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 4.158.2.129) smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- MAD0EPF000008AD.mail.protection.outlook.com (10.167.241.186) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.6
- via Frontend Transport; Fri, 9 Oct 2026 17:05:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mgiTTot7U+yoIQJq6AaQ3sVfDOzLNAb44MZh9ZQbyagpZbGHq9MudCSTtz/+2HN5JnhHSYi4pfR77vhFzHTmvPXGIm2IjgeEEq44oyAtF1GduZhPb2D4nlyxyKQj3QBI9MFfSZA04VMA6gw8SkKG2bbB2IpcJ/5dMa5EBDLdsnTnQ67keDd0Vltg1EaoRI64nd1MpmirYP598qqyTXYRUAeqV+MnY18SkM7K7NG/FXv0wT3tr7r0ZAMr0GO07XtRzwotxS99KXn7uG6BL6xc8Di0eLyWHN0ZMU2qhPU3whBg6U6TVIq+yYLyxcnlNISQEhFULIhxexEFEVfm55upfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qdsI7+40lrXLm8wOp5F1G+rkK04U1a5qE8MPJBPhFtk=;
- b=VnPFQ08dBHQ6LicwkAtNX85ZY8261aln7XEzGvraqVwfHTw7t/8gpEjwOKVA0zPbqNHYaZuewQfPFHM8pjqI1ls0og8WGcAgjlI4/ZV/E3o3HEuU98ZFOPEArU7gmJGhABL8eI21W/O0ESuBrRbzywmfCCVu0eASRZbKwYfxC3Gqoc5n6sNCXS+46Wgu5M6kkqa4ED61+dIpL6IGeAIRB5XlYaEwl73ggQf4kjI0AaVNDj6Cp0uJz5KDjKwsEq4CBYPTZmhVgdg4scVB0VvOrJNbywtClh5R0EaWpDwZj4UxdTfJMYDQg4SkGq7OGjdJpFTlJpnwJ8O3gFhcOZUGLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qdsI7+40lrXLm8wOp5F1G+rkK04U1a5qE8MPJBPhFtk=;
- b=eE09xTjEwJQibAIPJCZ6hnX/HQZnRQdWxcNcruEvLMnN1a/B4b0MNXpVyAyG6EkCyfsGOA++zefMg9JPRtm1qFMGSm+nqeV4KQvAFlTSlUH/5iZ4KhQhX+olhS1ShM3np6ySy3ZwF0OdRHml5nSznBD3PrgO+CNqdj6nxGbb7Uw=
-Authentication-Results-Original: mx.microsoft.com 1; dkim=none (message not
- signed) header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM0PR08MB11733.eurprd08.prod.outlook.com
- (2603:10a6:20b:740::16) by AS2PR08MB10251.eurprd08.prod.outlook.com
- (2603:10a6:20b:647::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.14; Fri, 9 Oct
- 2026 17:04:50 +0000
-Received: from AM0PR08MB11733.eurprd08.prod.outlook.com
- ([fe80::29d7:e9ba:ff69:a0c3]) by AM0PR08MB11733.eurprd08.prod.outlook.com
- ([fe80::29d7:e9ba:ff69:a0c3%6]) with mapi id 15.21.0496.010; Fri, 9 Oct 2026
- 17:04:50 +0000
-Message-ID: <d909d503-80f8-4d67-beb8-b698611b0495@arm.com>
-Date: Fri, 9 Oct 2026 19:04:49 +0200
-User-Agent: Mozilla Thunderbird
-From: Jerome Forissier <jerome.forissier@arm.com>
-Subject: Re: [PATCH v2 0/2] net: designware: Fix MDIO bus getting bound multiple times
-To: u-boot@lists.u-boot-project.org, Sean Anderson <sanderson@brivo.com>
-Cc: Ramon Fried <rfried.dev@gmail.com>, Tom Rini <trini@konsulko.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, u-boot-amlogic@groups.io,
- Joe Hershberger <joe.hershberger@ni.com>, nd <nd@arm.com>
-References: <20261005135406.509901-1-sanderson@brivo.com>
-In-Reply-To: <20261005135406.509901-1-sanderson@brivo.com>
-X-ClientProxiedBy: LO2P265CA0515.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:13b::22) To AM0PR08MB11733.eurprd08.prod.outlook.com
- (2603:10a6:20b:740::16)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=IkrUT5F5;
+ spf=pass (domain: gmail.com, ip: 209.85.167.179, mailfrom: imkyufie@gmail.com)
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-4e4a4d77e5bso1963628b6e.0
+        for <u-boot-amlogic@groups.io>; Sun, 11 Oct 2026 16:42:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791762147; cv=none;
+        d=google.com; s=arc-20260327;
+        b=oC5C2kXYClBhWhKY685ElvWyXDxS/0qwef7+Jcr7C6f78L8Tmb4f93MAQE3mgiMdja
+         ULq9XeHRtBOEgyO9JXaxeTEXV0lXafniDqI43xq5WEwgZjUU47eO8DDyIr0EYn0wks7o
+         A3+6nKq1Wa9i7CHVmbvadbchxAKDWZ/1MpvJoLaixjL0ntXe0+Tqedq7iw2hK7W4g9pH
+         BGJmR2V8K+rM1GHb/3EJAS1h+PaLdNe6JxjCd3Gzaie1CySFt1phw2WtKqZCrJEUVMI/
+         sRq6Mxp3CdHkqY5LFCCCKJPAFTqPkvE0j9tyTiAckDxyFPKYk0GBOj7nHMUV8f9xaEeD
+         8WPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=b//LNHyzozc43+1ywcj2GCgynY7KVJ1ZK7vozmI+TB4=;
+        fh=fw1cHuElIESaZl4OKpsxM5bNN+2Aj+0y0Ut1+lSoj54=;
+        b=K2I/ysUWwpsY1rPVRxFipGIbCXPapSxmedez9vaFmJQIaJYHlv5cEdbuWuhLakKwX5
+         1rWh0y/70z4SnfyORhxXhxervOCLEa8djAVGIpSMRy11rWeIf+8xRiAcnpl32hgqicWA
+         CjgoNkIb9SBXd8kvqUyasjxl5emDSPI1qmuOgx+BxYRtc3TM1K+Dvsvq/ZWMS7brHv7P
+         YI5FpxVxQ6Wzzmf3BuR9dXqOKWkadRhXwTel5g7RuNQr7f3dGI2Rns/jeoIATPjAMZib
+         lICVsDGvgnn6tnhYbM/CNJFV1d7L5moDJHYIUkpkW/bwihTLT3X3UrOvOG8338a2nxEC
+         HHBw==;
+        darn=groups.io
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791762147; x=1792366947; darn=groups.io;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=b//LNHyzozc43+1ywcj2GCgynY7KVJ1ZK7vozmI+TB4=;
+        b=IkrUT5F5/sVdm1S9ock0H7WdkOuySBxAnYiKwOlJ4/8Yn3CSW0IpNPFrI3yq1iOdCN
+         J4YuC6Ct40rRTmwIxtyaxoCpfA47TAleK8DqnBX7MBV0S27XmRFxi3mPciNjrSSCbF9M
+         MyWTxuqE8EetwA1+0t05rg3+1xV+j7JSy3gxuSmo70YwjVO9hGDvlpEdJYy+iskPtPhp
+         z3nTFX+Z+2+EOYglbwwaWckt26f9EibzWqU/jvpi1abkVnxXbBRL8tZvoi614DCggYG1
+         Rkti8T0DGscHV4wYkV8zZf4ScN+HFFXfadIHIUqx6NddWy3vLDWcAT7DbOohc4tkh8Vv
+         Tpzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791762147; x=1792366947;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=b//LNHyzozc43+1ywcj2GCgynY7KVJ1ZK7vozmI+TB4=;
+        b=zeQC8zXiEZJGDjSqRFlqROcJpewuDq17ySmZzvflSMXxqFseWYeXT6nnarry/tF6Rf
+         viPtp4bJrphWQ3ai6o/CbSkGB5f7VR8N5R03Z6LB6vfxHJAJMUp0DRd7+GMu9vUH6SyF
+         bmYGvJBiW7CPUXvWW1aedA7xLr8mU5zyWDXQRaFIuCj2zxqinNNeEsXqoNVEq69/aObe
+         M3J0OXj00Zn+h62HMRq6TnN9Pas18lwoJYAKbnpArO5yKLevniLEhwOAWRYYnd5vn/mn
+         WNvmP5kEvSSy56izTGFXWrzNJkaxyrDpbTooAoQSiUo35UIEkNgJwjao+1tRCgx3vOIP
+         1pzQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzpoG9AW+rAanGsuKYOrnyq6jg8SdNeu1i8ta9g+dlj3bemN/ehoyyJAcivFDIINtqtFaEwRVy3pagXpfYOww==@groups.io
+X-Gm-Message-State: AFq9FYKYvwjLduaL4WfJuDV03ytJtt3c1pxFv+LJ2BFnGcw+JXPDCNEG
+	nt0dsz8ZslKwX1WaxW7aAZk14z3S3GUitidD5xa0r5+P6Ym3NQ1Zsrzyr4kGw8MSBuiXfuES2T8
+	DshrLpZszEu5NBo8O5Lg8oyaQG5ywOWK/DTfn
+X-Gm-Gg: AYBFou1aOxCbjn/efO4MwfP7T62yMiSBzGSgcHgsQelcJd4VN456e8lUHolwgxCXE68
+	3nkAFIbRG/nLc61vjK1oU8oA5UDK5s4PvV13P7Ycpu/m1qJPqWSQvAX1rMfFWBatEQ0hN0e8E3V
+	r0YtvMnUty/0Y9tVDbU72DqPsDUZHIEOgRNOXWFKbFJNp6UYdeo78CDWP6eVRx374qSPBqR1W/Z
+	w91V67iwmvHkOVmMwjjGELYOrGjWGIntwWCKSZL7ED93z4374PshepccreOfmAh7lGxcqdy9y7J
+	p+SqKxUnfyhKfJS92iwDGMYuc6KcDBqfcAQ2ZKIuXShUGbslkbS/8RKyLCV8zXDK8TjpA/vIqKE
+	lZBRbXVbfdmU=
+X-Received: by 2002:a05:701b:4510:20b0:15b:1439:1fcb with SMTP id
+ a92af1059eb24-16a5b979b4bmr10870896c88.10.1791761715518; Sun, 11 Oct 2026
+ 16:35:15 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic: 
- AM0PR08MB11733:EE_|AS2PR08MB10251:EE_|MAD0EPF000008AD:EE_|PA4PR08MB6319:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9527d946-6dd2-4931-badb-08df262781e3
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: 
- BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|18002099003|22082099003|10067099003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info-Original: 
- e6TzJzeQJdyhphTR+7QyfcduN+jFh/iic/7y/kVNJdlxBo+vlAkwRvJfY2ePyugjdZxmslami62kzMwdVn7fwWc1t+cb35nLF2xXWHao4Nq2DZydA9bid/0dYfMDFheIiKb24TBd7rLeSw/15L5222GBiWpJ7v3A/NznelM80Z8fvOooTMfYOkMJZNtWhfu06hhb/1IYy3Xg3uBaatxlYPthfcM9IGcm77itPtGZJW3hD+QPWioWO2nLD4FTDiyQdD6Jqkk6He/SyFuSuUlXve3HDXIubGpa3WF6UkOokknf74g9KKwlW+aW+xAz3eFYEbiDxfm7jsE3wcvUkUaapnW5EB7CnO82JaZ8k2ll6jr2ljmsw19Y3sZ76VFvEZIpquaNt+r5dbRJq4NVILd7iukqX+UvFUqaNQayN8MwH47QrZPunFFmCGf09Yx0Y/zzMqrUdOxXquOCAhrgZHLAXrQOLUXr60eQWn0k3zbRWCJ9E2H+IRuDR+IHQzwNp9GB1h3RcSBUZ6Yjmihb2xw3sE+XalwRqzRYMtLvZVp4psmbLu7An5tfhyBsEd2KS8GX2W+1aZ5CdGIUcc9/JEyqfeDZed/VsnpW1GNT0Oek7eK3leZFPuM99HS9IoiQETcWd2y7rjPz4vZpsvEpciLFPwa7hCIfa2bs/adg7cWYLpI=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB11733.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(18002099003)(22082099003)(10067099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-Exchange-RoutingPolicyChecked: 
- uRYpSbpZaRrTqi+pyB8a8M/ha++o3woWWUiZjebYuialmA3bTTRJ9y1yTpmCqEsQ+rW94HhqhlfmrCqAjMu81aN8wWHKQzfiOZm8bcc4iePHbh5czIlj4zw71G3HB/xazO/66X4LYhbZhL0wsfQsL2dlsskWMXp8mQYzUJpI/BXoRXBCSqG6P2fGsAI6u0YWNyCZarcqORblKz4vu/qKVd4EIhc99IOxLzLJOFO83JWioYBHHUiF5C/LQ62cAWXov72erLPwEN8ywjlkIne6H+bZXAYuGvyo2KcKwOuAhGSMp2PWf3NKqpnnU4+2MoAefV8EF3tuWkZN+e144hVuug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB10251
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- MAD0EPF000008AD.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
- 689741aa-e57b-4348-1a07-08df26276df6
-X-Microsoft-Antispam: 
- BCL:0;ARA:13230040|35042699022|36860700016|23010399003|14060799003|82310400026|1800799024|376014|10067099003|18002099003|22082099003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info: 
- sAmEHd3VKVKprDsn96Zo8yJtj4/4xzGv/eu4+gEHNEOyTxcOWAtKMi0aJEjNzwBP2gj0qyNAQuTeFLwp13Sbhcwy8cMw1/K8WaCMaME7Yn5ZC0HflLPyF17712AyHC6irbVPTIkOjJvWgi+o8G2DNVNVq85jQEmuf1nqO8V4pCynop9S0MR/8YyohygmtgNVHZ7WOAiYv28oB3lti/v3iMIEckThGIPRuphsif1PodR3w4EFwWEyUy5nPU6ssxZirS3vrVxhQGQcpoeDO92wISmhbhAnaID2SQTwSV1zeHdM/EcITtZDQwwvv+26IGBivl+Fwkt4wqJ/ZZ/3mNWN/0VsBBsM/H1FjSTd6CnTWk4nM/xi1Fd8FXpGjish+/XMdrFf6MQKQvHpfmlWkXIcR6tco7WezQwKw9s/NnXIAp7BQxut/r+s467V16HIcGHVWY0S2e0BqeuXXLhLyP7ou8MGqrBr5ZVj8nnUlC+rgCEuX4HPkvmdrO9hwWThDGStHXq0BKzKc6GpaURfZsClq9xd5hTSLM9RClk0901smh9rmrHrcm1Jt/5TRIWRxY5GtbCWmzhB4+UP2++P2+LZ4XUe9C6YFx/0OufuCgqSoQ5NHxKLIoqnYyRlfp6jx2H3E/3Xmox7bpHl+ODtFMCHu77so0Sky3/+SOSNcfpWjw8HsR1/Rjp84MO3jowye7fO+9lEHzcS8FoNFr2Gb93SRQ==
-X-Forefront-Antispam-Report: 
- CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(36860700016)(23010399003)(14060799003)(82310400026)(1800799024)(376014)(10067099003)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
- Ooi6ijoe4eXkUjqLaIfe1OPPdYH/zMEg7b5DoRqMhp2oVQ3CxfLtRaPHeXFMdr5G2wwpp83tLw06iWC4cNs86Z8coDSuGFhXmyO6oS5E3FTvZuFNGRBExDxoYrvatydlqimo9fwLKDMkkCqN9vzUDRcnw2anwp20aN2hNlpprvJEJyIHKJTyVQtrtISGoe/FIgfXviBRqnSb2+uQlkAhHyDZuGDK9ge7DpuVCgyWCN5cG4v5IuVh/20KcF6SmkMfQlUnG+GDvSGcokESY8BLMYniVLONH/H3as706yv+9mF7sqPeFFQ3xszYy7FtMV1EFYCV4wgDdfexrwaklM1ZgDFl0/X7wD/Z3NOEAmNFazsYKcMe1w0ZQOaFQyjafe87cdmfEoQkYMjCZpovCedDudGa7vQ+/MukGePjJKoP77NZVbvIEV0vgwM+UUq3Qw3A
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2026 17:05:23.3037
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9527d946-6dd2-4931-badb-08df262781e3
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
- MAD0EPF000008AD.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6319
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20261008-bpp-helpers-v1-1-475d1b2513c9@gmail.com> <CAFLszTj7kB=JkLx1ws9QbKX682ZiYyy8LHJywzVq_pZnObbUQw@mail.gmail.com>
+In-Reply-To: <CAFLszTj7kB=JkLx1ws9QbKX682ZiYyy8LHJywzVq_pZnObbUQw@mail.gmail.com>
+From: Reza Kurniawan <imkyufie@gmail.com>
+Date: Mon, 12 Oct 2026 06:35:02 +0700
+X-Gm-Features: AclHuK_mgmJiIMIAVnrIVjikI6ge8eMwSbDGI1cj_bCvvb6ejuzvwgchPF3K2BQ
+Message-ID: <CAAq9HC5oHhXKSEOkeWkvz7F6o9GuWt_Od6dbooZ8kMLFsbW-Eg@mail.gmail.com>
+Subject: Re: [PATCH] video: use bpp conversion helpers consistently
+To: Simon Glass <sjg@chromium.org>
+Cc: "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, u-boot@lists.u-boot-project.org, 
+	u-boot-amlogic@groups.io, Tom Rini <trini@konsulko.com>, 
+	Anatolij Gustschin <ag.dev.uboot@gmail.com>, Eugen Hristev <ehristev@kernel.org>, 
+	Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Andre Przywara <andre.przywara@arm.com>, 
+	Thierry Reding <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 12 Oct 2026 09:35:17 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3126
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3128
 
-On Mon, 05 Oct 2026 09:54:01 -0400, Sean Anderson wrote:
-> This series fixes a bug caused by the MDIO bus getting created in
-> probe() instead of bind().
-> 
-> Changes in v2:
-> - Use if instead of #if for DM_MDIO
-> - Fix warnings about mdio_err and dw_mdio_init not being used
-> - Fix missing else clause when bitbang MDIO is enabled
-> 
-> [...]
+Hi Simon,
 
-Applied to u-boot-net branch for-next, thanks!
+On Sun, Oct 11, 2026 at 11:09=E2=80=AFPM Simon Glass <sjg@chromium.org> wro=
+te:
+>
+> Hi Reza,
+>
+> On 2026-10-08T13:51:38, Reza Kurniawan <imkyufie@gmail.com> wrote:
+> > video: use bpp conversion helpers consistently
+> >
+> > Use bpp conversion helpers for consistency and to reduce the
+> > reliance on the specially crafted VIDEO_BPP* enum values. No
+> > functional change is made.
+>
+> Thanks for doing this!
+>
+> Please can you name the helpers here (VNBYTES() and VNBITS() from
+> video.h)? It would also help to say that VNBYTES() is only correct for
+> 8bpp and above, and that every site converted here is 16bpp or 32bpp,
+> which is why there is no functional change.
+>
+> >
+> > Signed-off-by: Reza Kurniawan <imkyufie@gmail.com>
+> >
+> > cmd/bdinfo.c                           | 2 +-
+> >  drivers/video/atmel_hlcdfb.c           | 2 +-
+> >  drivers/video/imx/mxc_ipuv3_fb.c       | 2 +-
+> >  drivers/video/meson/meson_vpu.c        | 4 ++--
+> >  drivers/video/mvebu_lcd.c              | 2 +-
+> >  drivers/video/sunxi/sunxi_de2.c        | 2 +-
+> >  drivers/video/tegra/dc.c               | 4 ++--
+> >  drivers/video/tegra/tegra124/display.c | 2 +-
+> >  drivers/video/ti/tilcdc.c              | 4 ++--
+> >  drivers/video/tidss/tidss_drv.c        | 4 ++--
+> >  test/cmd/bdinfo.c                      | 2 +-
+> >  11 files changed, 15 insertions(+), 15 deletions(-)
+>
+> > diff --git a/drivers/video/atmel_hlcdfb.c b/drivers/video/atmel_hlcdfb.=
+c
+> > @@ -315,7 +315,7 @@ static int atmel_hlcdc_bind(struct udevice *dev)
+> >       uc_plat->size =3D LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+> > -                             (1 << LCD_MAX_LOG2_BPP) / 8;
+> > +                             VNBYTES(LCD_MAX_LOG2_BPP);
+>
+> The subject says 'consistently', but a few sites are not converted.
+> atmel_fb_lcd_bind() in drivers/video/atmel_lcdfb.c has exactly the
+> same pattern:
 
-[1/2] net: designware: Use if instead of #if for DM_MDIO
-      commit: beddf076d19427565e53588b5685a831c5a512ee
-[2/2] net: designware: Fix MDIO bus getting bound multiple times
-      commit: bcb0b1b44fd784e35dd2223d56a56f568735a72d
+Thanks for pointing that out, I did miss some of them. I'll try to
+look for more.
+
+>
+>     uc_plat->size =3D LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+>             (1 << VIDEO_BPP16) / 8;
+>
+> The others I spotted:
+>
+>     drivers/video/sunxi/sunxi_de2.c:221  (1 << l2bpp) / 8
+> (efi_add_memory_map() size)
+>     boot/fdt_simplefb.c:62               xsize * (1 << bpix) / 8
+>     drivers/video/video_bmp.c:322        1 << bpix             (VNBITS())
+
+Is changing 1 << bpix appropriate in this case? Since bpix is already set t=
+o
+VNBITS(priv->bpix), that bit shift shouldn't be aimed at calculating the bi=
+ts
+out of a log2 bpp. Should this be left out?
+
+>
+> Please can you convert these too, or say in the commit message why
+> they are left out?
+>
+> Regards,
+> Simon
 
 Best regards,
--- 
-Jerome Forissier <jerome.forissier@arm.com>
-
+Reza Kurniawan
 
