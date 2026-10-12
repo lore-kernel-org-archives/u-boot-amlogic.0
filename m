@@ -2,174 +2,213 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A52CA9ED0
-	for <webhook@archiver.kernel.org>; Mon, 12 Oct 2026 09:35:17 +0000 (UTC)
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.3119.1791762148000299527
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8207CA9EC5
+	for <webhook@archiver.kernel.org>; Mon, 12 Oct 2026 15:44:27 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.16475.1791819864842482790
  for <u-boot-amlogic@groups.io>;
- Sun, 11 Oct 2026 16:42:28 -0700
+ Mon, 12 Oct 2026 08:44:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=IkrUT5F5;
- spf=pass (domain: gmail.com, ip: 209.85.167.179, mailfrom: imkyufie@gmail.com)
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-4e4a4d77e5bso1963628b6e.0
-        for <u-boot-amlogic@groups.io>; Sun, 11 Oct 2026 16:42:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791762147; cv=none;
-        d=google.com; s=arc-20260327;
-        b=oC5C2kXYClBhWhKY685ElvWyXDxS/0qwef7+Jcr7C6f78L8Tmb4f93MAQE3mgiMdja
-         ULq9XeHRtBOEgyO9JXaxeTEXV0lXafniDqI43xq5WEwgZjUU47eO8DDyIr0EYn0wks7o
-         A3+6nKq1Wa9i7CHVmbvadbchxAKDWZ/1MpvJoLaixjL0ntXe0+Tqedq7iw2hK7W4g9pH
-         BGJmR2V8K+rM1GHb/3EJAS1h+PaLdNe6JxjCd3Gzaie1CySFt1phw2WtKqZCrJEUVMI/
-         sRq6Mxp3CdHkqY5LFCCCKJPAFTqPkvE0j9tyTiAckDxyFPKYk0GBOj7nHMUV8f9xaEeD
-         8WPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=b//LNHyzozc43+1ywcj2GCgynY7KVJ1ZK7vozmI+TB4=;
-        fh=fw1cHuElIESaZl4OKpsxM5bNN+2Aj+0y0Ut1+lSoj54=;
-        b=K2I/ysUWwpsY1rPVRxFipGIbCXPapSxmedez9vaFmJQIaJYHlv5cEdbuWuhLakKwX5
-         1rWh0y/70z4SnfyORhxXhxervOCLEa8djAVGIpSMRy11rWeIf+8xRiAcnpl32hgqicWA
-         CjgoNkIb9SBXd8kvqUyasjxl5emDSPI1qmuOgx+BxYRtc3TM1K+Dvsvq/ZWMS7brHv7P
-         YI5FpxVxQ6Wzzmf3BuR9dXqOKWkadRhXwTel5g7RuNQr7f3dGI2Rns/jeoIATPjAMZib
-         lICVsDGvgnn6tnhYbM/CNJFV1d7L5moDJHYIUkpkW/bwihTLT3X3UrOvOG8338a2nxEC
-         HHBw==;
-        darn=groups.io
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@linaro.org header.s=google header.b=e4pFsEh5;
+ spf=pass (domain: linaro.org, ip: 209.85.221.44, mailfrom: neil.armstrong@linaro.org)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-48b060ec084so1253030f8f.0
+        for <u-boot-amlogic@groups.io>; Mon, 12 Oct 2026 08:44:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791762147; x=1792366947; darn=groups.io;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=b//LNHyzozc43+1ywcj2GCgynY7KVJ1ZK7vozmI+TB4=;
-        b=IkrUT5F5/sVdm1S9ock0H7WdkOuySBxAnYiKwOlJ4/8Yn3CSW0IpNPFrI3yq1iOdCN
-         J4YuC6Ct40rRTmwIxtyaxoCpfA47TAleK8DqnBX7MBV0S27XmRFxi3mPciNjrSSCbF9M
-         MyWTxuqE8EetwA1+0t05rg3+1xV+j7JSy3gxuSmo70YwjVO9hGDvlpEdJYy+iskPtPhp
-         z3nTFX+Z+2+EOYglbwwaWckt26f9EibzWqU/jvpi1abkVnxXbBRL8tZvoi614DCggYG1
-         Rkti8T0DGscHV4wYkV8zZf4ScN+HFFXfadIHIUqx6NddWy3vLDWcAT7DbOohc4tkh8Vv
-         Tpzg==
+        d=linaro.org; s=google; t=1791819863; x=1792424663; darn=groups.io;
+        h=content-transfer-encoding:content-type:organization:autocrypt
+         :content-language:cc:to:reply-to:subject:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=b/CwHOVBkeCOQ01mmPsOnT+9oefBtixE7b9i4h9AB18=;
+        b=e4pFsEh5wUJQ0/KneMYQZEusgkT6sk+Hx+XqEzzobadAkqGPPybdNL7wj0Iqkk8Jae
+         8qRCQb1Dx62R6uJyzYpu6ot4/MPU+BngQr1DgMY0aOIChfkAHJBe4RlACbPZ0EwSO6iX
+         AXyffk0hVNSzc8bvxFH8Ll+CUoab/C8+/FPBklyMcRd82Ka5OSjbzsUKvHPBiZrCq+Jx
+         0d0zy+Ey8vlzauF1wTQeky1mKy5M4nDu1Sl4YZhfOjO8hVD60N38R+no/vlNBNHCA9fI
+         /ep2fwZnuuvoIpcTD501RKUJttkhZ4U3M5f4AUj3p2moP0ohWQlMAgiUHUhy+Z4alGGG
+         2VVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791762147; x=1792366947;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=b//LNHyzozc43+1ywcj2GCgynY7KVJ1ZK7vozmI+TB4=;
-        b=zeQC8zXiEZJGDjSqRFlqROcJpewuDq17ySmZzvflSMXxqFseWYeXT6nnarry/tF6Rf
-         viPtp4bJrphWQ3ai6o/CbSkGB5f7VR8N5R03Z6LB6vfxHJAJMUp0DRd7+GMu9vUH6SyF
-         bmYGvJBiW7CPUXvWW1aedA7xLr8mU5zyWDXQRaFIuCj2zxqinNNeEsXqoNVEq69/aObe
-         M3J0OXj00Zn+h62HMRq6TnN9Pas18lwoJYAKbnpArO5yKLevniLEhwOAWRYYnd5vn/mn
-         WNvmP5kEvSSy56izTGFXWrzNJkaxyrDpbTooAoQSiUo35UIEkNgJwjao+1tRCgx3vOIP
-         1pzQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzpoG9AW+rAanGsuKYOrnyq6jg8SdNeu1i8ta9g+dlj3bemN/ehoyyJAcivFDIINtqtFaEwRVy3pagXpfYOww==@groups.io
-X-Gm-Message-State: AFq9FYKYvwjLduaL4WfJuDV03ytJtt3c1pxFv+LJ2BFnGcw+JXPDCNEG
-	nt0dsz8ZslKwX1WaxW7aAZk14z3S3GUitidD5xa0r5+P6Ym3NQ1Zsrzyr4kGw8MSBuiXfuES2T8
-	DshrLpZszEu5NBo8O5Lg8oyaQG5ywOWK/DTfn
-X-Gm-Gg: AYBFou1aOxCbjn/efO4MwfP7T62yMiSBzGSgcHgsQelcJd4VN456e8lUHolwgxCXE68
-	3nkAFIbRG/nLc61vjK1oU8oA5UDK5s4PvV13P7Ycpu/m1qJPqWSQvAX1rMfFWBatEQ0hN0e8E3V
-	r0YtvMnUty/0Y9tVDbU72DqPsDUZHIEOgRNOXWFKbFJNp6UYdeo78CDWP6eVRx374qSPBqR1W/Z
-	w91V67iwmvHkOVmMwjjGELYOrGjWGIntwWCKSZL7ED93z4374PshepccreOfmAh7lGxcqdy9y7J
-	p+SqKxUnfyhKfJS92iwDGMYuc6KcDBqfcAQ2ZKIuXShUGbslkbS/8RKyLCV8zXDK8TjpA/vIqKE
-	lZBRbXVbfdmU=
-X-Received: by 2002:a05:701b:4510:20b0:15b:1439:1fcb with SMTP id
- a92af1059eb24-16a5b979b4bmr10870896c88.10.1791761715518; Sun, 11 Oct 2026
- 16:35:15 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1791819863; x=1792424663;
+        h=content-transfer-encoding:content-type:organization:autocrypt
+         :content-language:cc:to:reply-to:subject:from:user-agent
+         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=b/CwHOVBkeCOQ01mmPsOnT+9oefBtixE7b9i4h9AB18=;
+        b=oDzEfE4CPSpFnEQ5uGDwrmiMHAtff5ckgloZjx7UKXA7acyAJ7hstuVHcXhu0fSFOV
+         CTBZC5xD431WmrEtO7ROn4LS77m14mNtRFcS2d4FDsjFEsAoIw8PGfF+kSBddQ5GZVbB
+         ctKSmMlWdSoMIZf0n0KB1c7ZdLa0s+MBIlZoKN0JgQ9cYwCXqCXYDCmo8m7vX7Mucbig
+         +pU9CJGJ/GoBfJicOPtPRBmMcoDgKo229+7ljGbgrJ2lgtei9qc9LPQXwfUvVi9aRTp4
+         d+Hm2cfbR0rm87kz475qBUxPnTnAtXtubCdO8UYQUMBGGCE87Ytm6/Z6Cv2zafdz6Dv/
+         +mYA==
+X-Gm-Message-State: AFq9FYIOuz18DqEfOV0zRCodjvWRlCQcOiWJJLR3/L4chIP38sjEdGE4
+	hFkvmNv2AhcL3ZUt7NhXTiY/RQthWnf4xVuXcXdiCjh+eSwhghGdWkplYATV1VP0jbk=
+X-Gm-Gg: AYBFou1FgExgfjknlydl8XYANXaZXRtCF9Y5QcdOwobOJSbnkV1voUd71rCY4cW5qNk
+	dbare3ARqEsLX4EaRhdTWHHQ9eNppv3FypNImmL1cjmbMuEWLicJe3YyWN9OiLy0F+VYKbQTSTZ
+	QX7ruuN1ZOzKl4c2CGaArz34S8R97lCzGskaGP1Dy5+oS9mDjsmxJNkGn3KyvM+BTYaEjQ9xNtT
+	hgJpgGHpOzUaGx18T/LiaZX5QxUVqNbA9jOp8K3Nz7yeI8LH7gpH+NM4eotE3GmAapYlA8ONIdV
+	5X/F1r2m9polkMN+WYowv7Y5Y5ha2dk5qHv21plUjXFJORE730YtfuRK9Lr6gAwwW2Q11k0E127
+	BjbjEBVubZfTZvwkixx+i7o7R7WinSA005QP++7xhUFosY2MbS5XPDGzwe22skzRwf+ziYuqLqU
+	S8tu9pskr0N3yJtfw1rceP1hLK8MERHytYv2/vLCpLiVPzy/PyTTmBoQhv6JlFIAtzjrDHE0j2F
+	4cUANcAd5YfIYuO3kjNgsL8krdm/+yDvyfH
+X-Received: by 2002:a05:6000:989:b0:48d:b650:69aa with SMTP id ffacd0b85a97d-48dbacf596fmr17396840f8f.50.1791819862371;
+        Mon, 12 Oct 2026 08:44:22 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:417e:f4c4:5b8:8c48? ([2a01:e0a:106d:1080:417e:f4c4:5b8:8c48])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48de0bd777fsm81885f8f.57.2026.10.12.08.44.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Oct 2026 08:44:22 -0700 (PDT)
+Message-ID: <eb8bab99-2d96-4089-b2ae-4492e763203d@linaro.org>
+Date: Mon, 12 Oct 2026 17:44:21 +0200
 MIME-Version: 1.0
-References: <20261008-bpp-helpers-v1-1-475d1b2513c9@gmail.com> <CAFLszTj7kB=JkLx1ws9QbKX682ZiYyy8LHJywzVq_pZnObbUQw@mail.gmail.com>
-In-Reply-To: <CAFLszTj7kB=JkLx1ws9QbKX682ZiYyy8LHJywzVq_pZnObbUQw@mail.gmail.com>
-From: Reza Kurniawan <imkyufie@gmail.com>
-Date: Mon, 12 Oct 2026 06:35:02 +0700
-X-Gm-Features: AclHuK_mgmJiIMIAVnrIVjikI6ge8eMwSbDGI1cj_bCvvb6ejuzvwgchPF3K2BQ
-Message-ID: <CAAq9HC5oHhXKSEOkeWkvz7F6o9GuWt_Od6dbooZ8kMLFsbW-Eg@mail.gmail.com>
-Subject: Re: [PATCH] video: use bpp conversion helpers consistently
-To: Simon Glass <sjg@chromium.org>
-Cc: "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, u-boot@lists.u-boot-project.org, 
-	u-boot-amlogic@groups.io, Tom Rini <trini@konsulko.com>, 
-	Anatolij Gustschin <ag.dev.uboot@gmail.com>, Eugen Hristev <ehristev@kernel.org>, 
-	Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Andre Przywara <andre.przywara@arm.com>, 
-	Thierry Reding <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [GIT PULL] Please pull u-boot-amlogic-next-20261012
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+To: trini@konsulko.com
+Cc: u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Mon, 12 Oct 2026 09:35:17 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3128
+ <u-boot-amlogic@groups.io>; Mon, 12 Oct 2026 15:44:27 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3129
 
-Hi Simon,
+Hi Tom,
 
-On Sun, Oct 11, 2026 at 11:09=E2=80=AFPM Simon Glass <sjg@chromium.org> wro=
-te:
->
-> Hi Reza,
->
-> On 2026-10-08T13:51:38, Reza Kurniawan <imkyufie@gmail.com> wrote:
-> > video: use bpp conversion helpers consistently
-> >
-> > Use bpp conversion helpers for consistency and to reduce the
-> > reliance on the specially crafted VIDEO_BPP* enum values. No
-> > functional change is made.
->
-> Thanks for doing this!
->
-> Please can you name the helpers here (VNBYTES() and VNBITS() from
-> video.h)? It would also help to say that VNBYTES() is only correct for
-> 8bpp and above, and that every site converted here is 16bpp or 32bpp,
-> which is why there is no functional change.
->
-> >
-> > Signed-off-by: Reza Kurniawan <imkyufie@gmail.com>
-> >
-> > cmd/bdinfo.c                           | 2 +-
-> >  drivers/video/atmel_hlcdfb.c           | 2 +-
-> >  drivers/video/imx/mxc_ipuv3_fb.c       | 2 +-
-> >  drivers/video/meson/meson_vpu.c        | 4 ++--
-> >  drivers/video/mvebu_lcd.c              | 2 +-
-> >  drivers/video/sunxi/sunxi_de2.c        | 2 +-
-> >  drivers/video/tegra/dc.c               | 4 ++--
-> >  drivers/video/tegra/tegra124/display.c | 2 +-
-> >  drivers/video/ti/tilcdc.c              | 4 ++--
-> >  drivers/video/tidss/tidss_drv.c        | 4 ++--
-> >  test/cmd/bdinfo.c                      | 2 +-
-> >  11 files changed, 15 insertions(+), 15 deletions(-)
->
-> > diff --git a/drivers/video/atmel_hlcdfb.c b/drivers/video/atmel_hlcdfb.=
-c
-> > @@ -315,7 +315,7 @@ static int atmel_hlcdc_bind(struct udevice *dev)
-> >       uc_plat->size =3D LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
-> > -                             (1 << LCD_MAX_LOG2_BPP) / 8;
-> > +                             VNBYTES(LCD_MAX_LOG2_BPP);
->
-> The subject says 'consistently', but a few sites are not converted.
-> atmel_fb_lcd_bind() in drivers/video/atmel_lcdfb.c has exactly the
-> same pattern:
+Here's a set of Amlogic changes which enabled basic Amlogic S4 support for Khadas VIM1S,
+plus cleanup & update for Android support.
 
-Thanks for pointing that out, I did miss some of them. I'll try to
-look for more.
+Thanks,
+Neil
 
->
->     uc_plat->size =3D LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
->             (1 << VIDEO_BPP16) / 8;
->
-> The others I spotted:
->
->     drivers/video/sunxi/sunxi_de2.c:221  (1 << l2bpp) / 8
-> (efi_add_memory_map() size)
->     boot/fdt_simplefb.c:62               xsize * (1 << bpix) / 8
->     drivers/video/video_bmp.c:322        1 << bpix             (VNBITS())
+The following changes since commit e1dcad5512b81009eaf7e472c20a8a15db8c4a0e:
 
-Is changing 1 << bpix appropriate in this case? Since bpix is already set t=
-o
-VNBITS(priv->bpix), that bit shift shouldn't be aimed at calculating the bi=
-ts
-out of a log2 bpp. Should this be left out?
+   Azure: Switch u-boot-test-hooks to git.u-boot-project.org (2026-10-07 19:35:44 -0600)
 
->
-> Please can you convert these too, or say in the commit message why
-> they are left out?
->
-> Regards,
-> Simon
+are available in the Git repository at:
 
-Best regards,
-Reza Kurniawan
+   https://git.u-boot-project.org/u-boot/custodians/neil.armstrong/u-boot-amlogic.git tags/u-boot-amlogic-next-20261012
+
+for you to fetch changes up to 9c048da44bed99311355450d70840bb0795e21f8:
+
+   meson: Add Khadas VIM1S support (2026-10-08 10:45:27 +0200)
+
+----------------------------------------------------------------
+- Support watchdog for S4/T7
+- Add S4 support:
+  - reset
+  - serial
+  - clock
+  - mmc
+  - SoC support
+  - Khadas VIM1S
+- Remove Android support for SEI510/SEI610
+- Fix Android support for Khadas VIM3
+
+----------------------------------------------------------------
+Guillaume La Roque (7):
+       configs: sei510: drop Android support
+       configs: sei610: drop Android support
+       configs: remove unused meson64_android.h
+       configs: khadas-vim3: drop non-A/B Android defconfigs
+       configs: khadas-vim3: enlarge the fastboot buffer
+       configs: khadas-vim3: update the Android partition layout
+       configs: khadas-vim3: fix the Android DTB index
+
+Sean Anderson (13):
+       watchdog: meson_gxbb: Add support for s4/t7 SoCs
+       reset: meson: Add s4 support
+       serial: meson: Add s4 support
+       mmc: meson: Parse devicetree properties
+       arm64: meson: Add s4 SoC support
+       clk: meson: a1: Eliminate separate id parameter
+       clk: meson: a1: Use clk_set_rate from meson_mux_set_rate
+       clk: meson: Use soc-specific naming for common functions
+       clk: meson: Export a1 functions to common file
+       clk: meson: Support fractional fixed-factor clocks
+       clk: meson: Support power-of-two dividers
+       clk: meson: Add s4 clock driver
+       meson: Add Khadas VIM1S support
+
+  MAINTAINERS                                        |   1 -
+  .../dts/meson-s4-s905y4-khadas-vim1s-u-boot.dtsi   |   5 +
+  arch/arm/include/asm/arch-meson/boot0.h            |  12 +
+  arch/arm/mach-meson/Kconfig                        |   7 +
+  arch/arm/mach-meson/Makefile                       |   1 +
+  arch/arm/mach-meson/board-info.c                   |   2 +
+  arch/arm/mach-meson/board-s4.c                     |  50 ++
+  board/amlogic/sei510/MAINTAINERS                   |   1 -
+  board/amlogic/sei610/MAINTAINERS                   |   1 -
+  board/amlogic/vim1s/MAINTAINERS                    |   7 +
+  board/amlogic/vim1s/Makefile                       |   1 +
+  board/amlogic/vim1s/vim1s.c                        |  26 +
+  board/amlogic/vim3/MAINTAINERS                     |   2 -
+  configs/khadas-vim1s_defconfig                     |  66 +++
+  configs/khadas-vim3_android_ab_defconfig           |   1 +
+  configs/khadas-vim3_android_defconfig              | 122 -----
+  configs/khadas-vim3l_android_ab_defconfig          |   1 +
+  configs/khadas-vim3l_android_defconfig             | 122 -----
+  configs/sei510_defconfig                           |  10 -
+  configs/sei610_defconfig                           |  10 -
+  drivers/clk/meson/Kconfig                          |   8 +
+  drivers/clk/meson/Makefile                         |   2 +
+  drivers/clk/meson/a1.c                             | 495 +----------------
+  drivers/clk/meson/axg-ao.c                         |  12 +-
+  drivers/clk/meson/axg.c                            |  16 +-
+  drivers/clk/meson/clk_meson.c                      | 376 +++++++++++++
+  drivers/clk/meson/clk_meson.h                      | 149 +++++
+  drivers/clk/meson/g12a-ao.c                        |  12 +-
+  drivers/clk/meson/g12a.c                           |  24 +-
+  drivers/clk/meson/gxbb.c                           |  24 +-
+  drivers/clk/meson/s4.c                             | 601 +++++++++++++++++++++
+  drivers/mmc/meson_gx_mmc.c                         |   3 +
+  drivers/reset/reset-meson.c                        |   9 +
+  drivers/serial/Kconfig                             |   2 +
+  drivers/serial/serial_meson.c                      |   1 +
+  drivers/watchdog/meson_gxbb_wdt.c                  |  22 +-
+  include/configs/khadas-vim3_android.h              |  36 +-
+  include/configs/khadas-vim3l_android.h             |  36 +-
+  include/configs/meson64_android.h                  | 279 ----------
+  include/configs/sei510.h                           |  30 -
+  include/configs/sei610.h                           |  30 -
+  41 files changed, 1422 insertions(+), 1193 deletions(-)
+  create mode 100644 arch/arm/dts/meson-s4-s905y4-khadas-vim1s-u-boot.dtsi
+  create mode 100644 arch/arm/include/asm/arch-meson/boot0.h
+  create mode 100644 arch/arm/mach-meson/board-s4.c
+  create mode 100644 board/amlogic/vim1s/MAINTAINERS
+  create mode 100644 board/amlogic/vim1s/Makefile
+  create mode 100644 board/amlogic/vim1s/vim1s.c
+  create mode 100644 configs/khadas-vim1s_defconfig
+  delete mode 100644 configs/khadas-vim3_android_defconfig
+  delete mode 100644 configs/khadas-vim3l_android_defconfig
+  create mode 100644 drivers/clk/meson/clk_meson.c
+  create mode 100644 drivers/clk/meson/s4.c
+  delete mode 100644 include/configs/meson64_android.h
+  delete mode 100644 include/configs/sei510.h
+  delete mode 100644 include/configs/sei610.h
 
