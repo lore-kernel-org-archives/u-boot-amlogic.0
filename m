@@ -2,124 +2,98 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B5ECC6B2A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2398CC6B1F
 	for <webhook@archiver.kernel.org>; Wed, 14 Oct 2026 09:20:26 +0000 (UTC)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.4056.1791914436115251283
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.3317.1791885076421212934
  for <u-boot-amlogic@groups.io>;
- Tue, 13 Oct 2026 11:00:36 -0700
+ Tue, 13 Oct 2026 02:51:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kernel.org header.s=k20201202 header.b=lGeZyYtt;
- spf=pass (domain: kernel.org, ip: 172.234.252.31, mailfrom: devnull+iav.iav.lv@kernel.org)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 76B2640C52;
-	Tue, 13 Oct 2026 17:53:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 58B41C2BCFA;
-	Tue, 13 Oct 2026 17:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1791914016;
-	bh=GjuW0xVjuChdhF8eXw8FxorM4tcTp3XzAHW7nNVgc2s=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=lGeZyYtt5pOCqGF2sFfA4neKLLdrjeXZ9Q/aL7dOR41vN2zl1vghbSqFZZX/OLtAD
-	 fOHof8oYzh18Bifqhofx8xAW5i6f7v0556ew/UHA0tyrBcjJ0FxmACNnKt0Bu/jX1y
-	 rb8SQHxRhxW51DkwUjD8W2XGdECJ0XJ3UX9OHyQbGiFjHziUyzN/eM9ziXI3eHhjZX
-	 a2U1/p7o7A7R96S3v2kA0FCQeFfX3F7RlBASv6A9UMJvw8ZfYFriFm7PXN36g35E8B
-	 ZTdlejOKqXpaJ5Og3XF0TCnKPDftTe6Ek2G1nw2duNajpmSp64V/RN4JjX3Rbg5MNL
-	 pMIkCGKrfDbEg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44386CC6B12;
-	Tue, 13 Oct 2026 17:53:36 +0000 (UTC)
-From: Igor Velkov via B4 Relay <devnull+iav.iav.lv@kernel.org>
-Date: Tue, 13 Oct 2026 20:53:34 +0300
-Subject: [PATCH] arm: dts: meson-sm1-odroid-hc4: power-cycle the SD card at init
+ dkim=pass header.i=@kernel.org header.s=k20260515 header.b=nnO+Ahvm;
+ spf=pass (domain: kernel.org, ip: 172.105.4.254, mailfrom: mkorpershoek@kernel.org)
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id EEB69600D1;
+	Tue, 13 Oct 2026 09:44:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 319781F000FF;
+	Tue, 13 Oct 2026 09:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791884690;
+	bh=YX0v6coLzZMTjxH8asmNU0veahDytGWYu/rrEJJdSlU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=nnO+Ahvm8Z2Y/zNtt658PsAlv/ec+POmkt+7sCMbTbTXP1IujaCpSiNWF0UAqfc1k
+	 0U1yiSilx03cKRM45pbbCm7GUWLldLys9E1Pv+T7/fGW/3xdwKdjCAjGcS5Fua98ee
+	 N7s/sYzrPy9556QiEyuXAPcIYC22U6gaoop36blZm7BpwghI6GrPkpUwkbcq9s9Mi6
+	 1WSApEaYy+zs0leAORQh/OACx07gi56ZoslhkQdSaYGGJD9o+pUSqyJBlcnBSS1Or7
+	 lghtuQoahdxQbBxtAWzy5JbhesoKw1cwPQhixGkshZ2kIvlSAiuUnHt5t+OsjYPOIP
+	 S4ZT8om+6ZGeg==
+From: Mattijs Korpershoek <mkorpershoek@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>, u-boot-amlogic@groups.io,
+ u-boot@lists.u-boot-project.org, Guillaume La Roque
+ <glaroque@baylibre.com>
+Cc: Tom Rini <trini@konsulko.com>
+Subject: Re: [PATCH 0/4] configs: khadas-vim3: refresh Android support
+In-Reply-To: <179146357781.183177.17223915816731601716.b4-ty@b4>
+References: <20260925-update_vim-v1-0-fddf7ba4dc34@baylibre.com>
+ <179146357781.183177.17223915816731601716.b4-ty@b4>
+Date: Tue, 13 Oct 2026 11:44:48 +0200
+Message-ID: <xhkdb1p9u7x4f.fsf@mkorpers-koolstof.csb>
 MIME-Version: 1.0
-Message-Id: <20261013-b4-hc4-sd-power-cycle-v1-1-cde760a256a5@iav.lv>
-X-B4-Tracking: v=1; b=H4sIAB1wzmoC/x3MTQqAIBBA4avErBtIM6GuEi1SxxyICoV+kO6et
- PwW72VIFJkSDFWGSCcn3rcCUVdgw7wthOyKQTZSi0a0aBQGqzA5PPaLItrHroTeSKV170zbd1D
- aI5Ln+/+O0/t+ToIaRWcAAAA=
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: u-boot-amlogic@groups.io, u-boot@lists.u-boot-project.org, 
- Tom Rini <trini@konsulko.com>, 
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, Igor Velkov <iav@iav.lv>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2119; i=iav@iav.lv;
- h=from:subject:message-id;
- bh=tR/RFYgAqbY87MOye/X3GfkLr/MIhX3x0TK79SL/+gg=;
- b=owGbwMvMwCVmNH1q96v4SmbG02pJDFnnCuTebzBRkLR1C+N5XVVhc/bU4ePe07ObuXzd3DYfD
- hEXkFvTUcrCIMbFICumyDLhkMatjCVX//p7mD+AmcPKBDKEgYtTACbyfB0jw96599raVr42938l
- /P38ued23S8717Ov2G1X7tM7XyKnaCPDP7WE9T/32Rj0sXgUvgkozkn1C6q3y+M9t+zDFY02/6v
- 7mAE=
-X-Developer-Key: i=iav@iav.lv; a=openpgp;
- fpr=90C228DA68A4D5FD4F4837E03297958BEA5F7903
-X-Endpoint-Received: by B4 Relay for iav@iav.lv/default with auth_id=1060
-X-Original-From: Igor Velkov <iav@iav.lv>
-Reply-To: iav@iav.lv
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Wed, 14 Oct 2026 09:20:26 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3131
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3132
 
-From: Igor Velkov <iav@iav.lv>
+Hi Neil,
 
-mmc_get_op_cond() power-cycles the card, but both SD supplies,
-TFLASH_VDD and TF_IO, are regulator-always-on in the Linux device tree,
-so regulator_set_enable_if_allowed() leaves them on. After a watchdog
-reset a UHS card is still at 1.8 V signalling and U-Boot fails with
-"No partition table - mmc 0".
+On Thu, Oct 08, 2026 at 14:46, Neil Armstrong <neil.armstrong@linaro.org> wrote:
 
-Drop regulator-always-on from both supplies for U-Boot, and keep
-TFLASH_VDD off for 100 ms before it is turned back on. Linux has to
-keep regulator-always-on: the boot ROM does not turn the supply back on,
-see Linux commit dc7f2cb218b5 ("arm64: dts: amlogic: odroid-n2: keep SD
-card regulator always on") for the same supply on ODROID-N2. TF_IO
-keeps regulator-boot-on: after a reset a pull-up on the board enables
-it at 3.3 V before U-Boot runs.
+> Hi,
+>
+> On Fri, 25 Sep 2026 15:42:23 +0200, Guillaume La Roque wrote:
+>> Update VIM3 and VIM3L Android support to match the Android 16 AOSP
+>> A/B images used by these Khadas development boards. Remove the unused
+>> non-A/B defconfigs, increase the fastboot buffer to 512 MiB, update the
+>> partition layout and correct the DTB indices in vendor_boot.
+>> 
+>> The layout follows the AOSP generic boot and vendor_boot model:
+>> https://source.android.com/docs/core/architecture/partitions/generic-boot
+>> 
+>> [...]
+>
+> Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
+>
+> [1/4] configs: khadas-vim3: drop non-A/B Android defconfigs
+>       https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/a2d0134bfc140b9b2092ab09cfef37a7da7c51ac
+> [2/4] configs: khadas-vim3: enlarge the fastboot buffer
+>       https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/349d13ce42f60dba1604accc3abb24d5f6afeb18
+> [3/4] configs: khadas-vim3: update the Android partition layout
+>       https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/09aee880eea6cf05e117988da1be8231b07c5bc0
+> [4/4] configs: khadas-vim3: fix the Android DTB index
+>       https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/7a403d3db56db9f1efba44ed145e875c23fb785d
 
-Tested on ODROID-HC4 with a UHS-I SDXC card and U-Boot in SPI flash:
-after a watchdog reset 3/3 boots from SD (v2026.07 without this change:
-0/3); cold boot, reboot and suspend to RAM unaffected.
+I see that the patches have been applied to git.u-boot-project.org [1]
+but the b4 ty note still lists source.denx.de.
 
-Signed-off-by: Igor Velkov <iav@iav.lv>
----
-The card holds a btrfs root, so the main build under test also had
-FS_BTRFS, CMD_BTRFS and ZSTD enabled; odroid-hc4_defconfig has none of
-them.
----
- arch/arm/dts/meson-sm1-odroid-hc4-u-boot.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Can you consider updating your b4.thanks-treename and
+b4.thanks-commit-url-mask so that it points the new instance?
 
-diff --git a/arch/arm/dts/meson-sm1-odroid-hc4-u-boot.dtsi b/arch/arm/dts/meson-sm1-odroid-hc4-u-boot.dtsi
-index 963bf96b256..5f09ecc8f60 100644
---- a/arch/arm/dts/meson-sm1-odroid-hc4-u-boot.dtsi
-+++ b/arch/arm/dts/meson-sm1-odroid-hc4-u-boot.dtsi
-@@ -18,6 +18,16 @@
- 	vref-supply = <&vddao_1v8>;
- };
- 
-+/*
-+ * Let the MMC core power-cycle the SD card: after a watchdog reset a UHS card
-+ * is still powered and at 1.8 V signalling, and U-Boot cannot read it.
-+ */
- &tflash_vdd {
- 	gpio = <&gpio_ao GPIOAO_3 GPIO_OPEN_DRAIN>;
-+	/delete-property/ regulator-always-on;
-+	u-boot,off-on-delay-us = <100000>;
-+};
-+
-+&tf_io {
-+	/delete-property/ regulator-always-on;
- };
+FWIW, this is what I added to my ~/.gitconfig for DFU:
 
----
-base-commit: b871f72273c183ab557e29f9bc52d9065e0aacf3
-change-id: 20261013-b4-hc4-sd-power-cycle-fb24669db395
+ [b4]
+-    thanks-commit-url-mask = https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commit/%.40s
++    thanks-commit-url-mask = https://git.u-boot-project.org/u-boot/custodians/u-boot-dfu/-/commit/%.40s
+     thanks-am-template = /home/mkorpershoek/.dotfiles-private/u-boot-dfu/thanks-am-template
+-    thanks-treename = https://source.denx.de/u-boot/custodians/u-boot-dfu
++    thanks-treename = https://git.u-boot-project.org/u-boot/custodians/u-boot-dfu
 
-Best regards,
--- 
-Igor Velkov <iav@iav.lv>
+Thanks!
+Mattijs
 
+[1] https://git.u-boot-project.org/u-boot/custodians/neil.armstrong/u-boot-amlogic/-/tree/u-boot-amlogic-next?ref_type=heads
 
+>
+> -- 
+> Neil
 
