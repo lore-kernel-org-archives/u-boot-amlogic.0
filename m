@@ -2,165 +2,407 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27471CC6B1D
-	for <webhook@archiver.kernel.org>; Wed, 14 Oct 2026 09:46:19 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.9527.1791971176936536498
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B45CC6B38
+	for <webhook@archiver.kernel.org>; Fri, 16 Oct 2026 07:19:57 +0000 (UTC)
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.16119.1792132729359147684
  for <u-boot-amlogic@groups.io>;
- Wed, 14 Oct 2026 02:46:17 -0700
+ Thu, 15 Oct 2026 23:38:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Tqj4/uvf;
- spf=pass (domain: linaro.org, ip: 209.85.128.51, mailfrom: neil.armstrong@linaro.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a16c1608faso50648755e9.0
-        for <u-boot-amlogic@groups.io>; Wed, 14 Oct 2026 02:46:16 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=HYZRhV1p;
+ spf=pass (domain: gmail.com, ip: 209.85.219.44, mailfrom: imkyufie@gmail.com)
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-91b813ac020so77190856d6.3
+        for <u-boot-amlogic@groups.io>; Thu, 15 Oct 2026 23:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1791971175; x=1792575975; darn=groups.io;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=7OWGCIPcbNGiJSbGxIFwCTCg+W++D0AwkbWNgCH5LJE=;
-        b=Tqj4/uvfAuouYY/d/iNwUe3O0CuaY8CbXfJEvYg9W8sOgNxUTT6czBxUEi6fup7Pht
-         kqR+RI6m8NZmc9ccslM2bIP88X8XmE32lYa2DEDzpbIqZGsxl9gjKa0Aen2RsN03STW3
-         leBc22WfeP8C/QZhCxI1cKzqeg8sf3IC9rB49hw1DZwEjnu9lvQARVVHRsieK9qqpMLv
-         4bgGhZWzi5TPcbIW7U1VGaOpQlY5yWoTx3xPjuRsBWsP2WbX5eQjwmFBWA6PxXjcCCZD
-         mzvMS0xxYFmkx4k69Jl1Lxn4viLJwaT1wfsno7uRz27I6QzPXHQkM7jPiPESdxkzhHz9
-         wSgA==
+        d=gmail.com; s=20251104; t=1792132728; x=1792737528; darn=groups.io;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Rc+W73lTbahODgOogceftDxGGpq7Jo4OU0zm0qbwLJ8=;
+        b=HYZRhV1pklEexiUN6B+J98qdJAO2qu+nF9+RgXkEIOXaEYwEpfwWq/9p22PyVDj5s/
+         /O0ZnP6CeRORdACJNJ9lMXHWOSJCtA5BdNbXAnzcykcwQc6gSYITuYT6XKl4lT0qp03j
+         xMgti8oqN22dwzM7gSr4M9YjLkYSAV7GdE/ayh6LHNj+0ZCuxg8JzMk117w1k25DswFq
+         AOiYdpY6NGXVQVu0cK/+2ySOJUqyFZAWJv6mNmn2HHdSay0Y+Z8e9YYj6lCGKXg1m9a1
+         AGiEzeUzTs+C4+9oWgi8p6HUC8PkLsE9s7f1NTpk7G47ITNZ62bEUf/p2x6HjM39fk23
+         BLYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791971175; x=1792575975;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=7OWGCIPcbNGiJSbGxIFwCTCg+W++D0AwkbWNgCH5LJE=;
-        b=UnYbMWP1K6ZNuUPHoDemv+dBNT2ME1J2vp+2TObCQYIgCxr+s4ZGLqx+0w8ARbRWX9
-         G9ITBXbmBm/Im3Qv0fj1f3HU1H0EEcu3adf1qR+JMVrJ77L4R3feR7m0LdIzC4IxRsf5
-         nS49ZOyvBsX36R43W7guzo7NLYJCECJnOyFyJ7Zfcy4HiLC+H3Ogtk+wKQFdI1qhvckW
-         tkkh2nXlqLkEfSFT14Vmv+rvSGUubsJ+TGfuSpTjstebgEPdX0Bj+4E5IXEdqL78xOKK
-         1E1d+lPiS5gT7nD1gkg8JvhG9ZnckYRieZr7o4ilphfTmhg7fsAqUBy7v2B7CZl0nueD
-         lYDg==
-X-Forwarded-Encrypted: i=1; AKwUvBxnYk2Vrf0eojs8gPf9W1pqUiEP6GNRJlXgrHGUVdsFikf4CJaehOk5irW3i+JPuzSJDCS8zZjPvwBJppTQZg==@groups.io
-X-Gm-Message-State: AFq9FYKPNGVicoybDa4wmMbozPXnGiwTckdJ+BnbA9p+kDNQ4xNwwC3Y
-	vY96d9c6Yz0sMxSvlaxhdNI8lFtrHLhkwzbZUHwVjRMj1lirWU+F2xs6bTKHOZiKatY=
-X-Gm-Gg: AYBFou2YEv4FwtVeEHzXKjpM7lFr/RC06RdlwCEWsC1l5RNaRrXCJX6XL67QJ6ssUmg
-	hU5JL7UyGlNHzS/tcueau02uTQE0UOVhnJ4nA4v42SOJGg+PrUaGbZqnZXzRADr+p9zOltumwoR
-	5VVvQ6hcBrGZiCLXXaY7wKCG2lX+3LKCp9hQpBiODKDSr1O0ONVXVJoOhhbS/pnmvKOvC6YoA25
-	3R2+J9bCQi+e7oNu8qCrxxy+RWStCxTIpHVTdqgPvlJesH+PTqwdaenkQHSzaqZ0tPb4m3t/vo4
-	F7aRnsKcr2mc+MOsMXWxC9GwxyI/ky7/0EwaZmUc9ZyiJdLvB03Js9ILBO7DFzFAaTFhLYnM4zT
-	x2WPILOnMcbtSS8v3s+nEA+C8zhWFehsSAkqMcNfq75VwzieGF8UxZIbrTtcUhxqOqeFgCm2cCd
-	J5W4aSI42TtAN0c/z1VJFbuvzUVspPpO7XZXd3uWimXcbZj+l9lyiX5RWUduIi/p1/Qao34FEMQ
-	BGPRFmdwP3pIZQz8yxRiBdoMJklSc4BU/EGZfvmIc+pcStoI++0Dw==
-X-Received: by 2002:a05:600c:8b78:b0:49e:65f2:db64 with SMTP id 5b1f17b1804b1-4a18e4837f2mr289648215e9.5.1791971174837;
-        Wed, 14 Oct 2026 02:46:14 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:106d:1080:ef1f:5ab3:36fa:3ccb? ([2a01:e0a:106d:1080:ef1f:5ab3:36fa:3ccb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18be8c5e7sm547666275e9.4.2026.10.14.02.46.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Oct 2026 02:46:14 -0700 (PDT)
-Message-ID: <afdf3fbe-3a4b-403e-bcfd-fd166cc72a82@linaro.org>
-Date: Wed, 14 Oct 2026 11:46:13 +0200
+        d=1e100.net; s=20260707; t=1792132728; x=1792737528;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Rc+W73lTbahODgOogceftDxGGpq7Jo4OU0zm0qbwLJ8=;
+        b=lr01nQZmakQqW8EixIPHkZwAmsJhDcEC0mGvzf0mfSdhV7QSKmkZZUlBr8Uj02tsEb
+         jVGFZXbpFwVSBxIqFnjiRxKIGibw7bh0qY9YAh5go3iODXZePPOl9dC5yegUELADlEQl
+         qIXCYKdu8+6C3Ra//SpsI8k4zk5qJUG0ISGvU2jPyGZKaW4RWWQO65TZ0ihm4MzgO/c5
+         FDOqnOZj3QECJxylehjfF2OmwNOjjs+cdpfe81LfN7aIjaotrlpJk7foyZD2kWm5SxtU
+         +ftoIt3Wb5ZZAWPSOxSJQDXvuhtdVjwiWJfyAqJ2XQXZQiqHxS033Qz4KHrNYnb+EUrs
+         cXXA==
+X-Forwarded-Encrypted: i=1; AKwUvBwXtJbmsiVJC5OXbFGA5WUKFXmRrKWseUkvmtzjyURhcTxaIL+ss8m2VwSMeFpTB2xKdJQq3kUJx9cBm8ZgEw==@groups.io
+X-Gm-Message-State: AFq9FYLBCcOdj3oBHOAU0q8Fuzo1XoE4HQVUceDT5nY3Uz8N6kX1dIp6
+	/wuPMo6wsIeEe1KeqYfxyr//PbqUbQfNB8hMwVRfqF4K7DwT08g4Yddw/wSG1Q==
+X-Gm-Gg: AYBFou0CdMFmFXcDO+VRlI6a6ErX46pgYgaO4nECC/JBySxPVjPt+vd9jpXis13YTCt
+	i2fmatEcNlp3R/CK2qYZlVWtDaBdii3h7/wM7Y5CCvLtGFolDjZJk/Bb2uk4hRl1KFCL7nm6uLC
+	NwURcIyDwfsMLoJRS8UBDT2zh3QSqZVl1cW+hMMqR1KmrrEk/h5EzFceSQmK1r4lmyrLxhW1cH5
+	t8iFM0jCNKvsTvBuD73/IPmxCRB7OiKZqqanKU+LxE7WMyQH8r3IQd2TpCaRm8UHNuShKrNNww8
+	3Pr7fvRYAVyR4qkEY+GG3Lca8U8Vr6P9AbBx/B8Di5j0IpLsJNx4FgXPSlpm271Tp5zfZiwr300
+	79YS62CTQ4Gic9QaSlAfGc69mddz9Do/lJBLP4GedSot6bA4e7S2iFpzyFQRnXW7bqqPT1AxJJ9
+	Yv1Y/qnQ078brivIj0c1sE4ZyXtrIRIWge5UQYnktiI/921wFR435kMwczMgSOb1k=
+X-Received: by 2002:a05:6a00:c591:20b0:89d:eb23:4e83 with SMTP id d2e1a72fcca58-89deb234f8amr4195039b3a.30.1792132283254;
+        Thu, 15 Oct 2026 23:31:23 -0700 (PDT)
+Received: from [127.0.0.2] ([2404:c0:7618:4e1c:4ee1:1a8a:57cd:4423])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-89febdc2209sm84691b3a.33.2026.10.15.23.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 23:31:22 -0700 (PDT)
+From: Reza Kurniawan <imkyufie@gmail.com>
+Date: Fri, 16 Oct 2026 13:30:48 +0700
+Subject: [PATCH v2] video: use bpp conversion helpers consistently
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 0/4] configs: khadas-vim3: refresh Android support
-To: Mattijs Korpershoek <mkorpershoek@kernel.org>, u-boot-amlogic@groups.io,
- u-boot@lists.u-boot-project.org, Guillaume La Roque <glaroque@baylibre.com>
-Cc: Tom Rini <trini@konsulko.com>
-References: <20260925-update_vim-v1-0-fddf7ba4dc34@baylibre.com>
- <179146357781.183177.17223915816731601716.b4-ty@b4>
- <xhkdb1p9u7x4f.fsf@mkorpers-koolstof.csb>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <xhkdb1p9u7x4f.fsf@mkorpers-koolstof.csb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Message-Id: <20261016-bpp-helpers-v2-1-ca1e6bba2820@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/1WNQQ6CMBBFr0JmbU2nCCIr72FY0HaEMUCbFomGc
+ HcB48LlS95/f4ZIgSlCmcwQaOLIblhBHRIwbT00JNiuDEqqHKXMhfZetNR5ClHYwuapRiVtUcO
+ 68IHu/Nprt+rL8akfZMYtsRktx9GF93434eb9ysVfeUKB4nTOLGqVYWou16avuTsa10O1LMsHY
+ F4gyLgAAAA=
+X-Change-ID: 20261006-bpp-helpers-d8d63b120d8a
+To: "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, 
+ Simon Glass <sjg@chromium.org>, u-boot@lists.u-boot-project.org, 
+ u-boot-amlogic@groups.io
+Cc: Tom Rini <trini@konsulko.com>, 
+ Anatolij Gustschin <ag.dev.uboot@gmail.com>, 
+ Eugen Hristev <ehristev@kernel.org>, Stefano Babic <sbabic@nabladev.com>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Quentin Schulz <u-boot@0leil.net>, Kever Yang <kever.yang@rock-chips.com>, 
+ Andre Przywara <andre.przywara@arm.com>, 
+ Thierry Reding <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>, 
+ Reza Kurniawan <imkyufie@gmail.com>
+X-Mailer: b4 0.15.2
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <u-boot-amlogic@groups.io>; Wed, 14 Oct 2026 09:46:19 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3133
+ <u-boot-amlogic@groups.io>; Fri, 16 Oct 2026 07:19:57 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3134
 
-On 10/13/26 11:44, Mattijs Korpershoek wrote:
-> Hi Neil,
-> 
-> On Thu, Oct 08, 2026 at 14:46, Neil Armstrong <neil.armstrong@linaro.org> wrote:
-> 
->> Hi,
->>
->> On Fri, 25 Sep 2026 15:42:23 +0200, Guillaume La Roque wrote:
->>> Update VIM3 and VIM3L Android support to match the Android 16 AOSP
->>> A/B images used by these Khadas development boards. Remove the unused
->>> non-A/B defconfigs, increase the fastboot buffer to 512 MiB, update the
->>> partition layout and correct the DTB indices in vendor_boot.
->>>
->>> The layout follows the AOSP generic boot and vendor_boot model:
->>> https://source.android.com/docs/core/architecture/partitions/generic-boot
->>>
->>> [...]
->>
->> Thanks, Applied to https://source.denx.de/u-boot/custodians/u-boot-amlogic (u-boot-amlogic-next)
->>
->> [1/4] configs: khadas-vim3: drop non-A/B Android defconfigs
->>        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/a2d0134bfc140b9b2092ab09cfef37a7da7c51ac
->> [2/4] configs: khadas-vim3: enlarge the fastboot buffer
->>        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/349d13ce42f60dba1604accc3abb24d5f6afeb18
->> [3/4] configs: khadas-vim3: update the Android partition layout
->>        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/09aee880eea6cf05e117988da1be8231b07c5bc0
->> [4/4] configs: khadas-vim3: fix the Android DTB index
->>        https://source.denx.de/u-boot/custodians/u-boot-amlogic/-/commit/7a403d3db56db9f1efba44ed145e875c23fb785d
-> 
-> I see that the patches have been applied to git.u-boot-project.org [1]
-> but the b4 ty note still lists source.denx.de.
-> 
-> Can you consider updating your b4.thanks-treename and
-> b4.thanks-commit-url-mask so that it points the new instance?
-> 
-> FWIW, this is what I added to my ~/.gitconfig for DFU:
-> 
->   [b4]
-> -    thanks-commit-url-mask = https://source.denx.de/u-boot/custodians/u-boot-dfu/-/commit/%.40s
-> +    thanks-commit-url-mask = https://git.u-boot-project.org/u-boot/custodians/u-boot-dfu/-/commit/%.40s
->       thanks-am-template = /home/mkorpershoek/.dotfiles-private/u-boot-dfu/thanks-am-template
-> -    thanks-treename = https://source.denx.de/u-boot/custodians/u-boot-dfu
-> +    thanks-treename = https://git.u-boot-project.org/u-boot/custodians/u-boot-dfu
+Many places open-code the conversion between log2 bits-per-pixel and
+the actual number of bits or bytes per pixel, using expressions such as
+"1 << bpix", "(1 << bpix) / 8" and "((1 << bpix) >> 3)". Meanwhile,
+<video.h> already provides VNBITS() and VNBYTES() helpers for exactly
+these conversions. Replace the open-coded expressions with the helpers.
 
+Using the helpers makes the intent of the expression clear, removes
+duplicated bit manipulation, and reduces the reliance on the specially
+crafted VIDEO_BPP* enum values, since callers no longer need to know
+that those values are log2 quantities which is also important for
+future extensions.
 
-Forgot to update it, fixed thx.
+Note that VNBYTES() is only correct for 8bpp and above, since it returns
+a whole number of bytes per pixel and cannot represent sub-byte pixel
+sizes. Every site converted to VNBYTES() here uses 16bpp or 32bpp, so
+the result is identical to the original expression.
 
-Neil
+No functional change is made.
 
-> 
-> Thanks!
-> Mattijs
-> 
-> [1] https://git.u-boot-project.org/u-boot/custodians/neil.armstrong/u-boot-amlogic/-/tree/u-boot-amlogic-next?ref_type=heads
-> 
->>
->> -- 
->> Neil
+Signed-off-by: Reza Kurniawan <imkyufie@gmail.com>
+---
+Changes in v2:
+- Convert uncaught conversion cases in the following files:
+  - arch/sandbox/cpu/sdl.c
+  - boot/fdt_simplefb.c
+  - drivers/video/atmel_lcdfb.c
+  - drivers/video/rockchip/rk_vop.c
+  - drivers/video/sunxi/sunxi_de2.c
+  - drivers/video/tegra/tegra124/display.c
+- Updated commit message
+- Link to v1: https://patch.msgid.link/20261008-bpp-helpers-v1-1-475d1b2513c9@gmail.com
+---
+ arch/sandbox/cpu/sdl.c                 | 4 ++--
+ boot/fdt_simplefb.c                    | 2 +-
+ cmd/bdinfo.c                           | 2 +-
+ drivers/video/atmel_hlcdfb.c           | 2 +-
+ drivers/video/atmel_lcdfb.c            | 4 ++--
+ drivers/video/imx/mxc_ipuv3_fb.c       | 2 +-
+ drivers/video/meson/meson_vpu.c        | 4 ++--
+ drivers/video/mvebu_lcd.c              | 2 +-
+ drivers/video/rockchip/rk_vop.c        | 4 ++--
+ drivers/video/sunxi/sunxi_de2.c        | 8 ++++----
+ drivers/video/tegra/dc.c               | 4 ++--
+ drivers/video/tegra/tegra124/display.c | 4 ++--
+ drivers/video/ti/tilcdc.c              | 4 ++--
+ drivers/video/tidss/tidss_drv.c        | 4 ++--
+ test/cmd/bdinfo.c                      | 2 +-
+ 15 files changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/arch/sandbox/cpu/sdl.c b/arch/sandbox/cpu/sdl.c
+index ed84646bd..ff823fb72 100644
+--- a/arch/sandbox/cpu/sdl.c
++++ b/arch/sandbox/cpu/sdl.c
+@@ -152,10 +152,10 @@ int sandbox_sdl_init_display(int width, int height, int log2_bpp,
+ 	if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+ 		printf("Unable to init hinting: %s", SDL_GetError());
+ 
+-	sdl.src_depth = 1 << log2_bpp;
++	sdl.src_depth = VNBITS(log2_bpp);
+ 	if (log2_bpp != 4 && log2_bpp != 5)
+ 		log2_bpp = 5;
+-	sdl.depth = 1 << log2_bpp;
++	sdl.depth = VNBITS(log2_bpp);
+ 	sdl.pitch = sdl.width * sdl.depth / 8;
+ 	sdl.screen = SDL_CreateWindow("U-Boot", SDL_WINDOWPOS_UNDEFINED,
+ 				      SDL_WINDOWPOS_UNDEFINED, sdl.vis_width,
+diff --git a/boot/fdt_simplefb.c b/boot/fdt_simplefb.c
+index 69c7c2e24..9b7ffe9ff 100644
+--- a/boot/fdt_simplefb.c
++++ b/boot/fdt_simplefb.c
+@@ -59,7 +59,7 @@ static int fdt_simplefb_configure_node(void *blob, int off)
+ 	}
+ 
+ 	return fdt_setup_simplefb_node(blob, off, fb_base, xsize, ysize,
+-				       xsize * (1 << bpix) / 8, name);
++				       xsize * VNBYTES(bpix), name);
+ }
+ 
+ int fdt_simplefb_add_node(void *blob)
+diff --git a/cmd/bdinfo.c b/cmd/bdinfo.c
+index bf1eca759..37981764b 100644
+--- a/cmd/bdinfo.c
++++ b/cmd/bdinfo.c
+@@ -114,7 +114,7 @@ static void show_video_info(void)
+ 						   plat->copy_size);
+ 			}
+ 			printf("%-12s= %dx%dx%d\n", "FB size", upriv->xsize,
+-			       upriv->ysize, 1 << upriv->bpix);
++			       upriv->ysize, VNBITS(upriv->bpix));
+ 		}
+ 	}
+ }
+diff --git a/drivers/video/atmel_hlcdfb.c b/drivers/video/atmel_hlcdfb.c
+index 89bc0eeb6..8a0096cec 100644
+--- a/drivers/video/atmel_hlcdfb.c
++++ b/drivers/video/atmel_hlcdfb.c
+@@ -315,7 +315,7 @@ static int atmel_hlcdc_bind(struct udevice *dev)
+ 	struct video_uc_plat *uc_plat = dev_get_uclass_plat(dev);
+ 
+ 	uc_plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+-				(1 << LCD_MAX_LOG2_BPP) / 8;
++				VNBYTES(LCD_MAX_LOG2_BPP);
+ 
+ 	debug("%s: Frame buffer size %x\n", __func__, uc_plat->size);
+ 
+diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lcdfb.c
+index 281c3a1d6..29a24b8cd 100644
+--- a/drivers/video/atmel_lcdfb.c
++++ b/drivers/video/atmel_lcdfb.c
+@@ -69,7 +69,7 @@ static void atmel_fb_init(ulong addr, struct display_timing *timing, int bpix,
+ 
+ 	/* ...set frame size and burst length = 8 words (?) */
+ 	value = (timing->hactive.typ * timing->vactive.typ *
+-		 (1 << bpix)) / 32;
++		 VNBITS(bpix)) / 32;
+ 	value |= ((ATMEL_LCDC_DMA_BURST_LEN - 1) << ATMEL_LCDC_BLENGTH_OFFSET);
+ 	lcdc_writel(reg, ATMEL_LCDC_DMAFRMCFG, value);
+ 
+@@ -187,7 +187,7 @@ static int atmel_fb_lcd_bind(struct udevice *dev)
+ 	struct video_uc_plat *uc_plat = dev_get_uclass_plat(dev);
+ 
+ 	uc_plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+-			(1 << VIDEO_BPP16) / 8;
++			VNBYTES(VIDEO_BPP16);
+ 	debug("%s: Frame buffer size %x\n", __func__, uc_plat->size);
+ 
+ 	return 0;
+diff --git a/drivers/video/imx/mxc_ipuv3_fb.c b/drivers/video/imx/mxc_ipuv3_fb.c
+index 3a327b9e9..447644f5b 100644
+--- a/drivers/video/imx/mxc_ipuv3_fb.c
++++ b/drivers/video/imx/mxc_ipuv3_fb.c
+@@ -654,7 +654,7 @@ static int ipuv3_video_bind(struct udevice *dev)
+ {
+ 	struct video_uc_plat *plat = dev_get_uclass_plat(dev);
+ 
+-	plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT * (1 << VIDEO_BPP32) / 8;
++	plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT * VNBYTES(VIDEO_BPP32);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/meson/meson_vpu.c b/drivers/video/meson/meson_vpu.c
+index a686faf9f..21ac60749 100644
+--- a/drivers/video/meson/meson_vpu.c
++++ b/drivers/video/meson/meson_vpu.c
+@@ -79,7 +79,7 @@ cvbs:
+ 
+ 	/* Move the framebuffer to the end of addressable ram */
+ 	meson_fb.fb_size = ALIGN(meson_fb.xsize * meson_fb.ysize *
+-				 ((1 << VPU_MAX_LOG2_BPP) / 8) +
++				 VNBYTES(VPU_MAX_LOG2_BPP) +
+ 				 MESON_VPU_OVERSCAN, EFI_PAGE_SIZE);
+ 	meson_fb.base = gd->dram[0].start +
+ 			gd->dram[0].size - meson_fb.fb_size;
+@@ -141,7 +141,7 @@ static int meson_vpu_bind(struct udevice *dev)
+ 	struct video_uc_plat *plat = dev_get_uclass_plat(dev);
+ 
+ 	plat->size = VPU_MAX_WIDTH * VPU_MAX_HEIGHT *
+-		(1 << VPU_MAX_LOG2_BPP) / 8;
++		VNBYTES(VPU_MAX_LOG2_BPP);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/mvebu_lcd.c b/drivers/video/mvebu_lcd.c
+index 9f1ea9c35..234b27c90 100644
+--- a/drivers/video/mvebu_lcd.c
++++ b/drivers/video/mvebu_lcd.c
+@@ -576,7 +576,7 @@ static int mvebu_video_bind(struct udevice *dev)
+ 	struct video_uc_plat *plat = dev_get_uclass_plat(dev);
+ 
+ 	plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+-		(1 << LCD_MAX_LOG2_BPP) / 8;
++		VNBYTES(LCD_MAX_LOG2_BPP);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/rockchip/rk_vop.c b/drivers/video/rockchip/rk_vop.c
+index 17dfe62c9..b8f56d94e 100644
+--- a/drivers/video/rockchip/rk_vop.c
++++ b/drivers/video/rockchip/rk_vop.c
+@@ -381,9 +381,9 @@ static int rk_display_init(struct udevice *dev, ulong fbbase, ofnode ep_node)
+ 		return ret;
+ 	}
+ 
+-	rkvop_enable(dev, fbbase, 1 << l2bpp, &timing, &dclk_rst);
++	rkvop_enable(dev, fbbase, VNBITS(l2bpp), &timing, &dclk_rst);
+ 
+-	ret = display_enable(disp, 1 << l2bpp, &timing);
++	ret = display_enable(disp, VNBITS(l2bpp), &timing);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/video/sunxi/sunxi_de2.c b/drivers/video/sunxi/sunxi_de2.c
+index ab36ee159..2fec6a8ab 100644
+--- a/drivers/video/sunxi/sunxi_de2.c
++++ b/drivers/video/sunxi/sunxi_de2.c
+@@ -202,9 +202,9 @@ static int sunxi_de2_init(struct udevice *dev, ulong fbbase,
+ 	}
+ 
+ 	sunxi_de2_composer_init();
+-	sunxi_de2_mode_set(mux, &timing, 1 << l2bpp, fbbase, is_composite);
++	sunxi_de2_mode_set(mux, &timing, VNBITS(l2bpp), fbbase, is_composite);
+ 
+-	ret = display_enable(disp, 1 << l2bpp, &timing);
++	ret = display_enable(disp, VNBITS(l2bpp), &timing);
+ 	if (ret) {
+ 		debug("%s: Failed to enable display\n", __func__);
+ 		return ret;
+@@ -218,7 +218,7 @@ static int sunxi_de2_init(struct udevice *dev, ulong fbbase,
+ #ifdef CONFIG_EFI_LOADER
+ 	efi_add_memory_map(fbbase,
+ 			   timing.hactive.typ * timing.vactive.typ *
+-			   (1 << l2bpp) / 8,
++			   VNBYTES(l2bpp),
+ 			   EFI_RESERVED_MEMORY_TYPE);
+ #endif
+ 
+@@ -279,7 +279,7 @@ static int sunxi_de2_bind(struct udevice *dev)
+ 	struct video_uc_plat *plat = dev_get_uclass_plat(dev);
+ 
+ 	plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+-		(1 << LCD_MAX_LOG2_BPP) / 8;
++		VNBYTES(LCD_MAX_LOG2_BPP);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/tegra/dc.c b/drivers/video/tegra/dc.c
+index ced497188..6aca106f1 100644
+--- a/drivers/video/tegra/dc.c
++++ b/drivers/video/tegra/dc.c
+@@ -278,7 +278,7 @@ static int setup_window(struct tegra_lcd_priv *priv,
+ 	win->out_w = priv->width;
+ 	win->out_h = priv->height;
+ 	win->phys_addr = priv->frame_buffer;
+-	win->stride = priv->width * (1 << priv->log2_bpp) / 8;
++	win->stride = priv->width * VNBYTES(priv->log2_bpp);
+ 
+ 	log_debug("%s: depth = %d\n", __func__, priv->log2_bpp);
+ 
+@@ -646,7 +646,7 @@ static int tegra_lcd_bind(struct udevice *dev)
+ 	struct video_uc_plat *plat = dev_get_uclass_plat(dev);
+ 
+ 	plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+-		(1 << LCD_MAX_LOG2_BPP) / 8;
++		VNBYTES(LCD_MAX_LOG2_BPP);
+ 
+ 	return dm_scan_fdt_dev(dev);
+ }
+diff --git a/drivers/video/tegra/tegra124/display.c b/drivers/video/tegra/tegra124/display.c
+index abe31e27d..6d485736e 100644
+--- a/drivers/video/tegra/tegra124/display.c
++++ b/drivers/video/tegra/tegra124/display.c
+@@ -448,7 +448,7 @@ static int tegra124_lcd_init(struct udevice *dev, void *lcdbase,
+ 	reset_set_enable(PERIPH_ID_DPAUX, 0);
+ 	reset_set_enable(PERIPH_ID_SOR0, 0);
+ 
+-	ret = display_init(dev, lcdbase, 1 << l2bpp, &timing);
++	ret = display_init(dev, lcdbase, VNBITS(l2bpp), &timing);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -484,7 +484,7 @@ static int tegra124_lcd_bind(struct udevice *dev)
+ 	struct video_uc_plat *uc_plat = dev_get_uclass_plat(dev);
+ 
+ 	uc_plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+-			(1 << VIDEO_BPP16) / 8;
++			VNBYTES(VIDEO_BPP16);
+ 	debug("%s: Frame buffer size %x\n", __func__, uc_plat->size);
+ 
+ 	return 0;
+diff --git a/drivers/video/ti/tilcdc.c b/drivers/video/ti/tilcdc.c
+index b498e8186..6b2e591ce 100644
+--- a/drivers/video/ti/tilcdc.c
++++ b/drivers/video/ti/tilcdc.c
+@@ -430,8 +430,8 @@ static int tilcdc_bind(struct udevice *dev)
+ {
+ 	struct video_uc_plat *uc_plat = dev_get_uclass_plat(dev);
+ 
+-	uc_plat->size = ((LCDC_MAX_WIDTH * LCDC_MAX_HEIGHT *
+-			  (1 << LCDC_MAX_LOG2_BPP)) >> 3) + 0x20;
++	uc_plat->size = LCDC_MAX_WIDTH * LCDC_MAX_HEIGHT *
++			VNBYTES(LCDC_MAX_LOG2_BPP) + 0x20;
+ 
+ 	dev_dbg(dev, "frame buffer size 0x%x\n", uc_plat->size);
+ 	return 0;
+diff --git a/drivers/video/tidss/tidss_drv.c b/drivers/video/tidss/tidss_drv.c
+index c231fd034..7c8bfe418 100644
+--- a/drivers/video/tidss/tidss_drv.c
++++ b/drivers/video/tidss/tidss_drv.c
+@@ -986,8 +986,8 @@ static int tidss_drv_bind(struct udevice *dev)
+ {
+ 	struct video_uc_plat *uc_plat = dev_get_uclass_plat(dev);
+ 
+-	uc_plat->size = ((LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
+-			  (1 << LCD_MAX_LOG2_BPP)) >> 3) + 0x20;
++	uc_plat->size = LCD_MAX_WIDTH * LCD_MAX_HEIGHT *
++			VNBYTES(LCD_MAX_LOG2_BPP) + 0x20;
+ 	return 0;
+ }
+ 
+diff --git a/test/cmd/bdinfo.c b/test/cmd/bdinfo.c
+index 7b7fb0894..f53665446 100644
+--- a/test/cmd/bdinfo.c
++++ b/test/cmd/bdinfo.c
+@@ -91,7 +91,7 @@ static int test_video_info(struct unit_test_state *uts)
+ 			}
+ 			ut_assert_nextline("%-12s= %dx%dx%d", "FB size",
+ 					   upriv->xsize, upriv->ysize,
+-					   1 << upriv->bpix);
++					   VNBITS(upriv->bpix));
+ 		}
+ 	}
+ 
+
+---
+base-commit: ed869863c7e2aca50d57a05d843830dd843138c4
+change-id: 20261006-bpp-helpers-d8d63b120d8a
+
+Best regards,
+--  
+Reza Kurniawan <imkyufie@gmail.com>
 
 
