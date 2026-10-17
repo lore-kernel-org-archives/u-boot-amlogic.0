@@ -2,81 +2,101 @@ Return-Path: <neil.armstrong@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BCACCF2DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DADCCF2E0
 	for <webhook@archiver.kernel.org>; Mon, 19 Oct 2026 07:36:14 +0000 (UTC)
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.21654.1792156992692076890
+Received: from ocn-dfr-mts-118c1.ocn.ad.jp (ocn-dfr-mts-118c1.ocn.ad.jp [153.128.190.140])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1259.1792213636287030280
  for <u-boot-amlogic@groups.io>;
- Fri, 16 Oct 2026 06:23:13 -0700
+ Fri, 16 Oct 2026 22:07:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@0leil.net header.s=20231125 header.b=M4Afrvyh;
- spf=pass (domain: 0leil.net, ip: 84.16.66.175, mailfrom: u-boot@0leil.net)
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4j5lnQ56HszGqn;
-	Fri, 16 Oct 2026 15:16:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0leil.net;
-	s=20231125; t=1792156570;
-	bh=3DAlPEsgdKXErbdrwAwNpRc/8JPpXzduXyRqU2zjPGA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M4AfrvyhMmSVLiJUZ5oK5K4lrr8ut81DQGpySz8NX/ZaCFS9gbRj1EvSC7bfwrn9Z
-	 7kOu11vRVmNkJzVu+OUmf2ShLsaC6+57jyvxS/m8GVhLPuJ0IV+ryd+L3u0Y8VGEwC
-	 MfTHsyGRBogoqrZsSIHr1Z8Dixgf6y5a7gn5Im6Pm2qGguoYYAmzIFrjrUNVj4oEa1
-	 JAK2KveAcoG0LRLay2uKQyKvC8indd9EGJeHrP3jQhwXsTO3MHz5DRbcu+tMLpEf7j
-	 b3YGhVj7h3YpD6oWFTwrOEP2oXe9ZAozJ4Ynf77OhN6NfbIhxjiwdZHkn0B4TeO8ND
-	 vWM7GHI/4cOGQ==
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4j5lnN2ZK9z9LB;
-	Fri, 16 Oct 2026 15:16:07 +0200 (CEST)
-Message-ID: <69377c9e-b4a1-462a-b82d-66e13b465626@0leil.net>
-Date: Fri, 16 Oct 2026 15:16:07 +0200
+ dkim=pass header.i=@docomonet.jp header.s=20240125 header.b=j91kzGWj;
+ spf=pass (domain: docomonet.jp, ip: 153.128.190.140, mailfrom: y-asai.0816@docomonet.jp)
+Received: from ocn-ckd-mts-118c31.ocn.ad.jp (ocn-ckd-mts-118c31.ocn.ad.jp [122.28.129.96])
+	by ocn-dfr-mts-118c1.ocn.ad.jp (Postfix) with ESMTP id 9936318F
+	for <u-boot-amlogic@groups.io>; Sat, 17 Oct 2026 14:01:47 +0900 (JST)
+Received: from ocn-spm-mts-107c1.ocn.ad.jp (ocn-spm-mts-107c1.ocn.ad.jp [153.128.190.238])
+	by ocn-ckd-mts-118c31.ocn.ad.jp (Postfix) with ESMTP id DC1154C0067E2;
+	Sat, 17 Oct 2026 14:01:42 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=docomonet.jp;
+	s=20240125; t=1792213302;
+	bh=BjAA/43We5TqdIijW3xSxA/znQy2v21D5Zxp2DlvnAk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=j91kzGWj5wH1q9lL5RCxyI6OibiWYqqdkt0bH+JhXK/TXsA/BHB7Xtra8ZIwhyor7
+	 vfsgY0NKfHCdti+TVR1zqRAwcWJG/aGlamuJ9kDuoTpVjvGiKTmsbBAVAX0cEIuAxZ
+	 gBVl8oXtxWBdAAeIyPCjjcaQDX50icIx2gsW7MQM=
+Received: from ocn-vc-mts-109c1.ocn.ad.jp ([153.149.236.232])
+ by ocn-spm-mts-107c1 with ngmta
+ id 03dcc95e-18df3880dc5eccbc; Sat, 17 Oct 2026 14:01:42 +0900
+Received: from ocn-sdpx-mts-109c1.ocn.ad.jp ([153.128.117.199])
+ by ocn-vc-mts-109c1 with ngmta
+ id 2b9e6cd3-18df3880a7f4fd29; Sat, 17 Oct 2026 14:01:42 +0900
+Received: from docomonet.jp (p3688129-ipoe.ipoe.ocn.ne.jp [153.238.101.128])
+	by ocn-sdpx-mts-109c1.ocn.ad.jp (Postfix) with ESMTPA;
+	Sat, 17 Oct 2026 14:01:41 +0900 (JST)
+From: "Asai, Shigeaki" <y-asai.0816@docomonet.jp>
+To: Quentin Schulz <quentin.schulz@cherry.de>,
+ u-boot@lists.u-boot-project.org
+Cc: u-boot-amlogic@groups.io,
+ neil.armstrong@linaro.org,
+ jh80.chung@samsung.com,
+ peng.fan@nxp.com,
+ kever.yang@rock-chips.com,
+ sjg@chromium.org,
+ trini@konsulko.com,
+ ilias.apalodimas@linaro.org
+Subject: Re: [PATCH 1/2] power: regulator: rk8xx: add RK818 LDO9 support
+Date: Sat, 17 Oct 2026 14:01:41 +0900
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm: dts: meson-g12b-odroid-go-ultra-u-boot: set vddio_c to 3.3V
-To: Shigeaki Asai <y-asai.0816@docomonet.jp>, u-boot@lists.u-boot-project.org
-Cc: u-boot-amlogic@groups.io, neil.armstrong@linaro.org,
- jh80.chung@samsung.com, peng.fan@nxp.com, kever.yang@rock-chips.com,
- sjg@chromium.org, trini@konsulko.com, ilias.apalodimas@linaro.org
-References: <20261010013237.2269021-1-y-asai.0816@docomonet.jp>
- <20261010013237.2269021-3-y-asai.0816@docomonet.jp>
-From: Quentin Schulz <u-boot@0leil.net>
-In-Reply-To: <20261010013237.2269021-3-y-asai.0816@docomonet.jp>
-X-Infomaniak-Routing: alpha
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Mailer: HidemaruMail 7.42 (WinNT,A00)
+In-Reply-To: <b4abae45-635e-421d-bb8d-e4699b0f05b2@cherry.de>
+References: <20261010013237.2269021-1-y-asai.0816@docomonet.jp> <20261010013237.2269021-2-y-asai.0816@docomonet.jp> <b4abae45-635e-421d-bb8d-e4699b0f05b2@cherry.de>
+Message-Id: <CDD5DF499196292F3006A@docomonet.jp>
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <u-boot-amlogic@groups.io>; Mon, 19 Oct 2026 07:36:14 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3135
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3137
 
-Hi Shigeaki Asai,
 
-On 10/10/26 3:32 AM, Shigeaki Asai wrote:
-> vddio_c (RK818 LDO9) is the vqmmc supply of the SD card. Linux picks
-> 3.0V for it, the lowest value in the allowed 3.0V-3.3V range, and the
-> value is kept across a warm reboot. U-Boot then finds the card at
-> 3.0V: it initializes, but data reads at 40 MHz fail on some cards (a
-> SanDisk Ultra A1 64GB here), so the kernel cannot be loaded and the
-> board drops to the U-Boot prompt. A cold boot works since the PMIC
-> starts from its 3.3V default.
-> 
-> Changing the kernel would not help the kernels already in use, so set
-> vddio_c to 3.3V when U-Boot probes the regulator, which happens on
-> every boot.
-> 
+Hi Quentin,
 
-I'll let Neil decide since he's the maintainer of that code, but I don't 
-think this is necessarily correct? The spec specifically allows 
-2.7-3.6V, c.f. https://www.sdcard.org/developers/sd-standard-overview/.
+Thank you for the review.
 
-Moreover, RK3399 Puma has 1.8-3.0V only, and it's been working fine for 
-years now (though I haven't checked with that SD card specifically).
+On 10/16/26, Quentin Schulz wrote:
+> On 10/10/26 3:32 AM, Shigeaki Asai wrote:
+>> +	{ 1800000, 100000, REG_BOOST_LDO9_ON_VSEL, REG_BOOST_LDO9_SLP_VSEL, NA,
+>> +	  RK818_LDO_VSEL_MASK, },
+>
+> Please stay consistent with the rest of the file where we have
+> everything on the same line.
 
-What happens if you do NOT use the SD in U-Boot at all and boot straight 
-to the Linux kernel, is it also broken in the Linux kernel then? If not, 
-then your issue is probably not what your tool output and we may have an 
-issue elsewhere (possibly in the MMC subsystem for example).
+OK, I will put it on one line in v2.
 
-Cheers,
-Quentin
+>> +		if (priv->variant == RK818_ID && ldo == 8) {
+>> +			mask = RK818_LDO9_EN_MASK;
+>> +			ret = pmic_reg_read(pmic, REG_DCDC_EN);
+>> +		} else {
+>> +			mask = 1 << ldo;
+>> +			ret = pmic_reg_read(pmic, REG_LDO_EN);
+>> +		}
+>
+> This is not great, I would prefer to have some additional configuration
+> in rk8xx_reg_info instead, but since we do it for many other cases
+> already, nothing for you to do on this issue in this patch.
+
+I understand, thank you.
+
+> Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+
+Thank you. I will keep your Reviewed-by in v2.
+
+I will drop patch 2/2 (see my reply there), so I plan to send v2 of
+this patch alone, after waiting a few days for other comments.
+
+Best regards,
+Shigeaki Asai
+
+(This reply was written with the help of Claude.)
 
