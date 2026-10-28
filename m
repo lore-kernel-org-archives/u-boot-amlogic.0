@@ -1,191 +1,170 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (DU2PR03CU002.outbound.protection.outlook.com [52.101.65.28])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.21629.1793114429094100383
+Received: from DU2PR03CU002.outbound.protection.outlook.com (DU2PR03CU002.outbound.protection.outlook.com [52.101.65.47])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.44133.1793197502993499149
  for <u-boot-amlogic@groups.io>;
- Tue, 27 Oct 2026 08:20:29 -0700
+ Wed, 28 Oct 2026 07:25:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@cherry.de header.s=selector1 header.b=QfPtGeja;
- spf=pass (domain: cherry.de, ip: 52.101.65.28, mailfrom: quentin.schulz@cherry.de)
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=bDFoBQe2;
+ spf=pass (domain: cherry.de, ip: 52.101.65.47, mailfrom: quentin.schulz@cherry.de)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eoijYACEZtudPJpo3FCNWcwz3Nudlq/V9XqFZnN8DGp5XPJ8nrSmD6f3Satv6soq2ggP4fvaYjMywwzRqz54elSWEfj73O2QdFm8w79EWdAzt7rend71iKEM9Ihfh90+9A/PfKBCjKZHI0fOZL7lUmBy14xsGh7DNkeXSOzyBmMlVDsegpnBEZlO1JixeoAZmMkr0n7enbKmXRSoeZtgpWuhtKo2+8aDFkwCfK3l1NaFpCaocb+9lFUlyQ37tRaVBgAAQvGRyTsJ0bbpBBf+hiFraqc1ZtD0t0Y8VqtRy9Xg0qEaUmyIXufpVh5BqpH8deJYTqCGe+pValLaWESrdA==
+ b=NjNTsf54p/62Dz9TZ7ebgEdUicmaVC6jBZvj9CxfXW/HZLugwi2TtQXl13Mea5Z3D8XxgjBpXmUGC+MAw1GZPqrMHh3X5cS9uI5qqFUP09L1rXMG4n8FhbJ0ZugnysGpuTEDMxggoM24vkyMRF7bcX9GGnTWde/jEpIwm/bIfibhYSp3ygOnVCmTnLIPqQEgnwh3WQo5QzVXNx/O612daA7H6S9i6T6UrG65ZlEyFESB/lXDwUCQ9ZUIm1omE6IhYTW4fasOc9F57K8uLqebUMKgwPlnE/HTZvCiqgCpA0oScZ7hcL7HW1brHIIAY1KGs5+2lpzWYW5FgjOqc5FKQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nSfbXMum/hL3rjNUxklomLNu7agipoMTSSQqjArinM8=;
- b=rSdZ6A+v6yoq6X/lwhEOO6B+7V5WAikIQ8ZQ/43gCJPAIlOIzR/89CDZVaepld+uL9WtZHVHafjxkLR0NtmlR+nCzmDsOh02RtRfl60VQeBaixlSSUz+ZiZd9ejE07DlF34qT+HpHVwYWYsNp07jiJmlDiIpIyMEjgAFzGpd8WDYFf/gSrk9OzD+MhuDJSNwiiU1EgDWzoedD4y9wM7G3KbGvDeZOhmJxfxJbj2s5O1dP7KN0hX0ev2lMM+Zi634LIc26FJ/Oj3x5QGs0bNCtFydqn/UHIHlzh2i8F0yO3noyD3/Vgwzu6PvEmmCQSucBJEFs/B1Azdcb6CDjdPT1g==
+ bh=+Py7En7Ikxwh4omXuGqxUwh+kVNc39H281CPmcq7YBA=;
+ b=sHBzYhPuOuPujBqFsJfzjpSAFpP0DtIzzvpacy9xd1u5iThOJgYYXDw0JIoTd7pKDqLM/WtQM0Ghh35sFojnAKlYiWSwJEqC9juhPo9R64hqtRaTGIDeqGxe7PBEU9qRMn35JTAdH4u1uqJrT3SZLCyl2ijZQw4HpUscPZndYNqRj8zrg8g1r+slLW2ppgNaM2FQp37SeJNrOwCDUN7EKDEqjcSl+saCLsnQ7SjYrTyDzmBDmCX02B6IHoklDQ75vhEGIVnkpaRPH8L2sNB0ANecVZ9TM6/6uPzG3LFLM100BwYXDISyYWWV/VQXXqnqVVYLK6iYAMoFnJNDj7sm+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
  dkim=pass header.d=cherry.de; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nSfbXMum/hL3rjNUxklomLNu7agipoMTSSQqjArinM8=;
- b=QfPtGejaj1ZahswQ6wPuYNBZYo0o+Y+ONOm4OpuVoOl+z+5ROjsNK6S+yJMD7sGhRtBETKCBwD4UpYfMGhvkns78EbMdkeuMAFDbpg+zFb8HY+OgGwlqLAneauZWWdlLZrm5y8SMoUOFCoUk6kG+iWEq9eNMQO4xZe7J35yjbeU=
+ bh=+Py7En7Ikxwh4omXuGqxUwh+kVNc39H281CPmcq7YBA=;
+ b=bDFoBQe2rSmTzcg1N1evwGI9z5MiCLDzM1euwKxeklad10htqSWWMRS11A59RupQzVQHGZlgm2g6Y68mt923zWGAV0BMkzz/4uM4Z1mdn6rAcaPn4ayRgTjQlChwgMLzOP+5ARqOhSCmyTxd8TwSqhMbpBF5Xw3jRs3/xMNKYKY=
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=cherry.de;
 Received: from PA3PR04MB11153.eurprd04.prod.outlook.com (2603:10a6:102:4ab::7)
- by VI1PR04MB6782.eurprd04.prod.outlook.com (2603:10a6:803:139::8) with
+ by AMDPR04MB11298.eurprd04.prod.outlook.com (2603:10a6:20b:6cb::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Tue, 27 Oct
- 2026 15:04:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.8; Wed, 28 Oct
+ 2026 14:24:58 +0000
 Received: from PA3PR04MB11153.eurprd04.prod.outlook.com
  ([fe80::6b02:c0eb:95a4:3c3d]) by PA3PR04MB11153.eurprd04.prod.outlook.com
- ([fe80::6b02:c0eb:95a4:3c3d%5]) with mapi id 15.21.0546.021; Tue, 27 Oct 2026
- 15:04:27 +0000
-Message-ID: <0bc7a7aa-c51f-47d6-acc3-22d554ecc09f@cherry.de>
-Date: Tue, 27 Oct 2026 16:04:26 +0100
+ ([fe80::6b02:c0eb:95a4:3c3d%5]) with mapi id 15.21.0546.021; Wed, 28 Oct 2026
+ 14:24:58 +0000
+Message-ID: <1bee9457-b560-4077-940d-b9f75426f8b1@cherry.de>
+Date: Wed, 28 Oct 2026 15:24:56 +0100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] power: regulator: rk8xx: add RK818 LDO9 support
+Subject: Re: [PATCH v2] video: use bpp conversion helpers consistently
+To: Reza Kurniawan <imkyufie@gmail.com>,
+ "NXP i.MX U-Boot Team" <uboot-imx@nxp.com>, Simon Glass <sjg@chromium.org>,
+ u-boot@lists.u-boot-project.org, u-boot-amlogic@groups.io
+Cc: Tom Rini <trini@konsulko.com>, Anatolij Gustschin
+ <ag.dev.uboot@gmail.com>, Eugen Hristev <ehristev@kernel.org>,
+ Stefano Babic <sbabic@nabladev.com>, Fabio Estevam <festevam@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Andre Przywara <andre.przywara@arm.com>, Thierry Reding
+ <treding@nvidia.com>, Svyatoslav Ryhel <clamor95@gmail.com>
+References: <20261016-bpp-helpers-v2-1-ca1e6bba2820@gmail.com>
 From: Quentin Schulz <quentin.schulz@cherry.de>
-To: Shigeaki Asai <y-asai.0816@docomonet.jp>, u-boot@lists.u-boot-project.org
-CC: u-boot-amlogic@groups.io, neil.armstrong@linaro.org,
- jh80.chung@samsung.com, peng.fan@nxp.com, kever.yang@rock-chips.com,
- sjg@chromium.org, trini@konsulko.com, ilias.apalodimas@linaro.org
-References: <20261010013237.2269021-1-y-asai.0816@docomonet.jp>
- <20261010013237.2269021-2-y-asai.0816@docomonet.jp>
- <b4abae45-635e-421d-bb8d-e4699b0f05b2@cherry.de>
-In-Reply-To: <b4abae45-635e-421d-bb8d-e4699b0f05b2@cherry.de>
-X-ClientProxiedBy: VIVP296CA0076.AUTP296.PROD.OUTLOOK.COM
- (2603:10a6:800:352::13) To PA3PR04MB11153.eurprd04.prod.outlook.com
+In-Reply-To: <20261016-bpp-helpers-v2-1-ca1e6bba2820@gmail.com>
+X-ClientProxiedBy: FR5P281CA0042.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f3::15) To PA3PR04MB11153.eurprd04.prod.outlook.com
  (2603:10a6:102:4ab::7)
 Return-Path: quentin.schulz@cherry.de
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA3PR04MB11153:EE_|VI1PR04MB6782:EE_
-X-MS-Office365-Filtering-Correlation-Id: c8609c02-52f9-41fd-b4a8-08df343b986e
+X-MS-TrafficTypeDiagnostic: PA3PR04MB11153:EE_|AMDPR04MB11298:EE_
+X-MS-Office365-Filtering-Correlation-Id: edd6e49a-c02f-4197-b237-08df34ff3e72
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|23010399003|376014|366016|1800799024|261026140227099003|4143699003|11063799006|56012099006|261026121527099003|261021123027099003|261021121427099003|261009223027099003|261022105027099003|10067099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: hDM2seZi7Mj8R4c7n/GnqiW1ycmGcP3BhU2sh/nMcVxVnkRz6xUdksFXUORnmR4lmRAylq/yDd3HfEzcVJwAxCqRueK1kifdTJ6YAwnojXSWaBFCBmb79YWI+aZ6KF+aR8exGWQ0N6uUg2f5f8wAasO6WNnmQ0KJlRDuqW3GeKJVDxuyDGbQ4olK2eFkmPm0teWTbBpsQdg2NcZI5N/Nf5bXEjR86CHMfK0F7cdmiMpffXgF2r2cp5dM6/p3obiXG/Z3Jm+jWtRv0HcXPBtf+6Viu+yE/ZmIzlcoyAqOA3wvw51ltDpB0mx55A41rsPDM/PyQiJlGsM22CZAm5BprUEj7/FSzI0epxIJIXuvkGtxiuEhvXlzVnbENs5qX2A/lmwKTJ6ovarb1lvBJLlKNLqZk3lVDwC0Yvwlb0ELe5qHgOdM/bkydcTbQy/b/ftu2EagOskGm0skL3Uw/5smAwXCGKTTFrIIi5g8qpoUBb3kbouZYVm9mrL3o6jhi18WS/XSZzJXYr9gG7mf8G1Vfl64CbLUIpbtmSnKdfvmb/Lip7m1uTEwdVbIWKKv3xklkSpWuuvsTf5eDm1T1yVbM6sJZGsUzfA9di/BmbMcf3MTYJLpFa6WdrHT6kpsuniL
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA3PR04MB11153.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(376014)(366016)(1800799024)(261026140227099003)(4143699003)(11063799006)(56012099006)(261026121527099003)(261021123027099003)(261021121427099003)(261009223027099003)(261022105027099003)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|11063799006|56012099006|261009223027099003|261022105027099003|261026140227099003|261022075727099003|10067099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: a6jmBwbT77Wik2t4U1rsAa9rw49i/Qlxd5iDSksJ4oCMaTT/lD0ZV+ABkWGZ9Ic7tS+i0n71G8wDwJtt8OjGG2mPDYHl4zamKoXZaITfpEeVBN9dql+K1Y1rQuMqr8GpsptayU2bLB9yQwKpCOYV55MCykYtRavhmE+orYWc8zf35kvly2m/NVSNQASom2x8FFyUke2hTV3GdHamMTcEkNkvULt+AvJkXLpi7x5Vzp6LZNn1OOhXy38QmPnSkdLJh/6hZTzF7611XKKW9gRkMe7LVen7S6JHmfuqRIi6tcvHSH9aEDv22FLYp1b3dUeViIh5lloCIA1gavxZNZtUcn/hFI1IZnt1F2KNdNLninQbG91AbxeZ9sd+VvRbFNv89ZvYKjzPvXB09oukIbzAaKtn2UvFquVDUX6V9X0VGDa1yVgRvXOq2AQGujA9lr36AUGQhi9+ot5JrdFlk6mH5USbU/iaflsLqp6kzkqGr/Jcr8/6hstQNaXCROZXMk1fn76bP+kMG9MzkdVqmhFbo5lgpMRgccsLBJcGY/bKvbuqvwNJkJMM4+Gm8QCxttD3wA/jwRKmovUMVB7er8lUIKvuoK2hIgB56RL2ae5g2PZ+7tozM8OkDEiHTB8FthFm
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA3PR04MB11153.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(11063799006)(56012099006)(261009223027099003)(261022105027099003)(261026140227099003)(261022075727099003)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UU1kcGxLQXJuVzNHMzFtUGJsRnd1L016Zit3aHZLdjhxNzZzL1Z3eitrNUp5?=
- =?utf-8?B?elQxc0cxVGpnR3RkU1NldEZoaGxuZVBKZG0yRm9nVlh4SVg2djI1TDJUTDBm?=
- =?utf-8?B?VlBqNWhyTjg1Y2p4UjVwR3E4YjlNd1JMSFUxczA5YnNBUVVaSWt2QytZRFE0?=
- =?utf-8?B?ZTJWQ3NpYUthMTExL2hnTlVGTjkxSmRzVGR6WkhIbVQ3RzJ6VzBKeWQ2RCtZ?=
- =?utf-8?B?eko0cW9BWk5tQUZzQk1rMWFGbnROQkhLeVZBMy9MQXB0dHVJYm9NL2F1RGhj?=
- =?utf-8?B?ZGEyaDk0K3d4MHY0elA4VVFoYklLQVRUYk5tUXA1SUVJOEUzV1ZBMDJUOW5k?=
- =?utf-8?B?UE9XY1ozR1NhV1dzVkU5QVQ2NERiOVZ5RC9lSGJoRjg3ckhnRzZZRjV2c0tK?=
- =?utf-8?B?elRRSU5qNjJxTUhhNVhra1NqaE4wVlc4OHBGTWtGZmo4bm0xVVVtM093VmVh?=
- =?utf-8?B?SlRDaTh1UWdnckxRS1VoNldMeHgySXNMRjJ5alVvNzFxUHBiK3RIMHVxVHhX?=
- =?utf-8?B?bVROanRMTWdqdFhObTl5Qm9LZUVoRExTcUtIVURjUkNsT3pZd2NtL0IwWkpu?=
- =?utf-8?B?MEg3Qzg3aFRGRE1RRW42U29iNkcweEllZGxEQzIzUHR1YmhBQXFtUUoyTjNx?=
- =?utf-8?B?ZTNscjVpTWtySTlFNFZhRCtFbDdnSGNsWnZ2Y0tVc205Y0hBNkxienluQ1Iw?=
- =?utf-8?B?TFA1V3k2Y1YyZGVsOGNsQktWTGpteDNaeXc3bTAvdnJGZzU5dGZ2cnRNU3pl?=
- =?utf-8?B?ZWZzRCtjK2ExWDZJZEFRcWVCQXdLK0YvV25MSlV3eEF4dzVWcldwOWtYbTB2?=
- =?utf-8?B?eThSN3dvSXhvV01sdFhmWEpha1pZSkhCN1Q3ZlNDdzV1ZUdtekxwUXMxblZy?=
- =?utf-8?B?cXlnNE84QVIyMi9rTjI2K3Fnc09rdzdnNElIWkhDcnB4K08zZnYrWWxjWlhl?=
- =?utf-8?B?NXpmWHo4NFVTeVBPUm54VTJBK3E2UG1nL1ZtSmtmNkl6QXNRcTNuSHNVdTJk?=
- =?utf-8?B?U21ZeVhGdENMM29tWGFjamE3NVhQRXJXcDNsTk9LaktnY1BueVVjNW9JMWtF?=
- =?utf-8?B?V2VkZHpKMWJDdi9mMC9yR25qWXczQzVOZ0E4WDNRL0xMakZhSTlWVEUzMXNx?=
- =?utf-8?B?QzIzSG51RklqVlJFdVFOK05HMzJGSmE4L3JhR01EU0ZyWTRyL3lybUFmblg0?=
- =?utf-8?B?K3hpNGZGd0h1SGZvYWU2SnA0UWU1UXdkNHVzVFdUZXd5SmJqVFBTOFFRaE90?=
- =?utf-8?B?c3hsdFBHSFVocnpYUXdlSTVWZXFReU1rekdOYmc2VVhxb3dLZ1ArVWJTWSty?=
- =?utf-8?B?a2x1U004QStCamZlWkFVTVUrM1d2d3VpOTlRSkk5SndQeUZXNnlVbE9YbVdv?=
- =?utf-8?B?S0hoeGhIQ3QwWHk4Y0NuVjhVK1d1amlVcE5SSjBsQzQ1ZWZSWEJwTkpPZ0po?=
- =?utf-8?B?NEVOR3R1ZEE3cTY5MXh4dGRncTg4ZFVXUHcyYjBZR0NMVXlrdmhzZjRnY0tY?=
- =?utf-8?B?cVRUREtrNVR3NDU0SHVYNEZ2MTZaWGExV2JBcFgvLzFkR2hSdERVaHF4ekZS?=
- =?utf-8?B?UGdlUjIxZmJ1UHZNRGwrMkZGemdnUEF4YnR5a1dVYUJqZEliNDdNUWRJbnlI?=
- =?utf-8?B?bXp3YTFkOGUzVEhKSFEwMHFnb1VJd3RRTlhRMThQYjBkNmorUkZHYVMxcGRs?=
- =?utf-8?B?TWpkamIyTjJlTGtMRFROdG1McHd0azNFNTdmeUtsT1MzTXBiV1M1Ykkxcm5v?=
- =?utf-8?B?alFCMjAvWTFWWW1wcWJSRUs2QTFRdmVmNEJaUXJqYXR0bVh6Y25PeWpNcjJD?=
- =?utf-8?B?bEswdHZzaGpRb0RSaSs3d0c0T0RRTU9EcWtsYmwxSHNkN0xMeEhEYTU3akVy?=
- =?utf-8?B?cWtKOTl1dDdKdFhGTjV5a1Z4OTJpZVpUek1OYy9UbXI1T0NMUGp6Wi90cVha?=
- =?utf-8?B?UC91cXl3dzlVMTNlekI2Rkx6eHgvL2ZEbytkeFdNMEl4OHpjRXJ6YnlBWlN1?=
- =?utf-8?B?RnhvRGh0MVVRMWtTMHFhSnovc0JpYnk5WGJsRXo2VTgzWnRYTkFCZ1JKQW5v?=
- =?utf-8?B?RWxJWkkwd3N2OEdFRFlGREdsMGIyQ0RCNFNsSjduMEthMVJBNGtDU3UrOHBx?=
- =?utf-8?B?Zm9LU1JhTU9wci9DbFU4R3JEWDI4VVZjekFtWW1UbkFPYzU3VjJWeXl6ZTNj?=
- =?utf-8?B?ZWRSVVNCOWgyNkxySEFFWk1nUE81M0QyeXJQUWhLYW5KbVdQTmRuWXc5aTJK?=
- =?utf-8?B?SHdMbUEwTG1WNVEvM1NsTDFRZzQ5aXpPMWtSQ09udXhqV3VXY0dBUGQvN2JK?=
- =?utf-8?B?QzVpenJGV3hYbUR6eUZKOTFDeTNOZWxCWithS253c0h0ekVNZld0UT09?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cmxVV3M1K25uRlI0MkpRcUZiNml0bU0vU3NrNHlKZWNvUDFvQnNQblpwYW10?=
+ =?utf-8?B?algxaS9zeXVCbGVBK3hHbThwS0dyRG5TbkdKN3lrU0k3Tm56SzJpQTgrM1I2?=
+ =?utf-8?B?Ti9oazZNclBkQXpYaTNqS3MxVVhmMkljSWJZYXlycWVZRmZXTlF2YWV2cGNj?=
+ =?utf-8?B?NlNUUjNTcFRBaWd4amR3ZE11Qy9QR2EyNUpkcndlbSt1bGp6TjBnK05WWkFk?=
+ =?utf-8?B?dlU0TjNkeUlRblVxTlU5bHhrb3BSOG1pQ0c3SjcwSEkvK040ZnZ2eFR4cE1D?=
+ =?utf-8?B?SlYwcW9WZVB6KytqdkV6NU9PNEU5QVpRRFBHYlFOUHg2YVdpT2gwNCtreG5z?=
+ =?utf-8?B?VWdmMHJ2cjM4dDNJbWhZZ2pTeU5zRVFFVStuSm5aVThqU1h2cW1UQ2hsQUpZ?=
+ =?utf-8?B?N3lEeDk5VDlUb252eTkwM04zMmxLMXFvZklmUUZ5SWFEbjBoNDM5S3htSVhy?=
+ =?utf-8?B?WW1vU24wZEQxTGc3a3VHVGJ2dGJneHVjU1FPK3pLNVpVc2hHVmtZRXNMemlZ?=
+ =?utf-8?B?Unh2YnQzZjkyY05BdjUwQ0xKeCt0RllLZndOYittUG1HVFdvclFndythSXNN?=
+ =?utf-8?B?Sk9oUngzVVVPZnZmNFMvWDJEQnNRZ1UwbE1tNyswR2hBZ2Q3VzhEVGZmQ3pu?=
+ =?utf-8?B?bFBsT0lIRUw0VFFHRmI5OUE2Q3NDcjhpbWUvQUtiZDY4M0pNOTZEMFBhMlpj?=
+ =?utf-8?B?RENNeTJtUGNBeWo0ZHEwZWZIcmpXb1QyNkRLalNMN2FPaDN1dVdUUWc5NDg4?=
+ =?utf-8?B?aE9JclBBaEZiWXIxTjVrazQ3ZERMUG9PbDgrWmtQdWl2Q3NKakJkakhzcXNB?=
+ =?utf-8?B?RjgxTzBQL29UUyt4eXZjNGYzUjQ0ZDZBOHF4WHZNMDZ4ZG1YM3lsUkh3L0pE?=
+ =?utf-8?B?TDk5SjhXR201QlRNbWRGSVh5SFAvaUtjOEcrMWo4WG1OVnN6eUF5QlR4UURs?=
+ =?utf-8?B?YkxHUlQ5QXBlMFgyQUpoank4dFJHRVlSOHJ0eWh6UXZ2dVRoeFNsSERSR1hC?=
+ =?utf-8?B?N3NIa29kbVEvQVBzMWRKY1FKbHJmVE9rT3diWWo3NE0zbmdZbWk3bk9aL1JR?=
+ =?utf-8?B?MnhBZVBzQm45UG5UdzhOVzJTU3lra2NQKzBuSnRNQzh5YzRISUs2UWNxV3Rn?=
+ =?utf-8?B?K2xnWWZnMjk4VzFaRUlNZXdqcXl3ZHdIbmdPZC9STGRETE94eHg3MzNFZDIy?=
+ =?utf-8?B?MHd0RnM4TU1CRFp6ejlzaFMvSHEzSzgrd29FWFVJN3NlNWxBWUtUWjBBeDZv?=
+ =?utf-8?B?dWJ1WnZORk1SZ3NmZ0VuZjdpQmtENzJYd0ZhYVliV01obm5YRTJpVG9EL2d1?=
+ =?utf-8?B?ZVZCdFFtaWJlSE9CZ21MZ1Q0cWRhMFBFSjFsM1VmWU5xVW5Fb0JLMnNiZHpU?=
+ =?utf-8?B?TEVVaEVmZDY2S25USldWNHlOY3dKa1pZRmFuTzVPNTBPVlJUeG1wcmpraVNr?=
+ =?utf-8?B?K0xTY2VSc0dVZk9yNmxIODlKVkFZbUZrZlFyUmUveTdCbHgzellpNWxwU2w1?=
+ =?utf-8?B?cEIvUVNtQzhMZ3RJNjlUcXlTZnk3OWJGUktiNjJSbkJsM0E4dzRLbCtkcmJZ?=
+ =?utf-8?B?MldoTEYzakRsSENDNjBwYVV0YTBnaGtiSlBSekpaRWo0dHVDaTdMTEsxclpk?=
+ =?utf-8?B?T2gwOGhET2dlem5OU1VkQTdmaVZyV2pna3dGejRQdDlYS0RoNS94V1Bmc3Fo?=
+ =?utf-8?B?anJRVE1jbVdOQnZoVjA2Y1hjOXVIYXVOZlRaVkJnUjRiVWpZUGMyK1AwWVZ2?=
+ =?utf-8?B?MFM4ZVZ2SFgwb2gzYnBwUVBpZGRRVXh6emVBeVdOdjBLRUF5TkgvVWVHUW5O?=
+ =?utf-8?B?akpJMnlJNk1XbFp3UmRWTlp0SFVSVVI1QTFZeExWREFVcHc3cDB2R090MFA5?=
+ =?utf-8?B?ZFlFeVRDTDZiQUsxZVpmNmhHSE1tVnBzN3RNSHNEczJqUE1Vd0F5RnZKVUJp?=
+ =?utf-8?B?eHRKRnFJZHBLdnZKenFsN2pFRDJRbCsyT3k0VytvZVg4R3BHcXJEMFNURFpm?=
+ =?utf-8?B?cktnbmo0WFc2ejNScjN5cDJPNk8wTTR6MUorWS90b0JjWUl4aUxxVHdVMHBn?=
+ =?utf-8?B?azhyUzkwUDUwT1JaNFl4MGxZZ3JidHVsbU9LUENxRnNmU2ZZNTZXaGkwYTBt?=
+ =?utf-8?B?enZPSFFsRVNFbnljY1hzR2tPaS8zMXozclhmS1U1dElSb2JzTzNPVlc4Uy9v?=
+ =?utf-8?B?c2xrcWNOamZPQWRHZ0ZuUGNVNE42Z3BHN2QxWGVCbVdzMjNWeUxMVUhORkRM?=
+ =?utf-8?B?Slhsa3lsZWFpdUVheXg4T3RKRFFBNmNiclJpem1wOHlpVWhMT1RFQmlRbWlD?=
+ =?utf-8?B?Rk16b3QzQTFMbVN2c2tqd0lDeU1WNE0vN2RBcGtYZ25ycVBqdC8xdz09?=
 X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8609c02-52f9-41fd-b4a8-08df343b986e
+X-MS-Exchange-CrossTenant-Network-Message-Id: edd6e49a-c02f-4197-b237-08df34ff3e72
 X-MS-Exchange-CrossTenant-AuthSource: PA3PR04MB11153.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 15:04:27.7140
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2026 14:24:58.0591
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8Di3dtVvWGUMk66r0SL9ELU4NKYpO9cF9aibIwlwmFcdcaIYnhas32cnttuwjhknzePcqGXc8KsHL4+yHC3yeFBQu9Et0jdAz3/BPQGZTow=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6782
+X-MS-Exchange-CrossTenant-UserPrincipalName: ElWVIezq1GYP7pCvVWz60WxWXKeAzlDqs22jTykI05mXDaEJfN96XUaZ5vdxhLbjb/+S1iWQ9GXFtZVS7BqPQ/0adU1NH+S3BkaloR9YS/4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AMDPR04MB11298
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Wed, 28 Oct 2026 15:27:21 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3141
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3143
 
-Hi Shigeaki Asai,
+Hi Reza,
 
-On 10/16/26 3:05 PM, Quentin Schulz wrote:
-> Hi Shigeaki Asai,
->=20
-> On 10/10/26 3:32 AM, Shigeaki Asai wrote:
->> The RK818 has nine LDOs, but rk818_ldo[] only describes eight, so
->> LDO_REG9 indexes past the end of the table. Its voltage reads back as
->> garbage and it cannot be enabled or set.
->>
->> Unlike LDO1-8, LDO9 is switched from the DCDC enable and sleep
->> registers (bit 5), and its voltage selector lives in
->> BOOST_LDO9_ON_VSEL/SLP_VSEL with the usual 1.8-3.4V, 100mV range.
->>
->> Add the table entry and handle LDO9 in the enable and suspend enable
->> helpers.
->>
->> This patch was written with the help of Claude (claude-opus-5-5).
->>
->> Signed-off-by: Shigeaki Asai <y-asai.0816@docomonet.jp>
+On 10/16/26 8:30 AM, Reza Kurniawan wrote:
+> Many places open-code the conversion between log2 bits-per-pixel and
+> the actual number of bits or bytes per pixel, using expressions such as
+> "1 << bpix", "(1 << bpix) / 8" and "((1 << bpix) >> 3)". Meanwhile,
+> <video.h> already provides VNBITS() and VNBYTES() helpers for exactly
+> these conversions. Replace the open-coded expressions with the helpers.
+> 
+> Using the helpers makes the intent of the expression clear, removes
+> duplicated bit manipulation, and reduces the reliance on the specially
+> crafted VIDEO_BPP* enum values, since callers no longer need to know
+> that those values are log2 quantities which is also important for
+> future extensions.
+> 
+> Note that VNBYTES() is only correct for 8bpp and above, since it returns
+> a whole number of bytes per pixel and cannot represent sub-byte pixel
+> sizes. Every site converted to VNBYTES() here uses 16bpp or 32bpp, so
+> the result is identical to the original expression.
+> 
+> No functional change is made.
+> 
+> Signed-off-by: Reza Kurniawan <imkyufie@gmail.com>
+> ---
+> Changes in v2:
+> - Convert uncaught conversion cases in the following files:
+>    - arch/sandbox/cpu/sdl.c
+>    - boot/fdt_simplefb.c
+>    - drivers/video/atmel_lcdfb.c
+>    - drivers/video/rockchip/rk_vop.c
+>    - drivers/video/sunxi/sunxi_de2.c
+>    - drivers/video/tegra/tegra124/display.c
+> - Updated commit message
+> - Link to v1: https://patch.msgid.link/20261008-bpp-helpers-v1-1-475d1b2513c9@gmail.com
+> ---
+>   arch/sandbox/cpu/sdl.c                 | 4 ++--
+>   boot/fdt_simplefb.c                    | 2 +-
+>   cmd/bdinfo.c                           | 2 +-
+>   drivers/video/atmel_hlcdfb.c           | 2 +-
+>   drivers/video/atmel_lcdfb.c            | 4 ++--
+>   drivers/video/imx/mxc_ipuv3_fb.c       | 2 +-
+>   drivers/video/meson/meson_vpu.c        | 4 ++--
+>   drivers/video/mvebu_lcd.c              | 2 +-
+>   drivers/video/rockchip/rk_vop.c        | 4 ++--
 
-The patch never made it to the mailing list, c.f.=20
-https://lore.kernel.org/u-boot/ or=20
-https://lists.u-boot-project.org/pipermail/u-boot/2026-October/thread.html,=
-=20
-can you please fix the consistency issue and send a v2 and make sure it=20
-hits the mailing list? This is fixing a real issue, even though you=20
-don't have a need for it anymore, so I would like to merge this but I=20
-cannot if it's not on the mailing list.
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de> # Rockchip
 
-Thank you in advance!
 Cheers,
 Quentin
-
->> ---
->> =C2=A0 drivers/power/regulator/rk8xx.c | 46 ++++++++++++++++++++++++++--=
------
->> =C2=A0 1 file changed, 36 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/power/regulator/rk8xx.c b/drivers/power/=20
->> regulator/rk8xx.c
->> index 88453bb7bdb..cb402c96ec8 100644
->> --- a/drivers/power/regulator/rk8xx.c
->> +++ b/drivers/power/regulator/rk8xx.c
->> @@ -60,6 +60,8 @@
->> =C2=A0 #define RK818_BUCK4_VSEL_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x1f
->> =C2=A0 #define RK818_LDO_VSEL_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x1f
->> =C2=A0 #define RK818_LDO3_ON_VSEL_MASK=C2=A0=C2=A0=C2=A0 0xf
->> +/* LDO9 is switched from REG_DCDC_EN and REG_SLEEP_SET_OFF1 */
->> +#define RK818_LDO9_EN_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BI=
-T(5)
->> =C2=A0 #define RK818_BOOST_ON_VSEL_MASK=C2=A0=C2=A0=C2=A0 0xe0
->> =C2=A0 #define RK818_USB_ILIM_SEL_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 0x0f
->> =C2=A0 #define RK818_USB_CHG_SD_VSEL_MASK=C2=A0=C2=A0=C2=A0 0x70
->> @@ -297,6 +299,8 @@ static const struct rk8xx_reg_info rk818_ldo[] =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {=C2=A0 800000, 100000, REG_LDO6_ON_VSEL,=
- REG_LDO6_SLP_VSEL, NA,=20
->> RK818_LDO_VSEL_MASK, },
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {=C2=A0 800000, 100000, REG_LDO7_ON_VSEL,=
- REG_LDO7_SLP_VSEL, NA,=20
->> RK818_LDO_VSEL_MASK, },
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { 1800000, 100000, REG_LDO8_ON_VSEL, REG_=
-LDO8_SLP_VSEL, NA,=20
->> RK818_LDO_VSEL_MASK, },
->> +=C2=A0=C2=A0=C2=A0 { 1800000, 100000, REG_BOOST_LDO9_ON_VSEL,=20
->> REG_BOOST_LDO9_SLP_VSEL, NA,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 RK818_LDO_VSEL_MASK, },
->=20
-> Please stay consistent with the rest of the file where we have=20
-> everything on the same line.
->=20
