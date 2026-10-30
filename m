@@ -1,95 +1,62 @@
-Received: from ocn-dfr-mts-208c1.ocn.ad.jp (ocn-dfr-mts-208c1.ocn.ad.jp [210.145.249.208])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.33754.1793149480425563832
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.16921.1793381104585715917
  for <u-boot-amlogic@groups.io>;
- Tue, 27 Oct 2026 18:04:40 -0700
+ Fri, 30 Oct 2026 10:25:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@docomonet.jp header.s=20240125 header.b=tyXQQr1e;
- spf=pass (domain: docomonet.jp, ip: 210.145.249.208, mailfrom: y-asai.0816@docomonet.jp)
-Received: from ocn-ckd-mts-211c39.ocn.ad.jp (ocn-ckd-mts-211c39.ocn.ad.jp [210.163.245.40])
-	by ocn-dfr-mts-208c1.ocn.ad.jp (Postfix) with ESMTP id 7D76E7000020C
-	for <u-boot-amlogic@groups.io>; Wed, 28 Oct 2026 09:58:50 +0900 (JST)
-Received: from ocn-spm-mts-205c1.ocn.ad.jp (ocn-spm-mts-205c1.ocn.ad.jp [210.145.246.230])
-	by ocn-ckd-mts-211c39.ocn.ad.jp (Postfix) with ESMTP id 40B9620002E3C;
-	Wed, 28 Oct 2026 09:58:45 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=docomonet.jp;
-	s=20240125; t=1793149125;
-	bh=DlfN4F3QwYla2rxXts8khULYIia6QFD/yEbQ+/YYGfQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tyXQQr1e69DFgsSWJXX+dgNNa6J9HC2F9ZkkDlxfChk+iXYLeh1xzcFxX5eDWKpT+
-	 FkweVsgyNhcBBghz3AWKzoGJwej2rdxxCgFfiLgsBEfy1LjJSDZll/YeXVGuB/9bOW
-	 a6u60L3lwrhdAr+vSCnXNZN0rOS2tm4zqQ65nCg0=
-Received: from ocn-vc-mts-210c1.ocn.ad.jp ([210.145.250.232])
- by ocn-spm-mts-205c1 with ngmta
- id be2382af-18e28ba0fd9f8720; Wed, 28 Oct 2026 09:58:45 +0900
-Received: from ocn-sdpx-mts-202c1.ocn.ad.jp ([210.145.249.135])
- by ocn-vc-mts-210c1 with ngmta
- id 50dd90fe-18e28ba0c26bef2e; Wed, 28 Oct 2026 09:58:44 +0900
-Received: from docomonet.jp (p3688129-ipoe.ipoe.ocn.ne.jp [153.238.101.128])
-	by ocn-sdpx-mts-202c1.ocn.ad.jp (Postfix) with ESMTPA;
-	Wed, 28 Oct 2026 09:58:44 +0900 (JST)
-From: "Shigeaki Asai" <y-asai.0816@docomonet.jp>
-To: Quentin Schulz <quentin.schulz@cherry.de>,
- u-boot@lists.u-boot-project.org
-Cc: u-boot-amlogic@groups.io,
- neil.armstrong@linaro.org,
- jh80.chung@samsung.com,
- peng.fan@nxp.com,
- kever.yang@rock-chips.com,
- sjg@chromium.org,
- trini@konsulko.com,
- ilias.apalodimas@linaro.org
-Subject: Re: [PATCH 1/2] power: regulator: rk8xx: add RK818 LDO9 support
-Date: Wed, 28 Oct 2026 09:58:43 +0900
+ dkim=pass header.i=@0leil.net header.s=20231125 header.b=Y7E8Mcg+;
+ spf=pass (domain: 0leil.net, ip: 84.16.66.172, mailfrom: u-boot@0leil.net)
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jGSTy2WZdz6gg;
+	Fri, 30 Oct 2026 18:17:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0leil.net;
+	s=20231125; t=1793380678;
+	bh=0RLwoLhkubsMfpP2cOMR0F4RpznHPz8xW7/I6Pivb6I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Y7E8Mcg+bAFPQA/N8IemYEKg34yCboeFqezVwSiCmuMcVVl/Q8PNiYL9BKSKbf2YS
+	 aFKQ92rZBy+PV+Zf8q94DqBswUiTZby01YTKqPNAuRPrL0C8/DcH7PnSRRGAFYTeAX
+	 GZ6+iW3r/D51+FnkxD5UVJn6mzsku7NDaNN5Zq+7jakTYrwyCzSw9+gQYefqdSkqDr
+	 GJ7VXJbVRxuQ7E3dR0hi3aK0eXT3KVbfX640SaAZ3Q5mh53E+Z/WGKTUCLSfn2I818
+	 51HmhyxOEwS7fJgUr7XqghMEOfIg7qXeUyhIyuXE4c73rgBPyMR+ZyPS9KKw06FYZI
+	 G69IMHBVpaJzw==
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4jGSTw4tH3zZQ7;
+	Fri, 30 Oct 2026 18:17:56 +0100 (CET)
+From: Quentin Schulz <u-boot@0leil.net>
+To: quentin.schulz@cherry.de, u-boot@lists.u-boot-project.org, 
+ Shigeaki Asai <y-asai.0816@docomonet.jp>
+Cc: u-boot-amlogic@groups.io, neil.armstrong@linaro.org, 
+ jh80.chung@samsung.com, peng.fan@nxp.com, kever.yang@rock-chips.com, 
+ sjg@chromium.org, trini@konsulko.com, ilias.apalodimas@linaro.org
+In-Reply-To: <20261028020618.2844987-1-y-asai.0816@docomonet.jp>
+References: <20261028020618.2844987-1-y-asai.0816@docomonet.jp>
+Subject: Re: [PATCH v2] power: regulator: rk8xx: add RK818 LDO9 support
+Message-Id: <179338067662.786412.9023930308177381461.b4-ty@b4>
+Date: Fri, 30 Oct 2026 18:17:56 +0100
 MIME-Version: 1.0
-X-Mailer: HidemaruMail 7.47 (WinNT,A00)
-In-Reply-To: <0bc7a7aa-c51f-47d6-acc3-22d554ecc09f@cherry.de>
-References: <20261010013237.2269021-1-y-asai.0816@docomonet.jp> <20261010013237.2269021-2-y-asai.0816@docomonet.jp> <b4abae45-635e-421d-bb8d-e4699b0f05b2@cherry.de> <0bc7a7aa-c51f-47d6-acc3-22d554ecc09f@cherry.de>
-Message-Id: <4DD66777AE0BE92F3006A@docomonet.jp>
-Content-Type: text/plain; charset=us-ascii
+X-Mailer: b4 0.17-dev
+X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Wed, 28 Oct 2026 15:27:21 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3142
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Tue, 03 Nov 2026 08:47:56 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3144
 
-Hi Quentin,
+On Wed, 28 Oct 2026 11:06:18 +0900, Shigeaki Asai wrote:
+> The RK818 has nine LDOs, but rk818_ldo[] only describes eight, so
+> LDO_REG9 indexes past the end of the table. Its voltage reads back as
+> garbage and it cannot be enabled or set.
+> 
+> Unlike LDO1-8, LDO9 is switched from the DCDC enable and sleep
+> registers (bit 5), and its voltage selector lives in
+> BOOST_LDO9_ON_VSEL/SLP_VSEL with the usual 1.8-3.4V, 100mV range.
+> 
+> [...]
 
-Thank you for your reply.
-I think this was caused by my mail settings.
+Applied to https://git.u-boot-project.org/u-boot/custodians/u-boot-rockchip (u-boot-rockchip-2027.01), thanks!
 
-I will send v2 later (with the 1/2 patch only).
+[1/1] power: regulator: rk8xx: add RK818 LDO9 support
+      https://git.u-boot-project.org/u-boot/custodians/u-boot-rockchip/-/commit/a7d8b31958518d93f425369c0c76e76109d3981f
 
-Thanks,
-Shigeaki Asai
+Best regards,
+-- 
+Quentin Schulz <u-boot@0leil.net>
 
->Hi Shigeaki Asai,
->
->On 10/16/26 3:05 PM, Quentin Schulz wrote:
->> Hi Shigeaki Asai,
->> 
->> On 10/10/26 3:32 AM, Shigeaki Asai wrote:
->>> The RK818 has nine LDOs, but rk818_ldo[] only describes eight, so
->>> LDO_REG9 indexes past the end of the table. Its voltage reads back as
->>> garbage and it cannot be enabled or set.
->>>
->>> Unlike LDO1-8, LDO9 is switched from the DCDC enable and sleep
->>> registers (bit 5), and its voltage selector lives in
->>> BOOST_LDO9_ON_VSEL/SLP_VSEL with the usual 1.8-3.4V, 100mV range.
->>>
->>> Add the table entry and handle LDO9 in the enable and suspend enable
->>> helpers.
->>>
->>> This patch was written with the help of Claude (claude-opus-5-5).
->>>
->>> Signed-off-by: Shigeaki Asai <y-asai.0816@docomonet.jp>
->
->The patch never made it to the mailing list, c.f. 
->https://lore.kernel.org/u-boot/ or 
->https://lists.u-boot-project.org/pipermail/u-boot/2026-October/thread.html, 
->can you please fix the consistency issue and send a v2 and make sure it 
->hits the mailing list? This is fixing a real issue, even though you 
->don't have a need for it anymore, so I would like to merge this but I 
->cannot if it's not on the mailing list.
->
->Thank you in advance!
->Cheers,
->Quentin
