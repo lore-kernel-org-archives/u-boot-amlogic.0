@@ -1,66 +1,74 @@
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7521.1794235765491367135
+Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.499.1794240154339376910
  for <u-boot-amlogic@groups.io>;
- Mon, 09 Nov 2026 06:49:25 -0800
+ Mon, 09 Nov 2026 08:02:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@0leil.net header.s=20231125 header.b=IsLtDMdF;
- spf=pass (domain: 0leil.net, ip: 84.16.66.175, mailfrom: foss+uboot@0leil.net)
-Received: from smtp-4-0001 (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jNXZw23jnzwrB;
-	Mon,  9 Nov 2026 15:43:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0leil.net;
-	s=20231125; t=1794235399;
-	bh=MQPH4cCVc0C3XntBaiPnwH1k/7rRjqypEm3DVUb3hpw=;
-	h=From:Subject:Date:To:Cc:From;
-	b=IsLtDMdFTnP1Gi+P8d/ZE5WcHtfwKJHd2Xg3phqYyarZxLnMHYw1WNhXL1vLSrX0/
-	 w+TQ8FgJo0CBud+8KjYrosbiQiCp8b+Tp/d+19MmB/jr75P0/YHIXdJvunMKVADyuc
-	 jAaauHDmMjeXPhy2LpvKR5kL5YScTHHIbUk3+YAnQOPsbsk2eNBPyf71A+eNlJNHsu
-	 t5LNK5WyDh/j8EFgYVs2HJo7uA8gXI96t5D8YOs3TjPCy36mjcBkSi8+6TpNSTwWaT
-	 t5c5Oz49TG3s51Nr604374MFg6xPrKbh3fDWIpTNu0t7Y52hYsduwksQ+6tTYiYcaH
-	 HuxoFLHeMvdGA==
-Received: from unknown by smtp-4-0001 (Postfix) with ESMTPA id 4jNXZt4GfkzrQ6;
-	Mon,  9 Nov 2026 15:43:18 +0100 (CET)
-From: Quentin Schulz <foss+uboot@0leil.net>
-Subject: [PATCH 0/2] doc: follow-up to linkcheck fixes series
-Date: Mon, 09 Nov 2026 15:43:07 +0100
-Message-Id: <20261109-linkcheck-follow-up-v1-0-64ee7d115a6c@cherry.de>
+ dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=@baodeep.com header.s=dkim header.b=DqiB4M36;
+ spf=pass (domain: baodeep.com, ip: 185.250.0.168, mailfrom: v@baodeep.com)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1436A33EC8;
+	Mon, 09 Nov 2026 19:02:28 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baodeep.com; s=dkim;
+	t=1794240150; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=0+TsU8RcF40B0MjbzqTGoI0K+wCZQ91px5Jrfv/6NMc=;
+	b=DqiB4M36AXezp8KRlHEcGwYwSXcFERlIcXq8ycKoCTOlgvg6WX4BY6eYW+Q8IHKjHW2a5p
+	+ajW3wLfRfj2/pgO2wZUKtl82oFsJhnrA3urdFw/KDk5FQfndNmpVUODgR7YG4lz665Eff
+	z8iRcWm/EBC8J7GbB6m/0iemBHd1Bj87jqSteJrSlBSFQaiB8/JtKBIBXEZeCH37yhRpy0
+	ose+fgdKRLt76fKRCLftc0AQmKlGWrU4TJOPu53a+CiaIryV3tCFhCh9v7UKF7Qc1P+h5I
+	obRi8Arg+2wI4js0eHzGc04deuYn22+nViD6S2Hr1B9mcdnImX/an7ePPScC5w==
+Message-ID: <1478d4f1-e07a-4abe-b539-c8c703a9e05a@baodeep.com>
+Date: Mon, 9 Nov 2026 19:02:12 +0300
 MIME-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAAAAAAAA/yXMTQ6CMBAG0KtMvjWT0Ab86VUMC61TGWla0oqaE
- O5u1OXbvBVVikqFoxVFnlo1JzgyDcGP53QT1iscwbZ2Z0x75Khp8qP4iUOOMb94mXkfDqGzvfS
- 2EzSEuUjQ9289DX/X5XIX//hW2LYPH5ojlncAAAA=
-X-Change-ID: 20261109-linkcheck-follow-up-7f8f425e524e
-To: u-boot@lists.u-boot-project.org, u-boot-amlogic@groups.io
-Cc: Tom Rini <trini@konsulko.com>, Vyacheslav Bocharov <adeep@lexina.in>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Quentin Schulz <quentin.schulz@cherry.de>, 
- Heinrich Schuchardt <xypron.glpk@gmx.de>, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] doc: board/amlogic: jethub-j80: update shop link to
+ .com
+To: Quentin Schulz <foss+uboot@0leil.net>, u-boot@lists.u-boot-project.org,
+ u-boot-amlogic@groups.io
+Cc: Tom Rini <trini@konsulko.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Quentin Schulz <quentin.schulz@cherry.de>,
  Viacheslav Bocharov <v@baodeep.com>
-X-Mailer: b4 0.17-dev
-X-Infomaniak-Routing: alpha
-Content-Type: text/plain; charset="utf-8"
+References: <20261109-linkcheck-follow-up-v1-0-64ee7d115a6c@cherry.de>
+ <20261109-linkcheck-follow-up-v1-2-64ee7d115a6c@cherry.de>
+Content-Language: ru
+From: Viacheslav <v@baodeep.com>
+In-Reply-To: <20261109-linkcheck-follow-up-v1-2-64ee7d115a6c@cherry.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <u-boot-amlogic.groups.io>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Mon, 09 Nov 2026 15:41:33 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3148
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Mon, 09 Nov 2026 16:02:37 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3149
 
-I got some feedback on the v1 that I haven't addressed until now, so
-here are the two requested changes, sorry for the delay.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
-Quentin Schulz (2):
-      doc: arch/x86: update link to ACPI specs
-      doc: board/amlogic: jethub-j80: update shop link to .com
 
- doc/arch/x86/x86.rst             | 2 +-
- doc/board/amlogic/jethub-j80.rst | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
----
-base-commit: 934995f642a21ca7f35fa9aed5f061394fcba243
-base-tree: https://git.u-boot-project.org/u-boot/u-boot.git main
-change-id: 20261109-linkcheck-follow-up-7f8f425e524e
+09.11.2026 17:43, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
+> 
+> Use .com domain as suggested by Viacheslav.
+> 
+> Fixes: 1a33ee41ecd2 ("doc: board/amlogic: jethub-j80: use redirect link directly")
+> Suggested-by: Viacheslav Bocharov <v@baodeep.com>
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+>   doc/board/amlogic/jethub-j80.rst | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/doc/board/amlogic/jethub-j80.rst b/doc/board/amlogic/jethub-j80.rst
+> index c3800f9588aa..2e8b9a5dddb8 100644
+> --- a/doc/board/amlogic/jethub-j80.rst
+> +++ b/doc/board/amlogic/jethub-j80.rst
+> @@ -3,7 +3,7 @@
+>   U-Boot for JetHub J80 (S905W)
+>   =============================
+>   
+> -JetHome Jethub H1 (https://jethome.ru/h1/?variation_id=56) is a home automation controller device
+> +JetHome Jethub H1 (https://jethome.com/h1) is a home automation controller device
+>   manufactured by JetHome with the following specifications:
+>   
+>    - Amlogic S905W (ARM Cortex-A53) quad-core up to 1.5GHz
+> 
 
-Best regards,
---  
-Quentin Schulz <quentin.schulz@cherry.de>
+Reviewed-by: Viacheslav Bocharov <v@baodeep.com>
 
+Thanks,
+Viacheslav
