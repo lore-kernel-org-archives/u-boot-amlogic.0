@@ -1,72 +1,72 @@
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1934.1794715107285431897
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1927.1794715080072280873
  for <u-boot-amlogic@groups.io>;
- Sat, 14 Nov 2026 19:58:27 -0800
+ Sat, 14 Nov 2026 19:58:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kernel.org header.s=k20260515 header.b=NFJi9MAD;
- spf=pass (domain: kernel.org, ip: 172.234.252.31, mailfrom: devnull+iav.iav.lv@kernel.org)
+ dkim=pass header.i=@kernel.org header.s=k20260515 header.b=KGvDXLkf;
+ spf=pass (domain: kernel.org, ip: 172.105.4.254, mailfrom: devnull+iav.iav.lv@kernel.org)
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3528D43E50;
+	by tor.source.kernel.org (Postfix) with ESMTP id 010AA6184A;
 	Sun, 15 Nov 2026 03:50:35 +0000 (UTC)
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794714635;
-	b=ucjNnZO5DSauf44uAXCWA9gbnozUpozH41ARBV8FA16+wPsDbsml626cIQwRtFfL7WME
-	 MIyqDQEdmenCMHRqbj7+KmZmQ4aNimnWufInwMSWX3yLE+BT64+uzSf2TW9TdMzDSd1fP
-	 pZwZGwPZRqIG9L304F6UjWfDwpeO//Xchcy4XBVg+Xdlhdimu3Eg3uvSDKGFsBiaXZImo
-	 viDpaWEyfuszvn3UJAQGBHzGb011ZrWyaownuSz0e/i8jA9y0ZBMvCHjcYDWMhIP7Gz5U
-	 UAnczL50TdB/ohfPweX5upH4eyF5gaaLi5R+KKbJwSg5x7Vu7sT42Gwm+rQ/K6ghVGw==
+	t=1794714634;
+	b=OOeTG2eC9Mf1oaZ/tGA+J0lM5BYpuMU4XaB2fr6phsemwVgpdXS1cKbhhCfi/DodIhgG
+	 +PLLtQgAE4B3wegbk/maIETj0r3ctdzPlFXWxE6rGZ2dvNnqXLYjj6Mi/4B7iOnnMCilK
+	 oB6DXsws1oynLCTRjGy8uaez8PEwqjmtBXKpMB+fwngpMRQ++eJ8yWxGoONJAx22QSKx+
+	 ZqJ21rcQezhKagqVZ2XovSeko/ydXr4GU1sVddL48C9HHoiWISvS5kIksjfzqna86aZEY
+	 1MtioKZs0UQWbTaFWyjusN5Yz8/YhUTdfAiXMGg5lGJ4p77yM07Fl4sYf+SQpWT3iIQ==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794714635;
+	c=relaxed/relaxed; t=1794714634;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=/os7nt/UzbSihdCul5QdcXZqGl8vTtLAgCfB3B5yknY=;
-	b=nZlIW4Tft1h5TfGg+zQ0bmn2bkszBiMe5tzmYtnt7QTFhT9HJb9YcfRW1SRKX2VJD0gy
-	 eDXf4r/hRrP6UOq1t7jfyVfgitonGKo6W+HXJM+u/0kojtNXmPJz8XUTnpTQ8Ao9Cr9lD
-	 jqsuVgSKHGdqbEPqPiyKI7NYS6hrKg1FUMVgUyRISPzd7nLQb28EbrEGfWWqkfL2V5w2C
-	 F0gkgoCEQN40fCgM7zEsZSaRx5/ARIeB9JMx7sy6/MCYRBl7P44n0BYq/otUIYq3nRV2v
-	 qDtUpbCb7jup1I4jiaC/Pv9os5dNcP0pZqHfRSNFLVy3XqKxPyd7x5uh+YyPBEEaz+w==
+	bh=jzBHawrSi2BsPVL+Ic5A72BcVVlzspUs+xjYOYJxrdk=;
+	b=kydkJgjUXN8PKcD8FEkfv7mWVgLeF3xivUpSX6nj9cu6yZa99HhPeJv854PlddROqZT4
+	 NvoFiHnx2RX8ByDXgoMlycj7FQ6Rn+KHK2hriG+X6Q+cP3UhCsOlXZO0VqzHMnk+85jRn
+	 OLBwXHYaXg/mdzebGdNdTIYwWTn8rQyRMKj63Ae5ahggpQdOYLtfqLtg9aMF8nUQOoNOu
+	 scMLI+0IUaGT9ts+nB9EuWEHoZ4Lf6r+Z71pOICxu+2T+Bg2WotbvV5Jt3ph/rLYPRGGo
+	 1mTbEeqYA9OBekig0CPhxjMdomZdR61dFqQ5U+SCluup2ogEI77/zdoYgC+6cc4ZXGQ==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id D1FBA1F000C5;
-	Sun, 15 Nov 2026 03:50:33 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id 081CE1F000C7;
+	Sun, 15 Nov 2026 03:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794714635;
-	bh=/os7nt/UzbSihdCul5QdcXZqGl8vTtLAgCfB3B5yknY=;
+	s=k20260515; t=1794714634;
+	bh=jzBHawrSi2BsPVL+Ic5A72BcVVlzspUs+xjYOYJxrdk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=NFJi9MADD4vuqctFNWr1t4LxYKe6b8/P1bZqDp0ufZgouZF8J12DY+zLAiVsSxHgF
-	 CTeVet8SMrTGmPQYXhBw50oxFjvSZYKcwTkDx/pGKcNTO4Jh/zydlsCAqzaU4aWp8T
-	 a2PC0KP/5PiBnEnGUtj3lcpb0DCrMVCWZBI7sLKKgGkz+LNefW3WjrI51H9usckII/
-	 QzLdzMKq7xiWHu7DbL7mWZRRS+a+lo/ykC107XmIRelSs6Gz2lOfpUS0BPw9cFzm8U
-	 tcwKxAKyLN3Fbq44SbOITJn/UDFsc+3hBQShLS9fFLgv+94yhrA/+5UVIdalKp3czU
-	 1kkP8SVgih6zA==
+	b=KGvDXLkfwAc88yLsf5YoeA1yBxVlaQNmztpMwyWO3Al8V3AJE1acj5C2M+eua031i
+	 br+xyb5BMpjCsiVe5NwFj3RsWJJYZ5XZr9pQ0aQj2wDnqU9tmiYXMxX8ynJo4zew7L
+	 AKjE8cK/Yr01LbppUpc8+JIX44q8meupfLrrz9b86VDl5kOqTgsTgL5pyGhR4UO7PE
+	 WdwCXbJdIYvVOd01BSgl338mOhq0R4Ux5SAw+Vhw9JTdAvW+brRsJDw/P39XlQUVQg
+	 JX99sMSHEDPdPM1b6np+pydSrFDWZSrQh9+usDgL16wGimxSuwfODfgK/o8uMIapUO
+	 rSgeET0EBUFqw==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 5E56349F30;
+	by lkml.kernel.org (Postfix) with ESMTP id 8AB3449F61;
 	Sun, 15 Nov 2026 03:50:33 +0000 (UTC)
 From: Igor Velkov via B4 Relay <devnull+iav.iav.lv@kernel.org>
-Date: Sun, 15 Nov 2026 03:50:30 +0000
-Subject: [PATCH 1/3] arm: meson: g12a: send SCPI user data to the SCP firmware
+Date: Sun, 15 Nov 2026 03:50:32 +0000
+Subject: [PATCH 3/3] configs: odroid-c4, odroid-hc4: enable Wake-on-LAN from suspend
 MIME-Version: 1.0
-Message-Id: <20261115-b4-meson-scp-wol-v1-1-80c3e9f4deda@iav.lv>
+Message-Id: <20261115-b4-meson-scp-wol-v1-3-80c3e9f4deda@iav.lv>
 References: <20261115-b4-meson-scp-wol-v1-0-80c3e9f4deda@iav.lv>
 In-Reply-To: <20261115-b4-meson-scp-wol-v1-0-80c3e9f4deda@iav.lv>
 To: Neil Armstrong <neil.armstrong@linaro.org>, u-boot-amlogic@groups.io
 Cc: Tom Rini <trini@konsulko.com>, u-boot@lists.u-boot-project.org, 
  Igor Velkov <iav@iav.lv>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4345; i=iav@iav.lv;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3105; i=iav@iav.lv;
  h=from:subject:message-id;
- bh=2Gdr08FRW63F0qHBRAEK5BDd5GdXqVBzC6URzhNj9gE=;
- b=owGbwMvMwCVmNH1q96v4SmbG02pJDFk/ddhf8qVUxUz+8v1sh5CgHffPsxnzMzN4VbRZy5luL
- 86QO3qvo5SFQYyLQVZMkWXCIY1bGUuu/vX3MH8AM4eVCWQIAxenAExE/QbDP4PIiWp9125OZehk
- fHUx/W/sDreykphZf/zcb5715k5cHsTIcGl1PrPm8Y78NWsz/m20LL9x79z/K5svLuiTq7rvsO1
- wNQcA
+ bh=TR7+WSUw912x4EZh77Z+Wcm/UCk/rDcRO5KtEgwiol8=;
+ b=owGbwMvMwCVmNH1q96v4SmbG02pJDFk/dTgiX8SIPuY++9jozibj8weXz5lx9O2Bp++28Tcoa
+ YYFe92Y01HKwiDGxSArpsgy4ZDGrYwlV//6e5g/gJnDygQyhIGLUwAmUj2X4Z/u4qVr2R973hUN
+ +una0cPo8ftPZuU1sTnL03pm/he5vzyJ4a9Q59b8bzkfdqterz1qoyyiniC4NMzo76brqxguVF1
+ u+cEOAA==
 X-Developer-Key: i=iav@iav.lv; a=openpgp;
  fpr=90C228DA68A4D5FD4F4837E03297958BEA5F7903
 X-Endpoint-Received: by B4 Relay for iav@iav.lv/default with auth_id=1060
@@ -76,140 +76,80 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 List-Id: <u-boot-amlogic.groups.io>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Wed, 25 Nov 2026 12:52:10 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3157
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3156
 
 From: Igor Velkov <iav@iav.lv>
 
-The BL30 firmware on G12A boards takes settings from the AP through
-the SCPI SET_USR_DATA command on the MHU mailbox. Mainline Linux does
-not send this command, so U-Boot has to, before it starts the OS.
-
-Add meson_scpi_set_usr_data(), which sends the command on the
-low-priority channel and waits for the reply with a timeout.
+Enable CONFIG_MESON_G12A_SCPI so that U-Boot tells BL301 whether to
+wake the board on the Ethernet PHY in suspend, and describe it in the
+board docs.
 
 Signed-off-by: Igor Velkov <iav@iav.lv>
 ---
- arch/arm/include/asm/arch-meson/scpi.h | 17 +++++++++++
- arch/arm/mach-meson/Kconfig            |  9 ++++++
- arch/arm/mach-meson/Makefile           |  1 +
- arch/arm/mach-meson/scpi-g12a.c        | 55 ++++++++++++++++++++++++++++++++++
- 4 files changed, 82 insertions(+)
+ configs/odroid-c4_defconfig      | 1 +
+ configs/odroid-hc4_defconfig     | 1 +
+ doc/board/amlogic/odroid-c4.rst  | 9 +++++++++
+ doc/board/amlogic/odroid-hc4.rst | 9 +++++++++
+ 4 files changed, 20 insertions(+)
 
-diff --git a/arch/arm/include/asm/arch-meson/scpi.h b/arch/arm/include/asm/arch-meson/scpi.h
-new file mode 100644
-index 00000000000..5e9eef1974e
---- /dev/null
-+++ b/arch/arm/include/asm/arch-meson/scpi.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
+diff --git a/configs/odroid-c4_defconfig b/configs/odroid-c4_defconfig
+index f42fa0789d6..55e62f7f1cf 100644
+--- a/configs/odroid-c4_defconfig
++++ b/configs/odroid-c4_defconfig
+@@ -11,6 +11,7 @@ CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-sm1-odroid-c4"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_MESON_G12A=y
++CONFIG_MESON_G12A_SCPI=y
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+diff --git a/configs/odroid-hc4_defconfig b/configs/odroid-hc4_defconfig
+index 694db0684e7..1d18070d265 100644
+--- a/configs/odroid-hc4_defconfig
++++ b/configs/odroid-hc4_defconfig
+@@ -11,6 +11,7 @@ CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-sm1-odroid-hc4"
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_DM_RESET=y
+ CONFIG_MESON_G12A=y
++CONFIG_MESON_G12A_SCPI=y
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+diff --git a/doc/board/amlogic/odroid-c4.rst b/doc/board/amlogic/odroid-c4.rst
+index 6994b958cf8..2df7afd71bc 100644
+--- a/doc/board/amlogic/odroid-c4.rst
++++ b/doc/board/amlogic/odroid-c4.rst
+@@ -141,3 +141,12 @@ Then write the image to SD or eMMC with:
+     $ DEV=/dev/boot_device
+     $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+     $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
 +
-+#ifndef __MESON_SCPI_H__
-+#define __MESON_SCPI_H__
++Wake-on-LAN from suspend
++------------------------
 +
-+#include <linux/types.h>
++The BL301 firmware built from the Hardkernel sources wakes the board on the
++Ethernet PHY interrupt, and keeps the VCCK_B and 3.3 V rails on in suspend
++for it, only when told to. With ``CONFIG_MESON_G12A_SCPI``, U-Boot tells it
++to when the PHY node of the device tree passed to the OS has the
++``wakeup-source`` property, and tells it not to otherwise.
+diff --git a/doc/board/amlogic/odroid-hc4.rst b/doc/board/amlogic/odroid-hc4.rst
+index 1d37be2d80e..ccf30de5350 100644
+--- a/doc/board/amlogic/odroid-hc4.rst
++++ b/doc/board/amlogic/odroid-hc4.rst
+@@ -140,3 +140,12 @@ Then write U-Boot to SD or SPI-NOR with:
+     $ DEV=/dev/boot_device
+     $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=512 skip=1 seek=1
+     $ dd if=fip/u-boot.bin.sd.bin of=$DEV conv=fsync,notrunc bs=1 count=440
 +
-+/**
-+ * meson_scpi_set_usr_data - send SCPI_CMD_SET_USR_DATA to the SCP firmware
-+ *
-+ * @client: SCPI client id; its meaning is defined by the BL30 firmware
-+ * @val: value for the client
-+ * Return: 0 once the SCP has replied, -ETIMEDOUT otherwise
-+ */
-+int meson_scpi_set_usr_data(u8 client, u32 val);
++Wake-on-LAN from suspend
++------------------------
 +
-+#endif /* __MESON_SCPI_H__ */
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index 91d1e8342e0..cf98f4941d9 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -76,6 +76,15 @@ config MESON_S4
- 
- endchoice
- 
-+config MESON_G12A_SCPI
-+	bool "Send SCPI messages to the SCP firmware"
-+	depends on MESON_G12A
-+	help
-+	  Send SCPI messages to the BL30 firmware running on the SCP over
-+	  the MHU mailbox. Boards use them to pass settings to their BL30
-+	  build before starting the OS. If the firmware does not reply, each
-+	  message adds up to 200 ms to the boot.
-+
- config SYS_SOC
- 	default "meson"
- 
-diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
-index 2157c35c2d5..ff9effbbc9e 100644
---- a/arch/arm/mach-meson/Makefile
-+++ b/arch/arm/mach-meson/Makefile
-@@ -16,5 +16,6 @@ endif
- 
- obj-$(CONFIG_MESON_AXG) += board-axg.o
- obj-$(CONFIG_MESON_G12A) += board-g12a.o
-+obj-$(CONFIG_MESON_G12A_SCPI) += scpi-g12a.o
- obj-$(CONFIG_MESON_A1) += board-a1.o
- obj-$(CONFIG_MESON_S4) += board-s4.o
-diff --git a/arch/arm/mach-meson/scpi-g12a.c b/arch/arm/mach-meson/scpi-g12a.c
-new file mode 100644
-index 00000000000..ba66167fec0
---- /dev/null
-+++ b/arch/arm/mach-meson/scpi-g12a.c
-@@ -0,0 +1,55 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * SCPI messages to the G12A SCP firmware (BL30) over the MHU mailbox
-+ */
-+
-+#include <errno.h>
-+#include <asm/io.h>
-+#include <asm/arch/g12a.h>
-+#include <asm/arch/scpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/iopoll.h>
-+
-+/* Low-priority MHU channel: AP to SCP on SET/STAT/CLR_4, replies on _1 */
-+#define G12A_MHU_SCP_STAT	(G12A_HIU_BASE + 0x414)
-+#define G12A_MHU_SCP_CLR	(G12A_HIU_BASE + 0x418)
-+#define G12A_MHU_AP_SET		(G12A_HIU_BASE + 0x434)
-+#define G12A_MHU_AP_STAT	(G12A_HIU_BASE + 0x438)
-+#define G12A_MHU_AP_CLR		(G12A_HIU_BASE + 0x43c)
-+
-+/* AP to SCP low-priority payload in the shared SRAM */
-+#define G12A_MHU_AP_PAYLOAD	0xfffe7200
-+
-+#define SCPI_CMD_ID		GENMASK(7, 0)
-+#define SCPI_CMD_CLIENT		GENMASK(15, 8)
-+#define SCPI_CMD_SIZE		GENMASK(28, 20)
-+
-+#define SCPI_CMD_SET_USR_DATA	0x20
-+
-+#define SCPI_TIMEOUT_US		100000
-+
-+int meson_scpi_set_usr_data(u8 client, u32 val)
-+{
-+	u32 reg;
-+	int ret;
-+
-+	/* Drop a reply that came late for a request that timed out */
-+	writel(~0, G12A_MHU_SCP_CLR);
-+	writel(~0, G12A_MHU_AP_CLR);
-+	writel(val, G12A_MHU_AP_PAYLOAD);
-+	writel(FIELD_PREP(SCPI_CMD_ID, SCPI_CMD_SET_USR_DATA) |
-+	       FIELD_PREP(SCPI_CMD_CLIENT, client) |
-+	       FIELD_PREP(SCPI_CMD_SIZE, sizeof(val)), G12A_MHU_AP_SET);
-+
-+	ret = readl_poll_timeout(G12A_MHU_AP_STAT, reg, !reg, SCPI_TIMEOUT_US);
-+	if (ret) {
-+		/* Do not leave a stale request for the SCP to pick up later */
-+		writel(~0, G12A_MHU_AP_CLR);
-+		return ret;
-+	}
-+
-+	ret = readl_poll_timeout(G12A_MHU_SCP_STAT, reg, reg, SCPI_TIMEOUT_US);
-+	writel(~0, G12A_MHU_SCP_CLR);
-+
-+	return ret;
-+}
++The BL301 firmware built from the Hardkernel sources wakes the board on the
++Ethernet PHY interrupt, and keeps the VCCK_B and 3.3 V rails on in suspend
++for it, only when told to. With ``CONFIG_MESON_G12A_SCPI``, U-Boot tells it
++to when the PHY node of the device tree passed to the OS has the
++``wakeup-source`` property, and tells it not to otherwise.
 
 -- 
 2.43.0
