@@ -1,155 +1,162 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15865.1795264872769095157
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.1867.1794715080067551525
  for <u-boot-amlogic@groups.io>;
- Sat, 21 Nov 2026 04:41:13 -0800
+ Sat, 14 Nov 2026 19:58:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@amarulasolutions.com header.s=google header.b=BHRC08t7;
- spf=pass (domain: amarulasolutions.com, ip: 209.85.167.51, mailfrom: dario.binacchi@amarulasolutions.com)
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5be3ed646a5so2402878e87.1
-        for <u-boot-amlogic@groups.io>; Sat, 21 Nov 2026 04:41:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1795264871; x=1795869671; darn=groups.io;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=u0n+YNFcmMyOeqNS629GEoFYUxyDiF7wnnMtBbUZqLM=;
-        b=BHRC08t7RiJaIdjjisOeyKOnfV6Ys21v/UUewUXj0B4P8hvN3UU8Ub/g7mcxgdK3t2
-         28850Caf9xPxqZLV7P6pFdoGys5OERkIEAKEF217dYL0WAJ5/pDJEYcKX+XO4QW4S4R0
-         I+ituL9Ld4XHj+GcTdgRqp+UwtFftup+P2NmQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795264871; x=1795869671;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=u0n+YNFcmMyOeqNS629GEoFYUxyDiF7wnnMtBbUZqLM=;
-        b=PsfpdwDfpgUpsvqa8KDR/BAbDNOzJ36ykjDGv+tlcQnodDfxyrKh2Z31b8wCTI+szH
-         Qc5jMemLh4zw7HuPypHUYxYcgWcgQfRqMY09+vi2mJv1F6gobJmQkcAM+vaIYWgU8kwY
-         +Yl3JXYLVcdmwyOGuG/ujNBCZJh5Ef4Ee1XhfjVXCHsWxADrrPbtOljHaboGvLl2I4g0
-         ORMnnjeMULlM5WO9ewSGLfaZa6m9ojMd6i8dl7L8xneYefNT8oIpnMnlhHSsqwLe2j+j
-         1kVaxlzw1/hS/GvT8YD7aD3E8FkvbViZvRkKpKriMEdzo3tNmeQWfb8KOj3RUD+5S2/3
-         omiA==
-X-Forwarded-Encrypted: i=1; AL+hErFYi4cak2/Hvjf8fAxycUtwU/+TbEbHAJBKlrBGMmpQl4kv9nTIKmzQ/e75EkmMuEoAMob2qYeySZQ8/Cj23A==@groups.io
-X-Gm-Message-State: APuU4Z9tVXKqchdPjkYEjHY42PMYGybarjsfslSMalp9TaDSP82BQ/1o
-	nkBx6lzxPkGvNslx6WXXtyqt469rLlpqYToB6WyoyD8YLSF68I+d3ij4C2ecjU5aeqlvRJAmDnG
-	hjsHE
-X-Gm-Gg: AZFdTZfjx17+zfhUQH7ipzIfzsmOBvphcdjUicJnTVVAP+T9qDgCaIMIZ79o99yDPKS
-	LA45a1HKKl4w7hUaXidG5e7A9EoexXSvtz50LVTifFrnKrB0IgrHw1V3mSX5xbYr0wOKFeHCUvW
-	m/SyQi7lmIEfn3DV1/jxiPk1LONm3vaweW3pXao6An5n1X6A70MSsTrV7czpsDkFPW4adrPfNTl
-	0a0KfycOXRYwmVYRAIx0xQIR98ZuzpPydqRzo/s7F5tQWdNwKeFQIa681BkECScfsJd8sCkBA8V
-	v0mP+77p0tfot+BRcFkqcJDsYyDVnIcFqkovnlHLOY5MI0P/Mza+kwuPiWy5WSfZTMpMTR4REhQ
-	6qMRVrGuuP/u39rbRxrMvlGhcQo30EKRfnVnUG5ud9VihKOSuF47IPvgrmGqjRqB86vIHP5cvTn
-	cL2BDnaAOV/hiiDtg6Uh3vS0lEpBG6PacByk5Y4Jsxs0mjpc456SQ0/svwWyNi6I5zTfPRiYDBt
-	msqwRraYMPWPJIr7h0ZdgVeCw7h4g/7jfGmiklZj32qBcx2eBUjl4YXu3P/FFt5e2oiE+OBv/Nj
-	tsnq1npAe1Jl5+x6eXnN6aTQdRs/+F6B0uOJJWVDgZ94/nZFHGGhbn6wmT6MuEGEHZKbTj8FPAb
-	pl3kwCydH3Xd7xut3PAQtlkxGZIX4qHujLfnPCKCCmMG7LDbx9gxwynwePwpk//aJZ5TFkaWlro
-	AHPsP3OJakHFBQkEVhkruCi1fEpg==
-X-Received: by 2002:a05:6000:2385:b0:497:9e2a:b1e with SMTP id ffacd0b85a97d-4abb36787a4mr13966065f8f.9.1795264526668;
-        Sat, 21 Nov 2026 04:35:26 -0800 (PST)
-Return-Path: <dario.binacchi@amarulasolutions.com>
-Received: from dario-ThinkPad-P14s-Gen-5.homenet.telecomitalia.it (host-79-14-29-58.business.telecomitalia.it. [79.14.29.58])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab658e2d1bsm11720564f8f.8.2026.11.21.04.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 04:35:26 -0800 (PST)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: u-boot@lists.u-boot-project.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Heiko Schocher <hs@nabladev.com>,
-	Michael Trimarchi <michael@amarulasolutions.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <narmstrong@baylibre.com>,
-	=?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Joe Hershberger <joe.hershberger@ni.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Tom Rini <trini@konsulko.com>,
-	u-boot-amlogic@groups.io
-Subject: [PATCH v2 16/25] phy: dphy: Correct clk_pre parameter
-Date: Sat, 21 Nov 2026 13:34:06 +0100
-Message-ID: <20261121123451.2471185-17-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261121123451.2471185-1-dario.binacchi@amarulasolutions.com>
-References: <20261121123451.2471185-1-dario.binacchi@amarulasolutions.com>
+ dkim=pass header.i=@kernel.org header.s=k20260515 header.b=g8NzVqqI;
+ spf=pass (domain: kernel.org, ip: 172.105.4.254, mailfrom: devnull+iav.iav.lv@kernel.org)
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id BD125612A4;
+	Sun, 15 Nov 2026 03:50:34 +0000 (UTC)
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794714634;
+	b=Ld6IoGn83Zz7zD5ryZ+Xbg+UXI3A1xqERgWR8oqIfPojvtbGv6JixhxtKSZq7X4ecEzC
+	 Wx8yBc4xYhFjgrbEdhosrTyg0XWmB9KCI5TwXjQs71Yc0XeLHgT+4ra7eJGmBTiEsmm/D
+	 baxFuj7IMLGkeJXEKUhiMkCH5aFgPRFGNaIgbUp903Jfq/1jq0zIT0Tw10uhm+8uvs+/M
+	 u0wRXOFDTV+DT72bVkAtKxEVYg0TxbbvLoavgOJnC7mf/g+UeMH8nEh8LKpmseEo2BlGH
+	 aQZP47sle3Me6TE8ZfKOmxgG1edhV7Q6c+Op6T14oafKzIwqD9XNEukqhpsB0kuAUBw==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794714634;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=5qk9tDHzol00P5yMID0ol1PmjZ9dxwhS0CNKDUDwj0o=;
+	b=H4LqvaAQ+XRWTe5DtoRpxbO6viP6PPWfXX38vozTsfpnfICOOQ1eqInDkkWQDvLPUtxz
+	 pVdty70jeNJGdKezcRLiXe2/h2qarUy4a49D4Ps2ElnXjlur3xnCqYya9o5XaVUocFVlT
+	 pNUqb7jab8UmP22tRtrBSI+EAjNVhwlZyfeuDAA5Fi4t8ls5f/QCG0qN08FkwYtT6I5P0
+	 60zu08IlqB5OS0gVSDVJbSQ7Mwr8pAOyfThr21egrTaKYcjf6Y6uWiG6wtGGl1k01v8HZ
+	 BZDOLpKyQAw3Z7aTaWAgf1z0UE5TvZd1cSnBWGJfLsjGm920J6c+gRp0okix7SBG/bA==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id E6CDD1F000C6;
+	Sun, 15 Nov 2026 03:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794714634;
+	bh=5qk9tDHzol00P5yMID0ol1PmjZ9dxwhS0CNKDUDwj0o=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=g8NzVqqIXoN/RrL/HzPa85k3KD5ZICyQZykfTvQQr0OJx6/AR/9zKD+7ZWzd/W7iN
+	 dqAVRSqq2i7d9bnct0qx5oBaxrcUZEJG5+De6HjpcBu+hOR9Jb9DvkqyI9oyWt2NoK
+	 aiCcdqzjxoEGd9lAGBOhGadDgqj49T2K/39+V4o+OlRbtO8DroVTbWuxD5zc4b2esn
+	 AnZx8s1wUODaSgUFhyAbfelyfNln296iy1da18cCjASNSAA45mMFes3LIcaeev+1Lf
+	 ZwwY6OdtX1yGZHFE4tEmjJtxiQ8dUzZIhqHhkSTCcbocGh6IL5Zub+K5d8jXU8tRnD
+	 2JDMzI1oa5HlQ==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 7543B49F5D;
+	Sun, 15 Nov 2026 03:50:33 +0000 (UTC)
+From: Igor Velkov via B4 Relay <devnull+iav.iav.lv@kernel.org>
+Date: Sun, 15 Nov 2026 03:50:31 +0000
+Subject: [PATCH 2/3] board: amlogic: odroid-n2: tell BL301 whether to wake on LAN
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-List-Id: <u-boot-amlogic.groups.io>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Wed, 25 Nov 2026 12:52:00 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3153
+Message-Id: <20261115-b4-meson-scp-wol-v1-2-80c3e9f4deda@iav.lv>
+References: <20261115-b4-meson-scp-wol-v1-0-80c3e9f4deda@iav.lv>
+In-Reply-To: <20261115-b4-meson-scp-wol-v1-0-80c3e9f4deda@iav.lv>
+To: Neil Armstrong <neil.armstrong@linaro.org>, u-boot-amlogic@groups.io
+Cc: Tom Rini <trini@konsulko.com>, u-boot@lists.u-boot-project.org, 
+ Igor Velkov <iav@iav.lv>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2297; i=iav@iav.lv;
+ h=from:subject:message-id;
+ bh=3fdHEF8KsKvIXWDttHsUdkfsf3IxMKZP/SPsXxR+yF8=;
+ b=owGbwMvMwCVmNH1q96v4SmbG02pJDFk/ddgrvZ5c3qqfNlXL84eRfNaWsMXqt990WF07sLU07
+ LGV1m+djlIWBjEuBlkxRZYJhzRuZSy5+tffw/wBzBxWJpAhDFycAjAR+WJGhpdMOzQ+TuTJeit5
+ O2bTveeTveS/r3a5lbHh5PGCaTppW1gY/scLaTJNu7s/Wun6xicHl7P9cVnl8yF2Wpnsj2pL+2U
+ XKxgA
+X-Developer-Key: i=iav@iav.lv; a=openpgp;
+ fpr=90C228DA68A4D5FD4F4837E03297958BEA5F7903
+X-Endpoint-Received: by B4 Relay for iav@iav.lv/default with auth_id=1060
+X-Original-From: Igor Velkov <iav@iav.lv>
+Reply-To: iav@iav.lv
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+List-Id: <u-boot-amlogic.groups.io>
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Wed, 25 Nov 2026 12:52:09 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3154
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+From: Igor Velkov <iav@iav.lv>
 
-Upstream linux commit 9a8406ba1a9a29.
+Unless SCPI client 7 has been set to a non-zero value, the Hardkernel
+BL301 for ODROID-C4/HC4 switches VCCK_B and the 3.3 V rail off in
+suspend and does not add the PHY interrupt (GPIOZ_14) to its wake
+sources.
 
-The D-PHY specification (v1.2) explicitly mentions that the T-CLK-PRE
-parameter's unit is Unit Interval(UI) and the minimum value is 8.  Also,
-kernel doc of the 'clk_pre' member of struct phy_configure_opts_mipi_dphy
-mentions that it should be in UI.  However, the dphy core driver wrongly
-sets 'clk_pre' to 8000, which seems to hint that it's in picoseconds.
+With CONFIG_MESON_G12A_SCPI, send 1 when the Ethernet PHY in the device
+tree passed to the OS has wakeup-source, and 0 otherwise. BL301 keeps
+the last value, so it is sent on every fixup and the last fixup before
+the OS starts wins.
 
-So, let's fix the dphy core driver to correctly reflect the T-CLK-PRE
-parameter's minimum value according to the D-PHY specification.
-
-I'm assuming that all impacted custom drivers shall program values in
-TxByteClkHS cycles into hardware for the T-CLK-PRE parameter.  The D-PHY
-specification mentions that the frequency of TxByteClkHS is exactly 1/8
-the High-Speed(HS) bit rate(each HS bit consumes one UI).  So, relevant
-custom driver code is changed to program those values as
-DIV_ROUND_UP(cfg->clk_pre, BITS_PER_BYTE), then.
-
-Note that I've only tested the patch with RM67191 DSI panel on i.MX8mq EVK.
-Help is needed to test with other i.MX8mq, Meson and Rockchip platforms,
-as I don't have the hardwares.
-
-Tested-by: Liu Ying <victor.liu@nxp.com> # RM67191 DSI panel on i.MX8mq EVK
-Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com> # for phy-meson-axg-mipi-dphy.c
-Tested-by: Neil Armstrong <narmstrong@baylibre.com> # for phy-meson-axg-mipi-dphy.c
-Tested-by: Guido Günther <agx@sigxcpu.org> # Librem 5 (imx8mq) with it's rather picky panel
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
-Link: https://lore.kernel.org/r/20220124024007.1465018-1-victor.liu@nxp.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Signed-off-by: Igor Velkov <iav@iav.lv>
 ---
+ board/amlogic/odroid-n2/odroid-n2.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-(no changes since v1)
-
- drivers/phy/meson-axg-mipi-dphy.c | 2 +-
- drivers/phy/phy-core-mipi-dphy.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/phy/meson-axg-mipi-dphy.c b/drivers/phy/meson-axg-mipi-dphy.c
-index 3f89de19970b..fb10ccca6ac1 100644
---- a/drivers/phy/meson-axg-mipi-dphy.c
-+++ b/drivers/phy/meson-axg-mipi-dphy.c
-@@ -237,7 +237,7 @@ static int phy_meson_axg_mipi_dphy_power_on(struct phy *phy)
- 		     (DIV_ROUND_UP(priv->config.clk_zero, temp) << 16) |
- 		     (DIV_ROUND_UP(priv->config.clk_prepare, temp) << 24));
- 	regmap_write(priv->regmap, MIPI_DSI_CLK_TIM1,
--		     DIV_ROUND_UP(priv->config.clk_pre, temp));
-+		     DIV_ROUND_UP(priv->config.clk_pre, BITS_PER_BYTE));
+diff --git a/board/amlogic/odroid-n2/odroid-n2.c b/board/amlogic/odroid-n2/odroid-n2.c
+index ae953d0e4ba..94aaa6ca9ad 100644
+--- a/board/amlogic/odroid-n2/odroid-n2.c
++++ b/board/amlogic/odroid-n2/odroid-n2.c
+@@ -7,6 +7,7 @@
+ #include <dm.h>
+ #include <adc.h>
+ #include <env.h>
++#include <fdtdec.h>
+ #include <init.h>
+ #include <net.h>
+ #include <asm/io.h>
+@@ -14,6 +15,7 @@
+ #include <asm/arch/sm.h>
+ #include <asm/arch/eth.h>
+ #include <asm/arch/boot.h>
++#include <asm/arch/scpi.h>
  
- 	regmap_write(priv->regmap, MIPI_DSI_HS_TIM,
- 		     DIV_ROUND_UP(priv->config.hs_exit, temp) |
-diff --git a/drivers/phy/phy-core-mipi-dphy.c b/drivers/phy/phy-core-mipi-dphy.c
-index 79cab9125002..27cff85709d9 100644
---- a/drivers/phy/phy-core-mipi-dphy.c
-+++ b/drivers/phy/phy-core-mipi-dphy.c
-@@ -36,7 +36,7 @@ static int phy_mipi_dphy_calc_config(unsigned long pixel_clock,
+ #define EFUSE_MAC_OFFSET	20
+ #define EFUSE_MAC_SIZE		12
+@@ -24,6 +26,9 @@
+ #define MESON_SOC_ID_G12B	0x29
+ #define MESON_SOC_ID_SM1	0x2b
  
- 	cfg->clk_miss = 0;
- 	cfg->clk_post = 60000 + 52 * ui;
--	cfg->clk_pre = 8000;
-+	cfg->clk_pre = 8;
- 	cfg->clk_prepare = 38000;
- 	cfg->clk_settle = 95000;
- 	cfg->clk_term_en = 0;
++/* Hardkernel BL301 client: 1 = stay powered in suspend and wake on the PHY */
++#define SCPI_CL_WOL		7
++
+ int mmc_get_env_dev(void)
+ {
+ 	if (meson_get_boot_device() == BOOT_DEVICE_EMMC)
+@@ -138,3 +143,29 @@ int misc_init_r(void)
+ 	odroid_detect_variant();
+ 	return 0;
+ }
++
++/*
++ * BL301 keeps the last value sent, so we send one on every fixup: the last
++ * fixup before the OS starts wins.
++ */
++int meson_ft_board_setup(void *blob, struct bd_info *bd)
++{
++	bool wol = false;
++	int node, phy, ret;
++
++	if (!IS_ENABLED(CONFIG_MESON_G12A_SCPI))
++		return 0;
++
++	node = fdt_node_offset_by_compatible(blob, -1,
++					     "amlogic,meson-g12a-dwmac");
++	if (node >= 0 && fdtdec_get_is_enabled(blob, node)) {
++		phy = fdtdec_lookup_phandle(blob, node, "phy-handle");
++		wol = phy >= 0 && fdtdec_get_bool(blob, phy, "wakeup-source");
++	}
++
++	ret = meson_scpi_set_usr_data(SCPI_CL_WOL, wol);
++	if (ret)
++		printf("SCP: setting Wake-on-LAN to %d failed: %d\n", wol, ret);
++
++	return 0;
++}
+
 -- 
 2.43.0
+
 
