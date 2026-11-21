@@ -1,193 +1,228 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.33255.1794850689576018482
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.15720.1795264973190900572
  for <u-boot-amlogic@groups.io>;
- Mon, 16 Nov 2026 09:38:09 -0800
+ Sat, 21 Nov 2026 04:42:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@brivo.com header.s=google header.b=dVccOX3Q;
- spf=pass (domain: brivo.com, ip: 209.85.160.181, mailfrom: sanderson@brivo.com)
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-55d3563e50eso19729201cf.0
-        for <u-boot-amlogic@groups.io>; Mon, 16 Nov 2026 09:38:09 -0800 (PST)
+ dkim=pass header.i=@amarulasolutions.com header.s=google header.b=TKCitvXY;
+ spf=pass (domain: amarulasolutions.com, ip: 209.85.221.54, mailfrom: dario.binacchi@amarulasolutions.com)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-491971ac844so1590141f8f.2
+        for <u-boot-amlogic@groups.io>; Sat, 21 Nov 2026 04:42:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brivo.com; s=google; t=1794850688; x=1795455488; darn=groups.io;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+        d=amarulasolutions.com; s=google; t=1795264971; x=1795869771; darn=groups.io;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=dWrWC3lzaF8CJDmn/jBFTNALT8i6GCyPPmYIVsgcP7Q=;
-        b=dVccOX3QQ0+Me1eCcYo8NPGM+NUbJhBUDXQ34+bm2TJ8wHoQQQa/i/KyEZDSXw44vp
-         aU1TuiqpruRHZO6KvKIys2K6FaKklSAdY79cqoWiUN7+fPbnVT40TeI3yM/lV39dpZNN
-         Zf+BUOLYFyKUI+OOrKNjc3qdlm0NHhj73uEapWvszjXmNlhLNtNbITRzRFRcQM4yrOvw
-         3Z2V5Ae2j7bGpBOMoF+PSIXpnGQSrfEPAynDkLdfZibmDTXrmpL8198coxXv3uR3vsbX
-         0bYJ0gq78O0jPBqUQnHnuhFr9m5CrNOCNkZV41qWsfIdb8mdrxNew76JeKRs/u3qu9J/
-         vyAA==
+        bh=JPZ9oA/B+Gz0ryClkoT7lE/q3Keva2mmd38vgmGbTwA=;
+        b=TKCitvXYjMfUk/W1296jkVLEp944cSVIYDhAcddNGROIGv9yS1xetdHlnMxpVumdSU
+         WCeicBJkRIiDbjFZ+y6gTPm3BKMlG2j6znvKufQo1WKaU9jO87l33J3kCmcPtcHJGdlW
+         1TDkWhREs6CGrKtdRk7osCvYYSyibEacbsLhE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794850688; x=1795455488;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=dWrWC3lzaF8CJDmn/jBFTNALT8i6GCyPPmYIVsgcP7Q=;
-        b=TirXQ8iB4s+SQ5d8kC691fwCzR2E9M7NTJZmml4F/sqUFLXAHitpirQLA9a9qcbOjY
-         hLtSw8XFMLRAsQ0OyesNnPzSc5KFjR3Ohfn3gF/U1927WS+6t4RxbF4xtq1HQAX4WXO+
-         hU6Bs/gKFwER8NMb7HalH9rE3PUv2IfpENDhvBSPsOI3q8TRtHRu+SgZgOOncDOb06li
-         JEs3EsrqlrifbBNfJhZQV8yTwxQsrD6C95RIg87xN6YxZiVAFHzuvZKadVvI7y7Fev5u
-         D61SgtG+NuxceKhATLpfy7x6kV9pCTUqDkaH8nvYHJwp8WI4QTcF2M0SFFCw6Ab2eNai
-         C5Xg==
-X-Forwarded-Encrypted: i=1; AL+hErG1Q5NfLFkTSaMnfXBAUQGJmGJiVwT0KoarZ+LtXt3WEJoxoFF4YxNhB/ekKCbMAwLnEqM45714nNIq2Vtbjw==@groups.io
-X-Gm-Message-State: APuU4Z/xyrdlbEPCo/SLsQB0fOHnEqv3aYPURB5xqP8V1Y+zvuj+2NPN
-	sTf9U8suhal9jszBSULE3qfocSkeprMc2FpFkbpNYV+fmpuGSlzpIgIl48Nyl+zEyB09Zn89OpU
-	zDfut3geRQ2u2jIztkuhqpTVWsF8eF2af8PkMdwDdgG679XFwwy33bA==
-X-Gm-Gg: AYBFou0iA/eXBlvWHbVYArdxskdNY1TZz2SH69yKA8TrzGEhidgcT7PI23ovvi7sdDl
-	R+xiejch9SfDlyl8cMosUCfuKk3J4XPQU17tR68PDoLZRG6EIE+AbRtiVtlPLJ9ofyRzQ6jT87S
-	BdgoiPjb8NzrFYVTX22y3VcHThbfnzBuQukWf+48rUhX220X6FBKs+McxWuDJT8jQtRvhcXjsB7
-	uHmglu82BN1LcYoHJotr1daZ9aucN28Aj6JGlouhltVYlbcatWosgF/MM5tlesTAkaQLnTv9yiP
-	saBCI5Yq1kOVtobv4/+7WBGP/HKailcRIyyi72BOvS8rX8oyDwxCU+hAVFzQE4YonzhBOk5BzPy
-	uKuFGxYetoRyJfBlnYTu/AOj78TtWu7E4/WoMjgeqjjlvlPIxrblJfGES1ex5PU24yM2or0brgr
-	eFPxoxFxg1hJYcA4dVGH+frhISPeEMAOmax4NN/blq+VEmq9KBVcVIJ2Ju37OAcfSi4d3YWnBTT
-	eslotaLOte3cjyTq0GtrCKVo8aKBfphGe8iBfrQu97HI39hgy7JktB8xFpd9jiAGx2EwOsSMsjI
-	v2lPC23tBjPp6eBgLNdznaiZDckak6MtoDNv
-X-Received: by 2002:a05:622a:410c:b0:538:684:448b with SMTP id d75a77b69052e-55aca76a647mr187231811cf.60.1794850688108;
-        Mon, 16 Nov 2026 09:38:08 -0800 (PST)
-Return-Path: <sanderson@brivo.com>
-Received: from [10.200.233.210] ([71.163.254.246])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91f23d459c6sm91704356d6.14.2026.11.16.09.38.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Nov 2026 09:38:07 -0800 (PST)
-Message-ID: <7beaba3e-14e5-4e6d-bdd4-9f082d261d68@brivo.com>
-Date: Mon, 16 Nov 2026 12:38:07 -0500
+        d=1e100.net; s=20260707; t=1795264971; x=1795869771;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JPZ9oA/B+Gz0ryClkoT7lE/q3Keva2mmd38vgmGbTwA=;
+        b=dkHm30olgF1Lc+v2PxXhquOUjxNM2mIhOCWVxFEM08NQdIaUb6cbZS3IyejpRX5zLs
+         BrRs2E/LKsg/jD7tyyRJLVIHXviU81k6v7qYs6nhAM6SeGKVYVwyQUFdHrT1RKsL9bfJ
+         M7poHbJjJF1U7s1HrAplfkduWd3I9lWhM9JzhXT10mKEjlVBpShijke5VmR6jzn03Wl2
+         DPRvJfAmlakZdZJybWqOvOEtN8+WwISBMSOJZsNfUrXd1n/Xvv0XgWWwj6UhTm0f20Zr
+         grPkQXMyOR2PMP/l3XMTKylZR08Wz2oEgHsPn4q7PGDQM9hVEtSMYbvc6EvFjlJqKHYA
+         0kMg==
+X-Forwarded-Encrypted: i=1; AL+hErGvcs2MFKIqt8kiCs7BPFOnBuPYOAJVhQBJcSdASeRLonW0p+OxLmQ84kouQ7Kgunln/8+seh7I/lqhhubI9g==@groups.io
+X-Gm-Message-State: APuU4Z/hvFYpzxgcRjDIgO27naItiPrgpK69dOBgF3XZc+fgWuq4jbvK
+	RYsChjHB1mIxXsUegtvoy1wp6S4SD6AtNbk1J+uBwamB+CVBkDnZjie6wHBR0Acs23qRmFRtp1q
+	wD8Lf
+X-Gm-Gg: AZFdTZeBcuCoRV7eG5S0OOJ8eOXULf5+FNVXyOIbihCCiVH02U2l5po8mTyfuRr3c5n
+	ZfPPE+ynx4PjrA47Om1VnSl1XRpMuW6RPXFAPu4nXaTd6dT7zjfnpjXYqDLudp1ExaxaSir1xoa
+	1ImPfZl/ahu4gXa9+xw6txsRlsmCg1mMghg/DG4R7bGhen244RoJIq5S3S758SDpbEUzdTI93+d
+	iNXRV0F/RXtaOIDqYMqafGPlYIl6LjYW9iSDdRCR1HdgrIXN2UhZY0CTv7Vfb4yt0OBBfXGM/RQ
+	n0OZvqGhzFl4L9cCqyCoFrGxGCNO/1FpJDONnn7xlkQ70KtcPpWDixXXiggZMTNIAEDazxKq4Z8
+	+XRHX60Yg4kwwkRDeREb+9HCVw/wWLnlZ5ZLOsjHmAaSxNNNWyeE0d7EPEBEr8i4w1AmuODp9KG
+	K8t5PxMa5BtBGHiDlJlgdETsiah9h7FiBhnGf2tRmebHeWzgIOtcRAlhJnLl0HPkiHYFtLdlVM5
+	Rs+Z8Sl4nNOcf3Wysisen/9W+zi4cZf+jpJqD3OlNaUBVRU7DuTMlTu/M0BfmeQCeIuwapYZSPx
+	Ne3VPx98kEVexTI2Xvcq9bED/IhY6YqshJEExPcnZpY++pTVN4xKS7K7Zqy4+OK/Q53eW0iJtx5
+	+5IGA84P/T8/QrCt5C0O0OSy/LM0kJH7QgbhuMtJZx/1+60z9WkNLMCYkbLOZyGWz/qtnjk4wSm
+	2fo9u+dtaRTbsSPaWvAU+Zzf3MBg==
+X-Received: by 2002:a5d:64c8:0:b0:4a6:c5f4:cdf7 with SMTP id ffacd0b85a97d-4abaa976b7fmr11469286f8f.5.1795264496266;
+        Sat, 21 Nov 2026 04:34:56 -0800 (PST)
+Return-Path: <dario.binacchi@amarulasolutions.com>
+Received: from dario-ThinkPad-P14s-Gen-5.homenet.telecomitalia.it (host-79-14-29-58.business.telecomitalia.it. [79.14.29.58])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab658e2d1bsm11720564f8f.8.2026.11.21.04.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2026 04:34:55 -0800 (PST)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: u-boot@lists.u-boot-project.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Heiko Schocher <hs@nabladev.com>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Anatolij Gustschin <ag.dev.uboot@gmail.com>,
+	Brian Ruley <brian.ruley@gehealthcare.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Jaehoon Chung <jh80.chung@samsung.com>,
+	Joe Hershberger <joe.hershberger@ni.com>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Julien Stephan <jstephan@baylibre.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Lukasz Majewski <lukma@nabladev.com>,
+	Maksim Kiselev <bigunclemax@gmail.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	"Markus Schneider-Pargmann (TI)" <msp@baylibre.com>,
+	Michael Trimarchi <michael@amarulasolutions.com>,
+	Minkyu Kang <mk7.kang@samsung.com>,
+	"NXP i.MX U-Boot Team" <uboot-imx@nxp.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Stefano Babic <sbabic@nabladev.com>,
+	Tom Rini <trini@konsulko.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Ye Li <ye.li@nxp.com>,
+	u-boot-amlogic@groups.io
+Subject: [PATCH v2 00/25] Support display (and even more) on the BSH SMM S2/PRO boards
+Date: Sat, 21 Nov 2026 13:33:50 +0100
+Message-ID: <20261121123451.2471185-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/20] clk: meson: Constify driver ops
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>,
- u-boot@lists.u-boot-project.org
-Cc: Lukasz Majewski <lukma@nabladev.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Tom Rini <trini@konsulko.com>,
- u-boot-amlogic@groups.io
-References: <20261116173546.3487841-1-marek.vasut+renesas@mailbox.org>
- <20261116173546.3487841-7-marek.vasut+renesas@mailbox.org>
-Content-Language: en-US
-From: Sean Anderson <sanderson@brivo.com>
-In-Reply-To: <20261116173546.3487841-7-marek.vasut+renesas@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <u-boot-amlogic.groups.io>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Mon, 16 Nov 2026 17:38:14 -0000
-X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3151
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <u-boot-amlogic@groups.io>; Wed, 25 Nov 2026 12:51:59 -0000
+X-Groupsio-URL: https://groups.io/g/u-boot-amlogic/message/3152
 
+This series was created out of the need to support simple-framebuffer
+for BSH boards SMM_S2 and SMM_S2PRO. To achieve this goal, it was
+necessary to develop additional code and/or drivers for all the required
+components (i. e. clock, power domain, video, etc.). This series has a
+Linux counterpart that will also be submitted upstream as soon as
+possible.
 
+Sorry for the long time it took to send this v2. Compared to v1, the
+series is rebased on top of the clock reparenting rework that came out
+of the discussion with Miquel [1], the board-specific PLL enabling is
+replaced by a generic handling of the critical clocks in the clock
+framework, the patches already merged have been dropped, and the
+i.MX8MP media block control is left to the imx8mp-mediamix driver.
 
-On 11/16/26 12:34 PM, Marek Vasut wrote:
-> Set the ops structure as static const. The structure is not accessible
-> from outside of this driver and is not going to be modified at runtime.
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> ---
-> Cc: Lukasz Majewski <lukma@nabladev.com>
-> Cc: Neil Armstrong <neil.armstrong@linaro.org>
-> Cc: Sean Anderson <sanderson@brivo.com>
-> Cc: Tom Rini <trini@konsulko.com>
-> Cc: u-boot-amlogic@groups.io
-> Cc: u-boot@lists.u-boot-project.org
-> ---
->   drivers/clk/meson/a1.c          | 2 +-
->   drivers/clk/meson/axg-ao.c      | 2 +-
->   drivers/clk/meson/axg.c         | 2 +-
->   drivers/clk/meson/clk-measure.c | 2 +-
->   drivers/clk/meson/g12a-ao.c     | 2 +-
->   drivers/clk/meson/g12a.c        | 2 +-
->   drivers/clk/meson/gxbb.c        | 2 +-
->   7 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
-> index b6d1887c98a..01f364f8a8e 100644
-> --- a/drivers/clk/meson/a1.c
-> +++ b/drivers/clk/meson/a1.c
-> @@ -224,7 +224,7 @@ static const struct udevice_id meson_clk_ids[] = {
->   	{ }
->   };
->   
-> -static struct clk_ops meson_clk_ops = {
-> +static const struct clk_ops meson_clk_ops = {
->   	.disable	= meson_clk_disable,
->   	.enable		= meson_clk_enable,
->   	.get_rate	= meson_clk_get_rate,
-> diff --git a/drivers/clk/meson/axg-ao.c b/drivers/clk/meson/axg-ao.c
-> index 5f897d89e9b..e72eb839cfe 100644
-> --- a/drivers/clk/meson/axg-ao.c
-> +++ b/drivers/clk/meson/axg-ao.c
-> @@ -60,7 +60,7 @@ static int meson_clk_request(struct clk *clk)
->   	return 0;
->   }
->   
-> -static struct clk_ops meson_clk_ops = {
-> +static const struct clk_ops meson_clk_ops = {
->   	.disable	= meson_axg_ao_clk_disable,
->   	.enable		= meson_axg_ao_clk_enable,
->   	.request	= meson_clk_request,
-> diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
-> index 3b5f4af9f4c..8aa3d18eb9b 100644
-> --- a/drivers/clk/meson/axg.c
-> +++ b/drivers/clk/meson/axg.c
-> @@ -300,7 +300,7 @@ static int meson_clk_probe(struct udevice *dev)
->   	return 0;
->   }
->   
-> -static struct clk_ops meson_clk_ops = {
-> +static const struct clk_ops meson_clk_ops = {
->   	.disable	= meson_axg_clk_disable,
->   	.enable		= meson_axg_clk_enable,
->   	.get_rate	= meson_axg_clk_get_rate,
-> diff --git a/drivers/clk/meson/clk-measure.c b/drivers/clk/meson/clk-measure.c
-> index f653fc63552..743fe6f310b 100644
-> --- a/drivers/clk/meson/clk-measure.c
-> +++ b/drivers/clk/meson/clk-measure.c
-> @@ -591,7 +591,7 @@ static int meson_clk_msr_probe(struct udevice *dev)
->   	return 0;
->   }
->   
-> -static struct clk_ops meson_clk_msr_ops = {
-> +static const struct clk_ops meson_clk_msr_ops = {
->   	.of_xlate = meson_clk_msr_xlate,
->   	.dump = meson_clk_msr_dump,
->   };
-> diff --git a/drivers/clk/meson/g12a-ao.c b/drivers/clk/meson/g12a-ao.c
-> index d9425f900f3..c0f11ce6928 100644
-> --- a/drivers/clk/meson/g12a-ao.c
-> +++ b/drivers/clk/meson/g12a-ao.c
-> @@ -60,7 +60,7 @@ static int meson_clk_request(struct clk *clk)
->   	return 0;
->   }
->   
-> -static struct clk_ops meson_clk_ops = {
-> +static const struct clk_ops meson_clk_ops = {
->   	.disable	= meson_g12a_ao_clk_disable,
->   	.enable		= meson_g12a_ao_clk_enable,
->   	.request	= meson_clk_request,
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index b1ba5881904..1ac2b39c417 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -995,7 +995,7 @@ static int meson_clk_probe(struct udevice *dev)
->   	return 0;
->   }
->   
-> -static struct clk_ops meson_clk_ops = {
-> +static const struct clk_ops meson_clk_ops = {
->   	.disable	= meson_g12a_clk_disable,
->   	.enable		= meson_g12a_clk_enable,
->   	.get_rate	= meson_g12a_clk_get_rate,
-> diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-> index 62c1e0eed4f..5c2601e79d5 100644
-> --- a/drivers/clk/meson/gxbb.c
-> +++ b/drivers/clk/meson/gxbb.c
-> @@ -949,7 +949,7 @@ static int meson_clk_probe(struct udevice *dev)
->   	return 0;
->   }
->   
-> -static struct clk_ops meson_clk_ops = {
-> +static const struct clk_ops meson_clk_ops = {
->   	.disable	= meson_gxbb_clk_disable,
->   	.enable		= meson_gxbb_clk_enable,
->   	.get_rate	= meson_gxbb_clk_get_rate,
+Tested on the BSH SMM S2 PRO.
 
-Reviewed-by: Sean Anderson <sanderson@brivo.com>
+[1] https://lore.kernel.org/all/20240910101344.110633-1-miquel.raynal@bootlin.com/
+
+Changes in v2:
+- Add patch, replacing "clk: imx8mn: Mark IMX8MN_SYS_PLL2 and
+  IMX8MN_SYS_PLL3 as enabled" with a generic solution
+- Reword subject and commit message to describe the change
+- Fix the coding style of the new clocks
+- Add patch
+- Rebase on top of the parent enabling now done by clk_set_parent()
+- Read the flags from the private clock
+- Add CLK_SET_RATE_UNGATE support
+- Treat an error pointer returned by clk_get_parent() as no parent
+- Reword subject and commit message
+- Fix build error
+- Drop i.MX8MP support, already provided by the imx8mp-mediamix driver
+- Let the power domain uclass count the domain references
+- Check the domains allocation
+- Reword subject and commit message
+- Look up a device as a bridge before looking it up as a DSI host
+- Reword commit message
+- Add patch, split from "video: Update mxsfb video drivers for
+  iMX8MM/iMX8MN display"
+- Add patch, split from "video: Update mxsfb video drivers for
+  iMX8MM/iMX8MN display"
+- Move the coding style fix and the DE polarity change to separate
+  patches
+- Bind the DSI host to the DSIM node and drop the
+  "samsung,sec-mipi-dsi" compatible
+- Fix typo in a comment
+- Drop the dsi-host node
+- Add commit message
+- Drop the custom boot-on properties added to the Linux device tree
+- Drop the #if guard around smm_s2_setup_simplefb()
+- Fix the style of a comment
+
+Dario Binacchi (9):
+  clk: ccf: enable the critical clocks when they are registered
+  clk: clk-uclass: fix parent reference counting in clk_set_parent()
+  video: mxsfb: add missing space after if
+  boot: fdt_simplefb: add a debug message
+  video: mxsfb: support simple frame-buffer
+  video: bridge: samsung: support simple frame-buffer
+  imx8mn_bsh_smm_s2/pro: support simple frame-buffer
+  imx8mn_bsh_smm_s2/pro: enable simple frame-buffer
+  imx8mn_bsh_smm_s2/pro: add splash screen with BSH logo
+
+Michael Trimarchi (16):
+  clk: imx8mn: register the main_axi, noc and gic clocks as critical
+  clk: implement CLK_OPS_PARENT_ENABLE and CLK_SET_RATE_UNGATE
+  clk: imx8mn: add video clocks support
+  power: domain: add i.MX8MM/i.MX8MN display block control driver
+  video: Add video link framework
+  video: bridge: Add check_timing interface
+  video: dsi_host: add disable host interface
+  video: mxsfb: set the DE polarity from the display timings
+  video: Update mxsfb video drivers for iMX8MM/iMX8MN display
+  video: Enable DM_UC_FLAG_SEQ_ALIAS for display and bridge
+  phy: dphy: add support to calculate the timing based on hs_clk_rate
+  phy: dphy: Correct lpx parameter and its derivatives(ta_{get,go,sure})
+  phy: dphy: Correct clk_pre parameter
+  video: bridge: Add Samsung DSIM bridge
+  video: Add Synaptics R63353 panel driver
+  imx8mn_bsh_smm_s2/pro: Enable display on reference design
+
+ .../dts/imx8mn-bsh-smm-s2-u-boot-common.dtsi  |   16 +
+ board/bsh/imx8mn_smm_s2/imx8mn_smm_s2.c       |   72 +
+ boot/fdt_simplefb.c                           |    2 +
+ common/stdio.c                                |    4 +
+ configs/imx8mn_bsh_smm_s2_defconfig           |   21 +
+ configs/imx8mn_bsh_smm_s2pro_defconfig        |   21 +
+ drivers/clk/clk-uclass.c                      |   70 +-
+ drivers/clk/clk.c                             |   15 +
+ drivers/clk/imx/clk-imx8mn.c                  |  105 ++
+ drivers/phy/meson-axg-mipi-dphy.c             |    2 +-
+ drivers/phy/phy-core-mipi-dphy.c              |   36 +-
+ drivers/power/domain/Kconfig                  |    7 +
+ drivers/power/domain/Makefile                 |    1 +
+ drivers/power/domain/imx8m-blk-ctrl.c         |  355 ++++
+ drivers/power/domain/imx8m-power-domain.c     |  166 +-
+ drivers/video/Kconfig                         |   14 +
+ drivers/video/Makefile                        |    2 +
+ drivers/video/bridge/Kconfig                  |   13 +
+ drivers/video/bridge/Makefile                 |    1 +
+ drivers/video/bridge/samsung-dsi-host.c       | 1570 +++++++++++++++++
+ drivers/video/bridge/samsung-dsim.c           |  165 ++
+ drivers/video/bridge/samsung-dsim.h           |   20 +
+ drivers/video/bridge/video-bridge-uclass.c    |   11 +
+ drivers/video/display-uclass.c                |    1 +
+ drivers/video/dsi-host-uclass.c               |   10 +
+ drivers/video/mxsfb.c                         |  142 +-
+ drivers/video/synaptics-r63353.c              |  228 +++
+ drivers/video/video_link.c                    |  448 +++++
+ include/configs/imx8mn_bsh_smm_s2.h           |    1 +
+ include/configs/imx8mn_bsh_smm_s2_common.h    |    4 +
+ include/configs/imx8mn_bsh_smm_s2pro.h        |    1 +
+ include/dsi_host.h                            |    8 +
+ include/linux/clk-provider.h                  |   12 +-
+ include/phy-mipi-dphy.h                       |    3 +
+ include/video_bridge.h                        |   20 +
+ include/video_link.h                          |   19 +
+ tools/logos/bsh.bmp                           |  Bin 0 -> 10644 bytes
+ 37 files changed, 3521 insertions(+), 65 deletions(-)
+ create mode 100644 drivers/power/domain/imx8m-blk-ctrl.c
+ create mode 100644 drivers/video/bridge/samsung-dsi-host.c
+ create mode 100644 drivers/video/bridge/samsung-dsim.c
+ create mode 100644 drivers/video/bridge/samsung-dsim.h
+ create mode 100644 drivers/video/synaptics-r63353.c
+ create mode 100644 drivers/video/video_link.c
+ create mode 100644 include/video_link.h
+ create mode 100644 tools/logos/bsh.bmp
+
+---
+base-commit: c1958b5f6cce03956d309ce422b5d9f819955d4a
+branch: bsh-smm-s2-display
+
+-- 
+2.43.0
+
